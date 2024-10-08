@@ -703,7 +703,7 @@ const validator = customizeValidator({ AjvClass: Ajv2019 });
 render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
 ```
 
-### Localization (L12n) support
+### Localization (L10n) support
 
 The Ajv 8 validator supports the localization of error messages using [ajv-i18n](https://github.com/ajv-validator/ajv-i18n).
 In addition, you may provide a custom solution by implementing a function that conforms to the `Localizer` interface if your language is not supported.

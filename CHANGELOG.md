@@ -1994,7 +1994,7 @@ const Component = () => {
 
 ## @rjsf/validator-ajv8
 
-- Support for localization (L12n) on a customized validator using a `Localizer` function passed as a second parameter to `customizeValidator()`, fixing (https://github.com/rjsf-team/react-jsonschema-form/pull/846, and https://github.com/rjsf-team/react-jsonschema-form/issues/1195)
+- Support for localization (L10n) on a customized validator using a `Localizer` function passed as a second parameter to `customizeValidator()`, fixing (https://github.com/rjsf-team/react-jsonschema-form/pull/846, and https://github.com/rjsf-team/react-jsonschema-form/issues/1195)
 - Fixed the `README.md` to correct the package name in several places to match the actual package
 
 ## Dev / docs / playground
