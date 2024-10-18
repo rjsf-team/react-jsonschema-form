@@ -759,6 +759,81 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           type: 'string',
         });
       });
+      it('should not merge `allOf.contains` schemas', () => {
+        // https://github.com/rjsf-team/react-jsonschema-form/issues/2923#issuecomment-1946034240
+        const schema: RJSFSchema = {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              a: {
+                type: 'string',
+              },
+            },
+          },
+          allOf: [
+            {
+              maxItems: 5,
+            },
+            {
+              contains: {
+                type: 'object',
+                properties: {
+                  a: {
+                    pattern: '1',
+                  },
+                },
+              },
+            },
+            {
+              contains: {
+                type: 'object',
+                properties: {
+                  a: {
+                    pattern: '2',
+                  },
+                },
+              },
+            },
+          ],
+        };
+        const rootSchema: RJSFSchema = { definitions: {} };
+        const formData = {};
+        expect(retrieveSchema(testValidator, schema, rootSchema, formData)).toEqual({
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              a: {
+                type: 'string',
+              },
+            },
+          },
+          maxItems: 5,
+          allOf: [
+            {
+              contains: {
+                type: 'object',
+                properties: {
+                  a: {
+                    pattern: '1',
+                  },
+                },
+              },
+            },
+            {
+              contains: {
+                type: 'object',
+                properties: {
+                  a: {
+                    pattern: '2',
+                  },
+                },
+              },
+            },
+          ],
+        });
+      });
       it('should not merge incompatible types', () => {
         const schema: RJSFSchema = {
           allOf: [{ type: 'string' }, { type: 'boolean' }],
