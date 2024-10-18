@@ -3743,6 +3743,39 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         expect(getDefaultFormState(testValidator, schema, formData)).toEqual(result);
       });
     });
+    describe('object with defaults and undefined in formData, testing mergeDefaultsIntoFormData', () => {
+      let schema: RJSFSchema;
+      let defaultedFormData: any;
+      beforeAll(() => {
+        schema = {
+          type: 'object',
+          properties: {
+            field: {
+              type: 'string',
+              default: 'foo',
+            },
+          },
+          required: ['field'],
+        };
+        defaultedFormData = { field: 'foo' };
+      });
+      it('returns field value of default when formData is empty', () => {
+        const formData = {};
+        expect(getDefaultFormState(testValidator, schema, formData)).toEqual(defaultedFormData);
+      });
+      it('returns field value of undefined when formData has undefined for field', () => {
+        const formData = { field: undefined };
+        expect(getDefaultFormState(testValidator, schema, formData)).toEqual(formData);
+      });
+      it('returns field value of default when formData has undefined for field and `useDefaultIfFormDataUndefined`', () => {
+        const formData = { field: undefined };
+        expect(
+          getDefaultFormState(testValidator, schema, formData, undefined, undefined, {
+            mergeDefaultsIntoFormData: 'useDefaultIfFormDataUndefined',
+          })
+        ).toEqual(defaultedFormData);
+      });
+    });
     it('should return undefined defaults for a required array property with minItems', () => {
       const schema: RJSFSchema = {
         type: 'object',

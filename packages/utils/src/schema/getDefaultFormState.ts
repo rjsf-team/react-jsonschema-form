@@ -586,12 +586,14 @@ export default function getDefaultFormState<
     // No form data? Use schema defaults.
     return defaults;
   }
-  const { mergeExtraDefaults } = experimental_defaultFormStateBehavior?.arrayMinItems || {};
+  const { mergeDefaultsIntoFormData, arrayMinItems = {} } = experimental_defaultFormStateBehavior || {};
+  const { mergeExtraDefaults } = arrayMinItems;
+  const defaultSupercedesUndefined = mergeDefaultsIntoFormData === 'useDefaultIfFormDataUndefined';
   if (isObject(formData)) {
-    return mergeDefaultsWithFormData<T>(defaults as T, formData, mergeExtraDefaults);
+    return mergeDefaultsWithFormData<T>(defaults as T, formData, mergeExtraDefaults, defaultSupercedesUndefined);
   }
   if (Array.isArray(formData)) {
-    return mergeDefaultsWithFormData<T[]>(defaults as T[], formData, mergeExtraDefaults);
+    return mergeDefaultsWithFormData<T[]>(defaults as T[], formData, mergeExtraDefaults, defaultSupercedesUndefined);
   }
   return formData;
 }

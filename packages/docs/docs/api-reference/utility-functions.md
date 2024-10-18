@@ -575,6 +575,7 @@ When merging defaults and form data, we want to merge in this specific way:
 - [defaults]: T | undefined - The defaults to merge
 - [formData]: T | undefined - The form data into which the defaults will be merged
 - [mergeExtraArrayDefaults=false]: boolean - If true, any additional default array entries are appended onto the formData
+- [defaultSupercedesUndefined=false]: boolean - If true, an explicit undefined value will be overwritten by the default value
 
 #### Returns
 
@@ -897,6 +898,8 @@ Returns the superset of `formData` that includes the given set updated to includ
 - [formData]: T | undefined - The current formData, if any, onto which to provide any missing defaults
 - [rootSchema]: S | undefined - The root schema, used to primarily to look up `$ref`s
 - [includeUndefinedValues=false]: boolean | "excludeObjectChildren" - Optional flag, if true, cause undefined values to be added as defaults. If "excludeObjectChildren", cause undefined values for this object and pass `includeUndefinedValues` as false when computing defaults for any nested object properties.
+- [experimental_defaultFormStateBehavior]: Experimental_DefaultFormStateBehavior - See Form props [experimental_defaultFormStateBehavior documentation](./api-reference/form-props.md#experimental_defaultFormStateBehavior)
+- [experimental_customMergeAllOf]: Experimental_CustomMergeAllOf&lt;S> - See Form props [experimental_customMergeAllOf documentation](./api-reference/form-props.md#experimental_customMergeAllOf)
 
 #### Returns
 

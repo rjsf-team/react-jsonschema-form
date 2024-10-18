@@ -66,7 +66,8 @@ export type Experimental_ArrayMinItems = {
 
 /** Experimental features to specify different default form state behaviors. Currently, this affects the
  * handling of optional array fields where `minItems` is set and handling of setting defaults based on the
- * value of `emptyObjectFields`.
+ * value of `emptyObjectFields`. It also affects how `allOf` fields are handled and how to handle merging defaults into
+ * the formData in relation to explicit `undefined` values via `mergeDefaultsIntoFormData`.
  */
 export type Experimental_DefaultFormStateBehavior = {
   /** Optional object, that controls how the default form state for arrays with `minItems` is handled. When not provided
@@ -86,6 +87,15 @@ export type Experimental_DefaultFormStateBehavior = {
    * Optional flag to compute the default form state using allOf and if/then/else schemas. Defaults to `skipDefaults'.
    */
   allOf?: 'populateDefaults' | 'skipDefaults';
+  /** Optional enumerated flag controlling how the defaults are merged into the form data when dealing with undefined
+   * values, defaulting to `useFormDataIfPresent`.
+   * NOTE: If there is a default for a field and the `formData` is unspecified, the default ALWAYS merges.
+   * - `useFormDataIfPresent`: Legacy behavior - Do not merge defaults if there is a value for a field in `formData`,
+   *        even if that value is explicitly set to `undefined`
+   * - `useDefaultIfFormDataUndefined`: - If the value of a field within the `formData` is `undefined`, then use the
+   *        default value instead
+   */
+  mergeDefaultsIntoFormData?: 'useFormDataIfPresent' | 'useDefaultIfFormDataUndefined';
 };
 
 /** Optional function that allows for custom merging of `allOf` schemas

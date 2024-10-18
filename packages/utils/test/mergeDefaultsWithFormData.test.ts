@@ -17,8 +17,12 @@ describe('mergeDefaultsWithFormData()', () => {
     expect(mergeDefaultsWithFormData(undefined, [2])).toEqual([2]);
   });
 
-  it('should return default when formData is undefined', () => {
-    expect(mergeDefaultsWithFormData({}, undefined)).toEqual({});
+  it('should return formData when formData is undefined', () => {
+    expect(mergeDefaultsWithFormData({}, undefined)).toEqual(undefined);
+  });
+
+  it('should return default when formData is undefined and defaultSupercedesUndefined true', () => {
+    expect(mergeDefaultsWithFormData({}, undefined, undefined, true)).toEqual({});
   });
 
   it('should return undefined when formData is undefined', () => {
