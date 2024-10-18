@@ -16,6 +16,12 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 5.21.3
+
+## @rjsf/utils
+
+- Added `experimental_customMergeAllOf` option to `retrieveSchema` to allow custom merging of `allOf` schemas
+
 # 5.21.2
 
 ## @rjsf/core
