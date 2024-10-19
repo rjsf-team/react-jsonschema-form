@@ -337,7 +337,7 @@ export function getObjectDefaults<T = any, S extends StrictRJSFSchema = RJSFSche
     const objectDefaults = Object.keys(retrievedSchema.properties || {}).reduce(
       (acc: GenericObjectType, key: string) => {
         const propertySchema = get(retrievedSchema, [PROPERTIES_KEY, key]);
-        // Check if the parent schema has a const property defined,  then we should always return the computedDefault since it's coming from the const.
+        // Check if the parent schema has a const property defined, then we should always return the computedDefault since it's coming from the const.
         const hasParentConst = isObject(parentConst) && (parentConst as JSONSchema7Object)[key] !== undefined;
         const hasConst = (isObject(propertySchema) && CONST_KEY in propertySchema) || hasParentConst;
         // Compute the defaults for this node, with the parent defaults we might
@@ -473,7 +473,7 @@ export function getArrayDefaults<T = any, S extends StrictRJSFSchema = RJSFSchem
     }
   }
 
-  // Check if the schema has a const property defined,  then we should always return the computedDefault since it's coming from the const.
+  // Check if the schema has a const property defined, then we should always return the computedDefault since it's coming from the const.
   const hasConst = isObject(schema) && CONST_KEY in schema;
   if (hasConst === false) {
     if (neverPopulate) {

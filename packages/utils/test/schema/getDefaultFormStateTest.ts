@@ -22,6 +22,62 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
     it('throws error when schema is not an object', () => {
       expect(() => getDefaultFormState(testValidator, null as unknown as RJSFSchema)).toThrowError('Invalid schema:');
     });
+    it('test an object const value merge with formData', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          localConst: {
+            type: 'string',
+            const: 'local',
+          },
+          RootConst: {
+            type: 'object',
+            properties: {
+              attr1: {
+                type: 'number',
+              },
+              attr2: {
+                type: 'boolean',
+              },
+            },
+            const: {
+              attr1: 1,
+              attr2: true,
+            },
+          },
+          RootAndLocalConst: {
+            type: 'string',
+            const: 'FromLocal',
+          },
+          fromFormData: {
+            type: 'string',
+          },
+        },
+        const: {
+          RootAndLocalConst: 'FromRoot',
+        },
+      };
+      expect(
+        getDefaultFormState(
+          testValidator,
+          schema,
+          {
+            fromFormData: 'fromFormData',
+          },
+          schema,
+          false,
+          { emptyObjectFields: 'skipDefaults' }
+        )
+      ).toEqual({
+        localConst: 'local',
+        RootConst: {
+          attr1: 1,
+          attr2: true,
+        },
+        RootAndLocalConst: 'FromLocal',
+        fromFormData: 'fromFormData',
+      });
+    });
     it('getInnerSchemaForArrayItem() item of type boolean returns empty schema', () => {
       expect(getInnerSchemaForArrayItem({ items: [true] }, AdditionalItemsHandling.Ignore, 0)).toEqual({});
     });
@@ -48,7 +104,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           foo: 42,
         });
       });
-      it('test computeDefaults that is passed a schema with a cont property', () => {
+      it('test computeDefaults that is passed a schema with a const property', () => {
         const schema: RJSFSchema = {
           type: 'object',
           properties: {
@@ -885,6 +941,9 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
                 attr2: true,
               },
             },
+            fromFormData: {
+              type: 'string',
+            },
             RootAndLocalConst: {
               type: 'string',
               const: 'FromLocal',
@@ -898,6 +957,9 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           getObjectDefaults(testValidator, schema, {
             rootSchema: schema,
             experimental_defaultFormStateBehavior: { emptyObjectFields: 'skipDefaults' },
+            rawFormData: {
+              fromFormData: 'fromFormData',
+            },
           })
         ).toEqual({
           localConst: 'local',
