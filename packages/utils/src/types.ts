@@ -88,6 +88,12 @@ export type Experimental_DefaultFormStateBehavior = {
   allOf?: 'populateDefaults' | 'skipDefaults';
 };
 
+/** Optional function that allows for custom merging of `allOf` schemas
+ * @param schema - Schema with `allOf` that needs to be merged
+ * @returns The merged schema
+ */
+export type Experimental_CustomMergeAllOf<S extends StrictRJSFSchema = RJSFSchema> = (schema: S) => S;
+
 /** The interface representing a Date object that contains an optional time */
 export interface DateObject {
   /** The year of the Date */
@@ -1030,12 +1036,14 @@ export interface SchemaUtilsType<T = any, S extends StrictRJSFSchema = RJSFSchem
    * @param validator - An implementation of the `ValidatorType` interface that will be compared against the current one
    * @param rootSchema - The root schema that will be compared against the current one
    * @param [experimental_defaultFormStateBehavior] - Optional configuration object, if provided, allows users to override default form state behavior
+   * @param [experimental_customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
    * @returns - True if the `SchemaUtilsType` differs from the given `validator` or `rootSchema`
    */
   doesSchemaUtilsDiffer(
     validator: ValidatorType<T, S, F>,
     rootSchema: S,
-    experimental_defaultFormStateBehavior?: Experimental_DefaultFormStateBehavior
+    experimental_defaultFormStateBehavior?: Experimental_DefaultFormStateBehavior,
+    experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>
   ): boolean;
   /** Returns the superset of `formData` that includes the given set updated to include any missing fields that have
    * computed to have defaults provided in the `schema`.

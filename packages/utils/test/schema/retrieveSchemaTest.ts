@@ -897,6 +897,37 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           default: 'hi',
         });
       });
+
+      it('should use experimental_customMergeAllOf when provided', () => {
+        const schema: RJSFSchema = {
+          allOf: [
+            {
+              type: 'object',
+              properties: {
+                string: { type: 'string' },
+              },
+            },
+            {
+              type: 'object',
+              properties: {
+                number: { type: 'number' },
+              },
+            },
+          ],
+        };
+        const rootSchema: RJSFSchema = { definitions: {} };
+        const formData = {};
+        const customMergeAllOf = jest.fn().mockReturnValue({
+          type: 'object',
+          properties: { string: { type: 'string' }, number: { type: 'number' } },
+        });
+
+        expect(retrieveSchema(testValidator, schema, rootSchema, formData, customMergeAllOf)).toEqual({
+          type: 'object',
+          properties: { string: { type: 'string' }, number: { type: 'number' } },
+        });
+        expect(customMergeAllOf).toHaveBeenCalledWith(schema);
+      });
     });
     describe('Conditional schemas (If, Then, Else)', () => {
       it('should resolve if, then', () => {

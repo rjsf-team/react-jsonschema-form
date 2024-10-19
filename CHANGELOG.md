@@ -21,6 +21,7 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/utils
 
 - Made fields with const property pre-filled and readonly, fixing [#2600](https://github.com/rjsf-team/react-jsonschema-form/issues/2600)
+- Added `experimental_customMergeAllOf` option to `retrieveSchema` to allow custom merging of `allOf` schemas
 
 # 5.21.2
 
@@ -2000,7 +2001,7 @@ const Component = () => {
 
 ## @rjsf/validator-ajv8
 
-- Support for localization (L12n) on a customized validator using a `Localizer` function passed as a second parameter to `customizeValidator()`, fixing (https://github.com/rjsf-team/react-jsonschema-form/pull/846, and https://github.com/rjsf-team/react-jsonschema-form/issues/1195)
+- Support for localization (L10n) on a customized validator using a `Localizer` function passed as a second parameter to `customizeValidator()`, fixing (https://github.com/rjsf-team/react-jsonschema-form/pull/846, and https://github.com/rjsf-team/react-jsonschema-form/issues/1195)
 - Fixed the `README.md` to correct the package name in several places to match the actual package
 
 ## Dev / docs / playground
