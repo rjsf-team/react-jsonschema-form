@@ -899,7 +899,7 @@ Returns the superset of `formData` that includes the given set updated to includ
 - [rootSchema]: S | undefined - The root schema, used to primarily to look up `$ref`s
 - [includeUndefinedValues=false]: boolean | "excludeObjectChildren" - Optional flag, if true, cause undefined values to be added as defaults. If "excludeObjectChildren", cause undefined values for this object and pass `includeUndefinedValues` as false when computing defaults for any nested object properties.
 - [experimental_defaultFormStateBehavior]: Experimental_DefaultFormStateBehavior - See `Form` documentation for the [experimental_defaultFormStateBehavior](./api-reference/form-props.md#experimental_defaultFormStateBehavior) prop
-- [experimental_customMergeAllOf]: Experimental_CustomMergeAllOf&lt;S> - See `Form` documentation for the [experimental_customMergeAllOf](./api-reference/form-props.md#experimental_customMergeAllOf) prop
+- [experimental_customMergeAllOf]: Experimental_CustomMergeAllOf&lt;S&gt; - See `Form` documentation for the [experimental_customMergeAllOf](./api-reference/form-props.md#experimental_customMergeAllOf) prop
 
 #### Returns
 
