@@ -362,6 +362,8 @@ render(
 );
 ```
 
+### Wrapping BaseInputTemplate to customize it
+
 Sometimes you just need to pass some additional properties to the existing `BaseInputTemplate`.
 The way to do this varies based upon whether you are using `core` or some other theme (such as `mui`):
 
