@@ -35,6 +35,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Updated the `form-props.md` to add documentation for the new `experimental_customMergeAllOf` props and the `experimental_defaultFormStateBehavior.mergeDefaultsIntoFormData` option
 - Updated the `utility-functions.md` to add documentation for the new optional `defaultSupercedesUndefined` parameter and the two missing optional fields on `getDefaultFormState()`
+- Updated the `custom-templates.md` to add a section header for wrapping `BaseInputTemplate`
 - Updated the playground to add controls for the new `mergeDefaultsIntoFormData` option
   - In the process, moved the `Show Error List` component over one column, making it inline radio buttons rather than a select
 
