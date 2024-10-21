@@ -251,6 +251,17 @@ render(
 );
 ```
 
+### mergeDefaultsIntoFormData
+
+Optional enumerated flag controlling how the defaults are merged into the form data when dealing with undefined values, defaulting to `useFormDataIfPresent`.
+
+NOTE: If there is a default for a field and the `formData` is unspecified, the default ALWAYS merges.
+
+| Flag Value                      | Description                                                                                                                               |
+| ------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| `useFormDataIfPresent`          | Legacy behavior - Do not merge defaults if there is a value for a field in `formData` even if that value is explicitly set to `undefined` |
+| `useDefaultIfFormDataUndefined` | If the value of a field within the `formData` is `undefined`, then use the default value instead                                          |
+
 ## experimental_customMergeAllOf
 
 The `experimental_customMergeAllOf` function allows you to provide a custom implementation for merging `allOf` schemas. This can be particularly useful in scenarios where the default [json-schema-merge-allof](https://github.com/mokkabonna/json-schema-merge-allof) library becomes a performance bottleneck, especially with large and complex schemas or doesn't satisfy your needs.

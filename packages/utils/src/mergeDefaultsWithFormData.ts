@@ -12,23 +12,31 @@ import { GenericObjectType } from '../src';
  *     are deeply merged; additional entries from the defaults are ignored unless `mergeExtraArrayDefaults` is true, in
  *     which case the extras are appended onto the end of the form data
  *   - when the array is not set in form data, the default is copied over
- * - scalars are overwritten/set by form data
+ * - scalars are overwritten/set by form data unless undefined and there is a default AND `defaultSupercedesUndefined`
+ *   is true
  *
  * @param [defaults] - The defaults to merge
  * @param [formData] - The form data into which the defaults will be merged
  * @param [mergeExtraArrayDefaults=false] - If true, any additional default array entries are appended onto the formData
+ * @param [defaultSupercedesUndefined=false] - If true, an explicit undefined value will be overwritten by the default value
  * @returns - The resulting merged form data with defaults
  */
 export default function mergeDefaultsWithFormData<T = any>(
   defaults?: T,
   formData?: T,
-  mergeExtraArrayDefaults = false
+  mergeExtraArrayDefaults = false,
+  defaultSupercedesUndefined = false
 ): T | undefined {
   if (Array.isArray(formData)) {
     const defaultsArray = Array.isArray(defaults) ? defaults : [];
     const mapped = formData.map((value, idx) => {
       if (defaultsArray[idx]) {
-        return mergeDefaultsWithFormData<any>(defaultsArray[idx], value, mergeExtraArrayDefaults);
+        return mergeDefaultsWithFormData<any>(
+          defaultsArray[idx],
+          value,
+          mergeExtraArrayDefaults,
+          defaultSupercedesUndefined
+        );
       }
       return value;
     });
@@ -44,10 +52,14 @@ export default function mergeDefaultsWithFormData<T = any>(
       acc[key as keyof T] = mergeDefaultsWithFormData<T>(
         defaults ? get(defaults, key) : {},
         get(formData, key),
-        mergeExtraArrayDefaults
+        mergeExtraArrayDefaults,
+        defaultSupercedesUndefined
       );
       return acc;
     }, acc);
+  }
+  if (defaultSupercedesUndefined && formData === undefined) {
+    return defaults;
   }
   return formData;
 }

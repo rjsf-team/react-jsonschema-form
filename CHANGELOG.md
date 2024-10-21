@@ -18,10 +18,26 @@ should change the heading of the (upcoming) version to include a major version b
 
 # 5.22.0
 
+## @rjsf/core
+
+- Updated `MultiSchemaField` to call the `onChange` handler after setting the new option, fixing [#3997](https://github.com/rjsf-team/react-jsonschema-form/issues/3977) and [#4314](https://github.com/rjsf-team/react-jsonschema-form/issues/4314)
+
 ## @rjsf/utils
 
+- Added `experimental_customMergeAllOf` option to `retrieveSchema()` and `getDefaultFormState()` to allow custom merging of `allOf` schemas
 - Made fields with const property pre-filled and readonly, fixing [#2600](https://github.com/rjsf-team/react-jsonschema-form/issues/2600)
-- Added `experimental_customMergeAllOf` option to `retrieveSchema` to allow custom merging of `allOf` schemas
+- Added `mergeDefaultsIntoFormData` option to `Experimental_DefaultFormStateBehavior` type to control how to handle merging of defaults
+- Updated `mergeDefaultsWithFormData()` to add new optional `defaultSupercedesUndefined` that when true uses the defaults rather than `undefined` formData, fixing [#4322](https://github.com/rjsf-team/react-jsonschema-form/issues/4322)
+- Updated `getDefaultFormState()` to pass true to `mergeDefaultsWithFormData` for `defaultSupercedesUndefined` when `mergeDefaultsIntoFormData` has the value `useDefaultIfFormDataUndefined`, fixing [#4322](https://github.com/rjsf-team/react-jsonschema-form/issues/4322)
+- Updated `getClosestMatchingOption()` to improve the scoring of sub-property objects that are provided over ones that aren't, fixing [#3997](https://github.com/rjsf-team/react-jsonschema-form/issues/3977) and [#4314](https://github.com/rjsf-team/react-jsonschema-form/issues/4314)
+
+## Dev / docs / playground
+
+- Updated the `form-props.md` to add documentation for the new `experimental_customMergeAllOf` props and the `experimental_defaultFormStateBehavior.mergeDefaultsIntoFormData` option
+- Updated the `utility-functions.md` to add documentation for the new optional `defaultSupercedesUndefined` parameter and the two missing optional fields on `getDefaultFormState()`
+- Updated the `custom-templates.md` to add a section header for wrapping `BaseInputTemplate`
+- Updated the playground to add controls for the new `mergeDefaultsIntoFormData` option
+  - In the process, moved the `Show Error List` component over one column, making it inline radio buttons rather than a select
 
 # 5.21.2
 

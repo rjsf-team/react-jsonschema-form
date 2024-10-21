@@ -14,7 +14,7 @@
     "precommit": "lint-staged",
     "publish-to-npm": "npm run build && npm publish",
     "test": "jest",
-    "test:debug": "node --inspect-brk node_modules/.bin/jest",
+    "test:debug": "node --inspect-brk ../../node_modules/.bin/jest",
     "test:update": "jest --u",
     "test:watch": "jest --watch",
     "test-coverage": "jest --coverage"
