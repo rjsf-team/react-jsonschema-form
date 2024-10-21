@@ -943,6 +943,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             },
             fromFormData: {
               type: 'string',
+              default: 'notUsed'
             },
             RootAndLocalConst: {
               type: 'string',
