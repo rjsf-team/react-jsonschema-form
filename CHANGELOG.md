@@ -16,10 +16,11 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
-# 5.21.3
+# 5.22.0
 
 ## @rjsf/utils
 
+- Made fields with const property pre-filled and readonly, fixing [#2600](https://github.com/rjsf-team/react-jsonschema-form/issues/2600)
 - Added `experimental_customMergeAllOf` option to `retrieveSchema` to allow custom merging of `allOf` schemas
 
 # 5.21.2
