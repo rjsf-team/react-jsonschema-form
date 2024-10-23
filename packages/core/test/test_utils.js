@@ -14,10 +14,11 @@ export function createComponent(Component, props) {
   const onError = sinon.spy();
   const onSubmit = sinon.spy();
   const comp = <Component onSubmit={onSubmit} onError={onError} onChange={onChange} {...props} />;
-  const { container } = render(comp);
+  const compCB = (props) => <Component onSubmit={onSubmit} onError={onError} onChange={onChange} {...props} />;
+  const { container, rerender } = render(comp);
   const node = findDOMNode(container).firstElementChild;
 
-  return { comp, node, onChange, onError, onSubmit };
+  return { comp, compCB, node, onChange, onError, onSubmit, rerender };
 }
 
 export function createFormComponent(props) {
