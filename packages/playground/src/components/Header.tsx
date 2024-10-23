@@ -63,18 +63,18 @@ const liveSettingsBooleanSchema: RJSFSchema = {
     noValidate: { type: 'boolean', title: 'Disable validation' },
     noHtml5Validate: { type: 'boolean', title: 'Disable HTML 5 validation' },
     focusOnFirstError: { type: 'boolean', title: 'Focus on 1st Error' },
-  },
-};
-
-const liveSettingsSelectSchema: RJSFSchema = {
-  type: 'object',
-  properties: {
     showErrorList: {
       type: 'string',
       default: 'top',
       title: 'Show Error List',
       enum: [false, 'top', 'bottom'],
     },
+  },
+};
+
+const liveSettingsSelectSchema: RJSFSchema = {
+  type: 'object',
+  properties: {
     experimental_defaultFormStateBehavior: {
       title: 'Default Form State Behavior (Experimental)',
       type: 'object',
@@ -157,7 +157,33 @@ const liveSettingsSelectSchema: RJSFSchema = {
             },
           ],
         },
+        mergeDefaultsIntoFormData: {
+          type: 'string',
+          title: 'Merge defaults into formData',
+          default: 'useFormDataIfPresent',
+          oneOf: [
+            {
+              type: 'string',
+              title: 'Use undefined field value if present',
+              enum: ['useFormDataIfPresent'],
+            },
+            {
+              type: 'string',
+              title: 'Use default for undefined field value',
+              enum: ['useDefaultIfFormDataUndefined'],
+            },
+          ],
+        },
       },
+    },
+  },
+};
+
+const liveSettingsBooleanUiSchema: UiSchema = {
+  showErrorList: {
+    'ui:widget': 'radio',
+    'ui:options': {
+      inline: true,
     },
   },
 };
@@ -282,6 +308,7 @@ export default function Header({
             formData={liveSettings}
             validator={localValidator}
             onChange={handleSetLiveSettings}
+            uiSchema={liveSettingsBooleanUiSchema}
           >
             <div />
           </Form>
