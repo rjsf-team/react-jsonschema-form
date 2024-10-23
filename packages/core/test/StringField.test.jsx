@@ -299,6 +299,23 @@ describe('StringField', () => {
       expect(node.querySelector('input').getAttribute('autocomplete')).eql('family-name');
     });
 
+    it('Check that when formData changes, the form should re-validate', () => {
+      const { node, rerender, compCB } = createFormComponent({
+        schema: { type: 'string' },
+        formData: null,
+        liveValidate: true,
+      });
+
+      const errorMessages = node.querySelectorAll('#root__error');
+      expect(errorMessages).to.have.length(1);
+      const errorMessageContent = node.querySelector('#root__error .text-danger').textContent;
+      expect(errorMessageContent).to.contain('must be string');
+
+      rerender(compCB({ schema: { type: 'string' }, formData: 'hello', liveValidate: true }));
+
+      expect(node.querySelectorAll('#root__error')).to.have.length(0);
+    });
+
     it('raise an error and check if the error is displayed', () => {
       const { node } = createFormComponent({
         schema: { type: 'string' },
