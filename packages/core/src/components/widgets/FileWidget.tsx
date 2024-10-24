@@ -169,7 +169,7 @@ function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
       processFiles(event.target.files).then((filesInfoEvent) => {
         const newValue = filesInfoEvent.map((fileInfo) => fileInfo.dataURL);
         if (multiple) {
-          onChange(value.concat(newValue[0]));
+          onChange(value.concat(newValue));
         } else {
           onChange(newValue[0]);
         }
