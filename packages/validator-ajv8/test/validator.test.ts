@@ -1401,6 +1401,67 @@ describe('AJV8Validator', () => {
             expect(errorSchema.nested!.numberOfChildren!.__errors![0]).toEqual('must match pattern "\\d+"');
           });
         });
+        describe('replace the error message field with schema property title', () => {
+          beforeAll(() => {
+            const schema: RJSFSchema = {
+              type: 'object',
+              required: ['a', 'r'],
+              properties: {
+                a: { title: 'First Name', type: 'string' },
+                r: { title: 'Last Name', type: 'string' },
+              },
+            };
+
+            const formData = {};
+            const result = validator.validateFormData(formData, schema);
+            errors = result.errors;
+            errorSchema = result.errorSchema;
+          });
+          it('should return an error list', () => {
+            expect(errors).toHaveLength(2);
+
+            const stack = errors.map((e) => e.stack);
+
+            expect(stack).toEqual([
+              "must have required property 'First Name'",
+              "must have required property 'Last Name'",
+            ]);
+          });
+        });
+        describe('replace the error message field with uiSchema property title', () => {
+          beforeAll(() => {
+            const schema: RJSFSchema = {
+              type: 'object',
+              required: ['a', 'r'],
+              properties: {
+                a: { type: 'string', title: 'First Name' },
+                r: { type: 'string', title: 'Last Name' },
+              },
+            };
+            const uiSchema: UiSchema = {
+              a: {
+                'ui:title': 'uiSchema First Name',
+              },
+              r: {
+                'ui:title': 'uiSchema Last Name',
+              },
+            };
+
+            const formData = {};
+            const result = validator.validateFormData(formData, schema, undefined, undefined, uiSchema);
+            errors = result.errors;
+            errorSchema = result.errorSchema;
+          });
+          it('should return an error list', () => {
+            expect(errors).toHaveLength(2);
+            const stack = errors.map((e) => e.stack);
+
+            expect(stack).toEqual([
+              "must have required property 'uiSchema First Name'",
+              "must have required property 'uiSchema Last Name'",
+            ]);
+          });
+        });
       });
       describe('No custom validate function, single additionalProperties value', () => {
         let errors: RJSFValidationError[];

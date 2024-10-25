@@ -43,12 +43,12 @@ export function transformRJSFValidationErrors<
       const uiSchemaTitle = getUiOptions(get(uiSchema, `${property.replace(/^\./, '')}`)).title;
 
       if (uiSchemaTitle) {
-        message = message.replace(currentProperty, uiSchemaTitle);
+        message = message.replace(`'${currentProperty}'`, `'${uiSchemaTitle}'`);
       } else {
         const parentSchemaTitle = get(parentSchema, [PROPERTIES_KEY, currentProperty, 'title']);
 
         if (parentSchemaTitle) {
-          message = message.replace(currentProperty, parentSchemaTitle);
+          message = message.replace(`'${currentProperty}'`, `'${parentSchemaTitle}'`);
         }
       }
 
