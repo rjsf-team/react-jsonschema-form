@@ -3220,7 +3220,7 @@ describe('ArrayField', () => {
     });
 
     it('Check that when formData changes, the form should re-validate', () => {
-      const { node, rerender, compCB } = createFormComponent({
+      const { node, rerender } = createFormComponent({
         schema,
         formData: [
           {
@@ -3235,7 +3235,7 @@ describe('ArrayField', () => {
       const errorMessageContent = node.querySelector('#root_0_text__error .text-danger').textContent;
       expect(errorMessageContent).to.contain('must be string');
 
-      rerender(compCB({ schema, formData: [{ text: 'test' }], liveValidate: true }));
+      rerender({ schema, formData: [{ text: 'test' }], liveValidate: true });
 
       expect(node.querySelectorAll('#root_0_text__error')).to.have.length(0);
     });

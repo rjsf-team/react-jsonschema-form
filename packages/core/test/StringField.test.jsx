@@ -300,7 +300,7 @@ describe('StringField', () => {
     });
 
     it('Check that when formData changes, the form should re-validate', () => {
-      const { node, rerender, compCB } = createFormComponent({
+      const { node, rerender } = createFormComponent({
         schema: { type: 'string' },
         formData: null,
         liveValidate: true,
@@ -311,7 +311,7 @@ describe('StringField', () => {
       const errorMessageContent = node.querySelector('#root__error .text-danger').textContent;
       expect(errorMessageContent).to.contain('must be string');
 
-      rerender(compCB({ schema: { type: 'string' }, formData: 'hello', liveValidate: true }));
+      rerender({ schema: { type: 'string' }, formData: 'hello', liveValidate: true });
 
       expect(node.querySelectorAll('#root__error')).to.have.length(0);
     });
