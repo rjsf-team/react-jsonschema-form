@@ -16,12 +16,17 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 5.22.2
+
+## @rjsf/core
+
+- Fix an issue where only the first file was uploaded when users selected multiple files for upload.
+
 # 5.22.0
 
 ## @rjsf/core
 
 - Updated `MultiSchemaField` to call the `onChange` handler after setting the new option, fixing [#3997](https://github.com/rjsf-team/react-jsonschema-form/issues/3977) and [#4314](https://github.com/rjsf-team/react-jsonschema-form/issues/4314)
-- Fix an issue where only the first file was uploaded when users selected multiple files for upload.
 
 ## @rjsf/utils
 
