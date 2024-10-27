@@ -22,7 +22,6 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Fixed `AJV8Validator#transformRJSFValidationErrors` to replace the error message field with either the `uiSchema`'s `ui:title` field if one exists or the `parentSchema` title if one exists. Fixes [#4348](https://github.com/rjsf-team/react-jsonschema-form/issues/4348)
 
-
 # 5.22.0
 
 ## @rjsf/core
