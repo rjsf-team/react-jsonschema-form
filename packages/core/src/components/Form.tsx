@@ -441,9 +441,9 @@ export default class Form<
     if (mustValidate) {
       const schemaValidation = this.validate(formData, schema, schemaUtils, _retrievedSchema);
       errors = schemaValidation.errors;
-      // If the schema has changed, we do not merge state.errorSchema.
+      // If retrievedSchema is undefined which means the schema or formData has changed, we do not merge state.
       // Else in the case where it hasn't changed, we merge 'state.errorSchema' with 'schemaValidation.errorSchema.' This done to display the raised field error.
-      if (isSchemaChanged) {
+      if (retrievedSchema === undefined) {
         errorSchema = schemaValidation.errorSchema;
       } else {
         errorSchema = mergeObjects(
