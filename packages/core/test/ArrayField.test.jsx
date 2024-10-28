@@ -3254,6 +3254,27 @@ describe('ArrayField', () => {
       });
     });
 
+    it('Check that when formData changes, the form should re-validate', () => {
+      const { node, rerender } = createFormComponent({
+        schema,
+        formData: [
+          {
+            text: null,
+          },
+        ],
+        liveValidate: true,
+      });
+
+      const errorMessages = node.querySelectorAll('#root_0_text__error');
+      expect(errorMessages).to.have.length(1);
+      const errorMessageContent = node.querySelector('#root_0_text__error .text-danger').textContent;
+      expect(errorMessageContent).to.contain('must be string');
+
+      rerender({ schema, formData: [{ text: 'test' }], liveValidate: true });
+
+      expect(node.querySelectorAll('#root_0_text__error')).to.have.length(0);
+    });
+
     it('raise an error and check if the error is displayed', () => {
       const { node } = createFormComponent({
         schema,
