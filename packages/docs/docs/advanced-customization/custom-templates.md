@@ -283,13 +283,24 @@ render(
 );
 ```
 
-You also can provide your own template to a uiSchema by specifying a `ui:ArrayFieldDescriptionTemplate` property with your Component or a string value from the `Registry`.
+You also can provide your own template to a uiSchema by specifying a `ui:ArrayFieldDescriptionTemplate` property with your Component :
+
+```tsx
+import { UiSchema } from '@rjsf/utils';
+import ArrayFieldDescriptionTemplate from './ArrayFieldDescriptionTemplate';
+
+const uiSchema: UiSchema = {
+  'ui:ArrayFieldDescriptionTemplate': ArrayFieldDescriptionTemplate,
+};
+```
+
+or a string value from the `Registry` :
 
 ```tsx
 import { UiSchema } from '@rjsf/utils';
 
 const uiSchema: UiSchema = {
-  'ui:ArrayFieldTitleTemplate': ArrayFieldTitleTemplate,
+  'ui:ArrayFieldDescriptionTemplate': 'CustomArrayFieldDescriptionTemplate',
 };
 ```
 
@@ -641,10 +652,10 @@ You also can provide your own field template to a uiSchema by specifying a `ui:F
 
 ```tsx
 import { UiSchema } from '@rjsf/utils';
-import FieldTemplate from './FieldTemplate';
+import CustomFieldTemplate from './CustomFieldTemplate';
 
 const uiSchema: UiSchema = {
-  'ui:FieldTemplate': FieldTemplate,
+  'ui:FieldTemplate': CustomFieldTemplate,
 };
 ```
 
