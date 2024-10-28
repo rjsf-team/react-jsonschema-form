@@ -23,6 +23,10 @@ should change the heading of the (upcoming) version to include a major version b
 - Fix an issue where only the first file was uploaded when users selected multiple files for upload.
 - Fixed validation regression Form not revalidating after formData change, fixing [#4343](https://github.com/rjsf-team/react-jsonschema-form/issues/4343)
 
+## @rjsf/validator-ajv8
+
+- Fixed `AJV8Validator#transformRJSFValidationErrors` to replace the error message field with either the `uiSchema`'s `ui:title` field if one exists or the `parentSchema` title if one exists. Fixes [#4348](https://github.com/rjsf-team/react-jsonschema-form/issues/4348)
+
 # 5.22.1
 
 ## Dev / docs / playground
