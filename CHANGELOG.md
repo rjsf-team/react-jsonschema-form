@@ -20,6 +20,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/core
 
+- Fix an issue where only the first file was uploaded when users selected multiple files for upload.
 - Fixed validation regression Form not revalidating after formData change, fixing [#4343](https://github.com/rjsf-team/react-jsonschema-form/issues/4343)
 
 ## @rjsf/validator-ajv8

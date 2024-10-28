@@ -1702,6 +1702,41 @@ describe('ArrayField', () => {
       );
     });
 
+    it('should handle a change event with multiple files that results the same items in the list', async () => {
+      sandbox.stub(window, 'FileReader').returns({
+        set onload(fn) {
+          fn({ target: { result: 'data:text/plain;base64,x=' } });
+        },
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        readAsDataUrl() {},
+      });
+
+      const { node, onChange } = createFormComponent({ schema });
+
+      act(() => {
+        fireEvent.change(node.querySelector('.field input[type=file]'), {
+          target: {
+            files: [
+              { name: 'file1.txt', size: 1, type: 'type' },
+              { name: 'file2.txt', size: 2, type: 'type' },
+            ],
+          },
+        });
+      });
+
+      await act(() => {
+        new Promise(setImmediate);
+      });
+
+      sinon.assert.calledWithMatch(
+        onChange.lastCall,
+        {
+          formData: ['data:text/plain;name=file1.txt;base64,x=', 'data:text/plain;name=file2.txt;base64,x='],
+        },
+        'root'
+      );
+    });
+
     it('should fill field with data', () => {
       const { node } = createFormComponent({
         schema,
