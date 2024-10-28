@@ -16,6 +16,18 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 5.22.2
+
+## @rjsf/core
+
+- Fixed validation regression Form not revalidating after formData change, fixing [#4343](https://github.com/rjsf-team/react-jsonschema-form/issues/4343)
+
+# 5.22.1
+
+## Dev / docs / playground
+
+- Bumped peer dependencies to 5.22.x due to updated type definition and API changes in @rjsf/utils
+
 # 5.22.0
 
 ## @rjsf/core
