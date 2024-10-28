@@ -76,7 +76,7 @@ render(
 );
 ```
 
-You also can provide your own field template to a uiSchema by specifying a `ui:ArrayFieldTemplate` property.
+You also can provide your own field template to a uiSchema by specifying a `ui:ArrayFieldTemplate` property with your Component or a string value from the `Registry`.
 
 ```tsx
 import { UiSchema } from '@rjsf/utils';
@@ -163,7 +163,7 @@ render(
 );
 ```
 
-You also can provide your own template to a uiSchema by specifying a `ui:ArrayFieldDescriptionTemplate` property.
+You also can provide your own template to a uiSchema by specifying a `ui:ArrayFieldDescriptionTemplate` property with your Component or a string value from the `Registry`.
 
 ```tsx
 import { UiSchema } from '@rjsf/utils';
@@ -261,7 +261,7 @@ render(
 );
 ```
 
-You also can provide your own template to a uiSchema by specifying a `ui:ArrayFieldDescriptionTemplate` property.
+You also can provide your own template to a uiSchema by specifying a `ui:ArrayFieldDescriptionTemplate` property with your Component or a string value from the `Registry`.
 
 ```tsx
 import { UiSchema } from '@rjsf/utils';
@@ -615,7 +615,7 @@ render(
 );
 ```
 
-You also can provide your own field template to a uiSchema by specifying a `ui:FieldTemplate` property.
+You also can provide your own field template to a uiSchema by specifying a `ui:FieldTemplate` property with your Component or a string value from the `Registry`.
 
 ```tsx
 import { UiSchema } from '@rjsf/utils';
@@ -693,7 +693,7 @@ render(
 );
 ```
 
-You also can provide your own field template to a uiSchema by specifying a `ui:ObjectFieldTemplate` property.
+You also can provide your own field template to a uiSchema by specifying a `ui:ObjectFieldTemplate` property with your Component or a string value from the `Registry`.
 
 ```tsx
 import { UiSchema } from '@rjsf/utils';

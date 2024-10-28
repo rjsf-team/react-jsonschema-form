@@ -86,4 +86,19 @@ describe('getTemplate', () => {
       expect(getTemplate<typeof name>(name, registry, uiOptions)).toBe(CustomTemplate);
     });
   });
+  it('returns the template from registry using uiOptions key when available', () => {
+    KEYS.forEach((key) => {
+      const name = key as keyof TemplatesType;
+      expect(
+        getTemplate<typeof name>(
+          name,
+          registry,
+          Object.keys(uiOptions).reduce((uiOptions, key) => {
+            uiOptions[key] = key;
+            return uiOptions;
+          }, {})
+        )
+      ).toBe(FakeTemplate);
+    });
+  });
 });
