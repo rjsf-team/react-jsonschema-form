@@ -94,11 +94,23 @@ describe('getTemplate', () => {
           name,
           registry,
           Object.keys(uiOptions).reduce((uiOptions, key) => {
-            uiOptions[key] = key;
+            (uiOptions as Record<string, any>)[key] = key;
             return uiOptions;
           }, {})
         )
       ).toBe(FakeTemplate);
     });
+  });
+  it('returns the custom template name from the registry', () => {
+    const customTemplateKey = 'CustomTemplate';
+    registry.templates[customTemplateKey] = FakeTemplate;
+
+    expect(getTemplate(customTemplateKey, registry)).toBe(FakeTemplate);
+  });
+
+  it('returns undefined when the custom template is not in the registry', () => {
+    const customTemplateKey = 'CustomTemplate';
+
+    expect(getTemplate(customTemplateKey, registry)).toBeUndefined();
   });
 });
