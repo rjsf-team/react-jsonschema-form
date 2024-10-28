@@ -19,7 +19,9 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/utils
 
-- Updated `getTemplate()` to allow per-field customization using string key from `Registry`.
+- Updated `getTemplate()` to allow per-field customization using string key from `Registry`, fixing [#3695](https://github.com/rjsf-team/react-jsonschema-form/issues/3695).
+- Updated `TemplatesType` to allow for a string key to be used to reference a custom template in the `Registry`, fixing [#3695](https://github.com/rjsf-team/react-jsonschema-form/issues/3695)
+- Updated tests to cover the new `getTemplate()` functionality
 
 ## Dev / docs / playground
 
