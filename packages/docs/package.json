@@ -1,6 +1,6 @@
 {
   "name": "@rjsf/docs",
-  "version": "5.22.2",
+  "version": "5.22.3",
   "private": true,
   "scripts": {
     "docusaurus": "docusaurus",
