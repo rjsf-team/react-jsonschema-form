@@ -9,6 +9,7 @@ import {
 } from '../../src/schema/getDefaultFormState';
 import { RECURSIVE_REF, RECURSIVE_REF_ALLOF } from '../testUtils/testData';
 import { TestValidatorType } from './types';
+import { resolveDependencies } from '../../src/schema/retrieveSchema';
 
 export default function getDefaultFormStateTest(testValidator: TestValidatorType) {
   describe('getDefaultFormState()', () => {
@@ -78,8 +79,178 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         fromFormData: 'fromFormData',
       });
     });
+    it('test an object with deep nested dependencies with formData', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          nestedObject: {
+            type: 'object',
+            properties: {
+              first: {
+                type: 'string',
+                enum: ['no', 'yes'],
+                default: 'no',
+              },
+            },
+            dependencies: {
+              first: {
+                oneOf: [
+                  {
+                    properties: {
+                      first: {
+                        enum: ['yes'],
+                      },
+                      second: {
+                        type: 'object',
+                        properties: {
+                          deeplyNestedThird: {
+                            type: 'string',
+                            enum: ['before', 'after'],
+                            default: 'before',
+                          },
+                        },
+                      },
+                    },
+                  },
+                  {
+                    properties: {
+                      first: {
+                        enum: ['no'],
+                      },
+                    },
+                  },
+                ],
+              },
+            },
+          },
+        },
+      };
+
+      // Mock isValid so that withExactlyOneSubschema works as expected
+      testValidator.setReturnValues({
+        isValid: [
+          true, // First oneOf... first === first
+          false, // Second oneOf... second !== first
+        ],
+      });
+      expect(
+        getDefaultFormState(
+          testValidator,
+          schema,
+          {
+            nestedObject: {
+              first: 'yes',
+            },
+          },
+          schema,
+          false,
+          {
+            emptyObjectFields: 'populateAllDefaults',
+            allOf: 'skipDefaults',
+            arrayMinItems: {
+              populate: 'populate' as any,
+              mergeExtraDefaults: false,
+            },
+            mergeDefaultsIntoFormData: 'useFormDataIfPresent',
+          }
+        )
+      ).toEqual({
+        nestedObject: {
+          first: 'yes',
+          second: {
+            deeplyNestedThird: 'before',
+          },
+        },
+      });
+    });
     it('getInnerSchemaForArrayItem() item of type boolean returns empty schema', () => {
       expect(getInnerSchemaForArrayItem({ items: [true] }, AdditionalItemsHandling.Ignore, 0)).toEqual({});
+    });
+    describe('resolveDependencies()', () => {
+      it('test an object with dependencies', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            first: {
+              type: 'string',
+              enum: ['no', 'yes'],
+              default: 'no',
+            },
+          },
+          dependencies: {
+            first: {
+              oneOf: [
+                {
+                  properties: {
+                    first: {
+                      enum: ['yes'],
+                    },
+                    second: {
+                      type: 'object',
+                      properties: {
+                        deeplyNestedThird: {
+                          type: 'string',
+                          enum: ['before', 'after'],
+                          default: 'before',
+                        },
+                      },
+                    },
+                  },
+                },
+                {
+                  properties: {
+                    first: {
+                      enum: ['no'],
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        };
+
+        // Mock isValid so that withExactlyOneSubschema works as expected
+        testValidator.setReturnValues({
+          isValid: [
+            true, // First oneOf... first === first
+            false, // Second oneOf... second !== first
+          ],
+        });
+        expect(
+          resolveDependencies(
+            testValidator,
+            schema,
+            schema,
+            false,
+            [],
+            {
+              first: 'yes',
+            },
+            undefined
+          )
+        ).toEqual([
+          {
+            type: 'object',
+            properties: {
+              first: {
+                type: 'string',
+                enum: ['no', 'yes'],
+                default: 'no',
+              },
+              second: {
+                type: 'object',
+                properties: {
+                  deeplyNestedThird: {
+                    type: 'string',
+                    enum: ['before', 'after'],
+                    default: 'before',
+                  },
+                },
+              },
+            },
+          },
+        ]);
+      });
     });
     describe('computeDefaults()', () => {
       it('test computeDefaults that is passed a schema with a ref', () => {
@@ -400,6 +571,78 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             rawFormData: {},
           })
         ).toEqual({});
+      });
+      it('test an object with deep nested dependencies with formData', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            nestedObject: {
+              type: 'object',
+              properties: {
+                first: {
+                  type: 'string',
+                  enum: ['no', 'yes'],
+                  default: 'no',
+                },
+              },
+              dependencies: {
+                first: {
+                  oneOf: [
+                    {
+                      properties: {
+                        first: {
+                          enum: ['yes'],
+                        },
+                        second: {
+                          type: 'object',
+                          properties: {
+                            deeplyNestedThird: {
+                              type: 'string',
+                              enum: ['before', 'after'],
+                              default: 'before',
+                            },
+                          },
+                        },
+                      },
+                    },
+                    {
+                      properties: {
+                        first: {
+                          enum: ['no'],
+                        },
+                      },
+                    },
+                  ],
+                },
+              },
+            },
+          },
+        };
+
+        // Mock isValid so that withExactlyOneSubschema works as expected
+        testValidator.setReturnValues({
+          isValid: [
+            true, // First oneOf... first === first
+            false, // Second oneOf... second !== first
+          ],
+        });
+        expect(
+          computeDefaults(testValidator, schema, {
+            rootSchema: schema,
+            rawFormData: {
+              nestedObject: {
+                first: 'yes',
+              },
+            },
+          })
+        ).toEqual({
+          nestedObject: {
+            first: 'no',
+            second: {
+              deeplyNestedThird: 'before',
+            },
+          },
+        });
       });
       it('test computeDefaults handles an invalid property schema', () => {
         const schema: RJSFSchema = {

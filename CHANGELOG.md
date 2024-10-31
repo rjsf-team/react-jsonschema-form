@@ -27,6 +27,12 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Updated `advanced-customization/custom-templates` with the new feature.
 
+# 5.22.3 
+
+## @rjsf/utils
+
+- Fixed deep nested dependencies issue with assigning values to formData, fixing [[#4334](https://github.com/rjsf-team/react-jsonschema-form/issues/4334)]
+
 # 5.22.2
 
 ## @rjsf/core
