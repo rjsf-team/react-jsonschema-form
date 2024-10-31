@@ -644,6 +644,49 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           },
         });
       });
+      it('test an array with defaults with no formData', () => {
+        const schema: RJSFSchema = {
+          type: 'array',
+          minItems: 4,
+          default: ['Raphael', 'Michaelangelo'],
+          items: {
+            type: 'string',
+            default: 'Unknown',
+          },
+        };
+
+        expect(
+          computeDefaults(testValidator, schema, {
+            rootSchema: schema,
+            includeUndefinedValues: 'excludeObjectChildren',
+          })
+        ).toEqual(['Raphael', 'Michaelangelo', 'Unknown', 'Unknown']);
+      });
+      it('test an array with defaults with empty array as formData', () => {
+        const schema: RJSFSchema = {
+          type: 'array',
+          minItems: 4,
+          default: ['Raphael', 'Michaelangelo'],
+          items: {
+            type: 'string',
+            default: 'Unknown',
+          },
+        };
+
+        expect(
+          computeDefaults(testValidator, schema, {
+            rootSchema: schema,
+            rawFormData: [],
+            includeUndefinedValues: 'excludeObjectChildren',
+            experimental_defaultFormStateBehavior: {
+              arrayMinItems: {
+                mergeExtraDefaults: true,
+                populate: 'all',
+              },
+            },
+          })
+        ).toEqual(['Raphael', 'Michaelangelo', 'Unknown', 'Unknown']);
+      });
       it('test computeDefaults handles an invalid property schema', () => {
         const schema: RJSFSchema = {
           type: 'object',

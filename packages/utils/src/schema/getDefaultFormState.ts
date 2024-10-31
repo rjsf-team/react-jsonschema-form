@@ -432,11 +432,15 @@ export function getArrayDefaults<T = any, S extends StrictRJSFSchema = RJSFSchem
 ): T | T[] | undefined {
   const schema: S = rawSchema;
 
-  const neverPopulate = experimental_defaultFormStateBehavior?.arrayMinItems?.populate === 'never';
-  const ignoreMinItemsFlagSet = experimental_defaultFormStateBehavior?.arrayMinItems?.populate === 'requiredOnly';
+  const arrayMinItemsStateBehavior = experimental_defaultFormStateBehavior?.arrayMinItems;
+  const arrayMinItemsPopulate = arrayMinItemsStateBehavior?.populate;
+  const arrayMergeExtraDefaults = arrayMinItemsStateBehavior?.mergeExtraDefaults;
+
+  const neverPopulate = arrayMinItemsPopulate === 'never';
+  const ignoreMinItemsFlagSet = arrayMinItemsPopulate === 'requiredOnly';
+  const isPopulateAll = arrayMinItemsPopulate === 'all' || (!neverPopulate && !ignoreMinItemsFlagSet);
+  const computeSkipPopulate = arrayMinItemsStateBehavior?.computeSkipPopulate ?? (() => false);
   const isSkipEmptyDefaults = experimental_defaultFormStateBehavior?.emptyObjectFields === 'skipEmptyDefaults';
-  const computeSkipPopulate =
-    experimental_defaultFormStateBehavior?.arrayMinItems?.computeSkipPopulate ?? (() => false);
 
   const emptyDefault = isSkipEmptyDefaults ? undefined : [];
 
@@ -460,7 +464,7 @@ export function getArrayDefaults<T = any, S extends StrictRJSFSchema = RJSFSchem
     if (neverPopulate) {
       defaults = rawFormData;
     } else {
-      defaults = rawFormData.map((item: T, idx: number) => {
+      const itemDefaults = rawFormData.map((item: T, idx: number) => {
         return computeDefaults<T, S, F>(validator, schemaItem, {
           rootSchema,
           _recurseList,
@@ -470,6 +474,11 @@ export function getArrayDefaults<T = any, S extends StrictRJSFSchema = RJSFSchem
           required,
         });
       }) as T[];
+
+      // If the populate 'requiredOnly' flag is set then we only merge and include extra defaults if they are required.
+      // Or if populate 'all' is set we merge and include extra defaults.
+      const mergeExtraDefaults = ((ignoreMinItemsFlagSet && required) || isPopulateAll) && arrayMergeExtraDefaults;
+      defaults = mergeDefaultsWithFormData(defaults, itemDefaults, mergeExtraDefaults);
     }
   }
 
