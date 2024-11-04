@@ -222,6 +222,16 @@ export type FormValidation<T = any> = FieldValidation & {
   [key in keyof T]?: FormValidation<T[key]>;
 };
 
+/** The base properties passed to various RJSF components. */
+export type RJSFBaseProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any> = {
+  /** The schema object for the field being described */
+  schema: S;
+  /** The uiSchema object for this description field */
+  uiSchema?: UiSchema<T, S, F>;
+  /** The `registry` object */
+  registry: Registry<T, S, F>;
+};
+
 /** The properties that are passed to an `ErrorListTemplate` implementation */
 export type ErrorListProps<
   T = any,
@@ -274,15 +284,6 @@ export type RegistryFieldsType<T = any, S extends StrictRJSFSchema = RJSFSchema,
 export type RegistryWidgetsType<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any> = {
   /** A `Widget` indexed by `name` */
   [name: string]: Widget<T, S, F>;
-};
-
-export type RJSFBaseProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any> = {
-  /** The schema object for the field being described */
-  schema: S;
-  /** The uiSchema object for this description field */
-  uiSchema?: UiSchema<T, S, F>;
-  /** The `registry` object */
-  registry: Registry<T, S, F>;
 };
 
 /** The set of RJSF templates that can be overridden by themes or users */
@@ -994,7 +995,6 @@ export interface ValidatorType<T = any, S extends StrictRJSFSchema = RJSFSchema,
     transformErrors?: ErrorTransformer<T, S, F>,
     uiSchema?: UiSchema<T, S, F>
   ): ValidationData<T>;
-
   /** Converts an `errorSchema` into a list of `RJSFValidationErrors`
    *
    * @param errorSchema - The `ErrorSchema` instance to convert
@@ -1003,7 +1003,6 @@ export interface ValidatorType<T = any, S extends StrictRJSFSchema = RJSFSchema,
    *        the next major release.
    */
   toErrorList(errorSchema?: ErrorSchema<T>, fieldPath?: string[]): RJSFValidationError[];
-
   /** Validates data against a schema, returning true if the data is valid, or
    * false otherwise. If the schema is invalid, then this function will return
    * false.
@@ -1013,7 +1012,6 @@ export interface ValidatorType<T = any, S extends StrictRJSFSchema = RJSFSchema,
    * @param rootSchema - The root schema used to provide $ref resolutions
    */
   isValid(schema: S, formData: T | undefined, rootSchema: S): boolean;
-
   /** Runs the pure validation of the `schema` and `formData` without any of the RJSF functionality. Provided for use
    * by the playground. Returns the `errors` from the validation
    *
@@ -1021,7 +1019,6 @@ export interface ValidatorType<T = any, S extends StrictRJSFSchema = RJSFSchema,
    * @param formData - The form data to validate
    */
   rawValidation<Result = any>(schema: S, formData?: T): { errors?: Result[]; validationError?: Error };
-
   /** An optional function that can be used to reset validator implementation. Useful for clear schemas in the AJV
    * instance for tests.
    */
@@ -1039,7 +1036,6 @@ export interface SchemaUtilsType<T = any, S extends StrictRJSFSchema = RJSFSchem
    * @returns - The `ValidatorType`
    */
   getValidator(): ValidatorType<T, S, F>;
-
   /** Determines whether either the `validator` and `rootSchema` differ from the ones associated with this instance of
    * the `SchemaUtilsType`. If either `validator` or `rootSchema` are falsy, then return false to prevent the creation
    * of a new `SchemaUtilsType` with incomplete properties.
@@ -1056,7 +1052,6 @@ export interface SchemaUtilsType<T = any, S extends StrictRJSFSchema = RJSFSchem
     experimental_defaultFormStateBehavior?: Experimental_DefaultFormStateBehavior,
     experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>
   ): boolean;
-
   /** Returns the superset of `formData` that includes the given set updated to include any missing fields that have
    * computed to have defaults provided in the `schema`.
    *
@@ -1072,7 +1067,6 @@ export interface SchemaUtilsType<T = any, S extends StrictRJSFSchema = RJSFSchem
     formData?: T,
     includeUndefinedValues?: boolean | 'excludeObjectChildren'
   ): T | T[] | undefined;
-
   /** Determines whether the combination of `schema` and `uiSchema` properties indicates that the label for the `schema`
    * should be displayed in a UI.
    *
@@ -1082,7 +1076,6 @@ export interface SchemaUtilsType<T = any, S extends StrictRJSFSchema = RJSFSchem
    * @returns - True if the label should be displayed or false if it should not
    */
   getDisplayLabel(schema: S, uiSchema?: UiSchema<T, S, F>, globalOptions?: GlobalUISchemaOptions): boolean;
-
   /** Determines which of the given `options` provided most closely matches the `formData`.
    * Returns the index of the option that is valid and is the closest match, or 0 if there is no match.
    *
@@ -1102,7 +1095,6 @@ export interface SchemaUtilsType<T = any, S extends StrictRJSFSchema = RJSFSchem
     selectedOption?: number,
     discriminatorField?: string
   ): number;
-
   /** Given the `formData` and list of `options`, attempts to find the index of the first option that matches the data.
    * Always returns the first option if there is nothing that matches.
    *
@@ -1113,7 +1105,6 @@ export interface SchemaUtilsType<T = any, S extends StrictRJSFSchema = RJSFSchem
    * @returns - The firstindex of the matched option or 0 if none is available
    */
   getFirstMatchingOption(formData: T | undefined, options: S[], discriminatorField?: string): number;
-
   /** Given the `formData` and list of `options`, attempts to find the index of the option that best matches the data.
    * Deprecated, use `getFirstMatchingOption()` instead.
    *
@@ -1125,7 +1116,6 @@ export interface SchemaUtilsType<T = any, S extends StrictRJSFSchema = RJSFSchem
    * @deprecated
    */
   getMatchingOption(formData: T | undefined, options: S[], discriminatorField?: string): number;
-
   /** Checks to see if the `schema` and `uiSchema` combination represents an array of files
    *
    * @param schema - The schema for which check for array of files flag is desired
@@ -1133,21 +1123,18 @@ export interface SchemaUtilsType<T = any, S extends StrictRJSFSchema = RJSFSchem
    * @returns - True if schema/uiSchema contains an array of files, otherwise false
    */
   isFilesArray(schema: S, uiSchema?: UiSchema<T, S, F>): boolean;
-
   /** Checks to see if the `schema` combination represents a multi-select
    *
    * @param schema - The schema for which check for a multi-select flag is desired
    * @returns - True if schema contains a multi-select, otherwise false
    */
   isMultiSelect(schema: S): boolean;
-
   /** Checks to see if the `schema` combination represents a select
    *
    * @param schema - The schema for which check for a select flag is desired
    * @returns - True if schema contains a select, otherwise false
    */
   isSelect(schema: S): boolean;
-
   /** Merges the errors in `additionalErrorSchema` into the existing `validationData` by combining the hierarchies in
    * the two `ErrorSchema`s and then appending the error list from the `additionalErrorSchema` obtained by calling
    * `validator.toErrorList()` onto the `errors` in the `validationData`. If no `additionalErrorSchema` is passed, then
@@ -1160,7 +1147,6 @@ export interface SchemaUtilsType<T = any, S extends StrictRJSFSchema = RJSFSchem
    *        removed in the next major release.
    */
   mergeValidationData(validationData: ValidationData<T>, additionalErrorSchema?: ErrorSchema<T>): ValidationData<T>;
-
   /** Retrieves an expanded schema that has had all of its conditions, additional properties, references and
    * dependencies resolved and merged into the `schema` given a `rawFormData` that is used to do the potentially
    * recursive resolution.
@@ -1170,7 +1156,6 @@ export interface SchemaUtilsType<T = any, S extends StrictRJSFSchema = RJSFSchem
    * @returns - The schema having its conditions, additional properties, references and dependencies resolved
    */
   retrieveSchema(schema: S, formData?: T): S;
-
   /** Sanitize the `data` associated with the `oldSchema` so it is considered appropriate for the `newSchema`. If the
    * new schema does not contain any properties, then `undefined` is returned to clear all the form data. Due to the
    * nature of schemas, this sanitization happens recursively for nested objects of data. Also, any properties in the
@@ -1183,7 +1168,6 @@ export interface SchemaUtilsType<T = any, S extends StrictRJSFSchema = RJSFSchem
    *      to `undefined`. Will return `undefined` if the new schema is not an object containing properties.
    */
   sanitizeDataForNewSchema(newSchema?: S, oldSchema?: S, data?: any): T;
-
   /** Generates an `IdSchema` object for the `schema`, recursively
    *
    * @param schema - The schema for which the display label flag is desired
@@ -1194,7 +1178,6 @@ export interface SchemaUtilsType<T = any, S extends StrictRJSFSchema = RJSFSchem
    * @returns - The `IdSchema` object for the `schema`
    */
   toIdSchema(schema: S, id?: string, formData?: T, idPrefix?: string, idSeparator?: string): IdSchema<T>;
-
   /** Generates an `PathSchema` object for the `schema`, recursively
    *
    * @param schema - The schema for which the display label flag is desired
