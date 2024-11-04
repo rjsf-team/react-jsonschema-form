@@ -333,7 +333,7 @@ export type TemplatesType<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
   };
 } & {
   /** Allow this to support any named `ComponentType` or an object of named `ComponentType`s */
-  [key: string]: ComponentType<any> | { [key: string]: ComponentType<any> };
+  [key: string]: ComponentType<any> | { [key: string]: ComponentType<any> } | undefined;
 };
 
 /** The set of UiSchema options that can be set globally and used as fallbacks at an individual template, field or
