@@ -432,9 +432,8 @@ export function getArrayDefaults<T = any, S extends StrictRJSFSchema = RJSFSchem
 ): T | T[] | undefined {
   const schema: S = rawSchema;
 
-  const arrayMinItemsStateBehavior = experimental_defaultFormStateBehavior?.arrayMinItems;
-  const arrayMinItemsPopulate = arrayMinItemsStateBehavior?.populate;
-  const arrayMergeExtraDefaults = arrayMinItemsStateBehavior?.mergeExtraDefaults;
+  const arrayMinItemsStateBehavior = experimental_defaultFormStateBehavior?.arrayMinItems ?? {};
+  const { populate: arrayMinItemsPopulate, mergeExtraDefaults: arrayMergeExtraDefaults } = arrayMinItemsStateBehavior;
 
   const neverPopulate = arrayMinItemsPopulate === 'never';
   const ignoreMinItemsFlagSet = arrayMinItemsPopulate === 'requiredOnly';
