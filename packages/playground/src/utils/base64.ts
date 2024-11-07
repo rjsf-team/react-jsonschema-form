@@ -16,7 +16,7 @@ const base64 = (function () {
         const { TextEncoder } = require('util');
         encoder = new TextEncoder();
       }
-      return btoa(String.fromCharCode(...encoder.encode(text)));
+      return btoa(safeFromCharCode(encoder, text));
     },
     decode(text: string): string {
       let decoder: any;
@@ -30,5 +30,22 @@ const base64 = (function () {
     },
   };
 })();
+
+/**
+ * This function is a workaround for the fact that the String.fromCharCode method can throw a "Maximum call stack size exceeded" error if you try to pass too many arguments to it at once.
+ * This is because String.fromCharCode expects individual character codes as arguments and javascript has a limit on the number of arguments that can be passed to a function.
+ */
+function safeFromCharCode(encoder: any, text: string): string {
+  const codes = encoder.encode(text);
+  const CHUNK_SIZE = 0x9000; // 36864
+  let result = '';
+
+  for (let i = 0; i < codes.length; i += CHUNK_SIZE) {
+    const chunk = codes.slice(i, i + CHUNK_SIZE);
+    result += String.fromCharCode(...chunk);
+  }
+
+  return result;
+}
 
 export default base64;
