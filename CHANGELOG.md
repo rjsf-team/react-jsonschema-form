@@ -16,6 +16,12 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 5.22.4
+
+## Dev / docs / playground
+
+- Fix issue 'Maximum call stack size exceeded' with playground share with large content.
+
 # 5.22.3 
 
 ## @rjsf/utils
