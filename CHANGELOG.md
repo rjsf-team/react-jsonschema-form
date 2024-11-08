@@ -18,6 +18,10 @@ should change the heading of the (upcoming) version to include a major version b
 
 # 5.22.4
 
+## @rjsf/utils
+
+- Fixed issue with array schema defaults not applying properly when formData is an empty array, fixing [#4335](https://github.com/rjsf-team/react-jsonschema-form/issues/4335).
+
 ## Dev / docs / playground
 
 - Fix issue 'Maximum call stack size exceeded' with playground share with large content.
@@ -26,7 +30,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/utils
 
-- Fixed deep nested dependencies issue with assigning values to formData, fixing [[#4334](https://github.com/rjsf-team/react-jsonschema-form/issues/4334)]
+- Fixed deep nested dependencies issue with assigning values to formData, fixing [#4334](https://github.com/rjsf-team/react-jsonschema-form/issues/4334)
 
 # 5.22.2
 
