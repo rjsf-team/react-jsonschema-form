@@ -165,6 +165,43 @@ describe('anyOf', () => {
     );
   });
 
+  it('should assign a default value and set defaults on option change for scalar types schemas', () => {
+    const { node, onChange } = createFormComponent({
+      schema: {
+        type: 'object',
+        properties: {
+          foo: {
+            anyOf: [
+              {
+                type: 'string',
+                default: 'defaultfoo',
+              },
+              {
+                type: 'boolean',
+                default: true,
+              },
+            ],
+          },
+        },
+      },
+    });
+    sinon.assert.calledWithMatch(onChange.lastCall, {
+      formData: { foo: 'defaultfoo' },
+    });
+
+    const $select = node.querySelector('select');
+
+    act(() => {
+      fireEvent.change($select, {
+        target: { value: $select.options[1].value },
+      });
+    });
+
+    sinon.assert.calledWithMatch(onChange.lastCall, {
+      formData: { foo: true },
+    });
+  });
+
   it('should assign a default value and set defaults on option change when using references', () => {
     const { node, onChange } = createFormComponent({
       schema: {

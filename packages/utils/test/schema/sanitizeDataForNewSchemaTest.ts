@@ -483,5 +483,16 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
       };
       expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, ['qwerty', 'asdfg'])).toEqual({});
     });
+
+    it('returns default value when new schema is a scalar schema', () => {
+      const oldSchema: RJSFSchema = {
+        type: 'string',
+      };
+      const newSchema: RJSFSchema = {
+        type: 'boolean',
+        default: true,
+      };
+      expect(schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, 'oldValue')).toEqual(true);
+    });
   });
 }
