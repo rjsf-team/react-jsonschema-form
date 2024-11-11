@@ -39,7 +39,7 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
   onFocus,
   placeholder,
 }: WidgetProps<T, S, F>) {
-  const { enumOptions, enumDisabled, emptyValue: optEmptyVal } = options;
+  const { enumOptions, enumDisabled, emptyValue: optEmptyVal, optgroups } = options;
   const emptyValue = multiple ? [] : '';
 
   const handleFocus = useCallback(
@@ -47,7 +47,7 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
       const newValue = getValue(event, multiple);
       return onFocus(id, enumOptionsValueForIndex<S>(newValue, enumOptions, optEmptyVal));
     },
-    [onFocus, id, schema, multiple, enumOptions, optEmptyVal]
+    [onFocus, id, schema, multiple, options]
   );
 
   const handleBlur = useCallback(
@@ -55,7 +55,7 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
       const newValue = getValue(event, multiple);
       return onBlur(id, enumOptionsValueForIndex<S>(newValue, enumOptions, optEmptyVal));
     },
-    [onBlur, id, schema, multiple, enumOptions, optEmptyVal]
+    [onBlur, id, schema, multiple, options]
   );
 
   const handleChange = useCallback(
@@ -63,11 +63,41 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
       const newValue = getValue(event, multiple);
       return onChange(enumOptionsValueForIndex<S>(newValue, enumOptions, optEmptyVal));
     },
-    [onChange, schema, multiple, enumOptions, optEmptyVal]
+    [onChange, schema, multiple, options]
   );
 
   const selectedIndexes = enumOptionsIndexForValue<S>(value, enumOptions, multiple);
-  const showPlaceholderOption = !multiple && schema.default === undefined;
+
+  let opts = null
+  if (optgroups) {
+    let enumOptionFromValue = new Map()
+    enumOptions.forEach((enumOption, i) => {
+      enumOptionFromValue.set(enumOption.value, [enumOption, i])
+    })
+    opts = Object.keys(optgroups).map(optgroup => {
+      return (
+        <optgroup key={optgroup} label={optgroup}>{optgroups[optgroup].map(value => {
+          if (!enumOptionFromValue.has(value)) return null
+          const disabled = enumDisabled && enumDisabled.indexOf(value) !== -1;
+          let [{ label }, i] = enumOptionFromValue.get(value)
+          return (
+            <option key={i} value={String(i)} disabled={disabled}>
+              {label}
+            </option>
+          );
+        })}</optgroup>
+      )
+    })
+  } else {
+    opts = Array.isArray(enumOptions) && enumOptions.map(({ value, label }, i) => {
+      const disabled = enumDisabled && enumDisabled.indexOf(value) !== -1;
+      return (
+        <option key={i} value={String(i)} disabled={disabled}>
+          {label}
+        </option>
+      );
+    });
+  }
 
   return (
     <select
@@ -84,16 +114,8 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
       onChange={handleChange}
       aria-describedby={ariaDescribedByIds<T>(id)}
     >
-      {showPlaceholderOption && <option value=''>{placeholder}</option>}
-      {Array.isArray(enumOptions) &&
-        enumOptions.map(({ value, label }, i) => {
-          const disabled = enumDisabled && enumDisabled.indexOf(value) !== -1;
-          return (
-            <option key={i} value={String(i)} disabled={disabled}>
-              {label}
-            </option>
-          );
-        })}
+      {!multiple && schema.default === undefined && <option value=''>{placeholder}</option>}
+      {opts}
     </select>
   );
 }

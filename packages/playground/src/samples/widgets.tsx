@@ -106,6 +106,11 @@ const widgets: Sample = {
           },
         ],
       },
+      selectWidgetOptions3: {
+        title: 'Custom select widget with options grouped by optgroups',
+        type: 'string',
+        enum: ['foo', 'bar'],
+      },
     },
   },
   uiSchema: {
@@ -196,6 +201,14 @@ const widgets: Sample = {
         backgroundColor: 'pink',
       },
     },
+    selectWidgetOptions3: {
+      'ui:options': {
+        'optgroups': {
+          'lipsum': ['foo'],
+          'dolorem': ['bar']
+        }
+      }
+    }
   },
   formData: {
     stringFormats: {
