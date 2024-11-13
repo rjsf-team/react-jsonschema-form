@@ -16,6 +16,21 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 5.23.0
+
+## @rjsf/core
+
+- Updated `SchemaField` to no longer make schema fields with const read-only by default, partially fixing [#4344](https://github.com/rjsf-team/react-jsonschema-form/issues/4344)
+
+## @rjsf/utils
+
+- Updated `Experimental_DefaultFormStateBehavior` to add a new `constAsDefaults` option
+- Updated `getDefaultFormState()` to use the new `constAsDefaults` option to control how const is used for defaulting, fixing [#4344](https://github.com/rjsf-team/react-jsonschema-form/issues/4344), [#4361](https://github.com/rjsf-team/react-jsonschema-form/issues/4361) and [#4377](https://github.com/rjsf-team/react-jsonschema-form/issues/4377)
+
+## Dev / docs / playground
+
+- Updated the playground to add a selector for the `constAsDefaults` option
+
 # 5.22.4
 
 ## @rjsf/utils
