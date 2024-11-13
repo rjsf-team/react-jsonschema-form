@@ -181,7 +181,7 @@ render(
     schema={schema}
     validator={validator}
     experimental_defaultFormStateBehavior={{
-      arrayMinItems: { populate: 'requiredOnly' },
+      emptyObjectFields: 'populateRequiredDefaults',
     }}
   />,
   document.getElementById('app')
