@@ -47,7 +47,7 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
       const newValue = getValue(event, multiple);
       return onFocus(id, enumOptionsValueForIndex<S>(newValue, enumOptions, optEmptyVal));
     },
-    [onFocus, id, schema, multiple, options]
+    [onFocus, id, schema, multiple, enumOptions, optEmptyVal]
   );
 
   const handleBlur = useCallback(
@@ -55,7 +55,7 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
       const newValue = getValue(event, multiple);
       return onBlur(id, enumOptionsValueForIndex<S>(newValue, enumOptions, optEmptyVal));
     },
-    [onBlur, id, schema, multiple, options]
+    [onBlur, id, schema, multiple, enumOptions, optEmptyVal]
   );
 
   const handleChange = useCallback(
@@ -63,7 +63,7 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
       const newValue = getValue(event, multiple);
       return onChange(enumOptionsValueForIndex<S>(newValue, enumOptions, optEmptyVal));
     },
-    [onChange, schema, multiple, options]
+    [onChange, schema, multiple, enumOptions, optEmptyVal]
   );
 
   const selectedIndexes = enumOptionsIndexForValue<S>(value, enumOptions, multiple);
