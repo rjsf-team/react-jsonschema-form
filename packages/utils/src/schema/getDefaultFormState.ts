@@ -241,6 +241,7 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
         includeUndefinedValues,
         _recurseList,
         experimental_defaultFormStateBehavior,
+        experimental_customMergeAllOf,
         parentDefaults: Array.isArray(parentDefaults) ? parentDefaults[idx] : undefined,
         rawFormData: formData as T,
         required,
@@ -268,7 +269,8 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
         isEmpty(formData) ? undefined : formData,
         oneOf as S[],
         0,
-        discriminator
+        discriminator,
+        experimental_customMergeAllOf
       )
     ] as S;
     schemaToCompute = mergeSchemas(remaining, schemaToCompute) as S;
@@ -285,7 +287,8 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
         isEmpty(formData) ? undefined : formData,
         anyOf as S[],
         0,
-        discriminator
+        discriminator,
+        experimental_customMergeAllOf
       )
     ] as S;
     schemaToCompute = mergeSchemas(remaining, schemaToCompute) as S;
@@ -297,6 +300,7 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
       includeUndefinedValues,
       _recurseList: updatedRecurseList,
       experimental_defaultFormStateBehavior: experimental_dfsb_to_compute,
+      experimental_customMergeAllOf,
       parentDefaults: defaults as T | undefined,
       rawFormData: formData as T,
       required,
@@ -404,6 +408,7 @@ export function getObjectDefaults<T = any, S extends StrictRJSFSchema = RJSFSche
           rootSchema,
           _recurseList,
           experimental_defaultFormStateBehavior,
+          experimental_customMergeAllOf,
           includeUndefinedValues: includeUndefinedValues === true,
           parentDefaults: get(defaults, [key]),
           rawFormData: get(formData, [key]),
@@ -440,6 +445,7 @@ export function getArrayDefaults<T = any, S extends StrictRJSFSchema = RJSFSchem
     rootSchema = {} as S,
     _recurseList = [],
     experimental_defaultFormStateBehavior = undefined,
+    experimental_customMergeAllOf = undefined,
     required,
   }: ComputeDefaultsProps<T, S> = {},
   defaults?: T | T[] | undefined
@@ -465,6 +471,7 @@ export function getArrayDefaults<T = any, S extends StrictRJSFSchema = RJSFSchem
         rootSchema,
         _recurseList,
         experimental_defaultFormStateBehavior,
+        experimental_customMergeAllOf,
         parentDefaults: item,
         required,
       });
@@ -482,6 +489,7 @@ export function getArrayDefaults<T = any, S extends StrictRJSFSchema = RJSFSchem
           rootSchema,
           _recurseList,
           experimental_defaultFormStateBehavior,
+          experimental_customMergeAllOf,
           rawFormData: item,
           parentDefaults: get(defaults, [idx]),
           required,
@@ -513,7 +521,7 @@ export function getArrayDefaults<T = any, S extends StrictRJSFSchema = RJSFSchem
   const defaultsLength = Array.isArray(defaults) ? defaults.length : 0;
   if (
     !schema.minItems ||
-    isMultiSelect<T, S, F>(validator, schema, rootSchema) ||
+    isMultiSelect<T, S, F>(validator, schema, rootSchema, experimental_customMergeAllOf) ||
     computeSkipPopulate<T, S, F>(validator, schema, rootSchema) ||
     schema.minItems <= defaultsLength
   ) {
@@ -531,6 +539,7 @@ export function getArrayDefaults<T = any, S extends StrictRJSFSchema = RJSFSchem
       rootSchema,
       _recurseList,
       experimental_defaultFormStateBehavior,
+      experimental_customMergeAllOf,
       required,
     })
   ) as T[];
