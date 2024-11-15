@@ -365,13 +365,20 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
  * @param theSchema - The schema for which the existing additional properties is desired
  * @param [rootSchema] - The root schema, used to primarily to look up `$ref`s * @param validator
  * @param [aFormData] - The current formData, if any, to assist retrieving a schema
+ * @param [experimental_customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
  * @returns - The updated schema with additional properties stubbed
  */
 export function stubExistingAdditionalProperties<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
->(validator: ValidatorType<T, S, F>, theSchema: S, rootSchema?: S, aFormData?: T): S {
+>(
+  validator: ValidatorType<T, S, F>,
+  theSchema: S,
+  rootSchema?: S,
+  aFormData?: T,
+  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>
+): S {
   // Clone the schema so that we don't ruin the consumer's original
   const schema = {
     ...theSchema,
@@ -393,7 +400,8 @@ export function stubExistingAdditionalProperties<
           validator,
           { $ref: get(schema.additionalProperties, [REF_KEY]) } as S,
           rootSchema,
-          formData as T
+          formData as T,
+          experimental_customMergeAllOf
         );
       } else if ('type' in schema.additionalProperties!) {
         additionalProperties = { ...schema.additionalProperties };
@@ -456,7 +464,8 @@ export function retrieveSchemaInternal<
     rootSchema,
     expandAllBranches,
     recurseList,
-    rawFormData
+    rawFormData,
+    experimental_customMergeAllOf
   );
   return resolvedSchemas.flatMap((s: S) => {
     let resolvedSchema = s;
@@ -507,7 +516,13 @@ export function retrieveSchemaInternal<
     const hasAdditionalProperties =
       ADDITIONAL_PROPERTIES_KEY in resolvedSchema && resolvedSchema.additionalProperties !== false;
     if (hasAdditionalProperties) {
-      return stubExistingAdditionalProperties<T, S, F>(validator, resolvedSchema, rootSchema, rawFormData as T);
+      return stubExistingAdditionalProperties<T, S, F>(
+        validator,
+        resolvedSchema,
+        rootSchema,
+        rawFormData as T,
+        experimental_customMergeAllOf
+      );
     }
 
     return resolvedSchema;
