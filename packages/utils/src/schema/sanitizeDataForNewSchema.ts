@@ -51,8 +51,6 @@ const NO_VALUE = Symbol('no Value');
  *         - For each element in the `data` recursively sanitize the data, stopping at `maxItems` if specified
  *       - Otherwise, just return the `data` removing any values after `maxItems` if it is set
  *   - If the type of the old and new schema `items` are booleans of the same value, return `data` as is
- * - If the new schema contains a default value then:
- *   - return the default value. We expect this to be a scalar value
  * - Otherwise return `undefined`
  *
  * @param validator - An implementation of the `ValidatorType` interface that will be used when necessary
@@ -62,8 +60,7 @@ const NO_VALUE = Symbol('no Value');
  * @param [data={}] - The form data associated with the schema, defaulting to an empty object when undefined
  * @param [experimental_customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
  * @returns - The new form data, with all the fields uniquely associated with the old schema set
- *      to `undefined`. Will return `undefined` if the new schema is not an object containing properties
- *      and doesn't provide a default value
+ *      to `undefined`. Will return `undefined` if the new schema is not an object containing properties.
  */
 export default function sanitizeDataForNewSchema<
   T = any,
@@ -236,13 +233,6 @@ export default function sanitizeDataForNewSchema<
       newFormData = data;
     }
     // Also probably want to deal with `prefixItems` as tuples with the latest 2020 draft
-  }
-  // Schema contains a single scalar value
-  else {
-    const newDefaultValue = get(newSchema, 'default');
-    if (newDefaultValue !== undefined) {
-      newFormData = newDefaultValue;
-    }
   }
   return newFormData as T;
 }
