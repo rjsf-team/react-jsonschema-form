@@ -35,6 +35,7 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/core
 
 - Updated `SchemaField` to no longer make schema fields with const read-only by default, partially fixing [#4344](https://github.com/rjsf-team/react-jsonschema-form/issues/4344)
+- Fix default value population when switching between options in `MultiSchemaField` [#4375](https://github.com/rjsf-team/react-jsonschema-form/pull/4375). Fixes [#4367](https://github.com/rjsf-team/react-jsonschema-form/issues/4367)
 
 ## @rjsf/utils
 
@@ -61,7 +62,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Fix issue 'Maximum call stack size exceeded' with playground share with large content.
 
-# 5.22.3 
+# 5.22.3
 
 ## @rjsf/utils
 
@@ -137,7 +138,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/core
 
-- Updated `Form` to fix `focusOnError()` to support the ids that include dots, fixing [#4279](https://github.com/rjsf-team/react-jsonschema-form/issues/4279) 
+- Updated `Form` to fix `focusOnError()` to support the ids that include dots, fixing [#4279](https://github.com/rjsf-team/react-jsonschema-form/issues/4279)
 
 ## @rjsf/mui
 
@@ -165,7 +166,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 # 5.20.0
 
-## @rjsf/core 
+## @rjsf/core
 
 - Support allowing raising errors from within a custom Widget [#2718](https://github.com/rjsf-team/react-jsonschema-form/issues/2718)
 - Updated `ArrayField`, `BooleanField` and `StringField` to call `optionsList()` with the additional `UiSchema` parameter, fixing [#4215](https://github.com/rjsf-team/react-jsonschema-form/issues/4215) and  [#4260](https://github.com/rjsf-team/react-jsonschema-form/issues/4260)
@@ -183,7 +184,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 # 5.19.4
 
-## @rjsf/core 
+## @rjsf/core
 
 - Fix XSS when rendering schema validation errors [#4254](https://github.com/rjsf-team/react-jsonschema-form/issues/2718)
   - NOTE: This will have potential consequences if you are using the [translateString](https://rjsf-team.github.io/react-jsonschema-form/docs/api-reference/form-props/#translatestring) feature and are trying to render HTML. Switching to [Markdown](https://www.markdownguide.org/) will solve your problems.
@@ -200,7 +201,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## Dev / docs / playground
 
-- Updated the `Validator` dropdown to add `AJV8 (discriminator)` which sets the AJV validator [discriminator](https://ajv.js.org/json-schema.html#discriminator) option to `true` to support testing schemas with that option in them 
+- Updated the `Validator` dropdown to add `AJV8 (discriminator)` which sets the AJV validator [discriminator](https://ajv.js.org/json-schema.html#discriminator) option to `true` to support testing schemas with that option in them
 
 # 5.19.3
 
