@@ -240,6 +240,24 @@ describe('ErrorSchemaBuilder', () => {
     it('resetting error restores things back to an empty object', () => {
       expect(builder.resetAllErrors().ErrorSchema).toEqual({});
     });
+    it('adding duplicated error string with a path puts only the unique errors at the path', () => {
+      builder.addErrors([AN_ERROR], STRING_PATH);
+      builder.addErrors([AN_ERROR], STRING_PATH);
+      expect(builder.ErrorSchema).toEqual({
+        [STRING_PATH]: {
+          [ERRORS_KEY]: [AN_ERROR],
+        },
+      });
+    });
+
+    it('setting duplicated error string with a path puts only the unique errors at the path', () => {
+      builder.setErrors([AN_ERROR, AN_ERROR], STRING_PATH);
+      expect(builder.ErrorSchema).toEqual({
+        [STRING_PATH]: {
+          [ERRORS_KEY]: [AN_ERROR],
+        },
+      });
+    });
   });
   describe('using initial schema', () => {
     let builder: ErrorSchemaBuilder;
