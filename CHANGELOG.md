@@ -16,6 +16,20 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 5.23.1
+
+## @rjsf/chakra-ui
+
+- Updated `package.json` to restrict `@chakra-ui/react`'s peer dependency to be < 3.0.0, fixing [#4390](https://github.com/rjsf-team/react-jsonschema-form/issues/4390)
+
+## @rjsf/core
+
+- Updated `NumberField` to properly pass through the `errorSchema` and `id` in the onChange handler, fixing [#4382](https://github.com/rjsf-team/react-jsonschema-form/issues/4382)
+
+## Dev / docs / playground
+
+- Updated the peer dependencies for `@rjsf/*` to be `5.23.x`
+
 # 5.23.0
 
 ## @rjsf/core
