@@ -1037,7 +1037,7 @@ export interface ValidatorType<T = any, S extends StrictRJSFSchema = RJSFSchema,
   /** An optional function that can be used to reset validator implementation. Useful for clear schemas in the AJV
    * instance for tests.
    */
-  reset: () => void;
+  reset?: () => void;
 }
 
 /** The `SchemaUtilsType` interface provides a wrapper around the publicly exported APIs in the `@rjsf/utils/schema`

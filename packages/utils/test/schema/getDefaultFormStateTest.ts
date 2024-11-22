@@ -581,7 +581,9 @@ const testObjectDefault = (testValidator: TestValidatorType, expectList: ObjectD
       });
 
       // Reset the testValidator
-      testValidator?.reset();
+      if (typeof testValidator.reset === 'function') {
+        testValidator?.reset();
+      }
     });
     it('test oneOf with const values and constAsDefaults is always', () => {
       schema = {
@@ -638,6 +640,11 @@ type ArrayDefaultExpectList = [IExpectType, IExpectType, IExpectType, IExpectTyp
  */
 const testArrayDefault = (testValidator: TestValidatorType, expectList: ArrayDefaultExpectList) => {
   describe('test array default', () => {
+    // Reset the testValidator
+    if (typeof testValidator.reset === 'function') {
+      testValidator?.reset();
+    }
+
     it('test an array with defaults with no formData', () => {
       const schema: RJSFSchema = {
         type: 'array',
