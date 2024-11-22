@@ -29,6 +29,10 @@ should change the heading of the (upcoming) version to include a major version b
 - Use `experimental_customMergeAllOf` option in functions that have previously missed it.
 - Updated `ErrorSchemaBuilder` methods `addErrors` and `setErrors` to prevent duplicate error messages.
 
+## @rjsf/validator-ajv8
+
+- Fixed issue where error messages do not have `title` or `ui:title` if a `Localizer` function is used. Fixes [#4387](https://github.com/rjsf-team/react-jsonschema-form/issues/4387)
+
 ## Dev / docs / playground
 
 - Updated the playground to add a selector for the `constAsDefaults` option
