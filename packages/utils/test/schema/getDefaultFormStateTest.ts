@@ -6,6 +6,7 @@ import {
   getDefaultBasedOnSchemaType,
   getInnerSchemaForArrayItem,
   getObjectDefaults,
+  getValidFormData,
 } from '../../src/schema/getDefaultFormState';
 import { RECURSIVE_REF, RECURSIVE_REF_ALLOF } from '../testUtils/testData';
 import { IExpectType, TestValidatorType } from './types';
@@ -2057,6 +2058,29 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           toEqual: [],
         },
       ]);
+    });
+    describe('getValidFormData', () => {
+      let schema: RJSFSchema;
+      it('Test schema with non valid formData for enum property', () => {
+        schema = {
+          type: 'string',
+          enum: ['a', 'b', 'c'],
+        };
+
+        expect(getValidFormData(testValidator, schema, schema, 'd')).toBeUndefined();
+      });
+      it('Test schema with valid formData for enum property', () => {
+        expect(getValidFormData(testValidator, schema, schema, 'b')).toEqual('b');
+      });
+      it('Test schema with const property', () => {
+        schema = {
+          type: 'string',
+          enum: ['a', 'b', 'c'],
+          const: 'a',
+        };
+
+        expect(getValidFormData(testValidator, schema, schema, 'a')).toEqual('a');
+      });
     });
     describe('default form state behavior: ignore min items unless required', () => {
       it('should return empty data for an optional array property with minItems', () => {

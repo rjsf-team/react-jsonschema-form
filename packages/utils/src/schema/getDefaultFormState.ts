@@ -353,7 +353,7 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
  * @param formData The current formData
  * @returns valid formData
  */
-function getValidFormData<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+export function getValidFormData<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   validator: ValidatorType<T, S, F>,
   schema: S,
   rootSchema: S,
@@ -364,7 +364,7 @@ function getValidFormData<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
 
   if (isSelectField) {
     const getOptionsList = optionsList(schema);
-    const isValid = getOptionsList?.some((option) => isEqual(option.value, formData)) ?? false;
+    const isValid = getOptionsList?.some((option) => isEqual(option.value, formData));
     validFormData = isValid ? formData : undefined;
   }
   return validFormData;
