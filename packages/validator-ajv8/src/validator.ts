@@ -90,7 +90,21 @@ export default class AJV8Validator<T = any, S extends StrictRJSFSchema = RJSFSch
     let errors;
     if (compiledValidator) {
       if (typeof this.localizer === 'function') {
+        // Missing properties need to be enclosed with quotes so that
+        // `AJV8Validator#transformRJSFValidationErrors` replaces property names
+        // with `title` or `ui:title`. See #4348, #4349, and #4387.
+        (compiledValidator.errors ?? []).forEach((error) => {
+          if (error.params?.missingProperty) {
+            error.params.missingProperty = `'${error.params.missingProperty}'`;
+          }
+        });
         this.localizer(compiledValidator.errors);
+        // Revert to originals
+        (compiledValidator.errors ?? []).forEach((error) => {
+          if (error.params?.missingProperty) {
+            error.params.missingProperty = error.params.missingProperty.slice(1, -1);
+          }
+        });
       }
       errors = compiledValidator.errors || undefined;
 
