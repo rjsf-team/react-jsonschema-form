@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { asNumber, FieldProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import { asNumber, ErrorSchema, FieldProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 
 // Matches a string that ends in a . character, optionally followed by a sequence of
 // digits followed by any number of 0 characters up until the end of the line.
@@ -44,7 +44,7 @@ function NumberField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
    * @param value - The current value for the change occurring
    */
   const handleChange = useCallback(
-    (value: FieldProps<T, S, F>['value']) => {
+    (value: FieldProps<T, S, F>['value'], errorSchema?: ErrorSchema<T>, id?: string) => {
       // Cache the original value in component state
       setLastValue(value);
 
@@ -62,7 +62,7 @@ function NumberField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
           ? asNumber(value.replace(trailingCharMatcher, ''))
           : asNumber(value);
 
-      onChange(processed as unknown as T);
+      onChange(processed as unknown as T, errorSchema, id);
     },
     [onChange]
   );

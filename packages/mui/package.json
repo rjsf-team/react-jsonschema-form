@@ -36,8 +36,8 @@
     "@emotion/styled": "^11.6.0",
     "@mui/icons-material": "^5.2.0 || ^6.0.0",
     "@mui/material": "^5.2.2 || ^6.0.0",
-    "@rjsf/core": "^5.22.x",
-    "@rjsf/utils": "^5.22.x",
+    "@rjsf/core": "^5.23.x",
+    "@rjsf/utils": "^5.23.x",
     "react": ">=17"
   },
   "devDependencies": {
