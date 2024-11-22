@@ -37,6 +37,8 @@ import { JSONSchema7Object } from 'json-schema';
 import { isEqual } from 'lodash';
 import optionsList from '../optionsList';
 
+const PRIMITIVE_TYPES = ['string', 'number', 'integer', 'boolean', 'null'];
+
 /** Enum that indicates how `schema.additionalItems` should be handled by the `getInnerSchemaForArrayItem()` function.
  */
 export enum AdditionalItemsHandling {
@@ -207,9 +209,10 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
   let defaults: T | T[] | undefined = parentDefaults;
   // If we get a new schema, then we need to recompute defaults again for the new schema found.
   let schemaToCompute: S | null = null;
+  let experimental_dfsb_to_compute = experimental_defaultFormStateBehavior;
   let updatedRecurseList = _recurseList;
 
-  if (isConstant(schema)) {
+  if (schema[CONST_KEY] && experimental_defaultFormStateBehavior?.constAsDefaults !== 'never') {
     defaults = schema.const as unknown as T;
   } else if (isObject(defaults) && isObject(schema.default)) {
     // For object defaults, only override parent defaults that are defined in
@@ -247,6 +250,7 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
         includeUndefinedValues,
         _recurseList,
         experimental_defaultFormStateBehavior,
+        experimental_customMergeAllOf,
         parentDefaults: Array.isArray(parentDefaults) ? parentDefaults[idx] : undefined,
         rawFormData: formData as T,
         required,
@@ -259,6 +263,15 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
       return undefined;
     }
     const discriminator = getDiscriminatorFieldFromSchema<S>(schema);
+    const { type = 'null' } = remaining;
+    if (
+      !Array.isArray(type) &&
+      PRIMITIVE_TYPES.includes(type) &&
+      experimental_dfsb_to_compute?.constAsDefaults === 'skipOneOf'
+    ) {
+      // If we are in a oneOf of a primitive type, then we want to pass constAsDefaults as 'never' for the recursion
+      experimental_dfsb_to_compute = { ...experimental_dfsb_to_compute, constAsDefaults: 'never' };
+    }
     schemaToCompute = oneOf![
       getClosestMatchingOption<T, S, F>(
         validator,
@@ -266,7 +279,8 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
         isEmpty(formData) ? undefined : formData,
         oneOf as S[],
         0,
-        discriminator
+        discriminator,
+        experimental_customMergeAllOf
       )
     ] as S;
     schemaToCompute = mergeSchemas(remaining, schemaToCompute) as S;
@@ -283,7 +297,8 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
         isEmpty(formData) ? undefined : formData,
         anyOf as S[],
         0,
-        discriminator
+        discriminator,
+        experimental_customMergeAllOf
       )
     ] as S;
     schemaToCompute = mergeSchemas(remaining, schemaToCompute) as S;
@@ -294,7 +309,8 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
       rootSchema,
       includeUndefinedValues,
       _recurseList: updatedRecurseList,
-      experimental_defaultFormStateBehavior,
+      experimental_defaultFormStateBehavior: experimental_dfsb_to_compute,
+      experimental_customMergeAllOf,
       parentDefaults: defaults as T | undefined,
       rawFormData: formData as T,
       required,
@@ -390,9 +406,12 @@ export function getObjectDefaults<T = any, S extends StrictRJSFSchema = RJSFSche
     const objectDefaults = Object.keys(retrievedSchema.properties || {}).reduce(
       (acc: GenericObjectType, key: string) => {
         const propertySchema = get(retrievedSchema, [PROPERTIES_KEY, key]);
-        // Check if the parent schema has a const property defined, then we should always return the computedDefault since it's coming from the const.
+        // Check if the parent schema has a const property defined AND we are supporting const as defaults, then we
+        // should always return the computedDefault since it's coming from the const.
         const hasParentConst = isObject(parentConst) && (parentConst as JSONSchema7Object)[key] !== undefined;
-        const hasConst = (isObject(propertySchema) && CONST_KEY in propertySchema) || hasParentConst;
+        const hasConst =
+          ((isObject(propertySchema) && CONST_KEY in propertySchema) || hasParentConst) &&
+          experimental_defaultFormStateBehavior?.constAsDefaults !== 'never';
         // Compute the defaults for this node, with the parent defaults we might
         // have from a previous run: defaults[key].
         const computedDefault = computeDefaults<T, S, F>(validator, propertySchema, {
@@ -444,6 +463,7 @@ export function getObjectDefaults<T = any, S extends StrictRJSFSchema = RJSFSche
           rootSchema,
           _recurseList,
           experimental_defaultFormStateBehavior,
+          experimental_customMergeAllOf,
           includeUndefinedValues: includeUndefinedValues === true,
           parentDefaults: get(defaults, [key]),
           rawFormData: get(formData, [key]),
@@ -481,6 +501,7 @@ export function getArrayDefaults<T = any, S extends StrictRJSFSchema = RJSFSchem
     rootSchema = {} as S,
     _recurseList = [],
     experimental_defaultFormStateBehavior = undefined,
+    experimental_customMergeAllOf = undefined,
     required,
     shouldMergeDefaultsIntoFormData,
   }: ComputeDefaultsProps<T, S> = {},
@@ -507,6 +528,7 @@ export function getArrayDefaults<T = any, S extends StrictRJSFSchema = RJSFSchem
         rootSchema,
         _recurseList,
         experimental_defaultFormStateBehavior,
+        experimental_customMergeAllOf,
         parentDefaults: item,
         required,
         shouldMergeDefaultsIntoFormData,
@@ -525,6 +547,7 @@ export function getArrayDefaults<T = any, S extends StrictRJSFSchema = RJSFSchem
           rootSchema,
           _recurseList,
           experimental_defaultFormStateBehavior,
+          experimental_customMergeAllOf,
           rawFormData: item,
           parentDefaults: get(defaults, [idx]),
           required,
@@ -539,8 +562,10 @@ export function getArrayDefaults<T = any, S extends StrictRJSFSchema = RJSFSchem
     }
   }
 
-  // Check if the schema has a const property defined, then we should always return the computedDefault since it's coming from the const.
-  const hasConst = isObject(schema) && CONST_KEY in schema;
+  // Check if the schema has a const property defined AND we are supporting const as defaults, then we should always
+  // return the computedDefault since it's coming from the const.
+  const hasConst =
+    isObject(schema) && CONST_KEY in schema && experimental_defaultFormStateBehavior?.constAsDefaults !== 'never';
   if (hasConst === false) {
     if (neverPopulate) {
       return defaults ?? emptyDefault;
@@ -555,7 +580,7 @@ export function getArrayDefaults<T = any, S extends StrictRJSFSchema = RJSFSchem
   const defaultsLength = Array.isArray(defaults) ? defaults.length : 0;
   if (
     !schema.minItems ||
-    isMultiSelect<T, S, F>(validator, schema, rootSchema) ||
+    isMultiSelect<T, S, F>(validator, schema, rootSchema, experimental_customMergeAllOf) ||
     computeSkipPopulate<T, S, F>(validator, schema, rootSchema) ||
     schema.minItems <= defaultsLength
   ) {
@@ -573,6 +598,7 @@ export function getArrayDefaults<T = any, S extends StrictRJSFSchema = RJSFSchem
       rootSchema,
       _recurseList,
       experimental_defaultFormStateBehavior,
+      experimental_customMergeAllOf,
       required,
       shouldMergeDefaultsIntoFormData,
     })

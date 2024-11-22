@@ -11,7 +11,24 @@ import { RECURSIVE_REF, RECURSIVE_REF_ALLOF } from '../testUtils/testData';
 import { IExpectType, TestValidatorType } from './types';
 import { resolveDependencies } from '../../src/schema/retrieveSchema';
 
+/**
+ * Validate the expected value based on the index of the expectList
+ * @param index = index of the expectList
+ * @param expectList = list of expected values
+ * @param schema = schema
+ * @param options = optional arguments
+ */
+const validateBasedOnIndex = (index: number, expectList: IExpectType[], schema: RJSFSchema, options?: any) => {
+  const { expectedCB, toEqual } = expectList[index];
+  expect(expectedCB(schema, options)).toEqual(toEqual);
+};
+
 type ObjectDefaultExpectList = [
+  IExpectType,
+  IExpectType,
+  IExpectType,
+  IExpectType,
+  IExpectType,
   IExpectType,
   IExpectType,
   IExpectType,
@@ -32,18 +49,6 @@ type ObjectDefaultExpectList = [
   IExpectType,
   IExpectType
 ];
-
-/**
- * Validate the expected value based on the index of the expectList
- * @param index = index of the expectList
- * @param expectList = list of expected values
- * @param schema = schema
- * @param options = optional arguments
- */
-const validateBasedOnIndex = (index: number, expectList: IExpectType[], schema: RJSFSchema, options?: any) => {
-  const { expectedCB, toEqual } = expectList[index];
-  expect(expectedCB(schema, options)).toEqual(toEqual);
-};
 
 /**
  * This function tests schema with type object default values with expectedList, which has a generic callback to get expected data and toEqual data. It is used in multiple places with different methods. This will then test all object default values across different methods.
@@ -87,6 +92,17 @@ const testObjectDefault = (testValidator: TestValidatorType, expectList: ObjectD
       };
       validateBasedOnIndex(1, expectList, schema);
     });
+    it('test a schema with a const property and constAsDefaults is never', () => {
+      expect(
+        computeDefaults(testValidator, schema, {
+          rootSchema: schema,
+          experimental_defaultFormStateBehavior: { constAsDefaults: 'never' },
+        })
+      ).toEqual({});
+      validateBasedOnIndex(2, expectList, schema, {
+        experimental_defaultFormStateBehavior: { constAsDefaults: 'never' },
+      });
+    });
     it('test an object with an optional property that has a nested required property', () => {
       schema = {
         type: 'object',
@@ -107,7 +123,7 @@ const testObjectDefault = (testValidator: TestValidatorType, expectList: ObjectD
         },
         required: ['requiredProperty'],
       };
-      validateBasedOnIndex(2, expectList, schema);
+      validateBasedOnIndex(3, expectList, schema);
     });
     it('test an object with an optional property that has a nested required property with default', () => {
       schema = {
@@ -130,7 +146,7 @@ const testObjectDefault = (testValidator: TestValidatorType, expectList: ObjectD
         },
         required: ['requiredProperty'],
       };
-      validateBasedOnIndex(3, expectList, schema);
+      validateBasedOnIndex(4, expectList, schema);
     });
     it('test an object with an optional property that has a nested required property and includeUndefinedValues', () => {
       schema = {
@@ -157,7 +173,7 @@ const testObjectDefault = (testValidator: TestValidatorType, expectList: ObjectD
         },
         required: ['requiredProperty'],
       };
-      validateBasedOnIndex(4, expectList, schema, { includeUndefinedValues: true });
+      validateBasedOnIndex(5, expectList, schema, { includeUndefinedValues: true });
     });
     it("test an object with an optional property that has a nested required property and includeUndefinedValues is 'excludeObjectChildren'", () => {
       schema = {
@@ -187,7 +203,7 @@ const testObjectDefault = (testValidator: TestValidatorType, expectList: ObjectD
         },
         required: ['requiredProperty'],
       };
-      validateBasedOnIndex(5, expectList, schema, { includeUndefinedValues: 'excludeObjectChildren' });
+      validateBasedOnIndex(6, expectList, schema, { includeUndefinedValues: 'excludeObjectChildren' });
     });
     it('test an object with an additionalProperties', () => {
       schema = {
@@ -204,7 +220,7 @@ const testObjectDefault = (testValidator: TestValidatorType, expectList: ObjectD
           foo: 'bar',
         },
       };
-      validateBasedOnIndex(6, expectList, schema);
+      validateBasedOnIndex(7, expectList, schema);
     });
     it('test an object with an additionalProperties and includeUndefinedValues', () => {
       schema = {
@@ -223,7 +239,7 @@ const testObjectDefault = (testValidator: TestValidatorType, expectList: ObjectD
           foo: 'bar',
         },
       };
-      validateBasedOnIndex(7, expectList, schema, { includeUndefinedValues: true });
+      validateBasedOnIndex(8, expectList, schema, { includeUndefinedValues: true });
     });
     it('test an object with additionalProperties type object with defaults and formdata', () => {
       schema = {
@@ -255,7 +271,7 @@ const testObjectDefault = (testValidator: TestValidatorType, expectList: ObjectD
           },
         },
       };
-      validateBasedOnIndex(8, expectList, schema, { rawFormData: { test: { foo: 'x', newKey: {} } } });
+      validateBasedOnIndex(9, expectList, schema, { rawFormData: { test: { foo: 'x', newKey: {} } } });
     });
     it('test an object with additionalProperties type object with formdata and no defaults', () => {
       schema = {
@@ -285,7 +301,7 @@ const testObjectDefault = (testValidator: TestValidatorType, expectList: ObjectD
           },
         },
       };
-      validateBasedOnIndex(9, expectList, schema, { rawFormData: { test: { foo: 'x', newKey: {} } } });
+      validateBasedOnIndex(10, expectList, schema, { rawFormData: { test: { foo: 'x', newKey: {} } } });
     });
     it('test an object with additionalProperties type object with no defaults and non-object formdata', () => {
       schema = {
@@ -315,7 +331,7 @@ const testObjectDefault = (testValidator: TestValidatorType, expectList: ObjectD
           },
         },
       };
-      validateBasedOnIndex(10, expectList, schema, { rawFormData: {} });
+      validateBasedOnIndex(11, expectList, schema, { rawFormData: {} });
     });
     it('test an object with deep nested dependencies with formData', () => {
       schema = {
@@ -372,7 +388,7 @@ const testObjectDefault = (testValidator: TestValidatorType, expectList: ObjectD
         ],
       });
 
-      validateBasedOnIndex(11, expectList, schema, {
+      validateBasedOnIndex(12, expectList, schema, {
         rawFormData: {
           nestedObject: {
             first: 'yes',
@@ -389,21 +405,21 @@ const testObjectDefault = (testValidator: TestValidatorType, expectList: ObjectD
         },
       } as RJSFSchema;
 
-      validateBasedOnIndex(12, expectList, schema, {
+      validateBasedOnIndex(13, expectList, schema, {
         includeUndefinedValues: 'excludeObjectChildren',
       });
     });
     it('test with a recursive schema', () => {
-      validateBasedOnIndex(13, expectList, RECURSIVE_REF, {
+      validateBasedOnIndex(14, expectList, RECURSIVE_REF, {
         includeUndefinedValues: 'excludeObjectChildren',
       });
     });
     it('test with a recursive allof schema', () => {
-      validateBasedOnIndex(14, expectList, RECURSIVE_REF_ALLOF);
+      validateBasedOnIndex(15, expectList, RECURSIVE_REF_ALLOF);
     });
     it('test returns undefined with simple schema and no optional args', () => {
       schema = { type: 'string' };
-      validateBasedOnIndex(15, expectList, schema);
+      validateBasedOnIndex(16, expectList, schema);
     });
     it('test an object const value merge with formData', () => {
       schema = {
@@ -441,13 +457,25 @@ const testObjectDefault = (testValidator: TestValidatorType, expectList: ObjectD
         },
       };
 
-      validateBasedOnIndex(16, expectList, schema, {
+      validateBasedOnIndex(17, expectList, schema, {
         rawFormData: {
           fromFormData: 'fromFormData',
         },
         experimental_defaultFormStateBehavior: {
-          mptyObjectFields: 'skipDefaults',
+          emptyObjectFields: 'skipDefaults',
         },
+      });
+    });
+    it('test an object const value merge with formData and constAsDefault is never', () => {
+      validateBasedOnIndex(18, expectList, schema, {
+        rawFormData: {
+          fromFormData: 'fromFormData',
+        },
+        experimental_defaultFormStateBehavior: {
+          emptyObjectFields: 'skipDefaults',
+          constAsDefaults: 'never',
+        },
+        testValidator,
       });
     });
     it('test an object with non valid formData for enum properties', () => {
@@ -520,7 +548,7 @@ const testObjectDefault = (testValidator: TestValidatorType, expectList: ObjectD
         isValid: [false, true],
       });
 
-      validateBasedOnIndex(17, expectList, schema, {
+      validateBasedOnIndex(19, expectList, schema, {
         rawFormData: {
           animal: 'Fish',
           food: 'meat',
@@ -537,7 +565,7 @@ const testObjectDefault = (testValidator: TestValidatorType, expectList: ObjectD
         isValid: [false, true],
       });
 
-      validateBasedOnIndex(18, expectList, schema, {
+      validateBasedOnIndex(20, expectList, schema, {
         rawFormData: {
           animal: 'Fish',
           food: 'meat',
@@ -553,6 +581,47 @@ const testObjectDefault = (testValidator: TestValidatorType, expectList: ObjectD
 
       // Reset the testValidator
       testValidator?.reset();
+    });
+    it('test oneOf with const values and constAsDefaults is always', () => {
+      schema = {
+        type: 'object',
+        properties: {
+          oneOfField: {
+            title: 'One Of Field',
+            type: 'string',
+            oneOf: [
+              {
+                const: 'username',
+                title: 'Username and password',
+              },
+              {
+                const: 'secret',
+                title: 'SSO',
+              },
+            ],
+          },
+        },
+        required: ['oneOfField'],
+      };
+      validateBasedOnIndex(21, expectList, schema, {
+        experimental_defaultFormStateBehavior: {
+          constAsDefaults: 'always',
+        },
+      });
+    });
+    it('test oneOf with const values and constAsDefaults is skipOneOf', () => {
+      validateBasedOnIndex(22, expectList, schema, {
+        experimental_defaultFormStateBehavior: {
+          constAsDefaults: 'skipOneOf',
+        },
+      });
+    });
+    it('test oneOf with const values and constAsDefaults is never', () => {
+      validateBasedOnIndex(23, expectList, schema, {
+        experimental_defaultFormStateBehavior: {
+          constAsDefaults: 'never',
+        },
+      });
     });
   });
 };
@@ -675,6 +744,18 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         toEqual: {
           test: 'test',
         },
+      },
+      {
+        expectedCB: (schema, options) =>
+          getDefaultFormState(
+            testValidator,
+            schema,
+            undefined,
+            schema,
+            undefined,
+            options.experimental_defaultFormStateBehavior
+          ),
+        toEqual: {},
       },
       {
         expectedCB: (schema) => getDefaultFormState(testValidator, schema, undefined, schema),
@@ -816,6 +897,20 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
       },
       {
         expectedCB: (schema, options) =>
+          getDefaultFormState(
+            testValidator,
+            schema,
+            options.rawFormData,
+            schema,
+            false,
+            options.experimental_defaultFormStateBehavior
+          ),
+        toEqual: {
+          fromFormData: 'fromFormData',
+        },
+      },
+      {
+        expectedCB: (schema, options) =>
           getDefaultFormState(options.testValidator, schema, options.rawFormData, schema),
         toEqual: {
           animal: 'Fish',
@@ -840,6 +935,44 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           multipleChoicesList: ['a'],
           water: 'sea',
         },
+      },
+      {
+        expectedCB: (schema, options) =>
+          getDefaultFormState(
+            testValidator,
+            schema,
+            undefined,
+            schema,
+            undefined,
+            options.experimental_defaultFormStateBehavior
+          ),
+        toEqual: {
+          oneOfField: 'username',
+        },
+      },
+      {
+        expectedCB: (schema, options) =>
+          getDefaultFormState(
+            testValidator,
+            schema,
+            undefined,
+            schema,
+            undefined,
+            options.experimental_defaultFormStateBehavior
+          ),
+        toEqual: {},
+      },
+      {
+        expectedCB: (schema, options) =>
+          getDefaultFormState(
+            testValidator,
+            schema,
+            undefined,
+            schema,
+            undefined,
+            options.experimental_defaultFormStateBehavior
+          ),
+        toEqual: {},
       },
     ]);
     // test array defaults
@@ -992,6 +1125,14 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           },
         },
         {
+          expectedCB: (schema, options) =>
+            computeDefaults(testValidator, schema, {
+              rootSchema: schema,
+              ...options,
+            }),
+          toEqual: {},
+        },
+        {
           expectedCB: (schema) =>
             computeDefaults(testValidator, schema, {
               rootSchema: schema,
@@ -1158,6 +1299,14 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         },
         {
           expectedCB: (schema, options) =>
+            computeDefaults(testValidator, schema, {
+              rootSchema: schema,
+              ...options,
+            }),
+          toEqual: {},
+        },
+        {
+          expectedCB: (schema, options) =>
             computeDefaults(options.testValidator, schema, {
               rootSchema: schema,
               ...options,
@@ -1181,6 +1330,32 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             multipleChoicesList: ['a'],
             water: 'sea',
           },
+        },
+        {
+          expectedCB: (schema, options) =>
+            computeDefaults(testValidator, schema, {
+              rootSchema: schema,
+              ...options,
+            }),
+          toEqual: {
+            oneOfField: 'username',
+          },
+        },
+        {
+          expectedCB: (schema, options) =>
+            computeDefaults(testValidator, schema, {
+              rootSchema: schema,
+              ...options,
+            }),
+          toEqual: {},
+        },
+        {
+          expectedCB: (schema, options) =>
+            computeDefaults(testValidator, schema, {
+              rootSchema: schema,
+              ...options,
+            }),
+          toEqual: {},
         },
       ]);
       // test array defaults
@@ -1256,6 +1431,14 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           toEqual: {
             test: 'test',
           },
+        },
+        {
+          expectedCB: (schema, options) =>
+            getDefaultBasedOnSchemaType(testValidator, schema, {
+              rootSchema: schema,
+              ...options,
+            }),
+          toEqual: {},
         },
         {
           expectedCB: (schema) =>
@@ -1432,6 +1615,14 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         },
         {
           expectedCB: (schema, options) =>
+            getDefaultBasedOnSchemaType(testValidator, schema, {
+              rootSchema: schema,
+              ...options,
+            }),
+          toEqual: {},
+        },
+        {
+          expectedCB: (schema, options) =>
             getDefaultBasedOnSchemaType(options.testValidator, schema, {
               rootSchema: schema,
               ...options,
@@ -1449,6 +1640,32 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           toEqual: {
             animal: 'Fish',
           },
+        },
+        {
+          expectedCB: (schema, options) =>
+            getDefaultBasedOnSchemaType(testValidator, schema, {
+              rootSchema: schema,
+              ...options,
+            }),
+          toEqual: {
+            oneOfField: 'username',
+          },
+        },
+        {
+          expectedCB: (schema, options) =>
+            getDefaultBasedOnSchemaType(testValidator, schema, {
+              rootSchema: schema,
+              ...options,
+            }),
+          toEqual: {},
+        },
+        {
+          expectedCB: (schema, options) =>
+            getDefaultBasedOnSchemaType(testValidator, schema, {
+              rootSchema: schema,
+              ...options,
+            }),
+          toEqual: {},
         },
       ]);
       // test array defaults
@@ -1541,6 +1758,14 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           },
         },
         {
+          expectedCB: (schema, options) =>
+            getObjectDefaults(testValidator, schema, {
+              rootSchema: schema,
+              ...options,
+            }),
+          toEqual: {},
+        },
+        {
           expectedCB: (schema) =>
             getObjectDefaults(testValidator, schema, {
               rootSchema: schema,
@@ -1715,6 +1940,14 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         },
         {
           expectedCB: (schema, options) =>
+            getObjectDefaults(testValidator, schema, {
+              rootSchema: schema,
+              ...options,
+            }),
+          toEqual: {},
+        },
+        {
+          expectedCB: (schema, options) =>
             getObjectDefaults(options.testValidator, schema, {
               rootSchema: schema,
               ...options,
@@ -1732,6 +1965,32 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           toEqual: {
             animal: 'Fish',
           },
+        },
+        {
+          expectedCB: (schema, options) =>
+            getObjectDefaults(testValidator, schema, {
+              rootSchema: schema,
+              ...options,
+            }),
+          toEqual: {
+            oneOfField: 'username',
+          },
+        },
+        {
+          expectedCB: (schema, options) =>
+            getObjectDefaults(testValidator, schema, {
+              rootSchema: schema,
+              ...options,
+            }),
+          toEqual: {},
+        },
+        {
+          expectedCB: (schema, options) =>
+            getObjectDefaults(testValidator, schema, {
+              rootSchema: schema,
+              ...options,
+            }),
+          toEqual: {},
         },
       ]);
     });
