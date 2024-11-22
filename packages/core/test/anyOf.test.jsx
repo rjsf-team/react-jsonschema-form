@@ -172,14 +172,8 @@ describe('anyOf', () => {
         properties: {
           foo: {
             anyOf: [
-              {
-                type: 'string',
-                default: 'defaultfoo',
-              },
-              {
-                type: 'boolean',
-                default: true,
-              },
+              { type: 'string', default: 'defaultfoo' },
+              { type: 'boolean', default: true },
             ],
           },
         },
