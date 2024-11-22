@@ -1827,6 +1827,36 @@ describe('AJV8Validator', () => {
         });
       });
     });
+    describe('validating required fields with localizer', () => {
+      beforeAll(() => {
+        localizer = jest.fn().mockImplementation();
+        validator = new AJV8Validator({}, localizer);
+        schema = {
+          type: 'object',
+          required: ['a'],
+          properties: {
+            a: {
+              type: 'string',
+              title: 'A',
+            },
+          },
+        };
+      });
+      it('should enclose missing properties with quotes', () => {
+        const errors = validator.validateFormData({}, schema);
+        const errMessage = "must have required property 'A'";
+        expect(errors.errors[0].message).toEqual(errMessage);
+        expect(errors.errors[0].stack).toEqual(errMessage);
+        expect(errors.errorSchema).toEqual({
+          a: { __errors: [errMessage] },
+        });
+        expect(errors.errors[0].params.missingProperty).toEqual('a');
+      });
+      it('should handle the case when errors are not present', () => {
+        const errors = validator.validateFormData({ a: 'some kind of text' }, schema);
+        expect(errors.errors).toHaveLength(0);
+      });
+    });
   });
   describe('validator.validateFormData(), custom options, localizer and Ajv2019', () => {
     let validator: AJV8Validator;
