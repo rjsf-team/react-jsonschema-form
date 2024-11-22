@@ -25,6 +25,7 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/core
 
 - Updated `NumberField` to properly pass through the `errorSchema` and `id` in the onChange handler, fixing [#4382](https://github.com/rjsf-team/react-jsonschema-form/issues/4382)
+- Fix default value population when switching between options in `MultiSchemaField` [#4375](https://github.com/rjsf-team/react-jsonschema-form/pull/4375). Fixes [#4367](https://github.com/rjsf-team/react-jsonschema-form/issues/4367)
 
 ## Dev / docs / playground
 
@@ -35,7 +36,6 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/core
 
 - Updated `SchemaField` to no longer make schema fields with const read-only by default, partially fixing [#4344](https://github.com/rjsf-team/react-jsonschema-form/issues/4344)
-- Fix default value population when switching between options in `MultiSchemaField` [#4375](https://github.com/rjsf-team/react-jsonschema-form/pull/4375). Fixes [#4367](https://github.com/rjsf-team/react-jsonschema-form/issues/4367)
 
 ## @rjsf/utils
 
