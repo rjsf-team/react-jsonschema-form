@@ -16,6 +16,26 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 5.24.0
+
+## @rjsf/utils
+
+- Fixed issue with formData not updating when dependencies change, fixing [#4325](https://github.com/rjsf-team/react-jsonschema-form/issues/4325)
+
+# 5.23.1
+
+## @rjsf/chakra-ui
+
+- Updated `package.json` to restrict `@chakra-ui/react`'s peer dependency to be < 3.0.0, fixing [#4390](https://github.com/rjsf-team/react-jsonschema-form/issues/4390)
+
+## @rjsf/core
+
+- Updated `NumberField` to properly pass through the `errorSchema` and `id` in the onChange handler, fixing [#4382](https://github.com/rjsf-team/react-jsonschema-form/issues/4382)
+
+## Dev / docs / playground
+
+- Updated the peer dependencies for `@rjsf/*` to be `5.23.x`
+
 # 5.23.0
 
 ## @rjsf/core
@@ -27,7 +47,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Updated `Experimental_DefaultFormStateBehavior` to add a new `constAsDefaults` option
 - Updated `getDefaultFormState()` to use the new `constAsDefaults` option to control how const is used for defaulting, fixing [#4344](https://github.com/rjsf-team/react-jsonschema-form/issues/4344), [#4361](https://github.com/rjsf-team/react-jsonschema-form/issues/4361) and [#4377](https://github.com/rjsf-team/react-jsonschema-form/issues/4377)
 - Use `experimental_customMergeAllOf` option in functions that have previously missed it.
-- - Fixed issue with formData not updating when dependencies change, fixing [#4325](https://github.com/rjsf-team/react-jsonschema-form/issues/4325)
+- Updated `ErrorSchemaBuilder` methods `addErrors` and `setErrors` to prevent duplicate error messages.
 
 ## @rjsf/validator-ajv8
 

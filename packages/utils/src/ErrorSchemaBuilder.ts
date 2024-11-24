@@ -75,9 +75,9 @@ export default class ErrorSchemaBuilder<T = any> {
     }
 
     if (Array.isArray(errorOrList)) {
-      errorsList.push(...errorOrList);
+      set(errorBlock, ERRORS_KEY, [...new Set([...errorsList, ...errorOrList])]);
     } else {
-      errorsList.push(errorOrList);
+      set(errorBlock, ERRORS_KEY, [...new Set([...errorsList, errorOrList])]);
     }
     return this;
   }
@@ -93,7 +93,7 @@ export default class ErrorSchemaBuilder<T = any> {
   setErrors(errorOrList: string | string[], pathOfError?: string | (string | number)[]) {
     const errorBlock: ErrorSchema = this.getOrCreateErrorBlock(pathOfError);
     // Effectively clone the array being given to prevent accidental outside manipulation of the given list
-    const listToAdd = Array.isArray(errorOrList) ? [...errorOrList] : [errorOrList];
+    const listToAdd = Array.isArray(errorOrList) ? [...new Set([...errorOrList])] : [errorOrList];
     set(errorBlock, ERRORS_KEY, listToAdd);
     return this;
   }
