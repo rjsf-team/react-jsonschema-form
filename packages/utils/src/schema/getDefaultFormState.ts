@@ -331,11 +331,11 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
     const { arrayMinItems = {} } = experimental_defaultFormStateBehavior || {};
     const { mergeExtraDefaults } = arrayMinItems;
 
-    const validFormData = ensureFormDataMatchingSchema(validator, schema, rootSchema, rawFormData);
+    const matchingFormData = ensureFormDataMatchingSchema(validator, schema, rootSchema, rawFormData);
     if (!isObject(rawFormData)) {
       defaultsWithFormData = mergeDefaultsWithFormData<T>(
         defaultsWithFormData as T,
-        validFormData as T,
+        matchingFormData as T,
         mergeExtraDefaults,
         true
       ) as T;
