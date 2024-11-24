@@ -326,12 +326,12 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
   const defaultBasedOnSchemaType = getDefaultBasedOnSchemaType(validator, schema, computeDefaultsProps, defaults);
 
   let defaultsWithFormData = defaultBasedOnSchemaType ?? defaults;
-  // if shouldMfMergeDefaultsIntoFormData is true, then merge the defaults into the formData.
+  // if shouldMergeDefaultsIntoFormData is true, then merge the defaults into the formData.
   if (shouldMergeDefaultsIntoFormData) {
     const { arrayMinItems = {} } = experimental_defaultFormStateBehavior || {};
     const { mergeExtraDefaults } = arrayMinItems;
 
-    const validFormData = getValidFormData(validator, schema, rootSchema, rawFormData);
+    const validFormData = ensureFormDataMatchingSchema(validator, schema, rootSchema, rawFormData);
     if (!isObject(rawFormData)) {
       defaultsWithFormData = mergeDefaultsWithFormData<T>(
         defaultsWithFormData as T,
@@ -346,19 +346,18 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
 }
 
 /**
- * Gets valid formData. If it's not valid in the case of a selectField, we change it to a valid value.
+ * Ensure that the formData matches the given schema. If it's not matching in the case of a selectField, we change it to match the schema.
  * @param validator - an implementation of the `ValidatorType` interface that will be used when necessary
  * @param schema - The schema for which the formData state is desired
- * @param rootSchema The root schema, used to primarily to look up `$ref`s
- * @param formData The current formData
- * @returns valid formData
+ * @param rootSchema - The root schema, used to primarily to look up `$ref`s
+ * @param formData - The current formData
+ * @returns - valid formData that matches schema
  */
-export function getValidFormData<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  validator: ValidatorType<T, S, F>,
-  schema: S,
-  rootSchema: S,
-  formData: T | undefined
-): T | T[] | undefined {
+export function ensureFormDataMatchingSchema<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(validator: ValidatorType<T, S, F>, schema: S, rootSchema: S, formData: T | undefined): T | T[] | undefined {
   const isSelectField = !isConstant(schema) && isSelect(validator, schema, rootSchema);
   let validFormData: T | T[] | undefined = formData;
 
@@ -683,14 +682,14 @@ export default function getDefaultFormState<
   if (isObject(formData) || Array.isArray(formData)) {
     const { mergeDefaultsIntoFormData } = experimental_defaultFormStateBehavior || {};
     const defaultSupercedesUndefined = mergeDefaultsIntoFormData === 'useDefaultIfFormDataUndefined';
-    const restult = mergeDefaultsWithFormData<T>(
+    const result = mergeDefaultsWithFormData<T>(
       defaults as T,
       formData,
       true, // set to true to add any additional default array entries.
       defaultSupercedesUndefined,
-      true // set to true to override formDat with defaults if they exist.
+      true // set to true to override formData with defaults if they exist.
     );
-    return restult;
+    return result;
   }
 
   return defaults;

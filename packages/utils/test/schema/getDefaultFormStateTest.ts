@@ -6,7 +6,7 @@ import {
   getDefaultBasedOnSchemaType,
   getInnerSchemaForArrayItem,
   getObjectDefaults,
-  getValidFormData,
+  ensureFormDataMatchingSchema,
 } from '../../src/schema/getDefaultFormState';
 import { RECURSIVE_REF, RECURSIVE_REF_ALLOF } from '../testUtils/testData';
 import { IExpectType, TestValidatorType } from './types';
@@ -2074,10 +2074,10 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           enum: ['a', 'b', 'c'],
         };
 
-        expect(getValidFormData(testValidator, schema, schema, 'd')).toBeUndefined();
+        expect(ensureFormDataMatchingSchema(testValidator, schema, schema, 'd')).toBeUndefined();
       });
       it('Test schema with valid formData for enum property', () => {
-        expect(getValidFormData(testValidator, schema, schema, 'b')).toEqual('b');
+        expect(ensureFormDataMatchingSchema(testValidator, schema, schema, 'b')).toEqual('b');
       });
       it('Test schema with const property', () => {
         schema = {
@@ -2086,7 +2086,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           const: 'a',
         };
 
-        expect(getValidFormData(testValidator, schema, schema, 'a')).toEqual('a');
+        expect(ensureFormDataMatchingSchema(testValidator, schema, schema, 'a')).toEqual('a');
       });
     });
     describe('default form state behavior: ignore min items unless required', () => {

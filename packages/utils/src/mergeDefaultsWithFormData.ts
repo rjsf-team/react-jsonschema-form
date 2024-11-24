@@ -2,6 +2,7 @@ import get from 'lodash/get';
 
 import isObject from './isObject';
 import { GenericObjectType } from '../src';
+import { isNil } from 'lodash';
 
 /** Merges the `defaults` object of type `T` into the `formData` of type `T`
  *
@@ -19,7 +20,10 @@ import { GenericObjectType } from '../src';
  * @param [formData] - The form data into which the defaults will be merged
  * @param [mergeExtraArrayDefaults=false] - If true, any additional default array entries are appended onto the formData
  * @param [defaultSupercedesUndefined=false] - If true, an explicit undefined value will be overwritten by the default value
- * @param [overrideFormDataWithDefaults=false] - If true, the default value will overwrite the form data value. If the value doesn't exist in the default, we take it from formData and in case where the value is set to undefined in formData. This is useful when we have already merged formData with defaults and want to add an additional field from formData that does not exist in defaults.
+ * @param [overrideFormDataWithDefaults=false] - If true, the default value will overwrite the form data value. If the value
+ *        doesn't exist in the default, we take it from formData and in the case where the value is set to undefined in formData.
+ *       This is useful when we have already merged formData with defaults and want to add an additional field from formData
+ *       that does not exist in defaults.
  * @returns - The resulting merged form data with defaults
  */
 export default function mergeDefaultsWithFormData<T = any>(
@@ -74,12 +78,9 @@ export default function mergeDefaultsWithFormData<T = any>(
       return acc;
     }, acc);
   }
-  if (
-    defaultSupercedesUndefined &&
-    (formData === undefined || formData === null || (typeof formData === 'number' && isNaN(formData)))
-  ) {
+  if (defaultSupercedesUndefined && (isNil(formData) || (typeof formData === 'number' && isNaN(formData)))) {
     return defaults;
-  } else if (overrideFormDataWithDefaults && (formData === undefined || formData === null)) {
+  } else if (overrideFormDataWithDefaults && isNil(formData)) {
     // If the overrideFormDataWithDefaults flag is true and formData is set to undefined or null return formData
     return formData;
   }
