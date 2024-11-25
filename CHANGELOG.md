@@ -22,11 +22,9 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Updated `SelectWidget` to support `<optgroup>` through `ui:options` `optgroup`. Fixes [#1813]
 
-## @rjsf/playground
+## Dev / docs / playground
 
 - Updated `samples/widgets` to show `optgroup` usage (`selectWidgetOptions3`)
-
-## Dev / docs / playground
 
 # 5.22.4
 
