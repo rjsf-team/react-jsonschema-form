@@ -43,7 +43,7 @@ export function transformRJSFValidationErrors<
       let uiSchemaTitle = getUiOptions(get(uiSchema, `${property.replace(/^\./, '')}`)).title;
       if (uiSchemaTitle === undefined) {
         const uiSchemaPath = schemaPath
-          .replaceAll('/properties/', '/')
+          .replace(/\/properties\//g, '/')
           .split('/')
           .slice(1, -1)
           .concat([currentProperty]);
