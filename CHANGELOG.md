@@ -25,10 +25,12 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/core
 
 - Updated `NumberField` to properly pass through the `errorSchema` and `id` in the onChange handler, fixing [#4382](https://github.com/rjsf-team/react-jsonschema-form/issues/4382)
+- Updated `ObjectField` and `CheckboxWidget` to render markdown in the description when `enableMarkdownInDescription` is set to `true`, fixing [#3975](https://github.com/rjsf-team/react-jsonschema-form/issues/3975)
 
 ## Dev / docs / playground
 
 - Updated the peer dependencies for `@rjsf/*` to be `5.23.x`
+- Fixed typo in `package.json`
 
 # 5.23.0
 
