@@ -222,6 +222,37 @@ describe('oneOf', () => {
     );
   });
 
+  it('should assign a default value and set defaults on option change for scalar types schemas', () => {
+    const { node, onChange } = createFormComponent({
+      schema: {
+        type: 'object',
+        properties: {
+          foo: {
+            oneOf: [
+              { type: 'string', default: 'defaultfoo' },
+              { type: 'boolean', default: true },
+            ],
+          },
+        },
+      },
+    });
+    sinon.assert.calledWithMatch(onChange.lastCall, {
+      formData: { foo: 'defaultfoo' },
+    });
+
+    const $select = node.querySelector('select');
+
+    act(() => {
+      fireEvent.change($select, {
+        target: { value: $select.options[1].value },
+      });
+    });
+
+    sinon.assert.calledWithMatch(onChange.lastCall, {
+      formData: { foo: true },
+    });
+  });
+
   it('should render a custom widget', () => {
     const schema = {
       type: 'object',
@@ -573,6 +604,7 @@ describe('oneOf', () => {
       },
     };
     const formContext = { root: 'root-id', root_userId: 'userId-id' };
+
     function CustomSchemaField(props) {
       const { formContext, idSchema } = props;
       return (
@@ -582,6 +614,7 @@ describe('oneOf', () => {
         </>
       );
     }
+
     const { node } = createFormComponent({
       schema,
       formData: { userId: 'foobarbaz' },
@@ -1598,6 +1631,7 @@ describe('oneOf', () => {
         },
       },
     };
+
     function customValidate(formData, errors) {
       errors.userId.addError('test');
       return errors;
