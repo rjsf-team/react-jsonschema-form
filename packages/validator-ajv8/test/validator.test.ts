@@ -1344,6 +1344,247 @@ describe('AJV8Validator', () => {
             expect(errorSchema.numberOfChildren!.__errors![0]).toEqual('must match pattern "\\d+"');
           });
         });
+        describe('title is in validation message when it is in the uiSchema ui:title field with anyOf', () => {
+          beforeAll(() => {
+            const schema: RJSFSchema = {
+              anyOf: [
+                {
+                  type: 'object',
+                  required: ['firstName', 'lastName'],
+                  properties: {
+                    firstName: { type: 'string', title: 'First Name' },
+                    lastName: { type: 'string', title: 'Last Name' },
+                  },
+                },
+              ],
+            };
+            const uiSchema: UiSchema = {
+              anyOf: [
+                {
+                  firstName: {
+                    'ui:title': 'uiSchema First Name',
+                  },
+                  lastName: {
+                    'ui:title': 'uiSchema Last Name',
+                  },
+                },
+              ],
+            };
+
+            const formData = { firstName: 'a' };
+            const result = validator.validateFormData(formData, schema, undefined, undefined, uiSchema);
+            errors = result.errors;
+            errorSchema = result.errorSchema;
+          });
+          it('should return an error list', () => {
+            expect(errors).toHaveLength(2);
+
+            const expected = ["must have required property 'uiSchema Last Name'", 'must match a schema in anyOf'];
+
+            const messages = errors.map((e) => e.message);
+            expect(messages).toEqual(expected);
+
+            const stack = errors.map((e) => e.stack);
+            expect(stack).toEqual(expected);
+          });
+          it('should return an errorSchema', () => {
+            expect(errorSchema.lastName!.__errors).toHaveLength(1);
+            expect(errorSchema.lastName!.__errors![0]).toEqual("must have required property 'uiSchema Last Name'");
+
+            expect(errorSchema.__errors).toHaveLength(1);
+            expect(errorSchema.__errors![0]).toEqual('must match a schema in anyOf');
+          });
+        });
+        describe('title is in validation message when it is in the uiSchema ui:title field with oneOf', () => {
+          beforeAll(() => {
+            const schema: RJSFSchema = {
+              oneOf: [
+                {
+                  type: 'object',
+                  required: ['firstName', 'lastName'],
+                  properties: {
+                    firstName: { type: 'string', title: 'First Name' },
+                    lastName: { type: 'string', title: 'Last Name' },
+                  },
+                },
+              ],
+            };
+            const uiSchema: UiSchema = {
+              oneOf: [
+                {
+                  firstName: {
+                    'ui:title': 'uiSchema First Name',
+                  },
+                  lastName: {
+                    'ui:title': 'uiSchema Last Name',
+                  },
+                },
+              ],
+            };
+
+            const formData = { firstName: 'a' };
+            const result = validator.validateFormData(formData, schema, undefined, undefined, uiSchema);
+            errors = result.errors;
+            errorSchema = result.errorSchema;
+          });
+          it('should return an error list', () => {
+            expect(errors).toHaveLength(2);
+
+            const expected = [
+              "must have required property 'uiSchema Last Name'",
+              'must match exactly one schema in oneOf',
+            ];
+
+            const messages = errors.map((e) => e.message);
+            expect(messages).toEqual(expected);
+
+            const stack = errors.map((e) => e.stack);
+            expect(stack).toEqual(expected);
+          });
+          it('should return an errorSchema', () => {
+            expect(errorSchema.lastName!.__errors).toHaveLength(1);
+            expect(errorSchema.lastName!.__errors![0]).toEqual("must have required property 'uiSchema Last Name'");
+
+            expect(errorSchema.__errors).toHaveLength(1);
+            expect(errorSchema.__errors![0]).toEqual('must match exactly one schema in oneOf');
+          });
+        });
+        describe('ui:title is in validation message when it is defined in referrer', () => {
+          beforeAll(() => {
+            const schema: RJSFSchema = {
+              definitions: {
+                address: {
+                  type: 'object',
+                  properties: {
+                    streetAddress: { type: 'string' },
+                    city: { type: 'string' },
+                    state: { type: 'string' },
+                  },
+                  required: ['streetAddress', 'city', 'state'],
+                },
+              },
+              type: 'object',
+              required: ['billingAddress', 'shippingAddress'],
+              properties: {
+                billingAddress: {
+                  $ref: '#/definitions/address',
+                },
+                shippingAddress: {
+                  $ref: '#/definitions/address',
+                },
+              },
+            };
+            const uiSchema: UiSchema = {
+              billingAddress: {
+                'ui:title': 'uiSchema Billing Address',
+              },
+              shippingAddress: {
+                city: {
+                  'ui:title': 'uiSchema City',
+                },
+              },
+            };
+
+            const formData = { shippingAddress: { streetAddress: 'El Camino Real', state: 'California' } };
+            const result = validator.validateFormData(formData, schema, undefined, undefined, uiSchema);
+            errors = result.errors;
+            errorSchema = result.errorSchema;
+          });
+          it('should return an error list', () => {
+            expect(errors).toHaveLength(2);
+
+            const expected = [
+              "must have required property 'uiSchema Billing Address'",
+              "must have required property 'uiSchema City'",
+            ];
+
+            const messages = errors.map((e) => e.message);
+            expect(messages).toEqual(expected);
+
+            const stack = errors.map((e) => e.stack);
+            expect(stack).toEqual(expected);
+          });
+          it('should return an errorSchema', () => {
+            expect(errorSchema.billingAddress!.__errors).toHaveLength(1);
+            expect(errorSchema.billingAddress!.__errors![0]).toEqual(
+              "must have required property 'uiSchema Billing Address'"
+            );
+
+            expect(errorSchema.shippingAddress!.city!.__errors).toHaveLength(1);
+            expect(errorSchema.shippingAddress!.city!.__errors![0]).toEqual(
+              "must have required property 'uiSchema City'"
+            );
+          });
+        });
+        describe('ui:title is in validation message when it is defined in definitions', () => {
+          beforeAll(() => {
+            const schema: RJSFSchema = {
+              definitions: {
+                address: {
+                  type: 'object',
+                  properties: {
+                    streetAddress: { type: 'string' },
+                    city: { type: 'string' },
+                    state: { type: 'string' },
+                  },
+                  required: ['streetAddress', 'city', 'state'],
+                },
+              },
+              type: 'object',
+              required: ['billingAddress', 'shippingAddress'],
+              properties: {
+                billingAddress: {
+                  $ref: '#/definitions/address',
+                },
+                shippingAddress: {
+                  $ref: '#/definitions/address',
+                },
+              },
+            };
+            const uiSchema: UiSchema = {
+              definitions: {
+                address: {
+                  city: {
+                    'ui:title': 'uiSchema City',
+                  },
+                },
+              },
+              billingAddress: {
+                'ui:title': 'uiSchema Billing Address',
+              },
+            };
+
+            const formData = { shippingAddress: { streetAddress: 'El Camino Real', state: 'California' } };
+            const result = validator.validateFormData(formData, schema, undefined, undefined, uiSchema);
+            errors = result.errors;
+            errorSchema = result.errorSchema;
+          });
+          it('should return an error list', () => {
+            expect(errors).toHaveLength(2);
+
+            const expected = [
+              "must have required property 'uiSchema Billing Address'",
+              "must have required property 'uiSchema City'",
+            ];
+
+            const messages = errors.map((e) => e.message);
+            expect(messages).toEqual(expected);
+
+            const stack = errors.map((e) => e.stack);
+            expect(stack).toEqual(expected);
+          });
+          it('should return an errorSchema', () => {
+            expect(errorSchema.billingAddress!.__errors).toHaveLength(1);
+            expect(errorSchema.billingAddress!.__errors![0]).toEqual(
+              "must have required property 'uiSchema Billing Address'"
+            );
+
+            expect(errorSchema.shippingAddress!.city!.__errors).toHaveLength(1);
+            expect(errorSchema.shippingAddress!.city!.__errors![0]).toEqual(
+              "must have required property 'uiSchema City'"
+            );
+          });
+        });
         describe('uiSchema title in validation when defined in nested field', () => {
           beforeAll(() => {
             const schema: RJSFSchema = {
