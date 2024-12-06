@@ -22,6 +22,10 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Fix default value population when switching between options in `MultiSchemaField` [#4375](https://github.com/rjsf-team/react-jsonschema-form/pull/4375). Fixes [#4367](https://github.com/rjsf-team/react-jsonschema-form/issues/4367)
 
+## @rjsf/validator-ajv8
+
+- Fixed issue where `ui:title` in anyOf/oneOf is not shown in error messages. Fixes [#4368](https://github.com/rjsf-team/react-jsonschema-form/issues/4368)
+
 # 5.23.1
 
 ## @rjsf/chakra-ui
