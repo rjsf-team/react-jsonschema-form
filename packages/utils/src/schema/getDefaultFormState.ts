@@ -331,7 +331,13 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
     const { arrayMinItems = {} } = experimental_defaultFormStateBehavior || {};
     const { mergeExtraDefaults } = arrayMinItems;
 
-    const matchingFormData = ensureFormDataMatchingSchema(validator, schema, rootSchema, rawFormData);
+    const matchingFormData = ensureFormDataMatchingSchema(
+      validator,
+      schema,
+      rootSchema,
+      rawFormData,
+      experimental_defaultFormStateBehavior
+    );
     if (!isObject(rawFormData)) {
       defaultsWithFormData = mergeDefaultsWithFormData<T>(
         defaultsWithFormData as T,
@@ -351,21 +357,34 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
  * @param schema - The schema for which the formData state is desired
  * @param rootSchema - The root schema, used to primarily to look up `$ref`s
  * @param formData - The current formData
+ * @param experimental_defaultFormStateBehavior - Optional configuration object, if provided, allows users to override default form state behavior
  * @returns - valid formData that matches schema
  */
 export function ensureFormDataMatchingSchema<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
->(validator: ValidatorType<T, S, F>, schema: S, rootSchema: S, formData: T | undefined): T | T[] | undefined {
+>(
+  validator: ValidatorType<T, S, F>,
+  schema: S,
+  rootSchema: S,
+  formData: T | undefined,
+  experimental_defaultFormStateBehavior?: Experimental_DefaultFormStateBehavior
+): T | T[] | undefined {
   const isSelectField = !isConstant(schema) && isSelect(validator, schema, rootSchema);
   let validFormData: T | T[] | undefined = formData;
-
   if (isSelectField) {
     const getOptionsList = optionsList(schema);
     const isValid = getOptionsList?.some((option) => isEqual(option.value, formData));
     validFormData = isValid ? formData : undefined;
   }
+
+  // Override the formData with the const if the constAsDefaults is set to always
+  const constTakesPrecedence = schema[CONST_KEY] && experimental_defaultFormStateBehavior?.constAsDefaults === 'always';
+  if (constTakesPrecedence) {
+    validFormData = schema.const as any;
+  }
+
   return validFormData;
 }
 

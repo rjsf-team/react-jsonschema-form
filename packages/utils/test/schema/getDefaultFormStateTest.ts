@@ -48,6 +48,7 @@ type ObjectDefaultExpectList = [
   IExpectType,
   IExpectType,
   IExpectType,
+  IExpectType,
   IExpectType
 ];
 
@@ -620,6 +621,26 @@ const testObjectDefault = (testValidator: TestValidatorType, expectList: ObjectD
         },
       });
     });
+    it('Test an object with invalid formData const and constAsDefault set to always', () => {
+      schema = {
+        type: 'object',
+        properties: {
+          stringField: {
+            type: 'string',
+            const: 'fromConst',
+          },
+        },
+      };
+
+      validateBasedOnIndex(24, expectList, schema, {
+        rawFormData: {
+          stringField: 'fromFormData',
+        },
+        experimental_defaultFormStateBehavior: {
+          constAsDefaults: 'always',
+        },
+      });
+    });
   });
 };
 
@@ -975,6 +996,20 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             options.experimental_defaultFormStateBehavior
           ),
         toEqual: {},
+      },
+      {
+        expectedCB: (schema, options) =>
+          getDefaultFormState(
+            testValidator,
+            schema,
+            options.rawFormData,
+            schema,
+            undefined,
+            options.experimental_defaultFormStateBehavior
+          ),
+        toEqual: {
+          stringField: 'fromConst',
+        },
       },
     ]);
     // test array defaults
@@ -1356,6 +1391,16 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             }),
           toEqual: {},
         },
+        {
+          expectedCB: (schema, options) =>
+            computeDefaults(testValidator, schema, {
+              rootSchema: schema,
+              ...options,
+            }),
+          toEqual: {
+            stringField: 'fromConst',
+          },
+        },
       ]);
       // test array defaults
       testArrayDefault(testValidator, [
@@ -1662,6 +1707,16 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
               ...options,
             }),
           toEqual: {},
+        },
+        {
+          expectedCB: (schema, options) =>
+            getDefaultBasedOnSchemaType(testValidator, schema, {
+              rootSchema: schema,
+              ...options,
+            }),
+          toEqual: {
+            stringField: 'fromConst',
+          },
         },
       ]);
       // test array defaults
@@ -1984,6 +2039,16 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
               ...options,
             }),
           toEqual: {},
+        },
+        {
+          expectedCB: (schema, options) =>
+            getObjectDefaults(testValidator, schema, {
+              rootSchema: schema,
+              ...options,
+            }),
+          toEqual: {
+            stringField: 'fromConst',
+          },
         },
       ]);
     });
