@@ -133,7 +133,14 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
    * @returns - True if the label should be displayed or false if it should not
    */
   getDisplayLabel(schema: S, uiSchema?: UiSchema<T, S, F>, globalOptions?: GlobalUISchemaOptions) {
-    return getDisplayLabel<T, S, F>(this.validator, schema, uiSchema, this.rootSchema, globalOptions);
+    return getDisplayLabel<T, S, F>(
+      this.validator,
+      schema,
+      uiSchema,
+      this.rootSchema,
+      globalOptions,
+      this.experimental_customMergeAllOf
+    );
   }
 
   /** Determines which of the given `options` provided most closely matches the `formData`.
@@ -161,7 +168,8 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
       formData,
       options,
       selectedOption,
-      discriminatorField
+      discriminatorField,
+      this.experimental_customMergeAllOf
     );
   }
 
@@ -199,7 +207,7 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
    * @returns - True if schema/uiSchema contains an array of files, otherwise false
    */
   isFilesArray(schema: S, uiSchema?: UiSchema<T, S, F>) {
-    return isFilesArray<T, S, F>(this.validator, schema, uiSchema, this.rootSchema);
+    return isFilesArray<T, S, F>(this.validator, schema, uiSchema, this.rootSchema, this.experimental_customMergeAllOf);
   }
 
   /** Checks to see if the `schema` combination represents a multi-select
@@ -208,7 +216,7 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
    * @returns - True if schema contains a multi-select, otherwise false
    */
   isMultiSelect(schema: S) {
-    return isMultiSelect<T, S, F>(this.validator, schema, this.rootSchema);
+    return isMultiSelect<T, S, F>(this.validator, schema, this.rootSchema, this.experimental_customMergeAllOf);
   }
 
   /** Checks to see if the `schema` combination represents a select
@@ -217,7 +225,7 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
    * @returns - True if schema contains a select, otherwise false
    */
   isSelect(schema: S) {
-    return isSelect<T, S, F>(this.validator, schema, this.rootSchema);
+    return isSelect<T, S, F>(this.validator, schema, this.rootSchema, this.experimental_customMergeAllOf);
   }
 
   /** Merges the errors in `additionalErrorSchema` into the existing `validationData` by combining the hierarchies in
@@ -265,7 +273,14 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
    *      to `undefined`. Will return `undefined` if the new schema is not an object containing properties.
    */
   sanitizeDataForNewSchema(newSchema?: S, oldSchema?: S, data?: any): T {
-    return sanitizeDataForNewSchema(this.validator, this.rootSchema, newSchema, oldSchema, data);
+    return sanitizeDataForNewSchema(
+      this.validator,
+      this.rootSchema,
+      newSchema,
+      oldSchema,
+      data,
+      this.experimental_customMergeAllOf
+    );
   }
 
   /** Generates an `IdSchema` object for the `schema`, recursively
@@ -298,7 +313,14 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
    * @returns - The `PathSchema` object for the `schema`
    */
   toPathSchema(schema: S, name?: string, formData?: T): PathSchema<T> {
-    return toPathSchema<T, S, F>(this.validator, schema, name, this.rootSchema, formData);
+    return toPathSchema<T, S, F>(
+      this.validator,
+      schema,
+      name,
+      this.rootSchema,
+      formData,
+      this.experimental_customMergeAllOf
+    );
   }
 }
 

@@ -27,6 +27,47 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Updated `advanced-customization/custom-templates` with the new feature.
 
+# 5.23.2
+
+## @rjsf/core
+
+- Fix default value population when switching between options in `MultiSchemaField` [#4375](https://github.com/rjsf-team/react-jsonschema-form/pull/4375). Fixes [#4367](https://github.com/rjsf-team/react-jsonschema-form/issues/4367)
+
+# 5.23.1
+
+## @rjsf/chakra-ui
+
+- Updated `package.json` to restrict `@chakra-ui/react`'s peer dependency to be < 3.0.0, fixing [#4390](https://github.com/rjsf-team/react-jsonschema-form/issues/4390)
+
+## @rjsf/core
+
+- Updated `NumberField` to properly pass through the `errorSchema` and `id` in the onChange handler, fixing [#4382](https://github.com/rjsf-team/react-jsonschema-form/issues/4382)
+
+## Dev / docs / playground
+
+- Updated the peer dependencies for `@rjsf/*` to be `5.23.x`
+
+# 5.23.0
+
+## @rjsf/core
+
+- Updated `SchemaField` to no longer make schema fields with const read-only by default, partially fixing [#4344](https://github.com/rjsf-team/react-jsonschema-form/issues/4344)
+
+## @rjsf/utils
+
+- Updated `Experimental_DefaultFormStateBehavior` to add a new `constAsDefaults` option
+- Updated `getDefaultFormState()` to use the new `constAsDefaults` option to control how const is used for defaulting, fixing [#4344](https://github.com/rjsf-team/react-jsonschema-form/issues/4344), [#4361](https://github.com/rjsf-team/react-jsonschema-form/issues/4361) and [#4377](https://github.com/rjsf-team/react-jsonschema-form/issues/4377)
+- Use `experimental_customMergeAllOf` option in functions that have previously missed it.
+- Updated `ErrorSchemaBuilder` methods `addErrors` and `setErrors` to prevent duplicate error messages.
+
+## @rjsf/validator-ajv8
+
+- Fixed issue where error messages do not have `title` or `ui:title` if a `Localizer` function is used. Fixes [#4387](https://github.com/rjsf-team/react-jsonschema-form/issues/4387)
+
+## Dev / docs / playground
+
+- Updated the playground to add a selector for the `constAsDefaults` option
+
 # 5.22.4
 
 ## @rjsf/utils
@@ -37,7 +78,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Fix issue 'Maximum call stack size exceeded' with playground share with large content.
 
-# 5.22.3 
+# 5.22.3
 
 ## @rjsf/utils
 
@@ -113,7 +154,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/core
 
-- Updated `Form` to fix `focusOnError()` to support the ids that include dots, fixing [#4279](https://github.com/rjsf-team/react-jsonschema-form/issues/4279) 
+- Updated `Form` to fix `focusOnError()` to support the ids that include dots, fixing [#4279](https://github.com/rjsf-team/react-jsonschema-form/issues/4279)
 
 ## @rjsf/mui
 
@@ -141,7 +182,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 # 5.20.0
 
-## @rjsf/core 
+## @rjsf/core
 
 - Support allowing raising errors from within a custom Widget [#2718](https://github.com/rjsf-team/react-jsonschema-form/issues/2718)
 - Updated `ArrayField`, `BooleanField` and `StringField` to call `optionsList()` with the additional `UiSchema` parameter, fixing [#4215](https://github.com/rjsf-team/react-jsonschema-form/issues/4215) and  [#4260](https://github.com/rjsf-team/react-jsonschema-form/issues/4260)
@@ -159,7 +200,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 # 5.19.4
 
-## @rjsf/core 
+## @rjsf/core
 
 - Fix XSS when rendering schema validation errors [#4254](https://github.com/rjsf-team/react-jsonschema-form/issues/2718)
   - NOTE: This will have potential consequences if you are using the [translateString](https://rjsf-team.github.io/react-jsonschema-form/docs/api-reference/form-props/#translatestring) feature and are trying to render HTML. Switching to [Markdown](https://www.markdownguide.org/) will solve your problems.
@@ -176,7 +217,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## Dev / docs / playground
 
-- Updated the `Validator` dropdown to add `AJV8 (discriminator)` which sets the AJV validator [discriminator](https://ajv.js.org/json-schema.html#discriminator) option to `true` to support testing schemas with that option in them 
+- Updated the `Validator` dropdown to add `AJV8 (discriminator)` which sets the AJV validator [discriminator](https://ajv.js.org/json-schema.html#discriminator) option to `true` to support testing schemas with that option in them
 
 # 5.19.3
 

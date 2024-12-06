@@ -41,7 +41,7 @@ function toIdSchemaInternal<T = any, S extends StrictRJSFSchema = RJSFSchema, F 
   experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>
 ): IdSchema<T> {
   if (REF_KEY in schema || DEPENDENCIES_KEY in schema || ALL_OF_KEY in schema) {
-    const _schema = retrieveSchema<T, S, F>(validator, schema, rootSchema, formData);
+    const _schema = retrieveSchema<T, S, F>(validator, schema, rootSchema, formData, experimental_customMergeAllOf);
     const sameSchemaIndex = _recurseList.findIndex((item) => isEqual(item, _schema));
     if (sameSchemaIndex === -1) {
       return toIdSchemaInternal<T, S, F>(

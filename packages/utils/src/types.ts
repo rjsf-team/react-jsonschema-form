@@ -96,6 +96,18 @@ export type Experimental_DefaultFormStateBehavior = {
    *        default value instead
    */
   mergeDefaultsIntoFormData?: 'useFormDataIfPresent' | 'useDefaultIfFormDataUndefined';
+  /** Optional enumerated flag controlling how const values are merged into the form data as defaults when dealing with
+   * undefined values, defaulting to `always`. The defaulting behavior for this flag will always be controlled by the
+   * `emptyObjectField` flag value. For instance, if `populateRequiredDefaults` is set and the const value is not
+   * required, it will not be set.
+   * - `always`: A const value will always be merged into the form as a default. If there is are const values in a
+   *        `oneOf` (for instance to create an enumeration with title different from the values), the first const value
+   *        will be defaulted
+   * - `skipOneOf`: If const is in a `oneOf` it will NOT pick the first value as a default
+   * - `never`: A const value will never be used as a default
+   *
+   */
+  constAsDefaults?: 'always' | 'skipOneOf' | 'never';
 };
 
 /** Optional function that allows for custom merging of `allOf` schemas
