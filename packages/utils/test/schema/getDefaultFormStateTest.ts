@@ -94,12 +94,6 @@ const testObjectDefault = (testValidator: TestValidatorType, expectList: ObjectD
       validateBasedOnIndex(1, expectList, schema);
     });
     it('test a schema with a const property and constAsDefaults is never', () => {
-      expect(
-        computeDefaults(testValidator, schema, {
-          rootSchema: schema,
-          experimental_defaultFormStateBehavior: { constAsDefaults: 'never' },
-        })
-      ).toEqual({});
       validateBasedOnIndex(2, expectList, schema, {
         experimental_defaultFormStateBehavior: { constAsDefaults: 'never' },
       });
@@ -1284,10 +1278,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           },
         },
         {
-          expectedCB: (schema) =>
-            computeDefaults(testValidator, schema, {
-              rootSchema: schema,
-            }),
+          expectedCB: (schema) => computeDefaults(testValidator, schema),
           toEqual: undefined,
         },
         {
@@ -1600,10 +1591,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           },
         },
         {
-          expectedCB: (schema) =>
-            getDefaultBasedOnSchemaType(testValidator, schema, {
-              rootSchema: schema,
-            }),
+          expectedCB: (schema) => getDefaultBasedOnSchemaType(testValidator, schema),
           toEqual: undefined,
         },
         {
@@ -1925,10 +1913,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           },
         },
         {
-          expectedCB: (schema) =>
-            getObjectDefaults(testValidator, schema, {
-              rootSchema: schema,
-            }),
+          expectedCB: (schema) => getObjectDefaults(testValidator, schema),
           toEqual: {},
         },
         {
