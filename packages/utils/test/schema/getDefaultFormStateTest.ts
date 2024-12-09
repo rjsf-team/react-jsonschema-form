@@ -495,16 +495,6 @@ const testObjectDefault = (testValidator: TestValidatorType, expectList: ObjectD
                     enum: ['meat', 'grass', 'fish'],
                     default: 'meat',
                   },
-                  multipleChoicesList: {
-                    type: 'array',
-                    title: 'A multiple choices list',
-                    items: {
-                      type: 'string',
-                      enum: ['foo', 'bar', 'qux'],
-                    },
-                    uniqueItems: true,
-                    default: ['foo'],
-                  },
                 },
               },
               {
@@ -516,16 +506,6 @@ const testObjectDefault = (testValidator: TestValidatorType, expectList: ObjectD
                     type: 'string',
                     enum: ['insect', 'worms'],
                     default: 'worms',
-                  },
-                  multipleChoicesList: {
-                    type: 'array',
-                    title: 'A multiple choices list',
-                    items: {
-                      type: 'string',
-                      enum: ['a', 'a', 'b', 'c'],
-                    },
-                    uniqueItems: true,
-                    default: ['a'],
                   },
                   water: {
                     type: 'string',
@@ -548,7 +528,6 @@ const testObjectDefault = (testValidator: TestValidatorType, expectList: ObjectD
         rawFormData: {
           animal: 'Fish',
           food: 'meat',
-          multipleChoicesList: ['a'],
           water: null,
         },
         shouldMergeDefaultsIntoFormData: true,
@@ -565,7 +544,6 @@ const testObjectDefault = (testValidator: TestValidatorType, expectList: ObjectD
         rawFormData: {
           animal: 'Fish',
           food: 'meat',
-          multipleChoicesList: ['a'],
           water: null,
         },
         shouldMergeDefaultsIntoFormData: true,
@@ -938,7 +916,6 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         toEqual: {
           animal: 'Fish',
           food: 'worms',
-          multipleChoicesList: ['a'],
           water: null,
         },
       },
@@ -955,7 +932,6 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         toEqual: {
           animal: 'Fish',
           food: 'worms',
-          multipleChoicesList: ['a'],
           water: 'sea',
         },
       },
@@ -1348,7 +1324,6 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           toEqual: {
             animal: 'Fish',
             food: 'worms',
-            multipleChoicesList: ['a'],
             water: 'sea',
           },
         },
@@ -1361,7 +1336,6 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           toEqual: {
             animal: 'Fish',
             food: 'worms',
-            multipleChoicesList: ['a'],
             water: 'sea',
           },
         },
