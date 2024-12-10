@@ -26,4 +26,38 @@ describe('isObject()', () => {
       expect(isObject(object)).toBe(true);
     });
   });
+  describe('without accessing File and Date classes', () => {
+    const NativeFile = File;
+    const NativeDate = Date;
+
+    beforeEach(() => {
+      Object.defineProperty(global, 'File', {
+        get() {
+          throw new Error('File should not have been accessed');
+        },
+      });
+      Object.defineProperty(global, 'Date', {
+        get() {
+          throw new Error('Date should not have been accessed');
+        },
+      });
+    });
+
+    afterEach(() => {
+      Object.defineProperty(global, 'File', NativeFile);
+      Object.defineProperty(global, 'Date', NativeDate);
+    });
+
+    it('returns false when a non-object is provided', () => {
+      NON_OBJECTS.forEach((nonObject: string | number | boolean | null | undefined) => {
+        expect(isObject(nonObject)).toBe(false);
+      });
+    });
+
+    it('returns true when an object is provided', () => {
+      OBJECTS.forEach((object: any) => {
+        expect(isObject(object)).toBe(true);
+      });
+    });
+  });
 });
