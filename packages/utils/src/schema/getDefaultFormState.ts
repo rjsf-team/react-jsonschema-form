@@ -34,7 +34,7 @@ import isSelect from './isSelect';
 import retrieveSchema, { resolveDependencies } from './retrieveSchema';
 import isConstant from '../isConstant';
 import { JSONSchema7Object } from 'json-schema';
-import { isEqual } from 'lodash';
+import isEqual from 'lodash/isEqual';
 import optionsList from '../optionsList';
 
 const PRIMITIVE_TYPES = ['string', 'number', 'integer', 'boolean', 'null'];
