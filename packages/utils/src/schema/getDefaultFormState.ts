@@ -35,6 +35,7 @@ import retrieveSchema, { resolveDependencies } from './retrieveSchema';
 import isConstant from '../isConstant';
 import { JSONSchema7Object } from 'json-schema';
 import isEqual from 'lodash/isEqual';
+import isUndefined from 'lodash/isUndefined';
 import optionsList from '../optionsList';
 
 const PRIMITIVE_TYPES = ['string', 'number', 'integer', 'boolean', 'null'];
@@ -276,7 +277,7 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
       getClosestMatchingOption<T, S, F>(
         validator,
         rootSchema,
-        isEmpty(formData) ? undefined : formData,
+        isUndefined(rawFormData) ? undefined : rawFormData,
         oneOf as S[],
         0,
         discriminator,
@@ -294,7 +295,7 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
       getClosestMatchingOption<T, S, F>(
         validator,
         rootSchema,
-        isEmpty(formData) ? undefined : formData,
+        isUndefined(rawFormData) ? undefined : rawFormData,
         anyOf as S[],
         0,
         discriminator,
@@ -687,7 +688,8 @@ export default function getDefaultFormState<
   const schema = retrieveSchema<T, S, F>(validator, theSchema, rootSchema, formData, experimental_customMergeAllOf);
 
   // Get the computed defaults with 'shouldMergeDefaultsIntoFormData' set to true to merge defaults into formData.
-  // This is done when for example the value from formData does not exist in the schema 'enum' property, in such cases we take the value from the defaults because the value from the formData is not valid.
+  // This is done when for example the value from formData does not exist in the schema 'enum' property, in such
+  // cases we take the value from the defaults because the value from the formData is not valid.
   const defaults = computeDefaults<T, S, F>(validator, schema, {
     rootSchema,
     includeUndefinedValues,
@@ -697,7 +699,8 @@ export default function getDefaultFormState<
     shouldMergeDefaultsIntoFormData: true,
   });
 
-  // If the formData is an object or an array, add additional properties from formData and override formData with defaults since the defaults are already merged with formData.
+  // If the formData is an object or an array, add additional properties from formData and override formData with
+  // defaults since the defaults are already merged with formData.
   if (isObject(formData) || Array.isArray(formData)) {
     const { mergeDefaultsIntoFormData } = experimental_defaultFormStateBehavior || {};
     const defaultSupercedesUndefined = mergeDefaultsIntoFormData === 'useDefaultIfFormDataUndefined';
