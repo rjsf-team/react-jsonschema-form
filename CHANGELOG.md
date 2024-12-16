@@ -25,6 +25,7 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/utils
 
 - Short-circuit `File` and `Date` constructor access in isObject to optimize performance in scenarios where `globalThis` is a `Proxy` that incurs overhead for each class constructor access ([#4413](https://github.com/rjsf-team/react-jsonschema-form/pull/4413)). Fixes [#4409](https://github.com/rjsf-team/react-jsonschema-form/issues/4409)
+- Rollback `isValid()` in `retrieveSchema()` to `validateFormData()` to prevent a bug with empty enums blocking dependencies. Fixes [#4418](https://github.com/rjsf-team/react-jsonschema-form/pull/4418)
 
 ## @rjsf/validator-ajv8
 
