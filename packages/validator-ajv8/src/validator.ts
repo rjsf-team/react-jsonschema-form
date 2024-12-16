@@ -90,19 +90,35 @@ export default class AJV8Validator<T = any, S extends StrictRJSFSchema = RJSFSch
     let errors;
     if (compiledValidator) {
       if (typeof this.localizer === 'function') {
-        // Missing properties need to be enclosed with quotes so that
+        // Properties need to be enclosed with quotes so that
         // `AJV8Validator#transformRJSFValidationErrors` replaces property names
-        // with `title` or `ui:title`. See #4348, #4349, and #4387.
+        // with `title` or `ui:title`. See #4348, #4349, #4387, and #4402.
         (compiledValidator.errors ?? []).forEach((error) => {
-          if (error.params?.missingProperty) {
-            error.params.missingProperty = `'${error.params.missingProperty}'`;
+          ['missingProperty', 'property'].forEach((key) => {
+            if (error.params?.[key]) {
+              error.params[key] = `'${error.params[key]}'`;
+            }
+          });
+          if (error.params?.deps) {
+            error.params.deps = error.params.deps
+              .split(', ')
+              .map((v: string) => `'${v}'`)
+              .join(', ');
           }
         });
         this.localizer(compiledValidator.errors);
         // Revert to originals
         (compiledValidator.errors ?? []).forEach((error) => {
-          if (error.params?.missingProperty) {
-            error.params.missingProperty = error.params.missingProperty.slice(1, -1);
+          ['missingProperty', 'property'].forEach((key) => {
+            if (error.params?.[key]) {
+              error.params[key] = error.params[key].slice(1, -1);
+            }
+          });
+          if (error.params?.deps) {
+            error.params.deps = error.params.deps
+              .split(', ')
+              .map((v: string) => v.slice(1, -1))
+              .join(', ');
           }
         });
       }
