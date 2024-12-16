@@ -815,7 +815,8 @@ export function withExactlyOneSubschema<
           [dependencyKey]: conditionPropertySchema,
         },
       } as S;
-      return validator.isValid(conditionSchema, formData, rootSchema) || expandAllBranches;
+      const { errors } = validator.validateFormData(formData, conditionSchema);
+      return errors.length === 0 || expandAllBranches;
     }
     return false;
   });

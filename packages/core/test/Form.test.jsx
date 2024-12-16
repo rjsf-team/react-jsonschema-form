@@ -218,6 +218,7 @@ describeRepeated('Form common', (createFormComponent) => {
 
     it('should work with oneOf', function () {
       const schema = {
+        $schema: 'http://json-schema.org/draft-06/schema#',
         type: 'object',
         properties: {
           connector: {
