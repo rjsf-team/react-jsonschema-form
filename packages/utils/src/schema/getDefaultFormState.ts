@@ -115,11 +115,11 @@ function maybeAddDefaultToObject<T = any>(
     // Or if the schema has a const property defined, then we should always return the computedDefault since it's coming from the const.
     obj[key] = computedDefault;
   } else if (emptyObjectFields !== 'skipDefaults') {
-    if (isObject(computedDefault)) {
-      // If isParentRequired is undefined, then we are at the root level of the schema so defer to the requiredness of
-      // the field key itself in the `requiredField` list
-      const isSelfOrParentRequired = isParentRequired === undefined ? requiredFields.includes(key) : isParentRequired;
+    // If isParentRequired is undefined, then we are at the root level of the schema so defer to the requiredness of
+    // the field key itself in the `requiredField` list
+    const isSelfOrParentRequired = isParentRequired === undefined ? requiredFields.includes(key) : isParentRequired;
 
+    if (isObject(computedDefault)) {
       // If emptyObjectFields 'skipEmptyDefaults' store computedDefault if it's a non-empty object(e.g. not {})
       if (emptyObjectFields === 'skipEmptyDefaults') {
         if (!isEmpty(computedDefault)) {
@@ -138,11 +138,12 @@ function maybeAddDefaultToObject<T = any>(
     } else if (
       // Store computedDefault if it's a defined primitive (e.g., true) and satisfies certain conditions
       // Condition 1: computedDefault is not undefined
-      // Condition 2: If emptyObjectFields is 'populateAllDefaults' or 'skipEmptyDefaults) or if the key is a required field
+      // Condition 2: If emptyObjectFields is 'populateAllDefaults' or 'skipEmptyDefaults)
+      // Or if isSelfOrParentRequired is 'true' and the key is a required field
       computedDefault !== undefined &&
       (emptyObjectFields === 'populateAllDefaults' ||
         emptyObjectFields === 'skipEmptyDefaults' ||
-        requiredFields.includes(key))
+        (isSelfOrParentRequired && requiredFields.includes(key)))
     ) {
       obj[key] = computedDefault;
     }
