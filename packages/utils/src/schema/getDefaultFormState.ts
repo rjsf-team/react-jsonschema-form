@@ -35,7 +35,6 @@ import retrieveSchema, { resolveDependencies } from './retrieveSchema';
 import isConstant from '../isConstant';
 import { JSONSchema7Object } from 'json-schema';
 import isEqual from 'lodash/isEqual';
-import isUndefined from 'lodash/isUndefined';
 import optionsList from '../optionsList';
 
 const PRIMITIVE_TYPES = ['string', 'number', 'integer', 'boolean', 'null'];
@@ -277,7 +276,7 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
       getClosestMatchingOption<T, S, F>(
         validator,
         rootSchema,
-        isUndefined(rawFormData) ? undefined : rawFormData,
+        rawFormData,
         oneOf as S[],
         0,
         discriminator,
@@ -295,7 +294,7 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
       getClosestMatchingOption<T, S, F>(
         validator,
         rootSchema,
-        isUndefined(rawFormData) ? undefined : rawFormData,
+        rawFormData,
         anyOf as S[],
         0,
         discriminator,
