@@ -16,6 +16,12 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 5.24.0
+
+## @rjsf/utils
+
+- Fixed issue with assigning default values to formData with deeply nested required properties, fixing [#4399](https://github.com/rjsf-team/react-jsonschema-form/issues/4399)
+
 # 5.23.2
 
 ## @rjsf/core
