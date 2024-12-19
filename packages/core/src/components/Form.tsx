@@ -7,6 +7,7 @@ import {
   ErrorTransformer,
   FormContextType,
   GenericObjectType,
+  getChangedFields,
   getTemplate,
   getUiOptions,
   IdSchema,
@@ -316,8 +317,9 @@ export default class Form<
     prevState: FormState<T, S, F>
   ): { nextState: FormState<T, S, F>; shouldUpdate: true } | { shouldUpdate: false } {
     if (!deepEquals(this.props, prevProps)) {
+      const formDataChangedFields = getChangedFields(this.props.formData, prevProps.formData);
       const isSchemaChanged = !deepEquals(prevProps.schema, this.props.schema);
-      const isFormDataChanged = !deepEquals(prevProps.formData, this.props.formData);
+      const isFormDataChanged = formDataChangedFields.length > 0;
       const nextState = this.getStateFromProps(
         this.props,
         this.props.formData,
@@ -325,7 +327,8 @@ export default class Form<
         // Or if the `formData` changes, for example in the case of a schema with dependencies that need to
         //  match one of the subSchemas, the retrieved schema must be updated.
         isSchemaChanged || isFormDataChanged ? undefined : this.state.retrievedSchema,
-        isSchemaChanged
+        isSchemaChanged,
+        formDataChangedFields
       );
       const shouldUpdate = !deepEquals(nextState, prevState);
       return { nextState, shouldUpdate };
@@ -375,13 +378,15 @@ export default class Form<
    * @param inputFormData - The new or current data for the `Form`
    * @param retrievedSchema - An expanded schema, if not provided, it will be retrieved from the `schema` and `formData`.
    * @param isSchemaChanged - A flag indicating whether the schema has changed.
+   * @param formDataChangedFields - The changed fields of `formData`
    * @returns - The new state for the `Form`
    */
   getStateFromProps(
     props: FormProps<T, S, F>,
     inputFormData?: T,
     retrievedSchema?: S,
-    isSchemaChanged = false
+    isSchemaChanged = false,
+    formDataChangedFields: string[] = []
   ): FormState<T, S, F> {
     const state: FormState<T, S, F> = this.state || {};
     const schema = 'schema' in props ? props.schema : this.props.schema;
@@ -458,6 +463,17 @@ export default class Form<
       const currentErrors = getCurrentErrors();
       errors = currentErrors.errors;
       errorSchema = currentErrors.errorSchema;
+      if (formDataChangedFields.length > 0) {
+        const newErrorSchema = formDataChangedFields.reduce((acc, key) => {
+          acc[key] = undefined;
+          return acc;
+        }, {} as Record<string, undefined>);
+        errorSchema = schemaValidationErrorSchema = mergeObjects(
+          currentErrors.errorSchema,
+          newErrorSchema,
+          'preventDuplicates'
+        ) as ErrorSchema<T>;
+      }
     }
     if (props.extraErrors) {
       const merged = validationDataMerge({ errorSchema, errors }, props.extraErrors);
