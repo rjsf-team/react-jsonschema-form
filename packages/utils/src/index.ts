@@ -52,6 +52,7 @@ import utcToLocal from './utcToLocal';
 import validationDataMerge from './validationDataMerge';
 import withIdRefPrefix from './withIdRefPrefix';
 import getOptionMatchingSimpleDiscriminator from './getOptionMatchingSimpleDiscriminator';
+import getChangedFields from './getChangedFields';
 
 export * from './types';
 export * from './enums';
@@ -82,6 +83,7 @@ export {
   examplesId,
   ErrorSchemaBuilder,
   findSchemaDefinition,
+  getChangedFields,
   getDateElementProps,
   getDiscriminatorFieldFromSchema,
   getInputProps,
