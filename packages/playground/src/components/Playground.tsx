@@ -69,6 +69,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
         theme: dataTheme = theme,
         extraErrors,
         liveSettings,
+        validator,
         ...rest
       } = data;
 
@@ -85,6 +86,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
       setTheme(theTheme);
       setShowForm(true);
       setLiveSettings(liveSettings);
+      setValidator(validator);
       setOtherFormProps({ fields, templates, ...rest });
     },
     [theme, onThemeSelected, themes]

@@ -16,6 +16,10 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 5.24.0
+
+- Fix for AJV [$data](https://ajv.js.org/guide/combining-schemas.html#data-reference) reference in const property in schema treated as default/const value. The issue is mentioned in [#4361](https://github.com/rjsf-team/react-jsonschema-form/issues/4361).
+
 # 5.23.2
 
 ## @rjsf/core
