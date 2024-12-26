@@ -416,7 +416,9 @@ export default class Form<
       );
     }
     const formData: T = schemaUtils.getDefaultFormState(schema, inputFormData) as T;
-    const _retrievedSchema = retrievedSchema ?? schemaUtils.retrieveSchema(schema, formData);
+    const _retrievedSchema = this.updateRetrievedSchema(
+      retrievedSchema ?? schemaUtils.retrieveSchema(schema, formData)
+    );
 
     const getCurrentErrors = (): ValidationData<T> => {
       // If the `props.noValidate` option is set or the schema has changed, we reset the error state.
@@ -459,6 +461,7 @@ export default class Form<
       errors = currentErrors.errors;
       errorSchema = currentErrors.errorSchema;
     }
+
     if (props.extraErrors) {
       const merged = validationDataMerge({ errorSchema, errors }, props.extraErrors);
       errorSchema = merged.errorSchema;
@@ -649,11 +652,13 @@ export default class Form<
    */
   onChange = (formData: T | undefined, newErrorSchema?: ErrorSchema<T>, id?: string) => {
     const { extraErrors, omitExtraData, liveOmit, noValidate, liveValidate, onChange } = this.props;
-    const { schemaUtils, schema, retrievedSchema } = this.state;
+    const { schemaUtils, schema } = this.state;
 
+    let retrievedSchema = this.state.retrievedSchema;
     if (isObject(formData) || Array.isArray(formData)) {
-      const newState = this.getStateFromProps(this.props, formData, retrievedSchema);
+      const newState = this.getStateFromProps(this.props, formData);
       formData = newState.formData;
+      retrievedSchema = newState.retrievedSchema;
     }
 
     const mustValidate = !noValidate && liveValidate;
@@ -701,6 +706,19 @@ export default class Form<
       };
     }
     this.setState(state as FormState<T, S, F>, () => onChange && onChange({ ...this.state, ...state }, id));
+  };
+
+  /**
+   * Returns if the retrievedSchema has changed the new retrievedSchema,
+   * Else the old retrievedSchema to persist  reference.
+   * -  This ensures that AJV retrieves the schema from the cache when it has not changed,
+   *    avoiding the performance cost of recompiling the schema.
+   * @param retrievedSchema The new retrieved schema.
+   * @returns The new retrieved schema if it has changed, else the old retrieved schema.
+   */
+  private updateRetrievedSchema = (retrievedSchema: S) => {
+    const isTheSame = deepEquals(retrievedSchema, this.state?.retrievedSchema);
+    return isTheSame ? this.state.retrievedSchema : retrievedSchema;
   };
 
   /**
