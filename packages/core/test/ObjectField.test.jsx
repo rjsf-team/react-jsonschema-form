@@ -1203,4 +1203,76 @@ describe('ObjectField', () => {
       });
     });
   });
+
+  describe('markdown', () => {
+    const schema = {
+      title: 'A list of tasks',
+      type: 'object',
+      properties: {
+        tasks: {
+          description: 'New *description*, with some Markdown.',
+          type: 'object',
+          title: 'Tasks',
+          properties: {
+            details: {
+              type: 'string',
+              title: 'Task details',
+              description: 'Description to renders Markdown **correctly**.',
+            },
+            has_markdown: {
+              type: 'boolean',
+              description: 'Checkbox with some `markdown`!',
+            },
+          },
+        },
+      },
+    };
+
+    const uiSchema = {
+      tasks: {
+        'ui:enableMarkdownInDescription': true,
+        details: {
+          'ui:enableMarkdownInDescription': true,
+          'ui:widget': 'textarea',
+        },
+        has_markdown: {
+          'ui:enableMarkdownInDescription': true,
+        },
+      },
+    };
+
+    it('should render markdown in description when enableMarkdownInDescription is set to true', () => {
+      const { node } = createFormComponent({ schema, uiSchema });
+
+      const { innerHTML: rootInnerHTML } = node.querySelector('form .form-group .form-group .field-description');
+      expect(rootInnerHTML).to.contains('New <em>description</em>, with some Markdown.');
+
+      const { innerHTML: detailsInnerHTML } = node.querySelector(
+        'form .form-group .form-group .field-string .field-description'
+      );
+      expect(detailsInnerHTML).to.contains('Description to renders Markdown <strong>correctly</strong>.');
+
+      const { innerHTML: checkboxInnerHTML } = node.querySelector(
+        'form .form-group .form-group .field-boolean .field-description'
+      );
+      expect(checkboxInnerHTML).to.contains('Checkbox with some <code>markdown</code>!');
+    });
+    it('should not render markdown in description when enableMarkdownInDescription is not present in uiSchema', () => {
+      const { node } = createFormComponent({ schema });
+
+      const { innerHTML: rootInnerHTML } = node.querySelector('form .form-group .form-group .field-description');
+      expect(rootInnerHTML).to.contains('New *description*, with some Markdown.');
+
+      const { innerHTML: detailsInnerHTML } = node.querySelector(
+        'form .form-group .form-group .field-string .field-description'
+      );
+      expect(detailsInnerHTML).to.contains('Description to renders Markdown **correctly**.');
+
+      const { innerHTML: checkboxInnerHTML } = node.querySelector(
+        'form .form-group .form-group .field-boolean .field-description'
+      );
+      expect(checkboxInnerHTML).to.contains('Checkbox with some `markdown`!');
+    });
+
+  });
 });
