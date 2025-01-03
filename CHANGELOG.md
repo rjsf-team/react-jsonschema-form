@@ -16,7 +16,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
-# 5.24.0
+# 5.23.3
 
 ## @rjsf/utils
 
