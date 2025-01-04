@@ -709,17 +709,18 @@ export default class Form<
   };
 
   /**
-   * Returns if the retrievedSchema has changed the new retrievedSchema,
-   * Else the old retrievedSchema to persist  reference.
+   * If the retrievedSchema has changed the new retrievedSchema is returned.
+   * Otherwise, the old retrievedSchema is returned to persist reference.
    * -  This ensures that AJV retrieves the schema from the cache when it has not changed,
    *    avoiding the performance cost of recompiling the schema.
+   *
    * @param retrievedSchema The new retrieved schema.
    * @returns The new retrieved schema if it has changed, else the old retrieved schema.
    */
-  private updateRetrievedSchema = (retrievedSchema: S) => {
+  private updateRetrievedSchema(retrievedSchema: S) {
     const isTheSame = deepEquals(retrievedSchema, this.state?.retrievedSchema);
     return isTheSame ? this.state.retrievedSchema : retrievedSchema;
-  };
+  }
 
   /**
    * Callback function to handle reset form data.
