@@ -40,7 +40,15 @@ export function transformRJSFValidationErrors<
     if ('missingProperty' in params) {
       property = property ? `${property}.${params.missingProperty}` : params.missingProperty;
       const currentProperty: string = params.missingProperty;
-      const uiSchemaTitle = getUiOptions(get(uiSchema, `${property.replace(/^\./, '')}`)).title;
+      let uiSchemaTitle = getUiOptions(get(uiSchema, `${property.replace(/^\./, '')}`)).title;
+      if (uiSchemaTitle === undefined) {
+        const uiSchemaPath = schemaPath
+          .replace(/\/properties\//g, '/')
+          .split('/')
+          .slice(1, -1)
+          .concat([currentProperty]);
+        uiSchemaTitle = getUiOptions(get(uiSchema, uiSchemaPath)).title;
+      }
 
       if (uiSchemaTitle) {
         message = message.replace(`'${currentProperty}'`, `'${uiSchemaTitle}'`);
