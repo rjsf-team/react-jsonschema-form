@@ -354,6 +354,7 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
 
 /**
  * Ensure that the formData matches the given schema. If it's not matching in the case of a selectField, we change it to match the schema.
+ *
  * @param validator - an implementation of the `ValidatorType` interface that will be used when necessary
  * @param schema - The schema for which the formData state is desired
  * @param rootSchema - The root schema, used to primarily to look up `$ref`s
@@ -383,7 +384,7 @@ export function ensureFormDataMatchingSchema<
   // Override the formData with the const if the constAsDefaults is set to always
   const constTakesPrecedence = schema[CONST_KEY] && experimental_defaultFormStateBehavior?.constAsDefaults === 'always';
   if (constTakesPrecedence) {
-    validFormData = schema.const as any;
+    validFormData = schema.const as T;
   }
 
   return validFormData;
@@ -704,8 +705,8 @@ export default function getDefaultFormState<
   if (isObject(formData) || Array.isArray(formData)) {
     const { mergeDefaultsIntoFormData } = experimental_defaultFormStateBehavior || {};
     const defaultSupercedesUndefined = mergeDefaultsIntoFormData === 'useDefaultIfFormDataUndefined';
-    const result = mergeDefaultsWithFormData<T>(
-      defaults as T,
+    const result = mergeDefaultsWithFormData<T | T[]>(
+      defaults,
       formData,
       true, // set to true to add any additional default array entries.
       defaultSupercedesUndefined,

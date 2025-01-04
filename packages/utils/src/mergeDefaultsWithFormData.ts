@@ -78,14 +78,20 @@ export default function mergeDefaultsWithFormData<T = any>(
       return acc;
     }, acc);
   }
+
+  /**
+   * If the defaultSupercedesUndefined flag is true
+   *    And formData is set to undefined or null and defaults are defined
+   *    Or if formData is a number and is NaN return defaults
+   * Or if overrideFormDataWithDefaults flag is true and formData is set to not undefined/null return defaults
+   */
   if (
-    defaultSupercedesUndefined &&
-    ((!isNil(defaults) && isNil(formData)) || (typeof formData === 'number' && isNaN(formData)))
+    (defaultSupercedesUndefined &&
+      ((!isNil(defaults) && isNil(formData)) || (typeof formData === 'number' && isNaN(formData)))) ||
+    (overrideFormDataWithDefaults && !isNil(formData))
   ) {
     return defaults;
-  } else if (overrideFormDataWithDefaults && isNil(formData)) {
-    // If the overrideFormDataWithDefaults flag is true and formData is set to undefined or null return formData
-    return formData;
   }
-  return overrideFormDataWithDefaults ? defaults : formData;
+
+  return formData;
 }
