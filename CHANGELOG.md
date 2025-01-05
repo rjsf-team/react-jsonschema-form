@@ -16,6 +16,12 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 5.24.0
+
+## @rjsf/utils
+
+- Fixed issue error message will not be cleared after the controlled Form formData is changed. Fixes [#4426](https://github.com/rjsf-team/react-jsonschema-form/issues/4426)
+
 # 5.23.3
 
 ## @rjsf/utils
