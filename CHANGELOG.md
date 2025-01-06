@@ -20,6 +20,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/utils
 
+- Fixed issue with formData not updating when dependencies change, fixing [#4325](https://github.com/rjsf-team/react-jsonschema-form/issues/4325)
 - Fixed issue with assigning default values to formData with deeply nested required properties, fixing [#4399](https://github.com/rjsf-team/react-jsonschema-form/issues/4399)
 
 # 5.23.2
