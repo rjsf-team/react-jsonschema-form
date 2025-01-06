@@ -16,7 +16,11 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
-# 5.23.3
+# 5.24.0
+
+## @rjsf/core 
+
+- Fixed issue with schema if/then/else conditions where switching to then/else subschemas did not reflect the actual validation errors in the onChange event, fixing [#4249](https://github.com/rjsf-team/react-jsonschema-form/issues/4249) and improving performance.
 
 ## @rjsf/utils
 
