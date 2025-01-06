@@ -227,6 +227,56 @@ describe('ObjectField', () => {
       });
     });
 
+    it('Check schema with if/then/else conditions and activate the then/else subschemas, the onChange event should reflect the actual validation errors', () => {
+      const schema = {
+        type: 'object',
+        _const: 'test',
+        required: ['checkbox'],
+        properties: {
+          checkbox: {
+            type: 'boolean',
+          },
+        },
+        if: {
+          required: ['checkbox'],
+          properties: {
+            checkbox: {
+              const: true,
+            },
+          },
+        },
+        then: {
+          required: ['text'],
+          properties: {
+            text: {
+              type: 'string',
+            },
+          },
+        },
+      };
+
+      const { node, onChange } = createFormComponent({
+        schema,
+        formData: {
+          checkbox: true,
+        },
+        liveValidate: true,
+      });
+
+      // Uncheck the checkbox
+      fireEvent.click(node.querySelector('input[type=checkbox]'));
+
+      sinon.assert.calledWithMatch(
+        onChange.lastCall,
+        {
+          formData: { checkbox: false },
+          errorSchema: {},
+          errors: [],
+        },
+        'root_checkbox'
+      );
+    });
+
     it('should validate AJV $data reference ', () => {
       const schema = {
         type: 'object',
