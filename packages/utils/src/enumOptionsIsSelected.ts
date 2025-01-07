@@ -1,4 +1,4 @@
-import isEqual from 'lodash/isEqual';
+import { deepEqual } from 'fast-equals';
 
 import { EnumOptionsType, RJSFSchema, StrictRJSFSchema } from './types';
 
@@ -13,7 +13,7 @@ export default function enumOptionsIsSelected<S extends StrictRJSFSchema = RJSFS
   selected: EnumOptionsType<S>['value'] | EnumOptionsType<S>['value'][]
 ) {
   if (Array.isArray(selected)) {
-    return selected.some((sel) => isEqual(sel, value));
+    return selected.some((sel) => deepEqual(sel, value));
   }
-  return isEqual(selected, value);
+  return deepEqual(selected, value);
 }

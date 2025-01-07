@@ -2,14 +2,14 @@ import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
 
 import {
+  ALL_OF_KEY,
   ANY_OF_KEY,
   CONST_KEY,
   DEFAULT_KEY,
   DEPENDENCIES_KEY,
-  PROPERTIES_KEY,
   ONE_OF_KEY,
+  PROPERTIES_KEY,
   REF_KEY,
-  ALL_OF_KEY,
 } from '../constants';
 import findSchemaDefinition from '../findSchemaDefinition';
 import getClosestMatchingOption from './getClosestMatchingOption';
@@ -35,8 +35,8 @@ import retrieveSchema, { resolveDependencies } from './retrieveSchema';
 import isConstant from '../isConstant';
 import { JSONSchema7Object } from 'json-schema';
 import constIsAjvDataReference from '../constIsAjvDataReference';
-import isEqual from 'lodash/isEqual';
 import optionsList from '../optionsList';
+import { deepEqual } from 'fast-equals';
 
 const PRIMITIVE_TYPES = ['string', 'number', 'integer', 'boolean', 'null'];
 
@@ -130,8 +130,7 @@ function maybeAddDefaultToObject<T = any>(
         if (!isEmpty(computedDefault)) {
           obj[key] = computedDefault;
         }
-      }
-      // Else store computedDefault if it's a non-empty object(e.g. not {}) and satisfies certain conditions
+      } // Else store computedDefault if it's a non-empty object(e.g. not {}) and satisfies certain conditions
       // Condition 1: If computedDefault is not empty or if the key is a required field
       // Condition 2: If the parent object is required or emptyObjectFields is not 'populateRequiredDefaults'
       else if (
@@ -276,7 +275,10 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
       experimental_dfsb_to_compute?.constAsDefaults === 'skipOneOf'
     ) {
       // If we are in a oneOf of a primitive type, then we want to pass constAsDefaults as 'never' for the recursion
-      experimental_dfsb_to_compute = { ...experimental_dfsb_to_compute, constAsDefaults: 'never' };
+      experimental_dfsb_to_compute = {
+        ...experimental_dfsb_to_compute,
+        constAsDefaults: 'never',
+      };
     }
     schemaToCompute = oneOf![
       getClosestMatchingOption<T, S, F>(
@@ -382,7 +384,7 @@ export function ensureFormDataMatchingSchema<
   let validFormData: T | T[] | undefined = formData;
   if (isSelectField) {
     const getOptionsList = optionsList(schema);
-    const isValid = getOptionsList?.some((option) => isEqual(option.value, formData));
+    const isValid = getOptionsList?.some((option) => deepEqual(option.value, formData));
     validFormData = isValid ? formData : undefined;
   }
 
