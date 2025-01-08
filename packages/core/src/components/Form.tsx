@@ -705,7 +705,13 @@ export default class Form<
         errors: toErrorList(errorSchema),
       };
     }
-    this.setState(state as FormState<T, S, F>, () => onChange && onChange({ ...this.state, ...state }, id));
+    this.setState(prevState => {
+      const newState = { ...prevState, ...state } as FormState<T, S, F>;
+      if (onChange) {
+        onChange(newState, id);
+      }
+      return newState; 
+    });
   };
 
   /**
