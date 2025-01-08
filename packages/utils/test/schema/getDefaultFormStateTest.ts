@@ -2113,6 +2113,102 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         expect(ensureFormDataMatchingSchema(testValidator, schema, schema, 'a')).toEqual('a');
       });
     });
+    describe('AJV $data reference in const property in schema should not be treated as default/const value', () => {
+      let schema: RJSFSchema;
+      it('test nested object with $data in the schema', () => {
+        schema = {
+          type: 'object',
+          properties: {
+            email: {
+              type: 'string',
+              title: 'E-mail',
+              format: 'email',
+            },
+            emailConfirm: {
+              type: 'string',
+              const: {
+                $data: '/email',
+              },
+              title: 'Confirm e-mail',
+              format: 'email',
+            },
+            nestedObject: {
+              type: 'object',
+              properties: {
+                nestedEmail: {
+                  type: 'string',
+                  title: 'E-mail',
+                  format: 'email',
+                },
+                nestedEmailConfirm: {
+                  type: 'string',
+                  title: 'Confirm e-mail',
+                  const: {
+                    $data: '/nestedObject/nestedEmail',
+                  },
+                  format: 'email',
+                },
+              },
+            },
+            nestedObjectConfirm: {
+              type: 'object',
+              properties: {
+                nestedEmailConfirm: {
+                  type: 'string',
+                  title: 'Confirm e-mail',
+                  const: {
+                    $data: '/nestedObject/nestedEmail',
+                  },
+                  format: 'email',
+                },
+              },
+            },
+            arrayConfirm: {
+              type: 'array',
+              items: {
+                type: 'string',
+                title: 'Confirm e-mail',
+                const: {
+                  $data: '/nestedObject/nestedEmail',
+                },
+                format: 'email',
+              },
+            },
+          },
+        };
+        expect(
+          computeDefaults(testValidator, schema, {
+            rootSchema: schema,
+          })
+        ).toEqual({
+          arrayConfirm: [],
+        });
+      });
+      it('test nested object with $data in the schema and emptyObjectFields set to populateRequiredDefaults', () => {
+        expect(
+          computeDefaults(testValidator, schema, {
+            rootSchema: schema,
+            experimental_defaultFormStateBehavior: { emptyObjectFields: 'populateRequiredDefaults' },
+          })
+        ).toEqual({});
+      });
+      it('test nested object with $data in the schema and emptyObjectFields set to skipEmptyDefaults', () => {
+        expect(
+          computeDefaults(testValidator, schema, {
+            rootSchema: schema,
+            experimental_defaultFormStateBehavior: { emptyObjectFields: 'skipEmptyDefaults' },
+          })
+        ).toEqual({});
+      });
+      it('test nested object with $data in the schema and emptyObjectFields set to skipDefaults', () => {
+        expect(
+          computeDefaults(testValidator, schema, {
+            rootSchema: schema,
+            experimental_defaultFormStateBehavior: { emptyObjectFields: 'skipDefaults' },
+          })
+        ).toEqual({});
+      });
+    });
     describe('default form state behavior: ignore min items unless required', () => {
       it('should return empty data for an optional array property with minItems', () => {
         const schema: RJSFSchema = {

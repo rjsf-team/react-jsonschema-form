@@ -28,6 +28,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Fixed issue with formData not updating when dependencies change, fixing [#4325](https://github.com/rjsf-team/react-jsonschema-form/issues/4325)
 - Fixed issue with assigning default values to formData with deeply nested required properties, fixing [#4399](https://github.com/rjsf-team/react-jsonschema-form/issues/4399)
 - Fixed issue error message will not be cleared after the controlled Form formData is changed. Fixes [#4426](https://github.com/rjsf-team/react-jsonschema-form/issues/4426)
+- Fix for AJV [$data](https://ajv.js.org/guide/combining-schemas.html#data-reference) reference in const property in schema treated as default/const value. The issue is mentioned in [#4361](https://github.com/rjsf-team/react-jsonschema-form/issues/4361).
 
 # 5.23.2
 
