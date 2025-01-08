@@ -319,7 +319,10 @@ export default class Form<
     if (!deepEquals(this.props, prevProps)) {
       const formDataChangedFields = getChangedFields(this.props.formData, prevProps.formData);
       const isSchemaChanged = !deepEquals(prevProps.schema, this.props.schema);
-      const isFormDataChanged = formDataChangedFields.length > 0;
+      // When formData is not an object, getChangedFields returns an empty array.
+      // In this case, deepEquals is most needed to check again.
+      const isFormDataChanged =
+        formDataChangedFields.length > 0 || !deepEquals(prevProps.formData, this.props.formData);
       const nextState = this.getStateFromProps(
         this.props,
         this.props.formData,
