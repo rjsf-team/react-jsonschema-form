@@ -34,6 +34,7 @@ import isSelect from './isSelect';
 import retrieveSchema, { resolveDependencies } from './retrieveSchema';
 import isConstant from '../isConstant';
 import { JSONSchema7Object } from 'json-schema';
+import constIsAjvDataReference from '../constIsAjvDataReference';
 import isEqual from 'lodash/isEqual';
 import optionsList from '../optionsList';
 
@@ -213,8 +214,12 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
   let experimental_dfsb_to_compute = experimental_defaultFormStateBehavior;
   let updatedRecurseList = _recurseList;
 
-  if (schema[CONST_KEY] && experimental_defaultFormStateBehavior?.constAsDefaults !== 'never') {
-    defaults = schema.const as unknown as T;
+  if (
+    schema[CONST_KEY] &&
+    experimental_defaultFormStateBehavior?.constAsDefaults !== 'never' &&
+    !constIsAjvDataReference(schema)
+  ) {
+    defaults = schema[CONST_KEY] as unknown as T;
   } else if (isObject(defaults) && isObject(schema.default)) {
     // For object defaults, only override parent defaults that are defined in
     // schema.default.
@@ -431,7 +436,8 @@ export function getObjectDefaults<T = any, S extends StrictRJSFSchema = RJSFSche
         const hasParentConst = isObject(parentConst) && (parentConst as JSONSchema7Object)[key] !== undefined;
         const hasConst =
           ((isObject(propertySchema) && CONST_KEY in propertySchema) || hasParentConst) &&
-          experimental_defaultFormStateBehavior?.constAsDefaults !== 'never';
+          experimental_defaultFormStateBehavior?.constAsDefaults !== 'never' &&
+          !constIsAjvDataReference(propertySchema);
         // Compute the defaults for this node, with the parent defaults we might
         // have from a previous run: defaults[key].
         const computedDefault = computeDefaults<T, S, F>(validator, propertySchema, {

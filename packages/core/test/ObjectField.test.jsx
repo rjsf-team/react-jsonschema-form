@@ -277,6 +277,49 @@ describe('ObjectField', () => {
       );
     });
 
+    it('should validate AJV $data reference ', () => {
+      const schema = {
+        type: 'object',
+        properties: {
+          email: {
+            type: 'string',
+            title: 'E-mail',
+            format: 'email',
+          },
+          emailConfirm: {
+            type: 'string',
+            const: {
+              $data: '/email',
+            },
+            title: 'Confirm e-mail',
+            format: 'email',
+          },
+        },
+      };
+      const { node, rerender } = createFormComponent({
+        schema,
+        formData: {
+          email: 'Appie@hotmail.com',
+          emailConfirm: 'wrong@wrong.com',
+        },
+        liveValidate: true,
+      });
+
+      const errorMessages = node.querySelectorAll('#root_emailConfirm__error');
+      expect(errorMessages).to.have.length(1);
+
+      rerender({
+        schema,
+        formData: {
+          email: 'Appie@hotmail.com',
+          emailConfirm: 'Appie@hotmail.com',
+        },
+        liveValidate: true,
+      });
+
+      expect(node.querySelectorAll('#root_foo__error')).to.have.length(0);
+    });
+
     it('Check that when formData changes, the form should re-validate', () => {
       const { node, rerender } = createFormComponent({
         schema,

@@ -306,6 +306,7 @@ export default function Header({
           uiSchema,
           theme,
           liveSettings,
+          validator,
         })
       );
 
@@ -314,7 +315,7 @@ export default function Header({
       setShareURL(null);
       console.error(error);
     }
-  }, [formData, liveSettings, schema, theme, uiSchema, setShareURL]);
+  }, [formData, liveSettings, schema, theme, uiSchema, validator, setShareURL]);
 
   return (
     <div className='page-header'>
