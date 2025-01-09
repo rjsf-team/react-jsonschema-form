@@ -1,4 +1,4 @@
-import { deepEqual } from 'fast-equals';
+import isEqual from 'lodash/isEqual';
 
 import { EnumOptionsType, RJSFSchema, StrictRJSFSchema } from './types';
 import enumOptionsValueForIndex from './enumOptionsValueForIndex';
@@ -22,7 +22,7 @@ export default function enumOptionsDeselectValue<S extends StrictRJSFSchema = RJ
 ): EnumOptionsType<S>['value'] | EnumOptionsType<S>['value'][] | undefined {
   const value = enumOptionsValueForIndex<S>(valueIndex, allEnumOptions);
   if (Array.isArray(selected)) {
-    return selected.filter((v) => !deepEqual(v, value));
+    return selected.filter((v) => !isEqual(v, value));
   }
-  return deepEqual(value, selected) ? undefined : selected;
+  return isEqual(value, selected) ? undefined : selected;
 }

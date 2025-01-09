@@ -1,4 +1,5 @@
 import get from 'lodash/get';
+import isEqual from 'lodash/isEqual';
 import set from 'lodash/set';
 import times from 'lodash/times';
 import transform from 'lodash/transform';
@@ -14,10 +15,10 @@ import {
   ANY_OF_KEY,
   DEPENDENCIES_KEY,
   IF_KEY,
-  ITEMS_KEY,
   ONE_OF_KEY,
-  PROPERTIES_KEY,
   REF_KEY,
+  PROPERTIES_KEY,
+  ITEMS_KEY,
 } from '../constants';
 import findSchemaDefinition, { splitKeyElementFromObject } from '../findSchemaDefinition';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema';
@@ -33,7 +34,6 @@ import {
   ValidatorType,
 } from '../types';
 import getFirstMatchingOption from './getFirstMatchingOption';
-import { deepEqual } from 'fast-equals';
 
 /** Retrieves an expanded schema that has had all of its conditions, additional properties, references and dependencies
  * resolved and merged into the `schema` given a `validator`, `rootSchema` and `rawFormData` that is used to do the
@@ -256,10 +256,7 @@ export function resolveSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, 
       )
     );
     const allPermutations = getAllPermutationsOfXxxOf<S>(allOfSchemaElements);
-    return allPermutations.map((permutation) => ({
-      ...schema,
-      allOf: permutation,
-    }));
+    return allPermutations.map((permutation) => ({ ...schema, allOf: permutation }));
   }
   // No $ref or dependencies or allOf attribute was found, returning the original schema.
   return [schema];
@@ -359,7 +356,7 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
     };
   }
 
-  return deepEqual(schema, resolvedSchema) ? schema : resolvedSchema;
+  return isEqual(schema, resolvedSchema) ? schema : resolvedSchema;
 }
 
 /** Creates new 'properties' items for each key in the `formData`

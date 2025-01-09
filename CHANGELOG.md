@@ -16,16 +16,6 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
-# 5.25.0
-
-## @rjsf/utils
-
-- Switched uses of `lodash.isEqual()` to `fast-equals.deepEqual()` in many utility functions.
-
-## @rjsf/validator-ajv8
-
-- Switched uses of `lodash.isEqual()` to `fast-equals.deepEqual()` at precompiledValidator.
-
 # 5.24.0
 
 ## @rjsf/core

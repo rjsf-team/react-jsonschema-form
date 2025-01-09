@@ -1,10 +1,10 @@
 import forEach from 'lodash/forEach';
+import isEqual from 'lodash/isEqual';
 
 import { FormContextType, RJSFSchema, StrictRJSFSchema } from '../types';
-import { ITEMS_KEY, PROPERTIES_KEY } from '../constants';
+import { PROPERTIES_KEY, ITEMS_KEY } from '../constants';
 import ParserValidator, { SchemaMap } from './ParserValidator';
-import { resolveAnyOrOneOfSchemas, retrieveSchemaInternal } from '../schema/retrieveSchema';
-import { deepEqual } from 'fast-equals';
+import { retrieveSchemaInternal, resolveAnyOrOneOfSchemas } from '../schema/retrieveSchema';
 
 /** Recursive function used to parse the given `schema` belonging to the `rootSchema`. The `validator` is used to
  * capture the sub-schemas that the `isValid()` function is called with. For each schema returned by the
@@ -24,7 +24,7 @@ function parseSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
 ) {
   const schemas = retrieveSchemaInternal<T, S, F>(validator, schema, rootSchema, undefined, true);
   schemas.forEach((schema) => {
-    const sameSchemaIndex = recurseList.findIndex((item) => deepEqual(item, schema));
+    const sameSchemaIndex = recurseList.findIndex((item) => isEqual(item, schema));
     if (sameSchemaIndex === -1) {
       recurseList.push(schema);
       const allOptions = resolveAnyOrOneOfSchemas<T, S, F>(validator, schema, rootSchema, true);

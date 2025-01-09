@@ -1,5 +1,5 @@
 import get from 'lodash/get';
-import { deepEqual } from 'fast-equals';
+import isEqual from 'lodash/isEqual';
 
 import { ALL_OF_KEY, DEPENDENCIES_KEY, ID_KEY, ITEMS_KEY, PROPERTIES_KEY, REF_KEY } from '../constants';
 import isObject from '../isObject';
@@ -42,7 +42,7 @@ function toIdSchemaInternal<T = any, S extends StrictRJSFSchema = RJSFSchema, F 
 ): IdSchema<T> {
   if (REF_KEY in schema || DEPENDENCIES_KEY in schema || ALL_OF_KEY in schema) {
     const _schema = retrieveSchema<T, S, F>(validator, schema, rootSchema, formData, experimental_customMergeAllOf);
-    const sameSchemaIndex = _recurseList.findIndex((item) => deepEqual(item, _schema));
+    const sameSchemaIndex = _recurseList.findIndex((item) => isEqual(item, _schema));
     if (sameSchemaIndex === -1) {
       return toIdSchemaInternal<T, S, F>(
         validator,

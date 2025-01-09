@@ -1,11 +1,11 @@
-import { deepEqual } from 'fast-equals';
 import get from 'lodash/get';
+import isEqual from 'lodash/isEqual';
 import set from 'lodash/set';
 
 import {
-  ADDITIONAL_PROPERTIES_KEY,
   ALL_OF_KEY,
   ANY_OF_KEY,
+  ADDITIONAL_PROPERTIES_KEY,
   DEPENDENCIES_KEY,
   ITEMS_KEY,
   NAME_KEY,
@@ -50,7 +50,7 @@ function toPathSchemaInternal<T = any, S extends StrictRJSFSchema = RJSFSchema, 
 ): PathSchema<T> {
   if (REF_KEY in schema || DEPENDENCIES_KEY in schema || ALL_OF_KEY in schema) {
     const _schema = retrieveSchema<T, S, F>(validator, schema, rootSchema, formData, experimental_customMergeAllOf);
-    const sameSchemaIndex = _recurseList.findIndex((item) => deepEqual(item, _schema));
+    const sameSchemaIndex = _recurseList.findIndex((item) => isEqual(item, _schema));
     if (sameSchemaIndex === -1) {
       return toPathSchemaInternal<T, S, F>(
         validator,

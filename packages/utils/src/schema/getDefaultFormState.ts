@@ -35,8 +35,8 @@ import retrieveSchema, { resolveDependencies } from './retrieveSchema';
 import isConstant from '../isConstant';
 import { JSONSchema7Object } from 'json-schema';
 import constIsAjvDataReference from '../constIsAjvDataReference';
+import isEqual from 'lodash/isEqual';
 import optionsList from '../optionsList';
-import { deepEqual } from 'fast-equals';
 
 const PRIMITIVE_TYPES = ['string', 'number', 'integer', 'boolean', 'null'];
 
@@ -384,7 +384,7 @@ export function ensureFormDataMatchingSchema<
   let validFormData: T | T[] | undefined = formData;
   if (isSelectField) {
     const getOptionsList = optionsList(schema);
-    const isValid = getOptionsList?.some((option) => deepEqual(option.value, formData));
+    const isValid = getOptionsList?.some((option) => isEqual(option.value, formData));
     validFormData = isValid ? formData : undefined;
   }
 
