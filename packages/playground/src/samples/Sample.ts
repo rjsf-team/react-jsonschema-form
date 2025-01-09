@@ -1,3 +1,5 @@
 import { FormProps } from '@rjsf/core';
 
-export type Sample = Omit<FormProps, 'validator'>;
+export interface Sample extends Omit<FormProps, 'validator'> {
+  validator: string;
+}

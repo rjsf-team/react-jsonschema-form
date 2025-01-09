@@ -227,6 +227,99 @@ describe('ObjectField', () => {
       });
     });
 
+    it('Check schema with if/then/else conditions and activate the then/else subschemas, the onChange event should reflect the actual validation errors', () => {
+      const schema = {
+        type: 'object',
+        _const: 'test',
+        required: ['checkbox'],
+        properties: {
+          checkbox: {
+            type: 'boolean',
+          },
+        },
+        if: {
+          required: ['checkbox'],
+          properties: {
+            checkbox: {
+              const: true,
+            },
+          },
+        },
+        then: {
+          required: ['text'],
+          properties: {
+            text: {
+              type: 'string',
+            },
+          },
+        },
+      };
+
+      const { node, onChange } = createFormComponent({
+        schema,
+        formData: {
+          checkbox: true,
+        },
+        liveValidate: true,
+      });
+
+      // Uncheck the checkbox
+      fireEvent.click(node.querySelector('input[type=checkbox]'));
+
+      sinon.assert.calledWithMatch(
+        onChange.lastCall,
+        {
+          formData: { checkbox: false },
+          errorSchema: {},
+          errors: [],
+        },
+        'root_checkbox'
+      );
+    });
+
+    it('should validate AJV $data reference ', () => {
+      const schema = {
+        type: 'object',
+        properties: {
+          email: {
+            type: 'string',
+            title: 'E-mail',
+            format: 'email',
+          },
+          emailConfirm: {
+            type: 'string',
+            const: {
+              $data: '/email',
+            },
+            title: 'Confirm e-mail',
+            format: 'email',
+          },
+        },
+      };
+      const { node, rerender } = createFormComponent({
+        schema,
+        formData: {
+          email: 'Appie@hotmail.com',
+          emailConfirm: 'wrong@wrong.com',
+        },
+        liveValidate: true,
+      });
+
+      const errorMessages = node.querySelectorAll('#root_emailConfirm__error');
+      expect(errorMessages).to.have.length(1);
+
+      rerender({
+        schema,
+        formData: {
+          email: 'Appie@hotmail.com',
+          emailConfirm: 'Appie@hotmail.com',
+        },
+        liveValidate: true,
+      });
+
+      expect(node.querySelectorAll('#root_foo__error')).to.have.length(0);
+    });
+
     it('Check that when formData changes, the form should re-validate', () => {
       const { node, rerender } = createFormComponent({
         schema,
