@@ -34,6 +34,10 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Partially fixed issue where dependency errors do not show `title` or `ui:title`. This fix only applicable if we use an ajv-i18n localizer. Ref. [#4402](https://github.com/rjsf-team/react-jsonschema-form/issues/4402).
 
+## @rjsf/validator-ajv8
+
+- Switched uses of `lodash.isEqual()` to `@rjsf/utils.deepEquals` at precompiledValidator.
+
 # 5.23.2
 
 ## @rjsf/core

@@ -1,8 +1,9 @@
 import { ErrorObject } from 'ajv';
 import get from 'lodash/get';
-import { deepEqual } from 'fast-equals';
+
 import {
   CustomValidator,
+  deepEquals,
   ErrorSchema,
   ErrorTransformer,
   FormContextType,
@@ -92,10 +93,10 @@ export default class AJV8PrecompiledValidator<
    * @param [formData] - The form data to validate if any
    */
   ensureSameRootSchema(schema: S, formData?: T) {
-    if (!deepEqual(schema, this.rootSchema)) {
+    if (!deepEquals(schema, this.rootSchema)) {
       // Resolve the root schema with the passed in form data since that may affect the resolution
       const resolvedRootSchema = retrieveSchema(this, this.rootSchema, this.rootSchema, formData);
-      if (!deepEqual(schema, resolvedRootSchema)) {
+      if (!deepEquals(schema, resolvedRootSchema)) {
         throw new Error(
           'The schema associated with the precompiled validator differs from the rootSchema provided for validation'
         );
