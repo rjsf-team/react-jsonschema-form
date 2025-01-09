@@ -34,7 +34,6 @@ import isMultiSelect from './isMultiSelect';
 import isSelect from './isSelect';
 import retrieveSchema, { resolveDependencies } from './retrieveSchema';
 import isConstant from '../isConstant';
-import { JSONSchema7Object } from 'json-schema';
 import constIsAjvDataReference from '../constIsAjvDataReference';
 import optionsList from '../optionsList';
 import deepEquals from '../deepEquals';

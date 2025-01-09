@@ -1,5 +1,3 @@
-// import isEqual from 'lodash/isEqual';
-
 import { EnumOptionsType, RJSFSchema, StrictRJSFSchema } from './types';
 import enumOptionsValueForIndex from './enumOptionsValueForIndex';
 import deepEquals from './deepEquals';
