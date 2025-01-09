@@ -100,6 +100,8 @@ export default class AJV8Validator<T = any, S extends StrictRJSFSchema = RJSFSch
             }
           });
           if (error.params?.deps) {
+            // As `error.params.deps` is the comma+space separated list of missing dependencies, enclose each dependency separately.
+            // For example, `A, B` is converted into `'A', 'B'`.
             error.params.deps = error.params.deps
               .split(', ')
               .map((v: string) => `'${v}'`)
@@ -115,6 +117,7 @@ export default class AJV8Validator<T = any, S extends StrictRJSFSchema = RJSFSch
             }
           });
           if (error.params?.deps) {
+            // Remove surrounding quotes from each missing dependency. For example, `'A', 'B'` is reverted to `A, B`.
             error.params.deps = error.params.deps
               .split(', ')
               .map((v: string) => v.slice(1, -1))

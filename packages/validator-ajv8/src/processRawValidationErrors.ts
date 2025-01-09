@@ -47,6 +47,8 @@ export function transformRJSFValidationErrors<
         const path = property ? `${property}.${currentProperty}` : currentProperty;
         let uiSchemaTitle = getUiOptions(get(uiSchema, `${path.replace(/^\./, '')}`)).title;
         if (uiSchemaTitle === undefined) {
+          // To retrieve a title from UI schema, construct a path to UI schema from `schemaPath` and `currentProperty`.
+          // For example, when `#/properties/A/properties/B/required` and `C` are given, they are converted into `['A', 'B', 'C']`.
           const uiSchemaPath = schemaPath
             .replace(/\/properties\//g, '/')
             .split('/')
