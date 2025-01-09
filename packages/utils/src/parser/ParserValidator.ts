@@ -1,5 +1,4 @@
 import get from 'lodash/get';
-import isEqual from 'lodash/isEqual';
 
 import { ID_KEY } from '../constants';
 import hashForSchema from '../hashForSchema';
@@ -15,6 +14,7 @@ import {
   ValidationData,
   ValidatorType,
 } from '../types';
+import deepEquals from '../deepEquals';
 
 /** The type of the map of schema hash to schema
  */
@@ -67,7 +67,7 @@ export default class ParserValidator<T = any, S extends StrictRJSFSchema = RJSFS
     const existing = this.schemaMap[key];
     if (!existing) {
       this.schemaMap[key] = identifiedSchema;
-    } else if (!isEqual(existing, identifiedSchema)) {
+    } else if (!deepEquals(existing, identifiedSchema)) {
       console.error('existing schema:', JSON.stringify(existing, null, 2));
       console.error('new schema:', JSON.stringify(identifiedSchema, null, 2));
       throw new Error(
@@ -91,7 +91,7 @@ export default class ParserValidator<T = any, S extends StrictRJSFSchema = RJSFS
    * @throws - Error when the given `rootSchema` differs from the root schema provided during construction
    */
   isValid(schema: S, _formData: T, rootSchema: S): boolean {
-    if (!isEqual(rootSchema, this.rootSchema)) {
+    if (!deepEquals(rootSchema, this.rootSchema)) {
       throw new Error('Unexpectedly calling isValid() with a rootSchema that differs from the construction rootSchema');
     }
     this.addSchema(schema, hashForSchema<S>(schema));
