@@ -81,6 +81,7 @@ export function transformRJSFValidationErrors<
       }
     }
 
+    // If params.missingProperty is undefined, it is removed from rawPropertyNames by filter((item) => item).
     if ('missingProperty' in params) {
       property = property ? `${property}.${params.missingProperty}` : params.missingProperty;
     }
