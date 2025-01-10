@@ -1,6 +1,7 @@
 import { ErrorListProps, FormContextType, RJSFSchema, StrictRJSFSchema, TranslatableString } from '@rjsf/utils';
-import { List, ListIcon, ListItem, Alert, AlertTitle } from '@chakra-ui/react';
+import { ListIndicator, ListItem, ListRoot } from '@chakra-ui/react';
 import { WarningIcon } from '@chakra-ui/icons';
+import { Alert } from '../components/ui/alert';
 
 export default function ErrorList<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
   errors,
@@ -8,16 +9,23 @@ export default function ErrorList<T = any, S extends StrictRJSFSchema = RJSFSche
 }: ErrorListProps<T, S, F>) {
   const { translateString } = registry;
   return (
-    <Alert flexDirection='column' alignItems='flex-start' gap={3} status='error'>
-      <AlertTitle>{translateString(TranslatableString.ErrorsLabel)}</AlertTitle>
-      <List>
+    <Alert
+      flexDirection='column'
+      alignItems='flex-start'
+      gap={3}
+      status='error'
+      title={translateString(TranslatableString.ErrorsLabel)}
+    >
+      <ListRoot>
         {errors.map((error, i) => (
           <ListItem key={i}>
-            <ListIcon as={WarningIcon} color='red.500' />
+            <ListIndicator asChild color='red.500'>
+              <WarningIcon />
+            </ListIndicator>
             {error.stack}
           </ListItem>
         ))}
-      </List>
+      </ListRoot>
     </Alert>
   );
 }

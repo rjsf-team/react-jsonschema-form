@@ -1,5 +1,5 @@
 import { FocusEvent } from 'react';
-import { FormControl, FormLabel, Radio, RadioGroup, Stack } from '@chakra-ui/react';
+import { Stack } from '@chakra-ui/react';
 import {
   ariaDescribedByIds,
   enumOptionsIndexForValue,
@@ -12,6 +12,8 @@ import {
   WidgetProps,
 } from '@rjsf/utils';
 import { getChakra } from '../utils';
+import { Field } from '../components/ui/field';
+import { Radio, RadioGroup } from '../components/ui/radio';
 
 export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
   id,
@@ -40,13 +42,14 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
   const selectedIndex = (enumOptionsIndexForValue<S>(value, enumOptions) as string) ?? null;
 
   return (
-    <FormControl mb={1} {...chakraProps} isDisabled={disabled || readonly} isRequired={required} isReadOnly={readonly}>
-      {labelValue(
-        <FormLabel htmlFor={id} id={`${id}-label`}>
-          {label}
-        </FormLabel>,
-        hideLabel || !label,
-      )}
+    <Field
+      mb={1}
+      {...chakraProps}
+      disabled={disabled || readonly}
+      required={required}
+      isReadOnly={readonly}
+      label={labelValue(label, hideLabel || !label)}
+    >
       <RadioGroup
         onChange={_onChange}
         onBlur={_onBlur}
@@ -73,6 +76,6 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
             })}
         </Stack>
       </RadioGroup>
-    </FormControl>
+    </Field>
   );
 }

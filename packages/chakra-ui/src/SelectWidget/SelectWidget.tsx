@@ -1,5 +1,5 @@
 import { FocusEvent, useMemo } from 'react';
-import { FormControl, FormLabel } from '@chakra-ui/react';
+
 import {
   ariaDescribedByIds,
   EnumOptionsType,
@@ -13,6 +13,7 @@ import {
 } from '@rjsf/utils';
 import { getChakra } from '../utils';
 import { OptionsOrGroups, Select } from 'chakra-react-select';
+import { Field } from '../components/ui/field';
 
 export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: WidgetProps<T, S, F>,
@@ -75,7 +76,7 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
         return {
           label,
           value: String(index),
-          isDisabled: Array.isArray(enumDisabled) && enumDisabled.indexOf(value) !== -1,
+          disabled: Array.isArray(enumDisabled) && enumDisabled.indexOf(value) !== -1,
         };
       });
       if (showPlaceholderOption) {
@@ -100,20 +101,15 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
       };
 
   return (
-    <FormControl
+    <Field
       mb={1}
       {...chakraProps}
-      isDisabled={disabled || readonly}
-      isRequired={required}
+      disabled={disabled || readonly}
+      required={required}
       isReadOnly={readonly}
-      isInvalid={rawErrors && rawErrors.length > 0}
+      invalid={rawErrors && rawErrors.length > 0}
+      label={labelValue(label, hideLabel || !label)}
     >
-      {labelValue(
-        <FormLabel htmlFor={id} id={`${id}-label`}>
-          {label}
-        </FormLabel>,
-        hideLabel || !label,
-      )}
       <Select
         inputId={id}
         name={id}
@@ -128,6 +124,6 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
         value={formValue}
         aria-describedby={ariaDescribedByIds<T>(id)}
       />
-    </FormControl>
+    </Field>
   );
 }

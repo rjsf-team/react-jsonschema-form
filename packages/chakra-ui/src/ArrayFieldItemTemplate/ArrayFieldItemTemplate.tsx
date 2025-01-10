@@ -26,7 +26,7 @@ export default function ArrayFieldItemTemplate<
       <Box w='100%'>{children}</Box>
       {hasToolbar && (
         <Box>
-          <ButtonGroup isAttached mb={1}>
+          <ButtonGroup attached mb={1}>
             <ArrayFieldItemButtonsTemplate {...buttonsProps} />
           </ButtonGroup>
         </Box>

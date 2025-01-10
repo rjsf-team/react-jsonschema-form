@@ -1,5 +1,5 @@
 import { FocusEvent } from 'react';
-import { FormControl, FormLabel, Slider, SliderFilledTrack, SliderThumb, SliderTrack } from '@chakra-ui/react';
+import {} from '@chakra-ui/react';
 import {
   ariaDescribedByIds,
   FormContextType,
@@ -10,6 +10,8 @@ import {
   WidgetProps,
 } from '@rjsf/utils';
 import { getChakra } from '../utils';
+import { Field } from '../components/ui/field';
+import { Slider } from '../components/ui/slider';
 
 export default function RangeWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
   value,
@@ -34,23 +36,17 @@ export default function RangeWidget<T = any, S extends StrictRJSFSchema = RJSFSc
   const _onFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target && target.value);
 
   return (
-    <FormControl mb={1} {...chakraProps}>
-      {labelValue(<FormLabel htmlFor={id}>{label}</FormLabel>, hideLabel || !label)}
+    <Field mb={1} {...chakraProps} label={labelValue(label, hideLabel || !label)}>
       <Slider
         {...sliderWidgetProps}
         id={id}
         name={id}
-        isDisabled={disabled || readonly}
+        disabled={disabled || readonly}
         onChange={_onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
         aria-describedby={ariaDescribedByIds<T>(id)}
-      >
-        <SliderTrack>
-          <SliderFilledTrack />
-        </SliderTrack>
-        <SliderThumb />
-      </Slider>
-    </FormControl>
+      />
+    </Field>
   );
 }

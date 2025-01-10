@@ -1,5 +1,5 @@
 import { ChangeEvent, FocusEvent } from 'react';
-import { FormControl, FormLabel, Input } from '@chakra-ui/react';
+import { Input } from '@chakra-ui/react';
 import {
   ariaDescribedByIds,
   BaseInputTemplateProps,
@@ -11,6 +11,7 @@ import {
   StrictRJSFSchema,
 } from '@rjsf/utils';
 import { getChakra } from '../utils';
+import { Field } from '../components/ui/field';
 
 export default function BaseInputTemplate<
   T = any,
@@ -46,20 +47,15 @@ export default function BaseInputTemplate<
   const _onFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target && target.value);
 
   return (
-    <FormControl
+    <Field
       mb={1}
       {...chakraProps}
-      isDisabled={disabled || readonly}
-      isRequired={required}
+      disabled={disabled || readonly}
+      required={required}
       isReadOnly={readonly}
-      isInvalid={rawErrors && rawErrors.length > 0}
+      invalid={rawErrors && rawErrors.length > 0}
+      label={labelValue(label, hideLabel || !label)}
     >
-      {labelValue(
-        <FormLabel htmlFor={id} id={`${id}-label`}>
-          {label}
-        </FormLabel>,
-        hideLabel || !label,
-      )}
       <Input
         id={id}
         name={id}
@@ -82,6 +78,6 @@ export default function BaseInputTemplate<
             })}
         </datalist>
       ) : null}
-    </FormControl>
+    </Field>
   );
 }

@@ -1,5 +1,5 @@
 import { FocusEvent } from 'react';
-import { CheckboxGroup, Checkbox, FormLabel, FormControl, Text, Stack } from '@chakra-ui/react';
+import { CheckboxGroup, Text, Stack, FieldsetRoot } from '@chakra-ui/react';
 import {
   ariaDescribedByIds,
   enumOptionsIndexForValue,
@@ -13,6 +13,7 @@ import {
   WidgetProps,
 } from '@rjsf/utils';
 import { getChakra } from '../utils';
+import { Checkbox } from '../components/ui/checkbox';
 
 export default function CheckboxesWidget<
   T = any,
@@ -47,22 +48,17 @@ export default function CheckboxesWidget<
   const selectedIndexes = enumOptionsIndexForValue<S>(value, enumOptions, true) as string[];
 
   return (
-    <FormControl
+    <FieldsetRoot
       mb={1}
       {...chakraProps}
-      isDisabled={disabled || readonly}
-      isRequired={required}
+      disabled={disabled || readonly}
+      required={required}
       isReadOnly={readonly}
-      isInvalid={rawErrors && rawErrors.length > 0}
+      invalid={rawErrors && rawErrors.length > 0}
+      label={labelValue(label, hideLabel || !label)}
     >
-      {labelValue(
-        <FormLabel htmlFor={id} id={`${id}-label`}>
-          {label}
-        </FormLabel>,
-        hideLabel || !label,
-      )}
       <CheckboxGroup
-        onChange={(option) => onChange(enumOptionsValueForIndex<S>(option, enumOptions, emptyValue))}
+        onValueChange={(option) => onChange(enumOptionsValueForIndex<S>(option, enumOptions, emptyValue))}
         defaultValue={selectedIndexes}
         aria-describedby={ariaDescribedByIds<T>(id)}
       >
@@ -78,7 +74,7 @@ export default function CheckboxesWidget<
                   name={id}
                   value={String(index)}
                   isChecked={checked}
-                  isDisabled={disabled || itemDisabled || readonly}
+                  disabled={disabled || itemDisabled || readonly}
                   onBlur={_onBlur}
                   onFocus={_onFocus}
                 >
@@ -88,6 +84,6 @@ export default function CheckboxesWidget<
             })}
         </Stack>
       </CheckboxGroup>
-    </FormControl>
+    </FieldsetRoot>
   );
 }

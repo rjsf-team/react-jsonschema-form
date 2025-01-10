@@ -1,5 +1,5 @@
 import { ChangeEvent, FocusEvent } from 'react';
-import { Checkbox, FormControl, Text } from '@chakra-ui/react';
+import { Text } from '@chakra-ui/react';
 import {
   ariaDescribedByIds,
   descriptionId,
@@ -12,6 +12,8 @@ import {
   FormContextType,
 } from '@rjsf/utils';
 import { getChakra } from '../utils';
+import { Field } from '../components/ui/field';
+import { Checkbox } from '../components/ui/checkbox';
 
 export default function CheckboxWidget<
   T = any,
@@ -50,7 +52,7 @@ export default function CheckboxWidget<
   const _onFocus = ({ target }: FocusEvent<HTMLInputElement | any>) => onFocus(id, target && target.value);
 
   return (
-    <FormControl mb={1} {...chakraProps} isRequired={required}>
+    <Field mb={1} {...chakraProps} required={required}>
       {!hideLabel && !!description && (
         <DescriptionFieldTemplate
           id={descriptionId<T>(id)}
@@ -64,7 +66,7 @@ export default function CheckboxWidget<
         id={id}
         name={id}
         isChecked={typeof value === 'undefined' ? false : value}
-        isDisabled={disabled || readonly}
+        disabled={disabled || readonly}
         onChange={_onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
@@ -72,6 +74,6 @@ export default function CheckboxWidget<
       >
         {labelValue(<Text>{label}</Text>, hideLabel || !label)}
       </Checkbox>
-    </FormControl>
+    </Field>
   );
 }
