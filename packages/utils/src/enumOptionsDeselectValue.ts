@@ -1,7 +1,6 @@
-import isEqual from 'lodash/isEqual';
-
 import { EnumOptionsType, RJSFSchema, StrictRJSFSchema } from './types';
 import enumOptionsValueForIndex from './enumOptionsValueForIndex';
+import deepEquals from './deepEquals';
 
 /** Removes the enum option value at the `valueIndex` from the currently `selected` (list of) value(s). If `selected` is
  * a list, then that list is updated to remove the enum option value with the `valueIndex` in `allEnumOptions`. If it is
@@ -22,7 +21,7 @@ export default function enumOptionsDeselectValue<S extends StrictRJSFSchema = RJ
 ): EnumOptionsType<S>['value'] | EnumOptionsType<S>['value'][] | undefined {
   const value = enumOptionsValueForIndex<S>(valueIndex, allEnumOptions);
   if (Array.isArray(selected)) {
-    return selected.filter((v) => !isEqual(v, value));
+    return selected.filter((v) => !deepEquals(v, value));
   }
-  return isEqual(value, selected) ? undefined : selected;
+  return deepEquals(value, selected) ? undefined : selected;
 }
