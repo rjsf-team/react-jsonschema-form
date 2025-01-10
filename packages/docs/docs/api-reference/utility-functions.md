@@ -287,6 +287,30 @@ Otherwise, return the sub-schema. Also deals with nested `$ref`s in the sub-sche
 
 - Error indicating that no schema for that reference exists
 
+### getChangedFields(a: unknown, b: unknown)
+
+Compares two objects and returns the names of the fields that have changed.
+This function iterates over each field of object `a`, using `_.isEqual` to compare the field value with the corresponding field value in object `b`.
+If the values are different, the field name will be included in the returned array.
+
+#### Parameters
+
+- a: unknown - The first object, representing the original data to compare.
+- b: unknown - The second object, representing the updated data to compare.
+
+#### Returns
+
+- string[] : An array of field names that have changed.
+
+#### Example
+
+```typescript
+const a = { name: 'John', age: 30 };
+const b = { name: 'John', age: 31 };
+const changedFields = getChangedFields(a, b);
+console.log(changedFields); // Output: ['age']
+```
+
 ### getDiscriminatorFieldFromSchema&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
 Returns the `discriminator.propertyName` when defined in the `schema` if it is a string. A warning is generated when it is not a string.

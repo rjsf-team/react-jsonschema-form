@@ -11,9 +11,9 @@ import deepEquals from './deepEquals';
  * with the corresponding field value in object `b`. If the values are different, the field name will
  * be included in the returned array.
  *
- * @param {unknown} a - The first object, representing the original data to compare.
- * @param {unknown} b - The second object, representing the updated data to compare.
- * @returns {string[]} - An array of field names that have changed.
+ * @param a - The first object, representing the original data to compare.
+ * @param b - The second object, representing the updated data to compare.
+ * @returns - An array of field names that have changed.
  *
  * @example
  * const a = { name: 'John', age: 30 };
