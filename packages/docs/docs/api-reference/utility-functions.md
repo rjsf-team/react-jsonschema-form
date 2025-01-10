@@ -304,8 +304,6 @@ If the values are different, the field name will be included in the returned arr
 
 #### Example
 
-do
-
 ```typescript
 const a = { name: 'John', age: 30 };
 const b = { name: 'John', age: 31 };
