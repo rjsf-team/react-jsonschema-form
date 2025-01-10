@@ -15,6 +15,11 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+# 5.24.2
+
+## @rjsf/utils
+
+- switch `lodash.isEqualWith` to `fast-equals.createCustomEqual` providing `areFunctionsEqual` assuming any functions are equal.
 
 # 5.24.1
 
