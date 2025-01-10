@@ -20,7 +20,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## Dev / docs / playground
 
-- Updated the peer dependencies for `@rjsf/*` to be `5.23.x`
+- Updated the peer dependencies for `@rjsf/*` to be `5.24.x`
 
 # 5.24.0
 
