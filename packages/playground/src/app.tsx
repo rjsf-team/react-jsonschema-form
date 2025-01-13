@@ -20,9 +20,11 @@ const esV8Validator = customizeValidator({}, localize_es);
 const AJV8_2019 = customizeValidator({ AjvClass: Ajv2019 });
 const AJV8_2020 = customizeValidator({ AjvClass: Ajv2020 });
 const AJV8_DISC = customizeValidator({ ajvOptionsOverrides: { discriminator: true } });
+const AJV8_DATA_REF = customizeValidator({ ajvOptionsOverrides: { $data: true } });
 
 const validators: PlaygroundProps['validators'] = {
   AJV8: v8Validator,
+  'AJV8 $data reference': AJV8_DATA_REF,
   'AJV8 (discriminator)': AJV8_DISC,
   AJV8_es: esV8Validator,
   AJV8_2019,

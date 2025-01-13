@@ -1,6 +1,5 @@
-import isEqual from 'lodash/isEqual';
-
 import { EnumOptionsType, RJSFSchema, StrictRJSFSchema } from './types';
+import deepEquals from './deepEquals';
 
 /** Determines whether the given `value` is (one of) the `selected` value(s).
  *
@@ -13,7 +12,7 @@ export default function enumOptionsIsSelected<S extends StrictRJSFSchema = RJSFS
   selected: EnumOptionsType<S>['value'] | EnumOptionsType<S>['value'][]
 ) {
   if (Array.isArray(selected)) {
-    return selected.some((sel) => isEqual(sel, value));
+    return selected.some((sel) => deepEquals(sel, value));
   }
-  return isEqual(selected, value);
+  return deepEquals(selected, value);
 }

@@ -4490,8 +4490,8 @@ describe('Form omitExtraData and liveOmit', () => {
       // // error should still be present.
       errors = node.querySelectorAll('.error-detail');
       // screen.debug();
-      expect(errors).to.have.lengthOf(1);
-      expect(errors[0].textContent).to.be.eql("must have required property 'input'");
+      // change formData and make sure the error disappears.
+      expect(errors).to.have.lengthOf(0);
 
       // trigger programmatic validation again and make sure the error disappears.
       act(() => {

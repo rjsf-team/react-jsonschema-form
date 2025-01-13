@@ -1,15 +1,16 @@
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
+import { JSONSchema7Object } from 'json-schema';
 
 import {
+  ALL_OF_KEY,
   ANY_OF_KEY,
   CONST_KEY,
   DEFAULT_KEY,
   DEPENDENCIES_KEY,
-  PROPERTIES_KEY,
   ONE_OF_KEY,
+  PROPERTIES_KEY,
   REF_KEY,
-  ALL_OF_KEY,
 } from '../constants';
 import findSchemaDefinition from '../findSchemaDefinition';
 import getClosestMatchingOption from './getClosestMatchingOption';
@@ -30,8 +31,12 @@ import {
   ValidatorType,
 } from '../types';
 import isMultiSelect from './isMultiSelect';
+import isSelect from './isSelect';
 import retrieveSchema, { resolveDependencies } from './retrieveSchema';
-import { JSONSchema7Object } from 'json-schema';
+import isConstant from '../isConstant';
+import constIsAjvDataReference from '../constIsAjvDataReference';
+import optionsList from '../optionsList';
+import deepEquals from '../deepEquals';
 
 const PRIMITIVE_TYPES = ['string', 'number', 'integer', 'boolean', 'null'];
 
@@ -115,18 +120,17 @@ function maybeAddDefaultToObject<T = any>(
     // Or if the schema has a const property defined, then we should always return the computedDefault since it's coming from the const.
     obj[key] = computedDefault;
   } else if (emptyObjectFields !== 'skipDefaults') {
-    if (isObject(computedDefault)) {
-      // If isParentRequired is undefined, then we are at the root level of the schema so defer to the requiredness of
-      // the field key itself in the `requiredField` list
-      const isSelfOrParentRequired = isParentRequired === undefined ? requiredFields.includes(key) : isParentRequired;
+    // If isParentRequired is undefined, then we are at the root level of the schema so defer to the requiredness of
+    // the field key itself in the `requiredField` list
+    const isSelfOrParentRequired = isParentRequired === undefined ? requiredFields.includes(key) : isParentRequired;
 
+    if (isObject(computedDefault)) {
       // If emptyObjectFields 'skipEmptyDefaults' store computedDefault if it's a non-empty object(e.g. not {})
       if (emptyObjectFields === 'skipEmptyDefaults') {
         if (!isEmpty(computedDefault)) {
           obj[key] = computedDefault;
         }
-      }
-      // Else store computedDefault if it's a non-empty object(e.g. not {}) and satisfies certain conditions
+      } // Else store computedDefault if it's a non-empty object(e.g. not {}) and satisfies certain conditions
       // Condition 1: If computedDefault is not empty or if the key is a required field
       // Condition 2: If the parent object is required or emptyObjectFields is not 'populateRequiredDefaults'
       else if (
@@ -138,11 +142,12 @@ function maybeAddDefaultToObject<T = any>(
     } else if (
       // Store computedDefault if it's a defined primitive (e.g., true) and satisfies certain conditions
       // Condition 1: computedDefault is not undefined
-      // Condition 2: If emptyObjectFields is 'populateAllDefaults' or 'skipEmptyDefaults) or if the key is a required field
+      // Condition 2: If emptyObjectFields is 'populateAllDefaults' or 'skipEmptyDefaults)
+      // Or if isSelfOrParentRequired is 'true' and the key is a required field
       computedDefault !== undefined &&
       (emptyObjectFields === 'populateAllDefaults' ||
         emptyObjectFields === 'skipEmptyDefaults' ||
-        requiredFields.includes(key))
+        (isSelfOrParentRequired && requiredFields.includes(key)))
     ) {
       obj[key] = computedDefault;
     }
@@ -169,6 +174,10 @@ interface ComputeDefaultsProps<T = any, S extends StrictRJSFSchema = RJSFSchema>
   experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>;
   /** Optional flag, if true, indicates this schema was required in the parent schema. */
   required?: boolean;
+  /** Optional flag, if true, It will merge defaults into formData.
+   *  The formData should take precedence unless it's not valid. This is useful when for example the value from formData does not exist in the schema 'enum' property, in such cases we take the value from the defaults because the value from the formData is not valid.
+   */
+  shouldMergeDefaultsIntoFormData?: boolean;
 }
 
 /** Computes the defaults for the current `schema` given the `rawFormData` and `parentDefaults` if any. This drills into
@@ -193,6 +202,7 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
     experimental_defaultFormStateBehavior = undefined,
     experimental_customMergeAllOf = undefined,
     required,
+    shouldMergeDefaultsIntoFormData = false,
   } = computeDefaultsProps;
   const formData: T = (isObject(rawFormData) ? rawFormData : {}) as T;
   const schema: S = isObject(rawSchema) ? rawSchema : ({} as S);
@@ -203,8 +213,12 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
   let experimental_dfsb_to_compute = experimental_defaultFormStateBehavior;
   let updatedRecurseList = _recurseList;
 
-  if (schema[CONST_KEY] && experimental_defaultFormStateBehavior?.constAsDefaults !== 'never') {
-    defaults = schema.const as unknown as T;
+  if (
+    schema[CONST_KEY] &&
+    experimental_defaultFormStateBehavior?.constAsDefaults !== 'never' &&
+    !constIsAjvDataReference(schema)
+  ) {
+    defaults = schema[CONST_KEY] as unknown as T;
   } else if (isObject(defaults) && isObject(schema.default)) {
     // For object defaults, only override parent defaults that are defined in
     // schema.default.
@@ -245,6 +259,7 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
         parentDefaults: Array.isArray(parentDefaults) ? parentDefaults[idx] : undefined,
         rawFormData: formData as T,
         required,
+        shouldMergeDefaultsIntoFormData,
       })
     ) as T[];
   } else if (ONE_OF_KEY in schema) {
@@ -260,13 +275,16 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
       experimental_dfsb_to_compute?.constAsDefaults === 'skipOneOf'
     ) {
       // If we are in a oneOf of a primitive type, then we want to pass constAsDefaults as 'never' for the recursion
-      experimental_dfsb_to_compute = { ...experimental_dfsb_to_compute, constAsDefaults: 'never' };
+      experimental_dfsb_to_compute = {
+        ...experimental_dfsb_to_compute,
+        constAsDefaults: 'never',
+      };
     }
     schemaToCompute = oneOf![
       getClosestMatchingOption<T, S, F>(
         validator,
         rootSchema,
-        isEmpty(formData) ? undefined : formData,
+        rawFormData,
         oneOf as S[],
         0,
         discriminator,
@@ -284,7 +302,7 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
       getClosestMatchingOption<T, S, F>(
         validator,
         rootSchema,
-        isEmpty(formData) ? undefined : formData,
+        rawFormData,
         anyOf as S[],
         0,
         discriminator,
@@ -304,6 +322,7 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
       parentDefaults: defaults as T | undefined,
       rawFormData: formData as T,
       required,
+      shouldMergeDefaultsIntoFormData,
     });
   }
 
@@ -314,7 +333,68 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
 
   const defaultBasedOnSchemaType = getDefaultBasedOnSchemaType(validator, schema, computeDefaultsProps, defaults);
 
-  return defaultBasedOnSchemaType ?? defaults;
+  let defaultsWithFormData = defaultBasedOnSchemaType ?? defaults;
+  // if shouldMergeDefaultsIntoFormData is true, then merge the defaults into the formData.
+  if (shouldMergeDefaultsIntoFormData) {
+    const { arrayMinItems = {} } = experimental_defaultFormStateBehavior || {};
+    const { mergeExtraDefaults } = arrayMinItems;
+
+    const matchingFormData = ensureFormDataMatchingSchema(
+      validator,
+      schema,
+      rootSchema,
+      rawFormData,
+      experimental_defaultFormStateBehavior
+    );
+    if (!isObject(rawFormData)) {
+      defaultsWithFormData = mergeDefaultsWithFormData<T>(
+        defaultsWithFormData as T,
+        matchingFormData as T,
+        mergeExtraDefaults,
+        true
+      ) as T;
+    }
+  }
+
+  return defaultsWithFormData;
+}
+
+/**
+ * Ensure that the formData matches the given schema. If it's not matching in the case of a selectField, we change it to match the schema.
+ *
+ * @param validator - an implementation of the `ValidatorType` interface that will be used when necessary
+ * @param schema - The schema for which the formData state is desired
+ * @param rootSchema - The root schema, used to primarily to look up `$ref`s
+ * @param formData - The current formData
+ * @param experimental_defaultFormStateBehavior - Optional configuration object, if provided, allows users to override default form state behavior
+ * @returns - valid formData that matches schema
+ */
+export function ensureFormDataMatchingSchema<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(
+  validator: ValidatorType<T, S, F>,
+  schema: S,
+  rootSchema: S,
+  formData: T | undefined,
+  experimental_defaultFormStateBehavior?: Experimental_DefaultFormStateBehavior
+): T | T[] | undefined {
+  const isSelectField = !isConstant(schema) && isSelect(validator, schema, rootSchema);
+  let validFormData: T | T[] | undefined = formData;
+  if (isSelectField) {
+    const getOptionsList = optionsList(schema);
+    const isValid = getOptionsList?.some((option) => deepEquals(option.value, formData));
+    validFormData = isValid ? formData : undefined;
+  }
+
+  // Override the formData with the const if the constAsDefaults is set to always
+  const constTakesPrecedence = schema[CONST_KEY] && experimental_defaultFormStateBehavior?.constAsDefaults === 'always';
+  if (constTakesPrecedence) {
+    validFormData = schema.const as T;
+  }
+
+  return validFormData;
 }
 
 /** Computes the default value for objects.
@@ -336,6 +416,7 @@ export function getObjectDefaults<T = any, S extends StrictRJSFSchema = RJSFSche
     experimental_defaultFormStateBehavior = undefined,
     experimental_customMergeAllOf = undefined,
     required,
+    shouldMergeDefaultsIntoFormData,
   }: ComputeDefaultsProps<T, S> = {},
   defaults?: T | T[] | undefined
 ): T {
@@ -357,7 +438,8 @@ export function getObjectDefaults<T = any, S extends StrictRJSFSchema = RJSFSche
         const hasParentConst = isObject(parentConst) && (parentConst as JSONSchema7Object)[key] !== undefined;
         const hasConst =
           ((isObject(propertySchema) && CONST_KEY in propertySchema) || hasParentConst) &&
-          experimental_defaultFormStateBehavior?.constAsDefaults !== 'never';
+          experimental_defaultFormStateBehavior?.constAsDefaults !== 'never' &&
+          !constIsAjvDataReference(propertySchema);
         // Compute the defaults for this node, with the parent defaults we might
         // have from a previous run: defaults[key].
         const computedDefault = computeDefaults<T, S, F>(validator, propertySchema, {
@@ -369,6 +451,7 @@ export function getObjectDefaults<T = any, S extends StrictRJSFSchema = RJSFSche
           parentDefaults: get(defaults, [key]),
           rawFormData: get(formData, [key]),
           required: retrievedSchema.required?.includes(key),
+          shouldMergeDefaultsIntoFormData,
         });
         maybeAddDefaultToObject<T>(
           acc,
@@ -413,6 +496,7 @@ export function getObjectDefaults<T = any, S extends StrictRJSFSchema = RJSFSche
           parentDefaults: get(defaults, [key]),
           rawFormData: get(formData, [key]),
           required: retrievedSchema.required?.includes(key),
+          shouldMergeDefaultsIntoFormData,
         });
         // Since these are additional properties we don't need to add the `experimental_defaultFormStateBehavior` prop
         maybeAddDefaultToObject<T>(
@@ -447,6 +531,7 @@ export function getArrayDefaults<T = any, S extends StrictRJSFSchema = RJSFSchem
     experimental_defaultFormStateBehavior = undefined,
     experimental_customMergeAllOf = undefined,
     required,
+    shouldMergeDefaultsIntoFormData,
   }: ComputeDefaultsProps<T, S> = {},
   defaults?: T | T[] | undefined
 ): T | T[] | undefined {
@@ -474,6 +559,7 @@ export function getArrayDefaults<T = any, S extends StrictRJSFSchema = RJSFSchem
         experimental_customMergeAllOf,
         parentDefaults: item,
         required,
+        shouldMergeDefaultsIntoFormData,
       });
     }) as T[];
   }
@@ -493,6 +579,7 @@ export function getArrayDefaults<T = any, S extends StrictRJSFSchema = RJSFSchem
           rawFormData: item,
           parentDefaults: get(defaults, [idx]),
           required,
+          shouldMergeDefaultsIntoFormData,
         });
       }) as T[];
 
@@ -541,6 +628,7 @@ export function getArrayDefaults<T = any, S extends StrictRJSFSchema = RJSFSchem
       experimental_defaultFormStateBehavior,
       experimental_customMergeAllOf,
       required,
+      shouldMergeDefaultsIntoFormData,
     })
   ) as T[];
   // then fill up the rest with either the item default or empty, up to minItems
@@ -607,26 +695,33 @@ export default function getDefaultFormState<
     throw new Error('Invalid schema: ' + theSchema);
   }
   const schema = retrieveSchema<T, S, F>(validator, theSchema, rootSchema, formData, experimental_customMergeAllOf);
+
+  // Get the computed defaults with 'shouldMergeDefaultsIntoFormData' set to true to merge defaults into formData.
+  // This is done when for example the value from formData does not exist in the schema 'enum' property, in such
+  // cases we take the value from the defaults because the value from the formData is not valid.
   const defaults = computeDefaults<T, S, F>(validator, schema, {
     rootSchema,
     includeUndefinedValues,
     experimental_defaultFormStateBehavior,
     experimental_customMergeAllOf,
     rawFormData: formData,
+    shouldMergeDefaultsIntoFormData: true,
   });
 
-  if (formData === undefined || formData === null || (typeof formData === 'number' && isNaN(formData))) {
-    // No form data? Use schema defaults.
-    return defaults;
+  // If the formData is an object or an array, add additional properties from formData and override formData with
+  // defaults since the defaults are already merged with formData.
+  if (isObject(formData) || Array.isArray(formData)) {
+    const { mergeDefaultsIntoFormData } = experimental_defaultFormStateBehavior || {};
+    const defaultSupercedesUndefined = mergeDefaultsIntoFormData === 'useDefaultIfFormDataUndefined';
+    const result = mergeDefaultsWithFormData<T | T[]>(
+      defaults,
+      formData,
+      true, // set to true to add any additional default array entries.
+      defaultSupercedesUndefined,
+      true // set to true to override formData with defaults if they exist.
+    );
+    return result;
   }
-  const { mergeDefaultsIntoFormData, arrayMinItems = {} } = experimental_defaultFormStateBehavior || {};
-  const { mergeExtraDefaults } = arrayMinItems;
-  const defaultSupercedesUndefined = mergeDefaultsIntoFormData === 'useDefaultIfFormDataUndefined';
-  if (isObject(formData)) {
-    return mergeDefaultsWithFormData<T>(defaults as T, formData, mergeExtraDefaults, defaultSupercedesUndefined);
-  }
-  if (Array.isArray(formData)) {
-    return mergeDefaultsWithFormData<T[]>(defaults as T[], formData, mergeExtraDefaults, defaultSupercedesUndefined);
-  }
-  return formData;
+
+  return defaults;
 }
