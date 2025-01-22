@@ -1,5 +1,5 @@
-import { ChangeEvent, FocusEvent } from 'react';
-import { Text } from '@chakra-ui/react';
+import { FocusEvent } from 'react';
+import { CheckboxCheckedChangeDetails, Text } from '@chakra-ui/react';
 import {
   ariaDescribedByIds,
   descriptionId,
@@ -11,7 +11,6 @@ import {
   RJSFSchema,
   FormContextType,
 } from '@rjsf/utils';
-import { getChakra } from '../utils';
 import { Field } from '../components/ui/field';
 import { Checkbox } from '../components/ui/checkbox';
 
@@ -35,7 +34,7 @@ export default function CheckboxWidget<
     uiSchema,
     schema,
   } = props;
-  const chakraProps = getChakra({ uiSchema });
+  // const chakraProps = getChakra({ uiSchema });
   // Because an unchecked checkbox will cause html5 validation to fail, only add
   // the "required" attribute if the field value must be "true", due to the
   // "const" or "enum" keywords
@@ -47,12 +46,12 @@ export default function CheckboxWidget<
   );
   const description = options.description || schema.description;
 
-  const _onChange = ({ target: { checked } }: ChangeEvent<HTMLInputElement>) => onChange(checked);
+  const _onChange = ({ checked }: CheckboxCheckedChangeDetails) => onChange(checked);
   const _onBlur = ({ target }: FocusEvent<HTMLInputElement | any>) => onBlur(id, target && target.value);
   const _onFocus = ({ target }: FocusEvent<HTMLInputElement | any>) => onFocus(id, target && target.value);
 
   return (
-    <Field mb={1} {...chakraProps} required={required}>
+    <Field mb={1} required={required}>
       {!hideLabel && !!description && (
         <DescriptionFieldTemplate
           id={descriptionId<T>(id)}
@@ -65,9 +64,9 @@ export default function CheckboxWidget<
       <Checkbox
         id={id}
         name={id}
-        isChecked={typeof value === 'undefined' ? false : value}
+        checked={typeof value === 'undefined' ? false : value}
         disabled={disabled || readonly}
-        onChange={_onChange}
+        onCheckedChange={_onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
         aria-describedby={ariaDescribedByIds<T>(id)}

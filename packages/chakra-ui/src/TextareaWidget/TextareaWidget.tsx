@@ -8,7 +8,6 @@ import {
   StrictRJSFSchema,
   WidgetProps,
 } from '@rjsf/utils';
-import { getChakra } from '../utils';
 import { Field } from '../components/ui/field';
 
 export default function TextareaWidget<
@@ -28,11 +27,10 @@ export default function TextareaWidget<
   onFocus,
   onChange,
   options,
-  uiSchema,
   required,
   rawErrors,
 }: WidgetProps<T, S, F>) {
-  const chakraProps = getChakra({ uiSchema });
+  // const chakraProps = getChakra({ uiSchema });
 
   const _onChange = ({ target: { value } }: ChangeEvent<HTMLTextAreaElement>) =>
     onChange(value === '' ? options.emptyValue : value);
@@ -42,10 +40,10 @@ export default function TextareaWidget<
   return (
     <Field
       mb={1}
-      {...chakraProps}
+      // {...chakraProps}
       disabled={disabled || readonly}
       required={required}
-      isReadOnly={readonly}
+      readOnly={readonly}
       invalid={rawErrors && rawErrors.length > 0}
       label={labelValue(label, hideLabel || !label)}
     >
