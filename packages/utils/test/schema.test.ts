@@ -1,7 +1,6 @@
 import getTestValidator from './testUtils/getTestValidator';
 import {
   getDefaultFormStateTest,
-  getDefaultFormStateTest2,
   getDisplayLabelTest,
   getClosestMatchingOptionTest,
   getFirstMatchingOptionTest,
@@ -19,7 +18,6 @@ const testValidator = getTestValidator({});
 
 // NOTE: to restrict which tests to run, you can temporarily comment out any tests you aren't needing
 getDefaultFormStateTest(testValidator);
-getDefaultFormStateTest2(testValidator);
 getDisplayLabelTest(testValidator);
 getClosestMatchingOptionTest(testValidator);
 getFirstMatchingOptionTest(testValidator);
