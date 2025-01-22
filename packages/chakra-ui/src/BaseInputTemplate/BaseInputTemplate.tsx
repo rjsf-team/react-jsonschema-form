@@ -10,7 +10,6 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
 } from '@rjsf/utils';
-import { getChakra } from '../utils';
 import { Field } from '../components/ui/field';
 
 export default function BaseInputTemplate<
@@ -25,7 +24,6 @@ export default function BaseInputTemplate<
     label,
     hideLabel,
     schema,
-    uiSchema,
     onChange,
     onChangeOverride,
     onBlur,
@@ -39,7 +37,7 @@ export default function BaseInputTemplate<
     disabled,
   } = props;
   const inputProps = getInputProps<T, S, F>(schema, type, options);
-  const chakraProps = getChakra({ uiSchema });
+  // const chakraProps = getChakra({ uiSchema });
 
   const _onChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) =>
     onChange(value === '' ? options.emptyValue : value);
@@ -49,10 +47,10 @@ export default function BaseInputTemplate<
   return (
     <Field
       mb={1}
-      {...chakraProps}
+      // {...chakraProps}
       disabled={disabled || readonly}
       required={required}
-      isReadOnly={readonly}
+      readOnly={readonly}
       invalid={rawErrors && rawErrors.length > 0}
       label={labelValue(label, hideLabel || !label)}
     >

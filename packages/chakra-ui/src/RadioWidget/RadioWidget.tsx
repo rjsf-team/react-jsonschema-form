@@ -11,7 +11,6 @@ import {
   StrictRJSFSchema,
   WidgetProps,
 } from '@rjsf/utils';
-import { getChakra } from '../utils';
 import { Field } from '../components/ui/field';
 import { Radio, RadioGroup } from '../components/ui/radio';
 
@@ -27,10 +26,9 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
   onChange,
   onBlur,
   onFocus,
-  uiSchema,
 }: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, emptyValue } = options;
-  const chakraProps = getChakra({ uiSchema });
+  // const chakraProps = getChakra({ uiSchema });
 
   const _onChange = (nextValue: any) => onChange(enumOptionsValueForIndex<S>(nextValue, enumOptions, emptyValue));
   const _onBlur = ({ target: { value } }: FocusEvent<HTMLInputElement>) =>
@@ -44,10 +42,10 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
   return (
     <Field
       mb={1}
-      {...chakraProps}
+      // {...chakraProps}
       disabled={disabled || readonly}
       required={required}
-      isReadOnly={readonly}
+      readOnly={readonly}
       label={labelValue(label, hideLabel || !label)}
     >
       <RadioGroup

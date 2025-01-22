@@ -12,7 +12,6 @@ import {
   StrictRJSFSchema,
   WidgetProps,
 } from '@rjsf/utils';
-import { getChakra } from '../utils';
 import { Checkbox } from '../components/ui/checkbox';
 
 export default function CheckboxesWidget<
@@ -32,11 +31,10 @@ export default function CheckboxesWidget<
     required,
     label,
     hideLabel,
-    uiSchema,
     rawErrors = [],
   } = props;
   const { enumOptions, enumDisabled, emptyValue } = options;
-  const chakraProps = getChakra({ uiSchema });
+  // const chakraProps = getChakra({ uiSchema });
   const checkboxesValues = Array.isArray(value) ? value : [value];
 
   const _onBlur = ({ target }: FocusEvent<HTMLInputElement | any>) =>
@@ -50,17 +48,17 @@ export default function CheckboxesWidget<
   return (
     <FieldsetRoot
       mb={1}
-      {...chakraProps}
+      // {...chakraProps}
       disabled={disabled || readonly}
-      required={required}
-      isReadOnly={readonly}
       invalid={rawErrors && rawErrors.length > 0}
-      label={labelValue(label, hideLabel || !label)}
     >
       <CheckboxGroup
         onValueChange={(option) => onChange(enumOptionsValueForIndex<S>(option, enumOptions, emptyValue))}
         defaultValue={selectedIndexes}
         aria-describedby={ariaDescribedByIds<T>(id)}
+        readOnly={readonly}
+        required={required}
+        label={labelValue(label, hideLabel || !label)}
       >
         <Stack direction={row ? 'row' : 'column'}>
           {Array.isArray(enumOptions) &&
@@ -73,7 +71,7 @@ export default function CheckboxesWidget<
                   id={optionId(id, index)}
                   name={id}
                   value={String(index)}
-                  isChecked={checked}
+                  checked={checked}
                   disabled={disabled || itemDisabled || readonly}
                   onBlur={_onBlur}
                   onFocus={_onFocus}

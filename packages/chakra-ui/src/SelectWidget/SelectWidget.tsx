@@ -11,9 +11,10 @@ import {
   StrictRJSFSchema,
   WidgetProps,
 } from '@rjsf/utils';
-import { getChakra } from '../utils';
-import { OptionsOrGroups, Select } from 'chakra-react-select';
 import { Field } from '../components/ui/field';
+import { SelectContent, SelectItem, SelectRoot, SelectTrigger, SelectValueText } from '../components/ui/select';
+import { OptionsOrGroups } from 'chakra-react-select';
+import { createListCollection, SelectValueChangeDetails } from '@chakra-ui/react';
 
 export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: WidgetProps<T, S, F>,
@@ -34,11 +35,10 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
     onBlur,
     onFocus,
     rawErrors = [],
-    uiSchema,
     schema,
   } = props;
   const { enumOptions, enumDisabled, emptyValue } = options;
-  const chakraProps = getChakra({ uiSchema });
+  // const chakraProps = getChakra({ uiSchema });
 
   const _onMultiChange = (e: any) => {
     return onChange(
@@ -52,8 +52,8 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
     );
   };
 
-  const _onChange = (e: any) => {
-    return onChange(enumOptionsValueForIndex<S>(e.value, enumOptions, emptyValue));
+  const _onChange = ({ value }: SelectValueChangeDetails) => {
+    return onChange(enumOptionsValueForIndex<S>(value, enumOptions, emptyValue));
   };
 
   const _onBlur = ({ target }: FocusEvent<HTMLInputElement>) =>
@@ -95,35 +95,51 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
           value: i,
         };
       })
-    : {
-        label: valueLabelMap[selectedIndex as string] || '',
-        selectedIndex,
-      };
+    : [
+        {
+          label: valueLabelMap[selectedIndex as string] || '',
+          selectedIndex,
+        },
+      ];
+
+  const selectOptions = createListCollection({
+    items: displayEnumOptions,
+  });
 
   return (
     <Field
       mb={1}
-      {...chakraProps}
+      // {...chakraProps}
       disabled={disabled || readonly}
       required={required}
-      isReadOnly={readonly}
+      readOnly={readonly}
       invalid={rawErrors && rawErrors.length > 0}
       label={labelValue(label, hideLabel || !label)}
     >
-      <Select
-        inputId={id}
+      <SelectRoot
+        collection={selectOptions}
+        id={id}
         name={id}
-        isMulti={isMultiple}
-        options={displayEnumOptions}
-        placeholder={placeholder}
-        closeMenuOnSelect={!isMultiple}
+        multiple={isMultiple}
+        closeOnSelect={!isMultiple}
         onBlur={_onBlur}
-        onChange={isMultiple ? _onMultiChange : _onChange}
+        onValueChange={isMultiple ? _onMultiChange : _onChange}
         onFocus={_onFocus}
         autoFocus={autofocus}
         value={formValue}
         aria-describedby={ariaDescribedByIds<T>(id)}
-      />
+      >
+        <SelectTrigger>
+          <SelectValueText placeholder={placeholder} />
+        </SelectTrigger>
+        <SelectContent>
+          {selectOptions.items.map((item) => (
+            <SelectItem item={item} key={item.value}>
+              {item.label}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </SelectRoot>
     </Field>
   );
 }

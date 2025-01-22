@@ -1,12 +1,12 @@
 import { Global } from '@emotion/react';
 
 /**
- * 
- * The reason we need this is for ChakraProvider styling in Playground. 
+ *
+ * The reason we need this is for ChakraProvider styling in Playground.
  * The User Developer would be responsible for styling with ChakraProvider in their app.
- * 
+ *
  * Exact duplicate of `@chakra-ui/react`'s `CSSReset` component. Except for the following:
- * 
+ *
   ```css
     input {
       border-width: revert;
@@ -255,9 +255,9 @@ export const CSSReset = () => (
         display: none;
       }
       input {
-        border-width: revert;
-        border-color: revert;
-        border-style: revert;
+        // border-width: revert;
+        // border-color: revert;
+        // border-style: revert;
       }
       .array-item > hr {
         margin-top: 16px;

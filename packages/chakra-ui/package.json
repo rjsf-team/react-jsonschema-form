@@ -64,12 +64,11 @@
   },
   "peerDependencies": {
     "@chakra-ui/icons": ">=1.1.1",
-    "@chakra-ui/react": ">=3.3.0",
+    "@chakra-ui/react": ">=3.4.0",
     "@chakra-ui/system": ">=1.12.1",
     "@rjsf/core": "^6.x",
     "@rjsf/utils": "^6.x",
     "chakra-react-select": ">=3.3.8",
-    "framer-motion": ">=5.6.0",
     "react": ">=18"
   },
   "publishConfig": {
@@ -90,8 +89,9 @@
     "@babel/preset-env": "^7.23.9",
     "@babel/preset-react": "^7.23.3",
     "@babel/preset-typescript": "^7.23.3",
+    "@chakra-ui/cli": "^3.4.0",
     "@chakra-ui/icons": "^1.1.7",
-    "@chakra-ui/react": "^3.3.0",
+    "@chakra-ui/react": "^3.4.0",
     "@chakra-ui/system": "^1.12.1",
     "@emotion/eslint-plugin": "^11.11.0",
     "@emotion/jest": "^11.11.0",
@@ -116,9 +116,10 @@
     "react-test-renderer": "^18.2.0",
     "rimraf": "^5.0.5",
     "rollup": "^3.29.4",
-    "typescript": "^4.9.5"
+    "typescript": "^5.2.2"
   },
   "dependencies": {
+    "react-icons": "^5.4.0",
     "react-select": "^5.8.0"
   }
 }
