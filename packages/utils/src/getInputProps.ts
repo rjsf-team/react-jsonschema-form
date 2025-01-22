@@ -51,5 +51,9 @@ export default function getInputProps<
     inputProps.autoComplete = options.autocomplete;
   }
 
+  if (options.accept) {
+    inputProps.accept = options.accept as string;
+  }
+
   return inputProps;
 }

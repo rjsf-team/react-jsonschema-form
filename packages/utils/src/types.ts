@@ -150,6 +150,8 @@ export type InputPropsType = Omit<RangeSpecType, 'step'> & {
   step?: number | 'any';
   /** Specifies the `autoComplete` value for an <input> element */
   autoComplete?: HTMLInputElement['autocomplete'];
+  /** Specifies a filter for what file types the user can upload. */
+  accept?: HTMLInputElement['accept'];
 };
 
 /** Type describing an id used for a field in the `IdSchema` */
