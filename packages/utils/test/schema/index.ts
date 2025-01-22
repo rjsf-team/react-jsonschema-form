@@ -1,4 +1,5 @@
 import getDefaultFormStateTest from './getDefaultFormStateTest';
+import getDefaultFormStateTest2 from './getDefaultFormStateTest2';
 import getDisplayLabelTest from './getDisplayLabelTest';
 import getClosestMatchingOptionTest from './getClosestMatchingOptionTest';
 import getFirstMatchingOptionTest from './getFirstMatchingOptionTest';
@@ -15,6 +16,7 @@ export * from './types';
 
 export {
   getDefaultFormStateTest,
+  getDefaultFormStateTest2,
   getDisplayLabelTest,
   getClosestMatchingOptionTest,
   getFirstMatchingOptionTest,
