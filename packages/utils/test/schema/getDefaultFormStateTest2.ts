@@ -5,7 +5,7 @@ import {
   // getArrayDefaults,
   getDefaultBasedOnSchemaType,
   getInnerSchemaForArrayItem,
-  // getObjectDefaults,
+  getObjectDefaults,
   ensureFormDataMatchingSchema,
 } from '../../src/schema/getDefaultFormState';
 import { RECURSIVE_REF, RECURSIVE_REF_ALLOF } from '../testUtils/testData';
@@ -63,6 +63,10 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         test('getDefaultBasedOnSchemaType', () => {
           expect(getDefaultBasedOnSchemaType(testValidator, schema, { rootSchema: schema }, expected)).toBe(undefined);
         });
+
+        test('getObjectDefaults', () => {
+          expect(getObjectDefaults(testValidator, schema, { rootSchema: schema }, expected)).toEqual({});
+        });
       });
 
       describe('schema with a const property', () => {
@@ -99,6 +103,10 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           ).toEqual(expected);
         });
 
+        test('getObjectDefaults', () => {
+          expect(getObjectDefaults(testValidator, schema, { rootSchema: schema })).toEqual(expected);
+        });
+
         describe('constAsDefaults is never', () => {
           const experimental_defaultFormStateBehavior: Experimental_DefaultFormStateBehavior = {
             constAsDefaults: 'never',
@@ -130,6 +138,15 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           test('getDefaultBasedOnSchemaType', () => {
             expect(
               getDefaultBasedOnSchemaType(testValidator, schema, {
+                rootSchema: schema,
+                experimental_defaultFormStateBehavior,
+              })
+            ).toEqual(expected);
+          });
+
+          test('getObjectDefaults', () => {
+            expect(
+              getObjectDefaults(testValidator, schema, {
                 rootSchema: schema,
                 experimental_defaultFormStateBehavior,
               })
@@ -177,6 +194,10 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             })
           ).toEqual(expected);
         });
+
+        test('getObjectDefaults', () => {
+          expect(getObjectDefaults(testValidator, schema, { rootSchema: schema })).toEqual(expected);
+        });
       });
 
       describe('an object with an optional property that has a nested required property with default', () => {
@@ -219,6 +240,10 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
 
         test('getDefaultBasedOnSchemaType', () => {
           expect(getDefaultBasedOnSchemaType(testValidator, schema, { rootSchema: schema })).toEqual(expected);
+        });
+
+        test('getObjectDefaults', () => {
+          expect(getObjectDefaults(testValidator, schema, { rootSchema: schema })).toEqual(expected);
         });
       });
 
@@ -276,6 +301,12 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           expect(
             getDefaultBasedOnSchemaType(testValidator, schema, { rootSchema: schema, includeUndefinedValues })
           ).toEqual(expected);
+        });
+
+        test('getObjectDefaults', () => {
+          expect(getObjectDefaults(testValidator, schema, { rootSchema: schema, includeUndefinedValues })).toEqual(
+            expected
+          );
         });
       });
 
@@ -336,6 +367,12 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             getDefaultBasedOnSchemaType(testValidator, schema, { rootSchema: schema, includeUndefinedValues })
           ).toEqual(expected);
         });
+
+        test('getObjectDefaults', () => {
+          expect(getObjectDefaults(testValidator, schema, { rootSchema: schema, includeUndefinedValues })).toEqual(
+            expected
+          );
+        });
       });
 
       describe('an object with an additionalProperties', () => {
@@ -373,6 +410,19 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         test('getDefaultBasedOnSchemaType', () => {
           expect(
             getDefaultBasedOnSchemaType(
+              testValidator,
+              schema,
+              {
+                rootSchema: schema,
+              },
+              { foo: 'bar' }
+            )
+          ).toEqual(expected);
+        });
+
+        test('getObjectDefaults', () => {
+          expect(
+            getObjectDefaults(
               testValidator,
               schema,
               {
@@ -430,6 +480,12 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
               { rootSchema: schema, includeUndefinedValues },
               { foo: 'bar' }
             )
+          ).toEqual(expected);
+        });
+
+        test('getObjectDefaults', () => {
+          expect(
+            getObjectDefaults(testValidator, schema, { rootSchema: schema, includeUndefinedValues }, { foo: 'bar' })
           ).toEqual(expected);
         });
       });
@@ -510,6 +566,22 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           });
         });
 
+        test('getObjectDefaults', () => {
+          expect(
+            getObjectDefaults(testValidator, schema, {
+              rootSchema: schema,
+              rawFormData,
+            })
+          ).toEqual({
+            test: {
+              newKey: {
+                host: 'localhost',
+                port: 389,
+              },
+            },
+          });
+        });
+
         describe('an object with additionalProperties type object with formdata and no defaults', () => {
           const schema: RJSFSchema = {
             type: 'object',
@@ -574,6 +646,19 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
               },
             });
           });
+
+          test('getObjectDefaults', () => {
+            expect(
+              getObjectDefaults(testValidator, schema, {
+                rootSchema: schema,
+                rawFormData,
+              })
+            ).toEqual({
+              test: {
+                newKey: {},
+              },
+            });
+          });
         });
 
         describe('an object with additionalProperties type object with no defaults and non-object formdata', () => {
@@ -623,6 +708,15 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           test('getDefaultBasedOnSchemaType', () => {
             expect(
               getDefaultBasedOnSchemaType(testValidator, schema, {
+                rootSchema: schema,
+                rawFormData,
+              })
+            ).toEqual(expected);
+          });
+
+          test('getObjectDefaults', () => {
+            expect(
+              getObjectDefaults(testValidator, schema, {
                 rootSchema: schema,
                 rawFormData,
               })
@@ -750,6 +844,22 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
               },
             });
           });
+
+          test('getObjectDefaults', () => {
+            expect(
+              getObjectDefaults(testValidator, schema, {
+                rootSchema: schema,
+                rawFormData,
+              })
+            ).toEqual({
+              nestedObject: {
+                first: 'no',
+                second: {
+                  deeplyNestedThird: 'before',
+                },
+              },
+            });
+          });
         });
 
         describe('handling an invalid property schema', () => {
@@ -785,10 +895,20 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
               })
             ).toEqual(expected);
           });
+
+          test('getObjectDefaults', () => {
+            expect(
+              getObjectDefaults(testValidator, schema, {
+                rootSchema: schema,
+                includeUndefinedValues,
+              })
+            ).toEqual(expected);
+          });
         });
 
         describe('a recursive schema', () => {
           const schema = RECURSIVE_REF;
+          // NOTE: defined at L410
           // const includeUndefinedValues = 'excludeObjectChildren';
 
           test('getDefaultFormState', () => {
@@ -820,6 +940,15 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
               })
             ).toBe(undefined);
           });
+
+          test('getObjectDefaults', () => {
+            // NOTE: `includeUndefinedValues` is not used L1930
+            expect(
+              getObjectDefaults(testValidator, schema, {
+                rootSchema: schema,
+              })
+            ).toEqual({});
+          });
         });
 
         describe('a recursive allof schema', () => {
@@ -843,6 +972,10 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           test('getDefaultBasedOnSchemaType', () => {
             expect(getDefaultBasedOnSchemaType(testValidator, schema, { rootSchema: schema })).toEqual(expected);
           });
+
+          test('getObjectDefaults', () => {
+            expect(getObjectDefaults(testValidator, schema, { rootSchema: schema })).toEqual(expected);
+          });
         });
 
         describe('a simple schema and no optional args', () => {
@@ -859,6 +992,10 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
 
           test('getDefaultBasedOnSchemaType', () => {
             expect(getDefaultBasedOnSchemaType(testValidator, schema)).toEqual(expected);
+          });
+
+          test('getObjectDefaults', () => {
+            expect(getObjectDefaults(testValidator, schema)).toEqual({});
           });
         });
 
@@ -962,6 +1099,24 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             });
           });
 
+          test('getObjectDefaults', () => {
+            expect(
+              getObjectDefaults(testValidator, schema, {
+                rootSchema: schema,
+                rawFormData,
+                includeUndefinedValues,
+                experimental_defaultFormStateBehavior,
+              })
+            ).toEqual({
+              localConst: 'local',
+              RootConst: {
+                attr1: 1,
+                attr2: true,
+              },
+              RootAndLocalConst: 'FromLocal',
+            });
+          });
+
           describe('constAsDefault is never', () => {
             const experimental_defaultFormStateBehavior: Experimental_DefaultFormStateBehavior = {
               emptyObjectFields: 'skipDefaults',
@@ -997,6 +1152,15 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             test('getDefaultBasedOnSchemaType', () => {
               expect(
                 getDefaultBasedOnSchemaType(testValidator, schema, {
+                  rootSchema: schema,
+                  experimental_defaultFormStateBehavior,
+                })
+              ).toEqual({});
+            });
+
+            test('getObjectDefaults', () => {
+              expect(
+                getObjectDefaults(testValidator, schema, {
                   rootSchema: schema,
                   experimental_defaultFormStateBehavior,
                 })
@@ -1104,6 +1268,18 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           });
         });
 
+        test('getObjectDefaults', () => {
+          expect(
+            getObjectDefaults(testValidator, schema, {
+              rootSchema: schema,
+              rawFormData,
+              shouldMergeDefaultsIntoFormData,
+            })
+          ).toEqual({
+            animal: 'Fish',
+          });
+        });
+
         describe('mergeDefaultsIntoFormData set to "useDefaultIfFormDataUndefined"', () => {
           const experimental_defaultFormStateBehavior: Experimental_DefaultFormStateBehavior = {
             mergeDefaultsIntoFormData: 'useDefaultIfFormDataUndefined',
@@ -1141,6 +1317,19 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           test('getDefaultBasedOnSchemaType', () => {
             expect(
               getDefaultBasedOnSchemaType(testValidator, schema, {
+                rootSchema: schema,
+                rawFormData,
+                shouldMergeDefaultsIntoFormData,
+                experimental_defaultFormStateBehavior,
+              })
+            ).toEqual({
+              animal: 'Fish',
+            });
+          });
+
+          test('getObjectDefaults', () => {
+            expect(
+              getObjectDefaults(testValidator, schema, {
                 rootSchema: schema,
                 rawFormData,
                 shouldMergeDefaultsIntoFormData,
@@ -1213,6 +1402,15 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
               })
             ).toEqual(expected);
           });
+
+          test('getObjectDefaults', () => {
+            expect(
+              getObjectDefaults(testValidator, schema, {
+                rootSchema: schema,
+                experimental_defaultFormStateBehavior,
+              })
+            ).toEqual(expected);
+          });
         });
 
         describe('constAsDefaults is skipOneOf', () => {
@@ -1251,6 +1449,15 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
               })
             ).toEqual(expected);
           });
+
+          test('getObjectDefaults', () => {
+            expect(
+              getObjectDefaults(testValidator, schema, {
+                rootSchema: schema,
+                experimental_defaultFormStateBehavior,
+              })
+            ).toEqual(expected);
+          });
         });
 
         describe('constAsDefaults is never', () => {
@@ -1284,6 +1491,15 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           test('getDefaultBasedOnSchemaType', () => {
             expect(
               getDefaultBasedOnSchemaType(testValidator, schema, {
+                rootSchema: schema,
+                experimental_defaultFormStateBehavior,
+              })
+            ).toEqual(expected);
+          });
+
+          test('getObjectDefaults', () => {
+            expect(
+              getObjectDefaults(testValidator, schema, {
                 rootSchema: schema,
                 experimental_defaultFormStateBehavior,
               })
@@ -1338,6 +1554,16 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         test('getDefaultBasedOnSchemaType', () => {
           expect(
             getDefaultBasedOnSchemaType(testValidator, schema, {
+              rootSchema: schema,
+              rawFormData,
+              experimental_defaultFormStateBehavior,
+            })
+          ).toEqual(expected);
+        });
+
+        test('getObjectDefaults', () => {
+          expect(
+            getObjectDefaults(testValidator, schema, {
               rootSchema: schema,
               rawFormData,
               experimental_defaultFormStateBehavior,
