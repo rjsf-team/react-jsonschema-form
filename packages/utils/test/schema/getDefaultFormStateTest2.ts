@@ -44,11 +44,20 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           },
           $ref: '#/definitions/testdef',
         };
+        const expected = {
+          foo: 42,
+        };
 
         test('getDefaultFormState', () => {
-          expect(getDefaultFormState(testValidator, schema, undefined, schema)).toEqual({
-            foo: 42,
-          });
+          expect(getDefaultFormState(testValidator, schema, undefined, schema)).toEqual(expected);
+        });
+
+        test('computeDefaults', () => {
+          expect(
+            computeDefaults(testValidator, schema, {
+              rootSchema: schema,
+            })
+          ).toEqual(expected);
         });
       });
 
@@ -62,17 +71,28 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             },
           },
         };
+        const expected = {
+          test: 'test',
+        };
 
         test('getDefaultFormState', () => {
-          expect(getDefaultFormState(testValidator, schema, undefined, schema)).toEqual({
-            test: 'test',
-          });
+          expect(getDefaultFormState(testValidator, schema, undefined, schema)).toEqual(expected);
+        });
+
+        test('computeDefaults', () => {
+          expect(
+            computeDefaults(testValidator, schema, {
+              rootSchema: schema,
+            })
+          ).toEqual(expected);
         });
 
         describe('constAsDefaults is never', () => {
           const experimental_defaultFormStateBehavior: Experimental_DefaultFormStateBehavior = {
             constAsDefaults: 'never',
           };
+          const expected = {};
+
           test('getDefaultFormState', () => {
             expect(
               getDefaultFormState(
@@ -83,7 +103,16 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
                 undefined,
                 experimental_defaultFormStateBehavior
               )
-            ).toEqual({});
+            ).toEqual(expected);
+          });
+
+          test('computeDefaults', () => {
+            expect(
+              computeDefaults(testValidator, schema, {
+                rootSchema: schema,
+                experimental_defaultFormStateBehavior,
+              })
+            ).toEqual(expected);
           });
         });
       });
@@ -108,11 +137,16 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           },
           required: ['requiredProperty'],
         };
+        const expected = {
+          requiredProperty: 'foo',
+        };
 
         test('getDefaultFormState', () => {
-          expect(getDefaultFormState(testValidator, schema, undefined, schema)).toEqual({
-            requiredProperty: 'foo',
-          });
+          expect(getDefaultFormState(testValidator, schema, undefined, schema)).toEqual(expected);
+        });
+
+        test('computeDefaults', () => {
+          expect(computeDefaults(testValidator, schema, { rootSchema: schema })).toEqual(expected);
         });
       });
 
@@ -137,12 +171,21 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           },
           required: ['requiredProperty'],
         };
+        const expected = {
+          requiredProperty: 'foo',
+          optionalProperty: { nestedRequiredProperty: '' },
+        };
 
         test('getDefaultFormState', () => {
-          expect(getDefaultFormState(testValidator, schema, undefined, schema)).toEqual({
-            requiredProperty: 'foo',
-            optionalProperty: { nestedRequiredProperty: '' },
-          });
+          expect(getDefaultFormState(testValidator, schema, undefined, schema)).toEqual(expected);
+        });
+
+        test('computeDefaults', () => {
+          expect(
+            computeDefaults(testValidator, schema, {
+              rootSchema: schema,
+            })
+          );
         });
       });
 
@@ -172,16 +215,28 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           required: ['requiredProperty'],
         };
         const includeUndefinedValues = true;
+        const expected = {
+          optionalProperty: {
+            nestedRequiredProperty: {
+              undefinedProperty: undefined,
+            },
+          },
+          requiredProperty: 'foo',
+        };
 
         test('getDefaultFormState', () => {
-          expect(getDefaultFormState(testValidator, schema, undefined, schema, includeUndefinedValues)).toEqual({
-            optionalProperty: {
-              nestedRequiredProperty: {
-                undefinedProperty: undefined,
-              },
-            },
-            requiredProperty: 'foo',
-          });
+          expect(getDefaultFormState(testValidator, schema, undefined, schema, includeUndefinedValues)).toEqual(
+            expected
+          );
+        });
+
+        test('computeDefaults', () => {
+          expect(
+            computeDefaults(testValidator, schema, {
+              rootSchema: schema,
+              includeUndefinedValues,
+            })
+          ).toEqual(expected);
         });
       });
 
@@ -214,15 +269,27 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           required: ['requiredProperty'],
         };
         const includeUndefinedValues = 'excludeObjectChildren';
+        const expected = {
+          optionalNumberProperty: undefined,
+          optionalObjectProperty: {
+            nestedRequiredProperty: {},
+          },
+          requiredProperty: 'foo',
+        };
 
         test('getDefaultFormState', () => {
-          expect(getDefaultFormState(testValidator, schema, undefined, schema, includeUndefinedValues)).toEqual({
-            optionalNumberProperty: undefined,
-            optionalObjectProperty: {
-              nestedRequiredProperty: {},
-            },
-            requiredProperty: 'foo',
-          });
+          expect(getDefaultFormState(testValidator, schema, undefined, schema, includeUndefinedValues)).toEqual(
+            expected
+          );
+        });
+
+        test('computeDefaults', () => {
+          expect(
+            computeDefaults(testValidator, schema, {
+              rootSchema: schema,
+              includeUndefinedValues,
+            })
+          ).toEqual(expected);
         });
       });
 
@@ -241,12 +308,21 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             foo: 'bar',
           },
         };
+        const expected = {
+          requiredProperty: 'foo',
+          foo: 'bar',
+        };
 
         test('getDefaultFormState', () => {
-          expect(getDefaultFormState(testValidator, schema, undefined, schema)).toEqual({
-            requiredProperty: 'foo',
-            foo: 'bar',
-          });
+          expect(getDefaultFormState(testValidator, schema, undefined, schema)).toEqual(expected);
+        });
+
+        test('computeDefaults', () => {
+          expect(
+            computeDefaults(testValidator, schema, {
+              rootSchema: schema,
+            })
+          ).toEqual(expected);
         });
       });
 
@@ -268,12 +344,24 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           },
         };
         const includeUndefinedValues = true;
+        const expected = {
+          requiredProperty: 'foo',
+          foo: 'bar',
+        };
 
         test('getDefaultFormState', () => {
-          expect(getDefaultFormState(testValidator, schema, undefined, schema, includeUndefinedValues)).toEqual({
-            requiredProperty: 'foo',
-            foo: 'bar',
-          });
+          expect(getDefaultFormState(testValidator, schema, undefined, schema, includeUndefinedValues)).toEqual(
+            expected
+          );
+        });
+
+        test('computeDefaults', () => {
+          expect(
+            computeDefaults(testValidator, schema, {
+              rootSchema: schema,
+              includeUndefinedValues,
+            })
+          );
         });
       });
 
@@ -321,6 +409,22 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           });
         });
 
+        test('computeDefaults', () => {
+          expect(
+            computeDefaults(testValidator, schema, {
+              rootSchema: schema,
+              rawFormData,
+            })
+          ).toEqual({
+            test: {
+              newKey: {
+                host: 'localhost',
+                port: 389,
+              },
+            },
+          });
+        });
+
         describe('an object with additionalProperties type object with formdata and no defaults', () => {
           const schema: RJSFSchema = {
             type: 'object',
@@ -359,6 +463,19 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
               },
             });
           });
+
+          test('computeDefaults', () => {
+            expect(
+              computeDefaults(testValidator, schema, {
+                rootSchema: schema,
+                rawFormData,
+              })
+            ).toEqual({
+              test: {
+                newKey: {},
+              },
+            });
+          });
         });
 
         describe('an object with additionalProperties type object with no defaults and non-object formdata', () => {
@@ -390,9 +507,19 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             },
           };
           const rawFormData = {};
+          const expected = {};
 
           test('getDefaultFormState', () => {
-            expect(getDefaultFormState(testValidator, schema, rawFormData, schema)).toEqual({});
+            expect(getDefaultFormState(testValidator, schema, rawFormData, schema)).toEqual(expected);
+          });
+
+          test('computeDefaults', () => {
+            expect(
+              computeDefaults(testValidator, schema, {
+                rootSchema: schema,
+                rawFormData,
+              })
+            ).toEqual(expected);
           });
         });
 
@@ -484,6 +611,22 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
               },
             });
           });
+
+          test('computeDefaults', () => {
+            expect(
+              computeDefaults(testValidator, schema, {
+                rootSchema: schema,
+                rawFormData,
+              })
+            ).toEqual({
+              nestedObject: {
+                first: 'no',
+                second: {
+                  deeplyNestedThird: 'before',
+                },
+              },
+            });
+          });
         });
 
         describe('handling an invalid property schema', () => {
@@ -494,9 +637,21 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             },
           } as RJSFSchema;
           const includeUndefinedValues = 'excludeObjectChildren';
+          const expected = {};
 
           test('getDefaultFormState', () => {
-            expect(getDefaultFormState(testValidator, schema, undefined, schema, includeUndefinedValues)).toEqual({});
+            expect(getDefaultFormState(testValidator, schema, undefined, schema, includeUndefinedValues)).toEqual(
+              expected
+            );
+          });
+
+          test('computeDefaults', () => {
+            expect(
+              computeDefaults(testValidator, schema, {
+                rootSchema: schema,
+                includeUndefinedValues,
+              })
+            ).toEqual(expected);
           });
         });
 
@@ -513,23 +668,48 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
               name: '',
             });
           });
+
+          test('computeDefaults', () => {
+            // NOTE: `includeUndefinedValues` is not used L1275
+            expect(
+              computeDefaults(testValidator, schema, {
+                rootSchema: schema,
+              })
+            ).toEqual({
+              name: '',
+            });
+          });
         });
 
         describe('a recursive allof schema', () => {
           const schema = RECURSIVE_REF_ALLOF;
+          const expected = {
+            value: [undefined],
+          };
 
           test('getDefaultFormState', () => {
-            expect(getDefaultFormState(testValidator, schema, undefined, schema)).toEqual({
-              value: [undefined],
-            });
+            expect(getDefaultFormState(testValidator, schema, undefined, schema)).toEqual(expected);
+          });
+
+          test('computeDefaults', () => {
+            expect(
+              computeDefaults(testValidator, schema, {
+                rootSchema: schema,
+              })
+            ).toEqual(expected);
           });
         });
 
         describe('a simple schema and no optional args', () => {
           const schema: RJSFSchema = { type: 'string' };
+          const expected = undefined;
 
           test('getDefaultFormState', () => {
-            expect(getDefaultFormState(testValidator, schema, undefined)).toBe(undefined);
+            expect(getDefaultFormState(testValidator, schema, undefined)).toEqual(expected);
+          });
+
+          test('computeDefaults', () => {
+            expect(computeDefaults(testValidator, schema)).toEqual(expected);
           });
         });
 
@@ -596,6 +776,23 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
               fromFormData: 'fromFormData',
             });
           });
+          test('computeDefaults', () => {
+            expect(
+              computeDefaults(testValidator, schema, {
+                rootSchema: schema,
+                rawFormData,
+                includeUndefinedValues,
+                experimental_defaultFormStateBehavior,
+              })
+            ).toEqual({
+              localConst: 'local',
+              RootConst: {
+                attr1: 1,
+                attr2: true,
+              },
+              RootAndLocalConst: 'FromLocal',
+            });
+          });
 
           describe('constAsDefault is never', () => {
             const experimental_defaultFormStateBehavior: Experimental_DefaultFormStateBehavior = {
@@ -616,6 +813,17 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
               ).toEqual({
                 fromFormData: 'fromFormData',
               });
+            });
+
+            test('computeDefaults', () => {
+              expect(
+                computeDefaults(testValidator, schema, {
+                  rootSchema: schema,
+                  rawFormData,
+                  includeUndefinedValues,
+                  experimental_defaultFormStateBehavior,
+                })
+              ).toEqual({});
             });
           });
         });
@@ -683,7 +891,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           food: 'meat',
           water: null,
         };
-        // const shouldMergeDefaultsIntoFormData = true;
+        const shouldMergeDefaultsIntoFormData = true;
 
         test('getDefaultFormState', () => {
           expect(getDefaultFormState(testValidator, schema, rawFormData, schema)).toEqual({
@@ -693,9 +901,28 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           });
         });
 
+        test('computeDefaults', () => {
+          expect(
+            computeDefaults(testValidator, schema, {
+              rootSchema: schema,
+              rawFormData,
+              shouldMergeDefaultsIntoFormData,
+            })
+          ).toEqual({
+            animal: 'Fish',
+            food: 'worms',
+            water: 'sea',
+          });
+        });
+
         describe('mergeDefaultsIntoFormData set to "useDefaultIfFormDataUndefined"', () => {
           const experimental_defaultFormStateBehavior: Experimental_DefaultFormStateBehavior = {
             mergeDefaultsIntoFormData: 'useDefaultIfFormDataUndefined',
+          };
+          const expected = {
+            animal: 'Fish',
+            food: 'worms',
+            water: 'sea',
           };
 
           test('getDefaultFormState', () => {
@@ -708,11 +935,18 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
                 undefined,
                 experimental_defaultFormStateBehavior
               )
-            ).toEqual({
-              animal: 'Fish',
-              food: 'worms',
-              water: 'sea',
-            });
+            ).toEqual(expected);
+          });
+
+          test('computeDefaults', () => {
+            expect(
+              computeDefaults(testValidator, schema, {
+                rootSchema: schema,
+                rawFormData,
+                experimental_defaultFormStateBehavior,
+                shouldMergeDefaultsIntoFormData,
+              })
+            ).toEqual(expected);
           });
         });
       });
@@ -743,6 +977,9 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           const experimental_defaultFormStateBehavior: Experimental_DefaultFormStateBehavior = {
             constAsDefaults: 'always',
           };
+          const expected = {
+            oneOfField: 'username',
+          };
 
           test('getDefaultFormState', () => {
             expect(
@@ -754,9 +991,16 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
                 undefined,
                 experimental_defaultFormStateBehavior
               )
-            ).toEqual({
-              oneOfField: 'username',
-            });
+            ).toEqual(expected);
+          });
+
+          test('computeDefaults', () => {
+            expect(
+              computeDefaults(testValidator, schema, {
+                rootSchema: schema,
+                experimental_defaultFormStateBehavior,
+              })
+            ).toEqual(expected);
           });
         });
 
@@ -764,6 +1008,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           const experimental_defaultFormStateBehavior: Experimental_DefaultFormStateBehavior = {
             constAsDefaults: 'skipOneOf',
           };
+          const expected = {};
 
           test('getDefaultFormState', () => {
             expect(
@@ -775,7 +1020,16 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
                 undefined,
                 experimental_defaultFormStateBehavior
               )
-            ).toEqual({});
+            ).toEqual(expected);
+          });
+
+          test('computeDefaults', () => {
+            expect(
+              computeDefaults(testValidator, schema, {
+                rootSchema: schema,
+                experimental_defaultFormStateBehavior,
+              })
+            ).toEqual(expected);
           });
         });
 
@@ -783,6 +1037,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           const experimental_defaultFormStateBehavior: Experimental_DefaultFormStateBehavior = {
             constAsDefaults: 'never',
           };
+          const expected = {};
 
           test('getDefaultFormState', () => {
             expect(
@@ -794,7 +1049,16 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
                 undefined,
                 experimental_defaultFormStateBehavior
               )
-            ).toEqual({});
+            ).toEqual(expected);
+          });
+
+          test('computeDefaults', () => {
+            expect(
+              computeDefaults(testValidator, schema, {
+                rootSchema: schema,
+                experimental_defaultFormStateBehavior,
+              })
+            ).toEqual(expected);
           });
         });
       });
@@ -815,6 +1079,9 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         const experimental_defaultFormStateBehavior: Experimental_DefaultFormStateBehavior = {
           constAsDefaults: 'always',
         };
+        const expected = {
+          stringField: 'fromConst',
+        };
 
         test('getDefaultFormState', () => {
           expect(
@@ -826,9 +1093,17 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
               undefined,
               experimental_defaultFormStateBehavior
             )
-          ).toEqual({
-            stringField: 'fromConst',
-          });
+          ).toEqual(expected);
+        });
+
+        test('computeDefaults', () => {
+          expect(
+            computeDefaults(testValidator, schema, {
+              rootSchema: schema,
+              rawFormData,
+              experimental_defaultFormStateBehavior,
+            })
+          ).toEqual(expected);
         });
       });
     });
@@ -845,18 +1120,25 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           },
         };
         const includeUndefinedValues = 'excludeObjectChildren';
+        const expected = ['Raphael', 'Michaelangelo', 'Unknown', 'Unknown'];
 
         test('getDefaultFormState', () => {
-          expect(getDefaultFormState(testValidator, schema, undefined, schema, includeUndefinedValues)).toEqual([
-            'Raphael',
-            'Michaelangelo',
-            'Unknown',
-            'Unknown',
-          ]);
+          expect(getDefaultFormState(testValidator, schema, undefined, schema, includeUndefinedValues)).toEqual(
+            expected
+          );
+        });
+
+        test('computeDefaults', () => {
+          expect(
+            computeDefaults(testValidator, schema, {
+              rootSchema: schema,
+              includeUndefinedValues,
+            })
+          ).toEqual(expected);
         });
 
         describe('with empty array as formData', () => {
-          // const rawFormData = [];
+          const rawFormData: never[] = [];
           const experimental_defaultFormStateBehavior: Experimental_DefaultFormStateBehavior = {
             arrayMinItems: {
               mergeExtraDefaults: true,
@@ -875,7 +1157,17 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
                 includeUndefinedValues,
                 experimental_defaultFormStateBehavior
               )
-            ).toEqual(['Raphael', 'Michaelangelo', 'Unknown', 'Unknown']);
+            ).toEqual(expected);
+          });
+
+          test('computeDefaults', () => {
+            expect(
+              computeDefaults(testValidator, schema, {
+                rootSchema: schema,
+                rawFormData,
+                experimental_defaultFormStateBehavior,
+              })
+            ).toEqual(expected);
           });
         });
       });
@@ -889,9 +1181,21 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           },
         };
         const includeUndefinedValues = 'excludeObjectChildren';
+        const expected: never[] = [];
 
         test('getDefaultFormState', () => {
-          expect(getDefaultFormState(testValidator, schema, undefined, schema, includeUndefinedValues)).toEqual([]);
+          expect(getDefaultFormState(testValidator, schema, undefined, schema, includeUndefinedValues)).toEqual(
+            expected
+          );
+        });
+
+        test('computeDefaults', () => {
+          expect(
+            computeDefaults(testValidator, schema, {
+              rootSchema: schema,
+              includeUndefinedValues,
+            })
+          ).toEqual(expected);
         });
       });
 
@@ -906,14 +1210,21 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           },
         };
         const includeUndefinedValues = 'excludeObjectChildren';
+        const expected = ['ConstFromRoot', 'ConstFromRoot', 'Constant', 'Constant'];
 
         test('getDefaultFormState', () => {
-          expect(getDefaultFormState(testValidator, schema, undefined, schema, includeUndefinedValues)).toEqual([
-            'ConstFromRoot',
-            'ConstFromRoot',
-            'Constant',
-            'Constant',
-          ]);
+          expect(getDefaultFormState(testValidator, schema, undefined, schema, includeUndefinedValues)).toEqual(
+            expected
+          );
+        });
+
+        test('computeDefaults', () => {
+          expect(
+            computeDefaults(testValidator, schema, {
+              rootSchema: schema,
+              includeUndefinedValues,
+            })
+          ).toEqual(expected);
         });
       });
 
@@ -923,17 +1234,34 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           items: 'not a valid item value',
         } as RJSFSchema;
         const includeUndefinedValues = 'excludeObjectChildren';
+        const expected: never[] = [];
 
         test('getDefaultFormState', () => {
-          expect(getDefaultFormState(testValidator, schema, undefined, schema, includeUndefinedValues)).toEqual([]);
+          expect(getDefaultFormState(testValidator, schema, undefined, schema, includeUndefinedValues)).toEqual(
+            expected
+          );
+        });
+
+        test('computeDefaults', () => {
+          expect(
+            computeDefaults(testValidator, schema, {
+              rootSchema: schema,
+              includeUndefinedValues,
+            })
+          ).toEqual(expected);
         });
       });
 
       describe('simple schema and no optional args', () => {
         const schema: RJSFSchema = { type: 'array' };
+        const expected: never[] = [];
 
         test('getDefaultFormState', () => {
-          expect(getDefaultFormState(testValidator, schema)).toEqual([]);
+          expect(getDefaultFormState(testValidator, schema)).toEqual(expected);
+        });
+
+        test('computeDefaults', () => {
+          expect(computeDefaults(testValidator, schema)).toEqual(expected);
         });
       });
     });
