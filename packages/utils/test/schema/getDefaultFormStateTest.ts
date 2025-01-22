@@ -1707,7 +1707,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           },
         };
         const includeUndefinedValues = 'excludeObjectChildren';
-        const expected: never[] = [];
+        const expected: undefined[] = [undefined, undefined, undefined, undefined];
 
         test('getDefaultFormState', () => {
           expect(getDefaultFormState(testValidator, schema, undefined, schema, includeUndefinedValues)).toEqual(
