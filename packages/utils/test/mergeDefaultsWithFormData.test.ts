@@ -150,6 +150,38 @@ describe('mergeDefaultsWithFormData()', () => {
       expect(mergeDefaultsWithFormData({}, undefined, undefined, undefined, true)).toEqual(undefined);
     });
 
+    it('should deeply merge and return formData when formData is undefined and defaultSupercedesUndefined false', () => {
+      expect(
+        mergeDefaultsWithFormData(
+          {
+            arrayWithDefaults: ['Hello World'],
+            objectWidthDefaults: {
+              nestedField: 'Hello World!',
+            },
+            stringField: 'Hello World!!',
+          },
+          {
+            arrayWithDefaults: [null],
+            objectWidthDefaults: {
+              nestedField: undefined,
+            },
+            stringField: undefined,
+            nonEmptyField: 'Hello World!!!',
+          },
+          undefined,
+          undefined,
+          true
+        )
+      ).toEqual({
+        arrayWithDefaults: [null],
+        objectWidthDefaults: {
+          nestedField: undefined,
+        },
+        stringField: undefined,
+        nonEmptyField: 'Hello World!!!',
+      });
+    });
+
     it('should return default when formData is undefined and defaultSupercedesUndefined true', () => {
       expect(mergeDefaultsWithFormData({}, undefined, undefined, true, true)).toEqual({});
     });
