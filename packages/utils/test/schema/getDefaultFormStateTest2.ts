@@ -2,7 +2,7 @@ import { createSchemaUtils, Experimental_DefaultFormStateBehavior, getDefaultFor
 import {
   AdditionalItemsHandling,
   computeDefaults,
-  // getArrayDefaults,
+  getArrayDefaults,
   getDefaultBasedOnSchemaType,
   getInnerSchemaForArrayItem,
   getObjectDefaults,
@@ -1616,6 +1616,20 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           ).toEqual(expected);
         });
 
+        test('getArrayDefaults', () => {
+          expect(
+            getArrayDefaults(
+              testValidator,
+              schema,
+              {
+                rootSchema: schema,
+                includeUndefinedValues,
+              },
+              ['Raphael', 'Michaelangelo']
+            )
+          ).toEqual(expected);
+        });
+
         describe('with empty array as formData', () => {
           const rawFormData: never[] = [];
           const experimental_defaultFormStateBehavior: Experimental_DefaultFormStateBehavior = {
@@ -1665,6 +1679,22 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
               )
             ).toEqual(expected);
           });
+
+          test('getArrayDefaults', () => {
+            expect(
+              getArrayDefaults(
+                testValidator,
+                schema,
+                {
+                  rootSchema: schema,
+                  rawFormData,
+                  includeUndefinedValues,
+                  experimental_defaultFormStateBehavior,
+                },
+                ['Raphael', 'Michaelangelo']
+              )
+            ).toEqual(expected);
+          });
         });
       });
 
@@ -1697,6 +1727,15 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         test('getDefaultBasedOnSchemaType', () => {
           expect(
             getDefaultBasedOnSchemaType(testValidator, schema, {
+              rootSchema: schema,
+              includeUndefinedValues,
+            })
+          ).toEqual(expected);
+        });
+
+        test('getArrayDefaults', () => {
+          expect(
+            getArrayDefaults(testValidator, schema, {
               rootSchema: schema,
               includeUndefinedValues,
             })
@@ -1745,6 +1784,20 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             )
           ).toEqual(expected);
         });
+
+        test('getArrayDefaults', () => {
+          expect(
+            getArrayDefaults(
+              testValidator,
+              schema,
+              {
+                rootSchema: schema,
+                includeUndefinedValues,
+              },
+              ['ConstFromRoot', 'ConstFromRoot']
+            )
+          ).toEqual(expected);
+        });
       });
 
       describe('an invalid array schema', () => {
@@ -1775,6 +1828,12 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             getDefaultBasedOnSchemaType(testValidator, schema, { rootSchema: schema, includeUndefinedValues })
           ).toEqual(expected);
         });
+
+        test('getArrayDefaults', () => {
+          expect(getArrayDefaults(testValidator, schema, { rootSchema: schema, includeUndefinedValues })).toEqual(
+            expected
+          );
+        });
       });
 
       describe('simple schema and no optional args', () => {
@@ -1791,6 +1850,10 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
 
         test('getDefaultBasedOnSchemaType', () => {
           expect(getDefaultBasedOnSchemaType(testValidator, schema)).toEqual(expected);
+        });
+
+        test('getArrayDefaults', () => {
+          expect(getArrayDefaults(testValidator, schema)).toEqual(expected);
         });
       });
     });
