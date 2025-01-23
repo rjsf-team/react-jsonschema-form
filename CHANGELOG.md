@@ -20,6 +20,7 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/utils
 
 - switch `lodash.isEqualWith` to `fast-equals.createCustomEqual` providing `areFunctionsEqual` assuming any functions are equal.
+- Fixed issue with oneOf selector can be modified in readonly mode, fixing [#4460](https://github.com/rjsf-team/react-jsonschema-form/issues/4460)
 
 # 5.24.1
 

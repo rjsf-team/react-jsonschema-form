@@ -891,6 +891,80 @@ describe('oneOf', () => {
     });
   });
 
+  it('should select oneOf dropdown be disabled when the schema is readOnly', () => {
+    const schema = {
+      title: 'Example Schema',
+      type: 'object',
+      readOnly: true,
+      properties: {
+        contactPreference: {
+          oneOf: [
+            {
+              $ref: '#/definitions/phoneContact',
+            },
+            {
+              $ref: '#/definitions/emailContact',
+            },
+          ],
+        },
+      },
+      required: ['contactPreference'],
+      definitions: {
+        phoneContact: {
+          type: 'object',
+          properties: {
+            contactMethod: {
+              type: 'string',
+              enum: ['phone'],
+            },
+            phoneNumber: {
+              type: 'string',
+              pattern: '^[0-9]{10}$',
+            },
+          },
+          required: ['contactMethod', 'phoneNumber'],
+        },
+        emailContact: {
+          type: 'object',
+          properties: {
+            contactMethod: {
+              type: 'string',
+              enum: ['email'],
+            },
+            emailAddress: {
+              type: 'string',
+              format: 'email',
+            },
+          },
+          required: ['contactMethod', 'emailAddress'],
+        },
+      },
+    };
+
+    const { node } = createFormComponent({
+      schema,
+      formData: {
+        contactPreference: {
+          contactMethod: 'phone',
+          phoneNumber: '1231231231',
+        },
+      },
+    });
+
+    const $select = node.querySelector('select#root_contactPreference__oneof_select');
+
+    expect($select.value).eql('0');
+    expect($select).to.have.property('disabled', true);
+
+    act(() => {
+      fireEvent.change($select, {
+        target: { value: $select.options[1].value },
+      });
+    });
+
+    expect($select.value).eql('0');
+  });
+
   describe('Arrays', () => {
     it('should correctly render mixed types for oneOf inside array items', () => {
       const schema = {
