@@ -53,16 +53,8 @@ export default function BaseInputTemplate<
   } = props;
   const inputProps = getInputProps<T, S, F>(schema, type, options);
   // Now we need to pull out the step, min, max into an inner `inputProps` for material-ui
-  const { step, min, max, ...rest } = inputProps;
-  const otherProps = {
-    inputProps: {
-      step,
-      min,
-      max,
-      ...(schema.examples ? { list: examplesId<T>(id) } : undefined),
-    },
-    ...rest,
-  };
+  const { step, min, max, accept, ...rest } = inputProps;
+  const htmlInputProps = { step, min, max, accept, ...(schema.examples ? { list: examplesId<T>(id) } : undefined) };
   const _onChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) =>
     onChange(value === '' ? options.emptyValue : value);
   const _onBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target && target.value);
@@ -84,7 +76,10 @@ export default function BaseInputTemplate<
         autoFocus={autofocus}
         required={required}
         disabled={disabled || readonly}
-        {...otherProps}
+        slotProps={{
+          htmlInput: htmlInputProps,
+        }}
+        {...rest}
         value={value || value === 0 ? value : ''}
         error={rawErrors.length > 0}
         onChange={onChangeOverride || _onChange}
