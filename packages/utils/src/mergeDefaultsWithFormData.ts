@@ -41,7 +41,7 @@ export default function mergeDefaultsWithFormData<T = any>(
     const overrideOppositeArray = overrideFormDataWithDefaults ? formData : defaultsArray;
 
     const mapped = overrideArray.map((value, idx) => {
-     // We want to explicitly make sure that the value is NOT undefined since null, 0 and empty space are valid values
+      // We want to explicitly make sure that the value is NOT undefined since null, 0 and empty space are valid values
       if (overrideOppositeArray[idx] !== undefined) {
         return mergeDefaultsWithFormData<any>(
           defaultsArray[idx],
