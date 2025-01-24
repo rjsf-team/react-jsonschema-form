@@ -88,7 +88,7 @@ import * as precompiledValidator from 'path_to/yourCompiledSchema';
 
 const validator = createPrecompiledValidator(precompiledValidator as ValidatorFunctions);
 
-render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
+render(<Form schema={yourSchema} validator={validator} />, document.getElementById('app'));
 ```
 
 ### Dynamically pre-compiling validators
