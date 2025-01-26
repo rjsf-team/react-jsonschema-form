@@ -12,9 +12,10 @@ import {
   WidgetProps,
 } from '@rjsf/utils';
 import { Field } from '../components/ui/field';
-import { SelectContent, SelectItem, SelectRoot, SelectTrigger, SelectValueText } from '../components/ui/select';
+import { SelectRoot, SelectTrigger, SelectValueText } from '../components/ui/select';
 import { OptionsOrGroups } from 'chakra-react-select';
 import { createListCollection, SelectValueChangeDetails } from '@chakra-ui/react';
+import { Select as ChakraSelect } from '@chakra-ui/react';
 
 export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: WidgetProps<T, S, F>,
@@ -40,11 +41,11 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
   const { enumOptions, enumDisabled, emptyValue } = options;
   // const chakraProps = getChakra({ uiSchema });
 
-  const _onMultiChange = (e: any) => {
+  const _onMultiChange = ({ value }: SelectValueChangeDetails) => {
     return onChange(
       enumOptionsValueForIndex<S>(
-        e.map((v: { value: any }) => {
-          return v.value;
+        value.map((item) => {
+          return item;
         }),
         enumOptions,
         emptyValue,
@@ -88,22 +89,29 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
 
   const isMultiple = typeof multiple !== 'undefined' && multiple !== false && Boolean(enumOptions);
   const selectedIndex = enumOptionsIndexForValue<S>(value, enumOptions, isMultiple);
-  const formValue: any = isMultiple
-    ? ((selectedIndex as string[]) || []).map((i: string) => {
-        return {
-          label: valueLabelMap[i],
-          value: i,
-        };
-      })
-    : [
-        {
-          label: valueLabelMap[selectedIndex as string] || '',
-          selectedIndex,
-        },
-      ];
+
+  const getMultiValue = () =>
+    ((selectedIndex as string[]) || []).map((i: string) => {
+      return {
+        label: valueLabelMap[i],
+        value: i.toString(),
+      };
+    });
+
+  const getSingleValue = () =>
+    typeof selectedIndex !== 'undefined'
+      ? [
+          {
+            label: valueLabelMap[selectedIndex as string] || '',
+            value: selectedIndex.toString(),
+          },
+        ]
+      : [];
+
+  const formValue = (isMultiple ? getMultiValue() : getSingleValue()).map((item) => item.value);
 
   const selectOptions = createListCollection({
-    items: displayEnumOptions,
+    items: displayEnumOptions.filter((item) => item.value),
   });
 
   return (
@@ -132,13 +140,16 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
         <SelectTrigger>
           <SelectValueText placeholder={placeholder} />
         </SelectTrigger>
-        <SelectContent>
-          {selectOptions.items.map((item) => (
-            <SelectItem item={item} key={item.value}>
-              {item.label}
-            </SelectItem>
-          ))}
-        </SelectContent>
+        <ChakraSelect.Positioner minWidth='100% !important' zIndex='2 !important' top='calc(100% + 5px) !important'>
+          <ChakraSelect.Content>
+            {selectOptions.items.map((item) => (
+              <ChakraSelect.Item item={item} key={item.value}>
+                {item.label}
+                <ChakraSelect.ItemIndicator />
+              </ChakraSelect.Item>
+            ))}
+          </ChakraSelect.Content>
+        </ChakraSelect.Positioner>
       </SelectRoot>
     </Field>
   );

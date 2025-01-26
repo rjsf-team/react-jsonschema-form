@@ -10,6 +10,7 @@ import {
 } from '@rjsf/utils';
 import { Field } from '../components/ui/field';
 import { NumberInputField, NumberInputRoot } from '../components/ui/number-input';
+import { NumberInputValueChangeDetails } from '@chakra-ui/react';
 
 export default function UpDownWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: WidgetProps<T, S, F>,
@@ -18,7 +19,7 @@ export default function UpDownWidget<T = any, S extends StrictRJSFSchema = RJSFS
 
   // const chakraProps = getChakra({ uiSchema }); TODO - adjust getChakra everywhere
 
-  const _onChange = (value: string | number) => onChange(value);
+  const _onChange = ({ value }: NumberInputValueChangeDetails) => onChange(value);
   const _onBlur = ({ target }: FocusEvent<HTMLInputElement | any>) => onBlur(id, target && target.value);
   const _onFocus = ({ target }: FocusEvent<HTMLInputElement | any>) => onFocus(id, target && target.value);
 
@@ -33,15 +34,15 @@ export default function UpDownWidget<T = any, S extends StrictRJSFSchema = RJSFS
       label={labelValue(label, hideLabel || !label)}
     >
       <NumberInputRoot
-        value={value ?? ''}
-        onValueChange={({ value }) => _onChange(value)}
+        value={value}
+        onValueChange={_onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
         aria-describedby={ariaDescribedByIds<T>(id)}
         id={id}
         name={id}
       >
-        <NumberInputField />
+        <NumberInputField value={value} />
       </NumberInputRoot>
     </Field>
   );
