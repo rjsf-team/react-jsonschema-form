@@ -9,9 +9,7 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
   WidgetProps,
-  getUiOptions,
 } from '@rjsf/utils';
-import Markdown from 'markdown-to-jsx';
 
 /** The `CheckBoxWidget` is a widget for rendering boolean properties.
  *  It is typically used to represent a boolean.
@@ -34,9 +32,6 @@ function CheckboxWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F exte
   onChange,
   registry,
 }: WidgetProps<T, S, F>) {
-  const { globalUiOptions } = registry;
-  const uiOptions = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
-
   const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
     'DescriptionFieldTemplate',
     registry,
@@ -63,18 +58,12 @@ function CheckboxWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F exte
   );
   const description = options.description ?? schema.description;
 
-  const richDescription = uiOptions.enableMarkdownInDescription ? (
-    <Markdown options={{ disableParsingRawHTML: true }}>{description || ''}</Markdown>
-  ) : (
-    description || ''
-  );
-
   return (
     <div className={`checkbox ${disabled || readonly ? 'disabled' : ''}`}>
       {!hideLabel && !!description && (
         <DescriptionFieldTemplate
           id={descriptionId<T>(id)}
-          description={richDescription}
+          description={description}
           schema={schema}
           uiSchema={uiSchema}
           registry={registry}

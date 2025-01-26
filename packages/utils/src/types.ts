@@ -541,7 +541,7 @@ export type DescriptionFieldProps<T = any, S extends StrictRJSFSchema = RJSFSche
   /** The uiSchema object for this description field */
   uiSchema?: UiSchema<T, S, F>;
   /** The description of the field being rendered */
-  description: string | ReactElement;
+  description: string;
   /** The `registry` object */
   registry: Registry<T, S, F>;
 };

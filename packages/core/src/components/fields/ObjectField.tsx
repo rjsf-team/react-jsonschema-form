@@ -259,11 +259,6 @@ class ObjectField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
 
     const templateTitle = uiOptions.title ?? schema.title ?? title ?? name;
     const description = uiOptions.description ?? schema.description;
-    const richDescription = uiOptions.enableMarkdownInDescription ? (
-      <Markdown options={{ disableParsingRawHTML: true }}>{description || ''}</Markdown>
-    ) : (
-      description
-    );
     let orderedProperties: string[];
     try {
       const properties = Object.keys(schemaProperties);
@@ -286,7 +281,7 @@ class ObjectField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
     const templateProps = {
       // getDisplayLabel() always returns false for object types, so just check the `uiOptions.label`
       title: uiOptions.label === false ? '' : templateTitle,
-      description: uiOptions.label === false ? undefined : richDescription,
+      description: uiOptions.label === false ? undefined : description,
       properties: orderedProperties.map((name) => {
         const addedByAdditionalProperties = has(schema, [PROPERTIES_KEY, name, ADDITIONAL_PROPERTY_FLAG]);
         const fieldUiSchema = addedByAdditionalProperties ? uiSchema.additionalProperties : uiSchema[name];
