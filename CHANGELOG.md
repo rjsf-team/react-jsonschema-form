@@ -21,6 +21,12 @@ should change the heading of the (upcoming) version to include a major version b
 
 - switch `lodash.isEqualWith` to `fast-equals.createCustomEqual` providing `areFunctionsEqual` assuming any functions are equal.
 - Fixed issue with oneOf selector can be modified in readonly mode, fixing [#4460](https://github.com/rjsf-team/react-jsonschema-form/issues/4460)
+- Fixed issue with fields inside an array can't be set to empty when a default is set, fixing [#4456](https://github.com/rjsf-team/react-jsonschema-form/issues/4456)
+- Fixed issue with file accept attribute, fixing [#4404](https://github.com/rjsf-team/react-jsonschema-form/issues/4404).
+
+## @rjsf/mui
+
+- Fixed issue with file accept attribute, fixing [#4404](https://github.com/rjsf-team/react-jsonschema-form/issues/4404).
 
 # 5.24.1
 
