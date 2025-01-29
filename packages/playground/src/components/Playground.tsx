@@ -86,7 +86,9 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
       setTheme(theTheme);
       setShowForm(true);
       setLiveSettings(liveSettings);
-      setValidator(validator);
+      if ('validator' in data) {
+        setValidator(validator);
+      }
       setOtherFormProps({ fields, templates, ...rest });
     },
     [theme, onThemeSelected, themes]
