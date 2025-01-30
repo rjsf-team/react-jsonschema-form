@@ -15,6 +15,11 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+# 5.24.3
+
+## Dev / docs / playground
+- Fixed issue with selector, where validator was getting refreshed on clicking on anything in selector. [#4472](https://github.com/rjsf-team/react-jsonschema-form/pull/4472)
+
 # 5.24.2
 
 ## @rjsf/utils
@@ -27,9 +32,6 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/mui
 
 - Fixed issue with file accept attribute, fixing [#4404](https://github.com/rjsf-team/react-jsonschema-form/issues/4404).
-
-## Dev / docs / playground
-- Fixed issue with selector, where validator was getting refreshed on clicking on anything in selector. [#4472](https://github.com/rjsf-team/react-jsonschema-form/pull/4472)
 
 # 5.24.1
 
