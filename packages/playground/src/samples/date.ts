@@ -42,6 +42,14 @@ const date: Sample = {
     },
   },
   uiSchema: {
+    native: {
+      date: {
+        'ui:widget': 'date',
+      },
+      time: {
+        'ui:widget': 'time',
+      },
+    },
     alternative: {
       'alt-datetime': {
         'ui:widget': 'alt-datetime',

@@ -140,3 +140,4 @@ out/
 
 # typescript tsbuildinfo
 *.tsbuildinfo
+.aider*

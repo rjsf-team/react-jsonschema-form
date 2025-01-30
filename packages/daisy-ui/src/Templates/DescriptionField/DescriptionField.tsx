@@ -1,0 +1,12 @@
+import { DescriptionFieldProps, StrictRJSFSchema, RJSFSchema, FormContextType } from '@rjsf/utils';
+
+export default function DescriptionField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+  props: DescriptionFieldProps<T, S, F>
+) {
+  const { id, description } = props;
+  return (
+    <div id={id} className="description-field">
+      <p className="text-sm text-gray-600">{description}</p>
+    </div>
+  );
+}

@@ -12,59 +12,45 @@ function UiField(props: FieldProps) {
   };
   return (
     <>
-      <h4>Location</h4>
-      <div style={{ display: 'flex' }}>
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            width: '50%',
-            margin: '1rem',
-          }}
-        >
-          <div className='form-group field field-string'>
-            <label className='control-label' htmlFor={`${$id}-city`}>
-              City
+      <h4 className="text-lg font-bold mb-4">Location</h4>
+      <div className="flex flex-wrap">
+        <div className="w-full md:w-1/2 p-2">
+          <div className="form-control">
+            <label className="label" htmlFor={`${$id}-city`}>
+              <span className="label-text">City</span>
             </label>
             <input
-              className='form-control'
+              className="input input-bordered"
               id={`${$id}-city`}
               required={false}
-              placeholder=''
-              type='text'
+              placeholder=""
+              type="text"
               value={formData?.city || ''}
               onChange={changeHandlerFactory('city')}
             />
           </div>
         </div>
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            width: '50%',
-            margin: '1rem',
-          }}
-        >
-          <div className='form-group field field-string'>
-            <label className='control-label' htmlFor={`${$id}-lat`}>
-              Latitude
+        <div className="w-full md:w-1/2 p-2">
+          <div className="form-control">
+            <label className="label" htmlFor={`${$id}-lat`}>
+              <span className="label-text">Latitude</span>
             </label>
             <input
-              className='form-control'
+              className="input input-bordered"
               id={`${$id}-lat`}
-              type='number'
+              type="number"
               value={formData?.lat || 0}
               onChange={changeHandlerFactory('lat')}
             />
           </div>
-          <div className='form-group field field-string'>
-            <label className='control-label' htmlFor={`${$id}-lon`}>
-              Longitude
+          <div className="form-control mt-4">
+            <label className="label" htmlFor={`${$id}-lon`}>
+              <span className="label-text">Longitude</span>
             </label>
             <input
-              className='form-control'
+              className="input input-bordered"
               id={`${$id}-lon`}
-              type='number'
+              type="number"
               value={formData?.lon || 0}
               onChange={changeHandlerFactory('lon')}
             />
