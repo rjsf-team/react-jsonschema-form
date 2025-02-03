@@ -74,6 +74,7 @@
     "packages/material-ui",
     "packages/mui",
     "packages/playground",
+    "packages/primereact",
     "packages/semantic-ui",
     "packages/utils",
     "packages/validator-ajv6",

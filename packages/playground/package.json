@@ -50,6 +50,7 @@
     "@rjsf/fluentui-rc": "^5.24.3",
     "@rjsf/material-ui": "^5.24.3",
     "@rjsf/mui": "^5.24.3",
+    "@rjsf/primereact": "^5.24.3",
     "@rjsf/semantic-ui": "^5.24.3",
     "@rjsf/utils": "^5.24.3",
     "@rjsf/validator-ajv6": "^5.24.3",

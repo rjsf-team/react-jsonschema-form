@@ -6,6 +6,7 @@ import { Theme as SuiTheme } from '@rjsf/semantic-ui';
 import { Theme as AntdTheme } from '@rjsf/antd';
 import { Theme as Bootstrap4Theme } from '@rjsf/bootstrap-4';
 import { Theme as ChakraUITheme } from '@rjsf/chakra-ui';
+import { Theme as PrimeReactTheme } from '@rjsf/primereact';
 import v8Validator, { customizeValidator } from '@rjsf/validator-ajv8';
 import v6Validator from '@rjsf/validator-ajv6';
 import localize_es from 'ajv-i18n/localize/es';
@@ -120,6 +121,168 @@ const themes: PlaygroundProps['themes'] = {
   mui: {
     stylesheet: '',
     theme: MuiV5Theme,
+  },
+  primereact: {
+    stylesheet: '//cdn.jsdelivr.net/npm/primereact@10.9.2/resources/themes/lara-light-cyan/theme.css',
+    theme: PrimeReactTheme,
+    subthemes: {
+      'arya-blue': {
+        stylesheet: '//cdn.jsdelivr.net/npm/primereact@10.9.2/resources/themes/arya-blue/theme.css',
+      },
+      'arya-green': {
+        stylesheet: '//cdn.jsdelivr.net/npm/primereact@10.9.2/resources/themes/arya-green/theme.css',
+      },
+      'arya-orange': {
+        stylesheet: '//cdn.jsdelivr.net/npm/primereact@10.9.2/resources/themes/arya-orange/theme.css',
+      },
+      'arya-purple': {
+        stylesheet: '//cdn.jsdelivr.net/npm/primereact@10.9.2/resources/themes/arya-purple/theme.css',
+      },
+      'bootstrap4-dark-blue': {
+        stylesheet: '//cdn.jsdelivr.net/npm/primereact@10.9.2/resources/themes/bootstrap4-dark-blue/theme.css',
+      },
+      'bootstrap4-dark-purple': {
+        stylesheet: '//cdn.jsdelivr.net/npm/primereact@10.9.2/resources/themes/bootstrap4-dark-purple/theme.css',
+      },
+      'bootstrap4-light-blue': {
+        stylesheet: '//cdn.jsdelivr.net/npm/primereact@10.9.2/resources/themes/bootstrap4-light-blue/theme.css',
+      },
+      'bootstrap4-light-purple': {
+        stylesheet: '//cdn.jsdelivr.net/npm/primereact@10.9.2/resources/themes/bootstrap4-light-purple/theme.css',
+      },
+      'fluent-light': {
+        stylesheet: '//cdn.jsdelivr.net/npm/primereact@10.9.2/resources/themes/fluent-light/theme.css',
+      },
+      'lara-dark-amber': {
+        stylesheet: '//cdn.jsdelivr.net/npm/primereact@10.9.2/resources/themes/lara-dark-amber/theme.css',
+      },
+      'lara-dark-blue': {
+        stylesheet: '//cdn.jsdelivr.net/npm/primereact@10.9.2/resources/themes/lara-dark-blue/theme.css',
+      },
+      'lara-dark-cyan': {
+        stylesheet: '//cdn.jsdelivr.net/npm/primereact@10.9.2/resources/themes/lara-dark-cyan/theme.css',
+      },
+      'lara-dark-green': {
+        stylesheet: '//cdn.jsdelivr.net/npm/primereact@10.9.2/resources/themes/lara-dark-green/theme.css',
+      },
+      'lara-dark-indigo': {
+        stylesheet: '//cdn.jsdelivr.net/npm/primereact@10.9.2/resources/themes/lara-dark-indigo/theme.css',
+      },
+      'lara-dark-pink': {
+        stylesheet: '//cdn.jsdelivr.net/npm/primereact@10.9.2/resources/themes/lara-dark-pink/theme.css',
+      },
+      'lara-dark-purple': {
+        stylesheet: '//cdn.jsdelivr.net/npm/primereact@10.9.2/resources/themes/lara-dark-purple/theme.css',
+      },
+      'lara-dark-teal': {
+        stylesheet: '//cdn.jsdelivr.net/npm/primereact@10.9.2/resources/themes/lara-dark-teal/theme.css',
+      },
+      'lara-light-amber': {
+        stylesheet: '//cdn.jsdelivr.net/npm/primereact@10.9.2/resources/themes/lara-light-amber/theme.css',
+      },
+      'lara-light-blue': {
+        stylesheet: '//cdn.jsdelivr.net/npm/primereact@10.9.2/resources/themes/lara-light-blue/theme.css',
+      },
+      'lara-light-cyan': {
+        stylesheet: '//cdn.jsdelivr.net/npm/primereact@10.9.2/resources/themes/lara-light-cyan/theme.css',
+      },
+      'lara-light-green': {
+        stylesheet: '//cdn.jsdelivr.net/npm/primereact@10.9.2/resources/themes/lara-light-green/theme.css',
+      },
+      'lara-light-indigo': {
+        stylesheet: '//cdn.jsdelivr.net/npm/primereact@10.9.2/resources/themes/lara-light-indigo/theme.css',
+      },
+      'lara-light-pink': {
+        stylesheet: '//cdn.jsdelivr.net/npm/primereact@10.9.2/resources/themes/lara-light-pink/theme.css',
+      },
+      'lara-light-purple': {
+        stylesheet: '//cdn.jsdelivr.net/npm/primereact@10.9.2/resources/themes/lara-light-purple/theme.css',
+      },
+      'lara-light-teal': {
+        stylesheet: '//cdn.jsdelivr.net/npm/primereact@10.9.2/resources/themes/lara-light-teal/theme.css',
+      },
+      'luna-amber': {
+        stylesheet: '//cdn.jsdelivr.net/npm/primereact@10.9.2/resources/themes/luna-amber/theme.css',
+      },
+      'luna-blue': {
+        stylesheet: '//cdn.jsdelivr.net/npm/primereact@10.9.2/resources/themes/luna-blue/theme.css',
+      },
+      'luna-green': {
+        stylesheet: '//cdn.jsdelivr.net/npm/primereact@10.9.2/resources/themes/luna-green/theme.css',
+      },
+      'luna-pink': {
+        stylesheet: '//cdn.jsdelivr.net/npm/primereact@10.9.2/resources/themes/luna-pink/theme.css',
+      },
+      'md-dark-deeppurple': {
+        stylesheet: '//cdn.jsdelivr.net/npm/primereact@10.9.2/resources/themes/md-dark-deeppurple/theme.css',
+      },
+      'md-dark-indigo': {
+        stylesheet: '//cdn.jsdelivr.net/npm/primereact@10.9.2/resources/themes/md-dark-indigo/theme.css',
+      },
+      'md-light-deeppurple': {
+        stylesheet: '//cdn.jsdelivr.net/npm/primereact@10.9.2/resources/themes/md-light-deeppurple/theme.css',
+      },
+      'md-light-indigo': {
+        stylesheet: '//cdn.jsdelivr.net/npm/primereact@10.9.2/resources/themes/md-light-indigo/theme.css',
+      },
+      'mdc-dark-deeppurple': {
+        stylesheet: '//cdn.jsdelivr.net/npm/primereact@10.9.2/resources/themes/mdc-dark-deeppurple/theme.css',
+      },
+      'mdc-dark-indigo': {
+        stylesheet: '//cdn.jsdelivr.net/npm/primereact@10.9.2/resources/themes/mdc-dark-indigo/theme.css',
+      },
+      'mdc-light-deeppurple': {
+        stylesheet: '//cdn.jsdelivr.net/npm/primereact@10.9.2/resources/themes/mdc-light-deeppurple/theme.css',
+      },
+      'mdc-light-indigo': {
+        stylesheet: '//cdn.jsdelivr.net/npm/primereact@10.9.2/resources/themes/mdc-light-indigo/theme.css',
+      },
+      mira: {
+        stylesheet: '//cdn.jsdelivr.net/npm/primereact@10.9.2/resources/themes/mira/theme.css',
+      },
+      nano: {
+        stylesheet: '//cdn.jsdelivr.net/npm/primereact@10.9.2/resources/themes/nano/theme.css',
+      },
+      nova: {
+        stylesheet: '//cdn.jsdelivr.net/npm/primereact@10.9.2/resources/themes/nova/theme.css',
+      },
+      'nova-accent': {
+        stylesheet: '//cdn.jsdelivr.net/npm/primereact@10.9.2/resources/themes/nova-accent/theme.css',
+      },
+      'nova-alt': {
+        stylesheet: '//cdn.jsdelivr.net/npm/primereact@10.9.2/resources/themes/nova-alt/theme.css',
+      },
+      rhea: {
+        stylesheet: '//cdn.jsdelivr.net/npm/primereact@10.9.2/resources/themes/rhea/theme.css',
+      },
+      'saga-blue': {
+        stylesheet: '//cdn.jsdelivr.net/npm/primereact@10.9.2/resources/themes/saga-blue/theme.css',
+      },
+      'saga-green': {
+        stylesheet: '//cdn.jsdelivr.net/npm/primereact@10.9.2/resources/themes/saga-green/theme.css',
+      },
+      'saga-orange': {
+        stylesheet: '//cdn.jsdelivr.net/npm/primereact@10.9.2/resources/themes/saga-orange/theme.css',
+      },
+      'saga-purple': {
+        stylesheet: '//cdn.jsdelivr.net/npm/primereact@10.9.2/resources/themes/saga-purple/theme.css',
+      },
+      'soho-dark': {
+        stylesheet: '//cdn.jsdelivr.net/npm/primereact@10.9.2/resources/themes/soho-dark/theme.css',
+      },
+      'soho-light': {
+        stylesheet: '//cdn.jsdelivr.net/npm/primereact@10.9.2/resources/themes/soho-light/theme.css',
+      },
+      'tailwind-light': {
+        stylesheet: '//cdn.jsdelivr.net/npm/primereact@10.9.2/resources/themes/tailwind-light/theme.css',
+      },
+      'viva-dark': {
+        stylesheet: '//cdn.jsdelivr.net/npm/primereact@10.9.2/resources/themes/viva-dark/theme.css',
+      },
+      'viva-light': {
+        stylesheet: '//cdn.jsdelivr.net/npm/primereact@10.9.2/resources/themes/viva-light/theme.css',
+      },
+    },
   },
   'semantic-ui': {
     stylesheet: '//cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css',

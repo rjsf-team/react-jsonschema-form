@@ -8,6 +8,7 @@ import Frame, { FrameComponentProps, FrameContextConsumer } from 'react-frame-co
 import { __createChakraFrameProvider } from '@rjsf/chakra-ui';
 import { StyleProvider as AntdStyleProvider } from '@ant-design/cssinjs';
 import { __createFluentUIRCFrameProvider } from '@rjsf/fluentui-rc';
+import { PrimeReactProvider } from 'primereact/api';
 
 /*
 Adapted from https://github.com/mui-org/material-ui/blob/master/docs/src/modules/components/DemoSandboxed.js
@@ -122,6 +123,14 @@ export default function DemoFrame(props: DemoFrameProps) {
   } else if (theme === 'antd') {
     body = ready ? (
       <AntdStyleProvider container={instanceRef.current.contentWindow['demo-frame-jss']}>{children}</AntdStyleProvider>
+    ) : null;
+  } else if (theme === 'primereact') {
+    body = ready ? (
+      <>
+        <style>{`html { font-weight: 400; font-size: 14px; color: var(--text-color); }`}</style>
+        <link href='//cdn.jsdelivr.net/npm/primeicons@7.0.0/primeicons.min.css' rel='stylesheet' />
+        <PrimeReactProvider value={{ styleContainer: container, appendTo: 'self' }}>{children}</PrimeReactProvider>
+      </>
     ) : null;
   }
 

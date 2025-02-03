@@ -30,6 +30,7 @@
     { "path": "../fluentui-rc" },
     { "path": "../material-ui" },
     { "path": "../mui" },
+    { "path": "../primereact" },
     { "path": "../semantic-ui" },
     { "path": "../utils" },
     { "path": "../validator-ajv6" },
