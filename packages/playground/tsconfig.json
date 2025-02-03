@@ -57,6 +57,9 @@
       "path": "../react-bootstrap"
     },
     {
+      "path": "../primereact"
+    },
+    {
       "path": "../semantic-ui"
     },
     {
