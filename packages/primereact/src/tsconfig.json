@@ -1,0 +1,26 @@
+{
+  "extends": "../../../tsconfig.base.json",
+  "include": [
+    "./"
+  ],
+  "compilerOptions": {
+    "rootDir": "./",
+    "outDir": "../lib",
+    "baseUrl": "../",
+    "jsx": "react-jsx",
+    // There are type errors in semantic-ui-react type definitions because of which skipLibCheck had to be added
+    // semantic-ui-react/dist/commonjs/generic.d.ts(73,73): error TS2344: Type 'TProps' does not satisfy the constraint 'Record<string, any>'.
+    "skipLibCheck": true
+  },
+  "references": [
+    {
+      "path": "../../core"
+    },
+    {
+      "path": "../../utils"
+    },
+    {
+      "path": "../../validator-ajv8"
+    }
+  ]
+}
