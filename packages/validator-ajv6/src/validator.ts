@@ -152,7 +152,7 @@ export default class AJV6Validator<T = any, S extends StrictRJSFSchema = RJSFSch
     }
 
     // Include form data with undefined values, which is required for custom validation.
-    const newFormData = getDefaultFormState<T, S, F>(this, schema, formData, rootSchema, true) as T;
+    const newFormData = getDefaultFormState<T, S, F>(this, schema, formData, rootSchema, false, true) as T;
 
     const errorHandler = customValidate(newFormData, createErrorHandler<T>(newFormData), uiSchema);
     const userErrorSchema = unwrapErrorHandler<T>(errorHandler);
