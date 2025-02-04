@@ -508,11 +508,11 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
 
         describe('with $ref in oneOf', () => {
           it('should retrieve referenced schemas', () => {
-            // Mock isValid so that withExactlyOneSubschema works as expected
+            // Mock errors so that withExactlyOneSubschema works as expected
             testValidator.setReturnValues({
-              isValid: [
-                false, // First oneOf... second !== first
-                true, // Second oneOf... second === second
+              data: [
+                { errors: [{ stack: 'error' }], errorSchema: {} }, // First oneOf... second !== first
+                { errors: [], errorSchema: {} }, // Second oneOf... second === second
               ],
             });
             const schema: RJSFSchema = {
@@ -576,11 +576,11 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
 
         describe('true condition', () => {
           it('should add `first` properties given `first` data', () => {
-            // Mock isValid so that withExactlyOneSubschema works as expected
+            // Mock errors so that withExactlyOneSubschema works as expected
             testValidator.setReturnValues({
-              isValid: [
-                true, // First dependency... first === first
-                false, // Second dependency... second !== first
+              data: [
+                { errors: [], errorSchema: {} }, // First dependency... first === first
+                { errors: [{ stack: 'error' }], errorSchema: {} }, // Second dependency... second !== first
               ],
             });
             const schema: RJSFSchema = {
@@ -598,11 +598,11 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           });
 
           it('should add `second` properties given `second` data', () => {
-            // Mock isValid so that withExactlyOneSubschema works as expected
+            // Mock errors so that withExactlyOneSubschema works as expected
             testValidator.setReturnValues({
-              isValid: [
-                false, // First dependency... first !== second
-                true, // Second dependency... second === second
+              data: [
+                { errors: [{ stack: 'error' }], errorSchema: {} }, // First dependency... first !== second
+                { errors: [], errorSchema: {} }, // Second dependency... second === second
               ],
             });
             const schema: RJSFSchema = {
@@ -628,13 +628,13 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
             });
 
             it('should not include nested dependencies that should be hidden', () => {
-              // Mock isValid so that withExactlyOneSubschema works as expected
+              // Mock errors so that withExactlyOneSubschema works as expected
               testValidator.setReturnValues({
-                isValid: [
-                  false, // employee_accounts oneOf ... - fail
-                  true, // update_absences first oneOf... success
-                  false, // update_absences second oneOf... fail
-                  false, // update_absences third oneOf... fail
+                data: [
+                  { errors: [{ stack: 'error' }], errorSchema: {} }, // employee_accounts oneOf ... - fail
+                  { errors: [], errorSchema: {} }, // update_absences first oneOf... success
+                  { errors: [{ stack: 'error' }], errorSchema: {} }, // update_absences second oneOf... fail
+                  { errors: [{ stack: 'error' }], errorSchema: {} }, // update_absences third oneOf... fail
                 ],
               });
               const formData = {
@@ -656,13 +656,13 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
             });
 
             it('should include nested dependencies that should not be hidden', () => {
-              // Mock isValid so that withExactlyOneSubschema works as expected
+              // Mock errors so that withExactlyOneSubschema works as expected
               testValidator.setReturnValues({
-                isValid: [
-                  true, // employee_accounts oneOf... success
-                  true, // update_absences first oneOf... success
-                  false, // update_absences second oneOf... fail
-                  false, // update_absences third oneOf... fail
+                data: [
+                  { errors: [], errorSchema: {} }, // employee_accounts oneOf... success
+                  { errors: [], errorSchema: {} }, // update_absences first oneOf... success
+                  { errors: [{ stack: 'error' }], errorSchema: {} }, // update_absences second oneOf... fail
+                  { errors: [{ stack: 'error' }], errorSchema: {} }, // update_absences third oneOf... fail
                 ],
               });
               const formData = {
@@ -698,11 +698,11 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
 
         describe('with $ref in dependency', () => {
           it('should retrieve the referenced schema', () => {
-            // Mock isValid so that withExactlyOneSubschema works as expected
+            // Mock errors so that withExactlyOneSubschema works as expected
             testValidator.setReturnValues({
-              isValid: [
-                false, // First oneOf... fail
-                true, // Second oneOf... success
+              data: [
+                { errors: [{ stack: 'error' }], errorSchema: {} }, // First oneOf... fail
+                { errors: [], errorSchema: {} }, // Second oneOf... success
               ],
             });
             const schema: RJSFSchema = {

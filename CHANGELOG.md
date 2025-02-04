@@ -42,6 +42,7 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/utils
 
 - Fixed documentation for `getChangedFields()`
+- Rollback `isValid()` in `retrieveSchema()` to `validateFormData()` to prevent a bug with empty enums blocking dependencies ([#4418](https://github.com/rjsf-team/react-jsonschema-form/pull/4418)). Fixes [#4357](https://github.com/rjsf-team/react-jsonschema-form/issues/4357)
 
 ## Dev / docs / playground
 
