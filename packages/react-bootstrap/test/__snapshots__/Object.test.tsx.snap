@@ -9,9 +9,7 @@ exports[`object fields additionalProperties 1`] = `
   <div
     className="form-group field field-object"
   >
-    <div
-      className="form-group"
-    >
+    <div>
       <div
         className="p-0 container-fluid"
       >
@@ -33,9 +31,7 @@ exports[`object fields additionalProperties 1`] = `
               <div
                 className="col-5"
               >
-                <div
-                  className="form-group"
-                >
+                <div>
                   <label
                     className="form-label"
                     htmlFor="root_foo-key"
@@ -57,9 +53,7 @@ exports[`object fields additionalProperties 1`] = `
               <div
                 className="col-5"
               >
-                <div
-                  className="form-group"
-                >
+                <div>
                   <label
                     className="form-label"
                     htmlFor="root_foo"
@@ -85,10 +79,10 @@ exports[`object fields additionalProperties 1`] = `
                 </div>
               </div>
               <div
-                className="py-4 col-2"
+                className="py-4 d-grid gap-2 col-2"
               >
                 <button
-                  className="btn btn-danger btn-block btn-sm"
+                  className="btn btn-danger btn-sm"
                   disabled={false}
                   onClick={[Function]}
                   title="Remove"
@@ -187,9 +181,7 @@ exports[`object fields object 1`] = `
   <div
     className="form-group field field-object"
   >
-    <div
-      className="form-group"
-    >
+    <div>
       <div
         className="p-0 container-fluid"
       >
@@ -208,9 +200,7 @@ exports[`object fields object 1`] = `
             <div
               className="form-group field field-string"
             >
-              <div
-                className="form-group"
-              >
+              <div>
                 <label
                   className="form-label"
                   htmlFor="root_a"
@@ -252,9 +242,7 @@ exports[`object fields object 1`] = `
             <div
               className="form-group field field-number"
             >
-              <div
-                className="form-group"
-              >
+              <div>
                 <label
                   className="form-label"
                   htmlFor="root_b"
@@ -306,9 +294,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
   <div
     className="form-group field field-object"
   >
-    <div
-      className="form-group"
-    >
+    <div>
       <div
         className="p-0 container-fluid"
       >
@@ -330,9 +316,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
               <div
                 className="col-5"
               >
-                <div
-                  className="form-group"
-                >
+                <div>
                   <label
                     className="form-label"
                     htmlFor="root_additionalProperty-key"
@@ -354,9 +338,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
               <div
                 className="col-5"
               >
-                <div
-                  className="form-group"
-                >
+                <div>
                   <label
                     className="form-label"
                     htmlFor="root_additionalProperty"
@@ -382,10 +364,10 @@ exports[`object fields show add button and fields if additionalProperties is tru
                 </div>
               </div>
               <div
-                className="py-4 col-2"
+                className="py-4 d-grid gap-2 col-2"
               >
                 <button
-                  className="btn btn-danger btn-block btn-sm"
+                  className="btn btn-danger btn-sm"
                   disabled={false}
                   onClick={[Function]}
                   title="Remove"
@@ -484,9 +466,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
   <div
     className="form-group field field-object"
   >
-    <div
-      className="form-group"
-    >
+    <div>
       <div
         className="my-1"
         id="root__title"
@@ -532,9 +512,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
               <div
                 className="col-5"
               >
-                <div
-                  className="form-group"
-                >
+                <div>
                   <label
                     className="form-label"
                     htmlFor="root_foo-key"
@@ -556,9 +534,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
               <div
                 className="col-5"
               >
-                <div
-                  className="form-group"
-                >
+                <div>
                   <label
                     className="form-label"
                     htmlFor="root_foo"
@@ -584,10 +560,10 @@ exports[`object fields with title and description additionalProperties 1`] = `
                 </div>
               </div>
               <div
-                className="py-4 col-2"
+                className="py-4 d-grid gap-2 col-2"
               >
                 <button
-                  className="btn btn-danger btn-block btn-sm"
+                  className="btn btn-danger btn-sm"
                   disabled={false}
                   onClick={[Function]}
                   title="Remove"
@@ -686,9 +662,7 @@ exports[`object fields with title and description from both additionalProperties
   <div
     className="form-group field field-object"
   >
-    <div
-      className="form-group"
-    >
+    <div>
       <div
         className="my-1"
         id="root__title"
@@ -734,9 +708,7 @@ exports[`object fields with title and description from both additionalProperties
               <div
                 className="col-5"
               >
-                <div
-                  className="form-group"
-                >
+                <div>
                   <label
                     className="form-label"
                     htmlFor="root_foo-key"
@@ -758,9 +730,7 @@ exports[`object fields with title and description from both additionalProperties
               <div
                 className="col-5"
               >
-                <div
-                  className="form-group"
-                >
+                <div>
                   <label
                     className="form-label"
                     htmlFor="root_foo"
@@ -786,10 +756,10 @@ exports[`object fields with title and description from both additionalProperties
                 </div>
               </div>
               <div
-                className="py-4 col-2"
+                className="py-4 d-grid gap-2 col-2"
               >
                 <button
-                  className="btn btn-danger btn-block btn-sm"
+                  className="btn btn-danger btn-sm"
                   disabled={false}
                   onClick={[Function]}
                   title="Remove"
@@ -888,9 +858,7 @@ exports[`object fields with title and description from both object 1`] = `
   <div
     className="form-group field field-object"
   >
-    <div
-      className="form-group"
-    >
+    <div>
       <div
         className="my-1"
         id="root__title"
@@ -933,9 +901,7 @@ exports[`object fields with title and description from both object 1`] = `
             <div
               className="form-group field field-string"
             >
-              <div
-                className="form-group"
-              >
+              <div>
                 <label
                   className="form-label"
                   htmlFor="root_a"
@@ -989,9 +955,7 @@ exports[`object fields with title and description from both object 1`] = `
             <div
               className="form-group field field-number"
             >
-              <div
-                className="form-group"
-              >
+              <div>
                 <label
                   className="form-label"
                   htmlFor="root_b"
@@ -1055,9 +1019,7 @@ exports[`object fields with title and description from uiSchema additionalProper
   <div
     className="form-group field field-object"
   >
-    <div
-      className="form-group"
-    >
+    <div>
       <div
         className="my-1"
         id="root__title"
@@ -1103,9 +1065,7 @@ exports[`object fields with title and description from uiSchema additionalProper
               <div
                 className="col-5"
               >
-                <div
-                  className="form-group"
-                >
+                <div>
                   <label
                     className="form-label"
                     htmlFor="root_foo-key"
@@ -1127,9 +1087,7 @@ exports[`object fields with title and description from uiSchema additionalProper
               <div
                 className="col-5"
               >
-                <div
-                  className="form-group"
-                >
+                <div>
                   <label
                     className="form-label"
                     htmlFor="root_foo"
@@ -1155,10 +1113,10 @@ exports[`object fields with title and description from uiSchema additionalProper
                 </div>
               </div>
               <div
-                className="py-4 col-2"
+                className="py-4 d-grid gap-2 col-2"
               >
                 <button
-                  className="btn btn-danger btn-block btn-sm"
+                  className="btn btn-danger btn-sm"
                   disabled={false}
                   onClick={[Function]}
                   title="Remove"
@@ -1257,9 +1215,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
   <div
     className="form-group field field-object"
   >
-    <div
-      className="form-group"
-    >
+    <div>
       <div
         className="my-1"
         id="root__title"
@@ -1302,9 +1258,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
             <div
               className="form-group field field-string"
             >
-              <div
-                className="form-group"
-              >
+              <div>
                 <label
                   className="form-label"
                   htmlFor="root_a"
@@ -1358,9 +1312,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
             <div
               className="form-group field field-number"
             >
-              <div
-                className="form-group"
-              >
+              <div>
                 <label
                   className="form-label"
                   htmlFor="root_b"
@@ -1424,9 +1376,7 @@ exports[`object fields with title and description from uiSchema show add button 
   <div
     className="form-group field field-object"
   >
-    <div
-      className="form-group"
-    >
+    <div>
       <div
         className="my-1"
         id="root__title"
@@ -1472,9 +1422,7 @@ exports[`object fields with title and description from uiSchema show add button 
               <div
                 className="col-5"
               >
-                <div
-                  className="form-group"
-                >
+                <div>
                   <label
                     className="form-label"
                     htmlFor="root_additionalProperty-key"
@@ -1496,9 +1444,7 @@ exports[`object fields with title and description from uiSchema show add button 
               <div
                 className="col-5"
               >
-                <div
-                  className="form-group"
-                >
+                <div>
                   <label
                     className="form-label"
                     htmlFor="root_additionalProperty"
@@ -1524,10 +1470,10 @@ exports[`object fields with title and description from uiSchema show add button 
                 </div>
               </div>
               <div
-                className="py-4 col-2"
+                className="py-4 d-grid gap-2 col-2"
               >
                 <button
-                  className="btn btn-danger btn-block btn-sm"
+                  className="btn btn-danger btn-sm"
                   disabled={false}
                   onClick={[Function]}
                   title="Remove"
@@ -1626,9 +1572,7 @@ exports[`object fields with title and description object 1`] = `
   <div
     className="form-group field field-object"
   >
-    <div
-      className="form-group"
-    >
+    <div>
       <div
         className="my-1"
         id="root__title"
@@ -1671,9 +1615,7 @@ exports[`object fields with title and description object 1`] = `
             <div
               className="form-group field field-string"
             >
-              <div
-                className="form-group"
-              >
+              <div>
                 <label
                   className="form-label"
                   htmlFor="root_a"
@@ -1727,9 +1669,7 @@ exports[`object fields with title and description object 1`] = `
             <div
               className="form-group field field-number"
             >
-              <div
-                className="form-group"
-              >
+              <div>
                 <label
                   className="form-label"
                   htmlFor="root_b"
@@ -1793,9 +1733,7 @@ exports[`object fields with title and description show add button and fields if 
   <div
     className="form-group field field-object"
   >
-    <div
-      className="form-group"
-    >
+    <div>
       <div
         className="my-1"
         id="root__title"
@@ -1841,9 +1779,7 @@ exports[`object fields with title and description show add button and fields if 
               <div
                 className="col-5"
               >
-                <div
-                  className="form-group"
-                >
+                <div>
                   <label
                     className="form-label"
                     htmlFor="root_additionalProperty-key"
@@ -1865,9 +1801,7 @@ exports[`object fields with title and description show add button and fields if 
               <div
                 className="col-5"
               >
-                <div
-                  className="form-group"
-                >
+                <div>
                   <label
                     className="form-label"
                     htmlFor="root_additionalProperty"
@@ -1893,10 +1827,10 @@ exports[`object fields with title and description show add button and fields if 
                 </div>
               </div>
               <div
-                className="py-4 col-2"
+                className="py-4 d-grid gap-2 col-2"
               >
                 <button
-                  className="btn btn-danger btn-block btn-sm"
+                  className="btn btn-danger btn-sm"
                   disabled={false}
                   onClick={[Function]}
                   title="Remove"
@@ -1995,9 +1929,7 @@ exports[`object fields with title and description with global label off addition
   <div
     className="form-group field field-object"
   >
-    <div
-      className="form-group"
-    >
+    <div>
       <div
         className="p-0 container-fluid"
       >
@@ -2019,9 +1951,7 @@ exports[`object fields with title and description with global label off addition
               <div
                 className="col-5"
               >
-                <div
-                  className="form-group"
-                >
+                <div>
                   <label
                     className="form-label"
                     htmlFor="root_foo-key"
@@ -2043,9 +1973,7 @@ exports[`object fields with title and description with global label off addition
               <div
                 className="col-5"
               >
-                <div
-                  className="form-group"
-                >
+                <div>
                   <input
                     aria-describedby="root_foo__error root_foo__description root_foo__help"
                     autoFocus={false}
@@ -2065,10 +1993,10 @@ exports[`object fields with title and description with global label off addition
                 </div>
               </div>
               <div
-                className="py-4 col-2"
+                className="py-4 d-grid gap-2 col-2"
               >
                 <button
-                  className="btn btn-danger btn-block btn-sm"
+                  className="btn btn-danger btn-sm"
                   disabled={false}
                   onClick={[Function]}
                   title="Remove"
@@ -2167,9 +2095,7 @@ exports[`object fields with title and description with global label off object 1
   <div
     className="form-group field field-object"
   >
-    <div
-      className="form-group"
-    >
+    <div>
       <div
         className="p-0 container-fluid"
       >
@@ -2188,9 +2114,7 @@ exports[`object fields with title and description with global label off object 1
             <div
               className="form-group field field-string"
             >
-              <div
-                className="form-group"
-              >
+              <div>
                 <input
                   aria-describedby="root_a__error root_a__description root_a__help"
                   autoFocus={false}
@@ -2226,9 +2150,7 @@ exports[`object fields with title and description with global label off object 1
             <div
               className="form-group field field-number"
             >
-              <div
-                className="form-group"
-              >
+              <div>
                 <input
                   aria-describedby="root_b__error root_b__description root_b__help"
                   autoFocus={false}
@@ -2274,9 +2196,7 @@ exports[`object fields with title and description with global label off show add
   <div
     className="form-group field field-object"
   >
-    <div
-      className="form-group"
-    >
+    <div>
       <div
         className="p-0 container-fluid"
       >
@@ -2298,9 +2218,7 @@ exports[`object fields with title and description with global label off show add
               <div
                 className="col-5"
               >
-                <div
-                  className="form-group"
-                >
+                <div>
                   <label
                     className="form-label"
                     htmlFor="root_additionalProperty-key"
@@ -2322,9 +2240,7 @@ exports[`object fields with title and description with global label off show add
               <div
                 className="col-5"
               >
-                <div
-                  className="form-group"
-                >
+                <div>
                   <input
                     aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
                     autoFocus={false}
@@ -2344,10 +2260,10 @@ exports[`object fields with title and description with global label off show add
                 </div>
               </div>
               <div
-                className="py-4 col-2"
+                className="py-4 d-grid gap-2 col-2"
               >
                 <button
-                  className="btn btn-danger btn-block btn-sm"
+                  className="btn btn-danger btn-sm"
                   disabled={false}
                   onClick={[Function]}
                   title="Remove"
