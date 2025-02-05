@@ -1142,6 +1142,165 @@ describe('ObjectField', () => {
       });
     });
 
+    it('should generate the specifed default key and value inputs if default is provided outside of additionalProperties schema', () => {
+      const customSchema = {
+        ...schema,
+        default: {
+          defaultKey: 'defaultValue',
+        },
+      };
+      const { onChange } = createFormComponent({
+        schema: customSchema,
+        formData: {},
+      });
+
+      sinon.assert.calledWithMatch(onChange.lastCall, {
+        formData: {
+          defaultKey: 'defaultValue',
+        },
+      });
+    });
+
+    it('should generate the specifed default key/value input with custom formData provided', () => {
+      const customSchema = {
+        ...schema,
+        default: {
+          defaultKey: 'defaultValue',
+        },
+      };
+      const { onChange } = createFormComponent({
+        schema: customSchema,
+        formData: {
+          someData: 'someValue',
+        },
+      });
+
+      sinon.assert.calledWithMatch(onChange.lastCall, {
+        formData: {
+          defaultKey: 'defaultValue',
+          someData: 'someValue',
+        },
+      });
+    });
+
+    it('should edit the specifed default key without duplicating', () => {
+      const customSchema = {
+        ...schema,
+        default: {
+          defaultKey: 'defaultValue',
+        },
+      };
+      const { node, onChange } = createFormComponent({
+        schema: customSchema,
+        formData: {},
+      });
+
+      fireEvent.blur(node.querySelector('#root_defaultKey-key'), { target: { value: 'newDefaultKey' } });
+
+      sinon.assert.calledWithMatch(onChange.lastCall, {
+        formData: {
+          newDefaultKey: 'defaultValue',
+        },
+      });
+    });
+
+    it('should remove the specifed default key/value input item', () => {
+      const customSchema = {
+        ...schema,
+        default: {
+          defaultKey: 'defaultValue',
+        },
+      };
+      const { node, onChange } = createFormComponent({
+        schema: customSchema,
+        formData: {},
+      });
+
+      fireEvent.click(node.querySelector('.array-item-remove'));
+
+      sinon.assert.calledWithMatch(onChange.lastCall, {
+        formData: {},
+      });
+    });
+
+    it('should handle nested additional property default key/value input generation', () => {
+      const customSchema = {
+        ...schema,
+        default: {
+          defaultKey: 'defaultValue',
+        },
+        properties: {
+          nested: {
+            type: 'object',
+            properties: {
+              bar: {
+                type: 'object',
+                additionalProperties: {
+                  type: 'string',
+                },
+                default: {
+                  baz: 'value',
+                },
+              },
+            },
+          },
+        },
+      };
+
+      const { onChange } = createFormComponent({
+        schema: customSchema,
+        formData: {},
+      });
+
+      sinon.assert.calledWithMatch(onChange.lastCall, {
+        formData: {
+          defaultKey: 'defaultValue',
+          nested: {
+            bar: {
+              baz: 'value',
+            },
+          },
+        },
+      });
+    });
+
+    it('should remove nested additional property default key/value input', () => {
+      const customSchema = {
+        ...schema,
+        properties: {
+          nested: {
+            type: 'object',
+            properties: {
+              bar: {
+                type: 'object',
+                additionalProperties: {
+                  type: 'string',
+                },
+                default: {
+                  baz: 'value',
+                },
+              },
+            },
+          },
+        },
+      };
+
+      const { node, onChange } = createFormComponent({
+        schema: customSchema,
+        formData: {},
+      });
+
+      fireEvent.click(node.querySelector('.array-item-remove'));
+
+      sinon.assert.calledWithMatch(onChange.lastCall, {
+        formData: {
+          nested: {
+            bar: {},
+          },
+        },
+      });
+    });
+
     it('should not provide an expand button if length equals maxProperties', () => {
       const { node } = createFormComponent({
         schema: { maxProperties: 1, ...schema },
