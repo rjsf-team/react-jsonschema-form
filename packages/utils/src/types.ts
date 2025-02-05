@@ -1082,6 +1082,7 @@ export interface SchemaUtilsType<T = any, S extends StrictRJSFSchema = RJSFSchem
   getDefaultFormState(
     schema: S,
     formData?: T,
+    initDefaultsGenerated?: boolean,
     includeUndefinedValues?: boolean | 'excludeObjectChildren'
   ): T | T[] | undefined;
   /** Determines whether the combination of `schema` and `uiSchema` properties indicates that the label for the `schema`
