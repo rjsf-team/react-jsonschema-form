@@ -426,13 +426,6 @@ export default class Form<
       );
     }
 
-    if (schema.title === 'console') {
-      console.log('schema', schema);
-      console.log('retrievedSchema', retrievedSchema);
-      console.log('edit', edit);
-      console.log('props', props);
-    }
-
     const formData: T = schemaUtils.getDefaultFormState(schema, inputFormData, state.initialDefaultsGenerated) as T;
     const _retrievedSchema = this.updateRetrievedSchema(
       retrievedSchema ?? schemaUtils.retrieveSchema(schema, formData)

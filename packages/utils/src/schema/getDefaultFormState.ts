@@ -178,7 +178,7 @@ interface ComputeDefaultsProps<T = any, S extends StrictRJSFSchema = RJSFSchema>
    *  The formData should take precedence unless it's not valid. This is useful when for example the value from formData does not exist in the schema 'enum' property, in such cases we take the value from the defaults because the value from the formData is not valid.
    */
   shouldMergeDefaultsIntoFormData?: boolean;
-  /** Optional flag, if true, indicates that defaults have already been generated */
+  /** Indicates whether or not initial defaults have been generated */
   initDefaultsGenerated?: boolean;
 }
 
@@ -682,6 +682,7 @@ export function getDefaultBasedOnSchemaType<
  * @param theSchema - The schema for which the default state is desired
  * @param [formData] - The current formData, if any, onto which to provide any missing defaults
  * @param [rootSchema] - The root schema, used to primarily to look up `$ref`s
+ * @param initDefaultsGenerated - indicates whether or not initial defaults have been generated
  * @param [includeUndefinedValues=false] - Optional flag, if true, cause undefined values to be added as defaults.
  *          If "excludeObjectChildren", cause undefined values for this object and pass `includeUndefinedValues` as
  *          false when computing defaults for any nested object properties.
