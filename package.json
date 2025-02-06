@@ -3,7 +3,7 @@
   "private": true,
   "description": "monorepo for react-jsonschema-form and its themes",
   "engines": {
-    "node": ">=14"
+    "node": ">=20"
   },
   "scripts": {
     "publish-repo": "lerna publish",

@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [14.x, 16.x, 18.x]
+        node-version: [20.x, 22.x]
 
     steps:
       - uses: actions/checkout@v4
@@ -40,23 +40,21 @@ jobs:
 
       # Docusaurus doesn't support Node 14. These tasks can be removed once Node 14 is EOL (May 2023)
       - name: Build with Netlify badge (no docs)
-        if: github.ref != 'refs/heads/main' && matrix.node-version == '14.x'
         run: npx nx run-many --target=build --exclude=@rjsf/docs
         env:
           VITE_SHOW_NETLIFY_BADGE: true
           NODE_OPTIONS: --max_old_space_size=4096
       - name: Build (no docs)
-        if: github.ref == 'refs/heads/main' && matrix.node-version == '14.x'
         run: npx nx run-many --target=build --exclude=@rjsf/docs
         env:
           NODE_OPTIONS: --max_old_space_size=4096
 
-      - if: matrix.node-version == '18.x'
+      - if: matrix.node-version == '22.x'
         uses: actions/upload-artifact@v4
         with:
           name: playground
           path: packages/playground/dist
-      - if: matrix.node-version == '18.x'
+      - if: matrix.node-version == '22.x'
         uses: actions/upload-artifact@v4
         with:
           name: docs
