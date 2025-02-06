@@ -96,8 +96,6 @@ It's also possible to remove the `Now` and `Clear` buttons with the `hideNowButt
 
 You can also, customize the order in which date input fields are displayed by providing `format` property to `ui:options` in your uiSchema, available values are `YMD`(default), `MDY` and `DMY`.
 
-You can also, customize the order in which date input fields are displayed by providing `format` property to `ui:options` in your uiSchema, available values are `YMD`(default), `MDY` and `DMY`.
-
 ```tsx
 import Form from '@rjsf/core';
 import { RJSFSchema, UiSchema } from '@rjsf/utils';

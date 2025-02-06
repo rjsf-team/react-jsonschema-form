@@ -63,18 +63,18 @@ const liveSettingsBooleanSchema: RJSFSchema = {
     noValidate: { type: 'boolean', title: 'Disable validation' },
     noHtml5Validate: { type: 'boolean', title: 'Disable HTML 5 validation' },
     focusOnFirstError: { type: 'boolean', title: 'Focus on 1st Error' },
-  },
-};
-
-const liveSettingsSelectSchema: RJSFSchema = {
-  type: 'object',
-  properties: {
     showErrorList: {
       type: 'string',
       default: 'top',
       title: 'Show Error List',
       enum: [false, 'top', 'bottom'],
     },
+  },
+};
+
+const liveSettingsSelectSchema: RJSFSchema = {
+  type: 'object',
+  properties: {
     experimental_defaultFormStateBehavior: {
       title: 'Default Form State Behavior (Experimental)',
       type: 'object',
@@ -128,6 +128,28 @@ const liveSettingsSelectSchema: RJSFSchema = {
             },
           ],
         },
+        constAsDefaults: {
+          type: 'string',
+          title: 'const as default behavior',
+          default: 'always',
+          oneOf: [
+            {
+              type: 'string',
+              title: 'A const value will always be merged into the form as a default',
+              enum: ['always'],
+            },
+            {
+              type: 'string',
+              title: 'If const is in a `oneOf` it will NOT pick the first value as a default',
+              enum: ['skipOneOf'],
+            },
+            {
+              type: 'string',
+              title: 'A const value will never be used as a default',
+              enum: ['never'],
+            },
+          ],
+        },
         emptyObjectFields: {
           type: 'string',
           title: 'Object fields default behavior',
@@ -157,7 +179,33 @@ const liveSettingsSelectSchema: RJSFSchema = {
             },
           ],
         },
+        mergeDefaultsIntoFormData: {
+          type: 'string',
+          title: 'Merge defaults into formData',
+          default: 'useFormDataIfPresent',
+          oneOf: [
+            {
+              type: 'string',
+              title: 'Use undefined field value if present',
+              enum: ['useFormDataIfPresent'],
+            },
+            {
+              type: 'string',
+              title: 'Use default for undefined field value',
+              enum: ['useDefaultIfFormDataUndefined'],
+            },
+          ],
+        },
       },
+    },
+  },
+};
+
+const liveSettingsBooleanUiSchema: UiSchema = {
+  showErrorList: {
+    'ui:widget': 'radio',
+    'ui:options': {
+      inline: true,
     },
   },
 };
@@ -258,6 +306,7 @@ export default function Header({
           uiSchema,
           theme,
           liveSettings,
+          validator,
         })
       );
 
@@ -266,7 +315,7 @@ export default function Header({
       setShareURL(null);
       console.error(error);
     }
-  }, [formData, liveSettings, schema, theme, uiSchema, setShareURL]);
+  }, [formData, liveSettings, schema, theme, uiSchema, validator, setShareURL]);
 
   return (
     <div className='page-header'>
@@ -282,6 +331,7 @@ export default function Header({
             formData={liveSettings}
             validator={localValidator}
             onChange={handleSetLiveSettings}
+            uiSchema={liveSettingsBooleanUiSchema}
           >
             <div />
           </Form>

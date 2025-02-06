@@ -14,7 +14,7 @@
     "precommit": "lint-staged",
     "publish-to-npm": "npm run build && npm publish",
     "test": "jest",
-    "test:debug": "node --inspect-brk node_modules/.bin/jest",
+    "test:debug": "node --inspect-brk ../../node_modules/.bin/jest",
     "test:update": "jest --u",
     "test:watch": "jest --watch",
     "test-coverage": "jest --coverage"
@@ -34,10 +34,10 @@
   ],
   "engineStrict": false,
   "engines": {
-    "node": ">=14"
+    "node": ">=20"
   },
   "peerDependencies": {
-    "@rjsf/utils": "^5.20.x",
+    "@rjsf/utils": "^6.x",
     "react": "^16.14.0 || >=17"
   },
   "dependencies": {
@@ -67,7 +67,6 @@
     "atob": "^2.1.2",
     "babel-jest": "^29.7.0",
     "chai": "^3.5.0",
-    "esbuild": "^0.18.20",
     "eslint": "^8.56.0",
     "html": "^1.0.0",
     "jest": "^29.7.0",

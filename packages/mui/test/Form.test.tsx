@@ -28,8 +28,12 @@ formTests(Form, {
             scrollHeight: 100,
           };
         }
-        // The other one only really needs an empty object
-        return {};
+        // The other one needs to look like an input node with focus and style elements
+        return {
+          nodeName: 'INPUT',
+          focus: jest.fn(),
+          style: {},
+        };
       }
       return null;
     },

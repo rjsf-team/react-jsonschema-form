@@ -29,15 +29,15 @@
     ]
   },
   "engines": {
-    "node": ">=14"
+    "node": ">=20"
   },
   "peerDependencies": {
     "@emotion/react": "^11.7.0",
     "@emotion/styled": "^11.6.0",
-    "@mui/icons-material": "^5.2.0",
-    "@mui/material": "^5.2.2",
-    "@rjsf/core": "^5.20.x",
-    "@rjsf/utils": "^5.20.x",
+    "@mui/icons-material": "^6.0.0",
+    "@mui/material": "^6.0.0",
+    "@rjsf/core": "^6.x",
+    "@rjsf/utils": "^6.x",
     "react": ">=17"
   },
   "devDependencies": {
@@ -50,9 +50,8 @@
     "@emotion/jest": "^11.11.0",
     "@emotion/react": "^11.11.3",
     "@emotion/styled": "^11.11.0",
-    "@mui/base": "5.0.0-beta.28",
-    "@mui/icons-material": "5.15.2",
-    "@mui/material": "5.15.2",
+    "@mui/icons-material": "^6.4.3",
+    "@mui/material": "^6.4.3",
     "@rjsf/core": "^6.0.0-alpha.0",
     "@rjsf/snapshot-tests": "^6.0.0-alpha.0",
     "@rjsf/utils": "^6.0.0-alpha.0",
@@ -62,7 +61,6 @@
     "@types/react-dom": "^18.2.19",
     "@types/react-test-renderer": "^18.0.7",
     "babel-jest": "^29.7.0",
-    "esbuild": "^0.18.20",
     "eslint": "^8.56.0",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",

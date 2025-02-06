@@ -181,7 +181,7 @@ render(
     schema={schema}
     validator={validator}
     experimental_defaultFormStateBehavior={{
-      arrayMinItems: { populate: 'requiredOnly' },
+      emptyObjectFields: 'populateRequiredDefaults',
     }}
   />,
   document.getElementById('app')
@@ -247,6 +247,53 @@ render(
       allOf: 'populateDefaults',
     }}
   />,
+  document.getElementById('app')
+);
+```
+
+### constAsDefaults
+
+Optional enumerated flag controlling how const values are merged into the form data as defaults when dealing with undefined values, defaulting to `always`.
+The defaulting behavior for this flag will always be controlled by the `emptyObjectField` flag value.
+For instance, if `populateRequiredDefaults` is set and the const value is not required, it will not be set.
+
+| Flag Value  | Description                                                                                                                                                                                                                     |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `always`    | A const value will always be merged into the form as a default. If there is are const values in a `oneOf` (for instance to create an enumeration with title different from the values), the first const value will be defaulted |
+| `skipOneOf` | If const is in a `oneOf` it will NOT pick the first value as a default                                                                                                                                                          |
+| `never`     | A const value will never be used as a default                                                                                                                                                                                   |
+
+### mergeDefaultsIntoFormData
+
+Optional enumerated flag controlling how the defaults are merged into the form data when dealing with undefined values, defaulting to `useFormDataIfPresent`.
+
+NOTE: If there is a default for a field and the `formData` is unspecified, the default ALWAYS merges.
+
+| Flag Value                      | Description                                                                                                                               |
+| ------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| `useFormDataIfPresent`          | Legacy behavior - Do not merge defaults if there is a value for a field in `formData` even if that value is explicitly set to `undefined` |
+| `useDefaultIfFormDataUndefined` | If the value of a field within the `formData` is `undefined`, then use the default value instead                                          |
+
+## experimental_customMergeAllOf
+
+The `experimental_customMergeAllOf` function allows you to provide a custom implementation for merging `allOf` schemas. This can be particularly useful in scenarios where the default [json-schema-merge-allof](https://github.com/mokkabonna/json-schema-merge-allof) library becomes a performance bottleneck, especially with large and complex schemas or doesn't satisfy your needs.
+
+By providing your own implementation, you can potentially achieve significant performance improvements. For instance, if your use case only requires a subset of JSON Schema features, you can implement a faster, more tailored merging strategy.
+
+If you're looking for alternative `allOf` merging implementations, you might consider [allof-merge](https://github.com/udamir/allof-merge).
+
+**Warning:** This is an experimental feature. Only use this if you fully understand the implications of custom `allOf` merging and are prepared to handle potential edge cases. Incorrect implementations may lead to unexpected behavior or validation errors.
+
+```tsx
+import { Form } from '@rjsf/core';
+import validator from '@rjsf/validator-ajv8';
+
+const customMergeAllOf = (schema: RJSFSchema): RJSFSchema => {
+  // Your custom implementation here
+};
+
+render(
+  <Form schema={schema} validator={validator} experimental_customMergeAllOf={customMergeAllOf} />,
   document.getElementById('app')
 );
 ```

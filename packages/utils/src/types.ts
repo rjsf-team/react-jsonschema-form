@@ -66,7 +66,8 @@ export type Experimental_ArrayMinItems = {
 
 /** Experimental features to specify different default form state behaviors. Currently, this affects the
  * handling of optional array fields where `minItems` is set and handling of setting defaults based on the
- * value of `emptyObjectFields`.
+ * value of `emptyObjectFields`. It also affects how `allOf` fields are handled and how to handle merging defaults into
+ * the formData in relation to explicit `undefined` values via `mergeDefaultsIntoFormData`.
  */
 export type Experimental_DefaultFormStateBehavior = {
   /** Optional object, that controls how the default form state for arrays with `minItems` is handled. When not provided
@@ -86,7 +87,34 @@ export type Experimental_DefaultFormStateBehavior = {
    * Optional flag to compute the default form state using allOf and if/then/else schemas. Defaults to `skipDefaults'.
    */
   allOf?: 'populateDefaults' | 'skipDefaults';
+  /** Optional enumerated flag controlling how the defaults are merged into the form data when dealing with undefined
+   * values, defaulting to `useFormDataIfPresent`.
+   * NOTE: If there is a default for a field and the `formData` is unspecified, the default ALWAYS merges.
+   * - `useFormDataIfPresent`: Legacy behavior - Do not merge defaults if there is a value for a field in `formData`,
+   *        even if that value is explicitly set to `undefined`
+   * - `useDefaultIfFormDataUndefined`: - If the value of a field within the `formData` is `undefined`, then use the
+   *        default value instead
+   */
+  mergeDefaultsIntoFormData?: 'useFormDataIfPresent' | 'useDefaultIfFormDataUndefined';
+  /** Optional enumerated flag controlling how const values are merged into the form data as defaults when dealing with
+   * undefined values, defaulting to `always`. The defaulting behavior for this flag will always be controlled by the
+   * `emptyObjectField` flag value. For instance, if `populateRequiredDefaults` is set and the const value is not
+   * required, it will not be set.
+   * - `always`: A const value will always be merged into the form as a default. If there is are const values in a
+   *        `oneOf` (for instance to create an enumeration with title different from the values), the first const value
+   *        will be defaulted
+   * - `skipOneOf`: If const is in a `oneOf` it will NOT pick the first value as a default
+   * - `never`: A const value will never be used as a default
+   *
+   */
+  constAsDefaults?: 'always' | 'skipOneOf' | 'never';
 };
+
+/** Optional function that allows for custom merging of `allOf` schemas
+ * @param schema - Schema with `allOf` that needs to be merged
+ * @returns The merged schema
+ */
+export type Experimental_CustomMergeAllOf<S extends StrictRJSFSchema = RJSFSchema> = (schema: S) => S;
 
 /** The interface representing a Date object that contains an optional time */
 export interface DateObject {
@@ -122,6 +150,8 @@ export type InputPropsType = Omit<RangeSpecType, 'step'> & {
   step?: number | 'any';
   /** Specifies the `autoComplete` value for an <input> element */
   autoComplete?: HTMLInputElement['autocomplete'];
+  /** Specifies a filter for what file types the user can upload. */
+  accept?: HTMLInputElement['accept'];
 };
 
 /** Type describing an id used for a field in the `IdSchema` */
@@ -1030,12 +1060,14 @@ export interface SchemaUtilsType<T = any, S extends StrictRJSFSchema = RJSFSchem
    * @param validator - An implementation of the `ValidatorType` interface that will be compared against the current one
    * @param rootSchema - The root schema that will be compared against the current one
    * @param [experimental_defaultFormStateBehavior] - Optional configuration object, if provided, allows users to override default form state behavior
+   * @param [experimental_customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
    * @returns - True if the `SchemaUtilsType` differs from the given `validator` or `rootSchema`
    */
   doesSchemaUtilsDiffer(
     validator: ValidatorType<T, S, F>,
     rootSchema: S,
-    experimental_defaultFormStateBehavior?: Experimental_DefaultFormStateBehavior
+    experimental_defaultFormStateBehavior?: Experimental_DefaultFormStateBehavior,
+    experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>
   ): boolean;
   /** Returns the superset of `formData` that includes the given set updated to include any missing fields that have
    * computed to have defaults provided in the `schema`.

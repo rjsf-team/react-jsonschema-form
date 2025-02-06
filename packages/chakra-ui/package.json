@@ -31,14 +31,14 @@
   },
   "engineStrict": false,
   "engines": {
-    "node": ">=14"
+    "node": ">=20"
   },
   "peerDependencies": {
     "@chakra-ui/icons": ">=1.1.1",
-    "@chakra-ui/react": ">=1.7.3",
+    "@chakra-ui/react": ">=1.7.3 <3.0.0",
     "@chakra-ui/system": ">=1.12.1",
-    "@rjsf/core": "^5.20.x",
-    "@rjsf/utils": "^5.20.x",
+    "@rjsf/core": "^6.x",
+    "@rjsf/utils": "^6.x",
     "chakra-react-select": ">=3.3.8",
     "framer-motion": ">=5.6.0",
     "react": "^16.14.0 || >=17"
@@ -78,7 +78,6 @@
     "@types/react-test-renderer": "^18.0.7",
     "babel-jest": "^29.7.0",
     "chakra-react-select": "^3.3.9",
-    "esbuild": "^0.18.20",
     "eslint": "^8.56.0",
     "framer-motion": "^5.6.0",
     "jest": "^29.7.0",

@@ -15,6 +15,213 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+# 5.24.3
+
+## @rjsf/utils
+
+- Rollback [4446](https://github.com/rjsf-team/react-jsonschema-form/pull/4446) due to regression
+
+## Dev / docs / playground
+- Fixed issue with selector, where validator was getting refreshed on clicking on anything in selector. [#4472](https://github.com/rjsf-team/react-jsonschema-form/pull/4472)
+
+# 5.24.2
+
+## @rjsf/utils
+
+- switch `lodash.isEqualWith` to `fast-equals.createCustomEqual` providing `areFunctionsEqual` assuming any functions are equal.
+- Fixed issue with oneOf selector can be modified in readonly mode, fixing [#4460](https://github.com/rjsf-team/react-jsonschema-form/issues/4460)
+- Fixed issue with fields inside an array can't be set to empty when a default is set, fixing [#4456](https://github.com/rjsf-team/react-jsonschema-form/issues/4456)
+- Fixed issue with file accept attribute, fixing [#4404](https://github.com/rjsf-team/react-jsonschema-form/issues/4404).
+
+## @rjsf/mui
+
+- Fixed issue with file accept attribute, fixing [#4404](https://github.com/rjsf-team/react-jsonschema-form/issues/4404).
+
+# 5.24.1
+
+## @rjsf/utils
+
+- Fixed documentation for `getChangedFields()`
+
+## Dev / docs / playground
+
+- Updated the peer dependencies for `@rjsf/*` to be `5.24.x`
+- Added documentation for `getChangedFields()`
+
+# 5.24.0
+
+## @rjsf/core
+
+- Fixed issue with schema if/then/else conditions where switching to then/else subschemas did not reflect the actual validation errors in the onChange event, fixing [#4249](https://github.com/rjsf-team/react-jsonschema-form/issues/4249) and improving performance.
+- Fixed issue error message will not be cleared after the controlled Form formData is changed. Fixes [#4426](https://github.com/rjsf-team/react-jsonschema-form/issues/4426)
+
+## @rjsf/utils
+
+- Fixed issue with formData not updating when dependencies change, fixing [#4325](https://github.com/rjsf-team/react-jsonschema-form/issues/4325)
+- Fixed issue with assigning default values to formData with deeply nested required properties, fixing [#4399](https://github.com/rjsf-team/react-jsonschema-form/issues/4399)
+- Fixed issue error message will not be cleared after the controlled Form formData is changed. Fixes [#4426](https://github.com/rjsf-team/react-jsonschema-form/issues/4426)
+- Fix for AJV [$data](https://ajv.js.org/guide/combining-schemas.html#data-reference) reference in const property in schema treated as default/const value. The issue is mentioned in [#4361](https://github.com/rjsf-team/react-jsonschema-form/issues/4361).
+- Switched uses of `lodash.isEqual()` to `@rjsf/utils.deepEquals`.
+
+## @rjsf/validator-ajv8
+
+- Partially fixed issue where dependency errors do not show `title` or `ui:title`. This fix only applicable if we use an ajv-i18n localizer. Ref. [#4402](https://github.com/rjsf-team/react-jsonschema-form/issues/4402).
+- Switched uses of `lodash.isEqual()` to `@rjsf/utils.deepEquals` at precompiledValidator.
+
+# 5.23.2
+
+## @rjsf/core
+
+- Fix default value population when switching between options in `MultiSchemaField` [#4375](https://github.com/rjsf-team/react-jsonschema-form/pull/4375). Fixes [#4367](https://github.com/rjsf-team/react-jsonschema-form/issues/4367)
+
+## @rjsf/utils
+
+- Short-circuit `File` and `Date` constructor access in isObject to optimize performance in scenarios where `globalThis` is a `Proxy` that incurs overhead for each class constructor access ([#4413](https://github.com/rjsf-team/react-jsonschema-form/pull/4413)). Fixes [#4409](https://github.com/rjsf-team/react-jsonschema-form/issues/4409)
+
+## @rjsf/validator-ajv8
+
+- Fixed issue where `ui:title` in anyOf/oneOf is not shown in error messages. Fixes [#4368](https://github.com/rjsf-team/react-jsonschema-form/issues/4368)
+
+# 5.23.1
+
+## @rjsf/chakra-ui
+
+- Updated `package.json` to restrict `@chakra-ui/react`'s peer dependency to be < 3.0.0, fixing [#4390](https://github.com/rjsf-team/react-jsonschema-form/issues/4390)
+
+## @rjsf/core
+
+- Updated `NumberField` to properly pass through the `errorSchema` and `id` in the onChange handler, fixing [#4382](https://github.com/rjsf-team/react-jsonschema-form/issues/4382)
+
+## Dev / docs / playground
+
+- Updated the peer dependencies for `@rjsf/*` to be `5.23.x`
+
+# 5.23.0
+
+## @rjsf/core
+
+- Updated `SchemaField` to no longer make schema fields with const read-only by default, partially fixing [#4344](https://github.com/rjsf-team/react-jsonschema-form/issues/4344)
+
+## @rjsf/utils
+
+- Updated `Experimental_DefaultFormStateBehavior` to add a new `constAsDefaults` option
+- Updated `getDefaultFormState()` to use the new `constAsDefaults` option to control how const is used for defaulting, fixing [#4344](https://github.com/rjsf-team/react-jsonschema-form/issues/4344), [#4361](https://github.com/rjsf-team/react-jsonschema-form/issues/4361) and [#4377](https://github.com/rjsf-team/react-jsonschema-form/issues/4377)
+- Use `experimental_customMergeAllOf` option in functions that have previously missed it.
+- Updated `ErrorSchemaBuilder` methods `addErrors` and `setErrors` to prevent duplicate error messages.
+
+## @rjsf/validator-ajv8
+
+- Fixed issue where error messages do not have `title` or `ui:title` if a `Localizer` function is used. Fixes [#4387](https://github.com/rjsf-team/react-jsonschema-form/issues/4387)
+
+## Dev / docs / playground
+
+- Updated the playground to add a selector for the `constAsDefaults` option
+
+# 5.22.4
+
+## @rjsf/utils
+
+- Fixed issue with array schema defaults not applying properly when formData is an empty array, fixing [#4335](https://github.com/rjsf-team/react-jsonschema-form/issues/4335).
+
+## Dev / docs / playground
+
+- Fix issue 'Maximum call stack size exceeded' with playground share with large content.
+
+# 5.22.3
+
+## @rjsf/utils
+
+- Fixed deep nested dependencies issue with assigning values to formData, fixing [#4334](https://github.com/rjsf-team/react-jsonschema-form/issues/4334)
+
+# 5.22.2
+
+## @rjsf/core
+
+- Fix an issue where only the first file was uploaded when users selected multiple files for upload.
+- Fixed validation regression Form not revalidating after formData change, fixing [#4343](https://github.com/rjsf-team/react-jsonschema-form/issues/4343)
+
+## @rjsf/validator-ajv8
+
+- Fixed `AJV8Validator#transformRJSFValidationErrors` to replace the error message field with either the `uiSchema`'s `ui:title` field if one exists or the `parentSchema` title if one exists. Fixes [#4348](https://github.com/rjsf-team/react-jsonschema-form/issues/4348)
+
+# 5.22.1
+
+## Dev / docs / playground
+
+- Bumped peer dependencies to 5.22.x due to updated type definition and API changes in @rjsf/utils
+
+# 5.22.0
+
+## @rjsf/core
+
+- Updated `MultiSchemaField` to call the `onChange` handler after setting the new option, fixing [#3997](https://github.com/rjsf-team/react-jsonschema-form/issues/3977) and [#4314](https://github.com/rjsf-team/react-jsonschema-form/issues/4314)
+
+## @rjsf/utils
+
+- Added `experimental_customMergeAllOf` option to `retrieveSchema()` and `getDefaultFormState()` to allow custom merging of `allOf` schemas
+- Made fields with const property pre-filled and readonly, fixing [#2600](https://github.com/rjsf-team/react-jsonschema-form/issues/2600)
+- Added `mergeDefaultsIntoFormData` option to `Experimental_DefaultFormStateBehavior` type to control how to handle merging of defaults
+- Updated `mergeDefaultsWithFormData()` to add new optional `defaultSupercedesUndefined` that when true uses the defaults rather than `undefined` formData, fixing [#4322](https://github.com/rjsf-team/react-jsonschema-form/issues/4322)
+- Updated `getDefaultFormState()` to pass true to `mergeDefaultsWithFormData` for `defaultSupercedesUndefined` when `mergeDefaultsIntoFormData` has the value `useDefaultIfFormDataUndefined`, fixing [#4322](https://github.com/rjsf-team/react-jsonschema-form/issues/4322)
+- Updated `getClosestMatchingOption()` to improve the scoring of sub-property objects that are provided over ones that aren't, fixing [#3997](https://github.com/rjsf-team/react-jsonschema-form/issues/3977) and [#4314](https://github.com/rjsf-team/react-jsonschema-form/issues/4314)
+
+## Dev / docs / playground
+
+- Updated the `form-props.md` to add documentation for the new `experimental_customMergeAllOf` props and the `experimental_defaultFormStateBehavior.mergeDefaultsIntoFormData` option
+- Updated the `utility-functions.md` to add documentation for the new optional `defaultSupercedesUndefined` parameter and the two missing optional fields on `getDefaultFormState()`
+- Updated the `custom-templates.md` to add a section header for wrapping `BaseInputTemplate`
+- Updated the playground to add controls for the new `mergeDefaultsIntoFormData` option
+  - In the process, moved the `Show Error List` component over one column, making it inline radio buttons rather than a select
+
+# 5.21.2
+
+## @rjsf/core
+
+- Updated `SchemaField` to pass `required` flag to `_AnyOfField`/`_OneOfField`
+- Updated `Form` to deal with null objects in `filterErrorsBasedOnSchema()`, fixing [#4306](https://github.com/rjsf-team/react-jsonschema-form/issues/4306)
+
+## @rjsf/utils
+
+- Updated `ErrorSchemaBuilder` to support adding, updating, and removing paths that are numbers, fixing [#4297](https://github.com/rjsf-team/react-jsonschema-form/issues/4297)
+- Updated `retrieveSchema` to not merge `contains` properties in `allOf` schema lists, fixing [#2923](https://github.com/rjsf-team/react-jsonschema-form/issues/2923#issuecomment-1946034240)
+
+## Dev / docs / playground
+
+- Updated the `custom-widgets-fields.md` to add examples of wrapping a widget/field
+
+# 5.21.1
+
+## @rjsf/utils
+
+- Revert of updating `deepEquals()` from [#4292]
+
+## @validator-ajv8
+
+- Revert of using `deepEquals()` instead of `lodash.isEqual()` from [#4292]
+
+# 5.21.0
+
+## @rjsf/core
+
+- Updated `Form` to fix `focusOnError()` to support the ids that include dots, fixing [#4279](https://github.com/rjsf-team/react-jsonschema-form/issues/4279)
+
+## @rjsf/mui
+
+- Updated the peer dependencies for `@mui/material` and `@mui/icon-material`, fixing [4283](https://github.com/rjsf-team/react-jsonschema-form/issues/4283)
+
+## @rjsf/utils
+
+- Fixes an issue with dependencies computeDefaults to ensure we can get the dependencies defaults [#4271](https://github.com/rjsf-team/react-jsonschema-form/issues/4271)
+- Updated `deepEquals()` to use `fast-equals.createCustomEqual()` instead of `lodash.isEqualWith()`, fixing [#4291](https://github.com/rjsf-team/react-jsonschema-form/issues/4291)
+  - Switched uses of `lodash.isEqual()` to `deepEquals()` in many of the utility functions as well
+
+## @validator-ajv8
+
+- Use `@rjsf/utils` `deepEquals()` instead of `lodash.isEqual()` to improve performance, fixing [#4291](https://github.com/rjsf-team/react-jsonschema-form/issues/4291)
+
+## Dev / docs / playground
+
+- Updated the playground to use `@mui/*` version 6, changing the name of the dropdown from `material-ui-5` to `mui`
 
 # 5.20.1
 
@@ -24,25 +231,25 @@ should change the heading of the (upcoming) version to include a major version b
 
 # 5.20.0
 
-## @rjsf/core 
+## @rjsf/core
 
 - Support allowing raising errors from within a custom Widget [#2718](https://github.com/rjsf-team/react-jsonschema-form/issues/2718)
-- Updated `ArrayField`, `BooleanField` and `StringField` to call `optionsList()` with the additional `UiSchema` parameter, fixing [#4215](https://github.com/rjsf-team/react-jsonschema-form/issues/4215) and  [#4260](https://github.com/rjsf-team/react-jsonschema-form/issues/4260)
+- Updated `ArrayField`, `BooleanField` and `StringField` to call `optionsList()` with the additional `UiSchema` parameter, fixing [#4215](https://github.com/rjsf-team/react-jsonschema-form/issues/4215) and [#4260](https://github.com/rjsf-team/react-jsonschema-form/issues/4260)
 
 ## @rjsf/utils
 
 - Updated the `WidgetProps` type to add `es?: ErrorSchema<T>, id?: string` to the params of the `onChange` handler function
 - Updated `UIOptionsBaseType` to add the new `enumNames` prop to support an alternate way to provide labels for `enum`s in a schema, fixing [#4215](https://github.com/rjsf-team/react-jsonschema-form/issues/4215)
-- Updated `optionsList()` to take an optional `uiSchema` that is used to extract alternate labels for `enum`s or `oneOf`/`anyOf` in a schema, fixing [#4215](https://github.com/rjsf-team/react-jsonschema-form/issues/4215) and  [#4260](https://github.com/rjsf-team/react-jsonschema-form/issues/4260)
+- Updated `optionsList()` to take an optional `uiSchema` that is used to extract alternate labels for `enum`s or `oneOf`/`anyOf` in a schema, fixing [#4215](https://github.com/rjsf-team/react-jsonschema-form/issues/4215) and [#4260](https://github.com/rjsf-team/react-jsonschema-form/issues/4260)
   - NOTE: The generics for `optionsList()` were expanded from `<S extends StrictRJSFSchema = RJSFSchema>` to `<S extends StrictRJSFSchema = RJSFSchema, T = any, F extends FormContextType = any>` to support the `UiSchema`.
 
 ## Dev / docs / playground
 
--  Update the `custom-widget-fields.md` to add documentation for how to raise errors from a custom widget or field
+- Update the `custom-widget-fields.md` to add documentation for how to raise errors from a custom widget or field
 
 # 5.19.4
 
-## @rjsf/core 
+## @rjsf/core
 
 - Fix XSS when rendering schema validation errors [#4254](https://github.com/rjsf-team/react-jsonschema-form/issues/2718)
   - NOTE: This will have potential consequences if you are using the [translateString](https://rjsf-team.github.io/react-jsonschema-form/docs/api-reference/form-props/#translatestring) feature and are trying to render HTML. Switching to [Markdown](https://www.markdownguide.org/) will solve your problems.
@@ -59,7 +266,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## Dev / docs / playground
 
-- Updated the `Validator` dropdown to add `AJV8 (discriminator)` which sets the AJV validator [discriminator](https://ajv.js.org/json-schema.html#discriminator) option to `true` to support testing schemas with that option in them 
+- Updated the `Validator` dropdown to add `AJV8 (discriminator)` which sets the AJV validator [discriminator](https://ajv.js.org/json-schema.html#discriminator) option to `true` to support testing schemas with that option in them
 
 # 5.19.3
 
@@ -1944,7 +2151,7 @@ const Component = () => {
 
 ## @rjsf/validator-ajv8
 
-- Support for localization (L12n) on a customized validator using a `Localizer` function passed as a second parameter to `customizeValidator()`, fixing (https://github.com/rjsf-team/react-jsonschema-form/pull/846, and https://github.com/rjsf-team/react-jsonschema-form/issues/1195)
+- Support for localization (L10n) on a customized validator using a `Localizer` function passed as a second parameter to `customizeValidator()`, fixing (https://github.com/rjsf-team/react-jsonschema-form/pull/846, and https://github.com/rjsf-team/react-jsonschema-form/issues/1195)
 - Fixed the `README.md` to correct the package name in several places to match the actual package
 
 ## Dev / docs / playground
