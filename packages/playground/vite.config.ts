@@ -18,7 +18,6 @@ export default defineConfig({
       '@rjsf/antd': path.resolve(__dirname, '../antd/src'),
       '@rjsf/chakra-ui': path.resolve(__dirname, '../chakra-ui/src'),
       '@rjsf/core': path.resolve(__dirname, '../core/src'),
-      '@rjsf/fluent-ui': path.resolve(__dirname, '../fluent-ui/src'),
       '@rjsf/fluentui-rc': path.resolve(__dirname, '../fluentui-rc/src'),
       '@rjsf/mui': path.resolve(__dirname, '../mui/src'),
       '@rjsf/react-bootstrap': path.resolve(__dirname, '../react-bootstrap/src'),

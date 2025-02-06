@@ -68,7 +68,6 @@
     "packages/chakra-ui",
     "packages/core",
     "packages/docs",
-    "packages/fluent-ui",
     "packages/fluentui-rc",
     "packages/mui",
     "packages/playground",

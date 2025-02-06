@@ -25,7 +25,6 @@
     { "path": "../antd" },
     { "path": "../chakra-ui" },
     { "path": "../core" },
-    { "path": "../fluent-ui" },
     { "path": "../fluentui-rc" },
     { "path": "../mui" },
     { "path": "../react-bootstrap"},

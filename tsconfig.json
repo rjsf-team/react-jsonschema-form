@@ -17,9 +17,6 @@
       "path": "./packages/snapshot-tests"
     },
     {
-      "path": "./packages/fluent-ui"
-    },
-    {
       "path": "./packages/fluentui-rc"
     },
     {

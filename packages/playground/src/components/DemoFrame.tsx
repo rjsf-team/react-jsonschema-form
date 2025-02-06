@@ -85,16 +85,6 @@ export default function DemoFrame(props: DemoFrameProps) {
         })}
       </CacheProvider>
     ) : null;
-  } else if (theme === 'fluent-ui') {
-    // TODO: find a better way to render fluent-ui in an iframe, if we need to do so.
-
-    body = (
-      <>
-        <style dangerouslySetInnerHTML={{ __html: 'label { font-weight: normal; }' }} />
-        {head}
-        {children}
-      </>
-    );
   } else if (theme === 'fluentui-rc') {
     body = <FrameContextConsumer>{__createFluentUIRCFrameProvider(props)}</FrameContextConsumer>;
   } else if (theme === 'chakra-ui') {
