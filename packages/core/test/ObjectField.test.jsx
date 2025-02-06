@@ -1142,7 +1142,7 @@ describe('ObjectField', () => {
       });
     });
 
-    it('should generate the specifed default key and value inputs if default is provided outside of additionalProperties schema', () => {
+    it('should generate the specified default key and value inputs if default is provided outside of additionalProperties schema', () => {
       const customSchema = {
         ...schema,
         default: {
@@ -1161,7 +1161,7 @@ describe('ObjectField', () => {
       });
     });
 
-    it('should generate the specifed default key/value input with custom formData provided', () => {
+    it('should generate the specified default key/value input with custom formData provided', () => {
       const customSchema = {
         ...schema,
         default: {
@@ -1183,7 +1183,7 @@ describe('ObjectField', () => {
       });
     });
 
-    it('should edit the specifed default key without duplicating', () => {
+    it('should edit the specified default key without duplicating', () => {
       const customSchema = {
         ...schema,
         default: {
@@ -1204,7 +1204,7 @@ describe('ObjectField', () => {
       });
     });
 
-    it('should remove the specifed default key/value input item', () => {
+    it('should remove the specified default key/value input item', () => {
       const customSchema = {
         ...schema,
         default: {
