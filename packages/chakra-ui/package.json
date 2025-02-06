@@ -31,7 +31,7 @@
   },
   "engineStrict": false,
   "engines": {
-    "node": ">=14"
+    "node": ">=20"
   },
   "peerDependencies": {
     "@chakra-ui/icons": ">=1.1.1",

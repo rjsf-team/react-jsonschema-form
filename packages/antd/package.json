@@ -30,7 +30,7 @@
   ],
   "engineStrict": false,
   "engines": {
-    "node": ">=14"
+    "node": ">=20"
   },
   "peerDependencies": {
     "@ant-design/icons": "^4.0.0 || ^5.0.0",

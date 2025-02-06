@@ -28,7 +28,7 @@
   ],
   "engineStrict": false,
   "engines": {
-    "node": ">=14"
+    "node": ">=20"
   },
   "peerDependencies": {
     "react": "^18.2.0"
