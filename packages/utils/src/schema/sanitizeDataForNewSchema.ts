@@ -1,7 +1,14 @@
 import get from 'lodash/get';
 import has from 'lodash/has';
 
-import { FormContextType, GenericObjectType, RJSFSchema, StrictRJSFSchema, ValidatorType } from '../types';
+import {
+  Experimental_CustomMergeAllOf,
+  FormContextType,
+  GenericObjectType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  ValidatorType,
+} from '../types';
 import { PROPERTIES_KEY, REF_KEY } from '../constants';
 import retrieveSchema from './retrieveSchema';
 
@@ -51,6 +58,7 @@ const NO_VALUE = Symbol('no Value');
  * @param [newSchema] - The new schema for which the data is being sanitized
  * @param [oldSchema] - The old schema from which the data originated
  * @param [data={}] - The form data associated with the schema, defaulting to an empty object when undefined
+ * @param [experimental_customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
  * @returns - The new form data, with all the fields uniquely associated with the old schema set
  *      to `undefined`. Will return `undefined` if the new schema is not an object containing properties.
  */
@@ -58,7 +66,14 @@ export default function sanitizeDataForNewSchema<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
->(validator: ValidatorType<T, S, F>, rootSchema: S, newSchema?: S, oldSchema?: S, data: any = {}): T {
+>(
+  validator: ValidatorType<T, S, F>,
+  rootSchema: S,
+  newSchema?: S,
+  oldSchema?: S,
+  data: any = {},
+  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>
+): T {
   // By default, we will clear the form data
   let newFormData;
   // If the new schema is of type object and that object contains a list of properties
@@ -82,10 +97,22 @@ export default function sanitizeDataForNewSchema<
       let newKeyedSchema: S = get(newSchema, [PROPERTIES_KEY, key], {});
       // Resolve the refs if they exist
       if (has(oldKeyedSchema, REF_KEY)) {
-        oldKeyedSchema = retrieveSchema<T, S, F>(validator, oldKeyedSchema, rootSchema, formValue);
+        oldKeyedSchema = retrieveSchema<T, S, F>(
+          validator,
+          oldKeyedSchema,
+          rootSchema,
+          formValue,
+          experimental_customMergeAllOf
+        );
       }
       if (has(newKeyedSchema, REF_KEY)) {
-        newKeyedSchema = retrieveSchema<T, S, F>(validator, newKeyedSchema, rootSchema, formValue);
+        newKeyedSchema = retrieveSchema<T, S, F>(
+          validator,
+          newKeyedSchema,
+          rootSchema,
+          formValue,
+          experimental_customMergeAllOf
+        );
       }
       // Now get types and see if they are the same
       const oldSchemaTypeForKey = get(oldKeyedSchema, 'type');
@@ -104,7 +131,8 @@ export default function sanitizeDataForNewSchema<
             rootSchema,
             newKeyedSchema,
             oldKeyedSchema,
-            formValue
+            formValue,
+            experimental_customMergeAllOf
           );
           if (itemData !== undefined || newSchemaTypeForKey === 'array') {
             // only put undefined values for the array type and not the object type
@@ -154,10 +182,22 @@ export default function sanitizeDataForNewSchema<
       !Array.isArray(newSchemaItems)
     ) {
       if (has(oldSchemaItems, REF_KEY)) {
-        oldSchemaItems = retrieveSchema<T, S, F>(validator, oldSchemaItems as S, rootSchema, data as T);
+        oldSchemaItems = retrieveSchema<T, S, F>(
+          validator,
+          oldSchemaItems as S,
+          rootSchema,
+          data as T,
+          experimental_customMergeAllOf
+        );
       }
       if (has(newSchemaItems, REF_KEY)) {
-        newSchemaItems = retrieveSchema<T, S, F>(validator, newSchemaItems as S, rootSchema, data as T);
+        newSchemaItems = retrieveSchema<T, S, F>(
+          validator,
+          newSchemaItems as S,
+          rootSchema,
+          data as T,
+          experimental_customMergeAllOf
+        );
       }
       // Now get types and see if they are the same
       const oldSchemaType = get(oldSchemaItems, 'type');
@@ -172,7 +212,8 @@ export default function sanitizeDataForNewSchema<
               rootSchema,
               newSchemaItems as S,
               oldSchemaItems as S,
-              aValue
+              aValue,
+              experimental_customMergeAllOf
             );
             if (itemValue !== undefined && (maxItems < 0 || newValue.length < maxItems)) {
               newValue.push(itemValue);

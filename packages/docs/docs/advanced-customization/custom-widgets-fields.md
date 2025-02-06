@@ -279,6 +279,34 @@ render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, docum
 
 All the widgets that render a text input use the `BaseInputTemplate` component internally. If you need to customize all text inputs without customizing all widgets individually, you can provide a `BaseInputTemplate` component in the `templates` property of `Form` (see [Custom Templates](./custom-templates.md#baseinputtemplate)).
 
+### Wrapping an existing widget to customize it
+
+Sometimes you just need to customize the properties that are passed to an existing widget.
+The way to do this varies based upon whether you are using core or some other theme (such as mui).
+
+Here is an example of modifying the `SelectWidget` to change the ordering of `enumOptions`:
+
+```tsx
+import { WidgetProps } from '@rjsf/utils';
+import { getDefaultRegistry } from '@rjsf/core';
+import { Widgets } from '@rjsf/mui';
+
+import myOptionsOrderFunction from './myOptionsOrderFunction';
+
+const {
+  widgets: { SelectWidget },
+} = getDefaultRegistry(); // To get widgets from core
+// const { SelectWidget } = Widgets; // To get widgets from a theme do this
+
+function MySelectWidget(props: WidgetProps) {
+  const { options } = props;
+  let { enumOptions } = options;
+  // Reorder the `enumOptions` however you want
+  enumOptions = myOptionsOrderFunction(enumOptions);
+  return <SelectWidget {...props} options={{ ...options, enumOptions }} />;
+}
+```
+
 ## Custom field components
 
 You can provide your own field components to a uiSchema for basically any json schema data type, by specifying a `ui:field` property.
@@ -474,4 +502,38 @@ const schema: RJSFSchema = {
 };
 
 render(<Form schema={schema} validator={validator} fields={fields} />, document.getElementById('app'));
+```
+
+### Wrapping an existing field to customize it
+
+Sometimes you just need to customize the properties that are passed to an existing field.
+
+Here is an example of wrapping the `ObjectField` to tweak the `onChange` handler to look for a specific kind of bad data:
+
+```tsx
+import { useCallback } from 'react';
+import { FieldProps } from '@rjsf/utils';
+import { getDefaultRegistry } from '@rjsf/core';
+
+import checkBadData from './checkBadData';
+
+const {
+  fields: { ObjectField },
+} = getDefaultRegistry();
+
+function MyObjectField(props: FieldProps) {
+  const { onChange } = props;
+  const onChangeHandler = useCallback(
+    (newFormData: T | undefined, es?: ErrorSchema<T>, id?: string) => {
+      let data = newFormData;
+      let error = es;
+      if (checkBadData(newFormData)) {
+        // Format the `error` and fix the `data` here
+      }
+      onChange(data, error, id);
+    },
+    [onChange]
+  );
+  return <ObjectField {...props} onChange={onChangeHandler} />;
+}
 ```

@@ -123,14 +123,15 @@ class AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
     const oldOption = selectedOption >= 0 ? retrievedOptions[selectedOption] : undefined;
 
     let newFormData = schemaUtils.sanitizeDataForNewSchema(newOption, oldOption, formData);
-    if (newFormData && newOption) {
+    if (newOption) {
       // Call getDefaultFormState to make sure defaults are populated on change. Pass "excludeObjectChildren"
       // so that only the root objects themselves are created without adding undefined children properties
       newFormData = schemaUtils.getDefaultFormState(newOption, newFormData, 'excludeObjectChildren') as T;
     }
-    onChange(newFormData, undefined, this.getFieldId());
 
-    this.setState({ selectedOption: intOption });
+    this.setState({ selectedOption: intOption }, () => {
+      onChange(newFormData, undefined, this.getFieldId());
+    });
   };
 
   getFieldId() {
@@ -148,6 +149,7 @@ class AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
       formContext,
       onBlur,
       onFocus,
+      readonly,
       registry,
       schema,
       uiSchema,
@@ -236,6 +238,7 @@ class AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
             autofocus={autofocus}
             label={title ?? name}
             hideLabel={!displayLabel}
+            readonly={readonly}
           />
         </div>
         {optionSchema && <_SchemaField {...this.props} schema={optionSchema} uiSchema={optionUiSchema} />}

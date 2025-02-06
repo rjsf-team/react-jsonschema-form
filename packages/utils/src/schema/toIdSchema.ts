@@ -1,11 +1,19 @@
 import get from 'lodash/get';
-import isEqual from 'lodash/isEqual';
 
 import { ALL_OF_KEY, DEPENDENCIES_KEY, ID_KEY, ITEMS_KEY, PROPERTIES_KEY, REF_KEY } from '../constants';
 import isObject from '../isObject';
-import { FormContextType, GenericObjectType, IdSchema, RJSFSchema, StrictRJSFSchema, ValidatorType } from '../types';
+import {
+  Experimental_CustomMergeAllOf,
+  FormContextType,
+  GenericObjectType,
+  IdSchema,
+  RJSFSchema,
+  StrictRJSFSchema,
+  ValidatorType,
+} from '../types';
 import retrieveSchema from './retrieveSchema';
 import getSchemaType from '../getSchemaType';
+import deepEquals from '../deepEquals';
 
 /** An internal helper that generates an `IdSchema` object for the `schema`, recursively with protection against
  * infinite recursion
@@ -18,6 +26,7 @@ import getSchemaType from '../getSchemaType';
  * @param [rootSchema] - The root schema, used to primarily to look up `$ref`s
  * @param [formData] - The current formData, if any, to assist retrieving a schema
  * @param [_recurseList=[]] - The list of retrieved schemas currently being recursed, used to prevent infinite recursion
+ * @param [experimental_customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
  * @returns - The `IdSchema` object for the `schema`
  */
 function toIdSchemaInternal<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
@@ -28,11 +37,12 @@ function toIdSchemaInternal<T = any, S extends StrictRJSFSchema = RJSFSchema, F 
   id?: string | null,
   rootSchema?: S,
   formData?: T,
-  _recurseList: S[] = []
+  _recurseList: S[] = [],
+  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>
 ): IdSchema<T> {
   if (REF_KEY in schema || DEPENDENCIES_KEY in schema || ALL_OF_KEY in schema) {
-    const _schema = retrieveSchema<T, S, F>(validator, schema, rootSchema, formData);
-    const sameSchemaIndex = _recurseList.findIndex((item) => isEqual(item, _schema));
+    const _schema = retrieveSchema<T, S, F>(validator, schema, rootSchema, formData, experimental_customMergeAllOf);
+    const sameSchemaIndex = _recurseList.findIndex((item) => deepEquals(item, _schema));
     if (sameSchemaIndex === -1) {
       return toIdSchemaInternal<T, S, F>(
         validator,
@@ -42,7 +52,8 @@ function toIdSchemaInternal<T = any, S extends StrictRJSFSchema = RJSFSchema, F 
         id,
         rootSchema,
         formData,
-        _recurseList.concat(_schema)
+        _recurseList.concat(_schema),
+        experimental_customMergeAllOf
       );
     }
   }
@@ -55,7 +66,8 @@ function toIdSchemaInternal<T = any, S extends StrictRJSFSchema = RJSFSchema, F 
       id,
       rootSchema,
       formData,
-      _recurseList
+      _recurseList,
+      experimental_customMergeAllOf
     );
   }
   const $id = id || idPrefix;
@@ -74,7 +86,8 @@ function toIdSchemaInternal<T = any, S extends StrictRJSFSchema = RJSFSchema, F 
         // It's possible that formData is not an object -- this can happen if an
         // array item has just been added, but not populated with data yet
         get(formData, [name]),
-        _recurseList
+        _recurseList,
+        experimental_customMergeAllOf
       );
     }
   }
@@ -90,6 +103,7 @@ function toIdSchemaInternal<T = any, S extends StrictRJSFSchema = RJSFSchema, F 
  * @param [formData] - The current formData, if any, to assist retrieving a schema
  * @param [idPrefix='root'] - The prefix to use for the id
  * @param [idSeparator='_'] - The separator to use for the path segments in the id
+ * @param [experimental_customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
  * @returns - The `IdSchema` object for the `schema`
  */
 export default function toIdSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
@@ -99,7 +113,18 @@ export default function toIdSchema<T = any, S extends StrictRJSFSchema = RJSFSch
   rootSchema?: S,
   formData?: T,
   idPrefix = 'root',
-  idSeparator = '_'
+  idSeparator = '_',
+  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>
 ): IdSchema<T> {
-  return toIdSchemaInternal<T, S, F>(validator, schema, idPrefix, idSeparator, id, rootSchema, formData);
+  return toIdSchemaInternal<T, S, F>(
+    validator,
+    schema,
+    idPrefix,
+    idSeparator,
+    id,
+    rootSchema,
+    formData,
+    undefined,
+    experimental_customMergeAllOf
+  );
 }

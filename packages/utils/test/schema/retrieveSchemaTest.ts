@@ -759,6 +759,81 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           type: 'string',
         });
       });
+      it('should not merge `allOf.contains` schemas', () => {
+        // https://github.com/rjsf-team/react-jsonschema-form/issues/2923#issuecomment-1946034240
+        const schema: RJSFSchema = {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              a: {
+                type: 'string',
+              },
+            },
+          },
+          allOf: [
+            {
+              maxItems: 5,
+            },
+            {
+              contains: {
+                type: 'object',
+                properties: {
+                  a: {
+                    pattern: '1',
+                  },
+                },
+              },
+            },
+            {
+              contains: {
+                type: 'object',
+                properties: {
+                  a: {
+                    pattern: '2',
+                  },
+                },
+              },
+            },
+          ],
+        };
+        const rootSchema: RJSFSchema = { definitions: {} };
+        const formData = {};
+        expect(retrieveSchema(testValidator, schema, rootSchema, formData)).toEqual({
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              a: {
+                type: 'string',
+              },
+            },
+          },
+          maxItems: 5,
+          allOf: [
+            {
+              contains: {
+                type: 'object',
+                properties: {
+                  a: {
+                    pattern: '1',
+                  },
+                },
+              },
+            },
+            {
+              contains: {
+                type: 'object',
+                properties: {
+                  a: {
+                    pattern: '2',
+                  },
+                },
+              },
+            },
+          ],
+        });
+      });
       it('should not merge incompatible types', () => {
         const schema: RJSFSchema = {
           allOf: [{ type: 'string' }, { type: 'boolean' }],
@@ -821,6 +896,37 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           maxLength: 5,
           default: 'hi',
         });
+      });
+
+      it('should use experimental_customMergeAllOf when provided', () => {
+        const schema: RJSFSchema = {
+          allOf: [
+            {
+              type: 'object',
+              properties: {
+                string: { type: 'string' },
+              },
+            },
+            {
+              type: 'object',
+              properties: {
+                number: { type: 'number' },
+              },
+            },
+          ],
+        };
+        const rootSchema: RJSFSchema = { definitions: {} };
+        const formData = {};
+        const customMergeAllOf = jest.fn().mockReturnValue({
+          type: 'object',
+          properties: { string: { type: 'string' }, number: { type: 'number' } },
+        });
+
+        expect(retrieveSchema(testValidator, schema, rootSchema, formData, customMergeAllOf)).toEqual({
+          type: 'object',
+          properties: { string: { type: 'string' }, number: { type: 'number' } },
+        });
+        expect(customMergeAllOf).toHaveBeenCalledWith(schema);
       });
     });
     describe('Conditional schemas (If, Then, Else)', () => {

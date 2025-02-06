@@ -1793,6 +1793,16 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
               <div
                 aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
                 className="MuiFormControl-root MuiTextField-root emotion-4"
+                slotProps={
+                  {
+                    "htmlInput": {
+                      "accept": undefined,
+                      "max": undefined,
+                      "min": undefined,
+                      "step": undefined,
+                    },
+                  }
+                }
               >
                 <label
                   className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-5"
@@ -2407,6 +2417,16 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
               <div
                 aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
                 className="MuiFormControl-root MuiTextField-root emotion-4"
+                slotProps={
+                  {
+                    "htmlInput": {
+                      "accept": undefined,
+                      "max": undefined,
+                      "min": undefined,
+                      "step": undefined,
+                    },
+                  }
+                }
               >
                 <label
                   className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-5"
@@ -2841,6 +2861,16 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
       <div
         aria-describedby="root__error root__description root__help"
         className="MuiFormControl-root MuiTextField-root emotion-1"
+        slotProps={
+          {
+            "htmlInput": {
+              "accept": undefined,
+              "max": undefined,
+              "min": undefined,
+              "step": undefined,
+            },
+          }
+        }
       >
         <div
           className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-2"
@@ -3241,6 +3271,16 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
       <div
         aria-describedby="root__error root__description root__help"
         className="MuiFormControl-root MuiTextField-root emotion-1"
+        slotProps={
+          {
+            "htmlInput": {
+              "accept": undefined,
+              "max": undefined,
+              "min": undefined,
+              "step": undefined,
+            },
+          }
+        }
       >
         <div
           className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-2"
@@ -3650,6 +3690,16 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
       <div
         aria-describedby="root__error root__description root__help"
         className="MuiFormControl-root MuiTextField-root emotion-1"
+        slotProps={
+          {
+            "htmlInput": {
+              "accept": undefined,
+              "max": undefined,
+              "min": undefined,
+              "step": undefined,
+            },
+          }
+        }
       >
         <div
           className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-2"
@@ -4050,6 +4100,16 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
       <div
         aria-describedby="root__error root__description root__help"
         className="MuiFormControl-root MuiTextField-root emotion-1"
+        slotProps={
+          {
+            "htmlInput": {
+              "accept": undefined,
+              "max": undefined,
+              "min": undefined,
+              "step": undefined,
+            },
+          }
+        }
       >
         <div
           className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-2"
@@ -4695,6 +4755,16 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
       <div
         aria-describedby="root__error root__description root__help"
         className="MuiFormControl-root MuiTextField-root emotion-10"
+        slotProps={
+          {
+            "htmlInput": {
+              "accept": undefined,
+              "max": undefined,
+              "min": undefined,
+              "step": undefined,
+            },
+          }
+        }
       >
         <div
           className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary Mui-error MuiInputBase-formControl emotion-11"
@@ -5321,6 +5391,16 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
       <div
         aria-describedby="root__error root__description root__help"
         className="MuiFormControl-root MuiTextField-root emotion-1"
+        slotProps={
+          {
+            "htmlInput": {
+              "accept": undefined,
+              "max": undefined,
+              "min": undefined,
+              "step": undefined,
+            },
+          }
+        }
       >
         <div
           className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-2"
@@ -5886,6 +5966,16 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
       <div
         aria-describedby="root__error root__description root__help"
         className="MuiFormControl-root MuiTextField-root emotion-1"
+        slotProps={
+          {
+            "htmlInput": {
+              "accept": undefined,
+              "max": undefined,
+              "min": undefined,
+              "step": "any",
+            },
+          }
+        }
       >
         <div
           className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-2"
@@ -5904,7 +5994,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
             onFocus={[Function]}
             placeholder=""
             required={false}
-            step="any"
             type="number"
             value={0}
           />
@@ -6296,6 +6385,16 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
       <div
         aria-describedby="root__error root__description root__help"
         className="MuiFormControl-root MuiTextField-root emotion-1"
+        slotProps={
+          {
+            "htmlInput": {
+              "accept": undefined,
+              "max": undefined,
+              "min": undefined,
+              "step": "any",
+            },
+          }
+        }
       >
         <div
           className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-2"
@@ -6314,7 +6413,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
             onFocus={[Function]}
             placeholder=""
             required={false}
-            step="any"
             type="number"
             value=""
           />
@@ -6709,6 +6807,16 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
       <div
         aria-describedby="root__error root__description root__help"
         className="MuiFormControl-root MuiTextField-root emotion-1"
+        slotProps={
+          {
+            "htmlInput": {
+              "accept": undefined,
+              "max": undefined,
+              "min": undefined,
+              "step": undefined,
+            },
+          }
+        }
       >
         <div
           className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-2"
@@ -7611,6 +7719,17 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
       <div
         aria-describedby="root__error root__description root__help root__examples"
         className="MuiFormControl-root MuiTextField-root emotion-1"
+        slotProps={
+          {
+            "htmlInput": {
+              "accept": undefined,
+              "list": "root__examples",
+              "max": undefined,
+              "min": undefined,
+              "step": undefined,
+            },
+          }
+        }
       >
         <div
           className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-2"
@@ -7622,7 +7741,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
             className="MuiInputBase-input MuiOutlinedInput-input emotion-3"
             disabled={false}
             id="root"
-            list="root__examples"
             name="root"
             onAnimationStart={[Function]}
             onBlur={[Function]}
@@ -13126,6 +13244,16 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
         <div
           aria-describedby="root__error root__description root__help"
           className="MuiFormControl-root MuiTextField-root emotion-1"
+          slotProps={
+            {
+              "htmlInput": {
+                "accept": undefined,
+                "max": undefined,
+                "min": undefined,
+                "step": undefined,
+              },
+            }
+          }
         >
           <div
             className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-2"
@@ -13539,6 +13667,16 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
       <div
         aria-describedby="root__error root__description root__help"
         className="MuiFormControl-root MuiTextField-root emotion-1"
+        slotProps={
+          {
+            "htmlInput": {
+              "accept": undefined,
+              "max": undefined,
+              "min": undefined,
+              "step": undefined,
+            },
+          }
+        }
       >
         <div
           className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-2"
@@ -13939,6 +14077,16 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
       <div
         aria-describedby="root__error root__description root__help"
         className="MuiFormControl-root MuiTextField-root emotion-1"
+        slotProps={
+          {
+            "htmlInput": {
+              "accept": undefined,
+              "max": undefined,
+              "min": undefined,
+              "step": undefined,
+            },
+          }
+        }
       >
         <div
           className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-2"
@@ -14336,6 +14484,16 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
       <div
         aria-describedby="root__error root__description root__help"
         className="MuiFormControl-root MuiTextField-root emotion-1"
+        slotProps={
+          {
+            "htmlInput": {
+              "accept": undefined,
+              "max": undefined,
+              "min": undefined,
+              "step": undefined,
+            },
+          }
+        }
       >
         <div
           className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-2"
@@ -14733,6 +14891,16 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
       <div
         aria-describedby="root__error root__description root__help"
         className="MuiFormControl-root MuiTextField-root emotion-1"
+        slotProps={
+          {
+            "htmlInput": {
+              "accept": undefined,
+              "max": undefined,
+              "min": undefined,
+              "step": undefined,
+            },
+          }
+        }
       >
         <div
           className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-2"
@@ -15146,6 +15314,16 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
       <div
         aria-describedby="root__error root__description root__help"
         className="MuiFormControl-root MuiTextField-root emotion-1"
+        slotProps={
+          {
+            "htmlInput": {
+              "accept": undefined,
+              "max": undefined,
+              "min": undefined,
+              "step": undefined,
+            },
+          }
+        }
       >
         <div
           className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl MuiInputBase-multiline emotion-2"
@@ -15791,6 +15969,16 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-10:focus::-ms-input-
               <div
                 aria-describedby="root_title__error root_title__description root_title__help"
                 className="MuiFormControl-root MuiTextField-root emotion-7"
+                slotProps={
+                  {
+                    "htmlInput": {
+                      "accept": undefined,
+                      "max": undefined,
+                      "min": undefined,
+                      "step": undefined,
+                    },
+                  }
+                }
               >
                 <label
                   className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-8"
@@ -16375,6 +16563,16 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
       <div
         aria-describedby="root__error root__description root__help"
         className="MuiFormControl-root MuiTextField-root emotion-1"
+        slotProps={
+          {
+            "htmlInput": {
+              "accept": undefined,
+              "max": undefined,
+              "min": undefined,
+              "step": undefined,
+            },
+          }
+        }
       >
         <div
           className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-2"
@@ -16784,6 +16982,16 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
       <div
         aria-describedby="root__error root__description root__help"
         className="MuiFormControl-root MuiTextField-root emotion-1"
+        slotProps={
+          {
+            "htmlInput": {
+              "accept": undefined,
+              "max": undefined,
+              "min": undefined,
+              "step": undefined,
+            },
+          }
+        }
       >
         <div
           className="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl emotion-2"

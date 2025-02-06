@@ -1702,6 +1702,41 @@ describe('ArrayField', () => {
       );
     });
 
+    it('should handle a change event with multiple files that results the same items in the list', async () => {
+      sandbox.stub(window, 'FileReader').returns({
+        set onload(fn) {
+          fn({ target: { result: 'data:text/plain;base64,x=' } });
+        },
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        readAsDataUrl() {},
+      });
+
+      const { node, onChange } = createFormComponent({ schema });
+
+      act(() => {
+        fireEvent.change(node.querySelector('.field input[type=file]'), {
+          target: {
+            files: [
+              { name: 'file1.txt', size: 1, type: 'type' },
+              { name: 'file2.txt', size: 2, type: 'type' },
+            ],
+          },
+        });
+      });
+
+      await act(() => {
+        new Promise(setImmediate);
+      });
+
+      sinon.assert.calledWithMatch(
+        onChange.lastCall,
+        {
+          formData: ['data:text/plain;name=file1.txt;base64,x=', 'data:text/plain;name=file2.txt;base64,x='],
+        },
+        'root'
+      );
+    });
+
     it('should fill field with data', () => {
       const { node } = createFormComponent({
         schema,
@@ -3217,6 +3252,27 @@ describe('ArrayField', () => {
           },
         },
       });
+    });
+
+    it('Check that when formData changes, the form should re-validate', () => {
+      const { node, rerender } = createFormComponent({
+        schema,
+        formData: [
+          {
+            text: null,
+          },
+        ],
+        liveValidate: true,
+      });
+
+      const errorMessages = node.querySelectorAll('#root_0_text__error');
+      expect(errorMessages).to.have.length(1);
+      const errorMessageContent = node.querySelector('#root_0_text__error .text-danger').textContent;
+      expect(errorMessageContent).to.contain('must be string');
+
+      rerender({ schema, formData: [{ text: 'test' }], liveValidate: true });
+
+      expect(node.querySelectorAll('#root_0_text__error')).to.have.length(0);
     });
 
     it('raise an error and check if the error is displayed', () => {

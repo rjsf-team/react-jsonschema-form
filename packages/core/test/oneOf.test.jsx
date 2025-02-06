@@ -222,6 +222,37 @@ describe('oneOf', () => {
     );
   });
 
+  it('should assign a default value and set defaults on option change for scalar types schemas', () => {
+    const { node, onChange } = createFormComponent({
+      schema: {
+        type: 'object',
+        properties: {
+          foo: {
+            oneOf: [
+              { type: 'string', default: 'defaultfoo' },
+              { type: 'boolean', default: true },
+            ],
+          },
+        },
+      },
+    });
+    sinon.assert.calledWithMatch(onChange.lastCall, {
+      formData: { foo: 'defaultfoo' },
+    });
+
+    const $select = node.querySelector('select');
+
+    act(() => {
+      fireEvent.change($select, {
+        target: { value: $select.options[1].value },
+      });
+    });
+
+    sinon.assert.calledWithMatch(onChange.lastCall, {
+      formData: { foo: true },
+    });
+  });
+
   it('should render a custom widget', () => {
     const schema = {
       type: 'object',
@@ -573,6 +604,7 @@ describe('oneOf', () => {
       },
     };
     const formContext = { root: 'root-id', root_userId: 'userId-id' };
+
     function CustomSchemaField(props) {
       const { formContext, idSchema } = props;
       return (
@@ -582,6 +614,7 @@ describe('oneOf', () => {
         </>
       );
     }
+
     const { node } = createFormComponent({
       schema,
       formData: { userId: 'foobarbaz' },
@@ -856,6 +889,80 @@ describe('oneOf', () => {
         testProperty: { newKey: { prop1: undefined, prop2: undefined } },
       },
     });
+  });
+
+  it('should select oneOf dropdown be disabled when the schema is readOnly', () => {
+    const schema = {
+      title: 'Example Schema',
+      type: 'object',
+      readOnly: true,
+      properties: {
+        contactPreference: {
+          oneOf: [
+            {
+              $ref: '#/definitions/phoneContact',
+            },
+            {
+              $ref: '#/definitions/emailContact',
+            },
+          ],
+        },
+      },
+      required: ['contactPreference'],
+      definitions: {
+        phoneContact: {
+          type: 'object',
+          properties: {
+            contactMethod: {
+              type: 'string',
+              enum: ['phone'],
+            },
+            phoneNumber: {
+              type: 'string',
+              pattern: '^[0-9]{10}$',
+            },
+          },
+          required: ['contactMethod', 'phoneNumber'],
+        },
+        emailContact: {
+          type: 'object',
+          properties: {
+            contactMethod: {
+              type: 'string',
+              enum: ['email'],
+            },
+            emailAddress: {
+              type: 'string',
+              format: 'email',
+            },
+          },
+          required: ['contactMethod', 'emailAddress'],
+        },
+      },
+    };
+
+    const { node } = createFormComponent({
+      schema,
+      formData: {
+        contactPreference: {
+          contactMethod: 'phone',
+          phoneNumber: '1231231231',
+        },
+      },
+    });
+
+    const $select = node.querySelector('select#root_contactPreference__oneof_select');
+
+    expect($select.value).eql('0');
+    expect($select).to.have.property('disabled', true);
+
+    act(() => {
+      fireEvent.change($select, {
+        target: { value: $select.options[1].value },
+      });
+    });
+
+    expect($select.value).eql('0');
   });
 
   describe('Arrays', () => {
@@ -1598,6 +1705,7 @@ describe('oneOf', () => {
         },
       },
     };
+
     function customValidate(formData, errors) {
       errors.userId.addError('test');
       return errors;

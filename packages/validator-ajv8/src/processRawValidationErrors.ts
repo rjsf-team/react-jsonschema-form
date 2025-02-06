@@ -36,21 +36,35 @@ export function transformRJSFValidationErrors<
     let { message = '' } = rest;
     let property = instancePath.replace(/\//g, '.');
     let stack = `${property} ${message}`.trim();
+    const rawPropertyNames: string[] = [
+      ...(params.deps?.split(', ') || []),
+      params.missingProperty,
+      params.property,
+    ].filter((item) => item);
 
-    if ('missingProperty' in params) {
-      property = property ? `${property}.${params.missingProperty}` : params.missingProperty;
-      const currentProperty: string = params.missingProperty;
-      const uiSchemaTitle = getUiOptions(get(uiSchema, `${property.replace(/^\./, '')}`)).title;
-
-      if (uiSchemaTitle) {
-        message = message.replace(currentProperty, uiSchemaTitle);
-      } else {
-        const parentSchemaTitle = get(parentSchema, [PROPERTIES_KEY, currentProperty, 'title']);
-
-        if (parentSchemaTitle) {
-          message = message.replace(currentProperty, parentSchemaTitle);
+    if (rawPropertyNames.length > 0) {
+      rawPropertyNames.forEach((currentProperty) => {
+        const path = property ? `${property}.${currentProperty}` : currentProperty;
+        let uiSchemaTitle = getUiOptions(get(uiSchema, `${path.replace(/^\./, '')}`)).title;
+        if (uiSchemaTitle === undefined) {
+          // To retrieve a title from UI schema, construct a path to UI schema from `schemaPath` and `currentProperty`.
+          // For example, when `#/properties/A/properties/B/required` and `C` are given, they are converted into `['A', 'B', 'C']`.
+          const uiSchemaPath = schemaPath
+            .replace(/\/properties\//g, '/')
+            .split('/')
+            .slice(1, -1)
+            .concat([currentProperty]);
+          uiSchemaTitle = getUiOptions(get(uiSchema, uiSchemaPath)).title;
         }
-      }
+        if (uiSchemaTitle) {
+          message = message.replace(`'${currentProperty}'`, `'${uiSchemaTitle}'`);
+        } else {
+          const parentSchemaTitle = get(parentSchema, [PROPERTIES_KEY, currentProperty, 'title']);
+          if (parentSchemaTitle) {
+            message = message.replace(`'${currentProperty}'`, `'${parentSchemaTitle}'`);
+          }
+        }
+      });
 
       stack = message;
     } else {
@@ -65,6 +79,11 @@ export function transformRJSFValidationErrors<
           stack = `'${parentSchemaTitle}' ${message}`.trim();
         }
       }
+    }
+
+    // If params.missingProperty is undefined, it is removed from rawPropertyNames by filter((item) => item).
+    if ('missingProperty' in params) {
+      property = property ? `${property}.${params.missingProperty}` : params.missingProperty;
     }
 
     // put data in expected format
