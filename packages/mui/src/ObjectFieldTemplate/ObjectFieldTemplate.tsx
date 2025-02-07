@@ -76,7 +76,7 @@ export default function ObjectFieldTemplate<
           element.hidden ? (
             element.content
           ) : (
-            <Grid2 size='auto' key={index} style={{ marginBottom: '10px' }}>
+            <Grid2 size={{ xs: 12 }} key={index} style={{ marginBottom: '10px' }}>
               {element.content}
             </Grid2>
           )
