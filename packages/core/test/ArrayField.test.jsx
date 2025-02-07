@@ -3048,7 +3048,7 @@ describe('ArrayField', () => {
   describe('ErrorSchema gets updated', () => {
     const templates = {
       ArrayFieldItemTemplate: ArrayFieldTestItemTemplate,
-      ArrayFieldTestItemButtonsTemplate: ArrayFieldTestItemButtonsTemplate,
+      ArrayFieldItemButtonsTemplate: ArrayFieldTestItemButtonsTemplate,
     };
     const schema = {
       type: 'array',

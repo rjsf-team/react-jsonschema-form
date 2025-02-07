@@ -15,7 +15,7 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
-# 6.0.0-beta.2
+# 6.0.0-beta.1
 
 ## @rjsf/antd
 
@@ -70,7 +70,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Updated the `utility-functions.md` documentation to add the `buttonId()` function
 - Added the `v6.x upgrade guide.md` documentation
 
-# 6.0.0-beta.1
+# 6.0.0-alpha.0
 
 ## @rjsf/bootstrap-4
 

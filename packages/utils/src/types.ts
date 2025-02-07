@@ -289,7 +289,7 @@ export interface GridTemplateProps extends GenericObjectType {
   /** The contents of the grid template */
   children?: ReactNode;
   /** Optional flag indicating whether the grid element represents a column, necessary for themes which have components
-   * for Rows vs Columns
+   * for Rows vs Columns. NOTE: This is falsy by default when not specified
    */
   column?: boolean;
 }
