@@ -30,28 +30,41 @@ exports[`array fields array 1`] = `
 }
 
 .emotion-3 {
+  --Grid-columns: 12;
+  --Grid-columnSpacing: 0px;
+  --Grid-rowSpacing: 0px;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  min-width: 0;
   box-sizing: border-box;
   display: flex;
   -webkit-box-flex-wrap: wrap;
   -webkit-flex-wrap: wrap;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
-  width: 100%;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
+  gap: var(--Grid-rowSpacing) var(--Grid-columnSpacing);
   -webkit-box-pack: end;
   -ms-flex-pack: end;
   -webkit-justify-content: flex-end;
   justify-content: flex-end;
 }
 
+.emotion-3>* {
+  --Grid-parent-columns: 12;
+}
+
+.emotion-3>* {
+  --Grid-parent-columnSpacing: 0px;
+}
+
+.emotion-3>* {
+  --Grid-parent-rowSpacing: 0px;
+}
+
 .emotion-4 {
+  min-width: 0;
   box-sizing: border-box;
-  margin: 0;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
 }
 
 .emotion-5 {
@@ -286,10 +299,10 @@ exports[`array fields array 1`] = `
           className="MuiBox-root emotion-2"
         >
           <div
-            className="MuiGrid-root MuiGrid-container emotion-3"
+            className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row emotion-3"
           >
             <div
-              className="MuiGrid-root MuiGrid-item emotion-4"
+              className="MuiGrid2-root MuiGrid2-direction-xs-row emotion-4"
             >
               <div
                 className="MuiBox-root emotion-5"
@@ -392,88 +405,53 @@ exports[`array fields array icons 1`] = `
 }
 
 .emotion-3 {
+  --Grid-columns: 12;
+  --Grid-columnSpacing: 0px;
+  --Grid-rowSpacing: 0px;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  min-width: 0;
   box-sizing: border-box;
   display: flex;
   -webkit-box-flex-wrap: wrap;
   -webkit-flex-wrap: wrap;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
-  width: 100%;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
+  gap: var(--Grid-rowSpacing) var(--Grid-columnSpacing);
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
 }
 
+.emotion-3>* {
+  --Grid-parent-columns: 12;
+}
+
+.emotion-3>* {
+  --Grid-parent-columnSpacing: 0px;
+}
+
+.emotion-3>* {
+  --Grid-parent-rowSpacing: 0px;
+}
+
 .emotion-4 {
+  -webkit-flex-basis: auto;
+  -ms-flex-preferred-size: auto;
+  flex-basis: auto;
+  -webkit-box-flex: 0;
+  -webkit-flex-grow: 0;
+  -ms-flex-positive: 0;
+  flex-grow: 0;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  max-width: none;
+  width: auto;
+  min-width: 0;
   box-sizing: border-box;
-  margin: 0;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
-  -webkit-flex-basis: 0;
-  -ms-flex-preferred-size: 0;
-  flex-basis: 0;
-  -webkit-box-flex: 1;
-  -webkit-flex-grow: 1;
-  -ms-flex-positive: 1;
-  flex-grow: 1;
-  max-width: 100%;
-}
-
-@media (min-width:600px) {
-  .emotion-4 {
-    -webkit-flex-basis: 0;
-    -ms-flex-preferred-size: 0;
-    flex-basis: 0;
-    -webkit-box-flex: 1;
-    -webkit-flex-grow: 1;
-    -ms-flex-positive: 1;
-    flex-grow: 1;
-    max-width: 100%;
-  }
-}
-
-@media (min-width:900px) {
-  .emotion-4 {
-    -webkit-flex-basis: 0;
-    -ms-flex-preferred-size: 0;
-    flex-basis: 0;
-    -webkit-box-flex: 1;
-    -webkit-flex-grow: 1;
-    -ms-flex-positive: 1;
-    flex-grow: 1;
-    max-width: 100%;
-  }
-}
-
-@media (min-width:1200px) {
-  .emotion-4 {
-    -webkit-flex-basis: 0;
-    -ms-flex-preferred-size: 0;
-    flex-basis: 0;
-    -webkit-box-flex: 1;
-    -webkit-flex-grow: 1;
-    -ms-flex-positive: 1;
-    flex-grow: 1;
-    max-width: 100%;
-  }
-}
-
-@media (min-width:1536px) {
-  .emotion-4 {
-    -webkit-flex-basis: 0;
-    -ms-flex-preferred-size: 0;
-    flex-basis: 0;
-    -webkit-box-flex: 1;
-    -webkit-flex-grow: 1;
-    -ms-flex-positive: 1;
-    flex-grow: 1;
-    max-width: 100%;
-  }
 }
 
 .emotion-5 {
@@ -664,11 +642,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
 }
 
 .emotion-14 {
+  min-width: 0;
   box-sizing: border-box;
-  margin: 0;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
 }
 
 .emotion-15 {
@@ -839,20 +814,36 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
 }
 
 .emotion-43 {
+  --Grid-columns: 12;
+  --Grid-columnSpacing: 0px;
+  --Grid-rowSpacing: 0px;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  min-width: 0;
   box-sizing: border-box;
   display: flex;
   -webkit-box-flex-wrap: wrap;
   -webkit-flex-wrap: wrap;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
-  width: 100%;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
+  gap: var(--Grid-rowSpacing) var(--Grid-columnSpacing);
   -webkit-box-pack: end;
   -ms-flex-pack: end;
   -webkit-justify-content: flex-end;
   justify-content: flex-end;
+}
+
+.emotion-43>* {
+  --Grid-parent-columns: 12;
+}
+
+.emotion-43>* {
+  --Grid-parent-columnSpacing: 0px;
+}
+
+.emotion-43>* {
+  --Grid-parent-rowSpacing: 0px;
 }
 
 .emotion-45 {
@@ -1087,10 +1078,10 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
           className="MuiBox-root emotion-2"
         >
           <div
-            className="MuiGrid-root MuiGrid-container emotion-3"
+            className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row emotion-3"
           >
             <div
-              className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true emotion-4"
+              className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-4"
               style={
                 {
                   "overflow": "auto",
@@ -1165,7 +1156,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
               </div>
             </div>
             <div
-              className="MuiGrid-root MuiGrid-item emotion-14"
+              className="MuiGrid2-root MuiGrid2-direction-xs-row emotion-14"
             >
               <button
                 className="MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeSmall array-item-move-up emotion-15"
@@ -1302,10 +1293,10 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
             </div>
           </div>
           <div
-            className="MuiGrid-root MuiGrid-container emotion-3"
+            className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row emotion-3"
           >
             <div
-              className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true emotion-4"
+              className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-4"
               style={
                 {
                   "overflow": "auto",
@@ -1380,7 +1371,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
               </div>
             </div>
             <div
-              className="MuiGrid-root MuiGrid-item emotion-14"
+              className="MuiGrid2-root MuiGrid2-direction-xs-row emotion-14"
             >
               <button
                 className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall array-item-move-up emotion-15"
@@ -1517,10 +1508,10 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
             </div>
           </div>
           <div
-            className="MuiGrid-root MuiGrid-container emotion-43"
+            className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row emotion-43"
           >
             <div
-              className="MuiGrid-root MuiGrid-item emotion-14"
+              className="MuiGrid2-root MuiGrid2-direction-xs-row emotion-14"
             >
               <div
                 className="MuiBox-root emotion-45"
@@ -2107,94 +2098,49 @@ exports[`array fields empty errors array 1`] = `
 }
 
 .emotion-1 {
+  --Grid-columns: 12;
+  --Grid-columnSpacing: 16px;
+  --Grid-rowSpacing: 16px;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  min-width: 0;
   box-sizing: border-box;
   display: flex;
   -webkit-box-flex-wrap: wrap;
   -webkit-flex-wrap: wrap;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
-  width: calc(100% + 16px);
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
-  margin-top: calc(-1 * 16px);
-  margin-left: calc(-1 * 16px);
+  gap: var(--Grid-rowSpacing) var(--Grid-columnSpacing);
 }
 
-.emotion-1>.MuiGrid-item {
-  padding-top: 16px;
+.emotion-1>* {
+  --Grid-parent-columns: 12;
 }
 
-.emotion-1>.MuiGrid-item {
-  padding-left: 16px;
+.emotion-1>* {
+  --Grid-parent-columnSpacing: 16px;
+}
+
+.emotion-1>* {
+  --Grid-parent-rowSpacing: 16px;
 }
 
 .emotion-2 {
-  box-sizing: border-box;
-  margin: 0;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
-  -webkit-flex-basis: 100%;
-  -ms-flex-preferred-size: 100%;
-  flex-basis: 100%;
+  -webkit-flex-basis: auto;
+  -ms-flex-preferred-size: auto;
+  flex-basis: auto;
   -webkit-box-flex: 0;
   -webkit-flex-grow: 0;
   -ms-flex-positive: 0;
   flex-grow: 0;
-  max-width: 100%;
-}
-
-@media (min-width:600px) {
-  .emotion-2 {
-    -webkit-flex-basis: 100%;
-    -ms-flex-preferred-size: 100%;
-    flex-basis: 100%;
-    -webkit-box-flex: 0;
-    -webkit-flex-grow: 0;
-    -ms-flex-positive: 0;
-    flex-grow: 0;
-    max-width: 100%;
-  }
-}
-
-@media (min-width:900px) {
-  .emotion-2 {
-    -webkit-flex-basis: 100%;
-    -ms-flex-preferred-size: 100%;
-    flex-basis: 100%;
-    -webkit-box-flex: 0;
-    -webkit-flex-grow: 0;
-    -ms-flex-positive: 0;
-    flex-grow: 0;
-    max-width: 100%;
-  }
-}
-
-@media (min-width:1200px) {
-  .emotion-2 {
-    -webkit-flex-basis: 100%;
-    -ms-flex-preferred-size: 100%;
-    flex-basis: 100%;
-    -webkit-box-flex: 0;
-    -webkit-flex-grow: 0;
-    -ms-flex-positive: 0;
-    flex-grow: 0;
-    max-width: 100%;
-  }
-}
-
-@media (min-width:1536px) {
-  .emotion-2 {
-    -webkit-flex-basis: 100%;
-    -ms-flex-preferred-size: 100%;
-    flex-basis: 100%;
-    -webkit-box-flex: 0;
-    -webkit-flex-grow: 0;
-    -ms-flex-positive: 0;
-    flex-grow: 0;
-    max-width: 100%;
-  }
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  max-width: none;
+  width: auto;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .emotion-4 {
@@ -2557,7 +2503,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
     >
       <div
-        className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2 emotion-1"
+        className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 emotion-1"
         style={
           {
             "marginTop": "10px",
@@ -2565,7 +2511,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
         }
       >
         <div
-          className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 emotion-2"
+          className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-2"
           style={
             {
               "marginBottom": "10px",
@@ -2688,88 +2634,53 @@ exports[`array fields fixed array 1`] = `
 }
 
 .emotion-3 {
+  --Grid-columns: 12;
+  --Grid-columnSpacing: 0px;
+  --Grid-rowSpacing: 0px;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  min-width: 0;
   box-sizing: border-box;
   display: flex;
   -webkit-box-flex-wrap: wrap;
   -webkit-flex-wrap: wrap;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
-  width: 100%;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
+  gap: var(--Grid-rowSpacing) var(--Grid-columnSpacing);
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
 }
 
+.emotion-3>* {
+  --Grid-parent-columns: 12;
+}
+
+.emotion-3>* {
+  --Grid-parent-columnSpacing: 0px;
+}
+
+.emotion-3>* {
+  --Grid-parent-rowSpacing: 0px;
+}
+
 .emotion-4 {
+  -webkit-flex-basis: auto;
+  -ms-flex-preferred-size: auto;
+  flex-basis: auto;
+  -webkit-box-flex: 0;
+  -webkit-flex-grow: 0;
+  -ms-flex-positive: 0;
+  flex-grow: 0;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  max-width: none;
+  width: auto;
+  min-width: 0;
   box-sizing: border-box;
-  margin: 0;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
-  -webkit-flex-basis: 0;
-  -ms-flex-preferred-size: 0;
-  flex-basis: 0;
-  -webkit-box-flex: 1;
-  -webkit-flex-grow: 1;
-  -ms-flex-positive: 1;
-  flex-grow: 1;
-  max-width: 100%;
-}
-
-@media (min-width:600px) {
-  .emotion-4 {
-    -webkit-flex-basis: 0;
-    -ms-flex-preferred-size: 0;
-    flex-basis: 0;
-    -webkit-box-flex: 1;
-    -webkit-flex-grow: 1;
-    -ms-flex-positive: 1;
-    flex-grow: 1;
-    max-width: 100%;
-  }
-}
-
-@media (min-width:900px) {
-  .emotion-4 {
-    -webkit-flex-basis: 0;
-    -ms-flex-preferred-size: 0;
-    flex-basis: 0;
-    -webkit-box-flex: 1;
-    -webkit-flex-grow: 1;
-    -ms-flex-positive: 1;
-    flex-grow: 1;
-    max-width: 100%;
-  }
-}
-
-@media (min-width:1200px) {
-  .emotion-4 {
-    -webkit-flex-basis: 0;
-    -ms-flex-preferred-size: 0;
-    flex-basis: 0;
-    -webkit-box-flex: 1;
-    -webkit-flex-grow: 1;
-    -ms-flex-positive: 1;
-    flex-grow: 1;
-    max-width: 100%;
-  }
-}
-
-@media (min-width:1536px) {
-  .emotion-4 {
-    -webkit-flex-basis: 0;
-    -ms-flex-preferred-size: 0;
-    flex-basis: 0;
-    -webkit-box-flex: 1;
-    -webkit-flex-grow: 1;
-    -ms-flex-positive: 1;
-    flex-grow: 1;
-    max-width: 100%;
-  }
 }
 
 .emotion-5 {
@@ -3095,10 +3006,10 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
           className="MuiBox-root emotion-2"
         >
           <div
-            className="MuiGrid-root MuiGrid-container emotion-3"
+            className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row emotion-3"
           >
             <div
-              className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true emotion-4"
+              className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-4"
               style={
                 {
                   "overflow": "auto",
@@ -3174,10 +3085,10 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
             </div>
           </div>
           <div
-            className="MuiGrid-root MuiGrid-container emotion-3"
+            className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row emotion-3"
           >
             <div
-              className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true emotion-4"
+              className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-4"
               style={
                 {
                   "overflow": "auto",
@@ -3409,94 +3320,49 @@ exports[`array fields has errors 1`] = `
 }
 
 .emotion-10 {
+  --Grid-columns: 12;
+  --Grid-columnSpacing: 16px;
+  --Grid-rowSpacing: 16px;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  min-width: 0;
   box-sizing: border-box;
   display: flex;
   -webkit-box-flex-wrap: wrap;
   -webkit-flex-wrap: wrap;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
-  width: calc(100% + 16px);
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
-  margin-top: calc(-1 * 16px);
-  margin-left: calc(-1 * 16px);
+  gap: var(--Grid-rowSpacing) var(--Grid-columnSpacing);
 }
 
-.emotion-10>.MuiGrid-item {
-  padding-top: 16px;
+.emotion-10>* {
+  --Grid-parent-columns: 12;
 }
 
-.emotion-10>.MuiGrid-item {
-  padding-left: 16px;
+.emotion-10>* {
+  --Grid-parent-columnSpacing: 16px;
+}
+
+.emotion-10>* {
+  --Grid-parent-rowSpacing: 16px;
 }
 
 .emotion-11 {
-  box-sizing: border-box;
-  margin: 0;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
-  -webkit-flex-basis: 100%;
-  -ms-flex-preferred-size: 100%;
-  flex-basis: 100%;
+  -webkit-flex-basis: auto;
+  -ms-flex-preferred-size: auto;
+  flex-basis: auto;
   -webkit-box-flex: 0;
   -webkit-flex-grow: 0;
   -ms-flex-positive: 0;
   flex-grow: 0;
-  max-width: 100%;
-}
-
-@media (min-width:600px) {
-  .emotion-11 {
-    -webkit-flex-basis: 100%;
-    -ms-flex-preferred-size: 100%;
-    flex-basis: 100%;
-    -webkit-box-flex: 0;
-    -webkit-flex-grow: 0;
-    -ms-flex-positive: 0;
-    flex-grow: 0;
-    max-width: 100%;
-  }
-}
-
-@media (min-width:900px) {
-  .emotion-11 {
-    -webkit-flex-basis: 100%;
-    -ms-flex-preferred-size: 100%;
-    flex-basis: 100%;
-    -webkit-box-flex: 0;
-    -webkit-flex-grow: 0;
-    -ms-flex-positive: 0;
-    flex-grow: 0;
-    max-width: 100%;
-  }
-}
-
-@media (min-width:1200px) {
-  .emotion-11 {
-    -webkit-flex-basis: 100%;
-    -ms-flex-preferred-size: 100%;
-    flex-basis: 100%;
-    -webkit-box-flex: 0;
-    -webkit-flex-grow: 0;
-    -ms-flex-positive: 0;
-    flex-grow: 0;
-    max-width: 100%;
-  }
-}
-
-@media (min-width:1536px) {
-  .emotion-11 {
-    -webkit-flex-basis: 100%;
-    -ms-flex-preferred-size: 100%;
-    flex-basis: 100%;
-    -webkit-box-flex: 0;
-    -webkit-flex-grow: 0;
-    -ms-flex-positive: 0;
-    flex-grow: 0;
-    max-width: 100%;
-  }
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  max-width: none;
+  width: auto;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .emotion-13 {
@@ -3960,7 +3826,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-16:focus::-ms-input-
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-9"
     >
       <div
-        className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2 emotion-10"
+        className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 emotion-10"
         style={
           {
             "marginTop": "10px",
@@ -3968,7 +3834,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-16:focus::-ms-input-
         }
       >
         <div
-          className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 emotion-11"
+          className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-11"
           style={
             {
               "marginBottom": "10px",
@@ -4092,94 +3958,49 @@ exports[`array fields no errors 1`] = `
 }
 
 .emotion-1 {
+  --Grid-columns: 12;
+  --Grid-columnSpacing: 16px;
+  --Grid-rowSpacing: 16px;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  min-width: 0;
   box-sizing: border-box;
   display: flex;
   -webkit-box-flex-wrap: wrap;
   -webkit-flex-wrap: wrap;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
-  width: calc(100% + 16px);
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
-  margin-top: calc(-1 * 16px);
-  margin-left: calc(-1 * 16px);
+  gap: var(--Grid-rowSpacing) var(--Grid-columnSpacing);
 }
 
-.emotion-1>.MuiGrid-item {
-  padding-top: 16px;
+.emotion-1>* {
+  --Grid-parent-columns: 12;
 }
 
-.emotion-1>.MuiGrid-item {
-  padding-left: 16px;
+.emotion-1>* {
+  --Grid-parent-columnSpacing: 16px;
+}
+
+.emotion-1>* {
+  --Grid-parent-rowSpacing: 16px;
 }
 
 .emotion-2 {
-  box-sizing: border-box;
-  margin: 0;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
-  -webkit-flex-basis: 100%;
-  -ms-flex-preferred-size: 100%;
-  flex-basis: 100%;
+  -webkit-flex-basis: auto;
+  -ms-flex-preferred-size: auto;
+  flex-basis: auto;
   -webkit-box-flex: 0;
   -webkit-flex-grow: 0;
   -ms-flex-positive: 0;
   flex-grow: 0;
-  max-width: 100%;
-}
-
-@media (min-width:600px) {
-  .emotion-2 {
-    -webkit-flex-basis: 100%;
-    -ms-flex-preferred-size: 100%;
-    flex-basis: 100%;
-    -webkit-box-flex: 0;
-    -webkit-flex-grow: 0;
-    -ms-flex-positive: 0;
-    flex-grow: 0;
-    max-width: 100%;
-  }
-}
-
-@media (min-width:900px) {
-  .emotion-2 {
-    -webkit-flex-basis: 100%;
-    -ms-flex-preferred-size: 100%;
-    flex-basis: 100%;
-    -webkit-box-flex: 0;
-    -webkit-flex-grow: 0;
-    -ms-flex-positive: 0;
-    flex-grow: 0;
-    max-width: 100%;
-  }
-}
-
-@media (min-width:1200px) {
-  .emotion-2 {
-    -webkit-flex-basis: 100%;
-    -ms-flex-preferred-size: 100%;
-    flex-basis: 100%;
-    -webkit-box-flex: 0;
-    -webkit-flex-grow: 0;
-    -ms-flex-positive: 0;
-    flex-grow: 0;
-    max-width: 100%;
-  }
-}
-
-@media (min-width:1536px) {
-  .emotion-2 {
-    -webkit-flex-basis: 100%;
-    -ms-flex-preferred-size: 100%;
-    flex-basis: 100%;
-    -webkit-box-flex: 0;
-    -webkit-flex-grow: 0;
-    -ms-flex-positive: 0;
-    flex-grow: 0;
-    max-width: 100%;
-  }
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  max-width: none;
+  width: auto;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .emotion-4 {
@@ -4542,7 +4363,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
     >
       <div
-        className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2 emotion-1"
+        className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 emotion-1"
         style={
           {
             "marginTop": "10px",
@@ -4550,7 +4371,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
         }
       >
         <div
-          className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 emotion-2"
+          className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-2"
           style={
             {
               "marginBottom": "10px",
@@ -4707,28 +4528,41 @@ exports[`with title and description array 1`] = `
 }
 
 .emotion-7 {
+  --Grid-columns: 12;
+  --Grid-columnSpacing: 0px;
+  --Grid-rowSpacing: 0px;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  min-width: 0;
   box-sizing: border-box;
   display: flex;
   -webkit-box-flex-wrap: wrap;
   -webkit-flex-wrap: wrap;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
-  width: 100%;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
+  gap: var(--Grid-rowSpacing) var(--Grid-columnSpacing);
   -webkit-box-pack: end;
   -ms-flex-pack: end;
   -webkit-justify-content: flex-end;
   justify-content: flex-end;
 }
 
+.emotion-7>* {
+  --Grid-parent-columns: 12;
+}
+
+.emotion-7>* {
+  --Grid-parent-columnSpacing: 0px;
+}
+
+.emotion-7>* {
+  --Grid-parent-rowSpacing: 0px;
+}
+
 .emotion-8 {
+  min-width: 0;
   box-sizing: border-box;
-  margin: 0;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
 }
 
 .emotion-9 {
@@ -4988,10 +4822,10 @@ exports[`with title and description array 1`] = `
             a test description
           </h6>
           <div
-            className="MuiGrid-root MuiGrid-container emotion-7"
+            className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row emotion-7"
           >
             <div
-              className="MuiGrid-root MuiGrid-item emotion-8"
+              className="MuiGrid2-root MuiGrid2-direction-xs-row emotion-8"
             >
               <div
                 className="MuiBox-root emotion-9"
@@ -5128,88 +4962,53 @@ exports[`with title and description array icons 1`] = `
 }
 
 .emotion-7 {
+  --Grid-columns: 12;
+  --Grid-columnSpacing: 0px;
+  --Grid-rowSpacing: 0px;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  min-width: 0;
   box-sizing: border-box;
   display: flex;
   -webkit-box-flex-wrap: wrap;
   -webkit-flex-wrap: wrap;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
-  width: 100%;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
+  gap: var(--Grid-rowSpacing) var(--Grid-columnSpacing);
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
 }
 
+.emotion-7>* {
+  --Grid-parent-columns: 12;
+}
+
+.emotion-7>* {
+  --Grid-parent-columnSpacing: 0px;
+}
+
+.emotion-7>* {
+  --Grid-parent-rowSpacing: 0px;
+}
+
 .emotion-8 {
+  -webkit-flex-basis: auto;
+  -ms-flex-preferred-size: auto;
+  flex-basis: auto;
+  -webkit-box-flex: 0;
+  -webkit-flex-grow: 0;
+  -ms-flex-positive: 0;
+  flex-grow: 0;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  max-width: none;
+  width: auto;
+  min-width: 0;
   box-sizing: border-box;
-  margin: 0;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
-  -webkit-flex-basis: 0;
-  -ms-flex-preferred-size: 0;
-  flex-basis: 0;
-  -webkit-box-flex: 1;
-  -webkit-flex-grow: 1;
-  -ms-flex-positive: 1;
-  flex-grow: 1;
-  max-width: 100%;
-}
-
-@media (min-width:600px) {
-  .emotion-8 {
-    -webkit-flex-basis: 0;
-    -ms-flex-preferred-size: 0;
-    flex-basis: 0;
-    -webkit-box-flex: 1;
-    -webkit-flex-grow: 1;
-    -ms-flex-positive: 1;
-    flex-grow: 1;
-    max-width: 100%;
-  }
-}
-
-@media (min-width:900px) {
-  .emotion-8 {
-    -webkit-flex-basis: 0;
-    -ms-flex-preferred-size: 0;
-    flex-basis: 0;
-    -webkit-box-flex: 1;
-    -webkit-flex-grow: 1;
-    -ms-flex-positive: 1;
-    flex-grow: 1;
-    max-width: 100%;
-  }
-}
-
-@media (min-width:1200px) {
-  .emotion-8 {
-    -webkit-flex-basis: 0;
-    -ms-flex-preferred-size: 0;
-    flex-basis: 0;
-    -webkit-box-flex: 1;
-    -webkit-flex-grow: 1;
-    -ms-flex-positive: 1;
-    flex-grow: 1;
-    max-width: 100%;
-  }
-}
-
-@media (min-width:1536px) {
-  .emotion-8 {
-    -webkit-flex-basis: 0;
-    -ms-flex-preferred-size: 0;
-    flex-basis: 0;
-    -webkit-box-flex: 1;
-    -webkit-flex-grow: 1;
-    -ms-flex-positive: 1;
-    flex-grow: 1;
-    max-width: 100%;
-  }
 }
 
 .emotion-9 {
@@ -5470,11 +5269,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
 }
 
 .emotion-22 {
+  min-width: 0;
   box-sizing: border-box;
-  margin: 0;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
 }
 
 .emotion-23 {
@@ -5645,20 +5441,36 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
 }
 
 .emotion-55 {
+  --Grid-columns: 12;
+  --Grid-columnSpacing: 0px;
+  --Grid-rowSpacing: 0px;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  min-width: 0;
   box-sizing: border-box;
   display: flex;
   -webkit-box-flex-wrap: wrap;
   -webkit-flex-wrap: wrap;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
-  width: 100%;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
+  gap: var(--Grid-rowSpacing) var(--Grid-columnSpacing);
   -webkit-box-pack: end;
   -ms-flex-pack: end;
   -webkit-justify-content: flex-end;
   justify-content: flex-end;
+}
+
+.emotion-55>* {
+  --Grid-parent-columns: 12;
+}
+
+.emotion-55>* {
+  --Grid-parent-columnSpacing: 0px;
+}
+
+.emotion-55>* {
+  --Grid-parent-rowSpacing: 0px;
 }
 
 .emotion-57 {
@@ -5918,10 +5730,10 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
             a test description
           </h6>
           <div
-            className="MuiGrid-root MuiGrid-container emotion-7"
+            className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row emotion-7"
           >
             <div
-              className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true emotion-8"
+              className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-8"
               style={
                 {
                   "overflow": "auto",
@@ -6026,7 +5838,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
               </div>
             </div>
             <div
-              className="MuiGrid-root MuiGrid-item emotion-22"
+              className="MuiGrid2-root MuiGrid2-direction-xs-row emotion-22"
             >
               <button
                 className="MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeSmall array-item-move-up emotion-23"
@@ -6163,10 +5975,10 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
             </div>
           </div>
           <div
-            className="MuiGrid-root MuiGrid-container emotion-7"
+            className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row emotion-7"
           >
             <div
-              className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true emotion-8"
+              className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-8"
               style={
                 {
                   "overflow": "auto",
@@ -6271,7 +6083,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
               </div>
             </div>
             <div
-              className="MuiGrid-root MuiGrid-item emotion-22"
+              className="MuiGrid2-root MuiGrid2-direction-xs-row emotion-22"
             >
               <button
                 className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall array-item-move-up emotion-23"
@@ -6408,10 +6220,10 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
             </div>
           </div>
           <div
-            className="MuiGrid-root MuiGrid-container emotion-55"
+            className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row emotion-55"
           >
             <div
-              className="MuiGrid-root MuiGrid-item emotion-22"
+              className="MuiGrid2-root MuiGrid2-direction-xs-row emotion-22"
             >
               <div
                 className="MuiBox-root emotion-57"
@@ -7138,88 +6950,53 @@ exports[`with title and description fixed array 1`] = `
 }
 
 .emotion-7 {
+  --Grid-columns: 12;
+  --Grid-columnSpacing: 0px;
+  --Grid-rowSpacing: 0px;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  min-width: 0;
   box-sizing: border-box;
   display: flex;
   -webkit-box-flex-wrap: wrap;
   -webkit-flex-wrap: wrap;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
-  width: 100%;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
+  gap: var(--Grid-rowSpacing) var(--Grid-columnSpacing);
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
 }
 
+.emotion-7>* {
+  --Grid-parent-columns: 12;
+}
+
+.emotion-7>* {
+  --Grid-parent-columnSpacing: 0px;
+}
+
+.emotion-7>* {
+  --Grid-parent-rowSpacing: 0px;
+}
+
 .emotion-8 {
+  -webkit-flex-basis: auto;
+  -ms-flex-preferred-size: auto;
+  flex-basis: auto;
+  -webkit-box-flex: 0;
+  -webkit-flex-grow: 0;
+  -ms-flex-positive: 0;
+  flex-grow: 0;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  max-width: none;
+  width: auto;
+  min-width: 0;
   box-sizing: border-box;
-  margin: 0;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
-  -webkit-flex-basis: 0;
-  -ms-flex-preferred-size: 0;
-  flex-basis: 0;
-  -webkit-box-flex: 1;
-  -webkit-flex-grow: 1;
-  -ms-flex-positive: 1;
-  flex-grow: 1;
-  max-width: 100%;
-}
-
-@media (min-width:600px) {
-  .emotion-8 {
-    -webkit-flex-basis: 0;
-    -ms-flex-preferred-size: 0;
-    flex-basis: 0;
-    -webkit-box-flex: 1;
-    -webkit-flex-grow: 1;
-    -ms-flex-positive: 1;
-    flex-grow: 1;
-    max-width: 100%;
-  }
-}
-
-@media (min-width:900px) {
-  .emotion-8 {
-    -webkit-flex-basis: 0;
-    -ms-flex-preferred-size: 0;
-    flex-basis: 0;
-    -webkit-box-flex: 1;
-    -webkit-flex-grow: 1;
-    -ms-flex-positive: 1;
-    flex-grow: 1;
-    max-width: 100%;
-  }
-}
-
-@media (min-width:1200px) {
-  .emotion-8 {
-    -webkit-flex-basis: 0;
-    -ms-flex-preferred-size: 0;
-    flex-basis: 0;
-    -webkit-box-flex: 1;
-    -webkit-flex-grow: 1;
-    -ms-flex-positive: 1;
-    flex-grow: 1;
-    max-width: 100%;
-  }
-}
-
-@media (min-width:1536px) {
-  .emotion-8 {
-    -webkit-flex-basis: 0;
-    -ms-flex-preferred-size: 0;
-    flex-basis: 0;
-    -webkit-box-flex: 1;
-    -webkit-flex-grow: 1;
-    -ms-flex-positive: 1;
-    flex-grow: 1;
-    max-width: 100%;
-  }
 }
 
 .emotion-9 {
@@ -7636,10 +7413,10 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
             a test description
           </h6>
           <div
-            className="MuiGrid-root MuiGrid-container emotion-7"
+            className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row emotion-7"
           >
             <div
-              className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true emotion-8"
+              className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-8"
               style={
                 {
                   "overflow": "auto",
@@ -7745,10 +7522,10 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
             </div>
           </div>
           <div
-            className="MuiGrid-root MuiGrid-container emotion-7"
+            className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row emotion-7"
           >
             <div
-              className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true emotion-8"
+              className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-8"
               style={
                 {
                   "overflow": "auto",
@@ -7950,28 +7727,41 @@ exports[`with title and description from both array 1`] = `
 }
 
 .emotion-7 {
+  --Grid-columns: 12;
+  --Grid-columnSpacing: 0px;
+  --Grid-rowSpacing: 0px;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  min-width: 0;
   box-sizing: border-box;
   display: flex;
   -webkit-box-flex-wrap: wrap;
   -webkit-flex-wrap: wrap;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
-  width: 100%;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
+  gap: var(--Grid-rowSpacing) var(--Grid-columnSpacing);
   -webkit-box-pack: end;
   -ms-flex-pack: end;
   -webkit-justify-content: flex-end;
   justify-content: flex-end;
 }
 
+.emotion-7>* {
+  --Grid-parent-columns: 12;
+}
+
+.emotion-7>* {
+  --Grid-parent-columnSpacing: 0px;
+}
+
+.emotion-7>* {
+  --Grid-parent-rowSpacing: 0px;
+}
+
 .emotion-8 {
+  min-width: 0;
   box-sizing: border-box;
-  margin: 0;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
 }
 
 .emotion-9 {
@@ -8231,10 +8021,10 @@ exports[`with title and description from both array 1`] = `
             a fancier description
           </h6>
           <div
-            className="MuiGrid-root MuiGrid-container emotion-7"
+            className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row emotion-7"
           >
             <div
-              className="MuiGrid-root MuiGrid-item emotion-8"
+              className="MuiGrid2-root MuiGrid2-direction-xs-row emotion-8"
             >
               <div
                 className="MuiBox-root emotion-9"
@@ -8371,88 +8161,53 @@ exports[`with title and description from both array icons 1`] = `
 }
 
 .emotion-7 {
+  --Grid-columns: 12;
+  --Grid-columnSpacing: 0px;
+  --Grid-rowSpacing: 0px;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  min-width: 0;
   box-sizing: border-box;
   display: flex;
   -webkit-box-flex-wrap: wrap;
   -webkit-flex-wrap: wrap;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
-  width: 100%;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
+  gap: var(--Grid-rowSpacing) var(--Grid-columnSpacing);
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
 }
 
+.emotion-7>* {
+  --Grid-parent-columns: 12;
+}
+
+.emotion-7>* {
+  --Grid-parent-columnSpacing: 0px;
+}
+
+.emotion-7>* {
+  --Grid-parent-rowSpacing: 0px;
+}
+
 .emotion-8 {
+  -webkit-flex-basis: auto;
+  -ms-flex-preferred-size: auto;
+  flex-basis: auto;
+  -webkit-box-flex: 0;
+  -webkit-flex-grow: 0;
+  -ms-flex-positive: 0;
+  flex-grow: 0;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  max-width: none;
+  width: auto;
+  min-width: 0;
   box-sizing: border-box;
-  margin: 0;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
-  -webkit-flex-basis: 0;
-  -ms-flex-preferred-size: 0;
-  flex-basis: 0;
-  -webkit-box-flex: 1;
-  -webkit-flex-grow: 1;
-  -ms-flex-positive: 1;
-  flex-grow: 1;
-  max-width: 100%;
-}
-
-@media (min-width:600px) {
-  .emotion-8 {
-    -webkit-flex-basis: 0;
-    -ms-flex-preferred-size: 0;
-    flex-basis: 0;
-    -webkit-box-flex: 1;
-    -webkit-flex-grow: 1;
-    -ms-flex-positive: 1;
-    flex-grow: 1;
-    max-width: 100%;
-  }
-}
-
-@media (min-width:900px) {
-  .emotion-8 {
-    -webkit-flex-basis: 0;
-    -ms-flex-preferred-size: 0;
-    flex-basis: 0;
-    -webkit-box-flex: 1;
-    -webkit-flex-grow: 1;
-    -ms-flex-positive: 1;
-    flex-grow: 1;
-    max-width: 100%;
-  }
-}
-
-@media (min-width:1200px) {
-  .emotion-8 {
-    -webkit-flex-basis: 0;
-    -ms-flex-preferred-size: 0;
-    flex-basis: 0;
-    -webkit-box-flex: 1;
-    -webkit-flex-grow: 1;
-    -ms-flex-positive: 1;
-    flex-grow: 1;
-    max-width: 100%;
-  }
-}
-
-@media (min-width:1536px) {
-  .emotion-8 {
-    -webkit-flex-basis: 0;
-    -ms-flex-preferred-size: 0;
-    flex-basis: 0;
-    -webkit-box-flex: 1;
-    -webkit-flex-grow: 1;
-    -ms-flex-positive: 1;
-    flex-grow: 1;
-    max-width: 100%;
-  }
 }
 
 .emotion-9 {
@@ -8713,11 +8468,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
 }
 
 .emotion-22 {
+  min-width: 0;
   box-sizing: border-box;
-  margin: 0;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
 }
 
 .emotion-23 {
@@ -8888,20 +8640,36 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
 }
 
 .emotion-55 {
+  --Grid-columns: 12;
+  --Grid-columnSpacing: 0px;
+  --Grid-rowSpacing: 0px;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  min-width: 0;
   box-sizing: border-box;
   display: flex;
   -webkit-box-flex-wrap: wrap;
   -webkit-flex-wrap: wrap;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
-  width: 100%;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
+  gap: var(--Grid-rowSpacing) var(--Grid-columnSpacing);
   -webkit-box-pack: end;
   -ms-flex-pack: end;
   -webkit-justify-content: flex-end;
   justify-content: flex-end;
+}
+
+.emotion-55>* {
+  --Grid-parent-columns: 12;
+}
+
+.emotion-55>* {
+  --Grid-parent-columnSpacing: 0px;
+}
+
+.emotion-55>* {
+  --Grid-parent-rowSpacing: 0px;
 }
 
 .emotion-57 {
@@ -9161,10 +8929,10 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
             a fancier description
           </h6>
           <div
-            className="MuiGrid-root MuiGrid-container emotion-7"
+            className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row emotion-7"
           >
             <div
-              className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true emotion-8"
+              className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-8"
               style={
                 {
                   "overflow": "auto",
@@ -9269,7 +9037,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
               </div>
             </div>
             <div
-              className="MuiGrid-root MuiGrid-item emotion-22"
+              className="MuiGrid2-root MuiGrid2-direction-xs-row emotion-22"
             >
               <button
                 className="MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeSmall array-item-move-up emotion-23"
@@ -9406,10 +9174,10 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
             </div>
           </div>
           <div
-            className="MuiGrid-root MuiGrid-container emotion-7"
+            className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row emotion-7"
           >
             <div
-              className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true emotion-8"
+              className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-8"
               style={
                 {
                   "overflow": "auto",
@@ -9514,7 +9282,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
               </div>
             </div>
             <div
-              className="MuiGrid-root MuiGrid-item emotion-22"
+              className="MuiGrid2-root MuiGrid2-direction-xs-row emotion-22"
             >
               <button
                 className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall array-item-move-up emotion-23"
@@ -9651,10 +9419,10 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
             </div>
           </div>
           <div
-            className="MuiGrid-root MuiGrid-container emotion-55"
+            className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row emotion-55"
           >
             <div
-              className="MuiGrid-root MuiGrid-item emotion-22"
+              className="MuiGrid2-root MuiGrid2-direction-xs-row emotion-22"
             >
               <div
                 className="MuiBox-root emotion-57"
@@ -10381,88 +10149,53 @@ exports[`with title and description from both fixed array 1`] = `
 }
 
 .emotion-7 {
+  --Grid-columns: 12;
+  --Grid-columnSpacing: 0px;
+  --Grid-rowSpacing: 0px;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  min-width: 0;
   box-sizing: border-box;
   display: flex;
   -webkit-box-flex-wrap: wrap;
   -webkit-flex-wrap: wrap;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
-  width: 100%;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
+  gap: var(--Grid-rowSpacing) var(--Grid-columnSpacing);
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
 }
 
+.emotion-7>* {
+  --Grid-parent-columns: 12;
+}
+
+.emotion-7>* {
+  --Grid-parent-columnSpacing: 0px;
+}
+
+.emotion-7>* {
+  --Grid-parent-rowSpacing: 0px;
+}
+
 .emotion-8 {
+  -webkit-flex-basis: auto;
+  -ms-flex-preferred-size: auto;
+  flex-basis: auto;
+  -webkit-box-flex: 0;
+  -webkit-flex-grow: 0;
+  -ms-flex-positive: 0;
+  flex-grow: 0;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  max-width: none;
+  width: auto;
+  min-width: 0;
   box-sizing: border-box;
-  margin: 0;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
-  -webkit-flex-basis: 0;
-  -ms-flex-preferred-size: 0;
-  flex-basis: 0;
-  -webkit-box-flex: 1;
-  -webkit-flex-grow: 1;
-  -ms-flex-positive: 1;
-  flex-grow: 1;
-  max-width: 100%;
-}
-
-@media (min-width:600px) {
-  .emotion-8 {
-    -webkit-flex-basis: 0;
-    -ms-flex-preferred-size: 0;
-    flex-basis: 0;
-    -webkit-box-flex: 1;
-    -webkit-flex-grow: 1;
-    -ms-flex-positive: 1;
-    flex-grow: 1;
-    max-width: 100%;
-  }
-}
-
-@media (min-width:900px) {
-  .emotion-8 {
-    -webkit-flex-basis: 0;
-    -ms-flex-preferred-size: 0;
-    flex-basis: 0;
-    -webkit-box-flex: 1;
-    -webkit-flex-grow: 1;
-    -ms-flex-positive: 1;
-    flex-grow: 1;
-    max-width: 100%;
-  }
-}
-
-@media (min-width:1200px) {
-  .emotion-8 {
-    -webkit-flex-basis: 0;
-    -ms-flex-preferred-size: 0;
-    flex-basis: 0;
-    -webkit-box-flex: 1;
-    -webkit-flex-grow: 1;
-    -ms-flex-positive: 1;
-    flex-grow: 1;
-    max-width: 100%;
-  }
-}
-
-@media (min-width:1536px) {
-  .emotion-8 {
-    -webkit-flex-basis: 0;
-    -ms-flex-preferred-size: 0;
-    flex-basis: 0;
-    -webkit-box-flex: 1;
-    -webkit-flex-grow: 1;
-    -ms-flex-positive: 1;
-    flex-grow: 1;
-    max-width: 100%;
-  }
 }
 
 .emotion-9 {
@@ -10879,10 +10612,10 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
             a fancier description
           </h6>
           <div
-            className="MuiGrid-root MuiGrid-container emotion-7"
+            className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row emotion-7"
           >
             <div
-              className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true emotion-8"
+              className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-8"
               style={
                 {
                   "overflow": "auto",
@@ -10988,10 +10721,10 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
             </div>
           </div>
           <div
-            className="MuiGrid-root MuiGrid-container emotion-7"
+            className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row emotion-7"
           >
             <div
-              className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true emotion-8"
+              className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-8"
               style={
                 {
                   "overflow": "auto",
@@ -11193,28 +10926,41 @@ exports[`with title and description from uiSchema array 1`] = `
 }
 
 .emotion-7 {
+  --Grid-columns: 12;
+  --Grid-columnSpacing: 0px;
+  --Grid-rowSpacing: 0px;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  min-width: 0;
   box-sizing: border-box;
   display: flex;
   -webkit-box-flex-wrap: wrap;
   -webkit-flex-wrap: wrap;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
-  width: 100%;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
+  gap: var(--Grid-rowSpacing) var(--Grid-columnSpacing);
   -webkit-box-pack: end;
   -ms-flex-pack: end;
   -webkit-justify-content: flex-end;
   justify-content: flex-end;
 }
 
+.emotion-7>* {
+  --Grid-parent-columns: 12;
+}
+
+.emotion-7>* {
+  --Grid-parent-columnSpacing: 0px;
+}
+
+.emotion-7>* {
+  --Grid-parent-rowSpacing: 0px;
+}
+
 .emotion-8 {
+  min-width: 0;
   box-sizing: border-box;
-  margin: 0;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
 }
 
 .emotion-9 {
@@ -11474,10 +11220,10 @@ exports[`with title and description from uiSchema array 1`] = `
             a fancier description
           </h6>
           <div
-            className="MuiGrid-root MuiGrid-container emotion-7"
+            className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row emotion-7"
           >
             <div
-              className="MuiGrid-root MuiGrid-item emotion-8"
+              className="MuiGrid2-root MuiGrid2-direction-xs-row emotion-8"
             >
               <div
                 className="MuiBox-root emotion-9"
@@ -11614,88 +11360,53 @@ exports[`with title and description from uiSchema array icons 1`] = `
 }
 
 .emotion-7 {
+  --Grid-columns: 12;
+  --Grid-columnSpacing: 0px;
+  --Grid-rowSpacing: 0px;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  min-width: 0;
   box-sizing: border-box;
   display: flex;
   -webkit-box-flex-wrap: wrap;
   -webkit-flex-wrap: wrap;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
-  width: 100%;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
+  gap: var(--Grid-rowSpacing) var(--Grid-columnSpacing);
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
 }
 
+.emotion-7>* {
+  --Grid-parent-columns: 12;
+}
+
+.emotion-7>* {
+  --Grid-parent-columnSpacing: 0px;
+}
+
+.emotion-7>* {
+  --Grid-parent-rowSpacing: 0px;
+}
+
 .emotion-8 {
+  -webkit-flex-basis: auto;
+  -ms-flex-preferred-size: auto;
+  flex-basis: auto;
+  -webkit-box-flex: 0;
+  -webkit-flex-grow: 0;
+  -ms-flex-positive: 0;
+  flex-grow: 0;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  max-width: none;
+  width: auto;
+  min-width: 0;
   box-sizing: border-box;
-  margin: 0;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
-  -webkit-flex-basis: 0;
-  -ms-flex-preferred-size: 0;
-  flex-basis: 0;
-  -webkit-box-flex: 1;
-  -webkit-flex-grow: 1;
-  -ms-flex-positive: 1;
-  flex-grow: 1;
-  max-width: 100%;
-}
-
-@media (min-width:600px) {
-  .emotion-8 {
-    -webkit-flex-basis: 0;
-    -ms-flex-preferred-size: 0;
-    flex-basis: 0;
-    -webkit-box-flex: 1;
-    -webkit-flex-grow: 1;
-    -ms-flex-positive: 1;
-    flex-grow: 1;
-    max-width: 100%;
-  }
-}
-
-@media (min-width:900px) {
-  .emotion-8 {
-    -webkit-flex-basis: 0;
-    -ms-flex-preferred-size: 0;
-    flex-basis: 0;
-    -webkit-box-flex: 1;
-    -webkit-flex-grow: 1;
-    -ms-flex-positive: 1;
-    flex-grow: 1;
-    max-width: 100%;
-  }
-}
-
-@media (min-width:1200px) {
-  .emotion-8 {
-    -webkit-flex-basis: 0;
-    -ms-flex-preferred-size: 0;
-    flex-basis: 0;
-    -webkit-box-flex: 1;
-    -webkit-flex-grow: 1;
-    -ms-flex-positive: 1;
-    flex-grow: 1;
-    max-width: 100%;
-  }
-}
-
-@media (min-width:1536px) {
-  .emotion-8 {
-    -webkit-flex-basis: 0;
-    -ms-flex-preferred-size: 0;
-    flex-basis: 0;
-    -webkit-box-flex: 1;
-    -webkit-flex-grow: 1;
-    -ms-flex-positive: 1;
-    flex-grow: 1;
-    max-width: 100%;
-  }
 }
 
 .emotion-9 {
@@ -11956,11 +11667,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
 }
 
 .emotion-22 {
+  min-width: 0;
   box-sizing: border-box;
-  margin: 0;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
 }
 
 .emotion-23 {
@@ -12131,20 +11839,36 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
 }
 
 .emotion-55 {
+  --Grid-columns: 12;
+  --Grid-columnSpacing: 0px;
+  --Grid-rowSpacing: 0px;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  min-width: 0;
   box-sizing: border-box;
   display: flex;
   -webkit-box-flex-wrap: wrap;
   -webkit-flex-wrap: wrap;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
-  width: 100%;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
+  gap: var(--Grid-rowSpacing) var(--Grid-columnSpacing);
   -webkit-box-pack: end;
   -ms-flex-pack: end;
   -webkit-justify-content: flex-end;
   justify-content: flex-end;
+}
+
+.emotion-55>* {
+  --Grid-parent-columns: 12;
+}
+
+.emotion-55>* {
+  --Grid-parent-columnSpacing: 0px;
+}
+
+.emotion-55>* {
+  --Grid-parent-rowSpacing: 0px;
 }
 
 .emotion-57 {
@@ -12404,10 +12128,10 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
             a fancier description
           </h6>
           <div
-            className="MuiGrid-root MuiGrid-container emotion-7"
+            className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row emotion-7"
           >
             <div
-              className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true emotion-8"
+              className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-8"
               style={
                 {
                   "overflow": "auto",
@@ -12512,7 +12236,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
               </div>
             </div>
             <div
-              className="MuiGrid-root MuiGrid-item emotion-22"
+              className="MuiGrid2-root MuiGrid2-direction-xs-row emotion-22"
             >
               <button
                 className="MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeSmall array-item-move-up emotion-23"
@@ -12649,10 +12373,10 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
             </div>
           </div>
           <div
-            className="MuiGrid-root MuiGrid-container emotion-7"
+            className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row emotion-7"
           >
             <div
-              className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true emotion-8"
+              className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-8"
               style={
                 {
                   "overflow": "auto",
@@ -12757,7 +12481,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
               </div>
             </div>
             <div
-              className="MuiGrid-root MuiGrid-item emotion-22"
+              className="MuiGrid2-root MuiGrid2-direction-xs-row emotion-22"
             >
               <button
                 className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall array-item-move-up emotion-23"
@@ -12894,10 +12618,10 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
             </div>
           </div>
           <div
-            className="MuiGrid-root MuiGrid-container emotion-55"
+            className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row emotion-55"
           >
             <div
-              className="MuiGrid-root MuiGrid-item emotion-22"
+              className="MuiGrid2-root MuiGrid2-direction-xs-row emotion-22"
             >
               <div
                 className="MuiBox-root emotion-57"
@@ -13624,88 +13348,53 @@ exports[`with title and description from uiSchema fixed array 1`] = `
 }
 
 .emotion-7 {
+  --Grid-columns: 12;
+  --Grid-columnSpacing: 0px;
+  --Grid-rowSpacing: 0px;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  min-width: 0;
   box-sizing: border-box;
   display: flex;
   -webkit-box-flex-wrap: wrap;
   -webkit-flex-wrap: wrap;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
-  width: 100%;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
+  gap: var(--Grid-rowSpacing) var(--Grid-columnSpacing);
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
 }
 
+.emotion-7>* {
+  --Grid-parent-columns: 12;
+}
+
+.emotion-7>* {
+  --Grid-parent-columnSpacing: 0px;
+}
+
+.emotion-7>* {
+  --Grid-parent-rowSpacing: 0px;
+}
+
 .emotion-8 {
+  -webkit-flex-basis: auto;
+  -ms-flex-preferred-size: auto;
+  flex-basis: auto;
+  -webkit-box-flex: 0;
+  -webkit-flex-grow: 0;
+  -ms-flex-positive: 0;
+  flex-grow: 0;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  max-width: none;
+  width: auto;
+  min-width: 0;
   box-sizing: border-box;
-  margin: 0;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
-  -webkit-flex-basis: 0;
-  -ms-flex-preferred-size: 0;
-  flex-basis: 0;
-  -webkit-box-flex: 1;
-  -webkit-flex-grow: 1;
-  -ms-flex-positive: 1;
-  flex-grow: 1;
-  max-width: 100%;
-}
-
-@media (min-width:600px) {
-  .emotion-8 {
-    -webkit-flex-basis: 0;
-    -ms-flex-preferred-size: 0;
-    flex-basis: 0;
-    -webkit-box-flex: 1;
-    -webkit-flex-grow: 1;
-    -ms-flex-positive: 1;
-    flex-grow: 1;
-    max-width: 100%;
-  }
-}
-
-@media (min-width:900px) {
-  .emotion-8 {
-    -webkit-flex-basis: 0;
-    -ms-flex-preferred-size: 0;
-    flex-basis: 0;
-    -webkit-box-flex: 1;
-    -webkit-flex-grow: 1;
-    -ms-flex-positive: 1;
-    flex-grow: 1;
-    max-width: 100%;
-  }
-}
-
-@media (min-width:1200px) {
-  .emotion-8 {
-    -webkit-flex-basis: 0;
-    -ms-flex-preferred-size: 0;
-    flex-basis: 0;
-    -webkit-box-flex: 1;
-    -webkit-flex-grow: 1;
-    -ms-flex-positive: 1;
-    flex-grow: 1;
-    max-width: 100%;
-  }
-}
-
-@media (min-width:1536px) {
-  .emotion-8 {
-    -webkit-flex-basis: 0;
-    -ms-flex-preferred-size: 0;
-    flex-basis: 0;
-    -webkit-box-flex: 1;
-    -webkit-flex-grow: 1;
-    -ms-flex-positive: 1;
-    flex-grow: 1;
-    max-width: 100%;
-  }
 }
 
 .emotion-9 {
@@ -14122,10 +13811,10 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
             a fancier description
           </h6>
           <div
-            className="MuiGrid-root MuiGrid-container emotion-7"
+            className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row emotion-7"
           >
             <div
-              className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true emotion-8"
+              className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-8"
               style={
                 {
                   "overflow": "auto",
@@ -14231,10 +13920,10 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
             </div>
           </div>
           <div
-            className="MuiGrid-root MuiGrid-container emotion-7"
+            className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row emotion-7"
           >
             <div
-              className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true emotion-8"
+              className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-8"
               style={
                 {
                   "overflow": "auto",
@@ -14402,28 +14091,41 @@ exports[`with title and description with global label off array 1`] = `
 }
 
 .emotion-3 {
+  --Grid-columns: 12;
+  --Grid-columnSpacing: 0px;
+  --Grid-rowSpacing: 0px;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  min-width: 0;
   box-sizing: border-box;
   display: flex;
   -webkit-box-flex-wrap: wrap;
   -webkit-flex-wrap: wrap;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
-  width: 100%;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
+  gap: var(--Grid-rowSpacing) var(--Grid-columnSpacing);
   -webkit-box-pack: end;
   -ms-flex-pack: end;
   -webkit-justify-content: flex-end;
   justify-content: flex-end;
 }
 
+.emotion-3>* {
+  --Grid-parent-columns: 12;
+}
+
+.emotion-3>* {
+  --Grid-parent-columnSpacing: 0px;
+}
+
+.emotion-3>* {
+  --Grid-parent-rowSpacing: 0px;
+}
+
 .emotion-4 {
+  min-width: 0;
   box-sizing: border-box;
-  margin: 0;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
 }
 
 .emotion-5 {
@@ -14658,10 +14360,10 @@ exports[`with title and description with global label off array 1`] = `
           className="MuiBox-root emotion-2"
         >
           <div
-            className="MuiGrid-root MuiGrid-container emotion-3"
+            className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row emotion-3"
           >
             <div
-              className="MuiGrid-root MuiGrid-item emotion-4"
+              className="MuiGrid2-root MuiGrid2-direction-xs-row emotion-4"
             >
               <div
                 className="MuiBox-root emotion-5"
@@ -14764,88 +14466,53 @@ exports[`with title and description with global label off array icons 1`] = `
 }
 
 .emotion-3 {
+  --Grid-columns: 12;
+  --Grid-columnSpacing: 0px;
+  --Grid-rowSpacing: 0px;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  min-width: 0;
   box-sizing: border-box;
   display: flex;
   -webkit-box-flex-wrap: wrap;
   -webkit-flex-wrap: wrap;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
-  width: 100%;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
+  gap: var(--Grid-rowSpacing) var(--Grid-columnSpacing);
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
 }
 
+.emotion-3>* {
+  --Grid-parent-columns: 12;
+}
+
+.emotion-3>* {
+  --Grid-parent-columnSpacing: 0px;
+}
+
+.emotion-3>* {
+  --Grid-parent-rowSpacing: 0px;
+}
+
 .emotion-4 {
+  -webkit-flex-basis: auto;
+  -ms-flex-preferred-size: auto;
+  flex-basis: auto;
+  -webkit-box-flex: 0;
+  -webkit-flex-grow: 0;
+  -ms-flex-positive: 0;
+  flex-grow: 0;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  max-width: none;
+  width: auto;
+  min-width: 0;
   box-sizing: border-box;
-  margin: 0;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
-  -webkit-flex-basis: 0;
-  -ms-flex-preferred-size: 0;
-  flex-basis: 0;
-  -webkit-box-flex: 1;
-  -webkit-flex-grow: 1;
-  -ms-flex-positive: 1;
-  flex-grow: 1;
-  max-width: 100%;
-}
-
-@media (min-width:600px) {
-  .emotion-4 {
-    -webkit-flex-basis: 0;
-    -ms-flex-preferred-size: 0;
-    flex-basis: 0;
-    -webkit-box-flex: 1;
-    -webkit-flex-grow: 1;
-    -ms-flex-positive: 1;
-    flex-grow: 1;
-    max-width: 100%;
-  }
-}
-
-@media (min-width:900px) {
-  .emotion-4 {
-    -webkit-flex-basis: 0;
-    -ms-flex-preferred-size: 0;
-    flex-basis: 0;
-    -webkit-box-flex: 1;
-    -webkit-flex-grow: 1;
-    -ms-flex-positive: 1;
-    flex-grow: 1;
-    max-width: 100%;
-  }
-}
-
-@media (min-width:1200px) {
-  .emotion-4 {
-    -webkit-flex-basis: 0;
-    -ms-flex-preferred-size: 0;
-    flex-basis: 0;
-    -webkit-box-flex: 1;
-    -webkit-flex-grow: 1;
-    -ms-flex-positive: 1;
-    flex-grow: 1;
-    max-width: 100%;
-  }
-}
-
-@media (min-width:1536px) {
-  .emotion-4 {
-    -webkit-flex-basis: 0;
-    -ms-flex-preferred-size: 0;
-    flex-basis: 0;
-    -webkit-box-flex: 1;
-    -webkit-flex-grow: 1;
-    -ms-flex-positive: 1;
-    flex-grow: 1;
-    max-width: 100%;
-  }
 }
 
 .emotion-5 {
@@ -15036,11 +14703,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
 }
 
 .emotion-14 {
+  min-width: 0;
   box-sizing: border-box;
-  margin: 0;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
 }
 
 .emotion-15 {
@@ -15211,20 +14875,36 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
 }
 
 .emotion-43 {
+  --Grid-columns: 12;
+  --Grid-columnSpacing: 0px;
+  --Grid-rowSpacing: 0px;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  min-width: 0;
   box-sizing: border-box;
   display: flex;
   -webkit-box-flex-wrap: wrap;
   -webkit-flex-wrap: wrap;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
-  width: 100%;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
+  gap: var(--Grid-rowSpacing) var(--Grid-columnSpacing);
   -webkit-box-pack: end;
   -ms-flex-pack: end;
   -webkit-justify-content: flex-end;
   justify-content: flex-end;
+}
+
+.emotion-43>* {
+  --Grid-parent-columns: 12;
+}
+
+.emotion-43>* {
+  --Grid-parent-columnSpacing: 0px;
+}
+
+.emotion-43>* {
+  --Grid-parent-rowSpacing: 0px;
 }
 
 .emotion-45 {
@@ -15459,10 +15139,10 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
           className="MuiBox-root emotion-2"
         >
           <div
-            className="MuiGrid-root MuiGrid-container emotion-3"
+            className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row emotion-3"
           >
             <div
-              className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true emotion-4"
+              className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-4"
               style={
                 {
                   "overflow": "auto",
@@ -15537,7 +15217,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
               </div>
             </div>
             <div
-              className="MuiGrid-root MuiGrid-item emotion-14"
+              className="MuiGrid2-root MuiGrid2-direction-xs-row emotion-14"
             >
               <button
                 className="MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeSmall array-item-move-up emotion-15"
@@ -15674,10 +15354,10 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
             </div>
           </div>
           <div
-            className="MuiGrid-root MuiGrid-container emotion-3"
+            className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row emotion-3"
           >
             <div
-              className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true emotion-4"
+              className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-4"
               style={
                 {
                   "overflow": "auto",
@@ -15752,7 +15432,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
               </div>
             </div>
             <div
-              className="MuiGrid-root MuiGrid-item emotion-14"
+              className="MuiGrid2-root MuiGrid2-direction-xs-row emotion-14"
             >
               <button
                 className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall array-item-move-up emotion-15"
@@ -15889,10 +15569,10 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
             </div>
           </div>
           <div
-            className="MuiGrid-root MuiGrid-container emotion-43"
+            className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row emotion-43"
           >
             <div
-              className="MuiGrid-root MuiGrid-item emotion-14"
+              className="MuiGrid2-root MuiGrid2-direction-xs-row emotion-14"
             >
               <div
                 className="MuiBox-root emotion-45"
@@ -16585,88 +16265,53 @@ exports[`with title and description with global label off fixed array 1`] = `
 }
 
 .emotion-3 {
+  --Grid-columns: 12;
+  --Grid-columnSpacing: 0px;
+  --Grid-rowSpacing: 0px;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  min-width: 0;
   box-sizing: border-box;
   display: flex;
   -webkit-box-flex-wrap: wrap;
   -webkit-flex-wrap: wrap;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
-  width: 100%;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
+  gap: var(--Grid-rowSpacing) var(--Grid-columnSpacing);
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
 }
 
+.emotion-3>* {
+  --Grid-parent-columns: 12;
+}
+
+.emotion-3>* {
+  --Grid-parent-columnSpacing: 0px;
+}
+
+.emotion-3>* {
+  --Grid-parent-rowSpacing: 0px;
+}
+
 .emotion-4 {
+  -webkit-flex-basis: auto;
+  -ms-flex-preferred-size: auto;
+  flex-basis: auto;
+  -webkit-box-flex: 0;
+  -webkit-flex-grow: 0;
+  -ms-flex-positive: 0;
+  flex-grow: 0;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  max-width: none;
+  width: auto;
+  min-width: 0;
   box-sizing: border-box;
-  margin: 0;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
-  -webkit-flex-basis: 0;
-  -ms-flex-preferred-size: 0;
-  flex-basis: 0;
-  -webkit-box-flex: 1;
-  -webkit-flex-grow: 1;
-  -ms-flex-positive: 1;
-  flex-grow: 1;
-  max-width: 100%;
-}
-
-@media (min-width:600px) {
-  .emotion-4 {
-    -webkit-flex-basis: 0;
-    -ms-flex-preferred-size: 0;
-    flex-basis: 0;
-    -webkit-box-flex: 1;
-    -webkit-flex-grow: 1;
-    -ms-flex-positive: 1;
-    flex-grow: 1;
-    max-width: 100%;
-  }
-}
-
-@media (min-width:900px) {
-  .emotion-4 {
-    -webkit-flex-basis: 0;
-    -ms-flex-preferred-size: 0;
-    flex-basis: 0;
-    -webkit-box-flex: 1;
-    -webkit-flex-grow: 1;
-    -ms-flex-positive: 1;
-    flex-grow: 1;
-    max-width: 100%;
-  }
-}
-
-@media (min-width:1200px) {
-  .emotion-4 {
-    -webkit-flex-basis: 0;
-    -ms-flex-preferred-size: 0;
-    flex-basis: 0;
-    -webkit-box-flex: 1;
-    -webkit-flex-grow: 1;
-    -ms-flex-positive: 1;
-    flex-grow: 1;
-    max-width: 100%;
-  }
-}
-
-@media (min-width:1536px) {
-  .emotion-4 {
-    -webkit-flex-basis: 0;
-    -ms-flex-preferred-size: 0;
-    flex-basis: 0;
-    -webkit-box-flex: 1;
-    -webkit-flex-grow: 1;
-    -ms-flex-positive: 1;
-    flex-grow: 1;
-    max-width: 100%;
-  }
 }
 
 .emotion-5 {
@@ -16992,10 +16637,10 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
           className="MuiBox-root emotion-2"
         >
           <div
-            className="MuiGrid-root MuiGrid-container emotion-3"
+            className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row emotion-3"
           >
             <div
-              className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true emotion-4"
+              className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-4"
               style={
                 {
                   "overflow": "auto",
@@ -17071,10 +16716,10 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
             </div>
           </div>
           <div
-            className="MuiGrid-root MuiGrid-container emotion-3"
+            className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row emotion-3"
           >
             <div
-              className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true emotion-4"
+              className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-4"
               style={
                 {
                   "overflow": "auto",

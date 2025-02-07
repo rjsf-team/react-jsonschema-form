@@ -1,6 +1,6 @@
 import { CSSProperties } from 'react';
 import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
+import Grid2 from '@mui/material/Grid2';
 import Paper from '@mui/material/Paper';
 import {
   ArrayFieldTemplateItemType,
@@ -35,19 +35,19 @@ export default function ArrayFieldItemTemplate<
     minWidth: 0,
   };
   return (
-    <Grid container={true} alignItems='center'>
-      <Grid item={true} xs style={{ overflow: 'auto' }}>
+    <Grid2 container={true} alignItems='center'>
+      <Grid2 size='auto' style={{ overflow: 'auto' }}>
         <Box mb={2}>
           <Paper elevation={2}>
             <Box p={2}>{children}</Box>
           </Paper>
         </Box>
-      </Grid>
+      </Grid2>
       {hasToolbar && (
-        <Grid item={true}>
+        <Grid2>
           <ArrayFieldItemButtonsTemplate {...buttonsProps} style={btnStyle} />
-        </Grid>
+        </Grid2>
       )}
-    </Grid>
+    </Grid2>
   );
 }

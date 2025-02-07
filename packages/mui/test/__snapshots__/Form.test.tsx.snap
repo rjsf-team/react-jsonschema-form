@@ -1253,94 +1253,49 @@ exports[`single fields field with description 1`] = `
 }
 
 .emotion-1 {
+  --Grid-columns: 12;
+  --Grid-columnSpacing: 16px;
+  --Grid-rowSpacing: 16px;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  min-width: 0;
   box-sizing: border-box;
   display: flex;
   -webkit-box-flex-wrap: wrap;
   -webkit-flex-wrap: wrap;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
-  width: calc(100% + 16px);
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
-  margin-top: calc(-1 * 16px);
-  margin-left: calc(-1 * 16px);
+  gap: var(--Grid-rowSpacing) var(--Grid-columnSpacing);
 }
 
-.emotion-1>.MuiGrid-item {
-  padding-top: 16px;
+.emotion-1>* {
+  --Grid-parent-columns: 12;
 }
 
-.emotion-1>.MuiGrid-item {
-  padding-left: 16px;
+.emotion-1>* {
+  --Grid-parent-columnSpacing: 16px;
+}
+
+.emotion-1>* {
+  --Grid-parent-rowSpacing: 16px;
 }
 
 .emotion-2 {
-  box-sizing: border-box;
-  margin: 0;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
-  -webkit-flex-basis: 100%;
-  -ms-flex-preferred-size: 100%;
-  flex-basis: 100%;
+  -webkit-flex-basis: auto;
+  -ms-flex-preferred-size: auto;
+  flex-basis: auto;
   -webkit-box-flex: 0;
   -webkit-flex-grow: 0;
   -ms-flex-positive: 0;
   flex-grow: 0;
-  max-width: 100%;
-}
-
-@media (min-width:600px) {
-  .emotion-2 {
-    -webkit-flex-basis: 100%;
-    -ms-flex-preferred-size: 100%;
-    flex-basis: 100%;
-    -webkit-box-flex: 0;
-    -webkit-flex-grow: 0;
-    -ms-flex-positive: 0;
-    flex-grow: 0;
-    max-width: 100%;
-  }
-}
-
-@media (min-width:900px) {
-  .emotion-2 {
-    -webkit-flex-basis: 100%;
-    -ms-flex-preferred-size: 100%;
-    flex-basis: 100%;
-    -webkit-box-flex: 0;
-    -webkit-flex-grow: 0;
-    -ms-flex-positive: 0;
-    flex-grow: 0;
-    max-width: 100%;
-  }
-}
-
-@media (min-width:1200px) {
-  .emotion-2 {
-    -webkit-flex-basis: 100%;
-    -ms-flex-preferred-size: 100%;
-    flex-basis: 100%;
-    -webkit-box-flex: 0;
-    -webkit-flex-grow: 0;
-    -ms-flex-positive: 0;
-    flex-grow: 0;
-    max-width: 100%;
-  }
-}
-
-@media (min-width:1536px) {
-  .emotion-2 {
-    -webkit-flex-basis: 100%;
-    -ms-flex-preferred-size: 100%;
-    flex-basis: 100%;
-    -webkit-box-flex: 0;
-    -webkit-flex-grow: 0;
-    -ms-flex-positive: 0;
-    flex-grow: 0;
-    max-width: 100%;
-  }
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  max-width: none;
+  width: auto;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .emotion-4 {
@@ -1722,7 +1677,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
     >
       <div
-        className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2 emotion-1"
+        className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 emotion-1"
         style={
           {
             "marginTop": "10px",
@@ -1730,7 +1685,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
         }
       >
         <div
-          className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 emotion-2"
+          className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-2"
           style={
             {
               "marginBottom": "10px",
@@ -1855,94 +1810,49 @@ exports[`single fields field with description in uiSchema 1`] = `
 }
 
 .emotion-1 {
+  --Grid-columns: 12;
+  --Grid-columnSpacing: 16px;
+  --Grid-rowSpacing: 16px;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  min-width: 0;
   box-sizing: border-box;
   display: flex;
   -webkit-box-flex-wrap: wrap;
   -webkit-flex-wrap: wrap;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
-  width: calc(100% + 16px);
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
-  margin-top: calc(-1 * 16px);
-  margin-left: calc(-1 * 16px);
+  gap: var(--Grid-rowSpacing) var(--Grid-columnSpacing);
 }
 
-.emotion-1>.MuiGrid-item {
-  padding-top: 16px;
+.emotion-1>* {
+  --Grid-parent-columns: 12;
 }
 
-.emotion-1>.MuiGrid-item {
-  padding-left: 16px;
+.emotion-1>* {
+  --Grid-parent-columnSpacing: 16px;
+}
+
+.emotion-1>* {
+  --Grid-parent-rowSpacing: 16px;
 }
 
 .emotion-2 {
-  box-sizing: border-box;
-  margin: 0;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
-  -webkit-flex-basis: 100%;
-  -ms-flex-preferred-size: 100%;
-  flex-basis: 100%;
+  -webkit-flex-basis: auto;
+  -ms-flex-preferred-size: auto;
+  flex-basis: auto;
   -webkit-box-flex: 0;
   -webkit-flex-grow: 0;
   -ms-flex-positive: 0;
   flex-grow: 0;
-  max-width: 100%;
-}
-
-@media (min-width:600px) {
-  .emotion-2 {
-    -webkit-flex-basis: 100%;
-    -ms-flex-preferred-size: 100%;
-    flex-basis: 100%;
-    -webkit-box-flex: 0;
-    -webkit-flex-grow: 0;
-    -ms-flex-positive: 0;
-    flex-grow: 0;
-    max-width: 100%;
-  }
-}
-
-@media (min-width:900px) {
-  .emotion-2 {
-    -webkit-flex-basis: 100%;
-    -ms-flex-preferred-size: 100%;
-    flex-basis: 100%;
-    -webkit-box-flex: 0;
-    -webkit-flex-grow: 0;
-    -ms-flex-positive: 0;
-    flex-grow: 0;
-    max-width: 100%;
-  }
-}
-
-@media (min-width:1200px) {
-  .emotion-2 {
-    -webkit-flex-basis: 100%;
-    -ms-flex-preferred-size: 100%;
-    flex-basis: 100%;
-    -webkit-box-flex: 0;
-    -webkit-flex-grow: 0;
-    -ms-flex-positive: 0;
-    flex-grow: 0;
-    max-width: 100%;
-  }
-}
-
-@media (min-width:1536px) {
-  .emotion-2 {
-    -webkit-flex-basis: 100%;
-    -ms-flex-preferred-size: 100%;
-    flex-basis: 100%;
-    -webkit-box-flex: 0;
-    -webkit-flex-grow: 0;
-    -ms-flex-positive: 0;
-    flex-grow: 0;
-    max-width: 100%;
-  }
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  max-width: none;
+  width: auto;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .emotion-4 {
@@ -2324,7 +2234,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
     >
       <div
-        className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2 emotion-1"
+        className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 emotion-1"
         style={
           {
             "marginTop": "10px",
@@ -2332,7 +2242,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
         }
       >
         <div
-          className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 emotion-2"
+          className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-2"
           style={
             {
               "marginBottom": "10px",
@@ -4652,26 +4562,32 @@ exports[`single fields hidden field 1`] = `
 }
 
 .emotion-1 {
+  --Grid-columns: 12;
+  --Grid-columnSpacing: 16px;
+  --Grid-rowSpacing: 16px;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  min-width: 0;
   box-sizing: border-box;
   display: flex;
   -webkit-box-flex-wrap: wrap;
   -webkit-flex-wrap: wrap;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
-  width: calc(100% + 16px);
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
-  margin-top: calc(-1 * 16px);
-  margin-left: calc(-1 * 16px);
+  gap: var(--Grid-rowSpacing) var(--Grid-columnSpacing);
 }
 
-.emotion-1>.MuiGrid-item {
-  padding-top: 16px;
+.emotion-1>* {
+  --Grid-parent-columns: 12;
 }
 
-.emotion-1>.MuiGrid-item {
-  padding-left: 16px;
+.emotion-1>* {
+  --Grid-parent-columnSpacing: 16px;
+}
+
+.emotion-1>* {
+  --Grid-parent-rowSpacing: 16px;
 }
 
 .emotion-2 {
@@ -4799,7 +4715,7 @@ exports[`single fields hidden field 1`] = `
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
     >
       <div
-        className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2 emotion-1"
+        className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 emotion-1"
         style={
           {
             "marginTop": "10px",
@@ -14987,94 +14903,49 @@ exports[`single fields title field 1`] = `
 }
 
 .emotion-4 {
+  --Grid-columns: 12;
+  --Grid-columnSpacing: 16px;
+  --Grid-rowSpacing: 16px;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  min-width: 0;
   box-sizing: border-box;
   display: flex;
   -webkit-box-flex-wrap: wrap;
   -webkit-flex-wrap: wrap;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
-  width: calc(100% + 16px);
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
-  margin-top: calc(-1 * 16px);
-  margin-left: calc(-1 * 16px);
+  gap: var(--Grid-rowSpacing) var(--Grid-columnSpacing);
 }
 
-.emotion-4>.MuiGrid-item {
-  padding-top: 16px;
+.emotion-4>* {
+  --Grid-parent-columns: 12;
 }
 
-.emotion-4>.MuiGrid-item {
-  padding-left: 16px;
+.emotion-4>* {
+  --Grid-parent-columnSpacing: 16px;
+}
+
+.emotion-4>* {
+  --Grid-parent-rowSpacing: 16px;
 }
 
 .emotion-5 {
-  box-sizing: border-box;
-  margin: 0;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
-  -webkit-flex-basis: 100%;
-  -ms-flex-preferred-size: 100%;
-  flex-basis: 100%;
+  -webkit-flex-basis: auto;
+  -ms-flex-preferred-size: auto;
+  flex-basis: auto;
   -webkit-box-flex: 0;
   -webkit-flex-grow: 0;
   -ms-flex-positive: 0;
   flex-grow: 0;
-  max-width: 100%;
-}
-
-@media (min-width:600px) {
-  .emotion-5 {
-    -webkit-flex-basis: 100%;
-    -ms-flex-preferred-size: 100%;
-    flex-basis: 100%;
-    -webkit-box-flex: 0;
-    -webkit-flex-grow: 0;
-    -ms-flex-positive: 0;
-    flex-grow: 0;
-    max-width: 100%;
-  }
-}
-
-@media (min-width:900px) {
-  .emotion-5 {
-    -webkit-flex-basis: 100%;
-    -ms-flex-preferred-size: 100%;
-    flex-basis: 100%;
-    -webkit-box-flex: 0;
-    -webkit-flex-grow: 0;
-    -ms-flex-positive: 0;
-    flex-grow: 0;
-    max-width: 100%;
-  }
-}
-
-@media (min-width:1200px) {
-  .emotion-5 {
-    -webkit-flex-basis: 100%;
-    -ms-flex-preferred-size: 100%;
-    flex-basis: 100%;
-    -webkit-box-flex: 0;
-    -webkit-flex-grow: 0;
-    -ms-flex-positive: 0;
-    flex-grow: 0;
-    max-width: 100%;
-  }
-}
-
-@media (min-width:1536px) {
-  .emotion-5 {
-    -webkit-flex-basis: 100%;
-    -ms-flex-preferred-size: 100%;
-    flex-basis: 100%;
-    -webkit-box-flex: 0;
-    -webkit-flex-grow: 0;
-    -ms-flex-positive: 0;
-    flex-grow: 0;
-    max-width: 100%;
-  }
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  max-width: none;
+  width: auto;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .emotion-7 {
@@ -15451,7 +15322,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-10:focus::-ms-input-
         />
       </div>
       <div
-        className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2 emotion-4"
+        className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 emotion-4"
         style={
           {
             "marginTop": "10px",
@@ -15459,7 +15330,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-10:focus::-ms-input-
         }
       >
         <div
-          className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 emotion-5"
+          className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-5"
           style={
             {
               "marginBottom": "10px",

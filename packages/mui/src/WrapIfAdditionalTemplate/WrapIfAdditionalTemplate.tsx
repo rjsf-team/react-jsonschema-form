@@ -1,5 +1,5 @@
 import { CSSProperties, FocusEvent } from 'react';
-import Grid from '@mui/material/Grid';
+import Grid2 from '@mui/material/Grid2';
 import TextField from '@mui/material/TextField';
 import {
   ADDITIONAL_PROPERTY_FLAG,
@@ -59,8 +59,8 @@ export default function WrapIfAdditionalTemplate<
   const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) => onKeyChange(target && target.value);
 
   return (
-    <Grid container key={`${id}-key`} alignItems='center' spacing={2} className={classNames} style={style}>
-      <Grid item xs>
+    <Grid2 container key={`${id}-key`} alignItems='center' spacing={2} className={classNames} style={style}>
+      <Grid2 size='auto'>
         <TextField
           fullWidth={true}
           required={required}
@@ -72,11 +72,9 @@ export default function WrapIfAdditionalTemplate<
           onBlur={!readonly ? handleBlur : undefined}
           type='text'
         />
-      </Grid>
-      <Grid item={true} xs>
-        {children}
-      </Grid>
-      <Grid item={true}>
+      </Grid2>
+      <Grid2 size='auto'>{children}</Grid2>
+      <Grid2>
         <RemoveButton
           id={buttonId<T>(id, 'remove')}
           className='array-item-remove'
@@ -87,7 +85,7 @@ export default function WrapIfAdditionalTemplate<
           uiSchema={uiSchema}
           registry={registry}
         />
-      </Grid>
-    </Grid>
+      </Grid2>
+    </Grid2>
   );
 }
