@@ -103,7 +103,7 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
    *
    * @param schema - The schema for which the default state is desired
    * @param [formData] - The current formData, if any, onto which to provide any missing defaults
-   * @param initDefaultsGenerated - indicates whether or not initial defaults have been generated
+   * @param initialDefaultsGenerated - Indicates whether or not initial defaults have been generated
    * @param [includeUndefinedValues=false] - Optional flag, if true, cause undefined values to be added as defaults.
    *          If "excludeObjectChildren", pass `includeUndefinedValues` as false when computing defaults for any nested
    *          object properties.
@@ -112,7 +112,7 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
   getDefaultFormState(
     schema: S,
     formData?: T,
-    initDefaultsGenerated?: boolean,
+    initialDefaultsGenerated?: boolean,
     includeUndefinedValues: boolean | 'excludeObjectChildren' = false
   ): T | T[] | undefined {
     return getDefaultFormState<T, S, F>(
@@ -120,7 +120,7 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
       schema,
       formData,
       this.rootSchema,
-      initDefaultsGenerated,
+      initialDefaultsGenerated,
       includeUndefinedValues,
       this.experimental_defaultFormStateBehavior,
       this.experimental_customMergeAllOf

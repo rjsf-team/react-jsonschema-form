@@ -252,7 +252,7 @@ export interface FormState<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   // Private
   /** @description result of schemaUtils.retrieveSchema(schema, formData). This a memoized value to avoid re calculate at internal functions (getStateFromProps, onChange) */
   retrievedSchema: S;
-  /** Flag indicating whether the form defaults have been generated */
+  /** Flag indicating whether the initial form defaults have been generated */
   initialDefaultsGenerated: boolean;
 }
 

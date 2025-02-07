@@ -178,8 +178,8 @@ interface ComputeDefaultsProps<T = any, S extends StrictRJSFSchema = RJSFSchema>
    *  The formData should take precedence unless it's not valid. This is useful when for example the value from formData does not exist in the schema 'enum' property, in such cases we take the value from the defaults because the value from the formData is not valid.
    */
   shouldMergeDefaultsIntoFormData?: boolean;
-  /** Indicates whether or not initial defaults have been generated */
-  initDefaultsGenerated?: boolean;
+  /** Indicates whether initial defaults have been generated */
+  initialDefaultsGenerated?: boolean;
 }
 
 /** Computes the defaults for the current `schema` given the `rawFormData` and `parentDefaults` if any. This drills into
@@ -205,7 +205,7 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
     experimental_customMergeAllOf = undefined,
     required,
     shouldMergeDefaultsIntoFormData = false,
-    initDefaultsGenerated,
+    initialDefaultsGenerated,
   } = computeDefaultsProps;
   const formData: T = (isObject(rawFormData) ? rawFormData : {}) as T;
   const schema: S = isObject(rawSchema) ? rawSchema : ({} as S);
@@ -326,7 +326,7 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
       rawFormData: formData as T,
       required,
       shouldMergeDefaultsIntoFormData,
-      initDefaultsGenerated,
+      initialDefaultsGenerated,
     });
   }
 
@@ -421,7 +421,7 @@ export function getObjectDefaults<T = any, S extends StrictRJSFSchema = RJSFSche
     experimental_customMergeAllOf = undefined,
     required,
     shouldMergeDefaultsIntoFormData,
-    initDefaultsGenerated,
+    initialDefaultsGenerated,
   }: ComputeDefaultsProps<T, S> = {},
   defaults?: T | T[] | undefined
 ): T {
@@ -457,7 +457,7 @@ export function getObjectDefaults<T = any, S extends StrictRJSFSchema = RJSFSche
           rawFormData: get(formData, [key]),
           required: retrievedSchema.required?.includes(key),
           shouldMergeDefaultsIntoFormData,
-          initDefaultsGenerated,
+          initialDefaultsGenerated,
         });
         maybeAddDefaultToObject<T>(
           acc,
@@ -473,7 +473,7 @@ export function getObjectDefaults<T = any, S extends StrictRJSFSchema = RJSFSche
       },
       {}
     ) as T;
-    if (retrievedSchema.additionalProperties && !initDefaultsGenerated) {
+    if (retrievedSchema.additionalProperties && !initialDefaultsGenerated) {
       // as per spec additionalProperties may be either schema or boolean
       const additionalPropertiesSchema = isObject(retrievedSchema.additionalProperties)
         ? retrievedSchema.additionalProperties
@@ -503,7 +503,7 @@ export function getObjectDefaults<T = any, S extends StrictRJSFSchema = RJSFSche
           rawFormData: get(formData, [key]),
           required: retrievedSchema.required?.includes(key),
           shouldMergeDefaultsIntoFormData,
-          initDefaultsGenerated,
+          initialDefaultsGenerated,
         });
         // Since these are additional properties we don't need to add the `experimental_defaultFormStateBehavior` prop
         maybeAddDefaultToObject<T>(
@@ -539,7 +539,7 @@ export function getArrayDefaults<T = any, S extends StrictRJSFSchema = RJSFSchem
     experimental_customMergeAllOf = undefined,
     required,
     shouldMergeDefaultsIntoFormData,
-    initDefaultsGenerated,
+    initialDefaultsGenerated,
   }: ComputeDefaultsProps<T, S> = {},
   defaults?: T | T[] | undefined
 ): T | T[] | undefined {
@@ -568,7 +568,7 @@ export function getArrayDefaults<T = any, S extends StrictRJSFSchema = RJSFSchem
         parentDefaults: item,
         required,
         shouldMergeDefaultsIntoFormData,
-        initDefaultsGenerated,
+        initialDefaultsGenerated,
       });
     }) as T[];
   }
@@ -589,7 +589,7 @@ export function getArrayDefaults<T = any, S extends StrictRJSFSchema = RJSFSchem
           parentDefaults: get(defaults, [idx]),
           required,
           shouldMergeDefaultsIntoFormData,
-          initDefaultsGenerated,
+          initialDefaultsGenerated,
         });
       }) as T[];
 
@@ -639,7 +639,7 @@ export function getArrayDefaults<T = any, S extends StrictRJSFSchema = RJSFSchem
       experimental_customMergeAllOf,
       required,
       shouldMergeDefaultsIntoFormData,
-      initDefaultsGenerated,
+      initialDefaultsGenerated,
     })
   ) as T[];
   // then fill up the rest with either the item default or empty, up to minItems
@@ -682,7 +682,7 @@ export function getDefaultBasedOnSchemaType<
  * @param theSchema - The schema for which the default state is desired
  * @param [formData] - The current formData, if any, onto which to provide any missing defaults
  * @param [rootSchema] - The root schema, used to primarily to look up `$ref`s
- * @param initDefaultsGenerated - indicates whether or not initial defaults have been generated
+ * @param initialDefaultsGenerated - Indicates whether or not initial defaults have been generated
  * @param [includeUndefinedValues=false] - Optional flag, if true, cause undefined values to be added as defaults.
  *          If "excludeObjectChildren", cause undefined values for this object and pass `includeUndefinedValues` as
  *          false when computing defaults for any nested object properties.
@@ -699,7 +699,7 @@ export default function getDefaultFormState<
   theSchema: S,
   formData?: T,
   rootSchema?: S,
-  initDefaultsGenerated?: boolean,
+  initialDefaultsGenerated?: boolean,
   includeUndefinedValues: boolean | 'excludeObjectChildren' = false,
   experimental_defaultFormStateBehavior?: Experimental_DefaultFormStateBehavior,
   experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>
@@ -719,7 +719,7 @@ export default function getDefaultFormState<
     experimental_customMergeAllOf,
     rawFormData: formData,
     shouldMergeDefaultsIntoFormData: true,
-    initDefaultsGenerated,
+    initialDefaultsGenerated,
   });
 
   // If the formData is an object or an array, add additional properties from formData and override formData with
