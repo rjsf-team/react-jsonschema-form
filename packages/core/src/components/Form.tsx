@@ -35,6 +35,7 @@ import {
   ValidatorType,
   Experimental_DefaultFormStateBehavior,
   Experimental_CustomMergeAllOf,
+  // FormValidation,
 } from '@rjsf/utils';
 import _forEach from 'lodash/forEach';
 import _get from 'lodash/get';
@@ -273,6 +274,8 @@ export default class Form<
    * provide any possible type here
    */
   formElement: RefObject<any>;
+
+  private customValidationErrors: RJSFValidationError[] = [];
 
   /** Constructs the `Form` from the `props`. Will setup the initial state from the props. It will also call the
    * `onChange` handler if the initially provided `formData` is modified to add missing default values as part of the
@@ -519,6 +522,10 @@ export default class Form<
     return shouldRender(this, nextProps, nextState);
   }
 
+  // private customValidateCB = (formData: T | undefined, errors: FormValidation<T>, uiSchema?: UiSchema<T, S, F>): FormValidation<T> => {
+  //   const errorHandler = customValidate(newFormData, createErrorHandler<T>(newFormData), uiSchema);
+  // };
+
   /** Validates the `formData` against the `schema` using the `altSchemaUtils` (if provided otherwise it uses the
    * `schemaUtils` in the state), returning the results.
    *
@@ -703,8 +710,12 @@ export default class Form<
         errors = merged.errors;
       }
       // Merging 'newErrorSchema' into 'errorSchema' to display the custom raised errors.
+      console.log('newErrorSchema****', newErrorSchema);
       if (newErrorSchema) {
         const filteredErrors = this.filterErrorsBasedOnSchema(newErrorSchema, retrievedSchema, newFormData);
+        console.log('filteredErrors', filteredErrors);
+        console.log('newFormData', newFormData);
+        console.log('filteredErrors formData', formData);
         errorSchema = mergeObjects(errorSchema, filteredErrors, 'preventDuplicates') as ErrorSchema<T>;
       }
       state = {
