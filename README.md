@@ -31,7 +31,6 @@
 - [Bootstrap 3](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/core)
 - [React-Bootstrap (Bootstrap 5)](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/react-bootstrap)
 - [Chakra UI](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/chakra-ui)
-- [Fluent UI](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/fluent-ui)
 - [Fluent UI 9](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/fluentui-rc)
 - [Material UI 5](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/mui)
 - [Semantic UI](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/semantic-ui)

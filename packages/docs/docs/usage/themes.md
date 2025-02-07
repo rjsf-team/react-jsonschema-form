@@ -11,7 +11,6 @@ meaning that you must load the Bootstrap stylesheet on the page to view the form
 | Bootstrap 3 (default) | Published | `@rjsf/core`            |
 | react-bootstrap       | Published | `@rjsf/react-bootstrap` |
 | Chakra UI             | Published | `@rjsf/chakra-ui`       |
-| fluent-ui             | Published | `@rjsf/fluent-ui`       |
 | fluentui-rc           | Published | `@rjsf/fluentui-rc`     |
 | material-ui 5         | Published | `@rjsf/mui`             |
 | Semantic UI           | Published | `@rjsf/semantic-ui`     |

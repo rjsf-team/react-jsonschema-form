@@ -25,7 +25,6 @@ body:
         - core
         - antd
         - chakra-ui
-        - fluent-ui
         - mui
         - react-bootstrap
         - semantic-ui
