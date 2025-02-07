@@ -19,17 +19,17 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/antd
 
-- Refactored `ArrayFieldItemTemplate` to use the new `ArrayFieldItemButtonsTemplate`
+- BREAKING CHANGE: Refactored `ArrayFieldItemTemplate` to use the new `ArrayFieldItemButtonsTemplate`
 - Updated the `ArrayFieldTemplate`, `ObjectFieldTemplate`, and `WrapIfAdditionalTemplate` to a unique id using the `buttonId()` function and adding consistent marker classes
 
 ## @rjsf/chakra-ui
 
-- Refactored `ArrayFieldItemTemplate` to use the new `ArrayFieldItemButtonsTemplate`
+- BREAKING CHANGE: Refactored `ArrayFieldItemTemplate` to use the new `ArrayFieldItemButtonsTemplate`
 - Updated the `ArrayFieldTemplate`, `ObjectFieldTemplate`, and `WrapIfAdditionalTemplate` to a unique id using the `buttonId()` function and adding consistent marker classes
 
 ## @rjsf/core
 
-- Updated `ArrayField` to provide the `buttonsProps` to the `ArrayFieldItemTemplateType`
+- BREAKING CHANGE: Updated `ArrayField` to provide the `buttonsProps` to the `ArrayFieldItemTemplateType`
 - Added `ArrayFieldItemButtonsTemplate` component as a refactor of all the common buttons code from all the `ArrayFieldItemTemplate` implementations, adding a unique id using the `buttonId()` function
 - Refactored `ArrayFieldItemTemplate` to use the new `ArrayFieldItemButtonsTemplate`
 - Updated the `ArrayFieldTemplate`, `ObjectFieldTemplate`, and `WrapIfAdditionalTemplate` to a unique id using the `buttonId()` function and adding consistent marker classes
@@ -40,17 +40,17 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/fluentui-rc
 
-- Refactored `ArrayFieldItemTemplate` to use the new `ArrayFieldItemButtonsTemplate`
+- BREAKING CHANGE: Refactored `ArrayFieldItemTemplate` to use the new `ArrayFieldItemButtonsTemplate`
 - Updated the `ArrayFieldTemplate`, `ObjectFieldTemplate`, and `WrapIfAdditionalTemplate` to a unique id using the `buttonId()` function and adding consistent marker classes
 
 ## @rjsf/mui
 
-- Refactored `ArrayFieldItemTemplate` to use the new `ArrayFieldItemButtonsTemplate`
+- BREAKING CHANGE: Refactored `ArrayFieldItemTemplate` to use the new `ArrayFieldItemButtonsTemplate`
 - Updated the `ArrayFieldTemplate`, `ObjectFieldTemplate`, and `WrapIfAdditionalTemplate` to a unique id using the `buttonId()` function and adding consistent marker classes
 
 ## @rjsf/semantic-ui
 
-- Refactored `ArrayFieldItemTemplate` to use the new `ArrayFieldItemButtonsTemplate`
+- BREAKING CHANGE: Refactored `ArrayFieldItemTemplate` to use the new `ArrayFieldItemButtonsTemplate`
 - Updated the `ArrayFieldTemplate`, `ObjectFieldTemplate`, and `WrapIfAdditionalTemplate` to a unique id using the `buttonId()` function and adding consistent marker classes
 
 ## @rjsf/utils
