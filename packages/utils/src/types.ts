@@ -284,6 +284,16 @@ export type FieldHelpProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   registry: Registry<T, S, F>;
 };
 
+/** The properties that are passed to a `GridTemplate` */
+export interface GridTemplateProps extends GenericObjectType {
+  /** The contents of the grid template */
+  children?: ReactNode;
+  /** Optional flag indicating whether the grid element represents a column, necessary for themes which have components
+   * for Rows vs Columns. NOTE: This is falsy by default when not specified
+   */
+  column?: boolean;
+}
+
 /** The set of `Fields` stored in the `Registry` */
 export type RegistryFieldsType<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any> = {
   /** A `Field` indexed by `name` */
@@ -302,8 +312,10 @@ export interface TemplatesType<T = any, S extends StrictRJSFSchema = RJSFSchema,
   ArrayFieldTemplate: ComponentType<ArrayFieldTemplateProps<T, S, F>>;
   /** The template to use while rendering the description for an array field */
   ArrayFieldDescriptionTemplate: ComponentType<ArrayFieldDescriptionProps<T, S, F>>;
+  /** The template to use while rendering the buttons for an item in an array field */
+  ArrayFieldItemButtonsTemplate: ComponentType<ArrayFieldItemButtonsTemplateType<T, S, F>>;
   /** The template to use while rendering an item in an array field */
-  ArrayFieldItemTemplate: ComponentType<ArrayFieldTemplateItemType<T, S, F>>;
+  ArrayFieldItemTemplate: ComponentType<ArrayFieldItemTemplateType<T, S, F>>;
   /** The template to use while rendering the title for an array field */
   ArrayFieldTitleTemplate: ComponentType<ArrayFieldTitleProps<T, S, F>>;
   /** The template to use while rendering the standard html input */
@@ -318,6 +330,8 @@ export interface TemplatesType<T = any, S extends StrictRJSFSchema = RJSFSchema,
   FieldHelpTemplate: ComponentType<FieldHelpProps<T, S, F>>;
   /** The template to use while rendering a field */
   FieldTemplate: ComponentType<FieldTemplateProps<T, S, F>>;
+  /** The template to use to render a Grid element */
+  GridTemplate: ComponentType<GridTemplateProps>;
   /** The template to use while rendering an object */
   ObjectFieldTemplate: ComponentType<ObjectFieldTemplateProps<T, S, F>>;
   /** The template to use for rendering the title of a field */
@@ -572,16 +586,18 @@ export type ArrayFieldDescriptionProps<
   idSchema: IdSchema<T>;
 };
 
-/** The properties of each element in the ArrayFieldTemplateProps.items array */
-export type ArrayFieldTemplateItemType<
+/** The properties of the buttons to render for each element in the ArrayFieldTemplateProps.items array */
+export type ArrayFieldItemButtonsTemplateType<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
 > = {
-  /** The html for the item's content */
-  children: ReactElement;
+  /** The idSchema of the item for which buttons are being rendered */
+  idSchema: IdSchema<T>;
   /** The className string */
-  className: string;
+  className?: string;
+  /** Any optional style attributes */
+  style?: ButtonHTMLAttributes<HTMLButtonElement>['style'];
   /** A boolean value stating if the array item is disabled */
   disabled?: boolean;
   /** A boolean value stating whether new items can be added to the array */
@@ -594,8 +610,6 @@ export type ArrayFieldTemplateItemType<
   hasMoveUp: boolean;
   /** A boolean value stating whether the array item can be removed */
   hasRemove: boolean;
-  /** A boolean value stating whether the array item has a toolbar */
-  hasToolbar: boolean;
   /** A number stating the index the array item occurs in `items` */
   index: number;
   /** A number stating the total number `items` in the array */
@@ -610,6 +624,36 @@ export type ArrayFieldTemplateItemType<
   onReorderClick: (index: number, newIndex: number) => (event?: any) => void;
   /** A boolean value stating if the array item is read-only */
   readonly?: boolean;
+  /** The schema object for this array item */
+  schema: S;
+  /** The uiSchema object for this array item */
+  uiSchema?: UiSchema<T, S, F>;
+  /** The `registry` object */
+  registry: Registry<T, S, F>;
+};
+
+/** The properties of each element in the ArrayFieldTemplateProps.items array */
+export type ArrayFieldItemTemplateType<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+> = {
+  /** The html for the item's content */
+  children: ReactNode;
+  /** The props to pass to the `ArrayFieldItemButtonTemplate` */
+  buttonsProps: ArrayFieldItemButtonsTemplateType<T, S, F>;
+  /** The className string */
+  className: string;
+  /** A boolean value stating if the array item is disabled */
+  disabled?: boolean;
+  /** A boolean value stating whether the array item has a toolbar */
+  hasToolbar: boolean;
+  /** A number stating the index the array item occurs in `items` */
+  index: number;
+  /** A number stating the total number `items` in the array */
+  totalItems: number;
+  /** A boolean value stating if the array item is read-only */
+  readonly?: boolean;
   /** A stable, unique key for the array item */
   key: string;
   /** The schema object for this array item */
@@ -619,6 +663,15 @@ export type ArrayFieldTemplateItemType<
   /** The `registry` object */
   registry: Registry<T, S, F>;
 };
+
+/**
+ * @deprecated - Use `ArrayFieldItemTemplateType` instead
+ */
+export type ArrayFieldTemplateItemType<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+> = ArrayFieldItemTemplateType<T, S, F>;
 
 /** The properties that are passed to an ArrayFieldTemplate implementation */
 export type ArrayFieldTemplateProps<
@@ -635,7 +688,7 @@ export type ArrayFieldTemplateProps<
   /** An object containing the id for this object & ids for its properties */
   idSchema: IdSchema<T>;
   /** An array of objects representing the items in the array */
-  items: ArrayFieldTemplateItemType<T, S, F>[];
+  items: ArrayFieldItemTemplateType<T, S, F>[];
   /** A function that adds a new item to the array */
   onAddClick: (event?: any) => void;
   /** A boolean value stating if the array is read-only */

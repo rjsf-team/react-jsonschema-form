@@ -8,6 +8,7 @@ import {
   StrictRJSFSchema,
   TranslatableString,
   WrapIfAdditionalTemplateProps,
+  buttonId,
 } from '@rjsf/utils';
 
 const VERTICAL_LABEL_COL = { span: 24 };
@@ -108,6 +109,7 @@ export default function WrapIfAdditionalTemplate<
         </Col>
         <Col flex='192px'>
           <RemoveButton
+            id={buttonId<T>(id, 'remove')}
             className='array-item-remove'
             disabled={disabled || readonly}
             onClick={onDropPropertyClick(label)}

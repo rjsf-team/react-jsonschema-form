@@ -7,6 +7,7 @@ import {
   StrictRJSFSchema,
   RJSFSchema,
   FormContextType,
+  buttonId,
 } from '@rjsf/utils';
 
 export default function ArrayFieldTemplate<
@@ -64,6 +65,7 @@ export default function ArrayFieldTemplate<
           <GridItem justifySelf={'flex-end'}>
             <Box mt={2}>
               <AddButton
+                id={buttonId<T>(idSchema, 'add')}
                 className='array-item-add'
                 onClick={onAddClick}
                 disabled={disabled || readonly}

@@ -5,6 +5,7 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
   getUiOptions,
+  getTemplate,
 } from '@rjsf/utils';
 import { Button, Grid, Segment } from 'semantic-ui-react';
 
@@ -17,31 +18,20 @@ const gridStyle = (vertical: boolean) => ({
 
 /** The `ArrayFieldItemTemplate` component is the template used to render an items of an array.
  *
- * @param props - The `ArrayFieldTemplateItemType` props for the component
+ * @param props - The `ArrayFieldItemTemplateType` props for the component
  */
 export default function ArrayFieldItemTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
 >(props: ArrayFieldTemplateItemType<T, S, F>) {
-  const {
-    children,
-    disabled,
-    hasToolbar,
-    hasCopy,
-    hasMoveDown,
-    hasMoveUp,
-    hasRemove,
-    index,
-    onCopyIndexClick,
-    onDropIndexClick,
-    onReorderClick,
-    readonly,
-    uiSchema,
-    registry,
-  } = props;
-  const { CopyButton, MoveDownButton, MoveUpButton, RemoveButton } = registry.templates.ButtonTemplates;
+  const { children, buttonsProps, hasToolbar, uiSchema, registry } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
+  const ArrayFieldItemButtonsTemplate = getTemplate<'ArrayFieldItemButtonsTemplate', T, S, F>(
+    'ArrayFieldItemButtonsTemplate',
+    registry,
+    uiOptions
+  );
   // Pull the semantic props out of the uiOptions that were put in via the ArrayFieldTemplate
   const { horizontalButtons = true, wrapItem = false } = uiOptions.semantic as GenericObjectType;
   return (
@@ -53,46 +43,9 @@ export default function ArrayFieldItemTemplate<
           </Grid.Column>
           {hasToolbar && (
             <Grid.Column>
-              {(hasMoveUp || hasMoveDown || hasRemove) && (
-                <Button.Group size='mini' vertical={!horizontalButtons}>
-                  {(hasMoveUp || hasMoveDown) && (
-                    <MoveUpButton
-                      className='array-item-move-up'
-                      disabled={disabled || readonly || !hasMoveUp}
-                      onClick={onReorderClick(index, index - 1)}
-                      uiSchema={uiSchema}
-                      registry={registry}
-                    />
-                  )}
-                  {(hasMoveUp || hasMoveDown) && (
-                    <MoveDownButton
-                      className='array-item-move-down'
-                      disabled={disabled || readonly || !hasMoveDown}
-                      onClick={onReorderClick(index, index + 1)}
-                      uiSchema={uiSchema}
-                      registry={registry}
-                    />
-                  )}
-                  {hasCopy && (
-                    <CopyButton
-                      className='array-item-copy'
-                      disabled={disabled || readonly}
-                      onClick={onCopyIndexClick(index)}
-                      uiSchema={uiSchema}
-                      registry={registry}
-                    />
-                  )}
-                  {hasRemove && (
-                    <RemoveButton
-                      className='array-item-remove'
-                      disabled={disabled || readonly}
-                      onClick={onDropIndexClick(index)}
-                      uiSchema={uiSchema}
-                      registry={registry}
-                    />
-                  )}
-                </Button.Group>
-              )}
+              <Button.Group size='mini' vertical={!horizontalButtons}>
+                <ArrayFieldItemButtonsTemplate {...buttonsProps} />
+              </Button.Group>
             </Grid.Column>
           )}
         </Grid>

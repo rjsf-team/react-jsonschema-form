@@ -70,6 +70,19 @@ Otherwise, the string is wrapped by `Number()` and if that result is not `NaN`, 
 
 - undefined | null | string | number: The `value` converted to a number when appropriate, otherwise the `value`
 
+### buttonId<T = any>()
+
+Return a consistent `id` for the `btn` button element
+
+#### Parameters
+
+- id: IdSchema&lt;T> | string - Either simple string id or an IdSchema from which to extract it
+- btn: 'add' | 'copy' | 'moveDown' | 'moveUp' | 'remove' - The button type for which to generate the id
+
+#### Returns
+
+- string: The consistent id for the button from the given `id` and `btn` type
+
 ### canExpand<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
 
 Checks whether the field described by `schema`, having the `uiSchema` and `formData` supports expanding.

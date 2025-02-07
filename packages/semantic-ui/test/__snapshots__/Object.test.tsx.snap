@@ -95,6 +95,7 @@ exports[`object fields additionalProperties 1`] = `
             >
               <button
                 className="ui mini icon button array-item-remove"
+                id="root_foo__remove"
                 onClick={[Function]}
                 title="Remove"
               >
@@ -124,7 +125,8 @@ exports[`object fields additionalProperties 1`] = `
             }
           >
             <button
-              className="ui tiny icon button"
+              className="ui tiny icon button object-property-expand"
+              id="root__add"
               onClick={[Function]}
               title="Add Item"
             >
@@ -339,6 +341,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
             >
               <button
                 className="ui mini icon button array-item-remove"
+                id="root_additionalProperty__remove"
                 onClick={[Function]}
                 title="Remove"
               >
@@ -368,7 +371,8 @@ exports[`object fields show add button and fields if additionalProperties is tru
             }
           >
             <button
-              className="ui tiny icon button"
+              className="ui tiny icon button object-property-expand"
+              id="root__add"
               onClick={[Function]}
               title="Add Item"
             >
@@ -500,6 +504,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
             >
               <button
                 className="ui mini icon button array-item-remove"
+                id="root_foo__remove"
                 onClick={[Function]}
                 title="Remove"
               >
@@ -529,7 +534,8 @@ exports[`object fields with title and description additionalProperties 1`] = `
             }
           >
             <button
-              className="ui tiny icon button"
+              className="ui tiny icon button object-property-expand"
+              id="root__add"
               onClick={[Function]}
               title="Add Item"
             >
@@ -661,6 +667,7 @@ exports[`object fields with title and description from both additionalProperties
             >
               <button
                 className="ui mini icon button array-item-remove"
+                id="root_foo__remove"
                 onClick={[Function]}
                 title="Remove"
               >
@@ -690,7 +697,8 @@ exports[`object fields with title and description from both additionalProperties
             }
           >
             <button
-              className="ui tiny icon button"
+              className="ui tiny icon button object-property-expand"
+              id="root__add"
               onClick={[Function]}
               title="Add Item"
             >
@@ -941,6 +949,7 @@ exports[`object fields with title and description from uiSchema additionalProper
             >
               <button
                 className="ui mini icon button array-item-remove"
+                id="root_foo__remove"
                 onClick={[Function]}
                 title="Remove"
               >
@@ -970,7 +979,8 @@ exports[`object fields with title and description from uiSchema additionalProper
             }
           >
             <button
-              className="ui tiny icon button"
+              className="ui tiny icon button object-property-expand"
+              id="root__add"
               onClick={[Function]}
               title="Add Item"
             >
@@ -1221,6 +1231,7 @@ exports[`object fields with title and description from uiSchema show add button 
             >
               <button
                 className="ui mini icon button array-item-remove"
+                id="root_additionalProperty__remove"
                 onClick={[Function]}
                 title="Remove"
               >
@@ -1250,7 +1261,8 @@ exports[`object fields with title and description from uiSchema show add button 
             }
           >
             <button
-              className="ui tiny icon button"
+              className="ui tiny icon button object-property-expand"
+              id="root__add"
               onClick={[Function]}
               title="Add Item"
             >
@@ -1501,6 +1513,7 @@ exports[`object fields with title and description show add button and fields if 
             >
               <button
                 className="ui mini icon button array-item-remove"
+                id="root_additionalProperty__remove"
                 onClick={[Function]}
                 title="Remove"
               >
@@ -1530,7 +1543,8 @@ exports[`object fields with title and description show add button and fields if 
             }
           >
             <button
-              className="ui tiny icon button"
+              className="ui tiny icon button object-property-expand"
+              id="root__add"
               onClick={[Function]}
               title="Add Item"
             >
@@ -1645,6 +1659,7 @@ exports[`object fields with title and description with global label off addition
             >
               <button
                 className="ui mini icon button array-item-remove"
+                id="root_foo__remove"
                 onClick={[Function]}
                 title="Remove"
               >
@@ -1674,7 +1689,8 @@ exports[`object fields with title and description with global label off addition
             }
           >
             <button
-              className="ui tiny icon button"
+              className="ui tiny icon button object-property-expand"
+              id="root__add"
               onClick={[Function]}
               title="Add Item"
             >
@@ -1874,6 +1890,7 @@ exports[`object fields with title and description with global label off show add
             >
               <button
                 className="ui mini icon button array-item-remove"
+                id="root_additionalProperty__remove"
                 onClick={[Function]}
                 title="Remove"
               >
@@ -1903,7 +1920,8 @@ exports[`object fields with title and description with global label off show add
             }
           >
             <button
-              className="ui tiny icon button"
+              className="ui tiny icon button object-property-expand"
+              id="root__add"
               onClick={[Function]}
               title="Add Item"
             >

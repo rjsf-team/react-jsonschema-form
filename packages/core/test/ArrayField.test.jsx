@@ -16,30 +16,33 @@ const ExposedArrayKeyTemplate = function (props) {
         props.items.map((element) => (
           <div key={element.key} className='array-item' data-rjsf-itemkey={element.key}>
             <div>{element.children}</div>
-            {(element.hasMoveUp || element.hasMoveDown) && (
+            {(element.buttonsProps.hasMoveUp || element.buttonsProps.hasMoveDown) && (
               <button
                 className='array-item-move-down'
-                onClick={element.onReorderClick(element.index, element.index + 1)}
+                onClick={element.buttonsProps.onReorderClick(element.index, element.index + 1)}
               >
                 Down
               </button>
             )}
-            {(element.hasMoveUp || element.hasMoveDown) && (
-              <button className='array-item-move-up' onClick={element.onReorderClick(element.index, element.index - 1)}>
+            {(element.buttonsProps.hasMoveUp || element.buttonsProps.hasMoveDown) && (
+              <button
+                className='array-item-move-up'
+                onClick={element.buttonsProps.onReorderClick(element.index, element.index - 1)}
+              >
                 Up
               </button>
             )}
-            {element.hasCopy && (
-              <button className='array-item-copy' onClick={element.onCopyIndexClick(element.index)}>
+            {element.buttonsProps.hasCopy && (
+              <button className='array-item-copy' onClick={element.buttonsProps.onCopyIndexClick(element.index)}>
                 Copy
               </button>
             )}
-            {element.hasRemove && (
-              <button className='array-item-remove' onClick={element.onDropIndexClick(element.index)}>
+            {element.buttonsProps.hasRemove && (
+              <button className='array-item-remove' onClick={element.buttonsProps.onDropIndexClick(element.index)}>
                 Remove
               </button>
             )}
-            <button onClick={element.onDropIndexClick(element.index)}>Delete</button>
+            <button onClick={element.buttonsProps.onDropIndexClick(element.index)}>Delete</button>
             <hr />
           </div>
         ))}
@@ -76,17 +79,14 @@ const CustomOnAddClickTemplate = function (props) {
   );
 };
 
-const ArrayFieldTestItemTemplate = (props) => {
+const ArrayFieldTestItemButtonsTemplate = (props) => {
   const {
-    children,
-    className,
     disabled,
-    hasToolbar,
+    hasCopy,
     hasMoveDown,
     hasMoveUp,
     hasRemove,
-    hasCopy,
-    canAdd,
+    style,
     index,
     onAddIndexClick,
     onCopyIndexClick,
@@ -94,6 +94,49 @@ const ArrayFieldTestItemTemplate = (props) => {
     onReorderClick,
     readonly,
   } = props;
+  return (
+    <>
+      {hasMoveDown && (
+        <button
+          title='move-down'
+          style={style}
+          disabled={disabled || readonly}
+          onClick={onReorderClick(index, index + 1)}
+        >
+          move down
+        </button>
+      )}
+      {hasMoveUp && (
+        <button
+          title='move-up'
+          style={style}
+          disabled={disabled || readonly}
+          onClick={onReorderClick(index, index - 1)}
+        >
+          move up
+        </button>
+      )}
+      {hasCopy && (
+        <button title='copy' style={style} disabled={disabled || readonly} onClick={onCopyIndexClick(index)}>
+          copy
+        </button>
+      )}
+      {hasRemove && (
+        <button title='remove' style={style} disabled={disabled || readonly} onClick={onDropIndexClick(index)}>
+          remove
+        </button>
+      )}
+      {hasMoveDown && (
+        <button title='insert' style={style} disabled={disabled || readonly} onClick={onAddIndexClick(index + 1)}>
+          insert
+        </button>
+      )}
+    </>
+  );
+};
+
+const ArrayFieldTestItemTemplate = (props) => {
+  const { children, buttonsProps, className, hasToolbar } = props;
   const btnStyle = {
     flex: 1,
     paddingLeft: 6,
@@ -112,46 +155,7 @@ const ArrayFieldTestItemTemplate = (props) => {
               justifyContent: 'space-around',
             }}
           >
-            {hasMoveDown && (
-              <button
-                title='move-down'
-                style={btnStyle}
-                disabled={disabled || readonly}
-                onClick={onReorderClick(index, index + 1)}
-              >
-                move down
-              </button>
-            )}
-            {hasMoveUp && (
-              <button
-                title='move-up'
-                style={btnStyle}
-                disabled={disabled || readonly}
-                onClick={onReorderClick(index, index - 1)}
-              >
-                move up
-              </button>
-            )}
-            {hasCopy && (
-              <button title='copy' style={btnStyle} disabled={disabled || readonly} onClick={onCopyIndexClick(index)}>
-                copy
-              </button>
-            )}
-            {hasRemove && (
-              <button title='remove' style={btnStyle} disabled={disabled || readonly} onClick={onDropIndexClick(index)}>
-                remove
-              </button>
-            )}
-            {hasMoveDown && canAdd && (
-              <button
-                title='insert'
-                style={btnStyle}
-                disabled={disabled || readonly}
-                onClick={onAddIndexClick(index + 1)}
-              >
-                insert
-              </button>
-            )}
+            <ArrayFieldTestItemButtonsTemplate {...buttonsProps} style={btnStyle} />
           </div>
         </div>
       )}
@@ -510,7 +514,7 @@ describe('ArrayField', () => {
           <button
             key={`array-item-add-before-${item.key}`}
             className={'array-item-move-before array-item-move-before-to-' + beforeIndex}
-            onClick={item.onAddIndexClick(beforeIndex)}
+            onClick={item.buttonsProps.onAddIndexClick(beforeIndex)}
           >
             {'Add Item Above'}
           </button>
@@ -521,7 +525,7 @@ describe('ArrayField', () => {
           <button
             key={`array-item-add-after-${item.key}`}
             className={'array-item-move-after array-item-move-after-to-' + afterIndex}
-            onClick={item.onAddIndexClick(afterIndex)}
+            onClick={item.buttonsProps.onAddIndexClick(afterIndex)}
           >
             {'Add Item Below'}
           </button>
@@ -747,7 +751,11 @@ describe('ArrayField', () => {
         const buttons = [];
         for (let i = 0; i < 3; i++) {
           buttons.push(
-            <button key={i} className={'array-item-move-to-' + i} onClick={props.onReorderClick(props.index, i)}>
+            <button
+              key={i}
+              className={'array-item-move-to-' + i}
+              onClick={props.buttonsProps.onReorderClick(props.index, i)}
+            >
               {'Move item to index ' + i}
             </button>
           );
@@ -3038,7 +3046,10 @@ describe('ArrayField', () => {
   });
 
   describe('ErrorSchema gets updated', () => {
-    const templates = { ArrayFieldItemTemplate: ArrayFieldTestItemTemplate };
+    const templates = {
+      ArrayFieldItemTemplate: ArrayFieldTestItemTemplate,
+      ArrayFieldItemButtonsTemplate: ArrayFieldTestItemButtonsTemplate,
+    };
     const schema = {
       type: 'array',
       items: {

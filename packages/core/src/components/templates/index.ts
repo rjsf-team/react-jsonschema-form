@@ -2,6 +2,7 @@ import { FormContextType, RJSFSchema, StrictRJSFSchema, TemplatesType } from '@r
 
 import ArrayFieldDescriptionTemplate from './ArrayFieldDescriptionTemplate';
 import ArrayFieldItemTemplate from './ArrayFieldItemTemplate';
+import ArrayFieldItemButtonsTemplate from './ArrayFieldItemButtonsTemplate';
 import ArrayFieldTemplate from './ArrayFieldTemplate';
 import ArrayFieldTitleTemplate from './ArrayFieldTitleTemplate';
 import BaseInputTemplate from './BaseInputTemplate';
@@ -11,6 +12,7 @@ import ErrorList from './ErrorList';
 import FieldTemplate from './FieldTemplate';
 import FieldErrorTemplate from './FieldErrorTemplate';
 import FieldHelpTemplate from './FieldHelpTemplate';
+import GridTemplate from './GridTemplate';
 import ObjectFieldTemplate from './ObjectFieldTemplate';
 import TitleField from './TitleField';
 import UnsupportedField from './UnsupportedField';
@@ -24,6 +26,7 @@ function templates<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends F
   return {
     ArrayFieldDescriptionTemplate,
     ArrayFieldItemTemplate,
+    ArrayFieldItemButtonsTemplate,
     ArrayFieldTemplate,
     ArrayFieldTitleTemplate,
     ButtonTemplates: ButtonTemplates<T, S, F>(),
@@ -33,6 +36,7 @@ function templates<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends F
     FieldTemplate,
     FieldErrorTemplate,
     FieldHelpTemplate,
+    GridTemplate,
     ObjectFieldTemplate,
     TitleFieldTemplate: TitleField,
     UnsupportedFieldTemplate: UnsupportedField,

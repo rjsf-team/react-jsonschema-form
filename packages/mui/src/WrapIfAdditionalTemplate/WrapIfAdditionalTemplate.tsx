@@ -3,6 +3,7 @@ import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import {
   ADDITIONAL_PROPERTY_FLAG,
+  buttonId,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
@@ -77,6 +78,8 @@ export default function WrapIfAdditionalTemplate<
       </Grid>
       <Grid item={true}>
         <RemoveButton
+          id={buttonId<T>(id, 'remove')}
+          className='array-item-remove'
           iconType='default'
           style={btnStyle}
           disabled={disabled || readonly}

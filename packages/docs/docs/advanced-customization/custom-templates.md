@@ -19,27 +19,29 @@ This category, unlike the others, can only be overridden globally via the `templ
 
 Below is the table that lists all the `templates`, their props interface, their `uiSchema` name and from where they originated in the previous version of RJSF:
 
-| Template\*                                                        | Props Type                    | UiSchema name                    | Origin                                                                                                                                                       |
-| ----------------------------------------------------------------- | ----------------------------- | -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| [ArrayFieldTemplate](#arrayfieldtemplate)                         | ArrayFieldTemplateProps       | ui:ArrayFieldTemplate            | Formerly `Form.ArrayFieldTemplate` or `Registry.ArrayFieldTemplate`                                                                                          |
-| [ArrayFieldDescriptionTemplate\*](#arrayfielddescriptiontemplate) | ArrayFieldDescriptionProps    | ui:ArrayFieldDescriptionTemplate | Formerly part of `@rjsf/core` ArrayField, refactored as a template, used in all `ArrayFieldTemplate` implementations                                         |
-| [ArrayFieldItemTemplate\*](#arrayfielditemtemplate)               | ArrayFieldTemplateItemType    | ui:ArrayFieldItemTemplate        | Formerly an internal class for `ArrayFieldTemplate`s in all themes, refactored as a template in each theme, used in all `ArrayFieldTemplate` implementations |
-| [ArrayFieldTitleTemplate\*](#arrayfieldtitletemplate)             | ArrayFieldTitleProps          | ui:ArrayFieldTitleTemplate       | Formerly part of `@rjsf/core` ArrayField, refactored as a template, used in all `ArrayFieldTemplate` implementations.                                        |
-| [BaseInputTemplate\*](#baseinputtemplate)                         | WidgetProps                   | ui:BaseInputTemplate             | Formerly a `widget` in `@rjsf.core` moved to `templates` and newly implemented in each theme to maximize code reuse.                                         |
-| [DescriptionFieldTemplate\*](#descriptionfieldtemplate)           | DescriptionFieldProps         | ui:DescriptionFieldTemplate      | Formerly a `field` in `@rjsf.core` moved to `templates` with the `Template` suffix. Previously implemented in each theme.                                    |
-| [ErrorListTemplate\*](#errorlisttemplate)                         | ErrorListProps                | ui:ErrorListTemplate             | Formerly `Form.ErrorList` moved to `templates` with the `Templates` suffix. Previously implemented in each theme.                                            |
-| [FieldErrorTemplate\*](#fielderrortemplate)                       | FieldErrorProps               | ui:FieldErrorTemplate            | Formerly internal `ErrorList` component accessible only to `SchemaField`                                                                                     |
-| [FieldHelpTemplate\*](#fieldhelptemplate)                         | FieldHelpProps                | ui:FieldHelpTemplate             | Formerly internal `Help` component accessible only to `SchemaField`                                                                                          |
-| [FieldTemplate](#fieldtemplate)                                   | FieldTemplateProps            | ui:FieldTemplate                 | Formerly `Form.FieldTemplate` or `Registry.FieldTemplate`                                                                                                    |
-| [ObjectFieldTemplate](#objectfieldtemplate)                       | ObjectFieldTemplateProps      | ui:ObjectFieldTemplate           | Formerly `Form.ObjectFieldTemplate` or `Registry.ObjectFieldTemplate`                                                                                        |
-| [TitleFieldTemplate\*](#titlefieldtemplate)                       | TitleFieldProps               | ui:TitleFieldTemplate            | Formerly a `field` in `@rjsf.core` moved to `templates` with the `Template` suffix. Previously implemented in each theme.                                    |
-| [UnsupportedFieldTemplate\*](#unsupportedfieldtemplate)           | UnsupportedFieldProps         | ui:UnsupportedFieldTemplate      | Formerly a `field` in `@rjsf.core` moved to `templates` with the `Template` suffix.                                                                          |
-| [WrapIfAdditionalTemplate\*](#wrapifadditionaltemplate)           | WrapIfAdditionalTemplateProps | ui:WrapIfAdditionalTemplate      | Formerly an internal component in `@rjsf.core`. Previously implemented in most themes.                                                                       |
-| [ButtonTemplates.AddButton\*](#addbutton)                         | IconButtonProps               | n/a                              | Formerly an internal implementation in each theme                                                                                                            |
-| [ButtonTemplates.MoveDownButton\*](#movedownbutton)               | IconButtonProps               | n/a                              | Formerly an internal implementation in each theme                                                                                                            |
-| [ButtonTemplates.MoveUpButton\*](#moveupbutton)                   | IconButtonProps               | n/a                              | Formerly an internal implementation in each theme                                                                                                            |
-| [ButtonTemplates.RemoveButton\*](#removebutton)                   | IconButtonProps               | n/a                              | Formerly an internal implementation in each theme                                                                                                            |
-| [ButtonTemplates.SubmitButton\*](#submitbutton)                   | SubmitButtonProps             | n/a                              | Formerly a `field` in each theme move to `templates.ButtonTemplates`                                                                                         |
+| Template\*                                                        | Props Type                        | UiSchema name                    | Origin                                                                                                                                                               |
+| ----------------------------------------------------------------- | --------------------------------- | -------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [ArrayFieldTemplate](#arrayfieldtemplate)                         | ArrayFieldTemplateProps           | ui:ArrayFieldTemplate            | Formerly `Form.ArrayFieldTemplate` or `Registry.ArrayFieldTemplate`                                                                                                  |
+| [ArrayFieldDescriptionTemplate\*](#arrayfielddescriptiontemplate) | ArrayFieldDescriptionProps        | ui:ArrayFieldDescriptionTemplate | Formerly part of `@rjsf/core` ArrayField, refactored as a template, used in all `ArrayFieldTemplate` implementations                                                 |
+| [ArrayFieldItemTemplate\*](#arrayfielditemtemplate)               | ArrayFieldItemTemplateType        | ui:ArrayFieldItemTemplate        | Formerly an internal class for `ArrayFieldTemplate`s in all themes, refactored as a template in each theme, used in all `ArrayFieldTemplate` implementations         |
+| [ArrayFieldItemButtonsTemplate\*](#arrayfielditembuttonstemplate) | ArrayFieldTemplateItemButtonsType | ui:ArrayFieldItemButonsTemplate  | Formerly an internal class for `ArrayFieldItemTemplate`s in all themes, refactored as a template in the `core`, used in all `ArrayFieldItemTemplate` implementations |
+| [ArrayFieldTitleTemplate\*](#arrayfieldtitletemplate)             | ArrayFieldTitleProps              | ui:ArrayFieldTitleTemplate       | Formerly part of `@rjsf/core` ArrayField, refactored as a template, used in all `ArrayFieldTemplate` implementations.                                                |
+| [BaseInputTemplate\*](#baseinputtemplate)                         | WidgetProps                       | ui:BaseInputTemplate             | Formerly a `widget` in `@rjsf.core` moved to `templates` and newly implemented in each theme to maximize code reuse.                                                 |
+| [DescriptionFieldTemplate\*](#descriptionfieldtemplate)           | DescriptionFieldProps             | ui:DescriptionFieldTemplate      | Formerly a `field` in `@rjsf.core` moved to `templates` with the `Template` suffix. Previously implemented in each theme.                                            |
+| [ErrorListTemplate\*](#errorlisttemplate)                         | ErrorListProps                    | ui:ErrorListTemplate             | Formerly `Form.ErrorList` moved to `templates` with the `Templates` suffix. Previously implemented in each theme.                                                    |
+| [FieldErrorTemplate\*](#fielderrortemplate)                       | FieldErrorProps                   | ui:FieldErrorTemplate            | Formerly internal `ErrorList` component accessible only to `SchemaField`                                                                                             |
+| [FieldHelpTemplate\*](#fieldhelptemplate)                         | FieldHelpProps                    | ui:FieldHelpTemplate             | Formerly internal `Help` component accessible only to `SchemaField`                                                                                                  |
+| [FieldTemplate](#fieldtemplate)                                   | FieldTemplateProps                | ui:FieldTemplate                 | Formerly `Form.FieldTemplate` or `Registry.FieldTemplate`                                                                                                            |
+| [GridTemplate](#gridtemplate)                                     | GridTemplateProps                 | ui:GridTemplate                  | Theme dependent implementations of a Grid element for either rows or columns                                                                                         |
+| [ObjectFieldTemplate](#objectfieldtemplate)                       | ObjectFieldTemplateProps          | ui:ObjectFieldTemplate           | Formerly `Form.ObjectFieldTemplate` or `Registry.ObjectFieldTemplate`                                                                                                |
+| [TitleFieldTemplate\*](#titlefieldtemplate)                       | TitleFieldProps                   | ui:TitleFieldTemplate            | Formerly a `field` in `@rjsf.core` moved to `templates` with the `Template` suffix. Previously implemented in each theme.                                            |
+| [UnsupportedFieldTemplate\*](#unsupportedfieldtemplate)           | UnsupportedFieldProps             | ui:UnsupportedFieldTemplate      | Formerly a `field` in `@rjsf.core` moved to `templates` with the `Template` suffix.                                                                                  |
+| [WrapIfAdditionalTemplate\*](#wrapifadditionaltemplate)           | WrapIfAdditionalTemplateProps     | ui:WrapIfAdditionalTemplate      | Formerly an internal component in `@rjsf.core`. Previously implemented in most themes.                                                                               |
+| [ButtonTemplates.AddButton\*](#addbutton)                         | IconButtonProps                   | n/a                              | Formerly an internal implementation in each theme                                                                                                                    |
+| [ButtonTemplates.MoveDownButton\*](#movedownbutton)               | IconButtonProps                   | n/a                              | Formerly an internal implementation in each theme                                                                                                                    |
+| [ButtonTemplates.MoveUpButton\*](#moveupbutton)                   | IconButtonProps                   | n/a                              | Formerly an internal implementation in each theme                                                                                                                    |
+| [ButtonTemplates.RemoveButton\*](#removebutton)                   | IconButtonProps                   | n/a                              | Formerly an internal implementation in each theme                                                                                                                    |
+| [ButtonTemplates.SubmitButton\*](#submitbutton)                   | SubmitButtonProps                 | n/a                              | Formerly a `field` in each theme move to `templates.ButtonTemplates`                                                                                                 |
 
 \* indicates a new template in version 5
 
@@ -186,10 +188,10 @@ The following props are passed to each `ArrayFieldDescriptionTemplate`:
 The `ArrayFieldItemTemplate` is used to render the representation of a single item in an array.
 All of the `ArrayFieldTemplate` implementations in all themes get this template from the `registry` in order to render array fields items.
 Each theme has an implementation of the `ArrayFieldItemTemplate` to render an array field item in a manner best suited to the theme.
-If you want to change how an array field item is rendered you can customize this template (for instance to remove the move up/down and remove buttons).
+If you want to change how an array field item is rendered you can customize this template (for instance to remove the buttons rendered by `ArrayFieldItemButtonsTemplate`).
 
 ```tsx
-import { ArrayFieldTemplateItemType, RJSFSchema } from '@rjsf/utils';
+import { ArrayFieldItemTemplateType, RJSFSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
 const schema: RJSFSchema = {
@@ -199,7 +201,7 @@ const schema: RJSFSchema = {
   },
 };
 
-function ArrayFieldItemTemplate(props: ArrayFieldTemplateItemType) {
+function ArrayFieldItemTemplate(props: ArrayFieldItemTemplateType) {
   const { children, className } = props;
   return <div className={className}>{children}</div>;
 }
@@ -213,22 +215,81 @@ render(
 The following props are passed to each `ArrayFieldItemTemplate`:
 
 - `children`: The html for the item's content.
+- `buttonsProps`: The props to pass to the `ArrayFieldItemButtonTemplate`.
 - `className`: The className string.
 - `disabled`: A boolean value stating if the array item is disabled.
-- `canAdd`: A boolean value stating whether new items can be added to the array.
-- `hasCopy`: A boolean value stating whether the array item can be copied.
-- `hasMoveDown`: A boolean value stating whether the array item can be moved down.
-- `hasMoveUp`: A boolean value stating whether the array item can be moved up.
-- `hasRemove`: A boolean value stating whether the array item can be removed.
 - `hasToolbar`: A boolean value stating whether the array item has a toolbar.
 - `index`: A number stating the index the array item occurs in `items`.
 - `totalItems`: A number stating the total number `items` in the array.
 - `key`: A stable, unique key for the array item.
+- `readonly`: A boolean value stating if the array item is read-only.
+- `schema`: The schema object for this array item.
+- `uiSchema`: The uiSchema object for this array item.
+- `registry`: The `registry` object.
+
+## ArrayFieldItemButtonTemplate
+
+The `ArrayFieldItemButtonTemplate` is used to render the representation of the buttons used for copying, moving and deleting an item in an array.
+All of the `ArrayFieldItemTemplate` implementations in all themes get this template from the `registry` in order to render array fields items' buttons.
+Currently, only the `core` them has an implementation of this template as the button rendering is identical across all themes.
+If you want to change how an array field item's buttons are rendered you can customize this template (for instance to remove the move up/down and remove buttons).
+
+```tsx
+import { useMemo } from 'react';
+import { ArrayFieldTemplateItemButtonsType, buttonId, RJSFSchema } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
+
+const schema: RJSFSchema = {
+  type: 'array',
+  items: {
+    type: 'string',
+  },
+};
+
+function ArrayFieldItemButtonsTemplate(props: ArrayFieldTemplateItemButtonsType) {
+  const { disabled, readonly, hasCopy, idSchema, index, onCopyIndexClick, registry, uiSchema } = props;
+  const { CopyButton } = registry.templates.ButtonTemplates;
+  const onCopyClick = useMemo(() => onCopyIndexClick(index), [index, onCopyIndexClick]);
+  if (!hasCopy) {
+    return undefined;
+  }
+  return (
+    <CopyButton
+      id={buttonId<T>(idSchema, 'copy')}
+      className='array-item-copy'
+      disabled={disabled || readonly}
+      onClick={onCopyClick}
+      uiSchema={uiSchema}
+      registry={registry}
+    />
+  );
+}
+
+render(
+  <Form schema={schema} validator={validator} templates={{ ArrayFieldItemButtonsTemplate }} />,
+  document.getElementById('app')
+);
+```
+
+The following props are passed to each `ArrayFieldItemButtonsTemplate`:
+
+- `className`: The className string.
+- `disabled`: A boolean value stating if the array item is disabled.
+- `canAdd`: A boolean value stating whether new elements can be added to the array.
+- `hasCopy`: A boolean value stating whether the array item can be copied.
+- `hasMoveDown`: A boolean value stating whether the array item can be moved down.
+- `hasMoveUp`: A boolean value stating whether the array item can be moved up.
+- `hasRemove`: A boolean value stating whether the array item can be removed.
+- `idSchema`: The idSchema of the array field item in the hierarchy.
+- `index`: A number stating the index the array item occurs in `items`.
+- `totalItems`: A number stating the total number `items` in the array.
 - `onAddIndexClick: (index) => (event?) => void`: Returns a function that adds a new item at `index`.
+- `onCopyIndexClick: (index) => (event?) => void`: Returns a function that copys a new item at `index`.
 - `onDropIndexClick: (index) => (event?) => void`: Returns a function that removes the item at `index`.
 - `onReorderClick: (index, newIndex) => (event?) => void`: Returns a function that swaps the items at `index` with `newIndex`.
 - `readonly`: A boolean value stating if the array item is read-only.
 - `schema`: The schema object for this array item.
+- `style`: The optional style to pass to all of the buttons
 - `uiSchema`: The uiSchema object for this array item.
 - `registry`: The `registry` object.
 
@@ -654,6 +715,41 @@ The following props are passed to a custom field template component:
 - `registry`: The `registry` object.
 
 > Note: you can only define a single global field template for a form, but you can set individual field templates per property using `"ui:FieldTemplate"`.
+
+## GridTemplate
+
+The `GridTemplate` is the template that renders a theme dependent Grid for either a row or column.
+While it has only two explicit properties, it extends the `GenericObjectTemplate` in order to support passing any of the properties associated with a Grid implementation for any theme.
+If you want to customize how grids are rendered you can.
+
+```tsx
+import { Grid2 } from '@mui/material';
+import { GridTemplateProps } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
+import classNames from 'classnames';
+
+const schema: RJSFSchema = {
+  type: 'string',
+  title: 'My input',
+  description: 'input description',
+};
+
+function GridTemplate(props: FieldHelpProps) {
+  const { children, column, className, ...rest } = props;
+  return (
+    <Grid2 item={column} {...rest} className={`${className} my-custom-grid-styling`}>
+      {children}
+    </Grid2>
+  );
+}
+
+render(<Form schema={schema} validator={validator} templates={{ GridTemplate }} />, document.getElementById('app'));
+```
+
+The following props are passed to the `GridTemplate`:
+
+- `children`: The contents of the grid template
+- `column`: Optional flag indicating whether the grid element represents a column, necessary for themes which have components for Rows vs Column
 
 ## ObjectFieldTemplate
 

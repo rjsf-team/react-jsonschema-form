@@ -1,6 +1,7 @@
 import { FocusEvent } from 'react';
 import {
   ADDITIONAL_PROPERTY_FLAG,
+  buttonId,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
@@ -67,7 +68,8 @@ export default function WrapIfAdditionalTemplate<
       <Col xs={5}>{children}</Col>
       <Col xs={2} className='py-4 d-grid gap-2'>
         <RemoveButton
-          className='w-100'
+          id={buttonId<T>(id, 'remove')}
+          className='array-item-remove w-100'
           disabled={disabled || readonly}
           onClick={onDropPropertyClick(label)}
           uiSchema={uiSchema}

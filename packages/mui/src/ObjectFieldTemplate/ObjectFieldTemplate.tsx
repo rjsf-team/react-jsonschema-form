@@ -9,6 +9,7 @@ import {
   getTemplate,
   getUiOptions,
   titleId,
+  buttonId,
 } from '@rjsf/utils';
 
 /** The `ObjectFieldTemplate` is the template to use to render all the inner properties of an object along with the
@@ -84,6 +85,7 @@ export default function ObjectFieldTemplate<
           <Grid container justifyContent='flex-end'>
             <Grid item={true}>
               <AddButton
+                id={buttonId<T>(idSchema, 'add')}
                 className='object-property-expand'
                 onClick={onAddClick(schema)}
                 disabled={disabled || readonly}

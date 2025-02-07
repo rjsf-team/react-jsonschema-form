@@ -29,7 +29,8 @@ exports[`array fields array 1`] = `
             }
           >
             <button
-              className="ui tiny icon button"
+              className="ui tiny icon button array-item-add"
+              id="root__add"
               onClick={[Function]}
               title="Add Item"
             >
@@ -129,6 +130,7 @@ exports[`array fields array icons 1`] = `
                     <button
                       className="ui icon disabled button array-item-move-up"
                       disabled={true}
+                      id="root_0__moveUp"
                       onClick={[Function]}
                       tabIndex={-1}
                       title="Move up"
@@ -141,6 +143,7 @@ exports[`array fields array icons 1`] = `
                     </button>
                     <button
                       className="ui icon button array-item-move-down"
+                      id="root_0__moveDown"
                       onClick={[Function]}
                       title="Move down"
                     >
@@ -152,6 +155,7 @@ exports[`array fields array icons 1`] = `
                     </button>
                     <button
                       className="ui icon button array-item-copy"
+                      id="root_0__copy"
                       onClick={[Function]}
                       title="Copy"
                     >
@@ -163,6 +167,7 @@ exports[`array fields array icons 1`] = `
                     </button>
                     <button
                       className="ui icon button array-item-remove"
+                      id="root_0__remove"
                       onClick={[Function]}
                       title="Remove"
                     >
@@ -231,6 +236,7 @@ exports[`array fields array icons 1`] = `
                   >
                     <button
                       className="ui icon button array-item-move-up"
+                      id="root_1__moveUp"
                       onClick={[Function]}
                       title="Move up"
                     >
@@ -243,6 +249,7 @@ exports[`array fields array icons 1`] = `
                     <button
                       className="ui icon disabled button array-item-move-down"
                       disabled={true}
+                      id="root_1__moveDown"
                       onClick={[Function]}
                       tabIndex={-1}
                       title="Move down"
@@ -255,6 +262,7 @@ exports[`array fields array icons 1`] = `
                     </button>
                     <button
                       className="ui icon button array-item-copy"
+                      id="root_1__copy"
                       onClick={[Function]}
                       title="Copy"
                     >
@@ -266,6 +274,7 @@ exports[`array fields array icons 1`] = `
                     </button>
                     <button
                       className="ui icon button array-item-remove"
+                      id="root_1__remove"
                       onClick={[Function]}
                       title="Remove"
                     >
@@ -290,7 +299,8 @@ exports[`array fields array icons 1`] = `
             }
           >
             <button
-              className="ui tiny icon button"
+              className="ui tiny icon button array-item-add"
+              id="root__add"
               onClick={[Function]}
               title="Add Item"
             >
@@ -819,7 +829,8 @@ exports[`with title and description array 1`] = `
             }
           >
             <button
-              className="ui tiny icon button"
+              className="ui tiny icon button array-item-add"
+              id="root__add"
               onClick={[Function]}
               title="Add Item"
             >
@@ -942,6 +953,7 @@ exports[`with title and description array icons 1`] = `
                     <button
                       className="ui icon disabled button array-item-move-up"
                       disabled={true}
+                      id="root_0__moveUp"
                       onClick={[Function]}
                       tabIndex={-1}
                       title="Move up"
@@ -954,6 +966,7 @@ exports[`with title and description array icons 1`] = `
                     </button>
                     <button
                       className="ui icon button array-item-move-down"
+                      id="root_0__moveDown"
                       onClick={[Function]}
                       title="Move down"
                     >
@@ -965,6 +978,7 @@ exports[`with title and description array icons 1`] = `
                     </button>
                     <button
                       className="ui icon button array-item-copy"
+                      id="root_0__copy"
                       onClick={[Function]}
                       title="Copy"
                     >
@@ -976,6 +990,7 @@ exports[`with title and description array icons 1`] = `
                     </button>
                     <button
                       className="ui icon button array-item-remove"
+                      id="root_0__remove"
                       onClick={[Function]}
                       title="Remove"
                     >
@@ -1055,6 +1070,7 @@ exports[`with title and description array icons 1`] = `
                   >
                     <button
                       className="ui icon button array-item-move-up"
+                      id="root_1__moveUp"
                       onClick={[Function]}
                       title="Move up"
                     >
@@ -1067,6 +1083,7 @@ exports[`with title and description array icons 1`] = `
                     <button
                       className="ui icon disabled button array-item-move-down"
                       disabled={true}
+                      id="root_1__moveDown"
                       onClick={[Function]}
                       tabIndex={-1}
                       title="Move down"
@@ -1079,6 +1096,7 @@ exports[`with title and description array icons 1`] = `
                     </button>
                     <button
                       className="ui icon button array-item-copy"
+                      id="root_1__copy"
                       onClick={[Function]}
                       title="Copy"
                     >
@@ -1090,6 +1108,7 @@ exports[`with title and description array icons 1`] = `
                     </button>
                     <button
                       className="ui icon button array-item-remove"
+                      id="root_1__remove"
                       onClick={[Function]}
                       title="Remove"
                     >
@@ -1114,7 +1133,8 @@ exports[`with title and description array icons 1`] = `
             }
           >
             <button
-              className="ui tiny icon button"
+              className="ui tiny icon button array-item-add"
+              id="root__add"
               onClick={[Function]}
               title="Add Item"
             >
@@ -1474,7 +1494,8 @@ exports[`with title and description from both array 1`] = `
             }
           >
             <button
-              className="ui tiny icon button"
+              className="ui tiny icon button array-item-add"
+              id="root__add"
               onClick={[Function]}
               title="Add Item"
             >
@@ -1597,6 +1618,7 @@ exports[`with title and description from both array icons 1`] = `
                     <button
                       className="ui icon disabled button array-item-move-up"
                       disabled={true}
+                      id="root_0__moveUp"
                       onClick={[Function]}
                       tabIndex={-1}
                       title="Move up"
@@ -1609,6 +1631,7 @@ exports[`with title and description from both array icons 1`] = `
                     </button>
                     <button
                       className="ui icon button array-item-move-down"
+                      id="root_0__moveDown"
                       onClick={[Function]}
                       title="Move down"
                     >
@@ -1620,6 +1643,7 @@ exports[`with title and description from both array icons 1`] = `
                     </button>
                     <button
                       className="ui icon button array-item-copy"
+                      id="root_0__copy"
                       onClick={[Function]}
                       title="Copy"
                     >
@@ -1631,6 +1655,7 @@ exports[`with title and description from both array icons 1`] = `
                     </button>
                     <button
                       className="ui icon button array-item-remove"
+                      id="root_0__remove"
                       onClick={[Function]}
                       title="Remove"
                     >
@@ -1710,6 +1735,7 @@ exports[`with title and description from both array icons 1`] = `
                   >
                     <button
                       className="ui icon button array-item-move-up"
+                      id="root_1__moveUp"
                       onClick={[Function]}
                       title="Move up"
                     >
@@ -1722,6 +1748,7 @@ exports[`with title and description from both array icons 1`] = `
                     <button
                       className="ui icon disabled button array-item-move-down"
                       disabled={true}
+                      id="root_1__moveDown"
                       onClick={[Function]}
                       tabIndex={-1}
                       title="Move down"
@@ -1734,6 +1761,7 @@ exports[`with title and description from both array icons 1`] = `
                     </button>
                     <button
                       className="ui icon button array-item-copy"
+                      id="root_1__copy"
                       onClick={[Function]}
                       title="Copy"
                     >
@@ -1745,6 +1773,7 @@ exports[`with title and description from both array icons 1`] = `
                     </button>
                     <button
                       className="ui icon button array-item-remove"
+                      id="root_1__remove"
                       onClick={[Function]}
                       title="Remove"
                     >
@@ -1769,7 +1798,8 @@ exports[`with title and description from both array icons 1`] = `
             }
           >
             <button
-              className="ui tiny icon button"
+              className="ui tiny icon button array-item-add"
+              id="root__add"
               onClick={[Function]}
               title="Add Item"
             >
@@ -2129,7 +2159,8 @@ exports[`with title and description from uiSchema array 1`] = `
             }
           >
             <button
-              className="ui tiny icon button"
+              className="ui tiny icon button array-item-add"
+              id="root__add"
               onClick={[Function]}
               title="Add Item"
             >
@@ -2252,6 +2283,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                     <button
                       className="ui icon disabled button array-item-move-up"
                       disabled={true}
+                      id="root_0__moveUp"
                       onClick={[Function]}
                       tabIndex={-1}
                       title="Move up"
@@ -2264,6 +2296,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                     </button>
                     <button
                       className="ui icon button array-item-move-down"
+                      id="root_0__moveDown"
                       onClick={[Function]}
                       title="Move down"
                     >
@@ -2275,6 +2308,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                     </button>
                     <button
                       className="ui icon button array-item-copy"
+                      id="root_0__copy"
                       onClick={[Function]}
                       title="Copy"
                     >
@@ -2286,6 +2320,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                     </button>
                     <button
                       className="ui icon button array-item-remove"
+                      id="root_0__remove"
                       onClick={[Function]}
                       title="Remove"
                     >
@@ -2365,6 +2400,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                   >
                     <button
                       className="ui icon button array-item-move-up"
+                      id="root_1__moveUp"
                       onClick={[Function]}
                       title="Move up"
                     >
@@ -2377,6 +2413,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                     <button
                       className="ui icon disabled button array-item-move-down"
                       disabled={true}
+                      id="root_1__moveDown"
                       onClick={[Function]}
                       tabIndex={-1}
                       title="Move down"
@@ -2389,6 +2426,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                     </button>
                     <button
                       className="ui icon button array-item-copy"
+                      id="root_1__copy"
                       onClick={[Function]}
                       title="Copy"
                     >
@@ -2400,6 +2438,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                     </button>
                     <button
                       className="ui icon button array-item-remove"
+                      id="root_1__remove"
                       onClick={[Function]}
                       title="Remove"
                     >
@@ -2424,7 +2463,8 @@ exports[`with title and description from uiSchema array icons 1`] = `
             }
           >
             <button
-              className="ui tiny icon button"
+              className="ui tiny icon button array-item-add"
+              id="root__add"
               onClick={[Function]}
               title="Add Item"
             >
@@ -2772,7 +2812,8 @@ exports[`with title and description with global label off array 1`] = `
             }
           >
             <button
-              className="ui tiny icon button"
+              className="ui tiny icon button array-item-add"
+              id="root__add"
               onClick={[Function]}
               title="Add Item"
             >
@@ -2872,6 +2913,7 @@ exports[`with title and description with global label off array icons 1`] = `
                     <button
                       className="ui icon disabled button array-item-move-up"
                       disabled={true}
+                      id="root_0__moveUp"
                       onClick={[Function]}
                       tabIndex={-1}
                       title="Move up"
@@ -2884,6 +2926,7 @@ exports[`with title and description with global label off array icons 1`] = `
                     </button>
                     <button
                       className="ui icon button array-item-move-down"
+                      id="root_0__moveDown"
                       onClick={[Function]}
                       title="Move down"
                     >
@@ -2895,6 +2938,7 @@ exports[`with title and description with global label off array icons 1`] = `
                     </button>
                     <button
                       className="ui icon button array-item-copy"
+                      id="root_0__copy"
                       onClick={[Function]}
                       title="Copy"
                     >
@@ -2906,6 +2950,7 @@ exports[`with title and description with global label off array icons 1`] = `
                     </button>
                     <button
                       className="ui icon button array-item-remove"
+                      id="root_0__remove"
                       onClick={[Function]}
                       title="Remove"
                     >
@@ -2974,6 +3019,7 @@ exports[`with title and description with global label off array icons 1`] = `
                   >
                     <button
                       className="ui icon button array-item-move-up"
+                      id="root_1__moveUp"
                       onClick={[Function]}
                       title="Move up"
                     >
@@ -2986,6 +3032,7 @@ exports[`with title and description with global label off array icons 1`] = `
                     <button
                       className="ui icon disabled button array-item-move-down"
                       disabled={true}
+                      id="root_1__moveDown"
                       onClick={[Function]}
                       tabIndex={-1}
                       title="Move down"
@@ -2998,6 +3045,7 @@ exports[`with title and description with global label off array icons 1`] = `
                     </button>
                     <button
                       className="ui icon button array-item-copy"
+                      id="root_1__copy"
                       onClick={[Function]}
                       title="Copy"
                     >
@@ -3009,6 +3057,7 @@ exports[`with title and description with global label off array icons 1`] = `
                     </button>
                     <button
                       className="ui icon button array-item-remove"
+                      id="root_1__remove"
                       onClick={[Function]}
                       title="Remove"
                     >
@@ -3033,7 +3082,8 @@ exports[`with title and description with global label off array icons 1`] = `
             }
           >
             <button
-              className="ui tiny icon button"
+              className="ui tiny icon button array-item-add"
+              id="root__add"
               onClick={[Function]}
               title="Add Item"
             >

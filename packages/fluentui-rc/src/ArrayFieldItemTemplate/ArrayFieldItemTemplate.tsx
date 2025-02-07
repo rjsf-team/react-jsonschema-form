@@ -1,4 +1,11 @@
-import { ArrayFieldTemplateItemType, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import {
+  ArrayFieldTemplateItemType,
+  FormContextType,
+  getTemplate,
+  getUiOptions,
+  RJSFSchema,
+  StrictRJSFSchema,
+} from '@rjsf/utils';
 import { Flex } from '@fluentui/react-migration-v0-v9';
 import { makeStyles } from '@fluentui/react-components';
 
@@ -12,31 +19,21 @@ const useStyles = makeStyles({
 
 /** The `ArrayFieldItemTemplate` component is the template used to render an items of an array.
  *
- * @param props - The `ArrayFieldTemplateItemType` props for the component
+ * @param props - The `ArrayFieldItemTemplateType` props for the component
  */
 export default function ArrayFieldItemTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
 >(props: ArrayFieldTemplateItemType<T, S, F>) {
-  const {
-    children,
-    disabled,
-    hasToolbar,
-    hasCopy,
-    hasMoveDown,
-    hasMoveUp,
-    hasRemove,
-    index,
-    onCopyIndexClick,
-    onDropIndexClick,
-    onReorderClick,
-    readonly,
-    uiSchema,
-    registry,
-  } = props;
   const classes = useStyles();
-  const { CopyButton, MoveDownButton, MoveUpButton, RemoveButton } = registry.templates.ButtonTemplates;
+  const { children, buttonsProps, hasToolbar, uiSchema, registry } = props;
+  const uiOptions = getUiOptions<T, S, F>(uiSchema);
+  const ArrayFieldItemButtonsTemplate = getTemplate<'ArrayFieldItemButtonsTemplate', T, S, F>(
+    'ArrayFieldItemButtonsTemplate',
+    registry,
+    uiOptions
+  );
 
   return (
     <Flex vAlign='end'>
@@ -45,38 +42,7 @@ export default function ArrayFieldItemTemplate<
       </Flex>
       {hasToolbar && (
         <Flex style={{ marginLeft: '8px' }}>
-          {(hasMoveUp || hasMoveDown) && (
-            <MoveUpButton
-              disabled={disabled || readonly || !hasMoveUp}
-              onClick={onReorderClick(index, index - 1)}
-              uiSchema={uiSchema}
-              registry={registry}
-            />
-          )}
-          {(hasMoveUp || hasMoveDown) && (
-            <MoveDownButton
-              disabled={disabled || readonly || !hasMoveDown}
-              onClick={onReorderClick(index, index + 1)}
-              uiSchema={uiSchema}
-              registry={registry}
-            />
-          )}
-          {hasCopy && (
-            <CopyButton
-              disabled={disabled || readonly}
-              onClick={onCopyIndexClick(index)}
-              uiSchema={uiSchema}
-              registry={registry}
-            />
-          )}
-          {hasRemove && (
-            <RemoveButton
-              disabled={disabled || readonly}
-              onClick={onDropIndexClick(index)}
-              uiSchema={uiSchema}
-              registry={registry}
-            />
-          )}
+          <ArrayFieldItemButtonsTemplate {...buttonsProps} />
         </Flex>
       )}
     </Flex>

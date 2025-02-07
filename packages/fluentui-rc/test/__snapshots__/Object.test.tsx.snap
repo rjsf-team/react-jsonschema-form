@@ -88,8 +88,9 @@ exports[`object fields additionalProperties 1`] = `
             </div>
             <div>
               <button
-                className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+                className="fui-Button r1alrhcs array-item-remove ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
                 disabled={false}
+                id="root_foo__remove"
                 onClick={[Function]}
                 style={
                   {
@@ -130,6 +131,7 @@ exports[`object fields additionalProperties 1`] = `
           <button
             className="fui-Button r1alrhcs object-property-expand ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
             disabled={false}
+            id="root__add"
             onClick={[Function]}
             title="Add Item"
             type="button"
@@ -378,8 +380,9 @@ exports[`object fields show add button and fields if additionalProperties is tru
             </div>
             <div>
               <button
-                className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+                className="fui-Button r1alrhcs array-item-remove ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
                 disabled={false}
+                id="root_additionalProperty__remove"
                 onClick={[Function]}
                 style={
                   {
@@ -420,6 +423,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
           <button
             className="fui-Button r1alrhcs object-property-expand ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
             disabled={false}
+            id="root__add"
             onClick={[Function]}
             title="Add Item"
             type="button"
@@ -571,8 +575,9 @@ exports[`object fields with title and description additionalProperties 1`] = `
             </div>
             <div>
               <button
-                className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+                className="fui-Button r1alrhcs array-item-remove ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
                 disabled={false}
+                id="root_foo__remove"
                 onClick={[Function]}
                 style={
                   {
@@ -613,6 +618,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
           <button
             className="fui-Button r1alrhcs object-property-expand ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
             disabled={false}
+            id="root__add"
             onClick={[Function]}
             title="Add Item"
             type="button"
@@ -764,8 +770,9 @@ exports[`object fields with title and description from both additionalProperties
             </div>
             <div>
               <button
-                className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+                className="fui-Button r1alrhcs array-item-remove ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
                 disabled={false}
+                id="root_foo__remove"
                 onClick={[Function]}
                 style={
                   {
@@ -806,6 +813,7 @@ exports[`object fields with title and description from both additionalProperties
           <button
             className="fui-Button r1alrhcs object-property-expand ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
             disabled={false}
+            id="root__add"
             onClick={[Function]}
             title="Add Item"
             type="button"
@@ -1128,8 +1136,9 @@ exports[`object fields with title and description from uiSchema additionalProper
             </div>
             <div>
               <button
-                className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+                className="fui-Button r1alrhcs array-item-remove ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
                 disabled={false}
+                id="root_foo__remove"
                 onClick={[Function]}
                 style={
                   {
@@ -1170,6 +1179,7 @@ exports[`object fields with title and description from uiSchema additionalProper
           <button
             className="fui-Button r1alrhcs object-property-expand ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
             disabled={false}
+            id="root__add"
             onClick={[Function]}
             title="Add Item"
             type="button"
@@ -1492,8 +1502,9 @@ exports[`object fields with title and description from uiSchema show add button 
             </div>
             <div>
               <button
-                className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+                className="fui-Button r1alrhcs array-item-remove ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
                 disabled={false}
+                id="root_additionalProperty__remove"
                 onClick={[Function]}
                 style={
                   {
@@ -1534,6 +1545,7 @@ exports[`object fields with title and description from uiSchema show add button 
           <button
             className="fui-Button r1alrhcs object-property-expand ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
             disabled={false}
+            id="root__add"
             onClick={[Function]}
             title="Add Item"
             type="button"
@@ -1856,8 +1868,9 @@ exports[`object fields with title and description show add button and fields if 
             </div>
             <div>
               <button
-                className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+                className="fui-Button r1alrhcs array-item-remove ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
                 disabled={false}
+                id="root_additionalProperty__remove"
                 onClick={[Function]}
                 style={
                   {
@@ -1898,6 +1911,7 @@ exports[`object fields with title and description show add button and fields if 
           <button
             className="fui-Button r1alrhcs object-property-expand ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
             disabled={false}
+            id="root__add"
             onClick={[Function]}
             title="Add Item"
             type="button"
@@ -2022,8 +2036,9 @@ exports[`object fields with title and description with global label off addition
             </div>
             <div>
               <button
-                className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+                className="fui-Button r1alrhcs array-item-remove ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
                 disabled={false}
+                id="root_foo__remove"
                 onClick={[Function]}
                 style={
                   {
@@ -2064,6 +2079,7 @@ exports[`object fields with title and description with global label off addition
           <button
             className="fui-Button r1alrhcs object-property-expand ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
             disabled={false}
+            id="root__add"
             onClick={[Function]}
             title="Add Item"
             type="button"
@@ -2294,8 +2310,9 @@ exports[`object fields with title and description with global label off show add
             </div>
             <div>
               <button
-                className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+                className="fui-Button r1alrhcs array-item-remove ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
                 disabled={false}
+                id="root_additionalProperty__remove"
                 onClick={[Function]}
                 style={
                   {
@@ -2336,6 +2353,7 @@ exports[`object fields with title and description with global label off show add
           <button
             className="fui-Button r1alrhcs object-property-expand ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
             disabled={false}
+            id="root__add"
             onClick={[Function]}
             title="Add Item"
             type="button"
