@@ -15,6 +15,25 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+# 5.24.4
+
+## @rjsf/core
+
+- Added `initialDefaultsGenerated` flag to state, which indicates whether the initial generation of defaults has been completed
+- Added `ObjectField` tests for additionalProperties with defaults  
+
+## @rjsf/utils
+
+- Updated `getDefaultFormState` to add a new `initialDefaultsGenerated` prop flag, along with type definitions, fixing uneditable & permanent defaults with additional properties [3759](https://github.com/rjsf-team/react-jsonschema-form/issues/3759)
+- Updated `createSchemaUtils` definition to reflect addition of `initialDefaultsGenerated`
+- Updated existing tests where `getDefaultFormState` is used to reflect addition of `initialDefaultsGenerated`
+
+## @rjsf/docs 
+- Updated docs for `getDefaultFormState` to reflect addition of `initialDefaultsGenerated` prop
+
+## @rjsf/validator-ajv6 @rjsf/validator-avv8
+- Updated `getDefaultFormState` calls to reflect addition of `initialDefaultsGenerated`
+
 # 5.24.3
 
 ## @rjsf/utils
