@@ -761,6 +761,7 @@ export default class Form<
       errors: [] as unknown,
       schemaValidationErrors: [] as unknown,
       schemaValidationErrorSchema: {},
+      initialDefaultsGenerated: false,
     } as FormState<T, S, F>;
 
     this.setState(state, () => onChange && onChange({ ...this.state, ...state }));
