@@ -748,7 +748,7 @@ render(<Form schema={schema} validator={validator} templates={{ GridTemplate }} 
 
 The following props are passed to the `GridTemplate`:
 
-- `children`: TThe contents of the grid template
+- `children`: The contents of the grid template
 - `column`: Optional flag indicating whether the grid element represents a column, necessary for themes which have components for Rows vs Column
 
 ## ObjectFieldTemplate
