@@ -97,6 +97,7 @@ exports[`array fields array 1`] = `
               <button
                 className="chakra-button array-item-add emotion-6"
                 disabled={false}
+                id="root__add"
                 onClick={[Function]}
                 type="button"
               >
@@ -353,8 +354,9 @@ exports[`array fields array icons 1`] = `
                 >
                   <button
                     aria-label="Move up"
-                    className="chakra-button emotion-11"
+                    className="chakra-button array-item-move-up emotion-11"
                     disabled={true}
+                    id="root_0__moveUp"
                     onClick={[Function]}
                     title="Move up"
                     type="button"
@@ -373,8 +375,9 @@ exports[`array fields array icons 1`] = `
                   </button>
                   <button
                     aria-label="Move down"
-                    className="chakra-button emotion-11"
+                    className="chakra-button array-item-move-down emotion-11"
                     disabled={false}
+                    id="root_0__moveDown"
                     onClick={[Function]}
                     title="Move down"
                     type="button"
@@ -393,8 +396,9 @@ exports[`array fields array icons 1`] = `
                   </button>
                   <button
                     aria-label="Copy"
-                    className="chakra-button emotion-11"
+                    className="chakra-button array-item-copy emotion-11"
                     disabled={false}
+                    id="root_0__copy"
                     onClick={[Function]}
                     title="Copy"
                     type="button"
@@ -413,8 +417,9 @@ exports[`array fields array icons 1`] = `
                   </button>
                   <button
                     aria-label="Remove"
-                    className="chakra-button emotion-11"
+                    className="chakra-button array-item-remove emotion-11"
                     disabled={false}
+                    id="root_0__remove"
                     onClick={[Function]}
                     title="Remove"
                     type="button"
@@ -484,8 +489,9 @@ exports[`array fields array icons 1`] = `
                 >
                   <button
                     aria-label="Move up"
-                    className="chakra-button emotion-11"
+                    className="chakra-button array-item-move-up emotion-11"
                     disabled={false}
+                    id="root_1__moveUp"
                     onClick={[Function]}
                     title="Move up"
                     type="button"
@@ -504,8 +510,9 @@ exports[`array fields array icons 1`] = `
                   </button>
                   <button
                     aria-label="Move down"
-                    className="chakra-button emotion-11"
+                    className="chakra-button array-item-move-down emotion-11"
                     disabled={true}
+                    id="root_1__moveDown"
                     onClick={[Function]}
                     title="Move down"
                     type="button"
@@ -524,8 +531,9 @@ exports[`array fields array icons 1`] = `
                   </button>
                   <button
                     aria-label="Copy"
-                    className="chakra-button emotion-11"
+                    className="chakra-button array-item-copy emotion-11"
                     disabled={false}
+                    id="root_1__copy"
                     onClick={[Function]}
                     title="Copy"
                     type="button"
@@ -544,8 +552,9 @@ exports[`array fields array icons 1`] = `
                   </button>
                   <button
                     aria-label="Remove"
-                    className="chakra-button emotion-11"
+                    className="chakra-button array-item-remove emotion-11"
                     disabled={false}
+                    id="root_1__remove"
                     onClick={[Function]}
                     title="Remove"
                     type="button"
@@ -578,6 +587,7 @@ exports[`array fields array icons 1`] = `
               <button
                 className="chakra-button array-item-add emotion-36"
                 disabled={false}
+                id="root__add"
                 onClick={[Function]}
                 type="button"
               >
@@ -1686,6 +1696,7 @@ exports[`with title and description array 1`] = `
               <button
                 className="chakra-button array-item-add emotion-10"
                 disabled={false}
+                id="root__add"
                 onClick={[Function]}
                 type="button"
               >
@@ -2006,8 +2017,9 @@ exports[`with title and description array icons 1`] = `
                 >
                   <button
                     aria-label="Move up"
-                    className="chakra-button emotion-19"
+                    className="chakra-button array-item-move-up emotion-19"
                     disabled={true}
+                    id="root_0__moveUp"
                     onClick={[Function]}
                     title="Move up"
                     type="button"
@@ -2026,8 +2038,9 @@ exports[`with title and description array icons 1`] = `
                   </button>
                   <button
                     aria-label="Move down"
-                    className="chakra-button emotion-19"
+                    className="chakra-button array-item-move-down emotion-19"
                     disabled={false}
+                    id="root_0__moveDown"
                     onClick={[Function]}
                     title="Move down"
                     type="button"
@@ -2046,8 +2059,9 @@ exports[`with title and description array icons 1`] = `
                   </button>
                   <button
                     aria-label="Copy"
-                    className="chakra-button emotion-19"
+                    className="chakra-button array-item-copy emotion-19"
                     disabled={false}
+                    id="root_0__copy"
                     onClick={[Function]}
                     title="Copy"
                     type="button"
@@ -2066,8 +2080,9 @@ exports[`with title and description array icons 1`] = `
                   </button>
                   <button
                     aria-label="Remove"
-                    className="chakra-button emotion-19"
+                    className="chakra-button array-item-remove emotion-19"
                     disabled={false}
+                    id="root_0__remove"
                     onClick={[Function]}
                     title="Remove"
                     type="button"
@@ -2161,8 +2176,9 @@ exports[`with title and description array icons 1`] = `
                 >
                   <button
                     aria-label="Move up"
-                    className="chakra-button emotion-19"
+                    className="chakra-button array-item-move-up emotion-19"
                     disabled={false}
+                    id="root_1__moveUp"
                     onClick={[Function]}
                     title="Move up"
                     type="button"
@@ -2181,8 +2197,9 @@ exports[`with title and description array icons 1`] = `
                   </button>
                   <button
                     aria-label="Move down"
-                    className="chakra-button emotion-19"
+                    className="chakra-button array-item-move-down emotion-19"
                     disabled={true}
+                    id="root_1__moveDown"
                     onClick={[Function]}
                     title="Move down"
                     type="button"
@@ -2201,8 +2218,9 @@ exports[`with title and description array icons 1`] = `
                   </button>
                   <button
                     aria-label="Copy"
-                    className="chakra-button emotion-19"
+                    className="chakra-button array-item-copy emotion-19"
                     disabled={false}
+                    id="root_1__copy"
                     onClick={[Function]}
                     title="Copy"
                     type="button"
@@ -2221,8 +2239,9 @@ exports[`with title and description array icons 1`] = `
                   </button>
                   <button
                     aria-label="Remove"
-                    className="chakra-button emotion-19"
+                    className="chakra-button array-item-remove emotion-19"
                     disabled={false}
+                    id="root_1__remove"
                     onClick={[Function]}
                     title="Remove"
                     type="button"
@@ -2255,6 +2274,7 @@ exports[`with title and description array icons 1`] = `
               <button
                 className="chakra-button array-item-add emotion-48"
                 disabled={false}
+                id="root__add"
                 onClick={[Function]}
                 type="button"
               >
@@ -3040,6 +3060,7 @@ exports[`with title and description from both array 1`] = `
               <button
                 className="chakra-button array-item-add emotion-10"
                 disabled={false}
+                id="root__add"
                 onClick={[Function]}
                 type="button"
               >
@@ -3360,8 +3381,9 @@ exports[`with title and description from both array icons 1`] = `
                 >
                   <button
                     aria-label="Move up"
-                    className="chakra-button emotion-19"
+                    className="chakra-button array-item-move-up emotion-19"
                     disabled={true}
+                    id="root_0__moveUp"
                     onClick={[Function]}
                     title="Move up"
                     type="button"
@@ -3380,8 +3402,9 @@ exports[`with title and description from both array icons 1`] = `
                   </button>
                   <button
                     aria-label="Move down"
-                    className="chakra-button emotion-19"
+                    className="chakra-button array-item-move-down emotion-19"
                     disabled={false}
+                    id="root_0__moveDown"
                     onClick={[Function]}
                     title="Move down"
                     type="button"
@@ -3400,8 +3423,9 @@ exports[`with title and description from both array icons 1`] = `
                   </button>
                   <button
                     aria-label="Copy"
-                    className="chakra-button emotion-19"
+                    className="chakra-button array-item-copy emotion-19"
                     disabled={false}
+                    id="root_0__copy"
                     onClick={[Function]}
                     title="Copy"
                     type="button"
@@ -3420,8 +3444,9 @@ exports[`with title and description from both array icons 1`] = `
                   </button>
                   <button
                     aria-label="Remove"
-                    className="chakra-button emotion-19"
+                    className="chakra-button array-item-remove emotion-19"
                     disabled={false}
+                    id="root_0__remove"
                     onClick={[Function]}
                     title="Remove"
                     type="button"
@@ -3515,8 +3540,9 @@ exports[`with title and description from both array icons 1`] = `
                 >
                   <button
                     aria-label="Move up"
-                    className="chakra-button emotion-19"
+                    className="chakra-button array-item-move-up emotion-19"
                     disabled={false}
+                    id="root_1__moveUp"
                     onClick={[Function]}
                     title="Move up"
                     type="button"
@@ -3535,8 +3561,9 @@ exports[`with title and description from both array icons 1`] = `
                   </button>
                   <button
                     aria-label="Move down"
-                    className="chakra-button emotion-19"
+                    className="chakra-button array-item-move-down emotion-19"
                     disabled={true}
+                    id="root_1__moveDown"
                     onClick={[Function]}
                     title="Move down"
                     type="button"
@@ -3555,8 +3582,9 @@ exports[`with title and description from both array icons 1`] = `
                   </button>
                   <button
                     aria-label="Copy"
-                    className="chakra-button emotion-19"
+                    className="chakra-button array-item-copy emotion-19"
                     disabled={false}
+                    id="root_1__copy"
                     onClick={[Function]}
                     title="Copy"
                     type="button"
@@ -3575,8 +3603,9 @@ exports[`with title and description from both array icons 1`] = `
                   </button>
                   <button
                     aria-label="Remove"
-                    className="chakra-button emotion-19"
+                    className="chakra-button array-item-remove emotion-19"
                     disabled={false}
+                    id="root_1__remove"
                     onClick={[Function]}
                     title="Remove"
                     type="button"
@@ -3609,6 +3638,7 @@ exports[`with title and description from both array icons 1`] = `
               <button
                 className="chakra-button array-item-add emotion-48"
                 disabled={false}
+                id="root__add"
                 onClick={[Function]}
                 type="button"
               >
@@ -4394,6 +4424,7 @@ exports[`with title and description from uiSchema array 1`] = `
               <button
                 className="chakra-button array-item-add emotion-10"
                 disabled={false}
+                id="root__add"
                 onClick={[Function]}
                 type="button"
               >
@@ -4714,8 +4745,9 @@ exports[`with title and description from uiSchema array icons 1`] = `
                 >
                   <button
                     aria-label="Move up"
-                    className="chakra-button emotion-19"
+                    className="chakra-button array-item-move-up emotion-19"
                     disabled={true}
+                    id="root_0__moveUp"
                     onClick={[Function]}
                     title="Move up"
                     type="button"
@@ -4734,8 +4766,9 @@ exports[`with title and description from uiSchema array icons 1`] = `
                   </button>
                   <button
                     aria-label="Move down"
-                    className="chakra-button emotion-19"
+                    className="chakra-button array-item-move-down emotion-19"
                     disabled={false}
+                    id="root_0__moveDown"
                     onClick={[Function]}
                     title="Move down"
                     type="button"
@@ -4754,8 +4787,9 @@ exports[`with title and description from uiSchema array icons 1`] = `
                   </button>
                   <button
                     aria-label="Copy"
-                    className="chakra-button emotion-19"
+                    className="chakra-button array-item-copy emotion-19"
                     disabled={false}
+                    id="root_0__copy"
                     onClick={[Function]}
                     title="Copy"
                     type="button"
@@ -4774,8 +4808,9 @@ exports[`with title and description from uiSchema array icons 1`] = `
                   </button>
                   <button
                     aria-label="Remove"
-                    className="chakra-button emotion-19"
+                    className="chakra-button array-item-remove emotion-19"
                     disabled={false}
+                    id="root_0__remove"
                     onClick={[Function]}
                     title="Remove"
                     type="button"
@@ -4869,8 +4904,9 @@ exports[`with title and description from uiSchema array icons 1`] = `
                 >
                   <button
                     aria-label="Move up"
-                    className="chakra-button emotion-19"
+                    className="chakra-button array-item-move-up emotion-19"
                     disabled={false}
+                    id="root_1__moveUp"
                     onClick={[Function]}
                     title="Move up"
                     type="button"
@@ -4889,8 +4925,9 @@ exports[`with title and description from uiSchema array icons 1`] = `
                   </button>
                   <button
                     aria-label="Move down"
-                    className="chakra-button emotion-19"
+                    className="chakra-button array-item-move-down emotion-19"
                     disabled={true}
+                    id="root_1__moveDown"
                     onClick={[Function]}
                     title="Move down"
                     type="button"
@@ -4909,8 +4946,9 @@ exports[`with title and description from uiSchema array icons 1`] = `
                   </button>
                   <button
                     aria-label="Copy"
-                    className="chakra-button emotion-19"
+                    className="chakra-button array-item-copy emotion-19"
                     disabled={false}
+                    id="root_1__copy"
                     onClick={[Function]}
                     title="Copy"
                     type="button"
@@ -4929,8 +4967,9 @@ exports[`with title and description from uiSchema array icons 1`] = `
                   </button>
                   <button
                     aria-label="Remove"
-                    className="chakra-button emotion-19"
+                    className="chakra-button array-item-remove emotion-19"
                     disabled={false}
+                    id="root_1__remove"
                     onClick={[Function]}
                     title="Remove"
                     type="button"
@@ -4963,6 +5002,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
               <button
                 className="chakra-button array-item-add emotion-48"
                 disabled={false}
+                id="root__add"
                 onClick={[Function]}
                 type="button"
               >
@@ -5713,6 +5753,7 @@ exports[`with title and description with global label off array 1`] = `
               <button
                 className="chakra-button array-item-add emotion-6"
                 disabled={false}
+                id="root__add"
                 onClick={[Function]}
                 type="button"
               >
@@ -5969,8 +6010,9 @@ exports[`with title and description with global label off array icons 1`] = `
                 >
                   <button
                     aria-label="Move up"
-                    className="chakra-button emotion-11"
+                    className="chakra-button array-item-move-up emotion-11"
                     disabled={true}
+                    id="root_0__moveUp"
                     onClick={[Function]}
                     title="Move up"
                     type="button"
@@ -5989,8 +6031,9 @@ exports[`with title and description with global label off array icons 1`] = `
                   </button>
                   <button
                     aria-label="Move down"
-                    className="chakra-button emotion-11"
+                    className="chakra-button array-item-move-down emotion-11"
                     disabled={false}
+                    id="root_0__moveDown"
                     onClick={[Function]}
                     title="Move down"
                     type="button"
@@ -6009,8 +6052,9 @@ exports[`with title and description with global label off array icons 1`] = `
                   </button>
                   <button
                     aria-label="Copy"
-                    className="chakra-button emotion-11"
+                    className="chakra-button array-item-copy emotion-11"
                     disabled={false}
+                    id="root_0__copy"
                     onClick={[Function]}
                     title="Copy"
                     type="button"
@@ -6029,8 +6073,9 @@ exports[`with title and description with global label off array icons 1`] = `
                   </button>
                   <button
                     aria-label="Remove"
-                    className="chakra-button emotion-11"
+                    className="chakra-button array-item-remove emotion-11"
                     disabled={false}
+                    id="root_0__remove"
                     onClick={[Function]}
                     title="Remove"
                     type="button"
@@ -6100,8 +6145,9 @@ exports[`with title and description with global label off array icons 1`] = `
                 >
                   <button
                     aria-label="Move up"
-                    className="chakra-button emotion-11"
+                    className="chakra-button array-item-move-up emotion-11"
                     disabled={false}
+                    id="root_1__moveUp"
                     onClick={[Function]}
                     title="Move up"
                     type="button"
@@ -6120,8 +6166,9 @@ exports[`with title and description with global label off array icons 1`] = `
                   </button>
                   <button
                     aria-label="Move down"
-                    className="chakra-button emotion-11"
+                    className="chakra-button array-item-move-down emotion-11"
                     disabled={true}
+                    id="root_1__moveDown"
                     onClick={[Function]}
                     title="Move down"
                     type="button"
@@ -6140,8 +6187,9 @@ exports[`with title and description with global label off array icons 1`] = `
                   </button>
                   <button
                     aria-label="Copy"
-                    className="chakra-button emotion-11"
+                    className="chakra-button array-item-copy emotion-11"
                     disabled={false}
+                    id="root_1__copy"
                     onClick={[Function]}
                     title="Copy"
                     type="button"
@@ -6160,8 +6208,9 @@ exports[`with title and description with global label off array icons 1`] = `
                   </button>
                   <button
                     aria-label="Remove"
-                    className="chakra-button emotion-11"
+                    className="chakra-button array-item-remove emotion-11"
                     disabled={false}
+                    id="root_1__remove"
                     onClick={[Function]}
                     title="Remove"
                     type="button"
@@ -6194,6 +6243,7 @@ exports[`with title and description with global label off array icons 1`] = `
               <button
                 className="chakra-button array-item-add emotion-36"
                 disabled={false}
+                id="root__add"
                 onClick={[Function]}
                 type="button"
               >

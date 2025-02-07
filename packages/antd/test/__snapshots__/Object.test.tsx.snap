@@ -236,6 +236,7 @@ exports[`object fields additionalProperties 1`] = `
                           <button
                             className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-primary ant-btn-icon-only ant-btn-block ant-btn-dangerous array-item-remove"
                             disabled={false}
+                            id="root_foo__remove"
                             onClick={[Function]}
                             style={{}}
                             title="Remove"
@@ -298,6 +299,7 @@ exports[`object fields additionalProperties 1`] = `
                       <button
                         className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-primary ant-btn-icon-only ant-btn-block object-property-expand"
                         disabled={false}
+                        id="root__add"
                         onClick={[Function]}
                         style={{}}
                         title="Add Item"
@@ -898,6 +900,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
                           <button
                             className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-primary ant-btn-icon-only ant-btn-block ant-btn-dangerous array-item-remove"
                             disabled={false}
+                            id="root_additionalProperty__remove"
                             onClick={[Function]}
                             style={{}}
                             title="Remove"
@@ -960,6 +963,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
                       <button
                         className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-primary ant-btn-icon-only ant-btn-block object-property-expand"
                         disabled={false}
+                        id="root__add"
                         onClick={[Function]}
                         style={{}}
                         title="Add Item"
@@ -1287,6 +1291,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
                           <button
                             className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-primary ant-btn-icon-only ant-btn-block ant-btn-dangerous array-item-remove"
                             disabled={false}
+                            id="root_foo__remove"
                             onClick={[Function]}
                             style={{}}
                             title="Remove"
@@ -1349,6 +1354,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
                       <button
                         className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-primary ant-btn-icon-only ant-btn-block object-property-expand"
                         disabled={false}
+                        id="root__add"
                         onClick={[Function]}
                         style={{}}
                         title="Add Item"
@@ -1685,6 +1691,7 @@ exports[`object fields with title and description from both additionalProperties
                           <button
                             className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-primary ant-btn-icon-only ant-btn-block ant-btn-dangerous array-item-remove"
                             disabled={false}
+                            id="root_foo__remove"
                             onClick={[Function]}
                             style={{}}
                             title="Remove"
@@ -1747,6 +1754,7 @@ exports[`object fields with title and description from both additionalProperties
                       <button
                         className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-primary ant-btn-icon-only ant-btn-block object-property-expand"
                         disabled={false}
+                        id="root__add"
                         onClick={[Function]}
                         style={{}}
                         title="Add Item"
@@ -2451,6 +2459,7 @@ exports[`object fields with title and description from uiSchema additionalProper
                           <button
                             className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-primary ant-btn-icon-only ant-btn-block ant-btn-dangerous array-item-remove"
                             disabled={false}
+                            id="root_foo__remove"
                             onClick={[Function]}
                             style={{}}
                             title="Remove"
@@ -2513,6 +2522,7 @@ exports[`object fields with title and description from uiSchema additionalProper
                       <button
                         className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-primary ant-btn-icon-only ant-btn-block object-property-expand"
                         disabled={false}
+                        id="root__add"
                         onClick={[Function]}
                         style={{}}
                         title="Add Item"
@@ -3217,6 +3227,7 @@ exports[`object fields with title and description from uiSchema show add button 
                           <button
                             className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-primary ant-btn-icon-only ant-btn-block ant-btn-dangerous array-item-remove"
                             disabled={false}
+                            id="root_additionalProperty__remove"
                             onClick={[Function]}
                             style={{}}
                             title="Remove"
@@ -3279,6 +3290,7 @@ exports[`object fields with title and description from uiSchema show add button 
                       <button
                         className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-primary ant-btn-icon-only ant-btn-block object-property-expand"
                         disabled={false}
+                        id="root__add"
                         onClick={[Function]}
                         style={{}}
                         title="Add Item"
@@ -3983,6 +3995,7 @@ exports[`object fields with title and description show add button and fields if 
                           <button
                             className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-primary ant-btn-icon-only ant-btn-block ant-btn-dangerous array-item-remove"
                             disabled={false}
+                            id="root_additionalProperty__remove"
                             onClick={[Function]}
                             style={{}}
                             title="Remove"
@@ -4045,6 +4058,7 @@ exports[`object fields with title and description show add button and fields if 
                       <button
                         className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-primary ant-btn-icon-only ant-btn-block object-property-expand"
                         disabled={false}
+                        id="root__add"
                         onClick={[Function]}
                         style={{}}
                         title="Add Item"
@@ -4335,6 +4349,7 @@ exports[`object fields with title and description with global label off addition
                           <button
                             className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-primary ant-btn-icon-only ant-btn-block ant-btn-dangerous array-item-remove"
                             disabled={false}
+                            id="root_foo__remove"
                             onClick={[Function]}
                             style={{}}
                             title="Remove"
@@ -4397,6 +4412,7 @@ exports[`object fields with title and description with global label off addition
                       <button
                         className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-primary ant-btn-icon-only ant-btn-block object-property-expand"
                         disabled={false}
+                        id="root__add"
                         onClick={[Function]}
                         style={{}}
                         title="Add Item"
@@ -4997,6 +5013,7 @@ exports[`object fields with title and description with global label off show add
                           <button
                             className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-primary ant-btn-icon-only ant-btn-block ant-btn-dangerous array-item-remove"
                             disabled={false}
+                            id="root_additionalProperty__remove"
                             onClick={[Function]}
                             style={{}}
                             title="Remove"
@@ -5059,6 +5076,7 @@ exports[`object fields with title and description with global label off show add
                       <button
                         className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-primary ant-btn-icon-only ant-btn-block object-property-expand"
                         disabled={false}
+                        id="root__add"
                         onClick={[Function]}
                         style={{}}
                         title="Add Item"

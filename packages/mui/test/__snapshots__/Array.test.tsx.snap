@@ -297,7 +297,7 @@ exports[`array fields array 1`] = `
                 <button
                   className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorPrimary MuiIconButton-sizeMedium array-item-add emotion-6"
                   disabled={null}
-                  id=":r0:"
+                  id="root__add"
                   onBlur={[Function]}
                   onClick={[Function]}
                   onContextMenu={[Function]}
@@ -1168,9 +1168,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
               className="MuiGrid-root MuiGrid-item emotion-14"
             >
               <button
-                className="MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeSmall emotion-15"
+                className="MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeSmall array-item-move-up emotion-15"
                 disabled={true}
-                id=":r9:"
+                id="root_0__moveUp"
                 onBlur={[Function]}
                 onClick={[Function]}
                 onContextMenu={[Function]}
@@ -1184,15 +1184,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                 onTouchEnd={[Function]}
                 onTouchMove={[Function]}
                 onTouchStart={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "minWidth": 0,
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
                 tabIndex={-1}
                 title="Move up"
                 type="button"
@@ -1210,9 +1201,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                 </svg>
               </button>
               <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall emotion-15"
+                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall array-item-move-down emotion-15"
                 disabled={null}
-                id=":ra:"
+                id="root_0__moveDown"
                 onBlur={[Function]}
                 onClick={[Function]}
                 onContextMenu={[Function]}
@@ -1226,15 +1217,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                 onTouchEnd={[Function]}
                 onTouchMove={[Function]}
                 onTouchStart={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "minWidth": 0,
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
                 tabIndex={0}
                 title="Move down"
                 type="button"
@@ -1252,9 +1234,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                 </svg>
               </button>
               <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall emotion-15"
+                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall array-item-copy emotion-15"
                 disabled={null}
-                id=":rb:"
+                id="root_0__copy"
                 onBlur={[Function]}
                 onClick={[Function]}
                 onContextMenu={[Function]}
@@ -1268,15 +1250,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                 onTouchEnd={[Function]}
                 onTouchMove={[Function]}
                 onTouchStart={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "minWidth": 0,
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
                 tabIndex={0}
                 title="Copy"
                 type="button"
@@ -1294,9 +1267,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                 </svg>
               </button>
               <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeSmall emotion-21"
+                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeSmall array-item-remove emotion-21"
                 disabled={null}
-                id=":rc:"
+                id="root_0__remove"
                 onBlur={[Function]}
                 onClick={[Function]}
                 onContextMenu={[Function]}
@@ -1310,15 +1283,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                 onTouchEnd={[Function]}
                 onTouchMove={[Function]}
                 onTouchStart={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "minWidth": 0,
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
                 tabIndex={0}
                 title="Remove"
                 type="button"
@@ -1419,9 +1383,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
               className="MuiGrid-root MuiGrid-item emotion-14"
             >
               <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall emotion-15"
+                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall array-item-move-up emotion-15"
                 disabled={null}
-                id=":re:"
+                id="root_1__moveUp"
                 onBlur={[Function]}
                 onClick={[Function]}
                 onContextMenu={[Function]}
@@ -1435,15 +1399,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                 onTouchEnd={[Function]}
                 onTouchMove={[Function]}
                 onTouchStart={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "minWidth": 0,
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
                 tabIndex={0}
                 title="Move up"
                 type="button"
@@ -1461,9 +1416,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                 </svg>
               </button>
               <button
-                className="MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeSmall emotion-15"
+                className="MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeSmall array-item-move-down emotion-15"
                 disabled={true}
-                id=":rf:"
+                id="root_1__moveDown"
                 onBlur={[Function]}
                 onClick={[Function]}
                 onContextMenu={[Function]}
@@ -1477,15 +1432,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                 onTouchEnd={[Function]}
                 onTouchMove={[Function]}
                 onTouchStart={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "minWidth": 0,
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
                 tabIndex={-1}
                 title="Move down"
                 type="button"
@@ -1503,9 +1449,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                 </svg>
               </button>
               <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall emotion-15"
+                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall array-item-copy emotion-15"
                 disabled={null}
-                id=":rg:"
+                id="root_1__copy"
                 onBlur={[Function]}
                 onClick={[Function]}
                 onContextMenu={[Function]}
@@ -1519,15 +1465,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                 onTouchEnd={[Function]}
                 onTouchMove={[Function]}
                 onTouchStart={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "minWidth": 0,
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
                 tabIndex={0}
                 title="Copy"
                 type="button"
@@ -1545,9 +1482,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                 </svg>
               </button>
               <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeSmall emotion-21"
+                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeSmall array-item-remove emotion-21"
                 disabled={null}
-                id=":rh:"
+                id="root_1__remove"
                 onBlur={[Function]}
                 onClick={[Function]}
                 onContextMenu={[Function]}
@@ -1561,15 +1498,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                 onTouchEnd={[Function]}
                 onTouchMove={[Function]}
                 onTouchStart={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "minWidth": 0,
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
                 tabIndex={0}
                 title="Remove"
                 type="button"
@@ -1600,7 +1528,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                 <button
                   className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorPrimary MuiIconButton-sizeMedium array-item-add emotion-46"
                   disabled={null}
-                  id=":ri:"
+                  id="root__add"
                   onBlur={[Function]}
                   onClick={[Function]}
                   onContextMenu={[Function]}
@@ -5071,7 +4999,7 @@ exports[`with title and description array 1`] = `
                 <button
                   className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorPrimary MuiIconButton-sizeMedium array-item-add emotion-10"
                   disabled={null}
-                  id=":rq:"
+                  id="root__add"
                   onBlur={[Function]}
                   onClick={[Function]}
                   onContextMenu={[Function]}
@@ -6101,9 +6029,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
               className="MuiGrid-root MuiGrid-item emotion-22"
             >
               <button
-                className="MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeSmall emotion-23"
+                className="MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeSmall array-item-move-up emotion-23"
                 disabled={true}
-                id=":r13:"
+                id="root_0__moveUp"
                 onBlur={[Function]}
                 onClick={[Function]}
                 onContextMenu={[Function]}
@@ -6117,15 +6045,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                 onTouchEnd={[Function]}
                 onTouchMove={[Function]}
                 onTouchStart={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "minWidth": 0,
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
                 tabIndex={-1}
                 title="Move up"
                 type="button"
@@ -6143,9 +6062,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                 </svg>
               </button>
               <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall emotion-23"
+                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall array-item-move-down emotion-23"
                 disabled={null}
-                id=":r14:"
+                id="root_0__moveDown"
                 onBlur={[Function]}
                 onClick={[Function]}
                 onContextMenu={[Function]}
@@ -6159,15 +6078,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                 onTouchEnd={[Function]}
                 onTouchMove={[Function]}
                 onTouchStart={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "minWidth": 0,
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
                 tabIndex={0}
                 title="Move down"
                 type="button"
@@ -6185,9 +6095,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                 </svg>
               </button>
               <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall emotion-23"
+                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall array-item-copy emotion-23"
                 disabled={null}
-                id=":r15:"
+                id="root_0__copy"
                 onBlur={[Function]}
                 onClick={[Function]}
                 onContextMenu={[Function]}
@@ -6201,15 +6111,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                 onTouchEnd={[Function]}
                 onTouchMove={[Function]}
                 onTouchStart={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "minWidth": 0,
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
                 tabIndex={0}
                 title="Copy"
                 type="button"
@@ -6227,9 +6128,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                 </svg>
               </button>
               <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeSmall emotion-29"
+                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeSmall array-item-remove emotion-29"
                 disabled={null}
-                id=":r16:"
+                id="root_0__remove"
                 onBlur={[Function]}
                 onClick={[Function]}
                 onContextMenu={[Function]}
@@ -6243,15 +6144,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                 onTouchEnd={[Function]}
                 onTouchMove={[Function]}
                 onTouchStart={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "minWidth": 0,
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
                 tabIndex={0}
                 title="Remove"
                 type="button"
@@ -6382,9 +6274,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
               className="MuiGrid-root MuiGrid-item emotion-22"
             >
               <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall emotion-23"
+                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall array-item-move-up emotion-23"
                 disabled={null}
-                id=":r18:"
+                id="root_1__moveUp"
                 onBlur={[Function]}
                 onClick={[Function]}
                 onContextMenu={[Function]}
@@ -6398,15 +6290,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                 onTouchEnd={[Function]}
                 onTouchMove={[Function]}
                 onTouchStart={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "minWidth": 0,
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
                 tabIndex={0}
                 title="Move up"
                 type="button"
@@ -6424,9 +6307,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                 </svg>
               </button>
               <button
-                className="MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeSmall emotion-23"
+                className="MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeSmall array-item-move-down emotion-23"
                 disabled={true}
-                id=":r19:"
+                id="root_1__moveDown"
                 onBlur={[Function]}
                 onClick={[Function]}
                 onContextMenu={[Function]}
@@ -6440,15 +6323,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                 onTouchEnd={[Function]}
                 onTouchMove={[Function]}
                 onTouchStart={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "minWidth": 0,
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
                 tabIndex={-1}
                 title="Move down"
                 type="button"
@@ -6466,9 +6340,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                 </svg>
               </button>
               <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall emotion-23"
+                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall array-item-copy emotion-23"
                 disabled={null}
-                id=":r1a:"
+                id="root_1__copy"
                 onBlur={[Function]}
                 onClick={[Function]}
                 onContextMenu={[Function]}
@@ -6482,15 +6356,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                 onTouchEnd={[Function]}
                 onTouchMove={[Function]}
                 onTouchStart={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "minWidth": 0,
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
                 tabIndex={0}
                 title="Copy"
                 type="button"
@@ -6508,9 +6373,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                 </svg>
               </button>
               <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeSmall emotion-29"
+                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeSmall array-item-remove emotion-29"
                 disabled={null}
-                id=":r1b:"
+                id="root_1__remove"
                 onBlur={[Function]}
                 onClick={[Function]}
                 onContextMenu={[Function]}
@@ -6524,15 +6389,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                 onTouchEnd={[Function]}
                 onTouchMove={[Function]}
                 onTouchStart={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "minWidth": 0,
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
                 tabIndex={0}
                 title="Remove"
                 type="button"
@@ -6563,7 +6419,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                 <button
                   className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorPrimary MuiIconButton-sizeMedium array-item-add emotion-58"
                   disabled={null}
-                  id=":r1c:"
+                  id="root__add"
                   onBlur={[Function]}
                   onClick={[Function]}
                   onContextMenu={[Function]}
@@ -8386,7 +8242,7 @@ exports[`with title and description from both array 1`] = `
                 <button
                   className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorPrimary MuiIconButton-sizeMedium array-item-add emotion-10"
                   disabled={null}
-                  id=":r22:"
+                  id="root__add"
                   onBlur={[Function]}
                   onClick={[Function]}
                   onContextMenu={[Function]}
@@ -9416,9 +9272,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
               className="MuiGrid-root MuiGrid-item emotion-22"
             >
               <button
-                className="MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeSmall emotion-23"
+                className="MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeSmall array-item-move-up emotion-23"
                 disabled={true}
-                id=":r2b:"
+                id="root_0__moveUp"
                 onBlur={[Function]}
                 onClick={[Function]}
                 onContextMenu={[Function]}
@@ -9432,15 +9288,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                 onTouchEnd={[Function]}
                 onTouchMove={[Function]}
                 onTouchStart={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "minWidth": 0,
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
                 tabIndex={-1}
                 title="Move up"
                 type="button"
@@ -9458,9 +9305,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                 </svg>
               </button>
               <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall emotion-23"
+                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall array-item-move-down emotion-23"
                 disabled={null}
-                id=":r2c:"
+                id="root_0__moveDown"
                 onBlur={[Function]}
                 onClick={[Function]}
                 onContextMenu={[Function]}
@@ -9474,15 +9321,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                 onTouchEnd={[Function]}
                 onTouchMove={[Function]}
                 onTouchStart={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "minWidth": 0,
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
                 tabIndex={0}
                 title="Move down"
                 type="button"
@@ -9500,9 +9338,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                 </svg>
               </button>
               <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall emotion-23"
+                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall array-item-copy emotion-23"
                 disabled={null}
-                id=":r2d:"
+                id="root_0__copy"
                 onBlur={[Function]}
                 onClick={[Function]}
                 onContextMenu={[Function]}
@@ -9516,15 +9354,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                 onTouchEnd={[Function]}
                 onTouchMove={[Function]}
                 onTouchStart={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "minWidth": 0,
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
                 tabIndex={0}
                 title="Copy"
                 type="button"
@@ -9542,9 +9371,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                 </svg>
               </button>
               <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeSmall emotion-29"
+                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeSmall array-item-remove emotion-29"
                 disabled={null}
-                id=":r2e:"
+                id="root_0__remove"
                 onBlur={[Function]}
                 onClick={[Function]}
                 onContextMenu={[Function]}
@@ -9558,15 +9387,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                 onTouchEnd={[Function]}
                 onTouchMove={[Function]}
                 onTouchStart={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "minWidth": 0,
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
                 tabIndex={0}
                 title="Remove"
                 type="button"
@@ -9697,9 +9517,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
               className="MuiGrid-root MuiGrid-item emotion-22"
             >
               <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall emotion-23"
+                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall array-item-move-up emotion-23"
                 disabled={null}
-                id=":r2g:"
+                id="root_1__moveUp"
                 onBlur={[Function]}
                 onClick={[Function]}
                 onContextMenu={[Function]}
@@ -9713,15 +9533,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                 onTouchEnd={[Function]}
                 onTouchMove={[Function]}
                 onTouchStart={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "minWidth": 0,
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
                 tabIndex={0}
                 title="Move up"
                 type="button"
@@ -9739,9 +9550,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                 </svg>
               </button>
               <button
-                className="MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeSmall emotion-23"
+                className="MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeSmall array-item-move-down emotion-23"
                 disabled={true}
-                id=":r2h:"
+                id="root_1__moveDown"
                 onBlur={[Function]}
                 onClick={[Function]}
                 onContextMenu={[Function]}
@@ -9755,15 +9566,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                 onTouchEnd={[Function]}
                 onTouchMove={[Function]}
                 onTouchStart={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "minWidth": 0,
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
                 tabIndex={-1}
                 title="Move down"
                 type="button"
@@ -9781,9 +9583,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                 </svg>
               </button>
               <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall emotion-23"
+                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall array-item-copy emotion-23"
                 disabled={null}
-                id=":r2i:"
+                id="root_1__copy"
                 onBlur={[Function]}
                 onClick={[Function]}
                 onContextMenu={[Function]}
@@ -9797,15 +9599,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                 onTouchEnd={[Function]}
                 onTouchMove={[Function]}
                 onTouchStart={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "minWidth": 0,
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
                 tabIndex={0}
                 title="Copy"
                 type="button"
@@ -9823,9 +9616,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                 </svg>
               </button>
               <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeSmall emotion-29"
+                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeSmall array-item-remove emotion-29"
                 disabled={null}
-                id=":r2j:"
+                id="root_1__remove"
                 onBlur={[Function]}
                 onClick={[Function]}
                 onContextMenu={[Function]}
@@ -9839,15 +9632,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                 onTouchEnd={[Function]}
                 onTouchMove={[Function]}
                 onTouchStart={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "minWidth": 0,
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
                 tabIndex={0}
                 title="Remove"
                 type="button"
@@ -9878,7 +9662,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                 <button
                   className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorPrimary MuiIconButton-sizeMedium array-item-add emotion-58"
                   disabled={null}
-                  id=":r2k:"
+                  id="root__add"
                   onBlur={[Function]}
                   onClick={[Function]}
                   onContextMenu={[Function]}
@@ -11701,7 +11485,7 @@ exports[`with title and description from uiSchema array 1`] = `
                 <button
                   className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorPrimary MuiIconButton-sizeMedium array-item-add emotion-10"
                   disabled={null}
-                  id=":r1e:"
+                  id="root__add"
                   onBlur={[Function]}
                   onClick={[Function]}
                   onContextMenu={[Function]}
@@ -12731,9 +12515,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
               className="MuiGrid-root MuiGrid-item emotion-22"
             >
               <button
-                className="MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeSmall emotion-23"
+                className="MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeSmall array-item-move-up emotion-23"
                 disabled={true}
-                id=":r1n:"
+                id="root_0__moveUp"
                 onBlur={[Function]}
                 onClick={[Function]}
                 onContextMenu={[Function]}
@@ -12747,15 +12531,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                 onTouchEnd={[Function]}
                 onTouchMove={[Function]}
                 onTouchStart={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "minWidth": 0,
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
                 tabIndex={-1}
                 title="Move up"
                 type="button"
@@ -12773,9 +12548,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                 </svg>
               </button>
               <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall emotion-23"
+                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall array-item-move-down emotion-23"
                 disabled={null}
-                id=":r1o:"
+                id="root_0__moveDown"
                 onBlur={[Function]}
                 onClick={[Function]}
                 onContextMenu={[Function]}
@@ -12789,15 +12564,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                 onTouchEnd={[Function]}
                 onTouchMove={[Function]}
                 onTouchStart={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "minWidth": 0,
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
                 tabIndex={0}
                 title="Move down"
                 type="button"
@@ -12815,9 +12581,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                 </svg>
               </button>
               <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall emotion-23"
+                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall array-item-copy emotion-23"
                 disabled={null}
-                id=":r1p:"
+                id="root_0__copy"
                 onBlur={[Function]}
                 onClick={[Function]}
                 onContextMenu={[Function]}
@@ -12831,15 +12597,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                 onTouchEnd={[Function]}
                 onTouchMove={[Function]}
                 onTouchStart={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "minWidth": 0,
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
                 tabIndex={0}
                 title="Copy"
                 type="button"
@@ -12857,9 +12614,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                 </svg>
               </button>
               <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeSmall emotion-29"
+                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeSmall array-item-remove emotion-29"
                 disabled={null}
-                id=":r1q:"
+                id="root_0__remove"
                 onBlur={[Function]}
                 onClick={[Function]}
                 onContextMenu={[Function]}
@@ -12873,15 +12630,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                 onTouchEnd={[Function]}
                 onTouchMove={[Function]}
                 onTouchStart={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "minWidth": 0,
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
                 tabIndex={0}
                 title="Remove"
                 type="button"
@@ -13012,9 +12760,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
               className="MuiGrid-root MuiGrid-item emotion-22"
             >
               <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall emotion-23"
+                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall array-item-move-up emotion-23"
                 disabled={null}
-                id=":r1s:"
+                id="root_1__moveUp"
                 onBlur={[Function]}
                 onClick={[Function]}
                 onContextMenu={[Function]}
@@ -13028,15 +12776,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                 onTouchEnd={[Function]}
                 onTouchMove={[Function]}
                 onTouchStart={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "minWidth": 0,
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
                 tabIndex={0}
                 title="Move up"
                 type="button"
@@ -13054,9 +12793,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                 </svg>
               </button>
               <button
-                className="MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeSmall emotion-23"
+                className="MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeSmall array-item-move-down emotion-23"
                 disabled={true}
-                id=":r1t:"
+                id="root_1__moveDown"
                 onBlur={[Function]}
                 onClick={[Function]}
                 onContextMenu={[Function]}
@@ -13070,15 +12809,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                 onTouchEnd={[Function]}
                 onTouchMove={[Function]}
                 onTouchStart={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "minWidth": 0,
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
                 tabIndex={-1}
                 title="Move down"
                 type="button"
@@ -13096,9 +12826,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                 </svg>
               </button>
               <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall emotion-23"
+                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall array-item-copy emotion-23"
                 disabled={null}
-                id=":r1u:"
+                id="root_1__copy"
                 onBlur={[Function]}
                 onClick={[Function]}
                 onContextMenu={[Function]}
@@ -13112,15 +12842,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                 onTouchEnd={[Function]}
                 onTouchMove={[Function]}
                 onTouchStart={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "minWidth": 0,
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
                 tabIndex={0}
                 title="Copy"
                 type="button"
@@ -13138,9 +12859,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                 </svg>
               </button>
               <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeSmall emotion-29"
+                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeSmall array-item-remove emotion-29"
                 disabled={null}
-                id=":r1v:"
+                id="root_1__remove"
                 onBlur={[Function]}
                 onClick={[Function]}
                 onContextMenu={[Function]}
@@ -13154,15 +12875,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                 onTouchEnd={[Function]}
                 onTouchMove={[Function]}
                 onTouchStart={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "minWidth": 0,
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
                 tabIndex={0}
                 title="Remove"
                 type="button"
@@ -13193,7 +12905,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                 <button
                   className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorPrimary MuiIconButton-sizeMedium array-item-add emotion-58"
                   disabled={null}
-                  id=":r20:"
+                  id="root__add"
                   onBlur={[Function]}
                   onClick={[Function]}
                   onContextMenu={[Function]}
@@ -14957,7 +14669,7 @@ exports[`with title and description with global label off array 1`] = `
                 <button
                   className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorPrimary MuiIconButton-sizeMedium array-item-add emotion-6"
                   disabled={null}
-                  id=":r2m:"
+                  id="root__add"
                   onBlur={[Function]}
                   onClick={[Function]}
                   onContextMenu={[Function]}
@@ -15828,9 +15540,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
               className="MuiGrid-root MuiGrid-item emotion-14"
             >
               <button
-                className="MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeSmall emotion-15"
+                className="MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeSmall array-item-move-up emotion-15"
                 disabled={true}
-                id=":r2v:"
+                id="root_0__moveUp"
                 onBlur={[Function]}
                 onClick={[Function]}
                 onContextMenu={[Function]}
@@ -15844,15 +15556,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                 onTouchEnd={[Function]}
                 onTouchMove={[Function]}
                 onTouchStart={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "minWidth": 0,
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
                 tabIndex={-1}
                 title="Move up"
                 type="button"
@@ -15870,9 +15573,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                 </svg>
               </button>
               <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall emotion-15"
+                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall array-item-move-down emotion-15"
                 disabled={null}
-                id=":r30:"
+                id="root_0__moveDown"
                 onBlur={[Function]}
                 onClick={[Function]}
                 onContextMenu={[Function]}
@@ -15886,15 +15589,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                 onTouchEnd={[Function]}
                 onTouchMove={[Function]}
                 onTouchStart={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "minWidth": 0,
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
                 tabIndex={0}
                 title="Move down"
                 type="button"
@@ -15912,9 +15606,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                 </svg>
               </button>
               <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall emotion-15"
+                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall array-item-copy emotion-15"
                 disabled={null}
-                id=":r31:"
+                id="root_0__copy"
                 onBlur={[Function]}
                 onClick={[Function]}
                 onContextMenu={[Function]}
@@ -15928,15 +15622,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                 onTouchEnd={[Function]}
                 onTouchMove={[Function]}
                 onTouchStart={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "minWidth": 0,
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
                 tabIndex={0}
                 title="Copy"
                 type="button"
@@ -15954,9 +15639,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                 </svg>
               </button>
               <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeSmall emotion-21"
+                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeSmall array-item-remove emotion-21"
                 disabled={null}
-                id=":r32:"
+                id="root_0__remove"
                 onBlur={[Function]}
                 onClick={[Function]}
                 onContextMenu={[Function]}
@@ -15970,15 +15655,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                 onTouchEnd={[Function]}
                 onTouchMove={[Function]}
                 onTouchStart={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "minWidth": 0,
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
                 tabIndex={0}
                 title="Remove"
                 type="button"
@@ -16079,9 +15755,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
               className="MuiGrid-root MuiGrid-item emotion-14"
             >
               <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall emotion-15"
+                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall array-item-move-up emotion-15"
                 disabled={null}
-                id=":r34:"
+                id="root_1__moveUp"
                 onBlur={[Function]}
                 onClick={[Function]}
                 onContextMenu={[Function]}
@@ -16095,15 +15771,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                 onTouchEnd={[Function]}
                 onTouchMove={[Function]}
                 onTouchStart={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "minWidth": 0,
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
                 tabIndex={0}
                 title="Move up"
                 type="button"
@@ -16121,9 +15788,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                 </svg>
               </button>
               <button
-                className="MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeSmall emotion-15"
+                className="MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeSmall array-item-move-down emotion-15"
                 disabled={true}
-                id=":r35:"
+                id="root_1__moveDown"
                 onBlur={[Function]}
                 onClick={[Function]}
                 onContextMenu={[Function]}
@@ -16137,15 +15804,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                 onTouchEnd={[Function]}
                 onTouchMove={[Function]}
                 onTouchStart={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "minWidth": 0,
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
                 tabIndex={-1}
                 title="Move down"
                 type="button"
@@ -16163,9 +15821,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                 </svg>
               </button>
               <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall emotion-15"
+                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall array-item-copy emotion-15"
                 disabled={null}
-                id=":r36:"
+                id="root_1__copy"
                 onBlur={[Function]}
                 onClick={[Function]}
                 onContextMenu={[Function]}
@@ -16179,15 +15837,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                 onTouchEnd={[Function]}
                 onTouchMove={[Function]}
                 onTouchStart={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "minWidth": 0,
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
                 tabIndex={0}
                 title="Copy"
                 type="button"
@@ -16205,9 +15854,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                 </svg>
               </button>
               <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeSmall emotion-21"
+                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeSmall array-item-remove emotion-21"
                 disabled={null}
-                id=":r37:"
+                id="root_1__remove"
                 onBlur={[Function]}
                 onClick={[Function]}
                 onContextMenu={[Function]}
@@ -16221,15 +15870,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                 onTouchEnd={[Function]}
                 onTouchMove={[Function]}
                 onTouchStart={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "minWidth": 0,
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
                 tabIndex={0}
                 title="Remove"
                 type="button"
@@ -16260,7 +15900,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                 <button
                   className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorPrimary MuiIconButton-sizeMedium array-item-add emotion-46"
                   disabled={null}
-                  id=":r38:"
+                  id="root__add"
                   onBlur={[Function]}
                   onClick={[Function]}
                   onContextMenu={[Function]}

@@ -85,6 +85,7 @@ exports[`array fields array 1`] = `
                         <button
                           className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-primary ant-btn-icon-only ant-btn-block array-item-add"
                           disabled={false}
+                          id="root__add"
                           onClick={[Function]}
                           style={{}}
                           title="Add Item"
@@ -295,14 +296,11 @@ exports[`array fields array icons 1`] = `
                           }
                         >
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-default ant-btn-icon-only"
+                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-default ant-btn-icon-only array-item-move-up"
                             disabled={true}
+                            id="root_0__moveUp"
                             onClick={[Function]}
-                            style={
-                              {
-                                "width": "calc(100% / 4)",
-                              }
-                            }
+                            style={{}}
                             title="Move up"
                             type="button"
                           >
@@ -332,14 +330,11 @@ exports[`array fields array icons 1`] = `
                             </span>
                           </button>
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-default ant-btn-icon-only"
+                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-default ant-btn-icon-only array-item-move-down"
                             disabled={false}
+                            id="root_0__moveDown"
                             onClick={[Function]}
-                            style={
-                              {
-                                "width": "calc(100% / 4)",
-                              }
-                            }
+                            style={{}}
                             title="Move down"
                             type="button"
                           >
@@ -369,14 +364,11 @@ exports[`array fields array icons 1`] = `
                             </span>
                           </button>
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-default ant-btn-icon-only"
+                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-default ant-btn-icon-only array-item-copy"
                             disabled={false}
+                            id="root_0__copy"
                             onClick={[Function]}
-                            style={
-                              {
-                                "width": "calc(100% / 4)",
-                              }
-                            }
+                            style={{}}
                             title="Copy"
                             type="button"
                           >
@@ -406,14 +398,11 @@ exports[`array fields array icons 1`] = `
                             </span>
                           </button>
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-primary ant-btn-icon-only ant-btn-dangerous"
+                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-primary ant-btn-icon-only ant-btn-dangerous array-item-remove"
                             disabled={false}
+                            id="root_0__remove"
                             onClick={[Function]}
-                            style={
-                              {
-                                "width": "calc(100% / 4)",
-                              }
-                            }
+                            style={{}}
                             title="Remove"
                             type="button"
                           >
@@ -544,14 +533,11 @@ exports[`array fields array icons 1`] = `
                           }
                         >
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-default ant-btn-icon-only"
+                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-default ant-btn-icon-only array-item-move-up"
                             disabled={false}
+                            id="root_1__moveUp"
                             onClick={[Function]}
-                            style={
-                              {
-                                "width": "calc(100% / 4)",
-                              }
-                            }
+                            style={{}}
                             title="Move up"
                             type="button"
                           >
@@ -581,14 +567,11 @@ exports[`array fields array icons 1`] = `
                             </span>
                           </button>
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-default ant-btn-icon-only"
+                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-default ant-btn-icon-only array-item-move-down"
                             disabled={true}
+                            id="root_1__moveDown"
                             onClick={[Function]}
-                            style={
-                              {
-                                "width": "calc(100% / 4)",
-                              }
-                            }
+                            style={{}}
                             title="Move down"
                             type="button"
                           >
@@ -618,14 +601,11 @@ exports[`array fields array icons 1`] = `
                             </span>
                           </button>
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-default ant-btn-icon-only"
+                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-default ant-btn-icon-only array-item-copy"
                             disabled={false}
+                            id="root_1__copy"
                             onClick={[Function]}
-                            style={
-                              {
-                                "width": "calc(100% / 4)",
-                              }
-                            }
+                            style={{}}
                             title="Copy"
                             type="button"
                           >
@@ -655,14 +635,11 @@ exports[`array fields array icons 1`] = `
                             </span>
                           </button>
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-primary ant-btn-icon-only ant-btn-dangerous"
+                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-primary ant-btn-icon-only ant-btn-dangerous array-item-remove"
                             disabled={false}
+                            id="root_1__remove"
                             onClick={[Function]}
-                            style={
-                              {
-                                "width": "calc(100% / 4)",
-                              }
-                            }
+                            style={{}}
                             title="Remove"
                             type="button"
                           >
@@ -727,6 +704,7 @@ exports[`array fields array icons 1`] = `
                         <button
                           className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-primary ant-btn-icon-only ant-btn-block array-item-add"
                           disabled={false}
+                          id="root__add"
                           onClick={[Function]}
                           style={{}}
                           title="Add Item"
@@ -1929,6 +1907,7 @@ exports[`with title and description array 1`] = `
                         <button
                           className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-primary ant-btn-icon-only ant-btn-block array-item-add"
                           disabled={false}
+                          id="root__add"
                           onClick={[Function]}
                           style={{}}
                           title="Add Item"
@@ -2203,14 +2182,11 @@ exports[`with title and description array icons 1`] = `
                           }
                         >
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-default ant-btn-icon-only"
+                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-default ant-btn-icon-only array-item-move-up"
                             disabled={true}
+                            id="root_0__moveUp"
                             onClick={[Function]}
-                            style={
-                              {
-                                "width": "calc(100% / 4)",
-                              }
-                            }
+                            style={{}}
                             title="Move up"
                             type="button"
                           >
@@ -2240,14 +2216,11 @@ exports[`with title and description array icons 1`] = `
                             </span>
                           </button>
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-default ant-btn-icon-only"
+                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-default ant-btn-icon-only array-item-move-down"
                             disabled={false}
+                            id="root_0__moveDown"
                             onClick={[Function]}
-                            style={
-                              {
-                                "width": "calc(100% / 4)",
-                              }
-                            }
+                            style={{}}
                             title="Move down"
                             type="button"
                           >
@@ -2277,14 +2250,11 @@ exports[`with title and description array icons 1`] = `
                             </span>
                           </button>
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-default ant-btn-icon-only"
+                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-default ant-btn-icon-only array-item-copy"
                             disabled={false}
+                            id="root_0__copy"
                             onClick={[Function]}
-                            style={
-                              {
-                                "width": "calc(100% / 4)",
-                              }
-                            }
+                            style={{}}
                             title="Copy"
                             type="button"
                           >
@@ -2314,14 +2284,11 @@ exports[`with title and description array icons 1`] = `
                             </span>
                           </button>
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-primary ant-btn-icon-only ant-btn-dangerous"
+                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-primary ant-btn-icon-only ant-btn-dangerous array-item-remove"
                             disabled={false}
+                            id="root_0__remove"
                             onClick={[Function]}
-                            style={
-                              {
-                                "width": "calc(100% / 4)",
-                              }
-                            }
+                            style={{}}
                             title="Remove"
                             type="button"
                           >
@@ -2473,14 +2440,11 @@ exports[`with title and description array icons 1`] = `
                           }
                         >
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-default ant-btn-icon-only"
+                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-default ant-btn-icon-only array-item-move-up"
                             disabled={false}
+                            id="root_1__moveUp"
                             onClick={[Function]}
-                            style={
-                              {
-                                "width": "calc(100% / 4)",
-                              }
-                            }
+                            style={{}}
                             title="Move up"
                             type="button"
                           >
@@ -2510,14 +2474,11 @@ exports[`with title and description array icons 1`] = `
                             </span>
                           </button>
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-default ant-btn-icon-only"
+                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-default ant-btn-icon-only array-item-move-down"
                             disabled={true}
+                            id="root_1__moveDown"
                             onClick={[Function]}
-                            style={
-                              {
-                                "width": "calc(100% / 4)",
-                              }
-                            }
+                            style={{}}
                             title="Move down"
                             type="button"
                           >
@@ -2547,14 +2508,11 @@ exports[`with title and description array icons 1`] = `
                             </span>
                           </button>
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-default ant-btn-icon-only"
+                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-default ant-btn-icon-only array-item-copy"
                             disabled={false}
+                            id="root_1__copy"
                             onClick={[Function]}
-                            style={
-                              {
-                                "width": "calc(100% / 4)",
-                              }
-                            }
+                            style={{}}
                             title="Copy"
                             type="button"
                           >
@@ -2584,14 +2542,11 @@ exports[`with title and description array icons 1`] = `
                             </span>
                           </button>
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-primary ant-btn-icon-only ant-btn-dangerous"
+                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-primary ant-btn-icon-only ant-btn-dangerous array-item-remove"
                             disabled={false}
+                            id="root_1__remove"
                             onClick={[Function]}
-                            style={
-                              {
-                                "width": "calc(100% / 4)",
-                              }
-                            }
+                            style={{}}
                             title="Remove"
                             type="button"
                           >
@@ -2656,6 +2611,7 @@ exports[`with title and description array icons 1`] = `
                         <button
                           className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-primary ant-btn-icon-only ant-btn-block array-item-add"
                           disabled={false}
+                          id="root__add"
                           onClick={[Function]}
                           style={{}}
                           title="Add Item"
@@ -3437,6 +3393,7 @@ exports[`with title and description from both array 1`] = `
                         <button
                           className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-primary ant-btn-icon-only ant-btn-block array-item-add"
                           disabled={false}
+                          id="root__add"
                           onClick={[Function]}
                           style={{}}
                           title="Add Item"
@@ -3711,14 +3668,11 @@ exports[`with title and description from both array icons 1`] = `
                           }
                         >
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-default ant-btn-icon-only"
+                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-default ant-btn-icon-only array-item-move-up"
                             disabled={true}
+                            id="root_0__moveUp"
                             onClick={[Function]}
-                            style={
-                              {
-                                "width": "calc(100% / 4)",
-                              }
-                            }
+                            style={{}}
                             title="Move up"
                             type="button"
                           >
@@ -3748,14 +3702,11 @@ exports[`with title and description from both array icons 1`] = `
                             </span>
                           </button>
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-default ant-btn-icon-only"
+                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-default ant-btn-icon-only array-item-move-down"
                             disabled={false}
+                            id="root_0__moveDown"
                             onClick={[Function]}
-                            style={
-                              {
-                                "width": "calc(100% / 4)",
-                              }
-                            }
+                            style={{}}
                             title="Move down"
                             type="button"
                           >
@@ -3785,14 +3736,11 @@ exports[`with title and description from both array icons 1`] = `
                             </span>
                           </button>
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-default ant-btn-icon-only"
+                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-default ant-btn-icon-only array-item-copy"
                             disabled={false}
+                            id="root_0__copy"
                             onClick={[Function]}
-                            style={
-                              {
-                                "width": "calc(100% / 4)",
-                              }
-                            }
+                            style={{}}
                             title="Copy"
                             type="button"
                           >
@@ -3822,14 +3770,11 @@ exports[`with title and description from both array icons 1`] = `
                             </span>
                           </button>
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-primary ant-btn-icon-only ant-btn-dangerous"
+                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-primary ant-btn-icon-only ant-btn-dangerous array-item-remove"
                             disabled={false}
+                            id="root_0__remove"
                             onClick={[Function]}
-                            style={
-                              {
-                                "width": "calc(100% / 4)",
-                              }
-                            }
+                            style={{}}
                             title="Remove"
                             type="button"
                           >
@@ -3981,14 +3926,11 @@ exports[`with title and description from both array icons 1`] = `
                           }
                         >
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-default ant-btn-icon-only"
+                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-default ant-btn-icon-only array-item-move-up"
                             disabled={false}
+                            id="root_1__moveUp"
                             onClick={[Function]}
-                            style={
-                              {
-                                "width": "calc(100% / 4)",
-                              }
-                            }
+                            style={{}}
                             title="Move up"
                             type="button"
                           >
@@ -4018,14 +3960,11 @@ exports[`with title and description from both array icons 1`] = `
                             </span>
                           </button>
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-default ant-btn-icon-only"
+                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-default ant-btn-icon-only array-item-move-down"
                             disabled={true}
+                            id="root_1__moveDown"
                             onClick={[Function]}
-                            style={
-                              {
-                                "width": "calc(100% / 4)",
-                              }
-                            }
+                            style={{}}
                             title="Move down"
                             type="button"
                           >
@@ -4055,14 +3994,11 @@ exports[`with title and description from both array icons 1`] = `
                             </span>
                           </button>
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-default ant-btn-icon-only"
+                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-default ant-btn-icon-only array-item-copy"
                             disabled={false}
+                            id="root_1__copy"
                             onClick={[Function]}
-                            style={
-                              {
-                                "width": "calc(100% / 4)",
-                              }
-                            }
+                            style={{}}
                             title="Copy"
                             type="button"
                           >
@@ -4092,14 +4028,11 @@ exports[`with title and description from both array icons 1`] = `
                             </span>
                           </button>
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-primary ant-btn-icon-only ant-btn-dangerous"
+                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-primary ant-btn-icon-only ant-btn-dangerous array-item-remove"
                             disabled={false}
+                            id="root_1__remove"
                             onClick={[Function]}
-                            style={
-                              {
-                                "width": "calc(100% / 4)",
-                              }
-                            }
+                            style={{}}
                             title="Remove"
                             type="button"
                           >
@@ -4164,6 +4097,7 @@ exports[`with title and description from both array icons 1`] = `
                         <button
                           className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-primary ant-btn-icon-only ant-btn-block array-item-add"
                           disabled={false}
+                          id="root__add"
                           onClick={[Function]}
                           style={{}}
                           title="Add Item"
@@ -4945,6 +4879,7 @@ exports[`with title and description from uiSchema array 1`] = `
                         <button
                           className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-primary ant-btn-icon-only ant-btn-block array-item-add"
                           disabled={false}
+                          id="root__add"
                           onClick={[Function]}
                           style={{}}
                           title="Add Item"
@@ -5219,14 +5154,11 @@ exports[`with title and description from uiSchema array icons 1`] = `
                           }
                         >
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-default ant-btn-icon-only"
+                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-default ant-btn-icon-only array-item-move-up"
                             disabled={true}
+                            id="root_0__moveUp"
                             onClick={[Function]}
-                            style={
-                              {
-                                "width": "calc(100% / 4)",
-                              }
-                            }
+                            style={{}}
                             title="Move up"
                             type="button"
                           >
@@ -5256,14 +5188,11 @@ exports[`with title and description from uiSchema array icons 1`] = `
                             </span>
                           </button>
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-default ant-btn-icon-only"
+                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-default ant-btn-icon-only array-item-move-down"
                             disabled={false}
+                            id="root_0__moveDown"
                             onClick={[Function]}
-                            style={
-                              {
-                                "width": "calc(100% / 4)",
-                              }
-                            }
+                            style={{}}
                             title="Move down"
                             type="button"
                           >
@@ -5293,14 +5222,11 @@ exports[`with title and description from uiSchema array icons 1`] = `
                             </span>
                           </button>
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-default ant-btn-icon-only"
+                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-default ant-btn-icon-only array-item-copy"
                             disabled={false}
+                            id="root_0__copy"
                             onClick={[Function]}
-                            style={
-                              {
-                                "width": "calc(100% / 4)",
-                              }
-                            }
+                            style={{}}
                             title="Copy"
                             type="button"
                           >
@@ -5330,14 +5256,11 @@ exports[`with title and description from uiSchema array icons 1`] = `
                             </span>
                           </button>
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-primary ant-btn-icon-only ant-btn-dangerous"
+                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-primary ant-btn-icon-only ant-btn-dangerous array-item-remove"
                             disabled={false}
+                            id="root_0__remove"
                             onClick={[Function]}
-                            style={
-                              {
-                                "width": "calc(100% / 4)",
-                              }
-                            }
+                            style={{}}
                             title="Remove"
                             type="button"
                           >
@@ -5489,14 +5412,11 @@ exports[`with title and description from uiSchema array icons 1`] = `
                           }
                         >
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-default ant-btn-icon-only"
+                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-default ant-btn-icon-only array-item-move-up"
                             disabled={false}
+                            id="root_1__moveUp"
                             onClick={[Function]}
-                            style={
-                              {
-                                "width": "calc(100% / 4)",
-                              }
-                            }
+                            style={{}}
                             title="Move up"
                             type="button"
                           >
@@ -5526,14 +5446,11 @@ exports[`with title and description from uiSchema array icons 1`] = `
                             </span>
                           </button>
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-default ant-btn-icon-only"
+                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-default ant-btn-icon-only array-item-move-down"
                             disabled={true}
+                            id="root_1__moveDown"
                             onClick={[Function]}
-                            style={
-                              {
-                                "width": "calc(100% / 4)",
-                              }
-                            }
+                            style={{}}
                             title="Move down"
                             type="button"
                           >
@@ -5563,14 +5480,11 @@ exports[`with title and description from uiSchema array icons 1`] = `
                             </span>
                           </button>
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-default ant-btn-icon-only"
+                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-default ant-btn-icon-only array-item-copy"
                             disabled={false}
+                            id="root_1__copy"
                             onClick={[Function]}
-                            style={
-                              {
-                                "width": "calc(100% / 4)",
-                              }
-                            }
+                            style={{}}
                             title="Copy"
                             type="button"
                           >
@@ -5600,14 +5514,11 @@ exports[`with title and description from uiSchema array icons 1`] = `
                             </span>
                           </button>
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-primary ant-btn-icon-only ant-btn-dangerous"
+                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-primary ant-btn-icon-only ant-btn-dangerous array-item-remove"
                             disabled={false}
+                            id="root_1__remove"
                             onClick={[Function]}
-                            style={
-                              {
-                                "width": "calc(100% / 4)",
-                              }
-                            }
+                            style={{}}
                             title="Remove"
                             type="button"
                           >
@@ -5672,6 +5583,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                         <button
                           className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-primary ant-btn-icon-only ant-btn-block array-item-add"
                           disabled={false}
+                          id="root__add"
                           onClick={[Function]}
                           style={{}}
                           title="Add Item"
@@ -6438,6 +6350,7 @@ exports[`with title and description with global label off array 1`] = `
                         <button
                           className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-primary ant-btn-icon-only ant-btn-block array-item-add"
                           disabled={false}
+                          id="root__add"
                           onClick={[Function]}
                           style={{}}
                           title="Add Item"
@@ -6685,14 +6598,11 @@ exports[`with title and description with global label off array icons 1`] = `
                           }
                         >
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-default ant-btn-icon-only"
+                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-default ant-btn-icon-only array-item-move-up"
                             disabled={true}
+                            id="root_0__moveUp"
                             onClick={[Function]}
-                            style={
-                              {
-                                "width": "calc(100% / 4)",
-                              }
-                            }
+                            style={{}}
                             title="Move up"
                             type="button"
                           >
@@ -6722,14 +6632,11 @@ exports[`with title and description with global label off array icons 1`] = `
                             </span>
                           </button>
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-default ant-btn-icon-only"
+                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-default ant-btn-icon-only array-item-move-down"
                             disabled={false}
+                            id="root_0__moveDown"
                             onClick={[Function]}
-                            style={
-                              {
-                                "width": "calc(100% / 4)",
-                              }
-                            }
+                            style={{}}
                             title="Move down"
                             type="button"
                           >
@@ -6759,14 +6666,11 @@ exports[`with title and description with global label off array icons 1`] = `
                             </span>
                           </button>
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-default ant-btn-icon-only"
+                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-default ant-btn-icon-only array-item-copy"
                             disabled={false}
+                            id="root_0__copy"
                             onClick={[Function]}
-                            style={
-                              {
-                                "width": "calc(100% / 4)",
-                              }
-                            }
+                            style={{}}
                             title="Copy"
                             type="button"
                           >
@@ -6796,14 +6700,11 @@ exports[`with title and description with global label off array icons 1`] = `
                             </span>
                           </button>
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-primary ant-btn-icon-only ant-btn-dangerous"
+                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-primary ant-btn-icon-only ant-btn-dangerous array-item-remove"
                             disabled={false}
+                            id="root_0__remove"
                             onClick={[Function]}
-                            style={
-                              {
-                                "width": "calc(100% / 4)",
-                              }
-                            }
+                            style={{}}
                             title="Remove"
                             type="button"
                           >
@@ -6943,14 +6844,11 @@ exports[`with title and description with global label off array icons 1`] = `
                           }
                         >
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-default ant-btn-icon-only"
+                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-default ant-btn-icon-only array-item-move-up"
                             disabled={false}
+                            id="root_1__moveUp"
                             onClick={[Function]}
-                            style={
-                              {
-                                "width": "calc(100% / 4)",
-                              }
-                            }
+                            style={{}}
                             title="Move up"
                             type="button"
                           >
@@ -6980,14 +6878,11 @@ exports[`with title and description with global label off array icons 1`] = `
                             </span>
                           </button>
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-default ant-btn-icon-only"
+                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-default ant-btn-icon-only array-item-move-down"
                             disabled={true}
+                            id="root_1__moveDown"
                             onClick={[Function]}
-                            style={
-                              {
-                                "width": "calc(100% / 4)",
-                              }
-                            }
+                            style={{}}
                             title="Move down"
                             type="button"
                           >
@@ -7017,14 +6912,11 @@ exports[`with title and description with global label off array icons 1`] = `
                             </span>
                           </button>
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-default ant-btn-icon-only"
+                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-default ant-btn-icon-only array-item-copy"
                             disabled={false}
+                            id="root_1__copy"
                             onClick={[Function]}
-                            style={
-                              {
-                                "width": "calc(100% / 4)",
-                              }
-                            }
+                            style={{}}
                             title="Copy"
                             type="button"
                           >
@@ -7054,14 +6946,11 @@ exports[`with title and description with global label off array icons 1`] = `
                             </span>
                           </button>
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-primary ant-btn-icon-only ant-btn-dangerous"
+                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-primary ant-btn-icon-only ant-btn-dangerous array-item-remove"
                             disabled={false}
+                            id="root_1__remove"
                             onClick={[Function]}
-                            style={
-                              {
-                                "width": "calc(100% / 4)",
-                              }
-                            }
+                            style={{}}
                             title="Remove"
                             type="button"
                           >
@@ -7126,6 +7015,7 @@ exports[`with title and description with global label off array icons 1`] = `
                         <button
                           className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-primary ant-btn-icon-only ant-btn-block array-item-add"
                           disabled={false}
+                          id="root__add"
                           onClick={[Function]}
                           style={{}}
                           title="Add Item"

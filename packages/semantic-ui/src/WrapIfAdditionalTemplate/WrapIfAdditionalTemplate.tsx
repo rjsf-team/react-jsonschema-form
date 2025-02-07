@@ -1,6 +1,7 @@
 import { FocusEvent } from 'react';
 import {
   ADDITIONAL_PROPERTY_FLAG,
+  buttonId,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
@@ -80,6 +81,7 @@ export default function WrapIfAdditionalTemplate<
           </Grid.Column>
           <Grid.Column>
             <RemoveButton
+              id={buttonId<T>(id, 'remove')}
               iconType='mini'
               className='array-item-remove'
               disabled={disabled || readonly}

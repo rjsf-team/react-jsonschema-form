@@ -1,6 +1,7 @@
 import { CSSProperties, FocusEvent } from 'react';
 import {
   ADDITIONAL_PROPERTY_FLAG,
+  buttonId,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
@@ -87,7 +88,9 @@ export default function WrapIfAdditionalTemplate<
       <div>{children}</div>
       <div>
         <RemoveButton
+          id={buttonId<T>(id, 'remove')}
           iconType='default'
+          className='array-item-remove'
           style={btnStyle}
           disabled={disabled || readonly}
           onClick={onDropPropertyClick(label)}

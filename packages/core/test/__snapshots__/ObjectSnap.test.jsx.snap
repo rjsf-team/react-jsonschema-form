@@ -72,6 +72,7 @@ exports[`object fields additionalProperties 1`] = `
             <button
               className="btn btn-danger array-item-remove btn-block"
               disabled={false}
+              id="root_foo__remove"
               onClick={[Function]}
               style={
                 {
@@ -274,6 +275,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
             <button
               className="btn btn-danger array-item-remove btn-block"
               disabled={false}
+              id="root_additionalProperty__remove"
               onClick={[Function]}
               style={
                 {
@@ -406,6 +408,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
             <button
               className="btn btn-danger array-item-remove btn-block"
               disabled={false}
+              id="root_foo__remove"
               onClick={[Function]}
               style={
                 {
@@ -538,6 +541,7 @@ exports[`object fields with title and description from both additionalProperties
             <button
               className="btn btn-danger array-item-remove btn-block"
               disabled={false}
+              id="root_foo__remove"
               onClick={[Function]}
               style={
                 {
@@ -774,6 +778,7 @@ exports[`object fields with title and description from uiSchema additionalProper
             <button
               className="btn btn-danger array-item-remove btn-block"
               disabled={false}
+              id="root_foo__remove"
               onClick={[Function]}
               style={
                 {
@@ -1010,6 +1015,7 @@ exports[`object fields with title and description from uiSchema show add button 
             <button
               className="btn btn-danger array-item-remove btn-block"
               disabled={false}
+              id="root_additionalProperty__remove"
               onClick={[Function]}
               style={
                 {
@@ -1246,6 +1252,7 @@ exports[`object fields with title and description show add button and fields if 
             <button
               className="btn btn-danger array-item-remove btn-block"
               disabled={false}
+              id="root_additionalProperty__remove"
               onClick={[Function]}
               style={
                 {
@@ -1361,6 +1368,7 @@ exports[`object fields with title and description with global label off addition
             <button
               className="btn btn-danger array-item-remove btn-block"
               disabled={false}
+              id="root_foo__remove"
               onClick={[Function]}
               style={
                 {
@@ -1545,6 +1553,7 @@ exports[`object fields with title and description with global label off show add
             <button
               className="btn btn-danger array-item-remove btn-block"
               disabled={false}
+              id="root_additionalProperty__remove"
               onClick={[Function]}
               style={
                 {

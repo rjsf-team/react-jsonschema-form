@@ -1,33 +1,29 @@
 import { CSSProperties } from 'react';
-import { ArrayFieldTemplateItemType, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import {
+  ArrayFieldTemplateItemType,
+  FormContextType,
+  getTemplate,
+  getUiOptions,
+  RJSFSchema,
+  StrictRJSFSchema,
+} from '@rjsf/utils';
 
 /** The `ArrayFieldItemTemplate` component is the template used to render an items of an array.
  *
- * @param props - The `ArrayFieldTemplateItemType` props for the component
+ * @param props - The `ArrayFieldItemTemplateType` props for the component
  */
 export default function ArrayFieldItemTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
 >(props: ArrayFieldTemplateItemType<T, S, F>) {
-  const {
-    children,
-    className,
-    disabled,
-    hasToolbar,
-    hasMoveDown,
-    hasMoveUp,
-    hasRemove,
-    hasCopy,
-    index,
-    onCopyIndexClick,
-    onDropIndexClick,
-    onReorderClick,
-    readonly,
+  const { children, className, buttonsProps, hasToolbar, registry, uiSchema } = props;
+  const uiOptions = getUiOptions<T, S, F>(uiSchema);
+  const ArrayFieldItemButtonsTemplate = getTemplate<'ArrayFieldItemButtonsTemplate', T, S, F>(
+    'ArrayFieldItemButtonsTemplate',
     registry,
-    uiSchema,
-  } = props;
-  const { CopyButton, MoveDownButton, MoveUpButton, RemoveButton } = registry.templates.ButtonTemplates;
+    uiOptions
+  );
   const btnStyle: CSSProperties = {
     flex: 1,
     paddingLeft: 6,
@@ -46,42 +42,7 @@ export default function ArrayFieldItemTemplate<
               justifyContent: 'space-around',
             }}
           >
-            {(hasMoveUp || hasMoveDown) && (
-              <MoveUpButton
-                style={btnStyle}
-                disabled={disabled || readonly || !hasMoveUp}
-                onClick={onReorderClick(index, index - 1)}
-                uiSchema={uiSchema}
-                registry={registry}
-              />
-            )}
-            {(hasMoveUp || hasMoveDown) && (
-              <MoveDownButton
-                style={btnStyle}
-                disabled={disabled || readonly || !hasMoveDown}
-                onClick={onReorderClick(index, index + 1)}
-                uiSchema={uiSchema}
-                registry={registry}
-              />
-            )}
-            {hasCopy && (
-              <CopyButton
-                style={btnStyle}
-                disabled={disabled || readonly}
-                onClick={onCopyIndexClick(index)}
-                uiSchema={uiSchema}
-                registry={registry}
-              />
-            )}
-            {hasRemove && (
-              <RemoveButton
-                style={btnStyle}
-                disabled={disabled || readonly}
-                onClick={onDropIndexClick(index)}
-                uiSchema={uiSchema}
-                registry={registry}
-              />
-            )}
+            <ArrayFieldItemButtonsTemplate {...buttonsProps} style={btnStyle} />
           </div>
         </div>
       )}

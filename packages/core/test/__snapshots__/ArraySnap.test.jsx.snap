@@ -108,15 +108,8 @@ exports[`array fields array icons 1`] = `
               <button
                 className="btn btn-default array-item-move-up"
                 disabled={true}
+                id="root_0__moveUp"
                 onClick={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
                 title="Move up"
                 type="button"
               >
@@ -127,15 +120,8 @@ exports[`array fields array icons 1`] = `
               <button
                 className="btn btn-default array-item-move-down"
                 disabled={false}
+                id="root_0__moveDown"
                 onClick={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
                 title="Move down"
                 type="button"
               >
@@ -146,15 +132,8 @@ exports[`array fields array icons 1`] = `
               <button
                 className="btn btn-default array-item-copy"
                 disabled={false}
+                id="root_0__copy"
                 onClick={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
                 title="Copy"
                 type="button"
               >
@@ -165,15 +144,8 @@ exports[`array fields array icons 1`] = `
               <button
                 className="btn btn-danger array-item-remove"
                 disabled={false}
+                id="root_0__remove"
                 onClick={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
                 title="Remove"
                 type="button"
               >
@@ -227,15 +199,8 @@ exports[`array fields array icons 1`] = `
               <button
                 className="btn btn-default array-item-move-up"
                 disabled={false}
+                id="root_1__moveUp"
                 onClick={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
                 title="Move up"
                 type="button"
               >
@@ -246,15 +211,8 @@ exports[`array fields array icons 1`] = `
               <button
                 className="btn btn-default array-item-move-down"
                 disabled={true}
+                id="root_1__moveDown"
                 onClick={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
                 title="Move down"
                 type="button"
               >
@@ -265,15 +223,8 @@ exports[`array fields array icons 1`] = `
               <button
                 className="btn btn-default array-item-copy"
                 disabled={false}
+                id="root_1__copy"
                 onClick={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
                 title="Copy"
                 type="button"
               >
@@ -284,15 +235,8 @@ exports[`array fields array icons 1`] = `
               <button
                 className="btn btn-danger array-item-remove"
                 disabled={false}
+                id="root_1__remove"
                 onClick={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
                 title="Remove"
                 type="button"
               >
@@ -819,15 +763,8 @@ exports[`with title and description array icons 1`] = `
               <button
                 className="btn btn-default array-item-move-up"
                 disabled={true}
+                id="root_0__moveUp"
                 onClick={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
                 title="Move up"
                 type="button"
               >
@@ -838,15 +775,8 @@ exports[`with title and description array icons 1`] = `
               <button
                 className="btn btn-default array-item-move-down"
                 disabled={false}
+                id="root_0__moveDown"
                 onClick={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
                 title="Move down"
                 type="button"
               >
@@ -857,15 +787,8 @@ exports[`with title and description array icons 1`] = `
               <button
                 className="btn btn-default array-item-copy"
                 disabled={false}
+                id="root_0__copy"
                 onClick={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
                 title="Copy"
                 type="button"
               >
@@ -876,15 +799,8 @@ exports[`with title and description array icons 1`] = `
               <button
                 className="btn btn-danger array-item-remove"
                 disabled={false}
+                id="root_0__remove"
                 onClick={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
                 title="Remove"
                 type="button"
               >
@@ -955,15 +871,8 @@ exports[`with title and description array icons 1`] = `
               <button
                 className="btn btn-default array-item-move-up"
                 disabled={false}
+                id="root_1__moveUp"
                 onClick={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
                 title="Move up"
                 type="button"
               >
@@ -974,15 +883,8 @@ exports[`with title and description array icons 1`] = `
               <button
                 className="btn btn-default array-item-move-down"
                 disabled={true}
+                id="root_1__moveDown"
                 onClick={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
                 title="Move down"
                 type="button"
               >
@@ -993,15 +895,8 @@ exports[`with title and description array icons 1`] = `
               <button
                 className="btn btn-default array-item-copy"
                 disabled={false}
+                id="root_1__copy"
                 onClick={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
                 title="Copy"
                 type="button"
               >
@@ -1012,15 +907,8 @@ exports[`with title and description array icons 1`] = `
               <button
                 className="btn btn-danger array-item-remove"
                 disabled={false}
+                id="root_1__remove"
                 onClick={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
                 title="Remove"
                 type="button"
               >
@@ -1411,15 +1299,8 @@ exports[`with title and description from both array icons 1`] = `
               <button
                 className="btn btn-default array-item-move-up"
                 disabled={true}
+                id="root_0__moveUp"
                 onClick={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
                 title="Move up"
                 type="button"
               >
@@ -1430,15 +1311,8 @@ exports[`with title and description from both array icons 1`] = `
               <button
                 className="btn btn-default array-item-move-down"
                 disabled={false}
+                id="root_0__moveDown"
                 onClick={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
                 title="Move down"
                 type="button"
               >
@@ -1449,15 +1323,8 @@ exports[`with title and description from both array icons 1`] = `
               <button
                 className="btn btn-default array-item-copy"
                 disabled={false}
+                id="root_0__copy"
                 onClick={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
                 title="Copy"
                 type="button"
               >
@@ -1468,15 +1335,8 @@ exports[`with title and description from both array icons 1`] = `
               <button
                 className="btn btn-danger array-item-remove"
                 disabled={false}
+                id="root_0__remove"
                 onClick={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
                 title="Remove"
                 type="button"
               >
@@ -1547,15 +1407,8 @@ exports[`with title and description from both array icons 1`] = `
               <button
                 className="btn btn-default array-item-move-up"
                 disabled={false}
+                id="root_1__moveUp"
                 onClick={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
                 title="Move up"
                 type="button"
               >
@@ -1566,15 +1419,8 @@ exports[`with title and description from both array icons 1`] = `
               <button
                 className="btn btn-default array-item-move-down"
                 disabled={true}
+                id="root_1__moveDown"
                 onClick={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
                 title="Move down"
                 type="button"
               >
@@ -1585,15 +1431,8 @@ exports[`with title and description from both array icons 1`] = `
               <button
                 className="btn btn-default array-item-copy"
                 disabled={false}
+                id="root_1__copy"
                 onClick={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
                 title="Copy"
                 type="button"
               >
@@ -1604,15 +1443,8 @@ exports[`with title and description from both array icons 1`] = `
               <button
                 className="btn btn-danger array-item-remove"
                 disabled={false}
+                id="root_1__remove"
                 onClick={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
                 title="Remove"
                 type="button"
               >
@@ -2003,15 +1835,8 @@ exports[`with title and description from uiSchema array icons 1`] = `
               <button
                 className="btn btn-default array-item-move-up"
                 disabled={true}
+                id="root_0__moveUp"
                 onClick={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
                 title="Move up"
                 type="button"
               >
@@ -2022,15 +1847,8 @@ exports[`with title and description from uiSchema array icons 1`] = `
               <button
                 className="btn btn-default array-item-move-down"
                 disabled={false}
+                id="root_0__moveDown"
                 onClick={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
                 title="Move down"
                 type="button"
               >
@@ -2041,15 +1859,8 @@ exports[`with title and description from uiSchema array icons 1`] = `
               <button
                 className="btn btn-default array-item-copy"
                 disabled={false}
+                id="root_0__copy"
                 onClick={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
                 title="Copy"
                 type="button"
               >
@@ -2060,15 +1871,8 @@ exports[`with title and description from uiSchema array icons 1`] = `
               <button
                 className="btn btn-danger array-item-remove"
                 disabled={false}
+                id="root_0__remove"
                 onClick={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
                 title="Remove"
                 type="button"
               >
@@ -2139,15 +1943,8 @@ exports[`with title and description from uiSchema array icons 1`] = `
               <button
                 className="btn btn-default array-item-move-up"
                 disabled={false}
+                id="root_1__moveUp"
                 onClick={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
                 title="Move up"
                 type="button"
               >
@@ -2158,15 +1955,8 @@ exports[`with title and description from uiSchema array icons 1`] = `
               <button
                 className="btn btn-default array-item-move-down"
                 disabled={true}
+                id="root_1__moveDown"
                 onClick={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
                 title="Move down"
                 type="button"
               >
@@ -2177,15 +1967,8 @@ exports[`with title and description from uiSchema array icons 1`] = `
               <button
                 className="btn btn-default array-item-copy"
                 disabled={false}
+                id="root_1__copy"
                 onClick={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
                 title="Copy"
                 type="button"
               >
@@ -2196,15 +1979,8 @@ exports[`with title and description from uiSchema array icons 1`] = `
               <button
                 className="btn btn-danger array-item-remove"
                 disabled={false}
+                id="root_1__remove"
                 onClick={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
                 title="Remove"
                 type="button"
               >
@@ -2556,15 +2332,8 @@ exports[`with title and description with global label off array icons 1`] = `
               <button
                 className="btn btn-default array-item-move-up"
                 disabled={true}
+                id="root_0__moveUp"
                 onClick={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
                 title="Move up"
                 type="button"
               >
@@ -2575,15 +2344,8 @@ exports[`with title and description with global label off array icons 1`] = `
               <button
                 className="btn btn-default array-item-move-down"
                 disabled={false}
+                id="root_0__moveDown"
                 onClick={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
                 title="Move down"
                 type="button"
               >
@@ -2594,15 +2356,8 @@ exports[`with title and description with global label off array icons 1`] = `
               <button
                 className="btn btn-default array-item-copy"
                 disabled={false}
+                id="root_0__copy"
                 onClick={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
                 title="Copy"
                 type="button"
               >
@@ -2613,15 +2368,8 @@ exports[`with title and description with global label off array icons 1`] = `
               <button
                 className="btn btn-danger array-item-remove"
                 disabled={false}
+                id="root_0__remove"
                 onClick={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
                 title="Remove"
                 type="button"
               >
@@ -2675,15 +2423,8 @@ exports[`with title and description with global label off array icons 1`] = `
               <button
                 className="btn btn-default array-item-move-up"
                 disabled={false}
+                id="root_1__moveUp"
                 onClick={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
                 title="Move up"
                 type="button"
               >
@@ -2694,15 +2435,8 @@ exports[`with title and description with global label off array icons 1`] = `
               <button
                 className="btn btn-default array-item-move-down"
                 disabled={true}
+                id="root_1__moveDown"
                 onClick={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
                 title="Move down"
                 type="button"
               >
@@ -2713,15 +2447,8 @@ exports[`with title and description with global label off array icons 1`] = `
               <button
                 className="btn btn-default array-item-copy"
                 disabled={false}
+                id="root_1__copy"
                 onClick={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
                 title="Copy"
                 type="button"
               >
@@ -2732,15 +2459,8 @@ exports[`with title and description with global label off array icons 1`] = `
               <button
                 className="btn btn-danger array-item-remove"
                 disabled={false}
+                id="root_1__remove"
                 onClick={[Function]}
-                style={
-                  {
-                    "flex": 1,
-                    "fontWeight": "bold",
-                    "paddingLeft": 6,
-                    "paddingRight": 6,
-                  }
-                }
                 title="Remove"
                 type="button"
               >

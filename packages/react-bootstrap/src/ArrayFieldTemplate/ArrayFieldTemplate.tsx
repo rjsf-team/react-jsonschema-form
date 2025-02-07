@@ -4,6 +4,7 @@ import Container from 'react-bootstrap/Container';
 import {
   ArrayFieldTemplateItemType,
   ArrayFieldTemplateProps,
+  buttonId,
   FormContextType,
   getTemplate,
   getUiOptions,
@@ -68,6 +69,7 @@ export default function ArrayFieldTemplate<
                   <Col xs={9}></Col>
                   <Col xs={3} className='py-4 col-lg-3 col-3'>
                     <AddButton
+                      id={buttonId<T>(idSchema, 'add')}
                       className='array-item-add'
                       onClick={onAddClick}
                       disabled={disabled || readonly}

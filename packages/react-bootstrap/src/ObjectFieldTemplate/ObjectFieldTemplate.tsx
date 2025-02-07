@@ -3,6 +3,7 @@ import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 
 import {
+  buttonId,
   canExpand,
   descriptionId,
   FormContextType,
@@ -74,6 +75,7 @@ export default function ObjectFieldTemplate<
           <Row>
             <Col xs={{ offset: 9, span: 3 }} className='py-4'>
               <AddButton
+                id={buttonId<T>(idSchema, 'add')}
                 onClick={onAddClick(schema)}
                 disabled={disabled || readonly}
                 className='object-property-expand'

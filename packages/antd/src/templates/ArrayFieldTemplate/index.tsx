@@ -7,6 +7,7 @@ import {
   GenericObjectType,
   RJSFSchema,
   StrictRJSFSchema,
+  buttonId,
 } from '@rjsf/utils';
 import classNames from 'classnames';
 import { Col, Row, ConfigProvider } from 'antd';
@@ -18,7 +19,7 @@ const DESCRIPTION_COL_STYLE = {
 
 /** The `ArrayFieldTemplate` component is the template used to render all items in an array.
  *
- * @param props - The `ArrayFieldTemplateItemType` props for the component
+ * @param props - The `ArrayFieldItemTemplateType` props for the component
  */
 export default function ArrayFieldTemplate<
   T = any,
@@ -109,6 +110,7 @@ export default function ArrayFieldTemplate<
             <Row gutter={rowGutter} justify='end'>
               <Col flex='192px'>
                 <AddButton
+                  id={buttonId<T>(idSchema, 'add')}
                   className='array-item-add'
                   disabled={disabled || readonly}
                   onClick={onAddClick}

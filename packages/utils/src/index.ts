@@ -25,7 +25,16 @@ import getWidget from './getWidget';
 import guessType from './guessType';
 import hashForSchema from './hashForSchema';
 import hasWidget from './hasWidget';
-import { ariaDescribedByIds, descriptionId, errorId, examplesId, helpId, optionId, titleId } from './idGenerators';
+import {
+  ariaDescribedByIds,
+  buttonId,
+  descriptionId,
+  errorId,
+  examplesId,
+  helpId,
+  optionId,
+  titleId,
+} from './idGenerators';
 import isConstant from './isConstant';
 import isCustomWidget from './isCustomWidget';
 import isFixedItems from './isFixedItems';
@@ -65,6 +74,7 @@ export {
   allowAdditionalItems,
   ariaDescribedByIds,
   asNumber,
+  buttonId,
   canExpand,
   createErrorHandler,
   createSchemaUtils,

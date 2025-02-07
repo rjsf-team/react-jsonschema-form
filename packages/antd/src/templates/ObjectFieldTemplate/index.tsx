@@ -15,6 +15,7 @@ import {
   getTemplate,
   getUiOptions,
   titleId,
+  buttonId,
 } from '@rjsf/utils';
 import { Col, Row, ConfigProvider } from 'antd';
 import { useContext } from 'react';
@@ -153,6 +154,7 @@ export default function ObjectFieldTemplate<
           <Row gutter={rowGutter} justify='end'>
             <Col flex='192px'>
               <AddButton
+                id={buttonId<T>(idSchema, 'add')}
                 className='object-property-expand'
                 disabled={disabled || readonly}
                 onClick={onAddClick(schema)}

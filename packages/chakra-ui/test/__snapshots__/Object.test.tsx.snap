@@ -201,8 +201,9 @@ exports[`object fields additionalProperties 1`] = `
             >
               <button
                 aria-label="Remove"
-                className="chakra-button emotion-14"
+                className="chakra-button array-item-remove emotion-14"
                 disabled={false}
+                id="root_foo__remove"
                 onClick={[Function]}
                 title="Remove"
                 type="button"
@@ -231,6 +232,7 @@ exports[`object fields additionalProperties 1`] = `
           <button
             className="chakra-button object-property-expand emotion-17"
             disabled={false}
+            id="root__add"
             onClick={[Function]}
             type="button"
           >
@@ -631,8 +633,9 @@ exports[`object fields show add button and fields if additionalProperties is tru
             >
               <button
                 aria-label="Remove"
-                className="chakra-button emotion-14"
+                className="chakra-button array-item-remove emotion-14"
                 disabled={false}
+                id="root_additionalProperty__remove"
                 onClick={[Function]}
                 title="Remove"
                 type="button"
@@ -661,6 +664,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
           <button
             className="chakra-button object-property-expand emotion-17"
             disabled={false}
+            id="root__add"
             onClick={[Function]}
             type="button"
           >
@@ -935,8 +939,9 @@ exports[`object fields with title and description additionalProperties 1`] = `
             >
               <button
                 aria-label="Remove"
-                className="chakra-button emotion-18"
+                className="chakra-button array-item-remove emotion-18"
                 disabled={false}
+                id="root_foo__remove"
                 onClick={[Function]}
                 title="Remove"
                 type="button"
@@ -965,6 +970,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
           <button
             className="chakra-button object-property-expand emotion-21"
             disabled={false}
+            id="root__add"
             onClick={[Function]}
             type="button"
           >
@@ -1239,8 +1245,9 @@ exports[`object fields with title and description from both additionalProperties
             >
               <button
                 aria-label="Remove"
-                className="chakra-button emotion-18"
+                className="chakra-button array-item-remove emotion-18"
                 disabled={false}
+                id="root_foo__remove"
                 onClick={[Function]}
                 title="Remove"
                 type="button"
@@ -1269,6 +1276,7 @@ exports[`object fields with title and description from both additionalProperties
           <button
             className="chakra-button object-property-expand emotion-21"
             disabled={false}
+            id="root__add"
             onClick={[Function]}
             type="button"
           >
@@ -1763,8 +1771,9 @@ exports[`object fields with title and description from uiSchema additionalProper
             >
               <button
                 aria-label="Remove"
-                className="chakra-button emotion-18"
+                className="chakra-button array-item-remove emotion-18"
                 disabled={false}
+                id="root_foo__remove"
                 onClick={[Function]}
                 title="Remove"
                 type="button"
@@ -1793,6 +1802,7 @@ exports[`object fields with title and description from uiSchema additionalProper
           <button
             className="chakra-button object-property-expand emotion-21"
             disabled={false}
+            id="root__add"
             onClick={[Function]}
             type="button"
           >
@@ -2287,8 +2297,9 @@ exports[`object fields with title and description from uiSchema show add button 
             >
               <button
                 aria-label="Remove"
-                className="chakra-button emotion-18"
+                className="chakra-button array-item-remove emotion-18"
                 disabled={false}
+                id="root_additionalProperty__remove"
                 onClick={[Function]}
                 title="Remove"
                 type="button"
@@ -2317,6 +2328,7 @@ exports[`object fields with title and description from uiSchema show add button 
           <button
             className="chakra-button object-property-expand emotion-21"
             disabled={false}
+            id="root__add"
             onClick={[Function]}
             type="button"
           >
@@ -2811,8 +2823,9 @@ exports[`object fields with title and description show add button and fields if 
             >
               <button
                 aria-label="Remove"
-                className="chakra-button emotion-18"
+                className="chakra-button array-item-remove emotion-18"
                 disabled={false}
+                id="root_additionalProperty__remove"
                 onClick={[Function]}
                 title="Remove"
                 type="button"
@@ -2841,6 +2854,7 @@ exports[`object fields with title and description show add button and fields if 
           <button
             className="chakra-button object-property-expand emotion-21"
             disabled={false}
+            id="root__add"
             onClick={[Function]}
             type="button"
           >
@@ -3073,8 +3087,9 @@ exports[`object fields with title and description with global label off addition
             >
               <button
                 aria-label="Remove"
-                className="chakra-button emotion-13"
+                className="chakra-button array-item-remove emotion-13"
                 disabled={false}
+                id="root_foo__remove"
                 onClick={[Function]}
                 title="Remove"
                 type="button"
@@ -3103,6 +3118,7 @@ exports[`object fields with title and description with global label off addition
           <button
             className="chakra-button object-property-expand emotion-16"
             disabled={false}
+            id="root__add"
             onClick={[Function]}
             type="button"
           >
@@ -3477,8 +3493,9 @@ exports[`object fields with title and description with global label off show add
             >
               <button
                 aria-label="Remove"
-                className="chakra-button emotion-13"
+                className="chakra-button array-item-remove emotion-13"
                 disabled={false}
+                id="root_additionalProperty__remove"
                 onClick={[Function]}
                 title="Remove"
                 type="button"
@@ -3507,6 +3524,7 @@ exports[`object fields with title and description with global label off show add
           <button
             className="chakra-button object-property-expand emotion-16"
             disabled={false}
+            id="root__add"
             onClick={[Function]}
             type="button"
           >

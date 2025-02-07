@@ -8,6 +8,7 @@ import {
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
+  buttonId,
 } from '@rjsf/utils';
 
 const useStyles = makeStyles({
@@ -18,7 +19,7 @@ const useStyles = makeStyles({
 
 /** The `ArrayFieldTemplate` component is the template used to render all items in an array.
  *
- * @param props - The `ArrayFieldTemplateItemType` props for the component
+ * @param props - The `ArrayFieldItemTemplateType` props for the component
  */
 export default function ArrayFieldTemplate<
   T = any,
@@ -73,6 +74,7 @@ export default function ArrayFieldTemplate<
         {canAdd && (
           <Flex hAlign='end'>
             <AddButton
+              id={buttonId<T>(idSchema, 'add')}
               className='array-item-add'
               onClick={onAddClick}
               disabled={disabled || readonly}

@@ -1,5 +1,12 @@
 import { Button, Col, Row } from 'antd';
-import { ArrayFieldTemplateItemType, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import {
+  ArrayFieldTemplateItemType,
+  FormContextType,
+  getUiOptions,
+  getTemplate,
+  RJSFSchema,
+  StrictRJSFSchema,
+} from '@rjsf/utils';
 
 const BTN_GRP_STYLE = {
   width: '100%',
@@ -11,30 +18,20 @@ const BTN_STYLE = {
 
 /** The `ArrayFieldItemTemplate` component is the template used to render an items of an array.
  *
- * @param props - The `ArrayFieldTemplateItemType` props for the component
+ * @param props - The `ArrayFieldItemTemplateType` props for the component
  */
 export default function ArrayFieldItemTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
 >(props: ArrayFieldTemplateItemType<T, S, F>) {
-  const {
-    children,
-    disabled,
-    hasCopy,
-    hasMoveDown,
-    hasMoveUp,
-    hasRemove,
-    hasToolbar,
-    index,
-    onCopyIndexClick,
-    onDropIndexClick,
-    onReorderClick,
-    readonly,
+  const { children, buttonsProps, hasToolbar, index, registry, uiSchema } = props;
+  const uiOptions = getUiOptions<T, S, F>(uiSchema);
+  const ArrayFieldItemButtonsTemplate = getTemplate<'ArrayFieldItemButtonsTemplate', T, S, F>(
+    'ArrayFieldItemButtonsTemplate',
     registry,
-    uiSchema,
-  } = props;
-  const { CopyButton, MoveDownButton, MoveUpButton, RemoveButton } = registry.templates.ButtonTemplates;
+    uiOptions
+  );
   const { rowGutter = 24, toolbarAlign = 'top' } = registry.formContext;
 
   return (
@@ -44,42 +41,7 @@ export default function ArrayFieldItemTemplate<
       {hasToolbar && (
         <Col flex='192px'>
           <Button.Group style={BTN_GRP_STYLE}>
-            {(hasMoveUp || hasMoveDown) && (
-              <MoveUpButton
-                disabled={disabled || readonly || !hasMoveUp}
-                onClick={onReorderClick(index, index - 1)}
-                style={BTN_STYLE}
-                uiSchema={uiSchema}
-                registry={registry}
-              />
-            )}
-            {(hasMoveUp || hasMoveDown) && (
-              <MoveDownButton
-                disabled={disabled || readonly || !hasMoveDown}
-                onClick={onReorderClick(index, index + 1)}
-                style={BTN_STYLE}
-                uiSchema={uiSchema}
-                registry={registry}
-              />
-            )}
-            {hasCopy && (
-              <CopyButton
-                disabled={disabled || readonly}
-                onClick={onCopyIndexClick(index)}
-                style={BTN_STYLE}
-                uiSchema={uiSchema}
-                registry={registry}
-              />
-            )}
-            {hasRemove && (
-              <RemoveButton
-                disabled={disabled || readonly}
-                onClick={onDropIndexClick(index)}
-                style={BTN_STYLE}
-                uiSchema={uiSchema}
-                registry={registry}
-              />
-            )}
+            <ArrayFieldItemButtonsTemplate {...buttonsProps} style={BTN_STYLE} />
           </Button.Group>
         </Col>
       )}

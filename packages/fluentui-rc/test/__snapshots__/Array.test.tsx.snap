@@ -21,6 +21,7 @@ exports[`array fields array 1`] = `
           <button
             className="fui-Button r1alrhcs array-item-add ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
             disabled={false}
+            id="root__add"
             onClick={[Function]}
             title="Add Item"
             type="button"
@@ -132,8 +133,9 @@ exports[`array fields array icons 1`] = `
             }
           >
             <button
-              className="fui-Button r1alrhcs ___vbvxfv0_jgl51i0 f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1t6o4dc f10ztigi f1ft5sdu f12zbtn2 f1gzf82w fcvwxyo f8w4c43 f1ol4fw6 f1q1lw4e f1dwjv2g f4lkoma fg455y9 f1rvyvqg f1cwzwz f14g86mu f1dcs8yz fjwq6ea f1lr3nhc fn5gmvv f1mbxvi6 f1vmkb5g f53ppgq f1663y11 f18v5270 f80fkiy f1kc2mi9 f1y0svfh fihuait fnxhupq fx507ft fyd6l6x fb3rf2x f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              className="fui-Button r1alrhcs array-item-move-up ___vbvxfv0_jgl51i0 f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1t6o4dc f10ztigi f1ft5sdu f12zbtn2 f1gzf82w fcvwxyo f8w4c43 f1ol4fw6 f1q1lw4e f1dwjv2g f4lkoma fg455y9 f1rvyvqg f1cwzwz f14g86mu f1dcs8yz fjwq6ea f1lr3nhc fn5gmvv f1mbxvi6 f1vmkb5g f53ppgq f1663y11 f18v5270 f80fkiy f1kc2mi9 f1y0svfh fihuait fnxhupq fx507ft fyd6l6x fb3rf2x f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
               disabled={true}
+              id="root_0__moveUp"
               onClick={[Function]}
               title="Move up"
               type="button"
@@ -158,8 +160,9 @@ exports[`array fields array icons 1`] = `
               </span>
             </button>
             <button
-              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              className="fui-Button r1alrhcs array-item-move-down ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
               disabled={false}
+              id="root_0__moveDown"
               onClick={[Function]}
               title="Move down"
               type="button"
@@ -184,8 +187,9 @@ exports[`array fields array icons 1`] = `
               </span>
             </button>
             <button
-              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              className="fui-Button r1alrhcs array-item-copy ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
               disabled={false}
+              id="root_0__copy"
               onClick={[Function]}
               title="Copy"
               type="button"
@@ -210,8 +214,9 @@ exports[`array fields array icons 1`] = `
               </span>
             </button>
             <button
-              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              className="fui-Button r1alrhcs array-item-remove ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
               disabled={false}
+              id="root_0__remove"
               onClick={[Function]}
               title="Remove"
               type="button"
@@ -291,8 +296,9 @@ exports[`array fields array icons 1`] = `
             }
           >
             <button
-              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              className="fui-Button r1alrhcs array-item-move-up ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
               disabled={false}
+              id="root_1__moveUp"
               onClick={[Function]}
               title="Move up"
               type="button"
@@ -317,8 +323,9 @@ exports[`array fields array icons 1`] = `
               </span>
             </button>
             <button
-              className="fui-Button r1alrhcs ___vbvxfv0_jgl51i0 f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1t6o4dc f10ztigi f1ft5sdu f12zbtn2 f1gzf82w fcvwxyo f8w4c43 f1ol4fw6 f1q1lw4e f1dwjv2g f4lkoma fg455y9 f1rvyvqg f1cwzwz f14g86mu f1dcs8yz fjwq6ea f1lr3nhc fn5gmvv f1mbxvi6 f1vmkb5g f53ppgq f1663y11 f18v5270 f80fkiy f1kc2mi9 f1y0svfh fihuait fnxhupq fx507ft fyd6l6x fb3rf2x f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              className="fui-Button r1alrhcs array-item-move-down ___vbvxfv0_jgl51i0 f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1t6o4dc f10ztigi f1ft5sdu f12zbtn2 f1gzf82w fcvwxyo f8w4c43 f1ol4fw6 f1q1lw4e f1dwjv2g f4lkoma fg455y9 f1rvyvqg f1cwzwz f14g86mu f1dcs8yz fjwq6ea f1lr3nhc fn5gmvv f1mbxvi6 f1vmkb5g f53ppgq f1663y11 f18v5270 f80fkiy f1kc2mi9 f1y0svfh fihuait fnxhupq fx507ft fyd6l6x fb3rf2x f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
               disabled={true}
+              id="root_1__moveDown"
               onClick={[Function]}
               title="Move down"
               type="button"
@@ -343,8 +350,9 @@ exports[`array fields array icons 1`] = `
               </span>
             </button>
             <button
-              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              className="fui-Button r1alrhcs array-item-copy ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
               disabled={false}
+              id="root_1__copy"
               onClick={[Function]}
               title="Copy"
               type="button"
@@ -369,8 +377,9 @@ exports[`array fields array icons 1`] = `
               </span>
             </button>
             <button
-              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              className="fui-Button r1alrhcs array-item-remove ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
               disabled={false}
+              id="root_1__remove"
               onClick={[Function]}
               title="Remove"
               type="button"
@@ -402,6 +411,7 @@ exports[`array fields array icons 1`] = `
           <button
             className="fui-Button r1alrhcs array-item-add ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
             disabled={false}
+            id="root__add"
             onClick={[Function]}
             title="Add Item"
             type="button"
@@ -947,6 +957,7 @@ exports[`with title and description array 1`] = `
           <button
             className="fui-Button r1alrhcs array-item-add ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
             disabled={false}
+            id="root__add"
             onClick={[Function]}
             title="Add Item"
             type="button"
@@ -1096,8 +1107,9 @@ exports[`with title and description array icons 1`] = `
             }
           >
             <button
-              className="fui-Button r1alrhcs ___vbvxfv0_jgl51i0 f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1t6o4dc f10ztigi f1ft5sdu f12zbtn2 f1gzf82w fcvwxyo f8w4c43 f1ol4fw6 f1q1lw4e f1dwjv2g f4lkoma fg455y9 f1rvyvqg f1cwzwz f14g86mu f1dcs8yz fjwq6ea f1lr3nhc fn5gmvv f1mbxvi6 f1vmkb5g f53ppgq f1663y11 f18v5270 f80fkiy f1kc2mi9 f1y0svfh fihuait fnxhupq fx507ft fyd6l6x fb3rf2x f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              className="fui-Button r1alrhcs array-item-move-up ___vbvxfv0_jgl51i0 f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1t6o4dc f10ztigi f1ft5sdu f12zbtn2 f1gzf82w fcvwxyo f8w4c43 f1ol4fw6 f1q1lw4e f1dwjv2g f4lkoma fg455y9 f1rvyvqg f1cwzwz f14g86mu f1dcs8yz fjwq6ea f1lr3nhc fn5gmvv f1mbxvi6 f1vmkb5g f53ppgq f1663y11 f18v5270 f80fkiy f1kc2mi9 f1y0svfh fihuait fnxhupq fx507ft fyd6l6x fb3rf2x f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
               disabled={true}
+              id="root_0__moveUp"
               onClick={[Function]}
               title="Move up"
               type="button"
@@ -1122,8 +1134,9 @@ exports[`with title and description array icons 1`] = `
               </span>
             </button>
             <button
-              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              className="fui-Button r1alrhcs array-item-move-down ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
               disabled={false}
+              id="root_0__moveDown"
               onClick={[Function]}
               title="Move down"
               type="button"
@@ -1148,8 +1161,9 @@ exports[`with title and description array icons 1`] = `
               </span>
             </button>
             <button
-              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              className="fui-Button r1alrhcs array-item-copy ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
               disabled={false}
+              id="root_0__copy"
               onClick={[Function]}
               title="Copy"
               type="button"
@@ -1174,8 +1188,9 @@ exports[`with title and description array icons 1`] = `
               </span>
             </button>
             <button
-              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              className="fui-Button r1alrhcs array-item-remove ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
               disabled={false}
+              id="root_0__remove"
               onClick={[Function]}
               title="Remove"
               type="button"
@@ -1272,8 +1287,9 @@ exports[`with title and description array icons 1`] = `
             }
           >
             <button
-              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              className="fui-Button r1alrhcs array-item-move-up ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
               disabled={false}
+              id="root_1__moveUp"
               onClick={[Function]}
               title="Move up"
               type="button"
@@ -1298,8 +1314,9 @@ exports[`with title and description array icons 1`] = `
               </span>
             </button>
             <button
-              className="fui-Button r1alrhcs ___vbvxfv0_jgl51i0 f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1t6o4dc f10ztigi f1ft5sdu f12zbtn2 f1gzf82w fcvwxyo f8w4c43 f1ol4fw6 f1q1lw4e f1dwjv2g f4lkoma fg455y9 f1rvyvqg f1cwzwz f14g86mu f1dcs8yz fjwq6ea f1lr3nhc fn5gmvv f1mbxvi6 f1vmkb5g f53ppgq f1663y11 f18v5270 f80fkiy f1kc2mi9 f1y0svfh fihuait fnxhupq fx507ft fyd6l6x fb3rf2x f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              className="fui-Button r1alrhcs array-item-move-down ___vbvxfv0_jgl51i0 f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1t6o4dc f10ztigi f1ft5sdu f12zbtn2 f1gzf82w fcvwxyo f8w4c43 f1ol4fw6 f1q1lw4e f1dwjv2g f4lkoma fg455y9 f1rvyvqg f1cwzwz f14g86mu f1dcs8yz fjwq6ea f1lr3nhc fn5gmvv f1mbxvi6 f1vmkb5g f53ppgq f1663y11 f18v5270 f80fkiy f1kc2mi9 f1y0svfh fihuait fnxhupq fx507ft fyd6l6x fb3rf2x f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
               disabled={true}
+              id="root_1__moveDown"
               onClick={[Function]}
               title="Move down"
               type="button"
@@ -1324,8 +1341,9 @@ exports[`with title and description array icons 1`] = `
               </span>
             </button>
             <button
-              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              className="fui-Button r1alrhcs array-item-copy ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
               disabled={false}
+              id="root_1__copy"
               onClick={[Function]}
               title="Copy"
               type="button"
@@ -1350,8 +1368,9 @@ exports[`with title and description array icons 1`] = `
               </span>
             </button>
             <button
-              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              className="fui-Button r1alrhcs array-item-remove ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
               disabled={false}
+              id="root_1__remove"
               onClick={[Function]}
               title="Remove"
               type="button"
@@ -1383,6 +1402,7 @@ exports[`with title and description array icons 1`] = `
           <button
             className="fui-Button r1alrhcs array-item-add ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
             disabled={false}
+            id="root__add"
             onClick={[Function]}
             title="Add Item"
             type="button"
@@ -1746,6 +1766,7 @@ exports[`with title and description from both array 1`] = `
           <button
             className="fui-Button r1alrhcs array-item-add ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
             disabled={false}
+            id="root__add"
             onClick={[Function]}
             title="Add Item"
             type="button"
@@ -1895,8 +1916,9 @@ exports[`with title and description from both array icons 1`] = `
             }
           >
             <button
-              className="fui-Button r1alrhcs ___vbvxfv0_jgl51i0 f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1t6o4dc f10ztigi f1ft5sdu f12zbtn2 f1gzf82w fcvwxyo f8w4c43 f1ol4fw6 f1q1lw4e f1dwjv2g f4lkoma fg455y9 f1rvyvqg f1cwzwz f14g86mu f1dcs8yz fjwq6ea f1lr3nhc fn5gmvv f1mbxvi6 f1vmkb5g f53ppgq f1663y11 f18v5270 f80fkiy f1kc2mi9 f1y0svfh fihuait fnxhupq fx507ft fyd6l6x fb3rf2x f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              className="fui-Button r1alrhcs array-item-move-up ___vbvxfv0_jgl51i0 f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1t6o4dc f10ztigi f1ft5sdu f12zbtn2 f1gzf82w fcvwxyo f8w4c43 f1ol4fw6 f1q1lw4e f1dwjv2g f4lkoma fg455y9 f1rvyvqg f1cwzwz f14g86mu f1dcs8yz fjwq6ea f1lr3nhc fn5gmvv f1mbxvi6 f1vmkb5g f53ppgq f1663y11 f18v5270 f80fkiy f1kc2mi9 f1y0svfh fihuait fnxhupq fx507ft fyd6l6x fb3rf2x f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
               disabled={true}
+              id="root_0__moveUp"
               onClick={[Function]}
               title="Move up"
               type="button"
@@ -1921,8 +1943,9 @@ exports[`with title and description from both array icons 1`] = `
               </span>
             </button>
             <button
-              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              className="fui-Button r1alrhcs array-item-move-down ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
               disabled={false}
+              id="root_0__moveDown"
               onClick={[Function]}
               title="Move down"
               type="button"
@@ -1947,8 +1970,9 @@ exports[`with title and description from both array icons 1`] = `
               </span>
             </button>
             <button
-              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              className="fui-Button r1alrhcs array-item-copy ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
               disabled={false}
+              id="root_0__copy"
               onClick={[Function]}
               title="Copy"
               type="button"
@@ -1973,8 +1997,9 @@ exports[`with title and description from both array icons 1`] = `
               </span>
             </button>
             <button
-              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              className="fui-Button r1alrhcs array-item-remove ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
               disabled={false}
+              id="root_0__remove"
               onClick={[Function]}
               title="Remove"
               type="button"
@@ -2071,8 +2096,9 @@ exports[`with title and description from both array icons 1`] = `
             }
           >
             <button
-              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              className="fui-Button r1alrhcs array-item-move-up ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
               disabled={false}
+              id="root_1__moveUp"
               onClick={[Function]}
               title="Move up"
               type="button"
@@ -2097,8 +2123,9 @@ exports[`with title and description from both array icons 1`] = `
               </span>
             </button>
             <button
-              className="fui-Button r1alrhcs ___vbvxfv0_jgl51i0 f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1t6o4dc f10ztigi f1ft5sdu f12zbtn2 f1gzf82w fcvwxyo f8w4c43 f1ol4fw6 f1q1lw4e f1dwjv2g f4lkoma fg455y9 f1rvyvqg f1cwzwz f14g86mu f1dcs8yz fjwq6ea f1lr3nhc fn5gmvv f1mbxvi6 f1vmkb5g f53ppgq f1663y11 f18v5270 f80fkiy f1kc2mi9 f1y0svfh fihuait fnxhupq fx507ft fyd6l6x fb3rf2x f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              className="fui-Button r1alrhcs array-item-move-down ___vbvxfv0_jgl51i0 f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1t6o4dc f10ztigi f1ft5sdu f12zbtn2 f1gzf82w fcvwxyo f8w4c43 f1ol4fw6 f1q1lw4e f1dwjv2g f4lkoma fg455y9 f1rvyvqg f1cwzwz f14g86mu f1dcs8yz fjwq6ea f1lr3nhc fn5gmvv f1mbxvi6 f1vmkb5g f53ppgq f1663y11 f18v5270 f80fkiy f1kc2mi9 f1y0svfh fihuait fnxhupq fx507ft fyd6l6x fb3rf2x f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
               disabled={true}
+              id="root_1__moveDown"
               onClick={[Function]}
               title="Move down"
               type="button"
@@ -2123,8 +2150,9 @@ exports[`with title and description from both array icons 1`] = `
               </span>
             </button>
             <button
-              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              className="fui-Button r1alrhcs array-item-copy ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
               disabled={false}
+              id="root_1__copy"
               onClick={[Function]}
               title="Copy"
               type="button"
@@ -2149,8 +2177,9 @@ exports[`with title and description from both array icons 1`] = `
               </span>
             </button>
             <button
-              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              className="fui-Button r1alrhcs array-item-remove ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
               disabled={false}
+              id="root_1__remove"
               onClick={[Function]}
               title="Remove"
               type="button"
@@ -2182,6 +2211,7 @@ exports[`with title and description from both array icons 1`] = `
           <button
             className="fui-Button r1alrhcs array-item-add ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
             disabled={false}
+            id="root__add"
             onClick={[Function]}
             title="Add Item"
             type="button"
@@ -2545,6 +2575,7 @@ exports[`with title and description from uiSchema array 1`] = `
           <button
             className="fui-Button r1alrhcs array-item-add ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
             disabled={false}
+            id="root__add"
             onClick={[Function]}
             title="Add Item"
             type="button"
@@ -2694,8 +2725,9 @@ exports[`with title and description from uiSchema array icons 1`] = `
             }
           >
             <button
-              className="fui-Button r1alrhcs ___vbvxfv0_jgl51i0 f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1t6o4dc f10ztigi f1ft5sdu f12zbtn2 f1gzf82w fcvwxyo f8w4c43 f1ol4fw6 f1q1lw4e f1dwjv2g f4lkoma fg455y9 f1rvyvqg f1cwzwz f14g86mu f1dcs8yz fjwq6ea f1lr3nhc fn5gmvv f1mbxvi6 f1vmkb5g f53ppgq f1663y11 f18v5270 f80fkiy f1kc2mi9 f1y0svfh fihuait fnxhupq fx507ft fyd6l6x fb3rf2x f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              className="fui-Button r1alrhcs array-item-move-up ___vbvxfv0_jgl51i0 f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1t6o4dc f10ztigi f1ft5sdu f12zbtn2 f1gzf82w fcvwxyo f8w4c43 f1ol4fw6 f1q1lw4e f1dwjv2g f4lkoma fg455y9 f1rvyvqg f1cwzwz f14g86mu f1dcs8yz fjwq6ea f1lr3nhc fn5gmvv f1mbxvi6 f1vmkb5g f53ppgq f1663y11 f18v5270 f80fkiy f1kc2mi9 f1y0svfh fihuait fnxhupq fx507ft fyd6l6x fb3rf2x f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
               disabled={true}
+              id="root_0__moveUp"
               onClick={[Function]}
               title="Move up"
               type="button"
@@ -2720,8 +2752,9 @@ exports[`with title and description from uiSchema array icons 1`] = `
               </span>
             </button>
             <button
-              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              className="fui-Button r1alrhcs array-item-move-down ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
               disabled={false}
+              id="root_0__moveDown"
               onClick={[Function]}
               title="Move down"
               type="button"
@@ -2746,8 +2779,9 @@ exports[`with title and description from uiSchema array icons 1`] = `
               </span>
             </button>
             <button
-              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              className="fui-Button r1alrhcs array-item-copy ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
               disabled={false}
+              id="root_0__copy"
               onClick={[Function]}
               title="Copy"
               type="button"
@@ -2772,8 +2806,9 @@ exports[`with title and description from uiSchema array icons 1`] = `
               </span>
             </button>
             <button
-              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              className="fui-Button r1alrhcs array-item-remove ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
               disabled={false}
+              id="root_0__remove"
               onClick={[Function]}
               title="Remove"
               type="button"
@@ -2870,8 +2905,9 @@ exports[`with title and description from uiSchema array icons 1`] = `
             }
           >
             <button
-              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              className="fui-Button r1alrhcs array-item-move-up ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
               disabled={false}
+              id="root_1__moveUp"
               onClick={[Function]}
               title="Move up"
               type="button"
@@ -2896,8 +2932,9 @@ exports[`with title and description from uiSchema array icons 1`] = `
               </span>
             </button>
             <button
-              className="fui-Button r1alrhcs ___vbvxfv0_jgl51i0 f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1t6o4dc f10ztigi f1ft5sdu f12zbtn2 f1gzf82w fcvwxyo f8w4c43 f1ol4fw6 f1q1lw4e f1dwjv2g f4lkoma fg455y9 f1rvyvqg f1cwzwz f14g86mu f1dcs8yz fjwq6ea f1lr3nhc fn5gmvv f1mbxvi6 f1vmkb5g f53ppgq f1663y11 f18v5270 f80fkiy f1kc2mi9 f1y0svfh fihuait fnxhupq fx507ft fyd6l6x fb3rf2x f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              className="fui-Button r1alrhcs array-item-move-down ___vbvxfv0_jgl51i0 f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1t6o4dc f10ztigi f1ft5sdu f12zbtn2 f1gzf82w fcvwxyo f8w4c43 f1ol4fw6 f1q1lw4e f1dwjv2g f4lkoma fg455y9 f1rvyvqg f1cwzwz f14g86mu f1dcs8yz fjwq6ea f1lr3nhc fn5gmvv f1mbxvi6 f1vmkb5g f53ppgq f1663y11 f18v5270 f80fkiy f1kc2mi9 f1y0svfh fihuait fnxhupq fx507ft fyd6l6x fb3rf2x f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
               disabled={true}
+              id="root_1__moveDown"
               onClick={[Function]}
               title="Move down"
               type="button"
@@ -2922,8 +2959,9 @@ exports[`with title and description from uiSchema array icons 1`] = `
               </span>
             </button>
             <button
-              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              className="fui-Button r1alrhcs array-item-copy ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
               disabled={false}
+              id="root_1__copy"
               onClick={[Function]}
               title="Copy"
               type="button"
@@ -2948,8 +2986,9 @@ exports[`with title and description from uiSchema array icons 1`] = `
               </span>
             </button>
             <button
-              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              className="fui-Button r1alrhcs array-item-remove ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
               disabled={false}
+              id="root_1__remove"
               onClick={[Function]}
               title="Remove"
               type="button"
@@ -2981,6 +3020,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
           <button
             className="fui-Button r1alrhcs array-item-add ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
             disabled={false}
+            id="root__add"
             onClick={[Function]}
             title="Add Item"
             type="button"
@@ -3323,6 +3363,7 @@ exports[`with title and description with global label off array 1`] = `
           <button
             className="fui-Button r1alrhcs array-item-add ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
             disabled={false}
+            id="root__add"
             onClick={[Function]}
             title="Add Item"
             type="button"
@@ -3423,8 +3464,9 @@ exports[`with title and description with global label off array icons 1`] = `
             }
           >
             <button
-              className="fui-Button r1alrhcs ___vbvxfv0_jgl51i0 f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1t6o4dc f10ztigi f1ft5sdu f12zbtn2 f1gzf82w fcvwxyo f8w4c43 f1ol4fw6 f1q1lw4e f1dwjv2g f4lkoma fg455y9 f1rvyvqg f1cwzwz f14g86mu f1dcs8yz fjwq6ea f1lr3nhc fn5gmvv f1mbxvi6 f1vmkb5g f53ppgq f1663y11 f18v5270 f80fkiy f1kc2mi9 f1y0svfh fihuait fnxhupq fx507ft fyd6l6x fb3rf2x f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              className="fui-Button r1alrhcs array-item-move-up ___vbvxfv0_jgl51i0 f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1t6o4dc f10ztigi f1ft5sdu f12zbtn2 f1gzf82w fcvwxyo f8w4c43 f1ol4fw6 f1q1lw4e f1dwjv2g f4lkoma fg455y9 f1rvyvqg f1cwzwz f14g86mu f1dcs8yz fjwq6ea f1lr3nhc fn5gmvv f1mbxvi6 f1vmkb5g f53ppgq f1663y11 f18v5270 f80fkiy f1kc2mi9 f1y0svfh fihuait fnxhupq fx507ft fyd6l6x fb3rf2x f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
               disabled={true}
+              id="root_0__moveUp"
               onClick={[Function]}
               title="Move up"
               type="button"
@@ -3449,8 +3491,9 @@ exports[`with title and description with global label off array icons 1`] = `
               </span>
             </button>
             <button
-              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              className="fui-Button r1alrhcs array-item-move-down ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
               disabled={false}
+              id="root_0__moveDown"
               onClick={[Function]}
               title="Move down"
               type="button"
@@ -3475,8 +3518,9 @@ exports[`with title and description with global label off array icons 1`] = `
               </span>
             </button>
             <button
-              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              className="fui-Button r1alrhcs array-item-copy ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
               disabled={false}
+              id="root_0__copy"
               onClick={[Function]}
               title="Copy"
               type="button"
@@ -3501,8 +3545,9 @@ exports[`with title and description with global label off array icons 1`] = `
               </span>
             </button>
             <button
-              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              className="fui-Button r1alrhcs array-item-remove ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
               disabled={false}
+              id="root_0__remove"
               onClick={[Function]}
               title="Remove"
               type="button"
@@ -3571,8 +3616,9 @@ exports[`with title and description with global label off array icons 1`] = `
             }
           >
             <button
-              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              className="fui-Button r1alrhcs array-item-move-up ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
               disabled={false}
+              id="root_1__moveUp"
               onClick={[Function]}
               title="Move up"
               type="button"
@@ -3597,8 +3643,9 @@ exports[`with title and description with global label off array icons 1`] = `
               </span>
             </button>
             <button
-              className="fui-Button r1alrhcs ___vbvxfv0_jgl51i0 f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1t6o4dc f10ztigi f1ft5sdu f12zbtn2 f1gzf82w fcvwxyo f8w4c43 f1ol4fw6 f1q1lw4e f1dwjv2g f4lkoma fg455y9 f1rvyvqg f1cwzwz f14g86mu f1dcs8yz fjwq6ea f1lr3nhc fn5gmvv f1mbxvi6 f1vmkb5g f53ppgq f1663y11 f18v5270 f80fkiy f1kc2mi9 f1y0svfh fihuait fnxhupq fx507ft fyd6l6x fb3rf2x f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              className="fui-Button r1alrhcs array-item-move-down ___vbvxfv0_jgl51i0 f1bg9a2p f1jj8ep1 f15xbau f4ikngz fy0fskl f1s2aq7o fdrzuqr f15x8b5r f1falr9n f12mpcsy f1gwvigk f1jnshp0 f18rmfxp fvgxktp fphbwmw f19vpps7 fv5swzo f1al02dq f1t6o4dc f10ztigi f1ft5sdu f12zbtn2 f1gzf82w fcvwxyo f8w4c43 f1ol4fw6 f1q1lw4e f1dwjv2g f4lkoma fg455y9 f1rvyvqg f1cwzwz f14g86mu f1dcs8yz fjwq6ea f1lr3nhc fn5gmvv f1mbxvi6 f1vmkb5g f53ppgq f1663y11 f18v5270 f80fkiy f1kc2mi9 f1y0svfh fihuait fnxhupq fx507ft fyd6l6x fb3rf2x f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
               disabled={true}
+              id="root_1__moveDown"
               onClick={[Function]}
               title="Move down"
               type="button"
@@ -3623,8 +3670,9 @@ exports[`with title and description with global label off array icons 1`] = `
               </span>
             </button>
             <button
-              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              className="fui-Button r1alrhcs array-item-copy ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
               disabled={false}
+              id="root_1__copy"
               onClick={[Function]}
               title="Copy"
               type="button"
@@ -3649,8 +3697,9 @@ exports[`with title and description with global label off array icons 1`] = `
               </span>
             </button>
             <button
-              className="fui-Button r1alrhcs ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+              className="fui-Button r1alrhcs array-item-remove ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
               disabled={false}
+              id="root_1__remove"
               onClick={[Function]}
               title="Remove"
               type="button"
@@ -3682,6 +3731,7 @@ exports[`with title and description with global label off array icons 1`] = `
           <button
             className="fui-Button r1alrhcs array-item-add ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
             disabled={false}
+            id="root__add"
             onClick={[Function]}
             title="Add Item"
             type="button"
