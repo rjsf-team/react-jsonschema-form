@@ -4,29 +4,21 @@ import { Theme as SuiTheme } from '@rjsf/semantic-ui';
 import { Theme as AntdTheme } from '@rjsf/antd';
 import { Theme as BootstrapTheme } from '@rjsf/react-bootstrap';
 import { Theme as ChakraUITheme } from '@rjsf/chakra-ui';
+import { Theme as DaisyUITheme } from '@rjsf/daisyui';
 import v8Validator, { customizeValidator } from '@rjsf/validator-ajv8';
 import v6Validator from '@rjsf/validator-ajv6';
 import localize_es from 'ajv-i18n/localize/es';
-import Ajv2019 from 'ajv/dist/2019.js';
-import Ajv2020 from 'ajv/dist/2020.js';
 
 import Layout from './layout';
 import Playground, { PlaygroundProps } from './components';
 
-// @ts-expect-error todo: error TS2345: Argument of type 'Localize' is not assignable to parameter of type 'Localizer'.
 const esV8Validator = customizeValidator({}, localize_es);
-const AJV8_2019 = customizeValidator({ AjvClass: Ajv2019 });
-const AJV8_2020 = customizeValidator({ AjvClass: Ajv2020 });
-const AJV8_DISC = customizeValidator({ ajvOptionsOverrides: { discriminator: true } });
 const AJV8_DATA_REF = customizeValidator({ ajvOptionsOverrides: { $data: true } });
 
 const validators: PlaygroundProps['validators'] = {
   AJV8: v8Validator,
   'AJV8 $data reference': AJV8_DATA_REF,
-  'AJV8 (discriminator)': AJV8_DISC,
   AJV8_es: esV8Validator,
-  AJV8_2019,
-  AJV8_2020,
   'AJV6 (deprecated)': v6Validator,
 };
 
@@ -89,6 +81,47 @@ const themes: PlaygroundProps['themes'] = {
       yeti: {
         stylesheet: '//cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.6/yeti/bootstrap.min.css',
       },
+    },
+  },
+  'daisy-ui': {
+    stylesheet: 'https://cdn.jsdelivr.net/npm/daisyui@5.0.0-beta.7/daisyui.min.css',
+    theme: DaisyUITheme,
+    subthemes: {
+      light: { dataTheme: 'light' },
+      dark: { dataTheme: 'dark' },
+      cupcake: { dataTheme: 'cupcake' },
+      bumblebee: { dataTheme: 'bumblebee' },
+      emerald: { dataTheme: 'emerald' },
+      corporate: { dataTheme: 'corporate' },
+      synthwave: { dataTheme: 'synthwave' },
+      retro: { dataTheme: 'retro' },
+      cyberpunk: { dataTheme: 'cyberpunk' },
+      valentine: { dataTheme: 'valentine' },
+      halloween: { dataTheme: 'halloween' },
+      garden: { dataTheme: 'garden' },
+      forest: { dataTheme: 'forest' },
+      aqua: { dataTheme: 'aqua' },
+      lofi: { dataTheme: 'lofi' },
+      pastel: { dataTheme: 'pastel' },
+      fantasy: { dataTheme: 'fantasy' },
+      wireframe: { dataTheme: 'wireframe' },
+      black: { dataTheme: 'black' },
+      luxury: { dataTheme: 'luxury' },
+      dracula: { dataTheme: 'dracula' },
+      cmyk: { dataTheme: 'cmyk' },
+      autumn: { dataTheme: 'autumn' },
+      business: { dataTheme: 'business' },
+      acid: { dataTheme: 'acid' },
+      lemonade: { dataTheme: 'lemonade' },
+      night: { dataTheme: 'night' },
+      coffee: { dataTheme: 'coffee' },
+      winter: { dataTheme: 'winter' },
+      dim: { dataTheme: 'dim' },
+      nord: { dataTheme: 'nord' },
+      sunset: { dataTheme: 'sunset' },
+      caramellatte: { dataTheme: 'caramellatte' },
+      abyss: { dataTheme: 'abyss' },
+      silk: { dataTheme: 'silk' },
     },
   },
   antd: {
