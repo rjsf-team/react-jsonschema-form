@@ -45,18 +45,14 @@ exports[`object fields additionalProperties 1`] = `
 }
 
 .emotion-2 {
-  -webkit-flex-basis: auto;
-  -ms-flex-preferred-size: auto;
-  flex-basis: auto;
   -webkit-box-flex: 0;
   -webkit-flex-grow: 0;
   -ms-flex-positive: 0;
   flex-grow: 0;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
-  max-width: none;
-  width: auto;
+  -webkit-flex-basis: auto;
+  -ms-flex-preferred-size: auto;
+  flex-basis: auto;
+  width: calc(100% * 12 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 12) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
   min-width: 0;
   box-sizing: border-box;
 }
@@ -92,6 +88,23 @@ exports[`object fields additionalProperties 1`] = `
 
 .emotion-3>* {
   --Grid-parent-rowSpacing: 16px;
+}
+
+.emotion-4 {
+  -webkit-flex-basis: auto;
+  -ms-flex-preferred-size: auto;
+  flex-basis: auto;
+  -webkit-box-flex: 0;
+  -webkit-flex-grow: 0;
+  -ms-flex-positive: 0;
+  flex-grow: 0;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  max-width: none;
+  width: auto;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .emotion-5 {
@@ -721,7 +734,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
         }
       >
         <div
-          className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-2"
+          className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 emotion-2"
           style={
             {
               "marginBottom": "10px",
@@ -732,7 +745,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
             className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 form-group field field-string emotion-3"
           >
             <div
-              className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-2"
+              className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-4"
             >
               <div
                 className="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-5"
@@ -780,7 +793,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
               </div>
             </div>
             <div
-              className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-2"
+              className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-4"
             >
               <div
                 className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -997,18 +1010,14 @@ exports[`object fields object 1`] = `
 }
 
 .emotion-2 {
-  -webkit-flex-basis: auto;
-  -ms-flex-preferred-size: auto;
-  flex-basis: auto;
   -webkit-box-flex: 0;
   -webkit-flex-grow: 0;
   -ms-flex-positive: 0;
   flex-grow: 0;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
-  max-width: none;
-  width: auto;
+  -webkit-flex-basis: auto;
+  -ms-flex-preferred-size: auto;
+  flex-basis: auto;
+  width: calc(100% * 12 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 12) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
   min-width: 0;
   box-sizing: border-box;
 }
@@ -1381,7 +1390,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
         }
       >
         <div
-          className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-2"
+          className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 emotion-2"
           style={
             {
               "marginBottom": "10px",
@@ -1444,7 +1453,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
           </div>
         </div>
         <div
-          className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-2"
+          className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 emotion-2"
           style={
             {
               "marginBottom": "10px",
@@ -1583,18 +1592,14 @@ exports[`object fields show add button and fields if additionalProperties is tru
 }
 
 .emotion-2 {
-  -webkit-flex-basis: auto;
-  -ms-flex-preferred-size: auto;
-  flex-basis: auto;
   -webkit-box-flex: 0;
   -webkit-flex-grow: 0;
   -ms-flex-positive: 0;
   flex-grow: 0;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
-  max-width: none;
-  width: auto;
+  -webkit-flex-basis: auto;
+  -ms-flex-preferred-size: auto;
+  flex-basis: auto;
+  width: calc(100% * 12 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 12) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
   min-width: 0;
   box-sizing: border-box;
 }
@@ -1630,6 +1635,23 @@ exports[`object fields show add button and fields if additionalProperties is tru
 
 .emotion-3>* {
   --Grid-parent-rowSpacing: 16px;
+}
+
+.emotion-4 {
+  -webkit-flex-basis: auto;
+  -ms-flex-preferred-size: auto;
+  flex-basis: auto;
+  -webkit-box-flex: 0;
+  -webkit-flex-grow: 0;
+  -ms-flex-positive: 0;
+  flex-grow: 0;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  max-width: none;
+  width: auto;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .emotion-5 {
@@ -2255,7 +2277,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
         }
       >
         <div
-          className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-2"
+          className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 emotion-2"
           style={
             {
               "marginBottom": "10px",
@@ -2266,7 +2288,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
             className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 form-group field field-string emotion-3"
           >
             <div
-              className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-2"
+              className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-4"
             >
               <div
                 className="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-5"
@@ -2314,7 +2336,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
               </div>
             </div>
             <div
-              className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-2"
+              className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-4"
             >
               <div
                 className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -2565,18 +2587,14 @@ exports[`object fields with title and description additionalProperties 1`] = `
 }
 
 .emotion-6 {
-  -webkit-flex-basis: auto;
-  -ms-flex-preferred-size: auto;
-  flex-basis: auto;
   -webkit-box-flex: 0;
   -webkit-flex-grow: 0;
   -ms-flex-positive: 0;
   flex-grow: 0;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
-  max-width: none;
-  width: auto;
+  -webkit-flex-basis: auto;
+  -ms-flex-preferred-size: auto;
+  flex-basis: auto;
+  width: calc(100% * 12 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 12) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
   min-width: 0;
   box-sizing: border-box;
 }
@@ -2612,6 +2630,23 @@ exports[`object fields with title and description additionalProperties 1`] = `
 
 .emotion-7>* {
   --Grid-parent-rowSpacing: 16px;
+}
+
+.emotion-8 {
+  -webkit-flex-basis: auto;
+  -ms-flex-preferred-size: auto;
+  flex-basis: auto;
+  -webkit-box-flex: 0;
+  -webkit-flex-grow: 0;
+  -ms-flex-positive: 0;
+  flex-grow: 0;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  max-width: none;
+  width: auto;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .emotion-9 {
@@ -3266,7 +3301,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
         }
       >
         <div
-          className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-6"
+          className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 emotion-6"
           style={
             {
               "marginBottom": "10px",
@@ -3277,7 +3312,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
             className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 form-group field field-string emotion-7"
           >
             <div
-              className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-6"
+              className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-8"
             >
               <div
                 className="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-9"
@@ -3325,7 +3360,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
               </div>
             </div>
             <div
-              className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-6"
+              className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-8"
             >
               <div
                 className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -3576,18 +3611,14 @@ exports[`object fields with title and description from both additionalProperties
 }
 
 .emotion-6 {
-  -webkit-flex-basis: auto;
-  -ms-flex-preferred-size: auto;
-  flex-basis: auto;
   -webkit-box-flex: 0;
   -webkit-flex-grow: 0;
   -ms-flex-positive: 0;
   flex-grow: 0;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
-  max-width: none;
-  width: auto;
+  -webkit-flex-basis: auto;
+  -ms-flex-preferred-size: auto;
+  flex-basis: auto;
+  width: calc(100% * 12 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 12) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
   min-width: 0;
   box-sizing: border-box;
 }
@@ -3623,6 +3654,23 @@ exports[`object fields with title and description from both additionalProperties
 
 .emotion-7>* {
   --Grid-parent-rowSpacing: 16px;
+}
+
+.emotion-8 {
+  -webkit-flex-basis: auto;
+  -ms-flex-preferred-size: auto;
+  flex-basis: auto;
+  -webkit-box-flex: 0;
+  -webkit-flex-grow: 0;
+  -ms-flex-positive: 0;
+  flex-grow: 0;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  max-width: none;
+  width: auto;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .emotion-9 {
@@ -4277,7 +4325,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
         }
       >
         <div
-          className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-6"
+          className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 emotion-6"
           style={
             {
               "marginBottom": "10px",
@@ -4288,7 +4336,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
             className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 form-group field field-string emotion-7"
           >
             <div
-              className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-6"
+              className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-8"
             >
               <div
                 className="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-9"
@@ -4336,7 +4384,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
               </div>
             </div>
             <div
-              className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-6"
+              className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-8"
             >
               <div
                 className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -4587,18 +4635,14 @@ exports[`object fields with title and description from both object 1`] = `
 }
 
 .emotion-6 {
-  -webkit-flex-basis: auto;
-  -ms-flex-preferred-size: auto;
-  flex-basis: auto;
   -webkit-box-flex: 0;
   -webkit-flex-grow: 0;
   -ms-flex-positive: 0;
   flex-grow: 0;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
-  max-width: none;
-  width: auto;
+  -webkit-flex-basis: auto;
+  -ms-flex-preferred-size: auto;
+  flex-basis: auto;
+  width: calc(100% * 12 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 12) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
   min-width: 0;
   box-sizing: border-box;
 }
@@ -5006,7 +5050,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
         }
       >
         <div
-          className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-6"
+          className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 emotion-6"
           style={
             {
               "marginBottom": "10px",
@@ -5085,7 +5129,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
           </div>
         </div>
         <div
-          className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-6"
+          className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 emotion-6"
           style={
             {
               "marginBottom": "10px",
@@ -5274,18 +5318,14 @@ exports[`object fields with title and description from uiSchema additionalProper
 }
 
 .emotion-6 {
-  -webkit-flex-basis: auto;
-  -ms-flex-preferred-size: auto;
-  flex-basis: auto;
   -webkit-box-flex: 0;
   -webkit-flex-grow: 0;
   -ms-flex-positive: 0;
   flex-grow: 0;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
-  max-width: none;
-  width: auto;
+  -webkit-flex-basis: auto;
+  -ms-flex-preferred-size: auto;
+  flex-basis: auto;
+  width: calc(100% * 12 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 12) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
   min-width: 0;
   box-sizing: border-box;
 }
@@ -5321,6 +5361,23 @@ exports[`object fields with title and description from uiSchema additionalProper
 
 .emotion-7>* {
   --Grid-parent-rowSpacing: 16px;
+}
+
+.emotion-8 {
+  -webkit-flex-basis: auto;
+  -ms-flex-preferred-size: auto;
+  flex-basis: auto;
+  -webkit-box-flex: 0;
+  -webkit-flex-grow: 0;
+  -ms-flex-positive: 0;
+  flex-grow: 0;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  max-width: none;
+  width: auto;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .emotion-9 {
@@ -5975,7 +6032,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
         }
       >
         <div
-          className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-6"
+          className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 emotion-6"
           style={
             {
               "marginBottom": "10px",
@@ -5986,7 +6043,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
             className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 form-group field field-string emotion-7"
           >
             <div
-              className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-6"
+              className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-8"
             >
               <div
                 className="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-9"
@@ -6034,7 +6091,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
               </div>
             </div>
             <div
-              className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-6"
+              className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-8"
             >
               <div
                 className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -6285,18 +6342,14 @@ exports[`object fields with title and description from uiSchema object 1`] = `
 }
 
 .emotion-6 {
-  -webkit-flex-basis: auto;
-  -ms-flex-preferred-size: auto;
-  flex-basis: auto;
   -webkit-box-flex: 0;
   -webkit-flex-grow: 0;
   -ms-flex-positive: 0;
   flex-grow: 0;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
-  max-width: none;
-  width: auto;
+  -webkit-flex-basis: auto;
+  -ms-flex-preferred-size: auto;
+  flex-basis: auto;
+  width: calc(100% * 12 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 12) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
   min-width: 0;
   box-sizing: border-box;
 }
@@ -6704,7 +6757,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
         }
       >
         <div
-          className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-6"
+          className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 emotion-6"
           style={
             {
               "marginBottom": "10px",
@@ -6783,7 +6836,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
           </div>
         </div>
         <div
-          className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-6"
+          className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 emotion-6"
           style={
             {
               "marginBottom": "10px",
@@ -6972,18 +7025,14 @@ exports[`object fields with title and description from uiSchema show add button 
 }
 
 .emotion-6 {
-  -webkit-flex-basis: auto;
-  -ms-flex-preferred-size: auto;
-  flex-basis: auto;
   -webkit-box-flex: 0;
   -webkit-flex-grow: 0;
   -ms-flex-positive: 0;
   flex-grow: 0;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
-  max-width: none;
-  width: auto;
+  -webkit-flex-basis: auto;
+  -ms-flex-preferred-size: auto;
+  flex-basis: auto;
+  width: calc(100% * 12 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 12) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
   min-width: 0;
   box-sizing: border-box;
 }
@@ -7019,6 +7068,23 @@ exports[`object fields with title and description from uiSchema show add button 
 
 .emotion-7>* {
   --Grid-parent-rowSpacing: 16px;
+}
+
+.emotion-8 {
+  -webkit-flex-basis: auto;
+  -ms-flex-preferred-size: auto;
+  flex-basis: auto;
+  -webkit-box-flex: 0;
+  -webkit-flex-grow: 0;
+  -ms-flex-positive: 0;
+  flex-grow: 0;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  max-width: none;
+  width: auto;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .emotion-9 {
@@ -7669,7 +7735,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
         }
       >
         <div
-          className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-6"
+          className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 emotion-6"
           style={
             {
               "marginBottom": "10px",
@@ -7680,7 +7746,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
             className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 form-group field field-string emotion-7"
           >
             <div
-              className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-6"
+              className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-8"
             >
               <div
                 className="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-9"
@@ -7728,7 +7794,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
               </div>
             </div>
             <div
-              className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-6"
+              className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-8"
             >
               <div
                 className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -7979,18 +8045,14 @@ exports[`object fields with title and description object 1`] = `
 }
 
 .emotion-6 {
-  -webkit-flex-basis: auto;
-  -ms-flex-preferred-size: auto;
-  flex-basis: auto;
   -webkit-box-flex: 0;
   -webkit-flex-grow: 0;
   -ms-flex-positive: 0;
   flex-grow: 0;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
-  max-width: none;
-  width: auto;
+  -webkit-flex-basis: auto;
+  -ms-flex-preferred-size: auto;
+  flex-basis: auto;
+  width: calc(100% * 12 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 12) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
   min-width: 0;
   box-sizing: border-box;
 }
@@ -8398,7 +8460,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
         }
       >
         <div
-          className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-6"
+          className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 emotion-6"
           style={
             {
               "marginBottom": "10px",
@@ -8477,7 +8539,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
           </div>
         </div>
         <div
-          className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-6"
+          className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 emotion-6"
           style={
             {
               "marginBottom": "10px",
@@ -8666,18 +8728,14 @@ exports[`object fields with title and description show add button and fields if 
 }
 
 .emotion-6 {
-  -webkit-flex-basis: auto;
-  -ms-flex-preferred-size: auto;
-  flex-basis: auto;
   -webkit-box-flex: 0;
   -webkit-flex-grow: 0;
   -ms-flex-positive: 0;
   flex-grow: 0;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
-  max-width: none;
-  width: auto;
+  -webkit-flex-basis: auto;
+  -ms-flex-preferred-size: auto;
+  flex-basis: auto;
+  width: calc(100% * 12 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 12) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
   min-width: 0;
   box-sizing: border-box;
 }
@@ -8713,6 +8771,23 @@ exports[`object fields with title and description show add button and fields if 
 
 .emotion-7>* {
   --Grid-parent-rowSpacing: 16px;
+}
+
+.emotion-8 {
+  -webkit-flex-basis: auto;
+  -ms-flex-preferred-size: auto;
+  flex-basis: auto;
+  -webkit-box-flex: 0;
+  -webkit-flex-grow: 0;
+  -ms-flex-positive: 0;
+  flex-grow: 0;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  max-width: none;
+  width: auto;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .emotion-9 {
@@ -9363,7 +9438,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
         }
       >
         <div
-          className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-6"
+          className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 emotion-6"
           style={
             {
               "marginBottom": "10px",
@@ -9374,7 +9449,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
             className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 form-group field field-string emotion-7"
           >
             <div
-              className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-6"
+              className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-8"
             >
               <div
                 className="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-9"
@@ -9422,7 +9497,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
               </div>
             </div>
             <div
-              className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-6"
+              className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-8"
             >
               <div
                 className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -9639,18 +9714,14 @@ exports[`object fields with title and description with global label off addition
 }
 
 .emotion-2 {
-  -webkit-flex-basis: auto;
-  -ms-flex-preferred-size: auto;
-  flex-basis: auto;
   -webkit-box-flex: 0;
   -webkit-flex-grow: 0;
   -ms-flex-positive: 0;
   flex-grow: 0;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
-  max-width: none;
-  width: auto;
+  -webkit-flex-basis: auto;
+  -ms-flex-preferred-size: auto;
+  flex-basis: auto;
+  width: calc(100% * 12 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 12) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
   min-width: 0;
   box-sizing: border-box;
 }
@@ -9686,6 +9757,23 @@ exports[`object fields with title and description with global label off addition
 
 .emotion-3>* {
   --Grid-parent-rowSpacing: 16px;
+}
+
+.emotion-4 {
+  -webkit-flex-basis: auto;
+  -ms-flex-preferred-size: auto;
+  flex-basis: auto;
+  -webkit-box-flex: 0;
+  -webkit-flex-grow: 0;
+  -ms-flex-positive: 0;
+  flex-grow: 0;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  max-width: none;
+  width: auto;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .emotion-5 {
@@ -10321,7 +10409,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
         }
       >
         <div
-          className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-2"
+          className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 emotion-2"
           style={
             {
               "marginBottom": "10px",
@@ -10332,7 +10420,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
             className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 form-group field field-string emotion-3"
           >
             <div
-              className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-2"
+              className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-4"
             >
               <div
                 className="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-5"
@@ -10380,7 +10468,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
               </div>
             </div>
             <div
-              className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-2"
+              className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-4"
             >
               <div
                 className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -10592,18 +10680,14 @@ exports[`object fields with title and description with global label off object 1
 }
 
 .emotion-2 {
-  -webkit-flex-basis: auto;
-  -ms-flex-preferred-size: auto;
-  flex-basis: auto;
   -webkit-box-flex: 0;
   -webkit-flex-grow: 0;
   -ms-flex-positive: 0;
   flex-grow: 0;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
-  max-width: none;
-  width: auto;
+  -webkit-flex-basis: auto;
+  -ms-flex-preferred-size: auto;
+  flex-basis: auto;
+  width: calc(100% * 12 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 12) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
   min-width: 0;
   box-sizing: border-box;
 }
@@ -10924,7 +11008,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-6:focus::-ms-input-p
         }
       >
         <div
-          className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-2"
+          className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 emotion-2"
           style={
             {
               "marginBottom": "10px",
@@ -10982,7 +11066,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-6:focus::-ms-input-p
           </div>
         </div>
         <div
-          className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-2"
+          className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 emotion-2"
           style={
             {
               "marginBottom": "10px",
@@ -11116,18 +11200,14 @@ exports[`object fields with title and description with global label off show add
 }
 
 .emotion-2 {
-  -webkit-flex-basis: auto;
-  -ms-flex-preferred-size: auto;
-  flex-basis: auto;
   -webkit-box-flex: 0;
   -webkit-flex-grow: 0;
   -ms-flex-positive: 0;
   flex-grow: 0;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
-  max-width: none;
-  width: auto;
+  -webkit-flex-basis: auto;
+  -ms-flex-preferred-size: auto;
+  flex-basis: auto;
+  width: calc(100% * 12 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 12) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
   min-width: 0;
   box-sizing: border-box;
 }
@@ -11163,6 +11243,23 @@ exports[`object fields with title and description with global label off show add
 
 .emotion-3>* {
   --Grid-parent-rowSpacing: 16px;
+}
+
+.emotion-4 {
+  -webkit-flex-basis: auto;
+  -ms-flex-preferred-size: auto;
+  flex-basis: auto;
+  -webkit-box-flex: 0;
+  -webkit-flex-grow: 0;
+  -ms-flex-positive: 0;
+  flex-grow: 0;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  max-width: none;
+  width: auto;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .emotion-5 {
@@ -11798,7 +11895,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
         }
       >
         <div
-          className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-2"
+          className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 emotion-2"
           style={
             {
               "marginBottom": "10px",
@@ -11809,7 +11906,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
             className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 form-group field field-string emotion-3"
           >
             <div
-              className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-2"
+              className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-4"
             >
               <div
                 className="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-5"
@@ -11857,7 +11954,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
               </div>
             </div>
             <div
-              className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-2"
+              className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-4"
             >
               <div
                 className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"

@@ -2127,18 +2127,14 @@ exports[`array fields empty errors array 1`] = `
 }
 
 .emotion-2 {
-  -webkit-flex-basis: auto;
-  -ms-flex-preferred-size: auto;
-  flex-basis: auto;
   -webkit-box-flex: 0;
   -webkit-flex-grow: 0;
   -ms-flex-positive: 0;
   flex-grow: 0;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
-  max-width: none;
-  width: auto;
+  -webkit-flex-basis: auto;
+  -ms-flex-preferred-size: auto;
+  flex-basis: auto;
+  width: calc(100% * 12 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 12) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
   min-width: 0;
   box-sizing: border-box;
 }
@@ -2511,7 +2507,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
         }
       >
         <div
-          className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-2"
+          className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 emotion-2"
           style={
             {
               "marginBottom": "10px",
@@ -3349,18 +3345,14 @@ exports[`array fields has errors 1`] = `
 }
 
 .emotion-11 {
-  -webkit-flex-basis: auto;
-  -ms-flex-preferred-size: auto;
-  flex-basis: auto;
   -webkit-box-flex: 0;
   -webkit-flex-grow: 0;
   -ms-flex-positive: 0;
   flex-grow: 0;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
-  max-width: none;
-  width: auto;
+  -webkit-flex-basis: auto;
+  -ms-flex-preferred-size: auto;
+  flex-basis: auto;
+  width: calc(100% * 12 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 12) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
   min-width: 0;
   box-sizing: border-box;
 }
@@ -3834,7 +3826,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-16:focus::-ms-input-
         }
       >
         <div
-          className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-11"
+          className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 emotion-11"
           style={
             {
               "marginBottom": "10px",
@@ -3987,18 +3979,14 @@ exports[`array fields no errors 1`] = `
 }
 
 .emotion-2 {
-  -webkit-flex-basis: auto;
-  -ms-flex-preferred-size: auto;
-  flex-basis: auto;
   -webkit-box-flex: 0;
   -webkit-flex-grow: 0;
   -ms-flex-positive: 0;
   flex-grow: 0;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
-  max-width: none;
-  width: auto;
+  -webkit-flex-basis: auto;
+  -ms-flex-preferred-size: auto;
+  flex-basis: auto;
+  width: calc(100% * 12 / var(--Grid-parent-columns) - (var(--Grid-parent-columns) - 12) * (var(--Grid-parent-columnSpacing) / var(--Grid-parent-columns)));
   min-width: 0;
   box-sizing: border-box;
 }
@@ -4371,7 +4359,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
         }
       >
         <div
-          className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-2"
+          className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 emotion-2"
           style={
             {
               "marginBottom": "10px",
