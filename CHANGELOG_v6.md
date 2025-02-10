@@ -21,11 +21,13 @@ should change the heading of the (upcoming) version to include a major version b
 
 - BREAKING CHANGE: Refactored `ArrayFieldItemTemplate` to use the new `ArrayFieldItemButtonsTemplate`
 - Updated the `ArrayFieldTemplate`, `ObjectFieldTemplate`, and `WrapIfAdditionalTemplate` to a unique id using the `buttonId()` function and adding consistent marker classes
+- Implemented the `GridTemplate` component, adding it to the `templates` for the theme 
 
 ## @rjsf/chakra-ui
 
 - BREAKING CHANGE: Refactored `ArrayFieldItemTemplate` to use the new `ArrayFieldItemButtonsTemplate`
 - Updated the `ArrayFieldTemplate`, `ObjectFieldTemplate`, and `WrapIfAdditionalTemplate` to a unique id using the `buttonId()` function and adding consistent marker classes
+- Implemented the `GridTemplate` component, adding it to the `templates` for the theme
 
 ## @rjsf/core
 
@@ -33,6 +35,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Added `ArrayFieldItemButtonsTemplate` component as a refactor of all the common buttons code from all the `ArrayFieldItemTemplate` implementations, adding a unique id using the `buttonId()` function
 - Refactored `ArrayFieldItemTemplate` to use the new `ArrayFieldItemButtonsTemplate`
 - Updated the `ArrayFieldTemplate`, `ObjectFieldTemplate`, and `WrapIfAdditionalTemplate` to a unique id using the `buttonId()` function and adding consistent marker classes
+- Implemented the `GridTemplate` component, adding it to the `templates` for the theme
 
 ## @rjsf/fluent-ui
 
@@ -42,16 +45,20 @@ should change the heading of the (upcoming) version to include a major version b
 
 - BREAKING CHANGE: Refactored `ArrayFieldItemTemplate` to use the new `ArrayFieldItemButtonsTemplate`
 - Updated the `ArrayFieldTemplate`, `ObjectFieldTemplate`, and `WrapIfAdditionalTemplate` to a unique id using the `buttonId()` function and adding consistent marker classes
+- Implemented the `GridTemplate` component, adding it to the `templates` for the theme
 
 ## @rjsf/mui
 
 - BREAKING CHANGE: Refactored `ArrayFieldItemTemplate` to use the new `ArrayFieldItemButtonsTemplate`
 - Updated the `ArrayFieldTemplate`, `ObjectFieldTemplate`, and `WrapIfAdditionalTemplate` to a unique id using the `buttonId()` function and adding consistent marker classes
+- Updated the theme to use `Grid2` instead of the deprecated `Grid`
+- Implemented the `GridTemplate` component, adding it to the `templates` for the theme
 
 ## @rjsf/semantic-ui
 
 - BREAKING CHANGE: Refactored `ArrayFieldItemTemplate` to use the new `ArrayFieldItemButtonsTemplate`
 - Updated the `ArrayFieldTemplate`, `ObjectFieldTemplate`, and `WrapIfAdditionalTemplate` to a unique id using the `buttonId()` function and adding consistent marker classes
+- Implemented the `GridTemplate` component, adding it to the `templates` for the theme
 
 ## @rjsf/utils
 
