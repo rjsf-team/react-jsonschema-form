@@ -31,7 +31,12 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/docs 
 - Updated docs for `getDefaultFormState` to reflect addition of `initialDefaultsGenerated` prop
 
-## @rjsf/validator-ajv6 @rjsf/validator-avv8
+## @rjsf/validator-ajv6
+
+- Updated `getDefaultFormState` calls to reflect addition of `initialDefaultsGenerated`
+
+## @rjsf/validator-ajv8
+
 - Updated `getDefaultFormState` calls to reflect addition of `initialDefaultsGenerated`
 
 # 5.24.3
