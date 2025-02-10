@@ -126,7 +126,7 @@ class AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
     if (newOption) {
       // Call getDefaultFormState to make sure defaults are populated on change. Pass "excludeObjectChildren"
       // so that only the root objects themselves are created without adding undefined children properties
-      newFormData = schemaUtils.getDefaultFormState(newOption, newFormData, 'excludeObjectChildren') as T;
+      newFormData = schemaUtils.getDefaultFormState(newOption, newFormData, false, 'excludeObjectChildren') as T;
     }
 
     this.setState({ selectedOption: intOption }, () => {
