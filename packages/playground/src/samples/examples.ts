@@ -9,7 +9,7 @@ const examples: Sample = {
       browser: {
         type: 'string',
         title: 'Browser',
-        examples: ['Firefox', 'Chrome', 'Opera', 'Vivaldi', 'Safari'],
+        enum: ['Firefox', 'Chrome', 'Opera', 'Vivaldi', 'Safari'],
       },
     },
   },

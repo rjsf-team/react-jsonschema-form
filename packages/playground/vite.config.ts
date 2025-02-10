@@ -26,6 +26,7 @@ export default defineConfig({
       '@rjsf/semantic-ui': path.resolve(__dirname, '../semantic-ui/src'),
       '@rjsf/utils': path.resolve(__dirname, '../utils/src'),
       '@rjsf/validator-ajv8': path.resolve(__dirname, '../validator-ajv8/src'),
+      '@rjsf/daisyui': path.resolve(__dirname, '../daisyui/src'),
       // validator-ajv6 can not be mapped directly to the sources, because that causes wrong ajv version resolution
       // which looks related to: https://github.com/vitejs/vite/issues/12618
       //

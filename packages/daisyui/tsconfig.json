@@ -1,0 +1,26 @@
+{
+    "extends": "../../tsconfig.json",
+    "include": [
+        "src"
+    ],
+    "compilerOptions": {
+        "rootDir": "src",
+        "outDir": "dist",
+        "baseUrl": "../",
+        "jsx": "react-jsx",
+        "module": "ESNext",
+        "moduleResolution": "bundler",
+        "composite": true
+    },
+    "references": [
+        {
+            "path": "../core"
+        },
+        {
+            "path": "../utils"
+        },
+        {
+            "path": "../validator-ajv8"
+        }
+    ]
+}

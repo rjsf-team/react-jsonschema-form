@@ -31,6 +31,7 @@
 - [Bootstrap 3](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/core)
 - [Bootstrap 4](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/bootstrap-4)
 - [Chakra UI](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/chakra-ui)
+- [Daisy UI](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/daisyui)
 - [Fluent UI](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/fluent-ui)
 - [Fluent UI 9](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/fluentui-rc)
 - [Material UI 4](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/material-ui)
