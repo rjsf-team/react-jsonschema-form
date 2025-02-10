@@ -8,6 +8,7 @@ import { CopyButton, MoveDownButton, MoveUpButton, RemoveButton } from '../IconB
 import FieldErrorTemplate from '../FieldErrorTemplate';
 import FieldHelpTemplate from '../FieldHelpTemplate';
 import FieldTemplate from '../FieldTemplate';
+import GridTemplate from '../GridTemplate';
 import ObjectFieldTemplate from '../ObjectFieldTemplate';
 import SubmitButton from '../SubmitButton';
 import TitleField from '../TitleField';
@@ -36,6 +37,7 @@ export function generateTemplates<
     FieldErrorTemplate,
     FieldHelpTemplate,
     FieldTemplate,
+    GridTemplate,
     ObjectFieldTemplate,
     TitleFieldTemplate: TitleField,
     WrapIfAdditionalTemplate,

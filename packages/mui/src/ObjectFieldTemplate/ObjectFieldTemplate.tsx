@@ -1,4 +1,4 @@
-import Grid from '@mui/material/Grid';
+import Grid2 from '@mui/material/Grid2';
 import {
   FormContextType,
   ObjectFieldTemplateProps,
@@ -69,21 +69,21 @@ export default function ObjectFieldTemplate<
           registry={registry}
         />
       )}
-      <Grid container={true} spacing={2} style={{ marginTop: '10px' }}>
+      <Grid2 container={true} spacing={2} style={{ marginTop: '10px' }}>
         {properties.map((element, index) =>
-          // Remove the <Grid> if the inner element is hidden as the <Grid>
+          // Remove the <Grid2> if the inner element is hidden as the <Grid2>
           // itself would otherwise still take up space.
           element.hidden ? (
             element.content
           ) : (
-            <Grid item={true} xs={12} key={index} style={{ marginBottom: '10px' }}>
+            <Grid2 size={{ xs: 12 }} key={index} style={{ marginBottom: '10px' }}>
               {element.content}
-            </Grid>
+            </Grid2>
           )
         )}
         {canExpand<T, S, F>(schema, uiSchema, formData) && (
-          <Grid container justifyContent='flex-end'>
-            <Grid item={true}>
+          <Grid2 container justifyContent='flex-end'>
+            <Grid2>
               <AddButton
                 id={buttonId<T>(idSchema, 'add')}
                 className='object-property-expand'
@@ -92,10 +92,10 @@ export default function ObjectFieldTemplate<
                 uiSchema={uiSchema}
                 registry={registry}
               />
-            </Grid>
-          </Grid>
+            </Grid2>
+          </Grid2>
         )}
-      </Grid>
+      </Grid2>
     </>
   );
 }
