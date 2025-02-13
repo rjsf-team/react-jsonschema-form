@@ -1,6 +1,8 @@
 import { Sample } from './Sample';
+import validator from '@rjsf/validator-ajv8';
 
 const examples: Sample = {
+  validator: validator,
   schema: {
     title: 'Examples',
     description: 'A text field with example values.',
@@ -9,7 +11,7 @@ const examples: Sample = {
       browser: {
         type: 'string',
         title: 'Browser',
-        enum: ['Firefox', 'Chrome', 'Opera', 'Vivaldi', 'Safari'],
+        examples: ['Firefox', 'Chrome', 'Opera', 'Vivaldi', 'Safari'],
       },
     },
   },

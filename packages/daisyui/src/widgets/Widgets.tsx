@@ -7,7 +7,7 @@ import FileWidget from './FileWidget/FileWidget';
 import RadioWidget from './RadioWidget/RadioWidget';
 import RangeWidget from './RangeWidget/RangeWidget';
 import SelectWidget from './SelectWidget/SelectWidget';
-import TextAreaWidget from './TextAreaWidget/TextAreaWidget';
+import TextareaWidget from './TextareaWidget/TextAreaWidget';
 import TimeWidget from './TimeWidget/TimeWidget';
 
 export function generateWidgets<
@@ -25,7 +25,7 @@ export function generateWidgets<
     RadioWidget,
     RangeWidget,
     SelectWidget,
-    TextAreaWidget,
+    TextareaWidget,
     TimeWidget,
   };
 }
