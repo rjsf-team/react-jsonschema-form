@@ -14,7 +14,7 @@ export * from './templates/ButtonTemplates';
 export { default as RadioWidget } from './widgets/RadioWidget/RadioWidget';
 export { default as RangeWidget } from './widgets/RangeWidget/RangeWidget';
 export { default as SelectWidget } from './widgets/SelectWidget/SelectWidget';
-export { default as TextareaWidget } from './widgets/TextareaWidget/TextareaWidget';
+export { default as TextAreaWidget } from './widgets/TextAreaWidget/TextAreaWidget';
 export { default as TitleField } from './templates/TitleField';
 export { default as WrapIfAdditionalTemplate } from './templates/WrapIfAdditionalTemplate';
 export { default as Form, generateForm } from './daisyForm/DaisyForm';
