@@ -21,6 +21,7 @@ body:
         - bootstrap-4
         - chakra-ui
         - fluent-ui
+        - mantine
         - material-ui
         - mui
         - semantic-ui
