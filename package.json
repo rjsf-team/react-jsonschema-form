@@ -71,6 +71,7 @@
     "packages/docs",
     "packages/fluent-ui",
     "packages/fluentui-rc",
+    "packages/mantine",
     "packages/material-ui",
     "packages/mui",
     "packages/playground",
