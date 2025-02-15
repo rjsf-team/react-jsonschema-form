@@ -17,6 +17,10 @@ should change the heading of the (upcoming) version to include a major version b
 -->
 # 5.24.3
 
+## @rjsf/utils
+
+- Rollback [4446](https://github.com/rjsf-team/react-jsonschema-form/pull/4446) due to regression
+
 ## Dev / docs / playground
 - Fixed issue with selector, where validator was getting refreshed on clicking on anything in selector. [#4472](https://github.com/rjsf-team/react-jsonschema-form/pull/4472)
 
