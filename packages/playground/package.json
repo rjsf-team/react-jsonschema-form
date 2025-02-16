@@ -45,7 +45,7 @@
     "@rjsf/fluentui-rc": "^6.0.0-alpha.0",
     "@rjsf/mui": "^6.0.0-alpha.0",
     "@rjsf/react-bootstrap": "^6.0.0-alpha.0",
-    "@rjsf/primereact": "^5.24.3",
+    "@rjsf/primereact": "file:../primereact",
     "@rjsf/semantic-ui": "^6.0.0-alpha.0",
     "@rjsf/utils": "^6.0.0-alpha.0",
     "@rjsf/validator-ajv6": "^6.0.0-alpha.0",
