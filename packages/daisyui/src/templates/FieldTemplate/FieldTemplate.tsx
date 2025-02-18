@@ -29,8 +29,6 @@ const FieldTemplate = <T = any, S extends StrictRJSFSchema = RJSFSchema, F exten
     ...divProps
   } = props;
 
-  console.log('DaisyUI FieldTemplate');
-
   return (
     <div className={`field-template mb-2 ${classNames || ''}`} {...divProps}>
       {displayLabel && (

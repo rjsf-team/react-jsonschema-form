@@ -23,7 +23,7 @@ const RangeWidget = <T, S extends StrictRJSFSchema, F extends FormContextType>({
         step={schema.multipleOf || 1}
         onChange={(event) => onChange(event.target.value)}
       />
-      <span className='label-text'>{value}</span>
+      <span className='label-text ml-4'>{value}</span>
     </div>
   );
 };

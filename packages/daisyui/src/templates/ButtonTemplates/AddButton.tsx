@@ -14,7 +14,6 @@ export default function AddButton<T = any, S extends StrictRJSFSchema = RJSFSche
   registry,
 }: IconButtonProps<T, S, F>) {
   const { translateString } = registry;
-  console.log('AddButton', registry);
   return (
     <div className='row'>
       <p className={`col-xs-3 col-xs-offset-9 text-right ${className}`}>

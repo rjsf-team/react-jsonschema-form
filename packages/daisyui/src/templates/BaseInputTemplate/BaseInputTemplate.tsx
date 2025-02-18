@@ -6,7 +6,6 @@ export default function BaseInputTemplate<
   F extends FormContextType = any
 >(props: WidgetProps<T, S, F>) {
   const { id, value, required, disabled, readonly, onChange, label } = props;
-  console.log('DaisyUI BaseInputTemplate');
   return (
     <div className='form-control'>
       <label htmlFor={id} className='label hidden' style={{ display: 'none' }}>

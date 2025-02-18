@@ -6,7 +6,6 @@ export default function CheckboxWidget<
   F extends FormContextType = any
 >(props: WidgetProps<T, S, F>) {
   const { id, value, required, disabled, readonly, onChange, label } = props;
-  console.log('DaisyUI CheckboxWidget');
   return (
     <div className='form-control'>
       <label htmlFor={id} className='label cursor-pointer'>
@@ -17,7 +16,7 @@ export default function CheckboxWidget<
           required={required}
           disabled={disabled || readonly}
           onChange={(event) => onChange(event.target.checked)}
-          className='checkbox checkbox-primary'
+          className='checkbox'
         />
         <span className='label-text'>{label}</span>
       </label>

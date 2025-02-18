@@ -6,7 +6,6 @@ export default function FieldHelpTemplate<
   F extends FormContextType = any
 >(props: FieldHelpProps<T, S, F>) {
   const { help } = props;
-  console.log('DaisyUI FieldHelpTemplate');
   return (
     <div className='field-help-template text-gray-500 text-sm'>
       <p>{help}</p>

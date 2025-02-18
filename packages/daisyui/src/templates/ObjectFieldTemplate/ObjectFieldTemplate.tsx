@@ -41,8 +41,6 @@ export default function ObjectFieldTemplate<
     ButtonTemplates: { AddButton },
   } = registry.templates;
 
-  console.log('DaisyUI ObjectFieldTemplate');
-
   return (
     <div className='form-control'>
       {title && (

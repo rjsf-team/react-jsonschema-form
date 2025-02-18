@@ -16,7 +16,6 @@ const WrapIfAdditionalTemplate = <T = any, S extends StrictRJSFSchema = RJSFSche
     onDropPropertyClick,
     ...rest
   } = props;
-  console.log('DaisyUI WrapIfAdditionalTemplate');
   return (
     <div className={`wrap-if-additional-template ${classNames}`} {...rest}>
       <div className='flex items-center'>

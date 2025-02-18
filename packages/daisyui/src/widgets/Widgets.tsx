@@ -7,15 +7,31 @@ import FileWidget from './FileWidget/FileWidget';
 import RadioWidget from './RadioWidget/RadioWidget';
 import RangeWidget from './RangeWidget/RangeWidget';
 import SelectWidget from './SelectWidget/SelectWidget';
-import TextareaWidget from './TextareaWidget/TextAreaWidget';
+import TextareaWidget from './TextareaWidget/TextareaWidget';
 import TimeWidget from './TimeWidget/TimeWidget';
+import ToggleWidget from './ToggleWidget/ToggleWidget';
+import RatingWidget from './RatingWidget/RatingWidget';
+
+export {
+  CheckboxWidget,
+  CheckboxesWidget,
+  DateWidget,
+  DateTimeWidget,
+  FileWidget,
+  RadioWidget,
+  RangeWidget,
+  SelectWidget,
+  TextareaWidget,
+  TimeWidget,
+  ToggleWidget,
+  RatingWidget,
+};
 
 export function generateWidgets<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
 >(): RegistryWidgetsType<T, S, F> {
-  console.log('generateWidgets');
   return {
     CheckboxWidget,
     CheckboxesWidget,
@@ -27,6 +43,8 @@ export function generateWidgets<
     SelectWidget,
     TextareaWidget,
     TimeWidget,
+    toggle: ToggleWidget,
+    rating: RatingWidget,
   };
 }
 

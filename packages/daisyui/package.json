@@ -1,6 +1,6 @@
 {
   "name": "@rjsf/daisyui",
-  "version": "0.1.0",
+  "version": "6.0.0-alpha.1",
   "description": "Daisy UI components for react-jsonschema-form",
   "main": "src/index.ts",
   "types": "src/index.ts",
@@ -15,15 +15,17 @@
     "@fortawesome/fontawesome-svg-core": "^6.7.2",
     "@fortawesome/free-solid-svg-icons": "^6.7.2",
     "@fortawesome/react-fontawesome": "^0.2.2",
-    "@rjsf/core": "^5.24.2",
-    "@rjsf/utils": "^5.24.2",
     "@tailwindcss/vite": "^4.0.6",
     "react": "^18.2.0",
     "react-day-picker": "^9.5.1",
     "tailwindcss": "^4.0.6"
   },
   "peerDependencies": {
-    "react": "^18.2.0"
+    "react": "^18.2.0",
+    "@rjsf/core": "^6.x",
+    "@rjsf/utils": "^6.x",
+    "primeicons": ">=6.0.0",
+    "primereact": ">=8.0.0"
   },
   "devDependencies": {
     "daisyui": "^5.0.0-beta.7",

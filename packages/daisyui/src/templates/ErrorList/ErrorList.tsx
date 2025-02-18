@@ -4,7 +4,6 @@ export default function ErrorList<T = any, S extends StrictRJSFSchema = RJSFSche
   props: ErrorListProps<T, S, F>
 ) {
   const { errors } = props;
-  console.log('DaisyUI ErrorList');
   return (
     <div className='error-list'>
       <ul className='list-disc list-inside text-red-600'>

@@ -1,14 +1,15 @@
-import ArrayFieldItemTemplate from '../templates/ArrayFieldItemTemplate';
-import ArrayFieldTemplate from '../templates/ArrayFieldTemplate/ArrayFieldTemplate';
-import BaseInputTemplate from '../templates/BaseInputTemplate/BaseInputTemplate';
-import DescriptionField from '../templates/DescriptionField';
-import ErrorList from '../templates/ErrorList';
-import FieldErrorTemplate from '../templates/FieldErrorTemplate';
-import FieldHelpTemplate from '../templates/FieldHelpTemplate';
-import FieldTemplate from '../templates/FieldTemplate';
-import ObjectFieldTemplate from '../templates/ObjectFieldTemplate';
-import TitleFieldTemplate from '../templates/TitleField/TitleField';
-import WrapIfAdditionalTemplate from '../templates/WrapIfAdditionalTemplate';
+import ArrayFieldItemTemplate from './ArrayFieldItemTemplate';
+import ArrayFieldTemplate from './ArrayFieldTemplate/ArrayFieldTemplate';
+import ArrayFieldItemButtonsTemplate from './ArrayFieldItemButtonsTemplate';
+import BaseInputTemplate from './BaseInputTemplate/BaseInputTemplate';
+import DescriptionField from './DescriptionField';
+import ErrorList from './ErrorList';
+import FieldErrorTemplate from './FieldErrorTemplate';
+import FieldHelpTemplate from './FieldHelpTemplate';
+import FieldTemplate from './FieldTemplate';
+import ObjectFieldTemplate from './ObjectFieldTemplate';
+import TitleFieldTemplate from './TitleField/TitleField';
+import WrapIfAdditionalTemplate from './WrapIfAdditionalTemplate';
 
 import { FormContextType, RJSFSchema, StrictRJSFSchema, TemplatesType } from '@rjsf/utils';
 
@@ -24,6 +25,7 @@ export function generateTemplates<
   return {
     ArrayFieldItemTemplate,
     ArrayFieldTemplate,
+    ArrayFieldItemButtonsTemplate,
     BaseInputTemplate,
     ButtonTemplates: {
       AddButton,

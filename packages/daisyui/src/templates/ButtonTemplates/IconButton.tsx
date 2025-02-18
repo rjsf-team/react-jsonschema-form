@@ -8,7 +8,6 @@ export function CopyButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   const {
     registry: { translateString },
   } = props;
-  console.log('CopyButton', props);
   return <DaisyUIButton title={translateString(TranslatableString.CopyButton)} {...props} icon={faCopy} />;
 }
 
@@ -18,7 +17,6 @@ export function MoveDownButton<T = any, S extends StrictRJSFSchema = RJSFSchema,
   const {
     registry: { translateString },
   } = props;
-  console.log('MoveDownButton', props);
   return <DaisyUIButton title={translateString(TranslatableString.MoveDownButton)} {...props} icon={faArrowDown} />;
 }
 
@@ -28,7 +26,6 @@ export function MoveUpButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F
   const {
     registry: { translateString },
   } = props;
-  console.log('MoveUpButton', props);
   return <DaisyUIButton title={translateString(TranslatableString.MoveUpButton)} {...props} icon={faArrowUp} />;
 }
 
@@ -38,7 +35,6 @@ export function RemoveButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F
   const {
     registry: { translateString },
   } = props;
-  console.log('RemoveButton', props);
   return (
     <DaisyUIButton
       title={translateString(TranslatableString.RemoveButton)}

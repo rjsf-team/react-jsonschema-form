@@ -7,11 +7,10 @@ const ArrayFieldDescriptionTemplate = <
 >(
   props: ArrayFieldDescriptionProps<T, S, F>
 ) => {
-  console.log('DaisyUI ArrayFieldDescriptionTemplate');
-  props;
+  const { description } = props;
   return (
     <div>
-      <h1>ArrayFieldDescriptionTemplate</h1>
+      <p className='text-sm text-accent'>{description}</p>
     </div>
   );
 };

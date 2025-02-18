@@ -1,8 +1,8 @@
 import { ThemeProps } from '@rjsf/core';
 import { FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { getDefaultRegistry } from '@rjsf/core';
-import { generateTemplates } from '../templates';
-import { generateWidgets } from '../widgets';
+import { generateTemplates } from '../templates/Templates';
+import { generateWidgets } from '../widgets/Widgets';
 import React from 'react';
 
 export function generateTheme<
@@ -10,10 +10,14 @@ export function generateTheme<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
 >(): ThemeProps<T, S, F> {
-  const { fields } = getDefaultRegistry<T, S, F>();
+  const { fields, widgets } = getDefaultRegistry<T, S, F>();
+  const generatedWidgets = generateWidgets<T, S, F>();
   return {
     templates: generateTemplates<T, S, F>(),
-    widgets: generateWidgets<T, S, F>(),
+    widgets: {
+      ...generatedWidgets,
+      boolean: generatedWidgets.toggle,
+    },
     fields,
   };
 }

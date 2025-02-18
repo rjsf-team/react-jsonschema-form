@@ -70,8 +70,6 @@ export default function SelectWidget<
     enumOptions ||
     (Array.isArray(schema.examples) ? schema.examples.map((example) => ({ value: example, label: example })) : []);
 
-  console.log('DaisyUI SelectWidget');
-
   return (
     <div className='form-control w-full'>
       {shouldUseSelect ? (

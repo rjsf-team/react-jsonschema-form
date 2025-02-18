@@ -6,7 +6,6 @@ export default function TextareaWidget<
   F extends FormContextType = any
 >(props: WidgetProps<T, S, F>) {
   const { id, value, required, disabled, readonly, onChange } = props;
-  console.log('DaisyUI TextareaWidget');
   return (
     <div className='form-control'>
       <textarea
