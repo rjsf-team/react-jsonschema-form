@@ -1,0 +1,42 @@
+{
+  "name": "@rjsf/daisyui",
+  "version": "6.0.0-alpha.1",
+  "description": "Daisy UI components for react-jsonschema-form",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "scripts": {
+    "build": "tsc -b",
+    "build:cjs": "esbuild ./src/index.ts --bundle --outfile=dist/index.js --sourcemap --packages=external --format=cjs",
+    "build:esm": "esbuild ./src/index.ts --bundle --outfile=dist/daisy-ui.esm.js --sourcemap --packages=external --format=esm",
+    "build:umd": "rollup dist/daisy-ui.esm.js --format=umd --file=dist/daisy-ui.umd.js --name=@rjsf/daisy-ui",
+    "dev": "vite"
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^6.7.2",
+    "@fortawesome/free-solid-svg-icons": "^6.7.2",
+    "@fortawesome/react-fontawesome": "^0.2.2",
+    "@tailwindcss/vite": "^4.0.6",
+    "react": "^18.2.0",
+    "react-day-picker": "^9.5.1",
+    "tailwindcss": "^4.0.6"
+  },
+  "peerDependencies": {
+    "react": "^18.2.0",
+    "@rjsf/core": "^6.x",
+    "@rjsf/utils": "^6.x",
+    "primeicons": ">=6.0.0",
+    "primereact": ">=8.0.0"
+  },
+  "devDependencies": {
+    "daisyui": "^5.0.0-beta.7",
+    "esbuild": "^0.14.0",
+    "rollup": "^2.70.0",
+    "typescript": "^4.9.5"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rjsf-team/react-jsonschema-form.git"
+  },
+  "author": "Your Name <your.email@example.com>",
+  "license": "Apache-2.0"
+}

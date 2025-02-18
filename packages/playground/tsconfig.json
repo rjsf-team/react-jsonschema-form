@@ -1,13 +1,22 @@
 {
   "extends": "../../tsconfig.base.json",
-  "include": ["./", "src", "test"],
+  "include": [
+    "./",
+    "src",
+    "test",
+  ],
   "compilerOptions": {
     "rootDir": "./",
     "baseUrl": "./",
     "target": "ESNext",
     "useDefineForClassFields": true,
-    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "lib": [
+      "DOM",
+      "DOM.Iterable",
+      "ESNext"
+    ],
     "allowJs": false,
+    "composite": true,
     "skipLibCheck": true,
     "esModuleInterop": false,
     "allowSyntheticDefaultImports": true,
@@ -19,18 +28,46 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    "types": ["vite/client", "jest", "node"]
+    "types": [
+      "vite/client",
+      "jest",
+      "node"
+    ]
   },
   "references": [
-    { "path": "../antd" },
-    { "path": "../chakra-ui" },
-    { "path": "../core" },
-    { "path": "../fluentui-rc" },
-    { "path": "../mui" },
-    { "path": "../react-bootstrap"},
-    { "path": "../semantic-ui" },
-    { "path": "../utils" },
-    { "path": "../validator-ajv6" },
-    { "path": "../validator-ajv8" }
+    {
+      "path": "../antd"
+    },
+    {
+      "path": "../chakra-ui"
+    },
+    {
+      "path": "../daisyui",
+      "composite": true
+    },
+    {
+      "path": "../core"
+    },
+    {
+      "path": "../fluentui-rc"
+    },
+    {
+      "path": "../mui"
+    },
+    {
+      "path": "../react-bootstrap"
+    },
+    {
+      "path": "../semantic-ui"
+    },
+    {
+      "path": "../utils"
+    },
+    {
+      "path": "../validator-ajv6"
+    },
+    {
+      "path": "../validator-ajv8"
+    }
   ]
 }

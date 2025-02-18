@@ -40,19 +40,19 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
     liveOmit: false,
     experimental_defaultFormStateBehavior: { arrayMinItems: 'populate', emptyObjectFields: 'populateAllDefaults' },
   });
-  const [FormComponent, setFormComponent] = useState<ComponentType<FormProps>>(withTheme({}));
   const [otherFormProps, setOtherFormProps] = useState<Partial<FormProps>>({});
 
   const playGroundFormRef = useRef<any>(null);
 
+  const [FormComponent, setFormComponent] = useState<ComponentType<FormProps>>(withTheme({}));
+
   const onThemeSelected = useCallback(
     (theme: string, { stylesheet, theme: themeObj }: ThemesType) => {
       setTheme(theme);
-      setSubtheme(null);
       setFormComponent(withTheme(themeObj));
       setStylesheet(stylesheet);
     },
-    [setTheme, setSubtheme, setFormComponent, setStylesheet]
+    [setTheme, setStylesheet]
   );
 
   const load = useCallback(
@@ -83,7 +83,6 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
       setUiSchema(uiSchema);
       setFormData(formData);
       setExtraErrors(extraErrors);
-      setTheme(theTheme);
       setShowForm(true);
       setLiveSettings(liveSettings);
       if ('validator' in data) {
@@ -182,6 +181,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
                 border: 0,
               }}
               theme={theme}
+              subtheme={subtheme || 'light'}
             >
               <FormComponent
                 {...otherFormProps}
