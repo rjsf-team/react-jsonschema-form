@@ -1,6 +1,6 @@
 import { Button, Col, Row } from 'antd';
 import {
-  ArrayFieldTemplateItemType,
+  ArrayFieldItemTemplateType,
   FormContextType,
   getUiOptions,
   getTemplate,
@@ -24,7 +24,7 @@ export default function ArrayFieldItemTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
->(props: ArrayFieldTemplateItemType<T, S, F>) {
+>(props: ArrayFieldItemTemplateType<T, S, F>) {
   const { children, buttonsProps, hasToolbar, index, registry, uiSchema } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const ArrayFieldItemButtonsTemplate = getTemplate<'ArrayFieldItemButtonsTemplate', T, S, F>(

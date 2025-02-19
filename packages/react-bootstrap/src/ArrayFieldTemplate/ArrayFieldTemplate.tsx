@@ -2,7 +2,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 import {
-  ArrayFieldTemplateItemType,
+  ArrayFieldItemTemplateType,
   ArrayFieldTemplateProps,
   buttonId,
   FormContextType,
@@ -60,7 +60,7 @@ export default function ArrayFieldTemplate<
           />
           <Container fluid key={`array-item-list-${idSchema.$id}`} className='p-0 m-0'>
             {items &&
-              items.map(({ key, ...itemProps }: ArrayFieldTemplateItemType<T, S, F>) => (
+              items.map(({ key, ...itemProps }: ArrayFieldItemTemplateType<T, S, F>) => (
                 <ArrayFieldItemTemplate key={key} {...itemProps} />
               ))}
             {canAdd && (
