@@ -3,7 +3,7 @@ import {
   getUiOptions,
   isFixedItems,
   ArrayFieldTemplateProps,
-  ArrayFieldTemplateItemType,
+  ArrayFieldItemTemplateType,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
@@ -86,7 +86,7 @@ export default function ArrayFieldTemplate<
       <div key={`array-item-list-${idSchema.$id}`}>
         <div className='row array-item-list'>
           {items &&
-            items.map(({ key, uiSchema: itemUiSchema = {}, ...props }: ArrayFieldTemplateItemType<T, S, F>) => {
+            items.map(({ key, uiSchema: itemUiSchema = {}, ...props }: ArrayFieldItemTemplateType<T, S, F>) => {
               // Merge in the semantic props from the ArrayFieldTemplate into each of the items
               const mergedUiSchema = {
                 ...itemUiSchema,

@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import Grid2 from '@mui/material/Grid2';
 import Paper from '@mui/material/Paper';
 import {
-  ArrayFieldTemplateItemType,
+  ArrayFieldItemTemplateType,
   FormContextType,
   getUiOptions,
   getTemplate,
@@ -19,7 +19,7 @@ export default function ArrayFieldItemTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
->(props: ArrayFieldTemplateItemType<T, S, F>) {
+>(props: ArrayFieldItemTemplateType<T, S, F>) {
   const { children, buttonsProps, hasToolbar, uiSchema, registry } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const ArrayFieldItemButtonsTemplate = getTemplate<'ArrayFieldItemButtonsTemplate', T, S, F>(

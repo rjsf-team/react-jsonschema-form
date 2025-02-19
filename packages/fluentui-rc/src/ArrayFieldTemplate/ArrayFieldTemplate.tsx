@@ -4,7 +4,7 @@ import {
   getTemplate,
   getUiOptions,
   ArrayFieldTemplateProps,
-  ArrayFieldTemplateItemType,
+  ArrayFieldItemTemplateType,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
@@ -68,7 +68,7 @@ export default function ArrayFieldTemplate<
       />
       <Flex column key={`array-item-list-${idSchema.$id}`} className={classes.arrayItemList}>
         {items &&
-          items.map(({ key, ...itemProps }: ArrayFieldTemplateItemType<T, S, F>) => (
+          items.map(({ key, ...itemProps }: ArrayFieldItemTemplateType<T, S, F>) => (
             <ArrayFieldItemTemplate key={key} {...itemProps} />
           ))}
         {canAdd && (

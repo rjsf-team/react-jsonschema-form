@@ -1,6 +1,6 @@
 import { Box, ButtonGroup, HStack } from '@chakra-ui/react';
 import {
-  ArrayFieldTemplateItemType,
+  ArrayFieldItemTemplateType,
   FormContextType,
   getTemplate,
   getUiOptions,
@@ -12,7 +12,7 @@ export default function ArrayFieldItemTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
->(props: ArrayFieldTemplateItemType<T, S, F>) {
+>(props: ArrayFieldItemTemplateType<T, S, F>) {
   const { children, buttonsProps, hasToolbar, uiSchema, registry } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const ArrayFieldItemButtonsTemplate = getTemplate<'ArrayFieldItemButtonsTemplate', T, S, F>(

@@ -1,5 +1,4 @@
 import React from 'react';
-import clsx from 'clsx';
 import styles from './styles.module.css';
 
 type FeatureItem = {
@@ -43,7 +42,7 @@ const FeatureList: FeatureItem[] = [
 
 function Feature({ title, Svg, description }: FeatureItem) {
   return (
-    <div className={clsx('col col--4')}>
+    <div className='col col--4'>
       <div className='text--center'>
         <Svg className={styles.featureSvg} role='img' />
       </div>
