@@ -56,7 +56,6 @@
     "@babel/preset-typescript": "^7.23.3",
     "@rjsf/snapshot-tests": "^6.0.0-alpha.0",
     "@rjsf/utils": "^6.0.0-alpha.0",
-    "@rjsf/validator-ajv6": "^6.0.0-alpha.0",
     "@rjsf/validator-ajv8": "^6.0.0-alpha.0",
     "@types/jest": "^29.5.12",
     "@types/lodash": "^4.14.202",

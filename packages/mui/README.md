@@ -71,10 +71,10 @@ NOTE: Material UI 5 requires React 17, so you will need to upgrade
 - `@emotion/styled`
 - `@rjsf/core >= 5.0.0`
 - `@rjsf/utils >= 5.0.0`
-- `@rjsf/validator-ajv6 >= 5.0.0`
+- `@rjsf/validator-ajv8 >= 5.0.0`
 
 ```bash
-yarn add @mui/material @mui/icons-material @emotion/react @emotion/styled @rjsf/core @rjsf/utils @rjsf/validator-ajv6
+yarn add @mui/material @mui/icons-material @emotion/react @emotion/styled @rjsf/core @rjsf/utils @rjsf/validator-ajv8
 ```
 
 ### Installation

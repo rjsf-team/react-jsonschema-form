@@ -29,7 +29,6 @@ body:
         - react-bootstrap
         - semantic-ui
         - utils
-        - validator-ajv6
         - validator-ajv8
         - other
     validations:

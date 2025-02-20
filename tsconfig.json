@@ -32,9 +32,6 @@
       "path": "./packages/utils"
     },
     {
-      "path": "./packages/validator-ajv6"
-    },
-    {
       "path": "./packages/validator-ajv8"
     },
     {

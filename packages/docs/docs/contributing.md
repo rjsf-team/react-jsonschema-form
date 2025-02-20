@@ -125,7 +125,7 @@ The full report can be seen by opening `./coverage/lcov-report/index.html`.
 
 #### Utils and validator-ajvX code coverage
 
-100% code coverage is required by the `@rjsf/utils` and `@rjsf/validator-ajv6` and `@rjsf/validator-ajv8` tests.
+100% code coverage is required by the `@rjsf/utils` and `@rjsf/validator-ajv8` tests.
 If you make changes to those libraries, you will have to maintain that coverage, otherwise the tests will fail.
 
 > NOTE: All three of these directories share the same tests for verifying `validator` based APIs. See the documentation in the `getTestValidator()` functions for more information.
