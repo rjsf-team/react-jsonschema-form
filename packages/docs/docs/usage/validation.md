@@ -588,17 +588,11 @@ ajvKeywords(validator.ajv, ['your-keyword']);
 // use your update validator with a `Form`
 ```
 
-## Ajv8 validator differences
+## Ajv8 validator
 
-There are a few differences in configuring the Ajv 8 validator.
-First, there are many things to be aware of related to internal migration from Ajv 6 to 8; see the [migration guide](https://ajv.js.org/v6-to-v8-migration.html) for more information.
+Our implementation of `@rjsf/validator-ajv8` utilizes Ajv's internal cache to avoid unnecessarily re-compiling schemas, which can be an expensive operation. The cache key is the schema `$id`.
 
-One big difference is that Ajv 8 dropped support for any JSON Schema version before draft-06.
-So if your schema is using an older format, you must upgrade it.
-
-Our implementation of `@rjsf/validator-ajv8` also utilizes Ajv's internal cache to avoid unnecessarily re-compiling schemas, which can be an expensive operation. The cache key is the schema `$id`.
-
-The `ajvOptionsOverrides` for the Ajv 8 validator are the ones supported by that version and not the Ajv 6 validator.
+The `ajvOptionsOverrides` for the Ajv 8 validator are the ones supported by that version.
 Second, the data formats previously provided in Ajv 6 now need to be added explicitly using the `ajv-formats` package.
 A new `ajvFormatOptions` option is available on the `customizeValidator()` API to be able to configure this.
 Additionally, a new `AjvClass` option is available on the `customizeValidator()` API to support using one of the other [JSON schema versions](https://ajv.js.org/json-schema.html#json-schema-versions) provided by Ajv 8 besides the `draft-07` default.
