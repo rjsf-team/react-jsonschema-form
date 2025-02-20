@@ -525,7 +525,7 @@ export default class Form<
    *
    * @returns the previous customValidate errors
    */
-  private getPreviousCustomValidateErrors = (): ErrorSchema<T> => {
+  private getPreviousCustomValidateErrors(): ErrorSchema<T> {
     const { customValidate, uiSchema } = this.props;
     const prevFormData = this.state.formData as T;
     let customValidateErrors = {};
@@ -535,7 +535,7 @@ export default class Form<
       customValidateErrors = userErrorSchema;
     }
     return customValidateErrors;
-  };
+  }
 
   /** Validates the `formData` against the `schema` using the `altSchemaUtils` (if provided otherwise it uses the
    * `schemaUtils` in the state), returning the results.

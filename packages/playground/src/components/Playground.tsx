@@ -134,13 +134,6 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
     window.alert('Form submitted');
   }, []);
 
-  const customValidate = (formData: any, errors: any) => {
-    if (formData['Test'] > formData['Test2']) {
-      errors['Test']?.addError('Validate error: Test should be LE than Test2');
-    }
-    return errors;
-  };
-
   return (
     <>
       <Header
@@ -196,7 +189,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
                 extraErrors={extraErrors}
                 schema={schema}
                 uiSchema={uiSchema}
-                // formData={formData}
+                formData={formData}
                 fields={{
                   geo: GeoPosition,
                   '/schemas/specialString': SpecialInput,
@@ -208,7 +201,6 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
                 onFocus={(id: string, value: string) => console.log(`Focused ${id} with value ${value}`)}
                 onError={(errorList: RJSFValidationError[]) => console.log('errors', errorList)}
                 ref={playGroundFormRef}
-                customValidate={customValidate}
               />
             </DemoFrame>
           )}
