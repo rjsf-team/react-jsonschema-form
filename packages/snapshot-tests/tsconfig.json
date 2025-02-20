@@ -15,9 +15,6 @@
       "path": "../utils"
     },
     {
-      "path": "../validator-ajv6"
-    },
-    {
       "path": "../validator-ajv8"
     }
   ]

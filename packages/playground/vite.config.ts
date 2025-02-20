@@ -24,11 +24,6 @@ export default defineConfig({
       '@rjsf/semantic-ui': path.resolve(__dirname, '../semantic-ui/src'),
       '@rjsf/utils': path.resolve(__dirname, '../utils/src'),
       '@rjsf/validator-ajv8': path.resolve(__dirname, '../validator-ajv8/src'),
-      // validator-ajv6 can not be mapped directly to the sources, because that causes wrong ajv version resolution
-      // which looks related to: https://github.com/vitejs/vite/issues/12618
-      //
-      // the difference when mapping directly vs mapping to src folder - @vitejs/plugin-react can not be applied in the 2nd case
-      '@rjsf/validator-ajv6': '@rjsf/validator-ajv6/src',
     },
   },
 });
