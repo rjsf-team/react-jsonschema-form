@@ -679,7 +679,7 @@ export default class Form<
     const filterNilOrEmptyErrors = (errors: any, previousCustomValidateErrors: any = {}): ErrorSchema<T> => {
       _forEach(errors, (errorAtKey, errorKey: keyof typeof errors) => {
         const prevCustomValidateErrorAtKey = previousCustomValidateErrors[errorKey];
-        if (_isNil(errorAtKey)) {
+        if (_isNil(errorAtKey) || (Array.isArray(errorAtKey) && errorAtKey.length === 0)) {
           delete errors[errorKey];
         } else if (
           isObject(errorAtKey) &&
