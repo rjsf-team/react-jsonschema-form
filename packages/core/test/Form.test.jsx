@@ -2671,6 +2671,82 @@ describeRepeated('Form common', (createFormComponent) => {
         );
       });
     });
+
+    describe('customValidate errors', () => {
+      it('customValidate should raise an error when End is larger than Start field.', () => {
+        let schema = {
+          required: ['Start', 'End'],
+          properties: {
+            Start: {
+              type: 'number',
+            },
+            End: {
+              type: 'number',
+            },
+          },
+          type: 'object',
+        };
+
+        // customValidate method to raise an error when Start is larger than End field.
+        const customValidate = (formData, errors) => {
+          if (formData['Start'] > formData['End']) {
+            errors['Start']?.addError('Validate error: Test should be LE than End');
+          }
+          return errors;
+        };
+
+        const { node, onChange } = createFormComponent({
+          schema,
+          liveValidate: true,
+          formData: { Start: 2, End: 1 },
+          customValidate,
+        });
+
+        expect(node.querySelectorAll('#root_Start__error')).to.have.length(1);
+        let errorMessageContent = node.querySelector('#root_Start__error .text-danger').textContent;
+        expect(errorMessageContent).to.contain('Validate error: Test should be LE than End');
+
+        // Change the End field to a larger value than Start field to remove customValidate raised errors.
+        const endInput = node.querySelector('#root_End');
+        act(() => {
+          fireEvent.change(endInput, {
+            target: { value: 3 },
+          });
+        });
+
+        expect(node.querySelectorAll('#root_Start__error')).to.have.length(0);
+        sinon.assert.calledWithMatch(
+          onChange.lastCall,
+          {
+            errorSchema: {},
+            errors: [],
+          },
+          'root'
+        );
+
+        // Change the End field to a lesser value than Start field to raise customValidate errors.
+        act(() => {
+          fireEvent.change(endInput, {
+            target: { value: 0 },
+          });
+        });
+
+        expect(node.querySelectorAll('#root_Start__error')).to.have.length(1);
+        errorMessageContent = node.querySelector('#root_Start__error .text-danger').textContent;
+        expect(errorMessageContent).to.contain('Validate error: Test should be LE than End');
+        sinon.assert.calledWithMatch(
+          onChange.lastCall,
+          {
+            errorSchema: {
+              Start: {
+                __errors: ['Validate error: Test should be LE than End'],
+              },
+            },
+          },
+          'root'
+        );
+      });
+    });
   });
 
   describe('Schema and formData updates', () => {
