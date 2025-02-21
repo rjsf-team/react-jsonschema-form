@@ -344,6 +344,32 @@ render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, docum
 
 This property allows you to reorder the properties that are shown for a particular object. See [Objects](../json-schema/objects.md) for more information.
 
+### optgroup
+
+To leverage `<optgroup>` inside a select to group `<options>`, you can specify how to organize the options using the `optgroups` key inside your uiSchema.
+
+```tsx
+import { Form } from '@rjsf/core';
+import { RJSFSchema, UiSchema } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
+
+const schema: RJSFSchema = {
+  type: 'string',
+  enum: ['lorem', 'ipsum', 'dolorem', 'alpha', 'beta', 'gamma']
+};
+
+const uiSchema: UiSchema = {
+  'ui:options': {
+    optgroups: {
+      lipsum: ['lorem', 'ipsum', 'dolorem'],
+      greek: ['alpha', 'beta', 'gamma']
+    }
+  },
+};
+
+render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
+```
+
 ### placeholder
 
 You can add placeholder text to an input by using the `ui:placeholder` uiSchema directive:
