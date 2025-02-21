@@ -21,6 +21,7 @@ export default defineConfig({
       '@rjsf/core': path.resolve(__dirname, '../core/src'),
       '@rjsf/fluent-ui': path.resolve(__dirname, '../fluent-ui/src'),
       '@rjsf/fluentui-rc': path.resolve(__dirname, '../fluentui-rc/src'),
+      '@rjsf/mantine': path.resolve(__dirname, '../mantine/src'),
       '@rjsf/material-ui': path.resolve(__dirname, '../material-ui/src'),
       '@rjsf/mui': path.resolve(__dirname, '../mui/src'),
       '@rjsf/semantic-ui': path.resolve(__dirname, '../semantic-ui/src'),
