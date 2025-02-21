@@ -28,8 +28,6 @@ export function hashObject(object: unknown): string {
   const allKeys = new Set<string>();
   // solution source: https://stackoverflow.com/questions/16167581/sort-object-properties-and-json-stringify/53593328#53593328
   JSON.stringify(object, (key, value) => (allKeys.add(key), value));
-  const foo = JSON.stringify(object, Array.from(allKeys).sort());
-  console.log(object, allKeys, foo);
   return hashString(JSON.stringify(object, Array.from(allKeys).sort()));
 }
 
