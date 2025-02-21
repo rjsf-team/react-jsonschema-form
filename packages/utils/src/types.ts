@@ -31,6 +31,10 @@ export type RJSFSchema = StrictRJSFSchema & GenericObjectType;
  */
 export type FormContextType = GenericObjectType;
 
+/** The interface for the test ID proxy objects that are returned by the `getTestId` utility function.
+ */
+export type TestIdShape = Record<string, string>;
+
 /** Experimental feature that specifies the Array `minItems` default form state behavior
  */
 export type Experimental_ArrayMinItems = {
@@ -1095,6 +1099,15 @@ export interface ValidatorType<T = any, S extends StrictRJSFSchema = RJSFSchema,
   reset?: () => void;
 }
 
+/** The interface for the return value of the `findFieldInSchema` function
+ */
+export interface FoundFieldType<S extends StrictRJSFSchema = RJSFSchema> {
+  /** The field that was found, or undefined if it wasn't */
+  field?: S;
+  /** The requiredness of the field found or undefined if it wasn't */
+  isRequired?: boolean;
+}
+
 /** The `SchemaUtilsType` interface provides a wrapper around the publicly exported APIs in the `@rjsf/utils/schema`
  * directory such that one does not have to explicitly pass the `validator` or `rootSchema` to each method. Since both
  * the `validator` and `rootSchema` generally does not change across a `Form`, this allows for providing a simplified
@@ -1122,6 +1135,28 @@ export interface SchemaUtilsType<T = any, S extends StrictRJSFSchema = RJSFSchem
     experimental_defaultFormStateBehavior?: Experimental_DefaultFormStateBehavior,
     experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>
   ): boolean;
+  /** Finds the field specified by the `path` within the root or recursed `schema`. If there is no field for the specified
+   * `path`, then the default `{ field: undefined, isRequired: undefined }` is returned. It determines whether a leaf
+   * field is in the `required` list for its parent and if so, it is marked as required on return.
+   *
+   * @param schema - The current node within the JSON schema
+   * @param path - The remaining keys in the path to the desired field
+   * @param [formData] - The form data that is used to determine which oneOf option
+   * @returns - An object that contains the field and its required state. If no field can be found then
+   *            `{ field: undefined, isRequired: undefined }` is returned.
+   */
+  findFieldInSchema(schema: S, path: string | string[], formData?: T): FoundFieldType<S>;
+  /** Finds the oneOf option inside the `schema['any/oneOf']` list which has the `properties[selectorField].default` that
+   * matches the `formData[selectorField]` value. For the purposes of this function, `selectorField` is either
+   * `schema.discriminator.propertyName` or `fallbackField`.
+   *
+   * @param schema - The schema element in which to search for the selected oneOf option
+   * @param fallbackField - The field to use as a backup selector field if the schema does not have a required field
+   * @param xxx - Either `oneOf` or `anyOf`, defines which value is being sought
+   * @param [formData] - The form data that is used to determine which oneOf option
+   * @returns - The anyOf/oneOf option that matches the selector field in the schema or undefined if nothing is selected
+   */
+  findSelectedOptionInXxxOf(schema: S, fallbackField: string, xxx: 'anyOf' | `oneOf`, formData?: T): S | undefined;
   /** Returns the superset of `formData` that includes the given set updated to include any missing fields that have
    * computed to have defaults provided in the `schema`.
    *
@@ -1186,6 +1221,17 @@ export interface SchemaUtilsType<T = any, S extends StrictRJSFSchema = RJSFSchem
    * @deprecated
    */
   getMatchingOption(formData: T | undefined, options: S[], discriminatorField?: string): number;
+  /** Helper that acts like lodash's `get` but additionally retrieves `$ref`s as needed to get the path for schemas
+   * containing potentially nested `$ref`s.
+   *
+   * @param schema - The current node within the JSON schema recursion
+   * @param path - The remaining keys in the path to the desired property
+   * @param defaultValue - The value to return if a value is not found for the `pathList` path
+   * @returns - The internal schema from the `schema` for the given `path` or the `defaultValue` if not found
+   */
+  getFromSchema(schema: S, path: string | string[], defaultValue: T): T;
+  getFromSchema(schema: S, path: string | string[], defaultValue: S): S;
+  getFromSchema(schema: S, path: string | string[], defaultValue: T | S): S | T;
   /** Checks to see if the `schema` and `uiSchema` combination represents an array of files
    *
    * @param schema - The schema for which check for array of files flag is desired
