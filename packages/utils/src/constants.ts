@@ -20,9 +20,21 @@ export const JUNK_OPTION_ID = '_$junk_option_schema_id$_';
 export const NAME_KEY = '$name';
 export const ONE_OF_KEY = 'oneOf';
 export const PROPERTIES_KEY = 'properties';
+export const READONLY_KEY = 'readonly';
 export const REQUIRED_KEY = 'required';
 export const SUBMIT_BTN_OPTIONS_KEY = 'submitButtonOptions';
 export const REF_KEY = '$ref';
+/** The path of the discriminator value returned by the schema endpoint.
+ * The discriminator is the value in a `oneOf` that determines which option is selected.
+ */
+export const DISCRIMINATOR_PATH = ['discriminator', 'propertyName'];
+/** The name of the `formContext` attribute in the React JSON Schema Form Registry
+ */
+export const FORM_CONTEXT_NAME = 'formContext';
+
+/** The name of the `layoutGridLookupMap` attribute in the form context
+ */
+export const LOOKUP_MAP_NAME = 'layoutGridLookupMap';
 /**
  * @deprecated Replace with correctly spelled constant `RJSF_ADDITIONAL_PROPERTIES_FLAG`
  */

@@ -2,11 +2,12 @@ import reduce from 'lodash/reduce';
 import deepFreeze from 'deep-freeze-es6';
 
 import {
+  ANY_OF_KEY,
   EnumOptionsType,
   ErrorSchema,
   ErrorSchemaBuilder,
-  ONE_OF_KEY,
   ID_KEY,
+  ONE_OF_KEY,
   RJSFSchema,
   RJSFValidationError,
 } from '../../src';
@@ -898,3 +899,59 @@ export const SCHEMA_WITH_ALLOF_CANNOT_MERGE: RJSFSchema = deepFreeze<RJSFSchema>
     },
   ],
 });
+
+export const CHOICES: RJSFSchema[] = [
+  {
+    title: 'Choice 1',
+    type: 'object',
+    properties: {
+      answer: {
+        type: 'string',
+        default: '1',
+        readOnly: true,
+      },
+    },
+    required: ['answer'],
+  },
+  {
+    title: 'Choice 2',
+    type: 'object',
+    properties: {
+      answer: {
+        type: 'string',
+        const: '2',
+      },
+    },
+  },
+];
+
+export const testOneOfSchema: RJSFSchema = {
+  title: 'Simple OneOf',
+  type: 'object',
+  [ONE_OF_KEY]: CHOICES,
+  required: ['answer'],
+};
+
+export const testOneOfDiscriminatorSchema: RJSFSchema = {
+  ...testOneOfSchema,
+  discriminator: {
+    propertyName: 'answer',
+  },
+};
+
+export const testAnyOfSchema: RJSFSchema = {
+  title: 'Simple AnyOf',
+  type: 'object',
+  [ANY_OF_KEY]: CHOICES,
+  required: [],
+};
+
+export const testAnyOfDiscriminatorSchema: RJSFSchema = {
+  ...testAnyOfSchema,
+  discriminator: {
+    propertyName: 'answer',
+  },
+};
+
+export const ANSWER_1 = { answer: '1' };
+export const ANSWER_2 = { answer: '2' };

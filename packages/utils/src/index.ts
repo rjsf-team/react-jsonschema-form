@@ -20,10 +20,11 @@ import getInputProps from './getInputProps';
 import getSchemaType from './getSchemaType';
 import getSubmitButtonOptions from './getSubmitButtonOptions';
 import getTemplate from './getTemplate';
+import getTestIds from './getTestIds';
 import getUiOptions from './getUiOptions';
 import getWidget from './getWidget';
 import guessType from './guessType';
-import hashForSchema from './hashForSchema';
+import hashForSchema, { hashObject, hashString } from './hashForSchema';
 import hasWidget from './hasWidget';
 import {
   ariaDescribedByIds,
@@ -41,6 +42,7 @@ import isFixedItems from './isFixedItems';
 import isObject from './isObject';
 import labelValue from './labelValue';
 import localToUTC from './localToUTC';
+import lookupFromFormContext from './lookupFromFormContext';
 import mergeDefaultsWithFormData from './mergeDefaultsWithFormData';
 import mergeObjects from './mergeObjects';
 import mergeSchemas from './mergeSchemas';
@@ -101,11 +103,14 @@ export {
   getSchemaType,
   getSubmitButtonOptions,
   getTemplate,
+  getTestIds,
   getUiOptions,
   getWidget,
   guessType,
   hasWidget,
   hashForSchema,
+  hashObject,
+  hashString,
   helpId,
   isConstant,
   isCustomWidget,
@@ -113,6 +118,7 @@ export {
   isObject,
   labelValue,
   localToUTC,
+  lookupFromFormContext,
   mergeDefaultsWithFormData,
   mergeObjects,
   mergeSchemas,

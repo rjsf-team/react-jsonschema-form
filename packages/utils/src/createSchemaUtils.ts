@@ -4,6 +4,7 @@ import {
   Experimental_CustomMergeAllOf,
   Experimental_DefaultFormStateBehavior,
   FormContextType,
+  FoundFieldType,
   GlobalUISchemaOptions,
   IdSchema,
   PathSchema,
@@ -15,10 +16,13 @@ import {
   ValidatorType,
 } from './types';
 import {
+  findFieldInSchema,
+  findSelectedOptionInXxxOf,
   getDefaultFormState,
   getDisplayLabel,
   getClosestMatchingOption,
   getFirstMatchingOption,
+  getFromSchema,
   getMatchingOption,
   isFilesArray,
   isMultiSelect,
@@ -95,6 +99,49 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
       !deepEquals(this.rootSchema, rootSchema) ||
       !deepEquals(this.experimental_defaultFormStateBehavior, experimental_defaultFormStateBehavior) ||
       this.experimental_customMergeAllOf !== experimental_customMergeAllOf
+    );
+  }
+
+  /** Finds the field specified by the `path` within the root or recursed `schema`. If there is no field for the specified
+   * `path`, then the default `{ field: undefined, isRequired: undefined }` is returned. It determines whether a leaf
+   * field is in the `required` list for its parent and if so, it is marked as required on return.
+   *
+   * @param schema - The current node within the JSON schema
+   * @param path - The remaining keys in the path to the desired field
+   * @param [formData] - The form data that is used to determine which oneOf option
+   * @returns - An object that contains the field and its required state. If no field can be found then
+   *            `{ field: undefined, isRequired: undefined }` is returned.
+   */
+  findFieldInSchema(schema: S, path: string | string[], formData?: T): FoundFieldType<S> {
+    return findFieldInSchema(
+      this.validator,
+      this.rootSchema,
+      schema,
+      path,
+      formData,
+      this.experimental_customMergeAllOf
+    );
+  }
+
+  /** Finds the oneOf option inside the `schema['any/oneOf']` list which has the `properties[selectorField].default` that
+   * matches the `formData[selectorField]` value. For the purposes of this function, `selectorField` is either
+   * `schema.discriminator.propertyName` or `fallbackField`.
+   *
+   * @param schema - The schema element in which to search for the selected oneOf option
+   * @param fallbackField - The field to use as a backup selector field if the schema does not have a required field
+   * @param xxx - Either `oneOf` or `anyOf`, defines which value is being sought
+   * @param [formData={}] - The form data that is used to determine which oneOf option
+   * @returns - The anyOf/oneOf option that matches the selector field in the schema or undefined if nothing is selected
+   */
+  findSelectedOptionInXxxOf(schema: S, fallbackField: string, xxx: 'anyOf' | `oneOf`, formData: T): S | undefined {
+    return findSelectedOptionInXxxOf(
+      this.validator,
+      this.rootSchema,
+      schema,
+      fallbackField,
+      xxx,
+      formData,
+      this.experimental_customMergeAllOf
     );
   }
 
@@ -198,6 +245,28 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
    */
   getMatchingOption(formData: T | undefined, options: S[], discriminatorField?: string) {
     return getMatchingOption<T, S, F>(this.validator, formData, options, this.rootSchema, discriminatorField);
+  }
+
+  /** Helper that acts like lodash's `get` but additionally retrieves `$ref`s as needed to get the path for schemas
+   * containing potentially nested `$ref`s.
+   *
+   * @param schema - The current node within the JSON schema recursion
+   * @param path - The remaining keys in the path to the desired property
+   * @param defaultValue - The value to return if a value is not found for the `pathList` path
+   * @returns - The internal schema from the `schema` for the given `path` or the `defaultValue` if not found
+   */
+  getFromSchema(schema: S, path: string | string[], defaultValue: T): T;
+  getFromSchema(schema: S, path: string | string[], defaultValue: S): S;
+  getFromSchema(schema: S, path: string | string[], defaultValue: T | S): T | S {
+    return getFromSchema<T, S, F>(
+      this.validator,
+      this.rootSchema,
+      schema,
+      path,
+      // @ts-expect-error TS2769: No overload matches this call
+      defaultValue,
+      this.experimental_customMergeAllOf
+    );
   }
 
   /** Checks to see if the `schema` and `uiSchema` combination represents an array of files

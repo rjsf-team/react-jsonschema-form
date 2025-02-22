@@ -5,6 +5,7 @@ module.exports = {
     browsers: ['chrome', 'firefox', 'safari'],
   },
   testMatch: ['**/test/**/*.test.ts?(x)'],
+  transformIgnorePatterns: [`/node_modules/(?!nanoid)`],
   coverageDirectory: '<rootDir>/coverage/',
   collectCoverage: true,
   coveragePathIgnorePatterns: ['<rootDir>/node_modules/', '<rootDir>/test'],
