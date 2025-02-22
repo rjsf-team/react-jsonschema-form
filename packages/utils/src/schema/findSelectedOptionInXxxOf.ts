@@ -7,7 +7,8 @@ import retrieveSchema from './retrieveSchema';
 
 /** Finds the option inside the `schema['any/oneOf']` list which has the `properties[selectorField].default` or
  * `properties[selectorField].const` that matches the `formData[selectorField]` value. For the purposes of this
- * function, `selectorField` is either `schema.discriminator.propertyName` or `fallbackField`.
+ * function, `selectorField` is either `schema.discriminator.propertyName` or `fallbackField`. The `LayoutGridForm`
+ * works directly with schemas in a recursive manner, making this faster than `getFirstMatchingOption()`.
  *
  * @param validator - An implementation of the `ValidatorType` interface that will be forwarded to all the APIs
  * @param rootSchema - The root schema that will be forwarded to all the APIs
