@@ -21,6 +21,7 @@ export default defineConfig({
       '@rjsf/fluentui-rc': path.resolve(__dirname, '../fluentui-rc/src'),
       '@rjsf/mui': path.resolve(__dirname, '../mui/src'),
       '@rjsf/react-bootstrap': path.resolve(__dirname, '../react-bootstrap/src'),
+      '@rjsf/primereact': path.resolve(__dirname, '../primereact/src'),
       '@rjsf/semantic-ui': path.resolve(__dirname, '../semantic-ui/src'),
       '@rjsf/utils': path.resolve(__dirname, '../utils/src'),
       '@rjsf/validator-ajv8': path.resolve(__dirname, '../validator-ajv8/src'),
