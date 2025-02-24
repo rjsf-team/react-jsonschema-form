@@ -1,0 +1,111 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CheckboxesWidget inline 1`] = `
+<div
+  className="flex flex-row gap-4 flex-wrap"
+>
+  <div
+    className="flex items-center gap-2"
+  >
+    <button
+      aria-checked={false}
+      aria-describedby="_id__error _id__description _id__help"
+      aria-required={true}
+      autoFocus={true}
+      className="peer h-4 w-4 shrink-0 rounded-sm border border-primary shadow focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground"
+      data-disabled=""
+      data-state="unchecked"
+      disabled={true}
+      id="_id-0"
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      role="checkbox"
+      type="button"
+      value="on"
+    />
+    <input
+      aria-hidden={true}
+      defaultChecked={false}
+      disabled={true}
+      name="_id"
+      required={true}
+      style={
+        {
+          "margin": 0,
+          "opacity": 0,
+          "pointerEvents": "none",
+          "position": "absolute",
+          "transform": "translateX(-100%)",
+        }
+      }
+      tabIndex={-1}
+      type="checkbox"
+      value="on"
+    />
+    <label
+      className="text-sm font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 leading-tight"
+      htmlFor="_id-0"
+      onMouseDown={[Function]}
+    >
+      A
+    </label>
+  </div>
+</div>
+`;
+
+exports[`CheckboxesWidget simple 1`] = `
+<div
+  className="flex flex-col gap-2"
+>
+  <div
+    className="flex items-center gap-2"
+  >
+    <button
+      aria-checked={false}
+      aria-describedby="_id__error _id__description _id__help"
+      aria-required={true}
+      autoFocus={true}
+      className="peer h-4 w-4 shrink-0 rounded-sm border border-primary shadow focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground"
+      data-disabled=""
+      data-state="unchecked"
+      disabled={true}
+      id="_id-0"
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      role="checkbox"
+      type="button"
+      value="on"
+    />
+    <input
+      aria-hidden={true}
+      defaultChecked={false}
+      disabled={true}
+      name="_id"
+      required={true}
+      style={
+        {
+          "margin": 0,
+          "opacity": 0,
+          "pointerEvents": "none",
+          "position": "absolute",
+          "transform": "translateX(-100%)",
+        }
+      }
+      tabIndex={-1}
+      type="checkbox"
+      value="on"
+    />
+    <label
+      className="text-sm font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 leading-tight"
+      htmlFor="_id-0"
+      onMouseDown={[Function]}
+    >
+      A
+    </label>
+  </div>
+</div>
+`;

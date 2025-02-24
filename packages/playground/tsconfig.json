@@ -29,6 +29,7 @@
     { "path": "../mui" },
     { "path": "../react-bootstrap"},
     { "path": "../semantic-ui" },
+    { "path": "../shadcn" },
     { "path": "../utils" },
     { "path": "../validator-ajv8" }
   ]

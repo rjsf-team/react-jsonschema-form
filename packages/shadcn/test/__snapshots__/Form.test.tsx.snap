@@ -1,0 +1,3044 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`single fields checkbox field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-boolean"
+  >
+    <div
+      className="flex flex-col gap-2"
+    >
+      <div
+        aria-describedby="root__error root__description root__help"
+        className="relative "
+      >
+        <div
+          className="flex items-center gap-2 my-2"
+        >
+          <button
+            aria-checked={false}
+            aria-required={false}
+            autoFocus={false}
+            className="peer h-4 w-4 shrink-0 rounded-sm border border-primary shadow focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground"
+            data-state="unchecked"
+            disabled={false}
+            id="root"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            role="checkbox"
+            type="button"
+            value="on"
+          />
+          <input
+            aria-hidden={true}
+            defaultChecked={false}
+            disabled={false}
+            name="root"
+            required={false}
+            style={
+              {
+                "margin": 0,
+                "opacity": 0,
+                "pointerEvents": "none",
+                "position": "absolute",
+                "transform": "translateX(-100%)",
+              }
+            }
+            tabIndex={-1}
+            type="checkbox"
+            value="on"
+          />
+          <label
+            className="text-sm font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 leading-tight"
+            htmlFor="root"
+            onMouseDown={[Function]}
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2 my-2"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields checkbox field with label 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-boolean"
+  >
+    <div
+      className="flex flex-col gap-2"
+    >
+      <div
+        aria-describedby="root__error root__description root__help"
+        className="relative "
+      >
+        <div
+          className="flex items-center gap-2 my-2"
+        >
+          <button
+            aria-checked={false}
+            aria-required={false}
+            autoFocus={false}
+            className="peer h-4 w-4 shrink-0 rounded-sm border border-primary shadow focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground"
+            data-state="unchecked"
+            disabled={false}
+            id="root"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            role="checkbox"
+            type="button"
+            value="on"
+          />
+          <input
+            aria-hidden={true}
+            defaultChecked={false}
+            disabled={false}
+            name="root"
+            required={false}
+            style={
+              {
+                "margin": 0,
+                "opacity": 0,
+                "pointerEvents": "none",
+                "position": "absolute",
+                "transform": "translateX(-100%)",
+              }
+            }
+            tabIndex={-1}
+            type="checkbox"
+            value="on"
+          />
+          <label
+            className="text-sm font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 leading-tight"
+            htmlFor="root"
+            onMouseDown={[Function]}
+          >
+            test
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2 my-2"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields checkboxes field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+  >
+    <div
+      className="flex flex-col gap-2"
+    >
+      <label
+        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+        htmlFor="root"
+      >
+        An enum list rendered as checkboxes
+      </label>
+      <div
+        className="flex flex-col gap-2"
+      >
+        <div
+          className="flex items-center gap-2"
+        >
+          <button
+            aria-checked={false}
+            aria-describedby="root__error root__description root__help"
+            aria-required={false}
+            autoFocus={false}
+            className="peer h-4 w-4 shrink-0 rounded-sm border border-primary shadow focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground"
+            data-state="unchecked"
+            disabled={false}
+            id="root-0"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            role="checkbox"
+            type="button"
+            value="on"
+          />
+          <input
+            aria-hidden={true}
+            defaultChecked={false}
+            disabled={false}
+            name="root"
+            required={false}
+            style={
+              {
+                "margin": 0,
+                "opacity": 0,
+                "pointerEvents": "none",
+                "position": "absolute",
+                "transform": "translateX(-100%)",
+              }
+            }
+            tabIndex={-1}
+            type="checkbox"
+            value="on"
+          />
+          <label
+            className="text-sm font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 leading-tight"
+            htmlFor="root-0"
+            onMouseDown={[Function]}
+          >
+            foo
+          </label>
+        </div>
+        <div
+          className="flex items-center gap-2"
+        >
+          <button
+            aria-checked={false}
+            aria-describedby="root__error root__description root__help"
+            aria-required={false}
+            autoFocus={false}
+            className="peer h-4 w-4 shrink-0 rounded-sm border border-primary shadow focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground"
+            data-state="unchecked"
+            disabled={false}
+            id="root-1"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            role="checkbox"
+            type="button"
+            value="on"
+          />
+          <input
+            aria-hidden={true}
+            defaultChecked={false}
+            disabled={false}
+            name="root"
+            required={false}
+            style={
+              {
+                "margin": 0,
+                "opacity": 0,
+                "pointerEvents": "none",
+                "position": "absolute",
+                "transform": "translateX(-100%)",
+              }
+            }
+            tabIndex={-1}
+            type="checkbox"
+            value="on"
+          />
+          <label
+            className="text-sm font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 leading-tight"
+            htmlFor="root-1"
+            onMouseDown={[Function]}
+          >
+            bar
+          </label>
+        </div>
+        <div
+          className="flex items-center gap-2"
+        >
+          <button
+            aria-checked={false}
+            aria-describedby="root__error root__description root__help"
+            aria-required={false}
+            autoFocus={false}
+            className="peer h-4 w-4 shrink-0 rounded-sm border border-primary shadow focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground"
+            data-state="unchecked"
+            disabled={false}
+            id="root-2"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            role="checkbox"
+            type="button"
+            value="on"
+          />
+          <input
+            aria-hidden={true}
+            defaultChecked={false}
+            disabled={false}
+            name="root"
+            required={false}
+            style={
+              {
+                "margin": 0,
+                "opacity": 0,
+                "pointerEvents": "none",
+                "position": "absolute",
+                "transform": "translateX(-100%)",
+              }
+            }
+            tabIndex={-1}
+            type="checkbox"
+            value="on"
+          />
+          <label
+            className="text-sm font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 leading-tight"
+            htmlFor="root-2"
+            onMouseDown={[Function]}
+          >
+            fuzz
+          </label>
+        </div>
+        <div
+          className="flex items-center gap-2"
+        >
+          <button
+            aria-checked={false}
+            aria-describedby="root__error root__description root__help"
+            aria-required={false}
+            autoFocus={false}
+            className="peer h-4 w-4 shrink-0 rounded-sm border border-primary shadow focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground"
+            data-state="unchecked"
+            disabled={false}
+            id="root-3"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            role="checkbox"
+            type="button"
+            value="on"
+          />
+          <input
+            aria-hidden={true}
+            defaultChecked={false}
+            disabled={false}
+            name="root"
+            required={false}
+            style={
+              {
+                "margin": 0,
+                "opacity": 0,
+                "pointerEvents": "none",
+                "position": "absolute",
+                "transform": "translateX(-100%)",
+              }
+            }
+            tabIndex={-1}
+            type="checkbox"
+            value="on"
+          />
+          <label
+            className="text-sm font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 leading-tight"
+            htmlFor="root-3"
+            onMouseDown={[Function]}
+          >
+            qux
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2 my-2"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields field with description 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-object"
+  >
+    <div
+      className="flex flex-col gap-2"
+    >
+      <div
+        className="flex flex-col gap-2"
+      >
+        <div
+          className=" flex"
+        >
+          <div
+            className="w-full"
+          >
+             
+            <div
+              className="form-group field field-string"
+            >
+              <div
+                className="flex flex-col gap-2"
+              >
+                <label
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  htmlFor="root_my-field"
+                >
+                  my-field
+                </label>
+                <div
+                  className="p-0.5"
+                >
+                  <input
+                    aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
+                    autoFocus={false}
+                    className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                    disabled={false}
+                    id="root_my-field"
+                    name="root_my-field"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    readOnly={false}
+                    required={false}
+                    type="text"
+                    value=""
+                  />
+                </div>
+                <span
+                  className="text-xs font-medium text-muted-foreground"
+                >
+                  <div>
+                    <div
+                      className="text-sm text-muted-foreground"
+                      id="root_my-field__description"
+                    >
+                      some description
+                    </div>
+                  </div>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2 my-2"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields field with description in uiSchema 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-object"
+  >
+    <div
+      className="flex flex-col gap-2"
+    >
+      <div
+        className="flex flex-col gap-2"
+      >
+        <div
+          className=" flex"
+        >
+          <div
+            className="w-full"
+          >
+             
+            <div
+              className="form-group field field-string"
+            >
+              <div
+                className="flex flex-col gap-2"
+              >
+                <label
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  htmlFor="root_my-field"
+                >
+                  my-field
+                </label>
+                <div
+                  className="p-0.5"
+                >
+                  <input
+                    aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
+                    autoFocus={false}
+                    className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                    disabled={false}
+                    id="root_my-field"
+                    name="root_my-field"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    readOnly={false}
+                    required={false}
+                    type="text"
+                    value=""
+                  />
+                </div>
+                <span
+                  className="text-xs font-medium text-muted-foreground"
+                >
+                  <div>
+                    <div
+                      className="text-sm text-muted-foreground"
+                      id="root_my-field__description"
+                    >
+                      some other description
+                    </div>
+                  </div>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2 my-2"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields format color 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+  >
+    <div
+      className="flex flex-col gap-2"
+    >
+      <label
+        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+        htmlFor="root"
+      />
+      <div
+        className="p-0.5"
+      >
+        <input
+          aria-describedby="root__error root__description root__help"
+          autoFocus={false}
+          className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+          disabled={false}
+          id="root"
+          name="root"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          placeholder=""
+          readOnly={false}
+          type="color"
+          value=""
+        />
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2 my-2"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields format date 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+  >
+    <div
+      className="flex flex-col gap-2"
+    >
+      <label
+        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+        htmlFor="root"
+      />
+      <div
+        className="p-0.5"
+      >
+        <input
+          aria-describedby="root__error root__description root__help"
+          autoFocus={false}
+          className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+          disabled={false}
+          id="root"
+          name="root"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          placeholder=""
+          readOnly={false}
+          type="date"
+          value=""
+        />
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2 my-2"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields format datetime 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+  >
+    <div
+      className="flex flex-col gap-2"
+    >
+      <label
+        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+        htmlFor="root"
+      />
+      <div
+        className="p-0.5"
+      >
+        <input
+          aria-describedby="root__error root__description root__help"
+          autoFocus={false}
+          className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+          disabled={false}
+          id="root"
+          name="root"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          placeholder=""
+          readOnly={false}
+          type="datetime-local"
+          value=""
+        />
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2 my-2"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields format time 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+  >
+    <div
+      className="flex flex-col gap-2"
+    >
+      <label
+        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+        htmlFor="root"
+      />
+      <div
+        className="p-0.5"
+      >
+        <input
+          aria-describedby="root__error root__description root__help"
+          autoFocus={false}
+          className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+          disabled={false}
+          id="root"
+          name="root"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          placeholder=""
+          readOnly={false}
+          type="time"
+          value=""
+        />
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2 my-2"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields help and error display 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="relative w-full rounded-lg border px-4 py-3 text-sm [&>svg+div]:translate-y-[-3px] [&>svg]:absolute [&>svg]:start-4 [&>svg]:top-4 [&>svg~*]:ps-7 border-destructive/50 text-destructive dark:border-destructive [&>svg]:text-destructive mb-2"
+    role="alert"
+  >
+    <svg
+      className="lucide lucide-circle-alert h-4 w-4"
+      fill="none"
+      height={24}
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      viewBox="0 0 24 24"
+      width={24}
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <circle
+        cx="12"
+        cy="12"
+        r="10"
+      />
+      <line
+        x1="12"
+        x2="12"
+        y1="8"
+        y2="12"
+      />
+      <line
+        x1="12"
+        x2="12.01"
+        y1="16"
+        y2="16"
+      />
+    </svg>
+    <h5
+      className="mb-1 font-medium leading-none tracking-tight"
+    >
+      Errors
+    </h5>
+    <div
+      className="text-sm [&_p]:leading-relaxed flex flex-col gap-1"
+    >
+      <span>
+        • 
+        . an error
+      </span>
+    </div>
+  </div>
+  <div
+    className="form-group field field-string field-error has-error has-danger"
+  >
+    <div
+      className="flex flex-col gap-2"
+    >
+      <label
+        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-destructive"
+        htmlFor="root"
+      />
+      <div
+        className="p-0.5"
+      >
+        <input
+          aria-describedby="root__error root__description root__help"
+          autoFocus={false}
+          className="flex h-9 w-full rounded-md border bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 border-destructive focus-visible:ring-0"
+          disabled={false}
+          id="root"
+          name="root"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          placeholder=""
+          readOnly={false}
+          type="text"
+          value=""
+        />
+      </div>
+      <div
+        className="flex flex-col gap-1"
+        id="root__error"
+      >
+        <span
+          className="text-xs font-medium text-destructive mb-1"
+        >
+          an error
+        </span>
+      </div>
+      <span
+        className="text-xs font-medium text-destructive"
+        id="root__help"
+      >
+        help me!
+      </span>
+    </div>
+  </div>
+  <div>
+    <button
+      className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2 my-2"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields hidden field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-object"
+  >
+    <div
+      className="flex flex-col gap-2"
+    >
+      <div
+        className="flex flex-col gap-2"
+      >
+        <div
+          className="hidden flex"
+        >
+          <div
+            className="w-full"
+          >
+             
+            <div
+              className="hidden"
+            >
+              <input
+                id="root_my-field"
+                name="root_my-field"
+                type="hidden"
+                value=""
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2 my-2"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields hidden label 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+  >
+    <div
+      className="flex flex-col gap-2"
+    >
+      <div
+        className="p-0.5"
+      >
+        <input
+          aria-describedby="root__error root__description root__help"
+          autoFocus={false}
+          className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+          disabled={false}
+          id="root"
+          name="root"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          placeholder=""
+          readOnly={false}
+          type="text"
+          value=""
+        />
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2 my-2"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields null field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-null"
+  >
+    <div
+      className="flex flex-col gap-2"
+    >
+      <label
+        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+        htmlFor="root"
+      />
+    </div>
+  </div>
+  <div>
+    <button
+      className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2 my-2"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields number field 0 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-number"
+  >
+    <div
+      className="flex flex-col gap-2"
+    >
+      <label
+        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+        htmlFor="root"
+      />
+      <div
+        className="p-0.5"
+      >
+        <input
+          aria-describedby="root__error root__description root__help"
+          autoFocus={false}
+          className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+          disabled={false}
+          id="root"
+          name="root"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          placeholder=""
+          readOnly={false}
+          step="any"
+          type="number"
+          value={0}
+        />
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2 my-2"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields number field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-number"
+  >
+    <div
+      className="flex flex-col gap-2"
+    >
+      <label
+        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+        htmlFor="root"
+      />
+      <div
+        className="p-0.5"
+      >
+        <input
+          aria-describedby="root__error root__description root__help"
+          autoFocus={false}
+          className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+          disabled={false}
+          id="root"
+          name="root"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          placeholder=""
+          readOnly={false}
+          step="any"
+          type="number"
+          value=""
+        />
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2 my-2"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields password field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+  >
+    <div
+      className="flex flex-col gap-2"
+    >
+      <label
+        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+        htmlFor="root"
+      />
+      <div
+        className="p-0.5"
+      >
+        <input
+          aria-describedby="root__error root__description root__help"
+          autoFocus={false}
+          className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+          disabled={false}
+          id="root"
+          name="root"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          placeholder=""
+          readOnly={false}
+          type="password"
+          value=""
+        />
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2 my-2"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields radio field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-boolean"
+  >
+    <div
+      className="flex flex-col gap-2"
+    >
+      <label
+        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+        htmlFor="root"
+      />
+      <div
+        className="mb-0"
+      >
+        <div
+          aria-describedby="root__error root__description root__help"
+          aria-orientation="vertical"
+          aria-required={false}
+          className="gap-2 flex flex-wrap flex-col"
+          data-orientation="vertical"
+          dir="ltr"
+          onBlur={[Function]}
+          onFocus={[Function]}
+          onMouseDown={[Function]}
+          role="radiogroup"
+          style={
+            {
+              "outline": "none",
+            }
+          }
+          tabIndex={0}
+        >
+          <div
+            className="flex items-center gap-2"
+          >
+            <button
+              aria-checked={false}
+              className="aspect-square h-4 w-4 rounded-full border border-primary text-primary shadow focus:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+              data-orientation="vertical"
+              data-radix-collection-item=""
+              data-state="unchecked"
+              disabled={false}
+              id="root-0"
+              onClick={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              onMouseDown={[Function]}
+              role="radio"
+              tabIndex={-1}
+              type="button"
+              value="0"
+            />
+            <input
+              aria-hidden={true}
+              defaultChecked={false}
+              disabled={false}
+              required={false}
+              style={
+                {
+                  "margin": 0,
+                  "opacity": 0,
+                  "pointerEvents": "none",
+                  "position": "absolute",
+                  "transform": "translateX(-100%)",
+                }
+              }
+              tabIndex={-1}
+              type="radio"
+              value="0"
+            />
+            <label
+              className="text-sm font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 leading-tight"
+              onMouseDown={[Function]}
+            >
+              Yes
+            </label>
+          </div>
+          <div
+            className="flex items-center gap-2"
+          >
+            <button
+              aria-checked={false}
+              className="aspect-square h-4 w-4 rounded-full border border-primary text-primary shadow focus:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+              data-orientation="vertical"
+              data-radix-collection-item=""
+              data-state="unchecked"
+              disabled={false}
+              id="root-1"
+              onClick={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              onMouseDown={[Function]}
+              role="radio"
+              tabIndex={-1}
+              type="button"
+              value="1"
+            />
+            <input
+              aria-hidden={true}
+              defaultChecked={false}
+              disabled={false}
+              required={false}
+              style={
+                {
+                  "margin": 0,
+                  "opacity": 0,
+                  "pointerEvents": "none",
+                  "position": "absolute",
+                  "transform": "translateX(-100%)",
+                }
+              }
+              tabIndex={-1}
+              type="radio"
+              value="1"
+            />
+            <label
+              className="text-sm font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 leading-tight"
+              onMouseDown={[Function]}
+            >
+              No
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2 my-2"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields schema examples 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+  >
+    <div
+      className="flex flex-col gap-2"
+    >
+      <label
+        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+        htmlFor="root"
+      />
+      <div
+        className="p-0.5"
+      >
+        <input
+          aria-describedby="root__error root__description root__help root__examples"
+          autoFocus={false}
+          className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+          disabled={false}
+          id="root"
+          list="root__examples"
+          name="root"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          placeholder=""
+          readOnly={false}
+          type="text"
+          value=""
+        />
+        <datalist
+          id="root__examples"
+        >
+          <option
+            value="Firefox"
+          />
+          <option
+            value="Chrome"
+          />
+          <option
+            value="Opera"
+          />
+          <option
+            value="Vivaldi"
+          />
+          <option
+            value="Safari"
+          />
+        </datalist>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2 my-2"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields select field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+  >
+    <div
+      className="flex flex-col gap-2"
+    >
+      <label
+        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+        htmlFor="root"
+      />
+      <div
+        className="p-0.5"
+      >
+        <div
+          aria-describedby="root__error root__description root__help"
+          aria-disabled={false}
+          autoFocus={false}
+          className="flex h-full w-full flex-col rounded-md text-popover-foreground overflow-visible bg-transparent"
+          cmdk-root=""
+          onBlur={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          tabIndex={-1}
+        >
+          <label
+            cmdk-label=""
+            htmlFor="radix-:r2:"
+            id="radix-:r1:"
+            style={
+              {
+                "borderWidth": "0",
+                "clip": "rect(0, 0, 0, 0)",
+                "height": "1px",
+                "margin": "-1px",
+                "overflow": "hidden",
+                "padding": "0",
+                "position": "absolute",
+                "whiteSpace": "nowrap",
+                "width": "1px",
+              }
+            }
+          />
+          <div
+            className="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+            onClick={[Function]}
+          >
+            <span
+              className="flex-1 line-clamp-1 text-muted-foreground"
+            />
+            <svg
+              className="lucide lucide-chevron-down h-4 w-4 opacity-50"
+              fill="none"
+              height={24}
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              viewBox="0 0 24 24"
+              width={24}
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="m6 9 6 6 6-6"
+              />
+            </svg>
+          </div>
+          <div
+            className="relative"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2 my-2"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields select field multiple choice 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+  >
+    <div
+      className="flex flex-col gap-2"
+    >
+      <label
+        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+        htmlFor="root"
+      />
+      <div
+        className="p-0.5"
+      >
+        <div
+          aria-disabled={false}
+          autoFocus={false}
+          className="flex h-full w-full flex-col rounded-md text-popover-foreground overflow-visible bg-transparent"
+          cmdk-root=""
+          onBlur={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          tabIndex={-1}
+        >
+          <label
+            cmdk-label=""
+            htmlFor="radix-:r5:"
+            id="radix-:r4:"
+            style={
+              {
+                "borderWidth": "0",
+                "clip": "rect(0, 0, 0, 0)",
+                "height": "1px",
+                "margin": "-1px",
+                "overflow": "hidden",
+                "padding": "0",
+                "position": "absolute",
+                "whiteSpace": "nowrap",
+                "width": "1px",
+              }
+            }
+          />
+          <div
+            className="group border border-input px-3 py-2 text-sm ring-offset-background rounded-md focus-within:ring-1 focus-within:ring-ring focus-within:ring-offset-1"
+          >
+            <div
+              className="flex gap-1 flex-wrap"
+            >
+              <input
+                aria-autocomplete="list"
+                aria-controls="radix-:r3:"
+                aria-expanded={true}
+                aria-labelledby="radix-:r4:"
+                autoComplete="off"
+                autoCorrect="off"
+                className="rtl:mr-2 ltr:ml-2 bg-transparent outline-none placeholder:text-muted-foreground flex-1"
+                cmdk-input=""
+                disabled={false}
+                id="radix-:r5:"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                placeholder="Select ..."
+                role="combobox"
+                spellCheck={false}
+                type="text"
+                value=""
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2 my-2"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields select field multiple choice enumDisabled 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+  >
+    <div
+      className="flex flex-col gap-2"
+    >
+      <label
+        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+        htmlFor="root"
+      />
+      <div
+        className="p-0.5"
+      >
+        <div
+          aria-disabled={false}
+          autoFocus={false}
+          className="flex h-full w-full flex-col rounded-md text-popover-foreground overflow-visible bg-transparent"
+          cmdk-root=""
+          onBlur={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          tabIndex={-1}
+        >
+          <label
+            cmdk-label=""
+            htmlFor="radix-:rg:"
+            id="radix-:rf:"
+            style={
+              {
+                "borderWidth": "0",
+                "clip": "rect(0, 0, 0, 0)",
+                "height": "1px",
+                "margin": "-1px",
+                "overflow": "hidden",
+                "padding": "0",
+                "position": "absolute",
+                "whiteSpace": "nowrap",
+                "width": "1px",
+              }
+            }
+          />
+          <div
+            className="group border border-input px-3 py-2 text-sm ring-offset-background rounded-md focus-within:ring-1 focus-within:ring-ring focus-within:ring-offset-1"
+          >
+            <div
+              className="flex gap-1 flex-wrap"
+            >
+              <input
+                aria-autocomplete="list"
+                aria-controls="radix-:re:"
+                aria-expanded={true}
+                aria-labelledby="radix-:rf:"
+                autoComplete="off"
+                autoCorrect="off"
+                className="rtl:mr-2 ltr:ml-2 bg-transparent outline-none placeholder:text-muted-foreground flex-1"
+                cmdk-input=""
+                disabled={false}
+                id="radix-:rg:"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                placeholder="Select ..."
+                role="combobox"
+                spellCheck={false}
+                type="text"
+                value=""
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2 my-2"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields select field multiple choice enumDisabled using checkboxes 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+  >
+    <div
+      className="flex flex-col gap-2"
+    >
+      <label
+        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+        htmlFor="root"
+      />
+      <div
+        className="flex flex-col gap-2"
+      >
+        <div
+          className="flex items-center gap-2"
+        >
+          <button
+            aria-checked={false}
+            aria-describedby="root__error root__description root__help"
+            aria-required={false}
+            autoFocus={false}
+            className="peer h-4 w-4 shrink-0 rounded-sm border border-primary shadow focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground"
+            data-state="unchecked"
+            disabled={false}
+            id="root-0"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            role="checkbox"
+            type="button"
+            value="on"
+          />
+          <input
+            aria-hidden={true}
+            defaultChecked={false}
+            disabled={false}
+            name="root"
+            required={false}
+            style={
+              {
+                "margin": 0,
+                "opacity": 0,
+                "pointerEvents": "none",
+                "position": "absolute",
+                "transform": "translateX(-100%)",
+              }
+            }
+            tabIndex={-1}
+            type="checkbox"
+            value="on"
+          />
+          <label
+            className="text-sm font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 leading-tight"
+            htmlFor="root-0"
+            onMouseDown={[Function]}
+          >
+            foo
+          </label>
+        </div>
+        <div
+          className="flex items-center gap-2"
+        >
+          <button
+            aria-checked={false}
+            aria-describedby="root__error root__description root__help"
+            aria-required={false}
+            autoFocus={false}
+            className="peer h-4 w-4 shrink-0 rounded-sm border border-primary shadow focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground"
+            data-disabled=""
+            data-state="unchecked"
+            disabled={true}
+            id="root-1"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            role="checkbox"
+            type="button"
+            value="on"
+          />
+          <input
+            aria-hidden={true}
+            defaultChecked={false}
+            disabled={true}
+            name="root"
+            required={false}
+            style={
+              {
+                "margin": 0,
+                "opacity": 0,
+                "pointerEvents": "none",
+                "position": "absolute",
+                "transform": "translateX(-100%)",
+              }
+            }
+            tabIndex={-1}
+            type="checkbox"
+            value="on"
+          />
+          <label
+            className="text-sm font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 leading-tight"
+            htmlFor="root-1"
+            onMouseDown={[Function]}
+          >
+            bar
+          </label>
+        </div>
+        <div
+          className="flex items-center gap-2"
+        >
+          <button
+            aria-checked={false}
+            aria-describedby="root__error root__description root__help"
+            aria-required={false}
+            autoFocus={false}
+            className="peer h-4 w-4 shrink-0 rounded-sm border border-primary shadow focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground"
+            data-state="unchecked"
+            disabled={false}
+            id="root-2"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            role="checkbox"
+            type="button"
+            value="on"
+          />
+          <input
+            aria-hidden={true}
+            defaultChecked={false}
+            disabled={false}
+            name="root"
+            required={false}
+            style={
+              {
+                "margin": 0,
+                "opacity": 0,
+                "pointerEvents": "none",
+                "position": "absolute",
+                "transform": "translateX(-100%)",
+              }
+            }
+            tabIndex={-1}
+            type="checkbox"
+            value="on"
+          />
+          <label
+            className="text-sm font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 leading-tight"
+            htmlFor="root-2"
+            onMouseDown={[Function]}
+          >
+            fuzz
+          </label>
+        </div>
+        <div
+          className="flex items-center gap-2"
+        >
+          <button
+            aria-checked={false}
+            aria-describedby="root__error root__description root__help"
+            aria-required={false}
+            autoFocus={false}
+            className="peer h-4 w-4 shrink-0 rounded-sm border border-primary shadow focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground"
+            data-state="unchecked"
+            disabled={false}
+            id="root-3"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            role="checkbox"
+            type="button"
+            value="on"
+          />
+          <input
+            aria-hidden={true}
+            defaultChecked={false}
+            disabled={false}
+            name="root"
+            required={false}
+            style={
+              {
+                "margin": 0,
+                "opacity": 0,
+                "pointerEvents": "none",
+                "position": "absolute",
+                "transform": "translateX(-100%)",
+              }
+            }
+            tabIndex={-1}
+            type="checkbox"
+            value="on"
+          />
+          <label
+            className="text-sm font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 leading-tight"
+            htmlFor="root-3"
+            onMouseDown={[Function]}
+          >
+            qux
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2 my-2"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields select field multiple choice formData 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+  >
+    <div
+      className="flex flex-col gap-2"
+    >
+      <label
+        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+        htmlFor="root"
+      />
+      <div
+        className="p-0.5"
+      >
+        <div
+          aria-disabled={false}
+          autoFocus={false}
+          className="flex h-full w-full flex-col rounded-md text-popover-foreground overflow-visible bg-transparent"
+          cmdk-root=""
+          onBlur={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          tabIndex={-1}
+        >
+          <label
+            cmdk-label=""
+            htmlFor="radix-:rm:"
+            id="radix-:rl:"
+            style={
+              {
+                "borderWidth": "0",
+                "clip": "rect(0, 0, 0, 0)",
+                "height": "1px",
+                "margin": "-1px",
+                "overflow": "hidden",
+                "padding": "0",
+                "position": "absolute",
+                "whiteSpace": "nowrap",
+                "width": "1px",
+              }
+            }
+          />
+          <div
+            className="group border border-input px-3 py-2 text-sm ring-offset-background rounded-md focus-within:ring-1 focus-within:ring-ring focus-within:ring-offset-1"
+          >
+            <div
+              className="flex gap-1 flex-wrap"
+            >
+              <div
+                className="inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80"
+              >
+                foo
+                <button
+                  className="rtl:mr-1 ltr:ml-1 ring-offset-background rounded-full outline-none focus:ring-1 focus:ring-ring focus:ring-offset-1"
+                  onClick={[Function]}
+                  onKeyDown={[Function]}
+                  onMouseDown={[Function]}
+                  type="button"
+                >
+                  <svg
+                    className="lucide lucide-x h-3 w-3 text-muted-foreground hover:text-foreground"
+                    fill="none"
+                    height={24}
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    viewBox="0 0 24 24"
+                    width={24}
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M18 6 6 18"
+                    />
+                    <path
+                      d="m6 6 12 12"
+                    />
+                  </svg>
+                </button>
+              </div>
+              <div
+                className="inline-flex items-center rounded-md border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80"
+              >
+                bar
+                <button
+                  className="rtl:mr-1 ltr:ml-1 ring-offset-background rounded-full outline-none focus:ring-1 focus:ring-ring focus:ring-offset-1"
+                  onClick={[Function]}
+                  onKeyDown={[Function]}
+                  onMouseDown={[Function]}
+                  type="button"
+                >
+                  <svg
+                    className="lucide lucide-x h-3 w-3 text-muted-foreground hover:text-foreground"
+                    fill="none"
+                    height={24}
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    viewBox="0 0 24 24"
+                    width={24}
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M18 6 6 18"
+                    />
+                    <path
+                      d="m6 6 12 12"
+                    />
+                  </svg>
+                </button>
+              </div>
+              <input
+                aria-autocomplete="list"
+                aria-controls="radix-:rk:"
+                aria-expanded={true}
+                aria-labelledby="radix-:rl:"
+                autoComplete="off"
+                autoCorrect="off"
+                className="rtl:mr-2 ltr:ml-2 bg-transparent outline-none placeholder:text-muted-foreground flex-1"
+                cmdk-input=""
+                disabled={false}
+                id="radix-:rm:"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                placeholder="Select ..."
+                role="combobox"
+                spellCheck={false}
+                type="text"
+                value=""
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2 my-2"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields select field multiple choice with labels 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+  >
+    <div
+      className="flex flex-col gap-2"
+    >
+      <label
+        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+        htmlFor="root"
+      />
+      <div
+        className="p-0.5"
+      >
+        <div
+          aria-disabled={false}
+          autoFocus={false}
+          className="flex h-full w-full flex-col rounded-md text-popover-foreground overflow-visible bg-transparent"
+          cmdk-root=""
+          onBlur={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          tabIndex={-1}
+        >
+          <label
+            cmdk-label=""
+            htmlFor="radix-:r8:"
+            id="radix-:r7:"
+            style={
+              {
+                "borderWidth": "0",
+                "clip": "rect(0, 0, 0, 0)",
+                "height": "1px",
+                "margin": "-1px",
+                "overflow": "hidden",
+                "padding": "0",
+                "position": "absolute",
+                "whiteSpace": "nowrap",
+                "width": "1px",
+              }
+            }
+          />
+          <div
+            className="group border border-input px-3 py-2 text-sm ring-offset-background rounded-md focus-within:ring-1 focus-within:ring-ring focus-within:ring-offset-1"
+          >
+            <div
+              className="flex gap-1 flex-wrap"
+            >
+              <input
+                aria-autocomplete="list"
+                aria-controls="radix-:r6:"
+                aria-expanded={true}
+                aria-labelledby="radix-:r7:"
+                autoComplete="off"
+                autoCorrect="off"
+                className="rtl:mr-2 ltr:ml-2 bg-transparent outline-none placeholder:text-muted-foreground flex-1"
+                cmdk-input=""
+                disabled={false}
+                id="radix-:r8:"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                placeholder="Select ..."
+                role="combobox"
+                spellCheck={false}
+                type="text"
+                value=""
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2 my-2"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields select field single choice enumDisabled 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+  >
+    <div
+      className="flex flex-col gap-2"
+    >
+      <label
+        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+        htmlFor="root"
+      />
+      <div
+        className="p-0.5"
+      >
+        <div
+          aria-describedby="root__error root__description root__help"
+          aria-disabled={false}
+          autoFocus={false}
+          className="flex h-full w-full flex-col rounded-md text-popover-foreground overflow-visible bg-transparent"
+          cmdk-root=""
+          onBlur={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          tabIndex={-1}
+        >
+          <label
+            cmdk-label=""
+            htmlFor="radix-:rb:"
+            id="radix-:ra:"
+            style={
+              {
+                "borderWidth": "0",
+                "clip": "rect(0, 0, 0, 0)",
+                "height": "1px",
+                "margin": "-1px",
+                "overflow": "hidden",
+                "padding": "0",
+                "position": "absolute",
+                "whiteSpace": "nowrap",
+                "width": "1px",
+              }
+            }
+          />
+          <div
+            className="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+            onClick={[Function]}
+          >
+            <span
+              className="flex-1 line-clamp-1 text-muted-foreground"
+            />
+            <svg
+              className="lucide lucide-chevron-down h-4 w-4 opacity-50"
+              fill="none"
+              height={24}
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              viewBox="0 0 24 24"
+              width={24}
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="m6 9 6 6 6-6"
+              />
+            </svg>
+          </div>
+          <div
+            className="relative"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2 my-2"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields select field single choice enumDisabled using radio widget 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+  >
+    <div
+      className="flex flex-col gap-2"
+    >
+      <label
+        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+        htmlFor="root"
+      />
+      <div
+        className="mb-0"
+      >
+        <div
+          aria-describedby="root__error root__description root__help"
+          aria-orientation="vertical"
+          aria-required={false}
+          className="gap-2 flex flex-wrap flex-col"
+          data-orientation="vertical"
+          dir="ltr"
+          onBlur={[Function]}
+          onFocus={[Function]}
+          onMouseDown={[Function]}
+          role="radiogroup"
+          style={
+            {
+              "outline": "none",
+            }
+          }
+          tabIndex={0}
+        >
+          <div
+            className="flex items-center gap-2"
+          >
+            <button
+              aria-checked={false}
+              className="aspect-square h-4 w-4 rounded-full border border-primary text-primary shadow focus:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+              data-orientation="vertical"
+              data-radix-collection-item=""
+              data-state="unchecked"
+              disabled={false}
+              id="root-0"
+              onClick={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              onMouseDown={[Function]}
+              role="radio"
+              tabIndex={-1}
+              type="button"
+              value="0"
+            />
+            <input
+              aria-hidden={true}
+              defaultChecked={false}
+              disabled={false}
+              required={false}
+              style={
+                {
+                  "margin": 0,
+                  "opacity": 0,
+                  "pointerEvents": "none",
+                  "position": "absolute",
+                  "transform": "translateX(-100%)",
+                }
+              }
+              tabIndex={-1}
+              type="radio"
+              value="0"
+            />
+            <label
+              className="text-sm font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 leading-tight"
+              onMouseDown={[Function]}
+            >
+              foo
+            </label>
+          </div>
+          <div
+            className="flex items-center gap-2"
+          >
+            <button
+              aria-checked={false}
+              className="aspect-square h-4 w-4 rounded-full border border-primary text-primary shadow focus:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+              data-disabled=""
+              data-orientation="vertical"
+              data-radix-collection-item=""
+              data-state="unchecked"
+              disabled={true}
+              id="root-1"
+              onClick={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              onMouseDown={[Function]}
+              role="radio"
+              tabIndex={-1}
+              type="button"
+              value="1"
+            />
+            <input
+              aria-hidden={true}
+              defaultChecked={false}
+              disabled={true}
+              required={false}
+              style={
+                {
+                  "margin": 0,
+                  "opacity": 0,
+                  "pointerEvents": "none",
+                  "position": "absolute",
+                  "transform": "translateX(-100%)",
+                }
+              }
+              tabIndex={-1}
+              type="radio"
+              value="1"
+            />
+            <label
+              className="text-sm font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 leading-tight"
+              onMouseDown={[Function]}
+            >
+              bar
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2 my-2"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields select field single choice formData 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+  >
+    <div
+      className="flex flex-col gap-2"
+    >
+      <label
+        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+        htmlFor="root"
+      />
+      <div
+        className="p-0.5"
+      >
+        <div
+          aria-describedby="root__error root__description root__help"
+          aria-disabled={false}
+          autoFocus={false}
+          className="flex h-full w-full flex-col rounded-md text-popover-foreground overflow-visible bg-transparent"
+          cmdk-root=""
+          onBlur={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          tabIndex={-1}
+        >
+          <label
+            cmdk-label=""
+            htmlFor="radix-:rj:"
+            id="radix-:ri:"
+            style={
+              {
+                "borderWidth": "0",
+                "clip": "rect(0, 0, 0, 0)",
+                "height": "1px",
+                "margin": "-1px",
+                "overflow": "hidden",
+                "padding": "0",
+                "position": "absolute",
+                "whiteSpace": "nowrap",
+                "width": "1px",
+              }
+            }
+          />
+          <div
+            className="flex h-9 w-full items-center justify-between gap-2 whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+            onClick={[Function]}
+          >
+            <span
+              className="flex-1 line-clamp-1"
+            >
+              bar
+            </span>
+            <svg
+              className="lucide lucide-chevron-down h-4 w-4 opacity-50"
+              fill="none"
+              height={24}
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              viewBox="0 0 24 24"
+              width={24}
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="m6 9 6 6 6-6"
+              />
+            </svg>
+          </div>
+          <div
+            className="relative"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2 my-2"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields slider field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-integer"
+  >
+    <div
+      className="flex flex-col gap-2"
+    >
+      <label
+        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+        htmlFor="root"
+      />
+      <span
+        aria-describedby="root__error root__description root__help"
+        aria-disabled={false}
+        className="relative flex w-full touch-none select-none items-center"
+        data-orientation="horizontal"
+        dir="ltr"
+        id="root"
+        onKeyDown={[Function]}
+        onPointerDown={[Function]}
+        onPointerMove={[Function]}
+        onPointerUp={[Function]}
+        style={
+          {
+            "--radix-slider-thumb-transform": "translateX(-50%)",
+          }
+        }
+      >
+        <span
+          className="relative h-1.5 w-full grow overflow-hidden rounded-full bg-primary/20"
+          data-orientation="horizontal"
+        >
+          <span
+            className="absolute h-full bg-primary"
+            data-orientation="horizontal"
+            style={
+              {
+                "left": "0%",
+                "right": "43.10344827586207%",
+              }
+            }
+          />
+        </span>
+        <span
+          style={
+            {
+              "left": "calc(0% + 0px)",
+              "position": "absolute",
+              "transform": "var(--radix-slider-thumb-transform)",
+            }
+          }
+        >
+          <span
+            aria-orientation="horizontal"
+            aria-valuemax={100}
+            aria-valuemin={42}
+            className="block h-4 w-4 rounded-full border border-primary/50 bg-background shadow transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
+            data-orientation="horizontal"
+            data-radix-collection-item=""
+            onFocus={[Function]}
+            role="slider"
+            style={
+              {
+                "display": "none",
+              }
+            }
+            tabIndex={0}
+          />
+          <input
+            style={
+              {
+                "display": "none",
+              }
+            }
+          />
+        </span>
+      </span>
+      75
+    </div>
+  </div>
+  <div>
+    <button
+      className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2 my-2"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields string field format data-url 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+  >
+    <div
+      className="flex flex-col gap-2"
+    >
+      <label
+        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+        htmlFor="root"
+      />
+      <div>
+        <div
+          className="p-0.5"
+        >
+          <input
+            aria-describedby="root__error root__description root__help"
+            autoFocus={false}
+            className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+            disabled={false}
+            id="root"
+            name="root"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            placeholder=""
+            readOnly={false}
+            type="file"
+            value=""
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2 my-2"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields string field format email 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+  >
+    <div
+      className="flex flex-col gap-2"
+    >
+      <label
+        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+        htmlFor="root"
+      />
+      <div
+        className="p-0.5"
+      >
+        <input
+          aria-describedby="root__error root__description root__help"
+          autoFocus={false}
+          className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+          disabled={false}
+          id="root"
+          name="root"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          placeholder=""
+          readOnly={false}
+          type="email"
+          value=""
+        />
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2 my-2"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields string field format uri 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+  >
+    <div
+      className="flex flex-col gap-2"
+    >
+      <label
+        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+        htmlFor="root"
+      />
+      <div
+        className="p-0.5"
+      >
+        <input
+          aria-describedby="root__error root__description root__help"
+          autoFocus={false}
+          className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+          disabled={false}
+          id="root"
+          name="root"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          placeholder=""
+          readOnly={false}
+          type="url"
+          value=""
+        />
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2 my-2"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields string field regular 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+  >
+    <div
+      className="flex flex-col gap-2"
+    >
+      <label
+        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+        htmlFor="root"
+      />
+      <div
+        className="p-0.5"
+      >
+        <input
+          aria-describedby="root__error root__description root__help"
+          autoFocus={false}
+          className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+          disabled={false}
+          id="root"
+          name="root"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          placeholder=""
+          readOnly={false}
+          type="text"
+          value=""
+        />
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2 my-2"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields string field with placeholder 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+  >
+    <div
+      className="flex flex-col gap-2"
+    >
+      <label
+        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+        htmlFor="root"
+      />
+      <div
+        className="p-0.5"
+      >
+        <input
+          aria-describedby="root__error root__description root__help"
+          autoFocus={false}
+          className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+          disabled={false}
+          id="root"
+          name="root"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          placeholder="placeholder"
+          readOnly={false}
+          type="text"
+          value=""
+        />
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2 my-2"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields textarea field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+  >
+    <div
+      className="flex flex-col gap-2"
+    >
+      <label
+        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+        htmlFor="root"
+      />
+      <div
+        className="flex p-0.5"
+      >
+        <textarea
+          aria-describedby="root__error root__description root__help"
+          autoFocus={false}
+          className="flex min-h-[60px] w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+          disabled={false}
+          id="root"
+          name="root"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          placeholder=""
+          readOnly={false}
+          rows={5}
+          value=""
+        />
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2 my-2"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields title field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-object"
+  >
+    <div
+      className="flex flex-col gap-2"
+    >
+      <div
+        className="my-1 flex flex-col gap-0.5"
+        id="root__title"
+      >
+        <h5>
+          Titre 1
+        </h5>
+        <div
+          className="shrink-0 bg-border h-[1px] w-full my-1"
+          data-orientation="horizontal"
+          dir="horizontal"
+          role="none"
+          style={
+            {
+              "height": "1px",
+            }
+          }
+        />
+      </div>
+      <div
+        className="flex flex-col gap-2"
+      >
+        <div
+          className=" flex"
+        >
+          <div
+            className="w-full"
+          >
+             
+            <div
+              className="form-group field field-string"
+            >
+              <div
+                className="flex flex-col gap-2"
+              >
+                <label
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  htmlFor="root_title"
+                >
+                  Titre 2
+                </label>
+                <div
+                  className="p-0.5"
+                >
+                  <input
+                    aria-describedby="root_title__error root_title__description root_title__help"
+                    autoFocus={false}
+                    className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                    disabled={false}
+                    id="root_title"
+                    name="root_title"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    readOnly={false}
+                    required={false}
+                    type="text"
+                    value=""
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2 my-2"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields unsupported field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-undefined"
+  >
+    <div
+      className="flex flex-col gap-2"
+    >
+      <label
+        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+        htmlFor="root"
+      />
+      <div
+        className="unsupported-field"
+      >
+        <p>
+          <span>
+            Unsupported field schema for field 
+            <code>
+              root
+            </code>
+            : 
+            <em>
+              Unknown field type undefined
+            </em>
+            .
+          </span>
+        </p>
+        <pre>
+          {}
+        </pre>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2 my-2"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields up/down field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-number"
+  >
+    <div
+      className="flex flex-col gap-2"
+    >
+      <label
+        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+        htmlFor="root"
+      />
+      <div
+        className="p-0.5"
+      >
+        <input
+          aria-describedby="root__error root__description root__help"
+          autoFocus={false}
+          className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+          disabled={false}
+          id="root"
+          name="root"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          placeholder=""
+          readOnly={false}
+          type="number"
+          value=""
+        />
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2 my-2"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields using custom tagName 1`] = `
+<div
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+  >
+    <div
+      className="flex flex-col gap-2"
+    >
+      <label
+        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+        htmlFor="root"
+      />
+      <div
+        className="p-0.5"
+      >
+        <input
+          aria-describedby="root__error root__description root__help"
+          autoFocus={false}
+          className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+          disabled={false}
+          id="root"
+          name="root"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          placeholder=""
+          readOnly={false}
+          type="text"
+          value=""
+        />
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2 my-2"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</div>
+`;

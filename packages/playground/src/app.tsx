@@ -4,6 +4,7 @@ import { Theme as SuiTheme } from '@rjsf/semantic-ui';
 import { Theme as AntdTheme } from '@rjsf/antd';
 import { Theme as BootstrapTheme } from '@rjsf/react-bootstrap';
 import { Theme as ChakraUITheme } from '@rjsf/chakra-ui';
+import { Theme as shadcnTheme } from '@rjsf/shadcn';
 import v8Validator, { customizeValidator } from '@rjsf/validator-ajv8';
 import localize_es from 'ajv-i18n/localize/es';
 import Ajv2019 from 'ajv/dist/2019.js';
@@ -26,7 +27,7 @@ const validators: PlaygroundProps['validators'] = {
   AJV8_es: esV8Validator,
   AJV8_2019,
   AJV8_2020,
-  'AJV6 (deprecated)': v6Validator,
+  // 'AJV6 (deprecated)': v6Validator,
 };
 
 const themes: PlaygroundProps['themes'] = {
@@ -113,6 +114,39 @@ const themes: PlaygroundProps['themes'] = {
   'semantic-ui': {
     stylesheet: '//cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css',
     theme: SuiTheme,
+  },
+  shadcn: {
+    stylesheet: 'https://cdn.jsdelivr.net/gh/tuanphung2308/rjsf-shadcn-css@main/public/default.css',
+    theme: shadcnTheme,
+    subthemes: {
+      default: {
+        stylesheet: 'https://cdn.jsdelivr.net/gh/tuanphung2308/rjsf-shadcn-css@main/public/default.css',
+      },
+      blue: {
+        stylesheet: 'https://cdn.jsdelivr.net/gh/tuanphung2308/rjsf-shadcn-css@main/public/blue.css',
+      },
+      green: {
+        stylesheet: 'https://cdn.jsdelivr.net/gh/tuanphung2308/rjsf-shadcn-css@main/public/green.css',
+      },
+      orange: {
+        stylesheet: 'https://cdn.jsdelivr.net/gh/tuanphung2308/rjsf-shadcn-css@main/public/orange.css',
+      },
+      red: {
+        stylesheet: 'https://cdn.jsdelivr.net/gh/tuanphung2308/rjsf-shadcn-css@main/public/red.css',
+      },
+      rose: {
+        stylesheet: 'https://cdn.jsdelivr.net/gh/tuanphung2308/rjsf-shadcn-css@main/public/rose.css',
+      },
+      violet: {
+        stylesheet: 'https://cdn.jsdelivr.net/gh/tuanphung2308/rjsf-shadcn-css@main/public/violet.css',
+      },
+      yellow: {
+        stylesheet: 'https://cdn.jsdelivr.net/gh/tuanphung2308/rjsf-shadcn-css@main/public/yellow.css',
+      },
+      zinc: {
+        stylesheet: 'https://cdn.jsdelivr.net/gh/tuanphung2308/rjsf-shadcn-css@main/public/zinc.css',
+      },
+    },
   },
 };
 

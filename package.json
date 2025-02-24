@@ -73,6 +73,7 @@
     "packages/playground",
     "packages/react-bootstrap",
     "packages/semantic-ui",
+    "packages/shadcn",
     "packages/utils",
     "packages/validator-ajv8",
     "packages/snapshot-tests"
