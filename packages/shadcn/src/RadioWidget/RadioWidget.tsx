@@ -11,7 +11,7 @@ import {
 } from '@rjsf/utils';
 import { RadioGroup, RadioGroupItem } from '../components/ui/radio-group';
 import { Label } from '../components/ui/label';
-import { cn } from '../lib/utils';
+import { cn } from '../shad-lib/utils';
 
 export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
   id,

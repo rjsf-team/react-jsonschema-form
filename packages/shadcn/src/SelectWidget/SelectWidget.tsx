@@ -9,7 +9,7 @@ import {
 } from '@rjsf/utils';
 import { FancyMultiSelect } from '../components/ui/fancy-multi-select';
 import { FancySelect } from '../components/ui/fancy-select';
-import { cn } from '../lib/utils';
+import { cn } from '../shad-lib/utils';
 
 export default function SelectWidget<
   T = any,
@@ -69,7 +69,6 @@ export default function SelectWidget<
   ) : (
     <div className='p-0.5'>
       <FancyMultiSelect
-        ariaDescribedby={ariaDescribedByIds<T>(id)}
         autoFocus={autofocus}
         disabled={disabled || readonly}
         multiple
@@ -81,7 +80,6 @@ export default function SelectWidget<
         }}
         onFocus={_onFancyFocus}
         onBlur={_onFancyBlur}
-        id={id}
       />
     </div>
   );

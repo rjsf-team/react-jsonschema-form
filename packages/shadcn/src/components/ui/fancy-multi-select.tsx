@@ -6,7 +6,8 @@ import { X } from 'lucide-react';
 import { Badge } from './badge';
 import { Command, CommandGroup, CommandItem, CommandList } from './command';
 import { Command as CommandPrimitive } from 'cmdk';
-import { cn } from '../../lib/utils';
+import { v4 as uuidv4 } from 'uuid';
+import { cn } from '../../shad-lib/utils';
 import { isEqual } from 'lodash';
 
 export type FancySelectItem = {
@@ -28,7 +29,6 @@ interface FancyMultiSelectProps {
   disabled?: boolean;
   onBlur?: FocusEventHandler<HTMLDivElement>;
   onFocus?: FocusEventHandler<HTMLDivElement>;
-  id: string;
 }
 
 export function FancyMultiSelect({
@@ -43,7 +43,6 @@ export function FancyMultiSelect({
   onFocus,
   onBlur,
   className,
-  id,
 }: Readonly<FancyMultiSelectProps>): React.JSX.Element {
   const inputRef = useRef<HTMLInputElement>(null);
   const [open, setOpen] = useState(false);
@@ -67,12 +66,15 @@ export function FancyMultiSelect({
       const newSelected = selectedItems.filter((s) => !isEqual(s.value, framework.value));
       onValueChange?.(newSelected.map((item) => item.index));
     },
-    [selectedItems, onValueChange, disabled]
+    [disabled, selectedItems, onValueChange]
   );
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLDivElement>) => {
-      if (disabled || !inputRef.current || inputRef.current.value !== '') {
+      if (!inputRef.current || inputRef.current.value !== '') {
+        return;
+      }
+      if (disabled) {
         return;
       }
 
@@ -83,7 +85,7 @@ export function FancyMultiSelect({
         inputRef.current.blur();
       }
     },
-    [selectedItems, onValueChange, disabled]
+    [disabled, selectedItems, onValueChange]
   );
 
   const handleSelect = useCallback(
@@ -95,57 +97,42 @@ export function FancyMultiSelect({
       const newSelected = multiple ? [...selectedItems, item] : [item];
       onValueChange?.(newSelected.map((item) => item.index));
     },
-    [multiple, selectedItems, onValueChange, disabled]
-  );
-
-  const handleFocus = useCallback(
-    (e: React.FocusEvent<HTMLDivElement>) => {
-      if (!disabled) {
-        setOpen(true);
-      }
-      onFocus?.(e);
-    },
-    [disabled, onFocus]
+    [disabled, multiple, selectedItems, onValueChange]
   );
 
   return (
     <Command
+      disablePointerSelection={disabled}
       onKeyDown={handleKeyDown}
       className={cn('overflow-visible bg-transparent', className)}
       autoFocus={autoFocus}
       aria-disabled={disabled}
       onBlur={onBlur}
-      onFocus={handleFocus}
+      onFocus={onFocus}
       aria-describedby={ariaDescribedby}
       aria-placeholder={ariaPlaceholder}
     >
-      <div
-        className={cn(
-          'group border border-input px-3 py-2 text-sm ring-offset-background rounded-md focus-within:ring-1 focus-within:ring-ring focus-within:ring-offset-1',
-          disabled && 'opacity-50 cursor-not-allowed'
-        )}
-      >
+      <div className='group border border-input px-3 py-2 text-sm ring-offset-background rounded-md focus-within:ring-1 focus-within:ring-ring focus-within:ring-offset-1'>
         <div className='flex gap-1 flex-wrap'>
           {selectedItems.map((item) => (
-            <Badge key={item.value} variant='secondary'>
+            <Badge key={uuidv4()} variant='secondary'>
               {item.label}
               <button
                 type='button'
                 className='rtl:mr-1 ltr:ml-1 ring-offset-background rounded-full outline-none focus:ring-1 focus:ring-ring focus:ring-offset-1'
-                onKeyDown={(e) => e.key === 'Enter' && !disabled && handleUnselect(item)}
+                onKeyDown={(e) => e.key === 'Enter' && handleUnselect(item)}
                 onMouseDown={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
                 }}
-                onClick={() => handleUnselect(item)}
-                disabled={disabled}
+                onClick={() => {
+                  if (disabled) {
+                    return;
+                  }
+                  handleUnselect(item);
+                }}
               >
-                <X
-                  className={cn(
-                    'h-3 w-3 text-muted-foreground hover:text-foreground',
-                    disabled && 'pointer-events-none'
-                  )}
-                />
+                <X className='h-3 w-3 text-muted-foreground hover:text-foreground' />
               </button>
             </Badge>
           ))}
@@ -154,32 +141,26 @@ export function FancyMultiSelect({
             value={inputValue}
             onValueChange={setInputValue}
             onBlur={() => setOpen(false)}
-            onFocus={() => !disabled && setOpen(true)}
+            onFocus={() => setOpen(true)}
+            disabled={disabled}
             placeholder='Select ...'
             className='rtl:mr-2 ltr:ml-2 bg-transparent outline-none placeholder:text-muted-foreground flex-1'
-            disabled={disabled}
-            aria-controls={`command-item-input-${id}`}
-            aria-labelledby={`command-item-input-${id}`}
-            id={`command-item-input-${id}`}
           />
         </div>
       </div>
-      {open && !disabled && selectables.length > 0 && (
+      {open && selectables.length > 0 && (
         <div className='relative mt-2'>
           <div className='absolute w-full z-10 top-0 rounded-md border bg-popover text-popover-foreground shadow-md outline-none animate-in'>
             <CommandGroup className='h-full overflow-auto'>
               <CommandList>
                 {selectables.map((item) => (
                   <CommandItem
-                    disabled={item.disabled}
-                    key={`${item.value}-command-item`}
+                    disabled={item.disabled || disabled}
+                    key={uuidv4()}
                     onMouseDown={(e) => {
                       e.preventDefault();
                       e.stopPropagation();
                     }}
-                    aria-controls={`${item.value}-command-item`}
-                    aria-labelledby={`${item.value}-command-item`}
-                    id={`${item.value}-command-item`}
                     onSelect={() => handleSelect(item)}
                     className='cursor-pointer'
                   >

@@ -6,7 +6,7 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
 } from '@rjsf/utils';
-import { cn } from '../lib/utils';
+import { cn } from '../shad-lib/utils';
 
 export default function FieldTemplate<
   T = any,
