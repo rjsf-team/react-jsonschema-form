@@ -30,7 +30,7 @@ import LayoutGridField, {
   LayoutGridFieldProps,
   Operators,
   UI_GLOBAL_OPTIONS,
-} from '../src/components/fields/layoutGridField';
+} from '../src/components/fields/LayoutGridField';
 import { SAMPLE_SCHEMA, sampleUISchema, SIMPLE_ONEOF, SIMPLE_ONEOF_OPTIONS } from './testData/layoutData';
 import getRegistry from './testData/getRegistry';
 

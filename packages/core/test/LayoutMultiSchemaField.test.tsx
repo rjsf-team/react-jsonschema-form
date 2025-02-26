@@ -25,7 +25,7 @@ import { get } from 'lodash';
 import LayoutMultiSchemaField, {
   computeEnumOptions,
   getSelectedOption,
-} from '../src/components/fields/layoutMultiSchemaField';
+} from '../src/components/fields/LayoutMultiSchemaField';
 import RadioWidget from '../src/components/widgets/RadioWidget';
 import SelectWidget from '../src/components/widgets/SelectWidget';
 import { SIMPLE_ONEOF, SIMPLE_ONEOF_OPTIONS } from './testData/layoutData';
