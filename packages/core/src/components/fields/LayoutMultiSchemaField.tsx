@@ -1,0 +1,212 @@
+import { useState, useEffect } from 'react';
+import {
+  ANY_OF_KEY,
+  CONST_KEY,
+  DEFAULT_KEY,
+  EnumOptionsType,
+  ERRORS_KEY,
+  FieldProps,
+  FormContextType,
+  getDiscriminatorFieldFromSchema,
+  hashObject,
+  ID_KEY,
+  ONE_OF_KEY,
+  optionsList,
+  PROPERTIES_KEY,
+  RJSFSchema,
+  getTemplate,
+  getUiOptions,
+  getWidget,
+  SchemaUtilsType,
+  StrictRJSFSchema,
+  UiSchema,
+} from '@rjsf/utils';
+import get from 'lodash/get';
+import has from 'lodash/has';
+import isEmpty from 'lodash/isEmpty';
+import omit from 'lodash/omit';
+import set from 'lodash/set';
+
+/** Gets the selected option from the list of `options`, using the `selectorField` to search inside each `option` for
+ * the `properties[selectorField].default(or const)` that matches the given `value`.
+ *
+ * @param options - The list of schemas each representing a choice in the `oneOf`
+ * @param selectorField - The name of the field that is common in all of the schemas that represents the selector field
+ * @param value - The current value of the selector field from the data
+ */
+export function getSelectedOption<S extends StrictRJSFSchema = RJSFSchema>(
+  options: EnumOptionsType<S>[],
+  selectorField: string,
+  value: unknown
+): S | undefined {
+  const defaultValue = '!@#!@$@#$!@$#';
+  const schemaOptions: S[] = options.map(({ schema }) => schema!);
+  return schemaOptions.find((option) => {
+    const selector = get(option, [PROPERTIES_KEY, selectorField]);
+    const result = get(selector, DEFAULT_KEY, get(selector, CONST_KEY, defaultValue));
+    return result === value;
+  });
+}
+
+/** Computes the `enumOptions` array from the schema and options.
+ *
+ * @param schema - The schema that contains the `options`
+ * @param options - The options from the `schema`
+ * @param schemaUtils - The SchemaUtilsType object used to call retrieveSchema,
+ * @param [uiSchema] - The optional uiSchema for the schema
+ * @param [formData] - The optional formData associated with the schema
+ * @returns - The list of enumOptions for the `schema` and `options`
+ * @throws - Error when no enum options were computed
+ */
+export function computeEnumOptions<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+  schema: S,
+  options: S[],
+  schemaUtils: SchemaUtilsType<T, S, F>,
+  uiSchema?: UiSchema<T, S, F>,
+  formData?: T
+): EnumOptionsType<S>[] {
+  const realOptions = options.map((opt: S) => schemaUtils.retrieveSchema(opt, formData));
+  let tempSchema = schema;
+  if (has(schema, ONE_OF_KEY)) {
+    tempSchema = { ...schema, [ONE_OF_KEY]: realOptions };
+  } else if (has(schema, ANY_OF_KEY)) {
+    tempSchema = { ...schema, [ANY_OF_KEY]: realOptions };
+  }
+  const enumOptions = optionsList<T, S, F>(tempSchema, uiSchema);
+  if (!enumOptions) {
+    throw new Error(`No enumOptions were computed from the schema ${JSON.stringify(tempSchema)}`);
+  }
+  return enumOptions;
+}
+
+/** The `LayoutMultiSchemaField` TODO was adapted from the `@rjsf` `AnyOfField` (linked below) but changed considerably to only
+ * support `oneOf` fields that are being displayed in a grid where the field selection is shown as a radio group by
+ * default. It expects that a `selectorField` (that is common across all schema in the `oneOf` list) is provided to help
+ * determine which `oneOf` schema is active. If no explicit `selectorField` is specified, then the first `required`
+ * field associated with the `oneOf` in the type is used.
+ *
+ * [AnyOfField](https://github.com/rjsf-team/react-jsonschema-form/blob/bf6c99862afe9b381c9be4027ad97adbeabc1bd5/packages/core/src/components/fields/MultiSchemaField.js#L14)
+ *
+ * @param props - The props for the Field. For more details on these props, see the
+ *        [@rjsf docs](https://react-jsonschema-form.readthedocs.io/en/docs/advanced-customization/custom-widgets-fields/#field-props).
+ * @returns - The rendered `LayoutMultiSchemaField`
+ */
+export default function LayoutMultiSchemaField<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: FieldProps<T, S, F>) {
+  const {
+    name,
+    baseType,
+    disabled = false,
+    formData,
+    idSchema,
+    onBlur,
+    onChange,
+    options,
+    onFocus,
+    registry,
+    uiSchema,
+    schema,
+    formContext,
+    autofocus,
+    readonly,
+    required,
+    errorSchema,
+    hideError = false,
+  } = props;
+  const { widgets, schemaUtils } = registry;
+  const [enumOptions, setEnumOptions] = useState(computeEnumOptions(schema, options, schemaUtils, uiSchema, formData)!);
+  const id = get(idSchema, ID_KEY);
+  const discriminator = getDiscriminatorFieldFromSchema(schema);
+  const FieldErrorTemplate = getTemplate<'FieldErrorTemplate', T, S, F>('FieldErrorTemplate', registry, options);
+  const schemaHash = hashObject(schema);
+  const optionsHash = hashObject(options);
+  const uiSchemaHash = uiSchema ? hashObject(uiSchema) : '';
+  const formDataHash = formData ? hashObject(formData) : '';
+
+  useEffect(() => {
+    setEnumOptions(computeEnumOptions(schema, options, schemaUtils, uiSchema, formData));
+    // We are using hashes in place of the dependencies
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [schemaHash, optionsHash, schemaUtils, uiSchemaHash, formDataHash]);
+  const {
+    widget = discriminator ? 'radio' : 'select',
+    title = '',
+    optionsSchemaSelector: selectorField = discriminator,
+    hideError: uiSchemaHideError,
+    ...uiOptions
+  } = getUiOptions<T, S, F>(uiSchema);
+  if (!selectorField) {
+    throw new Error('No selector field provided for the LayoutMultiSchemaField');
+  }
+  const selectedOption = get(formData, selectorField);
+  let optionSchema = get(enumOptions[0]?.schema, [PROPERTIES_KEY, selectorField]);
+  const option = getSelectedOption<S>(enumOptions, selectorField, selectedOption);
+  // If the subschema doesn't declare a type, infer the type from the parent schema
+  optionSchema = optionSchema?.type ? optionSchema : ({ ...optionSchema, type: option?.type || baseType } as S);
+  const Widget = getWidget<T, S, F>(optionSchema!, widget, widgets);
+
+  // The following code was copied from `@rjsf`'s `SchemaField`
+  // Set hideError to the value provided in the uiSchema, otherwise stick with the prop to propagate to children
+  const hideFieldError = uiSchemaHideError === undefined ? hideError : Boolean(uiSchemaHideError);
+
+  const rawErrors = get(errorSchema, [ERRORS_KEY], []) as string[];
+  const fieldErrorSchema = omit(errorSchema, [ERRORS_KEY]);
+
+  /** Callback function that updates the selected option and adjusts the form data based on the structure of the new
+   * option, calling the `onChange` callback with the adjusted formData.
+   *
+   * @param opt - If the option is undefined, we are going to clear the selection otherwise we
+   *      will use it as the index of the new option to select
+   */
+  const onOptionChange = (opt?: unknown) => {
+    const newOption = getSelectedOption<S>(enumOptions, selectorField, opt);
+    const oldOption = getSelectedOption<S>(enumOptions, selectorField, selectedOption);
+
+    let newFormData = schemaUtils.sanitizeDataForNewSchema(newOption, oldOption, formData);
+    if (newFormData && newOption) {
+      // Call getDefaultFormState to make sure defaults are populated on change.
+      newFormData = schemaUtils.getDefaultFormState(newOption, newFormData, 'excludeObjectChildren') as T;
+    }
+    if (newFormData) {
+      set(newFormData, selectorField, opt);
+    }
+    onChange(newFormData);
+  };
+
+  // filtering the options based on the type of widget because `selectField` does not recognize the `convertOther` prop
+  const widgetOptions = { enumOptions, ...uiOptions };
+
+  return (
+    <>
+      <Widget
+        id={id}
+        name={name}
+        schema={schema}
+        label={(title || schema.title) ?? ''}
+        disabled={disabled || (Array.isArray(enumOptions) && isEmpty(enumOptions))}
+        uiSchema={uiSchema}
+        formContext={formContext}
+        autofocus={autofocus}
+        readonly={readonly}
+        required={required}
+        registry={registry}
+        multiple={false}
+        rawErrors={rawErrors}
+        hideError={hideFieldError}
+        errorSchema={fieldErrorSchema}
+        placeholder=''
+        onChange={onOptionChange}
+        onBlur={onBlur}
+        onFocus={onFocus}
+        value={selectedOption}
+        options={widgetOptions}
+      />
+      {!hideFieldError && rawErrors.length > 0 && (
+        <FieldErrorTemplate idSchema={idSchema} schema={schema} errors={rawErrors} registry={registry} />
+      )}
+    </>
+  );
+}

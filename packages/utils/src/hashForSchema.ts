@@ -18,6 +18,18 @@ export function hashString(string: string): string {
   return hash.toString(16);
 }
 
+/** Stringifies an `object`, sorts object fields in consistent order before stringifying it.
+ *
+ * @param object - The object for which the sorted stringify is desired
+ * @returns - The stringified object with keys sorted in a consistent order
+ */
+export function sortedJSONStringify(object: unknown): string {
+  const allKeys = new Set<string>();
+  // solution source: https://stackoverflow.com/questions/16167581/sort-object-properties-and-json-stringify/53593328#53593328
+  JSON.stringify(object, (key, value) => (allKeys.add(key), value));
+  return JSON.stringify(object, Array.from(allKeys).sort());
+}
+
 /** Stringifies an `object` and returns the hash of the resulting string. Sorts object fields
  * in consistent order before stringify to prevent different hash ids for the same object.
  *
@@ -25,10 +37,7 @@ export function hashString(string: string): string {
  * @returns - The string obtained from the hash of the stringified object
  */
 export function hashObject(object: unknown): string {
-  const allKeys = new Set<string>();
-  // solution source: https://stackoverflow.com/questions/16167581/sort-object-properties-and-json-stringify/53593328#53593328
-  JSON.stringify(object, (key, value) => (allKeys.add(key), value));
-  return hashString(JSON.stringify(object, Array.from(allKeys).sort()));
+  return hashString(sortedJSONStringify(object));
 }
 
 /** Stringifies the schema and returns the hash of the resulting string. Sorts schema fields

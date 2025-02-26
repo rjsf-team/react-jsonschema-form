@@ -1,10 +1,24 @@
-import { hashForSchema, hashObject, hashString, RJSFSchema } from '../src';
+import { hashForSchema, hashObject, hashString, RJSFSchema, sortedJSONStringify } from '../src';
 import { RECURSIVE_REF } from './testUtils/testData';
 
 const TINY_SCHEMA: RJSFSchema = {
   type: 'string',
   title: 'test',
 };
+
+const OUT_OF_ORDER_SCHEMA: RJSFSchema = {
+  type: 'string',
+  title: 'order',
+  properties: { foo: { type: 'string' }, bar: { type: 'number', default: 4 } },
+};
+
+const IN_ORDER_SCHEMA: RJSFSchema = {
+  properties: { bar: { default: 4, type: 'number' }, foo: { type: 'string' } },
+  title: 'order',
+  type: 'string',
+};
+
+const STRINGIFIED_IN_ORDER = JSON.stringify(IN_ORDER_SCHEMA);
 
 describe('hashForSchema', () => {
   it('returns a hash for a tiny schema', () => {
@@ -17,6 +31,15 @@ describe('hashForSchema', () => {
     const schema1: RJSFSchema = { type: 'string', title: 'order' };
     const schema2: RJSFSchema = { title: 'order', type: 'string' };
     expect(hashForSchema(schema1)).toBe(hashForSchema(schema2));
+  });
+});
+
+describe('sortedJSONStringify', () => {
+  it('stringifies the object with keys already in order', () => {
+    expect(sortedJSONStringify(IN_ORDER_SCHEMA)).toEqual(STRINGIFIED_IN_ORDER);
+  });
+  it('stringifies the object putting keys in order', () => {
+    expect(sortedJSONStringify(OUT_OF_ORDER_SCHEMA)).toEqual(STRINGIFIED_IN_ORDER);
   });
 });
 

@@ -955,6 +955,12 @@ type UIOptionsBaseType<T = any, S extends StrictRJSFSchema = RJSFSchema, F exten
     emptyValue?: any;
     /** Will disable any of the enum options specified in the array (by value) */
     enumDisabled?: Array<string | number | boolean>;
+    /** Allows a user to provide a list of labels for enum values in the schema */
+    enumNames?: string[];
+    /** Provides an optional field within a schema to be used as the oneOf/anyOf selector when there isn't a
+     * discriminator
+     */
+    optionsSchemaSelector?: string;
     /** Flag, if set to `true`, will hide the default error display for the given field AND all of its child fields in the
      * hierarchy
      */
@@ -977,8 +983,6 @@ type UIOptionsBaseType<T = any, S extends StrictRJSFSchema = RJSFSchema, F exten
      * to look up an implementation from the `widgets` list or an actual one-off widget implementation itself
      */
     widget?: Widget<T, S, F> | string;
-    /** Allows a user to provide a list of labels for enum values in the schema */
-    enumNames?: string[];
   };
 
 /** The type that represents the Options potentially provided by `ui:options` */

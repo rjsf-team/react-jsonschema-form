@@ -24,7 +24,7 @@ import getTestIds from './getTestIds';
 import getUiOptions from './getUiOptions';
 import getWidget from './getWidget';
 import guessType from './guessType';
-import hashForSchema, { hashObject, hashString } from './hashForSchema';
+import hashForSchema, { hashObject, hashString, sortedJSONStringify } from './hashForSchema';
 import hasWidget from './hasWidget';
 import {
   ariaDescribedByIds,
@@ -131,6 +131,7 @@ export {
   replaceStringParameters,
   schemaRequiresTrueValue,
   shouldRender,
+  sortedJSONStringify,
   titleId,
   toConstant,
   toDateString,

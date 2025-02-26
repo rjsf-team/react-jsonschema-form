@@ -786,6 +786,7 @@ exports[`single fields radio field 1`] = `
     <div
       className="field-radio-group"
       id="root"
+      role="radiogroup"
     >
       <div
         className="radio "
@@ -927,6 +928,7 @@ exports[`single fields select field 1`] = `
       onBlur={[Function]}
       onChange={[Function]}
       onFocus={[Function]}
+      role="combobox"
       value=""
     >
       <option
@@ -977,6 +979,7 @@ exports[`single fields select field multiple choice 1`] = `
       onChange={[Function]}
       onFocus={[Function]}
       required={false}
+      role="combobox"
       value={[]}
     >
       <option
@@ -1034,6 +1037,7 @@ exports[`single fields select field multiple choice enumDisabled 1`] = `
       onChange={[Function]}
       onFocus={[Function]}
       required={false}
+      role="combobox"
       value={[]}
     >
       <option
@@ -1218,6 +1222,7 @@ exports[`single fields select field multiple choice formData 1`] = `
       onChange={[Function]}
       onFocus={[Function]}
       required={false}
+      role="combobox"
       value={
         [
           "0",
@@ -1280,6 +1285,7 @@ exports[`single fields select field multiple choice with labels 1`] = `
       onChange={[Function]}
       onFocus={[Function]}
       required={false}
+      role="combobox"
       value={[]}
     >
       <option
@@ -1331,6 +1337,7 @@ exports[`single fields select field single choice enumDisabled 1`] = `
       onBlur={[Function]}
       onChange={[Function]}
       onFocus={[Function]}
+      role="combobox"
       value=""
     >
       <option
@@ -1374,6 +1381,7 @@ exports[`single fields select field single choice enumDisabled using radio widge
     <div
       className="field-radio-group"
       id="root"
+      role="radiogroup"
     >
       <div
         className="radio "
@@ -1457,6 +1465,7 @@ exports[`single fields select field single choice formData 1`] = `
       onBlur={[Function]}
       onChange={[Function]}
       onFocus={[Function]}
+      role="combobox"
       value="1"
     >
       <option

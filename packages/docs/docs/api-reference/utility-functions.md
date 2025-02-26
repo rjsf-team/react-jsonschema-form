@@ -717,16 +717,20 @@ Return a consistent `id` for the `optionIndex`s of a `Radio` or `Checkboxes` wid
 
 - string: An id for the option index based on the parent `id`
 
-### optionsList&lt;S extends StrictRJSFSchema = RJSFSchema, T = any, F extends FormContextType = any>()
+### optionsList<T = any, S extends StrictRJSFSchema = RJSFSchema,F extends FormContextType = any>()
 
 Gets the list of options from the `schema`. If the schema has an enum list, then those enum values are returned.
-The labels for the options will be extracted from the non-standard, RJSF-deprecated `enumNames` if it exists, otherwise
-the label will be the same as the `value`. If the schema has a `oneOf` or `anyOf`, then the value is the list of
-`const` values from the schema and the label is either the `schema.title` or the value. If a `uiSchema` is provided
-and it has the `ui:enumNames` matched with `enum` or it has an associated `oneOf` or `anyOf` with a list of objects
-containing `ui:title` then the UI schema values will replace the values from the schema.
+The labels for the options will be extracted from the non-standard, RJSF-deprecated `enumNames` if it exists, otherwise the label will be the same as the `value`.
 
-NOTE: `enumNames` is deprecated and will be removed in a future major version of RJSF. Use the "ui:enumNames" property in the uiSchema instead.
+If the schema has a `oneOf` or `anyOf`, then the value is the list of either:
+
+-
+- The `const` values from the schema if present
+- If the schema has a discriminator and the label using either the `schema.title` or the value. If a `uiSchema` is
+  provided, and it has the `ui:enumNames` matched with `enum` or it has an associated `oneOf` or `anyOf` with a list of
+  objects containing `ui:title` then the UI schema values will replace the values from the schema.
+
+- NOTE: `enumNames` is deprecated and will be removed in a future major version of RJSF. Use the "ui:enumNames" property in the uiSchema instead.
 
 #### Parameters
 
@@ -844,6 +848,18 @@ If either of those two sets are not the same, then the component should be reren
 #### Returns
 
 - True if boolean: the component should be re-rendered, false otherwise
+
+### sortedJSONStringify()
+
+Stringifies an `object`, sorts object fields in consistent order before stringifying it.
+
+#### Parameters
+
+- object: object - The object for which the sorted stringify is desired
+
+#### Returns
+
+- string: The stringified object with keys sorted in a consistent order
 
 ### titleId<T = any>()
 
