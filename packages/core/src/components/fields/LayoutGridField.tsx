@@ -90,7 +90,7 @@ export interface LayoutGridFieldProps<T = any, S extends StrictRJSFSchema = RJSF
 
 /** The constant representing the main layout grid schema option name in the `uiSchema`
  */
-export const LAYOUT_GRID_UI_OPTION = 'LayoutGridField';
+export const LAYOUT_GRID_UI_OPTION = 'layoutGrid';
 
 /** The constant representing the main layout grid schema option name in the `uiSchema`
  */

@@ -83,7 +83,7 @@ const readonlySchema: RJSFSchema = {
 };
 const readonlyUISchema: UiSchema = {
   'ui:field': 'LayoutGridField',
-  'ui:layout_grid': {
+  'ui:layoutGrid': {
     'ui:row': {
       children: [
         {
@@ -373,7 +373,7 @@ const gridFormSchema = {
 
 const gridFormUISchema: UiSchema = {
   'ui:field': 'LayoutGridForm',
-  'ui:layout_grid': {
+  'ui:layoutGrid': {
     'ui:row': [
       {
         'ui:row': {
@@ -432,7 +432,7 @@ const gridFormUISchema: UiSchema = {
     },
     address: {
       'ui:field': 'LayoutGridField',
-      'ui:layout_grid': {
+      'ui:layoutGrid': {
         'ui:row': {
           children: [
             {
@@ -463,7 +463,7 @@ const gridFormUISchema: UiSchema = {
   },
   employment: {
     'ui:field': 'LayoutGridField',
-    'ui:layout_grid': {
+    'ui:layoutGrid': {
       'ui:row': {
         children: [
           {
