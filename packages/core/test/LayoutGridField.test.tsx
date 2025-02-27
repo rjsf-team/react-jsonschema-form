@@ -32,7 +32,7 @@ import LayoutGridField, {
   UI_GLOBAL_OPTIONS,
 } from '../src/components/fields/LayoutGridField';
 import { SAMPLE_SCHEMA, sampleUISchema, SIMPLE_ONEOF, SIMPLE_ONEOF_OPTIONS } from './testData/layoutData';
-import getRegistry from './testData/getRegistry';
+import getTestRegistry from './testData/getTestRegistry';
 
 const ColumnWidth3 = 'col-xs-3';
 const ColumnWidth4 = 'col-xs-4';
@@ -638,10 +638,10 @@ const NO_SCHEMA_OR_OPTIONS = {
   idSchema: ID_SCHEMA,
 };
 
-const simpleOneOfRegistry = getRegistry(SIMPLE_ONEOF, REGISTRY_FIELDS, {}, {}, REGISTRY_FORM_CONTEXT);
-const gridFormSchemaRegistry = getRegistry(GRID_FORM_SCHEMA, REGISTRY_FIELDS, {}, {}, REGISTRY_FORM_CONTEXT);
-const sampleSchemaRegistry = getRegistry(SAMPLE_SCHEMA, REGISTRY_FIELDS, {}, {}, REGISTRY_FORM_CONTEXT);
-const readonlySchemaRegistry = getRegistry(readonlySchema, REGISTRY_FIELDS, {}, {}, REGISTRY_FORM_CONTEXT);
+const simpleOneOfRegistry = getTestRegistry(SIMPLE_ONEOF, REGISTRY_FIELDS, {}, {}, REGISTRY_FORM_CONTEXT);
+const gridFormSchemaRegistry = getTestRegistry(GRID_FORM_SCHEMA, REGISTRY_FIELDS, {}, {}, REGISTRY_FORM_CONTEXT);
+const sampleSchemaRegistry = getTestRegistry(SAMPLE_SCHEMA, REGISTRY_FIELDS, {}, {}, REGISTRY_FORM_CONTEXT);
+const readonlySchemaRegistry = getTestRegistry(readonlySchema, REGISTRY_FIELDS, {}, {}, REGISTRY_FORM_CONTEXT);
 const GRID_FORM_ID_SCHEMA = gridFormSchemaRegistry.schemaUtils.toIdSchema(GRID_FORM_SCHEMA);
 const SAMPLE_SCHEMA_ID_SCHEMA = sampleSchemaRegistry.schemaUtils.toIdSchema(SAMPLE_SCHEMA);
 const READONLY_ID_SCHEMA = readonlySchemaRegistry.schemaUtils.toIdSchema(readonlySchema);
@@ -724,7 +724,7 @@ describe('LayoutGridField', () => {
       uiSchema = {},
       disabled = false,
       layoutGridSchema,
-      registry = getRegistry(schema, REGISTRY_FIELDS, {}, {}, REGISTRY_FORM_CONTEXT),
+      registry = getTestRegistry(schema, REGISTRY_FIELDS, {}, {}, REGISTRY_FORM_CONTEXT),
     } = overrideProps;
     return {
       // required FieldProps stubbed
@@ -753,7 +753,7 @@ describe('LayoutGridField', () => {
   let toIdSchemaSpy: jest.SpyInstance;
   let findSelectedOptionInXxxOf: jest.SpyInstance;
   beforeAll(() => {
-    registry = getRegistry({}, REGISTRY_FIELDS, {}, {}, REGISTRY_FORM_CONTEXT);
+    registry = getTestRegistry({}, REGISTRY_FIELDS, {}, {}, REGISTRY_FORM_CONTEXT);
   });
   describe('LayoutGridField.conditionMatches()', () => {
     test('returns false when no operator is passed', () => {

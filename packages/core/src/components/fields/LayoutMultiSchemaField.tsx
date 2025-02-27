@@ -79,17 +79,11 @@ export function computeEnumOptions<T = any, S extends StrictRJSFSchema = RJSFSch
   return enumOptions;
 }
 
-/** The `LayoutMultiSchemaField` TODO was adapted from the `@rjsf` `AnyOfField` (linked below) but changed considerably to only
- * support `oneOf` fields that are being displayed in a grid where the field selection is shown as a radio group by
- * default. It expects that a `selectorField` (that is common across all schema in the `oneOf` list) is provided to help
- * determine which `oneOf` schema is active. If no explicit `selectorField` is specified, then the first `required`
- * field associated with the `oneOf` in the type is used.
- *
- * [AnyOfField](https://github.com/rjsf-team/react-jsonschema-form/blob/bf6c99862afe9b381c9be4027ad97adbeabc1bd5/packages/core/src/components/fields/MultiSchemaField.js#L14)
- *
- * @param props - The props for the Field. For more details on these props, see the
- *        [@rjsf docs](https://react-jsonschema-form.readthedocs.io/en/docs/advanced-customization/custom-widgets-fields/#field-props).
- * @returns - The rendered `LayoutMultiSchemaField`
+/** The `LayoutMultiSchemaField` is an adaptation of the `MultiSchemaField` but changed considerably to only
+ * support `anyOf`/`oneOf` fields that are being displayed in a `LayoutGridField` where the field selection is shown as
+ * a radio group by default. It expects that a `selectorField` is provided (either directly via the `discriminator`
+ * field or indirectly via `ui:optionsSchemaSelector` in the `uiSchema`) to help determine which `anyOf`/`oneOf` schema
+ * is active. If no `selectorField` is specified, then an error is thrown.
  */
 export default function LayoutMultiSchemaField<
   T = any,

@@ -29,7 +29,7 @@ import LayoutMultiSchemaField, {
 import RadioWidget from '../src/components/widgets/RadioWidget';
 import SelectWidget from '../src/components/widgets/SelectWidget';
 import { SIMPLE_ONEOF, SIMPLE_ONEOF_OPTIONS } from './testData/layoutData';
-import getRegistry from './testData/getRegistry';
+import getTestRegistry from './testData/getTestRegistry';
 
 jest.mock('@rjsf/utils', () => ({
   ...jest.requireActual('@rjsf/utils'),
@@ -194,7 +194,7 @@ describe('LayoutMultiSchemaField', () => {
       formData,
       idSchema,
       options,
-      registry: getRegistry(
+      registry: getTestRegistry(
         schema,
         {},
         { FieldErrorTemplate: FakeFieldErrorTemplate },
@@ -483,7 +483,7 @@ describe('LayoutMultiSchemaField', () => {
     test('Reads oneOfs from refs', () => {
       const schema = oneOfSchema as RJSFSchema;
       const uiSchema = { [UI_OPTIONS_KEY]: { optionsSchemaSelector: 'name' } };
-      const { schemaUtils } = getRegistry(schema);
+      const { schemaUtils } = getTestRegistry(schema);
       const option1 = schemaUtils.retrieveSchema(oneOfSchema[ONE_OF_KEY][0]);
       const option2 = schemaUtils.retrieveSchema(oneOfSchema[ONE_OF_KEY][1]);
       const enumOptions = computeEnumOptions(schema, oneOfSchema[ONE_OF_KEY], schemaUtils, uiSchema);
@@ -503,7 +503,7 @@ describe('LayoutMultiSchemaField', () => {
     test('Reads anyOf', () => {
       const schema = anyOfSchema as RJSFSchema;
       const options = anyOfSchema[ANY_OF_KEY] as RJSFSchema[];
-      const { schemaUtils } = getRegistry(schema);
+      const { schemaUtils } = getTestRegistry(schema);
       const enumOptions = computeEnumOptions(schema, options, schemaUtils);
       expect(enumOptions).toEqual([
         {
@@ -519,7 +519,7 @@ describe('LayoutMultiSchemaField', () => {
       ]);
     });
     test('throws error when no enumOptions are generated', () => {
-      const { schemaUtils } = getRegistry({});
+      const { schemaUtils } = getTestRegistry({});
       expect(() => computeEnumOptions({}, [], schemaUtils)).toThrow('No enumOptions were computed from the schema {}');
     });
   });
