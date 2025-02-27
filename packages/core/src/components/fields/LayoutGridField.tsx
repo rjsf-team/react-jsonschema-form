@@ -39,7 +39,7 @@ import isString from 'lodash/isString';
 import isUndefined from 'lodash/isUndefined';
 import set from 'lodash/set';
 
-/** The enumeration of the three different Layout Grid2 type values
+/** The enumeration of the three different Layout GridTemplate type values
  */
 export enum GridType {
   ROW = 'ui:row',
@@ -56,6 +56,7 @@ export enum Operators {
   NONE = 'none',
 }
 
+/** Type used to represent an object that contains anything */
 type ConfigObject = Record<string, any>;
 
 export interface GridProps extends GenericObjectType {
@@ -127,14 +128,14 @@ function getNonNullishValue<T = unknown>(value?: T, fallback?: T): T | undefined
   return value ?? fallback;
 }
 
-/** The `LayoutGridField` will render a schema, uiSchema and formData combination out into a Grid2 in the shape described
- * in the uiSchema. To define the grid to use to render the elements within a field in the schema, provide in the
- * uiSchema for that field the object contained under a `ui:LayoutGridField` element. E.g. (as a JSON object):
+/** The `LayoutGridField` will render a schema, uiSchema and formData combination out into a GridTemplate in the shape
+ * described in the uiSchema. To define the grid to use to render the elements within a field in the schema, provide in
+ * the uiSchema for that field the object contained under a `ui:LayoutGridField` element. E.g. (as a JSON object):
  *
  * ```
  * {
  *   "field1" : {
- *     "ui:field": "LayoutGridForm",
+ *     "ui:field": "LayoutGridField",
  *     "ui:LayoutGridField": {
  *       "ui:row": { ... }
  *     }
@@ -144,9 +145,9 @@ function getNonNullishValue<T = unknown>(value?: T, fallback?: T): T | undefined
  *
  * The outermost level of a `LayoutGridField` is the `ui:row` that defines the nested rows, columns, and/or condition
  * elements (i.e. "grid elements") in the grid. This definition is either a simple "grid elements" OR an object with
- * native `Grid2` implementation specific props and a `children` array of "grid elements". E.g. (as JSON objects):
+ * native `GridTemplate` implementation specific props and a `children` array of "grid elements". E.g. (as JSON objects):
  *
- * Simple `ui:row` definition, without additional native `Grid2` props:
+ * Simple `ui:row` definition, without additional `GridTemplate` props:
  * ```
  *  "ui:row": [
  *    { "ui:row"|"ui:column"|"ui:condition": ... },
@@ -154,7 +155,7 @@ function getNonNullishValue<T = unknown>(value?: T, fallback?: T): T | undefined
  *  ]
  * ```
  *
- * Complex `ui:row` definition, with additional native `Grid2` props:
+ * Complex `ui:row` definition, with additional `GridTemplate` (this example uses @mui/material/Grid2 native props):
  * ```
  *  "ui:row": {
  *    "spacing": 2,
@@ -170,26 +171,27 @@ function getNonNullishValue<T = unknown>(value?: T, fallback?: T): T | undefined
  *
  * NOTE: Special note about the native `className` prop values. All className values will automatically be looked up in
  *       the `formContext.lookupMap` in case they have been defined using a CSS-in-JS approach. In other words, from the
- *       example above, if the `MuiForm` was constructed with a `lookupMap` set to `{ GridRow: cssInJs.GridRowClass }`
- *       then when rendered, the native `Grid2` will get the `className` with the value from `cssInJs.GridRowClass`. This
- *       automatic lookup will happen for any of the "grid elements" when rendering with native `Grid2` props. If
- *       multiple className values are present, for example: `{ className: 'GridRow GridColumn' }`, the classNames are split
- *       apart, looked up individually, and joined together to form one className with the values from
- *       `cssInJs.GridRowClass` and `cssInJs.GridColumnClass`.
+ *       example above, if the `Form` was constructed with a `lookupMap` set to `{ GridRow: cssInJs.GridRowClass }`
+ *       then when rendered, the native `GridTemplate` will get the `className` with the value from
+ *       `cssInJs.GridRowClass`. This automatic lookup will happen for any of the "grid elements" when rendering with
+ *       `GridTemplate` props. If multiple className values are present, for example:
+ *       `{ className: 'GridRow GridColumn' }`, the classNames are split apart, looked up individually, and joined
+ *       together to form one className with the values from `cssInJs.GridRowClass` and `cssInJs.GridColumnClass`.
  *
  * The `ui:col` grid element is used to specify the list of columns within a grid row. A `ui:col` element can take on
  * several forms: 1) a simple list of dotted-path field names within the root field; 2) a list of objects containing the
  * dotted-path field `name` any other props that are gathered into `ui:options` for the field; 3) a list with a one-off
  * `render` functional component with or without a non-field `name` identifier and any other to-be-spread props; and
- * 4) an object with native `Grid2` implementation specific props and a `children` array with 1) or 2) or even a nested
- * `ui:row` or a `ui:condition` containing a `ui:row` (although this should be used carefully). E.g. (as JSON objects):
+ * 4) an object with native `GridTemplate` implementation specific props and a `children` array with 1) or 2) or even a
+ * nested `ui:row` or a `ui:condition` containing a `ui:row` (although this should be used carefully). E.g.
+ * (as JSON objects):
  *
- * Simple `ui:col` definition, without additional native `Grid2` props and form 1 only children:
+ * Simple `ui:col` definition, without additional `GridTemplate` props and form 1 only children:
  * ```
  * "ui:col": ["innerField", "inner.grandChild", ...]
  * ```
  *
- * Complicated `ui:col` definition, without additional native `Grid2` props and form 2 only children:
+ * Complicated `ui:col` definition, without additional `GridTemplate` props and form 2 only children:
  * ```
  * "ui:col": [
  *    { "name": "innerField", "fullWidth": true },
@@ -198,7 +200,7 @@ function getNonNullishValue<T = unknown>(value?: T, fallback?: T): T | undefined
  *  ]
  * ```
  *
- * More complicated `ui:col` definition, without additional native `Grid2` props and form 2 children, one being a
+ * More complicated `ui:col` definition, without additional `GridTemplate` props and form 2 children, one being a
  * one-off `render` functional component without a non-field `name` identifier
  * ```
  * "ui:col": [
@@ -211,7 +213,8 @@ function getNonNullishValue<T = unknown>(value?: T, fallback?: T): T | undefined
  *  ]
  *  ```
  *
- * Most complicated `ui:col` definition, additional native `Grid2` props and form 1, 2 and 3 children:
+ * Most complicated `ui:col` definition, additional `GridTemplate` props and form 1, 2 and 3 children  (this example
+ * uses @mui/material/Grid2 native props):
  * ```
  * "ui:col": {
  *    "size": { "md": 4 },
@@ -231,43 +234,41 @@ function getNonNullishValue<T = unknown>(value?: T, fallback?: T): T | undefined
  *       string, its value will be looked up in the `formContext.lookupMap` first before defaulting to a null render.
  *
  * The `ui:columns` grid element is syntactic sugar to specify a set of `ui:col` columns that all share the same set of
- * native `Grid2` props. In other words rather than writing the following configuration that renders a `<Grid2 container>`
- * element with 3 `<Grid2 md={4} className="GridColumn">` nodes and 2 `<Grid2 md={6}>` nodes within it (one for each of
- * the fields contained in the `children` list):
+ * native `GridTemplate` props. In other words rather than writing the following configuration that renders a
+ * `<GridTemplate>` element with 3 `<GridTemplate column className="GridColumn col-md-4">` nodes and 2
+ * `<GridTemplate column className="col-md-6">` nodes within it (one for each of the fields contained in the `children`
+ * list):
  *
  * ```
  * "ui:row": {
  *   "children": [
  *     {
  *       "ui:col": {
- *         "size": { "md": 4 },
- *         "className": "GridColumn",
+ *         "className": "GridColumn col-md-4",
  *         "children": ["innerField"],
  *       }
  *     },
  *     {
  *       "ui:col": {
- *         "size": { "md": 4 },
- *         "className": "GridColumn",
+ *         "className": "GridColumn col-md-4",
  *         "children": ["inner.grandChild"],
  *       }
  *     },
  *     {
  *       "ui:col": {
- *         "size": { "md": 4 },
- *         "className": "GridColumn",
- *         "children": [{ "name": "inner.grandChild2", "convertOther": true }],
+ *         "className": "GridColumn col-md-4",
+ *         "children": [{ "name": "inner.grandChild2" }],
  *       }
  *     },
  *     {
  *       "ui:col": {
- *         "size": { "md": 6 },
+ *         "className": "col-md-6",
  *         "children": ["innerField2"],
  *       }
  *     },
  *     {
  *       "ui:col": {
- *         "size": { "md": 6 },
+ *         "className": "col-md-6",
  *         "children": ["inner.grandChild3"],
  *       }
  *     },
@@ -282,14 +283,13 @@ function getNonNullishValue<T = unknown>(value?: T, fallback?: T): T | undefined
  *   "children": [
  *     {
  *       "ui:columns": {
- *         "size": { "md": 4 },
- *         "className": "GridColumn",
+ *         "className": "GridColumn col-md-4",
  *         "children": ["innerField", "inner.grandChild", { "name": "inner.grandChild2", "convertOther": true }],
  *       }
  *     },
  *     {
  *       "ui:columns": {
- *         "size": { "md": 6 },
+ *         "className": "col-md-6",
  *         "children": ["innerField2", "inner.grandChild3"],
  *       }
  *     }
@@ -297,8 +297,10 @@ function getNonNullishValue<T = unknown>(value?: T, fallback?: T): T | undefined
  * }
  * ```
  *
- * NOTE: This syntax differs from `"ui:col": { "md": 6, "children": ["innerField2", "inner.grandChild3"] }` in that
- *       the `ui:col` will render the two children fields inside of a single `<Grid2 md={6}>` element.
+ * NOTE: This syntax differs from
+ *       `"ui:col": { "className": "col-md-6", "children": ["innerField2", "inner.grandChild3"] }` in that
+ *       the `ui:col` will render the two children fields inside a single `<GridTemplate "className": "col-md-6",>`
+ *       element.
  *
  * The final grid element, `ui:condition`, allows for conditionally displaying "grid elements" within a row based on the
  * current value of a field as it relates to a (list of) hard-coded value(s). There are four elements that make up a
@@ -494,16 +496,17 @@ export default class LayoutGridField<
 
   /** Given a `dottedPath` to a field in the `initialSchema`, iterate through each individual path in the schema until
    * the leaf path is found and returned (along with whether that leaf path `isRequired`) OR no schema exists for an
-   * element in the path. If the leaf schema element happens to be a `oneOf` then also return the `oneOf` as `options`.
+   * element in the path. If the leaf schema element happens to be a oneOf/anyOf then also return the oneOf/anyOf as
+   * `options`.
    *
    * @param schemaUtils - The `SchemaUtilsType` used to call `retrieveSchema`
    * @param dottedPath - The dotted-path to the field for which to get the schema
    * @param initialSchema - The initial schema to start the search from
-   * @param formData - The formData, useful for resolving a oneOf selection in the path hierarchy
+   * @param formData - The formData, useful for resolving a oneOf/anyOf selection in the path hierarchy
    * @param initialIdSchema - The initial idSchema to start the search from
    * @param [idSeparator] - The param to pass into the `toIdSchema` util which will use it to join the `idSchema` paths
    * @returns - An object containing the destination schema, isRequired and isReadonly flags for the field and options
-   *            info if a oneOf
+   *            info if a oneOf/anyOf
    */
   static getSchemaDetailsForField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
     schemaUtils: SchemaUtilsType<T, S, F>,
@@ -535,7 +538,7 @@ export default class LayoutGridField<
         idSchema = get(idSchema, part, {}) as IdSchema<T>;
       } else if (schema && (has(schema, ONE_OF_KEY) || has(schema, ANY_OF_KEY))) {
         const xxx = has(schema, ONE_OF_KEY) ? ONE_OF_KEY : ANY_OF_KEY;
-        // When the schema represents a oneOf, find the selected schema for the oneOf and grab the inner part
+        // When the schema represents a oneOf/anyOf, find the selected schema for it and grab the inner part
         const selectedSchema = schemaUtils.findSelectedOptionInXxxOf(schema, part, xxx, innerData);
         const selectedIdSchema = LayoutGridField.getIdSchema<T, S, F>(
           schemaUtils,
@@ -566,9 +569,9 @@ export default class LayoutGridField<
       // When we have both a schema and a leafPath...
       if (schema && (has(schema, ONE_OF_KEY) || has(schema, ANY_OF_KEY))) {
         const xxx = has(schema, ONE_OF_KEY) ? ONE_OF_KEY : ANY_OF_KEY;
-        // Grab the selected schema for the oneOf value for the leafPath using the innerData
+        // Grab the selected schema for the oneOf/anyOf value for the leafPath using the innerData
         schema = schemaUtils.findSelectedOptionInXxxOf(schema, leafPath, xxx, innerData);
-        // Generate the idSchema for the oneOf value then merge with the existing `idSchema`
+        // Generate the idSchema for the oneOf/anyOf value then merge with the existing `idSchema`
         const rawIdSchema = LayoutGridField.getIdSchema<T, S, F>(schemaUtils, idSchema, formData, schema, idSeparator);
         idSchema = mergeObjects(rawIdSchema, idSchema) as IdSchema<T>;
       }
@@ -581,7 +584,7 @@ export default class LayoutGridField<
       isReadonly = getNonNullishValue(schema?.readOnly, isReadonly);
       if (schema && (has(schema, ONE_OF_KEY) || has(schema, ANY_OF_KEY))) {
         const xxx = has(schema, ONE_OF_KEY) ? ONE_OF_KEY : ANY_OF_KEY;
-        // Set the options if we have a schema with a oneOf
+        // Set the options if we have a schema with a oneOf/anyOf
         const discriminator = getDiscriminatorFieldFromSchema(schema);
         optionsInfo = { options: schema[xxx] as S[], hasDiscriminator: !!discriminator };
       }
@@ -691,12 +694,12 @@ export default class LayoutGridField<
     return null;
   }
 
-  /** Renders a material-ui `Grid2` as an item. The `layoutGridSchema` for the `GridType.COLUMN` is separated into the
-   * `children` and other `gridProps`. The `gridProps` will be spread onto the outer `Grid2`. Inside of the `Grid2` all of
-   * the `children` are rendered.
+  /** Renders a material-ui `GridTemplate` as an item. The `layoutGridSchema` for the `GridType.COLUMN` is separated
+   * into the `children` and other `gridProps`. The `gridProps` will be spread onto the outer `GridTemplate`. Inside
+   * the `GridTemplate` all the `children` are rendered.
    *
    * @param layoutGridSchema - The string or object that represents the configuration for the grid field
-   * @returns - The rendered `Grid2` containing the children for the `GridType.COLUMN`
+   * @returns - The rendered `GridTemplate` containing the children for the `GridType.COLUMN`
    */
   renderCol(layoutGridSchema: GridSchemaType) {
     const { registry, uiSchema } = this.props;
@@ -715,12 +718,12 @@ export default class LayoutGridField<
     );
   }
 
-  /** Renders a material-ui `Grid2` as an item. The `layoutGridSchema` for the `GridType.COLUMNS` is separated into the
-   * `children` and other `gridProps`. The `children` is iterated on and `gridProps` will be spread onto the outer
-   * `Grid2`. Each child will have their own rendered `Grid2`.
+  /** Renders a material-ui `GridTemplate` as an item. The `layoutGridSchema` for the `GridType.COLUMNS` is separated
+   * into the `children` and other `gridProps`. The `children` is iterated on and `gridProps` will be spread onto the
+   * outer `GridTemplate`. Each child will have their own rendered `GridTemplate`.
    *
    * @param layoutGridSchema - The string or object that represents the configuration for the grid field
-   * @returns - The rendered `Grid2` containing the children for the `GridType.COLUMNS`
+   * @returns - The rendered `GridTemplate` containing the children for the `GridType.COLUMNS`
    */
   renderColumns(layoutGridSchema: GridSchemaType) {
     const { registry, uiSchema } = this.props;
@@ -744,12 +747,12 @@ export default class LayoutGridField<
     ));
   }
 
-  /** Renders a material-ui `Grid2` as a container. The
+  /** Renders a material-ui `GridTemplate` as a container. The
    * `layoutGridSchema` for the `GridType.ROW` is separated into the `children` and other `gridProps`. The `gridProps`
-   * will be spread onto the outer `Grid2`. Inside of the `Grid2` all of the `children` are rendered.
+   * will be spread onto the outer `GridTemplate`. Inside of the `GridTemplate` all of the `children` are rendered.
    *
    * @param layoutGridSchema - The string or object that represents the configuration for the grid field
-   * @returns - The rendered `Grid2` containing the children for the `GridType.ROW`
+   * @returns - The rendered `GridTemplate` containing the children for the `GridType.ROW`
    */
   renderRow(layoutGridSchema: GridSchemaType) {
     const { registry, uiSchema } = this.props;
@@ -796,13 +799,13 @@ export default class LayoutGridField<
    * to be the dotted-path to the field in the schema. Otherwise, we extract the `name`, and optional `render` and all
    * other props. If `name` does not exist and there is an optional `render`, we return the `render` component with only
    * specified props for that component. If `name` exists, we take the name, the initial & root schemas and the formData
-   * and get the destination schema, is required state and optional oneOf options for it. If the destination schema was
-   * located along with oneOf options then a `LayoutMultiSchemaField` will be rendered with the `uiSchema`,
-   * `errorSchema`, `idSchema` and `formData` drilled down to the dotted-path field, spreading any other props from
-   * `gridSchema` into the `ui:options`. If the destination schema located without any oneOf options, then a
-   * `SchemaField` will be rendered with the same props as mentioned in the previous sentence. If no destination schema
-   * was located, but a custom render component was found, then it will be rendered with many of the non-event handling
-   * props. If none of the previous render paths are valid, then a null is returned.
+   * and get the destination schema, is required state and optional oneOf/anyOf options for it. If the destination
+   * schema was located along with oneOf/anyOf options then a `LayoutMultiSchemaField` will be rendered with the
+   * `uiSchema`, `errorSchema`, `idSchema` and `formData` drilled down to the dotted-path field, spreading any other
+   * props from `gridSchema` into the `ui:options`. If the destination schema located without any oneOf/anyOf options,
+   * then a `SchemaField` will be rendered with the same props as mentioned in the previous sentence. If no destination
+   * schema was located, but a custom render component was found, then it will be rendered with many of the non-event
+   * handling props. If none of the previous render paths are valid, then a null is returned.
    *
    * @param gridSchema - The string or object that represents the configuration for the grid field
    * @returns - One of `LayoutMultiSchemaField`, `SchemaField`, a custom render component or null, depending
