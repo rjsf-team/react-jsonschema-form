@@ -32,17 +32,17 @@ function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
   const handleBlur = useCallback(
     ({ target }: FocusEvent<HTMLInputElement>) =>
       onBlur(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, emptyValue)),
-    [onBlur, id]
+    [onBlur, enumOptions, emptyValue, id]
   );
 
   const handleFocus = useCallback(
     ({ target }: FocusEvent<HTMLInputElement>) =>
       onFocus(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, emptyValue)),
-    [onFocus, id]
+    [onFocus, enumOptions, emptyValue, id]
   );
 
   return (
-    <div className='field-radio-group' id={id}>
+    <div className='field-radio-group' id={id} role='radiogroup'>
       {Array.isArray(enumOptions) &&
         enumOptions.map((option, i) => {
           const checked = enumOptionsIsSelected<S>(option.value, value);

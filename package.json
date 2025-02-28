@@ -32,6 +32,7 @@
   "homepage": "https://github.com/rjsf-team/react-jsonschema-form",
   "devDependencies": {
     "@babel/eslint-parser": "^7.23.10",
+    "@babel/plugin-transform-class-static-block": "^7.26.0",
     "@nrwl/nx-cloud": "^15.3.5",
     "@testing-library/jest-dom": "^6.4.2",
     "@testing-library/react": "^14.2.1",

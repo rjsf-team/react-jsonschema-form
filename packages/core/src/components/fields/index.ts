@@ -2,6 +2,8 @@ import { Field, FormContextType, RegistryFieldsType, RJSFSchema, StrictRJSFSchem
 
 import ArrayField from './ArrayField';
 import BooleanField from './BooleanField';
+import LayoutGridField from './LayoutGridField';
+import LayoutMultiSchemaField from './LayoutMultiSchemaField';
 import MultiSchemaField from './MultiSchemaField';
 import NumberField from './NumberField';
 import ObjectField from './ObjectField';
@@ -19,6 +21,8 @@ function fields<
     ArrayField: ArrayField as unknown as Field<T, S, F>,
     // ArrayField falls back to SchemaField if ArraySchemaField is not defined, which it isn't by default
     BooleanField,
+    LayoutGridField,
+    LayoutMultiSchemaField,
     NumberField,
     ObjectField,
     OneOfField: MultiSchemaField,
