@@ -69,6 +69,7 @@ export default function SelectWidget<
   ) : (
     <div className='p-0.5'>
       <FancyMultiSelect
+        ariaDescribedby={ariaDescribedByIds<T>(id)}
         autoFocus={autofocus}
         disabled={disabled || readonly}
         multiple
@@ -80,6 +81,7 @@ export default function SelectWidget<
         }}
         onFocus={_onFancyFocus}
         onBlur={_onFancyBlur}
+        id={id}
       />
     </div>
   );

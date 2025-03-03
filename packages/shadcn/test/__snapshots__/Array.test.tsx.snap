@@ -530,6 +530,7 @@ exports[`array fields checkboxes 1`] = `
         className="p-0.5"
       >
         <div
+          aria-describedby="root__error root__description root__help"
           aria-disabled={false}
           autoFocus={false}
           className="flex h-full w-full flex-col rounded-md text-popover-foreground overflow-visible bg-transparent"
@@ -1625,6 +1626,7 @@ exports[`with title and description checkboxes 1`] = `
         className="p-0.5"
       >
         <div
+          aria-describedby="root__error root__description root__help"
           aria-disabled={false}
           autoFocus={false}
           className="flex h-full w-full flex-col rounded-md text-popover-foreground overflow-visible bg-transparent"
@@ -2508,6 +2510,7 @@ exports[`with title and description from both checkboxes 1`] = `
         className="p-0.5"
       >
         <div
+          aria-describedby="root__error root__description root__help"
           aria-disabled={false}
           autoFocus={false}
           className="flex h-full w-full flex-col rounded-md text-popover-foreground overflow-visible bg-transparent"
@@ -3391,6 +3394,7 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
         className="p-0.5"
       >
         <div
+          aria-describedby="root__error root__description root__help"
           aria-disabled={false}
           autoFocus={false}
           className="flex h-full w-full flex-col rounded-md text-popover-foreground overflow-visible bg-transparent"
@@ -4182,6 +4186,7 @@ exports[`with title and description with global label off checkboxes 1`] = `
         className="p-0.5"
       >
         <div
+          aria-describedby="root__error root__description root__help"
           aria-disabled={false}
           autoFocus={false}
           className="flex h-full w-full flex-col rounded-md text-popover-foreground overflow-visible bg-transparent"

@@ -1451,6 +1451,7 @@ exports[`single fields select field multiple choice 1`] = `
         className="p-0.5"
       >
         <div
+          aria-describedby="root__error root__description root__help"
           aria-disabled={false}
           autoFocus={false}
           className="flex h-full w-full flex-col rounded-md text-popover-foreground overflow-visible bg-transparent"
@@ -1542,6 +1543,7 @@ exports[`single fields select field multiple choice enumDisabled 1`] = `
         className="p-0.5"
       >
         <div
+          aria-describedby="root__error root__description root__help"
           aria-disabled={false}
           autoFocus={false}
           className="flex h-full w-full flex-col rounded-md text-popover-foreground overflow-visible bg-transparent"
@@ -1856,6 +1858,7 @@ exports[`single fields select field multiple choice formData 1`] = `
         className="p-0.5"
       >
         <div
+          aria-describedby="root__error root__description root__help"
           aria-disabled={false}
           autoFocus={false}
           className="flex h-full w-full flex-col rounded-md text-popover-foreground overflow-visible bg-transparent"
@@ -1895,6 +1898,7 @@ exports[`single fields select field multiple choice formData 1`] = `
                 foo
                 <button
                   className="rtl:mr-1 ltr:ml-1 ring-offset-background rounded-full outline-none focus:ring-1 focus:ring-ring focus:ring-offset-1"
+                  disabled={false}
                   onClick={[Function]}
                   onKeyDown={[Function]}
                   onMouseDown={[Function]}
@@ -1927,6 +1931,7 @@ exports[`single fields select field multiple choice formData 1`] = `
                 bar
                 <button
                   className="rtl:mr-1 ltr:ml-1 ring-offset-background rounded-full outline-none focus:ring-1 focus:ring-ring focus:ring-offset-1"
+                  disabled={false}
                   onClick={[Function]}
                   onKeyDown={[Function]}
                   onMouseDown={[Function]}
@@ -2011,6 +2016,7 @@ exports[`single fields select field multiple choice with labels 1`] = `
         className="p-0.5"
       >
         <div
+          aria-describedby="root__error root__description root__help"
           aria-disabled={false}
           autoFocus={false}
           className="flex h-full w-full flex-col rounded-md text-popover-foreground overflow-visible bg-transparent"
