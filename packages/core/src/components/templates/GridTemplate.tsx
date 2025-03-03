@@ -7,9 +7,8 @@ import { GridTemplateProps } from '@rjsf/utils';
  */
 export default function GridTemplate(props: GridTemplateProps) {
   const { children, column, className, ...rest } = props;
-  const classNames = column ? className : `row ${className}`;
   return (
-    <div className={classNames} {...rest}>
+    <div className={className} {...rest}>
       {children}
     </div>
   );

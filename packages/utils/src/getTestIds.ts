@@ -3,6 +3,12 @@ import get from 'lodash/get';
 
 import { TestIdShape } from './types';
 
+/** Returns an empty object for use on the browser since we'll never use test ids there.
+ */
+export function getTestIdsBrowser(): TestIdShape {
+  return {};
+}
+
 /** Returns an object of test IDs that can only be used in test mode. If the function is called in a test environment
  * (`NODE_ENV === 'test'`, this is set by jest) then a Proxy object will be returned. If a key within the returned
  * object is accessed, if the value already exists the object will return that value, otherwise it will create that key
@@ -22,7 +28,7 @@ export default function getTestIds(): TestIdShape {
   // For some reason, even though process.env contains the value of `test` for NODE_ENV, accessing it directly returns
   // 'development'. Using `get()` does, in fact, return test so sticking with it
   if (get(process, 'env.NODE_ENV') !== 'test') {
-    return {};
+    return getTestIdsBrowser();
   }
 
   const ids = new Map();
