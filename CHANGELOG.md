@@ -20,6 +20,7 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/utils
 
 - fixed issue with customValidate errors are not cleared when the form is valid [4365](https://github.com/rjsf-team/react-jsonschema-form/pull/4365) due to regression
+- Add missing `experimental_customMergeAllOf` argument to `ensureFormDataMatchingSchema` introduced by [4388](https://github.com/rjsf-team/react-jsonschema-form/pull/4388)
 
 # 5.24.3
 
