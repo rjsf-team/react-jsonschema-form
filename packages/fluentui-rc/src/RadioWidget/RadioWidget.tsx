@@ -30,7 +30,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
   onBlur,
   onFocus,
 }: WidgetProps<T, S, F>) {
-  const { enumOptions, enumDisabled, emptyValue } = options;
+  const { enumOptions, enumDisabled, emptyValue, inline } = options;
 
   const _onChange = (_: any, data: RadioGroupOnChangeData) =>
     onChange(enumOptionsValueForIndex<S>(data.value, enumOptions, emptyValue));
@@ -52,6 +52,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
       <RadioGroup
         id={id}
         name={id}
+        layout={inline ? 'horizontal' : 'vertical'}
         value={selectedIndex as string | undefined}
         onChange={_onChange}
         onBlur={_onBlur}

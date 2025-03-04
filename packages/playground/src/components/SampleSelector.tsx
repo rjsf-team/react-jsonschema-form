@@ -1,18 +1,16 @@
-import { useState, MouseEvent } from 'react';
+import { MouseEvent } from 'react';
 import { samples } from '../samples';
 
-interface SelectorProps {
-  onSelected: (data: any) => void;
+export interface SampleSelectorProps {
+  onSelected: (sampleName: string) => void;
+  selectedSample: string;
 }
 
-export default function Selector({ onSelected }: SelectorProps) {
-  const [current, setCurrent] = useState<string>('Simple');
-
+export default function SampleSelector({ onSelected, selectedSample }: SampleSelectorProps) {
   function onLabelClick(label: string) {
     return (event: MouseEvent) => {
       event.preventDefault();
-      setCurrent(label);
-      setTimeout(() => onSelected(samples[label]), 0);
+      setTimeout(() => onSelected(label), 0);
     };
   }
 
@@ -20,7 +18,7 @@ export default function Selector({ onSelected }: SelectorProps) {
     <ul className='nav nav-pills'>
       {Object.keys(samples).map((label, i) => {
         return (
-          <li key={i} role='presentation' className={current === label ? 'active' : ''}>
+          <li key={i} role='presentation' className={selectedSample === label ? 'active' : ''}>
             <a href='#' onClick={onLabelClick(label)}>
               {label}
             </a>

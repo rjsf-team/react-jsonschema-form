@@ -26,7 +26,6 @@ const validators: PlaygroundProps['validators'] = {
   AJV8_es: esV8Validator,
   AJV8_2019,
   AJV8_2020,
-  'AJV6 (deprecated)': v6Validator,
 };
 
 const themes: PlaygroundProps['themes'] = {
@@ -102,7 +101,7 @@ const themes: PlaygroundProps['themes'] = {
     stylesheet: '',
     theme: FluentUIRCTheme,
   },
-  'material-ui-5': {
+  mui: {
     stylesheet: '',
     theme: MuiV5Theme,
   },

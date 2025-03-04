@@ -75,7 +75,7 @@ export default function DemoFrame(props: DemoFrameProps) {
   }, []);
 
   let body: ReactNode = children;
-  if (theme === 'material-ui-5') {
+  if (theme === 'mui') {
     body = ready ? (
       <CacheProvider value={emotionCache}>
         <CssBaseline />
