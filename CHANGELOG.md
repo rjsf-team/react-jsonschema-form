@@ -15,6 +15,12 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+# 5.24.7
+
+## Dev / docs / playground
+
+- Fixed build issues with small change to `core/src/tsconfig.json` and running NX serially
+
 # 5.24.6
 
 ## @rjsf/core
