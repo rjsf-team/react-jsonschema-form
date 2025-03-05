@@ -27,14 +27,14 @@ jobs:
 
       - name: Build with Netlify badge
         if: github.ref != 'refs/heads/main' && matrix.node-version != '14.x'
-        run: npm run build
+        run: npm run build-serial
         env:
           VITE_SHOW_NETLIFY_BADGE: true
           NODE_OPTIONS: --max_old_space_size=4096
 
       - name: Build
         if: github.ref == 'refs/heads/main' && matrix.node-version != '14.x'
-        run: npm run build
+        run: npm run build-serial
         env:
           NODE_OPTIONS: --max_old_space_size=4096
 
