@@ -15,6 +15,12 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+# 5.24.6
+
+## @rjsf/core
+
+- Fixed `src/tsconfig.json` to add the `tsc-alias` block to support proper fixing up of ESM import
+
 # 5.24.5
 
 ## @rjsf/utils
