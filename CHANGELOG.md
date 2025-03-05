@@ -15,6 +15,12 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+# 5.24.5
+
+## @rjsf/utils
+
+- Fixed `package.json` to remove `node` from the `exports` block to fix ESM support
+
 # 5.24.4
 
 ## @rjsf/utils
@@ -34,6 +40,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Rollback [4446](https://github.com/rjsf-team/react-jsonschema-form/pull/4446) due to regression
 
 ## Dev / docs / playground
+
 - Fixed issue with selector, where validator was getting refreshed on clicking on anything in selector. [#4472](https://github.com/rjsf-team/react-jsonschema-form/pull/4472)
 
 # 5.24.2

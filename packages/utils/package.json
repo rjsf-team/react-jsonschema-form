@@ -7,7 +7,6 @@
   "description": "Utility functions for @rjsf/core",
   "exports": {
     "require": "./dist/index.js",
-    "node": "./dist/index.js",
     "import": "./lib/index.js",
     "types": "./lib/index.d.ts"
   },
