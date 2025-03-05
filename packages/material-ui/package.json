@@ -5,13 +5,18 @@
   "module": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "description": "Material UI 4 theme, fields and widgets for react-jsonschema-form",
+  "exports": {
+    "require": "./dist/index.js",
+    "import": "./lib/index.js",
+    "types": "./lib/index.d.ts"
+  },
   "files": [
     "dist",
     "lib",
     "src"
   ],
   "scripts": {
-    "build:ts": "tsc -b",
+    "build:ts": "tsc -b tsconfig.build.json && tsc-alias -p tsconfig.build.json",
     "build:cjs": "esbuild ./src/index.ts --bundle --outfile=dist/index.js --sourcemap --packages=external --format=cjs",
     "build:esm": "esbuild ./src/index.ts --bundle --outfile=dist/material-ui.esm.js --sourcemap --packages=external --format=esm",
     "build:umd": "rollup dist/material-ui.esm.js --format=umd --file=dist/material-ui.umd.js --name=@rjsf/material-ui",

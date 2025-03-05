@@ -5,6 +5,23 @@
   "module": "lib/index.js",
   "typings": "lib/index.d.ts",
   "description": "The ajv-8 based validator for @rjsf/core",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./lib/index.js",
+      "types": "./lib/index.d.ts"
+    },
+    "./compileSchemaValidators": {
+      "require": "./dist/compileSchemaValidators.js",
+      "import": "./lib/compileSchemaValidators.js",
+      "types": "./lib/compileSchemaValidators.d.ts"
+    },
+    "./dist/compileSchemaValidators": {
+      "require": "./dist/compileSchemaValidators.js",
+      "import": "./lib/compileSchemaValidators.js",
+      "types": "./lib/compileSchemaValidators.d.ts"
+    }
+  },
   "files": [
     "dist",
     "lib",
@@ -15,7 +32,8 @@
     "node": ">=14"
   },
   "scripts": {
-    "build:ts": "tsc -b",
+    "compileReplacer": "tsc -p tsconfig.replacer.json",
+    "build:ts": "npm run compileReplacer && rimraf ./lib && tsc -b tsconfig.build.json && tsc-alias -p tsconfig.build.json",
     "build:cjs": "esbuild ./src/index.ts --bundle --outfile=dist/index.js --sourcemap --packages=external --format=cjs && esbuild ./src/compileSchemaValidators.ts --bundle --outfile=dist/compileSchemaValidators.js --sourcemap --packages=external --format=cjs",
     "build:esm": "esbuild ./src/index.ts --bundle --outfile=dist/validator-ajv8.esm.js --sourcemap --packages=external --format=esm  && esbuild ./src/compileSchemaValidators.ts --bundle --outfile=dist/compileSchemaValidators.esm.js --sourcemap --packages=external --format=esm",
     "build:umd": "rollup dist/validator-ajv8.esm.js --format=umd --file=dist/validator-ajv8.umd.js --name=@rjsf/validator-ajv8",
