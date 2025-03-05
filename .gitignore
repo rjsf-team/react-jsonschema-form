@@ -141,4 +141,5 @@ out/
 # typescript tsbuildinfo
 *.tsbuildinfo
 lodashReplacer.js
+muiReplacer.js
 
