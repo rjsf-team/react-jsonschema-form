@@ -4,6 +4,11 @@
   "main": "dist/index.js",
   "module": "lib/index.js",
   "typings": "lib/index.d.ts",
+  "exports": {
+    "require": "./dist/index.js",
+    "import": "./lib/index.js",
+    "types": "./lib/index.d.ts"
+  },
   "description": "Bootstrap 4 theme, fields and widgets for react-jsonschema-form",
   "files": [
     "dist",
@@ -15,7 +20,7 @@
     "url": "git+https://github.com/rjsf-team/react-jsonschema-form.git"
   },
   "scripts": {
-    "build:ts": "tsc -b",
+    "build:ts": "tsc -b tsconfig.build.json && tsc-alias -p tsconfig.build.json",
     "build:cjs": "esbuild ./src/index.ts --bundle --outfile=dist/index.js --sourcemap --packages=external --format=cjs",
     "build:esm": "esbuild ./src/index.ts --bundle --outfile=dist/bootstrap-4.esm.js --sourcemap --packages=external --format=esm",
     "build:umd": "rollup dist/bootstrap-4.esm.js --format=umd --file=dist/bootstrap-4.umd.js --name=@rjsf/bootstrap-4",
