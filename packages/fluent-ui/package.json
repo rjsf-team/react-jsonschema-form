@@ -5,9 +5,31 @@
   "module": "lib/index.js",
   "typings": "lib/index.d.ts",
   "exports": {
-    "require": "./dist/index.js",
-    "import": "./lib/index.js",
-    "types": "./lib/index.d.ts"
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./lib/index.js",
+      "types": "./lib/index.d.ts"
+    },
+    "./lib": {
+      "require": "./dist/index.js",
+      "import": "./lib/index.js",
+      "types": "./lib/index.d.ts"
+    },
+    "./lib/*.js": {
+      "require": "./dist/*.js",
+      "import": "./lib/*.js",
+      "types": "./lib/*.d.ts"
+    },
+    "./dist": {
+      "require": "./dist/index.js",
+      "import": "./lib/index.js",
+      "types": "./lib/index.d.ts"
+    },
+    "./dist/*.js": {
+      "require": "./dist/*.js",
+      "import": "./lib/*.js",
+      "types": "./lib/*.d.ts"
+    }
   },
   "description": "Fluent UI theme, fields and widgets for react-jsonschema-form",
   "files": [

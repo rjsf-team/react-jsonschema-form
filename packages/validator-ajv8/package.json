@@ -16,10 +16,35 @@
       "import": "./lib/compileSchemaValidators.js",
       "types": "./lib/compileSchemaValidators.d.ts"
     },
+    "./lib/compileSchemaValidators": {
+      "require": "./dist/compileSchemaValidators.js",
+      "import": "./lib/compileSchemaValidators.js",
+      "types": "./lib/compileSchemaValidators.d.ts"
+    },
     "./dist/compileSchemaValidators": {
       "require": "./dist/compileSchemaValidators.js",
       "import": "./lib/compileSchemaValidators.js",
       "types": "./lib/compileSchemaValidators.d.ts"
+    },
+    "./lib": {
+      "require": "./dist/index.js",
+      "import": "./lib/index.js",
+      "types": "./lib/index.d.ts"
+    },
+    "./lib/*.js": {
+      "require": "./dist/*.js",
+      "import": "./lib/*.js",
+      "types": "./lib/*.d.ts"
+    },
+    "./dist": {
+      "require": "./dist/index.js",
+      "import": "./lib/index.js",
+      "types": "./lib/index.d.ts"
+    },
+    "./dist/*.js": {
+      "require": "./dist/*.js",
+      "import": "./lib/*.js",
+      "types": "./lib/*.d.ts"
     }
   },
   "files": [
