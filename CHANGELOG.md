@@ -19,7 +19,8 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## Dev / docs / playground
 
-- Fixed build issues with small change to `core/src/tsconfig.json` and running NX serially
+- Fixed build issues with small change to `core/src/tsconfig.json` and improvements to the `exports` for ESM support
+- Run NX serially in the pipelines to avoid odd out-of-sequence build issues
 
 # 5.24.6
 
