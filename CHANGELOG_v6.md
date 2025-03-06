@@ -79,7 +79,7 @@ should change the heading of the (upcoming) version to include a major version b
   - `findFieldInSchema<T = undefined, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(validator: ValidatorType<T, S, F>, rootSchema: S, path: string | string[], schema: S, formData?: T, experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>): FoundFieldType<S>`: Finds the field specified by the `path` within the root or recursed `schema`
   - `findSelectedOptionInXxxOf<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(validator: ValidatorType<T, S, F>, rootSchema: S, schema: S, fallbackField: string,xxx: 'anyOf' | 'oneOf', formData?: T, experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>): S | undefined`: Finds the option that matches the selector field in the `schema` or undefined if nothing is selected
   - `getFromSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(validator: ValidatorType<T, S, F>, rootSchema: S, schema: S, path: string | string[], defaultValue: T | S, experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>): T | S`: Helper that acts like lodash's `get` but additionally retrieves `$ref`s as needed to get the path for schemas
-- Exported a `browser` version of the libraries with a different `getTestIds()`
+- Exported a `browser` version of the libraries with a browser-safe version of `getTestIds()`
 
 ## @rjsf/validator-ajv6
 
