@@ -30,6 +30,7 @@ export default function ColorWidget<T = any, S extends StrictRJSFSchema = RJSFSc
   } = props;
   const inputProps = getInputProps<T, S, F>(schema, type, options);
   const { inline } = options;
+  const primeProps = (options.prime || {}) as object;
 
   const _onChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) =>
     onChange(value === '' ? options.emptyValue : value);
@@ -41,6 +42,7 @@ export default function ColorWidget<T = any, S extends StrictRJSFSchema = RJSFSc
       id={id}
       name={id}
       placeholder={placeholder}
+      {...primeProps}
       {...inputProps}
       required={required}
       inline={inline}

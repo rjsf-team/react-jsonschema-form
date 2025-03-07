@@ -15,6 +15,7 @@ meaning that you must load the Bootstrap stylesheet on the page to view the form
 | material-ui           | Published | `@rjsf/mui`             |
 | Semantic UI           | Published | `@rjsf/semantic-ui`     |
 | shadcn                | Published | `@rjsf/shadcn`          |
+| PrimeReact            | -         | `@rjsf/primereact`      |
 
 ## Using themes
 

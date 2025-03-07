@@ -43,6 +43,7 @@ export default function BaseInputTemplate<
   }
 
   const inputProps = getInputProps<T, S, F>(schema, type, options);
+  const primeProps = (options.prime || {}) as object;
   const _onChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) =>
     onChange(value === '' ? options.emptyValue : value);
   const _onBlur = () => onBlur && onBlur(id, value);
@@ -53,6 +54,7 @@ export default function BaseInputTemplate<
       id={id}
       name={id}
       placeholder={placeholder}
+      {...primeProps}
       {...inputProps}
       required={required}
       autoFocus={autofocus}
