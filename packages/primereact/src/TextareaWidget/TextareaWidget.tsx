@@ -12,6 +12,7 @@ export default function TextareaWidget<
   F extends FormContextType = any
 >(props: WidgetProps<T, S, F>) {
   const { id, value, required, disabled, readonly, autofocus, onChange, onBlur, onFocus, options } = props;
+  const primeProps = (options.prime || {}) as object;
 
   let rows = 5;
   // noinspection SuspiciousTypeOfGuard
@@ -26,6 +27,7 @@ export default function TextareaWidget<
   return (
     <InputTextarea
       id={id}
+      {...primeProps}
       value={value || ''}
       required={required}
       disabled={disabled || readonly}

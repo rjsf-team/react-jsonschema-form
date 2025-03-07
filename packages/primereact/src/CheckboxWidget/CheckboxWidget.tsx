@@ -51,6 +51,7 @@ export default function CheckboxWidget<
   const _onFocus = () => onFocus && onFocus(id, value);
   const checked = value === 'true' || value === true;
   const description = options.description ?? schema.description;
+  const primeProps = (options.prime || {}) as object;
 
   return (
     <>
@@ -70,6 +71,7 @@ export default function CheckboxWidget<
         <Checkbox
           inputId={id}
           name={id}
+          {...primeProps}
           disabled={disabled || readonly}
           autoFocus={autofocus}
           checked={typeof value === 'undefined' ? false : checked}

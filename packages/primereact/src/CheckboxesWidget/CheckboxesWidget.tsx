@@ -40,6 +40,7 @@ export default function CheckboxesWidget<
     hideLabel,
   } = props;
   const { enumOptions, enumDisabled } = options;
+  const primeProps = (options.prime || {}) as object;
   const checkboxesValues = Array.isArray(value) ? value : [value];
 
   const _onChange = (index: number) => (e: CheckboxChangeEvent) => {
@@ -88,6 +89,7 @@ export default function CheckboxesWidget<
               <Checkbox
                 inputId={optionId(id, index)}
                 name={id}
+                {...primeProps}
                 value={option.value}
                 checked={checked}
                 disabled={disabled || itemDisabled || readonly}

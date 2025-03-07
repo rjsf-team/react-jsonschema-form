@@ -19,6 +19,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
   props: WidgetProps<T, S, F>
 ) {
   const { id, value, disabled, readonly, onChange, onBlur, onFocus, options } = props;
+  const primeProps = (options.prime || {}) as object;
   const { enumOptions, enumDisabled, emptyValue } = options;
 
   const _onChange = (e: RadioButtonChangeEvent) => {
@@ -39,6 +40,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
               <RadioButton
                 inputId={optionId(id, index)}
                 name={id}
+                {...primeProps}
                 onFocus={_onFocus}
                 onBlur={_onBlur}
                 onChange={_onChange}

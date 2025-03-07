@@ -32,7 +32,7 @@ export default function PasswordWidget<
     rawErrors = [],
   } = props;
   const inputProps = getInputProps<T, S, F>(schema, type, options);
-  const { feedback, promptLabel, weakLabel, mediumLabel, strongLabel, toggleMask } = options;
+  const primeProps = (options.prime || {}) as object;
 
   const _onChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) =>
     onChange(value === '' ? options.emptyValue : value);
@@ -44,18 +44,13 @@ export default function PasswordWidget<
       id={id}
       name={id}
       placeholder={placeholder}
+      {...primeProps}
       {...inputProps}
       required={required}
       autoFocus={autofocus}
       disabled={disabled || readonly}
       value={value || ''}
       invalid={rawErrors.length > 0}
-      feedback={!!feedback}
-      promptLabel={promptLabel as string}
-      weakLabel={weakLabel as string}
-      mediumLabel={mediumLabel as string}
-      strongLabel={strongLabel as string}
-      toggleMask={!!toggleMask}
       onChange={onChangeOverride || _onChange}
       onBlur={_onBlur}
       onFocus={_onFocus}

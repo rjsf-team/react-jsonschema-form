@@ -30,6 +30,8 @@ export default function UpDownWidget<T = any, S extends StrictRJSFSchema = RJSFS
   } = props;
   const inputProps = getInputProps<T, S, F>(schema, type, options);
   const { showButtons, buttonLayout, useGrouping, minFractionDigits, maxFractionDigits, locale, currency } = options;
+  const primeProps = (options.prime || {}) as object;
+
   const _onChange = (event: InputNumberChangeEvent) => onChange(event.value === null ? options.emptyValue : value);
   const _onBlur = () => onBlur && onBlur(id, value);
   const _onFocus = () => onFocus && onFocus(id, value);
@@ -38,6 +40,7 @@ export default function UpDownWidget<T = any, S extends StrictRJSFSchema = RJSFS
     <InputNumber
       id={id}
       name={id}
+      {...primeProps}
       placeholder={placeholder}
       step={isNaN(Number(inputProps.step)) ? 1 : Number(inputProps.step)}
       required={required}
