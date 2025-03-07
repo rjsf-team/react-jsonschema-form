@@ -50,6 +50,7 @@ function SingleSelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F 
   ...dropdownProps
 }: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, emptyValue: optEmptyVal } = options;
+  const primeProps = (options.prime || {}) as object;
 
   multiple = typeof multiple === 'undefined' ? false : multiple;
 
@@ -68,6 +69,7 @@ function SingleSelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F 
     <Dropdown
       id={id}
       name={id}
+      {...primeProps}
       value={!isEmpty && typeof selectedIndexes !== 'undefined' ? selectedIndexes : emptyValue}
       options={(enumOptions ?? []).map(({ value, label }, i: number) => ({
         label,
@@ -100,6 +102,7 @@ function MultiSelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   onFocus,
 }: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, emptyValue: optEmptyVal } = options;
+  const primeProps = (options.prime || {}) as object;
 
   multiple = typeof multiple === 'undefined' ? false : multiple;
 
@@ -117,6 +120,7 @@ function MultiSelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
     <MultiSelect
       id={id}
       name={id}
+      {...primeProps}
       value={!isEmpty && typeof selectedIndexes !== 'undefined' ? selectedIndexes : emptyValue}
       options={(enumOptions ?? []).map(({ value, label }, i: number) => ({
         label,
