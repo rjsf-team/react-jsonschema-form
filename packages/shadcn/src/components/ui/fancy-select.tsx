@@ -4,7 +4,7 @@ import * as React from 'react';
 import { Check, ChevronDown } from 'lucide-react';
 import { Command, CommandGroup, CommandItem, CommandList } from './command';
 import { FocusEventHandler } from 'react';
-import { cn } from '../../shad-lib/utils';
+import { cn } from '../../lib/utils';
 
 export type FancySelectItem = {
   value: any;

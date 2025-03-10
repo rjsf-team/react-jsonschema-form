@@ -6,7 +6,7 @@ import { X } from 'lucide-react';
 import { Badge } from './badge';
 import { Command, CommandGroup, CommandItem, CommandList } from './command';
 import { Command as CommandPrimitive } from 'cmdk';
-import { cn } from '../../shad-lib/utils';
+import { cn } from '../../lib/utils';
 import { isEqual } from 'lodash';
 
 export type FancySelectItem = {

@@ -33,6 +33,7 @@ exports[`array fields array 1`] = `
                     disabled={false}
                     id="root__add"
                     onClick={[Function]}
+                    type="button"
                   >
                     <svg
                       className="lucide lucide-circle-plus"
@@ -157,6 +158,7 @@ exports[`array fields array icons 1`] = `
                         id="root_0__moveUp"
                         onClick={[Function]}
                         title="Move up"
+                        type="button"
                       >
                         <svg
                           className="lucide lucide-chevron-up h-4 w-4"
@@ -181,6 +183,7 @@ exports[`array fields array icons 1`] = `
                         id="root_0__moveDown"
                         onClick={[Function]}
                         title="Move down"
+                        type="button"
                       >
                         <svg
                           className="lucide lucide-chevron-down h-4 w-4"
@@ -205,6 +208,7 @@ exports[`array fields array icons 1`] = `
                         id="root_0__copy"
                         onClick={[Function]}
                         title="Copy"
+                        type="button"
                       >
                         <svg
                           className="lucide lucide-copy h-4 w-4"
@@ -237,6 +241,7 @@ exports[`array fields array icons 1`] = `
                         id="root_0__remove"
                         onClick={[Function]}
                         title="Remove"
+                        type="button"
                       >
                         <svg
                           className="lucide lucide-trash2 h-4 w-4 stroke-destructive"
@@ -331,6 +336,7 @@ exports[`array fields array icons 1`] = `
                         id="root_1__moveUp"
                         onClick={[Function]}
                         title="Move up"
+                        type="button"
                       >
                         <svg
                           className="lucide lucide-chevron-up h-4 w-4"
@@ -355,6 +361,7 @@ exports[`array fields array icons 1`] = `
                         id="root_1__moveDown"
                         onClick={[Function]}
                         title="Move down"
+                        type="button"
                       >
                         <svg
                           className="lucide lucide-chevron-down h-4 w-4"
@@ -379,6 +386,7 @@ exports[`array fields array icons 1`] = `
                         id="root_1__copy"
                         onClick={[Function]}
                         title="Copy"
+                        type="button"
                       >
                         <svg
                           className="lucide lucide-copy h-4 w-4"
@@ -411,6 +419,7 @@ exports[`array fields array icons 1`] = `
                         id="root_1__remove"
                         onClick={[Function]}
                         title="Remove"
+                        type="button"
                       >
                         <svg
                           className="lucide lucide-trash2 h-4 w-4 stroke-destructive"
@@ -462,6 +471,7 @@ exports[`array fields array icons 1`] = `
                     disabled={false}
                     id="root__add"
                     onClick={[Function]}
+                    type="button"
                   >
                     <svg
                       className="lucide lucide-circle-plus"
@@ -1074,6 +1084,7 @@ exports[`with title and description array 1`] = `
                     disabled={false}
                     id="root__add"
                     onClick={[Function]}
+                    type="button"
                   >
                     <svg
                       className="lucide lucide-circle-plus"
@@ -1238,6 +1249,7 @@ exports[`with title and description array icons 1`] = `
                         id="root_0__moveUp"
                         onClick={[Function]}
                         title="Move up"
+                        type="button"
                       >
                         <svg
                           className="lucide lucide-chevron-up h-4 w-4"
@@ -1262,6 +1274,7 @@ exports[`with title and description array icons 1`] = `
                         id="root_0__moveDown"
                         onClick={[Function]}
                         title="Move down"
+                        type="button"
                       >
                         <svg
                           className="lucide lucide-chevron-down h-4 w-4"
@@ -1286,6 +1299,7 @@ exports[`with title and description array icons 1`] = `
                         id="root_0__copy"
                         onClick={[Function]}
                         title="Copy"
+                        type="button"
                       >
                         <svg
                           className="lucide lucide-copy h-4 w-4"
@@ -1318,6 +1332,7 @@ exports[`with title and description array icons 1`] = `
                         id="root_0__remove"
                         onClick={[Function]}
                         title="Remove"
+                        type="button"
                       >
                         <svg
                           className="lucide lucide-trash2 h-4 w-4 stroke-destructive"
@@ -1425,6 +1440,7 @@ exports[`with title and description array icons 1`] = `
                         id="root_1__moveUp"
                         onClick={[Function]}
                         title="Move up"
+                        type="button"
                       >
                         <svg
                           className="lucide lucide-chevron-up h-4 w-4"
@@ -1449,6 +1465,7 @@ exports[`with title and description array icons 1`] = `
                         id="root_1__moveDown"
                         onClick={[Function]}
                         title="Move down"
+                        type="button"
                       >
                         <svg
                           className="lucide lucide-chevron-down h-4 w-4"
@@ -1473,6 +1490,7 @@ exports[`with title and description array icons 1`] = `
                         id="root_1__copy"
                         onClick={[Function]}
                         title="Copy"
+                        type="button"
                       >
                         <svg
                           className="lucide lucide-copy h-4 w-4"
@@ -1505,6 +1523,7 @@ exports[`with title and description array icons 1`] = `
                         id="root_1__remove"
                         onClick={[Function]}
                         title="Remove"
+                        type="button"
                       >
                         <svg
                           className="lucide lucide-trash2 h-4 w-4 stroke-destructive"
@@ -1556,6 +1575,7 @@ exports[`with title and description array icons 1`] = `
                     disabled={false}
                     id="root__add"
                     onClick={[Function]}
+                    type="button"
                   >
                     <svg
                       className="lucide lucide-circle-plus"
@@ -1958,6 +1978,7 @@ exports[`with title and description from both array 1`] = `
                     disabled={false}
                     id="root__add"
                     onClick={[Function]}
+                    type="button"
                   >
                     <svg
                       className="lucide lucide-circle-plus"
@@ -2122,6 +2143,7 @@ exports[`with title and description from both array icons 1`] = `
                         id="root_0__moveUp"
                         onClick={[Function]}
                         title="Move up"
+                        type="button"
                       >
                         <svg
                           className="lucide lucide-chevron-up h-4 w-4"
@@ -2146,6 +2168,7 @@ exports[`with title and description from both array icons 1`] = `
                         id="root_0__moveDown"
                         onClick={[Function]}
                         title="Move down"
+                        type="button"
                       >
                         <svg
                           className="lucide lucide-chevron-down h-4 w-4"
@@ -2170,6 +2193,7 @@ exports[`with title and description from both array icons 1`] = `
                         id="root_0__copy"
                         onClick={[Function]}
                         title="Copy"
+                        type="button"
                       >
                         <svg
                           className="lucide lucide-copy h-4 w-4"
@@ -2202,6 +2226,7 @@ exports[`with title and description from both array icons 1`] = `
                         id="root_0__remove"
                         onClick={[Function]}
                         title="Remove"
+                        type="button"
                       >
                         <svg
                           className="lucide lucide-trash2 h-4 w-4 stroke-destructive"
@@ -2309,6 +2334,7 @@ exports[`with title and description from both array icons 1`] = `
                         id="root_1__moveUp"
                         onClick={[Function]}
                         title="Move up"
+                        type="button"
                       >
                         <svg
                           className="lucide lucide-chevron-up h-4 w-4"
@@ -2333,6 +2359,7 @@ exports[`with title and description from both array icons 1`] = `
                         id="root_1__moveDown"
                         onClick={[Function]}
                         title="Move down"
+                        type="button"
                       >
                         <svg
                           className="lucide lucide-chevron-down h-4 w-4"
@@ -2357,6 +2384,7 @@ exports[`with title and description from both array icons 1`] = `
                         id="root_1__copy"
                         onClick={[Function]}
                         title="Copy"
+                        type="button"
                       >
                         <svg
                           className="lucide lucide-copy h-4 w-4"
@@ -2389,6 +2417,7 @@ exports[`with title and description from both array icons 1`] = `
                         id="root_1__remove"
                         onClick={[Function]}
                         title="Remove"
+                        type="button"
                       >
                         <svg
                           className="lucide lucide-trash2 h-4 w-4 stroke-destructive"
@@ -2440,6 +2469,7 @@ exports[`with title and description from both array icons 1`] = `
                     disabled={false}
                     id="root__add"
                     onClick={[Function]}
+                    type="button"
                   >
                     <svg
                       className="lucide lucide-circle-plus"
@@ -2842,6 +2872,7 @@ exports[`with title and description from uiSchema array 1`] = `
                     disabled={false}
                     id="root__add"
                     onClick={[Function]}
+                    type="button"
                   >
                     <svg
                       className="lucide lucide-circle-plus"
@@ -3006,6 +3037,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                         id="root_0__moveUp"
                         onClick={[Function]}
                         title="Move up"
+                        type="button"
                       >
                         <svg
                           className="lucide lucide-chevron-up h-4 w-4"
@@ -3030,6 +3062,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                         id="root_0__moveDown"
                         onClick={[Function]}
                         title="Move down"
+                        type="button"
                       >
                         <svg
                           className="lucide lucide-chevron-down h-4 w-4"
@@ -3054,6 +3087,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                         id="root_0__copy"
                         onClick={[Function]}
                         title="Copy"
+                        type="button"
                       >
                         <svg
                           className="lucide lucide-copy h-4 w-4"
@@ -3086,6 +3120,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                         id="root_0__remove"
                         onClick={[Function]}
                         title="Remove"
+                        type="button"
                       >
                         <svg
                           className="lucide lucide-trash2 h-4 w-4 stroke-destructive"
@@ -3193,6 +3228,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                         id="root_1__moveUp"
                         onClick={[Function]}
                         title="Move up"
+                        type="button"
                       >
                         <svg
                           className="lucide lucide-chevron-up h-4 w-4"
@@ -3217,6 +3253,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                         id="root_1__moveDown"
                         onClick={[Function]}
                         title="Move down"
+                        type="button"
                       >
                         <svg
                           className="lucide lucide-chevron-down h-4 w-4"
@@ -3241,6 +3278,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                         id="root_1__copy"
                         onClick={[Function]}
                         title="Copy"
+                        type="button"
                       >
                         <svg
                           className="lucide lucide-copy h-4 w-4"
@@ -3273,6 +3311,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                         id="root_1__remove"
                         onClick={[Function]}
                         title="Remove"
+                        type="button"
                       >
                         <svg
                           className="lucide lucide-trash2 h-4 w-4 stroke-destructive"
@@ -3324,6 +3363,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                     disabled={false}
                     id="root__add"
                     onClick={[Function]}
+                    type="button"
                   >
                     <svg
                       className="lucide lucide-circle-plus"
@@ -3699,6 +3739,7 @@ exports[`with title and description with global label off array 1`] = `
                     disabled={false}
                     id="root__add"
                     onClick={[Function]}
+                    type="button"
                   >
                     <svg
                       className="lucide lucide-circle-plus"
@@ -3817,6 +3858,7 @@ exports[`with title and description with global label off array icons 1`] = `
                         id="root_0__moveUp"
                         onClick={[Function]}
                         title="Move up"
+                        type="button"
                       >
                         <svg
                           className="lucide lucide-chevron-up h-4 w-4"
@@ -3841,6 +3883,7 @@ exports[`with title and description with global label off array icons 1`] = `
                         id="root_0__moveDown"
                         onClick={[Function]}
                         title="Move down"
+                        type="button"
                       >
                         <svg
                           className="lucide lucide-chevron-down h-4 w-4"
@@ -3865,6 +3908,7 @@ exports[`with title and description with global label off array icons 1`] = `
                         id="root_0__copy"
                         onClick={[Function]}
                         title="Copy"
+                        type="button"
                       >
                         <svg
                           className="lucide lucide-copy h-4 w-4"
@@ -3897,6 +3941,7 @@ exports[`with title and description with global label off array icons 1`] = `
                         id="root_0__remove"
                         onClick={[Function]}
                         title="Remove"
+                        type="button"
                       >
                         <svg
                           className="lucide lucide-trash2 h-4 w-4 stroke-destructive"
@@ -3985,6 +4030,7 @@ exports[`with title and description with global label off array icons 1`] = `
                         id="root_1__moveUp"
                         onClick={[Function]}
                         title="Move up"
+                        type="button"
                       >
                         <svg
                           className="lucide lucide-chevron-up h-4 w-4"
@@ -4009,6 +4055,7 @@ exports[`with title and description with global label off array icons 1`] = `
                         id="root_1__moveDown"
                         onClick={[Function]}
                         title="Move down"
+                        type="button"
                       >
                         <svg
                           className="lucide lucide-chevron-down h-4 w-4"
@@ -4033,6 +4080,7 @@ exports[`with title and description with global label off array icons 1`] = `
                         id="root_1__copy"
                         onClick={[Function]}
                         title="Copy"
+                        type="button"
                       >
                         <svg
                           className="lucide lucide-copy h-4 w-4"
@@ -4065,6 +4113,7 @@ exports[`with title and description with global label off array icons 1`] = `
                         id="root_1__remove"
                         onClick={[Function]}
                         title="Remove"
+                        type="button"
                       >
                         <svg
                           className="lucide lucide-trash2 h-4 w-4 stroke-destructive"
@@ -4116,6 +4165,7 @@ exports[`with title and description with global label off array icons 1`] = `
                     disabled={false}
                     id="root__add"
                     onClick={[Function]}
+                    type="button"
                   >
                     <svg
                       className="lucide lucide-circle-plus"

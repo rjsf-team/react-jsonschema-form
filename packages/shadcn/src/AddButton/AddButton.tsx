@@ -10,7 +10,7 @@ export default function AddButton<T = any, S extends StrictRJSFSchema = RJSFSche
   const { translateString } = registry;
   return (
     <div className='p-0 m-0'>
-      <Button {...props} className='w-fit gap-2' variant='outline'>
+      <Button {...props} className='w-fit gap-2' variant='outline' type='button'>
         <PlusCircle size={16} /> {translateString(TranslatableString.AddItemButton)}
       </Button>
     </div>

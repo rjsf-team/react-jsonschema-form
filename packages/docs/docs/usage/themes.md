@@ -14,6 +14,7 @@ meaning that you must load the Bootstrap stylesheet on the page to view the form
 | fluentui-rc           | Published | `@rjsf/fluentui-rc`     |
 | material-ui 5         | Published | `@rjsf/mui`             |
 | Semantic UI           | Published | `@rjsf/semantic-ui`     |
+| shadcn                | Published | `@rjsf/shadcn`          |
 
 ## Using themes
 

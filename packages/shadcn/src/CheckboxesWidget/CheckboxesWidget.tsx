@@ -12,7 +12,7 @@ import {
   WidgetProps,
 } from '@rjsf/utils';
 import { Checkbox } from '../components/ui/checkbox';
-import { cn } from '../shad-lib/utils';
+import { cn } from '../lib/utils';
 import { Label } from '../components/ui/label';
 
 export default function CheckboxesWidget<

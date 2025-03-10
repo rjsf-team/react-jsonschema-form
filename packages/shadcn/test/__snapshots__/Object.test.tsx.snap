@@ -93,6 +93,7 @@ exports[`object fields additionalProperties 1`] = `
                 id="root_foo__remove"
                 onClick={[Function]}
                 title="Remove"
+                type="button"
               >
                 <svg
                   className="lucide lucide-trash2 h-4 w-4 stroke-destructive"
@@ -146,6 +147,7 @@ exports[`object fields additionalProperties 1`] = `
             disabled={false}
             id="root__add"
             onClick={[Function]}
+            type="button"
           >
             <svg
               className="lucide lucide-circle-plus"
@@ -400,6 +402,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
                 id="root_additionalProperty__remove"
                 onClick={[Function]}
                 title="Remove"
+                type="button"
               >
                 <svg
                   className="lucide lucide-trash2 h-4 w-4 stroke-destructive"
@@ -453,6 +456,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
             disabled={false}
             id="root__add"
             onClick={[Function]}
+            type="button"
           >
             <svg
               className="lucide lucide-circle-plus"
@@ -617,6 +621,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
                 id="root_foo__remove"
                 onClick={[Function]}
                 title="Remove"
+                type="button"
               >
                 <svg
                   className="lucide lucide-trash2 h-4 w-4 stroke-destructive"
@@ -670,6 +675,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
             disabled={false}
             id="root__add"
             onClick={[Function]}
+            type="button"
           >
             <svg
               className="lucide lucide-circle-plus"
@@ -834,6 +840,7 @@ exports[`object fields with title and description from both additionalProperties
                 id="root_foo__remove"
                 onClick={[Function]}
                 title="Remove"
+                type="button"
               >
                 <svg
                   className="lucide lucide-trash2 h-4 w-4 stroke-destructive"
@@ -887,6 +894,7 @@ exports[`object fields with title and description from both additionalProperties
             disabled={false}
             id="root__add"
             onClick={[Function]}
+            type="button"
           >
             <svg
               className="lucide lucide-circle-plus"
@@ -1219,6 +1227,7 @@ exports[`object fields with title and description from uiSchema additionalProper
                 id="root_foo__remove"
                 onClick={[Function]}
                 title="Remove"
+                type="button"
               >
                 <svg
                   className="lucide lucide-trash2 h-4 w-4 stroke-destructive"
@@ -1272,6 +1281,7 @@ exports[`object fields with title and description from uiSchema additionalProper
             disabled={false}
             id="root__add"
             onClick={[Function]}
+            type="button"
           >
             <svg
               className="lucide lucide-circle-plus"
@@ -1604,6 +1614,7 @@ exports[`object fields with title and description from uiSchema show add button 
                 id="root_additionalProperty__remove"
                 onClick={[Function]}
                 title="Remove"
+                type="button"
               >
                 <svg
                   className="lucide lucide-trash2 h-4 w-4 stroke-destructive"
@@ -1657,6 +1668,7 @@ exports[`object fields with title and description from uiSchema show add button 
             disabled={false}
             id="root__add"
             onClick={[Function]}
+            type="button"
           >
             <svg
               className="lucide lucide-circle-plus"
@@ -1989,6 +2001,7 @@ exports[`object fields with title and description show add button and fields if 
                 id="root_additionalProperty__remove"
                 onClick={[Function]}
                 title="Remove"
+                type="button"
               >
                 <svg
                   className="lucide lucide-trash2 h-4 w-4 stroke-destructive"
@@ -2042,6 +2055,7 @@ exports[`object fields with title and description show add button and fields if 
             disabled={false}
             id="root__add"
             onClick={[Function]}
+            type="button"
           >
             <svg
               className="lucide lucide-circle-plus"
@@ -2173,6 +2187,7 @@ exports[`object fields with title and description with global label off addition
                 id="root_foo__remove"
                 onClick={[Function]}
                 title="Remove"
+                type="button"
               >
                 <svg
                   className="lucide lucide-trash2 h-4 w-4 stroke-destructive"
@@ -2226,6 +2241,7 @@ exports[`object fields with title and description with global label off addition
             disabled={false}
             id="root__add"
             onClick={[Function]}
+            type="button"
           >
             <svg
               className="lucide lucide-circle-plus"
@@ -2462,6 +2478,7 @@ exports[`object fields with title and description with global label off show add
                 id="root_additionalProperty__remove"
                 onClick={[Function]}
                 title="Remove"
+                type="button"
               >
                 <svg
                   className="lucide lucide-trash2 h-4 w-4 stroke-destructive"
@@ -2515,6 +2532,7 @@ exports[`object fields with title and description with global label off show add
             disabled={false}
             id="root__add"
             onClick={[Function]}
+            type="button"
           >
             <svg
               className="lucide lucide-circle-plus"

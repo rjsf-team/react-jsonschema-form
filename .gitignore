@@ -140,3 +140,5 @@ out/
 
 # typescript tsbuildinfo
 *.tsbuildinfo
+# Need this due to shadcn default utils folder is lib
+!packages/shadcn/src/lib

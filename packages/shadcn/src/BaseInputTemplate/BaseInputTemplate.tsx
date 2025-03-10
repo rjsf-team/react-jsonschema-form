@@ -8,7 +8,7 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
 } from '@rjsf/utils';
-import { cn } from '../shad-lib/utils';
+import { cn } from '../lib/utils';
 import { Input } from '../components/ui/input';
 
 export default function BaseInputTemplate<
