@@ -9,7 +9,7 @@ import {
 } from '@rjsf/utils';
 import { FancyMultiSelect } from '../components/ui/fancy-multi-select';
 import { FancySelect } from '../components/ui/fancy-select';
-import { cn } from '../shad-lib/utils';
+import { cn } from '../lib/utils';
 
 export default function SelectWidget<
   T = any,

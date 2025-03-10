@@ -41,6 +41,8 @@
 
 Exports `shadcn` theme, fields and widgets for `react-jsonschema-form`.
 
+[Live demo](https://react-jsonschema-form-shadcn-boilerplate.vercel.app/)
+
 ### Built With
 
 - [react-jsonschema-form](https://github.com/mozilla-services/react-jsonschema-form/)
@@ -138,11 +140,11 @@ npm install @radix-ui/react-direction --save
 import { DirectionProvider as RadixDirectionProvider } from '@radix-ui/react-direction;
 
 function Layout({ children, direction }) {
-    return (
-        <RadixDirectionProvider dir={direction}>
+  return (
+          <RadixDirectionProvider dir={direction}>
             {children}
-        </RadixDirectionProvider>
-    );
+          </RadixDirectionProvider>
+  );
 }
 ```
 
