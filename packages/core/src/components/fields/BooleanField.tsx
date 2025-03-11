@@ -52,7 +52,7 @@ function BooleanField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
   let enumOptions: EnumOptionsType<S>[] | undefined;
   const label = uiTitle ?? schemaTitle ?? title ?? name;
   if (Array.isArray(schema.oneOf)) {
-    enumOptions = optionsList<S, T, F>(
+    enumOptions = optionsList<T, S, F>(
       {
         oneOf: schema.oneOf
           .map((option) => {
@@ -84,7 +84,7 @@ function BooleanField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
         },
       ];
     } else {
-      enumOptions = optionsList<S, T, F>(
+      enumOptions = optionsList<T, S, F>(
         {
           enum: enums,
           // NOTE: enumNames is deprecated, but still supported for now.

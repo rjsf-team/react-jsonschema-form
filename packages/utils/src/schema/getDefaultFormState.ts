@@ -380,10 +380,10 @@ export function ensureFormDataMatchingSchema<
   formData: T | undefined,
   experimental_defaultFormStateBehavior?: Experimental_DefaultFormStateBehavior
 ): T | T[] | undefined {
-  const isSelectField = !isConstant(schema) && isSelect(validator, schema, rootSchema);
+  const isSelectField = !isConstant<S>(schema) && isSelect<T, S, F>(validator, schema, rootSchema);
   let validFormData: T | T[] | undefined = formData;
   if (isSelectField) {
-    const getOptionsList = optionsList(schema);
+    const getOptionsList = optionsList<T, S, F>(schema);
     const isValid = getOptionsList?.some((option) => deepEquals(option.value, formData));
     validFormData = isValid ? formData : undefined;
   }

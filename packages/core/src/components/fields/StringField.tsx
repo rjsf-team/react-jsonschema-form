@@ -35,7 +35,7 @@ function StringField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
   } = props;
   const { title, format } = schema;
   const { widgets, formContext, schemaUtils, globalUiOptions } = registry;
-  const enumOptions = schemaUtils.isSelect(schema) ? optionsList<S, T, F>(schema, uiSchema) : undefined;
+  const enumOptions = schemaUtils.isSelect(schema) ? optionsList<T, S, F>(schema, uiSchema) : undefined;
   let defaultWidget = enumOptions ? 'select' : 'text';
   if (format && hasWidget<T, S, F>(schema, format, widgets)) {
     defaultWidget = format;
