@@ -221,6 +221,31 @@ export function formTests(Form: ComponentType<FormProps>, customOptions: FormRen
       const tree = renderer.create(<Form schema={schema} uiSchema={uiSchema} validator={validator} />).toJSON();
       expect(tree).toMatchSnapshot();
     });
+    test('select field single choice uiSchema disabled using radio widget', () => {
+      const schema: RJSFSchema = {
+        type: 'string',
+        enum: ['foo', 'bar'],
+      };
+      const uiSchema = {
+        'ui:widget': 'radio',
+        'ui:disabled': true,
+      };
+      const tree = renderer.create(<Form schema={schema} uiSchema={uiSchema} validator={validator} />).toJSON();
+      expect(tree).toMatchSnapshot();
+    });
+    test('select field single choice form disabled using radio widget', () => {
+      const schema: RJSFSchema = {
+        type: 'string',
+        enum: ['foo', 'bar'],
+      };
+      const uiSchema = {
+        'ui:widget': 'radio',
+      };
+      const tree = renderer
+        .create(<Form schema={schema} uiSchema={uiSchema} validator={validator} disabled />)
+        .toJSON();
+      expect(tree).toMatchSnapshot();
+    });
     test('select field multiple choice enumDisabled', () => {
       const schema: RJSFSchema = {
         type: 'array',

@@ -142,4 +142,5 @@ out/
 *.tsbuildinfo
 lodashReplacer.js
 muiReplacer.js
+ajvReplacer.js
 

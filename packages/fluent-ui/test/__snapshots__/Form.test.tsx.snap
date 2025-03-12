@@ -15,13 +15,13 @@ exports[`single fields checkbox field 1`] = `
     }
   >
     <div
-      className="ms-Checkbox is-enabled root-210"
+      className="ms-Checkbox is-enabled root-213"
     >
       <input
         aria-disabled={false}
         autoFocus={false}
         checked={false}
-        className="input-211"
+        className="input-214"
         data-ktp-execute-target={true}
         disabled={false}
         id="root"
@@ -32,16 +32,16 @@ exports[`single fields checkbox field 1`] = `
         type="checkbox"
       />
       <label
-        className="ms-Checkbox-label label-212"
+        className="ms-Checkbox-label label-215"
         htmlFor="root"
       >
         <div
-          className="ms-Checkbox-checkbox checkbox-213"
+          className="ms-Checkbox-checkbox checkbox-216"
           data-ktp-target={true}
         >
           <i
             aria-hidden={true}
-            className="ms-Checkbox-checkmark checkmark-216"
+            className="ms-Checkbox-checkmark checkmark-219"
             data-icon-name="CheckMark"
           >
             
@@ -75,7 +75,7 @@ exports[`single fields checkbox field 1`] = `
           >
             <span
               className="ms-Button-label label-126"
-              id="id__177"
+              id="id__187"
             >
               Submit
             </span>
@@ -102,13 +102,13 @@ exports[`single fields checkbox field with label 1`] = `
     }
   >
     <div
-      className="ms-Checkbox is-enabled root-210"
+      className="ms-Checkbox is-enabled root-213"
     >
       <input
         aria-disabled={false}
         autoFocus={false}
         checked={false}
-        className="input-211"
+        className="input-214"
         data-ktp-execute-target={true}
         disabled={false}
         id="root"
@@ -119,23 +119,23 @@ exports[`single fields checkbox field with label 1`] = `
         type="checkbox"
       />
       <label
-        className="ms-Checkbox-label label-212"
+        className="ms-Checkbox-label label-215"
         htmlFor="root"
       >
         <div
-          className="ms-Checkbox-checkbox checkbox-213"
+          className="ms-Checkbox-checkbox checkbox-216"
           data-ktp-target={true}
         >
           <i
             aria-hidden={true}
-            className="ms-Checkbox-checkmark checkmark-216"
+            className="ms-Checkbox-checkmark checkmark-219"
             data-icon-name="CheckMark"
           >
             
           </i>
         </div>
         <span
-          className="ms-Checkbox-text text-215"
+          className="ms-Checkbox-text text-218"
         >
           test
         </span>
@@ -167,7 +167,7 @@ exports[`single fields checkbox field with label 1`] = `
           >
             <span
               className="ms-Button-label label-126"
-              id="id__180"
+              id="id__190"
             >
               Submit
             </span>
@@ -199,13 +199,13 @@ exports[`single fields checkboxes field 1`] = `
       An enum list rendered as checkboxes
     </label>
     <div
-      className="ms-Checkbox is-enabled root-210"
+      className="ms-Checkbox is-enabled root-213"
     >
       <input
         aria-disabled={false}
         autoFocus={false}
         checked={false}
-        className="input-211"
+        className="input-214"
         data-ktp-execute-target={true}
         disabled={false}
         id="root-0"
@@ -216,36 +216,36 @@ exports[`single fields checkboxes field 1`] = `
         type="checkbox"
       />
       <label
-        className="ms-Checkbox-label label-212"
+        className="ms-Checkbox-label label-215"
         htmlFor="root-0"
       >
         <div
-          className="ms-Checkbox-checkbox checkbox-213"
+          className="ms-Checkbox-checkbox checkbox-216"
           data-ktp-target={true}
         >
           <i
             aria-hidden={true}
-            className="ms-Checkbox-checkmark checkmark-216"
+            className="ms-Checkbox-checkmark checkmark-219"
             data-icon-name="CheckMark"
           >
             
           </i>
         </div>
         <span
-          className="ms-Checkbox-text text-215"
+          className="ms-Checkbox-text text-218"
         >
           foo
         </span>
       </label>
     </div>
     <div
-      className="ms-Checkbox is-enabled root-210"
+      className="ms-Checkbox is-enabled root-213"
     >
       <input
         aria-disabled={false}
         autoFocus={false}
         checked={false}
-        className="input-211"
+        className="input-214"
         data-ktp-execute-target={true}
         disabled={false}
         id="root-1"
@@ -256,36 +256,36 @@ exports[`single fields checkboxes field 1`] = `
         type="checkbox"
       />
       <label
-        className="ms-Checkbox-label label-212"
+        className="ms-Checkbox-label label-215"
         htmlFor="root-1"
       >
         <div
-          className="ms-Checkbox-checkbox checkbox-213"
+          className="ms-Checkbox-checkbox checkbox-216"
           data-ktp-target={true}
         >
           <i
             aria-hidden={true}
-            className="ms-Checkbox-checkmark checkmark-216"
+            className="ms-Checkbox-checkmark checkmark-219"
             data-icon-name="CheckMark"
           >
             
           </i>
         </div>
         <span
-          className="ms-Checkbox-text text-215"
+          className="ms-Checkbox-text text-218"
         >
           bar
         </span>
       </label>
     </div>
     <div
-      className="ms-Checkbox is-enabled root-210"
+      className="ms-Checkbox is-enabled root-213"
     >
       <input
         aria-disabled={false}
         autoFocus={false}
         checked={false}
-        className="input-211"
+        className="input-214"
         data-ktp-execute-target={true}
         disabled={false}
         id="root-2"
@@ -296,36 +296,36 @@ exports[`single fields checkboxes field 1`] = `
         type="checkbox"
       />
       <label
-        className="ms-Checkbox-label label-212"
+        className="ms-Checkbox-label label-215"
         htmlFor="root-2"
       >
         <div
-          className="ms-Checkbox-checkbox checkbox-213"
+          className="ms-Checkbox-checkbox checkbox-216"
           data-ktp-target={true}
         >
           <i
             aria-hidden={true}
-            className="ms-Checkbox-checkmark checkmark-216"
+            className="ms-Checkbox-checkmark checkmark-219"
             data-icon-name="CheckMark"
           >
             
           </i>
         </div>
         <span
-          className="ms-Checkbox-text text-215"
+          className="ms-Checkbox-text text-218"
         >
           fuzz
         </span>
       </label>
     </div>
     <div
-      className="ms-Checkbox is-enabled root-210"
+      className="ms-Checkbox is-enabled root-213"
     >
       <input
         aria-disabled={false}
         autoFocus={false}
         checked={false}
-        className="input-211"
+        className="input-214"
         data-ktp-execute-target={true}
         disabled={false}
         id="root-3"
@@ -336,23 +336,23 @@ exports[`single fields checkboxes field 1`] = `
         type="checkbox"
       />
       <label
-        className="ms-Checkbox-label label-212"
+        className="ms-Checkbox-label label-215"
         htmlFor="root-3"
       >
         <div
-          className="ms-Checkbox-checkbox checkbox-213"
+          className="ms-Checkbox-checkbox checkbox-216"
           data-ktp-target={true}
         >
           <i
             aria-hidden={true}
-            className="ms-Checkbox-checkmark checkmark-216"
+            className="ms-Checkbox-checkmark checkmark-219"
             data-icon-name="CheckMark"
           >
             
           </i>
         </div>
         <span
-          className="ms-Checkbox-text text-215"
+          className="ms-Checkbox-text text-218"
         >
           qux
         </span>
@@ -394,7 +394,7 @@ exports[`single fields checkboxes field 1`] = `
           >
             <span
               className="ms-Button-label label-126"
-              id="id__183"
+              id="id__193"
             >
               Submit
             </span>
@@ -444,7 +444,7 @@ exports[`single fields field with description 1`] = `
               <label
                 className="ms-Label root-130"
                 htmlFor="root_my-field"
-                id="TextFieldLabel199"
+                id="TextFieldLabel209"
               >
                 my-field
               </label>
@@ -454,7 +454,7 @@ exports[`single fields field with description 1`] = `
                 <input
                   aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
                   aria-invalid={false}
-                  aria-labelledby="TextFieldLabel199"
+                  aria-labelledby="TextFieldLabel209"
                   autoFocus={false}
                   className="ms-TextField-field field-113"
                   disabled={false}
@@ -474,10 +474,10 @@ exports[`single fields field with description 1`] = `
             </div>
           </div>
           <span
-            className="css-237"
+            className="css-240"
           >
             <span
-              className="css-237"
+              className="css-240"
               id="root_my-field__description"
             >
               some description
@@ -512,7 +512,7 @@ exports[`single fields field with description 1`] = `
           >
             <span
               className="ms-Button-label label-126"
-              id="id__202"
+              id="id__212"
             >
               Submit
             </span>
@@ -562,7 +562,7 @@ exports[`single fields field with description in uiSchema 1`] = `
               <label
                 className="ms-Label root-130"
                 htmlFor="root_my-field"
-                id="TextFieldLabel207"
+                id="TextFieldLabel217"
               >
                 my-field
               </label>
@@ -572,7 +572,7 @@ exports[`single fields field with description in uiSchema 1`] = `
                 <input
                   aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
                   aria-invalid={false}
-                  aria-labelledby="TextFieldLabel207"
+                  aria-labelledby="TextFieldLabel217"
                   autoFocus={false}
                   className="ms-TextField-field field-113"
                   disabled={false}
@@ -592,10 +592,10 @@ exports[`single fields field with description in uiSchema 1`] = `
             </div>
           </div>
           <span
-            className="css-237"
+            className="css-240"
           >
             <span
-              className="css-237"
+              className="css-240"
               id="root_my-field__description"
             >
               some other description
@@ -630,7 +630,7 @@ exports[`single fields field with description in uiSchema 1`] = `
           >
             <span
               className="ms-Button-label label-126"
-              id="id__210"
+              id="id__220"
             >
               Submit
             </span>
@@ -1409,18 +1409,18 @@ exports[`single fields help and error display 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="ms-MessageBar ms-MessageBar--error ms-MessageBar-singleline root-239"
+    className="ms-MessageBar ms-MessageBar--error ms-MessageBar-singleline root-242"
   >
     <div
-      className="ms-MessageBar-content content-240"
+      className="ms-MessageBar-content content-243"
     >
       <div
         aria-hidden={true}
-        className="ms-MessageBar-icon iconContainer-241"
+        className="ms-MessageBar-icon iconContainer-244"
       >
         <i
           aria-hidden={true}
-          className="icon-249"
+          className="icon-252"
           data-icon-name="ErrorBadge"
         >
           
@@ -1428,12 +1428,12 @@ exports[`single fields help and error display 1`] = `
       </div>
       <div
         aria-live="assertive"
-        className="ms-MessageBar-text text-243"
-        id="MessageBar245"
+        className="ms-MessageBar-text text-246"
+        id="MessageBar255"
         role="alert"
       >
         <span
-          className="ms-MessageBar-innerText innerText-244"
+          className="ms-MessageBar-innerText innerText-247"
         />
       </div>
     </div>
@@ -1453,10 +1453,10 @@ exports[`single fields help and error display 1`] = `
         className="ms-TextField-wrapper"
       >
         <div
-          className="ms-TextField-fieldGroup fieldGroup-250"
+          className="ms-TextField-fieldGroup fieldGroup-253"
         >
           <input
-            aria-describedby="TextFieldDescription247"
+            aria-describedby="TextFieldDescription257"
             aria-invalid={true}
             autoFocus={false}
             className="ms-TextField-field field-113"
@@ -1475,7 +1475,7 @@ exports[`single fields help and error display 1`] = `
         </div>
       </div>
       <span
-        id="TextFieldDescription247"
+        id="TextFieldDescription257"
       >
         <div
           role="alert"
@@ -1506,7 +1506,7 @@ exports[`single fields help and error display 1`] = `
       </div>
     </div>
     <span
-      className="css-237"
+      className="css-240"
       id="root__help"
     >
       help me!
@@ -1537,7 +1537,7 @@ exports[`single fields help and error display 1`] = `
           >
             <span
               className="ms-Button-label label-126"
-              id="id__251"
+              id="id__261"
             >
               Submit
             </span>
@@ -1612,7 +1612,7 @@ exports[`single fields hidden field 1`] = `
           >
             <span
               className="ms-Button-label label-126"
-              id="id__194"
+              id="id__204"
             >
               Submit
             </span>
@@ -1693,7 +1693,7 @@ exports[`single fields hidden label 1`] = `
           >
             <span
               className="ms-Button-label label-126"
-              id="id__226"
+              id="id__236"
             >
               Submit
             </span>
@@ -2040,7 +2040,7 @@ exports[`single fields radio field 1`] = `
                 checked={false}
                 className="ms-ChoiceField-input input-203"
                 disabled={false}
-                id="ChoiceGroup186-0"
+                id="ChoiceGroup196-0"
                 name="root"
                 onBlur={[Function]}
                 onChange={[Function]}
@@ -2049,11 +2049,11 @@ exports[`single fields radio field 1`] = `
               />
               <label
                 className="ms-ChoiceField-field field-204"
-                htmlFor="ChoiceGroup186-0"
+                htmlFor="ChoiceGroup196-0"
               >
                 <span
                   className="ms-ChoiceFieldLabel"
-                  id="ChoiceGroupLabel187-0"
+                  id="ChoiceGroupLabel197-0"
                 >
                   Yes
                 </span>
@@ -2071,7 +2071,7 @@ exports[`single fields radio field 1`] = `
                 checked={false}
                 className="ms-ChoiceField-input input-203"
                 disabled={false}
-                id="ChoiceGroup186-1"
+                id="ChoiceGroup196-1"
                 name="root"
                 onBlur={[Function]}
                 onChange={[Function]}
@@ -2080,11 +2080,11 @@ exports[`single fields radio field 1`] = `
               />
               <label
                 className="ms-ChoiceField-field field-204"
-                htmlFor="ChoiceGroup186-1"
+                htmlFor="ChoiceGroup196-1"
               >
                 <span
                   className="ms-ChoiceFieldLabel"
-                  id="ChoiceGroupLabel187-1"
+                  id="ChoiceGroupLabel197-1"
                 >
                   No
                 </span>
@@ -2120,7 +2120,7 @@ exports[`single fields radio field 1`] = `
           >
             <span
               className="ms-Button-label label-126"
-              id="id__188"
+              id="id__198"
             >
               Submit
             </span>
@@ -2221,7 +2221,7 @@ exports[`single fields schema examples 1`] = `
           >
             <span
               className="ms-Button-label label-126"
-              id="id__242"
+              id="id__252"
             >
               Submit
             </span>
@@ -2499,7 +2499,7 @@ exports[`single fields select field multiple choice enumDisabled 1`] = `
           >
             <span
               className="ms-Button-label label-126"
-              id="id__165"
+              id="id__175"
             >
               Submit
             </span>
@@ -2529,13 +2529,13 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
       className="ms-Label root-130"
     />
     <div
-      className="ms-Checkbox is-enabled root-210"
+      className="ms-Checkbox is-enabled root-213"
     >
       <input
         aria-disabled={false}
         autoFocus={false}
         checked={false}
-        className="input-211"
+        className="input-214"
         data-ktp-execute-target={true}
         disabled={false}
         id="root-0"
@@ -2546,36 +2546,36 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
         type="checkbox"
       />
       <label
-        className="ms-Checkbox-label label-212"
+        className="ms-Checkbox-label label-215"
         htmlFor="root-0"
       >
         <div
-          className="ms-Checkbox-checkbox checkbox-213"
+          className="ms-Checkbox-checkbox checkbox-216"
           data-ktp-target={true}
         >
           <i
             aria-hidden={true}
-            className="ms-Checkbox-checkmark checkmark-216"
+            className="ms-Checkbox-checkmark checkmark-219"
             data-icon-name="CheckMark"
           >
             
           </i>
         </div>
         <span
-          className="ms-Checkbox-text text-215"
+          className="ms-Checkbox-text text-218"
         >
           foo
         </span>
       </label>
     </div>
     <div
-      className="ms-Checkbox is-disabled root-217"
+      className="ms-Checkbox is-disabled root-220"
     >
       <input
         aria-disabled={true}
         autoFocus={false}
         checked={false}
-        className="input-211"
+        className="input-214"
         data-ktp-execute-target={true}
         disabled={true}
         id="root-1"
@@ -2586,36 +2586,36 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
         type="checkbox"
       />
       <label
-        className="ms-Checkbox-label label-218"
+        className="ms-Checkbox-label label-221"
         htmlFor="root-1"
       >
         <div
-          className="ms-Checkbox-checkbox checkbox-219"
+          className="ms-Checkbox-checkbox checkbox-222"
           data-ktp-target={true}
         >
           <i
             aria-hidden={true}
-            className="ms-Checkbox-checkmark checkmark-222"
+            className="ms-Checkbox-checkmark checkmark-225"
             data-icon-name="CheckMark"
           >
             
           </i>
         </div>
         <span
-          className="ms-Checkbox-text text-221"
+          className="ms-Checkbox-text text-224"
         >
           bar
         </span>
       </label>
     </div>
     <div
-      className="ms-Checkbox is-enabled root-210"
+      className="ms-Checkbox is-enabled root-213"
     >
       <input
         aria-disabled={false}
         autoFocus={false}
         checked={false}
-        className="input-211"
+        className="input-214"
         data-ktp-execute-target={true}
         disabled={false}
         id="root-2"
@@ -2626,36 +2626,36 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
         type="checkbox"
       />
       <label
-        className="ms-Checkbox-label label-212"
+        className="ms-Checkbox-label label-215"
         htmlFor="root-2"
       >
         <div
-          className="ms-Checkbox-checkbox checkbox-213"
+          className="ms-Checkbox-checkbox checkbox-216"
           data-ktp-target={true}
         >
           <i
             aria-hidden={true}
-            className="ms-Checkbox-checkmark checkmark-216"
+            className="ms-Checkbox-checkmark checkmark-219"
             data-icon-name="CheckMark"
           >
             
           </i>
         </div>
         <span
-          className="ms-Checkbox-text text-215"
+          className="ms-Checkbox-text text-218"
         >
           fuzz
         </span>
       </label>
     </div>
     <div
-      className="ms-Checkbox is-enabled root-210"
+      className="ms-Checkbox is-enabled root-213"
     >
       <input
         aria-disabled={false}
         autoFocus={false}
         checked={false}
-        className="input-211"
+        className="input-214"
         data-ktp-execute-target={true}
         disabled={false}
         id="root-3"
@@ -2666,23 +2666,23 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
         type="checkbox"
       />
       <label
-        className="ms-Checkbox-label label-212"
+        className="ms-Checkbox-label label-215"
         htmlFor="root-3"
       >
         <div
-          className="ms-Checkbox-checkbox checkbox-213"
+          className="ms-Checkbox-checkbox checkbox-216"
           data-ktp-target={true}
         >
           <i
             aria-hidden={true}
-            className="ms-Checkbox-checkmark checkmark-216"
+            className="ms-Checkbox-checkmark checkmark-219"
             data-icon-name="CheckMark"
           >
             
           </i>
         </div>
         <span
-          className="ms-Checkbox-text text-215"
+          className="ms-Checkbox-text text-218"
         >
           qux
         </span>
@@ -2724,7 +2724,7 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
           >
             <span
               className="ms-Button-label label-126"
-              id="id__168"
+              id="id__178"
             >
               Submit
             </span>
@@ -2775,7 +2775,7 @@ exports[`single fields select field multiple choice formData 1`] = `
       >
         <span
           aria-invalid={false}
-          className="ms-Dropdown-title title-223"
+          className="ms-Dropdown-title title-226"
           id="root-option"
         >
           foo, bar
@@ -2819,7 +2819,7 @@ exports[`single fields select field multiple choice formData 1`] = `
           >
             <span
               className="ms-Button-label label-126"
-              id="id__174"
+              id="id__184"
             >
               Submit
             </span>
@@ -3147,6 +3147,139 @@ exports[`single fields select field single choice enumDisabled using radio widge
 </form>
 `;
 
+exports[`single fields select field single choice form disabled using radio widget 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="ms-Grid-col ms-sm12  field field-string"
+    style={
+      {
+        "marginBottom": 15,
+      }
+    }
+  >
+    <div
+      className="ms-ChoiceFieldGroup root-201"
+      id="root"
+      name="root"
+      onBlur={[Function]}
+      onFocus={[Function]}
+    >
+      <div
+        onFocus={[Function]}
+        role="radiogroup"
+      >
+        <div
+          className="ms-ChoiceFieldGroup-flexContainer"
+        >
+          <div
+            className="ms-ChoiceField root-202"
+          >
+            <div
+              className="ms-ChoiceField-wrapper"
+            >
+              <input
+                aria-describedby="root__error root__description root__help"
+                checked={false}
+                className="ms-ChoiceField-input is-disabled input-203"
+                disabled={true}
+                id="ChoiceGroup170-0"
+                name="root"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                type="radio"
+              />
+              <label
+                className="ms-ChoiceField-field field-209"
+                htmlFor="ChoiceGroup170-0"
+              >
+                <span
+                  className="ms-ChoiceFieldLabel"
+                  id="ChoiceGroupLabel171-0"
+                >
+                  foo
+                </span>
+              </label>
+            </div>
+          </div>
+          <div
+            className="ms-ChoiceField root-202"
+          >
+            <div
+              className="ms-ChoiceField-wrapper"
+            >
+              <input
+                aria-describedby="root__error root__description root__help"
+                checked={false}
+                className="ms-ChoiceField-input is-disabled input-203"
+                disabled={true}
+                id="ChoiceGroup170-1"
+                name="root"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                type="radio"
+              />
+              <label
+                className="ms-ChoiceField-field field-209"
+                htmlFor="ChoiceGroup170-1"
+              >
+                <span
+                  className="ms-ChoiceFieldLabel"
+                  id="ChoiceGroupLabel171-1"
+                >
+                  bar
+                </span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <br />
+    <div
+      className="ms-Grid-col ms-sm12"
+    >
+      <button
+        aria-disabled={true}
+        className="ms-Button ms-Button--primary is-disabled root-210"
+        data-is-focusable={false}
+        disabled={true}
+        onClick={[Function]}
+        onKeyDown={[Function]}
+        onKeyPress={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseUp={[Function]}
+        type="submit"
+      >
+        <span
+          className="ms-Button-flexContainer flexContainer-123"
+          data-automationid="splitbuttonprimary"
+        >
+          <span
+            className="ms-Button-textContainer textContainer-124"
+          >
+            <span
+              className="ms-Button-label label-126"
+              id="id__172"
+            >
+              Submit
+            </span>
+          </span>
+        </span>
+      </button>
+    </div>
+  </div>
+</form>
+`;
+
 exports[`single fields select field single choice formData 1`] = `
 <form
   className="rjsf"
@@ -3227,7 +3360,138 @@ exports[`single fields select field single choice formData 1`] = `
           >
             <span
               className="ms-Button-label label-126"
-              id="id__171"
+              id="id__181"
+            >
+              Submit
+            </span>
+          </span>
+        </span>
+      </button>
+    </div>
+  </div>
+</form>
+`;
+
+exports[`single fields select field single choice uiSchema disabled using radio widget 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="ms-Grid-col ms-sm12  field field-string"
+    style={
+      {
+        "marginBottom": 15,
+      }
+    }
+  >
+    <div
+      className="ms-ChoiceFieldGroup root-201"
+      id="root"
+      name="root"
+      onBlur={[Function]}
+      onFocus={[Function]}
+    >
+      <div
+        onFocus={[Function]}
+        role="radiogroup"
+      >
+        <div
+          className="ms-ChoiceFieldGroup-flexContainer"
+        >
+          <div
+            className="ms-ChoiceField root-202"
+          >
+            <div
+              className="ms-ChoiceField-wrapper"
+            >
+              <input
+                aria-describedby="root__error root__description root__help"
+                checked={false}
+                className="ms-ChoiceField-input is-disabled input-203"
+                disabled={true}
+                id="ChoiceGroup165-0"
+                name="root"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                type="radio"
+              />
+              <label
+                className="ms-ChoiceField-field field-209"
+                htmlFor="ChoiceGroup165-0"
+              >
+                <span
+                  className="ms-ChoiceFieldLabel"
+                  id="ChoiceGroupLabel166-0"
+                >
+                  foo
+                </span>
+              </label>
+            </div>
+          </div>
+          <div
+            className="ms-ChoiceField root-202"
+          >
+            <div
+              className="ms-ChoiceField-wrapper"
+            >
+              <input
+                aria-describedby="root__error root__description root__help"
+                checked={false}
+                className="ms-ChoiceField-input is-disabled input-203"
+                disabled={true}
+                id="ChoiceGroup165-1"
+                name="root"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                type="radio"
+              />
+              <label
+                className="ms-ChoiceField-field field-209"
+                htmlFor="ChoiceGroup165-1"
+              >
+                <span
+                  className="ms-ChoiceFieldLabel"
+                  id="ChoiceGroupLabel166-1"
+                >
+                  bar
+                </span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <br />
+    <div
+      className="ms-Grid-col ms-sm12"
+    >
+      <button
+        className="ms-Button ms-Button--primary root-122"
+        data-is-focusable={true}
+        onClick={[Function]}
+        onKeyDown={[Function]}
+        onKeyPress={[Function]}
+        onKeyUp={[Function]}
+        onMouseDown={[Function]}
+        onMouseUp={[Function]}
+        type="submit"
+      >
+        <span
+          className="ms-Button-flexContainer flexContainer-123"
+          data-automationid="splitbuttonprimary"
+        >
+          <span
+            className="ms-Button-textContainer textContainer-124"
+          >
+            <span
+              className="ms-Button-label label-126"
+              id="id__167"
             >
               Submit
             </span>
@@ -3258,14 +3522,14 @@ exports[`single fields slider field 1`] = `
       htmlFor="root"
     />
     <div
-      className="ms-Slider ms-Slider-enabled ms-Slider-row root-224"
+      className="ms-Slider ms-Slider-enabled ms-Slider-row root-227"
     >
       <label
-        className="ms-Label titleLabel-235"
+        className="ms-Label titleLabel-238"
         htmlFor="root"
       />
       <div
-        className="ms-Slider-container container-226"
+        className="ms-Slider-container container-229"
       >
         <div
           aria-disabled={false}
@@ -3273,7 +3537,7 @@ exports[`single fields slider field 1`] = `
           aria-valuemin={42}
           aria-valuenow={42}
           aria-valuetext="42"
-          className="ms-Slider-slideBox ms-Slider-showValue slideBox-227"
+          className="ms-Slider-slideBox ms-Slider-showValue slideBox-230"
           data-is-focusable={true}
           id="root"
           onKeyDown={[Function]}
@@ -3283,10 +3547,10 @@ exports[`single fields slider field 1`] = `
           tabIndex={0}
         >
           <div
-            className="ms-Slider-line line-229"
+            className="ms-Slider-line line-232"
           >
             <span
-              className="ms-Slider-thumb thumb-228"
+              className="ms-Slider-thumb thumb-231"
               style={
                 {
                   "left": "0%",
@@ -3294,7 +3558,7 @@ exports[`single fields slider field 1`] = `
               }
             />
             <span
-              className="lineContainer-230 ms-Slider-inactive inactiveSection-232"
+              className="lineContainer-233 ms-Slider-inactive inactiveSection-235"
               style={
                 {
                   "width": "0%",
@@ -3302,7 +3566,7 @@ exports[`single fields slider field 1`] = `
               }
             />
             <span
-              className="lineContainer-230 ms-Slider-active activeSection-231"
+              className="lineContainer-233 ms-Slider-active activeSection-234"
               style={
                 {
                   "width": "0%",
@@ -3310,7 +3574,7 @@ exports[`single fields slider field 1`] = `
               }
             />
             <span
-              className="lineContainer-230 ms-Slider-inactive inactiveSection-232"
+              className="lineContainer-233 ms-Slider-inactive inactiveSection-235"
               style={
                 {
                   "width": "100%",
@@ -3320,7 +3584,7 @@ exports[`single fields slider field 1`] = `
           </div>
         </div>
         <label
-          className="ms-Label ms-Slider-value valueLabel-236"
+          className="ms-Label ms-Slider-value valueLabel-239"
         >
           42
         </label>
@@ -3352,7 +3616,7 @@ exports[`single fields slider field 1`] = `
           >
             <span
               className="ms-Button-label label-126"
-              id="id__191"
+              id="id__201"
             >
               Submit
             </span>
@@ -3867,7 +4131,7 @@ exports[`single fields title field 1`] = `
     }
   >
     <label
-      className="ms-Label root-238"
+      className="ms-Label root-241"
       id="root__title"
     >
       Titre 1
@@ -3896,7 +4160,7 @@ exports[`single fields title field 1`] = `
               <label
                 className="ms-Label root-130"
                 htmlFor="root_title"
-                id="TextFieldLabel215"
+                id="TextFieldLabel225"
               >
                 Titre 2
               </label>
@@ -3906,7 +4170,7 @@ exports[`single fields title field 1`] = `
                 <input
                   aria-describedby="root_title__error root_title__description root_title__help"
                   aria-invalid={false}
-                  aria-labelledby="TextFieldLabel215"
+                  aria-labelledby="TextFieldLabel225"
                   autoFocus={false}
                   className="ms-TextField-field field-113"
                   disabled={false}
@@ -3954,7 +4218,7 @@ exports[`single fields title field 1`] = `
           >
             <span
               className="ms-Button-label label-126"
-              id="id__218"
+              id="id__228"
             >
               Submit
             </span>
@@ -4264,7 +4528,7 @@ exports[`single fields using custom tagName 1`] = `
           >
             <span
               className="ms-Button-label label-126"
-              id="id__234"
+              id="id__244"
             >
               Submit
             </span>

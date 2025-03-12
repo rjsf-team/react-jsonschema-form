@@ -4,7 +4,7 @@ import { AliasReplacerArguments } from 'tsc-alias';
  *
  * @param orig - The original import name
  */
-export default function exampleReplacer({ orig }: AliasReplacerArguments): string {
+export default function muiReplacer({ orig }: AliasReplacerArguments): string {
   if (orig.startsWith("from '@mui/material/")) {
     const origMinusEndQuote = orig.substring(0, orig.length - 1);
     // console.log(origMinusEndQuote);
