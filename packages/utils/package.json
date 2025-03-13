@@ -6,6 +6,32 @@
   "typings": "lib/index.d.ts",
   "browser": "dist/indexBrowser.js",
   "description": "Utility functions for @rjsf/core",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./lib/index.js",
+      "types": "./lib/index.d.ts"
+    },
+    "./lib": {
+      "require": "./dist/index.js",
+      "import": "./lib/index.js",
+      "types": "./lib/index.d.ts"
+    },
+    "./lib/*.js": {
+      "require": "./dist/*.js",
+      "import": "./lib/*.js",
+      "types": "./lib/*.d.ts"
+    },
+    "./dist": {
+      "require": "./dist/index.js",
+      "import": "./lib/index.js",
+      "types": "./lib/index.d.ts"
+    },
+    "./dist/*.js": {
+      "require": "./dist/*.js",
+      "import": "./lib/*.js",
+      "types": "./lib/*.d.ts"
+    }  },
   "files": [
     "dist",
     "lib",
@@ -16,7 +42,8 @@
     "node": ">=20"
   },
   "scripts": {
-    "build:ts": "tsc -b",
+    "compileReplacer": "tsc -p tsconfig.replacer.json",
+    "build:ts": "npm run compileReplacer && rimraf ./lib && tsc -b tsconfig.build.json && tsc-alias -p tsconfig.build.json",
     "build:esm-browser": "esbuild ./src/indexBrowser.ts --bundle --outfile=dist/utils-browser.esm.js --sourcemap --packages=external --format=esm",
     "build:cjs-browser": "esbuild ./src/indexBrowser.ts --bundle --outfile=dist/indexBrowser.js --sourcemap --packages=external --format=cjs",
     "build:umd-browser": "rollup dist/utils-browser.esm.js --format=umd --file=dist/utils-browser.umd.js --name=@rjsf/utils",

@@ -15,6 +15,37 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+# 5.24.7
+
+## Dev / docs / playground
+
+- Fixed build issues with small change to `core/src/tsconfig.json` and improvements to the `exports` for ESM support
+- Run NX serially in the pipelines to avoid odd out-of-sequence build issues
+
+# 5.24.6
+
+## @rjsf/core
+
+- Fixed `src/tsconfig.json` to add the `tsc-alias` block to support proper fixing up of ESM import
+
+# 5.24.5
+
+## @rjsf/utils
+
+- Fixed `package.json` to remove `node` from the `exports` block to fix ESM support
+
+# 5.24.4
+
+## @rjsf/utils
+
+- Fixed issue with customValidate errors are not cleared when the form is valid [4365](https://github.com/rjsf-team/react-jsonschema-form/pull/4365) due to regression
+- Add missing `experimental_customMergeAllOf` argument to `ensureFormDataMatchingSchema` introduced by [4388](https://github.com/rjsf-team/react-jsonschema-form/pull/4388)
+
+## Dev / docs / playground
+
+- Improved the ESM support for all public packages by adding explicit `exports` to each public `package.json`
+- Updated the ESM builds to use `tsc-alias` to add `.js` onto all ESM imports
+
 # 5.24.3
 
 ## @rjsf/utils
@@ -22,6 +53,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Rollback [4446](https://github.com/rjsf-team/react-jsonschema-form/pull/4446) due to regression
 
 ## Dev / docs / playground
+
 - Fixed issue with selector, where validator was getting refreshed on clicking on anything in selector. [#4472](https://github.com/rjsf-team/react-jsonschema-form/pull/4472)
 
 # 5.24.2

@@ -5,6 +5,33 @@
   "module": "lib/index.js",
   "typings": "lib/index.d.ts",
   "description": "React Bootstrap theme, fields and widgets for react-jsonschema-form, powered by react-bootstrap",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./lib/index.js",
+      "types": "./lib/index.d.ts"
+    },
+    "./lib": {
+      "require": "./dist/index.js",
+      "import": "./lib/index.js",
+      "types": "./lib/index.d.ts"
+    },
+    "./lib/*.js": {
+      "require": "./dist/*.js",
+      "import": "./lib/*.js",
+      "types": "./lib/*.d.ts"
+    },
+    "./dist": {
+      "require": "./dist/index.js",
+      "import": "./lib/index.js",
+      "types": "./lib/index.d.ts"
+    },
+    "./dist/*.js": {
+      "require": "./dist/*.js",
+      "import": "./lib/*.js",
+      "types": "./lib/*.d.ts"
+    }
+  },
   "files": [
     "dist",
     "lib",
@@ -15,7 +42,7 @@
     "url": "git+https://github.com/rjsf-team/react-jsonschema-form.git"
   },
   "scripts": {
-    "build:ts": "tsc -b",
+    "build:ts": "tsc -b tsconfig.build.json && tsc-alias -p tsconfig.build.json",
     "build:cjs": "esbuild ./src/index.ts --bundle --outfile=dist/index.js --sourcemap --packages=external --format=cjs",
     "build:esm": "esbuild ./src/index.ts --bundle --outfile=dist/react-bootstrap.esm.js --sourcemap --packages=external --format=esm",
     "build:umd": "rollup dist/react-bootstrap.esm.js --format=umd --file=dist/react-bootstrap.umd.js --name=@rjsf/react-bootstrap",

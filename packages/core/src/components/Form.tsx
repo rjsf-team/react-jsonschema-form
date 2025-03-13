@@ -35,6 +35,8 @@ import {
   ValidatorType,
   Experimental_DefaultFormStateBehavior,
   Experimental_CustomMergeAllOf,
+  createErrorHandler,
+  unwrapErrorHandler,
 } from '@rjsf/utils';
 import _forEach from 'lodash/forEach';
 import _get from 'lodash/get';
@@ -519,6 +521,22 @@ export default class Form<
     return shouldRender(this, nextProps, nextState);
   }
 
+  /** Gets the previously raised customValidate errors.
+   *
+   * @returns the previous customValidate errors
+   */
+  private getPreviousCustomValidateErrors(): ErrorSchema<T> {
+    const { customValidate, uiSchema } = this.props;
+    const prevFormData = this.state.formData as T;
+    let customValidateErrors = {};
+    if (typeof customValidate === 'function') {
+      const errorHandler = customValidate(prevFormData, createErrorHandler<T>(prevFormData), uiSchema);
+      const userErrorSchema = unwrapErrorHandler<T>(errorHandler);
+      customValidateErrors = userErrorSchema;
+    }
+    return customValidateErrors;
+  }
+
   /** Validates the `formData` against the `schema` using the `altSchemaUtils` (if provided otherwise it uses the
    * `schemaUtils` in the state), returning the results.
    *
@@ -644,18 +662,39 @@ export default class Form<
     if (resolvedSchema?.type !== 'object' && resolvedSchema?.type !== 'array') {
       filteredErrors.__errors = schemaErrors.__errors;
     }
+
+    const prevCustomValidateErrors = this.getPreviousCustomValidateErrors();
+    // Filtering out the previous raised customValidate errors so that they are cleared when no longer valid.
+    const filterPreviousCustomErrors = (errors: string[] = [], prevCustomErrors: string[]) => {
+      if (errors.length === 0) {
+        return errors;
+      }
+
+      return errors.filter((error) => {
+        return !prevCustomErrors.includes(error);
+      });
+    };
+
     // Removing undefined, null and empty errors.
-    const filterNilOrEmptyErrors = (errors: any): ErrorSchema<T> => {
+    const filterNilOrEmptyErrors = (errors: any, previousCustomValidateErrors: any = {}): ErrorSchema<T> => {
       _forEach(errors, (errorAtKey, errorKey: keyof typeof errors) => {
-        if (_isNil(errorAtKey)) {
+        const prevCustomValidateErrorAtKey = previousCustomValidateErrors[errorKey];
+        if (_isNil(errorAtKey) || (Array.isArray(errorAtKey) && errorAtKey.length === 0)) {
           delete errors[errorKey];
+        } else if (
+          isObject(errorAtKey) &&
+          isObject(prevCustomValidateErrorAtKey) &&
+          Array.isArray(prevCustomValidateErrorAtKey?.__errors)
+        ) {
+          // if previous customValidate error is an object and has __errors array, filter out the errors previous customValidate errors.
+          errors[errorKey] = filterPreviousCustomErrors(errorAtKey.__errors, prevCustomValidateErrorAtKey.__errors);
         } else if (typeof errorAtKey === 'object' && !Array.isArray(errorAtKey.__errors)) {
-          filterNilOrEmptyErrors(errorAtKey);
+          filterNilOrEmptyErrors(errorAtKey, previousCustomValidateErrors[errorKey]);
         }
       });
       return errors;
     };
-    return filterNilOrEmptyErrors(filteredErrors);
+    return filterNilOrEmptyErrors(filteredErrors, prevCustomValidateErrors);
   }
 
   /** Function to handle changes made to a field in the `Form`. This handler receives an entirely new copy of the
