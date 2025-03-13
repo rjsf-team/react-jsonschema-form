@@ -69,7 +69,7 @@ exports[`single fields checkbox field 1`] = `
     </div>
   </div>
   <div
-    className="MuiBox-root MuiBox-root-33"
+    className="MuiBox-root MuiBox-root-35"
   >
     <button
       className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
@@ -169,7 +169,7 @@ exports[`single fields checkbox field with label 1`] = `
     </div>
   </div>
   <div
-    className="MuiBox-root MuiBox-root-34"
+    className="MuiBox-root MuiBox-root-36"
   >
     <button
       className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
@@ -444,7 +444,7 @@ exports[`single fields checkboxes field 1`] = `
     </div>
   </div>
   <div
-    className="MuiBox-root MuiBox-root-35"
+    className="MuiBox-root MuiBox-root-37"
   >
     <button
       className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
@@ -566,7 +566,7 @@ exports[`single fields field with description 1`] = `
     </div>
   </div>
   <div
-    className="MuiBox-root MuiBox-root-44"
+    className="MuiBox-root MuiBox-root-46"
   >
     <button
       className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
@@ -688,7 +688,7 @@ exports[`single fields field with description in uiSchema 1`] = `
     </div>
   </div>
   <div
-    className="MuiBox-root MuiBox-root-45"
+    className="MuiBox-root MuiBox-root-47"
   >
     <button
       className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
@@ -1013,7 +1013,7 @@ exports[`single fields help and error display 1`] = `
     className="MuiPaper-root MuiPaper-elevation2 MuiPaper-rounded"
   >
     <div
-      className="MuiBox-root MuiBox-root-51"
+      className="MuiBox-root MuiBox-root-53"
     >
       <h6
         className="MuiTypography-root MuiTypography-h6"
@@ -1110,7 +1110,7 @@ exports[`single fields help and error display 1`] = `
     </div>
   </div>
   <div
-    className="MuiBox-root MuiBox-root-52"
+    className="MuiBox-root MuiBox-root-54"
   >
     <button
       className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
@@ -1180,7 +1180,7 @@ exports[`single fields hidden field 1`] = `
     </div>
   </div>
   <div
-    className="MuiBox-root MuiBox-root-43"
+    className="MuiBox-root MuiBox-root-45"
   >
     <button
       className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
@@ -1250,7 +1250,7 @@ exports[`single fields hidden label 1`] = `
     </div>
   </div>
   <div
-    className="MuiBox-root MuiBox-root-48"
+    className="MuiBox-root MuiBox-root-50"
   >
     <button
       className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
@@ -1699,7 +1699,7 @@ exports[`single fields radio field 1`] = `
     </div>
   </div>
   <div
-    className="MuiBox-root MuiBox-root-36"
+    className="MuiBox-root MuiBox-root-38"
   >
     <button
       className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
@@ -1789,7 +1789,7 @@ exports[`single fields schema examples 1`] = `
     </div>
   </div>
   <div
-    className="MuiBox-root MuiBox-root-50"
+    className="MuiBox-root MuiBox-root-52"
   >
     <button
       className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
@@ -2078,7 +2078,7 @@ exports[`single fields select field multiple choice enumDisabled 1`] = `
     </div>
   </div>
   <div
-    className="MuiBox-root MuiBox-root-29"
+    className="MuiBox-root MuiBox-root-31"
   >
     <button
       className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
@@ -2342,7 +2342,7 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
     </div>
   </div>
   <div
-    className="MuiBox-root MuiBox-root-30"
+    className="MuiBox-root MuiBox-root-32"
   >
     <button
       className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
@@ -2431,7 +2431,7 @@ exports[`single fields select field multiple choice formData 1`] = `
     </div>
   </div>
   <div
-    className="MuiBox-root MuiBox-root-32"
+    className="MuiBox-root MuiBox-root-34"
   >
     <button
       className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
@@ -2839,6 +2839,191 @@ exports[`single fields select field single choice enumDisabled using radio widge
 </form>
 `;
 
+exports[`single fields select field single choice form disabled using radio widget 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+  >
+    <div
+      className="MuiFormControl-root MuiFormControl-fullWidth"
+    >
+      <label
+        className="MuiFormLabel-root"
+        htmlFor="root"
+      />
+      <div
+        aria-describedby="root__error root__description root__help"
+        className="MuiFormGroup-root"
+        id="root"
+        onBlur={[Function]}
+        onFocus={[Function]}
+        role="radiogroup"
+      >
+        <label
+          className="MuiFormControlLabel-root Mui-disabled"
+        >
+          <span
+            aria-disabled={true}
+            className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-21 MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-disabled-23 Mui-disabled MuiIconButton-colorPrimary Mui-disabled Mui-disabled"
+            onBlur={[Function]}
+            onDragLeave={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseLeave={[Function]}
+            onMouseUp={[Function]}
+            onTouchEnd={[Function]}
+            onTouchMove={[Function]}
+            onTouchStart={[Function]}
+            tabIndex={-1}
+          >
+            <span
+              className="MuiIconButton-label"
+            >
+              <input
+                checked={false}
+                className="PrivateSwitchBase-input-24"
+                disabled={true}
+                id="root-0"
+                name="root"
+                onChange={[Function]}
+                type="radio"
+                value="0"
+              />
+              <div
+                className="PrivateRadioButtonIcon-root-25"
+              >
+                <svg
+                  aria-hidden={true}
+                  className="MuiSvgIcon-root"
+                  focusable="false"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
+                  />
+                </svg>
+                <svg
+                  aria-hidden={true}
+                  className="MuiSvgIcon-root PrivateRadioButtonIcon-layer-26"
+                  focusable="false"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"
+                  />
+                </svg>
+              </div>
+            </span>
+          </span>
+          <span
+            className="MuiTypography-root MuiFormControlLabel-label Mui-disabled MuiTypography-body1"
+          >
+            foo
+          </span>
+        </label>
+        <label
+          className="MuiFormControlLabel-root Mui-disabled"
+        >
+          <span
+            aria-disabled={true}
+            className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-21 MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-disabled-23 Mui-disabled MuiIconButton-colorPrimary Mui-disabled Mui-disabled"
+            onBlur={[Function]}
+            onDragLeave={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseLeave={[Function]}
+            onMouseUp={[Function]}
+            onTouchEnd={[Function]}
+            onTouchMove={[Function]}
+            onTouchStart={[Function]}
+            tabIndex={-1}
+          >
+            <span
+              className="MuiIconButton-label"
+            >
+              <input
+                checked={false}
+                className="PrivateSwitchBase-input-24"
+                disabled={true}
+                id="root-1"
+                name="root"
+                onChange={[Function]}
+                type="radio"
+                value="1"
+              />
+              <div
+                className="PrivateRadioButtonIcon-root-25"
+              >
+                <svg
+                  aria-hidden={true}
+                  className="MuiSvgIcon-root"
+                  focusable="false"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
+                  />
+                </svg>
+                <svg
+                  aria-hidden={true}
+                  className="MuiSvgIcon-root PrivateRadioButtonIcon-layer-26"
+                  focusable="false"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"
+                  />
+                </svg>
+              </div>
+            </span>
+          </span>
+          <span
+            className="MuiTypography-root MuiFormControlLabel-label Mui-disabled MuiTypography-body1"
+          >
+            bar
+          </span>
+        </label>
+      </div>
+    </div>
+  </div>
+  <div
+    className="MuiBox-root MuiBox-root-30"
+  >
+    <button
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary Mui-disabled Mui-disabled"
+      disabled={true}
+      onBlur={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={-1}
+      type="submit"
+    >
+      <span
+        className="MuiButton-label"
+      >
+        Submit
+      </span>
+    </button>
+  </div>
+</form>
+`;
+
 exports[`single fields select field single choice formData 1`] = `
 <form
   className="rjsf"
@@ -2900,7 +3085,195 @@ exports[`single fields select field single choice formData 1`] = `
     </div>
   </div>
   <div
-    className="MuiBox-root MuiBox-root-31"
+    className="MuiBox-root MuiBox-root-33"
+  >
+    <button
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
+      disabled={false}
+      onBlur={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={0}
+      type="submit"
+    >
+      <span
+        className="MuiButton-label"
+      >
+        Submit
+      </span>
+      <span
+        className="MuiTouchRipple-root"
+      />
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields select field single choice uiSchema disabled using radio widget 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+  >
+    <div
+      className="MuiFormControl-root MuiFormControl-fullWidth"
+    >
+      <label
+        className="MuiFormLabel-root"
+        htmlFor="root"
+      />
+      <div
+        aria-describedby="root__error root__description root__help"
+        className="MuiFormGroup-root"
+        id="root"
+        onBlur={[Function]}
+        onFocus={[Function]}
+        role="radiogroup"
+      >
+        <label
+          className="MuiFormControlLabel-root Mui-disabled"
+        >
+          <span
+            aria-disabled={true}
+            className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-21 MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-disabled-23 Mui-disabled MuiIconButton-colorPrimary Mui-disabled Mui-disabled"
+            onBlur={[Function]}
+            onDragLeave={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseLeave={[Function]}
+            onMouseUp={[Function]}
+            onTouchEnd={[Function]}
+            onTouchMove={[Function]}
+            onTouchStart={[Function]}
+            tabIndex={-1}
+          >
+            <span
+              className="MuiIconButton-label"
+            >
+              <input
+                checked={false}
+                className="PrivateSwitchBase-input-24"
+                disabled={true}
+                id="root-0"
+                name="root"
+                onChange={[Function]}
+                type="radio"
+                value="0"
+              />
+              <div
+                className="PrivateRadioButtonIcon-root-25"
+              >
+                <svg
+                  aria-hidden={true}
+                  className="MuiSvgIcon-root"
+                  focusable="false"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
+                  />
+                </svg>
+                <svg
+                  aria-hidden={true}
+                  className="MuiSvgIcon-root PrivateRadioButtonIcon-layer-26"
+                  focusable="false"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"
+                  />
+                </svg>
+              </div>
+            </span>
+          </span>
+          <span
+            className="MuiTypography-root MuiFormControlLabel-label Mui-disabled MuiTypography-body1"
+          >
+            foo
+          </span>
+        </label>
+        <label
+          className="MuiFormControlLabel-root Mui-disabled"
+        >
+          <span
+            aria-disabled={true}
+            className="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-21 MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-disabled-23 Mui-disabled MuiIconButton-colorPrimary Mui-disabled Mui-disabled"
+            onBlur={[Function]}
+            onDragLeave={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseLeave={[Function]}
+            onMouseUp={[Function]}
+            onTouchEnd={[Function]}
+            onTouchMove={[Function]}
+            onTouchStart={[Function]}
+            tabIndex={-1}
+          >
+            <span
+              className="MuiIconButton-label"
+            >
+              <input
+                checked={false}
+                className="PrivateSwitchBase-input-24"
+                disabled={true}
+                id="root-1"
+                name="root"
+                onChange={[Function]}
+                type="radio"
+                value="1"
+              />
+              <div
+                className="PrivateRadioButtonIcon-root-25"
+              >
+                <svg
+                  aria-hidden={true}
+                  className="MuiSvgIcon-root"
+                  focusable="false"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
+                  />
+                </svg>
+                <svg
+                  aria-hidden={true}
+                  className="MuiSvgIcon-root PrivateRadioButtonIcon-layer-26"
+                  focusable="false"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"
+                  />
+                </svg>
+              </div>
+            </span>
+          </span>
+          <span
+            className="MuiTypography-root MuiFormControlLabel-label Mui-disabled MuiTypography-body1"
+          >
+            bar
+          </span>
+        </label>
+      </div>
+    </div>
+  </div>
+  <div
+    className="MuiBox-root MuiBox-root-29"
   >
     <button
       className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
@@ -2979,7 +3352,7 @@ exports[`single fields slider field 1`] = `
           aria-valuemax={100}
           aria-valuemin={42}
           aria-valuenow={75}
-          className="MuiSlider-thumb MuiSlider-thumbColorPrimary PrivateValueLabel-thumb-37"
+          className="MuiSlider-thumb MuiSlider-thumbColorPrimary PrivateValueLabel-thumb-39"
           data-index={0}
           onBlur={[Function]}
           onFocus={[Function]}
@@ -2995,13 +3368,13 @@ exports[`single fields slider field 1`] = `
           tabIndex={0}
         >
           <span
-            className="PrivateValueLabel-offset-39 MuiSlider-valueLabel"
+            className="PrivateValueLabel-offset-41 MuiSlider-valueLabel"
           >
             <span
-              className="PrivateValueLabel-circle-40"
+              className="PrivateValueLabel-circle-42"
             >
               <span
-                className="PrivateValueLabel-label-41"
+                className="PrivateValueLabel-label-43"
               >
                 75
               </span>
@@ -3012,7 +3385,7 @@ exports[`single fields slider field 1`] = `
     </div>
   </div>
   <div
-    className="MuiBox-root MuiBox-root-42"
+    className="MuiBox-root MuiBox-root-44"
   >
     <button
       className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
@@ -3488,7 +3861,7 @@ exports[`single fields title field 1`] = `
       className="MuiFormControl-root MuiFormControl-fullWidth"
     >
       <div
-        className="MuiBox-root MuiBox-root-46"
+        className="MuiBox-root MuiBox-root-48"
         id="root__title"
       >
         <h5
@@ -3563,7 +3936,7 @@ exports[`single fields title field 1`] = `
     </div>
   </div>
   <div
-    className="MuiBox-root MuiBox-root-47"
+    className="MuiBox-root MuiBox-root-49"
   >
     <button
       className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
@@ -3770,7 +4143,7 @@ exports[`single fields using custom tagName 1`] = `
     </div>
   </div>
   <div
-    className="MuiBox-root MuiBox-root-49"
+    className="MuiBox-root MuiBox-root-51"
   >
     <button
       className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"

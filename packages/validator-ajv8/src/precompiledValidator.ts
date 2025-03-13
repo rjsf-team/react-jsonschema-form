@@ -1,6 +1,5 @@
 import { ErrorObject } from 'ajv';
 import get from 'lodash/get';
-
 import {
   CustomValidator,
   deepEquals,

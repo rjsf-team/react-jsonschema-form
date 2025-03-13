@@ -4,7 +4,7 @@ import { AliasReplacerArguments } from 'tsc-alias';
  *
  * @param orig - The original import name
  */
-export default function exampleReplacer({ orig }: AliasReplacerArguments): string {
+export default function lodashReplacer({ orig }: AliasReplacerArguments): string {
   if (orig.startsWith("from 'lodash/")) {
     const origLodashEs = orig.substring(0, orig.length - 1).replace('lodash/', 'lodash-es/');
     // console.log(origLodashEs);

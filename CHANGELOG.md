@@ -15,6 +15,20 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+# 5.24.8
+
+## @rjsf/antd
+
+- Fixed the total disable of the `RadioWidget`, fixing [#4481](https://github.com/rjsf-team/react-jsonschema-form/issues/4481)
+
+## @rjsf/validator-ajv8
+
+- Fixed up the ESM build to properly handle ESM imports for `compileSchemaValidatorsCode()` by adding a new `ajvReplacer.ts` and using it
+
+## Dev / docs / playground
+
+- Updated `snapshot-tests` to add validation of disable `RadioWidget` via the `Form` prop as well as `uiSchema`
+
 # 5.24.7
 
 ## Dev / docs / playground
