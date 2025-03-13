@@ -1,4 +1,4 @@
-import { Theme as MuiV5Theme } from '@rjsf/mui';
+import { Theme as MuiTheme } from '@rjsf/mui';
 import { Theme as FluentUIRCTheme } from '@rjsf/fluentui-rc';
 import { Theme as SuiTheme } from '@rjsf/semantic-ui';
 import { Theme as AntdTheme } from '@rjsf/antd';
@@ -26,7 +26,6 @@ const validators: PlaygroundProps['validators'] = {
   AJV8_es: esV8Validator,
   AJV8_2019,
   AJV8_2020,
-  'AJV6 (deprecated)': v6Validator,
 };
 
 const themes: PlaygroundProps['themes'] = {
@@ -102,9 +101,9 @@ const themes: PlaygroundProps['themes'] = {
     stylesheet: '',
     theme: FluentUIRCTheme,
   },
-  'material-ui-5': {
+  mui: {
     stylesheet: '',
-    theme: MuiV5Theme,
+    theme: MuiTheme,
   },
   'react-bootstrap': {
     stylesheet: '//cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css',

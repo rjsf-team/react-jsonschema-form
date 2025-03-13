@@ -110,7 +110,7 @@ export default function LayoutMultiSchemaField<
     errorSchema,
     hideError = false,
   } = props;
-  const { widgets, schemaUtils } = registry;
+  const { widgets, schemaUtils, globalUiOptions } = registry;
   const [enumOptions, setEnumOptions] = useState(computeEnumOptions(schema, options, schemaUtils, uiSchema, formData)!);
   const id = get(idSchema, ID_KEY);
   const discriminator = getDiscriminatorFieldFromSchema(schema);
@@ -128,6 +128,7 @@ export default function LayoutMultiSchemaField<
   const {
     widget = discriminator ? 'radio' : 'select',
     title = '',
+    placeholder = '',
     optionsSchemaSelector: selectorField = discriminator,
     hideError: uiSchemaHideError,
     ...uiOptions
@@ -148,6 +149,7 @@ export default function LayoutMultiSchemaField<
 
   const rawErrors = get(errorSchema, [ERRORS_KEY], []) as string[];
   const fieldErrorSchema = omit(errorSchema, [ERRORS_KEY]);
+  const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions);
 
   /** Callback function that updates the selected option and adjusts the form data based on the structure of the new
    * option, calling the `onChange` callback with the adjusted formData.
@@ -167,7 +169,7 @@ export default function LayoutMultiSchemaField<
     if (newFormData) {
       set(newFormData, selectorField, opt);
     }
-    onChange(newFormData);
+    onChange(newFormData, undefined, id);
   };
 
   // filtering the options based on the type of widget because `selectField` does not recognize the `convertOther` prop
@@ -190,8 +192,9 @@ export default function LayoutMultiSchemaField<
         multiple={false}
         rawErrors={rawErrors}
         hideError={hideFieldError}
+        hideLabel={!displayLabel}
         errorSchema={fieldErrorSchema}
-        placeholder=''
+        placeholder={placeholder}
         onChange={onOptionChange}
         onBlur={onBlur}
         onFocus={onFocus}

@@ -31,8 +31,11 @@ import defaults from './defaults';
 import options from './options';
 import ifThenElse from './ifThenElse';
 import customField from './customField';
+import layoutGrid from './layoutGrid';
 import { Sample } from './Sample';
 import deepFreeze from 'deep-freeze-es6';
+
+export type { Sample };
 
 const _samples: Record<string, Sample> = {
   Blank: { schema: {}, uiSchema: {}, formData: {} },
@@ -69,6 +72,7 @@ const _samples: Record<string, Sample> = {
   ErrorSchema: errorSchema,
   Defaults: defaults,
   'Custom Field': customField,
+  'Layout Grid': layoutGrid,
 };
 
 export const samples = deepFreeze(_samples);
