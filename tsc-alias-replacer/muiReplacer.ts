@@ -1,6 +1,6 @@
 import { AliasReplacerArguments } from 'tsc-alias';
 
-/** A `tsc-alias` replacer that fixes up the imports `from 'lodash/xxxx'` to be `from `lodash/xxxx.js`
+/** A `tsc-alias` replacer that fixes up the imports `from '@mui/xxxx'` to be `from `@mui/xxxx/index.js`
  *
  * @param orig - The original import name
  */
