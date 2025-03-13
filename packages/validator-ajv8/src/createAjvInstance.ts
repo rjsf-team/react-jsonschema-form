@@ -1,9 +1,9 @@
 import Ajv, { Options } from 'ajv';
 import addFormats, { FormatsPluginOptions } from 'ajv-formats';
 import isObject from 'lodash/isObject';
+import { ADDITIONAL_PROPERTY_FLAG, RJSF_ADDITIONAL_PROPERTIES_FLAG } from '@rjsf/utils';
 
 import { CustomValidatorOptionsType } from './types';
-import { ADDITIONAL_PROPERTY_FLAG, RJSF_ADDITIONAL_PROPERTIES_FLAG } from '@rjsf/utils';
 
 export const AJV_CONFIG: Options = {
   allErrors: true,

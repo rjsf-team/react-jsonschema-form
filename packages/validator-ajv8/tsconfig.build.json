@@ -16,6 +16,10 @@
       "lodash": {
         "enabled": true,
         "file": "lodashReplacer.js"
+      },
+      "ajv": {
+        "enabled": true,
+        "file": "ajvReplacer.js"
       }
     }
   }
