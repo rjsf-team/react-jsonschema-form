@@ -32,7 +32,7 @@
   "homepage": "https://github.com/rjsf-team/react-jsonschema-form",
   "devDependencies": {
     "@babel/eslint-parser": "^7.23.10",
-    "@nrwl/nx-cloud": "^15.3.5",
+    "@nrwl/nx-cloud": "^19.0.0",
     "@testing-library/jest-dom": "^6.4.2",
     "@testing-library/react": "^14.2.1",
     "@types/estree": "^1.0.5",
