@@ -1553,8 +1553,8 @@ exports[`single fields select field multiple choice enumDisabled 1`] = `
         >
           <label
             cmdk-label=""
-            htmlFor="radix-:rg:"
-            id="radix-:rf:"
+            htmlFor="radix-:rk:"
+            id="radix-:rj:"
             style={
               {
                 "borderWidth": "0",
@@ -1577,15 +1577,15 @@ exports[`single fields select field multiple choice enumDisabled 1`] = `
             >
               <input
                 aria-autocomplete="list"
-                aria-controls="radix-:re:"
+                aria-controls="radix-:ri:"
                 aria-expanded={true}
-                aria-labelledby="radix-:rf:"
+                aria-labelledby="radix-:rj:"
                 autoComplete="off"
                 autoCorrect="off"
                 className="rtl:mr-2 ltr:ml-2 bg-transparent outline-none placeholder:text-muted-foreground flex-1"
                 cmdk-input=""
                 disabled={false}
-                id="radix-:rg:"
+                id="radix-:rk:"
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
@@ -1867,8 +1867,8 @@ exports[`single fields select field multiple choice formData 1`] = `
         >
           <label
             cmdk-label=""
-            htmlFor="radix-:rm:"
-            id="radix-:rl:"
+            htmlFor="radix-:rq:"
+            id="radix-:rp:"
             style={
               {
                 "borderWidth": "0",
@@ -1895,6 +1895,7 @@ exports[`single fields select field multiple choice formData 1`] = `
                 foo
                 <button
                   className="rtl:mr-1 ltr:ml-1 ring-offset-background rounded-full outline-none focus:ring-1 focus:ring-ring focus:ring-offset-1"
+                  disabled={false}
                   onClick={[Function]}
                   onKeyDown={[Function]}
                   onMouseDown={[Function]}
@@ -1927,6 +1928,7 @@ exports[`single fields select field multiple choice formData 1`] = `
                 bar
                 <button
                   className="rtl:mr-1 ltr:ml-1 ring-offset-background rounded-full outline-none focus:ring-1 focus:ring-ring focus:ring-offset-1"
+                  disabled={false}
                   onClick={[Function]}
                   onKeyDown={[Function]}
                   onMouseDown={[Function]}
@@ -1955,15 +1957,15 @@ exports[`single fields select field multiple choice formData 1`] = `
               </div>
               <input
                 aria-autocomplete="list"
-                aria-controls="radix-:rk:"
+                aria-controls="radix-:ro:"
                 aria-expanded={true}
-                aria-labelledby="radix-:rl:"
+                aria-labelledby="radix-:rp:"
                 autoComplete="off"
                 autoCorrect="off"
                 className="rtl:mr-2 ltr:ml-2 bg-transparent outline-none placeholder:text-muted-foreground flex-1"
                 cmdk-input=""
                 disabled={false}
-                id="radix-:rm:"
+                id="radix-:rq:"
                 onBlur={[Function]}
                 onChange={[Function]}
                 onFocus={[Function]}
@@ -2317,6 +2319,152 @@ exports[`single fields select field single choice enumDisabled using radio widge
 </form>
 `;
 
+exports[`single fields select field single choice form disabled using radio widget 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+  >
+    <div
+      className="flex flex-col gap-2"
+    >
+      <label
+        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+        htmlFor="root"
+      />
+      <div
+        className="mb-0"
+      >
+        <div
+          aria-describedby="root__error root__description root__help"
+          aria-orientation="vertical"
+          aria-required={false}
+          className="gap-2 flex flex-wrap flex-col"
+          data-disabled=""
+          data-orientation="vertical"
+          dir="ltr"
+          onBlur={[Function]}
+          onFocus={[Function]}
+          onMouseDown={[Function]}
+          role="radiogroup"
+          style={
+            {
+              "outline": "none",
+            }
+          }
+          tabIndex={-1}
+        >
+          <div
+            className="flex items-center gap-2"
+          >
+            <button
+              aria-checked={false}
+              className="aspect-square h-4 w-4 rounded-full border border-primary text-primary shadow focus:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+              data-disabled=""
+              data-orientation="vertical"
+              data-radix-collection-item=""
+              data-state="unchecked"
+              disabled={true}
+              id="root-0"
+              onClick={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              onMouseDown={[Function]}
+              role="radio"
+              tabIndex={-1}
+              type="button"
+              value="0"
+            />
+            <input
+              aria-hidden={true}
+              defaultChecked={false}
+              disabled={true}
+              required={false}
+              style={
+                {
+                  "margin": 0,
+                  "opacity": 0,
+                  "pointerEvents": "none",
+                  "position": "absolute",
+                  "transform": "translateX(-100%)",
+                }
+              }
+              tabIndex={-1}
+              type="radio"
+              value="0"
+            />
+            <label
+              className="text-sm font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 leading-tight"
+              onMouseDown={[Function]}
+            >
+              foo
+            </label>
+          </div>
+          <div
+            className="flex items-center gap-2"
+          >
+            <button
+              aria-checked={false}
+              className="aspect-square h-4 w-4 rounded-full border border-primary text-primary shadow focus:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+              data-disabled=""
+              data-orientation="vertical"
+              data-radix-collection-item=""
+              data-state="unchecked"
+              disabled={true}
+              id="root-1"
+              onClick={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              onMouseDown={[Function]}
+              role="radio"
+              tabIndex={-1}
+              type="button"
+              value="1"
+            />
+            <input
+              aria-hidden={true}
+              defaultChecked={false}
+              disabled={true}
+              required={false}
+              style={
+                {
+                  "margin": 0,
+                  "opacity": 0,
+                  "pointerEvents": "none",
+                  "position": "absolute",
+                  "transform": "translateX(-100%)",
+                }
+              }
+              tabIndex={-1}
+              type="radio"
+              value="1"
+            />
+            <label
+              className="text-sm font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 leading-tight"
+              onMouseDown={[Function]}
+            >
+              bar
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2 my-2"
+      disabled={true}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
 exports[`single fields select field single choice formData 1`] = `
 <form
   className="rjsf"
@@ -2349,8 +2497,8 @@ exports[`single fields select field single choice formData 1`] = `
         >
           <label
             cmdk-label=""
-            htmlFor="radix-:rj:"
-            id="radix-:ri:"
+            htmlFor="radix-:rn:"
+            id="radix-:rm:"
             style={
               {
                 "borderWidth": "0",
@@ -2394,6 +2542,152 @@ exports[`single fields select field single choice formData 1`] = `
           <div
             className="relative"
           />
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2 my-2"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields select field single choice uiSchema disabled using radio widget 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+  >
+    <div
+      className="flex flex-col gap-2"
+    >
+      <label
+        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+        htmlFor="root"
+      />
+      <div
+        className="mb-0"
+      >
+        <div
+          aria-describedby="root__error root__description root__help"
+          aria-orientation="vertical"
+          aria-required={false}
+          className="gap-2 flex flex-wrap flex-col"
+          data-disabled=""
+          data-orientation="vertical"
+          dir="ltr"
+          onBlur={[Function]}
+          onFocus={[Function]}
+          onMouseDown={[Function]}
+          role="radiogroup"
+          style={
+            {
+              "outline": "none",
+            }
+          }
+          tabIndex={-1}
+        >
+          <div
+            className="flex items-center gap-2"
+          >
+            <button
+              aria-checked={false}
+              className="aspect-square h-4 w-4 rounded-full border border-primary text-primary shadow focus:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+              data-disabled=""
+              data-orientation="vertical"
+              data-radix-collection-item=""
+              data-state="unchecked"
+              disabled={true}
+              id="root-0"
+              onClick={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              onMouseDown={[Function]}
+              role="radio"
+              tabIndex={-1}
+              type="button"
+              value="0"
+            />
+            <input
+              aria-hidden={true}
+              defaultChecked={false}
+              disabled={true}
+              required={false}
+              style={
+                {
+                  "margin": 0,
+                  "opacity": 0,
+                  "pointerEvents": "none",
+                  "position": "absolute",
+                  "transform": "translateX(-100%)",
+                }
+              }
+              tabIndex={-1}
+              type="radio"
+              value="0"
+            />
+            <label
+              className="text-sm font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 leading-tight"
+              onMouseDown={[Function]}
+            >
+              foo
+            </label>
+          </div>
+          <div
+            className="flex items-center gap-2"
+          >
+            <button
+              aria-checked={false}
+              className="aspect-square h-4 w-4 rounded-full border border-primary text-primary shadow focus:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+              data-disabled=""
+              data-orientation="vertical"
+              data-radix-collection-item=""
+              data-state="unchecked"
+              disabled={true}
+              id="root-1"
+              onClick={[Function]}
+              onFocus={[Function]}
+              onKeyDown={[Function]}
+              onMouseDown={[Function]}
+              role="radio"
+              tabIndex={-1}
+              type="button"
+              value="1"
+            />
+            <input
+              aria-hidden={true}
+              defaultChecked={false}
+              disabled={true}
+              required={false}
+              style={
+                {
+                  "margin": 0,
+                  "opacity": 0,
+                  "pointerEvents": "none",
+                  "position": "absolute",
+                  "transform": "translateX(-100%)",
+                }
+              }
+              tabIndex={-1}
+              type="radio"
+              value="1"
+            />
+            <label
+              className="text-sm font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 leading-tight"
+              onMouseDown={[Function]}
+            >
+              bar
+            </label>
+          </div>
         </div>
       </div>
     </div>
