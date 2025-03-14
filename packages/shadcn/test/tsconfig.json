@@ -1,0 +1,18 @@
+{
+  "extends": "../../../tsconfig.base.json",
+  "include": ["./"],
+  "compilerOptions": {
+    "rootDir": "./",
+    "baseUrl": "../",
+    "noEmit": true,
+    "jsx": "react-jsx"
+  },
+  "references": [
+    {
+      "path": "../src"
+    },
+    {
+      "path": "../../snapshot-tests"
+    }
+  ]
+}

@@ -29,6 +29,9 @@
       "path": "./packages/semantic-ui"
     },
     {
+      "path": "./packages/shadcn"
+    },
+    {
       "path": "./packages/utils"
     },
     {
