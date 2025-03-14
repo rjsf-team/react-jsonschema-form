@@ -55,7 +55,7 @@ Exports `shadcn` theme, fields and widgets for `react-jsonschema-form`.
 
 ### Prerequisites
 
-- `@rjsf/core >= 2.2.0`
+- `@rjsf/core >= 6`
 - `tailwindcss (optional)`
 
 ```bash
