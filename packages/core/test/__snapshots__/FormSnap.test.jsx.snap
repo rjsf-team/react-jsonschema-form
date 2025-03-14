@@ -1445,6 +1445,82 @@ exports[`single fields select field single choice enumDisabled using radio widge
 </form>
 `;
 
+exports[`single fields select field single choice form disabled using radio widget 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+  >
+    <div
+      className="field-radio-group"
+      id="root"
+      role="radiogroup"
+    >
+      <div
+        className="radio disabled"
+      >
+        <label>
+          <span>
+            <input
+              aria-describedby="root__error root__description root__help"
+              autoFocus={false}
+              checked={false}
+              disabled={true}
+              id="root-0"
+              name="root"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              type="radio"
+              value="0"
+            />
+            <span>
+              foo
+            </span>
+          </span>
+        </label>
+      </div>
+      <div
+        className="radio disabled"
+      >
+        <label>
+          <span>
+            <input
+              aria-describedby="root__error root__description root__help"
+              autoFocus={false}
+              checked={false}
+              disabled={true}
+              id="root-1"
+              name="root"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              type="radio"
+              value="1"
+            />
+            <span>
+              bar
+            </span>
+          </span>
+        </label>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-info "
+      disabled={true}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
 exports[`single fields select field single choice formData 1`] = `
 <form
   className="rjsf"
@@ -1482,6 +1558,82 @@ exports[`single fields select field single choice formData 1`] = `
         bar
       </option>
     </select>
+  </div>
+  <div>
+    <button
+      className="btn btn-info "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields select field single choice uiSchema disabled using radio widget 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+  >
+    <div
+      className="field-radio-group"
+      id="root"
+      role="radiogroup"
+    >
+      <div
+        className="radio disabled"
+      >
+        <label>
+          <span>
+            <input
+              aria-describedby="root__error root__description root__help"
+              autoFocus={false}
+              checked={false}
+              disabled={true}
+              id="root-0"
+              name="root"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              type="radio"
+              value="0"
+            />
+            <span>
+              foo
+            </span>
+          </span>
+        </label>
+      </div>
+      <div
+        className="radio disabled"
+      >
+        <label>
+          <span>
+            <input
+              aria-describedby="root__error root__description root__help"
+              autoFocus={false}
+              checked={false}
+              disabled={true}
+              id="root-1"
+              name="root"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              type="radio"
+              value="1"
+            />
+            <span>
+              bar
+            </span>
+          </span>
+        </label>
+      </div>
+    </div>
   </div>
   <div>
     <button

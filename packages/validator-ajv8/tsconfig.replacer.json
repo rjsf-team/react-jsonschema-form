@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es2017",
+    "outDir": "./",
+    "skipLibCheck": true,
+  },
+  "files": [
+    "../../tsc-alias-replacer/lodashReplacer.ts",
+    "../../tsc-alias-replacer/ajvReplacer.ts"
+  ],
+  "exclude": [
+    "./src",
+    "./test"
+  ]
+}

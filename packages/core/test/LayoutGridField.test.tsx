@@ -1386,7 +1386,7 @@ describe('LayoutGridField', () => {
     render(<LayoutGridField {...props} />);
     // Renders an outer grid row
     const row = screen.getByTestId(LayoutGridField.TEST_IDS.row);
-    expect(row).toHaveClass('row');
+    expect(row).toBeInTheDocument();
     // Renders 2 fields in the row
     const fields = within(row).getAllByTestId(LayoutGridField.TEST_IDS.field);
     expect(fields).toHaveLength(GRID_CHILDREN.length);
@@ -1407,7 +1407,7 @@ describe('LayoutGridField', () => {
     render(<LayoutGridField {...props} />);
     // Renders an outer grid row item with width 6
     const row = screen.getByTestId(LayoutGridField.TEST_IDS.row);
-    expect(row).toHaveClass(`row ${ColumnWidth6}`);
+    expect(row).toHaveClass(ColumnWidth6);
     // Renders 2 fields in the row
     const fields = within(row).getAllByTestId(LayoutGridField.TEST_IDS.field);
     expect(fields).toHaveLength(GRID_CHILDREN.length);
@@ -1428,7 +1428,6 @@ describe('LayoutGridField', () => {
     // Renders an outer grid item with width 6, but not a row
     const col = screen.getByTestId(LayoutGridField.TEST_IDS.col);
     expect(col).toHaveClass(ColumnWidth6);
-    expect(col).not.toHaveClass('row');
     // Renders 2 fields in the column
     const fields = within(col).getAllByTestId(LayoutGridField.TEST_IDS.field);
     expect(fields).toHaveLength(GRID_CHILDREN.length);
@@ -1451,13 +1450,11 @@ describe('LayoutGridField', () => {
     expect(cols).toHaveLength(GRID_CHILDREN.length);
     // First column is a grid item with width 6
     expect(cols[0]).toHaveClass(ColumnWidth6);
-    expect(cols[0]).not.toHaveClass('row');
     // Renders first field in the first column
     let field = within(cols[0]).getByTestId(LayoutGridField.TEST_IDS.field);
     expect(field).toHaveTextContent(stringifyProps(getExpectedPropsForField(props, GRID_CHILDREN[0])));
     // First column is a grid item with 6
     expect(cols[1]).toHaveClass(ColumnWidth6);
-    expect(cols[1]).not.toHaveClass('row');
     // Renders second field in the second column
     field = within(cols[1]).getByTestId(LayoutGridField.TEST_IDS.field);
     expect(field).toHaveTextContent(stringifyProps(getExpectedPropsForField(props, GRID_CHILDREN[1])));

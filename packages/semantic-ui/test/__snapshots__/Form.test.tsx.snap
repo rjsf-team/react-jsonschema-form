@@ -2240,6 +2240,102 @@ exports[`single fields select field single choice enumDisabled using radio widge
 </form>
 `;
 
+exports[`single fields select field single choice form disabled using radio widget 1`] = `
+<form
+  className="ui form rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+  >
+    <div
+      className="grouped equal width fields"
+    >
+      <div
+        className="grouped fields"
+      >
+        <div
+          className="disabled field"
+        >
+          <div
+            className="ui disabled radio checkbox"
+            fluid={true}
+            inverted={false}
+            onBlur={[Function]}
+            onChange={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onMouseDown={[Function]}
+            onMouseUp={[Function]}
+          >
+            <input
+              aria-describedby="root__error root__description root__help"
+              checked={false}
+              className="hidden"
+              disabled={true}
+              id="root-0"
+              name="root"
+              readOnly={true}
+              tabIndex={-1}
+              type="radio"
+              value="0"
+            />
+            <label
+              htmlFor="root-0"
+            >
+              foo
+            </label>
+          </div>
+        </div>
+        <div
+          className="disabled field"
+        >
+          <div
+            className="ui disabled radio checkbox"
+            fluid={true}
+            inverted={false}
+            onBlur={[Function]}
+            onChange={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onMouseDown={[Function]}
+            onMouseUp={[Function]}
+          >
+            <input
+              aria-describedby="root__error root__description root__help"
+              checked={false}
+              className="hidden"
+              disabled={true}
+              id="root-1"
+              name="root"
+              readOnly={true}
+              tabIndex={-1}
+              type="radio"
+              value="1"
+            />
+            <label
+              htmlFor="root-1"
+            >
+              bar
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    className="ui primary disabled button"
+    disabled={true}
+    onClick={[Function]}
+    tabIndex={-1}
+    type="submit"
+  >
+    Submit
+  </button>
+</form>
+`;
+
 exports[`single fields select field single choice formData 1`] = `
 <form
   className="ui form rjsf"
@@ -2345,6 +2441,100 @@ exports[`single fields select field single choice formData 1`] = `
                 bar
               </span>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    className="ui primary button"
+    onClick={[Function]}
+    type="submit"
+  >
+    Submit
+  </button>
+</form>
+`;
+
+exports[`single fields select field single choice uiSchema disabled using radio widget 1`] = `
+<form
+  className="ui form rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+  >
+    <div
+      className="grouped equal width fields"
+    >
+      <div
+        className="grouped fields"
+      >
+        <div
+          className="disabled field"
+        >
+          <div
+            className="ui disabled radio checkbox"
+            fluid={true}
+            inverted={false}
+            onBlur={[Function]}
+            onChange={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onMouseDown={[Function]}
+            onMouseUp={[Function]}
+          >
+            <input
+              aria-describedby="root__error root__description root__help"
+              checked={false}
+              className="hidden"
+              disabled={true}
+              id="root-0"
+              name="root"
+              readOnly={true}
+              tabIndex={-1}
+              type="radio"
+              value="0"
+            />
+            <label
+              htmlFor="root-0"
+            >
+              foo
+            </label>
+          </div>
+        </div>
+        <div
+          className="disabled field"
+        >
+          <div
+            className="ui disabled radio checkbox"
+            fluid={true}
+            inverted={false}
+            onBlur={[Function]}
+            onChange={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onMouseDown={[Function]}
+            onMouseUp={[Function]}
+          >
+            <input
+              aria-describedby="root__error root__description root__help"
+              checked={false}
+              className="hidden"
+              disabled={true}
+              id="root-1"
+              name="root"
+              readOnly={true}
+              tabIndex={-1}
+              type="radio"
+              value="1"
+            />
+            <label
+              htmlFor="root-1"
+            >
+              bar
+            </label>
           </div>
         </div>
       </div>

@@ -25,24 +25,24 @@ jobs:
       - run: npm run lint
 
       - name: Build with Netlify badge
-        run: npm run build
+        run: npm run build-serial
         env:
           VITE_SHOW_NETLIFY_BADGE: true
           NODE_OPTIONS: --max_old_space_size=4096
 
       - name: Build
-        run: npm run build
+        run: npm run build-serial
         env:
           NODE_OPTIONS: --max_old_space_size=4096
 
       # Docusaurus doesn't support Node 14. These tasks can be removed once Node 14 is EOL (May 2023)
       - name: Build with Netlify badge (no docs)
-        run: npx nx run-many --target=build --exclude=@rjsf/docs
+        run: npx nx run-many --target=build --exclude=@rjsf/docs --parallel=false
         env:
           VITE_SHOW_NETLIFY_BADGE: true
           NODE_OPTIONS: --max_old_space_size=4096
       - name: Build (no docs)
-        run: npx nx run-many --target=build --exclude=@rjsf/docs
+        run: npx nx run-many --target=build --exclude=@rjsf/docs --parallel=false
         env:
           NODE_OPTIONS: --max_old_space_size=4096
 

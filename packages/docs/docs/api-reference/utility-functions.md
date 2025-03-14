@@ -1052,6 +1052,22 @@ Returns the superset of `formData` that includes the given set updated to includ
 
 - T: The resulting `formData` with all the defaults provided
 
+### getDisplayLabel<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
+
+Determines whether the combination of `schema` and `uiSchema` properties indicates that the label for the `schema` should be displayed in a UI.
+
+#### Parameters
+
+- validator: ValidatorType<T, S, F> - An implementation of the `ValidatorType` interface that will be used when necessary
+- schema: S - The schema for which the display label flag is desired
+- [uiSchema={}]: UiSchema<T, S, F> - The UI schema from which to derive potentially displayable information
+- [rootSchema]: S | undefined - The root schema, used to primarily to look up `$ref`s
+- [globalOptions={}]: GlobalUISchemaOptions - The optional Global UI Schema from which to get any fallback `xxx` options
+
+#### Returns
+
+- boolean: True if the label should be displayed or false if it should not
+
 ### getClosestMatchingOption<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
 
 Determines which of the given `options` provided most closely matches the `formData`.

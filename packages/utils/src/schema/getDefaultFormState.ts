@@ -344,7 +344,8 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
       schema,
       rootSchema,
       rawFormData,
-      experimental_defaultFormStateBehavior
+      experimental_defaultFormStateBehavior,
+      experimental_customMergeAllOf
     );
     if (!isObject(rawFormData)) {
       defaultsWithFormData = mergeDefaultsWithFormData<T>(
@@ -366,7 +367,8 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
  * @param schema - The schema for which the formData state is desired
  * @param rootSchema - The root schema, used to primarily to look up `$ref`s
  * @param formData - The current formData
- * @param experimental_defaultFormStateBehavior - Optional configuration object, if provided, allows users to override default form state behavior
+ * @param [experimental_defaultFormStateBehavior] - Optional configuration object, if provided, allows users to override default form state behavior
+ * @param [experimental_customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
  * @returns - valid formData that matches schema
  */
 export function ensureFormDataMatchingSchema<
@@ -378,9 +380,11 @@ export function ensureFormDataMatchingSchema<
   schema: S,
   rootSchema: S,
   formData: T | undefined,
-  experimental_defaultFormStateBehavior?: Experimental_DefaultFormStateBehavior
+  experimental_defaultFormStateBehavior?: Experimental_DefaultFormStateBehavior,
+  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>
 ): T | T[] | undefined {
-  const isSelectField = !isConstant<S>(schema) && isSelect<T, S, F>(validator, schema, rootSchema);
+  const isSelectField =
+    !isConstant<S>(schema) && isSelect<T, S, F>(validator, schema, rootSchema, experimental_customMergeAllOf);
   let validFormData: T | T[] | undefined = formData;
   if (isSelectField) {
     const getOptionsList = optionsList<T, S, F>(schema);

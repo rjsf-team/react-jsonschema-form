@@ -3,7 +3,7 @@
   "version": "6.0.0-alpha.0",
   "description": "FluentUI React Components theme, fields and widgets for react-jsonschema-form",
   "scripts": {
-    "build:ts": "tsc -b",
+    "build:ts": "tsc -b tsconfig.build.json && tsc-alias -p tsconfig.build.json",
     "build:cjs": "esbuild ./src/index.ts --bundle --outfile=dist/index.js --sourcemap --packages=external --format=cjs",
     "build:esm": "esbuild ./src/index.ts --bundle --outfile=dist/index.esm.js --sourcemap --packages=external --format=esm",
     "build:umd": "rollup dist/index.esm.js --format=umd --file=dist/core.umd.js --name=JSONSchemaForm",
@@ -27,6 +27,33 @@
   "main": "dist/index.js",
   "module": "lib/index.js",
   "typings": "lib/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./lib/index.js",
+      "types": "./lib/index.d.ts"
+    },
+    "./lib": {
+      "require": "./dist/index.js",
+      "import": "./lib/index.js",
+      "types": "./lib/index.d.ts"
+    },
+    "./lib/*.js": {
+      "require": "./dist/*.js",
+      "import": "./lib/*.js",
+      "types": "./lib/*.d.ts"
+    },
+    "./dist": {
+      "require": "./dist/index.js",
+      "import": "./lib/index.js",
+      "types": "./lib/index.d.ts"
+    },
+    "./dist/*.js": {
+      "require": "./dist/*.js",
+      "import": "./lib/*.js",
+      "types": "./lib/*.d.ts"
+    }
+  },
   "files": [
     "dist",
     "lib",

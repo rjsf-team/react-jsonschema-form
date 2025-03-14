@@ -277,7 +277,7 @@ describe('LayoutMultiSchemaField', () => {
     await user.click(input);
 
     // OnChange was called with the correct event
-    expect(props.onChange).toHaveBeenCalledWith({ [selectorField]: '2' });
+    expect(props.onChange).toHaveBeenCalledWith({ [selectorField]: '2' }, undefined, DEFAULT_ID);
 
     // Rerender to simulate the onChange updating the value
     const newFormData = { [selectorField]: SIMPLE_ONEOF_OPTIONS[1].value };
@@ -347,10 +347,14 @@ describe('LayoutMultiSchemaField', () => {
       props.formData
     );
     await waitFor(() => {
-      expect(props.onChange).toHaveBeenCalledWith({
-        ...props.registry.schemaUtils.getDefaultFormState(retrievedOptions[0], sanitizedFormData),
-        [selectorField]: 'first_option',
-      });
+      expect(props.onChange).toHaveBeenCalledWith(
+        {
+          ...props.registry.schemaUtils.getDefaultFormState(retrievedOptions[0], sanitizedFormData),
+          [selectorField]: 'first_option',
+        },
+        undefined,
+        DEFAULT_ID
+      );
     });
   });
   test('custom selector field, ui:hideError false, props.hideError true, required true, autofocus true', async () => {
@@ -404,7 +408,7 @@ describe('LayoutMultiSchemaField', () => {
     await user.selectOptions(button, '');
 
     // OnChange was called with the correct event
-    expect(props.onChange).toHaveBeenCalledWith(undefined);
+    expect(props.onChange).toHaveBeenCalledWith(undefined, undefined, DEFAULT_ID);
   });
   test('no options for radio widget, ui:hideError true, props.hideError false, no errors to hide', () => {
     const props = getProps({ options: [], uiSchema: { 'ui:hideError': true }, hideError: false });

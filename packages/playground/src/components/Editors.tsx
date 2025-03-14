@@ -13,7 +13,7 @@ const monacoEditorOptions = {
 type EditorProps = {
   title: string;
   code: string;
-  onChange: (code: string) => void;
+  onChange: (data: any) => void;
 };
 
 function Editor({ title, code, onChange }: EditorProps) {
@@ -69,6 +69,7 @@ type EditorsProps = {
   extraErrors: ErrorSchema | undefined;
   setExtraErrors: React.Dispatch<React.SetStateAction<ErrorSchema | undefined>>;
   setShareURL: React.Dispatch<React.SetStateAction<string | null>>;
+  hasUiSchemaGenerator: boolean;
 };
 
 export default function Editors({
@@ -81,9 +82,10 @@ export default function Editors({
   setSchema,
   setShareURL,
   setUiSchema,
+  hasUiSchemaGenerator,
 }: EditorsProps) {
   const onSchemaEdited = useCallback(
-    (newSchema) => {
+    (newSchema: any) => {
       setSchema(newSchema);
       setShareURL(null);
     },
@@ -91,7 +93,7 @@ export default function Editors({
   );
 
   const onUISchemaEdited = useCallback(
-    (newUiSchema) => {
+    (newUiSchema: any) => {
       setUiSchema(newUiSchema);
       setShareURL(null);
     },
@@ -99,7 +101,7 @@ export default function Editors({
   );
 
   const onFormDataEdited = useCallback(
-    (newFormData) => {
+    (newFormData: any) => {
       if (
         !isEqualWith(newFormData, formData, (newValue, oldValue) => {
           // Since this is coming from the editor which uses JSON.stringify to trim undefined values compare the values
@@ -116,19 +118,20 @@ export default function Editors({
   );
 
   const onExtraErrorsEdited = useCallback(
-    (newExtraErrors) => {
+    (newExtraErrors: any) => {
       setExtraErrors(newExtraErrors);
       setShareURL(null);
     },
     [setExtraErrors, setShareURL]
   );
+  const uiSchemaTitle = hasUiSchemaGenerator ? 'UISchema (regenerated on theme change)' : 'UiSchema';
 
   return (
     <div className='col-sm-7'>
       <Editor title='JSONSchema' code={toJson(schema)} onChange={onSchemaEdited} />
       <div className='row'>
         <div className='col-sm-6'>
-          <Editor title='UISchema' code={toJson(uiSchema)} onChange={onUISchemaEdited} />
+          <Editor title={uiSchemaTitle} code={toJson(uiSchema)} onChange={onUISchemaEdited} />
         </div>
         <div className='col-sm-6'>
           <Editor title='formData' code={toJson(formData)} onChange={onFormDataEdited} />
