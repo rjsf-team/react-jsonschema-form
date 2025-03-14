@@ -1,18 +1,14 @@
 import { GridTemplateProps } from '@rjsf/utils';
+import { cn } from '../lib/utils';
 
-/** Renders a `GridTemplate` for react-bootstrap, which is expecting the column sizing information coming in via the
- * extra props provided by the caller, which are spread directly on the `Row`/`Col`.
- *
- * @param props - The GridTemplateProps, including the extra props containing the react-bootstrap grid positioning details
- */
+// Implementation using https://tailwindcss.com/docs/grid-auto-columns and https://tailwindcss.com/docs/grid-auto-rows
 export default function GridTemplate(props: GridTemplateProps) {
   const { children, column, ...rest } = props;
-  return column ? (
-    <div className={'flex flex-col'} {...rest}>
-      {children}
-    </div>
-  ) : (
-    <div className={'flex'} {...rest}>
+  return (
+    <div
+      className={cn('grid gap-2', !column && 'grid-cols-12 col-span-12', column && 'grid-flow-col grid-rows-12')}
+      {...rest}
+    >
       {children}
     </div>
   );
