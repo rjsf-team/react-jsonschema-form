@@ -1,13 +1,12 @@
 'use client';
 
-import * as React from 'react';
-import { FocusEventHandler, useCallback, useMemo, useRef, useState } from 'react';
+import { Command as CommandPrimitive } from 'cmdk';
+import { isEqual } from 'lodash';
 import { X } from 'lucide-react';
+import { FocusEvent, FocusEventHandler, KeyboardEvent, useCallback, useMemo, useRef, useState } from 'react';
+import { cn } from '../../lib/utils';
 import { Badge } from './badge';
 import { Command, CommandGroup, CommandItem, CommandList } from './command';
-import { Command as CommandPrimitive } from 'cmdk';
-import { cn } from '../../lib/utils';
-import { isEqual } from 'lodash';
 
 export type FancySelectItem = {
   value: any;
@@ -44,7 +43,7 @@ export function FancyMultiSelect({
   onBlur,
   className,
   id,
-}: Readonly<FancyMultiSelectProps>): React.JSX.Element {
+}: Readonly<FancyMultiSelectProps>): JSX.Element {
   const inputRef = useRef<HTMLInputElement>(null);
   const [open, setOpen] = useState(false);
   const [inputValue, setInputValue] = useState('');
@@ -71,7 +70,7 @@ export function FancyMultiSelect({
   );
 
   const handleKeyDown = useCallback(
-    (e: React.KeyboardEvent<HTMLDivElement>) => {
+    (e: KeyboardEvent<HTMLDivElement>) => {
       if (disabled || !inputRef.current || inputRef.current.value !== '') {
         return;
       }
@@ -99,7 +98,7 @@ export function FancyMultiSelect({
   );
 
   const handleFocus = useCallback(
-    (e: React.FocusEvent<HTMLDivElement>) => {
+    (e: FocusEvent<HTMLDivElement>) => {
       if (!disabled) {
         setOpen(true);
       }

@@ -1,10 +1,9 @@
 'use client';
 
-import * as React from 'react';
 import { Check, ChevronDown } from 'lucide-react';
-import { Command, CommandGroup, CommandItem, CommandList } from './command';
-import { FocusEventHandler } from 'react';
+import { FocusEvent, FocusEventHandler, useEffect, useRef, useState } from 'react';
 import { cn } from '../../lib/utils';
+import { Command, CommandGroup, CommandItem, CommandList } from './command';
 
 export type FancySelectItem = {
   value: any;
@@ -41,13 +40,13 @@ export function FancySelect({
   onFocus,
   onBlur,
   className,
-}: Readonly<FancySelectInterface>): React.JSX.Element {
-  const [open, setOpen] = React.useState(false);
+}: Readonly<FancySelectInterface>): JSX.Element {
+  const [open, setOpen] = useState(false);
   const selectedItem = items?.find((item) => item.value === selected);
-  const selectedRef = React.useRef<HTMLDivElement>(null);
-  const containerRef = React.useRef<HTMLDivElement>(null);
+  const selectedRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (open && selectedRef.current) {
       requestAnimationFrame(() => {
         selectedRef.current?.scrollIntoView({ block: 'nearest' });
@@ -55,7 +54,7 @@ export function FancySelect({
     }
   }, [open]);
 
-  const handleBlur = (e: React.FocusEvent<HTMLDivElement>) => {
+  const handleBlur = (e: FocusEvent<HTMLDivElement>) => {
     if (containerRef.current && !containerRef.current.contains(e.relatedTarget as Node)) {
       setOpen(false);
     }
