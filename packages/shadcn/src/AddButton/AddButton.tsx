@@ -1,7 +1,19 @@
 import { FormContextType, IconButtonProps, RJSFSchema, StrictRJSFSchema, TranslatableString } from '@rjsf/utils';
 import { PlusCircle } from 'lucide-react';
+
 import { Button } from '../components/ui/button';
 
+/**
+ * AddButton component for adding new items in a form
+ * @template T - The type of data being handled
+ * @template S - The JSON Schema type, extending StrictRJSFSchema
+ * @template F - The form context type
+ * @component
+ * @param {IconButtonProps<T, S, F>} props - The component props
+ * @param {Object} props.uiSchema - The UI schema configuration
+ * @param {Object} props.registry - The registry object containing form utilities
+ * @returns {JSX.Element} A button component with a plus icon
+ */
 export default function AddButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
   uiSchema,
   registry,

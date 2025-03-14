@@ -1,4 +1,3 @@
-import { FocusEvent } from 'react';
 import {
   ADDITIONAL_PROPERTY_FLAG,
   buttonId,
@@ -8,9 +7,16 @@ import {
   TranslatableString,
   WrapIfAdditionalTemplateProps,
 } from '@rjsf/utils';
-import { Separator } from '../components/ui/separator';
-import { Input } from '../components/ui/input';
+import { FocusEvent } from 'react';
 
+import { Input } from '../components/ui/input';
+import { Separator } from '../components/ui/separator';
+
+/** The `WrapIfAdditional` component is used by the `FieldTemplate` to rename, or remove properties that are
+ * part of an `additionalProperties` part of a schema.
+ *
+ * @param props - The `WrapIfAdditionalProps` for this component
+ */
 export default function WrapIfAdditionalTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,

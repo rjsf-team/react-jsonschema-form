@@ -1,5 +1,6 @@
-import { ChangeEvent, FocusEvent } from 'react';
 import { ariaDescribedByIds, FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import { ChangeEvent, FocusEvent } from 'react';
+
 import { Textarea } from '../components/ui/textarea';
 
 type CustomWidgetProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any> = WidgetProps<
@@ -10,6 +11,10 @@ type CustomWidgetProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F exten
   options: any;
 };
 
+/** The `TextareaWidget` is a widget for rendering input fields as textarea.
+ *
+ * @param props - The `WidgetProps` for this component
+ */
 export default function TextareaWidget<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,

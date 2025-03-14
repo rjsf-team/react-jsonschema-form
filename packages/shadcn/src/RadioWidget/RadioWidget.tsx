@@ -1,18 +1,24 @@
-import { FocusEvent } from 'react';
 import {
   ariaDescribedByIds,
   enumOptionsIsSelected,
   enumOptionsValueForIndex,
-  optionId,
   FormContextType,
+  optionId,
   RJSFSchema,
   StrictRJSFSchema,
   WidgetProps,
 } from '@rjsf/utils';
-import { RadioGroup, RadioGroupItem } from '../components/ui/radio-group';
+import { FocusEvent } from 'react';
+
 import { Label } from '../components/ui/label';
+import { RadioGroup, RadioGroupItem } from '../components/ui/radio-group';
 import { cn } from '../lib/utils';
 
+/** The `RadioWidget` is a widget for rendering a radio group.
+ *  It is typically used with a string property constrained with enum options.
+ *
+ * @param props - The `WidgetProps` for this component
+ */
 export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
   id,
   options,

@@ -1,5 +1,8 @@
 import { ariaDescribedByIds, FormContextType, rangeSpec, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import _pick from 'lodash/pick';
+
 import { Slider } from '../components/ui/slider';
+
 const allowedProps = [
   'name',
   'min',
@@ -15,8 +18,23 @@ const allowedProps = [
   'inverted',
   'minStepsBetweenThumbs',
 ];
-import _pick from 'lodash/pick';
 
+/**
+ * A range widget component that renders a slider for number input
+ * @template T - The type of the form data
+ * @template S - The type of the schema, extending StrictRJSFSchema
+ * @template F - The type of the form context
+ * @param {object} props - The widget properties
+ * @param {number} props.value - The current value of the range
+ * @param {boolean} props.readonly - Whether the widget is read-only
+ * @param {boolean} props.disabled - Whether the widget is disabled
+ * @param {object} props.options - Additional options for the widget
+ * @param {S} props.schema - The JSON schema for this field
+ * @param {(value: any) => void} props.onChange - Callback for when the value changes
+ * @param {string} props.label - The label for the range input
+ * @param {string} props.id - The unique identifier for the widget
+ * @returns {JSX.Element} The rendered range widget
+ */
 export default function RangeWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
   value,
   readonly,

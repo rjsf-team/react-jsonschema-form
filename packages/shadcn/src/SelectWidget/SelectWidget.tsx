@@ -1,16 +1,22 @@
 import {
   ariaDescribedByIds,
-  FormContextType,
   enumOptionsIndexForValue,
   enumOptionsValueForIndex,
+  FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
   WidgetProps,
 } from '@rjsf/utils';
+
 import { FancyMultiSelect } from '../components/ui/fancy-multi-select';
 import { FancySelect } from '../components/ui/fancy-select';
 import { cn } from '../lib/utils';
 
+/** The `SelectWidget` is a widget for rendering dropdowns.
+ *  It is typically used with string properties constrained with enum options.
+ *
+ * @param props - The `WidgetProps` for this component
+ */
 export default function SelectWidget<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
@@ -69,6 +75,7 @@ export default function SelectWidget<
   ) : (
     <div className='p-0.5'>
       <FancyMultiSelect
+        id={id}
         autoFocus={autofocus}
         disabled={disabled || readonly}
         multiple

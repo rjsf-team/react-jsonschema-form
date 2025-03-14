@@ -6,8 +6,14 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
 } from '@rjsf/utils';
+
 import { cn } from '../lib/utils';
 
+/** The `FieldTemplate` component is the template used by `SchemaField` to render any field. It renders the field
+ * content, (label, description, children, errors and help) inside of a `WrapIfAdditional` component.
+ *
+ * @param props - The `FieldTemplateProps` for this component
+ */
 export default function FieldTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,

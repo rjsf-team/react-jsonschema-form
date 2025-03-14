@@ -1,20 +1,26 @@
-import { FocusEvent } from 'react';
 import {
   ariaDescribedByIds,
   enumOptionsDeselectValue,
   enumOptionsIsSelected,
   enumOptionsSelectValue,
   enumOptionsValueForIndex,
-  optionId,
   FormContextType,
+  optionId,
   RJSFSchema,
   StrictRJSFSchema,
   WidgetProps,
 } from '@rjsf/utils';
-import { Checkbox } from '../components/ui/checkbox';
-import { cn } from '../lib/utils';
-import { Label } from '../components/ui/label';
+import { FocusEvent } from 'react';
 
+import { Checkbox } from '../components/ui/checkbox';
+import { Label } from '../components/ui/label';
+import { cn } from '../lib/utils';
+
+/** The `CheckboxesWidget` is a widget for rendering checkbox groups.
+ *  It is typically used to represent an array of enums.
+ *
+ * @param props - The `WidgetProps` for this component
+ */
 export default function CheckboxesWidget<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,

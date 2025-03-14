@@ -1,4 +1,3 @@
-import { ChangeEvent, FocusEvent } from 'react';
 import {
   ariaDescribedByIds,
   BaseInputTemplateProps,
@@ -8,9 +7,17 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
 } from '@rjsf/utils';
-import { cn } from '../lib/utils';
-import { Input } from '../components/ui/input';
+import { ChangeEvent, FocusEvent } from 'react';
 
+import { Input } from '../components/ui/input';
+import { cn } from '../lib/utils';
+
+/** The `BaseInputTemplate` is the template to use to render the basic `<input>` component for the `core` theme.
+ * It is used as the template for rendering many of the <input> based widgets that differ by `type` and callbacks only.
+ * It can be customized/overridden for other themes or individual implementations as needed.
+ *
+ * @param props - The `WidgetProps` for this template
+ */
 export default function BaseInputTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
