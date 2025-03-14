@@ -61,6 +61,8 @@ export * from './constants';
 export * from './parser';
 export * from './schema';
 
+export * from './components';
+
 export {
   allowAdditionalItems,
   ariaDescribedByIds,
