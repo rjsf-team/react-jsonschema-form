@@ -26,5 +26,3 @@ fs.readdirSync(srcDir).forEach((file) => {
     }
   }
 });
-
-console.log('CSS build complete.');
