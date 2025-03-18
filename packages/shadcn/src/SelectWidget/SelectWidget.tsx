@@ -54,40 +54,40 @@ export default function SelectWidget<
     disabled: Array.isArray(enumDisabled) && enumDisabled.includes(value),
   }));
 
-  return !multiple ? (
+  return (
     <div className='p-0.5'>
-      <FancySelect
-        items={items}
-        selected={enumOptionsIndexForValue<S>(value ?? defaultValue, enumOptions, false) as unknown as string}
-        onValueChange={(selectedValue) => {
-          onChange(enumOptionsValueForIndex<S>(selectedValue, enumOptions, optEmptyValue));
-        }}
-        autoFocus={autofocus}
-        disabled={disabled || readonly}
-        required={required}
-        placeholder={placeholder}
-        className={cn({ 'border-destructive': rawErrors.length > 0 })}
-        onFocus={_onFancyFocus}
-        onBlur={_onFancyBlur}
-        ariaDescribedby={ariaDescribedByIds<T>(id)}
-      />
-    </div>
-  ) : (
-    <div className='p-0.5'>
-      <FancyMultiSelect
-        id={id}
-        autoFocus={autofocus}
-        disabled={disabled || readonly}
-        multiple
-        className={rawErrors.length > 0 ? 'border-destructive' : ''}
-        items={items}
-        selected={value}
-        onValueChange={(values) => {
-          onChange(enumOptionsValueForIndex<S>(values, enumOptions, optEmptyValue));
-        }}
-        onFocus={_onFancyFocus}
-        onBlur={_onFancyBlur}
-      />
+      {!multiple ? (
+        <FancySelect
+          items={items}
+          selected={enumOptionsIndexForValue<S>(value ?? defaultValue, enumOptions, false) as unknown as string}
+          onValueChange={(selectedValue) => {
+            onChange(enumOptionsValueForIndex<S>(selectedValue, enumOptions, optEmptyValue));
+          }}
+          autoFocus={autofocus}
+          disabled={disabled || readonly}
+          required={required}
+          placeholder={placeholder}
+          className={cn({ 'border-destructive': rawErrors.length > 0 })}
+          onFocus={_onFancyFocus}
+          onBlur={_onFancyBlur}
+          ariaDescribedby={ariaDescribedByIds<T>(id)}
+        />
+      ) : (
+        <FancyMultiSelect
+          id={id}
+          autoFocus={autofocus}
+          disabled={disabled || readonly}
+          multiple
+          className={rawErrors.length > 0 ? 'border-destructive' : ''}
+          items={items}
+          selected={value}
+          onValueChange={(values) => {
+            onChange(enumOptionsValueForIndex<S>(values, enumOptions, optEmptyValue));
+          }}
+          onFocus={_onFancyFocus}
+          onBlur={_onFancyBlur}
+        />
+      )}
     </div>
   );
 }
