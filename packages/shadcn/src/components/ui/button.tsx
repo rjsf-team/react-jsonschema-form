@@ -52,6 +52,7 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement>, Va
  * @param props.size - The size variant of the button: 'default' | 'sm' | 'lg' | 'icon'
  * @param props.asChild - Whether to render the button as a child component
  * @param ref - The forwarded ref for the button element
+ * @returns A button element with the specified styles and behavior
  */
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, asChild = false, ...props }, ref) => {

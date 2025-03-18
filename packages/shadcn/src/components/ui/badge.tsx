@@ -37,6 +37,7 @@ export interface BadgeProps extends HTMLAttributes<HTMLDivElement>, VariantProps
  * @param props - The props for the Badge component
  * @param props.className - Additional CSS classes to apply to the badge
  * @param props.variant - The style variant of the badge: 'default' | 'secondary' | 'destructive' | 'outline'
+ * @returns A div element that displays as a badge
  */
 function Badge({ className, variant, ...props }: BadgeProps) {
   return <div className={cn(badgeVariants({ variant }), className)} {...props} />;

@@ -23,6 +23,7 @@ const alertVariants = cva(
  * @param props - Component props
  * @param props.variant - 'default' | 'destructive' - Style variant of the alert
  * @param props.className - Additional CSS classes
+ * @returns A div element that serves as an alert component
  */
 const Alert = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement> & VariantProps<typeof alertVariants>>(
   ({ className, variant, ...props }, ref) => (
@@ -35,6 +36,7 @@ Alert.displayName = 'Alert';
  *
  * @param props - Component props
  * @param props.className - Additional CSS classes
+ * @returns A heading element for the alert title
  */
 const AlertTitle = forwardRef<HTMLParagraphElement, HTMLAttributes<HTMLHeadingElement>>(
   ({ className, ...props }, ref) => (
@@ -47,6 +49,7 @@ AlertTitle.displayName = 'AlertTitle';
  *
  * @param props - Component props
  * @param props.className - Additional CSS classes
+ * @returns A div element containing the alert description
  */
 const AlertDescription = forwardRef<HTMLParagraphElement, HTMLAttributes<HTMLParagraphElement>>(
   ({ className, ...props }, ref) => (

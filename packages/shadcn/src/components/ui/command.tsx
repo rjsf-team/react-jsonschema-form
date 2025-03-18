@@ -9,6 +9,7 @@ import { cn } from '../../lib/utils';
 /**
  * The root Command component that provides command menu functionality
  * @see https://ui.shadcn.com/docs/components/command
+ * @returns A command menu component
  */
 const Command = forwardRef<ElementRef<typeof CommandPrimitive>, ComponentPropsWithoutRef<typeof CommandPrimitive>>(
   ({ className, ...props }, ref) => (
@@ -29,6 +30,7 @@ Command.displayName = CommandPrimitive.displayName;
  *
  * @param props - The props for the CommandDialog component
  * @param props.children - The content of the command dialog
+ * @returns A dialog component containing the command menu
  */
 const CommandDialog = ({ children, ...props }: DialogProps) => {
   return (
@@ -47,6 +49,7 @@ const CommandDialog = ({ children, ...props }: DialogProps) => {
  *
  * @param props - The props for the CommandInput component
  * @param props.className - Additional CSS classes to apply
+ * @returns A search input component for the command menu
  */
 const CommandInput = forwardRef<
   ElementRef<typeof CommandPrimitive.Input>,
@@ -72,6 +75,7 @@ CommandInput.displayName = CommandPrimitive.Input.displayName;
  *
  * @param props - The props for the CommandList component
  * @param props.className - Additional CSS classes to apply
+ * @returns A container component for command items
  */
 const CommandList = forwardRef<
   ElementRef<typeof CommandPrimitive.List>,
@@ -101,6 +105,7 @@ CommandEmpty.displayName = CommandPrimitive.Empty.displayName;
  *
  * @param props - The props for the CommandGroup component
  * @param props.className - Additional CSS classes to apply
+ * @returns A group container for related command items
  */
 const CommandGroup = forwardRef<
   ElementRef<typeof CommandPrimitive.Group>,
@@ -120,6 +125,7 @@ CommandGroup.displayName = CommandPrimitive.Group.displayName;
 
 /**
  * Visual separator between command groups or items
+ * @returns A separator component for the command menu
  */
 const CommandSeparator = forwardRef<
   ElementRef<typeof CommandPrimitive.Separator>,
@@ -134,6 +140,7 @@ CommandSeparator.displayName = CommandPrimitive.Separator.displayName;
  *
  * @param props - The props for the CommandItem component
  * @param props.className - Additional CSS classes to apply
+ * @returns A selectable command item component
  */
 const CommandItem = forwardRef<
   ElementRef<typeof CommandPrimitive.Item>,
@@ -156,6 +163,7 @@ CommandItem.displayName = CommandPrimitive.Item.displayName;
  *
  * @param props - The props for the CommandShortcut component
  * @param props.className - Additional CSS classes to apply
+ * @returns A component displaying keyboard shortcuts
  */
 const CommandShortcut = ({ className, ...props }: HTMLAttributes<HTMLSpanElement>) => {
   return <span className={cn('ms-auto text-xs tracking-widest text-muted-foreground', className)} {...props} />;
