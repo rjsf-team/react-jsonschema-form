@@ -6,6 +6,14 @@ import { ComponentPropsWithoutRef, ElementRef, forwardRef } from 'react';
 
 import { cn } from '../../lib/utils';
 
+/**
+ * A radio group component for selecting a single option from a list
+ *
+ * @param props - The props for the RadioGroup component
+ * @param props.className - Additional CSS classes to apply to the radio group
+ * @param ref - The forwarded ref for the radio group element
+ * @returns A radio group container element
+ */
 const RadioGroup = forwardRef<
   ElementRef<typeof RadioGroupPrimitive.Root>,
   ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Root>
@@ -14,6 +22,14 @@ const RadioGroup = forwardRef<
 });
 RadioGroup.displayName = RadioGroupPrimitive.Root.displayName;
 
+/**
+ * An individual radio item within a RadioGroup
+ *
+ * @param props - The props for the RadioGroupItem component
+ * @param props.className - Additional CSS classes to apply to the radio item
+ * @param ref - The forwarded ref for the radio item element
+ * @returns A styled radio input element
+ */
 const RadioGroupItem = forwardRef<
   ElementRef<typeof RadioGroupPrimitive.Item>,
   ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Item>

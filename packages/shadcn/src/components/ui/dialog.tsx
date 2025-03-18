@@ -5,14 +5,37 @@ import { X } from 'lucide-react';
 import { ComponentPropsWithoutRef, ElementRef, forwardRef, HTMLAttributes } from 'react';
 import { cn } from '../../lib/utils';
 
+/**
+ * The root Dialog component that manages the state and accessibility of the dialog
+ * @see https://ui.shadcn.com/docs/components/dialog
+ * @returns A Dialog root component
+ */
 const Dialog = Root;
 
+/**
+ * The button that opens the dialog when clicked
+ * @returns A button component that triggers the dialog
+ */
 const DialogTrigger = Trigger;
 
+/**
+ * Portal component that renders the dialog content in a portal
+ * @returns A portal component for dialog content
+ */
 const DialogPortal = Portal;
 
+/**
+ * Button component for closing the dialog
+ * @returns A close button component
+ */
 const DialogClose = Close;
 
+/**
+ * The overlay that covers the screen behind the dialog
+ * @param props - Props for the overlay component including className and ref
+ * @param props.className - Additional CSS classes to apply to the dialog overlay
+ * @returns A semi-transparent overlay component
+ */
 const DialogOverlay = forwardRef<ElementRef<typeof Overlay>, ComponentPropsWithoutRef<typeof Overlay>>(
   ({ className, ...props }, ref) => (
     <Overlay
@@ -27,6 +50,12 @@ const DialogOverlay = forwardRef<ElementRef<typeof Overlay>, ComponentPropsWitho
 );
 DialogOverlay.displayName = Overlay.displayName;
 
+/**
+ * The main content container of the dialog
+ * @param props - Props for the content component including className, children and ref
+ * @param props.className - Additional CSS classes to apply to the dialog content
+ * @returns A dialog content container component
+ */
 const DialogContent = forwardRef<ElementRef<typeof Content>, ComponentPropsWithoutRef<typeof Content>>(
   ({ className, children, ...props }, ref) => (
     <DialogPortal>
@@ -50,11 +79,23 @@ const DialogContent = forwardRef<ElementRef<typeof Content>, ComponentPropsWitho
 );
 DialogContent.displayName = Content.displayName;
 
+/**
+ * Container for the dialog header content
+ * @param props - HTML div element attributes including className
+ * @param props.className - Additional CSS classes to apply to the dialog header
+ * @returns A header container component
+ */
 const DialogHeader = ({ className, ...props }: HTMLAttributes<HTMLDivElement>) => (
   <div className={cn('flex flex-col space-y-1.5 text-center sm:text-start', className)} {...props} />
 );
 DialogHeader.displayName = 'DialogHeader';
 
+/**
+ * Container for the dialog footer content
+ * @param props - HTML div element attributes including className
+ * @param props.className - Additional CSS classes to apply to the dialog footer
+ * @returns A footer container component
+ */
 const DialogFooter = ({ className, ...props }: HTMLAttributes<HTMLDivElement>) => (
   <div
     className={cn('flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2 rtl:space-x-reverse', className)}
@@ -63,6 +104,12 @@ const DialogFooter = ({ className, ...props }: HTMLAttributes<HTMLDivElement>) =
 );
 DialogFooter.displayName = 'DialogFooter';
 
+/**
+ * The title component of the dialog
+ * @param props - Props for the title component including className and ref
+ * @param props.className - Additional CSS classes to apply to the dialog title
+ * @returns A title component for the dialog
+ */
 const DialogTitle = forwardRef<ElementRef<typeof Title>, ComponentPropsWithoutRef<typeof Title>>(
   ({ className, ...props }, ref) => (
     <Title ref={ref} className={cn('text-lg font-semibold leading-none tracking-tight', className)} {...props} />
@@ -70,6 +117,12 @@ const DialogTitle = forwardRef<ElementRef<typeof Title>, ComponentPropsWithoutRe
 );
 DialogTitle.displayName = Title.displayName;
 
+/**
+ * The description component of the dialog
+ * @param props - Props for the description component including className and ref
+ * @param props.className - Additional CSS classes to apply to the dialog description
+ * @returns A description component for the dialog
+ */
 const DialogDescription = forwardRef<ElementRef<typeof Description>, ComponentPropsWithoutRef<typeof Description>>(
   ({ className, ...props }, ref) => (
     <Description ref={ref} className={cn('text-sm text-muted-foreground', className)} {...props} />

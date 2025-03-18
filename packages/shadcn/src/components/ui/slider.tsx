@@ -5,6 +5,14 @@ import { ComponentPropsWithoutRef, ElementRef, forwardRef } from 'react';
 
 import { cn } from '../../lib/utils';
 
+/**
+ * A slider component for selecting a numeric value within a range
+ *
+ * @param props - The props for the Slider component
+ * @param props.className - Additional CSS classes to apply to the slider
+ * @param ref - The forwarded ref for the slider element
+ * @returns A slider input element with track and thumb
+ */
 const Slider = forwardRef<ElementRef<typeof Root>, ComponentPropsWithoutRef<typeof Root>>(
   ({ className, ...props }, ref) => (
     <Root ref={ref} className={cn('relative flex w-full touch-none select-none items-center', className)} {...props}>
