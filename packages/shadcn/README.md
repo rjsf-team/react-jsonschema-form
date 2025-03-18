@@ -141,9 +141,9 @@ import { DirectionProvider as RadixDirectionProvider } from '@radix-ui/react-dir
 
 function Layout({ children, direction }) {
   return (
-          <RadixDirectionProvider dir={direction}>
-            {children}
-          </RadixDirectionProvider>
+    <RadixDirectionProvider dir={direction}>
+      {children}
+    </RadixDirectionProvider>
   );
 }
 ```
