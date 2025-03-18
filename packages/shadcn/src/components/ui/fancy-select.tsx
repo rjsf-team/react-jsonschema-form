@@ -1,7 +1,7 @@
 'use client';
 
 import { Check, ChevronDown } from 'lucide-react';
-import { FocusEvent, FocusEventHandler, useEffect, useRef, useState } from 'react';
+import { FocusEvent, FocusEventHandler, ReactElement, useEffect, useRef, useState } from 'react';
 import { cn } from '../../lib/utils';
 import { Command, CommandGroup, CommandItem, CommandList } from './command';
 
@@ -29,7 +29,7 @@ interface FancySelectInterface {
   selected: string;
   /** Callback function when value changes */
   onValueChange?: (value: any) => void;
-  /** Whether the component should auto-focus */
+  /** Whether the component should autofocus */
   autoFocus?: boolean;
   /** ID of the element that describes this select */
   ariaDescribedby?: string;
@@ -67,7 +67,7 @@ export function FancySelect({
   onFocus,
   onBlur,
   className,
-}: Readonly<FancySelectInterface>): JSX.Element {
+}: Readonly<FancySelectInterface>): ReactElement {
   const [open, setOpen] = useState(false);
   const selectedItem = items?.find((item) => item.value === selected);
   const selectedRef = useRef<HTMLDivElement>(null);

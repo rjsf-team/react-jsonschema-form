@@ -3,7 +3,16 @@
 import { Command as CommandPrimitive } from 'cmdk';
 import { isEqual } from 'lodash';
 import { X } from 'lucide-react';
-import { FocusEvent, FocusEventHandler, KeyboardEvent, useCallback, useMemo, useRef, useState } from 'react';
+import {
+  FocusEvent,
+  FocusEventHandler,
+  KeyboardEvent,
+  ReactElement,
+  useCallback,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 
 import { cn } from '../../lib/utils';
 import { Badge } from './badge';
@@ -35,7 +44,7 @@ interface FancyMultiSelectProps {
   selected: string[];
   /** Callback function when value changes */
   onValueChange?: (value: number[]) => void;
-  /** Whether the component should auto-focus */
+  /** Whether the component should autofocus */
   autoFocus?: boolean;
   /** ID of the element that describes this select */
   ariaDescribedby?: string;
@@ -71,7 +80,7 @@ export function FancyMultiSelect({
   onBlur,
   className,
   id,
-}: Readonly<FancyMultiSelectProps>): JSX.Element {
+}: Readonly<FancyMultiSelectProps>): ReactElement {
   const inputRef = useRef<HTMLInputElement>(null);
   const [open, setOpen] = useState(false);
   const [inputValue, setInputValue] = useState('');

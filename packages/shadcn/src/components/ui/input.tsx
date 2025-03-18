@@ -8,7 +8,7 @@ import { cn } from '../../lib/utils';
 export type InputProps = InputHTMLAttributes<HTMLInputElement>;
 
 /**
- * A input component with styling and focus states
+ * An input component with styling and focus states
  *
  * @param props - The props for the Input component
  * @param props.className - Additional CSS classes to apply to the input

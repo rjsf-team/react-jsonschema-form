@@ -4,13 +4,11 @@ import { PlusCircle } from 'lucide-react';
 import { Button } from '../components/ui/button';
 
 /**
- * AddButton component for adding new items in a form
- * @template T - The type of data being handled
- * @template S - The JSON Schema type, extending StrictRJSFSchema
- * @template F - The form context type
- * @component
- * @param props - The component props
- * @returns - A button component with a plus icon
+ * A button component for adding new items in a form
+ * @param props - The component properties
+ * @param props.uiSchema - The UI Schema for the form
+ * @param props.registry - The registry object containing shared utilities
+ * @param props.registry.translateString - Function to translate strings
  */
 export default function AddButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
   uiSchema,
