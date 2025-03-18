@@ -42,7 +42,7 @@
     "url": "git+https://github.com/rjsf-team/react-jsonschema-form.git"
   },
   "scripts": {
-    "build:css": "node build-css.cjs",
+    "build:css": "node build-css.js",
     "build:ts": "tsc -b tsconfig.build.json && tsc-alias -p tsconfig.build.json",
     "build:cjs": "esbuild ./src/index.ts --bundle --outfile=dist/index.js --sourcemap --packages=external --format=cjs",
     "build:esm": "esbuild ./src/index.ts --bundle --outfile=dist/rjsf-shadcn.esm.js --sourcemap --packages=external --format=esm",
