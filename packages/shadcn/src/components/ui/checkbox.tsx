@@ -5,6 +5,15 @@ import { CheckIcon } from '@radix-ui/react-icons';
 import { ComponentPropsWithoutRef, ElementRef, forwardRef } from 'react';
 import { cn } from '../../lib/utils';
 
+/**
+ * A checkbox component built on top of Radix UI Checkbox primitive
+ * Renders an interactive checkbox that can be either checked or unchecked
+ * @see https://ui.shadcn.com/docs/components/checkbox
+ *
+ * @param props - Props extending Radix UI Checkbox primitive props
+ * @param props.className - Additional CSS classes to apply to the checkbox
+ * @param ref - Forward ref to access the underlying checkbox element
+ */
 const Checkbox = forwardRef<ElementRef<typeof Root>, ComponentPropsWithoutRef<typeof Root>>(
   ({ className, ...props }, ref) => (
     <Root
