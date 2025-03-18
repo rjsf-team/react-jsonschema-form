@@ -4,32 +4,60 @@ import { Command as CommandPrimitive } from 'cmdk';
 import { isEqual } from 'lodash';
 import { X } from 'lucide-react';
 import { FocusEvent, FocusEventHandler, KeyboardEvent, useCallback, useMemo, useRef, useState } from 'react';
+
 import { cn } from '../../lib/utils';
 import { Badge } from './badge';
 import { Command, CommandGroup, CommandItem, CommandList } from './command';
 
+/**
+ * Represents an item in the fancy multi-select dropdown
+ */
 export type FancySelectItem = {
+  /** The value of the item */
   value: any;
+  /** The display label for the item */
   label: string;
+  /** The index position of the item */
   index: number;
+  /** Whether the item is disabled */
   disabled?: boolean;
 };
 
+/**
+ * Props interface for the FancyMultiSelect component
+ */
 interface FancyMultiSelectProps {
+  /** Whether multiple items can be selected */
   multiple: boolean;
+  /** Array of items to display in the dropdown */
   items?: FancySelectItem[];
+  /** Array of selected item values */
   selected: string[];
+  /** Callback function when value changes */
   onValueChange?: (value: number[]) => void;
+  /** Whether the component should auto-focus */
   autoFocus?: boolean;
+  /** ID of the element that describes this select */
   ariaDescribedby?: string;
+  /** Aria placeholder text */
   ariaPlaceholder?: string;
+  /** Additional className for styling */
   className?: string;
+  /** Whether the select is disabled */
   disabled?: boolean;
+  /** Callback function for blur event */
   onBlur?: FocusEventHandler<HTMLDivElement>;
+  /** Callback function for focus event */
   onFocus?: FocusEventHandler<HTMLDivElement>;
+  /** Unique identifier for the component */
   id: string;
 }
 
+/**
+ * A fancy multi-select component that allows users to select multiple items from a dropdown
+ * @param props - The component props
+ * @returns A React component that renders a searchable multi-select dropdown with tags
+ */
 export function FancyMultiSelect({
   multiple,
   items = [],

@@ -28,6 +28,15 @@ const SelectGroup = Group;
 
 const SelectValue = Value;
 
+/**
+ * A select trigger component that displays the selected value and dropdown icon
+ *
+ * @param props - The props for the SelectTrigger component
+ * @param props.className - Additional CSS classes to apply to the trigger
+ * @param props.children - The content to display in the trigger
+ * @param ref - The forwarded ref for the trigger element
+ * @returns A styled select trigger button
+ */
 const SelectTrigger = forwardRef<ElementRef<typeof Trigger>, ComponentPropsWithoutRef<typeof Trigger>>(
   ({ className, children, ...props }, ref) => (
     <Trigger
@@ -75,6 +84,16 @@ const SelectScrollDownButton = forwardRef<
 ));
 SelectScrollDownButton.displayName = ScrollDownButton.displayName;
 
+/**
+ * A select content component that displays the dropdown menu
+ *
+ * @param props - The props for the SelectContent component
+ * @param props.className - Additional CSS classes to apply to the content
+ * @param props.children - The content to display in the dropdown
+ * @param props.position - The position of the dropdown ('popper' | 'item-aligned')
+ * @param ref - The forwarded ref for the content element
+ * @returns A styled dropdown menu container
+ */
 const SelectContent = forwardRef<ElementRef<typeof Content>, ComponentPropsWithoutRef<typeof Content>>(
   ({ className, children, position = 'popper', ...props }, ref) => (
     <Portal>
