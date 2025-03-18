@@ -3,6 +3,10 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { ButtonHTMLAttributes, forwardRef } from 'react';
 import { cn } from '../../lib/utils';
 
+/**
+ * Predefined button variants using class-variance-authority
+ * @see https://ui.shadcn.com/docs/components/button
+ */
 const buttonVariants = cva(
   'inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50',
   {
@@ -29,10 +33,26 @@ const buttonVariants = cva(
   }
 );
 
+/**
+ * Props for the Button component
+ * @extends ButtonHTMLAttributes<HTMLButtonElement> - HTML button element attributes
+ * @extends VariantProps<typeof buttonVariants> - Button variant props
+ */
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement>, VariantProps<typeof buttonVariants> {
+  /** Whether to render the button as a child component using Radix UI Slot */
   asChild?: boolean;
 }
 
+/**
+ * A button component with multiple style variants and sizes
+ *
+ * @param props - The props for the Button component
+ * @param props.className - Additional CSS classes to apply to the button
+ * @param props.variant - The style variant of the button: 'default' | 'destructive' | 'outline' | 'secondary' | 'ghost' | 'link'
+ * @param props.size - The size variant of the button: 'default' | 'sm' | 'lg' | 'icon'
+ * @param props.asChild - Whether to render the button as a child component
+ * @param ref - The forwarded ref for the button element
+ */
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, asChild = false, ...props }, ref) => {
     const Comp = asChild ? Slot : 'button';
