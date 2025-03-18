@@ -9,10 +9,8 @@ import { Button } from '../components/ui/button';
  * @template S - The JSON Schema type, extending StrictRJSFSchema
  * @template F - The form context type
  * @component
- * @param {IconButtonProps<T, S, F>} props - The component props
- * @param {Object} props.uiSchema - The UI schema configuration
- * @param {Object} props.registry - The registry object containing form utilities
- * @returns {JSX.Element} A button component with a plus icon
+ * @param props - The component props
+ * @returns - A button component with a plus icon
  */
 export default function AddButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
   uiSchema,
