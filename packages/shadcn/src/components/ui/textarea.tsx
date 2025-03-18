@@ -2,8 +2,20 @@ import { TextareaHTMLAttributes, forwardRef } from 'react';
 
 import { cn } from '../../lib/utils';
 
+/**
+ * Props for the Textarea component
+ * @extends TextareaHTMLAttributes<HTMLTextAreaElement> - HTML textarea element attributes
+ */
 export type TextareaProps = TextareaHTMLAttributes<HTMLTextAreaElement>;
 
+/**
+ * A textarea component with styling and focus states
+ *
+ * @param props - The props for the Textarea component
+ * @param props.className - Additional CSS classes to apply to the textarea
+ * @param ref - The forwarded ref for the textarea element
+ * @returns A styled textarea element
+ */
 const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(({ className, ...props }, ref) => {
   return (
     <textarea
