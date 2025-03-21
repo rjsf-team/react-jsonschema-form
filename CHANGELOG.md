@@ -15,6 +15,12 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+# 5.24.9
+
+## Dev / docs / playground
+
+- Updated docs for ArrayFieldItemTemplate to include prop `onCopyIndexClick`, fixing [#4507](https://github.com/rjsf-team/react-jsonschema-form/issues/4507)
+
 # 5.24.8
 
 ## @rjsf/antd
