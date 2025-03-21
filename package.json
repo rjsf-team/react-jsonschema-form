@@ -77,6 +77,7 @@
     "packages/semantic-ui",
     "packages/utils",
     "packages/validator-ajv8",
-    "packages/snapshot-tests"
+    "packages/snapshot-tests",
+    "packages/shadcn"
   ]
 }
