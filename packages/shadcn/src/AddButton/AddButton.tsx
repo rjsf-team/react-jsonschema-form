@@ -6,9 +6,6 @@ import { Button } from '../components/ui/button';
 /**
  * A button component for adding new items in a form
  * @param props - The component properties
- * @param props.uiSchema - The UI Schema for the form
- * @param props.registry - The registry object containing shared utilities
- * @param props.registry.translateString - Function to translate strings
  */
 export default function AddButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
   uiSchema,
