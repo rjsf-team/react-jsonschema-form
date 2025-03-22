@@ -1,5 +1,5 @@
 import { Text, makeStyles, tokens } from '@fluentui/react-components';
-import { DescriptionFieldProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import { DescriptionFieldProps, FormContextType, RichDescription, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 
 const useStyles = makeStyles({
   label: {
@@ -17,15 +17,15 @@ export default function DescriptionField<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
 >(props: DescriptionFieldProps<T, S, F>) {
-  const { id, description } = props;
+  const { id, description, registry, uiSchema } = props;
   const classes = useStyles();
-  if (description) {
-    return (
-      <Text block id={id} className={classes.label}>
-        {description}
-      </Text>
-    );
+  if (!description) {
+    return null;
   }
 
-  return null;
+  return (
+    <Text block id={id} className={classes.label}>
+      <RichDescription description={description} registry={registry} uiSchema={uiSchema} />
+    </Text>
+  );
 }
