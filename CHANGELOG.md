@@ -15,7 +15,7 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
-# 5.23.0
+# 5.25.0
 
 ## @rjsf/utils
 
@@ -27,11 +27,124 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Updated `advanced-customization/custom-templates` with the new feature.
 
+# 5.24.9
+
+## Dev / docs / playground
+
+- Updated docs for ArrayFieldItemTemplate to include prop `onCopyIndexClick`, fixing [#4507](https://github.com/rjsf-team/react-jsonschema-form/issues/4507)
+
+# 5.24.8
+
+## @rjsf/antd
+
+- Fixed the total disable of the `RadioWidget`, fixing [#4481](https://github.com/rjsf-team/react-jsonschema-form/issues/4481)
+
+## @rjsf/validator-ajv8
+
+- Fixed up the ESM build to properly handle ESM imports for `compileSchemaValidatorsCode()` by adding a new `ajvReplacer.ts` and using it
+
+## Dev / docs / playground
+
+- Updated `snapshot-tests` to add validation of disable `RadioWidget` via the `Form` prop as well as `uiSchema`
+
+# 5.24.7
+
+## Dev / docs / playground
+
+- Fixed build issues with small change to `core/src/tsconfig.json` and improvements to the `exports` for ESM support
+- Run NX serially in the pipelines to avoid odd out-of-sequence build issues
+
+# 5.24.6
+
+## @rjsf/core
+
+- Fixed `src/tsconfig.json` to add the `tsc-alias` block to support proper fixing up of ESM import
+
+# 5.24.5
+
+## @rjsf/utils
+
+- Fixed `package.json` to remove `node` from the `exports` block to fix ESM support
+
+# 5.24.4
+
+## @rjsf/utils
+
+- Fixed issue with customValidate errors are not cleared when the form is valid [4365](https://github.com/rjsf-team/react-jsonschema-form/pull/4365) due to regression
+- Add missing `experimental_customMergeAllOf` argument to `ensureFormDataMatchingSchema` introduced by [4388](https://github.com/rjsf-team/react-jsonschema-form/pull/4388)
+
+## Dev / docs / playground
+
+- Improved the ESM support for all public packages by adding explicit `exports` to each public `package.json`
+- Updated the ESM builds to use `tsc-alias` to add `.js` onto all ESM imports
+
+# 5.24.3
+
+## @rjsf/utils
+
+- Rollback [4446](https://github.com/rjsf-team/react-jsonschema-form/pull/4446) due to regression
+
+## Dev / docs / playground
+
+- Fixed issue with selector, where validator was getting refreshed on clicking on anything in selector. [#4472](https://github.com/rjsf-team/react-jsonschema-form/pull/4472)
+
+# 5.24.2
+
+## @rjsf/utils
+
+- switch `lodash.isEqualWith` to `fast-equals.createCustomEqual` providing `areFunctionsEqual` assuming any functions are equal.
+- Fixed issue with oneOf selector can be modified in readonly mode, fixing [#4460](https://github.com/rjsf-team/react-jsonschema-form/issues/4460)
+- Fixed issue with fields inside an array can't be set to empty when a default is set, fixing [#4456](https://github.com/rjsf-team/react-jsonschema-form/issues/4456)
+- Fixed issue with file accept attribute, fixing [#4404](https://github.com/rjsf-team/react-jsonschema-form/issues/4404).
+
+## @rjsf/mui
+
+- Fixed issue with file accept attribute, fixing [#4404](https://github.com/rjsf-team/react-jsonschema-form/issues/4404).
+
+# 5.24.1
+
+## @rjsf/utils
+
+- Fixed documentation for `getChangedFields()`
+
+## Dev / docs / playground
+
+- Updated the peer dependencies for `@rjsf/*` to be `5.24.x`
+- Added documentation for `getChangedFields()`
+
+# 5.24.0
+
+## @rjsf/core
+
+- Fixed issue with schema if/then/else conditions where switching to then/else subschemas did not reflect the actual validation errors in the onChange event, fixing [#4249](https://github.com/rjsf-team/react-jsonschema-form/issues/4249) and improving performance.
+- Fixed issue error message will not be cleared after the controlled Form formData is changed. Fixes [#4426](https://github.com/rjsf-team/react-jsonschema-form/issues/4426)
+
+## @rjsf/utils
+
+- Fixed issue with formData not updating when dependencies change, fixing [#4325](https://github.com/rjsf-team/react-jsonschema-form/issues/4325)
+- Fixed issue with assigning default values to formData with deeply nested required properties, fixing [#4399](https://github.com/rjsf-team/react-jsonschema-form/issues/4399)
+- Fixed issue error message will not be cleared after the controlled Form formData is changed. Fixes [#4426](https://github.com/rjsf-team/react-jsonschema-form/issues/4426)
+- Fix for AJV [$data](https://ajv.js.org/guide/combining-schemas.html#data-reference) reference in const property in schema treated as default/const value. The issue is mentioned in [#4361](https://github.com/rjsf-team/react-jsonschema-form/issues/4361).
+- Switched uses of `lodash.isEqual()` to `@rjsf/utils.deepEquals`.
+
+## @rjsf/validator-ajv8
+
+- Partially fixed issue where dependency errors do not show `title` or `ui:title`. This fix only applicable if we use an ajv-i18n localizer. Ref. [#4402](https://github.com/rjsf-team/react-jsonschema-form/issues/4402).
+- Switched uses of `lodash.isEqual()` to `@rjsf/utils.deepEquals` at precompiledValidator.
+
 # 5.23.2
 
 ## @rjsf/core
 
 - Fix default value population when switching between options in `MultiSchemaField` [#4375](https://github.com/rjsf-team/react-jsonschema-form/pull/4375). Fixes [#4367](https://github.com/rjsf-team/react-jsonschema-form/issues/4367)
+
+## @rjsf/utils
+
+- Short-circuit `File` and `Date` constructor access in isObject to optimize performance in scenarios where `globalThis` is a `Proxy` that incurs overhead for each class constructor access ([#4413](https://github.com/rjsf-team/react-jsonschema-form/pull/4413)). Fixes [#4409](https://github.com/rjsf-team/react-jsonschema-form/issues/4409)
+
+## @rjsf/validator-ajv8
+
+- Fixed issue where `ui:title` in anyOf/oneOf is not shown in error messages. Fixes [#4368](https://github.com/rjsf-team/react-jsonschema-form/issues/4368)
 
 # 5.23.1
 
@@ -185,18 +298,18 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/core
 
 - Support allowing raising errors from within a custom Widget [#2718](https://github.com/rjsf-team/react-jsonschema-form/issues/2718)
-- Updated `ArrayField`, `BooleanField` and `StringField` to call `optionsList()` with the additional `UiSchema` parameter, fixing [#4215](https://github.com/rjsf-team/react-jsonschema-form/issues/4215) and  [#4260](https://github.com/rjsf-team/react-jsonschema-form/issues/4260)
+- Updated `ArrayField`, `BooleanField` and `StringField` to call `optionsList()` with the additional `UiSchema` parameter, fixing [#4215](https://github.com/rjsf-team/react-jsonschema-form/issues/4215) and [#4260](https://github.com/rjsf-team/react-jsonschema-form/issues/4260)
 
 ## @rjsf/utils
 
 - Updated the `WidgetProps` type to add `es?: ErrorSchema<T>, id?: string` to the params of the `onChange` handler function
 - Updated `UIOptionsBaseType` to add the new `enumNames` prop to support an alternate way to provide labels for `enum`s in a schema, fixing [#4215](https://github.com/rjsf-team/react-jsonschema-form/issues/4215)
-- Updated `optionsList()` to take an optional `uiSchema` that is used to extract alternate labels for `enum`s or `oneOf`/`anyOf` in a schema, fixing [#4215](https://github.com/rjsf-team/react-jsonschema-form/issues/4215) and  [#4260](https://github.com/rjsf-team/react-jsonschema-form/issues/4260)
+- Updated `optionsList()` to take an optional `uiSchema` that is used to extract alternate labels for `enum`s or `oneOf`/`anyOf` in a schema, fixing [#4215](https://github.com/rjsf-team/react-jsonschema-form/issues/4215) and [#4260](https://github.com/rjsf-team/react-jsonschema-form/issues/4260)
   - NOTE: The generics for `optionsList()` were expanded from `<S extends StrictRJSFSchema = RJSFSchema>` to `<S extends StrictRJSFSchema = RJSFSchema, T = any, F extends FormContextType = any>` to support the `UiSchema`.
 
 ## Dev / docs / playground
 
--  Update the `custom-widget-fields.md` to add documentation for how to raise errors from a custom widget or field
+- Update the `custom-widget-fields.md` to add documentation for how to raise errors from a custom widget or field
 
 # 5.19.4
 

@@ -1,10 +1,52 @@
 {
   "name": "@rjsf/validator-ajv8",
-  "version": "5.23.1",
+  "version": "5.24.8",
   "main": "dist/index.js",
   "module": "lib/index.js",
   "typings": "lib/index.d.ts",
   "description": "The ajv-8 based validator for @rjsf/core",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./lib/index.js",
+      "types": "./lib/index.d.ts"
+    },
+    "./compileSchemaValidators": {
+      "require": "./dist/compileSchemaValidators.js",
+      "import": "./lib/compileSchemaValidators.js",
+      "types": "./lib/compileSchemaValidators.d.ts"
+    },
+    "./lib/compileSchemaValidators": {
+      "require": "./dist/compileSchemaValidators.js",
+      "import": "./lib/compileSchemaValidators.js",
+      "types": "./lib/compileSchemaValidators.d.ts"
+    },
+    "./dist/compileSchemaValidators": {
+      "require": "./dist/compileSchemaValidators.js",
+      "import": "./lib/compileSchemaValidators.js",
+      "types": "./lib/compileSchemaValidators.d.ts"
+    },
+    "./lib": {
+      "require": "./dist/index.js",
+      "import": "./lib/index.js",
+      "types": "./lib/index.d.ts"
+    },
+    "./lib/*.js": {
+      "require": "./dist/*.js",
+      "import": "./lib/*.js",
+      "types": "./lib/*.d.ts"
+    },
+    "./dist": {
+      "require": "./dist/index.js",
+      "import": "./lib/index.js",
+      "types": "./lib/index.d.ts"
+    },
+    "./dist/*.js": {
+      "require": "./dist/*.js",
+      "import": "./lib/*.js",
+      "types": "./lib/*.d.ts"
+    }
+  },
   "files": [
     "dist",
     "lib",
@@ -15,7 +57,8 @@
     "node": ">=14"
   },
   "scripts": {
-    "build:ts": "tsc -b",
+    "compileReplacer": "tsc -p tsconfig.replacer.json",
+    "build:ts": "npm run compileReplacer && rimraf ./lib && tsc -b tsconfig.build.json && tsc-alias -p tsconfig.build.json",
     "build:cjs": "esbuild ./src/index.ts --bundle --outfile=dist/index.js --sourcemap --packages=external --format=cjs && esbuild ./src/compileSchemaValidators.ts --bundle --outfile=dist/compileSchemaValidators.js --sourcemap --packages=external --format=cjs",
     "build:esm": "esbuild ./src/index.ts --bundle --outfile=dist/validator-ajv8.esm.js --sourcemap --packages=external --format=esm  && esbuild ./src/compileSchemaValidators.ts --bundle --outfile=dist/compileSchemaValidators.esm.js --sourcemap --packages=external --format=esm",
     "build:umd": "rollup dist/validator-ajv8.esm.js --format=umd --file=dist/validator-ajv8.umd.js --name=@rjsf/validator-ajv8",
@@ -39,7 +82,7 @@
     "lodash-es": "^4.17.21"
   },
   "peerDependencies": {
-    "@rjsf/utils": "^5.23.x"
+    "@rjsf/utils": "^5.24.x"
   },
   "devDependencies": {
     "@babel/core": "^7.23.9",
@@ -48,10 +91,11 @@
     "@babel/preset-env": "^7.23.9",
     "@babel/preset-react": "^7.23.3",
     "@babel/preset-typescript": "^7.23.3",
-    "@rjsf/utils": "^5.23.1",
+    "@rjsf/utils": "^5.24.8",
     "@types/jest": "^29.5.12",
     "@types/json-schema": "^7.0.15",
     "@types/lodash": "^4.14.202",
+    "ajv-i18n": "^4.2.0",
     "babel-jest": "^29.7.0",
     "eslint": "^8.56.0",
     "jest": "^29.7.0",

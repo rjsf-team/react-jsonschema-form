@@ -60,6 +60,7 @@
     "prettier": "^2.8.8",
     "rimraf": "^5.0.5",
     "ts-jest": "^29.1.2",
+    "tsc-alias": "^1.8.11",
     "tslib": "^2.6.2",
     "typescript": "^4.9.5"
   },
@@ -79,6 +80,5 @@
     "packages/validator-ajv6",
     "packages/validator-ajv8",
     "packages/snapshot-tests"
-  ],
-  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
+  ]
 }

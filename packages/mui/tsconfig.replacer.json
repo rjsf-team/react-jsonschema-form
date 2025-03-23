@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es2017",
+    "outDir": "./",
+    "skipLibCheck": true,
+  },
+  "files": [
+    "../../tsc-alias-replacer/muiReplacer.ts"
+  ],
+  "exclude": [
+    "./src",
+    "./test"
+  ]
+}
