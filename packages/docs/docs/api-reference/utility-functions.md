@@ -287,6 +287,30 @@ Otherwise, return the sub-schema. Also deals with nested `$ref`s in the sub-sche
 
 - Error indicating that no schema for that reference exists
 
+### getChangedFields(a: unknown, b: unknown)
+
+Compares two objects and returns the names of the fields that have changed.
+This function iterates over each field of object `a`, using `_.isEqual` to compare the field value with the corresponding field value in object `b`.
+If the values are different, the field name will be included in the returned array.
+
+#### Parameters
+
+- a: unknown - The first object, representing the original data to compare.
+- b: unknown - The second object, representing the updated data to compare.
+
+#### Returns
+
+- string[] : An array of field names that have changed.
+
+#### Example
+
+```typescript
+const a = { name: 'John', age: 30 };
+const b = { name: 'John', age: 31 };
+const changedFields = getChangedFields(a, b);
+console.log(changedFields); // Output: ['age']
+```
+
 ### getDiscriminatorFieldFromSchema&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
 Returns the `discriminator.propertyName` when defined in the `schema` if it is a string. A warning is generated when it is not a string.
@@ -899,7 +923,7 @@ Returns the superset of `formData` that includes the given set updated to includ
 - [rootSchema]: S | undefined - The root schema, used to primarily to look up `$ref`s
 - [includeUndefinedValues=false]: boolean | "excludeObjectChildren" - Optional flag, if true, cause undefined values to be added as defaults. If "excludeObjectChildren", cause undefined values for this object and pass `includeUndefinedValues` as false when computing defaults for any nested object properties.
 - [experimental_defaultFormStateBehavior]: Experimental_DefaultFormStateBehavior - See `Form` documentation for the [experimental_defaultFormStateBehavior](./form-props.md#experimental_defaultFormStateBehavior) prop
-- [experimental_customMergeAllOf]: Experimental_CustomMergeAllOf&lt;S&gt; - See `Form` documentation for the [experimental_customMergeAllOf](./form-props.md#experimental_customMergeAllOf) prop
+- [experimental_customMergeAllOf]: Experimental_CustomMergeAllOf&lt;S&gt; - See `Form` documentation for the [experimental_customMergeAllOf](./form-props.md#experimental_custommergeallof) prop
 
 #### Returns
 
@@ -916,6 +940,7 @@ Determines whether the combination of `schema` and `uiSchema` properties indicat
 - [uiSchema={}]: UiSchema<T, S, F> - The UI schema from which to derive potentially displayable information
 - [rootSchema]: S | undefined - The root schema, used to primarily to look up `$ref`s
 - [globalOptions={}]: GlobalUISchemaOptions - The optional Global UI Schema from which to get any fallback `xxx` options
+- [experimental_customMergeAllOf]: Experimental_CustomMergeAllOf&lt;S&gt; - See `Form` documentation for the [experimental_customMergeAllOf](./form-props.md#experimental_custommergeallof) prop
 
 #### Returns
 
@@ -936,6 +961,7 @@ The closest match is determined using the number of matching properties, and mor
 - options: S[] - The list of options to find a matching options from
 - [selectedOption=-1]: number - The index of the currently selected option, defaulted to -1 if not specified
 - [discriminatorField]: string | undefined - The optional name of the field within the options object whose value is used to determine which option is selected
+- [experimental_customMergeAllOf]: Experimental_CustomMergeAllOf&lt;S&gt; - See `Form` documentation for the [experimental_customMergeAllOf](./form-props.md#experimental_custommergeallof) prop
 
 #### Returns
 
@@ -985,6 +1011,7 @@ Checks to see if the `schema` and `uiSchema` combination represents an array of 
 - schema: S - The schema for which check for array of files flag is desired
 - [uiSchema={}]: UiSchema<T, S, F> - The UI schema from which to check the widget
 - [rootSchema]: S | undefined - The root schema, used to primarily to look up `$ref`s
+- [experimental_customMergeAllOf]: Experimental_CustomMergeAllOf&lt;S&gt; - See `Form` documentation for the [experimental_customMergeAllOf](./form-props.md#experimental_custommergeallof) prop
 
 #### Returns
 
@@ -999,6 +1026,7 @@ Checks to see if the `schema` combination represents a multi-select
 - validator: ValidatorType<T, S, F> - An implementation of the `ValidatorType` interface that will be used when necessary
 - schema: S - The schema for which check for a multi-select flag is desired
 - [rootSchema]: S | undefined - The root schema, used to primarily to look up `$ref`s
+- [experimental_customMergeAllOf]: Experimental_CustomMergeAllOf&lt;S&gt; - See `Form` documentation for the [experimental_customMergeAllOf](./form-props.md#experimental_custommergeallof) prop
 
 #### Returns
 
@@ -1013,6 +1041,7 @@ Checks to see if the `schema` combination represents a select
 - validator: ValidatorType<T, S, F> - An implementation of the `ValidatorType` interface that will be used when necessary
 - theSchema: S - The schema for which check for a select flag is desired
 - [rootSchema]: S | undefined - The root schema, used to primarily to look up `$ref`s
+- [experimental_customMergeAllOf]: Experimental_CustomMergeAllOf&lt;S&gt; - See `Form` documentation for the [experimental_customMergeAllOf](./form-props.md#experimental_custommergeallof) prop
 
 #### Returns
 
@@ -1048,6 +1077,7 @@ potentially recursive resolution.
 - schema: S - The schema for which retrieving a schema is desired
 - [rootSchema={}]: S - The root schema that will be forwarded to all the APIs
 - [rawFormData]: T | undefined - The current formData, if any, to assist retrieving a schema
+- [experimental_customMergeAllOf]: Experimental_CustomMergeAllOf&lt;S&gt; - See `Form` documentation for the [experimental_customMergeAllOf](./form-props.md#experimental_custommergeallof) prop
 
 #### Returns
 
@@ -1067,6 +1097,7 @@ Also, any properties in the old schema that are non-existent in the new schema a
 - [newSchema]: S | undefined - The new schema for which the data is being sanitized
 - [oldSchema]: S | undefined - The old schema from which the data originated
 - [data={}]: any - The form data associated with the schema, defaulting to an empty object when undefined
+- [experimental_customMergeAllOf]: Experimental_CustomMergeAllOf&lt;S&gt; - See `Form` documentation for the [experimental_customMergeAllOf](./form-props.md#experimental_custommergeallof) prop
 
 #### Returns
 
@@ -1085,6 +1116,7 @@ Generates an `IdSchema` object for the `schema`, recursively
 - [formData]: T | undefined - The current formData, if any, to assist retrieving a schema
 - [idPrefix='root']: string - The prefix to use for the id
 - [idSeparator='_']: string - The separator to use for the path segments in the id
+- [experimental_customMergeAllOf]: Experimental_CustomMergeAllOf&lt;S&gt; - See `Form` documentation for the [experimental_customMergeAllOf](./form-props.md#experimental_custommergeallof) prop
 
 #### Returns
 
@@ -1101,6 +1133,7 @@ Generates an `PathSchema` object for the `schema`, recursively
 - [name='']: string - The base name for the schema
 - [rootSchema]: S | undefined - The root schema, used to primarily to look up `$ref`s
 - [formData]: T | undefined - The current formData, if any, to assist retrieving a schema
+- [experimental_customMergeAllOf]: Experimental_CustomMergeAllOf&lt;S&gt; - See `Form` documentation for the [experimental_customMergeAllOf](./form-props.md#experimental_custommergeallof) prop
 
 #### Returns
 

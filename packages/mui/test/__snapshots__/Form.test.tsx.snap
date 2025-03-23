@@ -8797,7 +8797,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
           onClick={[Function]}
         >
           <div
-            aria-controls=":ro:"
+            aria-controls=":rq:"
             aria-expanded="false"
             aria-haspopup="listbox"
             aria-labelledby="root"
@@ -9828,7 +9828,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
           onClick={[Function]}
         >
           <div
-            aria-controls=":rs:"
+            aria-controls=":ru:"
             aria-expanded="false"
             aria-haspopup="listbox"
             aria-labelledby="root"
@@ -11397,6 +11397,505 @@ exports[`single fields select field single choice enumDisabled using radio widge
 </form>
 `;
 
+exports[`single fields select field single choice form disabled using radio widget 1`] = `
+.emotion-0 {
+  display: inline-flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  position: relative;
+  min-width: 0;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  vertical-align: top;
+  width: 100%;
+}
+
+.emotion-1 {
+  color: rgba(0, 0, 0, 0.6);
+  font-family: "Roboto","Helvetica","Arial",sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  line-height: 1.4375em;
+  letter-spacing: 0.00938em;
+  padding: 0;
+  position: relative;
+}
+
+.emotion-1.Mui-focused {
+  color: #1976d2;
+}
+
+.emotion-1.Mui-disabled {
+  color: rgba(0, 0, 0, 0.38);
+}
+
+.emotion-1.Mui-error {
+  color: #d32f2f;
+}
+
+.emotion-2 {
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-flex-wrap: wrap;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+}
+
+.emotion-3 {
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  cursor: pointer;
+  vertical-align: middle;
+  -webkit-tap-highlight-color: transparent;
+  margin-left: -11px;
+  margin-right: 16px;
+}
+
+.emotion-3.Mui-disabled {
+  cursor: default;
+}
+
+.emotion-3 .MuiFormControlLabel-label.Mui-disabled {
+  color: rgba(0, 0, 0, 0.38);
+}
+
+.emotion-4 {
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  background-color: transparent;
+  outline: 0;
+  border: 0;
+  margin: 0;
+  border-radius: 50%;
+  padding: 9px;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  vertical-align: middle;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.emotion-4::-moz-focus-inner {
+  border-style: none;
+}
+
+.emotion-4.Mui-disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
+@media print {
+  .emotion-4 {
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+}
+
+.emotion-4.Mui-disabled {
+  color: rgba(0, 0, 0, 0.26);
+}
+
+.emotion-4:hover {
+  background-color: rgba(25, 118, 210, 0.04);
+}
+
+.emotion-4.Mui-checked {
+  color: #1976d2;
+}
+
+@media (hover: none) {
+  .emotion-4:hover {
+    background-color: transparent;
+  }
+}
+
+.emotion-5 {
+  cursor: inherit;
+  position: absolute;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  margin: 0;
+  padding: 0;
+  z-index: 1;
+}
+
+.emotion-6 {
+  position: relative;
+  display: flex;
+}
+
+.emotion-7 {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  fill: currentColor;
+  font-size: 1.5rem;
+  -webkit-transform: scale(1);
+  -moz-transform: scale(1);
+  -ms-transform: scale(1);
+  transform: scale(1);
+}
+
+.emotion-8 {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
+  transition: transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
+  fill: currentColor;
+  font-size: 1.5rem;
+  left: 0;
+  position: absolute;
+  -webkit-transform: scale(0);
+  -moz-transform: scale(0);
+  -ms-transform: scale(0);
+  transform: scale(0);
+}
+
+.emotion-9 {
+  margin: 0;
+  font-family: "Roboto","Helvetica","Arial",sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  line-height: 1.5;
+  letter-spacing: 0.00938em;
+}
+
+.emotion-17 {
+  margin-top: 24px;
+}
+
+.emotion-18 {
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  background-color: var(--variant-containedBg);
+  outline: 0;
+  border: 0;
+  margin: 0;
+  border-radius: 4px;
+  padding: 6px 16px;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  vertical-align: middle;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: var(--variant-containedColor);
+  font-family: "Roboto","Helvetica","Arial",sans-serif;
+  font-weight: 500;
+  font-size: 0.875rem;
+  line-height: 1.75;
+  letter-spacing: 0.02857em;
+  text-transform: uppercase;
+  min-width: 64px;
+  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  box-shadow: 0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12);
+  --variant-textColor: #1976d2;
+  --variant-outlinedColor: #1976d2;
+  --variant-outlinedBorder: rgba(25, 118, 210, 0.5);
+  --variant-containedColor: #fff;
+  --variant-containedBg: #1976d2;
+}
+
+.emotion-18::-moz-focus-inner {
+  border-style: none;
+}
+
+.emotion-18.Mui-disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
+@media print {
+  .emotion-18 {
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+}
+
+.emotion-18:hover {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+}
+
+.emotion-18.Mui-disabled {
+  color: rgba(0, 0, 0, 0.26);
+}
+
+.emotion-18:hover {
+  box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2),0px 4px 5px 0px rgba(0,0,0,0.14),0px 1px 10px 0px rgba(0,0,0,0.12);
+}
+
+@media (hover: none) {
+  .emotion-18:hover {
+    box-shadow: 0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12);
+  }
+}
+
+.emotion-18:active {
+  box-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12);
+}
+
+.emotion-18.Mui-focusVisible {
+  box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);
+}
+
+.emotion-18.Mui-disabled {
+  color: rgba(0, 0, 0, 0.26);
+  box-shadow: none;
+  background-color: rgba(0, 0, 0, 0.12);
+}
+
+@media (hover: hover) {
+  .emotion-18:hover {
+    --variant-containedBg: #1565c0;
+    --variant-textBg: rgba(25, 118, 210, 0.04);
+    --variant-outlinedBorder: #1976d2;
+    --variant-outlinedBg: rgba(25, 118, 210, 0.04);
+  }
+}
+
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+  >
+    <div
+      className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
+    >
+      <label
+        className="MuiFormLabel-root MuiFormLabel-colorPrimary emotion-1"
+        htmlFor="root"
+      />
+      <div
+        aria-describedby="root__error root__description root__help"
+        className="MuiFormGroup-root MuiRadioGroup-root emotion-2"
+        id="root"
+        onBlur={[Function]}
+        onFocus={[Function]}
+        role="radiogroup"
+      >
+        <label
+          className="MuiFormControlLabel-root Mui-disabled MuiFormControlLabel-labelPlacementEnd emotion-3"
+        >
+          <span
+            aria-disabled={true}
+            className="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary Mui-disabled PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary Mui-disabled MuiRadio-root MuiRadio-colorPrimary emotion-4"
+            onBlur={[Function]}
+            onContextMenu={[Function]}
+            onDragLeave={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseLeave={[Function]}
+            onMouseUp={[Function]}
+            onTouchEnd={[Function]}
+            onTouchMove={[Function]}
+            onTouchStart={[Function]}
+            tabIndex={-1}
+          >
+            <input
+              checked={false}
+              className="PrivateSwitchBase-input emotion-5"
+              disabled={true}
+              id="root-0"
+              name="root"
+              onChange={[Function]}
+              required={false}
+              type="radio"
+              value="0"
+            />
+            <span
+              className="emotion-6"
+            >
+              <svg
+                aria-hidden={true}
+                className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-7"
+                data-testid="RadioButtonUncheckedIcon"
+                focusable="false"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
+                />
+              </svg>
+              <svg
+                aria-hidden={true}
+                className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-8"
+                data-testid="RadioButtonCheckedIcon"
+                focusable="false"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"
+                />
+              </svg>
+            </span>
+          </span>
+          <span
+            className="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label Mui-disabled emotion-9"
+            style={{}}
+          >
+            foo
+          </span>
+        </label>
+        <label
+          className="MuiFormControlLabel-root Mui-disabled MuiFormControlLabel-labelPlacementEnd emotion-3"
+        >
+          <span
+            aria-disabled={true}
+            className="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary Mui-disabled PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary Mui-disabled MuiRadio-root MuiRadio-colorPrimary emotion-4"
+            onBlur={[Function]}
+            onContextMenu={[Function]}
+            onDragLeave={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseLeave={[Function]}
+            onMouseUp={[Function]}
+            onTouchEnd={[Function]}
+            onTouchMove={[Function]}
+            onTouchStart={[Function]}
+            tabIndex={-1}
+          >
+            <input
+              checked={false}
+              className="PrivateSwitchBase-input emotion-5"
+              disabled={true}
+              id="root-1"
+              name="root"
+              onChange={[Function]}
+              required={false}
+              type="radio"
+              value="1"
+            />
+            <span
+              className="emotion-6"
+            >
+              <svg
+                aria-hidden={true}
+                className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-7"
+                data-testid="RadioButtonUncheckedIcon"
+                focusable="false"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
+                />
+              </svg>
+              <svg
+                aria-hidden={true}
+                className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-8"
+                data-testid="RadioButtonCheckedIcon"
+                focusable="false"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"
+                />
+              </svg>
+            </span>
+          </span>
+          <span
+            className="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label Mui-disabled emotion-9"
+            style={{}}
+          >
+            bar
+          </span>
+        </label>
+      </div>
+    </div>
+  </div>
+  <div
+    className="MuiBox-root emotion-17"
+  >
+    <button
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary Mui-disabled MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary emotion-18"
+      disabled={true}
+      onBlur={[Function]}
+      onContextMenu={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={-1}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
 exports[`single fields select field single choice formData 1`] = `
 .emotion-0 {
   display: inline-flex;
@@ -11801,7 +12300,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
           onClick={[Function]}
         >
           <div
-            aria-controls=":rq:"
+            aria-controls=":rs:"
             aria-expanded="false"
             aria-haspopup="listbox"
             aria-labelledby="root"
@@ -11864,6 +12363,505 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
   >
     <button
       className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary emotion-9"
+      disabled={false}
+      onBlur={[Function]}
+      onContextMenu={[Function]}
+      onDragLeave={[Function]}
+      onFocus={[Function]}
+      onKeyDown={[Function]}
+      onKeyUp={[Function]}
+      onMouseDown={[Function]}
+      onMouseLeave={[Function]}
+      onMouseUp={[Function]}
+      onTouchEnd={[Function]}
+      onTouchMove={[Function]}
+      onTouchStart={[Function]}
+      tabIndex={0}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields select field single choice uiSchema disabled using radio widget 1`] = `
+.emotion-0 {
+  display: inline-flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  position: relative;
+  min-width: 0;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  vertical-align: top;
+  width: 100%;
+}
+
+.emotion-1 {
+  color: rgba(0, 0, 0, 0.6);
+  font-family: "Roboto","Helvetica","Arial",sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  line-height: 1.4375em;
+  letter-spacing: 0.00938em;
+  padding: 0;
+  position: relative;
+}
+
+.emotion-1.Mui-focused {
+  color: #1976d2;
+}
+
+.emotion-1.Mui-disabled {
+  color: rgba(0, 0, 0, 0.38);
+}
+
+.emotion-1.Mui-error {
+  color: #d32f2f;
+}
+
+.emotion-2 {
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-flex-wrap: wrap;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+}
+
+.emotion-3 {
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  cursor: pointer;
+  vertical-align: middle;
+  -webkit-tap-highlight-color: transparent;
+  margin-left: -11px;
+  margin-right: 16px;
+}
+
+.emotion-3.Mui-disabled {
+  cursor: default;
+}
+
+.emotion-3 .MuiFormControlLabel-label.Mui-disabled {
+  color: rgba(0, 0, 0, 0.38);
+}
+
+.emotion-4 {
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  background-color: transparent;
+  outline: 0;
+  border: 0;
+  margin: 0;
+  border-radius: 50%;
+  padding: 9px;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  vertical-align: middle;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.emotion-4::-moz-focus-inner {
+  border-style: none;
+}
+
+.emotion-4.Mui-disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
+@media print {
+  .emotion-4 {
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+}
+
+.emotion-4.Mui-disabled {
+  color: rgba(0, 0, 0, 0.26);
+}
+
+.emotion-4:hover {
+  background-color: rgba(25, 118, 210, 0.04);
+}
+
+.emotion-4.Mui-checked {
+  color: #1976d2;
+}
+
+@media (hover: none) {
+  .emotion-4:hover {
+    background-color: transparent;
+  }
+}
+
+.emotion-5 {
+  cursor: inherit;
+  position: absolute;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  margin: 0;
+  padding: 0;
+  z-index: 1;
+}
+
+.emotion-6 {
+  position: relative;
+  display: flex;
+}
+
+.emotion-7 {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  fill: currentColor;
+  font-size: 1.5rem;
+  -webkit-transform: scale(1);
+  -moz-transform: scale(1);
+  -ms-transform: scale(1);
+  transform: scale(1);
+}
+
+.emotion-8 {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
+  transition: transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
+  fill: currentColor;
+  font-size: 1.5rem;
+  left: 0;
+  position: absolute;
+  -webkit-transform: scale(0);
+  -moz-transform: scale(0);
+  -ms-transform: scale(0);
+  transform: scale(0);
+}
+
+.emotion-9 {
+  margin: 0;
+  font-family: "Roboto","Helvetica","Arial",sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  line-height: 1.5;
+  letter-spacing: 0.00938em;
+}
+
+.emotion-17 {
+  margin-top: 24px;
+}
+
+.emotion-18 {
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  background-color: var(--variant-containedBg);
+  outline: 0;
+  border: 0;
+  margin: 0;
+  border-radius: 4px;
+  padding: 6px 16px;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  vertical-align: middle;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: var(--variant-containedColor);
+  font-family: "Roboto","Helvetica","Arial",sans-serif;
+  font-weight: 500;
+  font-size: 0.875rem;
+  line-height: 1.75;
+  letter-spacing: 0.02857em;
+  text-transform: uppercase;
+  min-width: 64px;
+  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  box-shadow: 0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12);
+  --variant-textColor: #1976d2;
+  --variant-outlinedColor: #1976d2;
+  --variant-outlinedBorder: rgba(25, 118, 210, 0.5);
+  --variant-containedColor: #fff;
+  --variant-containedBg: #1976d2;
+}
+
+.emotion-18::-moz-focus-inner {
+  border-style: none;
+}
+
+.emotion-18.Mui-disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
+@media print {
+  .emotion-18 {
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+}
+
+.emotion-18:hover {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+}
+
+.emotion-18.Mui-disabled {
+  color: rgba(0, 0, 0, 0.26);
+}
+
+.emotion-18:hover {
+  box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2),0px 4px 5px 0px rgba(0,0,0,0.14),0px 1px 10px 0px rgba(0,0,0,0.12);
+}
+
+@media (hover: none) {
+  .emotion-18:hover {
+    box-shadow: 0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12);
+  }
+}
+
+.emotion-18:active {
+  box-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12);
+}
+
+.emotion-18.Mui-focusVisible {
+  box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);
+}
+
+.emotion-18.Mui-disabled {
+  color: rgba(0, 0, 0, 0.26);
+  box-shadow: none;
+  background-color: rgba(0, 0, 0, 0.12);
+}
+
+@media (hover: hover) {
+  .emotion-18:hover {
+    --variant-containedBg: #1565c0;
+    --variant-textBg: rgba(25, 118, 210, 0.04);
+    --variant-outlinedBorder: #1976d2;
+    --variant-outlinedBg: rgba(25, 118, 210, 0.04);
+  }
+}
+
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+  >
+    <div
+      className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
+    >
+      <label
+        className="MuiFormLabel-root MuiFormLabel-colorPrimary emotion-1"
+        htmlFor="root"
+      />
+      <div
+        aria-describedby="root__error root__description root__help"
+        className="MuiFormGroup-root MuiRadioGroup-root emotion-2"
+        id="root"
+        onBlur={[Function]}
+        onFocus={[Function]}
+        role="radiogroup"
+      >
+        <label
+          className="MuiFormControlLabel-root Mui-disabled MuiFormControlLabel-labelPlacementEnd emotion-3"
+        >
+          <span
+            aria-disabled={true}
+            className="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary Mui-disabled PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary Mui-disabled MuiRadio-root MuiRadio-colorPrimary emotion-4"
+            onBlur={[Function]}
+            onContextMenu={[Function]}
+            onDragLeave={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseLeave={[Function]}
+            onMouseUp={[Function]}
+            onTouchEnd={[Function]}
+            onTouchMove={[Function]}
+            onTouchStart={[Function]}
+            tabIndex={-1}
+          >
+            <input
+              checked={false}
+              className="PrivateSwitchBase-input emotion-5"
+              disabled={true}
+              id="root-0"
+              name="root"
+              onChange={[Function]}
+              required={false}
+              type="radio"
+              value="0"
+            />
+            <span
+              className="emotion-6"
+            >
+              <svg
+                aria-hidden={true}
+                className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-7"
+                data-testid="RadioButtonUncheckedIcon"
+                focusable="false"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
+                />
+              </svg>
+              <svg
+                aria-hidden={true}
+                className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-8"
+                data-testid="RadioButtonCheckedIcon"
+                focusable="false"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"
+                />
+              </svg>
+            </span>
+          </span>
+          <span
+            className="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label Mui-disabled emotion-9"
+            style={{}}
+          >
+            foo
+          </span>
+        </label>
+        <label
+          className="MuiFormControlLabel-root Mui-disabled MuiFormControlLabel-labelPlacementEnd emotion-3"
+        >
+          <span
+            aria-disabled={true}
+            className="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary Mui-disabled PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary Mui-disabled MuiRadio-root MuiRadio-colorPrimary emotion-4"
+            onBlur={[Function]}
+            onContextMenu={[Function]}
+            onDragLeave={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            onKeyUp={[Function]}
+            onMouseDown={[Function]}
+            onMouseLeave={[Function]}
+            onMouseUp={[Function]}
+            onTouchEnd={[Function]}
+            onTouchMove={[Function]}
+            onTouchStart={[Function]}
+            tabIndex={-1}
+          >
+            <input
+              checked={false}
+              className="PrivateSwitchBase-input emotion-5"
+              disabled={true}
+              id="root-1"
+              name="root"
+              onChange={[Function]}
+              required={false}
+              type="radio"
+              value="1"
+            />
+            <span
+              className="emotion-6"
+            >
+              <svg
+                aria-hidden={true}
+                className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-7"
+                data-testid="RadioButtonUncheckedIcon"
+                focusable="false"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
+                />
+              </svg>
+              <svg
+                aria-hidden={true}
+                className="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-8"
+                data-testid="RadioButtonCheckedIcon"
+                focusable="false"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"
+                />
+              </svg>
+            </span>
+          </span>
+          <span
+            className="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label Mui-disabled emotion-9"
+            style={{}}
+          >
+            bar
+          </span>
+        </label>
+      </div>
+    </div>
+  </div>
+  <div
+    className="MuiBox-root emotion-17"
+  >
+    <button
+      className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary emotion-18"
       disabled={false}
       onBlur={[Function]}
       onContextMenu={[Function]}

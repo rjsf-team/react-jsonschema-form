@@ -90,7 +90,40 @@ export default class AJV8Validator<T = any, S extends StrictRJSFSchema = RJSFSch
     let errors;
     if (compiledValidator) {
       if (typeof this.localizer === 'function') {
+        // Properties need to be enclosed with quotes so that
+        // `AJV8Validator#transformRJSFValidationErrors` replaces property names
+        // with `title` or `ui:title`. See #4348, #4349, #4387, and #4402.
+        (compiledValidator.errors ?? []).forEach((error) => {
+          ['missingProperty', 'property'].forEach((key) => {
+            if (error.params?.[key]) {
+              error.params[key] = `'${error.params[key]}'`;
+            }
+          });
+          if (error.params?.deps) {
+            // As `error.params.deps` is the comma+space separated list of missing dependencies, enclose each dependency separately.
+            // For example, `A, B` is converted into `'A', 'B'`.
+            error.params.deps = error.params.deps
+              .split(', ')
+              .map((v: string) => `'${v}'`)
+              .join(', ');
+          }
+        });
         this.localizer(compiledValidator.errors);
+        // Revert to originals
+        (compiledValidator.errors ?? []).forEach((error) => {
+          ['missingProperty', 'property'].forEach((key) => {
+            if (error.params?.[key]) {
+              error.params[key] = error.params[key].slice(1, -1);
+            }
+          });
+          if (error.params?.deps) {
+            // Remove surrounding quotes from each missing dependency. For example, `'A', 'B'` is reverted to `A, B`.
+            error.params.deps = error.params.deps
+              .split(', ')
+              .map((v: string) => v.slice(1, -1))
+              .join(', ');
+          }
+        });
       }
       errors = compiledValidator.errors || undefined;
 

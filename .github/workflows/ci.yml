@@ -27,27 +27,27 @@ jobs:
 
       - name: Build with Netlify badge
         if: github.ref != 'refs/heads/main' && matrix.node-version != '14.x'
-        run: npm run build
+        run: npm run build-serial
         env:
           VITE_SHOW_NETLIFY_BADGE: true
           NODE_OPTIONS: --max_old_space_size=4096
 
       - name: Build
         if: github.ref == 'refs/heads/main' && matrix.node-version != '14.x'
-        run: npm run build
+        run: npm run build-serial
         env:
           NODE_OPTIONS: --max_old_space_size=4096
 
       # Docusaurus doesn't support Node 14. These tasks can be removed once Node 14 is EOL (May 2023)
       - name: Build with Netlify badge (no docs)
         if: github.ref != 'refs/heads/main' && matrix.node-version == '14.x'
-        run: npx nx run-many --target=build --exclude=@rjsf/docs
+        run: npx nx run-many --target=build --exclude=@rjsf/docs --parallel=false
         env:
           VITE_SHOW_NETLIFY_BADGE: true
           NODE_OPTIONS: --max_old_space_size=4096
       - name: Build (no docs)
         if: github.ref == 'refs/heads/main' && matrix.node-version == '14.x'
-        run: npx nx run-many --target=build --exclude=@rjsf/docs
+        run: npx nx run-many --target=build --exclude=@rjsf/docs --parallel=false
         env:
           NODE_OPTIONS: --max_old_space_size=4096
 
@@ -79,7 +79,7 @@ jobs:
           name: docs
           path: dist/docs
       - name: Deploy playground + docs to GitHub Pages
-        uses: crazy-max/ghaction-github-pages@v4.0.0
+        uses: crazy-max/ghaction-github-pages@v4.1.0
         with:
           keep_history: true
           target_branch: gh-pages

@@ -128,6 +128,28 @@ const liveSettingsSelectSchema: RJSFSchema = {
             },
           ],
         },
+        constAsDefaults: {
+          type: 'string',
+          title: 'const as default behavior',
+          default: 'always',
+          oneOf: [
+            {
+              type: 'string',
+              title: 'A const value will always be merged into the form as a default',
+              enum: ['always'],
+            },
+            {
+              type: 'string',
+              title: 'If const is in a `oneOf` it will NOT pick the first value as a default',
+              enum: ['skipOneOf'],
+            },
+            {
+              type: 'string',
+              title: 'A const value will never be used as a default',
+              enum: ['never'],
+            },
+          ],
+        },
         emptyObjectFields: {
           type: 'string',
           title: 'Object fields default behavior',
@@ -284,6 +306,7 @@ export default function Header({
           uiSchema,
           theme,
           liveSettings,
+          validator,
         })
       );
 
@@ -292,7 +315,7 @@ export default function Header({
       setShareURL(null);
       console.error(error);
     }
-  }, [formData, liveSettings, schema, theme, uiSchema, setShareURL]);
+  }, [formData, liveSettings, schema, theme, uiSchema, validator, setShareURL]);
 
   return (
     <div className='page-header'>

@@ -1,21 +1,21 @@
 import { ErrorObject } from 'ajv';
 import get from 'lodash/get';
-import isEqual from 'lodash/isEqual';
 import {
   CustomValidator,
+  deepEquals,
   ErrorSchema,
   ErrorTransformer,
   FormContextType,
   hashForSchema,
   ID_KEY,
   JUNK_OPTION_ID,
+  retrieveSchema,
   RJSFSchema,
   StrictRJSFSchema,
   toErrorList,
   UiSchema,
   ValidationData,
   ValidatorType,
-  retrieveSchema,
 } from '@rjsf/utils';
 
 import { CompiledValidateFunction, Localizer, ValidatorFunctions } from './types';
@@ -92,10 +92,10 @@ export default class AJV8PrecompiledValidator<
    * @param [formData] - The form data to validate if any
    */
   ensureSameRootSchema(schema: S, formData?: T) {
-    if (!isEqual(schema, this.rootSchema)) {
+    if (!deepEquals(schema, this.rootSchema)) {
       // Resolve the root schema with the passed in form data since that may affect the resolution
       const resolvedRootSchema = retrieveSchema(this, this.rootSchema, this.rootSchema, formData);
-      if (!isEqual(schema, resolvedRootSchema)) {
+      if (!deepEquals(schema, resolvedRootSchema)) {
         throw new Error(
           'The schema associated with the precompiled validator differs from the rootSchema provided for validation'
         );

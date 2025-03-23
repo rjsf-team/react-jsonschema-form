@@ -1,5 +1,4 @@
 import get from 'lodash/get';
-import isEqual from 'lodash/isEqual';
 
 import { ALL_OF_KEY, DEPENDENCIES_KEY, ID_KEY, ITEMS_KEY, PROPERTIES_KEY, REF_KEY } from '../constants';
 import isObject from '../isObject';
@@ -14,6 +13,7 @@ import {
 } from '../types';
 import retrieveSchema from './retrieveSchema';
 import getSchemaType from '../getSchemaType';
+import deepEquals from '../deepEquals';
 
 /** An internal helper that generates an `IdSchema` object for the `schema`, recursively with protection against
  * infinite recursion
@@ -41,8 +41,8 @@ function toIdSchemaInternal<T = any, S extends StrictRJSFSchema = RJSFSchema, F 
   experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>
 ): IdSchema<T> {
   if (REF_KEY in schema || DEPENDENCIES_KEY in schema || ALL_OF_KEY in schema) {
-    const _schema = retrieveSchema<T, S, F>(validator, schema, rootSchema, formData);
-    const sameSchemaIndex = _recurseList.findIndex((item) => isEqual(item, _schema));
+    const _schema = retrieveSchema<T, S, F>(validator, schema, rootSchema, formData, experimental_customMergeAllOf);
+    const sameSchemaIndex = _recurseList.findIndex((item) => deepEquals(item, _schema));
     if (sameSchemaIndex === -1) {
       return toIdSchemaInternal<T, S, F>(
         validator,

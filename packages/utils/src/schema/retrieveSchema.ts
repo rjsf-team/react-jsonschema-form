@@ -1,5 +1,4 @@
 import get from 'lodash/get';
-import isEqual from 'lodash/isEqual';
 import set from 'lodash/set';
 import times from 'lodash/times';
 import transform from 'lodash/transform';
@@ -15,10 +14,10 @@ import {
   ANY_OF_KEY,
   DEPENDENCIES_KEY,
   IF_KEY,
-  ONE_OF_KEY,
-  REF_KEY,
-  PROPERTIES_KEY,
   ITEMS_KEY,
+  ONE_OF_KEY,
+  PROPERTIES_KEY,
+  REF_KEY,
 } from '../constants';
 import findSchemaDefinition, { splitKeyElementFromObject } from '../findSchemaDefinition';
 import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema';
@@ -34,6 +33,7 @@ import {
   ValidatorType,
 } from '../types';
 import getFirstMatchingOption from './getFirstMatchingOption';
+import deepEquals from '../deepEquals';
 
 /** Retrieves an expanded schema that has had all of its conditions, additional properties, references and dependencies
  * resolved and merged into the `schema` given a `validator`, `rootSchema` and `rawFormData` that is used to do the
@@ -256,7 +256,10 @@ export function resolveSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, 
       )
     );
     const allPermutations = getAllPermutationsOfXxxOf<S>(allOfSchemaElements);
-    return allPermutations.map((permutation) => ({ ...schema, allOf: permutation }));
+    return allPermutations.map((permutation) => ({
+      ...schema,
+      allOf: permutation,
+    }));
   }
   // No $ref or dependencies or allOf attribute was found, returning the original schema.
   return [schema];
@@ -356,7 +359,7 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
     };
   }
 
-  return isEqual(schema, resolvedSchema) ? schema : resolvedSchema;
+  return deepEquals(schema, resolvedSchema) ? schema : resolvedSchema;
 }
 
 /** Creates new 'properties' items for each key in the `formData`
@@ -365,13 +368,20 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
  * @param theSchema - The schema for which the existing additional properties is desired
  * @param [rootSchema] - The root schema, used to primarily to look up `$ref`s * @param validator
  * @param [aFormData] - The current formData, if any, to assist retrieving a schema
+ * @param [experimental_customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
  * @returns - The updated schema with additional properties stubbed
  */
 export function stubExistingAdditionalProperties<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
->(validator: ValidatorType<T, S, F>, theSchema: S, rootSchema?: S, aFormData?: T): S {
+>(
+  validator: ValidatorType<T, S, F>,
+  theSchema: S,
+  rootSchema?: S,
+  aFormData?: T,
+  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>
+): S {
   // Clone the schema so that we don't ruin the consumer's original
   const schema = {
     ...theSchema,
@@ -393,7 +403,8 @@ export function stubExistingAdditionalProperties<
           validator,
           { $ref: get(schema.additionalProperties, [REF_KEY]) } as S,
           rootSchema,
-          formData as T
+          formData as T,
+          experimental_customMergeAllOf
         );
       } else if ('type' in schema.additionalProperties!) {
         additionalProperties = { ...schema.additionalProperties };
@@ -456,7 +467,8 @@ export function retrieveSchemaInternal<
     rootSchema,
     expandAllBranches,
     recurseList,
-    rawFormData
+    rawFormData,
+    experimental_customMergeAllOf
   );
   return resolvedSchemas.flatMap((s: S) => {
     let resolvedSchema = s;
@@ -507,7 +519,13 @@ export function retrieveSchemaInternal<
     const hasAdditionalProperties =
       ADDITIONAL_PROPERTIES_KEY in resolvedSchema && resolvedSchema.additionalProperties !== false;
     if (hasAdditionalProperties) {
-      return stubExistingAdditionalProperties<T, S, F>(validator, resolvedSchema, rootSchema, rawFormData as T);
+      return stubExistingAdditionalProperties<T, S, F>(
+        validator,
+        resolvedSchema,
+        rootSchema,
+        rawFormData as T,
+        experimental_customMergeAllOf
+      );
     }
 
     return resolvedSchema;

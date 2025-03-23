@@ -1,9 +1,9 @@
 {
   "name": "@rjsf/fluentui-rc",
-  "version": "5.22.2",
+  "version": "5.24.8",
   "description": "FluentUI React Components theme, fields and widgets for react-jsonschema-form",
   "scripts": {
-    "build:ts": "tsc -b",
+    "build:ts": "tsc -b tsconfig.build.json && tsc-alias -p tsconfig.build.json",
     "build:cjs": "esbuild ./src/index.ts --bundle --outfile=dist/index.js --sourcemap --packages=external --format=cjs",
     "build:esm": "esbuild ./src/index.ts --bundle --outfile=dist/index.esm.js --sourcemap --packages=external --format=esm",
     "build:umd": "rollup dist/index.esm.js --format=umd --file=dist/core.umd.js --name=JSONSchemaForm",
@@ -27,6 +27,33 @@
   "main": "dist/index.js",
   "module": "lib/index.js",
   "typings": "lib/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./lib/index.js",
+      "types": "./lib/index.d.ts"
+    },
+    "./lib": {
+      "require": "./dist/index.js",
+      "import": "./lib/index.js",
+      "types": "./lib/index.d.ts"
+    },
+    "./lib/*.js": {
+      "require": "./dist/*.js",
+      "import": "./lib/*.js",
+      "types": "./lib/*.d.ts"
+    },
+    "./dist": {
+      "require": "./dist/index.js",
+      "import": "./lib/index.js",
+      "types": "./lib/index.d.ts"
+    },
+    "./dist/*.js": {
+      "require": "./dist/*.js",
+      "import": "./lib/*.js",
+      "types": "./lib/*.d.ts"
+    }
+  },
   "files": [
     "dist",
     "lib",
@@ -37,7 +64,7 @@
     "node": ">=14"
   },
   "peerDependencies": {
-    "@rjsf/utils": "^5.22.x",
+    "@rjsf/utils": "^5.24.x",
     "react": "^16.14.0 || >=17"
   },
   "dependencies": {
@@ -52,10 +79,10 @@
     "@babel/preset-env": "^7.23.9",
     "@babel/preset-react": "^7.23.3",
     "@babel/preset-typescript": "^7.23.3",
-    "@rjsf/core": "^5.22.2",
-    "@rjsf/snapshot-tests": "^5.22.2",
-    "@rjsf/utils": "^5.22.2",
-    "@rjsf/validator-ajv8": "^5.22.2",
+    "@rjsf/core": "^5.24.8",
+    "@rjsf/snapshot-tests": "^5.24.8",
+    "@rjsf/utils": "^5.24.8",
+    "@rjsf/validator-ajv8": "^5.24.8",
     "@types/jest": "^29.5.12",
     "@types/react": "^18.2.58",
     "@types/react-dom": "^18.2.19",

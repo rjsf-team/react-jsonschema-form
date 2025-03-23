@@ -17,7 +17,7 @@ jobs:
           cache-dependency-path: 'package-lock.json'
       - run: npm i -g npm@9
       - run: npm ci
-      - run: npm run build
+      - run: npm run build-serial
         env:
           NODE_OPTIONS: --max_old_space_size=4096
       - run: npm test
