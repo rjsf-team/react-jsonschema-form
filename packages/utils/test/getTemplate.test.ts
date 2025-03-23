@@ -8,8 +8,10 @@ import {
   UIOptionsType,
 } from '../src';
 import getTestValidator from './testUtils/getTestValidator';
+import { ComponentType } from 'react';
+import cloneDeep from 'lodash/cloneDeep';
 
-const FakeTemplate = () => null;
+const FakeTemplate: ComponentType<any> = () => null;
 
 const CustomTemplate = () => undefined;
 
@@ -103,9 +105,11 @@ describe('getTemplate', () => {
   });
   it('returns the custom template name from the registry', () => {
     const customTemplateKey = 'CustomTemplate';
-    registry.templates[customTemplateKey] = FakeTemplate;
+    const newRegistry = cloneDeep(registry);
 
-    expect(getTemplate(customTemplateKey, registry)).toBe(FakeTemplate);
+    newRegistry.templates[customTemplateKey] = FakeTemplate;
+
+    expect(getTemplate(customTemplateKey, newRegistry)).toBe(FakeTemplate);
   });
 
   it('returns undefined when the custom template is not in the registry', () => {
