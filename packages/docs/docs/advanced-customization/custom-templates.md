@@ -1105,3 +1105,20 @@ The following prop is passed to a `SubmitButton`:
 
 - `uiSchema`: The uiSchema object for this field, used to extract the `UISchemaSubmitButtonOptions`.
 - `registry`: The `registry` object.
+
+## Custom Templates
+
+You can now add custom components to the registry and reference them in your `uiSchema` using string keys.
+
+### Adding Custom Templates to the Registry
+
+```tsx
+import CustomArrayFieldTemplate from './CustomArrayFieldTemplate';
+import { UiSchema } from '@rjsf/utils';
+
+// Add the custom template to the registry
+const registry = { templates: { CustomArrayFieldTemplate } };
+
+// Use the custom template in the uiSchema
+const uiSchema: UiSchema = { 'ui:ArrayFieldTemplate': 'CustomArrayFieldTemplate' };
+```
