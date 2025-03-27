@@ -20,9 +20,9 @@ export default function getTemplate<
   }
   // Allow templates to be customized per-field by using string keys from the registry
   if (
-    Object.hasOwn(uiOptions, name) &&
+    Object.prototype.hasOwnProperty.call(uiOptions, name) &&
     typeof uiOptions[name] === 'string' &&
-    Object.hasOwn(templates, uiOptions[name] as string)
+    Object.prototype.hasOwnProperty.call(templates, uiOptions[name] as string)
   ) {
     const key = uiOptions[name];
     // Evaluating templates[key] results in TS2590: Expression produces a union type that is too complex to represent
