@@ -17,6 +17,10 @@ should change the heading of the (upcoming) version to include a major version b
 -->
 # 5.24.9
 
+## @rjsf/core
+
+- Do not display input field in MultiSchemaField with null type
+
 ## Dev / docs / playground
 
 - Updated docs for ArrayFieldItemTemplate to include prop `onCopyIndexClick`, fixing [#4507](https://github.com/rjsf-team/react-jsonschema-form/issues/4507)
