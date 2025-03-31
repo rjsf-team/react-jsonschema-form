@@ -7,7 +7,9 @@
     "rootDir": "./",
     "outDir": "../lib",
     "baseUrl": "../",
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    // Skip because of antd inner ts errors
+    "skipLibCheck": true
   },
   "references": [
     {
