@@ -57,6 +57,7 @@
     "husky": "^8.0.3",
     "jest-environment-jsdom": "^29.7.0",
     "lint-staged": "^13.3.0",
+    "move-file-cli": "^3.0.0",
     "nx": "20.7.1",
     "prettier": "^2.8.8",
     "rimraf": "^5.0.5",

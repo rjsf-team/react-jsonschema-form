@@ -44,7 +44,7 @@
     "node": ">=20"
   },
   "scripts": {
-    "compileReplacer": "tsc -p tsconfig.replacer.json && mv lodashReplacer.js lodashReplacer.cjs",
+    "compileReplacer": "tsc -p tsconfig.replacer.json && move-file lodashReplacer.js lodashReplacer.cjs",
     "build:ts": "npm run compileReplacer && rimraf ./lib && tsc -b tsconfig.build.json && tsc-alias -p tsconfig.build.json",
     "build:esm-browser": "esbuild ./src/indexBrowser.ts --bundle --outfile=dist/utils-browser.esm.js --sourcemap --packages=external --format=esm",
     "build:cjs-browser": "esbuild ./src/indexBrowser.ts --bundle --outfile=dist/indexBrowser.js --sourcemap --packages=external --format=cjs",
