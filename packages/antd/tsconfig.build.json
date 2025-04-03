@@ -15,7 +15,7 @@
     "replacers": {
       "lodash": {
         "enabled": true,
-        "file": "lodashReplacer.js"
+        "file": "lodashReplacer.cjs"
       }
     }
   }

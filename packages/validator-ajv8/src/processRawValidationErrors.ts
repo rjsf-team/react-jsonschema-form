@@ -18,7 +18,10 @@ import {
   ValidatorType,
 } from '@rjsf/utils';
 
-export type RawValidationErrorsType<Result = any> = { errors?: Result[]; validationError?: Error };
+export type RawValidationErrorsType<Result = any> = {
+  errors?: Result[];
+  validationError?: Error;
+};
 
 /** Transforming the error output from ajv to format used by @rjsf/utils.
  * At some point, components should be updated to support ajv.

@@ -18,11 +18,14 @@ describe('compileSchemaValidatorsCode()', () => {
     let schemas: RJSFSchema[];
     beforeAll(() => {
       schemas = Object.values(schemaParser(superSchema as unknown as RJSFSchema));
-      expectedCode = readFileSync('./test/harness/superSchema.js').toString();
+      expectedCode = readFileSync('./test/harness/superSchema.cjs').toString();
       generatedCode = compileSchemaValidatorsCode(superSchema as unknown as RJSFSchema);
     });
     it('create AJV instance was called with the expected options', () => {
-      const expectedCompileOpts = { code: { source: true, lines: true }, schemas };
+      const expectedCompileOpts = {
+        code: { source: true, lines: true },
+        schemas,
+      };
       expect(createAjvInstance).toHaveBeenCalledWith(undefined, undefined, expectedCompileOpts, undefined, undefined);
     });
     it('generates the expected output', () => {
@@ -34,10 +37,13 @@ describe('compileSchemaValidatorsCode()', () => {
     let expectedCode: string;
     beforeAll(() => {
       schemas = Object.values(schemaParser(superSchema as unknown as RJSFSchema));
-      expectedCode = readFileSync('./test/harness/superSchemaOptions.js').toString();
+      expectedCode = readFileSync('./test/harness/superSchemaOptions.cjs').toString();
       generatedCode = compileSchemaValidatorsCode(superSchema as unknown as RJSFSchema, {
         ...CUSTOM_OPTIONS,
-        ajvOptionsOverrides: { ...CUSTOM_OPTIONS.ajvOptionsOverrides, code: { lines: false } },
+        ajvOptionsOverrides: {
+          ...CUSTOM_OPTIONS.ajvOptionsOverrides,
+          code: { lines: false },
+        },
       });
     });
     it('create AJV instance was called with the expected options', () => {
@@ -48,7 +54,11 @@ describe('compileSchemaValidatorsCode()', () => {
         ajvFormatOptions,
         AjvClass,
       } = CUSTOM_OPTIONS;
-      const expectedCompileOpts = { ...ajvOptionsOverrides, code: { source: true, lines: false }, schemas };
+      const expectedCompileOpts = {
+        ...ajvOptionsOverrides,
+        code: { source: true, lines: false },
+        schemas,
+      };
       expect(createAjvInstance).toHaveBeenCalledWith(
         additionalMetaSchemas,
         customFormats,
