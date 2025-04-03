@@ -136,14 +136,14 @@ To release, go to the main branch (NOT a fork) and then create a new branch with
 For instance if you are about to create the new `5.100.10` branch, then you would run the following commands:
 
 ```bash
-git checkout -b rc5.100.10
+git checkout -b rc6.100.10
 git push
-npx lerna version
+npx nx release version --git-tag
 npm run post-versioning
 ```
 
 Make sure you use [semver](https://semver.org/) for version numbering when selecting the version.
-The `npx lerna version` command will create a new version tag and push it to GitHub.
+The `npx nx release version --git-tag` command will create a new version tag and push it to GitHub.
 
 The `npm run post-versioning` script will update the peer dependencies in all of the `packages/*/package.json` files if necessary.
 It will then clean up the `node_modules` directories and rerun `npm install` to update the `package-lock.json` files.
