@@ -92,6 +92,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Updated the `utility-functions.md` documentation to add the `buttonId()` function
 - Added the `v6.x upgrade guide.md` documentation
 - Updated the `playground` to add a `Layout Grid` example and made the selected example now be part of the shared export
+- Replaced Lerna with Nx, updated all lerna commands to use the Nx CLI
 
 # 6.0.0-alpha.0
 
