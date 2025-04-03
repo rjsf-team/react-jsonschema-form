@@ -31,7 +31,8 @@
       "require": "./dist/*.js",
       "import": "./lib/*.js",
       "types": "./lib/*.d.ts"
-    }  },
+    }
+  },
   "files": [
     "dist",
     "lib",
