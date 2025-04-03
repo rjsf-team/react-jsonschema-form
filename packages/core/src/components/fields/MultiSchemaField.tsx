@@ -241,7 +241,9 @@ class AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
             readonly={readonly}
           />
         </div>
-        {optionSchema && <_SchemaField {...this.props} schema={optionSchema} uiSchema={optionUiSchema} />}
+        {optionSchema && optionSchema.type !== 'null' && (
+          <_SchemaField {...this.props} schema={optionSchema} uiSchema={optionUiSchema} />
+        )}
       </div>
     );
   }
