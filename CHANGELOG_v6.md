@@ -21,7 +21,8 @@ should change the heading of the (upcoming) version to include a major version b
 
 - BREAKING CHANGE: Refactored `ArrayFieldItemTemplate` to use the new `ArrayFieldItemButtonsTemplate`
 - Updated the `ArrayFieldTemplate`, `ObjectFieldTemplate`, and `WrapIfAdditionalTemplate` to a unique id using the `buttonId()` function and adding consistent marker classes
-- Implemented the `GridTemplate` component, adding it to the `templates` for the theme 
+- Implemented the `GridTemplate` component, adding it to the `templates` for the theme
+- BREAKING CHANGE: Removed support for version 4 of `antd`
 
 ## @rjsf/chakra-ui
 
@@ -36,6 +37,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Refactored `ArrayFieldItemTemplate` to use the new `ArrayFieldItemButtonsTemplate`
 - Updated the `ArrayFieldTemplate`, `ObjectFieldTemplate`, and `WrapIfAdditionalTemplate` to a unique id using the `buttonId()` function and adding consistent marker classes
 - Implemented the `GridTemplate` component, adding it to the `templates` for the theme
+- Implemented the new `LayoutGridField`, `LayoutMultiSchemaField` and `LayoutHeaderField`
 
 ## @rjsf/fluent-ui
 
@@ -93,6 +95,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Added the `v6.x upgrade guide.md` documentation
 - Updated the `playground` to add a `Layout Grid` example and made the selected example now be part of the shared export
 - Replaced Lerna with Nx, updated all lerna commands to use the Nx CLI
+- Updated the playground to use `antd` version 5
 
 # 6.0.0-alpha.0
 

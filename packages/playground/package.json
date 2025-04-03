@@ -34,7 +34,7 @@
     "react": "^18.2.0"
   },
   "dependencies": {
-    "@ant-design/icons": "^4.8.1",
+    "@ant-design/icons": "^5.6.1",
     "@babel/runtime": "^7.23.9",
     "@chakra-ui/icons": "^1.1.7",
     "@chakra-ui/react": "^1.8.9",
@@ -51,7 +51,7 @@
     "ajv": "^8.12.0",
     "ajv-formats": "^2.1.1",
     "ajv-i18n": "^4.2.0",
-    "antd": "^5.24.5",
+    "antd": "^5.24.6",
     "atob": "^2.1.2",
     "chakra-react-select": "^4.7.6",
     "core-js": "^3.35.1",
