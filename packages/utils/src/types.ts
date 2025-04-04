@@ -543,7 +543,7 @@ export type DescriptionFieldProps<T = any, S extends StrictRJSFSchema = RJSFSche
   /** The uiSchema object for this description field */
   uiSchema?: UiSchema<T, S, F>;
   /** The description of the field being rendered */
-  description: string | ReactElement;
+  description: string;
   /** The `registry` object */
   registry: Registry<T, S, F>;
 };
@@ -685,7 +685,7 @@ export type ObjectFieldTemplateProps<
   /** A string value containing the title for the object */
   title: string;
   /** A string value containing the description for the object */
-  description?: string;
+  description?: ReactNode;
   /** A boolean value stating if the object is disabled */
   disabled?: boolean;
   /** An array of objects representing the properties in the object */
