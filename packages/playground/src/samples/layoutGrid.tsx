@@ -6,7 +6,7 @@ const layoutGrid: Sample = {
   schema: {
     type: 'object',
     properties: {
-      person: { title: 'Person', $ref: '#/definitions/Person' },
+      person: { title: 'Person Info', $ref: '#/definitions/Person' },
       employment: {
         title: 'Employment',
         discriminator: {
@@ -279,6 +279,18 @@ const layoutGrid: Sample = {
               children: [
                 {
                   'ui:row': {
+                    children: [
+                      {
+                        'ui:col': {
+                          xs: 24,
+                          children: ['person'],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  'ui:row': {
                     gutter: [6, 0],
                     children: [
                       {
@@ -439,6 +451,7 @@ const layoutGrid: Sample = {
             },
           },
           person: {
+            'ui:field': 'LayoutHeaderField',
             race: {
               'ui:options': {
                 widget: 'checkboxes',
@@ -489,6 +502,17 @@ const layoutGrid: Sample = {
             'ui:row': {
               gap: 2,
               children: [
+                {
+                  'ui:row': {
+                    gap: 2,
+                    templateColumns: 'repeat(1, 1fr)',
+                    children: [
+                      {
+                        'ui:col': ['person'],
+                      },
+                    ],
+                  },
+                },
                 {
                   'ui:row': {
                     gap: 2,
@@ -634,6 +658,7 @@ const layoutGrid: Sample = {
             },
           },
           person: {
+            'ui:field': 'LayoutHeaderField',
             race: {
               'ui:options': {
                 widget: 'checkboxes',
@@ -683,25 +708,31 @@ const layoutGrid: Sample = {
               children: [
                 {
                   'ui:col': {
-                    style: { gridRow: '1 / auto', gridColumn: '1 / span 4' },
-                    children: ['person.name.first'],
-                  },
-                },
-                {
-                  'ui:col': {
-                    style: { gridRow: '1 / auto', gridColumn: '5 / span 4' },
-                    children: ['person.name.middle'],
-                  },
-                },
-                {
-                  'ui:col': {
-                    style: { gridRow: '1 / auto', gridColumn: '9 / span 4' },
-                    children: ['person.name.last'],
+                    style: { gridRow: '1 / auto', gridColumn: '1 / span 12' },
+                    children: ['person'],
                   },
                 },
                 {
                   'ui:col': {
                     style: { gridRow: '2 / auto', gridColumn: '1 / span 4' },
+                    children: ['person.name.first'],
+                  },
+                },
+                {
+                  'ui:col': {
+                    style: { gridRow: '2 / auto', gridColumn: '5 / span 4' },
+                    children: ['person.name.middle'],
+                  },
+                },
+                {
+                  'ui:col': {
+                    style: { gridRow: '2 / auto', gridColumn: '9 / span 4' },
+                    children: ['person.name.last'],
+                  },
+                },
+                {
+                  'ui:col': {
+                    style: { gridRow: '3 / auto', gridColumn: '1 / span 4' },
                     children: [
                       {
                         name: 'person.birth_date',
@@ -712,37 +743,37 @@ const layoutGrid: Sample = {
                 },
                 {
                   'ui:col': {
-                    style: { gridRow: '2 / auto', gridColumn: '5 / span 8', marginTop: '3px' },
+                    style: { gridRow: '3 / auto', gridColumn: '5 / span 8', marginTop: '3px' },
                     children: ['person.race'],
                   },
                 },
                 {
                   'ui:col': {
-                    style: { gridRow: '3 / auto', gridColumn: '1 / span 5' },
+                    style: { gridRow: '4 / auto', gridColumn: '1 / span 4' },
                     children: ['line_1'],
                   },
                 },
                 {
                   'ui:col': {
-                    style: { gridRow: '4 / auto', gridColumn: '1 / span 5' },
+                    style: { gridRow: '5 / auto', gridColumn: '1 / span 4' },
                     children: ['line_2'],
                   },
                 },
                 {
                   'ui:col': {
-                    style: { gridRow: '5 / auto', gridColumn: '1 / span 5' },
+                    style: { gridRow: '6 / auto', gridColumn: '1 / span 4' },
                     children: ['city'],
                   },
                 },
                 {
                   'ui:col': {
-                    style: { gridRow: '3 / auto', gridColumn: '1 / span 5' },
+                    style: { gridRow: '4 / auto', gridColumn: '1 / span 4' },
                     children: ['person.address'],
                   },
                 },
                 {
                   'ui:row': {
-                    style: { gridRow: '3 / auto', gridColumn: '6 / span 7' },
+                    style: { gridRow: '4 / auto', gridColumn: '6 / span 7' },
                     children: [
                       {
                         'ui:col': {
@@ -840,6 +871,7 @@ const layoutGrid: Sample = {
             },
           },
           person: {
+            'ui:field': 'LayoutHeaderField',
             race: {
               'ui:options': {
                 widget: 'checkboxes',
@@ -886,9 +918,22 @@ const layoutGrid: Sample = {
           'ui:field': 'LayoutGridField',
           'ui:layoutGrid': {
             'ui:row': {
-              mt: 1,
               spacing: 2,
               children: [
+                {
+                  'ui:row': {
+                    spacing: 2,
+                    size: 12,
+                    children: [
+                      {
+                        'ui:col': {
+                          size: 12,
+                          children: ['person'],
+                        },
+                      },
+                    ],
+                  },
+                },
                 {
                   'ui:row': {
                     spacing: 2,
@@ -1051,6 +1096,7 @@ const layoutGrid: Sample = {
             },
           },
           person: {
+            'ui:field': 'LayoutHeaderField',
             race: {
               'ui:options': {
                 widget: 'checkboxes',
@@ -1102,6 +1148,18 @@ const layoutGrid: Sample = {
           'ui:layoutGrid': {
             'ui:row': {
               children: [
+                {
+                  'ui:row': {
+                    children: [
+                      {
+                        'ui:col': {
+                          xs: 12,
+                          children: ['person'],
+                        },
+                      },
+                    ],
+                  },
+                },
                 {
                   'ui:row': {
                     children: [
@@ -1247,6 +1305,7 @@ const layoutGrid: Sample = {
             },
           },
           person: {
+            'ui:field': 'LayoutHeaderField',
             race: {
               'ui:options': {
                 widget: 'checkboxes',
@@ -1297,6 +1356,20 @@ const layoutGrid: Sample = {
             'ui:row': {
               container: true,
               children: [
+                {
+                  'ui:row': {
+                    style: { width: '100%' },
+                    children: [
+                      {
+                        'ui:columns': {
+                          width: 18,
+                          style: { paddingBottom: 0 },
+                          children: ['person'],
+                        },
+                      },
+                    ],
+                  },
+                },
                 {
                   'ui:row': {
                     style: { width: '100%' },
@@ -1476,6 +1549,7 @@ const layoutGrid: Sample = {
             },
           },
           person: {
+            'ui:field': 'LayoutHeaderField',
             race: {
               'ui:options': {
                 widget: 'checkboxes',
@@ -1527,6 +1601,18 @@ const layoutGrid: Sample = {
           'ui:field': 'LayoutGridField',
           'ui:layoutGrid': {
             'ui:row': [
+              {
+                'ui:row': {
+                  className: 'grid grid-cols-1 gap-4 col-span-12',
+                  children: [
+                    {
+                      'ui:col': {
+                        children: ['person'],
+                      },
+                    },
+                  ],
+                },
+              },
               {
                 'ui:row': {
                   className: 'grid grid-cols-12 gap-4 col-span-12',
@@ -1660,6 +1746,7 @@ const layoutGrid: Sample = {
             ],
           },
           person: {
+            'ui:field': 'LayoutHeaderField',
             race: {
               'ui:options': {
                 widget: 'checkboxes',
@@ -1679,6 +1766,7 @@ const layoutGrid: Sample = {
                     },
                     {
                       'ui:row': {
+                        className: 'grid-cols-12 col-span-12',
                         children: [
                           {
                             'ui:columns': {
@@ -1708,6 +1796,19 @@ const layoutGrid: Sample = {
           'ui:field': 'LayoutGridField',
           'ui:layoutGrid': {
             'ui:row': [
+              {
+                'ui:row': {
+                  className: 'row',
+                  children: [
+                    {
+                      'ui:col': {
+                        className: 'col-xs-12',
+                        children: ['person'],
+                      },
+                    },
+                  ],
+                },
+              },
               {
                 'ui:row': {
                   className: 'row',
@@ -1842,6 +1943,7 @@ const layoutGrid: Sample = {
             ],
           },
           person: {
+            'ui:field': 'LayoutHeaderField',
             race: {
               'ui:options': {
                 widget: 'checkboxes',

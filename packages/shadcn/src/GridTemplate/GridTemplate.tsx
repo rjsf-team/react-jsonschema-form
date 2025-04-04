@@ -7,12 +7,9 @@ import { cn } from '../lib/utils';
  * @param props - The GridTemplateProps, including the extra props containing the mui grid positioning details
  */
 export default function GridTemplate(props: GridTemplateProps) {
-  const { children, column, ...rest } = props;
+  const { children, column, className, ...rest } = props;
   return (
-    <div
-      className={cn('grid gap-2', !column && 'grid-cols-12 col-span-12', column && 'grid-flow-col grid-rows-12')}
-      {...rest}
-    >
+    <div className={cn('grid gap-2', className)} {...rest}>
       {children}
     </div>
   );

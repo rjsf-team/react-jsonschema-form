@@ -3,6 +3,7 @@ import { Field, FormContextType, RegistryFieldsType, RJSFSchema, StrictRJSFSchem
 import ArrayField from './ArrayField';
 import BooleanField from './BooleanField';
 import LayoutGridField from './LayoutGridField';
+import LayoutHeaderField from './LayoutHeaderField';
 import LayoutMultiSchemaField from './LayoutMultiSchemaField';
 import MultiSchemaField from './MultiSchemaField';
 import NumberField from './NumberField';
@@ -22,6 +23,7 @@ function fields<
     // ArrayField falls back to SchemaField if ArraySchemaField is not defined, which it isn't by default
     BooleanField,
     LayoutGridField,
+    LayoutHeaderField,
     LayoutMultiSchemaField,
     NumberField,
     ObjectField,
