@@ -59,7 +59,7 @@ describe('LayoutHeaderField', () => {
     expect(container).toBeEmptyDOMElement();
   });
 
-  test('name is provided, and its required', () => {
+  test('name is provided, and it is required', () => {
     const props = getProps({ name: TITLE_BOLD, required: true });
     render(<LayoutHeaderField {...props} />);
 
