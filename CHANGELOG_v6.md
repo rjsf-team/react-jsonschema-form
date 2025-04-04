@@ -24,7 +24,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Implemented the `GridTemplate` component, adding it to the `templates` for the theme
 - BREAKING CHANGE: Removed support for version 4 of `antd`
 - Updated `ArrayFieldItemTemplate` to replace `Button.Group` with `Space.Compact` since `Button.Group` is deprecated in `antd` version 5
-- Upgraded to `@ant-design/icon@5`, fixing typing issues in `IconButton`
+- Upgraded to `@ant-design/icon@5`
 
 ## @rjsf/chakra-ui
 
@@ -39,6 +39,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Refactored `ArrayFieldItemTemplate` to use the new `ArrayFieldItemButtonsTemplate`
 - Updated the `ArrayFieldTemplate`, `ObjectFieldTemplate`, and `WrapIfAdditionalTemplate` to a unique id using the `buttonId()` function and adding consistent marker classes
 - Implemented the `GridTemplate` component, adding it to the `templates` for the theme
+- Implemented the new `LayoutGridField`, `LayoutMultiSchemaField` and `LayoutHeaderField` fields, adding them to the `fields` list
 
 ## @rjsf/fluent-ui
 
