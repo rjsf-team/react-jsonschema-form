@@ -94,7 +94,13 @@ The default widgets you can override are:
 
 ## Raising errors from within a custom widget or field
 
-You can raise a custom error by overriding the `onChange` method to raise field/widget errors:
+You can raise custom 'live validation' errors by overriding the `onChange` method to provide feedback while users are actively changing the form data. Note that these errors are temporary and are not recognized during the form validation process.
+
+:::warning
+
+This method of raising errors _only_ runs onChange, i.e. when the user is changing data. This will not catch errors `onSubmit`. If you wish to add generic validation logic, you should use the [`customValidate` Form prop](../api-reference/form-props.md#customvalidate).
+
+:::
 
 ```tsx
 import { ErrorSchema, RJSFSchema, UiSchema, WidgetProps, RegistryWidgetsType } from '@rjsf/utils';
