@@ -58,7 +58,10 @@ describe('compileSchemaValidators()', () => {
   describe('compiling WITH additional options', () => {
     const customOptions = {
       ...CUSTOM_OPTIONS,
-      ajvOptionsOverrides: { ...CUSTOM_OPTIONS.ajvOptionsOverrides, code: { lines: false } },
+      ajvOptionsOverrides: {
+        ...CUSTOM_OPTIONS.ajvOptionsOverrides,
+        code: { lines: false },
+      },
     };
     beforeAll(() => {
       expectedCode = 'expected code 2';

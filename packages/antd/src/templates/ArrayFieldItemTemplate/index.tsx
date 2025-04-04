@@ -1,4 +1,4 @@
-import { Button, Col, Row } from 'antd';
+import { Col, Row, Space } from 'antd';
 import {
   ArrayFieldItemTemplateType,
   FormContextType,
@@ -40,9 +40,9 @@ export default function ArrayFieldItemTemplate<
 
       {hasToolbar && (
         <Col flex='192px'>
-          <Button.Group style={BTN_GRP_STYLE}>
+          <Space.Compact style={BTN_GRP_STYLE}>
             <ArrayFieldItemButtonsTemplate {...buttonsProps} style={BTN_STYLE} />
-          </Button.Group>
+          </Space.Compact>
         </Col>
       )}
     </Row>

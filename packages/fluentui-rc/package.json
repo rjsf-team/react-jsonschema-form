@@ -27,6 +27,7 @@
   "main": "dist/index.js",
   "module": "lib/index.js",
   "typings": "lib/index.d.ts",
+  "type": "module",
   "exports": {
     ".": {
       "require": "./dist/index.js",

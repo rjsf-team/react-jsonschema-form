@@ -5,6 +5,7 @@
   "main": "dist/index.js",
   "module": "lib/index.js",
   "typings": "lib/index.d.ts",
+  "type": "module",
   "exports": {
     ".": {
       "require": "./dist/index.js",
@@ -33,7 +34,7 @@
     }
   },
   "scripts": {
-    "compileReplacer": "tsc -p tsconfig.replacer.json",
+    "compileReplacer": "tsc -p tsconfig.replacer.json && move-file lodashReplacer.js lodashReplacer.cjs",
     "build:ts": "npm run compileReplacer && rimraf ./lib && tsc -b tsconfig.build.json && tsc-alias -p tsconfig.build.json",
     "build:cjs": "esbuild ./src/index.ts --bundle --outfile=dist/index.js --sourcemap --packages=external --format=cjs",
     "build:esm": "esbuild ./src/index.ts --bundle --outfile=dist/antd.esm.js --sourcemap --packages=external --format=esm",
@@ -61,10 +62,10 @@
     "node": ">=20"
   },
   "peerDependencies": {
-    "@ant-design/icons": "^4.0.0 || ^5.0.0",
+    "@ant-design/icons": "^5.0.0",
     "@rjsf/core": "^6.x",
     "@rjsf/utils": "^6.x",
-    "antd": "^4.24.0 || ^5.8.5",
+    "antd": "^5.8.5",
     "dayjs": "^1.8.0",
     "react": "^16.14.0 || >=17"
   },
@@ -75,7 +76,7 @@
     "rc-picker": "2.7.6"
   },
   "devDependencies": {
-    "@ant-design/icons": "^4.8.1",
+    "@ant-design/icons": "^5.6.1",
     "@babel/cli": "^7.23.9",
     "@babel/core": "^7.23.9",
     "@babel/eslint-parser": "^7.23.10",

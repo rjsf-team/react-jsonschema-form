@@ -1486,7 +1486,12 @@ describe('AJV8Validator', () => {
               },
             };
 
-            const formData = { shippingAddress: { streetAddress: 'El Camino Real', state: 'California' } };
+            const formData = {
+              shippingAddress: {
+                streetAddress: 'El Camino Real',
+                state: 'California',
+              },
+            };
             const result = validator.validateFormData(formData, schema, undefined, undefined, uiSchema);
             errors = result.errors;
             errorSchema = result.errorSchema;
@@ -1555,7 +1560,12 @@ describe('AJV8Validator', () => {
               },
             };
 
-            const formData = { shippingAddress: { streetAddress: 'El Camino Real', state: 'California' } };
+            const formData = {
+              shippingAddress: {
+                streetAddress: 'El Camino Real',
+                state: 'California',
+              },
+            };
             const result = validator.validateFormData(formData, schema, undefined, undefined, uiSchema);
             errors = result.errors;
             errorSchema = result.errorSchema;
