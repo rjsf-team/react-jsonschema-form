@@ -62,6 +62,9 @@ The default fields you can override are:
 - `DescriptionField`
 - `OneOfField`
 - `AnyOfField`
+- `LayoutGridField`
+- `LayoutMultiSchemaField`
+- `LayoutHeaderField`
 - `NullField`
 - `NumberField`
 - `ObjectField`
