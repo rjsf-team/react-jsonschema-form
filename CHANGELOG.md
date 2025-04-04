@@ -30,6 +30,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Updated docs for ArrayFieldItemTemplate to include prop `onCopyIndexClick`, fixing [#4507](https://github.com/rjsf-team/react-jsonschema-form/issues/4507)
 - Use antd 5 in playground
+- Updated docs to clarify that errors raised within a widget are not caught during form validation
 
 # 5.24.8
 
