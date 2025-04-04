@@ -98,7 +98,8 @@ You can raise custom 'live validation' errors by overriding the `onChange` metho
 
 :::warning
 
-This method of raising errors _only_ runs onChange, i.e. when the user is changing data. This will not catch errors `onSubmit`. If you wish to add generic validation logic, you should use the [`customValidate` Form prop](../api-reference/form-props.md#customvalidate).
+This method of raising errors _only_ runs during `onChange`, i.e. when the user is changing data. This will not catch errors `onSubmit`.
+If you wish to add generic validation logic for your component, you should use the [`customValidate` Form prop](../api-reference/form-props.md#customvalidate).
 
 :::
 
