@@ -284,7 +284,7 @@ The following props are passed to each `ArrayFieldItemButtonsTemplate`:
 - `index`: A number stating the index the array item occurs in `items`.
 - `totalItems`: A number stating the total number `items` in the array.
 - `onAddIndexClick: (index) => (event?) => void`: Returns a function that adds a new item at `index`.
-- `onCopyIndexClick: (index) => (event?) => void`: Returns a function that copys a new item at `index`.
+- `onCopyIndexClick: (index) => (event?) => void`: Returns a function that copies the item at `index` into the position at `index + 1`
 - `onDropIndexClick: (index) => (event?) => void`: Returns a function that removes the item at `index`.
 - `onReorderClick: (index, newIndex) => (event?) => void`: Returns a function that swaps the items at `index` with `newIndex`.
 - `readonly`: A boolean value stating if the array item is read-only.

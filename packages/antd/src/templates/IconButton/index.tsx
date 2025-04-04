@@ -14,12 +14,12 @@ import {
 } from '@rjsf/utils';
 import { MouseEventHandler } from 'react';
 
-// The `type` for IconButtonProps collides with the `type` for `ButtonProps` so omit it to avoid Typescript issue
+// The `type` and `color` for IconButtonProps collides with props of `ButtonProps` so omit it to avoid Typescript issue
 export type AntdIconButtonProps<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
-> = Omit<IconButtonProps<T, S, F>, 'type'>;
+> = Omit<IconButtonProps<T, S, F>, 'type' | 'color'>;
 
 export default function IconButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: AntdIconButtonProps<T, S, F> & Omit<ButtonProps, 'onClick'>

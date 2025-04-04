@@ -10,10 +10,10 @@ exports[`object fields additionalProperties 1`] = `
     className="form-group field field-object"
   >
     <div
-      className="ant-form-item css-dev-only-do-not-override-1b0bdye"
+      className="ant-form-item css-dev-only-do-not-override-1a3rktk"
     >
       <div
-        className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+        className="ant-row ant-form-item-row css-dev-only-do-not-override-1a3rktk"
         style={
           {
             "rowGap": undefined,
@@ -21,7 +21,7 @@ exports[`object fields additionalProperties 1`] = `
         }
       >
         <div
-          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1a3rktk"
           style={{}}
         >
           <div
@@ -34,7 +34,7 @@ exports[`object fields additionalProperties 1`] = `
                 id="root"
               >
                 <div
-                  className="ant-row css-dev-only-do-not-override-1b0bdye"
+                  className="ant-row css-dev-only-do-not-override-1a3rktk"
                   style={
                     {
                       "marginLeft": -12,
@@ -44,7 +44,7 @@ exports[`object fields additionalProperties 1`] = `
                   }
                 >
                   <div
-                    className="ant-col ant-col-24 css-dev-only-do-not-override-1b0bdye"
+                    className="ant-col ant-col-24 css-dev-only-do-not-override-1a3rktk"
                     style={
                       {
                         "paddingLeft": 12,
@@ -56,7 +56,7 @@ exports[`object fields additionalProperties 1`] = `
                       className="form-group field field-string"
                     >
                       <div
-                        className="ant-row ant-row-top css-dev-only-do-not-override-1b0bdye"
+                        className="ant-row ant-row-top css-dev-only-do-not-override-1a3rktk"
                         style={
                           {
                             "marginLeft": -12,
@@ -66,7 +66,7 @@ exports[`object fields additionalProperties 1`] = `
                         }
                       >
                         <div
-                          className="ant-col form-additional css-dev-only-do-not-override-1b0bdye"
+                          className="ant-col form-additional css-dev-only-do-not-override-1a3rktk"
                           style={
                             {
                               "flex": "1",
@@ -79,10 +79,10 @@ exports[`object fields additionalProperties 1`] = `
                             className="form-group"
                           >
                             <div
-                              className="ant-form-item form-group css-dev-only-do-not-override-1b0bdye"
+                              className="ant-form-item form-group css-dev-only-do-not-override-1a3rktk"
                             >
                               <div
-                                className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+                                className="ant-row ant-form-item-row css-dev-only-do-not-override-1a3rktk"
                                 style={
                                   {
                                     "rowGap": undefined,
@@ -90,7 +90,7 @@ exports[`object fields additionalProperties 1`] = `
                                 }
                               >
                                 <div
-                                  className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-1b0bdye"
+                                  className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-1a3rktk"
                                   style={{}}
                                 >
                                   <label
@@ -102,7 +102,7 @@ exports[`object fields additionalProperties 1`] = `
                                   </label>
                                 </div>
                                 <div
-                                  className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+                                  className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1a3rktk"
                                   style={{}}
                                 >
                                   <div
@@ -112,7 +112,7 @@ exports[`object fields additionalProperties 1`] = `
                                       className="ant-form-item-control-input-content"
                                     >
                                       <span
-                                        className="ant-input-affix-wrapper css-dev-only-do-not-override-1b0bdye ant-input-outlined form-control"
+                                        className="ant-input-affix-wrapper css-dev-only-do-not-override-1a3rktk ant-input-outlined form-control"
                                         onClick={[Function]}
                                         style={
                                           {
@@ -121,7 +121,7 @@ exports[`object fields additionalProperties 1`] = `
                                         }
                                       >
                                         <input
-                                          className="ant-input css-dev-only-do-not-override-1b0bdye"
+                                          className="ant-input css-dev-only-do-not-override-1a3rktk"
                                           disabled={false}
                                           id="root_foo-key"
                                           name="root_foo-key"
@@ -131,6 +131,7 @@ exports[`object fields additionalProperties 1`] = `
                                           onCompositionStart={[Function]}
                                           onFocus={[Function]}
                                           onKeyDown={[Function]}
+                                          onKeyUp={[Function]}
                                           type="text"
                                           value="foo"
                                         />
@@ -146,7 +147,7 @@ exports[`object fields additionalProperties 1`] = `
                           </div>
                         </div>
                         <div
-                          className="ant-col form-additional css-dev-only-do-not-override-1b0bdye"
+                          className="ant-col form-additional css-dev-only-do-not-override-1a3rktk"
                           style={
                             {
                               "flex": "1",
@@ -156,10 +157,10 @@ exports[`object fields additionalProperties 1`] = `
                           }
                         >
                           <div
-                            className="ant-form-item css-dev-only-do-not-override-1b0bdye"
+                            className="ant-form-item css-dev-only-do-not-override-1a3rktk"
                           >
                             <div
-                              className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+                              className="ant-row ant-form-item-row css-dev-only-do-not-override-1a3rktk"
                               style={
                                 {
                                   "rowGap": undefined,
@@ -167,7 +168,7 @@ exports[`object fields additionalProperties 1`] = `
                               }
                             >
                               <div
-                                className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-1b0bdye"
+                                className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-1a3rktk"
                                 style={{}}
                               >
                                 <label
@@ -179,7 +180,7 @@ exports[`object fields additionalProperties 1`] = `
                                 </label>
                               </div>
                               <div
-                                className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+                                className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1a3rktk"
                                 style={{}}
                               >
                                 <div
@@ -189,7 +190,7 @@ exports[`object fields additionalProperties 1`] = `
                                     className="ant-form-item-control-input-content"
                                   >
                                     <span
-                                      className="ant-input-affix-wrapper css-dev-only-do-not-override-1b0bdye ant-input-outlined"
+                                      className="ant-input-affix-wrapper css-dev-only-do-not-override-1a3rktk ant-input-outlined"
                                       onClick={[Function]}
                                       style={
                                         {
@@ -199,7 +200,7 @@ exports[`object fields additionalProperties 1`] = `
                                     >
                                       <input
                                         aria-describedby="root_foo__error root_foo__description root_foo__help"
-                                        className="ant-input css-dev-only-do-not-override-1b0bdye"
+                                        className="ant-input css-dev-only-do-not-override-1a3rktk"
                                         disabled={false}
                                         id="root_foo"
                                         name="root_foo"
@@ -209,6 +210,7 @@ exports[`object fields additionalProperties 1`] = `
                                         onCompositionStart={[Function]}
                                         onFocus={[Function]}
                                         onKeyDown={[Function]}
+                                        onKeyUp={[Function]}
                                         placeholder=""
                                         type="text"
                                         value="foo"
@@ -224,7 +226,7 @@ exports[`object fields additionalProperties 1`] = `
                           </div>
                         </div>
                         <div
-                          className="ant-col css-dev-only-do-not-override-1b0bdye"
+                          className="ant-col css-dev-only-do-not-override-1a3rktk"
                           style={
                             {
                               "flex": "0 0 192px",
@@ -234,7 +236,7 @@ exports[`object fields additionalProperties 1`] = `
                           }
                         >
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-primary ant-btn-icon-only ant-btn-block ant-btn-dangerous array-item-remove"
+                            className="ant-btn css-dev-only-do-not-override-1a3rktk ant-btn-primary ant-btn-dangerous ant-btn-color-dangerous ant-btn-variant-solid ant-btn-icon-only ant-btn-block array-item-remove"
                             disabled={false}
                             id="root_foo__remove"
                             onClick={[Function]}
@@ -273,11 +275,11 @@ exports[`object fields additionalProperties 1`] = `
                   </div>
                 </div>
                 <div
-                  className="ant-col ant-col-24 css-dev-only-do-not-override-1b0bdye"
+                  className="ant-col ant-col-24 css-dev-only-do-not-override-1a3rktk"
                   style={{}}
                 >
                   <div
-                    className="ant-row ant-row-end css-dev-only-do-not-override-1b0bdye"
+                    className="ant-row ant-row-end css-dev-only-do-not-override-1a3rktk"
                     style={
                       {
                         "marginLeft": -12,
@@ -287,7 +289,7 @@ exports[`object fields additionalProperties 1`] = `
                     }
                   >
                     <div
-                      className="ant-col css-dev-only-do-not-override-1b0bdye"
+                      className="ant-col css-dev-only-do-not-override-1a3rktk"
                       style={
                         {
                           "flex": "0 0 192px",
@@ -297,7 +299,7 @@ exports[`object fields additionalProperties 1`] = `
                       }
                     >
                       <button
-                        className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-primary ant-btn-icon-only ant-btn-block object-property-expand"
+                        className="ant-btn css-dev-only-do-not-override-1a3rktk ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block object-property-expand"
                         disabled={false}
                         id="root__add"
                         onClick={[Function]}
@@ -344,7 +346,7 @@ exports[`object fields additionalProperties 1`] = `
     </div>
   </div>
   <button
-    className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-submit"
+    className="ant-btn css-dev-only-do-not-override-1a3rktk ant-btn-submit"
     disabled={false}
     onClick={[Function]}
     style={{}}
@@ -367,10 +369,10 @@ exports[`object fields object 1`] = `
     className="form-group field field-object"
   >
     <div
-      className="ant-form-item css-dev-only-do-not-override-1b0bdye"
+      className="ant-form-item css-dev-only-do-not-override-1a3rktk"
     >
       <div
-        className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+        className="ant-row ant-form-item-row css-dev-only-do-not-override-1a3rktk"
         style={
           {
             "rowGap": undefined,
@@ -378,7 +380,7 @@ exports[`object fields object 1`] = `
         }
       >
         <div
-          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1a3rktk"
           style={{}}
         >
           <div
@@ -391,7 +393,7 @@ exports[`object fields object 1`] = `
                 id="root"
               >
                 <div
-                  className="ant-row css-dev-only-do-not-override-1b0bdye"
+                  className="ant-row css-dev-only-do-not-override-1a3rktk"
                   style={
                     {
                       "marginLeft": -12,
@@ -401,7 +403,7 @@ exports[`object fields object 1`] = `
                   }
                 >
                   <div
-                    className="ant-col ant-col-24 css-dev-only-do-not-override-1b0bdye"
+                    className="ant-col ant-col-24 css-dev-only-do-not-override-1a3rktk"
                     style={
                       {
                         "paddingLeft": 12,
@@ -413,10 +415,10 @@ exports[`object fields object 1`] = `
                       className="form-group field field-string"
                     >
                       <div
-                        className="ant-form-item css-dev-only-do-not-override-1b0bdye"
+                        className="ant-form-item css-dev-only-do-not-override-1a3rktk"
                       >
                         <div
-                          className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+                          className="ant-row ant-form-item-row css-dev-only-do-not-override-1a3rktk"
                           style={
                             {
                               "rowGap": undefined,
@@ -424,7 +426,7 @@ exports[`object fields object 1`] = `
                           }
                         >
                           <div
-                            className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-1b0bdye"
+                            className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-1a3rktk"
                             style={{}}
                           >
                             <label
@@ -436,7 +438,7 @@ exports[`object fields object 1`] = `
                             </label>
                           </div>
                           <div
-                            className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+                            className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1a3rktk"
                             style={{}}
                           >
                             <div
@@ -446,7 +448,7 @@ exports[`object fields object 1`] = `
                                 className="ant-form-item-control-input-content"
                               >
                                 <span
-                                  className="ant-input-affix-wrapper css-dev-only-do-not-override-1b0bdye ant-input-outlined"
+                                  className="ant-input-affix-wrapper css-dev-only-do-not-override-1a3rktk ant-input-outlined"
                                   onClick={[Function]}
                                   style={
                                     {
@@ -456,7 +458,7 @@ exports[`object fields object 1`] = `
                                 >
                                   <input
                                     aria-describedby="root_a__error root_a__description root_a__help"
-                                    className="ant-input css-dev-only-do-not-override-1b0bdye"
+                                    className="ant-input css-dev-only-do-not-override-1a3rktk"
                                     disabled={false}
                                     id="root_a"
                                     name="root_a"
@@ -466,6 +468,7 @@ exports[`object fields object 1`] = `
                                     onCompositionStart={[Function]}
                                     onFocus={[Function]}
                                     onKeyDown={[Function]}
+                                    onKeyUp={[Function]}
                                     placeholder=""
                                     type="text"
                                     value=""
@@ -482,7 +485,7 @@ exports[`object fields object 1`] = `
                     </div>
                   </div>
                   <div
-                    className="ant-col ant-col-24 css-dev-only-do-not-override-1b0bdye"
+                    className="ant-col ant-col-24 css-dev-only-do-not-override-1a3rktk"
                     style={
                       {
                         "paddingLeft": 12,
@@ -494,10 +497,10 @@ exports[`object fields object 1`] = `
                       className="form-group field field-number"
                     >
                       <div
-                        className="ant-form-item css-dev-only-do-not-override-1b0bdye"
+                        className="ant-form-item css-dev-only-do-not-override-1a3rktk"
                       >
                         <div
-                          className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+                          className="ant-row ant-form-item-row css-dev-only-do-not-override-1a3rktk"
                           style={
                             {
                               "rowGap": undefined,
@@ -505,7 +508,7 @@ exports[`object fields object 1`] = `
                           }
                         >
                           <div
-                            className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-1b0bdye"
+                            className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-1a3rktk"
                             style={{}}
                           >
                             <label
@@ -517,7 +520,7 @@ exports[`object fields object 1`] = `
                             </label>
                           </div>
                           <div
-                            className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+                            className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1a3rktk"
                             style={{}}
                           >
                             <div
@@ -527,7 +530,7 @@ exports[`object fields object 1`] = `
                                 className="ant-form-item-control-input-content"
                               >
                                 <div
-                                  className="ant-input-number-affix-wrapper css-dev-only-do-not-override-1b0bdye ant-input-number-outlined ant-input-number-has-feedback"
+                                  className="ant-input-number-affix-wrapper css-dev-only-do-not-override-1a3rktk ant-input-number-outlined ant-input-number-has-feedback"
                                   onClick={[Function]}
                                   style={
                                     {
@@ -536,7 +539,7 @@ exports[`object fields object 1`] = `
                                   }
                                 >
                                   <div
-                                    className="ant-input-number ant-input-number-in-form-item css-dev-only-do-not-override-1b0bdye"
+                                    className="ant-input-number ant-input-number-in-form-item css-dev-only-do-not-override-1a3rktk"
                                     onBeforeInput={[Function]}
                                     onBlur={[Function]}
                                     onCompositionEnd={[Function]}
@@ -651,7 +654,7 @@ exports[`object fields object 1`] = `
     </div>
   </div>
   <button
-    className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-submit"
+    className="ant-btn css-dev-only-do-not-override-1a3rktk ant-btn-submit"
     disabled={false}
     onClick={[Function]}
     style={{}}
@@ -674,10 +677,10 @@ exports[`object fields show add button and fields if additionalProperties is tru
     className="form-group field field-object"
   >
     <div
-      className="ant-form-item css-dev-only-do-not-override-1b0bdye"
+      className="ant-form-item css-dev-only-do-not-override-1a3rktk"
     >
       <div
-        className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+        className="ant-row ant-form-item-row css-dev-only-do-not-override-1a3rktk"
         style={
           {
             "rowGap": undefined,
@@ -685,7 +688,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
         }
       >
         <div
-          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1a3rktk"
           style={{}}
         >
           <div
@@ -698,7 +701,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
                 id="root"
               >
                 <div
-                  className="ant-row css-dev-only-do-not-override-1b0bdye"
+                  className="ant-row css-dev-only-do-not-override-1a3rktk"
                   style={
                     {
                       "marginLeft": -12,
@@ -708,7 +711,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
                   }
                 >
                   <div
-                    className="ant-col ant-col-24 css-dev-only-do-not-override-1b0bdye"
+                    className="ant-col ant-col-24 css-dev-only-do-not-override-1a3rktk"
                     style={
                       {
                         "paddingLeft": 12,
@@ -720,7 +723,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
                       className="form-group field field-string"
                     >
                       <div
-                        className="ant-row ant-row-top css-dev-only-do-not-override-1b0bdye"
+                        className="ant-row ant-row-top css-dev-only-do-not-override-1a3rktk"
                         style={
                           {
                             "marginLeft": -12,
@@ -730,7 +733,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
                         }
                       >
                         <div
-                          className="ant-col form-additional css-dev-only-do-not-override-1b0bdye"
+                          className="ant-col form-additional css-dev-only-do-not-override-1a3rktk"
                           style={
                             {
                               "flex": "1",
@@ -743,10 +746,10 @@ exports[`object fields show add button and fields if additionalProperties is tru
                             className="form-group"
                           >
                             <div
-                              className="ant-form-item form-group css-dev-only-do-not-override-1b0bdye"
+                              className="ant-form-item form-group css-dev-only-do-not-override-1a3rktk"
                             >
                               <div
-                                className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+                                className="ant-row ant-form-item-row css-dev-only-do-not-override-1a3rktk"
                                 style={
                                   {
                                     "rowGap": undefined,
@@ -754,7 +757,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
                                 }
                               >
                                 <div
-                                  className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-1b0bdye"
+                                  className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-1a3rktk"
                                   style={{}}
                                 >
                                   <label
@@ -766,7 +769,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
                                   </label>
                                 </div>
                                 <div
-                                  className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+                                  className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1a3rktk"
                                   style={{}}
                                 >
                                   <div
@@ -776,7 +779,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
                                       className="ant-form-item-control-input-content"
                                     >
                                       <span
-                                        className="ant-input-affix-wrapper css-dev-only-do-not-override-1b0bdye ant-input-outlined form-control"
+                                        className="ant-input-affix-wrapper css-dev-only-do-not-override-1a3rktk ant-input-outlined form-control"
                                         onClick={[Function]}
                                         style={
                                           {
@@ -785,7 +788,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
                                         }
                                       >
                                         <input
-                                          className="ant-input css-dev-only-do-not-override-1b0bdye"
+                                          className="ant-input css-dev-only-do-not-override-1a3rktk"
                                           disabled={false}
                                           id="root_additionalProperty-key"
                                           name="root_additionalProperty-key"
@@ -795,6 +798,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
                                           onCompositionStart={[Function]}
                                           onFocus={[Function]}
                                           onKeyDown={[Function]}
+                                          onKeyUp={[Function]}
                                           type="text"
                                           value="additionalProperty"
                                         />
@@ -810,7 +814,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
                           </div>
                         </div>
                         <div
-                          className="ant-col form-additional css-dev-only-do-not-override-1b0bdye"
+                          className="ant-col form-additional css-dev-only-do-not-override-1a3rktk"
                           style={
                             {
                               "flex": "1",
@@ -820,10 +824,10 @@ exports[`object fields show add button and fields if additionalProperties is tru
                           }
                         >
                           <div
-                            className="ant-form-item css-dev-only-do-not-override-1b0bdye"
+                            className="ant-form-item css-dev-only-do-not-override-1a3rktk"
                           >
                             <div
-                              className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+                              className="ant-row ant-form-item-row css-dev-only-do-not-override-1a3rktk"
                               style={
                                 {
                                   "rowGap": undefined,
@@ -831,7 +835,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
                               }
                             >
                               <div
-                                className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-1b0bdye"
+                                className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-1a3rktk"
                                 style={{}}
                               >
                                 <label
@@ -843,7 +847,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
                                 </label>
                               </div>
                               <div
-                                className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+                                className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1a3rktk"
                                 style={{}}
                               >
                                 <div
@@ -853,7 +857,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
                                     className="ant-form-item-control-input-content"
                                   >
                                     <span
-                                      className="ant-input-affix-wrapper css-dev-only-do-not-override-1b0bdye ant-input-outlined"
+                                      className="ant-input-affix-wrapper css-dev-only-do-not-override-1a3rktk ant-input-outlined"
                                       onClick={[Function]}
                                       style={
                                         {
@@ -863,7 +867,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
                                     >
                                       <input
                                         aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
-                                        className="ant-input css-dev-only-do-not-override-1b0bdye"
+                                        className="ant-input css-dev-only-do-not-override-1a3rktk"
                                         disabled={false}
                                         id="root_additionalProperty"
                                         name="root_additionalProperty"
@@ -873,6 +877,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
                                         onCompositionStart={[Function]}
                                         onFocus={[Function]}
                                         onKeyDown={[Function]}
+                                        onKeyUp={[Function]}
                                         placeholder=""
                                         type="text"
                                         value="should appear"
@@ -888,7 +893,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
                           </div>
                         </div>
                         <div
-                          className="ant-col css-dev-only-do-not-override-1b0bdye"
+                          className="ant-col css-dev-only-do-not-override-1a3rktk"
                           style={
                             {
                               "flex": "0 0 192px",
@@ -898,7 +903,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
                           }
                         >
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-primary ant-btn-icon-only ant-btn-block ant-btn-dangerous array-item-remove"
+                            className="ant-btn css-dev-only-do-not-override-1a3rktk ant-btn-primary ant-btn-dangerous ant-btn-color-dangerous ant-btn-variant-solid ant-btn-icon-only ant-btn-block array-item-remove"
                             disabled={false}
                             id="root_additionalProperty__remove"
                             onClick={[Function]}
@@ -937,11 +942,11 @@ exports[`object fields show add button and fields if additionalProperties is tru
                   </div>
                 </div>
                 <div
-                  className="ant-col ant-col-24 css-dev-only-do-not-override-1b0bdye"
+                  className="ant-col ant-col-24 css-dev-only-do-not-override-1a3rktk"
                   style={{}}
                 >
                   <div
-                    className="ant-row ant-row-end css-dev-only-do-not-override-1b0bdye"
+                    className="ant-row ant-row-end css-dev-only-do-not-override-1a3rktk"
                     style={
                       {
                         "marginLeft": -12,
@@ -951,7 +956,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
                     }
                   >
                     <div
-                      className="ant-col css-dev-only-do-not-override-1b0bdye"
+                      className="ant-col css-dev-only-do-not-override-1a3rktk"
                       style={
                         {
                           "flex": "0 0 192px",
@@ -961,7 +966,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
                       }
                     >
                       <button
-                        className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-primary ant-btn-icon-only ant-btn-block object-property-expand"
+                        className="ant-btn css-dev-only-do-not-override-1a3rktk ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block object-property-expand"
                         disabled={false}
                         id="root__add"
                         onClick={[Function]}
@@ -1008,7 +1013,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
     </div>
   </div>
   <button
-    className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-submit"
+    className="ant-btn css-dev-only-do-not-override-1a3rktk ant-btn-submit"
     disabled={false}
     onClick={[Function]}
     style={{}}
@@ -1031,10 +1036,10 @@ exports[`object fields with title and description additionalProperties 1`] = `
     className="form-group field field-object"
   >
     <div
-      className="ant-form-item css-dev-only-do-not-override-1b0bdye"
+      className="ant-form-item css-dev-only-do-not-override-1a3rktk"
     >
       <div
-        className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+        className="ant-row ant-form-item-row css-dev-only-do-not-override-1a3rktk"
         style={
           {
             "rowGap": undefined,
@@ -1042,7 +1047,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
         }
       >
         <div
-          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1a3rktk"
           style={{}}
         >
           <div
@@ -1055,7 +1060,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
                 id="root"
               >
                 <div
-                  className="ant-row css-dev-only-do-not-override-1b0bdye"
+                  className="ant-row css-dev-only-do-not-override-1a3rktk"
                   style={
                     {
                       "marginLeft": -12,
@@ -1065,7 +1070,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
                   }
                 >
                   <div
-                    className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-1b0bdye"
+                    className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-1a3rktk"
                     style={
                       {
                         "paddingLeft": 12,
@@ -1083,7 +1088,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
                     </label>
                   </div>
                   <div
-                    className="ant-col ant-col-24 css-dev-only-do-not-override-1b0bdye"
+                    className="ant-col ant-col-24 css-dev-only-do-not-override-1a3rktk"
                     style={
                       {
                         "paddingBottom": "8px",
@@ -1099,7 +1104,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
                     </span>
                   </div>
                   <div
-                    className="ant-col ant-col-24 css-dev-only-do-not-override-1b0bdye"
+                    className="ant-col ant-col-24 css-dev-only-do-not-override-1a3rktk"
                     style={
                       {
                         "paddingLeft": 12,
@@ -1111,7 +1116,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
                       className="form-group field field-string"
                     >
                       <div
-                        className="ant-row ant-row-top css-dev-only-do-not-override-1b0bdye"
+                        className="ant-row ant-row-top css-dev-only-do-not-override-1a3rktk"
                         style={
                           {
                             "marginLeft": -12,
@@ -1121,7 +1126,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
                         }
                       >
                         <div
-                          className="ant-col form-additional css-dev-only-do-not-override-1b0bdye"
+                          className="ant-col form-additional css-dev-only-do-not-override-1a3rktk"
                           style={
                             {
                               "flex": "1",
@@ -1134,10 +1139,10 @@ exports[`object fields with title and description additionalProperties 1`] = `
                             className="form-group"
                           >
                             <div
-                              className="ant-form-item form-group css-dev-only-do-not-override-1b0bdye"
+                              className="ant-form-item form-group css-dev-only-do-not-override-1a3rktk"
                             >
                               <div
-                                className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+                                className="ant-row ant-form-item-row css-dev-only-do-not-override-1a3rktk"
                                 style={
                                   {
                                     "rowGap": undefined,
@@ -1145,7 +1150,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
                                 }
                               >
                                 <div
-                                  className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-1b0bdye"
+                                  className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-1a3rktk"
                                   style={{}}
                                 >
                                   <label
@@ -1157,7 +1162,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
                                   </label>
                                 </div>
                                 <div
-                                  className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+                                  className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1a3rktk"
                                   style={{}}
                                 >
                                   <div
@@ -1167,7 +1172,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
                                       className="ant-form-item-control-input-content"
                                     >
                                       <span
-                                        className="ant-input-affix-wrapper css-dev-only-do-not-override-1b0bdye ant-input-outlined form-control"
+                                        className="ant-input-affix-wrapper css-dev-only-do-not-override-1a3rktk ant-input-outlined form-control"
                                         onClick={[Function]}
                                         style={
                                           {
@@ -1176,7 +1181,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
                                         }
                                       >
                                         <input
-                                          className="ant-input css-dev-only-do-not-override-1b0bdye"
+                                          className="ant-input css-dev-only-do-not-override-1a3rktk"
                                           disabled={false}
                                           id="root_foo-key"
                                           name="root_foo-key"
@@ -1186,6 +1191,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
                                           onCompositionStart={[Function]}
                                           onFocus={[Function]}
                                           onKeyDown={[Function]}
+                                          onKeyUp={[Function]}
                                           type="text"
                                           value="foo"
                                         />
@@ -1201,7 +1207,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
                           </div>
                         </div>
                         <div
-                          className="ant-col form-additional css-dev-only-do-not-override-1b0bdye"
+                          className="ant-col form-additional css-dev-only-do-not-override-1a3rktk"
                           style={
                             {
                               "flex": "1",
@@ -1211,10 +1217,10 @@ exports[`object fields with title and description additionalProperties 1`] = `
                           }
                         >
                           <div
-                            className="ant-form-item css-dev-only-do-not-override-1b0bdye"
+                            className="ant-form-item css-dev-only-do-not-override-1a3rktk"
                           >
                             <div
-                              className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+                              className="ant-row ant-form-item-row css-dev-only-do-not-override-1a3rktk"
                               style={
                                 {
                                   "rowGap": undefined,
@@ -1222,7 +1228,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
                               }
                             >
                               <div
-                                className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-1b0bdye"
+                                className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-1a3rktk"
                                 style={{}}
                               >
                                 <label
@@ -1234,7 +1240,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
                                 </label>
                               </div>
                               <div
-                                className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+                                className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1a3rktk"
                                 style={{}}
                               >
                                 <div
@@ -1244,7 +1250,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
                                     className="ant-form-item-control-input-content"
                                   >
                                     <span
-                                      className="ant-input-affix-wrapper css-dev-only-do-not-override-1b0bdye ant-input-outlined"
+                                      className="ant-input-affix-wrapper css-dev-only-do-not-override-1a3rktk ant-input-outlined"
                                       onClick={[Function]}
                                       style={
                                         {
@@ -1254,7 +1260,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
                                     >
                                       <input
                                         aria-describedby="root_foo__error root_foo__description root_foo__help"
-                                        className="ant-input css-dev-only-do-not-override-1b0bdye"
+                                        className="ant-input css-dev-only-do-not-override-1a3rktk"
                                         disabled={false}
                                         id="root_foo"
                                         name="root_foo"
@@ -1264,6 +1270,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
                                         onCompositionStart={[Function]}
                                         onFocus={[Function]}
                                         onKeyDown={[Function]}
+                                        onKeyUp={[Function]}
                                         placeholder=""
                                         type="text"
                                         value="foo"
@@ -1279,7 +1286,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
                           </div>
                         </div>
                         <div
-                          className="ant-col css-dev-only-do-not-override-1b0bdye"
+                          className="ant-col css-dev-only-do-not-override-1a3rktk"
                           style={
                             {
                               "flex": "0 0 192px",
@@ -1289,7 +1296,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
                           }
                         >
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-primary ant-btn-icon-only ant-btn-block ant-btn-dangerous array-item-remove"
+                            className="ant-btn css-dev-only-do-not-override-1a3rktk ant-btn-primary ant-btn-dangerous ant-btn-color-dangerous ant-btn-variant-solid ant-btn-icon-only ant-btn-block array-item-remove"
                             disabled={false}
                             id="root_foo__remove"
                             onClick={[Function]}
@@ -1328,11 +1335,11 @@ exports[`object fields with title and description additionalProperties 1`] = `
                   </div>
                 </div>
                 <div
-                  className="ant-col ant-col-24 css-dev-only-do-not-override-1b0bdye"
+                  className="ant-col ant-col-24 css-dev-only-do-not-override-1a3rktk"
                   style={{}}
                 >
                   <div
-                    className="ant-row ant-row-end css-dev-only-do-not-override-1b0bdye"
+                    className="ant-row ant-row-end css-dev-only-do-not-override-1a3rktk"
                     style={
                       {
                         "marginLeft": -12,
@@ -1342,7 +1349,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
                     }
                   >
                     <div
-                      className="ant-col css-dev-only-do-not-override-1b0bdye"
+                      className="ant-col css-dev-only-do-not-override-1a3rktk"
                       style={
                         {
                           "flex": "0 0 192px",
@@ -1352,7 +1359,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
                       }
                     >
                       <button
-                        className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-primary ant-btn-icon-only ant-btn-block object-property-expand"
+                        className="ant-btn css-dev-only-do-not-override-1a3rktk ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block object-property-expand"
                         disabled={false}
                         id="root__add"
                         onClick={[Function]}
@@ -1395,20 +1402,25 @@ exports[`object fields with title and description additionalProperties 1`] = `
             </div>
           </div>
           <div
-            className="ant-form-item-extra"
+            className="ant-form-item-additional"
+            style={{}}
           >
-            <span
-              id="root__description"
+            <div
+              className="ant-form-item-extra"
             >
-              a test description
-            </span>
+              <span
+                id="root__description"
+              >
+                a test description
+              </span>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
   <button
-    className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-submit"
+    className="ant-btn css-dev-only-do-not-override-1a3rktk ant-btn-submit"
     disabled={false}
     onClick={[Function]}
     style={{}}
@@ -1431,10 +1443,10 @@ exports[`object fields with title and description from both additionalProperties
     className="form-group field field-object"
   >
     <div
-      className="ant-form-item css-dev-only-do-not-override-1b0bdye"
+      className="ant-form-item css-dev-only-do-not-override-1a3rktk"
     >
       <div
-        className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+        className="ant-row ant-form-item-row css-dev-only-do-not-override-1a3rktk"
         style={
           {
             "rowGap": undefined,
@@ -1442,7 +1454,7 @@ exports[`object fields with title and description from both additionalProperties
         }
       >
         <div
-          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1a3rktk"
           style={{}}
         >
           <div
@@ -1455,7 +1467,7 @@ exports[`object fields with title and description from both additionalProperties
                 id="root"
               >
                 <div
-                  className="ant-row css-dev-only-do-not-override-1b0bdye"
+                  className="ant-row css-dev-only-do-not-override-1a3rktk"
                   style={
                     {
                       "marginLeft": -12,
@@ -1465,7 +1477,7 @@ exports[`object fields with title and description from both additionalProperties
                   }
                 >
                   <div
-                    className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-1b0bdye"
+                    className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-1a3rktk"
                     style={
                       {
                         "paddingLeft": 12,
@@ -1483,7 +1495,7 @@ exports[`object fields with title and description from both additionalProperties
                     </label>
                   </div>
                   <div
-                    className="ant-col ant-col-24 css-dev-only-do-not-override-1b0bdye"
+                    className="ant-col ant-col-24 css-dev-only-do-not-override-1a3rktk"
                     style={
                       {
                         "paddingBottom": "8px",
@@ -1499,7 +1511,7 @@ exports[`object fields with title and description from both additionalProperties
                     </span>
                   </div>
                   <div
-                    className="ant-col ant-col-24 css-dev-only-do-not-override-1b0bdye"
+                    className="ant-col ant-col-24 css-dev-only-do-not-override-1a3rktk"
                     style={
                       {
                         "paddingLeft": 12,
@@ -1511,7 +1523,7 @@ exports[`object fields with title and description from both additionalProperties
                       className="form-group field field-string"
                     >
                       <div
-                        className="ant-row ant-row-top css-dev-only-do-not-override-1b0bdye"
+                        className="ant-row ant-row-top css-dev-only-do-not-override-1a3rktk"
                         style={
                           {
                             "marginLeft": -12,
@@ -1521,7 +1533,7 @@ exports[`object fields with title and description from both additionalProperties
                         }
                       >
                         <div
-                          className="ant-col form-additional css-dev-only-do-not-override-1b0bdye"
+                          className="ant-col form-additional css-dev-only-do-not-override-1a3rktk"
                           style={
                             {
                               "flex": "1",
@@ -1534,10 +1546,10 @@ exports[`object fields with title and description from both additionalProperties
                             className="form-group"
                           >
                             <div
-                              className="ant-form-item form-group css-dev-only-do-not-override-1b0bdye"
+                              className="ant-form-item form-group css-dev-only-do-not-override-1a3rktk"
                             >
                               <div
-                                className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+                                className="ant-row ant-form-item-row css-dev-only-do-not-override-1a3rktk"
                                 style={
                                   {
                                     "rowGap": undefined,
@@ -1545,7 +1557,7 @@ exports[`object fields with title and description from both additionalProperties
                                 }
                               >
                                 <div
-                                  className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-1b0bdye"
+                                  className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-1a3rktk"
                                   style={{}}
                                 >
                                   <label
@@ -1557,7 +1569,7 @@ exports[`object fields with title and description from both additionalProperties
                                   </label>
                                 </div>
                                 <div
-                                  className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+                                  className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1a3rktk"
                                   style={{}}
                                 >
                                   <div
@@ -1567,7 +1579,7 @@ exports[`object fields with title and description from both additionalProperties
                                       className="ant-form-item-control-input-content"
                                     >
                                       <span
-                                        className="ant-input-affix-wrapper css-dev-only-do-not-override-1b0bdye ant-input-outlined form-control"
+                                        className="ant-input-affix-wrapper css-dev-only-do-not-override-1a3rktk ant-input-outlined form-control"
                                         onClick={[Function]}
                                         style={
                                           {
@@ -1576,7 +1588,7 @@ exports[`object fields with title and description from both additionalProperties
                                         }
                                       >
                                         <input
-                                          className="ant-input css-dev-only-do-not-override-1b0bdye"
+                                          className="ant-input css-dev-only-do-not-override-1a3rktk"
                                           disabled={false}
                                           id="root_foo-key"
                                           name="root_foo-key"
@@ -1586,6 +1598,7 @@ exports[`object fields with title and description from both additionalProperties
                                           onCompositionStart={[Function]}
                                           onFocus={[Function]}
                                           onKeyDown={[Function]}
+                                          onKeyUp={[Function]}
                                           type="text"
                                           value="foo"
                                         />
@@ -1601,7 +1614,7 @@ exports[`object fields with title and description from both additionalProperties
                           </div>
                         </div>
                         <div
-                          className="ant-col form-additional css-dev-only-do-not-override-1b0bdye"
+                          className="ant-col form-additional css-dev-only-do-not-override-1a3rktk"
                           style={
                             {
                               "flex": "1",
@@ -1611,10 +1624,10 @@ exports[`object fields with title and description from both additionalProperties
                           }
                         >
                           <div
-                            className="ant-form-item css-dev-only-do-not-override-1b0bdye"
+                            className="ant-form-item css-dev-only-do-not-override-1a3rktk"
                           >
                             <div
-                              className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+                              className="ant-row ant-form-item-row css-dev-only-do-not-override-1a3rktk"
                               style={
                                 {
                                   "rowGap": undefined,
@@ -1622,7 +1635,7 @@ exports[`object fields with title and description from both additionalProperties
                               }
                             >
                               <div
-                                className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-1b0bdye"
+                                className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-1a3rktk"
                                 style={{}}
                               >
                                 <label
@@ -1634,7 +1647,7 @@ exports[`object fields with title and description from both additionalProperties
                                 </label>
                               </div>
                               <div
-                                className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+                                className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1a3rktk"
                                 style={{}}
                               >
                                 <div
@@ -1644,7 +1657,7 @@ exports[`object fields with title and description from both additionalProperties
                                     className="ant-form-item-control-input-content"
                                   >
                                     <span
-                                      className="ant-input-affix-wrapper css-dev-only-do-not-override-1b0bdye ant-input-outlined"
+                                      className="ant-input-affix-wrapper css-dev-only-do-not-override-1a3rktk ant-input-outlined"
                                       onClick={[Function]}
                                       style={
                                         {
@@ -1654,7 +1667,7 @@ exports[`object fields with title and description from both additionalProperties
                                     >
                                       <input
                                         aria-describedby="root_foo__error root_foo__description root_foo__help"
-                                        className="ant-input css-dev-only-do-not-override-1b0bdye"
+                                        className="ant-input css-dev-only-do-not-override-1a3rktk"
                                         disabled={false}
                                         id="root_foo"
                                         name="root_foo"
@@ -1664,6 +1677,7 @@ exports[`object fields with title and description from both additionalProperties
                                         onCompositionStart={[Function]}
                                         onFocus={[Function]}
                                         onKeyDown={[Function]}
+                                        onKeyUp={[Function]}
                                         placeholder=""
                                         type="text"
                                         value="foo"
@@ -1679,7 +1693,7 @@ exports[`object fields with title and description from both additionalProperties
                           </div>
                         </div>
                         <div
-                          className="ant-col css-dev-only-do-not-override-1b0bdye"
+                          className="ant-col css-dev-only-do-not-override-1a3rktk"
                           style={
                             {
                               "flex": "0 0 192px",
@@ -1689,7 +1703,7 @@ exports[`object fields with title and description from both additionalProperties
                           }
                         >
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-primary ant-btn-icon-only ant-btn-block ant-btn-dangerous array-item-remove"
+                            className="ant-btn css-dev-only-do-not-override-1a3rktk ant-btn-primary ant-btn-dangerous ant-btn-color-dangerous ant-btn-variant-solid ant-btn-icon-only ant-btn-block array-item-remove"
                             disabled={false}
                             id="root_foo__remove"
                             onClick={[Function]}
@@ -1728,11 +1742,11 @@ exports[`object fields with title and description from both additionalProperties
                   </div>
                 </div>
                 <div
-                  className="ant-col ant-col-24 css-dev-only-do-not-override-1b0bdye"
+                  className="ant-col ant-col-24 css-dev-only-do-not-override-1a3rktk"
                   style={{}}
                 >
                   <div
-                    className="ant-row ant-row-end css-dev-only-do-not-override-1b0bdye"
+                    className="ant-row ant-row-end css-dev-only-do-not-override-1a3rktk"
                     style={
                       {
                         "marginLeft": -12,
@@ -1742,7 +1756,7 @@ exports[`object fields with title and description from both additionalProperties
                     }
                   >
                     <div
-                      className="ant-col css-dev-only-do-not-override-1b0bdye"
+                      className="ant-col css-dev-only-do-not-override-1a3rktk"
                       style={
                         {
                           "flex": "0 0 192px",
@@ -1752,7 +1766,7 @@ exports[`object fields with title and description from both additionalProperties
                       }
                     >
                       <button
-                        className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-primary ant-btn-icon-only ant-btn-block object-property-expand"
+                        className="ant-btn css-dev-only-do-not-override-1a3rktk ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block object-property-expand"
                         disabled={false}
                         id="root__add"
                         onClick={[Function]}
@@ -1795,20 +1809,25 @@ exports[`object fields with title and description from both additionalProperties
             </div>
           </div>
           <div
-            className="ant-form-item-extra"
+            className="ant-form-item-additional"
+            style={{}}
           >
-            <span
-              id="root__description"
+            <div
+              className="ant-form-item-extra"
             >
-              a fancier description
-            </span>
+              <span
+                id="root__description"
+              >
+                a fancier description
+              </span>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
   <button
-    className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-submit"
+    className="ant-btn css-dev-only-do-not-override-1a3rktk ant-btn-submit"
     disabled={false}
     onClick={[Function]}
     style={{}}
@@ -1831,10 +1850,10 @@ exports[`object fields with title and description from both object 1`] = `
     className="form-group field field-object"
   >
     <div
-      className="ant-form-item css-dev-only-do-not-override-1b0bdye"
+      className="ant-form-item css-dev-only-do-not-override-1a3rktk"
     >
       <div
-        className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+        className="ant-row ant-form-item-row css-dev-only-do-not-override-1a3rktk"
         style={
           {
             "rowGap": undefined,
@@ -1842,7 +1861,7 @@ exports[`object fields with title and description from both object 1`] = `
         }
       >
         <div
-          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1a3rktk"
           style={{}}
         >
           <div
@@ -1855,7 +1874,7 @@ exports[`object fields with title and description from both object 1`] = `
                 id="root"
               >
                 <div
-                  className="ant-row css-dev-only-do-not-override-1b0bdye"
+                  className="ant-row css-dev-only-do-not-override-1a3rktk"
                   style={
                     {
                       "marginLeft": -12,
@@ -1865,7 +1884,7 @@ exports[`object fields with title and description from both object 1`] = `
                   }
                 >
                   <div
-                    className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-1b0bdye"
+                    className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-1a3rktk"
                     style={
                       {
                         "paddingLeft": 12,
@@ -1883,7 +1902,7 @@ exports[`object fields with title and description from both object 1`] = `
                     </label>
                   </div>
                   <div
-                    className="ant-col ant-col-24 css-dev-only-do-not-override-1b0bdye"
+                    className="ant-col ant-col-24 css-dev-only-do-not-override-1a3rktk"
                     style={
                       {
                         "paddingBottom": "8px",
@@ -1899,7 +1918,7 @@ exports[`object fields with title and description from both object 1`] = `
                     </span>
                   </div>
                   <div
-                    className="ant-col ant-col-24 css-dev-only-do-not-override-1b0bdye"
+                    className="ant-col ant-col-24 css-dev-only-do-not-override-1a3rktk"
                     style={
                       {
                         "paddingLeft": 12,
@@ -1911,10 +1930,10 @@ exports[`object fields with title and description from both object 1`] = `
                       className="form-group field field-string"
                     >
                       <div
-                        className="ant-form-item css-dev-only-do-not-override-1b0bdye"
+                        className="ant-form-item css-dev-only-do-not-override-1a3rktk"
                       >
                         <div
-                          className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+                          className="ant-row ant-form-item-row css-dev-only-do-not-override-1a3rktk"
                           style={
                             {
                               "rowGap": undefined,
@@ -1922,7 +1941,7 @@ exports[`object fields with title and description from both object 1`] = `
                           }
                         >
                           <div
-                            className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-1b0bdye"
+                            className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-1a3rktk"
                             style={{}}
                           >
                             <label
@@ -1934,7 +1953,7 @@ exports[`object fields with title and description from both object 1`] = `
                             </label>
                           </div>
                           <div
-                            className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+                            className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1a3rktk"
                             style={{}}
                           >
                             <div
@@ -1944,7 +1963,7 @@ exports[`object fields with title and description from both object 1`] = `
                                 className="ant-form-item-control-input-content"
                               >
                                 <span
-                                  className="ant-input-affix-wrapper css-dev-only-do-not-override-1b0bdye ant-input-outlined"
+                                  className="ant-input-affix-wrapper css-dev-only-do-not-override-1a3rktk ant-input-outlined"
                                   onClick={[Function]}
                                   style={
                                     {
@@ -1954,7 +1973,7 @@ exports[`object fields with title and description from both object 1`] = `
                                 >
                                   <input
                                     aria-describedby="root_a__error root_a__description root_a__help"
-                                    className="ant-input css-dev-only-do-not-override-1b0bdye"
+                                    className="ant-input css-dev-only-do-not-override-1a3rktk"
                                     disabled={false}
                                     id="root_a"
                                     name="root_a"
@@ -1964,6 +1983,7 @@ exports[`object fields with title and description from both object 1`] = `
                                     onCompositionStart={[Function]}
                                     onFocus={[Function]}
                                     onKeyDown={[Function]}
+                                    onKeyUp={[Function]}
                                     placeholder=""
                                     type="text"
                                     value=""
@@ -1975,13 +1995,18 @@ exports[`object fields with title and description from both object 1`] = `
                               </div>
                             </div>
                             <div
-                              className="ant-form-item-extra"
+                              className="ant-form-item-additional"
+                              style={{}}
                             >
-                              <span
-                                id="root_a__description"
+                              <div
+                                className="ant-form-item-extra"
                               >
-                                a fancier item A description
-                              </span>
+                                <span
+                                  id="root_a__description"
+                                >
+                                  a fancier item A description
+                                </span>
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -1989,7 +2014,7 @@ exports[`object fields with title and description from both object 1`] = `
                     </div>
                   </div>
                   <div
-                    className="ant-col ant-col-24 css-dev-only-do-not-override-1b0bdye"
+                    className="ant-col ant-col-24 css-dev-only-do-not-override-1a3rktk"
                     style={
                       {
                         "paddingLeft": 12,
@@ -2001,10 +2026,10 @@ exports[`object fields with title and description from both object 1`] = `
                       className="form-group field field-number"
                     >
                       <div
-                        className="ant-form-item css-dev-only-do-not-override-1b0bdye"
+                        className="ant-form-item css-dev-only-do-not-override-1a3rktk"
                       >
                         <div
-                          className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+                          className="ant-row ant-form-item-row css-dev-only-do-not-override-1a3rktk"
                           style={
                             {
                               "rowGap": undefined,
@@ -2012,7 +2037,7 @@ exports[`object fields with title and description from both object 1`] = `
                           }
                         >
                           <div
-                            className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-1b0bdye"
+                            className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-1a3rktk"
                             style={{}}
                           >
                             <label
@@ -2024,7 +2049,7 @@ exports[`object fields with title and description from both object 1`] = `
                             </label>
                           </div>
                           <div
-                            className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+                            className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1a3rktk"
                             style={{}}
                           >
                             <div
@@ -2034,7 +2059,7 @@ exports[`object fields with title and description from both object 1`] = `
                                 className="ant-form-item-control-input-content"
                               >
                                 <div
-                                  className="ant-input-number-affix-wrapper css-dev-only-do-not-override-1b0bdye ant-input-number-outlined ant-input-number-has-feedback"
+                                  className="ant-input-number-affix-wrapper css-dev-only-do-not-override-1a3rktk ant-input-number-outlined ant-input-number-has-feedback"
                                   onClick={[Function]}
                                   style={
                                     {
@@ -2043,7 +2068,7 @@ exports[`object fields with title and description from both object 1`] = `
                                   }
                                 >
                                   <div
-                                    className="ant-input-number ant-input-number-in-form-item css-dev-only-do-not-override-1b0bdye"
+                                    className="ant-input-number ant-input-number-in-form-item css-dev-only-do-not-override-1a3rktk"
                                     onBeforeInput={[Function]}
                                     onBlur={[Function]}
                                     onCompositionEnd={[Function]}
@@ -2145,13 +2170,18 @@ exports[`object fields with title and description from both object 1`] = `
                               </div>
                             </div>
                             <div
-                              className="ant-form-item-extra"
+                              className="ant-form-item-additional"
+                              style={{}}
                             >
-                              <span
-                                id="root_b__description"
+                              <div
+                                className="ant-form-item-extra"
                               >
-                                a fancier item B description
-                              </span>
+                                <span
+                                  id="root_b__description"
+                                >
+                                  a fancier item B description
+                                </span>
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -2163,20 +2193,25 @@ exports[`object fields with title and description from both object 1`] = `
             </div>
           </div>
           <div
-            className="ant-form-item-extra"
+            className="ant-form-item-additional"
+            style={{}}
           >
-            <span
-              id="root__description"
+            <div
+              className="ant-form-item-extra"
             >
-              a fancier description
-            </span>
+              <span
+                id="root__description"
+              >
+                a fancier description
+              </span>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
   <button
-    className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-submit"
+    className="ant-btn css-dev-only-do-not-override-1a3rktk ant-btn-submit"
     disabled={false}
     onClick={[Function]}
     style={{}}
@@ -2199,10 +2234,10 @@ exports[`object fields with title and description from uiSchema additionalProper
     className="form-group field field-object"
   >
     <div
-      className="ant-form-item css-dev-only-do-not-override-1b0bdye"
+      className="ant-form-item css-dev-only-do-not-override-1a3rktk"
     >
       <div
-        className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+        className="ant-row ant-form-item-row css-dev-only-do-not-override-1a3rktk"
         style={
           {
             "rowGap": undefined,
@@ -2210,7 +2245,7 @@ exports[`object fields with title and description from uiSchema additionalProper
         }
       >
         <div
-          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1a3rktk"
           style={{}}
         >
           <div
@@ -2223,7 +2258,7 @@ exports[`object fields with title and description from uiSchema additionalProper
                 id="root"
               >
                 <div
-                  className="ant-row css-dev-only-do-not-override-1b0bdye"
+                  className="ant-row css-dev-only-do-not-override-1a3rktk"
                   style={
                     {
                       "marginLeft": -12,
@@ -2233,7 +2268,7 @@ exports[`object fields with title and description from uiSchema additionalProper
                   }
                 >
                   <div
-                    className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-1b0bdye"
+                    className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-1a3rktk"
                     style={
                       {
                         "paddingLeft": 12,
@@ -2251,7 +2286,7 @@ exports[`object fields with title and description from uiSchema additionalProper
                     </label>
                   </div>
                   <div
-                    className="ant-col ant-col-24 css-dev-only-do-not-override-1b0bdye"
+                    className="ant-col ant-col-24 css-dev-only-do-not-override-1a3rktk"
                     style={
                       {
                         "paddingBottom": "8px",
@@ -2267,7 +2302,7 @@ exports[`object fields with title and description from uiSchema additionalProper
                     </span>
                   </div>
                   <div
-                    className="ant-col ant-col-24 css-dev-only-do-not-override-1b0bdye"
+                    className="ant-col ant-col-24 css-dev-only-do-not-override-1a3rktk"
                     style={
                       {
                         "paddingLeft": 12,
@@ -2279,7 +2314,7 @@ exports[`object fields with title and description from uiSchema additionalProper
                       className="form-group field field-string"
                     >
                       <div
-                        className="ant-row ant-row-top css-dev-only-do-not-override-1b0bdye"
+                        className="ant-row ant-row-top css-dev-only-do-not-override-1a3rktk"
                         style={
                           {
                             "marginLeft": -12,
@@ -2289,7 +2324,7 @@ exports[`object fields with title and description from uiSchema additionalProper
                         }
                       >
                         <div
-                          className="ant-col form-additional css-dev-only-do-not-override-1b0bdye"
+                          className="ant-col form-additional css-dev-only-do-not-override-1a3rktk"
                           style={
                             {
                               "flex": "1",
@@ -2302,10 +2337,10 @@ exports[`object fields with title and description from uiSchema additionalProper
                             className="form-group"
                           >
                             <div
-                              className="ant-form-item form-group css-dev-only-do-not-override-1b0bdye"
+                              className="ant-form-item form-group css-dev-only-do-not-override-1a3rktk"
                             >
                               <div
-                                className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+                                className="ant-row ant-form-item-row css-dev-only-do-not-override-1a3rktk"
                                 style={
                                   {
                                     "rowGap": undefined,
@@ -2313,7 +2348,7 @@ exports[`object fields with title and description from uiSchema additionalProper
                                 }
                               >
                                 <div
-                                  className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-1b0bdye"
+                                  className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-1a3rktk"
                                   style={{}}
                                 >
                                   <label
@@ -2325,7 +2360,7 @@ exports[`object fields with title and description from uiSchema additionalProper
                                   </label>
                                 </div>
                                 <div
-                                  className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+                                  className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1a3rktk"
                                   style={{}}
                                 >
                                   <div
@@ -2335,7 +2370,7 @@ exports[`object fields with title and description from uiSchema additionalProper
                                       className="ant-form-item-control-input-content"
                                     >
                                       <span
-                                        className="ant-input-affix-wrapper css-dev-only-do-not-override-1b0bdye ant-input-outlined form-control"
+                                        className="ant-input-affix-wrapper css-dev-only-do-not-override-1a3rktk ant-input-outlined form-control"
                                         onClick={[Function]}
                                         style={
                                           {
@@ -2344,7 +2379,7 @@ exports[`object fields with title and description from uiSchema additionalProper
                                         }
                                       >
                                         <input
-                                          className="ant-input css-dev-only-do-not-override-1b0bdye"
+                                          className="ant-input css-dev-only-do-not-override-1a3rktk"
                                           disabled={false}
                                           id="root_foo-key"
                                           name="root_foo-key"
@@ -2354,6 +2389,7 @@ exports[`object fields with title and description from uiSchema additionalProper
                                           onCompositionStart={[Function]}
                                           onFocus={[Function]}
                                           onKeyDown={[Function]}
+                                          onKeyUp={[Function]}
                                           type="text"
                                           value="foo"
                                         />
@@ -2369,7 +2405,7 @@ exports[`object fields with title and description from uiSchema additionalProper
                           </div>
                         </div>
                         <div
-                          className="ant-col form-additional css-dev-only-do-not-override-1b0bdye"
+                          className="ant-col form-additional css-dev-only-do-not-override-1a3rktk"
                           style={
                             {
                               "flex": "1",
@@ -2379,10 +2415,10 @@ exports[`object fields with title and description from uiSchema additionalProper
                           }
                         >
                           <div
-                            className="ant-form-item css-dev-only-do-not-override-1b0bdye"
+                            className="ant-form-item css-dev-only-do-not-override-1a3rktk"
                           >
                             <div
-                              className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+                              className="ant-row ant-form-item-row css-dev-only-do-not-override-1a3rktk"
                               style={
                                 {
                                   "rowGap": undefined,
@@ -2390,7 +2426,7 @@ exports[`object fields with title and description from uiSchema additionalProper
                               }
                             >
                               <div
-                                className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-1b0bdye"
+                                className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-1a3rktk"
                                 style={{}}
                               >
                                 <label
@@ -2402,7 +2438,7 @@ exports[`object fields with title and description from uiSchema additionalProper
                                 </label>
                               </div>
                               <div
-                                className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+                                className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1a3rktk"
                                 style={{}}
                               >
                                 <div
@@ -2412,7 +2448,7 @@ exports[`object fields with title and description from uiSchema additionalProper
                                     className="ant-form-item-control-input-content"
                                   >
                                     <span
-                                      className="ant-input-affix-wrapper css-dev-only-do-not-override-1b0bdye ant-input-outlined"
+                                      className="ant-input-affix-wrapper css-dev-only-do-not-override-1a3rktk ant-input-outlined"
                                       onClick={[Function]}
                                       style={
                                         {
@@ -2422,7 +2458,7 @@ exports[`object fields with title and description from uiSchema additionalProper
                                     >
                                       <input
                                         aria-describedby="root_foo__error root_foo__description root_foo__help"
-                                        className="ant-input css-dev-only-do-not-override-1b0bdye"
+                                        className="ant-input css-dev-only-do-not-override-1a3rktk"
                                         disabled={false}
                                         id="root_foo"
                                         name="root_foo"
@@ -2432,6 +2468,7 @@ exports[`object fields with title and description from uiSchema additionalProper
                                         onCompositionStart={[Function]}
                                         onFocus={[Function]}
                                         onKeyDown={[Function]}
+                                        onKeyUp={[Function]}
                                         placeholder=""
                                         type="text"
                                         value="foo"
@@ -2447,7 +2484,7 @@ exports[`object fields with title and description from uiSchema additionalProper
                           </div>
                         </div>
                         <div
-                          className="ant-col css-dev-only-do-not-override-1b0bdye"
+                          className="ant-col css-dev-only-do-not-override-1a3rktk"
                           style={
                             {
                               "flex": "0 0 192px",
@@ -2457,7 +2494,7 @@ exports[`object fields with title and description from uiSchema additionalProper
                           }
                         >
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-primary ant-btn-icon-only ant-btn-block ant-btn-dangerous array-item-remove"
+                            className="ant-btn css-dev-only-do-not-override-1a3rktk ant-btn-primary ant-btn-dangerous ant-btn-color-dangerous ant-btn-variant-solid ant-btn-icon-only ant-btn-block array-item-remove"
                             disabled={false}
                             id="root_foo__remove"
                             onClick={[Function]}
@@ -2496,11 +2533,11 @@ exports[`object fields with title and description from uiSchema additionalProper
                   </div>
                 </div>
                 <div
-                  className="ant-col ant-col-24 css-dev-only-do-not-override-1b0bdye"
+                  className="ant-col ant-col-24 css-dev-only-do-not-override-1a3rktk"
                   style={{}}
                 >
                   <div
-                    className="ant-row ant-row-end css-dev-only-do-not-override-1b0bdye"
+                    className="ant-row ant-row-end css-dev-only-do-not-override-1a3rktk"
                     style={
                       {
                         "marginLeft": -12,
@@ -2510,7 +2547,7 @@ exports[`object fields with title and description from uiSchema additionalProper
                     }
                   >
                     <div
-                      className="ant-col css-dev-only-do-not-override-1b0bdye"
+                      className="ant-col css-dev-only-do-not-override-1a3rktk"
                       style={
                         {
                           "flex": "0 0 192px",
@@ -2520,7 +2557,7 @@ exports[`object fields with title and description from uiSchema additionalProper
                       }
                     >
                       <button
-                        className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-primary ant-btn-icon-only ant-btn-block object-property-expand"
+                        className="ant-btn css-dev-only-do-not-override-1a3rktk ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block object-property-expand"
                         disabled={false}
                         id="root__add"
                         onClick={[Function]}
@@ -2563,20 +2600,25 @@ exports[`object fields with title and description from uiSchema additionalProper
             </div>
           </div>
           <div
-            className="ant-form-item-extra"
+            className="ant-form-item-additional"
+            style={{}}
           >
-            <span
-              id="root__description"
+            <div
+              className="ant-form-item-extra"
             >
-              a fancier description
-            </span>
+              <span
+                id="root__description"
+              >
+                a fancier description
+              </span>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
   <button
-    className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-submit"
+    className="ant-btn css-dev-only-do-not-override-1a3rktk ant-btn-submit"
     disabled={false}
     onClick={[Function]}
     style={{}}
@@ -2599,10 +2641,10 @@ exports[`object fields with title and description from uiSchema object 1`] = `
     className="form-group field field-object"
   >
     <div
-      className="ant-form-item css-dev-only-do-not-override-1b0bdye"
+      className="ant-form-item css-dev-only-do-not-override-1a3rktk"
     >
       <div
-        className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+        className="ant-row ant-form-item-row css-dev-only-do-not-override-1a3rktk"
         style={
           {
             "rowGap": undefined,
@@ -2610,7 +2652,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
         }
       >
         <div
-          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1a3rktk"
           style={{}}
         >
           <div
@@ -2623,7 +2665,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
                 id="root"
               >
                 <div
-                  className="ant-row css-dev-only-do-not-override-1b0bdye"
+                  className="ant-row css-dev-only-do-not-override-1a3rktk"
                   style={
                     {
                       "marginLeft": -12,
@@ -2633,7 +2675,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
                   }
                 >
                   <div
-                    className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-1b0bdye"
+                    className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-1a3rktk"
                     style={
                       {
                         "paddingLeft": 12,
@@ -2651,7 +2693,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
                     </label>
                   </div>
                   <div
-                    className="ant-col ant-col-24 css-dev-only-do-not-override-1b0bdye"
+                    className="ant-col ant-col-24 css-dev-only-do-not-override-1a3rktk"
                     style={
                       {
                         "paddingBottom": "8px",
@@ -2667,7 +2709,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
                     </span>
                   </div>
                   <div
-                    className="ant-col ant-col-24 css-dev-only-do-not-override-1b0bdye"
+                    className="ant-col ant-col-24 css-dev-only-do-not-override-1a3rktk"
                     style={
                       {
                         "paddingLeft": 12,
@@ -2679,10 +2721,10 @@ exports[`object fields with title and description from uiSchema object 1`] = `
                       className="form-group field field-string"
                     >
                       <div
-                        className="ant-form-item css-dev-only-do-not-override-1b0bdye"
+                        className="ant-form-item css-dev-only-do-not-override-1a3rktk"
                       >
                         <div
-                          className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+                          className="ant-row ant-form-item-row css-dev-only-do-not-override-1a3rktk"
                           style={
                             {
                               "rowGap": undefined,
@@ -2690,7 +2732,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
                           }
                         >
                           <div
-                            className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-1b0bdye"
+                            className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-1a3rktk"
                             style={{}}
                           >
                             <label
@@ -2702,7 +2744,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
                             </label>
                           </div>
                           <div
-                            className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+                            className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1a3rktk"
                             style={{}}
                           >
                             <div
@@ -2712,7 +2754,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
                                 className="ant-form-item-control-input-content"
                               >
                                 <span
-                                  className="ant-input-affix-wrapper css-dev-only-do-not-override-1b0bdye ant-input-outlined"
+                                  className="ant-input-affix-wrapper css-dev-only-do-not-override-1a3rktk ant-input-outlined"
                                   onClick={[Function]}
                                   style={
                                     {
@@ -2722,7 +2764,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
                                 >
                                   <input
                                     aria-describedby="root_a__error root_a__description root_a__help"
-                                    className="ant-input css-dev-only-do-not-override-1b0bdye"
+                                    className="ant-input css-dev-only-do-not-override-1a3rktk"
                                     disabled={false}
                                     id="root_a"
                                     name="root_a"
@@ -2732,6 +2774,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
                                     onCompositionStart={[Function]}
                                     onFocus={[Function]}
                                     onKeyDown={[Function]}
+                                    onKeyUp={[Function]}
                                     placeholder=""
                                     type="text"
                                     value=""
@@ -2743,13 +2786,18 @@ exports[`object fields with title and description from uiSchema object 1`] = `
                               </div>
                             </div>
                             <div
-                              className="ant-form-item-extra"
+                              className="ant-form-item-additional"
+                              style={{}}
                             >
-                              <span
-                                id="root_a__description"
+                              <div
+                                className="ant-form-item-extra"
                               >
-                                a fancier item A description
-                              </span>
+                                <span
+                                  id="root_a__description"
+                                >
+                                  a fancier item A description
+                                </span>
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -2757,7 +2805,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
                     </div>
                   </div>
                   <div
-                    className="ant-col ant-col-24 css-dev-only-do-not-override-1b0bdye"
+                    className="ant-col ant-col-24 css-dev-only-do-not-override-1a3rktk"
                     style={
                       {
                         "paddingLeft": 12,
@@ -2769,10 +2817,10 @@ exports[`object fields with title and description from uiSchema object 1`] = `
                       className="form-group field field-number"
                     >
                       <div
-                        className="ant-form-item css-dev-only-do-not-override-1b0bdye"
+                        className="ant-form-item css-dev-only-do-not-override-1a3rktk"
                       >
                         <div
-                          className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+                          className="ant-row ant-form-item-row css-dev-only-do-not-override-1a3rktk"
                           style={
                             {
                               "rowGap": undefined,
@@ -2780,7 +2828,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
                           }
                         >
                           <div
-                            className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-1b0bdye"
+                            className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-1a3rktk"
                             style={{}}
                           >
                             <label
@@ -2792,7 +2840,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
                             </label>
                           </div>
                           <div
-                            className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+                            className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1a3rktk"
                             style={{}}
                           >
                             <div
@@ -2802,7 +2850,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
                                 className="ant-form-item-control-input-content"
                               >
                                 <div
-                                  className="ant-input-number-affix-wrapper css-dev-only-do-not-override-1b0bdye ant-input-number-outlined ant-input-number-has-feedback"
+                                  className="ant-input-number-affix-wrapper css-dev-only-do-not-override-1a3rktk ant-input-number-outlined ant-input-number-has-feedback"
                                   onClick={[Function]}
                                   style={
                                     {
@@ -2811,7 +2859,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
                                   }
                                 >
                                   <div
-                                    className="ant-input-number ant-input-number-in-form-item css-dev-only-do-not-override-1b0bdye"
+                                    className="ant-input-number ant-input-number-in-form-item css-dev-only-do-not-override-1a3rktk"
                                     onBeforeInput={[Function]}
                                     onBlur={[Function]}
                                     onCompositionEnd={[Function]}
@@ -2913,13 +2961,18 @@ exports[`object fields with title and description from uiSchema object 1`] = `
                               </div>
                             </div>
                             <div
-                              className="ant-form-item-extra"
+                              className="ant-form-item-additional"
+                              style={{}}
                             >
-                              <span
-                                id="root_b__description"
+                              <div
+                                className="ant-form-item-extra"
                               >
-                                a fancier item B description
-                              </span>
+                                <span
+                                  id="root_b__description"
+                                >
+                                  a fancier item B description
+                                </span>
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -2931,20 +2984,25 @@ exports[`object fields with title and description from uiSchema object 1`] = `
             </div>
           </div>
           <div
-            className="ant-form-item-extra"
+            className="ant-form-item-additional"
+            style={{}}
           >
-            <span
-              id="root__description"
+            <div
+              className="ant-form-item-extra"
             >
-              a fancier description
-            </span>
+              <span
+                id="root__description"
+              >
+                a fancier description
+              </span>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
   <button
-    className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-submit"
+    className="ant-btn css-dev-only-do-not-override-1a3rktk ant-btn-submit"
     disabled={false}
     onClick={[Function]}
     style={{}}
@@ -2967,10 +3025,10 @@ exports[`object fields with title and description from uiSchema show add button 
     className="form-group field field-object"
   >
     <div
-      className="ant-form-item css-dev-only-do-not-override-1b0bdye"
+      className="ant-form-item css-dev-only-do-not-override-1a3rktk"
     >
       <div
-        className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+        className="ant-row ant-form-item-row css-dev-only-do-not-override-1a3rktk"
         style={
           {
             "rowGap": undefined,
@@ -2978,7 +3036,7 @@ exports[`object fields with title and description from uiSchema show add button 
         }
       >
         <div
-          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1a3rktk"
           style={{}}
         >
           <div
@@ -2991,7 +3049,7 @@ exports[`object fields with title and description from uiSchema show add button 
                 id="root"
               >
                 <div
-                  className="ant-row css-dev-only-do-not-override-1b0bdye"
+                  className="ant-row css-dev-only-do-not-override-1a3rktk"
                   style={
                     {
                       "marginLeft": -12,
@@ -3001,7 +3059,7 @@ exports[`object fields with title and description from uiSchema show add button 
                   }
                 >
                   <div
-                    className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-1b0bdye"
+                    className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-1a3rktk"
                     style={
                       {
                         "paddingLeft": 12,
@@ -3019,7 +3077,7 @@ exports[`object fields with title and description from uiSchema show add button 
                     </label>
                   </div>
                   <div
-                    className="ant-col ant-col-24 css-dev-only-do-not-override-1b0bdye"
+                    className="ant-col ant-col-24 css-dev-only-do-not-override-1a3rktk"
                     style={
                       {
                         "paddingBottom": "8px",
@@ -3035,7 +3093,7 @@ exports[`object fields with title and description from uiSchema show add button 
                     </span>
                   </div>
                   <div
-                    className="ant-col ant-col-24 css-dev-only-do-not-override-1b0bdye"
+                    className="ant-col ant-col-24 css-dev-only-do-not-override-1a3rktk"
                     style={
                       {
                         "paddingLeft": 12,
@@ -3047,7 +3105,7 @@ exports[`object fields with title and description from uiSchema show add button 
                       className="form-group field field-string"
                     >
                       <div
-                        className="ant-row ant-row-top css-dev-only-do-not-override-1b0bdye"
+                        className="ant-row ant-row-top css-dev-only-do-not-override-1a3rktk"
                         style={
                           {
                             "marginLeft": -12,
@@ -3057,7 +3115,7 @@ exports[`object fields with title and description from uiSchema show add button 
                         }
                       >
                         <div
-                          className="ant-col form-additional css-dev-only-do-not-override-1b0bdye"
+                          className="ant-col form-additional css-dev-only-do-not-override-1a3rktk"
                           style={
                             {
                               "flex": "1",
@@ -3070,10 +3128,10 @@ exports[`object fields with title and description from uiSchema show add button 
                             className="form-group"
                           >
                             <div
-                              className="ant-form-item form-group css-dev-only-do-not-override-1b0bdye"
+                              className="ant-form-item form-group css-dev-only-do-not-override-1a3rktk"
                             >
                               <div
-                                className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+                                className="ant-row ant-form-item-row css-dev-only-do-not-override-1a3rktk"
                                 style={
                                   {
                                     "rowGap": undefined,
@@ -3081,7 +3139,7 @@ exports[`object fields with title and description from uiSchema show add button 
                                 }
                               >
                                 <div
-                                  className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-1b0bdye"
+                                  className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-1a3rktk"
                                   style={{}}
                                 >
                                   <label
@@ -3093,7 +3151,7 @@ exports[`object fields with title and description from uiSchema show add button 
                                   </label>
                                 </div>
                                 <div
-                                  className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+                                  className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1a3rktk"
                                   style={{}}
                                 >
                                   <div
@@ -3103,7 +3161,7 @@ exports[`object fields with title and description from uiSchema show add button 
                                       className="ant-form-item-control-input-content"
                                     >
                                       <span
-                                        className="ant-input-affix-wrapper css-dev-only-do-not-override-1b0bdye ant-input-outlined form-control"
+                                        className="ant-input-affix-wrapper css-dev-only-do-not-override-1a3rktk ant-input-outlined form-control"
                                         onClick={[Function]}
                                         style={
                                           {
@@ -3112,7 +3170,7 @@ exports[`object fields with title and description from uiSchema show add button 
                                         }
                                       >
                                         <input
-                                          className="ant-input css-dev-only-do-not-override-1b0bdye"
+                                          className="ant-input css-dev-only-do-not-override-1a3rktk"
                                           disabled={false}
                                           id="root_additionalProperty-key"
                                           name="root_additionalProperty-key"
@@ -3122,6 +3180,7 @@ exports[`object fields with title and description from uiSchema show add button 
                                           onCompositionStart={[Function]}
                                           onFocus={[Function]}
                                           onKeyDown={[Function]}
+                                          onKeyUp={[Function]}
                                           type="text"
                                           value="additionalProperty"
                                         />
@@ -3137,7 +3196,7 @@ exports[`object fields with title and description from uiSchema show add button 
                           </div>
                         </div>
                         <div
-                          className="ant-col form-additional css-dev-only-do-not-override-1b0bdye"
+                          className="ant-col form-additional css-dev-only-do-not-override-1a3rktk"
                           style={
                             {
                               "flex": "1",
@@ -3147,10 +3206,10 @@ exports[`object fields with title and description from uiSchema show add button 
                           }
                         >
                           <div
-                            className="ant-form-item css-dev-only-do-not-override-1b0bdye"
+                            className="ant-form-item css-dev-only-do-not-override-1a3rktk"
                           >
                             <div
-                              className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+                              className="ant-row ant-form-item-row css-dev-only-do-not-override-1a3rktk"
                               style={
                                 {
                                   "rowGap": undefined,
@@ -3158,7 +3217,7 @@ exports[`object fields with title and description from uiSchema show add button 
                               }
                             >
                               <div
-                                className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-1b0bdye"
+                                className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-1a3rktk"
                                 style={{}}
                               >
                                 <label
@@ -3170,7 +3229,7 @@ exports[`object fields with title and description from uiSchema show add button 
                                 </label>
                               </div>
                               <div
-                                className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+                                className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1a3rktk"
                                 style={{}}
                               >
                                 <div
@@ -3180,7 +3239,7 @@ exports[`object fields with title and description from uiSchema show add button 
                                     className="ant-form-item-control-input-content"
                                   >
                                     <span
-                                      className="ant-input-affix-wrapper css-dev-only-do-not-override-1b0bdye ant-input-outlined"
+                                      className="ant-input-affix-wrapper css-dev-only-do-not-override-1a3rktk ant-input-outlined"
                                       onClick={[Function]}
                                       style={
                                         {
@@ -3190,7 +3249,7 @@ exports[`object fields with title and description from uiSchema show add button 
                                     >
                                       <input
                                         aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
-                                        className="ant-input css-dev-only-do-not-override-1b0bdye"
+                                        className="ant-input css-dev-only-do-not-override-1a3rktk"
                                         disabled={false}
                                         id="root_additionalProperty"
                                         name="root_additionalProperty"
@@ -3200,6 +3259,7 @@ exports[`object fields with title and description from uiSchema show add button 
                                         onCompositionStart={[Function]}
                                         onFocus={[Function]}
                                         onKeyDown={[Function]}
+                                        onKeyUp={[Function]}
                                         placeholder=""
                                         type="text"
                                         value="should appear"
@@ -3215,7 +3275,7 @@ exports[`object fields with title and description from uiSchema show add button 
                           </div>
                         </div>
                         <div
-                          className="ant-col css-dev-only-do-not-override-1b0bdye"
+                          className="ant-col css-dev-only-do-not-override-1a3rktk"
                           style={
                             {
                               "flex": "0 0 192px",
@@ -3225,7 +3285,7 @@ exports[`object fields with title and description from uiSchema show add button 
                           }
                         >
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-primary ant-btn-icon-only ant-btn-block ant-btn-dangerous array-item-remove"
+                            className="ant-btn css-dev-only-do-not-override-1a3rktk ant-btn-primary ant-btn-dangerous ant-btn-color-dangerous ant-btn-variant-solid ant-btn-icon-only ant-btn-block array-item-remove"
                             disabled={false}
                             id="root_additionalProperty__remove"
                             onClick={[Function]}
@@ -3264,11 +3324,11 @@ exports[`object fields with title and description from uiSchema show add button 
                   </div>
                 </div>
                 <div
-                  className="ant-col ant-col-24 css-dev-only-do-not-override-1b0bdye"
+                  className="ant-col ant-col-24 css-dev-only-do-not-override-1a3rktk"
                   style={{}}
                 >
                   <div
-                    className="ant-row ant-row-end css-dev-only-do-not-override-1b0bdye"
+                    className="ant-row ant-row-end css-dev-only-do-not-override-1a3rktk"
                     style={
                       {
                         "marginLeft": -12,
@@ -3278,7 +3338,7 @@ exports[`object fields with title and description from uiSchema show add button 
                     }
                   >
                     <div
-                      className="ant-col css-dev-only-do-not-override-1b0bdye"
+                      className="ant-col css-dev-only-do-not-override-1a3rktk"
                       style={
                         {
                           "flex": "0 0 192px",
@@ -3288,7 +3348,7 @@ exports[`object fields with title and description from uiSchema show add button 
                       }
                     >
                       <button
-                        className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-primary ant-btn-icon-only ant-btn-block object-property-expand"
+                        className="ant-btn css-dev-only-do-not-override-1a3rktk ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block object-property-expand"
                         disabled={false}
                         id="root__add"
                         onClick={[Function]}
@@ -3331,20 +3391,25 @@ exports[`object fields with title and description from uiSchema show add button 
             </div>
           </div>
           <div
-            className="ant-form-item-extra"
+            className="ant-form-item-additional"
+            style={{}}
           >
-            <span
-              id="root__description"
+            <div
+              className="ant-form-item-extra"
             >
-              a fancier description
-            </span>
+              <span
+                id="root__description"
+              >
+                a fancier description
+              </span>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
   <button
-    className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-submit"
+    className="ant-btn css-dev-only-do-not-override-1a3rktk ant-btn-submit"
     disabled={false}
     onClick={[Function]}
     style={{}}
@@ -3367,10 +3432,10 @@ exports[`object fields with title and description object 1`] = `
     className="form-group field field-object"
   >
     <div
-      className="ant-form-item css-dev-only-do-not-override-1b0bdye"
+      className="ant-form-item css-dev-only-do-not-override-1a3rktk"
     >
       <div
-        className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+        className="ant-row ant-form-item-row css-dev-only-do-not-override-1a3rktk"
         style={
           {
             "rowGap": undefined,
@@ -3378,7 +3443,7 @@ exports[`object fields with title and description object 1`] = `
         }
       >
         <div
-          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1a3rktk"
           style={{}}
         >
           <div
@@ -3391,7 +3456,7 @@ exports[`object fields with title and description object 1`] = `
                 id="root"
               >
                 <div
-                  className="ant-row css-dev-only-do-not-override-1b0bdye"
+                  className="ant-row css-dev-only-do-not-override-1a3rktk"
                   style={
                     {
                       "marginLeft": -12,
@@ -3401,7 +3466,7 @@ exports[`object fields with title and description object 1`] = `
                   }
                 >
                   <div
-                    className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-1b0bdye"
+                    className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-1a3rktk"
                     style={
                       {
                         "paddingLeft": 12,
@@ -3419,7 +3484,7 @@ exports[`object fields with title and description object 1`] = `
                     </label>
                   </div>
                   <div
-                    className="ant-col ant-col-24 css-dev-only-do-not-override-1b0bdye"
+                    className="ant-col ant-col-24 css-dev-only-do-not-override-1a3rktk"
                     style={
                       {
                         "paddingBottom": "8px",
@@ -3435,7 +3500,7 @@ exports[`object fields with title and description object 1`] = `
                     </span>
                   </div>
                   <div
-                    className="ant-col ant-col-24 css-dev-only-do-not-override-1b0bdye"
+                    className="ant-col ant-col-24 css-dev-only-do-not-override-1a3rktk"
                     style={
                       {
                         "paddingLeft": 12,
@@ -3447,10 +3512,10 @@ exports[`object fields with title and description object 1`] = `
                       className="form-group field field-string"
                     >
                       <div
-                        className="ant-form-item css-dev-only-do-not-override-1b0bdye"
+                        className="ant-form-item css-dev-only-do-not-override-1a3rktk"
                       >
                         <div
-                          className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+                          className="ant-row ant-form-item-row css-dev-only-do-not-override-1a3rktk"
                           style={
                             {
                               "rowGap": undefined,
@@ -3458,7 +3523,7 @@ exports[`object fields with title and description object 1`] = `
                           }
                         >
                           <div
-                            className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-1b0bdye"
+                            className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-1a3rktk"
                             style={{}}
                           >
                             <label
@@ -3470,7 +3535,7 @@ exports[`object fields with title and description object 1`] = `
                             </label>
                           </div>
                           <div
-                            className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+                            className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1a3rktk"
                             style={{}}
                           >
                             <div
@@ -3480,7 +3545,7 @@ exports[`object fields with title and description object 1`] = `
                                 className="ant-form-item-control-input-content"
                               >
                                 <span
-                                  className="ant-input-affix-wrapper css-dev-only-do-not-override-1b0bdye ant-input-outlined"
+                                  className="ant-input-affix-wrapper css-dev-only-do-not-override-1a3rktk ant-input-outlined"
                                   onClick={[Function]}
                                   style={
                                     {
@@ -3490,7 +3555,7 @@ exports[`object fields with title and description object 1`] = `
                                 >
                                   <input
                                     aria-describedby="root_a__error root_a__description root_a__help"
-                                    className="ant-input css-dev-only-do-not-override-1b0bdye"
+                                    className="ant-input css-dev-only-do-not-override-1a3rktk"
                                     disabled={false}
                                     id="root_a"
                                     name="root_a"
@@ -3500,6 +3565,7 @@ exports[`object fields with title and description object 1`] = `
                                     onCompositionStart={[Function]}
                                     onFocus={[Function]}
                                     onKeyDown={[Function]}
+                                    onKeyUp={[Function]}
                                     placeholder=""
                                     type="text"
                                     value=""
@@ -3511,13 +3577,18 @@ exports[`object fields with title and description object 1`] = `
                               </div>
                             </div>
                             <div
-                              className="ant-form-item-extra"
+                              className="ant-form-item-additional"
+                              style={{}}
                             >
-                              <span
-                                id="root_a__description"
+                              <div
+                                className="ant-form-item-extra"
                               >
-                                A description
-                              </span>
+                                <span
+                                  id="root_a__description"
+                                >
+                                  A description
+                                </span>
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -3525,7 +3596,7 @@ exports[`object fields with title and description object 1`] = `
                     </div>
                   </div>
                   <div
-                    className="ant-col ant-col-24 css-dev-only-do-not-override-1b0bdye"
+                    className="ant-col ant-col-24 css-dev-only-do-not-override-1a3rktk"
                     style={
                       {
                         "paddingLeft": 12,
@@ -3537,10 +3608,10 @@ exports[`object fields with title and description object 1`] = `
                       className="form-group field field-number"
                     >
                       <div
-                        className="ant-form-item css-dev-only-do-not-override-1b0bdye"
+                        className="ant-form-item css-dev-only-do-not-override-1a3rktk"
                       >
                         <div
-                          className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+                          className="ant-row ant-form-item-row css-dev-only-do-not-override-1a3rktk"
                           style={
                             {
                               "rowGap": undefined,
@@ -3548,7 +3619,7 @@ exports[`object fields with title and description object 1`] = `
                           }
                         >
                           <div
-                            className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-1b0bdye"
+                            className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-1a3rktk"
                             style={{}}
                           >
                             <label
@@ -3560,7 +3631,7 @@ exports[`object fields with title and description object 1`] = `
                             </label>
                           </div>
                           <div
-                            className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+                            className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1a3rktk"
                             style={{}}
                           >
                             <div
@@ -3570,7 +3641,7 @@ exports[`object fields with title and description object 1`] = `
                                 className="ant-form-item-control-input-content"
                               >
                                 <div
-                                  className="ant-input-number-affix-wrapper css-dev-only-do-not-override-1b0bdye ant-input-number-outlined ant-input-number-has-feedback"
+                                  className="ant-input-number-affix-wrapper css-dev-only-do-not-override-1a3rktk ant-input-number-outlined ant-input-number-has-feedback"
                                   onClick={[Function]}
                                   style={
                                     {
@@ -3579,7 +3650,7 @@ exports[`object fields with title and description object 1`] = `
                                   }
                                 >
                                   <div
-                                    className="ant-input-number ant-input-number-in-form-item css-dev-only-do-not-override-1b0bdye"
+                                    className="ant-input-number ant-input-number-in-form-item css-dev-only-do-not-override-1a3rktk"
                                     onBeforeInput={[Function]}
                                     onBlur={[Function]}
                                     onCompositionEnd={[Function]}
@@ -3681,13 +3752,18 @@ exports[`object fields with title and description object 1`] = `
                               </div>
                             </div>
                             <div
-                              className="ant-form-item-extra"
+                              className="ant-form-item-additional"
+                              style={{}}
                             >
-                              <span
-                                id="root_b__description"
+                              <div
+                                className="ant-form-item-extra"
                               >
-                                B description
-                              </span>
+                                <span
+                                  id="root_b__description"
+                                >
+                                  B description
+                                </span>
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -3699,20 +3775,25 @@ exports[`object fields with title and description object 1`] = `
             </div>
           </div>
           <div
-            className="ant-form-item-extra"
+            className="ant-form-item-additional"
+            style={{}}
           >
-            <span
-              id="root__description"
+            <div
+              className="ant-form-item-extra"
             >
-              a test description
-            </span>
+              <span
+                id="root__description"
+              >
+                a test description
+              </span>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
   <button
-    className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-submit"
+    className="ant-btn css-dev-only-do-not-override-1a3rktk ant-btn-submit"
     disabled={false}
     onClick={[Function]}
     style={{}}
@@ -3735,10 +3816,10 @@ exports[`object fields with title and description show add button and fields if 
     className="form-group field field-object"
   >
     <div
-      className="ant-form-item css-dev-only-do-not-override-1b0bdye"
+      className="ant-form-item css-dev-only-do-not-override-1a3rktk"
     >
       <div
-        className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+        className="ant-row ant-form-item-row css-dev-only-do-not-override-1a3rktk"
         style={
           {
             "rowGap": undefined,
@@ -3746,7 +3827,7 @@ exports[`object fields with title and description show add button and fields if 
         }
       >
         <div
-          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1a3rktk"
           style={{}}
         >
           <div
@@ -3759,7 +3840,7 @@ exports[`object fields with title and description show add button and fields if 
                 id="root"
               >
                 <div
-                  className="ant-row css-dev-only-do-not-override-1b0bdye"
+                  className="ant-row css-dev-only-do-not-override-1a3rktk"
                   style={
                     {
                       "marginLeft": -12,
@@ -3769,7 +3850,7 @@ exports[`object fields with title and description show add button and fields if 
                   }
                 >
                   <div
-                    className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-1b0bdye"
+                    className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-1a3rktk"
                     style={
                       {
                         "paddingLeft": 12,
@@ -3787,7 +3868,7 @@ exports[`object fields with title and description show add button and fields if 
                     </label>
                   </div>
                   <div
-                    className="ant-col ant-col-24 css-dev-only-do-not-override-1b0bdye"
+                    className="ant-col ant-col-24 css-dev-only-do-not-override-1a3rktk"
                     style={
                       {
                         "paddingBottom": "8px",
@@ -3803,7 +3884,7 @@ exports[`object fields with title and description show add button and fields if 
                     </span>
                   </div>
                   <div
-                    className="ant-col ant-col-24 css-dev-only-do-not-override-1b0bdye"
+                    className="ant-col ant-col-24 css-dev-only-do-not-override-1a3rktk"
                     style={
                       {
                         "paddingLeft": 12,
@@ -3815,7 +3896,7 @@ exports[`object fields with title and description show add button and fields if 
                       className="form-group field field-string"
                     >
                       <div
-                        className="ant-row ant-row-top css-dev-only-do-not-override-1b0bdye"
+                        className="ant-row ant-row-top css-dev-only-do-not-override-1a3rktk"
                         style={
                           {
                             "marginLeft": -12,
@@ -3825,7 +3906,7 @@ exports[`object fields with title and description show add button and fields if 
                         }
                       >
                         <div
-                          className="ant-col form-additional css-dev-only-do-not-override-1b0bdye"
+                          className="ant-col form-additional css-dev-only-do-not-override-1a3rktk"
                           style={
                             {
                               "flex": "1",
@@ -3838,10 +3919,10 @@ exports[`object fields with title and description show add button and fields if 
                             className="form-group"
                           >
                             <div
-                              className="ant-form-item form-group css-dev-only-do-not-override-1b0bdye"
+                              className="ant-form-item form-group css-dev-only-do-not-override-1a3rktk"
                             >
                               <div
-                                className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+                                className="ant-row ant-form-item-row css-dev-only-do-not-override-1a3rktk"
                                 style={
                                   {
                                     "rowGap": undefined,
@@ -3849,7 +3930,7 @@ exports[`object fields with title and description show add button and fields if 
                                 }
                               >
                                 <div
-                                  className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-1b0bdye"
+                                  className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-1a3rktk"
                                   style={{}}
                                 >
                                   <label
@@ -3861,7 +3942,7 @@ exports[`object fields with title and description show add button and fields if 
                                   </label>
                                 </div>
                                 <div
-                                  className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+                                  className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1a3rktk"
                                   style={{}}
                                 >
                                   <div
@@ -3871,7 +3952,7 @@ exports[`object fields with title and description show add button and fields if 
                                       className="ant-form-item-control-input-content"
                                     >
                                       <span
-                                        className="ant-input-affix-wrapper css-dev-only-do-not-override-1b0bdye ant-input-outlined form-control"
+                                        className="ant-input-affix-wrapper css-dev-only-do-not-override-1a3rktk ant-input-outlined form-control"
                                         onClick={[Function]}
                                         style={
                                           {
@@ -3880,7 +3961,7 @@ exports[`object fields with title and description show add button and fields if 
                                         }
                                       >
                                         <input
-                                          className="ant-input css-dev-only-do-not-override-1b0bdye"
+                                          className="ant-input css-dev-only-do-not-override-1a3rktk"
                                           disabled={false}
                                           id="root_additionalProperty-key"
                                           name="root_additionalProperty-key"
@@ -3890,6 +3971,7 @@ exports[`object fields with title and description show add button and fields if 
                                           onCompositionStart={[Function]}
                                           onFocus={[Function]}
                                           onKeyDown={[Function]}
+                                          onKeyUp={[Function]}
                                           type="text"
                                           value="additionalProperty"
                                         />
@@ -3905,7 +3987,7 @@ exports[`object fields with title and description show add button and fields if 
                           </div>
                         </div>
                         <div
-                          className="ant-col form-additional css-dev-only-do-not-override-1b0bdye"
+                          className="ant-col form-additional css-dev-only-do-not-override-1a3rktk"
                           style={
                             {
                               "flex": "1",
@@ -3915,10 +3997,10 @@ exports[`object fields with title and description show add button and fields if 
                           }
                         >
                           <div
-                            className="ant-form-item css-dev-only-do-not-override-1b0bdye"
+                            className="ant-form-item css-dev-only-do-not-override-1a3rktk"
                           >
                             <div
-                              className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+                              className="ant-row ant-form-item-row css-dev-only-do-not-override-1a3rktk"
                               style={
                                 {
                                   "rowGap": undefined,
@@ -3926,7 +4008,7 @@ exports[`object fields with title and description show add button and fields if 
                               }
                             >
                               <div
-                                className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-1b0bdye"
+                                className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-1a3rktk"
                                 style={{}}
                               >
                                 <label
@@ -3938,7 +4020,7 @@ exports[`object fields with title and description show add button and fields if 
                                 </label>
                               </div>
                               <div
-                                className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+                                className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1a3rktk"
                                 style={{}}
                               >
                                 <div
@@ -3948,7 +4030,7 @@ exports[`object fields with title and description show add button and fields if 
                                     className="ant-form-item-control-input-content"
                                   >
                                     <span
-                                      className="ant-input-affix-wrapper css-dev-only-do-not-override-1b0bdye ant-input-outlined"
+                                      className="ant-input-affix-wrapper css-dev-only-do-not-override-1a3rktk ant-input-outlined"
                                       onClick={[Function]}
                                       style={
                                         {
@@ -3958,7 +4040,7 @@ exports[`object fields with title and description show add button and fields if 
                                     >
                                       <input
                                         aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
-                                        className="ant-input css-dev-only-do-not-override-1b0bdye"
+                                        className="ant-input css-dev-only-do-not-override-1a3rktk"
                                         disabled={false}
                                         id="root_additionalProperty"
                                         name="root_additionalProperty"
@@ -3968,6 +4050,7 @@ exports[`object fields with title and description show add button and fields if 
                                         onCompositionStart={[Function]}
                                         onFocus={[Function]}
                                         onKeyDown={[Function]}
+                                        onKeyUp={[Function]}
                                         placeholder=""
                                         type="text"
                                         value="should appear"
@@ -3983,7 +4066,7 @@ exports[`object fields with title and description show add button and fields if 
                           </div>
                         </div>
                         <div
-                          className="ant-col css-dev-only-do-not-override-1b0bdye"
+                          className="ant-col css-dev-only-do-not-override-1a3rktk"
                           style={
                             {
                               "flex": "0 0 192px",
@@ -3993,7 +4076,7 @@ exports[`object fields with title and description show add button and fields if 
                           }
                         >
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-primary ant-btn-icon-only ant-btn-block ant-btn-dangerous array-item-remove"
+                            className="ant-btn css-dev-only-do-not-override-1a3rktk ant-btn-primary ant-btn-dangerous ant-btn-color-dangerous ant-btn-variant-solid ant-btn-icon-only ant-btn-block array-item-remove"
                             disabled={false}
                             id="root_additionalProperty__remove"
                             onClick={[Function]}
@@ -4032,11 +4115,11 @@ exports[`object fields with title and description show add button and fields if 
                   </div>
                 </div>
                 <div
-                  className="ant-col ant-col-24 css-dev-only-do-not-override-1b0bdye"
+                  className="ant-col ant-col-24 css-dev-only-do-not-override-1a3rktk"
                   style={{}}
                 >
                   <div
-                    className="ant-row ant-row-end css-dev-only-do-not-override-1b0bdye"
+                    className="ant-row ant-row-end css-dev-only-do-not-override-1a3rktk"
                     style={
                       {
                         "marginLeft": -12,
@@ -4046,7 +4129,7 @@ exports[`object fields with title and description show add button and fields if 
                     }
                   >
                     <div
-                      className="ant-col css-dev-only-do-not-override-1b0bdye"
+                      className="ant-col css-dev-only-do-not-override-1a3rktk"
                       style={
                         {
                           "flex": "0 0 192px",
@@ -4056,7 +4139,7 @@ exports[`object fields with title and description show add button and fields if 
                       }
                     >
                       <button
-                        className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-primary ant-btn-icon-only ant-btn-block object-property-expand"
+                        className="ant-btn css-dev-only-do-not-override-1a3rktk ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block object-property-expand"
                         disabled={false}
                         id="root__add"
                         onClick={[Function]}
@@ -4099,20 +4182,25 @@ exports[`object fields with title and description show add button and fields if 
             </div>
           </div>
           <div
-            className="ant-form-item-extra"
+            className="ant-form-item-additional"
+            style={{}}
           >
-            <span
-              id="root__description"
+            <div
+              className="ant-form-item-extra"
             >
-              a test description
-            </span>
+              <span
+                id="root__description"
+              >
+                a test description
+              </span>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
   <button
-    className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-submit"
+    className="ant-btn css-dev-only-do-not-override-1a3rktk ant-btn-submit"
     disabled={false}
     onClick={[Function]}
     style={{}}
@@ -4135,10 +4223,10 @@ exports[`object fields with title and description with global label off addition
     className="form-group field field-object"
   >
     <div
-      className="ant-form-item css-dev-only-do-not-override-1b0bdye"
+      className="ant-form-item css-dev-only-do-not-override-1a3rktk"
     >
       <div
-        className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+        className="ant-row ant-form-item-row css-dev-only-do-not-override-1a3rktk"
         style={
           {
             "rowGap": undefined,
@@ -4146,7 +4234,7 @@ exports[`object fields with title and description with global label off addition
         }
       >
         <div
-          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1a3rktk"
           style={{}}
         >
           <div
@@ -4159,7 +4247,7 @@ exports[`object fields with title and description with global label off addition
                 id="root"
               >
                 <div
-                  className="ant-row css-dev-only-do-not-override-1b0bdye"
+                  className="ant-row css-dev-only-do-not-override-1a3rktk"
                   style={
                     {
                       "marginLeft": -12,
@@ -4169,7 +4257,7 @@ exports[`object fields with title and description with global label off addition
                   }
                 >
                   <div
-                    className="ant-col ant-col-24 css-dev-only-do-not-override-1b0bdye"
+                    className="ant-col ant-col-24 css-dev-only-do-not-override-1a3rktk"
                     style={
                       {
                         "paddingLeft": 12,
@@ -4181,7 +4269,7 @@ exports[`object fields with title and description with global label off addition
                       className="form-group field field-string"
                     >
                       <div
-                        className="ant-row ant-row-top css-dev-only-do-not-override-1b0bdye"
+                        className="ant-row ant-row-top css-dev-only-do-not-override-1a3rktk"
                         style={
                           {
                             "marginLeft": -12,
@@ -4191,7 +4279,7 @@ exports[`object fields with title and description with global label off addition
                         }
                       >
                         <div
-                          className="ant-col form-additional css-dev-only-do-not-override-1b0bdye"
+                          className="ant-col form-additional css-dev-only-do-not-override-1a3rktk"
                           style={
                             {
                               "flex": "1",
@@ -4204,10 +4292,10 @@ exports[`object fields with title and description with global label off addition
                             className="form-group"
                           >
                             <div
-                              className="ant-form-item form-group css-dev-only-do-not-override-1b0bdye"
+                              className="ant-form-item form-group css-dev-only-do-not-override-1a3rktk"
                             >
                               <div
-                                className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+                                className="ant-row ant-form-item-row css-dev-only-do-not-override-1a3rktk"
                                 style={
                                   {
                                     "rowGap": undefined,
@@ -4215,7 +4303,7 @@ exports[`object fields with title and description with global label off addition
                                 }
                               >
                                 <div
-                                  className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-1b0bdye"
+                                  className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-1a3rktk"
                                   style={{}}
                                 >
                                   <label
@@ -4227,7 +4315,7 @@ exports[`object fields with title and description with global label off addition
                                   </label>
                                 </div>
                                 <div
-                                  className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+                                  className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1a3rktk"
                                   style={{}}
                                 >
                                   <div
@@ -4237,7 +4325,7 @@ exports[`object fields with title and description with global label off addition
                                       className="ant-form-item-control-input-content"
                                     >
                                       <span
-                                        className="ant-input-affix-wrapper css-dev-only-do-not-override-1b0bdye ant-input-outlined form-control"
+                                        className="ant-input-affix-wrapper css-dev-only-do-not-override-1a3rktk ant-input-outlined form-control"
                                         onClick={[Function]}
                                         style={
                                           {
@@ -4246,7 +4334,7 @@ exports[`object fields with title and description with global label off addition
                                         }
                                       >
                                         <input
-                                          className="ant-input css-dev-only-do-not-override-1b0bdye"
+                                          className="ant-input css-dev-only-do-not-override-1a3rktk"
                                           disabled={false}
                                           id="root_foo-key"
                                           name="root_foo-key"
@@ -4256,6 +4344,7 @@ exports[`object fields with title and description with global label off addition
                                           onCompositionStart={[Function]}
                                           onFocus={[Function]}
                                           onKeyDown={[Function]}
+                                          onKeyUp={[Function]}
                                           type="text"
                                           value="foo"
                                         />
@@ -4271,7 +4360,7 @@ exports[`object fields with title and description with global label off addition
                           </div>
                         </div>
                         <div
-                          className="ant-col form-additional css-dev-only-do-not-override-1b0bdye"
+                          className="ant-col form-additional css-dev-only-do-not-override-1a3rktk"
                           style={
                             {
                               "flex": "1",
@@ -4281,10 +4370,10 @@ exports[`object fields with title and description with global label off addition
                           }
                         >
                           <div
-                            className="ant-form-item css-dev-only-do-not-override-1b0bdye"
+                            className="ant-form-item css-dev-only-do-not-override-1a3rktk"
                           >
                             <div
-                              className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+                              className="ant-row ant-form-item-row css-dev-only-do-not-override-1a3rktk"
                               style={
                                 {
                                   "rowGap": undefined,
@@ -4292,7 +4381,7 @@ exports[`object fields with title and description with global label off addition
                               }
                             >
                               <div
-                                className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+                                className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1a3rktk"
                                 style={{}}
                               >
                                 <div
@@ -4302,7 +4391,7 @@ exports[`object fields with title and description with global label off addition
                                     className="ant-form-item-control-input-content"
                                   >
                                     <span
-                                      className="ant-input-affix-wrapper css-dev-only-do-not-override-1b0bdye ant-input-outlined"
+                                      className="ant-input-affix-wrapper css-dev-only-do-not-override-1a3rktk ant-input-outlined"
                                       onClick={[Function]}
                                       style={
                                         {
@@ -4312,7 +4401,7 @@ exports[`object fields with title and description with global label off addition
                                     >
                                       <input
                                         aria-describedby="root_foo__error root_foo__description root_foo__help"
-                                        className="ant-input css-dev-only-do-not-override-1b0bdye"
+                                        className="ant-input css-dev-only-do-not-override-1a3rktk"
                                         disabled={false}
                                         id="root_foo"
                                         name="root_foo"
@@ -4322,6 +4411,7 @@ exports[`object fields with title and description with global label off addition
                                         onCompositionStart={[Function]}
                                         onFocus={[Function]}
                                         onKeyDown={[Function]}
+                                        onKeyUp={[Function]}
                                         placeholder=""
                                         type="text"
                                         value="foo"
@@ -4337,7 +4427,7 @@ exports[`object fields with title and description with global label off addition
                           </div>
                         </div>
                         <div
-                          className="ant-col css-dev-only-do-not-override-1b0bdye"
+                          className="ant-col css-dev-only-do-not-override-1a3rktk"
                           style={
                             {
                               "flex": "0 0 192px",
@@ -4347,7 +4437,7 @@ exports[`object fields with title and description with global label off addition
                           }
                         >
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-primary ant-btn-icon-only ant-btn-block ant-btn-dangerous array-item-remove"
+                            className="ant-btn css-dev-only-do-not-override-1a3rktk ant-btn-primary ant-btn-dangerous ant-btn-color-dangerous ant-btn-variant-solid ant-btn-icon-only ant-btn-block array-item-remove"
                             disabled={false}
                             id="root_foo__remove"
                             onClick={[Function]}
@@ -4386,11 +4476,11 @@ exports[`object fields with title and description with global label off addition
                   </div>
                 </div>
                 <div
-                  className="ant-col ant-col-24 css-dev-only-do-not-override-1b0bdye"
+                  className="ant-col ant-col-24 css-dev-only-do-not-override-1a3rktk"
                   style={{}}
                 >
                   <div
-                    className="ant-row ant-row-end css-dev-only-do-not-override-1b0bdye"
+                    className="ant-row ant-row-end css-dev-only-do-not-override-1a3rktk"
                     style={
                       {
                         "marginLeft": -12,
@@ -4400,7 +4490,7 @@ exports[`object fields with title and description with global label off addition
                     }
                   >
                     <div
-                      className="ant-col css-dev-only-do-not-override-1b0bdye"
+                      className="ant-col css-dev-only-do-not-override-1a3rktk"
                       style={
                         {
                           "flex": "0 0 192px",
@@ -4410,7 +4500,7 @@ exports[`object fields with title and description with global label off addition
                       }
                     >
                       <button
-                        className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-primary ant-btn-icon-only ant-btn-block object-property-expand"
+                        className="ant-btn css-dev-only-do-not-override-1a3rktk ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block object-property-expand"
                         disabled={false}
                         id="root__add"
                         onClick={[Function]}
@@ -4453,20 +4543,25 @@ exports[`object fields with title and description with global label off addition
             </div>
           </div>
           <div
-            className="ant-form-item-extra"
+            className="ant-form-item-additional"
+            style={{}}
           >
-            <span
-              id="root__description"
+            <div
+              className="ant-form-item-extra"
             >
-              a test description
-            </span>
+              <span
+                id="root__description"
+              >
+                a test description
+              </span>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
   <button
-    className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-submit"
+    className="ant-btn css-dev-only-do-not-override-1a3rktk ant-btn-submit"
     disabled={false}
     onClick={[Function]}
     style={{}}
@@ -4489,10 +4584,10 @@ exports[`object fields with title and description with global label off object 1
     className="form-group field field-object"
   >
     <div
-      className="ant-form-item css-dev-only-do-not-override-1b0bdye"
+      className="ant-form-item css-dev-only-do-not-override-1a3rktk"
     >
       <div
-        className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+        className="ant-row ant-form-item-row css-dev-only-do-not-override-1a3rktk"
         style={
           {
             "rowGap": undefined,
@@ -4500,7 +4595,7 @@ exports[`object fields with title and description with global label off object 1
         }
       >
         <div
-          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1a3rktk"
           style={{}}
         >
           <div
@@ -4513,7 +4608,7 @@ exports[`object fields with title and description with global label off object 1
                 id="root"
               >
                 <div
-                  className="ant-row css-dev-only-do-not-override-1b0bdye"
+                  className="ant-row css-dev-only-do-not-override-1a3rktk"
                   style={
                     {
                       "marginLeft": -12,
@@ -4523,7 +4618,7 @@ exports[`object fields with title and description with global label off object 1
                   }
                 >
                   <div
-                    className="ant-col ant-col-24 css-dev-only-do-not-override-1b0bdye"
+                    className="ant-col ant-col-24 css-dev-only-do-not-override-1a3rktk"
                     style={
                       {
                         "paddingLeft": 12,
@@ -4535,10 +4630,10 @@ exports[`object fields with title and description with global label off object 1
                       className="form-group field field-string"
                     >
                       <div
-                        className="ant-form-item css-dev-only-do-not-override-1b0bdye"
+                        className="ant-form-item css-dev-only-do-not-override-1a3rktk"
                       >
                         <div
-                          className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+                          className="ant-row ant-form-item-row css-dev-only-do-not-override-1a3rktk"
                           style={
                             {
                               "rowGap": undefined,
@@ -4546,7 +4641,7 @@ exports[`object fields with title and description with global label off object 1
                           }
                         >
                           <div
-                            className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+                            className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1a3rktk"
                             style={{}}
                           >
                             <div
@@ -4556,7 +4651,7 @@ exports[`object fields with title and description with global label off object 1
                                 className="ant-form-item-control-input-content"
                               >
                                 <span
-                                  className="ant-input-affix-wrapper css-dev-only-do-not-override-1b0bdye ant-input-outlined"
+                                  className="ant-input-affix-wrapper css-dev-only-do-not-override-1a3rktk ant-input-outlined"
                                   onClick={[Function]}
                                   style={
                                     {
@@ -4566,7 +4661,7 @@ exports[`object fields with title and description with global label off object 1
                                 >
                                   <input
                                     aria-describedby="root_a__error root_a__description root_a__help"
-                                    className="ant-input css-dev-only-do-not-override-1b0bdye"
+                                    className="ant-input css-dev-only-do-not-override-1a3rktk"
                                     disabled={false}
                                     id="root_a"
                                     name="root_a"
@@ -4576,6 +4671,7 @@ exports[`object fields with title and description with global label off object 1
                                     onCompositionStart={[Function]}
                                     onFocus={[Function]}
                                     onKeyDown={[Function]}
+                                    onKeyUp={[Function]}
                                     placeholder=""
                                     type="text"
                                     value=""
@@ -4587,13 +4683,18 @@ exports[`object fields with title and description with global label off object 1
                               </div>
                             </div>
                             <div
-                              className="ant-form-item-extra"
+                              className="ant-form-item-additional"
+                              style={{}}
                             >
-                              <span
-                                id="root_a__description"
+                              <div
+                                className="ant-form-item-extra"
                               >
-                                A description
-                              </span>
+                                <span
+                                  id="root_a__description"
+                                >
+                                  A description
+                                </span>
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -4601,7 +4702,7 @@ exports[`object fields with title and description with global label off object 1
                     </div>
                   </div>
                   <div
-                    className="ant-col ant-col-24 css-dev-only-do-not-override-1b0bdye"
+                    className="ant-col ant-col-24 css-dev-only-do-not-override-1a3rktk"
                     style={
                       {
                         "paddingLeft": 12,
@@ -4613,10 +4714,10 @@ exports[`object fields with title and description with global label off object 1
                       className="form-group field field-number"
                     >
                       <div
-                        className="ant-form-item css-dev-only-do-not-override-1b0bdye"
+                        className="ant-form-item css-dev-only-do-not-override-1a3rktk"
                       >
                         <div
-                          className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+                          className="ant-row ant-form-item-row css-dev-only-do-not-override-1a3rktk"
                           style={
                             {
                               "rowGap": undefined,
@@ -4624,7 +4725,7 @@ exports[`object fields with title and description with global label off object 1
                           }
                         >
                           <div
-                            className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+                            className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1a3rktk"
                             style={{}}
                           >
                             <div
@@ -4634,7 +4735,7 @@ exports[`object fields with title and description with global label off object 1
                                 className="ant-form-item-control-input-content"
                               >
                                 <div
-                                  className="ant-input-number-affix-wrapper css-dev-only-do-not-override-1b0bdye ant-input-number-outlined ant-input-number-has-feedback"
+                                  className="ant-input-number-affix-wrapper css-dev-only-do-not-override-1a3rktk ant-input-number-outlined ant-input-number-has-feedback"
                                   onClick={[Function]}
                                   style={
                                     {
@@ -4643,7 +4744,7 @@ exports[`object fields with title and description with global label off object 1
                                   }
                                 >
                                   <div
-                                    className="ant-input-number ant-input-number-in-form-item css-dev-only-do-not-override-1b0bdye"
+                                    className="ant-input-number ant-input-number-in-form-item css-dev-only-do-not-override-1a3rktk"
                                     onBeforeInput={[Function]}
                                     onBlur={[Function]}
                                     onCompositionEnd={[Function]}
@@ -4745,13 +4846,18 @@ exports[`object fields with title and description with global label off object 1
                               </div>
                             </div>
                             <div
-                              className="ant-form-item-extra"
+                              className="ant-form-item-additional"
+                              style={{}}
                             >
-                              <span
-                                id="root_b__description"
+                              <div
+                                className="ant-form-item-extra"
                               >
-                                B description
-                              </span>
+                                <span
+                                  id="root_b__description"
+                                >
+                                  B description
+                                </span>
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -4763,20 +4869,25 @@ exports[`object fields with title and description with global label off object 1
             </div>
           </div>
           <div
-            className="ant-form-item-extra"
+            className="ant-form-item-additional"
+            style={{}}
           >
-            <span
-              id="root__description"
+            <div
+              className="ant-form-item-extra"
             >
-              a test description
-            </span>
+              <span
+                id="root__description"
+              >
+                a test description
+              </span>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
   <button
-    className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-submit"
+    className="ant-btn css-dev-only-do-not-override-1a3rktk ant-btn-submit"
     disabled={false}
     onClick={[Function]}
     style={{}}
@@ -4799,10 +4910,10 @@ exports[`object fields with title and description with global label off show add
     className="form-group field field-object"
   >
     <div
-      className="ant-form-item css-dev-only-do-not-override-1b0bdye"
+      className="ant-form-item css-dev-only-do-not-override-1a3rktk"
     >
       <div
-        className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+        className="ant-row ant-form-item-row css-dev-only-do-not-override-1a3rktk"
         style={
           {
             "rowGap": undefined,
@@ -4810,7 +4921,7 @@ exports[`object fields with title and description with global label off show add
         }
       >
         <div
-          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1a3rktk"
           style={{}}
         >
           <div
@@ -4823,7 +4934,7 @@ exports[`object fields with title and description with global label off show add
                 id="root"
               >
                 <div
-                  className="ant-row css-dev-only-do-not-override-1b0bdye"
+                  className="ant-row css-dev-only-do-not-override-1a3rktk"
                   style={
                     {
                       "marginLeft": -12,
@@ -4833,7 +4944,7 @@ exports[`object fields with title and description with global label off show add
                   }
                 >
                   <div
-                    className="ant-col ant-col-24 css-dev-only-do-not-override-1b0bdye"
+                    className="ant-col ant-col-24 css-dev-only-do-not-override-1a3rktk"
                     style={
                       {
                         "paddingLeft": 12,
@@ -4845,7 +4956,7 @@ exports[`object fields with title and description with global label off show add
                       className="form-group field field-string"
                     >
                       <div
-                        className="ant-row ant-row-top css-dev-only-do-not-override-1b0bdye"
+                        className="ant-row ant-row-top css-dev-only-do-not-override-1a3rktk"
                         style={
                           {
                             "marginLeft": -12,
@@ -4855,7 +4966,7 @@ exports[`object fields with title and description with global label off show add
                         }
                       >
                         <div
-                          className="ant-col form-additional css-dev-only-do-not-override-1b0bdye"
+                          className="ant-col form-additional css-dev-only-do-not-override-1a3rktk"
                           style={
                             {
                               "flex": "1",
@@ -4868,10 +4979,10 @@ exports[`object fields with title and description with global label off show add
                             className="form-group"
                           >
                             <div
-                              className="ant-form-item form-group css-dev-only-do-not-override-1b0bdye"
+                              className="ant-form-item form-group css-dev-only-do-not-override-1a3rktk"
                             >
                               <div
-                                className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+                                className="ant-row ant-form-item-row css-dev-only-do-not-override-1a3rktk"
                                 style={
                                   {
                                     "rowGap": undefined,
@@ -4879,7 +4990,7 @@ exports[`object fields with title and description with global label off show add
                                 }
                               >
                                 <div
-                                  className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-1b0bdye"
+                                  className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-1a3rktk"
                                   style={{}}
                                 >
                                   <label
@@ -4891,7 +5002,7 @@ exports[`object fields with title and description with global label off show add
                                   </label>
                                 </div>
                                 <div
-                                  className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+                                  className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1a3rktk"
                                   style={{}}
                                 >
                                   <div
@@ -4901,7 +5012,7 @@ exports[`object fields with title and description with global label off show add
                                       className="ant-form-item-control-input-content"
                                     >
                                       <span
-                                        className="ant-input-affix-wrapper css-dev-only-do-not-override-1b0bdye ant-input-outlined form-control"
+                                        className="ant-input-affix-wrapper css-dev-only-do-not-override-1a3rktk ant-input-outlined form-control"
                                         onClick={[Function]}
                                         style={
                                           {
@@ -4910,7 +5021,7 @@ exports[`object fields with title and description with global label off show add
                                         }
                                       >
                                         <input
-                                          className="ant-input css-dev-only-do-not-override-1b0bdye"
+                                          className="ant-input css-dev-only-do-not-override-1a3rktk"
                                           disabled={false}
                                           id="root_additionalProperty-key"
                                           name="root_additionalProperty-key"
@@ -4920,6 +5031,7 @@ exports[`object fields with title and description with global label off show add
                                           onCompositionStart={[Function]}
                                           onFocus={[Function]}
                                           onKeyDown={[Function]}
+                                          onKeyUp={[Function]}
                                           type="text"
                                           value="additionalProperty"
                                         />
@@ -4935,7 +5047,7 @@ exports[`object fields with title and description with global label off show add
                           </div>
                         </div>
                         <div
-                          className="ant-col form-additional css-dev-only-do-not-override-1b0bdye"
+                          className="ant-col form-additional css-dev-only-do-not-override-1a3rktk"
                           style={
                             {
                               "flex": "1",
@@ -4945,10 +5057,10 @@ exports[`object fields with title and description with global label off show add
                           }
                         >
                           <div
-                            className="ant-form-item css-dev-only-do-not-override-1b0bdye"
+                            className="ant-form-item css-dev-only-do-not-override-1a3rktk"
                           >
                             <div
-                              className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+                              className="ant-row ant-form-item-row css-dev-only-do-not-override-1a3rktk"
                               style={
                                 {
                                   "rowGap": undefined,
@@ -4956,7 +5068,7 @@ exports[`object fields with title and description with global label off show add
                               }
                             >
                               <div
-                                className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+                                className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1a3rktk"
                                 style={{}}
                               >
                                 <div
@@ -4966,7 +5078,7 @@ exports[`object fields with title and description with global label off show add
                                     className="ant-form-item-control-input-content"
                                   >
                                     <span
-                                      className="ant-input-affix-wrapper css-dev-only-do-not-override-1b0bdye ant-input-outlined"
+                                      className="ant-input-affix-wrapper css-dev-only-do-not-override-1a3rktk ant-input-outlined"
                                       onClick={[Function]}
                                       style={
                                         {
@@ -4976,7 +5088,7 @@ exports[`object fields with title and description with global label off show add
                                     >
                                       <input
                                         aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
-                                        className="ant-input css-dev-only-do-not-override-1b0bdye"
+                                        className="ant-input css-dev-only-do-not-override-1a3rktk"
                                         disabled={false}
                                         id="root_additionalProperty"
                                         name="root_additionalProperty"
@@ -4986,6 +5098,7 @@ exports[`object fields with title and description with global label off show add
                                         onCompositionStart={[Function]}
                                         onFocus={[Function]}
                                         onKeyDown={[Function]}
+                                        onKeyUp={[Function]}
                                         placeholder=""
                                         type="text"
                                         value="should appear"
@@ -5001,7 +5114,7 @@ exports[`object fields with title and description with global label off show add
                           </div>
                         </div>
                         <div
-                          className="ant-col css-dev-only-do-not-override-1b0bdye"
+                          className="ant-col css-dev-only-do-not-override-1a3rktk"
                           style={
                             {
                               "flex": "0 0 192px",
@@ -5011,7 +5124,7 @@ exports[`object fields with title and description with global label off show add
                           }
                         >
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-primary ant-btn-icon-only ant-btn-block ant-btn-dangerous array-item-remove"
+                            className="ant-btn css-dev-only-do-not-override-1a3rktk ant-btn-primary ant-btn-dangerous ant-btn-color-dangerous ant-btn-variant-solid ant-btn-icon-only ant-btn-block array-item-remove"
                             disabled={false}
                             id="root_additionalProperty__remove"
                             onClick={[Function]}
@@ -5050,11 +5163,11 @@ exports[`object fields with title and description with global label off show add
                   </div>
                 </div>
                 <div
-                  className="ant-col ant-col-24 css-dev-only-do-not-override-1b0bdye"
+                  className="ant-col ant-col-24 css-dev-only-do-not-override-1a3rktk"
                   style={{}}
                 >
                   <div
-                    className="ant-row ant-row-end css-dev-only-do-not-override-1b0bdye"
+                    className="ant-row ant-row-end css-dev-only-do-not-override-1a3rktk"
                     style={
                       {
                         "marginLeft": -12,
@@ -5064,7 +5177,7 @@ exports[`object fields with title and description with global label off show add
                     }
                   >
                     <div
-                      className="ant-col css-dev-only-do-not-override-1b0bdye"
+                      className="ant-col css-dev-only-do-not-override-1a3rktk"
                       style={
                         {
                           "flex": "0 0 192px",
@@ -5074,7 +5187,7 @@ exports[`object fields with title and description with global label off show add
                       }
                     >
                       <button
-                        className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-primary ant-btn-icon-only ant-btn-block object-property-expand"
+                        className="ant-btn css-dev-only-do-not-override-1a3rktk ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block object-property-expand"
                         disabled={false}
                         id="root__add"
                         onClick={[Function]}
@@ -5117,20 +5230,25 @@ exports[`object fields with title and description with global label off show add
             </div>
           </div>
           <div
-            className="ant-form-item-extra"
+            className="ant-form-item-additional"
+            style={{}}
           >
-            <span
-              id="root__description"
+            <div
+              className="ant-form-item-extra"
             >
-              a test description
-            </span>
+              <span
+                id="root__description"
+              >
+                a test description
+              </span>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
   <button
-    className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-submit"
+    className="ant-btn css-dev-only-do-not-override-1a3rktk ant-btn-submit"
     disabled={false}
     onClick={[Function]}
     style={{}}
