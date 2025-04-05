@@ -2,25 +2,28 @@
 
 A [DaisyUI](https://daisyui.com/) theme for [react-jsonschema-form](https://github.com/rjsf-team/react-jsonschema-form/).
 
-**Warning:** This integrates DaisyUI v5.0.0-beta.7. This is not yet released and is subject to change. It also integrates tailwindcss v4.0.6.
+This package integrates DaisyUI v6, Tailwind CSS v4, and RJSF v6 to provide a modern, customizable form experience.
 
 ## Features
 
-- Complete DaisyUI styling for all form elements
-- Support for custom themes via DaisyUI theme system
-- Responsive form layouts
+- Complete DaisyUI v6 styling for all RJSF form elements
+- Responsive design with mobile-friendly layouts
+- Connected card styling for nested elements and arrays
+- Consistent visual hierarchy for complex forms
 - Support for all RJSF field types including:
-  - Text inputs
-  - Select dropdowns (with examples support)
-  - Checkboxes and radio buttons
-  - Arrays and objects
-  - Enumerated objects
-  - Custom array handling
+  - Text inputs with proper styling and validation states
+  - Select dropdowns with customizable option rendering
+  - Checkboxes and radio buttons with optimized layouts
+  - Arrays with add/remove/reorder functionality
+  - Objects with proper nesting and visual hierarchy
+  - Date/time inputs with cross-browser compatibility
+- Support for custom themes via DaisyUI's theme system
+- Accessible form components following WAI-ARIA practices
 
 ## Installation
 
 ```bash
-npm install @rjsf/daisyui @rjsf/core @rjsf/utils
+npm install @rjsf/daisyui @rjsf/core @rjsf/utils tailwindcss@^4.0.0 daisyui@^6.0.0
 ```
 
 ## Usage
@@ -52,6 +55,28 @@ The form components use DaisyUI's theme system. You can customize the theme by a
 </html>
 ```
 
+For dynamic theme switching, you can change the data-theme attribute in your application code.
+
+## Tailwind Configuration
+
+Make sure your `tailwind.config.js` includes the DaisyUI plugin:
+
+```js
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  content: [
+    "./src/**/*.{js,jsx,ts,tsx}",
+  ],
+  theme: {
+    extend: {},
+  },
+  plugins: [require("daisyui")],
+  daisyui: {
+    themes: true,
+  },
+}
+```
+
 ## Development
 
 ```bash
@@ -61,8 +86,8 @@ npm install
 # Build the package
 npm run build
 
-# Run tests
-npm test
+# Run the development server
+npm run dev
 ```
 
 ## License
