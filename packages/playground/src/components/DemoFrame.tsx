@@ -6,6 +6,7 @@ import Frame, { FrameComponentProps, FrameContextConsumer } from 'react-frame-co
 import { __createChakraFrameProvider } from '@rjsf/chakra-ui';
 import { StyleProvider as AntdStyleProvider } from '@ant-design/cssinjs';
 import { __createFluentUIRCFrameProvider } from '@rjsf/fluentui-rc';
+import { __createDaisyUIFrameProvider } from '@rjsf/daisyui';
 
 /*
 Adapted from https://github.com/mui-org/material-ui/blob/master/docs/src/modules/components/DemoSandboxed.js
@@ -39,10 +40,11 @@ interface DemoFrameProps extends FrameComponentProps {
    * children being of the other valid ReactNode types, undefined and string as it always contains an RJSF `Form`
    */
   children: ReactElement;
+  subtheme: string;
 }
 
 export default function DemoFrame(props: DemoFrameProps) {
-  const { children, head, theme, ...frameProps } = props;
+  const { children, head, theme, subtheme, ...frameProps } = props;
 
   const [ready, setReady] = useState(false);
   const [emotionCache, setEmotionCache] = useState<EmotionCache>(createCache({ key: 'css' }));
@@ -92,6 +94,17 @@ export default function DemoFrame(props: DemoFrameProps) {
   } else if (theme === 'antd') {
     body = ready ? (
       <AntdStyleProvider container={instanceRef.current.contentWindow['demo-frame-jss']}>{children}</AntdStyleProvider>
+    ) : null;
+  } else if (theme === 'daisy-ui') {
+    body = ready ? (
+      <FrameContextConsumer>
+        {__createDaisyUIFrameProvider({
+          ...props,
+          subtheme: { dataTheme: subtheme },
+          container: container,
+          window: window,
+        })}
+      </FrameContextConsumer>
     ) : null;
   }
 

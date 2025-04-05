@@ -11,6 +11,9 @@
       "path": "./packages/chakra-ui"
     },
     {
+      "path": "./packages/daisyui"
+    },
+    {
       "path": "./packages/core"
     },
     {
