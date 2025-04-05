@@ -1,0 +1,64 @@
+import { FieldTemplateProps, StrictRJSFSchema, RJSFSchema, FormContextType } from '@rjsf/utils';
+
+const FieldTemplate = <T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+  props: FieldTemplateProps<T, S, F>
+) => {
+  const {
+    id,
+    label,
+    children,
+    errors,
+    formContext,
+    formData,
+    help,
+    hideError,
+    displayLabel,
+    classNames,
+    // Destructure props we don't want to pass to div
+    onKeyChange,
+    onDropPropertyClick,
+    uiSchema,
+    schema,
+    readonly,
+    required,
+    rawErrors,
+    rawHelp,
+    rawDescription,
+    hidden,
+    onChange,
+    ...divProps
+  } = props;
+
+  // Special handling for checkboxes - they should have the label after the input
+  const isCheckbox = schema.type === 'boolean';
+
+  return (
+    <div className={`field-template mb-3 ${classNames || ''}`} {...divProps}>
+      {displayLabel && !isCheckbox && (
+        <label htmlFor={id} className='label'>
+          <span className='label-text font-medium'>
+            {label}
+            {required && <span className='text-error ml-1'>*</span>}
+          </span>
+        </label>
+      )}
+      {isCheckbox ? (
+        <div className='form-control'>
+          <label className='label cursor-pointer justify-start'>
+            <div className='mr-2'>{children}</div>
+            <span className='label-text'>
+              {label}
+              {required && <span className='text-error ml-1'>*</span>}
+            </span>
+          </label>
+        </div>
+      ) : (
+        children
+      )}
+      {errors}
+      {help}
+    </div>
+  );
+};
+
+export default FieldTemplate;

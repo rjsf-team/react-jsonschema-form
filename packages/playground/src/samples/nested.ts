@@ -38,11 +38,31 @@ const nested: Sample = {
     },
   },
   uiSchema: {
+    title: {
+      'ui:placeholder': 'Enter a title for your task list',
+      'ui:className': 'font-semibold',
+    },
     tasks: {
+      'ui:description': 'Add your tasks below',
       items: {
+        title: {
+          'ui:placeholder': 'What needs to be done?',
+          'ui:className': 'font-semibold',
+        },
         details: {
           'ui:widget': 'textarea',
+          'ui:placeholder': 'Additional details about this task...',
+          'ui:options': {
+            rows: 3,
+          },
         },
+        done: {
+          'ui:widget': 'checkbox',
+          'ui:options': {
+            label: false, // Prevents double labeling
+          },
+        },
+        'ui:order': ['title', 'details', 'done'],
       },
     },
   },

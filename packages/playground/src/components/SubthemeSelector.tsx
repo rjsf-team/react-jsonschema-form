@@ -8,7 +8,8 @@ const uiSchema: UiSchema = {
 };
 
 interface SubthemeType {
-  stylesheet: string;
+  stylesheet?: string;
+  dataTheme?: string;
 }
 
 export interface SubthemesType {
