@@ -11,6 +11,7 @@ import {
   StrictRJSFSchema,
 } from '@rjsf/utils';
 import { Checkbox, Flex, Input } from '@mantine/core';
+import { cleanupOptions } from '../utils';
 
 /** The `CheckboxesWidget` is a widget for rendering checkbox groups.
  *  It is typically used to represent an array of enums.
@@ -39,6 +40,7 @@ export default function CheckboxesWidget<
   } = props;
 
   const { enumOptions, enumDisabled, inline, emptyValue } = options;
+  const themeProps = cleanupOptions(options);
 
   const handleChange = useCallback(
     (nextValue: any) => {
@@ -84,8 +86,7 @@ export default function CheckboxesWidget<
         readOnly={disabled || readonly}
         error={rawErrors && rawErrors.length > 0 ? rawErrors.join('\n') : undefined}
         aria-describedby={ariaDescribedByIds<T>(id)}
-        {...options}
-        classNames={typeof options?.classNames === 'object' ? options.classNames : undefined}
+        {...themeProps}
       >
         {Array.isArray(enumOptions) ? (
           <Flex mt='xs' direction={inline ? 'row' : 'column'} gap='xs' wrap='wrap'>
