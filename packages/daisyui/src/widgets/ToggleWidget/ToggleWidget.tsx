@@ -1,14 +1,52 @@
-import { ChangeEvent } from 'react';
+import { ChangeEvent, FocusEvent } from 'react';
 import { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 
+/** The `ToggleWidget` component renders a toggle switch input with DaisyUI styling
+ *
+ * Features:
+ * - Provides a visual toggle switch rather than a standard checkbox
+ * - Supports different sizes through options (sm, md, lg)
+ * - Handles required, disabled, and readonly states
+ * - Manages focus and blur events for accessibility
+ * - Includes an optional label from options
+ *
+ * @param props - The `WidgetProps` for this component
+ */
 export default function ToggleWidget<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
->({ id, value, required, disabled, readonly, autofocus, onChange, options }: WidgetProps<T, S, F>) {
+>({ id, value, required, disabled, readonly, autofocus, onChange, onFocus, onBlur, options }: WidgetProps<T, S, F>) {
+  /** Handle change events from the toggle input
+   *
+   * @param event - The change event
+   */
   const _onChange = ({ target: { checked } }: ChangeEvent<HTMLInputElement>) => onChange(checked);
+
+  /** Handle focus events
+   *
+   * @param event - The focus event
+   */
+  const handleFocus = (event: FocusEvent<HTMLInputElement>) => {
+    if (onFocus) {
+      onFocus(id, value);
+    }
+  };
+
+  /** Handle blur events
+   *
+   * @param event - The blur event
+   */
+  const handleBlur = (event: FocusEvent<HTMLInputElement>) => {
+    if (onBlur) {
+      onBlur(id, value);
+    }
+  };
+
+  // Get size from options or use default "md"
   const { size = 'md' } = options;
 
+  // Only add size class if it's not the default size
   const sizeClass = size !== 'md' ? `toggle-${size}` : '';
 
   return (
@@ -22,6 +60,8 @@ export default function ToggleWidget<
           disabled={disabled || readonly}
           autoFocus={autofocus}
           onChange={_onChange}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
           className={`toggle ${sizeClass}`}
         />
         <span className='label-text'>{options.label}</span>

@@ -1,5 +1,4 @@
 import {
-  ariaDescribedByIds,
   enumOptionsIndexForValue,
   enumOptionsValueForIndex,
   FormContextType,
@@ -28,12 +27,9 @@ export default function SelectWidget<
   onChange,
   onBlur,
   onFocus,
-  rawErrors = [],
 }: WidgetProps<T, S, F>) {
-  const { enumOptions, enumDisabled, emptyValue: optEmptyVal } = options;
+  const { enumOptions, emptyValue: optEmptyVal } = options;
   multiple = typeof multiple === 'undefined' ? false : !!multiple;
-  const emptyValue = multiple ? [] : '';
-  const isEmpty = typeof value === 'undefined' || (multiple && value.length < 1) || (!multiple && value === emptyValue);
   const dataListId = `${id}-datalist`;
 
   const getDisplayValue = (val: any) => {

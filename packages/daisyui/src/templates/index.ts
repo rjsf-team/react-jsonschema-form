@@ -11,7 +11,6 @@ export * from './FieldHelpTemplate';
 export * from './FieldTemplate';
 export * from './ObjectFieldTemplate';
 export * from './TitleField';
-export * from './UnsupportedField';
 export * from './WrapIfAdditionalTemplate';
 
 export * from './Templates';

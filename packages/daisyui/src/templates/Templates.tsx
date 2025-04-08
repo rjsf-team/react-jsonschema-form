@@ -17,6 +17,20 @@ import AddButton from './ButtonTemplates/AddButton';
 import SubmitButton from './ButtonTemplates/SubmitButton';
 import { CopyButton, MoveDownButton, MoveUpButton, RemoveButton } from './ButtonTemplates/IconButton';
 
+/** Function that generates all the template components required for the DaisyUI theme.
+ *
+ * This provides a complete set of styled components that implement the DaisyUI design system
+ * for use with react-jsonschema-form.
+ *
+ * The templates include:
+ * - Array field templates (for rendering array items and controls)
+ * - Button templates (for add, submit, copy, move, remove actions)
+ * - Input templates (for rendering form controls)
+ * - Layout templates (for fields, objects, additional properties)
+ * - Helper templates (for titles, descriptions, errors, help text)
+ *
+ * @returns A partial `TemplatesType` object with all required template components
+ */
 export function generateTemplates<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
@@ -46,4 +60,5 @@ export function generateTemplates<
   };
 }
 
+/** Default export of all generated templates for the DaisyUI theme */
 export default generateTemplates();

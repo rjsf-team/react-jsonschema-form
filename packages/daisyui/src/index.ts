@@ -21,6 +21,7 @@ export { default as CheckboxesWidget } from './widgets/CheckboxesWidget/Checkbox
 export { default as CheckboxWidget } from './widgets/CheckboxWidget/CheckboxWidget';
 export { default as RadioWidget } from './widgets/RadioWidget/RadioWidget';
 export { default as RangeWidget } from './widgets/RangeWidget/RangeWidget';
+export { default as RatingWidget } from './widgets/RatingWidget/RatingWidget';
 export { default as SelectWidget } from './widgets/SelectWidget/SelectWidget';
 export { default as TextAreaWidget } from './widgets/TextareaWidget/TextareaWidget';
 export { generateWidgets, default as Widgets } from './widgets/Widgets';

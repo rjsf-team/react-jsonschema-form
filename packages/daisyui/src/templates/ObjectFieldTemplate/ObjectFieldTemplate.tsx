@@ -8,8 +8,20 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
   titleId,
+  buttonId,
 } from '@rjsf/utils';
 
+/** The `ObjectFieldTemplate` component renders a layout for object fields in the form
+ * with DaisyUI styling. It handles:
+ *
+ * - Special styling for the root object with extra padding and shadows
+ * - Rendering of title and description using appropriate templates
+ * - Grid layout for object properties with consistent spacing
+ * - Conditionally rendering an add button for expandable objects
+ * - Support for hidden properties
+ *
+ * @param props - The `ObjectFieldTemplateProps` for the component
+ */
 export default function ObjectFieldTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
@@ -81,6 +93,7 @@ export default function ObjectFieldTemplate<
         {canExpand<T, S, F>(schema, uiSchema, formData) && (
           <div className='flex justify-end'>
             <AddButton
+              id={buttonId<T>(idSchema, 'add')}
               className='btn btn-primary btn-sm'
               onClick={onAddClick(schema)}
               disabled={disabled || readonly}

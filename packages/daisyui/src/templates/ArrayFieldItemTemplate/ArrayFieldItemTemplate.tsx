@@ -8,9 +8,18 @@ import {
   StrictRJSFSchema,
 } from '@rjsf/utils';
 
-/** The `ArrayFieldItemTemplate` component is the template used to render an items of an array.
+/** The `ArrayFieldItemTemplate` component is the template used to render an item of an array.
  *
- * @param props - The `ArrayFieldItemTemplateType` props for the component
+ * This DaisyUI implementation:
+ * - Renders items as cards with different styling for first, middle, and last items
+ * - Creates a connected appearance using border radius and border styling
+ * - Positions items with z-index to create a stacked effect
+ * - Places action buttons in a toolbar below the content using the join component
+ * - Uses shadow and border styling for visual hierarchy
+ *
+ * @param props - The `ArrayFieldItemTemplateType` props for the component with additional properties:
+ * @param props.index - The position of this item in the array (optional)
+ * @param props.isLastItem - Whether this is the last item in the array (optional)
  */
 export default function ArrayFieldItemTemplate<
   T = any,

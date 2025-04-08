@@ -1,21 +1,55 @@
 import { WidgetProps, StrictRJSFSchema, RJSFSchema, FormContextType } from '@rjsf/utils';
+import { FocusEvent } from 'react';
 
-const TimeWidget = <T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+/** The `TimeWidget` component renders a time input with DaisyUI styling
+ *
+ * Features:
+ * - Provides a time picker with hours and minutes
+ * - Handles required, disabled, and readonly states
+ * - Manages focus and blur events for accessibility
+ * - Uses DaisyUI's input styling with proper width
+ *
+ * @param props - The `WidgetProps` for this component
+ */
+export default function TimeWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: WidgetProps<T, S, F>
-) => {
-  const { id, value, onChange, required, disabled, readonly } = props;
+) {
+  const { id, value, onChange, onFocus, onBlur, required, disabled, readonly } = props;
+
+  /** Handle focus events
+   *
+   * @param event - The focus event
+   */
+  const handleFocus = (event: FocusEvent<HTMLInputElement>) => {
+    if (onFocus) {
+      onFocus(id, event.target.value);
+    }
+  };
+
+  /** Handle blur events
+   *
+   * @param event - The blur event
+   */
+  const handleBlur = (event: FocusEvent<HTMLInputElement>) => {
+    if (onBlur) {
+      onBlur(id, event.target.value);
+    }
+  };
 
   return (
-    <input
-      type='time'
-      id={id}
-      className='input input-bordered w-full'
-      value={value || ''}
-      required={required}
-      disabled={disabled || readonly}
-      onChange={(event) => onChange(event.target.value)}
-    />
+    <div className='form-control'>
+      <input
+        type='time'
+        id={id}
+        className='input input-bordered w-full'
+        value={value || ''}
+        required={required}
+        disabled={disabled || readonly}
+        readOnly={readonly}
+        onChange={(event) => onChange(event.target.value)}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
+      />
+    </div>
   );
-};
-
-export default TimeWidget;
+}

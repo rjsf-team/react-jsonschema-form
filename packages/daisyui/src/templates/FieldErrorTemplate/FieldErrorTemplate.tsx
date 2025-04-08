@@ -1,5 +1,13 @@
 import { FieldErrorProps, StrictRJSFSchema, RJSFSchema, FormContextType } from '@rjsf/utils';
 
+/** The `FieldErrorTemplate` component renders validation errors for a specific field
+ * with DaisyUI styling. It displays field-level errors as a bulleted list in red text.
+ *
+ * Unlike ErrorList which shows form-level errors, this component displays errors
+ * specific to a particular field in the form.
+ *
+ * @param props - The `FieldErrorProps` for the component
+ */
 export default function FieldErrorTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,

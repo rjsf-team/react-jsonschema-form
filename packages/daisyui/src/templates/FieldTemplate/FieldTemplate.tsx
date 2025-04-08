@@ -1,5 +1,18 @@
 import { FieldTemplateProps, StrictRJSFSchema, RJSFSchema, FormContextType } from '@rjsf/utils';
 
+/** The `FieldTemplate` component provides the main layout for each form field
+ * with DaisyUI styling. It handles:
+ *
+ * - Displaying field labels with required indicators
+ * - Special layout for checkbox fields (label positioned after the input)
+ * - Proper spacing between form fields
+ * - Rendering error messages and help text
+ * - Maintaining accessibility with proper label associations
+ *
+ * This template uses DaisyUI's label and form-control components for consistent styling.
+ *
+ * @param props - The `FieldTemplateProps` for the component
+ */
 const FieldTemplate = <T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: FieldTemplateProps<T, S, F>
 ) => {

@@ -7,6 +7,16 @@ import {
   buttonId,
 } from '@rjsf/utils';
 
+/** The `ArrayFieldItemButtonsTemplate` component renders the action buttons for an array field item
+ * with DaisyUI styling, including move up/down, copy, and remove buttons.
+ *
+ * Each button has appropriate DaisyUI classes:
+ * - All buttons use the base `btn btn-sm btn-ghost` classes
+ * - The remove button has an additional `btn-error` class for error styling
+ * - Buttons are conditionally rendered and disabled based on their availability and form state
+ *
+ * @param props - The `ArrayFieldItemButtonsTemplateType` properties for this component
+ */
 export default function ArrayFieldItemButtonsTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,

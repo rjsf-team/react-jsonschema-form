@@ -7,30 +7,41 @@ import 'react-day-picker/dist/style.css';
 
 import { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 
-//
-// Types
-//
+/**
+ * Props for the DateTimePicker popup component
+ */
 interface DateTimePickerProps {
+  /** Currently selected date */
   selectedDate?: Date;
+  /** Currently displayed month */
   month: Date;
+  /** Handler for month changes */
   onMonthChange: (date: Date) => void;
+  /** Handler for date selection */
   onSelect: (date: Date | undefined) => void;
+  /** Handler for time input changes */
   onTimeChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-//
-// Hook to manage popup state and the displayed month
-//
-const useDatePickerState = (initialDate?: Date) => {
+/**
+ * Custom hook to manage the picker's popup state and displayed month
+ *
+ * @param initialDate - Initial date to display, defaults to today
+ * @returns State and handlers for the date picker
+ */
+function useDatePickerState(initialDate?: Date) {
   const [isOpen, setIsOpen] = useState(false);
   const [month, setMonth] = useState<Date>(initialDate ?? new Date());
   return { isOpen, setIsOpen, month, setMonth };
-};
+}
 
-//
-// Hook for detecting clicks outside of a container
-//
-const useClickOutside = (ref: React.RefObject<HTMLDivElement>, callback: () => void) => {
+/**
+ * Custom hook to detect clicks outside an element and run a callback
+ *
+ * @param ref - React ref to the element to monitor
+ * @param callback - Function to call when a click outside is detected
+ */
+function useClickOutside(ref: React.RefObject<HTMLDivElement>, callback: () => void) {
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (ref.current && !ref.current.contains(event.target as Node)) {
@@ -40,11 +51,11 @@ const useClickOutside = (ref: React.RefObject<HTMLDivElement>, callback: () => v
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [ref, callback]);
-};
+}
 
-//
-// Predefined DayPicker styles using DaisyUI classes
-//
+/**
+ * Predefined DayPicker styles using DaisyUI classes
+ */
 const dayPickerStyles: { classNames: Partial<ClassNames>; modifiers: Partial<ModifiersClassNames> } = {
   classNames: {
     [UI.Root]: 'relative',
@@ -74,61 +85,77 @@ const dayPickerStyles: { classNames: Partial<ClassNames>; modifiers: Partial<Mod
   },
 };
 
-//
-// Popup component for the calendar and time input.
-// Wrapped with React.memo to avoid unnecessary re‑renders.
-//
-const DateTimePickerPopup: React.FC<DateTimePickerProps> = React.memo(
-  ({ selectedDate, month, onMonthChange, onSelect, onTimeChange }) => {
-    const customDayModifiers = {
-      selected: selectedDate, // Keep the 'selected' modifier as is - DayPicker uses this to track selection
+/**
+ * Popup component for the calendar and time input
+ *
+ * Renders a DayPicker calendar with time input for selecting date and time
+ *
+ * @param props - The DateTimePickerProps for this component
+ */
+function DateTimePickerPopup({ selectedDate, month, onMonthChange, onSelect, onTimeChange }: DateTimePickerProps) {
+  const customDayModifiers = {
+    selected: selectedDate, // Keep the 'selected' modifier as is - DayPicker uses this to track selection
 
-      // NEW 'custom-today' modifier - we will style "today" manually
-      'custom-today': (date: Date) => isToday(date) && !(selectedDate && isSameDay(date, selectedDate)),
-    };
+    // NEW 'custom-today' modifier - we will style "today" manually
+    'custom-today': (date: Date) => isToday(date) && !(selectedDate && isSameDay(date, selectedDate)),
+  };
 
-    const customModifiersClassNames: ModifiersClassNames = {
-      selected: dayPickerStyles.modifiers.selected as string, // Keep selected style
-      'custom-today': 'btn btn-outline btn-info min-h-0 h-full', // Manually apply "today" style
-    };
+  const customModifiersClassNames: ModifiersClassNames = {
+    selected: dayPickerStyles.modifiers.selected as string, // Keep selected style
+    'custom-today': 'btn btn-outline btn-info min-h-0 h-full', // Manually apply "today" style
+  };
 
-    return (
-      <div>
-        <DayPicker
-          captionLayout='dropdown'
-          classNames={dayPickerStyles.classNames}
-          fromYear={1800}
-          toYear={2025}
-          mode='single'
-          modifiers={customDayModifiers}
-          modifiersClassNames={customModifiersClassNames}
-          month={month}
-          onMonthChange={onMonthChange}
-          onSelect={onSelect}
-          selected={selectedDate}
-          showOutsideDays
+  return (
+    <div>
+      <DayPicker
+        captionLayout='dropdown'
+        classNames={dayPickerStyles.classNames}
+        fromYear={1800}
+        toYear={2025}
+        mode='single'
+        modifiers={customDayModifiers}
+        modifiersClassNames={customModifiersClassNames}
+        month={month}
+        onMonthChange={onMonthChange}
+        onSelect={onSelect}
+        selected={selectedDate}
+        showOutsideDays
+      />
+      <div className='mt-4 flex justify-center'>
+        <input
+          type='time'
+          className='input'
+          value={selectedDate ? format(selectedDate, 'HH:mm') : ''}
+          onChange={onTimeChange}
+          onClick={(e) => e.stopPropagation()}
         />
-        <div className='mt-4 flex justify-center'>
-          <input
-            type='time'
-            className='input'
-            value={selectedDate ? format(selectedDate, 'HH:mm') : ''}
-            onChange={onTimeChange}
-            onClick={(e) => e.stopPropagation()}
-          />
-        </div>
       </div>
-    );
-  }
-);
+    </div>
+  );
+}
 
-//
-// Main widget component
-//
-const DateTimeWidget = <T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: WidgetProps<T, S, F>
-) => {
-  const { id, value, onChange, schema } = props;
+// Use React.memo to optimize re-renders
+const MemoizedDateTimePickerPopup = React.memo(DateTimePickerPopup);
+
+/** The `DateTimeWidget` component provides a date and time picker with DaisyUI styling.
+ *
+ * Features:
+ * - Calendar popup with month/year navigation
+ * - Time input field
+ * - Today highlighting
+ * - Accessible keyboard navigation
+ * - Date formatting using date-fns
+ * - Custom DaisyUI styled calendar
+ * - Manages focus and blur events for accessibility
+ *
+ * @param props - The `WidgetProps` for this component
+ */
+export default function DateTimeWidget<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: WidgetProps<T, S, F>) {
+  const { id, value, onChange, onFocus, onBlur, schema } = props;
   // Initialize the local date from the parent's value.
   const initialDate = useMemo(() => (value ? new Date(value) : undefined), [value]);
   const [localDate, setLocalDate] = useState<Date | undefined>(initialDate);
@@ -192,6 +219,20 @@ const DateTimeWidget = <T = any, S extends StrictRJSFSchema = RJSFSchema, F exte
     [setIsOpen]
   );
 
+  // Handle focus event
+  const handleFocus = useCallback(() => {
+    if (onFocus) {
+      onFocus(id, value);
+    }
+  }, [id, onFocus, value]);
+
+  // Handle blur event
+  const handleBlur = useCallback(() => {
+    if (onBlur) {
+      onBlur(id, value);
+    }
+  }, [id, onBlur, value]);
+
   return (
     <div ref={containerRef} className='form-control my-4 w-full relative'>
       <div
@@ -202,6 +243,8 @@ const DateTimeWidget = <T = any, S extends StrictRJSFSchema = RJSFSchema, F exte
             togglePicker(e as unknown as React.MouseEvent);
           }
         }}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
       >
         <div
           id={id}
@@ -221,7 +264,7 @@ const DateTimeWidget = <T = any, S extends StrictRJSFSchema = RJSFSchema, F exte
         </div>
         {isOpen && (
           <div className='absolute z-50 mt-2 w-full max-w-xs bg-base-100 border border-base-300 shadow-lg rounded-box p-4'>
-            <DateTimePickerPopup
+            <MemoizedDateTimePickerPopup
               selectedDate={localDate}
               month={month}
               onMonthChange={handleMonthChange}
@@ -245,6 +288,4 @@ const DateTimeWidget = <T = any, S extends StrictRJSFSchema = RJSFSchema, F exte
       </div>
     </div>
   );
-};
-
-export default DateTimeWidget;
+}

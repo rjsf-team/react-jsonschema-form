@@ -1,5 +1,10 @@
 import { FormContextType, StrictRJSFSchema, RJSFSchema, ArrayFieldDescriptionProps } from '@rjsf/utils';
 
+/** The `ArrayFieldDescriptionTemplate` component renders the description for an array field
+ * with DaisyUI styling, displaying it as a small text with accent color.
+ *
+ * @param props - The `ArrayFieldDescriptionProps` for the component
+ */
 const ArrayFieldDescriptionTemplate = <
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,

@@ -1,26 +1,19 @@
-import { FormContextType, RJSFSchema, StrictRJSFSchema, TemplatesType } from '@rjsf/utils';
-
-import SubmitButton from './SubmitButton';
 import AddButton from './AddButton';
+import SubmitButton from './SubmitButton';
 import { CopyButton, MoveDownButton, MoveUpButton, RemoveButton } from './IconButton';
 
-function buttonTemplates<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
->(): TemplatesType<T, S, F>['ButtonTemplates'] {
-  return {
-    SubmitButton,
-    AddButton,
-    CopyButton,
-    MoveDownButton,
-    MoveUpButton,
-    RemoveButton,
-  };
-}
+export { AddButton };
+export { CopyButton, MoveDownButton, MoveUpButton, RemoveButton };
+export { SubmitButton };
 
-export { default as AddButton } from './AddButton';
-export { CopyButton, MoveDownButton, MoveUpButton, RemoveButton } from './IconButton';
-export { default as SubmitButton } from './SubmitButton';
+// Create a default export with all button templates
+const buttonTemplates = {
+  AddButton,
+  CopyButton,
+  MoveDownButton,
+  MoveUpButton,
+  RemoveButton,
+  SubmitButton
+};
 
 export default buttonTemplates;

@@ -9,9 +9,10 @@ import {
   parseDateString,
   toDateString,
   dateRangeOptions,
+  DateObject as RJSFDateObject,
 } from '@rjsf/utils';
 
-// Define the date object structure
+/** Interface for date object with optional string fields for each date/time component */
 interface DateObject {
   year?: string;
   month?: string;
@@ -21,15 +22,27 @@ interface DateObject {
   second?: string;
 }
 
-// Check if the date has all required fields
+/** Determines if the date object has all required fields to form a valid date
+ *
+ * @param state - The date object to check
+ * @param time - Whether to check time fields as well
+ * @returns True if all required fields are present
+ */
 function readyForChange(state: DateObject, time = false) {
   return state.year && state.month && state.day && (!time || (state.hour && state.minute && state.second));
 }
 
-// Helper type for date element format
+/** Supported date element display formats */
 type DateElementFormat = 'YMD' | 'MDY' | 'DMY';
 
-// Get props for date elements based on format
+/** Gets configuration for date elements based on format and ranges
+ *
+ * @param state - The current date object state
+ * @param time - Whether to include time elements
+ * @param yearsRange - Optional range of years to display
+ * @param format - Format for ordering date elements (year, month, day)
+ * @returns Array of element properties for rendering
+ */
 function getDateElementProps(
   state: DateObject,
   time: boolean,
@@ -70,7 +83,40 @@ function getDateElementProps(
   return dateElements;
 }
 
-// Component for each date element (year, month, day, etc.)
+/** Props for the DateElement component */
+interface DateElementProps {
+  /** Type of date element (year, month, day, etc.) */
+  type: string;
+  /** Min/max range for the element values */
+  range: [number, number];
+  /** Current value */
+  value?: string;
+  /** Function to call when value is selected */
+  select: (property: keyof DateObject, value: any) => void;
+  /** Base ID for the form element */
+  rootId: string;
+  /** Name attribute for the form element */
+  name: string;
+  /** Whether the input is disabled */
+  disabled?: boolean;
+  /** Whether the input is readonly */
+  readonly?: boolean;
+  /** Whether the input should autofocus */
+  autofocus?: boolean;
+  /** Registry containing widgets and templates */
+  registry: any;
+  /** Function called when input loses focus */
+  onBlur: (id: string, value: string) => void;
+  /** Function called when input gains focus */
+  onFocus: (id: string, value: string) => void;
+}
+
+/** Component for rendering individual date/time elements (year, month, day, etc.)
+ *
+ * Renders a select input for each date component with appropriate options.
+ *
+ * @param props - The props for the component
+ */
 function DateElement<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
   type,
   range,
@@ -84,20 +130,7 @@ function DateElement<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
   registry,
   onBlur,
   onFocus,
-}: {
-  type: string;
-  range: [number, number];
-  value?: string;
-  select: (property: keyof DateObject, value: any) => void;
-  rootId: string;
-  name: string;
-  disabled?: boolean;
-  readonly?: boolean;
-  autofocus?: boolean;
-  registry: any;
-  onBlur: (id: string, value: string) => void;
-  onFocus: (id: string, value: string) => void;
-}) {
+}: DateElementProps) {
   const id = `${rootId}_${type}`;
   const { SelectWidget } = registry.widgets;
 
@@ -124,7 +157,35 @@ function DateElement<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
   );
 }
 
-// Main AltDateWidget component
+/** Converts our DateObject to the expected format for toDateString
+ *
+ * @param dateObj - The internal DateObject
+ * @returns A properly formatted object for the utils toDateString function
+ */
+function convertToRJSFDateObject(dateObj: DateObject): RJSFDateObject {
+  return {
+    year: dateObj.year ? parseInt(dateObj.year) : 0,
+    month: dateObj.month ? parseInt(dateObj.month) : 0,
+    day: dateObj.day ? parseInt(dateObj.day) : 0,
+    hour: dateObj.hour ? parseInt(dateObj.hour) : 0,
+    minute: dateObj.minute ? parseInt(dateObj.minute) : 0,
+    second: dateObj.second ? parseInt(dateObj.second) : 0,
+  };
+}
+
+/** The `AltDateWidget` component provides an alternative date/time input
+ * with individual fields for year, month, day, and optionally time components.
+ *
+ * Features:
+ * - Supports different date formats (YMD, MDY, DMY)
+ * - Optional time selection (hours, minutes, seconds)
+ * - "Set to now" and "Clear" buttons
+ * - Configurable year ranges
+ * - Accessible controls with proper labeling
+ * - DaisyUI styling for all elements
+ *
+ * @param props - The `WidgetProps` for this component
+ */
 function AltDateWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
   time = false,
   disabled = false,
@@ -154,7 +215,8 @@ function AltDateWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F exten
 
   // Handle changes in props or state
   useEffect(() => {
-    const stateValue = toDateString(state, time);
+    const rjsfDateObj = convertToRJSFDateObject(state);
+    const stateValue = toDateString(rjsfDateObj, time);
     if (readyForChange(state, time) && stateValue !== value) {
       // Valid date changed via the selects
       onChange(stateValue);
@@ -178,7 +240,8 @@ function AltDateWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F exten
         return;
       }
       const nextState = parseDateString(new Date().toJSON(), time) as unknown as DateObject;
-      onChange(toDateString(nextState, time));
+      const rjsfDateObj = convertToRJSFDateObject(nextState);
+      onChange(toDateString(rjsfDateObj, time));
     },
     [disabled, readonly, time, onChange]
   );

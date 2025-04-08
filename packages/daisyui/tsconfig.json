@@ -9,7 +9,7 @@
         "baseUrl": "../",
         "jsx": "react-jsx",
         "module": "ESNext",
-        "moduleResolution": "bundler",
+        "moduleResolution": "node",
         "composite": true
     },
     "references": [

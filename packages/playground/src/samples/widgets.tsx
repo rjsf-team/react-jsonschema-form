@@ -62,6 +62,68 @@ const widgets: Sample = {
           },
         },
       },
+      customWidgets: {
+        type: 'object',
+        title: 'Custom widgets',
+        properties: {
+          rating: {
+            type: 'integer',
+            title: 'Rating (Stars - Default)',
+            description: 'Rate this from 1 to 5 stars',
+            minimum: 1,
+            maximum: 5,
+            default: 3,
+          },
+          ratingCustomStars: {
+            type: 'integer',
+            title: 'Rating (3 stars)',
+            description: 'Custom number of stars example',
+            minimum: 1,
+            maximum: 3,
+            default: 2,
+          },
+          ratingHearts: {
+            type: 'integer',
+            title: 'Rating (Hearts)',
+            description: 'Hearts instead of stars',
+            minimum: 1,
+            maximum: 5,
+            default: 3,
+          },
+          ratingColor: {
+            type: 'integer',
+            title: 'Rating (Green stars)',
+            description: 'Custom color example',
+            minimum: 1,
+            maximum: 5,
+            default: 4,
+          },
+          ratingGradient: {
+            type: 'integer',
+            title: 'Rating (Color gradient)',
+            description: 'Stars with gradient colors',
+            minimum: 1,
+            maximum: 5,
+            default: 3,
+          },
+          ratingSize: {
+            type: 'integer',
+            title: 'Rating (Large size)',
+            description: 'Stars with larger size',
+            minimum: 1,
+            maximum: 5,
+            default: 3,
+          },
+          ratingSmall: {
+            type: 'integer',
+            title: 'Rating (Small size)',
+            description: 'Stars with smaller size',
+            minimum: 1,
+            maximum: 5,
+            default: 3,
+          },
+        },
+      },
       secret: {
         type: 'string',
         default: "I'm a hidden string.",
@@ -129,6 +191,48 @@ const widgets: Sample = {
       },
       color: {
         'ui:widget': 'color',
+      },
+    },
+    customWidgets: {
+      rating: {
+        'ui:widget': 'rating',
+      },
+      ratingCustomStars: {
+        'ui:widget': 'rating',
+        'ui:options': {
+          stars: 3,
+        },
+      },
+      ratingHearts: {
+        'ui:widget': 'rating',
+        'ui:options': {
+          shape: 'heart',
+          color: 'red',
+        },
+      },
+      ratingColor: {
+        'ui:widget': 'rating',
+        'ui:options': {
+          color: 'green',
+        },
+      },
+      ratingGradient: {
+        'ui:widget': 'rating',
+        'ui:options': {
+          colorGradient: true,
+        },
+      },
+      ratingSize: {
+        'ui:widget': 'rating',
+        'ui:options': {
+          size: 'lg',
+        },
+      },
+      ratingSmall: {
+        'ui:widget': 'rating',
+        'ui:options': {
+          size: 'xs',
+        },
       },
     },
     secret: {
@@ -210,6 +314,15 @@ const widgets: Sample = {
     string: {
       default: 'Hello...',
       textarea: '... World',
+    },
+    customWidgets: {
+      rating: 3,
+      ratingCustomStars: 2,
+      ratingHearts: 3,
+      ratingColor: 4,
+      ratingGradient: 3,
+      ratingSize: 3,
+      ratingSmall: 3,
     },
     secret: "I'm a hidden string.",
   },

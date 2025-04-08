@@ -1,6 +1,7 @@
 import { FormContextType, IconButtonProps, RJSFSchema, StrictRJSFSchema, TranslatableString } from '@rjsf/utils';
 import DaisyUIButton from './DaisyUIButton';
 import { faCopy, faArrowDown, faArrowUp, faTrash, faPlus } from '@fortawesome/free-solid-svg-icons';
+import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 
 export function CopyButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: IconButtonProps<T, S, F>
@@ -8,7 +9,9 @@ export function CopyButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   const {
     registry: { translateString },
   } = props;
-  return <DaisyUIButton title={translateString(TranslatableString.CopyButton)} {...props} icon={faCopy} />;
+  return (
+    <DaisyUIButton {...props} title={translateString(TranslatableString.CopyButton)} icon={faCopy as IconDefinition} />
+  );
 }
 
 export function MoveDownButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
@@ -17,7 +20,13 @@ export function MoveDownButton<T = any, S extends StrictRJSFSchema = RJSFSchema,
   const {
     registry: { translateString },
   } = props;
-  return <DaisyUIButton title={translateString(TranslatableString.MoveDownButton)} {...props} icon={faArrowDown} />;
+  return (
+    <DaisyUIButton
+      {...props}
+      title={translateString(TranslatableString.MoveDownButton)}
+      icon={faArrowDown as IconDefinition}
+    />
+  );
 }
 
 export function MoveUpButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
@@ -26,7 +35,13 @@ export function MoveUpButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F
   const {
     registry: { translateString },
   } = props;
-  return <DaisyUIButton title={translateString(TranslatableString.MoveUpButton)} {...props} icon={faArrowUp} />;
+  return (
+    <DaisyUIButton
+      {...props}
+      title={translateString(TranslatableString.MoveUpButton)}
+      icon={faArrowUp as IconDefinition}
+    />
+  );
 }
 
 export function RemoveButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
@@ -37,10 +52,10 @@ export function RemoveButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F
   } = props;
   return (
     <DaisyUIButton
-      title={translateString(TranslatableString.RemoveButton)}
       {...props}
+      title={translateString(TranslatableString.RemoveButton)}
       iconType='danger'
-      icon={faTrash}
+      icon={faTrash as IconDefinition}
     />
   );
 }

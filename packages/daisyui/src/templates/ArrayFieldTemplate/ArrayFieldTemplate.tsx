@@ -1,11 +1,27 @@
-import { ArrayFieldTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema, getUiOptions } from '@rjsf/utils';
+import {
+  ArrayFieldTemplateProps,
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  buttonId,
+  getUiOptions,
+} from '@rjsf/utils';
 import ArrayFieldTitleTemplate from '../ArrayFieldTitleTemplate/ArrayFieldTitleTemplate';
 import ArrayFieldDescriptionTemplate from '../ArrayFieldDescriptionTemplate/ArrayFieldDescriptionTemplate';
 import ArrayFieldItemTemplate from '../ArrayFieldItemTemplate/ArrayFieldItemTemplate';
 
 /** The `ArrayFieldTemplate` component is the template used to render all items in an array.
  *
- * @param props - The `ArrayFieldItemTemplateType` props for the component
+ * This DaisyUI implementation:
+ * - Renders the entire array in a rounded container with base-200 background
+ * - Uses custom ArrayFieldTitleTemplate and ArrayFieldDescriptionTemplate
+ * - Displays an info alert when the array is empty
+ * - Renders each array item using ArrayFieldItemTemplate with additional props
+ * - Positions the add button at the bottom right using flexbox
+ * - Uses DaisyUI's button styling for the add button
+ * - Maintains proper spacing with margin and padding utilities
+ *
+ * @param props - The `ArrayFieldTemplateProps` for the component
  */
 export default function ArrayFieldTemplate<
   T = any,
@@ -80,6 +96,7 @@ export default function ArrayFieldTemplate<
         <div className='flex flex-row justify-end mt-4'>
           <AddButton
             className='btn btn-primary btn-md'
+            id={buttonId<T>(idSchema, 'add')}
             onClick={onAddClick}
             disabled={disabled || readonly}
             uiSchema={uiSchema}

@@ -3,7 +3,17 @@
  * can be rendered within an iframe without affecting the parent page.
  * Required for using DaisyUI in the playground.
  *
- * NOTE: This is an internal component only used by @rjsf/playground
+ * We have to define DaisyUIFrameProvider in this library, as opposed to the playground,
+ * to ensure consistent styling and proper theme management across frames.
+ *
+ * This provider:
+ * - Injects Tailwind CSS and DaisyUI stylesheets into the iframe
+ * - Configures Tailwind with DaisyUI themes
+ * - Manages theme persistence through localStorage
+ * - Wraps content in a themed container
+ *
+ * NOTE: This is an internal component only used by @rjsf/playground (no
+ * backwards compatibility guarantees!)
  */
 
 import React from 'react';
@@ -13,6 +23,13 @@ interface DaisyUIFrameProviderProps {
   subtheme?: { dataTheme?: string } | null;
 }
 
+/**
+ * Creates a DaisyUI frame provider component that can be used within an iframe
+ * to properly render DaisyUI styles without affecting the parent document.
+ *
+ * @param props - The component props
+ * @returns A component that sets up DaisyUI within an iframe context
+ */
 export const __createDaisyUIFrameProvider = (props: DaisyUIFrameProviderProps) => {
   return function DaisyUIFrame({ document }: { document?: Document }) {
     // Get theme from localStorage or use default

@@ -1,6 +1,18 @@
-import { WidgetProps, StrictRJSFSchema, FormContextType } from '@rjsf/utils';
+import { WidgetProps, StrictRJSFSchema, FormContextType, RJSFSchema } from '@rjsf/utils';
+import { FocusEvent } from 'react';
 
-const RadioWidget = <T, S extends StrictRJSFSchema, F extends FormContextType>({
+/** The `RadioWidget` component renders a group of radio buttons with DaisyUI styling
+ *
+ * Features:
+ * - Supports both primitive values and objects in enum options
+ * - Handles selection state for various data types
+ * - Uses DaisyUI radio styling with accessible labels
+ * - Supports disabled and readonly states
+ * - Provides focus and blur event handling
+ *
+ * @param props - The `WidgetProps` for this component
+ */
+export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
   id,
   options,
   value,
@@ -9,22 +21,53 @@ const RadioWidget = <T, S extends StrictRJSFSchema, F extends FormContextType>({
   readonly,
   label,
   onChange,
-}: WidgetProps<T, S, F>) => {
+  onFocus,
+  onBlur,
+}: WidgetProps<T, S, F>) {
   const { enumOptions } = options;
   const isEnumeratedObject = enumOptions && enumOptions[0]?.value && typeof enumOptions[0].value === 'object';
 
+  /** Gets the actual value from an option
+   *
+   * @param option - The option object to get value from
+   * @returns The option's value
+   */
   const getValue = (option: any) => {
-    if (isEnumeratedObject) {
-      return option.value;
-    }
     return option.value;
   };
 
+  /** Determines if an option is checked based on the current value
+   *
+   * @param option - The option to check
+   * @returns Whether the option should be checked
+   */
   const isChecked = (option: any) => {
     if (isEnumeratedObject) {
       return value && value.name === option.value.name;
     }
     return value === option.value;
+  };
+
+  /** Handles focus events for accessibility
+   *
+   * @param event - The focus event
+   * @param optionValue - The value of the focused option
+   */
+  const handleFocus = (event: FocusEvent<HTMLInputElement>, optionValue: any) => {
+    if (onFocus) {
+      onFocus(id, optionValue);
+    }
+  };
+
+  /** Handles blur events for accessibility
+   *
+   * @param event - The blur event
+   * @param optionValue - The value of the blurred option
+   */
+  const handleBlur = (event: FocusEvent<HTMLInputElement>, optionValue: any) => {
+    if (onBlur) {
+      onBlur(id, optionValue);
+    }
   };
 
   return (
@@ -44,12 +87,12 @@ const RadioWidget = <T, S extends StrictRJSFSchema, F extends FormContextType>({
               onChange(isEnumeratedObject ? option.value : option.value);
               e.target.blur();
             }}
+            onFocus={(e) => handleFocus(e, option.value)}
+            onBlur={(e) => handleBlur(e, option.value)}
           />
           <span className='label-text'>{option.label}</span>
         </label>
       ))}
     </div>
   );
-};
-
-export default RadioWidget;
+}
