@@ -1,3 +1,2 @@
-import AltDateTimeWidget from './AltDateTimeWidget';
-
-export default AltDateTimeWidget; 
+export { default } from './AltDateTimeWidget';
+export * from './AltDateTimeWidget';

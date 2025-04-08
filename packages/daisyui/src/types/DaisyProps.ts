@@ -1,5 +1,5 @@
 export interface DaisyProps {
-    theme?: string;
-    className?: string;
-    style?: React.CSSProperties;
+  theme?: string;
+  className?: string;
+  style?: React.CSSProperties;
 }

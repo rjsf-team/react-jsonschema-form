@@ -14,9 +14,7 @@ import WrapIfAdditionalTemplate from './WrapIfAdditionalTemplate';
 
 import { FormContextType, RJSFSchema, StrictRJSFSchema, TemplatesType } from '@rjsf/utils';
 
-import AddButton from './ButtonTemplates/AddButton';
-import SubmitButton from './ButtonTemplates/SubmitButton';
-import { CopyButton, MoveDownButton, MoveUpButton, RemoveButton } from './ButtonTemplates/IconButton';
+import { AddButton, SubmitButton, CopyButton, MoveDownButton, MoveUpButton, RemoveButton } from './ButtonTemplates';
 
 /** Function that generates all the template components required for the DaisyUI theme.
  *

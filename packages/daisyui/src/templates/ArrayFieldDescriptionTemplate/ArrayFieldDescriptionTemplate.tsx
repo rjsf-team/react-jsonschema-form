@@ -5,19 +5,17 @@ import { FormContextType, StrictRJSFSchema, RJSFSchema, ArrayFieldDescriptionPro
  *
  * @param props - The `ArrayFieldDescriptionProps` for the component
  */
-const ArrayFieldDescriptionTemplate = <
+function ArrayFieldDescriptionTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
->(
-  props: ArrayFieldDescriptionProps<T, S, F>
-) => {
+>(props: ArrayFieldDescriptionProps<T, S, F>) {
   const { description } = props;
   return (
     <div>
       <p className='text-sm text-accent'>{description}</p>
     </div>
   );
-};
+}
 
 export default ArrayFieldDescriptionTemplate;

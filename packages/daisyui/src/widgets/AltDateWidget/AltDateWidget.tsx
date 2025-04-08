@@ -186,7 +186,11 @@ function convertToRJSFDateObject(dateObj: DateObject): RJSFDateObject {
  *
  * @param props - The `WidgetProps` for this component
  */
-function AltDateWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
+export default function AltDateWidget<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>({
   time = false,
   disabled = false,
   readonly = false,
@@ -313,5 +317,3 @@ function AltDateWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F exten
     </div>
   );
 }
-
-export default AltDateWidget;
