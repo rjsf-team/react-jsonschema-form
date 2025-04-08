@@ -1,0 +1,31 @@
+{
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+        "outDir": "lib",
+        "baseUrl": ".",
+        "rootDir": "src",
+        "skipLibCheck": true,
+        "allowSyntheticDefaultImports": true,
+        "esModuleInterop": true,
+        "moduleResolution": "node",
+        "module": "esnext",
+        "target": "es5",
+        "lib": [
+            "dom",
+            "esnext"
+        ],
+        "jsx": "react-jsx",
+        "declaration": true,
+        "sourceMap": true,
+        "noUnusedLocals": false,
+        "noUnusedParameters": false
+    },
+    "include": [
+        "src"
+    ],
+    "exclude": [
+        "node_modules",
+        "lib",
+        "dist"
+    ]
+}

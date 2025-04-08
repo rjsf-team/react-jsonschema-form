@@ -51,8 +51,16 @@ export default function SelectWidget<
         isEnumeratedObject ? enumOptions[idx].value : enumOptionsValueForIndex<S>(value, enumOptions, optEmptyVal)
       );
     } else {
-      const option = optionsList.find((opt) => getDisplayValue(opt.label) === value);
-      onChange(option ? option.value : value);
+      let selectedOption = null;
+      if (optionsList) {
+        for (let i = 0; i < optionsList.length; i++) {
+          if (getDisplayValue(optionsList[i].label) === value) {
+            selectedOption = optionsList[i];
+            break;
+          }
+        }
+      }
+      onChange(selectedOption ? selectedOption.value : value);
     }
   };
   const _onBlur = ({ target }: FocusEvent<HTMLSelectElement | HTMLInputElement>) =>

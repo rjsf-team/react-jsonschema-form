@@ -43,7 +43,7 @@
     "node": ">=20"
   },
   "scripts": {
-    "build": "tsc -b",
+    "build": "tsc -b tsconfig.build.json",
     "build:cjs": "esbuild ./src/index.ts --bundle --outfile=dist/index.js --sourcemap --packages=external --format=cjs",
     "build:esm": "esbuild ./src/index.ts --bundle --outfile=dist/daisy-ui.esm.js --sourcemap --packages=external --format=esm",
     "build:umd": "rollup dist/daisy-ui.esm.js --format=umd --file=dist/daisy-ui.umd.js --name=@rjsf/daisy-ui",
