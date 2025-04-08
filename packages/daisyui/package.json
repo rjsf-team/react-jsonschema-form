@@ -59,7 +59,7 @@
     "tailwindcss": "^4.0.6"
   },
   "peerDependencies": {
-    "react": "^18.2.0",
+    "react": ">=17",
     "@rjsf/core": "^6.x",
     "@rjsf/utils": "^6.x",
     "primeicons": ">=6.0.0",
