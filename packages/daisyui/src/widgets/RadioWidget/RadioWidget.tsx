@@ -9,6 +9,7 @@ import { FocusEvent } from 'react';
  * - Uses DaisyUI radio styling with accessible labels
  * - Supports disabled and readonly states
  * - Provides focus and blur event handling
+ * - Renders radio buttons in a vertical layout for better spacing
  *
  * @param props - The `WidgetProps` for this component
  */
@@ -72,27 +73,30 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
 
   return (
     <div className='form-control'>
-      {enumOptions?.map((option) => (
-        <label key={option.value} className='cursor-pointer label my-auto mr-4'>
-          <input
-            type='radio'
-            id={`${id}-${option.value}`}
-            className='radio'
-            name={id}
-            value={getValue(option)}
-            checked={isChecked(option)}
-            required={required}
-            disabled={disabled || readonly}
-            onChange={(e) => {
-              onChange(isEnumeratedObject ? option.value : option.value);
-              e.target.blur();
-            }}
-            onFocus={(e) => handleFocus(e, option.value)}
-            onBlur={(e) => handleBlur(e, option.value)}
-          />
-          <span className='label-text'>{option.label}</span>
-        </label>
-      ))}
+      {/* Display the options in a vertical flex layout for better spacing */}
+      <div className='flex flex-col gap-2 mt-1'>
+        {enumOptions?.map((option) => (
+          <label key={option.value} className='flex items-center cursor-pointer gap-2'>
+            <input
+              type='radio'
+              id={`${id}-${option.value}`}
+              className='radio'
+              name={id}
+              value={getValue(option)}
+              checked={isChecked(option)}
+              required={required}
+              disabled={disabled || readonly}
+              onChange={(e) => {
+                onChange(isEnumeratedObject ? option.value : option.value);
+                e.target.blur();
+              }}
+              onFocus={(e) => handleFocus(e, option.value)}
+              onBlur={(e) => handleBlur(e, option.value)}
+            />
+            <span className='label-text'>{option.label}</span>
+          </label>
+        ))}
+      </div>
     </div>
   );
 }

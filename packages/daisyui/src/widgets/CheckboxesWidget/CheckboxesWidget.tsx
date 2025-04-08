@@ -10,6 +10,7 @@ import { FocusEvent, useCallback } from 'react';
  * - Uses DaisyUI checkbox styling with accessible labels
  * - Supports disabled and readonly states
  * - Provides focus and blur event handling for accessibility
+ * - Uses vertical layout for better spacing and readability
  * - Uses memoized handlers for optimal performance
  *
  * @param props - The `WidgetProps` for this component
@@ -94,23 +95,26 @@ export default function CheckboxesWidget<T, S extends StrictRJSFSchema = RJSFSch
 
   return (
     <div className='form-control'>
-      {enumOptions?.map((option) => (
-        <label key={option.value} className='cursor-pointer label my-auto mr-4'>
-          <input
-            type='checkbox'
-            id={`${id}-${option.value}`}
-            className='checkbox'
-            name={id}
-            checked={isChecked(option)}
-            required={required}
-            disabled={disabled || readonly}
-            onChange={() => _onChange(option)}
-            onFocus={(e) => handleFocus(e, option)}
-            onBlur={(e) => handleBlur(e, option)}
-          />
-          <span className='label-text'>{option.label}</span>
-        </label>
-      ))}
+      {/* Use a vertical layout with proper spacing */}
+      <div className='flex flex-col gap-2 mt-1'>
+        {enumOptions?.map((option) => (
+          <label key={option.value} className='flex items-center cursor-pointer gap-2'>
+            <input
+              type='checkbox'
+              id={`${id}-${option.value}`}
+              className='checkbox'
+              name={id}
+              checked={isChecked(option)}
+              required={required}
+              disabled={disabled || readonly}
+              onChange={() => _onChange(option)}
+              onFocus={(e) => handleFocus(e, option)}
+              onBlur={(e) => handleBlur(e, option)}
+            />
+            <span className='label-text'>{option.label}</span>
+          </label>
+        ))}
+      </div>
     </div>
   );
 }

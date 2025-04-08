@@ -1,3 +1,4 @@
-export { default } from './TextareaWidget';
-export * from './TextareaWidget';
+import TextareaWidget from './TextAreaWidget';
+
+export default TextareaWidget;
 

@@ -10,7 +10,7 @@ import { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjs
 /**
  * Props for the DatePicker popup component
  */
-interface DateTimePickerProps {
+interface DatePickerProps {
   /** Currently selected date */
   selectedDate?: Date;
   /** Currently displayed month */
@@ -77,7 +77,6 @@ const dayPickerStyles: { classNames: Partial<ClassNames>; modifiers: Partial<Mod
   },
   modifiers: {
     selected: 'btn btn-accent min-h-0 h-full',
-    // today: 'btn btn-outline btn-info min-h-0 h-full',
     outside: 'text-base-content/30 hover:btn-ghost',
     disabled: 'opacity-50 cursor-not-allowed hover:btn-disabled',
   },
@@ -88,34 +87,34 @@ const dayPickerStyles: { classNames: Partial<ClassNames>; modifiers: Partial<Mod
  *
  * Renders a DayPicker calendar for selecting dates
  *
- * @param props - The DateTimePickerProps for this component
+ * @param props - The DatePickerProps for this component
  */
-function DatePickerPopup({ selectedDate, month, onMonthChange, onSelect }: DateTimePickerProps) {
+function DatePickerPopup({ selectedDate, month, onMonthChange, onSelect }: DatePickerProps) {
   const customDayModifiers = {
-    selected: selectedDate, // DayPicker uses this for tracking selection.
+    selected: selectedDate,
     'custom-today': (date: Date) => isToday(date) && !(selectedDate && isSameDay(date, selectedDate)),
   };
 
   const customModifiersClassNames: ModifiersClassNames = {
-    selected: dayPickerStyles.modifiers.selected as string,
+    ...dayPickerStyles.modifiers,
     'custom-today': 'btn btn-outline btn-info min-h-0 h-full',
   };
 
   return (
-    <div>
+    <div className='p-3'>
       <DayPicker
-        captionLayout='dropdown'
-        classNames={dayPickerStyles.classNames}
-        fromYear={1800}
-        toYear={2025}
         mode='single'
-        modifiers={customDayModifiers}
-        modifiersClassNames={customModifiersClassNames}
+        selected={selectedDate}
         month={month}
         onMonthChange={onMonthChange}
         onSelect={onSelect}
-        selected={selectedDate}
+        captionLayout='dropdown'
+        fromYear={1900}
+        toYear={new Date().getFullYear() + 10}
         showOutsideDays
+        classNames={dayPickerStyles.classNames}
+        modifiers={customDayModifiers}
+        modifiersClassNames={customModifiersClassNames}
       />
     </div>
   );
@@ -128,10 +127,8 @@ const MemoizedDatePickerPopup = React.memo(DatePickerPopup);
  *
  * Features:
  * - Calendar popup with month/year dropdown navigation
- * - Today highlighting with custom styling
  * - Accessible keyboard navigation
  * - Date formatting using date-fns
- * - Custom DaisyUI styled calendar
  * - Date-only selection (time component set to 00:00:00)
  * - Manages focus and blur events for accessibility
  *
@@ -152,11 +149,18 @@ export default function DateWidget<T = any, S extends StrictRJSFSchema = RJSFSch
 
   const { isOpen, setIsOpen, month, setMonth } = useDatePickerState(initialDate);
   const containerRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLDivElement>(null);
 
   // Close the popup when clicking outside and commit changes.
   useClickOutside(containerRef, () => {
-    setIsOpen(false);
-    onChange(localDate ? localDate.toISOString() : '');
+    if (isOpen) {
+      setIsOpen(false);
+      onChange(localDate ? localDate.toISOString() : '');
+      // Manually invoke the blur handler to ensure blur event is triggered
+      if (onBlur) {
+        onBlur(id, value);
+      }
+    }
   });
 
   // When the local date changes, update the displayed month.
@@ -183,8 +187,11 @@ export default function DateWidget<T = any, S extends StrictRJSFSchema = RJSFSch
     (e: React.MouseEvent) => {
       e.stopPropagation();
       setIsOpen((prev) => !prev);
+      if (!isOpen && onFocus) {
+        onFocus(id, value);
+      }
     },
-    [setIsOpen]
+    [isOpen, id, onFocus, setIsOpen, value]
   );
 
   // Handle focus event
@@ -196,13 +203,28 @@ export default function DateWidget<T = any, S extends StrictRJSFSchema = RJSFSch
 
   // Handle blur event
   const handleBlur = useCallback(() => {
-    if (onBlur) {
+    if (!isOpen && onBlur) {
       onBlur(id, value);
     }
-  }, [id, onBlur, value]);
+  }, [id, onBlur, value, isOpen]);
+
+  // Close popup on escape key
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isOpen) {
+        setIsOpen(false);
+        if (onBlur) {
+          onBlur(id, value);
+        }
+      }
+    };
+
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
+  }, [id, isOpen, onBlur, value]);
 
   return (
-    <div ref={containerRef} className='form-control my-4 w-full relative'>
+    <div className='form-control my-4 w-full relative'>
       <div
         className='w-full'
         tabIndex={0}
@@ -213,6 +235,7 @@ export default function DateWidget<T = any, S extends StrictRJSFSchema = RJSFSch
         }}
         onFocus={handleFocus}
         onBlur={handleBlur}
+        ref={inputRef}
       >
         <div
           id={id}
@@ -228,23 +251,31 @@ export default function DateWidget<T = any, S extends StrictRJSFSchema = RJSFSch
           <span className={localDate && isValid(localDate) ? '' : 'text-base-content/50'}>
             {localDate && isValid(localDate) ? format(localDate, 'PP') : schema.title}
           </span>
-          <FontAwesomeIcon icon={faCalendar} className='ml-2 h-4 w-4 text-primary-content' />
+          <FontAwesomeIcon icon={faCalendar} className='ml-2 h-4 w-4 text-primary' />
         </div>
         {isOpen && (
-          <div className='absolute z-50 mt-2 w-full max-w-xs bg-base-100 border border-base-300 shadow-lg rounded-box p-4'>
+          <div
+            ref={containerRef}
+            className='absolute z-[100] mt-2 w-full max-w-xs bg-base-100 border border-base-300 shadow-lg rounded-box'
+            onClick={(e) => e.stopPropagation()}
+          >
             <MemoizedDatePickerPopup
               selectedDate={localDate}
               month={month}
               onMonthChange={handleMonthChange}
               onSelect={handleSelect}
             />
-            <div className='mt-2 flex justify-end'>
+            <div className='p-3 flex justify-end border-t border-base-300'>
               <button
                 type='button'
                 className='btn btn-sm btn-primary'
                 onClick={() => {
                   setIsOpen(false);
                   onChange(localDate ? localDate.toISOString() : '');
+                  if (onBlur) {
+                    onBlur(id, value);
+                  }
+                  inputRef.current?.focus();
                 }}
               >
                 Done

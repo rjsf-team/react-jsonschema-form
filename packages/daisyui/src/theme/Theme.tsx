@@ -19,8 +19,10 @@ export function generateTheme<
 >(): ThemeProps<T, S, F> {
   const { fields, widgets } = getDefaultRegistry<T, S, F>();
   const generatedWidgets = generateWidgets<T, S, F>();
+  const templates = generateTemplates<T, S, F>();
+
   return {
-    templates: generateTemplates<T, S, F>(),
+    templates,
     widgets: {
       ...generatedWidgets,
       boolean: generatedWidgets.toggle,

@@ -1,17 +1,18 @@
-import { ComponentType } from 'react';
-import { withTheme, FormProps } from '@rjsf/core';
-import { generateTheme } from '../theme';
-import { FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import { withTheme } from '@rjsf/core';
+import { RJSFSchema, StrictRJSFSchema, FormContextType } from '@rjsf/utils';
 
-export function generateForm<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
->(): ComponentType<FormProps<T, S, F>> {
-  const theme = generateTheme<T, S, F>();
-  return withTheme<T, S, F>(theme);
+import { generateTheme } from '../theme/Theme';
+
+/**
+ * Generate a form with the DaisyUI theme
+ */
+export function generateForm<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>() {
+  return withTheme(generateTheme<T, S, F>());
 }
 
+/**
+ * Form component with DaisyUI theme
+ */
 const Form = generateForm();
 
 export { Form, generateTheme };

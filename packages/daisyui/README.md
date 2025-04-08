@@ -1,5 +1,11 @@
 # @rjsf/daisyui
 
+[![Build Status][build-shield]][build-url]
+[![npm][npm-shield]][npm-url]
+[![npm downloads][npm-dl-shield]][npm-dl-url]
+[![Contributors][contributors-shield]][contributors-url]
+[![License][license-shield]][license-url]
+
 A [DaisyUI](https://daisyui.com/) theme for [react-jsonschema-form](https://github.com/rjsf-team/react-jsonschema-form/).
 
 This package integrates DaisyUI v6, Tailwind CSS v4, and RJSF v6 to provide a modern, customizable form experience.
@@ -90,6 +96,114 @@ npm run build
 npm run dev
 ```
 
+## Customization
+
+### Grid Layout
+
+The DaisyUI theme supports the standard RJSF layout grid system. You can use grid layouts by incorporating the `LayoutGridField` in your UI schema:
+
+```jsx
+import { RJSFSchema, UiSchema } from "@rjsf/utils";
+import Form from "@rjsf/daisyui";
+import validator from "@rjsf/validator-ajv8";
+
+const schema = {
+  type: "object",
+  properties: {
+    firstName: { type: "string", title: "First Name" },
+    lastName: { type: "string", title: "Last Name" },
+    email: { type: "string", format: "email", title: "Email" },
+    phone: { type: "string", title: "Phone" }
+  }
+};
+
+// Use grid layout for the form
+const uiSchema = {
+  "ui:field": "LayoutGridField",
+  "ui:layoutGrid": {
+    "ui:row": {
+      children: [
+        {
+          "ui:row": {
+            children: [
+              {
+                "ui:col": {
+                  xs: 12,
+                  sm: 6,
+                  children: ["firstName"]
+                }
+              },
+              {
+                "ui:col": {
+                  xs: 12,
+                  sm: 6,
+                  children: ["lastName"]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "ui:row": {
+            children: [
+              {
+                "ui:col": {
+                  xs: 12,
+                  sm: 6,
+                  children: ["email"]
+                }
+              },
+              {
+                "ui:col": {
+                  xs: 12,
+                  sm: 6,
+                  children: ["phone"]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+};
+
+const MyForm = () => (
+  <Form 
+    schema={schema} 
+    uiSchema={uiSchema}
+    validator={validator}
+  />
+);
+```
+
+The DaisyUI theme uses a flexible grid system based on Tailwind CSS's flex utilities. This grid layout integrates with the standard RJSF layout system, providing a consistent experience across all themes.
+
+## Theme Configuration
+
+DaisyUI itself provides a variety of themes. To use a specific theme, add the `data-theme` attribute to your root element or use the `ThemeProvider` component.
+
+```jsx
+import { ThemeProvider } from '@rjsf/daisyui';
+
+const App = () => (
+  <ThemeProvider>
+    <Form schema={schema} validator={validator} />
+  </ThemeProvider>
+);
+```
+
 ## License
 
 Apache-2.0
+
+[build-shield]: https://github.com/rjsf-team/react-jsonschema-form/workflows/CI/badge.svg
+[build-url]: https://github.com/rjsf-team/react-jsonschema-form/actions
+[npm-shield]: https://img.shields.io/npm/v/@rjsf/daisyui/latest.svg?style=flat-square
+[npm-url]: https://www.npmjs.com/package/@rjsf/daisyui
+[npm-dl-shield]: https://img.shields.io/npm/dm/@rjsf/daisyui.svg?style=flat-square
+[npm-dl-url]: https://www.npmjs.com/package/@rjsf/daisyui
+[contributors-shield]: https://img.shields.io/github/contributors/rjsf-team/react-jsonschema-form.svg?style=flat-square
+[contributors-url]: https://github.com/rjsf-team/react-jsonschema-form/graphs/contributors
+[license-shield]: https://img.shields.io/badge/license-Apache%202.0-blue.svg?style=flat-square
+[license-url]: https://github.com/rjsf-team/react-jsonschema-form/blob/main/LICENSE

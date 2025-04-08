@@ -7,6 +7,7 @@ import ErrorList from './ErrorList';
 import FieldErrorTemplate from './FieldErrorTemplate';
 import FieldHelpTemplate from './FieldHelpTemplate';
 import FieldTemplate from './FieldTemplate';
+import GridTemplate from './GridTemplate/GridTemplate';
 import ObjectFieldTemplate from './ObjectFieldTemplate';
 import TitleFieldTemplate from './TitleField/TitleField';
 import WrapIfAdditionalTemplate from './WrapIfAdditionalTemplate';
@@ -54,6 +55,7 @@ export function generateTemplates<
     FieldErrorTemplate,
     FieldHelpTemplate,
     FieldTemplate,
+    GridTemplate,
     ObjectFieldTemplate,
     TitleFieldTemplate,
     WrapIfAdditionalTemplate,
