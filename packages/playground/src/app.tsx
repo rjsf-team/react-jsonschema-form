@@ -4,6 +4,7 @@ import { Theme as SuiTheme } from '@rjsf/semantic-ui';
 import { Theme as AntdTheme } from '@rjsf/antd';
 import { Theme as BootstrapTheme } from '@rjsf/react-bootstrap';
 import { Theme as ChakraUITheme } from '@rjsf/chakra-ui';
+import { Theme as MantineTheme } from '@rjsf/mantine';
 import { Theme as shadcnTheme } from '@rjsf/shadcn';
 import { Theme as DaisyUITheme } from '@rjsf/daisyui';
 import v8Validator, { customizeValidator } from '@rjsf/validator-ajv8';
@@ -183,6 +184,10 @@ const themes: PlaygroundProps['themes'] = {
   'fluentui-rc': {
     stylesheet: '',
     theme: FluentUIRCTheme,
+  },
+  mantine: {
+    stylesheet: '//mantine-rjsf.pages.dev/styles.css',
+    theme: MantineTheme,
   },
   mui: {
     stylesheet: '',
