@@ -1,6 +1,7 @@
 import React, { useCallback } from 'react';
 import { StrictRJSFSchema, RJSFSchema, FormContextType, WidgetProps, labelValue } from '@rjsf/utils';
 import { Textarea } from '@mantine/core';
+import { cleanupOptions } from '../utils';
 
 export default function TextareaWidget<
   T = any,
@@ -24,6 +25,8 @@ export default function TextareaWidget<
     onBlur,
     onFocus,
   } = props;
+
+  const themeProps = cleanupOptions(options);
   const emptyValue = options?.emptyValue ?? '';
 
   const handleChange = useCallback(
@@ -65,8 +68,7 @@ export default function TextareaWidget<
       onBlur={handleBlur}
       onFocus={handleFocus}
       error={rawErrors && rawErrors.length > 0 ? rawErrors.join('\n') : undefined}
-      {...options}
-      classNames={typeof options?.classNames === 'object' ? options.classNames : undefined}
+      {...themeProps}
     />
   );
 }
