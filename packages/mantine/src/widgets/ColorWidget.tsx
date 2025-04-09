@@ -8,6 +8,7 @@ import {
   ariaDescribedByIds,
 } from '@rjsf/utils';
 import { ColorInput } from '@mantine/core';
+import { cleanupOptions } from '../utils';
 
 /** The `ColorWidget` component uses the `ColorInput` from Mantine, allowing users to pick a color.
  *
@@ -35,6 +36,7 @@ export default function ColorWidget<T = any, S extends StrictRJSFSchema = RJSFSc
   } = props;
 
   const emptyValue = options.emptyValue || '';
+  const themeProps = cleanupOptions(options);
 
   const handleChange = useCallback(
     (nextValue: string) => {
@@ -75,10 +77,9 @@ export default function ColorWidget<T = any, S extends StrictRJSFSchema = RJSFSc
       onBlur={handleBlur}
       onFocus={handleFocus}
       error={rawErrors && rawErrors.length > 0 ? rawErrors.join('\n') : undefined}
-      {...options}
+      {...themeProps}
       aria-describedby={ariaDescribedByIds<T>(id)}
       popoverProps={{ withinPortal: false }}
-      classNames={typeof options?.classNames === 'object' ? options.classNames : undefined}
     />
   );
 }

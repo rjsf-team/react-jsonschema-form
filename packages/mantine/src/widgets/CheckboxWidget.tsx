@@ -8,6 +8,7 @@ import {
   ariaDescribedByIds,
 } from '@rjsf/utils';
 import { Checkbox } from '@mantine/core';
+import { cleanupOptions } from '../utils';
 
 export default function CheckboxWidget<
   T = any,
@@ -30,6 +31,8 @@ export default function CheckboxWidget<
     onBlur,
     onFocus,
   } = props;
+
+  const themeProps = cleanupOptions(options);
 
   const handleCheckboxChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -72,8 +75,7 @@ export default function CheckboxWidget<
       onFocus={handleFocus}
       error={rawErrors && rawErrors.length > 0 ? rawErrors.join('\n') : undefined}
       aria-describedby={ariaDescribedByIds<T>(id)}
-      {...options}
-      classNames={typeof options?.classNames === 'object' ? options.classNames : undefined}
+      {...themeProps}
     />
   );
 }
