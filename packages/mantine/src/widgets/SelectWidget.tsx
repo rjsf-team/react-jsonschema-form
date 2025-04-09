@@ -10,6 +10,7 @@ import {
   WidgetProps,
 } from '@rjsf/utils';
 import { Select, MultiSelect } from '@mantine/core';
+import { cleanupOptions } from '../utils';
 
 /** The `SelectWidget` is a widget for rendering dropdowns.
  *  It is typically used with string properties constrained with enum options.
@@ -38,6 +39,7 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
   } = props;
 
   const { enumOptions, enumDisabled, emptyValue } = options;
+  const themeProps = cleanupOptions(options);
 
   const handleChange = useCallback(
     (nextValue: any) => {
@@ -98,10 +100,9 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
       required={required}
       error={rawErrors && rawErrors.length > 0 ? rawErrors.join('\n') : undefined}
       searchable
-      {...options}
+      {...themeProps}
       aria-describedby={ariaDescribedByIds<T>(id)}
       comboboxProps={{ withinPortal: false }}
-      classNames={typeof options?.classNames === 'object' ? options.classNames : undefined}
     />
   );
 }
