@@ -8,6 +8,7 @@ import {
   WidgetProps,
 } from '@rjsf/utils';
 import { PasswordInput } from '@mantine/core';
+import { cleanupOptions } from '../utils';
 
 /**
  * The `PasswordWidget` component renders a password input element.
@@ -38,6 +39,7 @@ export default function PasswordWidget<
   } = props;
 
   const emptyValue = options.emptyValue || '';
+  const themeProps = cleanupOptions(options);
 
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -78,9 +80,8 @@ export default function PasswordWidget<
       onBlur={handleBlur}
       onFocus={handleFocus}
       error={rawErrors && rawErrors.length > 0 ? rawErrors.join('\n') : undefined}
-      {...options}
+      {...themeProps}
       aria-describedby={ariaDescribedByIds<T>(id)}
-      classNames={typeof options?.classNames === 'object' ? options.classNames : undefined}
     />
   );
 }
