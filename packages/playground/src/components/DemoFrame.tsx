@@ -7,6 +7,7 @@ import { __createChakraFrameProvider } from '@rjsf/chakra-ui';
 import { StyleProvider as AntdStyleProvider } from '@ant-design/cssinjs';
 import { __createFluentUIRCFrameProvider } from '@rjsf/fluentui-rc';
 import { __createDaisyUIFrameProvider } from '@rjsf/daisyui';
+import { MantineProvider } from '@mantine/core';
 import { PrimeReactProvider } from 'primereact/api';
 
 /*
@@ -61,7 +62,7 @@ export default function DemoFrame(props: DemoFrameProps) {
         key: 'css',
         prepend: true,
         container: instanceRef.current.contentWindow['demo-frame-jss'],
-      }),
+      })
     );
     setContainer(instanceRef.current.contentDocument.body);
     setWindow(() => instanceRef.current.contentWindow);
@@ -102,6 +103,16 @@ export default function DemoFrame(props: DemoFrameProps) {
         <link href='//cdn.jsdelivr.net/npm/primeicons@7.0.0/primeicons.min.css' rel='stylesheet' />
         <PrimeReactProvider value={{ styleContainer: container, appendTo: 'self' }}>{children}</PrimeReactProvider>
       </>
+    ) : null;
+  } else if (theme === 'mantine') {
+    body = ready ? (
+      <FrameContextConsumer>
+        {({ document }) => (
+          <MantineProvider getRootElement={() => document?.body} cssVariablesSelector='body'>
+            {children}
+          </MantineProvider>
+        )}
+      </FrameContextConsumer>
     ) : null;
   }
 
