@@ -6,15 +6,30 @@ import {
   getTemplate,
   getUiOptions,
 } from '@rjsf/utils';
-import { Box } from '@mantine/core';
+import { Box, Text } from '@mantine/core';
 
 export default function FieldTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
 >(props: FieldTemplateProps<T, S, F>) {
-  const { id, classNames, style, label, errors, help, hidden, schema, uiSchema, registry, children, ...otherProps } =
-    props;
+  const {
+    id,
+    classNames,
+    style,
+    label,
+    errors,
+    help,
+    displayLabel,
+    description,
+    rawDescription,
+    hidden,
+    schema,
+    uiSchema,
+    registry,
+    children,
+    ...otherProps
+  } = props;
 
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const WrapIfAdditionalTemplate = getTemplate<'WrapIfAdditionalTemplate', T, S, F>(
@@ -39,8 +54,13 @@ export default function FieldTemplate<
       {...otherProps}
     >
       {children}
-      {help}
+      {displayLabel && rawDescription && (
+        <Text size='sm' mt={5}>
+          {description}
+        </Text>
+      )}
       {errors}
+      {help}
     </WrapIfAdditionalTemplate>
   );
 }

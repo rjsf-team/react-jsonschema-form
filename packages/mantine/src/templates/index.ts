@@ -4,6 +4,7 @@ import ArrayFieldItemTemplate from './ArrayFieldItemTemplate';
 import ArrayFieldTemplate from './ArrayFieldTemplate';
 import ArrayFieldTitleTemplate from './ArrayFieldTitleTemplate';
 import BaseInputTemplate from './BaseInputTemplate';
+import DescriptionField from './DescriptionField';
 import ErrorList from './ErrorList';
 import ButtonTemplates from './ButtonTemplates';
 import FieldErrorTemplate from './FieldErrorTemplate';
@@ -24,6 +25,7 @@ export function generateTemplates<
     ArrayFieldTitleTemplate,
     BaseInputTemplate,
     ButtonTemplates: ButtonTemplates<T, S, F>(),
+    DescriptionFieldTemplate: DescriptionField,
     ErrorListTemplate: ErrorList,
     FieldErrorTemplate,
     FieldTemplate,
