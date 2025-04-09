@@ -1,6 +1,6 @@
 import { FormContextType, IconButtonProps, RJSFSchema, StrictRJSFSchema, TranslatableString } from '@rjsf/utils';
 import DaisyUIButton from './DaisyUIButton';
-import { faCopy, faArrowDown, faArrowUp, faTrash, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faCopy, faArrowDown, faArrowUp, faTrash } from '@fortawesome/free-solid-svg-icons';
 import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 
 export function CopyButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(

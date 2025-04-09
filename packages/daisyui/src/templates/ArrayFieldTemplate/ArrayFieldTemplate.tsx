@@ -89,7 +89,7 @@ export default function ArrayFieldTemplate<
         )}
         <div className='task-cards-container'>
           {items.map((item, idx) => (
-            <ArrayFieldItemTemplate {...item} index={idx} isLastItem={idx === items.length - 1} />
+            <ArrayFieldItemTemplate key={idx} {...item} index={idx} isLastItem={idx === items.length - 1} />
           ))}
         </div>
       </div>

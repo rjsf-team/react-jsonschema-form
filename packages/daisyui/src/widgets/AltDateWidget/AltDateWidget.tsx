@@ -10,6 +10,7 @@ import {
   toDateString,
   dateRangeOptions,
   DateObject as RJSFDateObject,
+  Registry,
 } from '@rjsf/utils';
 
 /** Interface for date object with optional string fields for each date/time component */
@@ -84,7 +85,7 @@ function getDateElementProps(
 }
 
 /** Props for the DateElement component */
-interface DateElementProps {
+interface DateElementProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any> {
   /** Type of date element (year, month, day, etc.) */
   type: string;
   /** Min/max range for the element values */
@@ -104,7 +105,7 @@ interface DateElementProps {
   /** Whether the input should autofocus */
   autofocus?: boolean;
   /** Registry containing widgets and templates */
-  registry: any;
+  registry: Registry<T, S, F>;
   /** Function called when input loses focus */
   onBlur: (id: string, value: string) => void;
   /** Function called when input gains focus */
@@ -130,9 +131,9 @@ function DateElement<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
   registry,
   onBlur,
   onFocus,
-}: DateElementProps) {
+}: DateElementProps<T, S, F>) {
   const id = `${rootId}_${type}`;
-  const { SelectWidget } = registry.widgets;
+  const { SelectWidget } = registry.widgets as Registry<T, S, F>['widgets'];
 
   return (
     <SelectWidget

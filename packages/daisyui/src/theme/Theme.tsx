@@ -17,7 +17,7 @@ export function generateTheme<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
 >(): ThemeProps<T, S, F> {
-  const { fields, widgets } = getDefaultRegistry<T, S, F>();
+  const { fields } = getDefaultRegistry<T, S, F>();
   const generatedWidgets = generateWidgets<T, S, F>();
   const templates = generateTemplates<T, S, F>();
 
