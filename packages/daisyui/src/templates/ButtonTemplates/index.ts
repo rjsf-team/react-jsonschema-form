@@ -13,7 +13,7 @@ const buttonTemplates = {
   MoveDownButton,
   MoveUpButton,
   RemoveButton,
-  SubmitButton
+  SubmitButton,
 };
 
 export default buttonTemplates;

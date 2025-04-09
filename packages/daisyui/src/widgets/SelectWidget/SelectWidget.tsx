@@ -33,9 +33,13 @@ export default function SelectWidget<
   const dataListId = `${id}-datalist`;
 
   const getDisplayValue = (val: any) => {
-    if (!val) return '';
+    if (!val) {
+      return '';
+    }
     if (typeof val === 'object') {
-      if (val.name) return val.name;
+      if (val.name) {
+        return val.name;
+      }
       return val.label || JSON.stringify(val);
     }
     return String(val);

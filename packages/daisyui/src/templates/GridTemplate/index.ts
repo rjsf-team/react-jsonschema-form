@@ -1,1 +1,1 @@
-export { default } from './GridTemplate'; 
+export { default } from './GridTemplate';

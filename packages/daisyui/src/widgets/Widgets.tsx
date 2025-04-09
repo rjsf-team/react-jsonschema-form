@@ -46,7 +46,7 @@ export function generateWidgets<
     FileWidget,
     RadioWidget,
     RangeWidget,
-    rating: RatingWidget,
+    RatingWidget,
     SelectWidget,
     TextareaWidget,
     TimeWidget,

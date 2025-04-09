@@ -8,7 +8,9 @@
         "declaration": true,
         "esModuleInterop": true,
         "allowSyntheticDefaultImports": true,
-        "moduleResolution": "Node"
+        "moduleResolution": "node",
+        "jsx": "react-jsx",
+        "skipLibCheck": true
     },
     "references": [
         {
@@ -22,4 +24,3 @@
         }
     ]
 }
-

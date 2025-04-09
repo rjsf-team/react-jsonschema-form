@@ -1,7 +1,12 @@
 {
-  "extends": ["eslint:recommended", "plugin:react/recommended", "plugin:@typescript-eslint/recommended"],
+  "extends": [
+    "../../.eslintrc"
+  ],
   "parser": "@typescript-eslint/parser",
-  "plugins": ["@typescript-eslint", "react"],
+  "plugins": [
+    "@typescript-eslint",
+    "react"
+  ],
   "env": {
     "browser": true,
     "es2021": true

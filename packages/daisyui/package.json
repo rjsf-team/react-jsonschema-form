@@ -11,26 +11,6 @@
       "require": "./dist/index.js",
       "import": "./lib/index.js",
       "types": "./lib/index.d.ts"
-    },
-    "./lib": {
-      "require": "./dist/index.js",
-      "import": "./lib/index.js",
-      "types": "./lib/index.d.ts"
-    },
-    "./lib/*.js": {
-      "require": "./dist/*.js",
-      "import": "./lib/*.js",
-      "types": "./lib/*.d.ts"
-    },
-    "./dist": {
-      "require": "./dist/index.js",
-      "import": "./lib/index.js",
-      "types": "./lib/index.d.ts"
-    },
-    "./dist/*.js": {
-      "require": "./dist/*.js",
-      "import": "./lib/*.js",
-      "types": "./lib/*.d.ts"
     }
   },
   "files": [
@@ -44,31 +24,24 @@
   },
   "scripts": {
     "build": "tsc -b tsconfig.build.json",
-    "build:cjs": "esbuild ./src/index.ts --bundle --outfile=dist/index.js --sourcemap --packages=external --format=cjs",
-    "build:esm": "esbuild ./src/index.ts --bundle --outfile=dist/daisy-ui.esm.js --sourcemap --packages=external --format=esm",
-    "build:umd": "rollup dist/daisy-ui.esm.js --format=umd --file=dist/daisy-ui.umd.js --name=@rjsf/daisy-ui",
     "dev": "vite"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.7.2",
     "@fortawesome/free-solid-svg-icons": "^6.7.2",
     "@fortawesome/react-fontawesome": "^0.2.2",
-    "@tailwindcss/vite": "^4.0.6",
-    "react": "^18.2.0",
+    "react": ">=17",
     "react-day-picker": "^9.5.1",
+    "daisyui": "^5.0.17",
     "tailwindcss": "^4.0.6"
   },
   "peerDependencies": {
     "react": ">=17",
     "@rjsf/core": "^6.x",
     "@rjsf/utils": "^6.x",
-    "primeicons": ">=6.0.0",
-    "primereact": ">=8.0.0"
+    "@rjsf/validator-ajv8": "^6.x"
   },
   "devDependencies": {
-    "daisyui": "^5.0.17",
-    "esbuild": "^0.14.0",
-    "rollup": "^2.70.0",
     "typescript": "^4.9.5"
   },
   "repository": {

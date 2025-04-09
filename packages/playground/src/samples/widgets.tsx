@@ -172,64 +172,48 @@ const widgets: Sample = {
   },
   uiSchema: {
     boolean: {
-      radio: {
-        'ui:widget': 'radio',
-      },
-      select: {
-        'ui:widget': 'select',
-      },
+      'ui:widget': 'toggle',
     },
     string: {
-      textarea: {
-        'ui:widget': 'textarea',
-        'ui:options': {
-          rows: 5,
-        },
-      },
-      placeholder: {
-        'ui:placeholder': 'This is a placeholder',
-      },
-      color: {
-        'ui:widget': 'color',
-      },
+      'ui:widget': 'textarea',
     },
     customWidgets: {
       rating: {
-        'ui:widget': 'rating',
+        'ui:widget': 'RatingWidget',
       },
       ratingCustomStars: {
-        'ui:widget': 'rating',
+        'ui:widget': 'RatingWidget',
         'ui:options': {
           stars: 3,
         },
       },
       ratingHearts: {
-        'ui:widget': 'rating',
+        'ui:widget': 'RatingWidget',
         'ui:options': {
           shape: 'heart',
           color: 'red',
         },
       },
       ratingColor: {
-        'ui:widget': 'rating',
+        'ui:widget': 'RatingWidget',
         'ui:options': {
           color: 'green',
         },
       },
       ratingGradient: {
-        'ui:widget': 'rating',
+        'ui:widget': 'RatingWidget',
         'ui:options': {
           colorGradient: true,
         },
       },
       ratingSize: {
-        'ui:widget': 'rating',
+        'ui:widget': 'RatingWidget',
         'ui:options': {
           size: 'lg',
         },
       },
       ratingSmall: {
-        'ui:widget': 'rating',
+        'ui:widget': 'RatingWidget',
         'ui:options': {
           size: 'xs',
         },
