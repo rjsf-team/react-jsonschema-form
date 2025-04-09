@@ -71,6 +71,7 @@ export default function ObjectFieldTemplate<
         cols={gridCols}
         spacing={gridSpacing as MantineSpacing | undefined}
         verticalSpacing={gridVerticalSpacing as MantineSpacing | undefined}
+        mb='sm'
       >
         {properties
           .filter((e) => !e.hidden)
