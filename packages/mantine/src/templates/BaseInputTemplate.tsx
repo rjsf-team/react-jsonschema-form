@@ -10,6 +10,7 @@ import {
   StrictRJSFSchema,
 } from '@rjsf/utils';
 import { TextInput, NumberInput } from '@mantine/core';
+import { cleanupOptions } from '../utils';
 
 export default function BaseInputTemplate<
   T = any,
@@ -37,6 +38,7 @@ export default function BaseInputTemplate<
   } = props;
 
   const inputProps = getInputProps<T, S, F>(schema, type, options, false);
+  const themeProps = cleanupOptions(options);
 
   const handleNumberChange = (value: number | string) => onChange(value);
 
@@ -65,6 +67,7 @@ export default function BaseInputTemplate<
         error={rawErrors && rawErrors.length > 0 ? rawErrors.join('\n') : undefined}
         list={schema.examples ? examplesId<T>(id) : undefined}
         {...inputProps}
+        {...themeProps}
         step={typeof inputProps.step === 'number' ? inputProps.step : 1}
         type='text'
         value={value}
@@ -85,6 +88,7 @@ export default function BaseInputTemplate<
         error={rawErrors && rawErrors.length > 0 ? rawErrors.join('\n') : undefined}
         list={schema.examples ? examplesId<T>(id) : undefined}
         {...inputProps}
+        {...themeProps}
         value={value}
         aria-describedby={ariaDescribedByIds<T>(id, !!schema.examples)}
       />

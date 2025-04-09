@@ -9,9 +9,10 @@ import {
   titleId,
 } from '@rjsf/utils';
 import { Slider, Input } from '@mantine/core';
+import { cleanupOptions } from '../utils';
 
 /** The `RangeWidget` component uses the `BaseInputTemplate` changing the type to `range` and wrapping the result
- * in a div, with the value along side it.
+ * in a div, with the value alongside it.
  *
  * @param props - The `WidgetProps` for this component
  */
@@ -36,6 +37,7 @@ export default function RangeWidget<T = any, S extends StrictRJSFSchema = RJSFSc
     schema,
   } = props;
 
+  const themeProps = cleanupOptions(options);
   const { min, max, step } = rangeSpec(schema);
 
   const handleChange = useCallback(
@@ -71,9 +73,8 @@ export default function RangeWidget<T = any, S extends StrictRJSFSchema = RJSFSc
         onChange={handleChange}
         onBlur={handleBlur}
         onFocus={handleFocus}
-        {...options}
+        {...themeProps}
         aria-describedby={ariaDescribedByIds<T>(id)}
-        classNames={typeof options?.classNames === 'object' ? options.classNames : undefined}
       />
       {rawErrors &&
         rawErrors?.length > 0 &&
