@@ -1,41 +1,46 @@
-import { ArrayFieldTemplateItemType, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import {
+  ArrayFieldItemTemplateType,
+  FormContextType,
+  getTemplate,
+  getUiOptions,
+  RJSFSchema,
+  StrictRJSFSchema,
+} from '@rjsf/utils';
 import { Box, Flex, Group } from '@mantine/core';
 
 /** The `ArrayFieldItemTemplate` component is the template used to render an items of an array.
  *
- * @param props - The `ArrayFieldTemplateItemType` props for the component
+ * @param props - The `ArrayFieldItemTemplateType` props for the component
  */
 export default function ArrayFieldItemTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
->(props: ArrayFieldTemplateItemType<T, S, F>) {
-  const {
-    disabled,
-    className,
-    hasCopy,
-    hasMoveDown,
-    hasMoveUp,
-    hasRemove,
-    hasToolbar,
-    index,
-    onCopyIndexClick,
-    onDropIndexClick,
-    onReorderClick,
-    readonly,
-    uiSchema,
+>(props: ArrayFieldItemTemplateType<T, S, F>) {
+  const { buttonsProps, className, hasToolbar, index, uiSchema, registry, children } = props;
+  const uiOptions = getUiOptions<T, S, F>(uiSchema);
+  const ArrayFieldItemButtonsTemplate = getTemplate<'ArrayFieldItemButtonsTemplate', T, S, F>(
+    'ArrayFieldItemButtonsTemplate',
     registry,
-    children,
-  } = props;
-  const { CopyButton, MoveDownButton, MoveUpButton, RemoveButton } = registry.templates.ButtonTemplates;
+    uiOptions
+  );
 
   return (
     <Box key={`array-item-${index}`} className={className || 'array-item'} mb='xs'>
       <Flex gap='xs' align='end' justify='center'>
         <Box w='100%'>{children}</Box>
         {hasToolbar && (
-          <Group wrap='nowrap' gap={2}>
-            {(hasMoveUp || hasMoveDown) && (
+          <Group wrap='nowrap' gap={2} mb={7}>
+            <ArrayFieldItemButtonsTemplate {...buttonsProps} />
+          </Group>
+        )}
+      </Flex>
+    </Box>
+  );
+}
+
+/*
+{(hasMoveUp || hasMoveDown) && (
               <MoveUpButton
                 iconType='sm'
                 className='array-item-move-up'
@@ -75,9 +80,4 @@ export default function ArrayFieldItemTemplate<
                 registry={registry}
               />
             )}
-          </Group>
-        )}
-      </Flex>
-    </Box>
-  );
-}
+ */

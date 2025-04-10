@@ -1,5 +1,7 @@
 import React, { useCallback } from 'react';
 import {
+  descriptionId,
+  getTemplate,
   StrictRJSFSchema,
   RJSFSchema,
   FormContextType,
@@ -25,14 +27,23 @@ export default function CheckboxWidget<
     autofocus,
     label,
     hideLabel,
+    schema,
     rawErrors,
     options,
     onChange,
     onBlur,
     onFocus,
+    registry,
+    uiSchema,
   } = props;
 
   const themeProps = cleanupOptions(options);
+
+  const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
+    'DescriptionFieldTemplate',
+    registry,
+    options
+  );
 
   const handleCheckboxChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -61,21 +72,33 @@ export default function CheckboxWidget<
     [onFocus, id]
   );
 
+  const description = options.description || schema.description;
   return (
-    <Checkbox
-      id={id}
-      name={name}
-      label={labelValue(label || undefined, hideLabel, false)}
-      disabled={disabled || readonly}
-      required={required}
-      autoFocus={autofocus}
-      checked={typeof value === 'undefined' ? false : value === 'true' || value}
-      onChange={handleCheckboxChange}
-      onBlur={handleBlur}
-      onFocus={handleFocus}
-      error={rawErrors && rawErrors.length > 0 ? rawErrors.join('\n') : undefined}
-      aria-describedby={ariaDescribedByIds<T>(id)}
-      {...themeProps}
-    />
+    <>
+      {!hideLabel && !!description && (
+        <DescriptionFieldTemplate
+          id={descriptionId<T>(id)}
+          description={description}
+          schema={schema}
+          uiSchema={uiSchema}
+          registry={registry}
+        />
+      )}
+      <Checkbox
+        id={id}
+        name={name}
+        label={labelValue(label || undefined, hideLabel, false)}
+        disabled={disabled || readonly}
+        required={required}
+        autoFocus={autofocus}
+        checked={typeof value === 'undefined' ? false : value === 'true' || value}
+        onChange={handleCheckboxChange}
+        onBlur={handleBlur}
+        onFocus={handleFocus}
+        error={rawErrors && rawErrors.length > 0 ? rawErrors.join('\n') : undefined}
+        aria-describedby={ariaDescribedByIds<T>(id)}
+        {...themeProps}
+      />
+    </>
   );
 }
