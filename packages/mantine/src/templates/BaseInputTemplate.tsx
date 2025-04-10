@@ -35,6 +35,7 @@ export default function BaseInputTemplate<
     onFocus,
     options,
     rawErrors,
+    children,
   } = props;
 
   const inputProps = getInputProps<T, S, F>(schema, type, options, false);
@@ -97,6 +98,7 @@ export default function BaseInputTemplate<
   return (
     <>
       {input}
+      {children}
       {Array.isArray(schema.examples) && (
         <datalist id={examplesId<T>(id)}>
           {(schema.examples as string[])

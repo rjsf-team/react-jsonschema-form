@@ -12,7 +12,7 @@ export type MantineIconButtonProps<
 export default function IconButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: MantineIconButtonProps<T, S, F>
 ) {
-  const { icon, iconType, color, onClick, uiSchema, registry, ...otherProps } = props;
+  const { icon, iconType = 'sm', color, onClick, uiSchema, registry, ...otherProps } = props;
   return (
     <ActionIcon
       size={iconType as ActionIconProps['size']}

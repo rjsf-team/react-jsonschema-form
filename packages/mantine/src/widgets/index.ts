@@ -9,6 +9,7 @@ import { AltDateTimeWidget, AltDateWidget, DateWidget, DateTimeWidget, TimeWidge
 import CheckboxesWidget from './CheckboxesWidget';
 import CheckboxWidget from './CheckboxWidget';
 import ColorWidget from './ColorWidget';
+import FileWidget from './FileWidget';
 import PasswordWidget from './PasswordWidget';
 import RadioWidget from './RadioWidget';
 import RangeWidget from './RangeWidget';
@@ -26,6 +27,7 @@ export function generateWidgets<
     CheckboxesWidget,
     CheckboxWidget,
     ColorWidget,
+    FileWidget,
     DateTimeWidget,
     DateWidget,
     PasswordWidget,
