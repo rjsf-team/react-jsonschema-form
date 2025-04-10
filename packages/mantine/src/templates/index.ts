@@ -10,6 +10,7 @@ import ButtonTemplates from './ButtonTemplates';
 import FieldErrorTemplate from './FieldErrorTemplate';
 import FieldTemplate from './FieldTemplate';
 import FieldHelpTemplate from './FieldHelpTemplate';
+import GridTemplate from './GridTemplate';
 import ObjectFieldTemplate from './ObjectFieldTemplate';
 import TitleField from './TitleField';
 import WrapIfAdditionalTemplate from './WrapIfAdditionalTemplate';
@@ -30,6 +31,7 @@ export function generateTemplates<
     FieldErrorTemplate,
     FieldTemplate,
     FieldHelpTemplate,
+    GridTemplate,
     ObjectFieldTemplate,
     TitleFieldTemplate: TitleField,
     WrapIfAdditionalTemplate,

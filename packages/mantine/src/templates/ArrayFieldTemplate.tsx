@@ -2,7 +2,7 @@ import {
   getTemplate,
   getUiOptions,
   ArrayFieldTemplateProps,
-  ArrayFieldTemplateItemType,
+  ArrayFieldItemTemplateType,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
@@ -11,7 +11,7 @@ import { Fieldset, Box, Group } from '@mantine/core';
 
 /** The `ArrayFieldTemplate` component is the template used to render all items in an array.
  *
- * @param props - The `ArrayFieldTemplateItemType` props for the component
+ * @param props - The `ArrayFieldItemTemplateType` props for the component
  */
 export default function ArrayFieldTemplate<
   T = any,
@@ -79,7 +79,7 @@ export default function ArrayFieldTemplate<
 
       <Box className='row array-item-list'>
         {items &&
-          items.map(({ key, ...itemProps }: ArrayFieldTemplateItemType<T, S, F>) => (
+          items.map(({ key, ...itemProps }: ArrayFieldItemTemplateType<T, S, F>) => (
             <ArrayFieldItemTemplate key={key} {...itemProps} />
           ))}
       </Box>
@@ -92,6 +92,7 @@ export default function ArrayFieldTemplate<
             onClick={onAddClick}
             uiSchema={uiSchema}
             registry={registry}
+            iconType='md'
           />
         </Group>
       )}
