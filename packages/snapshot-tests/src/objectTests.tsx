@@ -1,9 +1,8 @@
 import { ComponentType } from 'react';
 import renderer from 'react-test-renderer';
+import { FormProps } from '@rjsf/core';
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
-
-import { FormProps } from '@rjsf/core';
 
 const titleAndDesc = {
   title: 'Test field',

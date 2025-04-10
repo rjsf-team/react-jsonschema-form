@@ -25,6 +25,7 @@ import {
   UiSchema,
 } from '@rjsf/utils';
 import cloneDeep from 'lodash/cloneDeep';
+import each from 'lodash/each';
 import flatten from 'lodash/flatten';
 import get from 'lodash/get';
 import has from 'lodash/has';
@@ -87,6 +88,10 @@ export interface LayoutGridFieldProps<T = any, S extends StrictRJSFSchema = RJSF
    */
   layoutGridSchema?: LayoutGridSchemaType;
 }
+
+/** The regular expression that is used to detect whether a string contains a lookup key
+ */
+export const LOOKUP_REGEX = /^\$lookup=(.+)/;
 
 /** The constant representing the main layout grid schema option name in the `uiSchema`
  */
@@ -615,6 +620,49 @@ export default class LayoutGridField<
     return null;
   }
 
+  /** Extract the `name`, and optional `render` and all other props from the `gridSchema`. We look up the `render` to
+   * see if can be resolved to a UIComponent. If `name` does not exist and there is an optional `render` UIComponent, we
+   * set the `rendered` component with only specified props for that component in the object.
+   *
+   * @param registry - The `@rjsf` Registry from which to look up `classNames` if they are present in the extra props
+   * @param gridSchema - The string or object that represents the configuration for the grid field
+   * @returns - The UIComponentPropsType computed from the gridSchema
+   */
+  static computeUIComponentPropsFromGridSchema<
+    T = any,
+    S extends StrictRJSFSchema = RJSFSchema,
+    F extends FormContextType = any
+  >(registry: Registry<T, S, F>, gridSchema?: string | ConfigObject): UIComponentPropsType {
+    let name: string;
+    let UIComponent: RenderComponent | null = null;
+    let uiProps: ConfigObject = {};
+    let rendered: ReactNode | undefined;
+    if (isString(gridSchema) || isUndefined(gridSchema)) {
+      name = gridSchema ?? '';
+    } else {
+      const { name: innerName, render, ...innerProps } = gridSchema;
+      name = innerName;
+      uiProps = innerProps;
+      if (!isEmpty(uiProps)) {
+        // Transform any `$lookup=` in the uiProps props with the appropriate value
+        each(uiProps, (prop: ConfigObject, key: string) => {
+          if (isString(prop)) {
+            const match: string[] | null = LOOKUP_REGEX.exec(prop);
+            if (Array.isArray(match) && match.length > 1) {
+              const name = match[1];
+              uiProps[key] = lookupFromFormContext(registry, name, name);
+            }
+          }
+        });
+      }
+      UIComponent = LayoutGridField.getCustomRenderComponent<T, S, F>(render, registry);
+      if (!innerName && UIComponent) {
+        rendered = <UIComponent {...innerProps} data-testid={LayoutGridField.TEST_IDS.uiComponent} />;
+      }
+    }
+    return { name, UIComponent, uiProps, rendered };
+  }
+
   /** Constructs an `LayoutGridField` with the given `props`
    *
    * @param props - The `LayoutGridField` for this template
@@ -643,33 +691,6 @@ export default class LayoutGridField<
       onChange(newFormData, newErrorSchema, id);
     };
   };
-
-  /** Extract the `name`, and optional `render` and all other props from the `gridSchema`. We look up the `render` to
-   * see if can be resolved to a UIComponent. If `name` does not exist and there is an optional `render` UIComponent, we
-   * set the `rendered` component with only specified props for that component in the object.
-   *
-   * @param gridSchema - The string or object that represents the configuration for the grid field
-   * @returns - The UIComponentPropsType computed from the gridSchema
-   */
-  computeUIComponentPropsFromGridSchema(gridSchema?: string | ConfigObject): UIComponentPropsType {
-    const { registry } = this.props;
-    let name: string;
-    let UIComponent: RenderComponent | null = null;
-    let uiProps: ConfigObject = {};
-    let rendered: ReactNode | undefined;
-    if (isString(gridSchema) || isUndefined(gridSchema)) {
-      name = gridSchema ?? '';
-    } else {
-      const { name: innerName, render, ...innerProps } = gridSchema;
-      name = innerName;
-      uiProps = innerProps;
-      UIComponent = LayoutGridField.getCustomRenderComponent<T, S, F>(render, registry);
-      if (!innerName && UIComponent) {
-        rendered = <UIComponent {...innerProps} data-testid={LayoutGridField.TEST_IDS.uiComponent} />;
-      }
-    }
-    return { name, UIComponent, uiProps, rendered };
-  }
 
   /** Renders the `children` of the `GridType.CONDITION` if it passes. The `layoutGridSchema` for the
    * `GridType.CONDITION` is separated into the `children` and other `gridProps`. The `gridProps` are used to extract
@@ -827,7 +848,7 @@ export default class LayoutGridField<
     } = this.props;
     const { fields, schemaUtils } = registry;
     const { SchemaField, LayoutMultiSchemaField } = fields;
-    const uiComponentProps = this.computeUIComponentPropsFromGridSchema(gridSchema);
+    const uiComponentProps = LayoutGridField.computeUIComponentPropsFromGridSchema(registry, gridSchema);
     if (uiComponentProps.rendered) {
       return uiComponentProps.rendered;
     }

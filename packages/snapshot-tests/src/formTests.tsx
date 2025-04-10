@@ -1,9 +1,8 @@
 import { ComponentType } from 'react';
 import renderer, { TestRendererOptions } from 'react-test-renderer';
+import { FormProps } from '@rjsf/core';
 import { RJSFSchema, ErrorSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
-
-import { FormProps } from '@rjsf/core';
 
 export const SELECT_CUSTOMIZE = 'selectMulti';
 export const SLIDER_CUSTOMIZE = 'slider';
@@ -149,7 +148,7 @@ export function formTests(Form: ComponentType<FormProps>, customOptions: FormRen
         'ui:widget': 'textarea',
       };
       const tree = renderer
-        .create(<Form schema={schema} validator={validator} uiSchema={uiSchema} />, customOptions.textarea)
+        .create(<Form schema={schema} validator={validator} uiSchema={uiSchema} />, customOptions[TEXTAREA_CUSTOMIZE])
         .toJSON();
       expect(tree).toMatchSnapshot();
     });
@@ -170,7 +169,9 @@ export function formTests(Form: ComponentType<FormProps>, customOptions: FormRen
         },
         uniqueItems: true,
       };
-      const tree = renderer.create(<Form schema={schema} validator={validator} />, customOptions.selectMulti).toJSON();
+      const tree = renderer
+        .create(<Form schema={schema} validator={validator} />, customOptions[SELECT_CUSTOMIZE])
+        .toJSON();
       expect(tree).toMatchSnapshot();
     });
     test('select field multiple choice with labels', () => {
@@ -195,7 +196,9 @@ export function formTests(Form: ComponentType<FormProps>, customOptions: FormRen
         },
         uniqueItems: true,
       };
-      const tree = renderer.create(<Form schema={schema} validator={validator} />, customOptions.selectMulti).toJSON();
+      const tree = renderer
+        .create(<Form schema={schema} validator={validator} />, customOptions[SELECT_CUSTOMIZE])
+        .toJSON();
       expect(tree).toMatchSnapshot();
     });
     test('select field single choice enumDisabled', () => {
@@ -259,7 +262,7 @@ export function formTests(Form: ComponentType<FormProps>, customOptions: FormRen
         'ui:enumDisabled': ['bar'],
       };
       const tree = renderer
-        .create(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, customOptions.selectMulti)
+        .create(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, customOptions[SELECT_CUSTOMIZE])
         .toJSON();
       expect(tree).toMatchSnapshot();
     });
@@ -277,7 +280,7 @@ export function formTests(Form: ComponentType<FormProps>, customOptions: FormRen
         'ui:enumDisabled': ['bar'],
       };
       const tree = renderer
-        .create(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, customOptions.selectMulti)
+        .create(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, customOptions[SELECT_CUSTOMIZE])
         .toJSON();
       expect(tree).toMatchSnapshot();
     });
@@ -301,7 +304,7 @@ export function formTests(Form: ComponentType<FormProps>, customOptions: FormRen
       };
       const formData = ['foo', 'bar'];
       const tree = renderer
-        .create(<Form schema={schema} formData={formData} validator={validator} />, customOptions.selectMulti)
+        .create(<Form schema={schema} formData={formData} validator={validator} />, customOptions[SELECT_CUSTOMIZE])
         .toJSON();
       expect(tree).toMatchSnapshot();
     });
@@ -356,7 +359,10 @@ export function formTests(Form: ComponentType<FormProps>, customOptions: FormRen
         'ui:widget': 'range',
       };
       const tree = renderer
-        .create(<Form schema={schema} validator={validator} uiSchema={uiSchema} formData={75} />, customOptions.slider)
+        .create(
+          <Form schema={schema} validator={validator} uiSchema={uiSchema} formData={75} />,
+          customOptions[SLIDER_CUSTOMIZE]
+        )
         .toJSON();
       expect(tree).toMatchSnapshot();
     });
