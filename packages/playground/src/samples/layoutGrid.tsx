@@ -1,8 +1,14 @@
-import { RJSFSchema } from '@rjsf/utils';
+import { LOOKUP_MAP_NAME, RJSFSchema } from '@rjsf/utils';
 
 import { Sample } from './Sample';
 
 const layoutGrid: Sample = {
+  formContext: {
+    [LOOKUP_MAP_NAME]: {
+      FooClass: 'Foo',
+      PlaceholderText: 'DOB',
+    },
+  },
   schema: {
     type: 'object',
     properties: {

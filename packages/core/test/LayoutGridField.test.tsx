@@ -609,6 +609,7 @@ const LOOKUP_MAP: { [index: string]: string | ((props: FieldProps) => ReactEleme
   FooClass: 'Foo',
   BarClass: 'Bar',
   TestRenderer,
+  PlaceholderText: 'looked up Placeholder',
 };
 
 const REGISTRY_FIELDS = { SchemaField: FakeSchemaField, LayoutMultiSchemaField: FakeSchemaField };
@@ -1257,6 +1258,53 @@ describe('LayoutGridField', () => {
           [UI_OPTIONS_KEY]: { readonly: true },
         },
         uiReadonly: true,
+      });
+    });
+  });
+  describe('LayoutGridField.computeUIComponentPropsFromGridSchema()', () => {
+    test('gridSchema is undefined', () => {
+      expect(LayoutGridField.computeUIComponentPropsFromGridSchema(registry)).toEqual({
+        name: '',
+        uiProps: {},
+        UIComponent: null,
+      });
+    });
+    test('gridSchema is a string', () => {
+      expect(LayoutGridField.computeUIComponentPropsFromGridSchema(registry, 'foo')).toEqual({
+        name: 'foo',
+        uiProps: {},
+        UIComponent: null,
+      });
+    });
+    test('gridSchema contains name and looked up placeholder', () => {
+      const gridSchema = { name: 'foo', placeholder: '$lookup=PlaceholderText' };
+      expect(LayoutGridField.computeUIComponentPropsFromGridSchema(registry, gridSchema)).toEqual({
+        name: 'foo',
+        uiProps: {
+          placeholder: LOOKUP_MAP.PlaceholderText,
+        },
+        UIComponent: null,
+      });
+    });
+    test('gridSchema contains name, other props and a render', () => {
+      const gridSchema = { name: 'foo', fullWidth: true, render: TestRenderer };
+      expect(LayoutGridField.computeUIComponentPropsFromGridSchema(registry, gridSchema)).toEqual({
+        name: 'foo',
+        uiProps: {
+          fullWidth: true,
+        },
+        UIComponent: TestRenderer,
+      });
+    });
+    test('gridSchema contains name, other props and a render', () => {
+      const gridSchema = { fullWidth: true, render: TestRenderer };
+      expect(LayoutGridField.computeUIComponentPropsFromGridSchema(registry, gridSchema)).toEqual({
+        uiProps: {
+          fullWidth: true,
+        },
+        UIComponent: TestRenderer,
+        // @ts-expect-error TS2740 because it is missing all of the FieldProps, which we don't need
+        rendered: <TestRenderer data-testid={LayoutGridField.TEST_IDS.uiComponent} fullWidth />,
       });
     });
   });
