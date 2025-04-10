@@ -1,7 +1,8 @@
-import { gridTests } from '@rjsf/snapshot-tests';
+import { gridTests, SELECT_CUSTOMIZE } from '@rjsf/snapshot-tests';
 
 import '../__mocks__/matchMedia.mock';
 import Form from '../src';
+import { FORM_RENDER_OPTIONS } from './snapshotConstants';
 
 gridTests(
   Form,
@@ -234,15 +235,5 @@ gridTests(
       },
     },
   },
-  {
-    createNodeMock: (element) => {
-      if (element.type === 'span' && element.props['aria-hidden']) {
-        // the `rc-select` MultipleSelector code expects a ref for this span to exist, so use the feature of
-        // react-test-renderer to create one
-        // See: https://reactjs.org/docs/test-renderer.html#ideas
-        return { scrollWidth: 100 };
-      }
-      return null;
-    },
-  }
+  FORM_RENDER_OPTIONS[SELECT_CUSTOMIZE]
 );

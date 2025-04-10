@@ -1,18 +1,10 @@
-import { gridTests } from '@rjsf/snapshot-tests';
+import { gridTests, TEXTAREA_CUSTOMIZE } from '@rjsf/snapshot-tests';
 
 import Form from '../src';
+import { COMPUTED_STYLE_MOCK, FORM_RENDER_OPTIONS } from './snapshotConstants';
 
 // The `TextareaAutosize` code reads the following data from the `getComputedStyle()` function in a useEffect hook
-jest.spyOn(window, 'getComputedStyle').mockImplementation(() => {
-  return {
-    width: 100,
-    'box-sizing': 10,
-    'padding-bottom': 1,
-    'padding-top': 1,
-    'border-bottom-width': 1,
-    'border-top-width': 1,
-  } as unknown as CSSStyleDeclaration;
-});
+jest.spyOn(window, 'getComputedStyle').mockImplementation(() => COMPUTED_STYLE_MOCK);
 
 gridTests(
   Form,
@@ -252,27 +244,5 @@ gridTests(
       },
     },
   },
-  {
-    createNodeMock: (element) => {
-      if (element.type === 'textarea') {
-        // the `TextareaAutosize` code expects a ref for two textareas to exist, so use the feature of
-        // react-test-renderer to create one
-        // See: https://reactjs.org/docs/test-renderer.html#ideas
-        if (element.props['aria-hidden']) {
-          // The hidden one reads the following values
-          return {
-            style: { width: 10 },
-            scrollHeight: 100,
-          };
-        }
-        // The other one needs to look like an input node with focus and style elements
-        return {
-          nodeName: 'INPUT',
-          focus: jest.fn(),
-          style: {},
-        };
-      }
-      return null;
-    },
-  }
+  FORM_RENDER_OPTIONS[TEXTAREA_CUSTOMIZE]
 );
