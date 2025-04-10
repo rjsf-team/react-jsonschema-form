@@ -1,6 +1,6 @@
 {
   "name": "@rjsf/mantine",
-  "version": "5.24.3",
+  "version": "6.0.0-alpha.0",
   "main": "dist/index.js",
   "module": "lib/index.js",
   "typings": "lib/index.d.ts",
@@ -33,8 +33,8 @@
     ]
   },
   "peerDependencies": {
-    "@rjsf/core": "^5.24.x",
-    "@rjsf/utils": "^5.24.x",
+    "@rjsf/core": "^6.x",
+    "@rjsf/utils": "^6.x",
     "react": "^16.14.0 || >=17",
     "@mantine/core": ">=7",
     "@mantine/hooks": ">=7",
@@ -47,10 +47,10 @@
     "@babel/preset-env": "^7.23.9",
     "@babel/preset-react": "^7.23.3",
     "@babel/preset-typescript": "^7.23.3",
-    "@rjsf/core": "^5.24.3",
-    "@rjsf/snapshot-tests": "^5.24.3",
-    "@rjsf/utils": "^5.24.3",
-    "@rjsf/validator-ajv8": "^5.24.3",
+    "@rjsf/core": "^6.0.0-alpha.0",
+    "@rjsf/snapshot-tests": "^6.0.0-alpha.0",
+    "@rjsf/utils": "^6.0.0-alpha.0",
+    "@rjsf/validator-ajv8": "^6.0.0-alpha.0",
     "@types/jest": "^29.5.12",
     "@types/lodash": "^4.14.202",
     "@types/react": "^18.2.58",
