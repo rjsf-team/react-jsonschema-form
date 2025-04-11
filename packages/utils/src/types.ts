@@ -206,7 +206,7 @@ export type RJSFValidationError = {
    */
   schemaPath?: string;
   /** Full error name, for example ".name is a required property" */
-  stack: string;
+  stack?: string;
 };
 
 /** The type that describes an error in a field */
