@@ -13,7 +13,7 @@ export default function ArrayFieldDescriptionTemplate<
   const { description } = props;
   return (
     <div>
-      <p className='text-sm text-accent'>{description}</p>
+      <div className='text-sm text-accent'>{description}</div>
     </div>
   );
 }

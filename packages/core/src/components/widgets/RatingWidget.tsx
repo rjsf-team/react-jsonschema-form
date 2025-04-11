@@ -1,4 +1,4 @@
-import { ChangeEvent, FocusEvent } from 'react';
+import { FocusEvent, useCallback } from 'react';
 import { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 
 /** The `RatingWidget` component renders a star or heart rating input
@@ -9,7 +9,7 @@ import { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjs
  * - Supports minimum and maximum values from schema
  * - Handles required, disabled, and readonly states
  * - Provides focus and blur event handling for accessibility
- * - Uses radio inputs for a11y compatibility
+ * - Uses Unicode characters for better visual representation
  *
  * @param props - The `WidgetProps` for this component
  */
@@ -36,59 +36,99 @@ export default function RatingWidget<
   const numStars = schema.maximum ? Math.min(schema.maximum, 5) : Math.min(Math.max(stars as number, 1), 5);
   const min = schema.minimum || 0;
 
-  /** Handles change events from radio inputs
+  /** Handles clicking on a star to set the rating
    *
-   * @param event - The change event
+   * @param starValue - The value of the clicked star
    */
-  const _onChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
-    onChange(parseInt(value));
-  };
+  const handleStarClick = useCallback(
+    (starValue: number) => {
+      if (!disabled && !readonly) {
+        onChange(starValue);
+      }
+    },
+    [onChange, disabled, readonly]
+  );
 
   /** Handles focus events for accessibility
    *
    * @param event - The focus event
    * @param starValue - The value of the focused star
    */
-  const handleFocus = (event: FocusEvent<HTMLInputElement>, starValue: number) => {
-    if (onFocus) {
-      onFocus(id, starValue);
-    }
-  };
+  const handleFocus = useCallback(
+    (event: FocusEvent<HTMLSpanElement>, starValue: number) => {
+      if (onFocus) {
+        onFocus(id, starValue);
+      }
+    },
+    [onFocus, id]
+  );
 
   /** Handles blur events for accessibility
    *
    * @param event - The blur event
    * @param starValue - The value of the blurred star
    */
-  const handleBlur = (event: FocusEvent<HTMLInputElement>, starValue: number) => {
-    if (onBlur) {
-      onBlur(id, starValue);
+  const handleBlur = useCallback(
+    (event: FocusEvent<HTMLSpanElement>, starValue: number) => {
+      if (onBlur) {
+        onBlur(id, starValue);
+      }
+    },
+    [onBlur, id]
+  );
+
+  // Get the appropriate Unicode character based on shape option
+  const getSymbol = (isFilled: boolean): string => {
+    if (shape === 'heart') {
+      return isFilled ? '♥' : '♡';
     }
+    return isFilled ? '★' : '☆';
   };
 
   return (
     <div className='field field-array'>
-      <div className='rating'>
+      <div
+        className='rating-widget'
+        style={{
+          display: 'inline-flex',
+          fontSize: '1.5rem',
+          cursor: disabled || readonly ? 'default' : 'pointer',
+        }}
+      >
         {[...Array(numStars)].map((_, index) => {
           const starValue = min + index;
+          const isFilled = starValue <= value;
+
           return (
-            <input
+            <span
               key={index}
-              type='radio'
-              name={id}
-              value={starValue}
-              checked={value === starValue}
-              onChange={_onChange}
+              onClick={() => handleStarClick(starValue)}
               onFocus={(e) => handleFocus(e, starValue)}
               onBlur={(e) => handleBlur(e, starValue)}
-              className='rating-input'
-              disabled={disabled || readonly}
-              required={required}
-              autoFocus={autofocus && index === 0}
+              tabIndex={disabled || readonly ? -1 : 0}
+              role='radio'
+              aria-checked={starValue === value}
               aria-label={`${starValue} ${shape === 'heart' ? 'heart' : 'star'}${starValue === 1 ? '' : 's'}`}
-            />
+              style={{
+                color: isFilled ? '#FFD700' : '#ccc',
+                padding: '0 0.2rem',
+                transition: 'color 0.2s',
+                userSelect: 'none',
+              }}
+            >
+              {getSymbol(isFilled)}
+            </span>
           );
         })}
+        <input
+          type='hidden'
+          id={id}
+          name={id}
+          value={value || ''}
+          required={required}
+          disabled={disabled || readonly}
+          aria-hidden='true'
+        />
       </div>
     </div>
   );

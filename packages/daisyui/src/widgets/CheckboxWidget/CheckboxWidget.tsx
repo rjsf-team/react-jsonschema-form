@@ -1,5 +1,5 @@
 import { WidgetProps, StrictRJSFSchema, RJSFSchema, FormContextType } from '@rjsf/utils';
-import { FocusEvent } from 'react';
+import { FocusEvent, useCallback } from 'react';
 
 /** The `CheckboxWidget` component renders a single checkbox input with DaisyUI styling.
  *
@@ -39,6 +39,17 @@ export default function CheckboxWidget<
     }
   };
 
+  /** Handle change events
+   *
+   * @param event - The change event
+   */
+  const handleChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      onChange(event.target.checked);
+    },
+    [onChange]
+  );
+
   // Don't display the label here since the FieldTemplate already handles it
   return (
     <input
@@ -47,7 +58,7 @@ export default function CheckboxWidget<
       checked={value}
       required={required}
       disabled={disabled || readonly}
-      onChange={(event) => onChange(event.target.checked)}
+      onChange={handleChange}
       onFocus={handleFocus}
       onBlur={handleBlur}
       className='checkbox'

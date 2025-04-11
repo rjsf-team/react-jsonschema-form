@@ -14,7 +14,7 @@ export default function DescriptionField<
   const { id, description } = props;
   return (
     <div id={id} className='description-field my-4'>
-      <p className='text-sm text-base-content/80'>{description}</p>
+      <div className='text-sm text-base-content/80'>{description}</div>
     </div>
   );
 }

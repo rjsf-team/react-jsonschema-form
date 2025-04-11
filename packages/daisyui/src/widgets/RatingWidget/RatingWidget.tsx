@@ -1,4 +1,4 @@
-import { ChangeEvent, FocusEvent } from 'react';
+import { ChangeEvent, FocusEvent, useCallback } from 'react';
 import { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 
 /** The `RatingWidget` component renders a star or heart rating input with DaisyUI styling
@@ -49,31 +49,40 @@ export default function RatingWidget<
    *
    * @param event - The change event
    */
-  const _onChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
-    onChange(parseInt(value));
-  };
+  const _onChange = useCallback(
+    ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
+      onChange(parseInt(value));
+    },
+    [onChange]
+  );
 
   /** Handles focus events for accessibility
    *
    * @param event - The focus event
    * @param starValue - The value of the focused star
    */
-  const handleFocus = (event: FocusEvent<HTMLInputElement>, starValue: number) => {
-    if (onFocus) {
-      onFocus(id, starValue);
-    }
-  };
+  const handleFocus = useCallback(
+    (event: FocusEvent<HTMLInputElement>, starValue: number) => {
+      if (onFocus) {
+        onFocus(id, starValue);
+      }
+    },
+    [onFocus, id]
+  );
 
   /** Handles blur events for accessibility
    *
    * @param event - The blur event
    * @param starValue - The value of the blurred star
    */
-  const handleBlur = (event: FocusEvent<HTMLInputElement>, starValue: number) => {
-    if (onBlur) {
-      onBlur(id, starValue);
-    }
-  };
+  const handleBlur = useCallback(
+    (event: FocusEvent<HTMLInputElement>, starValue: number) => {
+      if (onBlur) {
+        onBlur(id, starValue);
+      }
+    },
+    [onBlur, id]
+  );
 
   /** Get color class for a specific star/heart
    *

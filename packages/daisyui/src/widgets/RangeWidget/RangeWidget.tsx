@@ -1,5 +1,5 @@
 import { WidgetProps, StrictRJSFSchema, RJSFSchema, FormContextType } from '@rjsf/utils';
-import { FocusEvent } from 'react';
+import { FocusEvent, useCallback } from 'react';
 
 /** The `RangeWidget` component renders a range slider input with DaisyUI styling
  *
@@ -43,6 +43,17 @@ export default function RangeWidget<T = any, S extends StrictRJSFSchema = RJSFSc
     }
   };
 
+  /** Handle change events
+   *
+   * @param event - The change event
+   */
+  const handleChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      onChange(event.target.value);
+    },
+    [onChange]
+  );
+
   return (
     <div className='form-control'>
       <div className='flex items-center'>
@@ -56,7 +67,7 @@ export default function RangeWidget<T = any, S extends StrictRJSFSchema = RJSFSc
           min={schema.minimum}
           max={schema.maximum}
           step={schema.multipleOf || 1}
-          onChange={(event) => onChange(event.target.value)}
+          onChange={handleChange}
           onFocus={handleFocus}
           onBlur={handleBlur}
         />

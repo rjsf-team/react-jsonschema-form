@@ -1,3 +1,4 @@
+import React, { useCallback } from 'react';
 import {
   ArrayFieldTemplateProps,
   getTemplate,
@@ -60,6 +61,19 @@ export default function ArrayFieldTemplate<T = any, S extends RJSFSchema = RJSFS
     ButtonTemplates: { AddButton },
   } = registry.templates;
 
+  /** Handle the add button click
+   *
+   * @param e - The click event
+   */
+  const handleAddClick = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement>) => {
+      e.preventDefault();
+      e.stopPropagation();
+      onAddClick(e);
+    },
+    [onAddClick]
+  );
+
   return (
     <div className={`array-field-template ${className}`}>
       <ArrayFieldTitleTemplate
@@ -91,11 +105,7 @@ export default function ArrayFieldTemplate<T = any, S extends RJSFSchema = RJSFS
           <div className='flex justify-end'>
             <AddButton
               className='btn btn-primary btn-sm'
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                onAddClick(e);
-              }}
+              onClick={handleAddClick}
               disabled={disabled || readonly}
               uiSchema={uiSchema}
               registry={registry}

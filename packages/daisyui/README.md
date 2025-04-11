@@ -8,11 +8,16 @@
 
 A [DaisyUI](https://daisyui.com/) theme for [react-jsonschema-form](https://github.com/rjsf-team/react-jsonschema-form/).
 
-This package integrates DaisyUI v6, Tailwind CSS v4, and RJSF v6 to provide a modern, customizable form experience.
+This package integrates [DaisyUI](https://daisyui.com/), [Tailwind CSS](https://tailwindcss.com/), and [RJSF](https://github.com/rjsf-team/react-jsonschema-form/) to provide a modern, customizable form experience.
+
+## Screenshots
+
+![DaisyUI Form Example 1](daisy-screenshot1.png)
+![DaisyUI Form Example 2](daisy-screenshot2.png)
 
 ## Features
 
-- Complete DaisyUI v6 styling for all RJSF form elements
+- Complete DaisyUI styling for all RJSF form elements
 - Responsive design with mobile-friendly layouts
 - Connected card styling for nested elements and arrays
 - Consistent visual hierarchy for complex forms
@@ -29,7 +34,7 @@ This package integrates DaisyUI v6, Tailwind CSS v4, and RJSF v6 to provide a mo
 ## Installation
 
 ```bash
-npm install @rjsf/daisyui @rjsf/core @rjsf/utils tailwindcss@^4.0.0 daisyui@^6.0.0
+npm install @rjsf/daisyui @rjsf/core @rjsf/utils tailwindcss daisyui
 ```
 
 ## Usage
@@ -40,13 +45,7 @@ import validator from '@rjsf/validator-ajv8';
 
 function App() {
   return (
-    <Form 
-      schema={schema}
-      uiSchema={uiSchema}
-      validator={validator}
-      onChange={console.log}
-      onSubmit={console.log}
-    />
+    <Form schema={schema} uiSchema={uiSchema} validator={validator} onChange={console.log} onSubmit={console.log} />
   );
 }
 ```
@@ -70,30 +69,15 @@ Make sure your `tailwind.config.js` includes the DaisyUI plugin:
 ```js
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: [
-    "./src/**/*.{js,jsx,ts,tsx}",
-  ],
+  content: ['./src/**/*.{js,jsx,ts,tsx}'],
   theme: {
     extend: {},
   },
-  plugins: [require("daisyui")],
+  plugins: [require('daisyui')],
   daisyui: {
     themes: true,
   },
-}
-```
-
-## Development
-
-```bash
-# Install dependencies
-npm install
-
-# Build the package
-npm run build
-
-# Run the development server
-npm run dev
+};
 ```
 
 ## Customization
@@ -103,95 +87,133 @@ npm run dev
 The DaisyUI theme supports the standard RJSF layout grid system. You can use grid layouts by incorporating the `LayoutGridField` in your UI schema:
 
 ```jsx
-import { RJSFSchema, UiSchema } from "@rjsf/utils";
-import Form from "@rjsf/daisyui";
-import validator from "@rjsf/validator-ajv8";
+import { RJSFSchema, UiSchema } from '@rjsf/utils';
+import Form from '@rjsf/daisyui';
+import validator from '@rjsf/validator-ajv8';
 
 const schema = {
-  type: "object",
+  type: 'object',
   properties: {
-    firstName: { type: "string", title: "First Name" },
-    lastName: { type: "string", title: "Last Name" },
-    email: { type: "string", format: "email", title: "Email" },
-    phone: { type: "string", title: "Phone" }
-  }
+    firstName: { type: 'string', title: 'First Name' },
+    lastName: { type: 'string', title: 'Last Name' },
+    email: { type: 'string', format: 'email', title: 'Email' },
+    phone: { type: 'string', title: 'Phone' },
+  },
 };
 
 // Use grid layout for the form
 const uiSchema = {
-  "ui:field": "LayoutGridField",
-  "ui:layoutGrid": {
-    "ui:row": {
+  'ui:field': 'LayoutGridField',
+  'ui:layoutGrid': {
+    'ui:row': {
       children: [
         {
-          "ui:row": {
+          'ui:row': {
             children: [
               {
-                "ui:col": {
+                'ui:col': {
                   xs: 12,
                   sm: 6,
-                  children: ["firstName"]
-                }
+                  children: ['firstName'],
+                },
               },
               {
-                "ui:col": {
+                'ui:col': {
                   xs: 12,
                   sm: 6,
-                  children: ["lastName"]
-                }
-              }
-            ]
-          }
+                  children: ['lastName'],
+                },
+              },
+            ],
+          },
         },
         {
-          "ui:row": {
+          'ui:row': {
             children: [
               {
-                "ui:col": {
+                'ui:col': {
                   xs: 12,
                   sm: 6,
-                  children: ["email"]
-                }
+                  children: ['email'],
+                },
               },
               {
-                "ui:col": {
+                'ui:col': {
                   xs: 12,
                   sm: 6,
-                  children: ["phone"]
-                }
-              }
-            ]
-          }
-        }
-      ]
-    }
-  }
+                  children: ['phone'],
+                },
+              },
+            ],
+          },
+        },
+      ],
+    },
+  },
 };
 
-const MyForm = () => (
-  <Form 
-    schema={schema} 
-    uiSchema={uiSchema}
-    validator={validator}
-  />
-);
+const MyForm = () => <Form schema={schema} uiSchema={uiSchema} validator={validator} />;
 ```
 
 The DaisyUI theme uses a flexible grid system based on Tailwind CSS's flex utilities. This grid layout integrates with the standard RJSF layout system, providing a consistent experience across all themes.
 
 ## Theme Configuration
 
-DaisyUI itself provides a variety of themes. To use a specific theme, add the `data-theme` attribute to your root element or use the `ThemeProvider` component.
+DaisyUI itself provides a variety of themes. To use a specific theme, add the `data-theme` attribute to your root element:
 
 ```jsx
-import { ThemeProvider } from '@rjsf/daisyui';
-
-const App = () => (
-  <ThemeProvider>
-    <Form schema={schema} validator={validator} />
-  </ThemeProvider>
-);
+<div data-theme='dark'>
+  <Form schema={schema} validator={validator} />
+</div>
 ```
+
+You can also dynamically change themes in your application:
+
+```jsx
+import { useState } from 'react';
+import { Form } from '@rjsf/daisyui';
+import validator from '@rjsf/validator-ajv8';
+
+function App() {
+  const [theme, setTheme] = useState('light');
+
+  return (
+    <div data-theme={theme}>
+      <select value={theme} onChange={(e) => setTheme(e.target.value)}>
+        <option value='light'>Light</option>
+        <option value='dark'>Dark</option>
+        <option value='cupcake'>Cupcake</option>
+        <option value='cyberpunk'>Cyberpunk</option>
+        <option value='synthwave'>Synthwave</option>
+        {/* Add more themes as needed */}
+      </select>
+
+      <Form schema={schema} validator={validator} />
+    </div>
+  );
+}
+```
+
+## Development
+
+To develop locally:
+
+```bash
+# Clone the repository
+git clone https://github.com/rjsf-team/react-jsonschema-form.git
+cd react-jsonschema-form
+
+# Install dependencies
+npm install
+
+# Build packages
+npm run build
+
+# Run playground
+npm run start:playground
+```
+
+To test the DaisyUI theme specifically, select it from the themes dropdown in the playground.
 
 ## License
 

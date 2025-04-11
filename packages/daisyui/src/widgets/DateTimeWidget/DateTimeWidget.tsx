@@ -258,6 +258,18 @@ export default function DateTimeWidget<
     return () => document.removeEventListener('keydown', handleEscape);
   }, [id, isOpen, onBlur, value]);
 
+  // Add the handleDoneClick callback near the top of the component, with the other event handlers
+  /** Handle clicking the "Done" button
+   */
+  const handleDoneClick = useCallback(() => {
+    setIsOpen(false);
+    onChange(localDate ? localDate.toISOString() : '');
+    if (onBlur) {
+      onBlur(id, value);
+    }
+    inputRef.current?.focus();
+  }, [localDate, onChange, onBlur, id, value]);
+
   return (
     <div className='form-control my-4 w-full relative'>
       <div
@@ -302,18 +314,7 @@ export default function DateTimeWidget<
               onTimeChange={handleTimeChange}
             />
             <div className='p-3 flex justify-end border-t border-base-300'>
-              <button
-                type='button'
-                className='btn btn-sm btn-primary'
-                onClick={() => {
-                  setIsOpen(false);
-                  onChange(localDate ? localDate.toISOString() : '');
-                  if (onBlur) {
-                    onBlur(id, value);
-                  }
-                  inputRef.current?.focus();
-                }}
-              >
+              <button type='button' className='btn btn-sm btn-primary' onClick={handleDoneClick}>
                 Done
               </button>
             </div>

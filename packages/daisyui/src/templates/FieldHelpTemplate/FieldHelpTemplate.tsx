@@ -17,7 +17,7 @@ export default function FieldHelpTemplate<
   const { help } = props;
   return (
     <div className='field-help-template text-gray-500 text-sm'>
-      <p>{help}</p>
+      <div>{help}</div>
     </div>
   );
 }

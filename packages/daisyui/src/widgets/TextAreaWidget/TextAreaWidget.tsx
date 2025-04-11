@@ -1,5 +1,5 @@
 import { WidgetProps, StrictRJSFSchema, RJSFSchema, FormContextType } from '@rjsf/utils';
-import { FocusEvent } from 'react';
+import { FocusEvent, useCallback } from 'react';
 
 /** The `TextareaWidget` component renders a multi-line text input with DaisyUI styling
  *
@@ -38,6 +38,17 @@ export default function TextareaWidget<
     }
   };
 
+  /** Handle change events
+   *
+   * @param event - The change event
+   */
+  const handleChange = useCallback(
+    (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+      onChange(event.target.value);
+    },
+    [onChange]
+  );
+
   // Extract rows and other textarea-specific props from options
   const rows = options?.rows || 5;
 
@@ -50,7 +61,7 @@ export default function TextareaWidget<
         disabled={disabled || readonly}
         readOnly={readonly}
         rows={rows}
-        onChange={(event) => onChange(event.target.value)}
+        onChange={handleChange}
         onFocus={handleFocus}
         onBlur={handleBlur}
         className='textarea textarea-bordered w-full'

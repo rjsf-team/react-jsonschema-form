@@ -1,4 +1,3 @@
-/** @type {import('tailwindcss').Config} */
 const config = require('./tailwind.config.json');
 
 // Add plugins that require JavaScript functions

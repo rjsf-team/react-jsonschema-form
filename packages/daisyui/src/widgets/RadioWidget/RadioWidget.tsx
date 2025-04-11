@@ -1,5 +1,5 @@
 import { WidgetProps, StrictRJSFSchema, FormContextType, RJSFSchema } from '@rjsf/utils';
-import { FocusEvent } from 'react';
+import { FocusEvent, useCallback } from 'react';
 
 /** The `RadioWidget` component renders a group of radio buttons with DaisyUI styling
  *
@@ -71,6 +71,19 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
     }
   };
 
+  /** Handles change events for a specific option
+   *
+   * @param option - The selected option
+   * @returns A handler function for the change event
+   */
+  const createHandleChange = useCallback(
+    (option: any) => (e: React.ChangeEvent<HTMLInputElement>) => {
+      onChange(isEnumeratedObject ? option.value : option.value);
+      e.target.blur();
+    },
+    [onChange, isEnumeratedObject]
+  );
+
   return (
     <div className='form-control'>
       {/* Display the options in a vertical flex layout for better spacing */}
@@ -86,10 +99,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
               checked={isChecked(option)}
               required={required}
               disabled={disabled || readonly}
-              onChange={(e) => {
-                onChange(isEnumeratedObject ? option.value : option.value);
-                e.target.blur();
-              }}
+              onChange={createHandleChange(option)}
               onFocus={(e) => handleFocus(e, option.value)}
               onBlur={(e) => handleBlur(e, option.value)}
             />

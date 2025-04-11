@@ -1,5 +1,5 @@
 import { WidgetProps, StrictRJSFSchema, RJSFSchema, FormContextType } from '@rjsf/utils';
-import { FocusEvent } from 'react';
+import { FocusEvent, useCallback } from 'react';
 
 /** The `TimeWidget` component renders a time input with DaisyUI styling
  *
@@ -36,6 +36,17 @@ export default function TimeWidget<T = any, S extends StrictRJSFSchema = RJSFSch
     }
   };
 
+  /** Handle change events
+   *
+   * @param event - The change event
+   */
+  const handleChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      onChange(event.target.value);
+    },
+    [onChange]
+  );
+
   return (
     <div className='form-control'>
       <input
@@ -46,7 +57,7 @@ export default function TimeWidget<T = any, S extends StrictRJSFSchema = RJSFSch
         required={required}
         disabled={disabled || readonly}
         readOnly={readonly}
-        onChange={(event) => onChange(event.target.value)}
+        onChange={handleChange}
         onFocus={handleFocus}
         onBlur={handleBlur}
       />

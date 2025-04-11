@@ -1,4 +1,4 @@
-import React, { FocusEvent } from 'react';
+import React, { FocusEvent, useCallback } from 'react';
 import { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 
 /** The `FileWidget` component provides a file input with DaisyUI styling
@@ -26,19 +26,22 @@ export default function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSch
    *
    * @param event - The change event from the file input
    */
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (!event.target.files) {
-      return;
-    }
-    // Convert FileList to array for multiple upload handling.
-    const fileList = Array.from(event.target.files);
-    if (isMulti) {
-      onChange(fileList);
-    } else {
-      // For single file, send the first file (or null if none chosen)
-      onChange(fileList[0] || null);
-    }
-  };
+  const handleChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      if (!event.target.files) {
+        return;
+      }
+      // Convert FileList to array for multiple upload handling.
+      const fileList = Array.from(event.target.files);
+      if (isMulti) {
+        onChange(fileList);
+      } else {
+        // For single file, send the first file (or null if none chosen)
+        onChange(fileList[0] || null);
+      }
+    },
+    [onChange, isMulti]
+  );
 
   /** Handle focus events
    *
