@@ -137,6 +137,7 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/core
 
 - Fix default value population when switching between options in `MultiSchemaField` [#4375](https://github.com/rjsf-team/react-jsonschema-form/pull/4375). Fixes [#4367](https://github.com/rjsf-team/react-jsonschema-form/issues/4367)
+- Updated `ObjectField` and `CheckboxWidget` to render markdown in the description when `enableMarkdownInDescription` is set to `true`, fixing [#3975](https://github.com/rjsf-team/react-jsonschema-form/issues/3975)
 
 ## @rjsf/utils
 
@@ -145,6 +146,10 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/validator-ajv8
 
 - Fixed issue where `ui:title` in anyOf/oneOf is not shown in error messages. Fixes [#4368](https://github.com/rjsf-team/react-jsonschema-form/issues/4368)
+
+## Dev / docs / playground
+
+- Fixed typo in `package.json`
 
 # 5.23.1
 
