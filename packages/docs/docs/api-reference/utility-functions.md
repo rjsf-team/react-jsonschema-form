@@ -923,9 +923,9 @@ Transforms a RJSF validation errors list into an `ErrorSchema`
 
 ```ts
 const changesThis = [
-  { property: '.level1.level2[2].level3', message: 'err a' },
-  { property: '.level1.level2[2].level3', message: 'err b' },
-  { property: '.level1.level2[4].level3', message: 'err b' },
+  { property: '.level1.level2[2].level3', message: 'err a', stack: '.level1.level2[2].level3 err a' },
+  { property: '.level1.level2[2].level3', message: 'err b', stack: '.level1.level2[2].level3 err b' },
+  { property: '.level1.level2[4].level3', message: 'err b', stack: '.level1.level2[4].level3 err b' },
 ];
 const intoThis = {
   level1: {
