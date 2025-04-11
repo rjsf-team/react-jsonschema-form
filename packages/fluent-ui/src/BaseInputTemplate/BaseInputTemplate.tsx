@@ -83,7 +83,7 @@ export default function BaseInputTemplate<
   const _onBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target && target.value);
   const _onFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target && target.value);
 
-  const uiProps = _pick((options.props as object) || {}, allowedProps);
+  const uiProps = _pick(options || {}, allowedProps);
 
   return (
     <>
