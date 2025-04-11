@@ -45,10 +45,7 @@ export default function RatingWidget<
   // Generate size class
   const sizeClass = size === 'md' ? '' : `rating-${size}`;
 
-  /** Handles change events from radio inputs
-   *
-   * @param event - The change event
-   */
+  /** Handles change events from radio inputs */
   const _onChange = useCallback(
     ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
       onChange(parseInt(value));
@@ -56,28 +53,22 @@ export default function RatingWidget<
     [onChange]
   );
 
-  /** Handles focus events for accessibility
-   *
-   * @param event - The focus event
-   * @param starValue - The value of the focused star
-   */
+  /** Handles focus events for accessibility */
   const handleFocus = useCallback(
-    (event: FocusEvent<HTMLInputElement>, starValue: number) => {
+    (event: FocusEvent<HTMLInputElement>) => {
       if (onFocus) {
+        const starValue = Number(event.target.value);
         onFocus(id, starValue);
       }
     },
     [onFocus, id]
   );
 
-  /** Handles blur events for accessibility
-   *
-   * @param event - The blur event
-   * @param starValue - The value of the blurred star
-   */
+  /** Handles blur events for accessibility */
   const handleBlur = useCallback(
-    (event: FocusEvent<HTMLInputElement>, starValue: number) => {
+    (event: FocusEvent<HTMLInputElement>) => {
       if (onBlur) {
+        const starValue = Number(event.target.value);
         onBlur(id, starValue);
       }
     },
@@ -113,8 +104,8 @@ export default function RatingWidget<
               value={starValue}
               checked={value === starValue}
               onChange={_onChange}
-              onFocus={(e) => handleFocus(e, starValue)}
-              onBlur={(e) => handleBlur(e, starValue)}
+              onFocus={handleFocus}
+              onBlur={handleBlur}
               className={`mask ${maskClass} ${getColorClass(index)}`}
               disabled={disabled || readonly}
               required={required}

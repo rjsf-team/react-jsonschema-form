@@ -6,6 +6,7 @@ import {
   TranslatableString,
   buttonId,
 } from '@rjsf/utils';
+import { useCallback } from 'react';
 
 /** The `WrapIfAdditional` component is used by the `FieldTemplate` to rename, or remove properties that are
  * part of an `additionalProperties` part of a schema.
@@ -34,6 +35,17 @@ export default function WrapIfAdditionalTemplate<
 
   const { translateString } = registry;
 
+  const handleBlur = useCallback(
+    (event: React.FocusEvent<HTMLInputElement>) => {
+      onKeyChange(event.target.value);
+    },
+    [onKeyChange]
+  );
+
+  const handleRemove = useCallback(() => {
+    onDropPropertyClick(label)();
+  }, [onDropPropertyClick, label]);
+
   return (
     <div className={`wrap-if-additional-template ${classNames}`} {...rest}>
       <div className='flex items-center'>
@@ -41,7 +53,7 @@ export default function WrapIfAdditionalTemplate<
           type='text'
           className='input input-bordered'
           id={`${id}-key`}
-          onBlur={(event) => onKeyChange(event.target.value)}
+          onBlur={handleBlur}
           defaultValue={label}
           disabled={disabled || readonly}
         />
@@ -49,7 +61,7 @@ export default function WrapIfAdditionalTemplate<
           <button
             className='btn btn-danger ml-2'
             id={buttonId<T>(id, 'remove')}
-            onClick={onDropPropertyClick(label)}
+            onClick={handleRemove}
             disabled={disabled || readonly}
           >
             {translateString(TranslatableString.RemoveButton)}

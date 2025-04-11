@@ -13,9 +13,11 @@ import { FieldTemplateProps, StrictRJSFSchema, RJSFSchema, FormContextType } fro
  *
  * @param props - The `FieldTemplateProps` for the component
  */
-function FieldTemplate<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: FieldTemplateProps<T, S, F>
-) {
+export default function FieldTemplate<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: FieldTemplateProps<T, S, F>) {
   const {
     id,
     label,
@@ -73,5 +75,3 @@ function FieldTemplate<T = any, S extends StrictRJSFSchema = RJSFSchema, F exten
     </div>
   );
 }
-
-export default FieldTemplate;

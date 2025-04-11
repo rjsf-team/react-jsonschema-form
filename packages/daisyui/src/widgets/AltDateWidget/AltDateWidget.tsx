@@ -135,6 +135,14 @@ function DateElement<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
   const id = `${rootId}_${type}`;
   const { SelectWidget } = registry.widgets as Registry<T, S, F>['widgets'];
 
+  // Memoize the onChange handler
+  const handleChange = useCallback(
+    (value: any) => {
+      select(type as keyof DateObject, value);
+    },
+    [select, type]
+  );
+
   return (
     <SelectWidget
       schema={{ type: 'integer' } as S}
@@ -147,7 +155,7 @@ function DateElement<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
       disabled={disabled}
       readonly={readonly}
       autofocus={autofocus}
-      onChange={(value: any) => select(type as keyof DateObject, value)}
+      onChange={handleChange}
       onBlur={onBlur}
       onFocus={onFocus}
       registry={registry}

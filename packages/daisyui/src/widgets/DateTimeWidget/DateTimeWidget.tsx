@@ -101,6 +101,11 @@ function DateTimePickerPopup({ selectedDate, month, onMonthChange, onSelect, onT
     'custom-today': 'btn btn-outline btn-info min-h-0 h-full',
   };
 
+  // Memoize click handler to stop event propagation
+  const handleClick = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+  }, []);
+
   return (
     <div className='p-3'>
       <DayPicker
@@ -128,7 +133,7 @@ function DateTimePickerPopup({ selectedDate, month, onMonthChange, onSelect, onT
             className='input input-bordered w-full'
             value={selectedDate ? format(selectedDate, 'HH:mm') : ''}
             onChange={onTimeChange}
-            onClick={(e) => e.stopPropagation()}
+            onClick={handleClick}
           />
         </div>
       </div>
@@ -243,6 +248,21 @@ export default function DateTimeWidget<
     }
   }, [id, onBlur, value, isOpen]);
 
+  // Handle keydown events for accessibility
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        togglePicker(e as unknown as React.MouseEvent);
+      }
+    },
+    [togglePicker]
+  );
+
+  // Prevent event propagation for popup container
+  const handleContainerClick = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+  }, []);
+
   // Close popup on escape key
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
@@ -275,11 +295,7 @@ export default function DateTimeWidget<
       <div
         className='w-full'
         tabIndex={0}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter' || e.key === ' ') {
-            togglePicker(e as unknown as React.MouseEvent);
-          }
-        }}
+        onKeyDown={handleKeyDown}
         onFocus={handleFocus}
         onBlur={handleBlur}
         ref={inputRef}
@@ -304,7 +320,7 @@ export default function DateTimeWidget<
           <div
             ref={containerRef}
             className='absolute z-[100] mt-2 w-full max-w-xs bg-base-100 border border-base-300 shadow-lg rounded-box'
-            onClick={(e) => e.stopPropagation()}
+            onClick={handleContainerClick}
           >
             <MemoizedDateTimePickerPopup
               selectedDate={localDate}

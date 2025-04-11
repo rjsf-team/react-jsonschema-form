@@ -22,21 +22,27 @@ export default function TextareaWidget<
    *
    * @param event - The focus event
    */
-  const handleFocus = (event: FocusEvent<HTMLTextAreaElement>) => {
-    if (onFocus) {
-      onFocus(id, event.target.value);
-    }
-  };
+  const handleFocus = useCallback(
+    (event: FocusEvent<HTMLTextAreaElement>) => {
+      if (onFocus) {
+        onFocus(id, event.target.value);
+      }
+    },
+    [onFocus, id]
+  );
 
   /** Handle blur events
    *
    * @param event - The blur event
    */
-  const handleBlur = (event: FocusEvent<HTMLTextAreaElement>) => {
-    if (onBlur) {
-      onBlur(id, event.target.value);
-    }
-  };
+  const handleBlur = useCallback(
+    (event: FocusEvent<HTMLTextAreaElement>) => {
+      if (onBlur) {
+        onBlur(id, event.target.value);
+      }
+    },
+    [onBlur, id]
+  );
 
   /** Handle change events
    *

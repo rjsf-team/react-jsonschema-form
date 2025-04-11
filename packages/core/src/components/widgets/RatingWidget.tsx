@@ -36,10 +36,7 @@ export default function RatingWidget<
   const numStars = schema.maximum ? Math.min(schema.maximum, 5) : Math.min(Math.max(stars as number, 1), 5);
   const min = schema.minimum || 0;
 
-  /** Handles clicking on a star to set the rating
-   *
-   * @param starValue - The value of the clicked star
-   */
+  /** Handles clicking on a star to set the rating */
   const handleStarClick = useCallback(
     (starValue: number) => {
       if (!disabled && !readonly) {
@@ -49,28 +46,24 @@ export default function RatingWidget<
     [onChange, disabled, readonly]
   );
 
-  /** Handles focus events for accessibility
-   *
-   * @param event - The focus event
-   * @param starValue - The value of the focused star
-   */
+  /** Handles focus events for accessibility */
   const handleFocus = useCallback(
-    (event: FocusEvent<HTMLSpanElement>, starValue: number) => {
+    (event: FocusEvent<HTMLSpanElement>) => {
       if (onFocus) {
+        // Get the star value from the data attribute
+        const starValue = Number((event.target as HTMLElement).dataset.value);
         onFocus(id, starValue);
       }
     },
     [onFocus, id]
   );
 
-  /** Handles blur events for accessibility
-   *
-   * @param event - The blur event
-   * @param starValue - The value of the blurred star
-   */
+  /** Handles blur events for accessibility */
   const handleBlur = useCallback(
-    (event: FocusEvent<HTMLSpanElement>, starValue: number) => {
+    (event: FocusEvent<HTMLSpanElement>) => {
       if (onBlur) {
+        // Get the star value from the data attribute
+        const starValue = Number((event.target as HTMLElement).dataset.value);
         onBlur(id, starValue);
       }
     },
@@ -103,8 +96,9 @@ export default function RatingWidget<
             <span
               key={index}
               onClick={() => handleStarClick(starValue)}
-              onFocus={(e) => handleFocus(e, starValue)}
-              onBlur={(e) => handleBlur(e, starValue)}
+              onFocus={handleFocus}
+              onBlur={handleBlur}
+              data-value={starValue}
               tabIndex={disabled || readonly ? -1 : 0}
               role='radio'
               aria-checked={starValue === value}

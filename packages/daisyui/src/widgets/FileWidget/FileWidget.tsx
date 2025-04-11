@@ -47,21 +47,27 @@ export default function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSch
    *
    * @param event - The focus event
    */
-  const handleFocus = (event: FocusEvent<HTMLInputElement>) => {
-    if (onFocus) {
-      onFocus(id, event.target.files ? Array.from(event.target.files) : null);
-    }
-  };
+  const handleFocus = useCallback(
+    (event: FocusEvent<HTMLInputElement>) => {
+      if (onFocus) {
+        onFocus(id, event.target.files ? Array.from(event.target.files) : null);
+      }
+    },
+    [onFocus, id]
+  );
 
   /** Handle blur events
    *
    * @param event - The blur event
    */
-  const handleBlur = (event: FocusEvent<HTMLInputElement>) => {
-    if (onBlur) {
-      onBlur(id, event.target.files ? Array.from(event.target.files) : null);
-    }
-  };
+  const handleBlur = useCallback(
+    (event: FocusEvent<HTMLInputElement>) => {
+      if (onBlur) {
+        onBlur(id, event.target.files ? Array.from(event.target.files) : null);
+      }
+    },
+    [onBlur, id]
+  );
 
   return (
     <input

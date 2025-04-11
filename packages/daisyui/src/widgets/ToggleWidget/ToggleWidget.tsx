@@ -30,21 +30,27 @@ export default function ToggleWidget<
    *
    * @param event - The focus event
    */
-  const handleFocus = (event: FocusEvent<HTMLInputElement>) => {
-    if (onFocus) {
-      onFocus(id, value);
-    }
-  };
+  const handleFocus = useCallback(
+    (event: FocusEvent<HTMLInputElement>) => {
+      if (onFocus) {
+        onFocus(id, value);
+      }
+    },
+    [onFocus, id, value]
+  );
 
   /** Handle blur events
    *
    * @param event - The blur event
    */
-  const handleBlur = (event: FocusEvent<HTMLInputElement>) => {
-    if (onBlur) {
-      onBlur(id, value);
-    }
-  };
+  const handleBlur = useCallback(
+    (event: FocusEvent<HTMLInputElement>) => {
+      if (onBlur) {
+        onBlur(id, value);
+      }
+    },
+    [onBlur, id, value]
+  );
 
   // Get size from options or use default "md"
   const { size = 'md' } = options;

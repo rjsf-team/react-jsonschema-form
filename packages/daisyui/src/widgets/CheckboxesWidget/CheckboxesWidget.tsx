@@ -47,12 +47,15 @@ export default function CheckboxesWidget<T, S extends StrictRJSFSchema = RJSFSch
     [value, isEnumeratedObject]
   );
 
-  /** Handles changes to a checkbox's checked state
-   *
-   * @param option - The option that was changed
-   */
-  const _onChange = useCallback(
-    (option: any) => {
+  /** Handles changes to a checkbox's checked state */
+  const handleChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const index = Number(event.target.dataset.index);
+      const option = enumOptions?.[index];
+      if (!option) {
+        return;
+      }
+
       const newValue = Array.isArray(value) ? [...value] : [];
       const optionValue = isEnumeratedObject ? option.value : option.value;
 
@@ -62,42 +65,42 @@ export default function CheckboxesWidget<T, S extends StrictRJSFSchema = RJSFSch
         onChange([...newValue, optionValue]);
       }
     },
-    [onChange, value, isChecked, isEnumeratedObject]
+    [onChange, value, isChecked, isEnumeratedObject, enumOptions]
   );
 
-  /** Handles focus events for accessibility
-   *
-   * @param event - The focus event
-   * @param option - The option being focused
-   */
+  /** Handles focus events for accessibility */
   const handleFocus = useCallback(
-    (event: FocusEvent<HTMLInputElement>, option: any) => {
+    (event: FocusEvent<HTMLInputElement>) => {
       if (onFocus) {
-        onFocus(id, option.value);
+        const index = Number(event.target.dataset.index);
+        const option = enumOptions?.[index];
+        if (option) {
+          onFocus(id, option.value);
+        }
       }
     },
-    [onFocus, id]
+    [onFocus, id, enumOptions]
   );
 
-  /** Handles blur events for accessibility
-   *
-   * @param event - The blur event
-   * @param option - The option being blurred
-   */
+  /** Handles blur events for accessibility */
   const handleBlur = useCallback(
-    (event: FocusEvent<HTMLInputElement>, option: any) => {
+    (event: FocusEvent<HTMLInputElement>) => {
       if (onBlur) {
-        onBlur(id, option.value);
+        const index = Number(event.target.dataset.index);
+        const option = enumOptions?.[index];
+        if (option) {
+          onBlur(id, option.value);
+        }
       }
     },
-    [onBlur, id]
+    [onBlur, id, enumOptions]
   );
 
   return (
     <div className='form-control'>
       {/* Use a vertical layout with proper spacing */}
       <div className='flex flex-col gap-2 mt-1'>
-        {enumOptions?.map((option) => (
+        {enumOptions?.map((option, index) => (
           <label key={option.value} className='flex items-center cursor-pointer gap-2'>
             <input
               type='checkbox'
@@ -107,9 +110,10 @@ export default function CheckboxesWidget<T, S extends StrictRJSFSchema = RJSFSch
               checked={isChecked(option)}
               required={required}
               disabled={disabled || readonly}
-              onChange={() => _onChange(option)}
-              onFocus={(e) => handleFocus(e, option)}
-              onBlur={(e) => handleBlur(e, option)}
+              data-index={index}
+              onChange={handleChange}
+              onFocus={handleFocus}
+              onBlur={handleBlur}
             />
             <span className='label-text'>{option.label}</span>
           </label>

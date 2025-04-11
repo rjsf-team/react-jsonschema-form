@@ -1,4 +1,4 @@
-import { ChangeEvent, FocusEvent } from 'react';
+import { ChangeEvent, FocusEvent, useCallback } from 'react';
 import {
   WidgetProps,
   StrictRJSFSchema,
@@ -52,10 +52,20 @@ export default function BaseInputTemplate<
   const { step, min, max, accept, ...rest } = inputProps;
   const htmlInputProps = { step, min, max, accept, ...(schema.examples ? { list: examplesId<T>(id) } : undefined) };
 
-  const _onChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) =>
-    onChange(value === '' ? options.emptyValue : value);
-  const _onBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur && onBlur(id, target.value);
-  const _onFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus && onFocus(id, target.value);
+  const _onChange = useCallback(
+    ({ target: { value } }: ChangeEvent<HTMLInputElement>) => onChange(value === '' ? options.emptyValue : value),
+    [onChange, options]
+  );
+
+  const _onBlur = useCallback(
+    ({ target }: FocusEvent<HTMLInputElement>) => onBlur && onBlur(id, target.value),
+    [onBlur, id]
+  );
+
+  const _onFocus = useCallback(
+    ({ target }: FocusEvent<HTMLInputElement>) => onFocus && onFocus(id, target.value),
+    [onFocus, id]
+  );
 
   return (
     <>

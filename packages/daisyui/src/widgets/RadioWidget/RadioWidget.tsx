@@ -49,46 +49,48 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
     return value === option.value;
   };
 
-  /** Handles focus events for accessibility
-   *
-   * @param event - The focus event
-   * @param optionValue - The value of the focused option
-   */
-  const handleFocus = (event: FocusEvent<HTMLInputElement>, optionValue: any) => {
-    if (onFocus) {
-      onFocus(id, optionValue);
-    }
-  };
-
-  /** Handles blur events for accessibility
-   *
-   * @param event - The blur event
-   * @param optionValue - The value of the blurred option
-   */
-  const handleBlur = (event: FocusEvent<HTMLInputElement>, optionValue: any) => {
-    if (onBlur) {
-      onBlur(id, optionValue);
-    }
-  };
-
-  /** Handles change events for a specific option
-   *
-   * @param option - The selected option
-   * @returns A handler function for the change event
-   */
-  const createHandleChange = useCallback(
-    (option: any) => (e: React.ChangeEvent<HTMLInputElement>) => {
-      onChange(isEnumeratedObject ? option.value : option.value);
-      e.target.blur();
+  /** Handles focus events for accessibility */
+  const handleFocus = useCallback(
+    (event: FocusEvent<HTMLInputElement>) => {
+      if (onFocus) {
+        const index = Number(event.target.dataset.index);
+        const optionValue = enumOptions?.[index]?.value;
+        onFocus(id, optionValue);
+      }
     },
-    [onChange, isEnumeratedObject]
+    [onFocus, id, enumOptions]
+  );
+
+  /** Handles blur events for accessibility */
+  const handleBlur = useCallback(
+    (event: FocusEvent<HTMLInputElement>) => {
+      if (onBlur) {
+        const index = Number(event.target.dataset.index);
+        const optionValue = enumOptions?.[index]?.value;
+        onBlur(id, optionValue);
+      }
+    },
+    [onBlur, id, enumOptions]
+  );
+
+  /** Handles change events for radio options */
+  const handleChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const index = Number(event.target.dataset.index);
+      const option = enumOptions?.[index];
+      if (option) {
+        onChange(isEnumeratedObject ? option.value : option.value);
+        event.target.blur();
+      }
+    },
+    [onChange, isEnumeratedObject, enumOptions]
   );
 
   return (
     <div className='form-control'>
       {/* Display the options in a vertical flex layout for better spacing */}
       <div className='flex flex-col gap-2 mt-1'>
-        {enumOptions?.map((option) => (
+        {enumOptions?.map((option, index) => (
           <label key={option.value} className='flex items-center cursor-pointer gap-2'>
             <input
               type='radio'
@@ -99,9 +101,10 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
               checked={isChecked(option)}
               required={required}
               disabled={disabled || readonly}
-              onChange={createHandleChange(option)}
-              onFocus={(e) => handleFocus(e, option.value)}
-              onBlur={(e) => handleBlur(e, option.value)}
+              data-index={index}
+              onChange={handleChange}
+              onFocus={handleFocus}
+              onBlur={handleBlur}
             />
             <span className='label-text'>{option.label}</span>
           </label>

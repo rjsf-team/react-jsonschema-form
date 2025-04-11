@@ -57,7 +57,12 @@ export default function SelectWidget<
   const isEnumeratedObject = enumOptions && enumOptions[0]?.value && typeof enumOptions[0].value === 'object';
 
   const handleOptionClick = useCallback(
-    (index: number) => {
+    (event: React.MouseEvent<HTMLLIElement>) => {
+      const index = Number(event.currentTarget.dataset.value);
+      if (isNaN(index)) {
+        return;
+      }
+
       if (multiple) {
         const currentValue = Array.isArray(value) ? value : [];
         const optionValue = isEnumeratedObject
@@ -78,19 +83,25 @@ export default function SelectWidget<
     [value, multiple, isEnumeratedObject, enumOptions, optEmptyVal, onChange]
   );
 
-  const _onBlur = ({ target }: FocusEvent<HTMLDivElement>) => {
-    const dataValue = target?.getAttribute('data-value');
-    if (dataValue !== null) {
-      onBlur(id, enumOptionsValueForIndex<S>(dataValue, enumOptions, optEmptyVal));
-    }
-  };
+  const _onBlur = useCallback(
+    ({ target }: FocusEvent<HTMLDivElement>) => {
+      const dataValue = target?.getAttribute('data-value');
+      if (dataValue !== null) {
+        onBlur(id, enumOptionsValueForIndex<S>(dataValue, enumOptions, optEmptyVal));
+      }
+    },
+    [onBlur, id, enumOptions, optEmptyVal]
+  );
 
-  const _onFocus = ({ target }: FocusEvent<HTMLDivElement>) => {
-    const dataValue = target?.getAttribute('data-value');
-    if (dataValue !== null) {
-      onFocus(id, enumOptionsValueForIndex<S>(dataValue, enumOptions, optEmptyVal));
-    }
-  };
+  const _onFocus = useCallback(
+    ({ target }: FocusEvent<HTMLDivElement>) => {
+      const dataValue = target?.getAttribute('data-value');
+      if (dataValue !== null) {
+        onFocus(id, enumOptionsValueForIndex<S>(dataValue, enumOptions, optEmptyVal));
+      }
+    },
+    [onFocus, id, enumOptions, optEmptyVal]
+  );
 
   const selectedIndexes = enumOptionsIndexForValue<S>(value, enumOptions, multiple);
   const selectedValues = Array.isArray(selectedIndexes) ? selectedIndexes : [selectedIndexes];
@@ -127,7 +138,7 @@ export default function SelectWidget<
               className={`px-4 py-2 hover:bg-base-200 cursor-pointer ${
                 selectedValues.includes(String(i)) ? 'bg-primary/10' : ''
               }`}
-              onClick={() => handleOptionClick(i)}
+              onClick={handleOptionClick}
               data-value={i}
             >
               <div className='flex items-center gap-2'>

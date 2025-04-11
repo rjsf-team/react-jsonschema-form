@@ -20,21 +20,27 @@ export default function TimeWidget<T = any, S extends StrictRJSFSchema = RJSFSch
    *
    * @param event - The focus event
    */
-  const handleFocus = (event: FocusEvent<HTMLInputElement>) => {
-    if (onFocus) {
-      onFocus(id, event.target.value);
-    }
-  };
+  const handleFocus = useCallback(
+    (event: FocusEvent<HTMLInputElement>) => {
+      if (onFocus) {
+        onFocus(id, event.target.value);
+      }
+    },
+    [onFocus, id]
+  );
 
   /** Handle blur events
    *
    * @param event - The blur event
    */
-  const handleBlur = (event: FocusEvent<HTMLInputElement>) => {
-    if (onBlur) {
-      onBlur(id, event.target.value);
-    }
-  };
+  const handleBlur = useCallback(
+    (event: FocusEvent<HTMLInputElement>) => {
+      if (onBlur) {
+        onBlur(id, event.target.value);
+      }
+    },
+    [onBlur, id]
+  );
 
   /** Handle change events
    *
