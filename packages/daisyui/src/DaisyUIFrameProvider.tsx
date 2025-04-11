@@ -46,24 +46,7 @@ export const __createDaisyUIFrameProvider = (props: DaisyUIFrameProviderProps) =
     })();
 
     if (document) {
-      // Add Tailwind first
-      const tailwindScript = document.createElement('script');
-      tailwindScript.src = 'https://unpkg.com/@tailwindcss/browser@4.0.6';
-      document.head.appendChild(tailwindScript);
-
-      // Add DaisyUI CSS
-      const daisyLink = document.createElement('link');
-      daisyLink.rel = 'stylesheet';
-      daisyLink.href = 'https://cdn.jsdelivr.net/npm/daisyui@5.0.0-beta.7/daisyui.css';
-      document.head.appendChild(daisyLink);
-
-      // Add all themes
-      const daisyLinkAllThemes = document.createElement('link');
-      daisyLinkAllThemes.rel = 'stylesheet';
-      daisyLinkAllThemes.href = 'https://cdn.jsdelivr.net/npm/daisyui@5.0.0-beta.7/themes.css';
-      document.head.appendChild(daisyLinkAllThemes);
-
-      // Configure Tailwind
+      // Configure Tailwind first to ensure config is available before script loads
       const configScript = document.createElement('script');
       configScript.textContent = `
         window.tailwind = window.tailwind || {};
@@ -77,6 +60,23 @@ export const __createDaisyUIFrameProvider = (props: DaisyUIFrameProviderProps) =
         }
       `;
       document.head.appendChild(configScript);
+
+      // Add Tailwind
+      const tailwindScript = document.createElement('script');
+      tailwindScript.src = 'https://unpkg.com/@tailwindcss/browser@4.1.3';
+      document.head.appendChild(tailwindScript);
+
+      // Add DaisyUI CSS
+      const daisyLink = document.createElement('link');
+      daisyLink.rel = 'stylesheet';
+      daisyLink.href = 'https://cdn.jsdelivr.net/npm/daisyui@5.0.19';
+      document.head.appendChild(daisyLink);
+
+      // Add all themes
+      const daisyLinkAllThemes = document.createElement('link');
+      daisyLinkAllThemes.rel = 'stylesheet';
+      daisyLinkAllThemes.href = 'https://cdn.jsdelivr.net/npm/daisyui@5.0.19/themes.css';
+      document.head.appendChild(daisyLinkAllThemes);
     }
 
     return (
