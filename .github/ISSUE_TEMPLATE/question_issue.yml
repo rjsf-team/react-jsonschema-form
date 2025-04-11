@@ -19,6 +19,7 @@ body:
         - core
         - antd
         - chakra-ui
+        - mantine
         - mui
         - react-bootstrap
         - semantic-ui

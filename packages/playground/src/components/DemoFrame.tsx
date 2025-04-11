@@ -6,6 +6,7 @@ import Frame, { FrameComponentProps, FrameContextConsumer } from 'react-frame-co
 import { __createChakraFrameProvider } from '@rjsf/chakra-ui';
 import { StyleProvider as AntdStyleProvider } from '@ant-design/cssinjs';
 import { __createFluentUIRCFrameProvider } from '@rjsf/fluentui-rc';
+import { MantineProvider } from '@mantine/core';
 
 /*
 Adapted from https://github.com/mui-org/material-ui/blob/master/docs/src/modules/components/DemoSandboxed.js
@@ -92,6 +93,16 @@ export default function DemoFrame(props: DemoFrameProps) {
   } else if (theme === 'antd') {
     body = ready ? (
       <AntdStyleProvider container={instanceRef.current.contentWindow['demo-frame-jss']}>{children}</AntdStyleProvider>
+    ) : null;
+  } else if (theme === 'mantine') {
+    body = ready ? (
+      <FrameContextConsumer>
+        {({ document }) => (
+          <MantineProvider getRootElement={() => document?.body} cssVariablesSelector='body'>
+            {children}
+          </MantineProvider>
+        )}
+      </FrameContextConsumer>
     ) : null;
   }
 
