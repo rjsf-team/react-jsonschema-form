@@ -12,9 +12,11 @@ import {
  *
  * @param props - The `WrapIfAdditionalProps` for this component
  */
-function WrapIfAdditionalTemplate<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: WrapIfAdditionalTemplateProps<T, S, F>
-) {
+export default function WrapIfAdditionalTemplate<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: WrapIfAdditionalTemplateProps<T, S, F>) {
   const {
     children,
     classNames,
@@ -58,5 +60,3 @@ function WrapIfAdditionalTemplate<T = any, S extends StrictRJSFSchema = RJSFSche
     </div>
   );
 }
-
-export default WrapIfAdditionalTemplate;

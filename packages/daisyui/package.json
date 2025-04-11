@@ -39,7 +39,8 @@
     "react": ">=17",
     "@rjsf/core": "^6.x",
     "@rjsf/utils": "^6.x",
-    "@rjsf/validator-ajv8": "^6.x"
+    "@rjsf/validator-ajv8": "^6.x",
+    "react-i18next": "^14.x"
   },
   "devDependencies": {
     "typescript": "^4.9.5"

@@ -1,3 +1,2 @@
-import RatingWidget from './RatingWidget';
-
-export default RatingWidget;
+export { default } from './RatingWidget';
+export * from './RatingWidget';

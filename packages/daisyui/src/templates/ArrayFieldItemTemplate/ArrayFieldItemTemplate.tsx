@@ -10,22 +10,21 @@ import {
 /** The `ArrayFieldItemTemplate` component is the template used to render an item of an array.
  *
  * This DaisyUI implementation:
- * - Renders items as cards with different styling for first, middle, and last items
- * - Creates a connected appearance using border radius and border styling
+ * - Uses the fieldset component for proper form grouping
+ * - Maintains connected appearance for multiple items
  * - Positions items with z-index to create a stacked effect
- * - Places action buttons in a toolbar below the content using the join component
- * - Uses shadow and border styling for visual hierarchy
+ * - Places action buttons in an easily accessible location
  *
  * @param props - The `ArrayFieldItemTemplateType` props for the component with additional properties:
  * @param props.index - The position of this item in the array (optional)
- * @param props.isLastItem - Whether this is the last item in the array (optional)
+ * @param props.totalItems - The total number of items in the array (optional)
  */
 export default function ArrayFieldItemTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
->(props: ArrayFieldItemTemplateType<T, S, F> & { index?: number; isLastItem?: boolean }) {
-  const { children, buttonsProps, hasToolbar, registry, uiSchema, index, isLastItem } = props;
+>(props: ArrayFieldItemTemplateType<T, S, F>) {
+  const { children, buttonsProps, hasToolbar, registry, uiSchema, index, totalItems } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const ArrayFieldItemButtonsTemplate = getTemplate<'ArrayFieldItemButtonsTemplate', T, S, F>(
     'ArrayFieldItemButtonsTemplate',
@@ -35,36 +34,22 @@ export default function ArrayFieldItemTemplate<
 
   // Different styling for first, middle, and last items to create connected feel
   const isFirstItem = index === 0;
-  const borderRadius = isFirstItem
-    ? 'rounded-t-xl rounded-b-none'
-    : isLastItem
-    ? 'rounded-t-none rounded-b-xl'
-    : 'rounded-none';
-
-  const borderStyle = isLastItem ? 'border-b' : 'border-b-0';
-  const marginBottom = isLastItem ? 'mb-4' : 'mb-0';
+  const isLastItem = index === totalItems - 1;
+  const borderRadius = isFirstItem ? 'rounded-t-lg' : isLastItem ? 'rounded-b-lg' : '';
+  const marginBottom = isLastItem ? '' : 'mb-[-1px]';
+  const zIndex = index === undefined ? '' : 'z-' + (10 - Math.min(index, 9));
 
   return (
-    <div
-      className={`card bg-base-100 shadow-sm border border-base-300 ${borderRadius} ${borderStyle} ${marginBottom} ${
-        index === undefined ? '' : 'z-' + (10 - Math.min(index, 9))
-      }`}
-    >
-      <div className='card-body p-4'>
-        <div className='flex flex-col gap-3'>
-          {/* Content area */}
-          <div className='w-full'>{children}</div>
+    <fieldset className={`fieldset bg-base-100 border border-base-300 p-4 ${borderRadius} ${marginBottom} ${zIndex}`}>
+      {/* Main content area */}
+      {children}
 
-          {/* Toolbar buttons in a separate row under content */}
-          {hasToolbar && (
-            <div className='flex justify-end mt-2'>
-              <div className='join'>
-                <ArrayFieldItemButtonsTemplate {...buttonsProps} />
-              </div>
-            </div>
-          )}
+      {/* Action buttons */}
+      {hasToolbar && (
+        <div className='flex justify-end mt-2'>
+          <ArrayFieldItemButtonsTemplate {...buttonsProps} />
         </div>
-      </div>
-    </div>
+      )}
+    </fieldset>
   );
 }

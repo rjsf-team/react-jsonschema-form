@@ -101,8 +101,6 @@ export default function DemoFrame(props: DemoFrameProps) {
         {__createDaisyUIFrameProvider({
           ...props,
           subtheme: { dataTheme: subtheme },
-          container: container,
-          window: window,
         })}
       </FrameContextConsumer>
     ) : null;

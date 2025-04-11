@@ -5,7 +5,7 @@ import { FormContextType, StrictRJSFSchema, RJSFSchema, ArrayFieldDescriptionPro
  *
  * @param props - The `ArrayFieldDescriptionProps` for the component
  */
-function ArrayFieldDescriptionTemplate<
+export default function ArrayFieldDescriptionTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
@@ -17,5 +17,3 @@ function ArrayFieldDescriptionTemplate<
     </div>
   );
 }
-
-export default ArrayFieldDescriptionTemplate;

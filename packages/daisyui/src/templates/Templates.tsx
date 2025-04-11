@@ -1,7 +1,10 @@
+import { FormContextType, RJSFSchema, StrictRJSFSchema, TemplatesType } from '@rjsf/utils';
+
+import ArrayFieldItemButtonsTemplate from './ArrayFieldItemButtonsTemplate';
 import ArrayFieldItemTemplate from './ArrayFieldItemTemplate';
 import ArrayFieldTemplate from './ArrayFieldTemplate/ArrayFieldTemplate';
-import ArrayFieldItemButtonsTemplate from './ArrayFieldItemButtonsTemplate';
 import BaseInputTemplate from './BaseInputTemplate/BaseInputTemplate';
+import { AddButton, CopyButton, MoveDownButton, MoveUpButton, RemoveButton, SubmitButton } from './ButtonTemplates';
 import DescriptionField from './DescriptionField';
 import ErrorList from './ErrorList';
 import FieldErrorTemplate from './FieldErrorTemplate';
@@ -11,10 +14,6 @@ import GridTemplate from './GridTemplate/GridTemplate';
 import ObjectFieldTemplate from './ObjectFieldTemplate';
 import TitleFieldTemplate from './TitleField/TitleField';
 import WrapIfAdditionalTemplate from './WrapIfAdditionalTemplate';
-
-import { FormContextType, RJSFSchema, StrictRJSFSchema, TemplatesType } from '@rjsf/utils';
-
-import { AddButton, SubmitButton, CopyButton, MoveDownButton, MoveUpButton, RemoveButton } from './ButtonTemplates';
 
 /** Function that generates all the template components required for the DaisyUI theme.
  *

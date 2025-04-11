@@ -6,8 +6,20 @@ import {
   StrictRJSFSchema,
   WidgetProps,
 } from '@rjsf/utils';
-import { ChangeEvent, FocusEvent } from 'react';
+import { FocusEvent, useCallback } from 'react';
 
+/** The `SelectWidget` component renders a select input with DaisyUI styling
+ *
+ * Features:
+ * - Supports both single and multiple selection
+ * - Handles enumerated objects and primitive values
+ * - Uses DaisyUI select styling with proper width
+ * - Supports required, disabled, and readonly states
+ * - Manages focus and blur events for accessibility
+ * - Provides placeholder option when needed
+ *
+ * @param props - The `WidgetProps` for this component
+ */
 export default function SelectWidget<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
@@ -17,20 +29,17 @@ export default function SelectWidget<
   id,
   options,
   label,
-  required,
   disabled,
   placeholder,
   readonly,
   value,
   multiple,
-  autofocus,
   onChange,
   onBlur,
   onFocus,
 }: WidgetProps<T, S, F>) {
   const { enumOptions, emptyValue: optEmptyVal } = options;
   multiple = typeof multiple === 'undefined' ? false : !!multiple;
-  const dataListId = `${id}-datalist`;
 
   const getDisplayValue = (val: any) => {
     if (!val) {
@@ -46,33 +55,45 @@ export default function SelectWidget<
   };
 
   const isEnumeratedObject = enumOptions && enumOptions[0]?.value && typeof enumOptions[0].value === 'object';
-  const shouldUseSelect = isEnumeratedObject || schema.examples;
 
-  const _onChange = ({ target: { value } }: ChangeEvent<{ value: string }>) => {
-    if (shouldUseSelect) {
-      const idx = parseInt(value);
-      onChange(
-        isEnumeratedObject ? enumOptions[idx].value : enumOptionsValueForIndex<S>(value, enumOptions, optEmptyVal)
-      );
-    } else {
-      let selectedOption = null;
-      if (optionsList) {
-        for (let i = 0; i < optionsList.length; i++) {
-          if (getDisplayValue(optionsList[i].label) === value) {
-            selectedOption = optionsList[i];
-            break;
-          }
-        }
+  const handleOptionClick = useCallback(
+    (index: number) => {
+      if (multiple) {
+        const currentValue = Array.isArray(value) ? value : [];
+        const optionValue = isEnumeratedObject
+          ? enumOptions[index].value
+          : enumOptionsValueForIndex<S>(String(index), enumOptions, optEmptyVal);
+        const newValue = currentValue.includes(optionValue)
+          ? currentValue.filter((v) => v !== optionValue)
+          : [...currentValue, optionValue];
+        onChange(newValue);
+      } else {
+        onChange(
+          isEnumeratedObject
+            ? enumOptions[index].value
+            : enumOptionsValueForIndex<S>(String(index), enumOptions, optEmptyVal)
+        );
       }
-      onChange(selectedOption ? selectedOption.value : value);
+    },
+    [value, multiple, isEnumeratedObject, enumOptions, optEmptyVal, onChange]
+  );
+
+  const _onBlur = ({ target }: FocusEvent<HTMLDivElement>) => {
+    const dataValue = target?.getAttribute('data-value');
+    if (dataValue !== null) {
+      onBlur(id, enumOptionsValueForIndex<S>(dataValue, enumOptions, optEmptyVal));
     }
   };
-  const _onBlur = ({ target }: FocusEvent<HTMLSelectElement | HTMLInputElement>) =>
-    onBlur(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, optEmptyVal));
-  const _onFocus = ({ target }: FocusEvent<HTMLSelectElement | HTMLInputElement>) =>
-    onFocus(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, optEmptyVal));
+
+  const _onFocus = ({ target }: FocusEvent<HTMLDivElement>) => {
+    const dataValue = target?.getAttribute('data-value');
+    if (dataValue !== null) {
+      onFocus(id, enumOptionsValueForIndex<S>(dataValue, enumOptions, optEmptyVal));
+    }
+  };
+
   const selectedIndexes = enumOptionsIndexForValue<S>(value, enumOptions, multiple);
-  const showPlaceholderOption = !multiple && schema.default === undefined;
+  const selectedValues = Array.isArray(selectedIndexes) ? selectedIndexes : [selectedIndexes];
 
   const optionsList =
     enumOptions ||
@@ -80,50 +101,50 @@ export default function SelectWidget<
 
   return (
     <div className='form-control w-full'>
-      {shouldUseSelect ? (
-        <select
-          id={id}
-          className='select select-bordered w-full'
-          value={selectedIndexes}
-          required={required}
-          disabled={disabled || readonly}
-          autoFocus={autofocus}
+      <div className='dropdown w-full'>
+        <div
+          tabIndex={0}
+          role='button'
+          className={`btn btn-outline w-full text-left flex justify-between items-center ${
+            disabled || readonly ? 'btn-disabled' : ''
+          }`}
           onBlur={_onBlur}
           onFocus={_onFocus}
-          onChange={_onChange}
         >
-          {showPlaceholderOption && <option value=''>{placeholder || label || ''}</option>}
+          <span className='truncate'>
+            {selectedValues.length > 0
+              ? selectedValues.map((index) => optionsList[Number(index)]?.label).join(', ')
+              : placeholder || label || 'Select...'}
+          </span>
+          <span className='ml-2'>▼</span>
+        </div>
+        <ul className='dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg'>
           {optionsList.map(({ value, label }, i) => (
-            <option key={i} value={i}>
-              {isEnumeratedObject ? label : getDisplayValue(label)}
-            </option>
+            <li
+              key={i}
+              role='button'
+              tabIndex={0}
+              className={`px-4 py-2 hover:bg-base-200 cursor-pointer ${
+                selectedValues.includes(String(i)) ? 'bg-primary/10' : ''
+              }`}
+              onClick={() => handleOptionClick(i)}
+              data-value={i}
+            >
+              <div className='flex items-center gap-2'>
+                {multiple && (
+                  <input
+                    type='checkbox'
+                    className='checkbox checkbox-sm'
+                    checked={selectedValues.includes(String(i))}
+                    readOnly
+                  />
+                )}
+                <span>{isEnumeratedObject ? label : getDisplayValue(label)}</span>
+              </div>
+            </li>
           ))}
-        </select>
-      ) : (
-        <>
-          <input
-            id={id}
-            className='input input-bordered w-full'
-            type='text'
-            value={getDisplayValue(value)}
-            required={required}
-            disabled={disabled || readonly}
-            autoFocus={autofocus}
-            placeholder={placeholder || label}
-            list={dataListId}
-            onBlur={_onBlur}
-            onFocus={_onFocus}
-            onChange={_onChange}
-          />
-          <datalist id={dataListId}>
-            {optionsList.map(({ value, label }, i) => (
-              <option key={i} value={getDisplayValue(label)}>
-                {getDisplayValue(label)}
-              </option>
-            ))}
-          </datalist>
-        </>
-      )}
+        </ul>
+      </div>
     </div>
   );
 }

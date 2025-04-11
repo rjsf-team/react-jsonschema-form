@@ -18,9 +18,9 @@ interface DaisyUIButtonProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F
 function DaisyUIButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: DaisyUIButtonProps<T, S, F>
 ) {
-  const { icon, iconType, uiSchema, registry, ...otherProps } = props;
+  const { icon, iconType, uiSchema, registry, className, ...otherProps } = props;
   return (
-    <button type='button' className={`btn btn-${iconType}`} aria-label={props.title!} {...otherProps}>
+    <button type='button' className={className} aria-label={props.title!} {...otherProps}>
       <FontAwesomeIcon icon={icon} className='h-5 w-5' />
     </button>
   );

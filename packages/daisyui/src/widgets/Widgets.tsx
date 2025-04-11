@@ -1,4 +1,5 @@
 import { FormContextType, RegistryWidgetsType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+
 import AltDateTimeWidget from './AltDateTimeWidget/AltDateTimeWidget';
 import AltDateWidget from './AltDateWidget/AltDateWidget';
 import CheckboxWidget from './CheckboxWidget/CheckboxWidget';

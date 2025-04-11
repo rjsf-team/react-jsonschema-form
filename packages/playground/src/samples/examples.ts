@@ -1,5 +1,6 @@
-import { Sample } from './Sample';
 import validator from '@rjsf/validator-ajv8';
+
+import { Sample } from './Sample';
 
 const examples: Sample = {
   validator: validator,

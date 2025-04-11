@@ -1,11 +1,10 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { format, isValid, isToday, isSameDay } from 'date-fns';
-import { DayPicker, ClassNames, ModifiersClassNames, UI } from 'react-day-picker';
-import 'react-day-picker/dist/style.css';
-
 import { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import { format, isSameDay, isToday, isValid } from 'date-fns';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { ClassNames, DayPicker, ModifiersClassNames, UI } from 'react-day-picker';
+import 'react-day-picker/dist/style.css';
 
 /**
  * Props for the DateTimePicker popup component

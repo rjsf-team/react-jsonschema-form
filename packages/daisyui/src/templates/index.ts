@@ -20,5 +20,3 @@ export * from './Templates';
 export { generateTemplates } from './Templates';
 
 export { default as buttonTemplates } from './ButtonTemplates';
-
-// Export interfaces

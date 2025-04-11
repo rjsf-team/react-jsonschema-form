@@ -1,15 +1,12 @@
 import {
   ArrayFieldTemplateProps,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  buttonId,
+  getTemplate,
   getUiOptions,
+  Registry,
+  RJSFSchema,
+  FormContextType,
+  TranslatableString,
 } from '@rjsf/utils';
-
-import ArrayFieldTitleTemplate from '../ArrayFieldTitleTemplate/ArrayFieldTitleTemplate';
-import ArrayFieldDescriptionTemplate from '../ArrayFieldDescriptionTemplate/ArrayFieldDescriptionTemplate';
-import ArrayFieldItemTemplate from '../ArrayFieldItemTemplate/ArrayFieldItemTemplate';
 
 /** The `ArrayFieldTemplate` component is the template used to render all items in an array.
  *
@@ -24,17 +21,14 @@ import ArrayFieldItemTemplate from '../ArrayFieldItemTemplate/ArrayFieldItemTemp
  *
  * @param props - The `ArrayFieldTemplateProps` for the component
  */
-export default function ArrayFieldTemplate<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
->(props: ArrayFieldTemplateProps<T, S, F>) {
+export default function ArrayFieldTemplate<T = any, S extends RJSFSchema = RJSFSchema, F extends FormContextType = any>(
+  props: ArrayFieldTemplateProps<T, S, F>
+) {
   const {
     canAdd,
     className,
     disabled,
     idSchema,
-    uiSchema,
     items,
     onAddClick,
     readonly,
@@ -42,69 +36,73 @@ export default function ArrayFieldTemplate<
     required,
     schema,
     title,
+    uiSchema,
   } = props;
 
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-
-  // Get templates directly from registry
+  const ArrayFieldDescriptionTemplate = getTemplate<'ArrayFieldDescriptionTemplate', T, S, F>(
+    'ArrayFieldDescriptionTemplate',
+    registry as Registry<T, S, F>,
+    uiOptions
+  );
+  const ArrayFieldItemTemplate = getTemplate<'ArrayFieldItemTemplate', T, S, F>(
+    'ArrayFieldItemTemplate',
+    registry as Registry<T, S, F>,
+    uiOptions
+  );
+  const ArrayFieldTitleTemplate = getTemplate<'ArrayFieldTitleTemplate', T, S, F>(
+    'ArrayFieldTitleTemplate',
+    registry as Registry<T, S, F>,
+    uiOptions
+  );
+  // Button templates are not overridden in the uiSchema
   const {
     ButtonTemplates: { AddButton },
   } = registry.templates;
 
   return (
-    <div className={`${className} bg-base-200 p-4 rounded-xl mb-6`}>
+    <div className={`array-field-template ${className}`}>
       <ArrayFieldTitleTemplate
-        title={title}
-        required={required}
         idSchema={idSchema}
+        title={uiOptions.title || title}
         schema={schema}
         uiSchema={uiSchema}
+        required={required}
         registry={registry}
       />
       <ArrayFieldDescriptionTemplate
-        description={uiOptions.description || schema.description}
         idSchema={idSchema}
+        description={uiOptions.description || schema.description}
         schema={schema}
         uiSchema={uiSchema}
         registry={registry}
       />
-      <div className='array-item-list mt-4'>
-        {items.length === 0 && (
-          <div className='alert alert-info'>
-            <svg
-              xmlns='http://www.w3.org/2000/svg'
-              fill='none'
-              viewBox='0 0 24 24'
-              className='stroke-current shrink-0 w-6 h-6'
-            >
-              <path
-                strokeLinecap='round'
-                strokeLinejoin='round'
-                strokeWidth='2'
-                d='M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z'
-              ></path>
-            </svg>
-            <span>No items yet. Use the button below to add some.</span>
+      <div className='flex flex-col gap-4'>
+        <div className='array-item-list'>
+          {items &&
+            items.map(({ key, ...itemProps }, index) => (
+              <ArrayFieldItemTemplate key={key} {...itemProps} index={index} totalItems={items.length} />
+            ))}
+          {items && items.length === 0 && canAdd && (
+            <div className='text-center italic text-base-content/70'>{TranslatableString.EmptyArray}</div>
+          )}
+        </div>
+        {canAdd && (
+          <div className='flex justify-end'>
+            <AddButton
+              className='btn btn-primary btn-sm'
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                onAddClick(e);
+              }}
+              disabled={disabled || readonly}
+              uiSchema={uiSchema}
+              registry={registry}
+            />
           </div>
         )}
-        <div className='task-cards-container'>
-          {items.map((item, idx) => (
-            <ArrayFieldItemTemplate key={idx} {...item} index={idx} isLastItem={idx === items.length - 1} />
-          ))}
-        </div>
       </div>
-      {canAdd && (
-        <div className='flex flex-row justify-end mt-4'>
-          <AddButton
-            className='btn btn-primary btn-md'
-            id={buttonId<T>(idSchema, 'add')}
-            onClick={onAddClick}
-            disabled={disabled || readonly}
-            uiSchema={uiSchema}
-            registry={registry}
-          />
-        </div>
-      )}
     </div>
   );
 }

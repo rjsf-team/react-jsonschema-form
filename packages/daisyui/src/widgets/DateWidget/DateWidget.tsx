@@ -1,11 +1,10 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { format, isValid, isToday, isSameDay } from 'date-fns';
-import { DayPicker, ClassNames, ModifiersClassNames, UI } from 'react-day-picker';
-import 'react-day-picker/dist/style.css';
-
 import { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
+import { format, isSameDay, isToday, isValid } from 'date-fns';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { ClassNames, DayPicker, ModifiersClassNames, UI } from 'react-day-picker';
+import 'react-day-picker/dist/style.css';
 
 /**
  * Props for the DatePicker popup component
@@ -101,7 +100,7 @@ function DatePickerPopup({ selectedDate, month, onMonthChange, onSelect }: DateP
   };
 
   return (
-    <div className='p-3'>
+    <div className='p-3' style={{ minWidth: '320px', minHeight: '350px' }}>
       <DayPicker
         mode='single'
         selected={selectedDate}
@@ -182,6 +181,103 @@ export default function DateWidget<T = any, S extends StrictRJSFSchema = RJSFSch
     }
   }, []);
 
+  // Add a portal container to the document body if it doesn't exist
+  useEffect(() => {
+    // Check if the portal container exists, create it if not
+    let portalContainer = document.getElementById('date-picker-portal');
+    if (!portalContainer) {
+      portalContainer = document.createElement('div');
+      portalContainer.id = 'date-picker-portal';
+      document.body.appendChild(portalContainer);
+    }
+
+    // Clean up on unmount
+    return () => {
+      // Only remove if no other date pickers are using it
+      if (document.querySelectorAll('.date-picker-popup').length === 0) {
+        portalContainer.remove();
+      }
+    };
+  }, []);
+
+  // Get the document and window objects (will work in iframes too)
+  const getDocumentAndWindow = () => {
+    // Try to get the iframe's document and window if we're in one
+    let doc = document;
+    let win = window;
+
+    try {
+      // If we're in an iframe, try to access the parent
+      if (window.frameElement) {
+        // We're in an iframe
+        const iframe = window.frameElement as HTMLIFrameElement;
+        // Get the iframe's contentDocument and contentWindow
+        if (iframe.contentDocument) {
+          doc = iframe.contentDocument;
+        }
+        if (iframe.contentWindow) {
+          win = iframe.contentWindow as typeof window;
+        }
+      }
+    } catch (e) {
+      // Security error, we're in a cross-origin iframe
+      console.log('Unable to access parent frame:', e);
+    }
+
+    return { doc, win };
+  };
+
+  // Render the calendar at a specific position
+  const renderCalendar = useCallback(() => {
+    if (!containerRef.current || !inputRef.current) {
+      return;
+    }
+
+    // Get the proper document and window
+    const { win } = getDocumentAndWindow();
+
+    const inputRect = inputRef.current.getBoundingClientRect();
+    const containerWidth = 320; // Minimum width we've set
+
+    // Position the calendar relative to the input but with fixed positioning
+    containerRef.current.style.position = 'fixed';
+    containerRef.current.style.top = `${inputRect.bottom + 5}px`;
+
+    // Prevent it from going off-screen on the right
+    const rightEdge = inputRect.left + containerWidth;
+    const windowWidth = win.innerWidth;
+
+    if (rightEdge > windowWidth - 20) {
+      // Align to the right edge if it would overflow
+      containerRef.current.style.left = `${Math.max(20, windowWidth - 20 - containerWidth)}px`;
+    } else {
+      // Otherwise align to the left edge of the input
+      containerRef.current.style.left = `${inputRect.left}px`;
+    }
+
+    // Ensure the calendar is visible
+    containerRef.current.style.zIndex = '99999';
+  }, [containerRef, inputRef]);
+
+  // Handle window resize to reposition the calendar
+  useEffect(() => {
+    if (!isOpen) {
+      return;
+    }
+
+    // Position initially
+    renderCalendar();
+
+    // Update position on resize
+    window.addEventListener('resize', renderCalendar);
+    window.addEventListener('scroll', renderCalendar);
+
+    return () => {
+      window.removeEventListener('resize', renderCalendar);
+      window.removeEventListener('scroll', renderCalendar);
+    };
+  }, [isOpen, renderCalendar]);
+
   // Toggle popup visibility.
   const togglePicker = useCallback(
     (e: React.MouseEvent) => {
@@ -190,6 +286,8 @@ export default function DateWidget<T = any, S extends StrictRJSFSchema = RJSFSch
       if (!isOpen && onFocus) {
         onFocus(id, value);
       }
+
+      // Position calculation will happen in the effect hook
     },
     [isOpen, id, onFocus, setIsOpen, value]
   );
@@ -256,7 +354,11 @@ export default function DateWidget<T = any, S extends StrictRJSFSchema = RJSFSch
         {isOpen && (
           <div
             ref={containerRef}
-            className='absolute z-[100] mt-2 w-full max-w-xs bg-base-100 border border-base-300 shadow-lg rounded-box'
+            className='date-picker-popup fixed z-[99999] w-full max-w-xs bg-base-100 border border-base-300 shadow-lg rounded-box'
+            style={{
+              maxHeight: 'none',
+              overflow: 'visible',
+            }}
             onClick={(e) => e.stopPropagation()}
           >
             <MemoizedDatePickerPopup

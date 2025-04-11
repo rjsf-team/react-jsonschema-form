@@ -8,14 +8,7 @@ import {
 } from '@rjsf/utils';
 
 /** The `ArrayFieldItemButtonsTemplate` component renders the action buttons for an array field item
- * with DaisyUI styling, including move up/down, copy, and remove buttons.
- *
- * Each button has appropriate DaisyUI classes:
- * - All buttons use the base `btn btn-sm btn-ghost` classes
- * - The remove button has an additional `btn-error` class for error styling
- * - Buttons are conditionally rendered and disabled based on their availability and form state
- *
- * @param props - The `ArrayFieldItemButtonsTemplateType` properties for this component
+ * using DaisyUI's join component when multiple buttons are present.
  */
 export default function ArrayFieldItemButtonsTemplate<
   T = any,
@@ -43,32 +36,36 @@ export default function ArrayFieldItemButtonsTemplate<
   const onArrowUpClick = useMemo(() => onReorderClick(index, index - 1), [index, onReorderClick]);
   const onArrowDownClick = useMemo(() => onReorderClick(index, index + 1), [index, onReorderClick]);
 
-  return (
+  const renderMany = [hasMoveUp || hasMoveDown, hasCopy, hasRemove].filter(Boolean).length > 1;
+  const btnClass = renderMany ? 'join-item btn btn-sm px-2' : 'btn btn-sm px-2 rounded-sm';
+  const removeBtnClass = renderMany ? 'join-item btn btn-sm btn-error px-2' : 'btn btn-sm btn-error px-2 rounded-sm';
+
+  const buttons = (
     <>
       {(hasMoveUp || hasMoveDown) && (
-        <MoveUpButton
-          id={buttonId<T>(idSchema, 'moveUp')}
-          className='btn btn-sm btn-ghost'
-          disabled={disabled || readonly || !hasMoveUp}
-          onClick={onArrowUpClick}
-          uiSchema={uiSchema}
-          registry={registry}
-        />
-      )}
-      {(hasMoveUp || hasMoveDown) && (
-        <MoveDownButton
-          id={buttonId<T>(idSchema, 'moveDown')}
-          className='btn btn-sm btn-ghost'
-          disabled={disabled || readonly || !hasMoveDown}
-          onClick={onArrowDownClick}
-          uiSchema={uiSchema}
-          registry={registry}
-        />
+        <>
+          <MoveUpButton
+            id={buttonId<T>(idSchema, 'moveUp')}
+            className={btnClass}
+            disabled={disabled || readonly || !hasMoveUp}
+            onClick={onArrowUpClick}
+            uiSchema={uiSchema}
+            registry={registry}
+          />
+          <MoveDownButton
+            id={buttonId<T>(idSchema, 'moveDown')}
+            className={btnClass}
+            disabled={disabled || readonly || !hasMoveDown}
+            onClick={onArrowDownClick}
+            uiSchema={uiSchema}
+            registry={registry}
+          />
+        </>
       )}
       {hasCopy && (
         <CopyButton
           id={buttonId<T>(idSchema, 'copy')}
-          className='btn btn-sm btn-ghost'
+          className={btnClass}
           disabled={disabled || readonly}
           onClick={onCopyClick}
           uiSchema={uiSchema}
@@ -78,7 +75,7 @@ export default function ArrayFieldItemButtonsTemplate<
       {hasRemove && (
         <RemoveButton
           id={buttonId<T>(idSchema, 'remove')}
-          className='btn btn-sm btn-ghost btn-error'
+          className={removeBtnClass}
           disabled={disabled || readonly}
           onClick={onRemoveClick}
           uiSchema={uiSchema}
@@ -87,4 +84,6 @@ export default function ArrayFieldItemButtonsTemplate<
       )}
     </>
   );
+
+  return renderMany ? <div className='join'>{buttons}</div> : buttons;
 }
