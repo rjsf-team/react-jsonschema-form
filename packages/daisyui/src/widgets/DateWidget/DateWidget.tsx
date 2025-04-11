@@ -193,9 +193,10 @@ export default function DateWidget<T = any, S extends StrictRJSFSchema = RJSFSch
 
     // Clean up on unmount
     return () => {
-      // Only remove if no other date pickers are using it
-      if (document.querySelectorAll('.date-picker-popup').length === 0) {
-        portalContainer.remove();
+      // Only remove if no other date pickers are using it and if portalContainer exists
+      const container = document.getElementById('date-picker-portal');
+      if (container && document.querySelectorAll('.date-picker-popup').length === 0) {
+        container.remove();
       }
     };
   }, []);

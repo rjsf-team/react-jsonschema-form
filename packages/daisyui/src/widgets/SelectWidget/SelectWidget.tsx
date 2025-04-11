@@ -130,7 +130,7 @@ export default function SelectWidget<
           <span className='ml-2'>▼</span>
         </div>
         <ul className='dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg'>
-          {optionsList.map(({ value, label }, i) => (
+          {optionsList.map(({ label }, i) => (
             <li
               key={i}
               role='button'

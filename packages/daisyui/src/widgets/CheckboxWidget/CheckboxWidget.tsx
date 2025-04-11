@@ -1,5 +1,5 @@
 import { WidgetProps, StrictRJSFSchema, RJSFSchema, FormContextType } from '@rjsf/utils';
-import { FocusEvent, useCallback } from 'react';
+import { useCallback } from 'react';
 
 /** The `CheckboxWidget` component renders a single checkbox input with DaisyUI styling.
  *
@@ -20,24 +20,20 @@ export default function CheckboxWidget<
   const { id, value, required, disabled, readonly, onChange, onFocus, onBlur } = props;
 
   /** Handle focus events
-   *
-   * @param event - The focus event
    */
-  const handleFocus = (event: FocusEvent<HTMLInputElement>) => {
+  const handleFocus = useCallback(() => {
     if (onFocus) {
       onFocus(id, value);
     }
-  };
+  }, [onFocus, id, value]);
 
   /** Handle blur events
-   *
-   * @param event - The blur event
    */
-  const handleBlur = (event: FocusEvent<HTMLInputElement>) => {
+  const handleBlur = useCallback(() => {
     if (onBlur) {
       onBlur(id, value);
     }
-  };
+  }, [onBlur, id, value]);
 
   /** Handle change events
    *

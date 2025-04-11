@@ -1,4 +1,4 @@
-import { ChangeEvent, FocusEvent, useCallback } from 'react';
+import { ChangeEvent, useCallback } from 'react';
 import { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 
 /** The `ToggleWidget` component renders a toggle switch input with DaisyUI styling
@@ -27,30 +27,20 @@ export default function ToggleWidget<
   );
 
   /** Handle focus events
-   *
-   * @param event - The focus event
    */
-  const handleFocus = useCallback(
-    (event: FocusEvent<HTMLInputElement>) => {
-      if (onFocus) {
-        onFocus(id, value);
-      }
-    },
-    [onFocus, id, value]
-  );
+  const handleFocus = useCallback(() => {
+    if (onFocus) {
+      onFocus(id, value);
+    }
+  }, [onFocus, id, value]);
 
   /** Handle blur events
-   *
-   * @param event - The blur event
    */
-  const handleBlur = useCallback(
-    (event: FocusEvent<HTMLInputElement>) => {
-      if (onBlur) {
-        onBlur(id, value);
-      }
-    },
-    [onBlur, id, value]
-  );
+  const handleBlur = useCallback(() => {
+    if (onBlur) {
+      onBlur(id, value);
+    }
+  }, [onBlur, id, value]);
 
   // Get size from options or use default "md"
   const { size = 'md' } = options;
