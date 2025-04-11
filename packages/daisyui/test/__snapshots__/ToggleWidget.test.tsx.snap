@@ -1,0 +1,79 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ToggleWidget renders correctly 1`] = `
+<div
+  className="form-control"
+>
+  <label
+    className="cursor-pointer label my-auto"
+  >
+    <input
+      autoFocus={true}
+      checked="test-value"
+      className="toggle "
+      disabled={false}
+      id="test-id"
+      onBlur={[Function]}
+      onChange={[Function]}
+      onFocus={[Function]}
+      required={true}
+      type="checkbox"
+    />
+    <span
+      className="label-text"
+    />
+  </label>
+</div>
+`;
+
+exports[`ToggleWidget renders disabled state correctly 1`] = `
+<div
+  className="form-control"
+>
+  <label
+    className="cursor-pointer label my-auto"
+  >
+    <input
+      autoFocus={true}
+      checked="test-value"
+      className="toggle "
+      disabled={true}
+      id="test-id"
+      onBlur={[Function]}
+      onChange={[Function]}
+      onFocus={[Function]}
+      required={true}
+      type="checkbox"
+    />
+    <span
+      className="label-text"
+    />
+  </label>
+</div>
+`;
+
+exports[`ToggleWidget renders with custom label 1`] = `
+<div
+  className="form-control"
+>
+  <label
+    className="cursor-pointer label my-auto"
+  >
+    <input
+      autoFocus={true}
+      checked="test-value"
+      className="toggle "
+      disabled={false}
+      id="test-id"
+      onBlur={[Function]}
+      onChange={[Function]}
+      onFocus={[Function]}
+      required={true}
+      type="checkbox"
+    />
+    <span
+      className="label-text"
+    />
+  </label>
+</div>
+`;

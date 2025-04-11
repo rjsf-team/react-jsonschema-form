@@ -22,12 +22,15 @@ body:
     attributes:
       label: What theme are you using?
       options:
-        - core
         - antd
         - chakra-ui
+        - core
+        - daisyui
+        - fluentui-rc
         - mui
         - react-bootstrap
         - semantic-ui
+        - shadcn
         - utils
         - validator-ajv8
         - other
