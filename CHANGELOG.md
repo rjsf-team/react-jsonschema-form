@@ -26,6 +26,10 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Restricted the chakra-react-select peerDependency to <6.0.0, fixing [#4539](https://github.com/rjsf-team/react-jsonschema-form/issues/4539)
 
+## @rjsf/mui
+
+- Fixed issue in BaseInputTemplate where input props were passed to `slotProps.htmlInput`, which does not work in MUI v5.
+
 ## Dev / docs / playground
 
 - Updated docs for ArrayFieldItemTemplate to include prop `onCopyIndexClick`, fixing [#4507](https://github.com/rjsf-team/react-jsonschema-form/issues/4507)
