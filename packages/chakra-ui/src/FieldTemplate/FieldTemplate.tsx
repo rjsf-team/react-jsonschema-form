@@ -6,8 +6,6 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
 } from '@rjsf/utils';
-import { Text } from '@chakra-ui/react';
-import { Field } from '../components/ui/field';
 
 export default function FieldTemplate<
   T = any,
@@ -20,7 +18,6 @@ export default function FieldTemplate<
     classNames,
     style,
     disabled,
-    displayLabel,
     hidden,
     label,
     onDropPropertyClick,
@@ -28,11 +25,6 @@ export default function FieldTemplate<
     readonly,
     registry,
     required,
-    rawErrors = [],
-    errors,
-    help,
-    description,
-    rawDescription,
     schema,
     uiSchema,
   } = props;
@@ -62,15 +54,7 @@ export default function FieldTemplate<
       uiSchema={uiSchema}
       registry={registry}
     >
-      <Field
-        required={required}
-        invalid={rawErrors && rawErrors.length > 0}
-        label={displayLabel && rawDescription ? <Text mt={2}>{description}</Text> : null}
-        helperText={help}
-        errorText={errors}
-      >
-        {children}
-      </Field>
+      {children}
     </WrapIfAdditionalTemplate>
   );
 }

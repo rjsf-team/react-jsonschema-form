@@ -3,7 +3,6 @@ import { CheckboxGroup, Text, Stack, FieldsetRoot } from '@chakra-ui/react';
 import {
   ariaDescribedByIds,
   enumOptionsIndexForValue,
-  enumOptionsIsSelected,
   enumOptionsValueForIndex,
   labelValue,
   optionId,
@@ -35,7 +34,6 @@ export default function CheckboxesWidget<
   } = props;
   const { enumOptions, enumDisabled, emptyValue } = options;
   // const chakraProps = getChakra({ uiSchema });
-  const checkboxesValues = Array.isArray(value) ? value : [value];
 
   const _onBlur = ({ target }: FocusEvent<HTMLInputElement | any>) =>
     onBlur(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, emptyValue));
@@ -54,7 +52,7 @@ export default function CheckboxesWidget<
     >
       <CheckboxGroup
         onValueChange={(option) => onChange(enumOptionsValueForIndex<S>(option, enumOptions, emptyValue))}
-        defaultValue={selectedIndexes}
+        value={selectedIndexes}
         aria-describedby={ariaDescribedByIds<T>(id)}
         readOnly={readonly}
         required={required}
@@ -63,7 +61,6 @@ export default function CheckboxesWidget<
         <Stack direction={row ? 'row' : 'column'}>
           {Array.isArray(enumOptions) &&
             enumOptions.map((option, index) => {
-              const checked = enumOptionsIsSelected<S>(option.value, checkboxesValues);
               const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.indexOf(option.value) !== -1;
               return (
                 <Checkbox
@@ -71,7 +68,6 @@ export default function CheckboxesWidget<
                   id={optionId(id, index)}
                   name={id}
                   value={String(index)}
-                  checked={checked}
                   disabled={disabled || itemDisabled || readonly}
                   onBlur={_onBlur}
                   onFocus={_onFocus}
