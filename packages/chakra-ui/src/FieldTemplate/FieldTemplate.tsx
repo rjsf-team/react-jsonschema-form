@@ -1,3 +1,4 @@
+import { Fieldset, Text } from '@chakra-ui/react';
 import {
   FieldTemplateProps,
   FormContextType,
@@ -18,6 +19,7 @@ export default function FieldTemplate<
     classNames,
     style,
     disabled,
+    displayLabel,
     hidden,
     label,
     onDropPropertyClick,
@@ -25,6 +27,11 @@ export default function FieldTemplate<
     readonly,
     registry,
     required,
+    rawErrors = [],
+    errors,
+    help,
+    description,
+    rawDescription,
     schema,
     uiSchema,
   } = props;
@@ -54,7 +61,12 @@ export default function FieldTemplate<
       uiSchema={uiSchema}
       registry={registry}
     >
-      {children}
+      <Fieldset.Root disabled={disabled} invalid={rawErrors && rawErrors.length > 0}>
+        {displayLabel && rawDescription ? <Fieldset.Legend mt={2}>{description}</Fieldset.Legend> : null}
+        {help && <Text>{help}</Text>}
+        <Fieldset.Content>{children}</Fieldset.Content>
+        {errors && <Fieldset.ErrorText>{errors}</Fieldset.ErrorText>}
+      </Fieldset.Root>
     </WrapIfAdditionalTemplate>
   );
 }
