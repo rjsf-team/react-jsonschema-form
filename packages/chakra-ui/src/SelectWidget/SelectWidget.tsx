@@ -1,4 +1,4 @@
-import { FocusEvent, useMemo } from 'react';
+import { FocusEvent, useMemo, useRef } from 'react';
 
 import {
   ariaDescribedByIds,
@@ -14,7 +14,7 @@ import {
 import { Field } from '../components/ui/field';
 import { SelectRoot, SelectTrigger, SelectValueText } from '../components/ui/select';
 import { OptionsOrGroups } from 'chakra-react-select';
-import { createListCollection, SelectValueChangeDetails } from '@chakra-ui/react';
+import { createListCollection, Portal, SelectValueChangeDetails } from '@chakra-ui/react';
 import { Select as ChakraSelect } from '@chakra-ui/react';
 
 export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
@@ -114,8 +114,11 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
     items: displayEnumOptions.filter((item) => item.value),
   });
 
+  const containerRef = useRef(null);
+
   return (
     <Field
+      ref={containerRef}
       mb={1}
       // {...chakraProps}
       disabled={disabled || readonly}
@@ -123,6 +126,7 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
       readOnly={readonly}
       invalid={rawErrors && rawErrors.length > 0}
       label={labelValue(label, hideLabel || !label)}
+      position='relative'
     >
       <SelectRoot
         collection={selectOptions}
@@ -136,20 +140,25 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
         autoFocus={autofocus}
         value={formValue}
         aria-describedby={ariaDescribedByIds<T>(id)}
+        positioning={{ placement: 'bottom' }}
       >
-        <SelectTrigger>
-          <SelectValueText placeholder={placeholder} />
-        </SelectTrigger>
-        <ChakraSelect.Positioner minWidth='100% !important' zIndex='2 !important' top='calc(100% + 5px) !important'>
-          <ChakraSelect.Content>
-            {selectOptions.items.map((item) => (
-              <ChakraSelect.Item item={item} key={item.value}>
-                {item.label}
-                <ChakraSelect.ItemIndicator />
-              </ChakraSelect.Item>
-            ))}
-          </ChakraSelect.Content>
-        </ChakraSelect.Positioner>
+        <ChakraSelect.Control>
+          <SelectTrigger>
+            <SelectValueText placeholder={placeholder} />
+          </SelectTrigger>
+        </ChakraSelect.Control>
+        <Portal container={containerRef}>
+          <ChakraSelect.Positioner minWidth='100% !important' zIndex='2 !important' top='calc(100% + 5px) !important'>
+            <ChakraSelect.Content>
+              {selectOptions.items.map((item) => (
+                <ChakraSelect.Item item={item} key={item.value}>
+                  {item.label}
+                  <ChakraSelect.ItemIndicator />
+                </ChakraSelect.Item>
+              ))}
+            </ChakraSelect.Content>
+          </ChakraSelect.Positioner>
+        </Portal>
       </SelectRoot>
     </Field>
   );
