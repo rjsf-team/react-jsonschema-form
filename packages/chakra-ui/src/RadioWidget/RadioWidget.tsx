@@ -1,4 +1,4 @@
-import { FocusEvent } from 'react';
+import { ChangeEvent, FocusEvent } from 'react';
 import { Stack } from '@chakra-ui/react';
 import {
   ariaDescribedByIds,
@@ -30,7 +30,8 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
   const { enumOptions, enumDisabled, emptyValue } = options;
   // const chakraProps = getChakra({ uiSchema });
 
-  const _onChange = (nextValue: any) => onChange(enumOptionsValueForIndex<S>(nextValue, enumOptions, emptyValue));
+  const _onChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) =>
+    onChange(enumOptionsValueForIndex<S>(value, enumOptions, emptyValue));
   const _onBlur = ({ target: { value } }: FocusEvent<HTMLInputElement>) =>
     onBlur(id, enumOptionsValueForIndex<S>(value, enumOptions, emptyValue));
   const _onFocus = ({ target: { value } }: FocusEvent<HTMLInputElement>) =>
