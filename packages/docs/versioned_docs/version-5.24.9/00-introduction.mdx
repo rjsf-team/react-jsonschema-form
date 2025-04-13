@@ -1,0 +1,135 @@
+---
+id: intro
+title: Introduction
+slug: /
+---
+
+# react-jsonschema-form
+
+![Build Status](https://github.com/rjsf-team/react-jsonschema-form/workflows/CI/badge.svg)
+
+A simple [React](https://reactjs.org/) component capable of building HTML forms out of a [JSON schema](http://json-schema.org/).
+
+A [live playground](https://rjsf-team.github.io/react-jsonschema-form/) is hosted on GitHub Pages:
+
+<a target='_blank' href='https://rjsf-team.github.io/react-jsonschema-form/'>
+    <img alt='Playground' src='https://i.imgur.com/M8ZCES5.gif'/>
+</a>
+
+## Philosophy
+
+react-jsonschema-form is meant to automatically generate a React form based on a [JSON Schema](http://json-schema.org/). If you want to generate a form for any data, sight unseen, simply given a JSON schema, react-jsonschema-form may be for you. If you have _a priori_ knowledge of your data and want a toolkit for generating forms for it, you might look elsewhere.
+
+react-jsonschema-form also comes with tools such as `uiSchema` and other form props to customize the look and feel of the form beyond the default themes.
+
+## Installation
+
+First install the dependencies from npm, along with a validator implementation (such as `@rjsf/validator-ajv8`):
+
+```bash
+$ npm install @rjsf/core @rjsf/utils @rjsf/validator-ajv8 --save
+```
+
+Then import the dependencies as follows:
+
+```ts
+import Form from '@rjsf/core';
+import validator from '@rjsf/validator-ajv8';
+```
+
+Our latest version requires React 16+.
+
+## Usage
+
+```tsx
+import Form from '@rjsf/core';
+import { RJSFSchema } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
+
+const schema: RJSFSchema = {
+  title: 'Todo',
+  type: 'object',
+  required: ['title'],
+  properties: {
+    title: { type: 'string', title: 'Title', default: 'A new task' },
+    done: { type: 'boolean', title: 'Done?', default: false },
+  },
+};
+
+const log = (type) => console.log.bind(console, type);
+
+render(
+  <Form
+    schema={schema}
+    validator={validator}
+    onChange={log('changed')}
+    onSubmit={log('submitted')}
+    onError={log('errors')}
+  />,
+  document.getElementById('app')
+);
+```
+
+## Theming
+
+For more information on what themes we support, see [Using Themes](usage/themes).
+
+<!--
+
+disabled until https://github.com/rjsf-team/react-jsonschema-form/issues/1584 is resolved
+
+## Useful samples
+
+ - Custom field template: <https://jsfiddle.net/hdp1kgn6/1/>
+ - Multi-step wizard: <https://jsfiddle.net/sn4bnw9h/1/>
+ - Using classNames with uiSchema: <https://jsfiddle.net/gfwp25we/1/>
+ - Conditional fields: <https://jsfiddle.net/69z2wepo/88541/>
+ - Advanced conditional fields: <https://jsfiddle.net/cowbellerina/zbfh96b1/>
+ - Use radio list for enums: <https://jsfiddle.net/f2y3fq7L/2/>
+ - Reading file input data: <https://jsfiddle.net/f9vcb6pL/1/>
+ - Custom errors messages with transformErrors: <https://jsfiddle.net/revolunet/5r3swnr4/>
+ - 2 columns form with CSS and FieldTemplate: <https://jsfiddle.net/n1k0/bw0ffnz4/1/>
+ - Validate and submit form from external control: <https://jsfiddle.net/spacebaboon/g5a1re63/>
+ - Custom component for Help text with `ui:help`: <https://codesandbox.io/s/14pqx97xl7/>
+ - Collapsing / Showing and Hiding individual fields: <https://codesandbox.io/s/examplereactjsonschemaformcollapsefieldtemplate-t41dn>
+
+-->
+
+## License
+
+Apache 2
+
+## Credits
+
+<table>
+    <tr>
+        <th>
+            <img src="https://avatars1.githubusercontent.com/u/1066228?s=200&v=4" alt="mozilla-services-logo" style={{maxHeight: '100px'}} />
+        </th>
+        <td>
+            This project initially started as a <a href="https://github.com/mozilla-services">mozilla-services</a> project.
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <img src="https://user-images.githubusercontent.com/1689183/51487090-4ea04f80-1d57-11e9-9a91-79b7ef8d2013.png" alt='browserstack logo'  style={{maxHeight: '100px'}}/>
+        </th>
+        <td>
+            Testing is powered by <a href="https://www.browserstack.com/" >BrowserStack</a>.
+        </td>
+    </tr>
+    <tr>
+        <th>
+            <img src="https://www.netlify.com/img/global/badges/netlify-color-accent.svg" alt='netlify logo'  style={{maxHeight: '100px'}}/>
+        </th>
+        <td>
+            Deploy Previews are provided by <a href="https://www.netlify.com">Netlify</a>.
+        </td>
+    </tr>
+</table>
+
+## Who uses react-jsonschema-form?
+
+- ...
+
+Add your own company / organization by making a [pull request](https://github.com/rjsf-team/react-jsonschema-form/pulls).
