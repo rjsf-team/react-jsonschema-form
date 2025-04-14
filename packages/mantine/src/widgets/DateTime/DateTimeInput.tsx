@@ -25,6 +25,9 @@ const dateFormat = (date?: Date, format?: string) => {
   return dayjs(date).format(format || 'YYYY-MM-DD');
 };
 
+/** The `DateTimeInput` is a base component that used by other Date-Time widget components.
+ * @param props - The `WidgetProps` for this component
+ */
 export default function DateTimeInput<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,

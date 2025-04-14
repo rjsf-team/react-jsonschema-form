@@ -3,6 +3,7 @@ import {
   getUiOptions,
   ArrayFieldTemplateProps,
   ArrayFieldItemTemplateType,
+  buttonId,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
@@ -87,6 +88,7 @@ export default function ArrayFieldTemplate<
       {canAdd && (
         <Group justify='flex-end'>
           <AddButton
+            id={buttonId<T>(idSchema, 'add')}
             className='array-item-add'
             disabled={disabled || readonly}
             onClick={onAddClick}

@@ -2,6 +2,7 @@ import React from 'react';
 import {
   ADDITIONAL_PROPERTY_FLAG,
   UI_OPTIONS_KEY,
+  buttonId,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
@@ -81,6 +82,7 @@ export default function WrapIfAdditionalTemplate<
           </Grid.Col>
         </Grid>
         <RemoveButton
+          id={buttonId<T>(id, 'remove')}
           iconType='sm'
           className='array-item-remove'
           disabled={disabled || readonly}
