@@ -1,4 +1,5 @@
 import {
+  buttonId,
   FormContextType,
   ObjectFieldTemplateProps,
   ObjectFieldTemplatePropertyType,
@@ -12,6 +13,12 @@ import {
 } from '@rjsf/utils';
 import { Container, Box, SimpleGrid, MantineSpacing } from '@mantine/core';
 
+/** The `ObjectFieldTemplate` is the template to use to render all the inner properties of an object along with the
+ * title and description if available. If the object is expandable, then an `AddButton` is also rendered after all
+ * the properties.
+ *
+ * @param props - The `ObjectFieldTemplateProps` for this component
+ */
 export default function ObjectFieldTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
@@ -83,8 +90,10 @@ export default function ObjectFieldTemplate<
       {canExpand(schema, uiSchema, formData) && (
         <Box mt='xs'>
           <AddButton
+            id={buttonId<T>(idSchema, 'add')}
             disabled={disabled || readonly}
             onClick={onAddClick(schema)}
+            className='object-property-expand'
             uiSchema={uiSchema}
             registry={registry}
           />
