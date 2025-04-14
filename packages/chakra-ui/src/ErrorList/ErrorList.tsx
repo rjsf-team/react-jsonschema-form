@@ -1,6 +1,6 @@
 import { ErrorListProps, FormContextType, RJSFSchema, StrictRJSFSchema, TranslatableString } from '@rjsf/utils';
 import { ListIndicator, ListItem, ListRoot } from '@chakra-ui/react';
-import { WarningIcon } from '@chakra-ui/icons';
+import { TriangleAlert } from 'lucide-react';
 import { Alert } from '../components/ui/alert';
 
 export default function ErrorList<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
@@ -20,7 +20,7 @@ export default function ErrorList<T = any, S extends StrictRJSFSchema = RJSFSche
         {errors.map((error, i) => (
           <ListItem key={i}>
             <ListIndicator asChild color='red.500'>
-              <WarningIcon />
+              <TriangleAlert />
             </ListIndicator>
             {error.stack}
           </ListItem>

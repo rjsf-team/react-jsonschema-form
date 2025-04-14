@@ -63,13 +63,13 @@
     "node": ">=20"
   },
   "peerDependencies": {
-    "@chakra-ui/icons": ">=1.1.1",
     "@chakra-ui/react": ">=3.4.0",
     "@chakra-ui/system": ">=1.12.1",
     "@rjsf/core": "^6.x",
     "@rjsf/utils": "^6.x",
     "chakra-react-select": ">=3.3.8",
-    "react": ">=18"
+    "react": ">=18",
+    "lucide-react": "^0.488.0"
   },
   "publishConfig": {
     "access": "public"
@@ -90,7 +90,6 @@
     "@babel/preset-react": "^7.23.3",
     "@babel/preset-typescript": "^7.23.3",
     "@chakra-ui/cli": "^3.4.0",
-    "@chakra-ui/icons": "^1.1.7",
     "@chakra-ui/react": "^3.4.0",
     "@chakra-ui/system": "^1.12.1",
     "@emotion/eslint-plugin": "^11.11.0",
@@ -111,6 +110,7 @@
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
     "jest-watch-typeahead": "^2.2.2",
+    "lucide-react": "^0.488.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-test-renderer": "^18.2.0",
