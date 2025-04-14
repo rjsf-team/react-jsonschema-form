@@ -23,9 +23,11 @@ function readyForChange(state: DateObject) {
 /** The `AltDateWidget` is an alternative widget for rendering date properties.
  * @param props - The `WidgetProps` for this component
  */
-function AltDateWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: WidgetProps<T, S, F>
-) {
+export default function AltDateWidget<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any
+>(props: WidgetProps<T, S, F>) {
   const {
     id,
     value,
@@ -134,5 +136,3 @@ function AltDateWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F exten
 AltDateWidget.defaultProps = {
   showTime: false,
 };
-
-export default AltDateWidget;

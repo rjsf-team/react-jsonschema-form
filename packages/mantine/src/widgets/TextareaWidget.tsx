@@ -3,6 +3,10 @@ import { StrictRJSFSchema, RJSFSchema, FormContextType, WidgetProps, labelValue 
 import { Textarea } from '@mantine/core';
 import { cleanupOptions } from '../utils';
 
+/** The `TextareaWidget` is a widget for rendering input fields as textarea.
+ *
+ * @param props - The `WidgetProps` for this component
+ */
 export default function TextareaWidget<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
