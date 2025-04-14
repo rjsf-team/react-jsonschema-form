@@ -2,6 +2,8 @@ import { FormContextType, IconButtonProps, RJSFSchema, StrictRJSFSchema, Transla
 import IconButton from './IconButton';
 import { Plus } from '../icons';
 
+/** The `AddButton` renders a button that represent the `Add` action on a form
+ */
 export default function AddButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: IconButtonProps<T, S, F>
 ) {

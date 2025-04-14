@@ -2,6 +2,11 @@ import { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjs
 
 import _AltDateWidget from './AltDateWidget';
 
+/** The `AltDateTimeWidget` is an alternative widget for rendering datetime properties.
+ *  It uses the AltDateWidget for rendering, with the `time` prop set to true by default.
+ *
+ * @param props - The `WidgetProps` for this component
+ */
 export default function AltDateTimeWidget<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
