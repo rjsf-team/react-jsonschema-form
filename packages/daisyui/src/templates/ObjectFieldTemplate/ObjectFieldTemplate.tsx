@@ -94,7 +94,7 @@ export default function ObjectFieldTemplate<
           <div className='flex justify-end'>
             <AddButton
               id={buttonId<T>(idSchema, 'add')}
-              className='btn btn-primary btn-sm'
+              className='object-property-expand btn btn-primary btn-sm'
               onClick={onAddClick(schema)}
               disabled={disabled || readonly}
               uiSchema={uiSchema}

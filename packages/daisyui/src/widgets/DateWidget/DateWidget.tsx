@@ -1,8 +1,8 @@
+import { memo, RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import { format, isSameDay, isToday, isValid } from 'date-fns';
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ClassNames, DayPicker, ModifiersClassNames, UI } from 'react-day-picker';
 import 'react-day-picker/dist/style.css';
 
@@ -38,7 +38,7 @@ function useDatePickerState(initialDate?: Date) {
  * @param ref - React ref to the element to monitor
  * @param callback - Function to call when a click outside is detected
  */
-function useClickOutside(ref: React.RefObject<HTMLDivElement>, callback: () => void) {
+function useClickOutside(ref: RefObject<HTMLDivElement>, callback: () => void) {
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (ref.current && !ref.current.contains(event.target as Node)) {
@@ -120,7 +120,7 @@ function DatePickerPopup({ selectedDate, month, onMonthChange, onSelect }: DateP
 }
 
 // Use React.memo to optimize re-renders
-const MemoizedDatePickerPopup = React.memo(DatePickerPopup);
+const MemoizedDatePickerPopup = memo(DatePickerPopup);
 
 /** The `DateWidget` component provides a date picker with DaisyUI styling.
  *

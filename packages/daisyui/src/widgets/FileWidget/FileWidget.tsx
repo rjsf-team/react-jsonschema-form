@@ -1,4 +1,4 @@
-import React, { FocusEvent, useCallback } from 'react';
+import { ChangeEvent, FocusEvent, useCallback } from 'react';
 import { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 
 /** The `FileWidget` component provides a file input with DaisyUI styling
@@ -27,7 +27,7 @@ export default function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSch
    * @param event - The change event from the file input
    */
   const handleChange = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
+    (event: ChangeEvent<HTMLInputElement>) => {
       if (!event.target.files) {
         return;
       }

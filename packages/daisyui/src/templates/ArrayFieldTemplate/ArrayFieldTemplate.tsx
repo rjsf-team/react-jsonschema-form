@@ -7,6 +7,7 @@ import {
   RJSFSchema,
   FormContextType,
   TranslatableString,
+  buttonId,
 } from '@rjsf/utils';
 
 /** The `ArrayFieldTemplate` component is the template used to render all items in an array.
@@ -104,7 +105,8 @@ export default function ArrayFieldTemplate<T = any, S extends RJSFSchema = RJSFS
         {canAdd && (
           <div className='flex justify-end'>
             <AddButton
-              className='btn btn-primary btn-sm'
+              id={buttonId<T>(idSchema, 'add')}
+              className='array-item-add btn btn-primary btn-sm'
               onClick={handleAddClick}
               disabled={disabled || readonly}
               uiSchema={uiSchema}

@@ -1,8 +1,8 @@
+import { ChangeEvent, memo, RefObject, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 import { format, isSameDay, isToday, isValid } from 'date-fns';
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ClassNames, DayPicker, ModifiersClassNames, UI } from 'react-day-picker';
 import 'react-day-picker/dist/style.css';
 
@@ -19,7 +19,7 @@ interface DateTimePickerProps {
   /** Handler for date selection */
   onSelect: (date: Date | undefined) => void;
   /** Handler for time input changes */
-  onTimeChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onTimeChange: (e: ChangeEvent<HTMLInputElement>) => void;
 }
 
 /**
@@ -40,7 +40,7 @@ function useDatePickerState(initialDate?: Date) {
  * @param ref - React ref to the element to monitor
  * @param callback - Function to call when a click outside is detected
  */
-function useClickOutside(ref: React.RefObject<HTMLDivElement>, callback: () => void) {
+function useClickOutside(ref: RefObject<HTMLDivElement>, callback: () => void) {
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (ref.current && !ref.current.contains(event.target as Node)) {
@@ -141,8 +141,8 @@ function DateTimePickerPopup({ selectedDate, month, onMonthChange, onSelect, onT
   );
 }
 
-// Use React.memo to optimize re-renders
-const MemoizedDateTimePickerPopup = React.memo(DateTimePickerPopup);
+// Use memo to optimize re-renders
+const MemoizedDateTimePickerPopup = memo(DateTimePickerPopup);
 
 /** The `DateTimeWidget` component provides a date and time picker with DaisyUI styling.
  *
@@ -211,7 +211,7 @@ export default function DateTimeWidget<
 
   // Update local state on time change.
   const handleTimeChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
+    (e: ChangeEvent<HTMLInputElement>) => {
       if (localDate) {
         const [hours, minutes] = e.target.value.split(':');
         const newDate = new Date(localDate);
@@ -265,7 +265,7 @@ export default function DateTimeWidget<
 
   // Close popup on escape key
   useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
+    const handleEscape = (e: React.KeyboardEvent | KeyboardEvent) => {
       if (e.key === 'Escape' && isOpen) {
         setIsOpen(false);
         if (onBlur) {
@@ -274,8 +274,9 @@ export default function DateTimeWidget<
       }
     };
 
-    document.addEventListener('keydown', handleEscape);
-    return () => document.removeEventListener('keydown', handleEscape);
+    // Need to use native DOM events since we're attaching to document
+    document.addEventListener('keydown', handleEscape as (e: KeyboardEvent) => void);
+    return () => document.removeEventListener('keydown', handleEscape as (e: KeyboardEvent) => void);
   }, [id, isOpen, onBlur, value]);
 
   // Add the handleDoneClick callback near the top of the component, with the other event handlers

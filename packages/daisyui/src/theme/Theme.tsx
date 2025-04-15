@@ -1,9 +1,9 @@
-import { ThemeProps } from '@rjsf/core';
+import { createContext, ReactNode, useCallback, useContext, useState } from 'react';
+import { getDefaultRegistry, ThemeProps } from '@rjsf/core';
 import { FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { getDefaultRegistry } from '@rjsf/core';
+
 import { generateTemplates } from '../templates/Templates';
 import { generateWidgets } from '../widgets/Widgets';
-import React from 'react';
 
 /** Generates a complete theme configuration for RJSF with DaisyUI styling
  *
@@ -45,7 +45,7 @@ interface ThemeContextType {
 }
 
 /** React context for sharing theme information throughout the application */
-export const ThemeContext = React.createContext<ThemeContextType>({
+export const ThemeContext = createContext<ThemeContextType>({
   theme: 'night',
   setTheme: () => {},
 });
@@ -53,7 +53,7 @@ export const ThemeContext = React.createContext<ThemeContextType>({
 /** Props for the ThemeProvider component */
 interface ThemeProviderProps {
   /** React components to be wrapped by the provider */
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 /** ThemeProvider component that manages DaisyUI theme state and persistence
@@ -66,7 +66,7 @@ interface ThemeProviderProps {
  * @param props - The props for the component
  */
 export function ThemeProvider({ children }: ThemeProviderProps) {
-  const [theme, setTheme] = React.useState(() => {
+  const [theme, setTheme] = useState(() => {
     try {
       return localStorage.getItem('daisyui-theme') || 'cupcake';
     } catch {
@@ -74,7 +74,7 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
     }
   });
 
-  const handleSetTheme = React.useCallback((newTheme: string) => {
+  const handleSetTheme = useCallback((newTheme: string) => {
     try {
       localStorage.setItem('daisyui-theme', newTheme);
       setTheme(newTheme);
@@ -90,4 +90,4 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
  *
  * @returns The current theme context with theme name and setter function
  */
-export const useTheme = () => React.useContext(ThemeContext);
+export const useTheme = () => useContext(ThemeContext);

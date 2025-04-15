@@ -1,5 +1,5 @@
-import { WidgetProps, StrictRJSFSchema, FormContextType, RJSFSchema } from '@rjsf/utils';
 import { FocusEvent, useCallback } from 'react';
+import { WidgetProps, StrictRJSFSchema, FormContextType, RJSFSchema } from '@rjsf/utils';
 
 /** The `RadioWidget` component renders a group of radio buttons with DaisyUI styling
  *

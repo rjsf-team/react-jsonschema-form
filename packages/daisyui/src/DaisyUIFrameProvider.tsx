@@ -69,13 +69,13 @@ export const __createDaisyUIFrameProvider = (props: DaisyUIFrameProviderProps) =
       // Add DaisyUI CSS
       const daisyLink = document.createElement('link');
       daisyLink.rel = 'stylesheet';
-      daisyLink.href = 'https://cdn.jsdelivr.net/npm/daisyui@5.0.19';
+      daisyLink.href = 'https://cdn.jsdelivr.net/npm/daisyui@5.0.20';
       document.head.appendChild(daisyLink);
 
       // Add all themes
       const daisyLinkAllThemes = document.createElement('link');
       daisyLinkAllThemes.rel = 'stylesheet';
-      daisyLinkAllThemes.href = 'https://cdn.jsdelivr.net/npm/daisyui@5.0.19/themes.css';
+      daisyLinkAllThemes.href = 'https://cdn.jsdelivr.net/npm/daisyui@5.0.20/themes.css';
       document.head.appendChild(daisyLinkAllThemes);
     }
 

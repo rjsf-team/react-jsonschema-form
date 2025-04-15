@@ -1,3 +1,4 @@
+import { FocusEvent, useCallback } from 'react';
 import {
   enumOptionsIndexForValue,
   enumOptionsValueForIndex,
@@ -6,7 +7,6 @@ import {
   StrictRJSFSchema,
   WidgetProps,
 } from '@rjsf/utils';
-import { FocusEvent, useCallback } from 'react';
 
 /** The `SelectWidget` component renders a select input with DaisyUI styling
  *

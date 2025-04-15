@@ -1,3 +1,4 @@
+import { useCallback } from 'react';
 import {
   WrapIfAdditionalTemplateProps,
   StrictRJSFSchema,
@@ -6,7 +7,6 @@ import {
   TranslatableString,
   buttonId,
 } from '@rjsf/utils';
-import { useCallback } from 'react';
 
 /** The `WrapIfAdditional` component is used by the `FieldTemplate` to rename, or remove properties that are
  * part of an `additionalProperties` part of a schema.
@@ -59,8 +59,8 @@ export default function WrapIfAdditionalTemplate<
         />
         {schema.additionalProperties && (
           <button
-            className='btn btn-danger ml-2'
             id={buttonId<T>(id, 'remove')}
+            className='array-item-remove btn btn-danger ml-2'
             onClick={handleRemove}
             disabled={disabled || readonly}
           >

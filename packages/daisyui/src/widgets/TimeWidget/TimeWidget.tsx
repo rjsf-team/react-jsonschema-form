@@ -1,5 +1,5 @@
-import { WidgetProps, StrictRJSFSchema, RJSFSchema, FormContextType } from '@rjsf/utils';
 import { FocusEvent, useCallback } from 'react';
+import { WidgetProps, StrictRJSFSchema, RJSFSchema, FormContextType } from '@rjsf/utils';
 
 /** The `TimeWidget` component renders a time input with DaisyUI styling
  *
