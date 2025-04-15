@@ -15,16 +15,22 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+
 # 5.24.9
 
 ## @rjsf/antd
 
 - Fixed ts errors in newer antd versions [#4525](https://github.com/rjsf-team/react-jsonschema-form/issues/4525)
 
+## @rjsf/chakra-ui
+
+- Restricted the chakra-react-select peerDependency to <6.0.0, fixing [#4539](https://github.com/rjsf-team/react-jsonschema-form/issues/4539)
+
 ## Dev / docs / playground
 
 - Updated docs for ArrayFieldItemTemplate to include prop `onCopyIndexClick`, fixing [#4507](https://github.com/rjsf-team/react-jsonschema-form/issues/4507)
 - Use antd 5 in playground
+- Updated docs to clarify that errors raised within a widget are not caught during form validation
 
 # 5.24.8
 
