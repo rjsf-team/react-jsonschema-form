@@ -54,7 +54,7 @@ function getFieldComponent<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   const field = uiOptions.field;
   const { fields, translateString } = registry;
   if (typeof field === 'function') {
-    return field;
+    return field as React.FC;
   }
   if (typeof field === 'string' && field in fields) {
     return fields[field];
@@ -162,7 +162,8 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
 
   const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions);
 
-  const { __errors, ...fieldErrorSchema } = errorSchema || {};
+  // const { __errors, ...fieldErrorSchema } = errorSchema || {}; //TODO - adjust
+  const { __errors } = errorSchema || {};
   // See #439: uiSchema: Don't pass consumed class names or style to child components
   const fieldUiSchema = omit(uiSchema, ['ui:classNames', 'classNames', 'ui:style']);
   if (UI_OPTIONS_KEY in fieldUiSchema) {
@@ -180,7 +181,7 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
       readonly={readonly}
       hideError={hideError}
       autofocus={autofocus}
-      errorSchema={fieldErrorSchema}
+      // errorSchema={fieldErrorSchema}
       formContext={formContext}
       rawErrors={__errors}
     />

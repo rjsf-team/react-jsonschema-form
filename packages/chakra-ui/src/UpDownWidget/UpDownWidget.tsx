@@ -1,13 +1,5 @@
 import { FocusEvent } from 'react';
-import {
-  NumberInput,
-  NumberDecrementStepper,
-  NumberIncrementStepper,
-  NumberInputField,
-  NumberInputStepper,
-  FormControl,
-  FormLabel,
-} from '@chakra-ui/react';
+
 import {
   ariaDescribedByIds,
   labelValue,
@@ -16,43 +8,42 @@ import {
   StrictRJSFSchema,
   WidgetProps,
 } from '@rjsf/utils';
-import { getChakra } from '../utils';
+import { Field } from '../components/ui/field';
+import { NumberInputField, NumberInputRoot } from '../components/ui/number-input';
+import { NumberInputValueChangeDetails } from '@chakra-ui/react';
 
 export default function UpDownWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: WidgetProps<T, S, F>
 ) {
-  const { id, uiSchema, readonly, disabled, label, hideLabel, value, onChange, onBlur, onFocus, rawErrors, required } =
-    props;
+  const { id, readonly, disabled, label, hideLabel, value, onChange, onBlur, onFocus, rawErrors, required } = props;
 
-  const chakraProps = getChakra({ uiSchema });
+  // const chakraProps = getChakra({ uiSchema }); TODO - adjust getChakra everywhere
 
-  const _onChange = (value: string | number) => onChange(value);
+  const _onChange = ({ value }: NumberInputValueChangeDetails) => onChange(value);
   const _onBlur = ({ target }: FocusEvent<HTMLInputElement | any>) => onBlur(id, target && target.value);
   const _onFocus = ({ target }: FocusEvent<HTMLInputElement | any>) => onFocus(id, target && target.value);
 
   return (
-    <FormControl
+    <Field
       mb={1}
-      {...chakraProps}
-      isDisabled={disabled || readonly}
-      isRequired={required}
-      isReadOnly={readonly}
-      isInvalid={rawErrors && rawErrors.length > 0}
+      // {...chakraProps}
+      disabled={disabled || readonly}
+      required={required}
+      readOnly={readonly}
+      invalid={rawErrors && rawErrors.length > 0}
+      label={labelValue(label, hideLabel || !label)}
     >
-      {labelValue(<FormLabel htmlFor={id}>{label}</FormLabel>, hideLabel || !label)}
-      <NumberInput
-        value={value ?? ''}
-        onChange={_onChange}
+      <NumberInputRoot
+        value={value}
+        onValueChange={_onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
         aria-describedby={ariaDescribedByIds<T>(id)}
+        id={id}
+        name={id}
       >
-        <NumberInputField id={id} name={id} />
-        <NumberInputStepper>
-          <NumberIncrementStepper />
-          <NumberDecrementStepper />
-        </NumberInputStepper>
-      </NumberInput>
-    </FormControl>
+        <NumberInputField value={value} />
+      </NumberInputRoot>
+    </Field>
   );
 }

@@ -1,9 +1,8 @@
 import { FocusEvent } from 'react';
-import { CheckboxGroup, Checkbox, FormLabel, FormControl, Text, Stack } from '@chakra-ui/react';
+import { CheckboxGroup, Text, Stack, FieldsetRoot } from '@chakra-ui/react';
 import {
   ariaDescribedByIds,
   enumOptionsIndexForValue,
-  enumOptionsIsSelected,
   enumOptionsValueForIndex,
   labelValue,
   optionId,
@@ -12,7 +11,7 @@ import {
   StrictRJSFSchema,
   WidgetProps,
 } from '@rjsf/utils';
-import { getChakra } from '../utils';
+import { Checkbox } from '../components/ui/checkbox';
 
 export default function CheckboxesWidget<
   T = any,
@@ -31,12 +30,10 @@ export default function CheckboxesWidget<
     required,
     label,
     hideLabel,
-    uiSchema,
     rawErrors = [],
   } = props;
   const { enumOptions, enumDisabled, emptyValue } = options;
-  const chakraProps = getChakra({ uiSchema });
-  const checkboxesValues = Array.isArray(value) ? value : [value];
+  // const chakraProps = getChakra({ uiSchema });
 
   const _onBlur = ({ target }: FocusEvent<HTMLInputElement | any>) =>
     onBlur(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, emptyValue));
@@ -47,29 +44,23 @@ export default function CheckboxesWidget<
   const selectedIndexes = enumOptionsIndexForValue<S>(value, enumOptions, true) as string[];
 
   return (
-    <FormControl
+    <FieldsetRoot
       mb={1}
-      {...chakraProps}
-      isDisabled={disabled || readonly}
-      isRequired={required}
-      isReadOnly={readonly}
-      isInvalid={rawErrors && rawErrors.length > 0}
+      // {...chakraProps}
+      disabled={disabled || readonly}
+      invalid={rawErrors && rawErrors.length > 0}
     >
-      {labelValue(
-        <FormLabel htmlFor={id} id={`${id}-label`}>
-          {label}
-        </FormLabel>,
-        hideLabel || !label
-      )}
       <CheckboxGroup
-        onChange={(option) => onChange(enumOptionsValueForIndex<S>(option, enumOptions, emptyValue))}
-        defaultValue={selectedIndexes}
+        onValueChange={(option) => onChange(enumOptionsValueForIndex<S>(option, enumOptions, emptyValue))}
+        value={selectedIndexes}
         aria-describedby={ariaDescribedByIds<T>(id)}
+        readOnly={readonly}
+        required={required}
+        label={labelValue(label, hideLabel || !label)}
       >
         <Stack direction={row ? 'row' : 'column'}>
           {Array.isArray(enumOptions) &&
             enumOptions.map((option, index) => {
-              const checked = enumOptionsIsSelected<S>(option.value, checkboxesValues);
               const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.indexOf(option.value) !== -1;
               return (
                 <Checkbox
@@ -77,8 +68,7 @@ export default function CheckboxesWidget<
                   id={optionId(id, index)}
                   name={id}
                   value={String(index)}
-                  isChecked={checked}
-                  isDisabled={disabled || itemDisabled || readonly}
+                  disabled={disabled || itemDisabled || readonly}
                   onBlur={_onBlur}
                   onFocus={_onFocus}
                 >
@@ -88,6 +78,6 @@ export default function CheckboxesWidget<
             })}
         </Stack>
       </CheckboxGroup>
-    </FormControl>
+    </FieldsetRoot>
   );
 }

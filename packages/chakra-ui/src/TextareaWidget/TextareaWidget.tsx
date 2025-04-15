@@ -1,5 +1,5 @@
 import { ChangeEvent, FocusEvent } from 'react';
-import { FormControl, FormLabel, Textarea } from '@chakra-ui/react';
+import { Textarea } from '@chakra-ui/react';
 import {
   ariaDescribedByIds,
   labelValue,
@@ -8,7 +8,7 @@ import {
   StrictRJSFSchema,
   WidgetProps,
 } from '@rjsf/utils';
-import { getChakra } from '../utils';
+import { Field } from '../components/ui/field';
 
 export default function TextareaWidget<
   T = any,
@@ -27,11 +27,10 @@ export default function TextareaWidget<
   onFocus,
   onChange,
   options,
-  uiSchema,
   required,
   rawErrors,
 }: WidgetProps<T, S, F>) {
-  const chakraProps = getChakra({ uiSchema });
+  // const chakraProps = getChakra({ uiSchema });
 
   const _onChange = ({ target: { value } }: ChangeEvent<HTMLTextAreaElement>) =>
     onChange(value === '' ? options.emptyValue : value);
@@ -39,15 +38,15 @@ export default function TextareaWidget<
   const _onFocus = ({ target }: FocusEvent<HTMLTextAreaElement>) => onFocus(id, target && target.value);
 
   return (
-    <FormControl
+    <Field
       mb={1}
-      {...chakraProps}
-      isDisabled={disabled || readonly}
-      isRequired={required}
-      isReadOnly={readonly}
-      isInvalid={rawErrors && rawErrors.length > 0}
+      // {...chakraProps}
+      disabled={disabled || readonly}
+      required={required}
+      readOnly={readonly}
+      invalid={rawErrors && rawErrors.length > 0}
+      label={labelValue(label, hideLabel || !label)}
     >
-      {labelValue(<FormLabel htmlFor={id}>{label}</FormLabel>, hideLabel || !label)}
       <Textarea
         id={id}
         name={id}
@@ -60,6 +59,6 @@ export default function TextareaWidget<
         rows={options.rows}
         aria-describedby={ariaDescribedByIds<T>(id)}
       />
-    </FormControl>
+    </Field>
   );
 }
