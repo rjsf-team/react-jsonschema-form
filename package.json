@@ -86,6 +86,8 @@
   "dependencies": {
     "@restart/hooks": "^0.6.2",
     "@restart/ui": "^1.9.4",
+    "ajv": "^8.17.1",
+    "ajv-keywords": "^5.1.0",
     "uncontrollable": "^9.0.0"
   }
 }
