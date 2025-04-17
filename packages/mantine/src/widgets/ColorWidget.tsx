@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import { FocusEvent, useCallback } from 'react';
 import {
   FormContextType,
   RJSFSchema,
@@ -8,6 +8,7 @@ import {
   ariaDescribedByIds,
 } from '@rjsf/utils';
 import { ColorInput } from '@mantine/core';
+
 import { cleanupOptions } from '../utils';
 
 /** The `ColorWidget` component uses the `ColorInput` from Mantine, allowing users to pick a color.
@@ -35,18 +36,17 @@ export default function ColorWidget<T = any, S extends StrictRJSFSchema = RJSFSc
     onFocus,
   } = props;
 
-  const emptyValue = options.emptyValue || '';
   const themeProps = cleanupOptions(options);
 
   const handleChange = useCallback(
     (nextValue: string) => {
       onChange(nextValue);
     },
-    [onChange, emptyValue]
+    [onChange]
   );
 
   const handleBlur = useCallback(
-    ({ target }: React.FocusEvent<HTMLInputElement>) => {
+    ({ target }: FocusEvent<HTMLInputElement>) => {
       if (onBlur) {
         onBlur(id, target && target.value);
       }
@@ -55,7 +55,7 @@ export default function ColorWidget<T = any, S extends StrictRJSFSchema = RJSFSc
   );
 
   const handleFocus = useCallback(
-    ({ target }: React.FocusEvent<HTMLInputElement>) => {
+    ({ target }: FocusEvent<HTMLInputElement>) => {
       if (onFocus) {
         onFocus(id, target && target.value);
       }

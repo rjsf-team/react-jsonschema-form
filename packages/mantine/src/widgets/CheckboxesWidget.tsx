@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import { FocusEvent, useCallback } from 'react';
 import {
   ariaDescribedByIds,
   enumOptionsValueForIndex,
@@ -11,6 +11,7 @@ import {
   StrictRJSFSchema,
 } from '@rjsf/utils';
 import { Checkbox, Flex, Input } from '@mantine/core';
+
 import { cleanupOptions } from '../utils';
 
 /** The `CheckboxesWidget` is a widget for rendering checkbox groups.
@@ -52,7 +53,7 @@ export default function CheckboxesWidget<
   );
 
   const handleBlur = useCallback(
-    ({ target }: React.FocusEvent<HTMLInputElement>) => {
+    ({ target }: FocusEvent<HTMLInputElement>) => {
       if (onBlur) {
         onBlur(id, enumOptionsValueForIndex<S>(target.value, enumOptions, emptyValue));
       }
@@ -61,7 +62,7 @@ export default function CheckboxesWidget<
   );
 
   const handleFocus = useCallback(
-    ({ target }: React.FocusEvent<HTMLInputElement>) => {
+    ({ target }: FocusEvent<HTMLInputElement>) => {
       if (onFocus) {
         onFocus(id, enumOptionsValueForIndex<S>(target.value, enumOptions, emptyValue));
       }

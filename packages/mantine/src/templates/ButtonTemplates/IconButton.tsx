@@ -1,6 +1,7 @@
-import React from 'react';
+import { MouseEventHandler } from 'react';
 import { ActionIcon, ActionIconProps } from '@mantine/core';
 import { FormContextType, IconButtonProps, RJSFSchema, StrictRJSFSchema, TranslatableString } from '@rjsf/utils';
+
 import { Copy, ChevronDown, ChevronUp, X } from '../icons';
 
 export type MantineIconButtonProps<
@@ -17,7 +18,7 @@ export default function IconButton<T = any, S extends StrictRJSFSchema = RJSFSch
     <ActionIcon
       size={iconType as ActionIconProps['size']}
       color={color as ActionIconProps['color']}
-      onClick={onClick as React.MouseEventHandler<HTMLAnchorElement> & React.MouseEventHandler<HTMLButtonElement>}
+      onClick={onClick as MouseEventHandler<HTMLAnchorElement> & MouseEventHandler<HTMLButtonElement>}
       {...otherProps}
     >
       {icon}

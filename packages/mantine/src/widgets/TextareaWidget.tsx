@@ -1,6 +1,7 @@
-import React, { useCallback } from 'react';
+import { ReactElement, ChangeEvent, FocusEvent, useCallback } from 'react';
 import { StrictRJSFSchema, RJSFSchema, FormContextType, WidgetProps, labelValue } from '@rjsf/utils';
 import { Textarea } from '@mantine/core';
+
 import { cleanupOptions } from '../utils';
 
 /** The `TextareaWidget` is a widget for rendering input fields as textarea.
@@ -11,7 +12,7 @@ export default function TextareaWidget<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
->(props: WidgetProps<T, S, F>): React.ReactElement {
+>(props: WidgetProps<T, S, F>): ReactElement {
   const {
     id,
     name,
@@ -34,14 +35,14 @@ export default function TextareaWidget<
   const emptyValue = options?.emptyValue ?? '';
 
   const handleChange = useCallback(
-    (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    (e: ChangeEvent<HTMLTextAreaElement>) => {
       onChange(e.target.value === '' ? emptyValue : e.target.value);
     },
     [onChange, emptyValue]
   );
 
   const handleBlur = useCallback(
-    ({ target }: React.FocusEvent<HTMLTextAreaElement>) => {
+    ({ target }: FocusEvent<HTMLTextAreaElement>) => {
       if (onBlur) {
         onBlur(id, target && target.value);
       }
@@ -50,7 +51,7 @@ export default function TextareaWidget<
   );
 
   const handleFocus = useCallback(
-    ({ target }: React.FocusEvent<HTMLTextAreaElement>) => {
+    ({ target }: FocusEvent<HTMLTextAreaElement>) => {
       if (onFocus) {
         onFocus(id, target && target.value);
       }
