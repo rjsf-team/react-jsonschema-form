@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import { ChangeEvent, FocusEvent, useCallback } from 'react';
 import {
   ariaDescribedByIds,
   FormContextType,
@@ -8,6 +8,7 @@ import {
   WidgetProps,
 } from '@rjsf/utils';
 import { PasswordInput } from '@mantine/core';
+
 import { cleanupOptions } from '../utils';
 
 /**
@@ -42,14 +43,14 @@ export default function PasswordWidget<
   const themeProps = cleanupOptions(options);
 
   const handleChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
+    (e: ChangeEvent<HTMLInputElement>) => {
       onChange(e.target.value === '' ? emptyValue : e.target.value);
     },
     [onChange, emptyValue]
   );
 
   const handleBlur = useCallback(
-    ({ target }: React.FocusEvent<HTMLInputElement>) => {
+    ({ target }: FocusEvent<HTMLInputElement>) => {
       if (onBlur) {
         onBlur(id, target && target.value);
       }
@@ -58,7 +59,7 @@ export default function PasswordWidget<
   );
 
   const handleFocus = useCallback(
-    ({ target }: React.FocusEvent<HTMLInputElement>) => {
+    ({ target }: FocusEvent<HTMLInputElement>) => {
       if (onFocus) {
         onFocus(id, target && target.value);
       }
