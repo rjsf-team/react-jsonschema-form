@@ -1,0 +1,26 @@
+{
+    "extends": "../../tsconfig.base.json",
+    "include": [
+        "src",
+        "../utils/src/types.d.ts"
+    ],
+    "compilerOptions": {
+        "declaration": true,
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "moduleResolution": "node",
+        "jsx": "react-jsx",
+        "skipLibCheck": true
+    },
+    "references": [
+        {
+            "path": "../core"
+        },
+        {
+            "path": "../utils"
+        },
+        {
+            "path": "../validator-ajv8"
+        }
+    ]
+}

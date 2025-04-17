@@ -13,6 +13,7 @@ import HiddenWidget from './HiddenWidget';
 import PasswordWidget from './PasswordWidget';
 import RadioWidget from './RadioWidget';
 import RangeWidget from './RangeWidget';
+import RatingWidget from './RatingWidget';
 import SelectWidget from './SelectWidget';
 import TextareaWidget from './TextareaWidget';
 import TextWidget from './TextWidget';
@@ -39,6 +40,7 @@ function widgets<
     PasswordWidget,
     RadioWidget,
     RangeWidget,
+    RatingWidget,
     SelectWidget,
     TextWidget,
     TextareaWidget,

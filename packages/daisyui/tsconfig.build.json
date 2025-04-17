@@ -1,0 +1,25 @@
+{
+    "extends": "../../tsconfig.build.json",
+    "compilerOptions": {
+        "outDir": "./lib",
+        "rootDir": "src"
+    },
+    "files": [],
+    "references": [
+        {
+            "path": "./src"
+        }
+    ],
+    "tsc-alias": {
+        "resolveFullPaths": true,
+        "verbose": true
+    },
+    "include": [
+        "src"
+    ],
+    "exclude": [
+        "node_modules",
+        "lib",
+        "dist"
+    ]
+}

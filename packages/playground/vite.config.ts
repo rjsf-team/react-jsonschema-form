@@ -26,6 +26,7 @@ export default defineConfig({
       // We want to pick up the browser version of the utils
       '@rjsf/utils': path.resolve(__dirname, '../utils/src/indexBrowser'),
       '@rjsf/validator-ajv8': path.resolve(__dirname, '../validator-ajv8/src'),
+      '@rjsf/daisyui': path.resolve(__dirname, '../daisyui/src'),
     },
   },
 });
