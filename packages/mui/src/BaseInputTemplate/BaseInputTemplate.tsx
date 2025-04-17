@@ -76,9 +76,7 @@ export default function BaseInputTemplate<
         autoFocus={autofocus}
         required={required}
         disabled={disabled || readonly}
-        slotProps={{
-          htmlInput: htmlInputProps,
-        }}
+        inputProps={htmlInputProps}
         {...rest}
         value={value || value === 0 ? value : ''}
         error={rawErrors.length > 0}

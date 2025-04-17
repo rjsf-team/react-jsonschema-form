@@ -36,7 +36,7 @@ const widgets: RegistryWidgetsType = {
 
 render(
   <Form schema={schema} uiSchema={uiSchema} validator={validator} widgets={widgets} />,
-  document.getElementById('app')
+  document.getElementById('app'),
 );
 ```
 
@@ -97,7 +97,15 @@ The default widgets you can override are:
 
 ## Raising errors from within a custom widget or field
 
-You can raise a custom error by overriding the `onChange` method to raise field/widget errors:
+You can raise custom 'live validation' errors by overriding the `onChange` method to provide feedback while users are actively changing the form data.
+Note that these errors are temporary and are not recognized during the form validation process.
+
+:::warning
+
+This method of raising errors _only_ runs during `onChange`, i.e. when the user is changing data. This will not catch errors `onSubmit`, i.e when submitting the form.
+If you wish to add generic validation logic for your component, you should use the [`customValidate` Form prop](../api-reference/form-props.md#customvalidate).
+
+:::
 
 ```tsx
 import { ErrorSchema, RJSFSchema, UiSchema, WidgetProps, RegistryWidgetsType } from '@rjsf/utils';
@@ -133,7 +141,7 @@ const widgets: RegistryWidgetsType = {
 
 render(
   <Form schema={schema} uiSchema={uiSchema} validator={validator} widgets={widgets} />,
-  document.getElementById('app')
+  document.getElementById('app'),
 );
 ```
 
@@ -233,7 +241,7 @@ const uiSchema: UiSchema = {
 
 render(
   <Form schema={schema} uiSchema={uiSchema} validator={validator} widgets={widgets} />,
-  document.getElementById('app')
+  document.getElementById('app'),
 );
 ```
 
@@ -342,7 +350,7 @@ class GeoPosition extends React.Component<FieldProps> {
         {
           [name]: parseFloat(event.target.value),
         },
-        () => this.props.onChange(this.state)
+        () => this.props.onChange(this.state),
       );
     };
   }
@@ -369,7 +377,7 @@ const fields: RegistryFieldsType = { geo: GeoPosition };
 // as props
 render(
   <Form schema={schema} uiSchema={uiSchema} validator={validator} fields={fields} />,
-  document.getElementById('app')
+  document.getElementById('app'),
 );
 ```
 
@@ -535,7 +543,7 @@ function MyObjectField(props: FieldProps) {
       }
       onChange(data, error, id);
     },
-    [onChange]
+    [onChange],
   );
   return <ObjectField {...props} onChange={onChangeHandler} />;
 }
