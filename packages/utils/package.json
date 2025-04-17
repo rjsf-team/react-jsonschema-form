@@ -4,7 +4,6 @@
   "main": "dist/index.js",
   "module": "lib/index.js",
   "typings": "lib/index.d.ts",
-  "browser": "dist/indexBrowser.js",
   "type": "module",
   "description": "Utility functions for @rjsf/core",
   "exports": {
@@ -46,13 +45,10 @@
   "scripts": {
     "compileReplacer": "tsc -p tsconfig.replacer.json && move-file lodashReplacer.js lodashReplacer.cjs",
     "build:ts": "npm run compileReplacer && rimraf ./lib && tsc -b tsconfig.build.json && tsc-alias -p tsconfig.build.json",
-    "build:esm-browser": "esbuild ./src/indexBrowser.ts --bundle --outfile=dist/utils-browser.esm.js --sourcemap --packages=external --format=esm",
-    "build:cjs-browser": "esbuild ./src/indexBrowser.ts --bundle --outfile=dist/indexBrowser.js --sourcemap --packages=external --format=cjs",
-    "build:umd-browser": "rollup dist/utils-browser.esm.js --format=umd --file=dist/utils-browser.umd.js --name=@rjsf/utils",
     "build:cjs": "esbuild ./src/index.ts --bundle --outfile=dist/index.js --sourcemap --packages=external --format=cjs",
     "build:esm": "esbuild ./src/index.ts --bundle --outfile=dist/utils.esm.js --sourcemap --packages=external --format=esm",
     "build:umd": "rollup dist/utils.esm.js --format=umd --file=dist/utils.umd.js --name=@rjsf/utils",
-    "build": "npm run build:ts && npm run build:cjs && npm run build:cjs-browser && npm run build:esm && npm run build:esm-browser && npm run build:umd && npm run build:umd-browser",
+    "build": "npm run build:ts && npm run build:cjs && npm run build:esm && npm run build:umd",
     "cs-check": "prettier -l \"{src,test}/**/*.ts?(x)\"",
     "cs-format": "prettier \"{src,test}/**/*.ts?(x)\" --write",
     "lint": "eslint src test",
