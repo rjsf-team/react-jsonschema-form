@@ -41,6 +41,10 @@ should change the heading of the (upcoming) version to include a major version b
 - Implemented the `GridTemplate` component, adding it to the `templates` for the theme
 - Implemented the new `LayoutGridField`, `LayoutMultiSchemaField` and `LayoutHeaderField` fields, adding them to the `fields` list
 
+## @rjsf/daisyui
+
+- Added new theme!
+
 ## @rjsf/fluent-ui
 
 - BREAKING CHANGE: Deleted this theme in favor of `fluentui-rc`
@@ -63,6 +67,10 @@ should change the heading of the (upcoming) version to include a major version b
 - BREAKING CHANGE: Refactored `ArrayFieldItemTemplate` to use the new `ArrayFieldItemButtonsTemplate`
 - Updated the `ArrayFieldTemplate`, `ObjectFieldTemplate`, and `WrapIfAdditionalTemplate` to a unique id using the `buttonId()` function and adding consistent marker classes
 - Implemented the `GridTemplate` component, adding it to the `templates` for the theme
+
+## @rjsf/shadcn
+
+- Added new theme!
 
 ## @rjsf/utils
 
