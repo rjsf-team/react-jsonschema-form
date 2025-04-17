@@ -1,5 +1,6 @@
 import renderer from 'react-test-renderer';
 import { render, fireEvent } from '@testing-library/react';
+
 import RatingWidget from '../src/widgets/RatingWidget/RatingWidget';
 import { makeWidgetMockProps } from './helpers/createMocks';
 

@@ -1,5 +1,6 @@
 import renderer from 'react-test-renderer';
 import { render, fireEvent } from '@testing-library/react';
+
 import ToggleWidget from '../src/widgets/ToggleWidget/ToggleWidget';
 import { makeWidgetMockProps } from './helpers/createMocks';
 

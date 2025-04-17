@@ -1,4 +1,5 @@
 import { render } from '@testing-library/react';
+
 import { __createDaisyUIFrameProvider } from '../src/DaisyUIFrameProvider';
 
 describe('DaisyUIFrameProvider', () => {
