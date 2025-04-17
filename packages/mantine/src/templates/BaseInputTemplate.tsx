@@ -1,4 +1,4 @@
-import React from 'react';
+import { ChangeEvent, FocusEvent } from 'react';
 import {
   ariaDescribedByIds,
   BaseInputTemplateProps,
@@ -10,6 +10,7 @@ import {
   StrictRJSFSchema,
 } from '@rjsf/utils';
 import { TextInput, NumberInput } from '@mantine/core';
+
 import { cleanupOptions } from '../utils';
 
 /** The `BaseInputTemplate` is the template to use to render the basic `<input>` component for the `core` theme.
@@ -51,12 +52,11 @@ export default function BaseInputTemplate<
 
   const handleChange = onChangeOverride
     ? onChangeOverride
-    : (e: React.ChangeEvent<HTMLInputElement>) =>
-        onChange(e.target.value === '' ? options.emptyValue ?? '' : e.target.value);
+    : (e: ChangeEvent<HTMLInputElement>) => onChange(e.target.value === '' ? options.emptyValue ?? '' : e.target.value);
 
-  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => onBlur(id, e.target && e.target.value);
+  const handleBlur = (e: FocusEvent<HTMLInputElement>) => onBlur(id, e.target && e.target.value);
 
-  const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => onFocus(id, e.target && e.target.value);
+  const handleFocus = (e: FocusEvent<HTMLInputElement>) => onFocus(id, e.target && e.target.value);
 
   const input =
     inputProps.type === 'number' || inputProps.type === 'integer' ? (

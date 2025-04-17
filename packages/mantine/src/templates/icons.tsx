@@ -1,6 +1,6 @@
-import React from 'react';
+import { ComponentPropsWithoutRef } from 'react';
 
-interface IconProps extends React.ComponentPropsWithoutRef<'svg'> {
+interface IconProps extends ComponentPropsWithoutRef<'svg'> {
   size?: number | string;
 }
 
