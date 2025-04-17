@@ -27,7 +27,7 @@ export function getTestIdsBrowser(): TestIdShape {
 export default function getTestIds(): TestIdShape {
   // For some reason, even though process.env contains the value of `test` for NODE_ENV, accessing it directly returns
   // 'development'. Using `get()` does, in fact, return test so sticking with it
-  if (get(process, 'env.NODE_ENV') !== 'test') {
+  if (typeof process !== 'undefined' && get(process, 'env.NODE_ENV') !== 'test') {
     return getTestIdsBrowser();
   }
 
