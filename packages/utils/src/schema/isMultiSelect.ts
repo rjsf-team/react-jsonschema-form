@@ -13,12 +13,12 @@ import isSelect from './isSelect';
 export default function isMultiSelect<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(
   validator: ValidatorType<T, S, F>,
   schema: S,
   rootSchema?: S,
-  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>
+  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
 ) {
   if (!schema.uniqueItems || !schema.items || typeof schema.items === 'boolean') {
     return false;

@@ -12,7 +12,7 @@ import { TitleFieldProps, StrictRJSFSchema, RJSFSchema, FormContextType, getUiOp
  * @param props - The `TitleFieldProps` for the component
  */
 export default function TitleField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: TitleFieldProps<T, S, F>
+  props: TitleFieldProps<T, S, F>,
 ) {
   const { id, title, uiSchema } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);

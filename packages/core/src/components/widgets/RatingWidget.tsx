@@ -16,7 +16,7 @@ import { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjs
 export default function RatingWidget<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >({
   id,
   value,
@@ -43,7 +43,7 @@ export default function RatingWidget<
         onChange(starValue);
       }
     },
-    [onChange, disabled, readonly]
+    [onChange, disabled, readonly],
   );
 
   /** Handles focus events for accessibility */
@@ -55,7 +55,7 @@ export default function RatingWidget<
         onFocus(id, starValue);
       }
     },
-    [onFocus, id]
+    [onFocus, id],
   );
 
   /** Handles blur events for accessibility */
@@ -67,7 +67,7 @@ export default function RatingWidget<
         onBlur(id, starValue);
       }
     },
-    [onBlur, id]
+    [onBlur, id],
   );
 
   // Get the appropriate Unicode character based on shape option

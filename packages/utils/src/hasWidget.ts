@@ -12,7 +12,7 @@ import { FormContextType, RegistryWidgetsType, RJSFSchema, StrictRJSFSchema, Wid
 export default function hasWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   schema: RJSFSchema,
   widget: Widget<T, S, F> | string,
-  registeredWidgets: RegistryWidgetsType<T, S, F> = {}
+  registeredWidgets: RegistryWidgetsType<T, S, F> = {},
 ) {
   try {
     getWidget(schema, widget, registeredWidgets);

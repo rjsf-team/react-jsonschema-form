@@ -359,7 +359,7 @@ function getNonNullishValue<T = unknown>(value?: T, fallback?: T): T | undefined
 export default class LayoutGridField<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 > extends PureComponent<LayoutGridFieldProps<T, S, F>> {
   static defaultProps = {
     layoutGridSchema: undefined,
@@ -384,7 +384,7 @@ export default class LayoutGridField<
     uiProps: ConfigObject,
     uiSchema?: UiSchema<T, S, F>,
     schemaReadonly?: boolean,
-    forceReadonly?: boolean
+    forceReadonly?: boolean,
   ) {
     const globalUiOptions = get(uiSchema, [UI_GLOBAL_OPTIONS], {});
     const localUiSchema = get(uiSchema, field);
@@ -457,7 +457,7 @@ export default class LayoutGridField<
   static findChildrenAndProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
     layoutGridSchema: GridSchemaType,
     schemaKey: GridType,
-    registry: Registry<T, S, F>
+    registry: Registry<T, S, F>,
   ) {
     let gridProps: GridProps = {};
     let children = layoutGridSchema[schemaKey];
@@ -493,7 +493,7 @@ export default class LayoutGridField<
     baseIdSchema: IdSchema<T>,
     formData: FieldProps['formData'],
     schema: S = {} as S,
-    idSeparator?: string
+    idSeparator?: string,
   ): FieldProps<T, S, F>['idSchema'] {
     const baseId = get(baseIdSchema, ID_KEY);
     return schemaUtils.toIdSchema(schema, baseId, formData, baseId, idSeparator);
@@ -519,7 +519,7 @@ export default class LayoutGridField<
     initialSchema: S,
     formData: FieldProps<T, S, F>['formData'],
     initialIdSchema: IdSchema<T>,
-    idSeparator?: string
+    idSeparator?: string,
   ): {
     schema?: S;
     isRequired: boolean;
@@ -550,7 +550,7 @@ export default class LayoutGridField<
           idSchema,
           formData,
           selectedSchema,
-          idSeparator
+          idSeparator,
         );
         rawSchema = get(selectedSchema, [PROPERTIES_KEY, part], {}) as S;
         idSchema = get(selectedIdSchema, part, {}) as IdSchema<T>;
@@ -608,7 +608,7 @@ export default class LayoutGridField<
    */
   static getCustomRenderComponent<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
     render: string | RenderComponent,
-    registry: Registry<T, S, F>
+    registry: Registry<T, S, F>,
   ): RenderComponent | null {
     let customRenderer = render;
     if (isString(customRenderer)) {
@@ -631,7 +631,7 @@ export default class LayoutGridField<
   static computeUIComponentPropsFromGridSchema<
     T = any,
     S extends StrictRJSFSchema = RJSFSchema,
-    F extends FormContextType = any
+    F extends FormContextType = any,
   >(registry: Registry<T, S, F>, gridSchema?: string | ConfigObject): UIComponentPropsType {
     let name: string;
     let UIComponent: RenderComponent | null = null;
@@ -705,7 +705,7 @@ export default class LayoutGridField<
     const { children, gridProps } = LayoutGridField.findChildrenAndProps<T, S, F>(
       layoutGridSchema,
       GridType.CONDITION,
-      registry
+      registry,
     );
     const { operator, field = '', value } = gridProps;
     const fieldData = get(formData, field, null);
@@ -727,7 +727,7 @@ export default class LayoutGridField<
     const { children, gridProps } = LayoutGridField.findChildrenAndProps<T, S, F>(
       layoutGridSchema,
       GridType.COLUMN,
-      registry
+      registry,
     );
     const uiOptions = getUiOptions<T, S, F>(uiSchema);
     const GridTemplate = getTemplate<'GridTemplate', T, S, F>('GridTemplate', registry, uiOptions);
@@ -751,7 +751,7 @@ export default class LayoutGridField<
     const { children, gridProps } = LayoutGridField.findChildrenAndProps<T, S, F>(
       layoutGridSchema,
       GridType.COLUMNS,
-      registry
+      registry,
     );
     const uiOptions = getUiOptions<T, S, F>(uiSchema);
     const GridTemplate = getTemplate<'GridTemplate', T, S, F>('GridTemplate', registry, uiOptions);
@@ -780,7 +780,7 @@ export default class LayoutGridField<
     const { children, gridProps } = LayoutGridField.findChildrenAndProps<T, S, F>(
       layoutGridSchema,
       GridType.ROW,
-      registry
+      registry,
     );
     const uiOptions = getUiOptions<T, S, F>(uiSchema);
     const GridTemplate = getTemplate<'GridTemplate', T, S, F>('GridTemplate', registry, uiOptions);
@@ -865,7 +865,7 @@ export default class LayoutGridField<
       initialSchema,
       formData,
       idSchema,
-      idSeparator
+      idSeparator,
     );
 
     if (schema) {
@@ -880,7 +880,7 @@ export default class LayoutGridField<
         uiProps,
         uiSchema,
         isReadonly,
-        readonly
+        readonly,
       );
 
       return (

@@ -57,7 +57,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
         onFocus(id, optionValue);
       }
     },
-    [onFocus, id, enumOptions]
+    [onFocus, id, enumOptions],
   );
 
   /** Handles blur events for accessibility */
@@ -69,7 +69,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
         onBlur(id, optionValue);
       }
     },
-    [onBlur, id, enumOptions]
+    [onBlur, id, enumOptions],
   );
 
   /** Handles change events for radio options */
@@ -82,7 +82,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
         event.target.blur();
       }
     },
-    [onChange, isEnumeratedObject, enumOptions]
+    [onChange, isEnumeratedObject, enumOptions],
   );
 
   return (

@@ -141,7 +141,7 @@ function extractFileInfo(dataURLs: string[]): FileInfoType[] {
           type: blob.type,
         },
       ];
-    } catch (e) {
+    } catch {
       // Invalid dataURI, so just ignore it.
       return acc;
     }
@@ -153,7 +153,7 @@ function extractFileInfo(dataURLs: string[]): FileInfoType[] {
  *  It is typically used with a string property with data-url format.
  */
 function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: WidgetProps<T, S, F>
+  props: WidgetProps<T, S, F>,
 ) {
   const { disabled, readonly, required, multiple, onChange, value, options, registry } = props;
   const BaseInputTemplate = getTemplate<'BaseInputTemplate', T, S, F>('BaseInputTemplate', registry, options);
@@ -175,7 +175,7 @@ function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
         }
       });
     },
-    [multiple, value, onChange]
+    [multiple, value, onChange],
   );
 
   const filesInfo = useMemo(() => extractFileInfo(Array.isArray(value) ? value : [value]), [value]);
@@ -188,7 +188,7 @@ function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
         onChange(undefined);
       }
     },
-    [multiple, value, onChange]
+    [multiple, value, onChange],
   );
   return (
     <div>

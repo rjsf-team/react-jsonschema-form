@@ -7,7 +7,7 @@ import superSchema from './harness/superSchema.json';
 import { CUSTOM_OPTIONS } from './harness/testData';
 
 jest.mock('../src/createAjvInstance', () =>
-  jest.fn().mockImplementation((...args) => jest.requireActual('../src/createAjvInstance').default(...args))
+  jest.fn().mockImplementation((...args) => jest.requireActual('../src/createAjvInstance').default(...args)),
 );
 
 describe('compileSchemaValidatorsCode()', () => {
@@ -64,7 +64,7 @@ describe('compileSchemaValidatorsCode()', () => {
         customFormats,
         expectedCompileOpts,
         ajvFormatOptions,
-        AjvClass
+        AjvClass,
       );
     });
     it('generates expected output', () => {

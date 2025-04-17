@@ -97,7 +97,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
    */
   static getDerivedStateFromProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
     nextProps: Readonly<FieldProps<T[], S, F>>,
-    prevState: Readonly<ArrayFieldState<T>>
+    prevState: Readonly<ArrayFieldState<T>>,
   ) {
     // Don't call getDerivedStateFromProps if keyed formdata was just updated.
     if (prevState.updatedKeyedFormData) {
@@ -130,7 +130,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
     return get(
       schema,
       [ITEMS_KEY, 'title'],
-      get(schema, [ITEMS_KEY, 'description'], translateString(TranslatableString.ArrayItemTitle))
+      get(schema, [ITEMS_KEY, 'description'], translateString(TranslatableString.ArrayItemTitle)),
     );
   }
 
@@ -229,7 +229,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
         keyedFormData: newKeyedFormData,
         updatedKeyedFormData: true,
       },
-      () => onChange(keyedToPlainFormData(newKeyedFormData), newErrorSchema as ErrorSchema<T[]>)
+      () => onChange(keyedToPlainFormData(newKeyedFormData), newErrorSchema as ErrorSchema<T[]>),
     );
   }
 
@@ -298,7 +298,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
           keyedFormData: newKeyedFormData,
           updatedKeyedFormData: true,
         },
-        () => onChange(keyedToPlainFormData(newKeyedFormData), newErrorSchema as ErrorSchema<T[]>)
+        () => onChange(keyedToPlainFormData(newKeyedFormData), newErrorSchema as ErrorSchema<T[]>),
       );
     };
   };
@@ -335,7 +335,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
           keyedFormData: newKeyedFormData,
           updatedKeyedFormData: true,
         },
-        () => onChange(keyedToPlainFormData(newKeyedFormData), newErrorSchema as ErrorSchema<T[]>)
+        () => onChange(keyedToPlainFormData(newKeyedFormData), newErrorSchema as ErrorSchema<T[]>),
       );
     };
   };
@@ -385,7 +385,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
         {
           keyedFormData: newKeyedFormData,
         },
-        () => onChange(keyedToPlainFormData(newKeyedFormData), newErrorSchema as ErrorSchema<T[]>)
+        () => onChange(keyedToPlainFormData(newKeyedFormData), newErrorSchema as ErrorSchema<T[]>),
       );
     };
   };
@@ -412,7 +412,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
             ...errorSchema,
             [index]: newErrorSchema,
           },
-        id
+        id,
       );
     };
   };
@@ -433,7 +433,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
       const UnsupportedFieldTemplate = getTemplate<'UnsupportedFieldTemplate', T[], S, F>(
         'UnsupportedFieldTemplate',
         registry,
-        uiOptions
+        uiOptions,
       );
 
       return (
@@ -720,7 +720,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
     const { schemaUtils, formContext } = registry;
     const _schemaItems: S[] = isObject(schema.items) ? (schema.items as S[]) : ([] as S[]);
     const itemSchemas = _schemaItems.map((item: S, index: number) =>
-      schemaUtils.retrieveSchema(item, formData[index] as unknown as T[])
+      schemaUtils.retrieveSchema(item, formData[index] as unknown as T[]),
     );
     const additionalSchema = isObject(schema.additionalItems)
       ? schemaUtils.retrieveSchema(schema.additionalItems as S, formData)
@@ -754,8 +754,8 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
         const itemUiSchema = additional
           ? uiSchema.additionalItems || {}
           : Array.isArray(uiSchema.items)
-          ? uiSchema.items[index]
-          : uiSchema.items || {};
+            ? uiSchema.items[index]
+            : uiSchema.items || {};
         const itemErrorSchema = errorSchema ? (errorSchema[index] as ErrorSchema<T[]>) : undefined;
 
         return this.renderArrayFieldItem({

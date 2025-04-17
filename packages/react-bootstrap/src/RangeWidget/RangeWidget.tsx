@@ -3,7 +3,7 @@ import { ChangeEvent, FocusEvent } from 'react';
 import FormRange from 'react-bootstrap/FormRange';
 
 export default function RangeWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: WidgetProps<T, S, F>
+  props: WidgetProps<T, S, F>,
 ) {
   const { id, value, disabled, onChange, onBlur, onFocus, schema } = props;
 

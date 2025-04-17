@@ -26,7 +26,7 @@ import {
 export default function BaseInputTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(props: WidgetProps<T, S, F>) {
   const {
     id,
@@ -54,17 +54,17 @@ export default function BaseInputTemplate<
 
   const _onChange = useCallback(
     ({ target: { value } }: ChangeEvent<HTMLInputElement>) => onChange(value === '' ? options.emptyValue : value),
-    [onChange, options]
+    [onChange, options],
   );
 
   const _onBlur = useCallback(
     ({ target }: FocusEvent<HTMLInputElement>) => onBlur && onBlur(id, target.value),
-    [onBlur, id]
+    [onBlur, id],
   );
 
   const _onFocus = useCallback(
     ({ target }: FocusEvent<HTMLInputElement>) => onFocus && onFocus(id, target.value),
-    [onFocus, id]
+    [onFocus, id],
   );
 
   return (

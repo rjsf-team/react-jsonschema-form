@@ -20,17 +20,17 @@ function TextareaWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F exte
 }: WidgetProps<T, S, F>) {
   const handleChange = useCallback(
     ({ target: { value } }: ChangeEvent<HTMLTextAreaElement>) => onChange(value === '' ? options.emptyValue : value),
-    [onChange, options.emptyValue]
+    [onChange, options.emptyValue],
   );
 
   const handleBlur = useCallback(
     ({ target }: FocusEvent<HTMLTextAreaElement>) => onBlur(id, target && target.value),
-    [onBlur, id]
+    [onBlur, id],
   );
 
   const handleFocus = useCallback(
     ({ target }: FocusEvent<HTMLTextAreaElement>) => onFocus(id, target && target.value),
-    [id, onFocus]
+    [id, onFocus],
   );
 
   return (

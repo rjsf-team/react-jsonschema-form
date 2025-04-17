@@ -15,7 +15,7 @@ import {
 export default function ArrayFieldItemButtonsTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(props: ArrayFieldItemButtonsTemplateType<T, S, F>) {
   const {
     disabled,

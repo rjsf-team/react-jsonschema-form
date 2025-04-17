@@ -12,7 +12,7 @@ describe('CheckboxesWidget', () => {
               enumOptions: [{ label: 'A', value: 'a' }],
             },
           })}
-        />
+        />,
       )
       .toJSON();
     expect(tree).toMatchSnapshot();
@@ -27,7 +27,7 @@ describe('CheckboxesWidget', () => {
               inline: true,
             },
           })}
-        />
+        />,
       )
       .toJSON();
     expect(tree).toMatchSnapshot();

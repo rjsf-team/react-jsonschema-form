@@ -41,6 +41,6 @@ export default function getTestIds(): TestIdShape {
         }
         return ids.get(prop);
       },
-    }
+    },
   );
 }

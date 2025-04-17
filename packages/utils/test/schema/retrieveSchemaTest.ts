@@ -263,7 +263,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       const result = retrieveSchema(
         testValidator,
         get(RECURSIVE_REF_ALLOF, [PROPERTIES_KEY, 'value', 'items']),
-        RECURSIVE_REF_ALLOF
+        RECURSIVE_REF_ALLOF,
       );
       expect(result).toEqual({
         ...(RECURSIVE_REF_ALLOF.definitions!['@enum'] as RJSFSchema),
@@ -651,7 +651,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
                 },
               });
               expect(consoleWarnSpy).toHaveBeenCalledWith(
-                "ignoring oneOf in dependencies because there isn't exactly one subschema that is valid"
+                "ignoring oneOf in dependencies because there isn't exactly one subschema that is valid",
               );
             });
 
@@ -843,7 +843,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         expect(retrieveSchema(testValidator, schema, rootSchema, formData)).toEqual({});
         expect(consoleWarnSpy).toBeCalledWith(
           expect.stringMatching(/could not merge subschemas in allOf/),
-          expect.any(Error)
+          expect.any(Error),
         );
       });
       it('should return allOf and top level schemas when expand all', () => {
@@ -1563,7 +1563,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
     describe('resolveCondition()', () => {
       it('returns both conditions with expandAll', () => {
         expect(
-          resolveCondition(testValidator, SCHEMA_WITH_SINGLE_CONDITION, SCHEMA_WITH_SINGLE_CONDITION, true, [])
+          resolveCondition(testValidator, SCHEMA_WITH_SINGLE_CONDITION, SCHEMA_WITH_SINGLE_CONDITION, true, []),
         ).toEqual([
           {
             type: 'object',

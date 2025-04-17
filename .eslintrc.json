@@ -33,6 +33,7 @@
     "comma-dangle": [
       0
     ],
+    "@typescript-eslint/no-require-imports": "off",
     "@typescript-eslint/no-unused-vars": [
       2,
       {

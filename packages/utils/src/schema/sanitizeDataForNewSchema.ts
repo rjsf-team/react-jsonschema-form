@@ -65,14 +65,14 @@ const NO_VALUE = Symbol('no Value');
 export default function sanitizeDataForNewSchema<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(
   validator: ValidatorType<T, S, F>,
   rootSchema: S,
   newSchema?: S,
   oldSchema?: S,
   data: any = {},
-  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>
+  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
 ): T {
   // By default, we will clear the form data
   let newFormData;
@@ -102,7 +102,7 @@ export default function sanitizeDataForNewSchema<
           oldKeyedSchema,
           rootSchema,
           formValue,
-          experimental_customMergeAllOf
+          experimental_customMergeAllOf,
         );
       }
       if (has(newKeyedSchema, REF_KEY)) {
@@ -111,7 +111,7 @@ export default function sanitizeDataForNewSchema<
           newKeyedSchema,
           rootSchema,
           formValue,
-          experimental_customMergeAllOf
+          experimental_customMergeAllOf,
         );
       }
       // Now get types and see if they are the same
@@ -132,7 +132,7 @@ export default function sanitizeDataForNewSchema<
             newKeyedSchema,
             oldKeyedSchema,
             formValue,
-            experimental_customMergeAllOf
+            experimental_customMergeAllOf,
           );
           if (itemData !== undefined || newSchemaTypeForKey === 'array') {
             // only put undefined values for the array type and not the object type
@@ -187,7 +187,7 @@ export default function sanitizeDataForNewSchema<
           oldSchemaItems as S,
           rootSchema,
           data as T,
-          experimental_customMergeAllOf
+          experimental_customMergeAllOf,
         );
       }
       if (has(newSchemaItems, REF_KEY)) {
@@ -196,7 +196,7 @@ export default function sanitizeDataForNewSchema<
           newSchemaItems as S,
           rootSchema,
           data as T,
-          experimental_customMergeAllOf
+          experimental_customMergeAllOf,
         );
       }
       // Now get types and see if they are the same
@@ -213,7 +213,7 @@ export default function sanitizeDataForNewSchema<
               newSchemaItems as S,
               oldSchemaItems as S,
               aValue,
-              experimental_customMergeAllOf
+              experimental_customMergeAllOf,
             );
             if (itemValue !== undefined && (maxItems < 0 || newValue.length < maxItems)) {
               newValue.push(itemValue);

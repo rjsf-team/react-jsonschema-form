@@ -59,7 +59,7 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
     validator: ValidatorType<T, S, F>,
     rootSchema: S,
     experimental_defaultFormStateBehavior: Experimental_DefaultFormStateBehavior,
-    experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>
+    experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
   ) {
     this.rootSchema = rootSchema;
     this.validator = validator;
@@ -89,7 +89,7 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
     validator: ValidatorType<T, S, F>,
     rootSchema: S,
     experimental_defaultFormStateBehavior = {},
-    experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>
+    experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
   ): boolean {
     if (!validator || !rootSchema) {
       return false;
@@ -119,7 +119,7 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
       schema,
       path,
       formData,
-      this.experimental_customMergeAllOf
+      this.experimental_customMergeAllOf,
     );
   }
 
@@ -141,7 +141,7 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
       fallbackField,
       xxx,
       formData,
-      this.experimental_customMergeAllOf
+      this.experimental_customMergeAllOf,
     );
   }
 
@@ -158,7 +158,7 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
   getDefaultFormState(
     schema: S,
     formData?: T,
-    includeUndefinedValues: boolean | 'excludeObjectChildren' = false
+    includeUndefinedValues: boolean | 'excludeObjectChildren' = false,
   ): T | T[] | undefined {
     return getDefaultFormState<T, S, F>(
       this.validator,
@@ -167,7 +167,7 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
       this.rootSchema,
       includeUndefinedValues,
       this.experimental_defaultFormStateBehavior,
-      this.experimental_customMergeAllOf
+      this.experimental_customMergeAllOf,
     );
   }
 
@@ -186,7 +186,7 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
       uiSchema,
       this.rootSchema,
       globalOptions,
-      this.experimental_customMergeAllOf
+      this.experimental_customMergeAllOf,
     );
   }
 
@@ -207,7 +207,7 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
     formData: T | undefined,
     options: S[],
     selectedOption?: number,
-    discriminatorField?: string
+    discriminatorField?: string,
   ): number {
     return getClosestMatchingOption<T, S, F>(
       this.validator,
@@ -216,7 +216,7 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
       options,
       selectedOption,
       discriminatorField,
-      this.experimental_customMergeAllOf
+      this.experimental_customMergeAllOf,
     );
   }
 
@@ -265,7 +265,7 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
       path,
       // @ts-expect-error TS2769: No overload matches this call
       defaultValue,
-      this.experimental_customMergeAllOf
+      this.experimental_customMergeAllOf,
     );
   }
 
@@ -326,7 +326,7 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
       schema,
       this.rootSchema,
       rawFormData,
-      this.experimental_customMergeAllOf
+      this.experimental_customMergeAllOf,
     );
   }
 
@@ -348,7 +348,7 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
       newSchema,
       oldSchema,
       data,
-      this.experimental_customMergeAllOf
+      this.experimental_customMergeAllOf,
     );
   }
 
@@ -370,7 +370,7 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
       formData,
       idPrefix,
       idSeparator,
-      this.experimental_customMergeAllOf
+      this.experimental_customMergeAllOf,
     );
   }
 
@@ -388,7 +388,7 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
       name,
       this.rootSchema,
       formData,
-      this.experimental_customMergeAllOf
+      this.experimental_customMergeAllOf,
     );
   }
 }
@@ -405,17 +405,17 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
 export default function createSchemaUtils<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(
   validator: ValidatorType<T, S, F>,
   rootSchema: S,
   experimental_defaultFormStateBehavior = {},
-  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>
+  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
 ): SchemaUtilsType<T, S, F> {
   return new SchemaUtils<T, S, F>(
     validator,
     rootSchema,
     experimental_defaultFormStateBehavior,
-    experimental_customMergeAllOf
+    experimental_customMergeAllOf,
   );
 }

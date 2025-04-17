@@ -23,14 +23,14 @@ const gridStyle = (vertical: boolean) => ({
 export default function ArrayFieldItemTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(props: ArrayFieldItemTemplateType<T, S, F>) {
   const { children, buttonsProps, hasToolbar, uiSchema, registry } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const ArrayFieldItemButtonsTemplate = getTemplate<'ArrayFieldItemButtonsTemplate', T, S, F>(
     'ArrayFieldItemButtonsTemplate',
     registry,
-    uiOptions
+    uiOptions,
   );
   // Pull the semantic props out of the uiOptions that were put in via the ArrayFieldTemplate
   const { horizontalButtons = true, wrapItem = false } = uiOptions.semantic as GenericObjectType;

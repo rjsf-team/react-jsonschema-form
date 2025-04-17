@@ -25,7 +25,7 @@ const SELECT_STYLE = {
 export default function SelectWidget<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >({
   autofocus,
   disabled,

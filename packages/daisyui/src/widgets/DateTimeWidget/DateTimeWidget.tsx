@@ -158,7 +158,7 @@ const MemoizedDateTimePickerPopup = memo(DateTimePickerPopup);
 export default function DateTimeWidget<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(props: WidgetProps<T, S, F>) {
   const { id, value, onChange, onFocus, onBlur, schema } = props;
   // Initialize the local date from the parent's value.
@@ -206,7 +206,7 @@ export default function DateTimeWidget<
         setLocalDate(date);
       }
     },
-    [localDate]
+    [localDate],
   );
 
   // Update local state on time change.
@@ -219,7 +219,7 @@ export default function DateTimeWidget<
         setLocalDate(newDate);
       }
     },
-    [localDate]
+    [localDate],
   );
 
   // Toggle popup visibility.
@@ -231,7 +231,7 @@ export default function DateTimeWidget<
         onFocus(id, value);
       }
     },
-    [isOpen, id, onFocus, setIsOpen, value]
+    [isOpen, id, onFocus, setIsOpen, value],
   );
 
   // Handle focus event
@@ -255,7 +255,7 @@ export default function DateTimeWidget<
         togglePicker(e as unknown as React.MouseEvent);
       }
     },
-    [togglePicker]
+    [togglePicker],
   );
 
   // Prevent event propagation for popup container

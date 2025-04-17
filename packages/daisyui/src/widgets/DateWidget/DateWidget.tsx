@@ -134,7 +134,7 @@ const MemoizedDatePickerPopup = memo(DatePickerPopup);
  * @param props - The `WidgetProps` for this component
  */
 export default function DateWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: WidgetProps<T, S, F>
+  props: WidgetProps<T, S, F>,
 ) {
   const { id, value, onChange, onFocus, onBlur, schema } = props;
   // Initialize the local date from the parent's value.
@@ -290,7 +290,7 @@ export default function DateWidget<T = any, S extends StrictRJSFSchema = RJSFSch
 
       // Position calculation will happen in the effect hook
     },
-    [isOpen, id, onFocus, setIsOpen, value]
+    [isOpen, id, onFocus, setIsOpen, value],
   );
 
   // Handle focus event

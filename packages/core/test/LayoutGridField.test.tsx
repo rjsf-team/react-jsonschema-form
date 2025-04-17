@@ -673,7 +673,7 @@ function getExpectedPropsForField(
   props: Partial<FieldProps>,
   field: string,
   otherProps: GenericObjectType = {},
-  otherUiProps: GenericObjectType = {}
+  otherUiProps: GenericObjectType = {},
 ) {
   const { schemaUtils } = props.registry!;
   let { required } = props;
@@ -809,7 +809,7 @@ describe('LayoutGridField', () => {
   describe('LayoutGridField.findChildrenAndProps()', () => {
     test('throws TypeError when children is not an array', () => {
       expect(() => LayoutGridField.findChildrenAndProps({}, GridType.ROW, registry)).toThrow(
-        new TypeError('Expected array for "ui:row" in {}')
+        new TypeError('Expected array for "ui:row" in {}'),
       );
     });
     test('returns the children array and empty grid props for the row', () => {
@@ -824,7 +824,7 @@ describe('LayoutGridField', () => {
         gridProps: { className: LOOKUP_MAP[TEST_LAYOUT_GRID_CHILDREN[GridType.COLUMN].className] },
       };
       expect(LayoutGridField.findChildrenAndProps(TEST_LAYOUT_GRID_CHILDREN, GridType.COLUMN, registry)).toEqual(
-        expectedResult
+        expectedResult,
       );
     });
     test('returns the children array and expected looked up className values in grid props for the condition', () => {
@@ -835,7 +835,7 @@ describe('LayoutGridField', () => {
         gridProps: { ...omit(TEST_LAYOUT_GRID_CHILDREN[GridType.CONDITION], ['children']), className },
       };
       expect(LayoutGridField.findChildrenAndProps(TEST_LAYOUT_GRID_CHILDREN, GridType.CONDITION, registry)).toEqual(
-        expectedResult
+        expectedResult,
       );
     });
   });
@@ -862,14 +862,14 @@ describe('LayoutGridField', () => {
     });
     test('returns no schema or options when name is empty string', () => {
       expect(LayoutGridField.getSchemaDetailsForField(registry.schemaUtils, '', {}, {}, ID_SCHEMA)).toEqual(
-        NO_SCHEMA_OR_OPTIONS
+        NO_SCHEMA_OR_OPTIONS,
       );
       expect(retrieveSchemaSpy).toHaveBeenCalledTimes(1);
       expect(toIdSchemaSpy).not.toHaveBeenCalled();
     });
     test('returns no schema or options when schema is empty', () => {
       expect(LayoutGridField.getSchemaDetailsForField(registry.schemaUtils, 'name', {}, {}, ID_SCHEMA)).toEqual(
-        NO_SCHEMA_OR_OPTIONS
+        NO_SCHEMA_OR_OPTIONS,
       );
       expect(retrieveSchemaSpy).toHaveBeenCalledTimes(1);
       expect(toIdSchemaSpy).not.toHaveBeenCalled();
@@ -897,8 +897,8 @@ describe('LayoutGridField', () => {
           'path.is.bad', // Need two bad paths, plus a bad leaf for test coverage
           SAMPLE_SCHEMA,
           {},
-          SAMPLE_SCHEMA_ID_SCHEMA
-        )
+          SAMPLE_SCHEMA_ID_SCHEMA,
+        ),
       ).toEqual({ ...NO_SCHEMA_OR_OPTIONS, idSchema: {} }); // `path` digs into `idSchema`
       expect(retrieveSchemaSpy).toHaveBeenCalledTimes(3);
       expect(toIdSchemaSpy).not.toHaveBeenCalled();
@@ -910,8 +910,8 @@ describe('LayoutGridField', () => {
           'ignored',
           SAMPLE_SCHEMA,
           {},
-          SAMPLE_SCHEMA_ID_SCHEMA
-        )
+          SAMPLE_SCHEMA_ID_SCHEMA,
+        ),
       ).toEqual({ ...NO_SCHEMA_OR_OPTIONS, idSchema: {} }); // `path` digs into `idSchema`
       expect(retrieveSchemaSpy).toHaveBeenCalledTimes(1);
       expect(toIdSchemaSpy).not.toHaveBeenCalled();
@@ -922,7 +922,7 @@ describe('LayoutGridField', () => {
         validator,
         get(SAMPLE_SCHEMA, [PROPERTIES_KEY, path]) as RJSFSchema,
         SAMPLE_SCHEMA,
-        {}
+        {},
       );
       expect(
         LayoutGridField.getSchemaDetailsForField(
@@ -930,8 +930,8 @@ describe('LayoutGridField', () => {
           path,
           SAMPLE_SCHEMA,
           {},
-          SAMPLE_SCHEMA_ID_SCHEMA
-        )
+          SAMPLE_SCHEMA_ID_SCHEMA,
+        ),
       ).toEqual({
         schema,
         isRequired: true,
@@ -972,8 +972,8 @@ describe('LayoutGridField', () => {
           SIMPLE_ONEOF,
           formData,
           initialIdSchema,
-          idSeparator
-        )
+          idSeparator,
+        ),
       ).toEqual({
         schema,
         isRequired: false,
@@ -987,7 +987,7 @@ describe('LayoutGridField', () => {
         initialIdSchema[ID_KEY],
         formData,
         initialIdSchema[ID_KEY],
-        idSeparator
+        idSeparator,
       );
     });
   });
@@ -1016,8 +1016,8 @@ describe('LayoutGridField', () => {
           path,
           GRID_FORM_SCHEMA,
           {},
-          GRID_FORM_ID_SCHEMA
-        )
+          GRID_FORM_ID_SCHEMA,
+        ),
       ).toEqual({
         schema,
         isRequired: false,
@@ -1034,7 +1034,7 @@ describe('LayoutGridField', () => {
       const schema: RJSFSchema = gridFormSchemaRegistry.schemaUtils.getFromSchema(
         GRID_FORM_SCHEMA,
         [DEFINITIONS_KEY, 'Location', PROPERTIES_KEY, 'state'],
-        {}
+        {},
       );
       expect(
         LayoutGridField.getSchemaDetailsForField(
@@ -1042,8 +1042,8 @@ describe('LayoutGridField', () => {
           path,
           GRID_FORM_SCHEMA,
           formData,
-          GRID_FORM_ID_SCHEMA
-        )
+          GRID_FORM_ID_SCHEMA,
+        ),
       ).toEqual({
         schema,
         isRequired: true,
@@ -1054,13 +1054,13 @@ describe('LayoutGridField', () => {
       const subschemaSchema = gridFormSchemaRegistry.schemaUtils.getFromSchema(
         GRID_FORM_SCHEMA,
         [PROPERTIES_KEY, 'employment'],
-        {}
+        {},
       );
       expect(findSelectedOptionInXxxOf).toHaveBeenCalledWith(
         subschemaSchema,
         path.split('.')[1],
         ONE_OF_KEY,
-        formData.employment
+        formData.employment,
       );
       expect(toIdSchemaSpy).toHaveBeenCalledTimes(1);
     });
@@ -1090,8 +1090,8 @@ describe('LayoutGridField', () => {
           path,
           readonlySchema,
           {},
-          READONLY_ID_SCHEMA
-        )
+          READONLY_ID_SCHEMA,
+        ),
       ).toEqual({
         schema,
         isRequired: false,
@@ -1111,8 +1111,8 @@ describe('LayoutGridField', () => {
           path,
           readonlySchema,
           {},
-          READONLY_ID_SCHEMA
-        )
+          READONLY_ID_SCHEMA,
+        ),
       ).toEqual({
         schema,
         isRequired: false,
@@ -1132,8 +1132,8 @@ describe('LayoutGridField', () => {
           path,
           readonlySchema,
           {},
-          READONLY_ID_SCHEMA
-        )
+          READONLY_ID_SCHEMA,
+        ),
       ).toEqual({
         schema,
         isRequired: false,
@@ -1154,8 +1154,8 @@ describe('LayoutGridField', () => {
           path,
           readonlySchema,
           {},
-          READONLY_ID_SCHEMA
-        )
+          READONLY_ID_SCHEMA,
+        ),
       ).toEqual({
         schema,
         isRequired: true,
@@ -1400,7 +1400,7 @@ describe('LayoutGridField', () => {
     render(<LayoutGridField {...props} {...otherProps} />);
     const field = screen.getByTestId(LayoutGridField.TEST_IDS.layoutMultiSchemaField);
     expect(field).toHaveTextContent(
-      stringifyProps(getExpectedPropsForField(props, fieldName, otherProps, otherUIProps))
+      stringifyProps(getExpectedPropsForField(props, fieldName, otherProps, otherUIProps)),
     );
   });
   test('renderField via object explicit readonlySchema, and uiSchema readonly override', () => {

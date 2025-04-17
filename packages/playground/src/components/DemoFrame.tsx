@@ -60,7 +60,7 @@ export default function DemoFrame(props: DemoFrameProps) {
         contentWindow: ref ? ref.node.contentWindow : null,
       };
     },
-    [instanceRef]
+    [instanceRef],
   );
 
   const onContentDidMount = useCallback(() => {
@@ -70,7 +70,7 @@ export default function DemoFrame(props: DemoFrameProps) {
         key: 'css',
         prepend: true,
         container: instanceRef.current.contentWindow['demo-frame-jss'],
-      })
+      }),
     );
     setContainer(instanceRef.current.contentDocument.body);
     setWindow(() => instanceRef.current.contentWindow);

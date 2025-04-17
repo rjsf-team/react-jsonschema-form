@@ -10,7 +10,7 @@ describe('toDateString()', () => {
         hour: 14,
         minute: 1,
         second: 30,
-      })
+      }),
     ).toEqual('2016-04-05T14:01:30.000Z');
   });
 
@@ -22,8 +22,8 @@ describe('toDateString()', () => {
           month: 4,
           day: 5,
         },
-        false
-      )
+        false,
+      ),
     ).toEqual('2016-04-05');
   });
 });

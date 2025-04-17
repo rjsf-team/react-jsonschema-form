@@ -69,7 +69,7 @@ const widgetMap: { [k: string]: { [j: string]: string } } = {
  * @returns - The wrapper widget
  */
 function mergeWidgetOptions<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  AWidget: Widget<T, S, F>
+  AWidget: Widget<T, S, F>,
 ) {
   let MergedWidget: Widget<T, S, F> | undefined = get(AWidget, 'MergedWidget');
   // cache return value as property of widget for proper react reconciliation
@@ -97,7 +97,7 @@ function mergeWidgetOptions<T = any, S extends StrictRJSFSchema = RJSFSchema, F 
 export default function getWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   schema: RJSFSchema,
   widget?: Widget<T, S, F> | string,
-  registeredWidgets: RegistryWidgetsType<T, S, F> = {}
+  registeredWidgets: RegistryWidgetsType<T, S, F> = {},
 ): Widget<T, S, F> {
   const type = getSchemaType(schema);
 

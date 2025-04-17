@@ -17,7 +17,7 @@ import AJV8PrecompiledValidator from './precompiledValidator';
 export default function createPrecompiledValidator<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(validateFns: ValidatorFunctions, rootSchema: S, localizer?: Localizer): ValidatorType<T, S, F> {
   return new AJV8PrecompiledValidator<T, S, F>(validateFns, rootSchema, localizer);
 }

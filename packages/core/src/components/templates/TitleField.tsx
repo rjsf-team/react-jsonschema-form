@@ -7,7 +7,7 @@ const REQUIRED_FIELD_SYMBOL = '*';
  * @param props - The `TitleFieldProps` for this component
  */
 export default function TitleField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: TitleFieldProps<T, S, F>
+  props: TitleFieldProps<T, S, F>,
 ) {
   const { id, title, required } = props;
   return (

@@ -11,7 +11,7 @@ import { ErrorSchema, GenericObjectType, RJSFValidationError } from './types';
  */
 export default function toErrorList<T = any>(
   errorSchema?: ErrorSchema<T>,
-  fieldPath: string[] = []
+  fieldPath: string[] = [],
 ): RJSFValidationError[] {
   if (!errorSchema) {
     return [];
@@ -26,7 +26,7 @@ export default function toErrorList<T = any>(
           message,
           stack: `${property} ${message}`,
         };
-      })
+      }),
     );
   }
   return Object.keys(errorSchema).reduce((acc, key) => {

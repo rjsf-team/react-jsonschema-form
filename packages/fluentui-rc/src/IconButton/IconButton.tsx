@@ -5,7 +5,7 @@ import { FormContextType, IconButtonProps, RJSFSchema, StrictRJSFSchema, Transla
 export default function FluentIconButton<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(props: IconButtonProps<T, S, F>) {
   const { color, uiSchema, registry, ...otherProps } = props;
 
@@ -13,7 +13,7 @@ export default function FluentIconButton<
 }
 
 export function CopyButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: IconButtonProps<T, S, F>
+  props: IconButtonProps<T, S, F>,
 ) {
   const {
     registry: { translateString },
@@ -28,7 +28,7 @@ export function CopyButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
 }
 
 export function MoveDownButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: IconButtonProps<T, S, F>
+  props: IconButtonProps<T, S, F>,
 ) {
   const {
     registry: { translateString },
@@ -43,7 +43,7 @@ export function MoveDownButton<T = any, S extends StrictRJSFSchema = RJSFSchema,
 }
 
 export function MoveUpButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: IconButtonProps<T, S, F>
+  props: IconButtonProps<T, S, F>,
 ) {
   const {
     registry: { translateString },
@@ -58,7 +58,7 @@ export function MoveUpButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F
 }
 
 export function RemoveButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: IconButtonProps<T, S, F>
+  props: IconButtonProps<T, S, F>,
 ) {
   const {
     registry: { translateString },

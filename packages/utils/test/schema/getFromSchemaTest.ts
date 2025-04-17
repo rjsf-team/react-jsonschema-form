@@ -79,9 +79,9 @@ export default function getFromSchemaTest(testValidator: TestValidatorType) {
       const field = schemaUtils.getFromSchema(
         testSchema,
         [PROPERTIES_KEY, 'patient', PROPERTIES_KEY, 'telecom', PROPERTIES_KEY, 'phone', PROPERTIES_KEY, 'number'].join(
-          '.'
+          '.',
         ),
-        undefined
+        undefined,
       );
       expect(field).toEqual(SCHEMA_DEFINITIONS.Phone[PROPERTIES_KEY].number);
     });

@@ -21,13 +21,13 @@ import getOptionMatchingSimpleDiscriminator from '../getOptionMatchingSimpleDisc
 export default function getMatchingOption<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(
   validator: ValidatorType<T, S, F>,
   formData: T | undefined,
   options: S[],
   rootSchema: S,
-  discriminatorField?: string
+  discriminatorField?: string,
 ): number {
   // For performance, skip validating subschemas if formData is undefined. We just
   // want to get the first option in that case.

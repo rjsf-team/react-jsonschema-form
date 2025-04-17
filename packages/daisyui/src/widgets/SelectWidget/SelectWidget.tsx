@@ -23,7 +23,7 @@ import {
 export default function SelectWidget<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >({
   schema,
   id,
@@ -76,11 +76,11 @@ export default function SelectWidget<
         onChange(
           isEnumeratedObject
             ? enumOptions[index].value
-            : enumOptionsValueForIndex<S>(String(index), enumOptions, optEmptyVal)
+            : enumOptionsValueForIndex<S>(String(index), enumOptions, optEmptyVal),
         );
       }
     },
-    [value, multiple, isEnumeratedObject, enumOptions, optEmptyVal, onChange]
+    [value, multiple, isEnumeratedObject, enumOptions, optEmptyVal, onChange],
   );
 
   const _onBlur = useCallback(
@@ -90,7 +90,7 @@ export default function SelectWidget<
         onBlur(id, enumOptionsValueForIndex<S>(dataValue, enumOptions, optEmptyVal));
       }
     },
-    [onBlur, id, enumOptions, optEmptyVal]
+    [onBlur, id, enumOptions, optEmptyVal],
   );
 
   const _onFocus = useCallback(
@@ -100,7 +100,7 @@ export default function SelectWidget<
         onFocus(id, enumOptionsValueForIndex<S>(dataValue, enumOptions, optEmptyVal));
       }
     },
-    [onFocus, id, enumOptions, optEmptyVal]
+    [onFocus, id, enumOptions, optEmptyVal],
   );
 
   const selectedIndexes = enumOptionsIndexForValue<S>(value, enumOptions, multiple);

@@ -31,7 +31,7 @@ const useStyles = makeStyles({
 export default function BaseInputTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(props: BaseInputTemplateProps<T, S, F>) {
   const {
     id,
@@ -64,7 +64,7 @@ export default function BaseInputTemplate<
         <Label htmlFor={id} required={required} disabled={disabled} className={classes.label}>
           {label}
         </Label>,
-        hideLabel
+        hideLabel,
       )}
       <Input
         id={id}

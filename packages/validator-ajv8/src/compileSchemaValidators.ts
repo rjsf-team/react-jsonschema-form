@@ -20,7 +20,7 @@ export { compileSchemaValidatorsCode };
 export default function compileSchemaValidators<S extends StrictRJSFSchema = RJSFSchema>(
   schema: S,
   output: string,
-  options: CustomValidatorOptionsType = {}
+  options: CustomValidatorOptionsType = {},
 ) {
   console.log('parsing the schema');
 

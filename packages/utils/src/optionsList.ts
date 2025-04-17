@@ -22,7 +22,7 @@ import { RJSFSchema, EnumOptionsType, StrictRJSFSchema, FormContextType, UiSchem
  */
 export default function optionsList<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   schema: S,
-  uiSchema?: UiSchema<T, S, F>
+  uiSchema?: UiSchema<T, S, F>,
 ): EnumOptionsType<S>[] | undefined {
   const schemaWithEnumNames = schema as S & { enumNames?: string[] };
   if (schema.enum) {
@@ -36,7 +36,7 @@ export default function optionsList<T = any, S extends StrictRJSFSchema = RJSFSc
       // Cast the type to include enumNames so the feature still works.
       if (process.env.NODE_ENV !== 'production') {
         console.warn(
-          'The "enumNames" property in the schema is deprecated and will be removed in a future major release. Use the "ui:enumNames" property in the uiSchema instead.'
+          'The "enumNames" property in the schema is deprecated and will be removed in a future major release. Use the "ui:enumNames" property in the uiSchema instead.',
         );
       }
       enumNames = schemaWithEnumNames.enumNames;

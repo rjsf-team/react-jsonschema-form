@@ -15,7 +15,7 @@ import { getChakra } from '../utils';
 import { OptionsOrGroups, Select } from 'chakra-react-select';
 
 export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: WidgetProps<T, S, F>
+  props: WidgetProps<T, S, F>,
 ) {
   const {
     id,
@@ -46,8 +46,8 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
           return v.value;
         }),
         enumOptions,
-        emptyValue
-      )
+        emptyValue,
+      ),
     );
   };
 
@@ -112,7 +112,7 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
         <FormLabel htmlFor={id} id={`${id}-label`}>
           {label}
         </FormLabel>,
-        hideLabel || !label
+        hideLabel || !label,
       )}
       <Select
         inputId={id}

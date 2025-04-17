@@ -11,7 +11,7 @@ import Form from 'react-bootstrap/Form';
 export default function FieldTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >({
   id,
   children,
@@ -38,7 +38,7 @@ export default function FieldTemplate<
   const WrapIfAdditionalTemplate = getTemplate<'WrapIfAdditionalTemplate', T, S, F>(
     'WrapIfAdditionalTemplate',
     registry,
-    uiOptions
+    uiOptions,
   );
   if (hidden) {
     return <div className='hidden'>{children}</div>;

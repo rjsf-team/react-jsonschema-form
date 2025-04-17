@@ -10,7 +10,7 @@ export default function getTestRegistry(
   fields: Registry['fields'] = {},
   templates: Partial<Registry['templates']> = {},
   widgets: Registry['widgets'] = {},
-  formContext: Registry['formContext'] = {}
+  formContext: Registry['formContext'] = {},
 ): Registry {
   const defaults = getDefaultRegistry();
   const schemaUtils = createSchemaUtils(validator, rootSchema);

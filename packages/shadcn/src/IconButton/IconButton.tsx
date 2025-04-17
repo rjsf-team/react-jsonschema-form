@@ -11,7 +11,7 @@ import { Button, ButtonProps } from '../components/ui/button';
  * @param props - The combined props from RJSF IconButtonProps and Shadcn ButtonProps, including icon and event handlers
  */
 export default function IconButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: IconButtonProps<T, S, F> & ButtonProps
+  props: IconButtonProps<T, S, F> & ButtonProps,
 ) {
   const { icon, iconType, className, uiSchema, registry, ...otherProps } = props;
   return (
@@ -28,7 +28,7 @@ export default function IconButton<T = any, S extends StrictRJSFSchema = RJSFSch
  * @param props - The RJSF icon button properties, including registry for translations and event handlers
  */
 export function CopyButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: IconButtonProps<T, S, F>
+  props: IconButtonProps<T, S, F>,
 ) {
   const {
     registry: { translateString },
@@ -45,7 +45,7 @@ export function CopyButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
  * @param props - The RJSF icon button properties, including registry for translations and event handlers
  */
 export function MoveDownButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: IconButtonProps<T, S, F>
+  props: IconButtonProps<T, S, F>,
 ) {
   const {
     registry: { translateString },
@@ -66,7 +66,7 @@ export function MoveDownButton<T = any, S extends StrictRJSFSchema = RJSFSchema,
  * @param props - The RJSF icon button properties, including registry for translations and event handlers
  */
 export function MoveUpButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: IconButtonProps<T, S, F>
+  props: IconButtonProps<T, S, F>,
 ) {
   const {
     registry: { translateString },
@@ -88,7 +88,7 @@ export function MoveUpButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F
  * @param props - The RJSF icon button properties, including registry for translations and event handlers
  */
 export function RemoveButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: IconButtonProps<T, S, F>
+  props: IconButtonProps<T, S, F>,
 ) {
   const {
     registry: { translateString },

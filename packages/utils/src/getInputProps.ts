@@ -12,12 +12,12 @@ import { FormContextType, InputPropsType, RJSFSchema, StrictRJSFSchema, UIOption
 export default function getInputProps<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(
   schema: RJSFSchema,
   defaultType?: string,
   options: UIOptionsType<T, S, F> = {},
-  autoDefaultStepAny = true
+  autoDefaultStepAny = true,
 ): InputPropsType {
   const inputProps: InputPropsType = {
     type: defaultType || 'text',

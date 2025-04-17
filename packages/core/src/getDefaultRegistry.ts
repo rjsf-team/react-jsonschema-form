@@ -11,7 +11,7 @@ import widgets from './components/widgets';
 export default function getDefaultRegistry<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(): Omit<Registry<T, S, F>, 'schemaUtils'> {
   return {
     fields: fields<T, S, F>(),

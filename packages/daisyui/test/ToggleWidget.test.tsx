@@ -17,7 +17,7 @@ describe('ToggleWidget', () => {
           {...makeWidgetMockProps({
             label: 'Custom Toggle Label',
           })}
-        />
+        />,
       )
       .toJSON();
     expect(tree).toMatchSnapshot();
@@ -30,7 +30,7 @@ describe('ToggleWidget', () => {
           {...makeWidgetMockProps({
             disabled: true,
           })}
-        />
+        />,
       )
       .toJSON();
     expect(tree).toMatchSnapshot();
@@ -44,7 +44,7 @@ describe('ToggleWidget', () => {
           onChange,
           value: false,
         })}
-      />
+      />,
     );
 
     const toggle = getByRole('checkbox');
@@ -59,7 +59,7 @@ describe('ToggleWidget', () => {
         {...makeWidgetMockProps({
           value: true,
         })}
-      />
+      />,
     );
 
     const toggle = getByRole('checkbox');

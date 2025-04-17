@@ -20,7 +20,7 @@ export type SemanticPropsTypes<T = any, S extends StrictRJSFSchema = RJSFSchema,
 export type SemanticErrorPropsType<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 > = {
   formContext?: F;
   uiSchema?: UiSchema<T, S, F>;
@@ -61,7 +61,7 @@ export function getSemanticProps<T = any, S extends StrictRJSFSchema = RJSFSchem
     { ...defaultContextProps },
     schemaProps,
     optionProps,
-    formContextProps
+    formContextProps,
   );
 }
 
@@ -77,7 +77,7 @@ export function getSemanticProps<T = any, S extends StrictRJSFSchema = RJSFSchem
 export function getSemanticErrorProps<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >({
   formContext = {} as F,
   uiSchema = {},

@@ -15,7 +15,7 @@ import { WidgetProps, StrictRJSFSchema, RJSFSchema, FormContextType } from '@rjs
 export default function CheckboxWidget<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(props: WidgetProps<T, S, F>) {
   const { id, value, required, disabled, readonly, onChange, onFocus, onBlur } = props;
 
@@ -43,7 +43,7 @@ export default function CheckboxWidget<
     (event: React.ChangeEvent<HTMLInputElement>) => {
       onChange(event.target.checked);
     },
-    [onChange]
+    [onChange],
   );
 
   // Don't display the label here since the FieldTemplate already handles it

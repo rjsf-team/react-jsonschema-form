@@ -269,7 +269,7 @@ export interface IChangeEvent<T = any, S extends StrictRJSFSchema = RJSFSchema, 
 export default class Form<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 > extends Component<FormProps<T, S, F>, FormState<T, S, F>> {
   /** The ref used to hold the `form` element, this needs to be `any` because `tagName` or `_internalFormWrapper` can
    * provide any possible type here
@@ -316,7 +316,7 @@ export default class Form<
    */
   getSnapshotBeforeUpdate(
     prevProps: FormProps<T, S, F>,
-    prevState: FormState<T, S, F>
+    prevState: FormState<T, S, F>,
   ): { nextState: FormState<T, S, F>; shouldUpdate: true } | { shouldUpdate: false } {
     if (!deepEquals(this.props, prevProps)) {
       const formDataChangedFields = getChangedFields(this.props.formData, prevProps.formData);
@@ -333,7 +333,7 @@ export default class Form<
         //  match one of the subSchemas, the retrieved schema must be updated.
         isSchemaChanged || isFormDataChanged ? undefined : this.state.retrievedSchema,
         isSchemaChanged,
-        formDataChangedFields
+        formDataChangedFields,
       );
       const shouldUpdate = !deepEquals(nextState, prevState);
       return { nextState, shouldUpdate };
@@ -359,7 +359,7 @@ export default class Form<
   componentDidUpdate(
     _: FormProps<T, S, F>,
     prevState: FormState<T, S, F>,
-    snapshot: { nextState: FormState<T, S, F>; shouldUpdate: true } | { shouldUpdate: false }
+    snapshot: { nextState: FormState<T, S, F>; shouldUpdate: true } | { shouldUpdate: false },
   ) {
     if (snapshot.shouldUpdate) {
       const { nextState } = snapshot;
@@ -391,7 +391,7 @@ export default class Form<
     inputFormData?: T,
     retrievedSchema?: S,
     isSchemaChanged = false,
-    formDataChangedFields: string[] = []
+    formDataChangedFields: string[] = [],
   ): FormState<T, S, F> {
     const state: FormState<T, S, F> = this.state || {};
     const schema = 'schema' in props ? props.schema : this.props.schema;
@@ -415,19 +415,19 @@ export default class Form<
         props.validator,
         rootSchema,
         experimental_defaultFormStateBehavior,
-        experimental_customMergeAllOf
+        experimental_customMergeAllOf,
       )
     ) {
       schemaUtils = createSchemaUtils<T, S, F>(
         props.validator,
         rootSchema,
         experimental_defaultFormStateBehavior,
-        experimental_customMergeAllOf
+        experimental_customMergeAllOf,
       );
     }
     const formData: T = schemaUtils.getDefaultFormState(schema, inputFormData) as T;
     const _retrievedSchema = this.updateRetrievedSchema(
-      retrievedSchema ?? schemaUtils.retrieveSchema(schema, formData)
+      retrievedSchema ?? schemaUtils.retrieveSchema(schema, formData),
     );
 
     const getCurrentErrors = (): ValidationData<T> => {
@@ -461,7 +461,7 @@ export default class Form<
         errorSchema = mergeObjects(
           this.state?.errorSchema,
           schemaValidation.errorSchema,
-          'preventDuplicates'
+          'preventDuplicates',
         ) as ErrorSchema<T>;
       }
       schemaValidationErrors = errors;
@@ -471,14 +471,17 @@ export default class Form<
       errors = currentErrors.errors;
       errorSchema = currentErrors.errorSchema;
       if (formDataChangedFields.length > 0) {
-        const newErrorSchema = formDataChangedFields.reduce((acc, key) => {
-          acc[key] = undefined;
-          return acc;
-        }, {} as Record<string, undefined>);
+        const newErrorSchema = formDataChangedFields.reduce(
+          (acc, key) => {
+            acc[key] = undefined;
+            return acc;
+          },
+          {} as Record<string, undefined>,
+        );
         errorSchema = schemaValidationErrorSchema = mergeObjects(
           currentErrors.errorSchema,
           newErrorSchema,
-          'preventDuplicates'
+          'preventDuplicates',
         ) as ErrorSchema<T>;
       }
     }
@@ -493,7 +496,7 @@ export default class Form<
       uiSchema['ui:rootFieldId'],
       formData,
       props.idPrefix,
-      props.idSeparator
+      props.idSeparator,
     );
     const nextState: FormState<T, S, F> = {
       schemaUtils,
@@ -548,7 +551,7 @@ export default class Form<
     formData: T | undefined,
     schema = this.props.schema,
     altSchemaUtils?: SchemaUtilsType<T, S, F>,
-    retrievedSchema?: S
+    retrievedSchema?: S,
   ): ValidationData<T> {
     const schemaUtils = altSchemaUtils ? altSchemaUtils : this.state.schemaUtils;
     const { customValidate, transformErrors, uiSchema } = this.props;
@@ -866,7 +869,7 @@ export default class Form<
           if (onSubmit) {
             onSubmit({ ...this.state, formData: newFormData, status: 'submitted' }, event);
           }
-        }
+        },
       );
     }
   };
@@ -981,7 +984,7 @@ export default class Form<
           } else {
             console.error('Form validation failed', errors);
           }
-        }
+        },
       );
     } else if (prevErrors.length > 0) {
       this.setState({

@@ -278,21 +278,21 @@ export default function Header({
       setSubtheme(subtheme);
       setStylesheet(stylesheet);
     },
-    [setSubtheme, setStylesheet]
+    [setSubtheme, setStylesheet],
   );
 
   const onValidatorSelected = useCallback(
     (validator: string) => {
       setValidator(validator);
     },
-    [setValidator]
+    [setValidator],
   );
 
   const handleSetLiveSettings = useCallback(
     ({ formData }: IChangeEvent) => {
       setLiveSettings((previousLiveSettings) => ({ ...previousLiveSettings, ...formData }));
     },
-    [setLiveSettings]
+    [setLiveSettings],
   );
 
   const onShare = useCallback(() => {
@@ -310,7 +310,7 @@ export default function Header({
           liveSettings,
           validator,
           sampleName,
-        })
+        }),
       );
 
       setShareURL(`${origin}${pathname}#${hash}`);

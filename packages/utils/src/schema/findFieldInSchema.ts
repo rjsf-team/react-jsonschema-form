@@ -32,14 +32,14 @@ export const NOT_FOUND_SCHEMA = { title: '!@#$_UNKNOWN_$#@!' };
 export default function findFieldInSchema<
   T = undefined,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(
   validator: ValidatorType<T, S, F>,
   rootSchema: S,
   schema: S,
   path: string | string[],
   formData: T = {} as T,
-  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>
+  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
 ): FoundFieldType<S> {
   const pathList = Array.isArray(path) ? [...path] : path.split('.');
   let parentField = schema;
@@ -56,7 +56,7 @@ export default function findFieldInSchema<
         parentField,
         [PROPERTIES_KEY, subPath],
         {} as S,
-        experimental_customMergeAllOf
+        experimental_customMergeAllOf,
       );
       if (has(parentField, ONE_OF_KEY)) {
         // if this sub-path has a `oneOf` then use the formData to drill into the schema with the selected option
@@ -67,7 +67,7 @@ export default function findFieldInSchema<
           fieldName,
           ONE_OF_KEY,
           get(formData, subPath),
-          experimental_customMergeAllOf
+          experimental_customMergeAllOf,
         )!;
       } else if (has(parentField, ANY_OF_KEY)) {
         // if this sub-path has a `anyOf` then use the formData to drill into the schema with the selected option
@@ -78,7 +78,7 @@ export default function findFieldInSchema<
           fieldName,
           ANY_OF_KEY,
           get(formData, subPath),
-          experimental_customMergeAllOf
+          experimental_customMergeAllOf,
         )!;
       }
     });
@@ -93,7 +93,7 @@ export default function findFieldInSchema<
       fieldName,
       ONE_OF_KEY,
       formData,
-      experimental_customMergeAllOf
+      experimental_customMergeAllOf,
     )!;
   } else if (has(parentField, ANY_OF_KEY)) {
     // When anyOf is in the root schema, use the formData to drill into the schema with the selected option
@@ -104,7 +104,7 @@ export default function findFieldInSchema<
       fieldName,
       ANY_OF_KEY,
       formData,
-      experimental_customMergeAllOf
+      experimental_customMergeAllOf,
     )!;
   }
 
@@ -115,7 +115,7 @@ export default function findFieldInSchema<
     parentField,
     [PROPERTIES_KEY, fieldName],
     NOT_FOUND_SCHEMA as S,
-    experimental_customMergeAllOf
+    experimental_customMergeAllOf,
   );
   if (field === NOT_FOUND_SCHEMA) {
     field = undefined;
@@ -127,7 +127,7 @@ export default function findFieldInSchema<
     parentField,
     REQUIRED_KEY,
     [] as T,
-    experimental_customMergeAllOf
+    experimental_customMergeAllOf,
   );
   let isRequired: boolean | undefined;
   if (field && Array.isArray(requiredArray)) {

@@ -7,7 +7,7 @@ import { CopyButton, MoveDownButton, MoveUpButton, RemoveButton } from './IconBu
 function buttonTemplates<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(): TemplatesType<T, S, F>['ButtonTemplates'] {
   return {
     SubmitButton,

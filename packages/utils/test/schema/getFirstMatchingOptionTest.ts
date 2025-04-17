@@ -206,7 +206,7 @@ export default function getFirstMatchingOptionTest(testValidator: TestValidatorT
           'Error encountered compiling schema:',
           expect.objectContaining({
             message: 'discriminator: "properties/code" must have "const" or "enum"',
-          })
+          }),
         );
         expect(result).toEqual(0);
       } else {

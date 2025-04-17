@@ -24,7 +24,7 @@ const useStyles = makeStyles({
 export default function ArrayFieldItemTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(props: ArrayFieldItemTemplateType<T, S, F>) {
   const classes = useStyles();
   const { children, buttonsProps, hasToolbar, uiSchema, registry } = props;
@@ -32,7 +32,7 @@ export default function ArrayFieldItemTemplate<
   const ArrayFieldItemButtonsTemplate = getTemplate<'ArrayFieldItemButtonsTemplate', T, S, F>(
     'ArrayFieldItemButtonsTemplate',
     registry,
-    uiOptions
+    uiOptions,
   );
 
   return (

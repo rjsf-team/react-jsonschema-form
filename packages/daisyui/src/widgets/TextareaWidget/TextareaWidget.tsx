@@ -14,7 +14,7 @@ import { WidgetProps, StrictRJSFSchema, RJSFSchema, FormContextType } from '@rjs
 export default function TextareaWidget<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(props: WidgetProps<T, S, F>) {
   const { id, value, required, disabled, readonly, onChange, onFocus, onBlur, options } = props;
 
@@ -28,7 +28,7 @@ export default function TextareaWidget<
         onFocus(id, event.target.value);
       }
     },
-    [onFocus, id]
+    [onFocus, id],
   );
 
   /** Handle blur events
@@ -41,7 +41,7 @@ export default function TextareaWidget<
         onBlur(id, event.target.value);
       }
     },
-    [onBlur, id]
+    [onBlur, id],
   );
 
   /** Handle change events
@@ -52,7 +52,7 @@ export default function TextareaWidget<
     (event: React.ChangeEvent<HTMLTextAreaElement>) => {
       onChange(event.target.value);
     },
-    [onChange]
+    [onChange],
   );
 
   // Extract rows and other textarea-specific props from options

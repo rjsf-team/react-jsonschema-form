@@ -7,7 +7,7 @@ import Markdown from 'markdown-to-jsx';
  * @param props - The `FieldProps` for this template
  */
 function UnsupportedField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: UnsupportedFieldProps<T, S, F>
+  props: UnsupportedFieldProps<T, S, F>,
 ) {
   const { schema, idSchema, reason, registry } = props;
   const { translateString } = registry;

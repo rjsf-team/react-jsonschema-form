@@ -24,7 +24,7 @@ import {
  * @param props - The `ArrayFieldTemplateProps` for the component
  */
 export default function ArrayFieldTemplate<T = any, S extends RJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: ArrayFieldTemplateProps<T, S, F>
+  props: ArrayFieldTemplateProps<T, S, F>,
 ) {
   const {
     canAdd,
@@ -45,17 +45,17 @@ export default function ArrayFieldTemplate<T = any, S extends RJSFSchema = RJSFS
   const ArrayFieldDescriptionTemplate = getTemplate<'ArrayFieldDescriptionTemplate', T, S, F>(
     'ArrayFieldDescriptionTemplate',
     registry as Registry<T, S, F>,
-    uiOptions
+    uiOptions,
   );
   const ArrayFieldItemTemplate = getTemplate<'ArrayFieldItemTemplate', T, S, F>(
     'ArrayFieldItemTemplate',
     registry as Registry<T, S, F>,
-    uiOptions
+    uiOptions,
   );
   const ArrayFieldTitleTemplate = getTemplate<'ArrayFieldTitleTemplate', T, S, F>(
     'ArrayFieldTitleTemplate',
     registry as Registry<T, S, F>,
-    uiOptions
+    uiOptions,
   );
   // Button templates are not overridden in the uiSchema
   const {
@@ -72,7 +72,7 @@ export default function ArrayFieldTemplate<T = any, S extends RJSFSchema = RJSFS
       e.stopPropagation();
       onAddClick(e);
     },
-    [onAddClick]
+    [onAddClick],
   );
 
   return (

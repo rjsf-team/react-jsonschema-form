@@ -14,7 +14,7 @@ import {
  * @param props - The `FieldProps` for this template
  */
 function StringField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: FieldProps<T, S, F>
+  props: FieldProps<T, S, F>,
 ) {
   const {
     schema,

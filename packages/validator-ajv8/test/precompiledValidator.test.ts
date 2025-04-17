@@ -55,8 +55,8 @@ describe('AJV8PrecompiledValidator', () => {
         };
         expect(() => validator.ensureSameRootSchema(schema)).toThrowError(
           new Error(
-            'The schema associated with the precompiled validator differs from the rootSchema provided for validation'
-          )
+            'The schema associated with the precompiled validator differs from the rootSchema provided for validation',
+          ),
         );
       });
     });
@@ -105,7 +105,7 @@ describe('AJV8PrecompiledValidator', () => {
         const schema: RJSFSchema = 'foobarbaz' as unknown as RJSFSchema;
         const hash = hashForSchema(schema);
         expect(() => validator.isValid(schema, { name: 'bar' }, rootSchema)).toThrowError(
-          new Error(`No precompiled validator function was found for the given schema for "${hash}"`)
+          new Error(`No precompiled validator function was found for the given schema for "${hash}"`),
         );
       });
       it('should throw if the rootSchema is different than the one the validator was constructed with', () => {
@@ -117,8 +117,8 @@ describe('AJV8PrecompiledValidator', () => {
         };
         expect(() => validator.isValid(schema, { foo: { name: 'bar' } }, schema)).toThrowError(
           new Error(
-            'The schema associated with the precompiled validator differs from the rootSchema provided for validation'
-          )
+            'The schema associated with the precompiled validator differs from the rootSchema provided for validation',
+          ),
         );
       });
     });
@@ -150,8 +150,8 @@ describe('AJV8PrecompiledValidator', () => {
         };
         expect(() => validator.validateFormData({}, schema)).toThrowError(
           new Error(
-            'The schema associated with the precompiled validator differs from the rootSchema provided for validation'
-          )
+            'The schema associated with the precompiled validator differs from the rootSchema provided for validation',
+          ),
         );
       });
       describe('No custom validate function, single value of correct type generates no errors', () => {

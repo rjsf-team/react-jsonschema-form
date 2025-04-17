@@ -16,7 +16,7 @@ import { FieldTemplateProps, StrictRJSFSchema, RJSFSchema, FormContextType } fro
 export default function FieldTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(props: FieldTemplateProps<T, S, F>) {
   const {
     id,

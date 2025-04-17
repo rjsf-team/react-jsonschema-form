@@ -361,7 +361,7 @@ export function formTests(Form: ComponentType<FormProps>, customOptions: FormRen
       const tree = renderer
         .create(
           <Form schema={schema} validator={validator} uiSchema={uiSchema} formData={75} />,
-          customOptions[SLIDER_CUSTOMIZE]
+          customOptions[SLIDER_CUSTOMIZE],
         )
         .toJSON();
       expect(tree).toMatchSnapshot();

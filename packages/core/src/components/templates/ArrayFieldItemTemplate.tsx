@@ -15,14 +15,14 @@ import {
 export default function ArrayFieldItemTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(props: ArrayFieldItemTemplateType<T, S, F>) {
   const { children, className, buttonsProps, hasToolbar, registry, uiSchema } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const ArrayFieldItemButtonsTemplate = getTemplate<'ArrayFieldItemButtonsTemplate', T, S, F>(
     'ArrayFieldItemButtonsTemplate',
     registry,
-    uiOptions
+    uiOptions,
   );
   const btnStyle: CSSProperties = {
     flex: 1,

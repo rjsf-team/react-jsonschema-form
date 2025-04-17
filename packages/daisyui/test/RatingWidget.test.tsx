@@ -12,7 +12,7 @@ describe('RatingWidget', () => {
           {...makeWidgetMockProps({
             value: 0,
           })}
-        />
+        />,
       )
       .toJSON();
     expect(tree).toMatchSnapshot();
@@ -25,7 +25,7 @@ describe('RatingWidget', () => {
           {...makeWidgetMockProps({
             value: 3,
           })}
-        />
+        />,
       )
       .toJSON();
     expect(tree).toMatchSnapshot();
@@ -42,7 +42,7 @@ describe('RatingWidget', () => {
             },
             value: 7,
           })}
-        />
+        />,
       )
       .toJSON();
     expect(tree).toMatchSnapshot();
@@ -56,7 +56,7 @@ describe('RatingWidget', () => {
             disabled: true,
             value: 3,
           })}
-        />
+        />,
       )
       .toJSON();
     expect(tree).toMatchSnapshot();
@@ -70,7 +70,7 @@ describe('RatingWidget', () => {
             readonly: true,
             value: 3,
           })}
-        />
+        />,
       )
       .toJSON();
     expect(tree).toMatchSnapshot();
@@ -84,7 +84,7 @@ describe('RatingWidget', () => {
           onChange,
           value: 0,
         })}
-      />
+      />,
     );
 
     // Get the third star (index 2, value 2+1=3)
@@ -107,7 +107,7 @@ describe('RatingWidget', () => {
           disabled: true,
           value: 0,
         })}
-      />
+      />,
     );
 
     const inputs = container.querySelectorAll('input');

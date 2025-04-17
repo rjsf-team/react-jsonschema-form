@@ -23,14 +23,14 @@ const BTN_STYLE = {
 export default function ArrayFieldItemTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(props: ArrayFieldItemTemplateType<T, S, F>) {
   const { children, buttonsProps, hasToolbar, index, registry, uiSchema } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const ArrayFieldItemButtonsTemplate = getTemplate<'ArrayFieldItemButtonsTemplate', T, S, F>(
     'ArrayFieldItemButtonsTemplate',
     registry,
-    uiOptions
+    uiOptions,
   );
   const { rowGutter = 24, toolbarAlign = 'top' } = registry.formContext;
 

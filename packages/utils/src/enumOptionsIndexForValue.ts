@@ -15,7 +15,7 @@ import enumOptionsIsSelected from './enumOptionsIsSelected';
 export default function enumOptionsIndexForValue<S extends StrictRJSFSchema = RJSFSchema>(
   value: EnumOptionsType<S>['value'] | EnumOptionsType<S>['value'][],
   allEnumOptions: EnumOptionsType<S>[] = [],
-  multiple = false
+  multiple = false,
 ): string | string[] | undefined {
   const selectedIndexes: string[] = allEnumOptions
     .map((opt, index) => (enumOptionsIsSelected(opt.value, value) ? String(index) : undefined))

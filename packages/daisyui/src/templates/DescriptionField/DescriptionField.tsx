@@ -9,7 +9,7 @@ import { DescriptionFieldProps, StrictRJSFSchema, RJSFSchema, FormContextType } 
 export default function DescriptionField<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(props: DescriptionFieldProps<T, S, F>) {
   const { id, description } = props;
   return (

@@ -17,7 +17,7 @@ import isObject from 'lodash/isObject';
  * @param props - The `FieldProps` for this template
  */
 function BooleanField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: FieldProps<T, S, F>
+  props: FieldProps<T, S, F>,
 ) {
   const {
     schema,
@@ -66,7 +66,7 @@ function BooleanField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
           })
           .filter((o: any) => o) as S[], // cast away the error that typescript can't grok is fixed
       } as unknown as S,
-      uiSchema
+      uiSchema,
     );
   } else {
     // We deprecated enumNames in v5. It's intentionally omitted from RSJFSchema type, so we need to cast here.
@@ -90,7 +90,7 @@ function BooleanField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
           // NOTE: enumNames is deprecated, but still supported for now.
           enumNames: schemaWithEnumNames.enumNames,
         } as unknown as S,
-        uiSchema
+        uiSchema,
       );
     }
   }

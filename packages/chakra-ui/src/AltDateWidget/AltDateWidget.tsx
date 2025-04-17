@@ -16,7 +16,7 @@ import {
 import { Box, Button } from '@chakra-ui/react';
 
 function DateElement<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: WidgetProps<T, S, F>
+  props: WidgetProps<T, S, F>,
 ) {
   const { SelectWidget } = props.registry.widgets;
   const value = props.value ? props.value : undefined;
@@ -46,7 +46,7 @@ const readyForChange = (state: AltDateStateType) => {
 };
 
 function AltDateWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: WidgetProps<T, S, F>
+  props: WidgetProps<T, S, F>,
 ) {
   const { autofocus, disabled, id, onBlur, onChange, onFocus, options, readonly, registry, showTime, value } = props;
   const { translateString } = registry;
@@ -92,7 +92,7 @@ function AltDateWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F exten
           state,
           showTime,
           options.yearsRange as [number, number] | undefined,
-          options.format as DateElementFormat | undefined
+          options.format as DateElementFormat | undefined,
         ).map((elemProps: any, i) => {
           const elemId = id + '_' + elemProps.type;
           return (

@@ -18,7 +18,7 @@ import { FormContextType, RJSFSchema, StrictRJSFSchema, TemplatesType } from '@r
 export function generateTemplates<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(): Partial<TemplatesType<T, S, F>> {
   return {
     ArrayFieldItemTemplate,

@@ -18,11 +18,11 @@ import { ErrorSchema, FormContextType, RJSFSchema, StrictRJSFSchema, ValidationD
 export default function mergeValidationData<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(
   validator: ValidatorType<T, S, F>,
   validationData: ValidationData<T>,
-  additionalErrorSchema?: ErrorSchema<T>
+  additionalErrorSchema?: ErrorSchema<T>,
 ): ValidationData<T> {
   if (!additionalErrorSchema) {
     return validationData;

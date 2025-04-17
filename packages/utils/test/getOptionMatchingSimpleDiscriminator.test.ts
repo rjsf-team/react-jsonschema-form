@@ -12,7 +12,7 @@ describe('getOptionMatchingSimpleDiscriminator()', () => {
 
     test('options with no data', () => {
       expect(
-        getOptionMatchingSimpleDiscriminator({}, [{ type: 'object', properties: { foo: { const: 'foo' } } }], 'id')
+        getOptionMatchingSimpleDiscriminator({}, [{ type: 'object', properties: { foo: { const: 'foo' } } }], 'id'),
       ).toEqual(undefined);
     });
 
@@ -20,7 +20,7 @@ describe('getOptionMatchingSimpleDiscriminator()', () => {
       expect(
         getOptionMatchingSimpleDiscriminator({ foo: 'foo' }, [
           { type: 'object', properties: { foo: { const: 'foo' } } },
-        ])
+        ]),
       ).toEqual(undefined);
     });
 
@@ -29,8 +29,8 @@ describe('getOptionMatchingSimpleDiscriminator()', () => {
         getOptionMatchingSimpleDiscriminator(
           { foo: 'foo' },
           [{ type: 'object', properties: { foo: { const: 'foo' } } }],
-          'bar'
-        )
+          'bar',
+        ),
       ).toEqual(undefined);
     });
   });
@@ -41,8 +41,8 @@ describe('getOptionMatchingSimpleDiscriminator()', () => {
         getOptionMatchingSimpleDiscriminator(
           { foo: 'foo' },
           [{}, { type: 'object', properties: { foo: { const: 'foo' } } }],
-          'foo'
-        )
+          'foo',
+        ),
       ).toEqual(1);
     });
 
@@ -51,8 +51,8 @@ describe('getOptionMatchingSimpleDiscriminator()', () => {
         getOptionMatchingSimpleDiscriminator(
           { foo: 'foo' },
           [{}, { type: 'object', properties: { foo: { enum: ['bar', 'foo'] } } }],
-          'foo'
-        )
+          'foo',
+        ),
       ).toEqual(1);
     });
   });
@@ -63,8 +63,8 @@ describe('getOptionMatchingSimpleDiscriminator()', () => {
         getOptionMatchingSimpleDiscriminator(
           { foo: 'foo' },
           [{}, { type: 'object', properties: { foo: { type: 'object' } } }],
-          'foo'
-        )
+          'foo',
+        ),
       ).toEqual(undefined);
     });
 
@@ -73,8 +73,8 @@ describe('getOptionMatchingSimpleDiscriminator()', () => {
         getOptionMatchingSimpleDiscriminator(
           { foo: 'foo' },
           [{}, { type: 'object', properties: { foo: { type: 'array' } } }],
-          'foo'
-        )
+          'foo',
+        ),
       ).toEqual(undefined);
     });
   });

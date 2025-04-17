@@ -16,7 +16,7 @@ import { CustomValidatorOptionsType } from './types';
  */
 export function compileSchemaValidatorsCode<S extends StrictRJSFSchema = RJSFSchema>(
   schema: S,
-  options: CustomValidatorOptionsType = {}
+  options: CustomValidatorOptionsType = {},
 ) {
   const schemaMaps = schemaParser(schema);
   const schemas = Object.values(schemaMaps);

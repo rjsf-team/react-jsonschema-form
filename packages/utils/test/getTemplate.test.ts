@@ -75,7 +75,7 @@ describe('getTemplate', () => {
   });
   it('returns the ButtonTemplates from the registry even with uiOptions', () => {
     expect(getTemplate<'ButtonTemplates'>('ButtonTemplates', registry, uiOptions)).toBe(
-      registry.templates.ButtonTemplates
+      registry.templates.ButtonTemplates,
     );
   });
   it('returns the template from registry', () => {

@@ -24,7 +24,7 @@ import UpDownWidget from './UpDownWidget';
 function widgets<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(): RegistryWidgetsType<T, S, F> {
   return {
     AltDateWidget,
