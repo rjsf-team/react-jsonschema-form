@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import { ReactElement, ChangeEvent, FocusEvent, useCallback } from 'react';
 import {
   descriptionId,
   getTemplate,
@@ -10,6 +10,7 @@ import {
   ariaDescribedByIds,
 } from '@rjsf/utils';
 import { Checkbox } from '@mantine/core';
+
 import { cleanupOptions } from '../utils';
 
 /** The `CheckBoxWidget` is a widget for rendering boolean properties.
@@ -21,7 +22,7 @@ export default function CheckboxWidget<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
->(props: WidgetProps<T, S, F>): React.ReactElement {
+>(props: WidgetProps<T, S, F>): ReactElement {
   const {
     id,
     name,
@@ -51,7 +52,7 @@ export default function CheckboxWidget<
   );
 
   const handleCheckboxChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
+    (e: ChangeEvent<HTMLInputElement>) => {
       if (!disabled && !readonly && onChange) {
         onChange(e.currentTarget.checked);
       }
@@ -60,7 +61,7 @@ export default function CheckboxWidget<
   );
 
   const handleBlur = useCallback(
-    ({ target }: React.FocusEvent<HTMLInputElement>) => {
+    ({ target }: FocusEvent<HTMLInputElement>) => {
       if (onBlur) {
         onBlur(id, target.checked);
       }
@@ -69,7 +70,7 @@ export default function CheckboxWidget<
   );
 
   const handleFocus = useCallback(
-    ({ target }: React.FocusEvent<HTMLInputElement>) => {
+    ({ target }: FocusEvent<HTMLInputElement>) => {
       if (onFocus) {
         onFocus(id, target.checked);
       }

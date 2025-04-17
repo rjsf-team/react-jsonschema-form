@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react';
+import { FocusEvent, useCallback, useMemo } from 'react';
 import {
   ariaDescribedByIds,
   enumOptionsIndexForValue,
@@ -10,6 +10,7 @@ import {
   WidgetProps,
 } from '@rjsf/utils';
 import { Select, MultiSelect } from '@mantine/core';
+
 import { cleanupOptions } from '../utils';
 
 /** The `SelectWidget` is a widget for rendering dropdowns.
@@ -51,7 +52,7 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
   );
 
   const handleBlur = useCallback(
-    ({ target }: React.FocusEvent<HTMLInputElement>) => {
+    ({ target }: FocusEvent<HTMLInputElement>) => {
       if (onBlur) {
         onBlur(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, emptyValue));
       }
@@ -60,7 +61,7 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
   );
 
   const handleFocus = useCallback(
-    ({ target }: React.FocusEvent<HTMLInputElement>) => {
+    ({ target }: FocusEvent<HTMLInputElement>) => {
       if (onFocus) {
         onFocus(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, emptyValue));
       }

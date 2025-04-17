@@ -9,6 +9,7 @@ import {
   WidgetProps,
 } from '@rjsf/utils';
 import { FileInput, Pill } from '@mantine/core';
+
 import { cleanupOptions } from '../utils';
 
 function addNameToDataURL(dataURL: string, name: string) {

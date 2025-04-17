@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import { FocusEvent, useCallback } from 'react';
 import {
   ariaDescribedByIds,
   enumOptionsIndexForValue,
@@ -10,6 +10,7 @@ import {
   WidgetProps,
 } from '@rjsf/utils';
 import { Radio, Flex } from '@mantine/core';
+
 import { cleanupOptions } from '../utils';
 
 /** The `RadioWidget` is a widget for rendering a radio group.
@@ -49,7 +50,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
   );
 
   const handleBlur = useCallback(
-    ({ target }: React.FocusEvent<HTMLInputElement>) => {
+    ({ target }: FocusEvent<HTMLInputElement>) => {
       if (onBlur) {
         onBlur(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, emptyValue));
       }
@@ -58,7 +59,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
   );
 
   const handleFocus = useCallback(
-    ({ target }: React.FocusEvent<HTMLInputElement>) => {
+    ({ target }: FocusEvent<HTMLInputElement>) => {
       if (onFocus) {
         onFocus(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, emptyValue));
       }
