@@ -61,7 +61,7 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
           notInEitherSchema: 'keep',
           defaultField: 'myData',
           anotherField: true,
-        })
+        }),
       ).toEqual({ notInEitherSchema: 'keep', defaultField: 'myData' });
     });
     it('returns new schema const in formData when the old schema default matches in the formData', () => {
@@ -93,7 +93,7 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
         schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, {
           defaultField: 'myData',
           anotherField: true,
-        })
+        }),
       ).toEqual({ defaultField: 'yourData' });
     });
     it('returns input formData when the old schema default does not match in the formData', () => {
@@ -125,7 +125,7 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
         schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, {
           defaultField: 'fooData',
           anotherField: true,
-        })
+        }),
       ).toEqual({ defaultField: 'fooData' });
     });
     it('returns empty formData when the old schema default does not match in the formData, and new schema default is readOnly', () => {
@@ -158,7 +158,7 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
         schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, {
           defaultField: 'fooData',
           anotherField: true,
-        })
+        }),
       ).toEqual({});
     });
     it('returns input formData when the new schema and old schema match on a const', () => {
@@ -191,7 +191,7 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
           notInEitherSchema: 'keep',
           constField: 'myData',
           anotherField: true,
-        })
+        }),
       ).toEqual({ notInEitherSchema: 'keep', constField: 'myData' });
     });
     it('returns new schema const in formData when the old schema const matches in the formData', () => {
@@ -223,7 +223,7 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
         schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, {
           constField: 'myData',
           anotherField: true,
-        })
+        }),
       ).toEqual({ constField: 'yourData' });
     });
     it('returns empty formData when the old schema const does not match in the formData', () => {
@@ -255,7 +255,7 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
         schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, {
           constField: 'fooData',
           anotherField: true,
-        })
+        }),
       ).toEqual({});
     });
     it('returns empty formData after resolving schema refs', () => {
@@ -286,7 +286,7 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
         },
       };
       expect(sanitizeDataForNewSchema(testValidator, rootSchema, newSchema, oldSchema, { oldField: 'test' })).toEqual(
-        {}
+        {},
       );
     });
     it('returns data when two arrays have same boolean items', () => {
@@ -441,7 +441,7 @@ export default function sanitizeDataForNewSchemaTest(testValidator: TestValidato
       expect(
         schemaUtils.sanitizeDataForNewSchema(newSchema, oldSchema, {
           foo: ['1'],
-        })
+        }),
       ).toEqual({ foo: undefined });
     });
     it('returns formData when the new schema has field that is not in the old schema', () => {

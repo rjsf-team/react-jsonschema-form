@@ -13,27 +13,30 @@ import { GenericObjectType } from './types';
 export default function mergeObjects(
   obj1: GenericObjectType,
   obj2: GenericObjectType,
-  concatArrays: boolean | 'preventDuplicates' = false
+  concatArrays: boolean | 'preventDuplicates' = false,
 ) {
-  return Object.keys(obj2).reduce((acc, key) => {
-    const left = obj1 ? obj1[key] : {},
-      right = obj2[key];
-    if (obj1 && key in obj1 && isObject(right)) {
-      acc[key] = mergeObjects(left, right, concatArrays);
-    } else if (concatArrays && Array.isArray(left) && Array.isArray(right)) {
-      let toMerge = right;
-      if (concatArrays === 'preventDuplicates') {
-        toMerge = right.reduce((result, value) => {
-          if (!left.includes(value)) {
-            result.push(value);
-          }
-          return result;
-        }, []);
+  return Object.keys(obj2).reduce(
+    (acc, key) => {
+      const left = obj1 ? obj1[key] : {},
+        right = obj2[key];
+      if (obj1 && key in obj1 && isObject(right)) {
+        acc[key] = mergeObjects(left, right, concatArrays);
+      } else if (concatArrays && Array.isArray(left) && Array.isArray(right)) {
+        let toMerge = right;
+        if (concatArrays === 'preventDuplicates') {
+          toMerge = right.reduce((result, value) => {
+            if (!left.includes(value)) {
+              result.push(value);
+            }
+            return result;
+          }, []);
+        }
+        acc[key] = left.concat(toMerge);
+      } else {
+        acc[key] = right;
       }
-      acc[key] = left.concat(toMerge);
-    } else {
-      acc[key] = right;
-    }
-    return acc;
-  }, Object.assign({}, obj1)); // Prevent mutation of source object.
+      return acc;
+    },
+    Object.assign({}, obj1),
+  ); // Prevent mutation of source object.
 }

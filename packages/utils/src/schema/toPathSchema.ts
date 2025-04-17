@@ -46,7 +46,7 @@ function toPathSchemaInternal<T = any, S extends StrictRJSFSchema = RJSFSchema, 
   rootSchema?: S,
   formData?: T,
   _recurseList: S[] = [],
-  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>
+  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
 ): PathSchema<T> {
   if (REF_KEY in schema || DEPENDENCIES_KEY in schema || ALL_OF_KEY in schema) {
     const _schema = retrieveSchema<T, S, F>(validator, schema, rootSchema, formData, experimental_customMergeAllOf);
@@ -59,7 +59,7 @@ function toPathSchemaInternal<T = any, S extends StrictRJSFSchema = RJSFSchema, 
         rootSchema,
         formData,
         _recurseList.concat(_schema),
-        experimental_customMergeAllOf
+        experimental_customMergeAllOf,
       );
     }
   }
@@ -78,7 +78,7 @@ function toPathSchemaInternal<T = any, S extends StrictRJSFSchema = RJSFSchema, 
       xxxOf,
       0,
       discriminator,
-      experimental_customMergeAllOf
+      experimental_customMergeAllOf,
     );
     const _schema: S = xxxOf![index] as S;
     pathSchema = {
@@ -90,7 +90,7 @@ function toPathSchemaInternal<T = any, S extends StrictRJSFSchema = RJSFSchema, 
         rootSchema,
         formData,
         _recurseList,
-        experimental_customMergeAllOf
+        experimental_customMergeAllOf,
       ),
     };
   }
@@ -112,7 +112,7 @@ function toPathSchemaInternal<T = any, S extends StrictRJSFSchema = RJSFSchema, 
             rootSchema,
             element,
             _recurseList,
-            experimental_customMergeAllOf
+            experimental_customMergeAllOf,
           );
         } else if (schemaAdditionalItems) {
           (pathSchema as PathSchema<T[]>)[i] = toPathSchemaInternal<T, S, F>(
@@ -122,7 +122,7 @@ function toPathSchemaInternal<T = any, S extends StrictRJSFSchema = RJSFSchema, 
             rootSchema,
             element,
             _recurseList,
-            experimental_customMergeAllOf
+            experimental_customMergeAllOf,
           );
         } else {
           console.warn(`Unable to generate path schema for "${name}.${i}". No schema defined for it`);
@@ -137,7 +137,7 @@ function toPathSchemaInternal<T = any, S extends StrictRJSFSchema = RJSFSchema, 
           rootSchema,
           element,
           _recurseList,
-          experimental_customMergeAllOf
+          experimental_customMergeAllOf,
         );
       });
     }
@@ -153,7 +153,7 @@ function toPathSchemaInternal<T = any, S extends StrictRJSFSchema = RJSFSchema, 
         // array item has just been added, but not populated with data yet
         get(formData, [property]),
         _recurseList,
-        experimental_customMergeAllOf
+        experimental_customMergeAllOf,
       );
     }
   }
@@ -176,7 +176,7 @@ export default function toPathSchema<T = any, S extends StrictRJSFSchema = RJSFS
   name = '',
   rootSchema?: S,
   formData?: T,
-  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>
+  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
 ): PathSchema<T> {
   return toPathSchemaInternal(validator, schema, name, rootSchema, formData, undefined, experimental_customMergeAllOf);
 }

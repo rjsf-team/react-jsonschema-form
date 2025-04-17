@@ -20,7 +20,7 @@ function parseSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
   validator: ParserValidator<T, S, F>,
   recurseList: S[],
   rootSchema: S,
-  schema: S
+  schema: S,
 ) {
   const schemas = retrieveSchemaInternal<T, S, F>(validator, schema, rootSchema, undefined, true);
   schemas.forEach((schema) => {
@@ -49,7 +49,7 @@ function parseSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
  * @returns - The `SchemaMap` of all schemas that were parsed
  */
 export default function schemaParser<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  rootSchema: S
+  rootSchema: S,
 ): SchemaMap<S> {
   const validator = new ParserValidator<T, S, F>(rootSchema);
   const recurseList: S[] = [];

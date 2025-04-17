@@ -15,7 +15,7 @@ const alertVariants = cva(
     defaultVariants: {
       variant: 'default',
     },
-  }
+  },
 );
 
 /** A component that displays a brief, important message in a way that attracts the user's attention without interrupting their task.
@@ -28,7 +28,7 @@ const alertVariants = cva(
 const Alert = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement> & VariantProps<typeof alertVariants>>(
   ({ className, variant, ...props }, ref) => (
     <div ref={ref} role='alert' className={cn(alertVariants({ variant }), className)} {...props} />
-  )
+  ),
 );
 Alert.displayName = 'Alert';
 
@@ -41,7 +41,7 @@ Alert.displayName = 'Alert';
 const AlertTitle = forwardRef<HTMLParagraphElement, HTMLAttributes<HTMLHeadingElement>>(
   ({ className, ...props }, ref) => (
     <h5 ref={ref} className={cn('mb-1 font-medium leading-none tracking-tight', className)} {...props} />
-  )
+  ),
 );
 AlertTitle.displayName = 'AlertTitle';
 
@@ -54,7 +54,7 @@ AlertTitle.displayName = 'AlertTitle';
 const AlertDescription = forwardRef<HTMLParagraphElement, HTMLAttributes<HTMLParagraphElement>>(
   ({ className, ...props }, ref) => (
     <div ref={ref} className={cn('text-sm [&_p]:leading-relaxed', className)} {...props} />
-  )
+  ),
 );
 AlertDescription.displayName = 'AlertDescription';
 

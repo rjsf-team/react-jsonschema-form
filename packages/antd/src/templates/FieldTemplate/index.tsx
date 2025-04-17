@@ -20,7 +20,7 @@ const VERTICAL_WRAPPER_COL = { span: 24 };
 export default function FieldTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(props: FieldTemplateProps<T, S, F>) {
   const {
     children,
@@ -58,7 +58,7 @@ export default function FieldTemplate<
   const WrapIfAdditionalTemplate = getTemplate<'WrapIfAdditionalTemplate', T, S, F>(
     'WrapIfAdditionalTemplate',
     registry,
-    uiOptions
+    uiOptions,
   );
 
   if (hidden) {

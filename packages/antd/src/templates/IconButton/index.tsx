@@ -18,11 +18,11 @@ import { MouseEventHandler } from 'react';
 export type AntdIconButtonProps<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 > = Omit<IconButtonProps<T, S, F>, 'type' | 'color'>;
 
 export default function IconButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: AntdIconButtonProps<T, S, F> & Omit<ButtonProps, 'onClick'>
+  props: AntdIconButtonProps<T, S, F> & Omit<ButtonProps, 'onClick'>,
 ) {
   const { iconType = 'default', icon, onClick, uiSchema, registry, ...otherProps } = props;
   return (
@@ -36,7 +36,7 @@ export default function IconButton<T = any, S extends StrictRJSFSchema = RJSFSch
 }
 
 export function AddButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: AntdIconButtonProps<T, S, F>
+  props: AntdIconButtonProps<T, S, F>,
 ) {
   const {
     registry: { translateString },
@@ -53,7 +53,7 @@ export function AddButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
 }
 
 export function CopyButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: AntdIconButtonProps<T, S, F>
+  props: AntdIconButtonProps<T, S, F>,
 ) {
   const {
     registry: { translateString },
@@ -62,7 +62,7 @@ export function CopyButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
 }
 
 export function MoveDownButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: AntdIconButtonProps<T, S, F>
+  props: AntdIconButtonProps<T, S, F>,
 ) {
   const {
     registry: { translateString },
@@ -73,7 +73,7 @@ export function MoveDownButton<T = any, S extends StrictRJSFSchema = RJSFSchema,
 }
 
 export function MoveUpButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: AntdIconButtonProps<T, S, F>
+  props: AntdIconButtonProps<T, S, F>,
 ) {
   const {
     registry: { translateString },
@@ -82,7 +82,7 @@ export function MoveUpButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F
 }
 
 export function RemoveButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: AntdIconButtonProps<T, S, F>
+  props: AntdIconButtonProps<T, S, F>,
 ) {
   // The `block` prop is not part of the `IconButtonProps` defined in the template, so get it from the uiSchema instead
   const options = getUiOptions<T, S, F>(props.uiSchema);

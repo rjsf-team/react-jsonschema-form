@@ -18,7 +18,7 @@ fs.readdirSync(srcDir).forEach((file) => {
         `npx tailwindcss -i ${srcFile} -o ${distFile} --minify --content="./src/**/*.{js,jsx,ts,tsx},../playground/src/**/*.{js,jsx,ts,tsx}"`,
         {
           stdio: 'ignore',
-        }
+        },
       );
     } catch (error) {
       console.error(`Error building ${srcFile}:`, error);

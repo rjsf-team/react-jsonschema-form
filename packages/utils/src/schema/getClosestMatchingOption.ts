@@ -53,7 +53,7 @@ export function calculateIndexScore<T = any, S extends StrictRJSFSchema = RJSFSc
   rootSchema: S,
   schema?: S,
   formData?: any,
-  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>
+  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
 ): number {
   let totalScore = 0;
   if (schema) {
@@ -71,7 +71,7 @@ export function calculateIndexScore<T = any, S extends StrictRJSFSchema = RJSFSc
               value as S,
               rootSchema,
               formValue,
-              experimental_customMergeAllOf
+              experimental_customMergeAllOf,
             );
             return (
               score +
@@ -80,7 +80,7 @@ export function calculateIndexScore<T = any, S extends StrictRJSFSchema = RJSFSc
                 rootSchema,
                 newSchema,
                 formValue || {},
-                experimental_customMergeAllOf
+                experimental_customMergeAllOf,
               )
             );
           }
@@ -96,7 +96,7 @@ export function calculateIndexScore<T = any, S extends StrictRJSFSchema = RJSFSc
                 get(value, key) as S[],
                 -1,
                 discriminator,
-                experimental_customMergeAllOf
+                experimental_customMergeAllOf,
               )
             );
           }
@@ -127,7 +127,7 @@ export function calculateIndexScore<T = any, S extends StrictRJSFSchema = RJSFSc
           }
           return score;
         },
-        0
+        0,
       );
     } else if (isString(schema.type) && schema.type === guessType(formData)) {
       totalScore += 1;
@@ -162,7 +162,7 @@ export function calculateIndexScore<T = any, S extends StrictRJSFSchema = RJSFSc
 export default function getClosestMatchingOption<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(
   validator: ValidatorType<T, S, F>,
   rootSchema: S,
@@ -170,7 +170,7 @@ export default function getClosestMatchingOption<
   options: S[],
   selectedOption = -1,
   discriminatorField?: string,
-  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>
+  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
 ): number {
   // First resolve any refs in the options
   const resolvedOptions = options.map((option) => {
@@ -215,7 +215,7 @@ export default function getClosestMatchingOption<
       }
       return scoreData;
     },
-    { bestIndex: selectedOption, bestScore: 0 }
+    { bestIndex: selectedOption, bestScore: 0 },
   );
   // if all scores are the same go with selectedOption
   if (scoreCount.size === 1 && selectedOption >= 0) {

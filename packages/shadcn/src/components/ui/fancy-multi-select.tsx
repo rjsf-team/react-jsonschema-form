@@ -87,12 +87,12 @@ export function FancyMultiSelect({
 
   const selectedItems = useMemo(
     () => items.filter((item) => selected.some((selectedValue) => isEqual(item.value, selectedValue))),
-    [items, selected]
+    [items, selected],
   );
 
   const selectables = useMemo(
     () => items.filter((framework) => !selectedItems.some((item) => isEqual(item.value, framework.value))),
-    [items, selectedItems]
+    [items, selectedItems],
   );
 
   const handleUnselect = useCallback(
@@ -103,7 +103,7 @@ export function FancyMultiSelect({
       const newSelected = selectedItems.filter((s) => !isEqual(s.value, framework.value));
       onValueChange?.(newSelected.map((item) => item.index));
     },
-    [selectedItems, onValueChange, disabled]
+    [selectedItems, onValueChange, disabled],
   );
 
   const handleKeyDown = useCallback(
@@ -119,7 +119,7 @@ export function FancyMultiSelect({
         inputRef.current.blur();
       }
     },
-    [selectedItems, onValueChange, disabled]
+    [selectedItems, onValueChange, disabled],
   );
 
   const handleSelect = useCallback(
@@ -131,7 +131,7 @@ export function FancyMultiSelect({
       const newSelected = multiple ? [...selectedItems, item] : [item];
       onValueChange?.(newSelected.map((item) => item.index));
     },
-    [multiple, selectedItems, onValueChange, disabled]
+    [multiple, selectedItems, onValueChange, disabled],
   );
 
   const handleFocus = useCallback(
@@ -141,7 +141,7 @@ export function FancyMultiSelect({
       }
       onFocus?.(e);
     },
-    [disabled, onFocus]
+    [disabled, onFocus],
   );
 
   return (
@@ -158,7 +158,7 @@ export function FancyMultiSelect({
       <div
         className={cn(
           'group border border-input px-3 py-2 text-sm ring-offset-background rounded-md focus-within:ring-1 focus-within:ring-ring focus-within:ring-offset-1',
-          disabled && 'opacity-50 cursor-not-allowed'
+          disabled && 'opacity-50 cursor-not-allowed',
         )}
       >
         <div className='flex gap-1 flex-wrap'>
@@ -179,7 +179,7 @@ export function FancyMultiSelect({
                 <X
                   className={cn(
                     'h-3 w-3 text-muted-foreground hover:text-foreground',
-                    disabled && 'pointer-events-none'
+                    disabled && 'pointer-events-none',
                   )}
                 />
               </button>

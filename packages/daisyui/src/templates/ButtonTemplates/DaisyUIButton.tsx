@@ -16,7 +16,7 @@ interface DaisyUIButtonProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F
  * @param props - The component props
  */
 function DaisyUIButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: DaisyUIButtonProps<T, S, F>
+  props: DaisyUIButtonProps<T, S, F>,
 ) {
   const { icon, iconType, uiSchema, registry, className, ...otherProps } = props;
   return (

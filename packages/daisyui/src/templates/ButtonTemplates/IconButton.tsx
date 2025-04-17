@@ -5,7 +5,7 @@ import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import DaisyUIButton from './DaisyUIButton';
 
 export function CopyButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: IconButtonProps<T, S, F>
+  props: IconButtonProps<T, S, F>,
 ) {
   const {
     registry: { translateString },
@@ -16,7 +16,7 @@ export function CopyButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
 }
 
 export function MoveDownButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: IconButtonProps<T, S, F>
+  props: IconButtonProps<T, S, F>,
 ) {
   const {
     registry: { translateString },
@@ -31,7 +31,7 @@ export function MoveDownButton<T = any, S extends StrictRJSFSchema = RJSFSchema,
 }
 
 export function MoveUpButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: IconButtonProps<T, S, F>
+  props: IconButtonProps<T, S, F>,
 ) {
   const {
     registry: { translateString },
@@ -46,7 +46,7 @@ export function MoveUpButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F
 }
 
 export function RemoveButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: IconButtonProps<T, S, F>
+  props: IconButtonProps<T, S, F>,
 ) {
   const {
     registry: { translateString },

@@ -22,7 +22,7 @@ const DATE_PICKER_STYLE = {
 export default function DateTimeWidget<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(props: WidgetProps<T, S, F>) {
   const { disabled, formContext, id, onBlur, onChange, onFocus, placeholder, readonly, value } = props;
   const { readonlyAsDisabled = true } = formContext as GenericObjectType;

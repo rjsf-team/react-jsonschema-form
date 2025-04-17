@@ -49,7 +49,7 @@ function getFieldComponent<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   schema: S,
   uiOptions: UIOptionsType<T, S, F>,
   idSchema: IdSchema<T>,
-  registry: Registry<T, S, F>
+  registry: Registry<T, S, F>,
 ) {
   const field = uiOptions.field;
   const { fields, translateString } = registry;
@@ -82,7 +82,7 @@ function getFieldComponent<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
         const UnsupportedFieldTemplate = getTemplate<'UnsupportedFieldTemplate', T, S, F>(
           'UnsupportedFieldTemplate',
           registry,
-          uiOptions
+          uiOptions,
         );
 
         return (
@@ -103,7 +103,7 @@ function getFieldComponent<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
  * @param props - The `FieldProps` for this component
  */
 function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: FieldProps<T, S, F>
+  props: FieldProps<T, S, F>,
 ) {
   const {
     schema: _schema,
@@ -127,7 +127,7 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
     'DescriptionFieldTemplate',
     registry,
-    uiOptions
+    uiOptions,
   );
   const FieldHelpTemplate = getTemplate<'FieldHelpTemplate', T, S, F>('FieldHelpTemplate', registry, uiOptions);
   const FieldErrorTemplate = getTemplate<'FieldErrorTemplate', T, S, F>('FieldErrorTemplate', registry, uiOptions);
@@ -135,7 +135,7 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   const fieldId = _idSchema[ID_KEY];
   const idSchema = mergeObjects(
     schemaUtils.toIdSchema(schema, fieldId, formData, idPrefix, idSeparator),
-    _idSchema
+    _idSchema,
   ) as IdSchema<T>;
 
   /** Intermediary `onChange` handler for field components that will inject the `id` of the current field into the
@@ -146,7 +146,7 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
       const theId = id || fieldId;
       return onChange(formData, newErrorSchema, theId);
     },
-    [fieldId, onChange]
+    [fieldId, onChange],
   );
 
   const FieldComponent = getFieldComponent<T, S, F>(schema, uiOptions, idSchema, registry);
@@ -216,7 +216,7 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   if (uiSchema?.classNames) {
     if (process.env.NODE_ENV !== 'production') {
       console.warn(
-        "'uiSchema.classNames' is deprecated and may be removed in a major release; Use 'ui:classNames' instead."
+        "'uiSchema.classNames' is deprecated and may be removed in a major release; Use 'ui:classNames' instead.",
       );
     }
     classNames.push(uiSchema.classNames);
@@ -314,7 +314,7 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
             onChange={props.onChange}
             onFocus={props.onFocus}
             options={schema.anyOf.map((_schema) =>
-              schemaUtils.retrieveSchema(isObject(_schema) ? (_schema as S) : ({} as S), formData)
+              schemaUtils.retrieveSchema(isObject(_schema) ? (_schema as S) : ({} as S), formData),
             )}
             registry={registry}
             required={required}
@@ -338,7 +338,7 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
             onChange={props.onChange}
             onFocus={props.onFocus}
             options={schema.oneOf.map((_schema) =>
-              schemaUtils.retrieveSchema(isObject(_schema) ? (_schema as S) : ({} as S), formData)
+              schemaUtils.retrieveSchema(isObject(_schema) ? (_schema as S) : ({} as S), formData),
             )}
             registry={registry}
             required={required}

@@ -37,7 +37,7 @@ import set from 'lodash/set';
 export function getSelectedOption<S extends StrictRJSFSchema = RJSFSchema>(
   options: EnumOptionsType<S>[],
   selectorField: string,
-  value: unknown
+  value: unknown,
 ): S | undefined {
   const defaultValue = '!@#!@$@#$!@$#';
   const schemaOptions: S[] = options.map(({ schema }) => schema!);
@@ -63,7 +63,7 @@ export function computeEnumOptions<T = any, S extends StrictRJSFSchema = RJSFSch
   options: S[],
   schemaUtils: SchemaUtilsType<T, S, F>,
   uiSchema?: UiSchema<T, S, F>,
-  formData?: T
+  formData?: T,
 ): EnumOptionsType<S>[] {
   const realOptions = options.map((opt: S) => schemaUtils.retrieveSchema(opt, formData));
   let tempSchema = schema;
@@ -88,7 +88,7 @@ export function computeEnumOptions<T = any, S extends StrictRJSFSchema = RJSFSch
 export default function LayoutMultiSchemaField<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(props: FieldProps<T, S, F>) {
   const {
     name,

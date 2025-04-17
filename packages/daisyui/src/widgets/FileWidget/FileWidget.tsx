@@ -12,7 +12,7 @@ import { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjs
  * @param props - The `WidgetProps` for this component
  */
 export default function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: WidgetProps<T, S, F>
+  props: WidgetProps<T, S, F>,
 ) {
   const { id, required, disabled, readonly, schema, onChange, onFocus, onBlur, options = {} } = props;
 
@@ -40,7 +40,7 @@ export default function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSch
         onChange(fileList[0] || null);
       }
     },
-    [onChange, isMulti]
+    [onChange, isMulti],
   );
 
   /** Handle focus events
@@ -53,7 +53,7 @@ export default function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSch
         onFocus(id, event.target.files ? Array.from(event.target.files) : null);
       }
     },
-    [onFocus, id]
+    [onFocus, id],
   );
 
   /** Handle blur events
@@ -66,7 +66,7 @@ export default function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSch
         onBlur(id, event.target.files ? Array.from(event.target.files) : null);
       }
     },
-    [onBlur, id]
+    [onBlur, id],
   );
 
   return (

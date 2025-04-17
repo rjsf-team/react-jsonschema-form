@@ -19,7 +19,7 @@ jest.mock('@rjsf/utils', () => ({
           }
           return ids.get(prop);
         },
-      }
+      },
     );
   }),
 }));
@@ -331,7 +331,7 @@ const FORM_CONTEXT = {
 export function gridTests(
   Form: ComponentType<FormProps>,
   customOptions: GridRenderCustomOptions,
-  formOptions?: TestRendererOptions
+  formOptions?: TestRendererOptions,
 ) {
   describe('Two even column grid', () => {
     let uiSchema: UiSchema;
@@ -400,7 +400,7 @@ export function gridTests(
       const tree = renderer
         .create(
           <Form schema={schema} uiSchema={uiSchema} validator={validator} formContext={FORM_CONTEXT} />,
-          formOptions
+          formOptions,
         )
         .toJSON();
       expect(tree).toMatchSnapshot();
@@ -466,7 +466,7 @@ export function gridTests(
       const tree = renderer
         .create(
           <Form schema={schema} uiSchema={uiSchema} validator={validator} formContext={FORM_CONTEXT} />,
-          formOptions
+          formOptions,
         )
         .toJSON();
       expect(tree).toMatchSnapshot();
@@ -482,7 +482,7 @@ export function gridTests(
             validator={validator}
             formContext={FORM_CONTEXT}
           />,
-          formOptions
+          formOptions,
         )
         .toJSON();
       expect(tree).toMatchSnapshot();
@@ -501,7 +501,7 @@ export function gridTests(
             }}
             formContext={FORM_CONTEXT}
           />,
-          formOptions
+          formOptions,
         )
         .toJSON();
       expect(tree).toMatchSnapshot();
@@ -520,7 +520,7 @@ export function gridTests(
             }}
             formContext={FORM_CONTEXT}
           />,
-          formOptions
+          formOptions,
         )
         .toJSON();
       expect(tree).toMatchSnapshot();
@@ -539,7 +539,7 @@ export function gridTests(
             }}
             formContext={FORM_CONTEXT}
           />,
-          formOptions
+          formOptions,
         )
         .toJSON();
       expect(tree).toMatchSnapshot();

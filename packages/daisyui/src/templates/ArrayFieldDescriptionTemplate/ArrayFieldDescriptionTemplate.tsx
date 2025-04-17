@@ -8,7 +8,7 @@ import { FormContextType, StrictRJSFSchema, RJSFSchema, ArrayFieldDescriptionPro
 export default function ArrayFieldDescriptionTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(props: ArrayFieldDescriptionProps<T, S, F>) {
   const { description } = props;
   return (

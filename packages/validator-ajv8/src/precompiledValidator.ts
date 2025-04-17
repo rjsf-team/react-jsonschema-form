@@ -27,7 +27,7 @@ import processRawValidationErrors, { RawValidationErrorsType } from './processRa
 export default class AJV8PrecompiledValidator<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 > implements ValidatorType<T, S, F>
 {
   /** The root schema object used to construct this validator
@@ -97,7 +97,7 @@ export default class AJV8PrecompiledValidator<
       const resolvedRootSchema = retrieveSchema(this, this.rootSchema, this.rootSchema, formData);
       if (!deepEquals(schema, resolvedRootSchema)) {
         throw new Error(
-          'The schema associated with the precompiled validator differs from the rootSchema provided for validation'
+          'The schema associated with the precompiled validator differs from the rootSchema provided for validation',
         );
       }
     }
@@ -153,7 +153,7 @@ export default class AJV8PrecompiledValidator<
     schema: S,
     customValidate?: CustomValidator<T, S, F>,
     transformErrors?: ErrorTransformer<T, S, F>,
-    uiSchema?: UiSchema<T, S, F>
+    uiSchema?: UiSchema<T, S, F>,
   ): ValidationData<T> {
     const rawErrors = this.rawValidation<ErrorObject>(schema, formData);
     return processRawValidationErrors(this, rawErrors, formData, schema, customValidate, transformErrors, uiSchema);

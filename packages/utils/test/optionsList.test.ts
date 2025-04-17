@@ -41,7 +41,7 @@ describe('optionsList()', () => {
         enumSchema.enum!.map((opt, index) => {
           const label: string = uiSchema['ui:enumNames']![index] ?? opt;
           return { label, value: opt };
-        })
+        }),
       );
     });
     it('generates options and favors uiSchema if schema.enumNames is present', () => {
@@ -62,7 +62,7 @@ describe('optionsList()', () => {
         enumNameSchema.enum!.map((opt, index) => {
           const label: string = uiSchema['ui:enumNames']![index] ?? opt;
           return { label, value: opt };
-        })
+        }),
       );
       expect(console.warn).not.toHaveBeenCalled();
     });
@@ -82,7 +82,7 @@ describe('optionsList()', () => {
         enumNameSchema.enum!.map((opt, index) => {
           const label = enumNameSchema.enumNames[index] || opt;
           return { label, value: opt };
-        })
+        }),
       );
       expect(console.warn).not.toHaveBeenCalled();
     });
@@ -101,10 +101,10 @@ describe('optionsList()', () => {
         enumNameSchema.enum!.map((opt, index) => {
           const label = enumNameSchema.enumNames[index] || opt;
           return { label, value: opt };
-        })
+        }),
       );
       expect(console.warn).toHaveBeenCalledWith(
-        expect.stringMatching(/The "enumNames" property in the schema is deprecated/)
+        expect.stringMatching(/The "enumNames" property in the schema is deprecated/),
       );
     });
   });
@@ -139,14 +139,14 @@ describe('optionsList()', () => {
           schema,
           label: schema.title,
           value: schema.const,
-        }))
+        })),
       );
       expect(optionsList(anyofSchema)).toEqual(
         anyofSchema.anyOf.map((schema) => ({
           schema,
           label: schema.title,
           value: schema.const,
-        }))
+        })),
       );
     });
     it('should generate options for an anyOf schema and uiSchema', () => {
@@ -171,7 +171,7 @@ describe('optionsList()', () => {
           schema,
           label: anyOfUiSchema.anyOf[index]['ui:title'],
           value: get(schema, CONST_KEY),
-        }))
+        })),
       );
     });
     it('should generate options for an anyOf schema uses value as fallback title', () => {
@@ -189,7 +189,7 @@ describe('optionsList()', () => {
           schema,
           label: schema.const,
           value: schema.const,
-        }))
+        })),
       );
     });
     it('should generate options for an anyOf object schema with a discriminator, titles in object', () => {
@@ -226,7 +226,7 @@ describe('optionsList()', () => {
           schema,
           label: get(schema, ['title']),
           value: get(schema, [PROPERTIES_KEY, 'animal', CONST_KEY]),
-        }))
+        })),
       );
     });
     it('should generate options for an anyOf object schema with a discriminator, titles in discriminator property', () => {
@@ -263,7 +263,7 @@ describe('optionsList()', () => {
           schema,
           label: get(schema, [PROPERTIES_KEY, 'animal', 'title']),
           value: get(schema, [PROPERTIES_KEY, 'animal', CONST_KEY]),
-        }))
+        })),
       );
     });
     it('should generate options for an anyOf object schema with a discriminator, value as fallback titles', () => {
@@ -298,7 +298,7 @@ describe('optionsList()', () => {
           schema,
           label: get(schema, [PROPERTIES_KEY, 'animal', CONST_KEY]),
           value: get(schema, [PROPERTIES_KEY, 'animal', CONST_KEY]),
-        }))
+        })),
       );
     });
     it('should generate options for an anyOf object schema without a discriminator, with optionsSchemaSelector', () => {
@@ -333,7 +333,7 @@ describe('optionsList()', () => {
           schema,
           label: get(schema, [PROPERTIES_KEY, 'animal', 'title']),
           value: get(schema, [PROPERTIES_KEY, 'animal', CONST_KEY]),
-        }))
+        })),
       );
     });
     it('should generate options for an anyOf object schema without a discriminator, with optionsSchemaSelector, uiTitles', () => {
@@ -364,7 +364,7 @@ describe('optionsList()', () => {
           schema,
           label: anyOfUiSchema.anyOf[index]['ui:title'],
           value: get(schema, [PROPERTIES_KEY, 'animal', CONST_KEY]),
-        }))
+        })),
       );
     });
   });
@@ -400,14 +400,14 @@ describe('optionsList()', () => {
           schema,
           label: schema.title,
           value: schema.const,
-        }))
+        })),
       );
       expect(optionsList(anyofSchema)).toEqual(
         anyofSchema.anyOf.map((schema) => ({
           schema,
           label: schema.title,
           value: schema.const,
-        }))
+        })),
       );
     });
     it('should generate options for a oneOf schema and uiSchema', () => {
@@ -432,7 +432,7 @@ describe('optionsList()', () => {
           schema,
           label: oneOfUiSchema.oneOf[index]['ui:title'],
           value: get(schema, CONST_KEY),
-        }))
+        })),
       );
     });
     it('should generate options for a oneOf schema uses value as fallback title', () => {
@@ -450,7 +450,7 @@ describe('optionsList()', () => {
           schema,
           label: schema.const,
           value: schema.const,
-        }))
+        })),
       );
     });
     it('should generate options for a oneOf object schema with a discriminator, titles in object', () => {
@@ -487,7 +487,7 @@ describe('optionsList()', () => {
           schema,
           label: get(schema, ['title']),
           value: get(schema, [PROPERTIES_KEY, 'animal', CONST_KEY]),
-        }))
+        })),
       );
     });
     it('should generate options for a oneOf object schema with a discriminator, titles in discriminator property', () => {
@@ -524,7 +524,7 @@ describe('optionsList()', () => {
           schema,
           label: get(schema, [PROPERTIES_KEY, 'animal', 'title']),
           value: get(schema, [PROPERTIES_KEY, 'animal', CONST_KEY]),
-        }))
+        })),
       );
     });
     it('should generate options for a oneOf object schema with a discriminator, value as fallback titles', () => {
@@ -559,7 +559,7 @@ describe('optionsList()', () => {
           schema,
           label: get(schema, [PROPERTIES_KEY, 'animal', CONST_KEY]),
           value: get(schema, [PROPERTIES_KEY, 'animal', CONST_KEY]),
-        }))
+        })),
       );
     });
     it('should generate options for a oneOf object schema without a discriminator, with optionsSchemaSelector', () => {
@@ -594,7 +594,7 @@ describe('optionsList()', () => {
           schema,
           label: get(schema, [PROPERTIES_KEY, 'animal', 'title']),
           value: get(schema, [PROPERTIES_KEY, 'animal', CONST_KEY]),
-        }))
+        })),
       );
     });
     it('should generate options for a oneOf object schema without a discriminator, with optionsSchemaSelector, uiTitles', () => {
@@ -625,7 +625,7 @@ describe('optionsList()', () => {
           schema,
           label: oneOfUiSchema.oneOf[index]['ui:title'],
           value: get(schema, [PROPERTIES_KEY, 'animal', CONST_KEY]),
-        }))
+        })),
       );
     });
   });

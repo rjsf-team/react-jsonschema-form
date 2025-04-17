@@ -68,7 +68,7 @@ describe('getUiOptions()', () => {
   it('returns widget object as empty, with error', () => {
     expect(getUiOptions(uiSchema.widgetObject)).toEqual(results.widgetObject);
     expect(consoleErrorSpy).toHaveBeenCalledWith(
-      'Setting options via ui:widget object is no longer supported, use ui:options instead'
+      'Setting options via ui:widget object is no longer supported, use ui:options instead',
     );
   });
   it('returns options object as options', () => {

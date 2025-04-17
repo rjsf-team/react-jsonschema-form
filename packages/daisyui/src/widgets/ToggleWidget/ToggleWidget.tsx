@@ -15,7 +15,7 @@ import { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjs
 export default function ToggleWidget<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >({ id, value, required, disabled, readonly, autofocus, onChange, onFocus, onBlur, options }: WidgetProps<T, S, F>) {
   /** Handle change events from the toggle input
    *
@@ -23,7 +23,7 @@ export default function ToggleWidget<
    */
   const _onChange = useCallback(
     ({ target: { checked } }: ChangeEvent<HTMLInputElement>) => onChange(checked),
-    [onChange]
+    [onChange],
   );
 
   /** Handle focus events

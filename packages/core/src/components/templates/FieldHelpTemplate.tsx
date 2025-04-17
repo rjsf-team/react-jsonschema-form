@@ -7,7 +7,7 @@ import { helpId, FieldHelpProps, FormContextType, RJSFSchema, StrictRJSFSchema }
 export default function FieldHelpTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(props: FieldHelpProps<T, S, F>) {
   const { idSchema, help } = props;
   if (!help) {

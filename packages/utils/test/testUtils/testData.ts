@@ -384,7 +384,7 @@ export const TEST_ERROR_SCHEMA: ErrorSchema = reduce(
     }
     return builder;
   },
-  new ErrorSchemaBuilder()
+  new ErrorSchemaBuilder(),
 ).ErrorSchema;
 
 export const TEST_ERROR_LIST: RJSFValidationError[] = reduce(
@@ -393,7 +393,7 @@ export const TEST_ERROR_LIST: RJSFValidationError[] = reduce(
     list.push({ property: `.${key}`, message: value, stack: `.${key} ${value}` });
     return list;
   },
-  []
+  [],
 );
 
 export const TEST_ERROR_LIST_OUTPUT: RJSFValidationError[] = reduce(
@@ -404,7 +404,7 @@ export const TEST_ERROR_LIST_OUTPUT: RJSFValidationError[] = reduce(
     }
     return list;
   },
-  []
+  [],
 );
 
 export const SUPER_SCHEMA: RJSFSchema = deepFreeze<RJSFSchema>({

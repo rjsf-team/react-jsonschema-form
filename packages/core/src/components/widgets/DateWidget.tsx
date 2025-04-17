@@ -7,7 +7,7 @@ import { getTemplate, FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps
  * @param props - The `WidgetProps` for this component
  */
 export default function DateWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: WidgetProps<T, S, F>
+  props: WidgetProps<T, S, F>,
 ) {
   const { onChange, options, registry } = props;
   const BaseInputTemplate = getTemplate<'BaseInputTemplate', T, S, F>('BaseInputTemplate', registry, options);

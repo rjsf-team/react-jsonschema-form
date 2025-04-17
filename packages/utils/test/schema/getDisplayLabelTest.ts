@@ -43,7 +43,11 @@ export default function getDisplayLabelTest(testValidator: TestValidatorType) {
       });
       it('custom type', () => {
         expect(
-          getDisplayLabel(testValidator, { type: 'array', title: 'myAwesomeTitle' }, { 'ui:widget': 'MyAwesomeWidget' })
+          getDisplayLabel(
+            testValidator,
+            { type: 'array', title: 'myAwesomeTitle' },
+            { 'ui:widget': 'MyAwesomeWidget' },
+          ),
         ).toEqual(true);
       });
     });

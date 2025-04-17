@@ -34,13 +34,13 @@ export default function findSelectedOptionInXxxOfTest(testValidator: TestValidat
     test('returns oneOf when formData has value via the fallbackField', () => {
       const expectedResult = CHOICES[0];
       expect(schemaUtils.findSelectedOptionInXxxOf(testOneOfSchema, 'answer', ONE_OF_KEY, ANSWER_1)).toEqual(
-        expectedResult
+        expectedResult,
       );
     });
     test('returns anyOf when formData has value via the fallbackField', () => {
       const expectedResult = CHOICES[0];
       expect(schemaUtils.findSelectedOptionInXxxOf(testAnyOfSchema, 'answer', ANY_OF_KEY, ANSWER_1)).toEqual(
-        expectedResult
+        expectedResult,
       );
     });
     test('returns oneOf when formData has value via the discriminator', () => {
@@ -49,8 +49,8 @@ export default function findSelectedOptionInXxxOfTest(testValidator: TestValidat
           testOneOfDiscriminatorSchema,
           'ignored_in_this_test',
           ONE_OF_KEY,
-          ANSWER_2
-        )
+          ANSWER_2,
+        ),
       ).toEqual(CHOICES[1]);
     });
     test('returns anyOf when formData has value via the discriminator', () => {
@@ -59,18 +59,18 @@ export default function findSelectedOptionInXxxOfTest(testValidator: TestValidat
           testAnyOfDiscriminatorSchema,
           'ignored_in_this_test',
           ANY_OF_KEY,
-          ANSWER_2
-        )
+          ANSWER_2,
+        ),
       ).toEqual(CHOICES[1]);
     });
     test('returns undefined when formData has non-existent oneOf value via the discriminator', () => {
       expect(
-        schemaUtils.findSelectedOptionInXxxOf(testOneOfDiscriminatorSchema, 'ignored_in_this_test', ONE_OF_KEY, {})
+        schemaUtils.findSelectedOptionInXxxOf(testOneOfDiscriminatorSchema, 'ignored_in_this_test', ONE_OF_KEY, {}),
       ).toBeUndefined();
     });
     test('returns undefined when formData has non-existent anyOf value via the discriminator', () => {
       expect(
-        schemaUtils.findSelectedOptionInXxxOf(testAnyOfDiscriminatorSchema, 'ignored_in_this_test', ANY_OF_KEY, {})
+        schemaUtils.findSelectedOptionInXxxOf(testAnyOfDiscriminatorSchema, 'ignored_in_this_test', ANY_OF_KEY, {}),
       ).toBeUndefined();
     });
   });

@@ -134,7 +134,7 @@ const DEFAULT_ID = 'test-id';
 const FIELD_ERROR_TEST_ID = 'FakeFieldErrorTemplate-testId';
 
 const NOT_SHOWN_ERROR_SCHEMA = new ErrorSchemaBuilder().addErrors(
-  'error message will not be rendered due to hideError flag'
+  'error message will not be rendered due to hideError flag',
 ).ErrorSchema;
 const NESTED_ERROR_SCHEMA = new ErrorSchemaBuilder()
   .addErrors(['first error', 'second error'])
@@ -198,7 +198,7 @@ describe('LayoutMultiSchemaField', () => {
         schema,
         {},
         { FieldErrorTemplate: FakeFieldErrorTemplate },
-        { SelectWidget: WrappedSelectWidget, RadioWidget: WrappedRadioWidget }
+        { SelectWidget: WrappedSelectWidget, RadioWidget: WrappedRadioWidget },
       ),
       schema,
       uiSchema,
@@ -243,7 +243,7 @@ describe('LayoutMultiSchemaField', () => {
       expect.objectContaining({
         message: expect.stringContaining(expectedError),
         type: 'unhandled exception',
-      })
+      }),
     );
   });
   test('default render with SIMPLE_ONEOF schema', async () => {
@@ -339,12 +339,12 @@ describe('LayoutMultiSchemaField', () => {
 
     // OnChange was called with the correct event
     const retrievedOptions = props.options.map((opt: object) =>
-      props.registry.schemaUtils.retrieveSchema(opt, props.formData)
+      props.registry.schemaUtils.retrieveSchema(opt, props.formData),
     );
     const sanitizedFormData = props.registry.schemaUtils.sanitizeDataForNewSchema(
       retrievedOptions[0],
       retrievedOptions[1],
-      props.formData
+      props.formData,
     );
     await waitFor(() => {
       expect(props.onChange).toHaveBeenCalledWith(
@@ -353,7 +353,7 @@ describe('LayoutMultiSchemaField', () => {
           [selectorField]: 'first_option',
         },
         undefined,
-        DEFAULT_ID
+        DEFAULT_ID,
       );
     });
   });
@@ -539,7 +539,7 @@ describe('LayoutMultiSchemaField', () => {
     });
     test('existing value,returns option with existing value', () => {
       expect(getSelectedOption(enumOptions, selectorField, SIMPLE_ONEOF_OPTIONS[0].value)).toBe(
-        SIMPLE_ONEOF[ONE_OF_KEY]![0]
+        SIMPLE_ONEOF[ONE_OF_KEY]![0],
       );
     });
     test('non-existing value, returns undefined', () => {

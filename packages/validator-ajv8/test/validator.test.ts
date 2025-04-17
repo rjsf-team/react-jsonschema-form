@@ -378,7 +378,7 @@ describe('AJV8Validator', () => {
             schema,
             undefined,
             transformErrors,
-            uiSchema
+            uiSchema,
           );
           errors = result.errors;
         });
@@ -833,7 +833,7 @@ describe('AJV8Validator', () => {
             schema,
             undefined,
             transformErrors,
-            uiSchema
+            uiSchema,
           );
           errors = result.errors;
         });
@@ -1513,12 +1513,12 @@ describe('AJV8Validator', () => {
           it('should return an errorSchema', () => {
             expect(errorSchema.billingAddress!.__errors).toHaveLength(1);
             expect(errorSchema.billingAddress!.__errors![0]).toEqual(
-              "must have required property 'uiSchema Billing Address'"
+              "must have required property 'uiSchema Billing Address'",
             );
 
             expect(errorSchema.shippingAddress!.city!.__errors).toHaveLength(1);
             expect(errorSchema.shippingAddress!.city!.__errors![0]).toEqual(
-              "must have required property 'uiSchema City'"
+              "must have required property 'uiSchema City'",
             );
           });
         });
@@ -1587,12 +1587,12 @@ describe('AJV8Validator', () => {
           it('should return an errorSchema', () => {
             expect(errorSchema.billingAddress!.__errors).toHaveLength(1);
             expect(errorSchema.billingAddress!.__errors![0]).toEqual(
-              "must have required property 'uiSchema Billing Address'"
+              "must have required property 'uiSchema Billing Address'",
             );
 
             expect(errorSchema.shippingAddress!.city!.__errors).toHaveLength(1);
             expect(errorSchema.shippingAddress!.city!.__errors![0]).toEqual(
-              "must have required property 'uiSchema City'"
+              "must have required property 'uiSchema City'",
             );
           });
         });
@@ -1646,7 +1646,7 @@ describe('AJV8Validator', () => {
           it('should return an errorSchema', () => {
             expect(errorSchema.nested!.lastName!.__errors).toHaveLength(1);
             expect(errorSchema.nested!.lastName!.__errors![0]).toEqual(
-              "must have required property 'uiSchema Last Name'"
+              "must have required property 'uiSchema Last Name'",
             );
 
             expect(errorSchema.nested!.numberOfChildren!.__errors).toHaveLength(1);
@@ -1788,7 +1788,7 @@ describe('AJV8Validator', () => {
             schema,
             undefined,
             transformErrors,
-            uiSchema
+            uiSchema,
           );
           errors = result.errors;
         });
@@ -1969,7 +1969,7 @@ describe('AJV8Validator', () => {
           {
             additionalMetaSchemas: [metaSchemaDraft6],
           },
-          localizer
+          localizer,
         );
         const result = validator.validateFormData({ datasetId: 'some kind of text' }, schema);
         errors = result.errors;
@@ -2065,7 +2065,7 @@ describe('AJV8Validator', () => {
                     format: 'area-code',
                   },
                 },
-              }
+              },
             );
             errors = result.errors;
           });
@@ -2152,7 +2152,7 @@ describe('AJV8Validator', () => {
             additionalMetaSchemas: [metaSchemaDraft6],
             AjvClass: Ajv2019,
           },
-          localizer
+          localizer,
         );
         const result = validator.validateFormData({ datasetId: 'some kind of text' }, schema);
         errors = result.errors;
@@ -2249,7 +2249,7 @@ describe('AJV8Validator', () => {
                     format: 'area-code',
                   },
                 },
-              }
+              },
             );
             errors = result.errors;
           });
@@ -2492,7 +2492,7 @@ describe('AJV8Validator', () => {
             holderName: 'Alice',
             billingAddress: 'El Camino Real',
           },
-          schema
+          schema,
         );
         expect(errors.errors).toHaveLength(0);
       });
@@ -2540,7 +2540,7 @@ describe('AJV8Validator', () => {
             additionalMetaSchemas: [metaSchemaDraft6],
             AjvClass: Ajv2020,
           },
-          localizer
+          localizer,
         );
         const result = validator.validateFormData({ datasetId: 'some kind of text' }, schema);
         errors = result.errors;
@@ -2637,7 +2637,7 @@ describe('AJV8Validator', () => {
                     format: 'area-code',
                   },
                 },
-              }
+              },
             );
             errors = result.errors;
           });

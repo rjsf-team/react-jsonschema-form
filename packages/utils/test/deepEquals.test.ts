@@ -6,8 +6,8 @@ describe('deepEquals()', () => {
     expect(
       deepEquals(
         () => {},
-        () => {}
-      )
+        () => {},
+      ),
     ).toBe(true);
     expect(deepEquals({ foo() {} }, { foo() {} })).toBe(true);
     expect(deepEquals({ foo: { bar() {} } }, { foo: { bar() {} } })).toBe(true);

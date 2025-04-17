@@ -23,7 +23,7 @@ import getDiscriminatorFieldFromSchema from '../getDiscriminatorFieldFromSchema'
 export default function findSelectedOptionInXxxOf<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(
   validator: ValidatorType<T, S, F>,
   rootSchema: S,
@@ -31,20 +31,20 @@ export default function findSelectedOptionInXxxOf<
   fallbackField: string,
   xxx: 'anyOf' | 'oneOf',
   formData: T = {} as T,
-  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>
+  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
 ): S | undefined {
   if (Array.isArray(schema[xxx])) {
     const discriminator = getDiscriminatorFieldFromSchema<S>(schema);
     const selectorField = discriminator || fallbackField;
     const xxxOfs = schema[xxx]!.map((xxxOf) =>
-      retrieveSchema<T, S, F>(validator, xxxOf as S, rootSchema, formData, experimental_customMergeAllOf)
+      retrieveSchema<T, S, F>(validator, xxxOf as S, rootSchema, formData, experimental_customMergeAllOf),
     );
     const data = get(formData, selectorField);
     if (data !== undefined) {
       return xxxOfs.find((xxx) => {
         return isEqual(
           get(xxx, [PROPERTIES_KEY, selectorField, DEFAULT_KEY], get(xxx, [PROPERTIES_KEY, selectorField, CONST_KEY])),
-          data
+          data,
         );
       });
     }

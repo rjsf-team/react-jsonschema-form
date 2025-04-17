@@ -15,13 +15,13 @@ import { FormContextType, RJSFSchema, StrictRJSFSchema, ValidatorType } from '..
 export default function getFirstMatchingOption<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(
   validator: ValidatorType<T, S, F>,
   formData: T | undefined,
   options: S[],
   rootSchema: S,
-  discriminatorField?: string
+  discriminatorField?: string,
 ): number {
   return getMatchingOption<T, S, F>(validator, formData, options, rootSchema, discriminatorField);
 }

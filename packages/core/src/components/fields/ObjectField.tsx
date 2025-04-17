@@ -86,7 +86,7 @@ class ObjectField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
             ...errorSchema,
             [name]: newErrorSchema,
           },
-        id
+        id,
       );
     };
   };
@@ -158,7 +158,7 @@ class ObjectField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
           errorSchema && {
             ...errorSchema,
             [value]: newErrorSchema,
-          }
+          },
       );
     };
   };

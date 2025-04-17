@@ -29,11 +29,11 @@ function Editor({ title, code, onChange }: EditorProps) {
         const parsedCode = JSON.parse(code);
         setValid(true);
         onChange(parsedCode);
-      } catch (err) {
+      } catch {
         setValid(false);
       }
     },
-    [setValid, onChange]
+    [setValid, onChange],
   );
 
   const icon = valid ? 'ok' : 'remove';
@@ -89,7 +89,7 @@ export default function Editors({
       setSchema(newSchema);
       setShareURL(null);
     },
-    [setSchema, setShareURL]
+    [setSchema, setShareURL],
   );
 
   const onUISchemaEdited = useCallback(
@@ -97,7 +97,7 @@ export default function Editors({
       setUiSchema(newUiSchema);
       setShareURL(null);
     },
-    [setUiSchema, setShareURL]
+    [setUiSchema, setShareURL],
   );
 
   const onFormDataEdited = useCallback(
@@ -114,7 +114,7 @@ export default function Editors({
         setShareURL(null);
       }
     },
-    [formData, setFormData, setShareURL]
+    [formData, setFormData, setShareURL],
   );
 
   const onExtraErrorsEdited = useCallback(
@@ -122,7 +122,7 @@ export default function Editors({
       setExtraErrors(newExtraErrors);
       setShareURL(null);
     },
-    [setExtraErrors, setShareURL]
+    [setExtraErrors, setShareURL],
   );
   const uiSchemaTitle = hasUiSchemaGenerator ? 'UISchema (regenerated on theme change)' : 'UiSchema';
 

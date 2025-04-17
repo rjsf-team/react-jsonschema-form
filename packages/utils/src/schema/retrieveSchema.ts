@@ -49,13 +49,13 @@ import deepEquals from '../deepEquals';
 export default function retrieveSchema<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(
   validator: ValidatorType<T, S, F>,
   schema: S,
   rootSchema: S = {} as S,
   rawFormData?: T,
-  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>
+  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
 ): S {
   return retrieveSchemaInternal<T, S, F>(
     validator,
@@ -64,7 +64,7 @@ export default function retrieveSchema<
     rawFormData,
     undefined,
     undefined,
-    experimental_customMergeAllOf
+    experimental_customMergeAllOf,
   )[0];
 }
 
@@ -89,7 +89,7 @@ export function resolveCondition<T = any, S extends StrictRJSFSchema = RJSFSchem
   expandAllBranches: boolean,
   recurseList: string[],
   formData?: T,
-  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>
+  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
 ): S[] {
   const { if: expression, then, else: otherwise, ...resolvedSchemaLessConditional } = schema;
 
@@ -106,8 +106,8 @@ export function resolveCondition<T = any, S extends StrictRJSFSchema = RJSFSchem
           formData,
           expandAllBranches,
           recurseList,
-          experimental_customMergeAllOf
-        )
+          experimental_customMergeAllOf,
+        ),
       );
     }
     if (otherwise && typeof otherwise !== 'boolean') {
@@ -119,8 +119,8 @@ export function resolveCondition<T = any, S extends StrictRJSFSchema = RJSFSchem
           formData,
           expandAllBranches,
           recurseList,
-          experimental_customMergeAllOf
-        )
+          experimental_customMergeAllOf,
+        ),
       );
     }
   } else {
@@ -134,8 +134,8 @@ export function resolveCondition<T = any, S extends StrictRJSFSchema = RJSFSchem
           formData,
           expandAllBranches,
           recurseList,
-          experimental_customMergeAllOf
-        )
+          experimental_customMergeAllOf,
+        ),
       );
     }
   }
@@ -150,8 +150,8 @@ export function resolveCondition<T = any, S extends StrictRJSFSchema = RJSFSchem
       formData,
       expandAllBranches,
       recurseList,
-      experimental_customMergeAllOf
-    )
+      experimental_customMergeAllOf,
+    ),
   );
 }
 
@@ -180,7 +180,7 @@ export function getAllPermutationsOfXxxOf<S extends StrictRJSFSchema = RJSFSchem
       permutations.forEach((permutation) => permutation.push(list[0]));
       return permutations;
     },
-    [[]] as S[][] // Start with an empty list
+    [[]] as S[][], // Start with an empty list
   );
 
   return allPermutations;
@@ -207,7 +207,7 @@ export function resolveSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, 
   expandAllBranches: boolean,
   recurseList: string[],
   formData?: T,
-  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>
+  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
 ): S[] {
   const updatedSchemas = resolveReference<T, S, F>(
     validator,
@@ -215,7 +215,7 @@ export function resolveSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, 
     rootSchema,
     expandAllBranches,
     recurseList,
-    formData
+    formData,
   );
   if (updatedSchemas.length > 1 || updatedSchemas[0] !== schema) {
     // return the updatedSchemas array if it has either multiple schemas within it
@@ -229,7 +229,7 @@ export function resolveSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, 
       rootSchema,
       expandAllBranches,
       recurseList,
-      formData
+      formData,
     );
     return resolvedSchemas.flatMap((s) => {
       return retrieveSchemaInternal<T, S, F>(
@@ -239,7 +239,7 @@ export function resolveSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, 
         formData,
         expandAllBranches,
         recurseList,
-        experimental_customMergeAllOf
+        experimental_customMergeAllOf,
       );
     });
   }
@@ -252,8 +252,8 @@ export function resolveSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, 
         formData,
         expandAllBranches,
         recurseList,
-        experimental_customMergeAllOf
-      )
+        experimental_customMergeAllOf,
+      ),
     );
     const allPermutations = getAllPermutationsOfXxxOf<S>(allOfSchemaElements);
     return allPermutations.map((permutation) => ({
@@ -286,7 +286,7 @@ export function resolveReference<T = any, S extends StrictRJSFSchema = RJSFSchem
   expandAllBranches: boolean,
   recurseList: string[],
   formData?: T,
-  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>
+  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
 ): S[] {
   const updatedSchema = resolveAllReferences<S>(schema, rootSchema, recurseList);
   if (updatedSchema !== schema) {
@@ -298,7 +298,7 @@ export function resolveReference<T = any, S extends StrictRJSFSchema = RJSFSchem
       formData,
       expandAllBranches,
       recurseList,
-      experimental_customMergeAllOf
+      experimental_customMergeAllOf,
     );
   }
   return [schema];
@@ -314,7 +314,7 @@ export function resolveReference<T = any, S extends StrictRJSFSchema = RJSFSchem
 export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
   schema: S,
   rootSchema: S,
-  recurseList: string[]
+  recurseList: string[],
 ): S {
   if (!isObject(schema)) {
     return schema;
@@ -342,7 +342,7 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
         result[key] = resolveAllReferences(value as S, rootSchema, childList);
         childrenLists.push(childList);
       },
-      {} as RJSFSchema
+      {} as RJSFSchema,
     );
     merge(recurseList, uniq(flattenDeep(childrenLists)));
     resolvedSchema = { ...resolvedSchema, [PROPERTIES_KEY]: updatedProps };
@@ -374,13 +374,13 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
 export function stubExistingAdditionalProperties<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(
   validator: ValidatorType<T, S, F>,
   theSchema: S,
   rootSchema?: S,
   aFormData?: T,
-  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>
+  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
 ): S {
   // Clone the schema so that we don't ruin the consumer's original
   const schema = {
@@ -404,7 +404,7 @@ export function stubExistingAdditionalProperties<
           { $ref: get(schema.additionalProperties, [REF_KEY]) } as S,
           rootSchema,
           formData as T,
-          experimental_customMergeAllOf
+          experimental_customMergeAllOf,
         );
       } else if ('type' in schema.additionalProperties!) {
         additionalProperties = { ...schema.additionalProperties };
@@ -448,7 +448,7 @@ export function stubExistingAdditionalProperties<
 export function retrieveSchemaInternal<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(
   validator: ValidatorType<T, S, F>,
   schema: S,
@@ -456,7 +456,7 @@ export function retrieveSchemaInternal<
   rawFormData?: T,
   expandAllBranches = false,
   recurseList: string[] = [],
-  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>
+  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
 ): S[] {
   if (!isObject(schema)) {
     return [{} as S];
@@ -468,7 +468,7 @@ export function retrieveSchemaInternal<
     expandAllBranches,
     recurseList,
     rawFormData,
-    experimental_customMergeAllOf
+    experimental_customMergeAllOf,
   );
   return resolvedSchemas.flatMap((s: S) => {
     let resolvedSchema = s;
@@ -480,7 +480,7 @@ export function retrieveSchemaInternal<
         expandAllBranches,
         recurseList,
         rawFormData as T,
-        experimental_customMergeAllOf
+        experimental_customMergeAllOf,
       );
     }
     if (ALL_OF_KEY in resolvedSchema) {
@@ -524,7 +524,7 @@ export function retrieveSchemaInternal<
         resolvedSchema,
         rootSchema,
         rawFormData as T,
-        experimental_customMergeAllOf
+        experimental_customMergeAllOf,
       );
     }
 
@@ -547,7 +547,7 @@ export function retrieveSchemaInternal<
 export function resolveAnyOrOneOfSchemas<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(validator: ValidatorType<T, S, F>, schema: S, rootSchema: S, expandAllBranches: boolean, rawFormData?: T) {
   let anyOrOneOf: S[] | undefined;
   const { oneOf, anyOf, ...remaining } = schema;
@@ -595,7 +595,7 @@ export function resolveDependencies<T = any, S extends StrictRJSFSchema = RJSFSc
   expandAllBranches: boolean,
   recurseList: string[],
   formData?: T,
-  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>
+  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
 ): S[] {
   // Drop the dependencies from the source schema.
   const { dependencies, ...remainingSchema } = schema;
@@ -604,7 +604,7 @@ export function resolveDependencies<T = any, S extends StrictRJSFSchema = RJSFSc
     remainingSchema as S,
     rootSchema,
     expandAllBranches,
-    formData
+    formData,
   );
   return resolvedSchemas.flatMap((resolvedSchema) =>
     processDependencies<T, S, F>(
@@ -615,8 +615,8 @@ export function resolveDependencies<T = any, S extends StrictRJSFSchema = RJSFSc
       expandAllBranches,
       recurseList,
       formData,
-      experimental_customMergeAllOf
-    )
+      experimental_customMergeAllOf,
+    ),
   );
 }
 
@@ -642,7 +642,7 @@ export function processDependencies<T = any, S extends StrictRJSFSchema = RJSFSc
   expandAllBranches: boolean,
   recurseList: string[],
   formData?: T,
-  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>
+  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
 ): S[] {
   let schemas = [resolvedSchema];
   // Process dependencies updating the local schema properties as appropriate.
@@ -657,7 +657,7 @@ export function processDependencies<T = any, S extends StrictRJSFSchema = RJSFSc
     }
     const [remainingDependencies, dependencyValue] = splitKeyElementFromObject(
       dependencyKey,
-      dependencies as GenericObjectType
+      dependencies as GenericObjectType,
     );
     if (Array.isArray(dependencyValue)) {
       schemas[0] = withDependentProperties<S>(resolvedSchema, dependencyValue);
@@ -671,7 +671,7 @@ export function processDependencies<T = any, S extends StrictRJSFSchema = RJSFSc
         expandAllBranches,
         recurseList,
         formData,
-        experimental_customMergeAllOf
+        experimental_customMergeAllOf,
       );
     }
     return schemas.flatMap((schema) =>
@@ -683,8 +683,8 @@ export function processDependencies<T = any, S extends StrictRJSFSchema = RJSFSc
         expandAllBranches,
         recurseList,
         formData,
-        experimental_customMergeAllOf
-      )
+        experimental_customMergeAllOf,
+      ),
     );
   }
   return schemas;
@@ -698,7 +698,7 @@ export function processDependencies<T = any, S extends StrictRJSFSchema = RJSFSc
  */
 export function withDependentProperties<S extends StrictRJSFSchema = RJSFSchema>(
   schema: S,
-  additionallyRequired?: string[]
+  additionallyRequired?: string[],
 ) {
   if (!additionallyRequired) {
     return schema;
@@ -733,7 +733,7 @@ export function withDependentSchema<T = any, S extends StrictRJSFSchema = RJSFSc
   expandAllBranches: boolean,
   recurseList: string[],
   formData?: T,
-  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>
+  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
 ): S[] {
   const dependentSchemas = retrieveSchemaInternal<T, S, F>(
     validator,
@@ -742,7 +742,7 @@ export function withDependentSchema<T = any, S extends StrictRJSFSchema = RJSFSc
     formData,
     expandAllBranches,
     recurseList,
-    experimental_customMergeAllOf
+    experimental_customMergeAllOf,
   );
   return dependentSchemas.flatMap((dependent) => {
     const { oneOf, ...dependentSchema } = dependent;
@@ -769,8 +769,8 @@ export function withDependentSchema<T = any, S extends StrictRJSFSchema = RJSFSc
         expandAllBranches,
         recurseList,
         formData,
-        experimental_customMergeAllOf
-      )
+        experimental_customMergeAllOf,
+      ),
     );
   });
 }
@@ -794,7 +794,7 @@ export function withDependentSchema<T = any, S extends StrictRJSFSchema = RJSFSc
 export function withExactlyOneSubschema<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(
   validator: ValidatorType<T, S, F>,
   schema: S,
@@ -804,7 +804,7 @@ export function withExactlyOneSubschema<
   expandAllBranches: boolean,
   recurseList: string[],
   formData?: T,
-  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>
+  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
 ): S[] {
   const validSubschemas = oneOf!.filter((subschema) => {
     if (typeof subschema === 'boolean' || !subschema || !subschema.properties) {
@@ -838,7 +838,7 @@ export function withExactlyOneSubschema<
       formData,
       expandAllBranches,
       recurseList,
-      experimental_customMergeAllOf
+      experimental_customMergeAllOf,
     );
     return schemas.map((s) => mergeSchemas(schema, s) as S);
   });

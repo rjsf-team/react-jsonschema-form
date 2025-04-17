@@ -6,7 +6,7 @@ import { AiOutlineArrowUp } from '@react-icons/all-files/ai/AiOutlineArrowUp';
 import { AiOutlineArrowDown } from '@react-icons/all-files/ai/AiOutlineArrowDown';
 
 export default function IconButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: IconButtonProps<T, S, F> & ButtonProps
+  props: IconButtonProps<T, S, F> & ButtonProps,
 ) {
   const { icon, iconType, className, uiSchema, registry, ...otherProps } = props;
   return (
@@ -17,7 +17,7 @@ export default function IconButton<T = any, S extends StrictRJSFSchema = RJSFSch
 }
 
 export function CopyButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: IconButtonProps<T, S, F>
+  props: IconButtonProps<T, S, F>,
 ) {
   const {
     registry: { translateString },
@@ -26,7 +26,7 @@ export function CopyButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
 }
 
 export function MoveDownButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: IconButtonProps<T, S, F>
+  props: IconButtonProps<T, S, F>,
 ) {
   const {
     registry: { translateString },
@@ -37,7 +37,7 @@ export function MoveDownButton<T = any, S extends StrictRJSFSchema = RJSFSchema,
 }
 
 export function MoveUpButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: IconButtonProps<T, S, F>
+  props: IconButtonProps<T, S, F>,
 ) {
   const {
     registry: { translateString },
@@ -46,7 +46,7 @@ export function MoveUpButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F
 }
 
 export function RemoveButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: IconButtonProps<T, S, F>
+  props: IconButtonProps<T, S, F>,
 ) {
   const {
     registry: { translateString },

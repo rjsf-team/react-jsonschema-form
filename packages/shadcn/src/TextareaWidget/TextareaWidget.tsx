@@ -18,7 +18,7 @@ type CustomWidgetProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F exten
 export default function TextareaWidget<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >({
   id,
   placeholder,

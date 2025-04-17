@@ -12,7 +12,7 @@ import { WidgetProps, StrictRJSFSchema, RJSFSchema, FormContextType } from '@rjs
  * @param props - The `WidgetProps` for this component
  */
 export default function TimeWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: WidgetProps<T, S, F>
+  props: WidgetProps<T, S, F>,
 ) {
   const { id, value, onChange, onFocus, onBlur, required, disabled, readonly } = props;
 
@@ -26,7 +26,7 @@ export default function TimeWidget<T = any, S extends StrictRJSFSchema = RJSFSch
         onFocus(id, event.target.value);
       }
     },
-    [onFocus, id]
+    [onFocus, id],
   );
 
   /** Handle blur events
@@ -39,7 +39,7 @@ export default function TimeWidget<T = any, S extends StrictRJSFSchema = RJSFSch
         onBlur(id, event.target.value);
       }
     },
-    [onBlur, id]
+    [onBlur, id],
   );
 
   /** Handle change events
@@ -50,7 +50,7 @@ export default function TimeWidget<T = any, S extends StrictRJSFSchema = RJSFSch
     (event: React.ChangeEvent<HTMLInputElement>) => {
       onChange(event.target.value);
     },
-    [onChange]
+    [onChange],
   );
 
   return (

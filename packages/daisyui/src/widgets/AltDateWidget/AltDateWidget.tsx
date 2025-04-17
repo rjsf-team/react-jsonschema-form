@@ -48,7 +48,7 @@ function getDateElementProps(
   state: DateObject,
   time: boolean,
   yearsRange?: [number, number],
-  format: DateElementFormat = 'YMD'
+  format: DateElementFormat = 'YMD',
 ) {
   const rangeOptions = yearsRange ?? [1900, new Date().getFullYear() + 2];
   // Define the order based on the format
@@ -66,10 +66,10 @@ function getDateElementProps(
       key === 'year'
         ? (rangeOptions as [number, number])
         : key === 'month'
-        ? ([1, 12] as [number, number])
-        : key === 'day'
-        ? ([1, 31] as [number, number])
-        : ([0, 59] as [number, number]),
+          ? ([1, 12] as [number, number])
+          : key === 'day'
+            ? ([1, 31] as [number, number])
+            : ([0, 59] as [number, number]),
   }));
 
   // Add time elements if needed
@@ -77,7 +77,7 @@ function getDateElementProps(
     dateElements.push(
       { type: 'hour', value: state.hour, range: [0, 23] as [number, number] },
       { type: 'minute', value: state.minute, range: [0, 59] as [number, number] },
-      { type: 'second', value: state.second, range: [0, 59] as [number, number] }
+      { type: 'second', value: state.second, range: [0, 59] as [number, number] },
     );
   }
 
@@ -140,7 +140,7 @@ function DateElement<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
     (value: any) => {
       select(type as keyof DateObject, value);
     },
-    [select, type]
+    [select, type],
   );
 
   return (
@@ -198,7 +198,7 @@ function convertToRJSFDateObject(dateObj: DateObject): RJSFDateObject {
 export default function AltDateWidget<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >({
   time = false,
   disabled = false,
@@ -256,7 +256,7 @@ export default function AltDateWidget<
       const rjsfDateObj = convertToRJSFDateObject(nextState);
       onChange(toDateString(rjsfDateObj, time));
     },
-    [disabled, readonly, time, onChange]
+    [disabled, readonly, time, onChange],
   );
 
   // Clear the date
@@ -268,7 +268,7 @@ export default function AltDateWidget<
       }
       onChange(undefined);
     },
-    [disabled, readonly, onChange]
+    [disabled, readonly, onChange],
   );
 
   return (
@@ -278,7 +278,7 @@ export default function AltDateWidget<
           state,
           time,
           options.yearsRange as [number, number] | undefined,
-          options.format as DateElementFormat | undefined
+          options.format as DateElementFormat | undefined,
         ).map((elemProps, i) => (
           <div key={i} className='form-control'>
             <label className='label'>

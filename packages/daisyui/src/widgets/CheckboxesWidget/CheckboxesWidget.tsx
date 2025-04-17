@@ -44,7 +44,7 @@ export default function CheckboxesWidget<T, S extends StrictRJSFSchema = RJSFSch
       }
       return value.includes(option.value);
     },
-    [value, isEnumeratedObject]
+    [value, isEnumeratedObject],
   );
 
   /** Handles changes to a checkbox's checked state */
@@ -65,7 +65,7 @@ export default function CheckboxesWidget<T, S extends StrictRJSFSchema = RJSFSch
         onChange([...newValue, optionValue]);
       }
     },
-    [onChange, value, isChecked, isEnumeratedObject, enumOptions]
+    [onChange, value, isChecked, isEnumeratedObject, enumOptions],
   );
 
   /** Handles focus events for accessibility */
@@ -79,7 +79,7 @@ export default function CheckboxesWidget<T, S extends StrictRJSFSchema = RJSFSch
         }
       }
     },
-    [onFocus, id, enumOptions]
+    [onFocus, id, enumOptions],
   );
 
   /** Handles blur events for accessibility */
@@ -93,7 +93,7 @@ export default function CheckboxesWidget<T, S extends StrictRJSFSchema = RJSFSch
         }
       }
     },
-    [onBlur, id, enumOptions]
+    [onBlur, id, enumOptions],
   );
 
   return (

@@ -8,7 +8,7 @@ import Widgets, { generateWidgets } from './widgets';
 export function generateTheme<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(): ThemeProps<T, S, F> {
   return {
     templates: generateTemplates<T, S, F>(),
@@ -21,7 +21,7 @@ const Theme = generateTheme();
 export function generateForm<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(): ComponentType<FormProps<T, S, F>> {
   return withTheme<T, S, F>(generateTheme<T, S, F>());
 }

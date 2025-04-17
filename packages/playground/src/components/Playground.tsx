@@ -59,7 +59,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
         setUiSchema(uiSchemaGenerator.generator(theme));
       }
     },
-    [uiSchemaGenerator, setTheme, setSubtheme, setFormComponent, setStylesheet]
+    [uiSchemaGenerator, setTheme, setSubtheme, setFormComponent, setStylesheet],
   );
 
   const load = useCallback(
@@ -115,14 +115,14 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
       }
       setOtherFormProps({ fields, templates, ...rest });
     },
-    [theme, onThemeSelected, themes]
+    [theme, onThemeSelected, themes],
   );
 
   const onSampleSelected = useCallback(
     (sampleName: string) => {
       load({ ...samples[sampleName], sampleName, liveSettings, theme });
     },
-    [load, liveSettings, theme, samples]
+    [load, liveSettings, theme, samples],
   );
 
   useEffect(() => {
@@ -156,7 +156,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
       setFormData(formData);
       setShareURL(null);
     },
-    [setFormData, setShareURL]
+    [setFormData, setShareURL],
   );
 
   const onFormDataSubmit = useCallback(({ formData }: IChangeEvent, event: FormEvent<any>) => {

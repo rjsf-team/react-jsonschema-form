@@ -21,7 +21,7 @@ import {
 export default function LayoutHeaderField<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(props: FieldProps<T, S, F>) {
   const { idSchema, title, schema, uiSchema, required, registry, name } = props;
   const options = getUiOptions<T, S, F>(uiSchema, registry.globalUiOptions);
@@ -34,7 +34,7 @@ export default function LayoutHeaderField<
   const TitleFieldTemplate: TemplatesType<T, S, F>['TitleFieldTemplate'] = getTemplate<'TitleFieldTemplate', T, S, F>(
     'TitleFieldTemplate',
     registry,
-    options
+    options,
   );
   return (
     <TitleFieldTemplate

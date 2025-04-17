@@ -18,7 +18,7 @@ const DEFAULT_OPTIONS = {
 export default function FieldErrorTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >({ errors, idSchema, uiSchema, registry }: FieldErrorProps<T, S, F>) {
   const { formContext } = registry;
   const options = getSemanticErrorProps<T, S, F>({

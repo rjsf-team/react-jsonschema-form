@@ -51,7 +51,7 @@ export default function RangeWidget<T = any, S extends StrictRJSFSchema = RJSFSc
     (event: React.ChangeEvent<HTMLInputElement>) => {
       onChange(event.target.value);
     },
-    [onChange]
+    [onChange],
   );
 
   return (

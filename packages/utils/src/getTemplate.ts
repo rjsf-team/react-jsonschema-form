@@ -12,7 +12,7 @@ export default function getTemplate<
   Name extends keyof TemplatesType<T, S, F>,
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(name: Name, registry: Registry<T, S, F>, uiOptions: UIOptionsType<T, S, F> = {}): TemplatesType<T, S, F>[Name] {
   const { templates } = registry;
   if (name === 'ButtonTemplates') {

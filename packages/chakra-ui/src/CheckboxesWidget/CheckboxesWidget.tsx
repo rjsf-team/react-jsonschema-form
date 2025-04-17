@@ -17,7 +17,7 @@ import { getChakra } from '../utils';
 export default function CheckboxesWidget<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(props: WidgetProps<T, S, F>) {
   const {
     id,
@@ -59,7 +59,7 @@ export default function CheckboxesWidget<
         <FormLabel htmlFor={id} id={`${id}-label`}>
           {label}
         </FormLabel>,
-        hideLabel || !label
+        hideLabel || !label,
       )}
       <CheckboxGroup
         onChange={(option) => onChange(enumOptionsValueForIndex<S>(option, enumOptions, emptyValue))}

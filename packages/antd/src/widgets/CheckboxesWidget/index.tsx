@@ -20,7 +20,7 @@ import {
 export default function CheckboxesWidget<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >({ autofocus, disabled, formContext, id, onBlur, onChange, onFocus, options, readonly, value }: WidgetProps<T, S, F>) {
   const { readonlyAsDisabled = true } = formContext as GenericObjectType;
 

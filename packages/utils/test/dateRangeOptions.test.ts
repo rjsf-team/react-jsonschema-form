@@ -63,7 +63,7 @@ describe('dateRangeOptions()', () => {
   });
   it('throws when start and stop are different signs', () => {
     expect(() => dateRangeOptions(1, -1)).toThrowError(
-      new Error(`Both start (${1}) and stop (${-1}) must both be <= 0 or > 0, got one of each`)
+      new Error(`Both start (${1}) and stop (${-1}) must both be <= 0 or > 0, got one of each`),
     );
   });
 });

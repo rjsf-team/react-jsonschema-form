@@ -80,6 +80,6 @@ describe('getSchemaType()', () => {
     `should correctly guess the type "%s" of a schema %j`,
     (expected, schema) => {
       expect(getSchemaType(schema)).toBe(expected);
-    }
+    },
   );
 });

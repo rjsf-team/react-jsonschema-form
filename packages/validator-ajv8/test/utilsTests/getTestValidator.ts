@@ -23,7 +23,7 @@ export default function getTestValidator<T = any>(options: CustomValidatorOption
       formData: T | undefined,
       schema: RJSFSchema,
       customValidate?: CustomValidator<T>,
-      transformErrors?: ErrorTransformer<T>
+      transformErrors?: ErrorTransformer<T>,
     ): ValidationData<T> {
       return validator.validateFormData(formData, schema, customValidate, transformErrors);
     },

@@ -153,7 +153,7 @@ export default class AJV8Validator<T = any, S extends StrictRJSFSchema = RJSFSch
     schema: S,
     customValidate?: CustomValidator<T, S, F>,
     transformErrors?: ErrorTransformer<T, S, F>,
-    uiSchema?: UiSchema<T, S, F>
+    uiSchema?: UiSchema<T, S, F>,
   ): ValidationData<T> {
     const rawErrors = this.rawValidation<ErrorObject>(schema, formData);
     return processRawValidationErrors(this, rawErrors, formData, schema, customValidate, transformErrors, uiSchema);

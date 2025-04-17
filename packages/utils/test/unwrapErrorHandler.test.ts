@@ -12,7 +12,7 @@ const POPULATED_WRAPPER: FormValidation = reduce(
     propValidation?.addError(value);
     return validation;
   },
-  createErrorHandler(TEST_FORM_DATA) as FormValidation
+  createErrorHandler(TEST_FORM_DATA) as FormValidation,
 );
 
 describe('unwrapErrorHandler()', () => {

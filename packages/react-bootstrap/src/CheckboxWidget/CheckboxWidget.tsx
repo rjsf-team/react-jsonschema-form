@@ -15,7 +15,7 @@ import Form from 'react-bootstrap/Form';
 export default function CheckboxWidget<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(props: WidgetProps<T, S, F>) {
   const {
     id,
@@ -40,7 +40,7 @@ export default function CheckboxWidget<
   const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
     'DescriptionFieldTemplate',
     registry,
-    options
+    options,
   );
 
   const _onChange = ({ target: { checked } }: FocusEvent<HTMLInputElement>) => onChange(checked);

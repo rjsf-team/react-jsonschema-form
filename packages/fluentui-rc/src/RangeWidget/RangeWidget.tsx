@@ -16,7 +16,7 @@ import { Label, Slider, SliderOnChangeData } from '@fluentui/react-components';
  * @param props - The `WidgetProps` for this component
  */
 export default function RangeWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: WidgetProps<T, S, F>
+  props: WidgetProps<T, S, F>,
 ) {
   const { value, readonly, disabled, onBlur, onFocus, options, schema, onChange, required, label, hideLabel, id } =
     props;
@@ -34,7 +34,7 @@ export default function RangeWidget<T = any, S extends StrictRJSFSchema = RJSFSc
         <Label required={required} htmlFor={id}>
           {label || undefined}
         </Label>,
-        hideLabel
+        hideLabel,
       )}
       <Slider
         disabled={disabled || readonly}

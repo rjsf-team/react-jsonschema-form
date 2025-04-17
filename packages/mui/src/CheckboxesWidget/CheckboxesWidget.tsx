@@ -25,7 +25,7 @@ import {
 export default function CheckboxesWidget<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >({
   label,
   hideLabel,
@@ -64,7 +64,7 @@ export default function CheckboxesWidget<
         <FormLabel required={required} htmlFor={id}>
           {label || undefined}
         </FormLabel>,
-        hideLabel
+        hideLabel,
       )}
       <FormGroup id={id} row={!!inline}>
         {Array.isArray(enumOptions) &&

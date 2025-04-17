@@ -21,7 +21,7 @@ function getFromSchemaInternal<T = any, S extends StrictRJSFSchema = RJSFSchema,
   rootSchema: S,
   schema: S,
   path: string | string[],
-  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>
+  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
 ): T | S | undefined {
   let fieldSchema = schema;
   if (has(schema, REF_KEY)) {
@@ -39,7 +39,7 @@ function getFromSchemaInternal<T = any, S extends StrictRJSFSchema = RJSFSchema,
       rootSchema,
       fieldSchema,
       nestedPath,
-      experimental_customMergeAllOf
+      experimental_customMergeAllOf,
     );
   }
   return undefined;
@@ -59,38 +59,38 @@ function getFromSchemaInternal<T = any, S extends StrictRJSFSchema = RJSFSchema,
 export default function getFromSchema<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(
   validator: ValidatorType<T, S, F>,
   rootSchema: S,
   schema: S,
   path: string | string[],
   defaultValue: T,
-  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>
+  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
 ): T;
 export default function getFromSchema<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(
   validator: ValidatorType<T, S, F>,
   rootSchema: S,
   schema: S,
   path: string | string[],
   defaultValue: S,
-  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>
+  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
 ): S;
 export default function getFromSchema<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(
   validator: ValidatorType<T, S, F>,
   rootSchema: S,
   schema: S,
   path: string | string[],
   defaultValue: T | S,
-  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>
+  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
 ): T | S {
   const result = getFromSchemaInternal(validator, rootSchema, schema, path, experimental_customMergeAllOf);
   if (result === undefined) {

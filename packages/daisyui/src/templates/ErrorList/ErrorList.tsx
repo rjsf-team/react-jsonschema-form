@@ -6,7 +6,7 @@ import { ErrorListProps, StrictRJSFSchema, RJSFSchema, FormContextType } from '@
  * @param props - The `ErrorListProps` for the component
  */
 export default function ErrorList<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: ErrorListProps<T, S, F>
+  props: ErrorListProps<T, S, F>,
 ) {
   const { errors } = props;
   return (

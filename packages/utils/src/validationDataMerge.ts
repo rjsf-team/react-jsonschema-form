@@ -15,7 +15,7 @@ import { ErrorSchema, ValidationData } from './types';
  */
 export default function validationDataMerge<T = any>(
   validationData: ValidationData<T>,
-  additionalErrorSchema?: ErrorSchema<T>
+  additionalErrorSchema?: ErrorSchema<T>,
 ): ValidationData<T> {
   if (!additionalErrorSchema) {
     return validationData;

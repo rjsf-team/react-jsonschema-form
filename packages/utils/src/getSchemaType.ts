@@ -13,7 +13,7 @@ import { RJSFSchema, StrictRJSFSchema } from './types';
  * @returns - The type of the schema
  */
 export default function getSchemaType<S extends StrictRJSFSchema = RJSFSchema>(
-  schema: S
+  schema: S,
 ): string | string[] | undefined {
   let { type } = schema;
 

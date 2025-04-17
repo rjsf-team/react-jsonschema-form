@@ -21,7 +21,7 @@ import {
 export default function ObjectFieldTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(props: ObjectFieldTemplateProps<T, S, F>) {
   const {
     description,
@@ -42,7 +42,7 @@ export default function ObjectFieldTemplate<
   const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
     'DescriptionFieldTemplate',
     registry,
-    uiOptions
+    uiOptions,
   );
   // Button templates are not overridden in the uiSchema
   const {
@@ -79,7 +79,7 @@ export default function ObjectFieldTemplate<
             <Grid2 size={{ xs: 12 }} key={index} style={{ marginBottom: '10px' }}>
               {element.content}
             </Grid2>
-          )
+          ),
         )}
         {canExpand<T, S, F>(schema, uiSchema, formData) && (
           <Grid2 container justifyContent='flex-end'>

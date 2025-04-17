@@ -7,7 +7,7 @@ import { getTemplate, FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps
 export default function PasswordWidget<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(props: WidgetProps<T, S, F>) {
   const { options, registry } = props;
   const BaseInputTemplate = getTemplate<'BaseInputTemplate', T, S, F>('BaseInputTemplate', registry, options);

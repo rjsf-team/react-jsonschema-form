@@ -16,7 +16,7 @@ import Form from 'react-bootstrap/Form';
 export default function WrapIfAdditionalTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >({
   classNames,
   style,

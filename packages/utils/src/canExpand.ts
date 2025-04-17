@@ -13,7 +13,7 @@ import getUiOptions from './getUiOptions';
 export default function canExpand<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   schema: RJSFSchema,
   uiSchema: UiSchema<T, S, F> = {},
-  formData?: T
+  formData?: T,
 ) {
   if (!schema.additionalProperties) {
     return false;

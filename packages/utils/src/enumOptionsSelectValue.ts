@@ -13,7 +13,7 @@ import isNil from 'lodash/isNil';
 export default function enumOptionsSelectValue<S extends StrictRJSFSchema = RJSFSchema>(
   valueIndex: string | number,
   selected: EnumOptionsType<S>['value'][],
-  allEnumOptions: EnumOptionsType<S>[] = []
+  allEnumOptions: EnumOptionsType<S>[] = [],
 ) {
   const value = enumOptionsValueForIndex<S>(valueIndex, allEnumOptions);
   if (!isNil(value)) {

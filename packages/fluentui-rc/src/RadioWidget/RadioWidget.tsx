@@ -47,7 +47,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
         <Label required={required} htmlFor={id}>
           {label || undefined}
         </Label>,
-        hideLabel
+        hideLabel,
       )}
       <RadioGroup
         id={id}

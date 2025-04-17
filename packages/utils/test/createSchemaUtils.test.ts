@@ -28,7 +28,7 @@ describe('createSchemaUtils()', () => {
       });
       it('returns true when passing different defaultFormStateBehavior', () => {
         expect(
-          schemaUtils.doesSchemaUtilsDiffer(testValidator, rootSchema, { arrayMinItems: { populate: 'requiredOnly' } })
+          schemaUtils.doesSchemaUtilsDiffer(testValidator, rootSchema, { arrayMinItems: { populate: 'requiredOnly' } }),
         ).toBe(true);
       });
     });
@@ -39,12 +39,12 @@ describe('createSchemaUtils()', () => {
       });
       it('returns false when passing falsy validator', () => {
         expect(schemaUtils.doesSchemaUtilsDiffer(null as unknown as ValidatorType, {}, defaultFormStateBehavior)).toBe(
-          false
+          false,
         );
       });
       it('returns false when passing falsy rootSchema', () => {
         expect(
-          schemaUtils.doesSchemaUtilsDiffer(testValidator, null as unknown as RJSFSchema, defaultFormStateBehavior)
+          schemaUtils.doesSchemaUtilsDiffer(testValidator, null as unknown as RJSFSchema, defaultFormStateBehavior),
         ).toBe(false);
       });
       it('returns true when passing different validator', () => {
@@ -55,7 +55,7 @@ describe('createSchemaUtils()', () => {
       });
       it('returns true when passing different defaultFormStateBehavior', () => {
         expect(
-          schemaUtils.doesSchemaUtilsDiffer(testValidator, rootSchema, { arrayMinItems: { populate: 'all' } })
+          schemaUtils.doesSchemaUtilsDiffer(testValidator, rootSchema, { arrayMinItems: { populate: 'all' } }),
         ).toBe(true);
       });
     });
