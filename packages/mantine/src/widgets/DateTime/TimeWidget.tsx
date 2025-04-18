@@ -14,7 +14,7 @@ import { TimeInput } from '@mantine/dates';
  * @param props - The `WidgetProps` for this component
  */
 export default function TimeWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: WidgetProps<T, S, F>
+  props: WidgetProps<T, S, F>,
 ) {
   const {
     id,
@@ -40,7 +40,7 @@ export default function TimeWidget<T = any, S extends StrictRJSFSchema = RJSFSch
     (e: ChangeEvent<HTMLInputElement>) => {
       onChange(e.target.value === '' ? emptyValue : e.target.value);
     },
-    [onChange, emptyValue]
+    [onChange, emptyValue],
   );
 
   const handleBlur = useCallback(
@@ -49,7 +49,7 @@ export default function TimeWidget<T = any, S extends StrictRJSFSchema = RJSFSch
         onBlur(id, target && target.value);
       }
     },
-    [onBlur, id]
+    [onBlur, id],
   );
 
   const handleFocus = useCallback(
@@ -58,7 +58,7 @@ export default function TimeWidget<T = any, S extends StrictRJSFSchema = RJSFSch
         onFocus(id, target && target.value);
       }
     },
-    [onFocus, id]
+    [onFocus, id],
   );
 
   return (

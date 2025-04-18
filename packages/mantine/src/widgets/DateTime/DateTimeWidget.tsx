@@ -9,7 +9,7 @@ import DateTimeInput from './DateTimeInput';
 export default function DateTimeWidget<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(props: WidgetProps<T, S, F>) {
   const { valueFormat = 'YYYY-MM-DD HH:mm:ss', displayFormat, ...otherOptions } = props.options;
 

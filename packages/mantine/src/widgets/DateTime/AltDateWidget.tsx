@@ -26,7 +26,7 @@ function readyForChange(state: DateObject) {
 export default function AltDateWidget<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(props: WidgetProps<T, S, F>) {
   const {
     id,
@@ -70,7 +70,7 @@ export default function AltDateWidget<
       const nextState = parseDateString(new Date().toJSON(), showTime);
       onChange(toDateString(nextState, showTime));
     }
-  }, [disabled, readonly, showTime]);
+  }, [disabled, readonly, showTime, onChange]);
 
   const handleClear = useCallback(() => {
     if (!disabled && !readonly) {
@@ -90,7 +90,7 @@ export default function AltDateWidget<
           state,
           showTime,
           options.yearsRange as [number, number] | undefined,
-          options.format as DateElementFormat | undefined
+          options.format as DateElementFormat | undefined,
         ).map((elemProps, i) => {
           const elemId = id + '_' + elemProps.type;
           return (
