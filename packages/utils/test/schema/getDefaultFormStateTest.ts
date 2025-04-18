@@ -2164,101 +2164,6 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         ).toEqual({ requiredArray: ['default0', 'default0'] });
       });
     });
-    describe('default form state behaviour: allOf = "populateDefaults"', () => {
-      it('should populate default values correctly', () => {
-        const schema: RJSFSchema = {
-          title: 'Example',
-          type: 'object',
-          properties: {
-            animalInfo: {
-              properties: {
-                animal: {
-                  type: 'string',
-                  default: 'Cat',
-                  enum: ['Cat', 'Fish'],
-                },
-              },
-              allOf: [
-                {
-                  if: {
-                    properties: {
-                      animal: {
-                        const: 'Cat',
-                      },
-                    },
-                  },
-                  then: {
-                    properties: {
-                      food: {
-                        type: 'string',
-                        default: 'meat',
-                        enum: ['meat', 'grass', 'fish'],
-                      },
-                    },
-                    required: ['food'],
-                  },
-                },
-              ],
-            },
-          },
-        };
-
-        expect(
-          computeDefaults(testValidator, schema, {
-            rootSchema: schema,
-            experimental_defaultFormStateBehavior: { allOf: 'populateDefaults' },
-          })
-        ).toEqual({ animalInfo: { animal: 'Cat', food: 'meat' } });
-      });
-    });
-
-    describe('default form state behaviour: allOf = "skipDefaults"', () => {
-      it('should populate default values correctly', () => {
-        const schema: RJSFSchema = {
-          title: 'Example',
-          type: 'object',
-          properties: {
-            animalInfo: {
-              properties: {
-                animal: {
-                  type: 'string',
-                  default: 'Cat',
-                  enum: ['Cat', 'Fish'],
-                },
-              },
-              allOf: [
-                {
-                  if: {
-                    properties: {
-                      animal: {
-                        const: 'Cat',
-                      },
-                    },
-                  },
-                  then: {
-                    properties: {
-                      food: {
-                        type: 'string',
-                        default: 'meat',
-                        enum: ['meat', 'grass', 'fish'],
-                      },
-                    },
-                    required: ['food'],
-                  },
-                },
-              ],
-            },
-          },
-        };
-
-        expect(
-          computeDefaults(testValidator, schema, {
-            rootSchema: schema,
-            experimental_defaultFormStateBehavior: { allOf: 'skipDefaults' },
-          })
-        ).toEqual({ animalInfo: { animal: 'Cat' } });
-      });
-    });
     describe('default form state behavior: arrayMinItems.populate = "never"', () => {
       it('should not be filled if minItems defined and required', () => {
         const schema: RJSFSchema = {
@@ -3765,7 +3670,106 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         });
       });
     });
+    describe('defaults with allOf', () => {
+      let schema: RJSFSchema;
+
+      it('should populate root defaults for allOf', () => {
+        schema = {
+          allOf: [
+            {
+              properties: {
+                first: {
+                  title: 'First',
+                  type: 'string',
+                },
+              },
+            },
+            {
+              properties: {
+                second: {
+                  title: 'Second',
+                  type: 'string',
+                },
+              },
+            },
+          ],
+          default: {
+            second: 'Second 2!',
+          },
+          type: 'object',
+        };
+
+        expect(getDefaultFormState(testValidator, schema, {})).toEqual({
+          second: 'Second 2!',
+        });
+      });
+
+      describe('default form state behaviour: allOf = "populateDefaults"', () => {
+        it('should populate default values correctly', () => {
+          schema = {
+            title: 'Example',
+            type: 'object',
+            properties: {
+              animalInfo: {
+                properties: {
+                  animal: {
+                    type: 'string',
+                    default: 'Cat',
+                    enum: ['Cat', 'Fish'],
+                  },
+                },
+                allOf: [
+                  {
+                    if: {
+                      properties: {
+                        animal: {
+                          const: 'Cat',
+                        },
+                      },
+                    },
+                    then: {
+                      properties: {
+                        food: {
+                          type: 'string',
+                          default: 'meat',
+                          enum: ['meat', 'grass', 'fish'],
+                        },
+                      },
+                      required: ['food'],
+                    },
+                  },
+                ],
+              },
+            },
+          };
+
+          expect(
+            computeDefaults(testValidator, schema, {
+              rootSchema: schema,
+              experimental_defaultFormStateBehavior: { allOf: 'populateDefaults' },
+            })
+          ).toEqual({ animalInfo: { animal: 'Cat', food: 'meat' } });
+        });
+      });
+
+      describe('default form state behaviour: allOf = "skipDefaults"', () => {
+        it('should populate default values correctly', () => {
+          expect(
+            computeDefaults(testValidator, schema, {
+              rootSchema: schema,
+              experimental_defaultFormStateBehavior: { allOf: 'skipDefaults' },
+            })
+          ).toEqual({ animalInfo: { animal: 'Cat' } });
+        });
+      });
+    });
     describe('defaults with oneOf', () => {
+      afterEach(() => {
+        // Reset the testValidator
+        if (typeof testValidator.reset === 'function') {
+          testValidator?.reset();
+        }
+      });
       it('should not populate defaults for empty oneOf', () => {
         const schema: RJSFSchema = {
           type: 'object',
@@ -3793,6 +3797,46 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         };
         expect(getDefaultFormState(testValidator, schema, {})).toEqual({
           name: 'a',
+        });
+      });
+      it('should populate root defaults for oneOf', () => {
+        const schema: RJSFSchema = {
+          oneOf: [
+            {
+              properties: {
+                first: {
+                  title: 'First',
+                  type: 'string',
+                },
+              },
+            },
+            {
+              properties: {
+                second: {
+                  title: 'Second',
+                  type: 'string',
+                },
+              },
+            },
+          ],
+          default: {
+            second: 'Second 2!',
+          },
+          type: 'object',
+        };
+
+        // Mock isValid so that withExactlyOneSubschema works as expected
+        testValidator.setReturnValues({
+          isValid: [
+            false, // First oneOf... first === first
+            false, // Second oneOf... second !== first
+            false, // Third oneOf... second === second
+            true, // Fourth oneOf... second === second
+          ],
+        });
+
+        expect(getDefaultFormState(testValidator, schema, {})).toEqual({
+          second: 'Second 2!',
         });
       });
       it('should populate defaults for oneOf when `type`: `object` is missing', () => {
@@ -3979,7 +4023,13 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
       });
     });
     describe('defaults with anyOf', () => {
-      it('should not populate defaults for empty oneOf', () => {
+      afterEach(() => {
+        // Reset the testValidator
+        if (typeof testValidator.reset === 'function') {
+          testValidator?.reset();
+        }
+      });
+      it('should not populate defaults for empty anyOf', () => {
         const schema: RJSFSchema = {
           type: 'object',
           properties: {
@@ -4006,6 +4056,46 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         };
         expect(getDefaultFormState(testValidator, schema, {})).toEqual({
           name: 'a',
+        });
+      });
+      it('should populate root defaults for anyOf', () => {
+        const schema: RJSFSchema = {
+          anyOf: [
+            {
+              properties: {
+                first: {
+                  title: 'First',
+                  type: 'string',
+                },
+              },
+            },
+            {
+              properties: {
+                second: {
+                  title: 'Second',
+                  type: 'string',
+                },
+              },
+            },
+          ],
+          default: {
+            second: 'Second 2!',
+          },
+          type: 'object',
+        };
+
+        // Mock isValid so that withExactlyOneSubschema works as expected
+        testValidator.setReturnValues({
+          isValid: [
+            false, // First anyOf... first === first
+            false, // Second anyOf... second !== first
+            false, // Third anyOf... second === second
+            true, // Fourth anyOf... second === second
+          ],
+        });
+
+        expect(getDefaultFormState(testValidator, schema, {})).toEqual({
+          second: 'Second 2!',
         });
       });
       it('should populate nested default values for anyOf', () => {
