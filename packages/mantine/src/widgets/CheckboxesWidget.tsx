@@ -22,7 +22,7 @@ import { cleanupOptions } from '../utils';
 export default function CheckboxesWidget<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(props: WidgetProps<T, S, F>) {
   const {
     id,
@@ -49,7 +49,7 @@ export default function CheckboxesWidget<
         onChange(enumOptionsValueForIndex<S>(nextValue, enumOptions, emptyValue));
       }
     },
-    [onChange, disabled, readonly, enumOptions, emptyValue]
+    [onChange, disabled, readonly, enumOptions, emptyValue],
   );
 
   const handleBlur = useCallback(
@@ -58,7 +58,7 @@ export default function CheckboxesWidget<
         onBlur(id, enumOptionsValueForIndex<S>(target.value, enumOptions, emptyValue));
       }
     },
-    [onBlur, id, enumOptions, emptyValue]
+    [onBlur, id, enumOptions, emptyValue],
   );
 
   const handleFocus = useCallback(
@@ -67,7 +67,7 @@ export default function CheckboxesWidget<
         onFocus(id, enumOptionsValueForIndex<S>(target.value, enumOptions, emptyValue));
       }
     },
-    [onFocus, id, enumOptions, emptyValue]
+    [onFocus, id, enumOptions, emptyValue],
   );
 
   const selectedIndexes = enumOptionsIndexForValue<S>(value, enumOptions, true) as string[];

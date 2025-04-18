@@ -19,7 +19,7 @@ import { cleanupOptions } from '../utils';
  * @param props - The `WidgetProps` for this component
  */
 export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: WidgetProps<T, S, F>
+  props: WidgetProps<T, S, F>,
 ) {
   const {
     id,
@@ -46,7 +46,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
         onChange(enumOptionsValueForIndex<S>(nextValue, enumOptions, emptyValue));
       }
     },
-    [onChange, disabled, readonly, enumOptions, emptyValue]
+    [onChange, disabled, readonly, enumOptions, emptyValue],
   );
 
   const handleBlur = useCallback(
@@ -55,7 +55,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
         onBlur(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, emptyValue));
       }
     },
-    [onBlur, id, enumOptions, emptyValue]
+    [onBlur, id, enumOptions, emptyValue],
   );
 
   const handleFocus = useCallback(
@@ -64,7 +64,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
         onFocus(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, emptyValue));
       }
     },
-    [onFocus, id, enumOptions, emptyValue]
+    [onFocus, id, enumOptions, emptyValue],
   );
 
   const selected = enumOptionsIndexForValue<S>(value, enumOptions) as string;

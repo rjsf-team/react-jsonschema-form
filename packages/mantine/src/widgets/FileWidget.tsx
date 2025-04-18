@@ -73,6 +73,7 @@ function extractFileInfo(dataURLs: string[]): FileInfoType[] {
         },
       ];
     } catch (e) {
+      console.log(e);
       // Invalid dataURI, so just ignore it.
       return acc;
     }
@@ -85,7 +86,7 @@ function extractFileInfo(dataURLs: string[]): FileInfoType[] {
  * @param props - The `WidgetProps` for this component
  */
 export default function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: WidgetProps<T, S, F>
+  props: WidgetProps<T, S, F>,
 ) {
   const {
     id,
@@ -120,7 +121,7 @@ export default function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSch
       }
       return;
     },
-    [multiple, value, onChange]
+    [multiple, value, onChange],
   );
 
   const handleRemoveFile = useCallback(
@@ -132,7 +133,7 @@ export default function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSch
         onChange(undefined);
       }
     },
-    [multiple, value, onChange]
+    [multiple, value, onChange],
   );
 
   const ValueComponent = useCallback(
@@ -151,7 +152,7 @@ export default function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSch
       }
       return null;
     },
-    [handleRemoveFile]
+    [handleRemoveFile],
   );
 
   return (
