@@ -74,6 +74,7 @@
     "packages/daisyui",
     "packages/docs",
     "packages/fluentui-rc",
+    "packages/mantine",
     "packages/mui",
     "packages/playground",
     "packages/react-bootstrap",
