@@ -19,7 +19,7 @@ import { cleanupOptions } from '../utils';
  * @param props - The `WidgetProps` for this component
  */
 export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: WidgetProps<T, S, F>
+  props: WidgetProps<T, S, F>,
 ) {
   const {
     id,
@@ -48,7 +48,7 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
         onChange(enumOptionsValueForIndex<S>(nextValue, enumOptions, emptyValue));
       }
     },
-    [onChange, disabled, readonly, enumOptions, emptyValue]
+    [onChange, disabled, readonly, enumOptions, emptyValue],
   );
 
   const handleBlur = useCallback(
@@ -57,7 +57,7 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
         onBlur(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, emptyValue));
       }
     },
-    [onBlur, id, enumOptions, emptyValue]
+    [onBlur, id, enumOptions, emptyValue],
   );
 
   const handleFocus = useCallback(
@@ -66,7 +66,7 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
         onFocus(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, emptyValue));
       }
     },
-    [onFocus, id, enumOptions, emptyValue]
+    [onFocus, id, enumOptions, emptyValue],
   );
 
   const selectedIndexes = enumOptionsIndexForValue<S>(value, enumOptions, multiple);

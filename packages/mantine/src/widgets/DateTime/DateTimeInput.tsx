@@ -31,7 +31,7 @@ const dateFormat = (date?: Date, format?: string) => {
 export default function DateTimeInput<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(props: WidgetProps<T, S, F>) {
   const {
     id,
@@ -53,13 +53,11 @@ export default function DateTimeInput<
     displayFormat,
   } = props;
 
-  const emptyValue = options?.emptyValue ?? '';
-
   const handleChange = useCallback(
     (nextValue: any) => {
       onChange(dateFormat(nextValue, valueFormat as string));
     },
-    [onChange, emptyValue]
+    [onChange, valueFormat],
   );
 
   const handleBlur = () => onBlur && onBlur(id, value);

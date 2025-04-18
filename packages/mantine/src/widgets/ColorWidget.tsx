@@ -16,7 +16,7 @@ import { cleanupOptions } from '../utils';
  * @param props - The `WidgetProps` for this component
  */
 export default function ColorWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: WidgetProps<T, S, F>
+  props: WidgetProps<T, S, F>,
 ) {
   const {
     id,
@@ -42,7 +42,7 @@ export default function ColorWidget<T = any, S extends StrictRJSFSchema = RJSFSc
     (nextValue: string) => {
       onChange(nextValue);
     },
-    [onChange]
+    [onChange],
   );
 
   const handleBlur = useCallback(
@@ -51,7 +51,7 @@ export default function ColorWidget<T = any, S extends StrictRJSFSchema = RJSFSc
         onBlur(id, target && target.value);
       }
     },
-    [onBlur, id]
+    [onBlur, id],
   );
 
   const handleFocus = useCallback(
@@ -60,7 +60,7 @@ export default function ColorWidget<T = any, S extends StrictRJSFSchema = RJSFSc
         onFocus(id, target && target.value);
       }
     },
-    [onFocus, id]
+    [onFocus, id],
   );
 
   return (

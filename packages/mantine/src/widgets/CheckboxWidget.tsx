@@ -21,7 +21,7 @@ import { cleanupOptions } from '../utils';
 export default function CheckboxWidget<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(props: WidgetProps<T, S, F>): ReactElement {
   const {
     id,
@@ -48,7 +48,7 @@ export default function CheckboxWidget<
   const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
     'DescriptionFieldTemplate',
     registry,
-    options
+    options,
   );
 
   const handleCheckboxChange = useCallback(
@@ -57,7 +57,7 @@ export default function CheckboxWidget<
         onChange(e.currentTarget.checked);
       }
     },
-    [onChange, disabled, readonly]
+    [onChange, disabled, readonly],
   );
 
   const handleBlur = useCallback(
@@ -66,7 +66,7 @@ export default function CheckboxWidget<
         onBlur(id, target.checked);
       }
     },
-    [onBlur, id]
+    [onBlur, id],
   );
 
   const handleFocus = useCallback(
@@ -75,7 +75,7 @@ export default function CheckboxWidget<
         onFocus(id, target.checked);
       }
     },
-    [onFocus, id]
+    [onFocus, id],
   );
 
   const description = options.description || schema.description;

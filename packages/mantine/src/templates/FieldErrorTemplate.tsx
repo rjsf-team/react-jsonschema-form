@@ -8,7 +8,7 @@ import { Box, List } from '@mantine/core';
 export default function FieldErrorTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >({ errors, idSchema }: FieldErrorProps<T, S, F>) {
   if (!errors || !errors.length) {
     return null;
