@@ -19,7 +19,7 @@ import { cleanupOptions } from '../utils';
 export default function PasswordWidget<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(props: WidgetProps<T, S, F>) {
   const {
     id,
@@ -46,7 +46,7 @@ export default function PasswordWidget<
     (e: ChangeEvent<HTMLInputElement>) => {
       onChange(e.target.value === '' ? emptyValue : e.target.value);
     },
-    [onChange, emptyValue]
+    [onChange, emptyValue],
   );
 
   const handleBlur = useCallback(
@@ -55,7 +55,7 @@ export default function PasswordWidget<
         onBlur(id, target && target.value);
       }
     },
-    [onBlur, id]
+    [onBlur, id],
   );
 
   const handleFocus = useCallback(
@@ -64,7 +64,7 @@ export default function PasswordWidget<
         onFocus(id, target && target.value);
       }
     },
-    [onFocus, id]
+    [onFocus, id],
   );
 
   return (

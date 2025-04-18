@@ -16,7 +16,7 @@ import { Title } from '@mantine/core';
 export default function ArrayFieldTitleTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(props: ArrayFieldTitleProps<T, S, F>) {
   const { idSchema, title, uiSchema, registry } = props;
 
