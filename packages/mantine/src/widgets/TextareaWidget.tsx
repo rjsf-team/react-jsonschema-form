@@ -11,7 +11,7 @@ import { cleanupOptions } from '../utils';
 export default function TextareaWidget<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(props: WidgetProps<T, S, F>): ReactElement {
   const {
     id,
@@ -38,7 +38,7 @@ export default function TextareaWidget<
     (e: ChangeEvent<HTMLTextAreaElement>) => {
       onChange(e.target.value === '' ? emptyValue : e.target.value);
     },
-    [onChange, emptyValue]
+    [onChange, emptyValue],
   );
 
   const handleBlur = useCallback(
@@ -47,7 +47,7 @@ export default function TextareaWidget<
         onBlur(id, target && target.value);
       }
     },
-    [onBlur, id]
+    [onBlur, id],
   );
 
   const handleFocus = useCallback(
@@ -56,7 +56,7 @@ export default function TextareaWidget<
         onFocus(id, target && target.value);
       }
     },
-    [onFocus, id]
+    [onFocus, id],
   );
 
   return (

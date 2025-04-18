@@ -22,7 +22,7 @@ import { cleanupOptions } from '../utils';
 export default function BaseInputTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(props: BaseInputTemplateProps<T, S, F>) {
   const {
     id,
@@ -52,7 +52,8 @@ export default function BaseInputTemplate<
 
   const handleChange = onChangeOverride
     ? onChangeOverride
-    : (e: ChangeEvent<HTMLInputElement>) => onChange(e.target.value === '' ? options.emptyValue ?? '' : e.target.value);
+    : (e: ChangeEvent<HTMLInputElement>) =>
+        onChange(e.target.value === '' ? (options.emptyValue ?? '') : e.target.value);
 
   const handleBlur = (e: FocusEvent<HTMLInputElement>) => onBlur(id, e.target && e.target.value);
 
