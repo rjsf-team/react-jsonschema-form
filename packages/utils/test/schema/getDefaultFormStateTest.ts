@@ -3835,7 +3835,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           ],
         });
 
-        expect(getDefaultFormState(testValidator, schema, {})).toEqual({
+        expect(getDefaultFormState(testValidator, schema)).toEqual({
           second: 'Second 2!',
         });
       });
@@ -4094,7 +4094,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           ],
         });
 
-        expect(getDefaultFormState(testValidator, schema, {})).toEqual({
+        expect(getDefaultFormState(testValidator, schema)).toEqual({
           second: 'Second 2!',
         });
       });
