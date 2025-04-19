@@ -1261,6 +1261,174 @@ describeRepeated('Form common', (createFormComponent) => {
       sinon.assert.callCount(onChange, 1);
       sinon.assert.callCount(secondOnChange, 1);
     });
+    it('should modify an allOf field when the defaults are set', () => {
+      const schema = {
+        properties: {
+          all_of_field: {
+            allOf: [
+              {
+                properties: {
+                  first: {
+                    type: 'string',
+                  },
+                },
+              },
+              {
+                properties: {
+                  second: {
+                    type: 'string',
+                  },
+                },
+              },
+            ],
+            default: {
+              second: 'second!',
+            },
+          },
+        },
+        type: 'object',
+      };
+
+      const { node, onChange } = createFormComponent({
+        schema,
+      });
+
+      const secondInputID = '#root_all_of_field_second';
+      expect(node.querySelector(secondInputID).value).to.equal('second!');
+
+      act(() => {
+        fireEvent.change(node.querySelector(secondInputID), {
+          target: { value: 'changed!' },
+        });
+      });
+
+      sinon.assert.calledWithMatch(
+        onChange.lastCall,
+        {
+          formData: {
+            all_of_field: {
+              second: 'changed!',
+            },
+          },
+          schema,
+        },
+        'root_all_of_field_second'
+      );
+
+      expect(node.querySelector(secondInputID).value).to.equal('changed!');
+    });
+    it('should modify an oneOf field when the defaults are set', () => {
+      const schema = {
+        properties: {
+          one_of_field: {
+            oneOf: [
+              {
+                properties: {
+                  first: {
+                    type: 'string',
+                  },
+                },
+              },
+              {
+                properties: {
+                  second: {
+                    type: 'string',
+                  },
+                },
+              },
+            ],
+            default: {
+              second: 'second!',
+            },
+          },
+        },
+        type: 'object',
+      };
+
+      const { node, onChange } = createFormComponent({
+        schema,
+      });
+
+      const secondInputID = '#root_one_of_field_second';
+      expect(node.querySelector(secondInputID).value).to.equal('second!');
+
+      act(() => {
+        fireEvent.change(node.querySelector(secondInputID), {
+          target: { value: 'changed!' },
+        });
+      });
+
+      sinon.assert.calledWithMatch(
+        onChange.lastCall,
+        {
+          formData: {
+            one_of_field: {
+              second: 'changed!',
+            },
+          },
+          schema,
+        },
+        'root_one_of_field_second'
+      );
+
+      expect(node.querySelector(secondInputID).value).to.equal('changed!');
+    });
+    it('should modify an anyOf field when the defaults are set', () => {
+      const schema = {
+        properties: {
+          any_of_field: {
+            anyOf: [
+              {
+                properties: {
+                  first: {
+                    type: 'string',
+                  },
+                },
+              },
+              {
+                properties: {
+                  second: {
+                    type: 'string',
+                  },
+                },
+              },
+            ],
+            default: {
+              second: 'second!',
+            },
+          },
+        },
+        type: 'object',
+      };
+
+      const { node, onChange } = createFormComponent({
+        schema,
+      });
+
+      const secondInputID = '#root_any_of_field_second';
+      expect(node.querySelector(secondInputID).value).to.equal('second!');
+
+      act(() => {
+        fireEvent.change(node.querySelector(secondInputID), {
+          target: { value: 'changed!' },
+        });
+      });
+
+      sinon.assert.calledWithMatch(
+        onChange.lastCall,
+        {
+          formData: {
+            any_of_field: {
+              second: 'changed!',
+            },
+          },
+          schema,
+        },
+        'root_any_of_field_second'
+      );
+
+      expect(node.querySelector(secondInputID).value).to.equal('changed!');
+    });
   });
 
   describe('Blur handler', () => {
