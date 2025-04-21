@@ -22,8 +22,7 @@ export default defineConfig({
       '@rjsf/mui': path.resolve(__dirname, '../mui/src'),
       '@rjsf/react-bootstrap': path.resolve(__dirname, '../react-bootstrap/src'),
       '@rjsf/semantic-ui': path.resolve(__dirname, '../semantic-ui/src'),
-      '@rjsf/shadcn': path.resolve(__dirname, '../shadcn/src'),
-      // We want to pick up the browser version of the utils
+      '@rjsf/uswds': path.resolve(__dirname, '../uswds/src'),
       '@rjsf/utils': path.resolve(__dirname, '../utils/src'),
       '@rjsf/validator-ajv8': path.resolve(__dirname, '../validator-ajv8/src'),
       '@rjsf/daisyui': path.resolve(__dirname, '../daisyui/src'),

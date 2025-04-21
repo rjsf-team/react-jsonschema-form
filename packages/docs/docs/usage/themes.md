@@ -5,16 +5,18 @@ meaning that you must load the Bootstrap stylesheet on the page to view the form
 
 ## Supported themes
 
-| Theme Name            | Status    | Package Name / Link     |
-| --------------------- | --------- | ----------------------- |
-| antd                  | Published | `@rjsf/antd`            |
-| Bootstrap 3 (default) | Published | `@rjsf/core`            |
-| react-bootstrap       | Published | `@rjsf/react-bootstrap` |
-| Chakra UI             | Published | `@rjsf/chakra-ui`       |
-| fluentui-rc           | Published | `@rjsf/fluentui-rc`     |
-| material-ui           | Published | `@rjsf/mui`             |
-| Semantic UI           | Published | `@rjsf/semantic-ui`     |
-| shadcn                | Published | `@rjsf/shadcn`          |
+| Theme Name            | Status    | Package Name / Link |
+| --------------------- | --------- | ------------------- |
+| antd                  | Published | `@rjsf/antd`        |
+| Bootstrap 3 (default) | Published | `@rjsf/core`        |
+| Bootstrap 4           | Published | `@rjsf/bootstrap-4` |
+| Chakra UI             | Published | `@rjsf/chakra-ui`   |
+| fluent-ui             | Published | `@rjsf/fluent-ui`   |
+| fluentui-rc           | Published | `@rjsf/fluentui-rc` |
+| material-ui 4         | Published | `@rjsf/material-ui` |
+| material-ui 5         | Published | `@rjsf/mui`         |
+| Semantic UI           | Published | `@rjsf/semantic-ui` |
+| USWDS                 | Published | `@rjsf/uswds`       |
 
 ## Using themes
 
@@ -39,10 +41,16 @@ For example, to use the standard bootstrap 3 form, you can run:
 import Form from '@rjsf/core';
 ```
 
-To use the material-ui form, you should first install both `@rjsf/core` and `@rjsf/material-ui`. Then, you can run:
+To use the material-ui 5 form, you should first install both `@rjsf/core` and `@rjsf/mui`. Then, you can run:
 
 ```ts
 import Form from '@rjsf/material-ui';
+```
+
+To use the USWDS form, you should first install both `@rjsf/core` and `@rjsf/uswds`, and ensure you have included the USWDS CSS in your project. Then, you can run:
+
+```ts
+import Form from '@rjsf/uswds';
 ```
 
 For more information on how to create a custom theme, see documentation on the `withTheme` component.

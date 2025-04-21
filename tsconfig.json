@@ -26,6 +26,9 @@
       "path": "./packages/mui"
     },
     {
+      "path": "./packages/uswds"
+    },    
+    {
       "path": "./packages/playground"
     },
     {

@@ -6,8 +6,11 @@
     "node": ">=20"
   },
   "scripts": {
-    "test": "nx run-many --parallel=2 --target=test",
-    "test:update": "nx run-many --parallel=2 --target=test:update",
+    "publish-repo": "lerna publish",
+    "changed": "lerna changed",
+    "test": "lerna run test --stream --concurrency=1",
+    "test:ci": "lerna run test:ci --stream --concurrency=1",
+    "test:update": "lerna run --concurrency 2 --stream test:update",
     "lint": "eslint './packages/**/*.{ts,tsx}' --quiet",
     "cs-check": "nx run-many --target=cs-check",
     "cs-format": "nx run-many --target=cs-format",
