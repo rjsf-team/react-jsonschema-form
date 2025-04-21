@@ -1,0 +1,65 @@
+{
+  "name": "@rjsf/uswds",
+  "version": "5.19.2",
+  "description": "USWDS theme, fields and widgets for react-jsonschema-form",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "cs-check": "prettier -c --ignore-path ../../.prettierignore \"src/**/*.{js,jsx,ts,tsx,json}\"",
+    "cs-format": "prettier -w --ignore-path ../../.prettierignore \"src/**/*.{js,jsx,ts,tsx,json}\"",
+    "lint": "eslint src",
+    "test": "jest",
+    "test:update": "jest --u"
+  },
+  "dependencies": {
+    "@rjsf/utils": "^5.19.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.22.8",
+    "@babel/preset-env": "^7.22.7",
+    "@babel/preset-react": "^7.22.5",
+    "@babel/preset-typescript": "^7.22.5",
+    "@rjsf/snapshot-tests": "^5.19.2",
+    "@rjsf/validator-ajv8": "^5.19.2",
+    "@types/jest": "^29.5.3",
+    "@types/react": "^18.2.14",
+    "@types/react-dom": "^18.2.6",
+    "eslint": "^8.44.0",
+    "jest": "^29.6.1",
+    "jest-environment-jsdom": "^29.6.1",
+    "prettier": "^3.0.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-test-renderer": "^18.2.0",
+    "typescript": "^5.1.6"
+  },
+  "peerDependencies": {
+    "@rjsf/core": "^5.19.2",
+    "@uswds/uswds": "^3.0.0",
+    "react": "^16.14.0 || ^17.0.0 || ^18.0.0",
+    "react-dom": "^16.14.0 || ^17.0.0 || ^18.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "author": "John H. Jediny <john.jediny@gsa.gov>",
+  "contributors": [],
+  "keywords": [
+    "react-jsonschema-form",
+    "jsonschema",
+    "json-schema",
+    "json",
+    "schema",
+    "form",
+    "react",
+    "uswds",
+    "ui"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rjsf-team/react-jsonschema-form.git"
+  },
+  "license": "Apache-2.0"
+}

@@ -6,6 +6,7 @@ import { Theme as BootstrapTheme } from '@rjsf/react-bootstrap';
 import { Theme as ChakraUITheme } from '@rjsf/chakra-ui';
 import { Theme as shadcnTheme } from '@rjsf/shadcn';
 import { Theme as DaisyUITheme } from '@rjsf/daisyui';
+import { Theme as UswdsTheme } from '@rjsf/uswds';
 import v8Validator, { customizeValidator } from '@rjsf/validator-ajv8';
 import Ajv2019 from 'ajv/dist/2019.js';
 import Ajv2020 from 'ajv/dist/2020.js';
@@ -156,38 +157,9 @@ const themes: PlaygroundProps['themes'] = {
     stylesheet: '//cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css',
     theme: SuiTheme,
   },
-  shadcn: {
-    stylesheet: 'https://cdn.jsdelivr.net/gh/tuanphung2308/rjsf-shadcn-css@main/public/default.css',
-    theme: shadcnTheme,
-    subthemes: {
-      default: {
-        stylesheet: 'https://cdn.jsdelivr.net/gh/tuanphung2308/rjsf-shadcn-css@main/public/default.css',
-      },
-      blue: {
-        stylesheet: 'https://cdn.jsdelivr.net/gh/tuanphung2308/rjsf-shadcn-css@main/public/blue.css',
-      },
-      green: {
-        stylesheet: 'https://cdn.jsdelivr.net/gh/tuanphung2308/rjsf-shadcn-css@main/public/green.css',
-      },
-      orange: {
-        stylesheet: 'https://cdn.jsdelivr.net/gh/tuanphung2308/rjsf-shadcn-css@main/public/orange.css',
-      },
-      red: {
-        stylesheet: 'https://cdn.jsdelivr.net/gh/tuanphung2308/rjsf-shadcn-css@main/public/red.css',
-      },
-      rose: {
-        stylesheet: 'https://cdn.jsdelivr.net/gh/tuanphung2308/rjsf-shadcn-css@main/public/rose.css',
-      },
-      violet: {
-        stylesheet: 'https://cdn.jsdelivr.net/gh/tuanphung2308/rjsf-shadcn-css@main/public/violet.css',
-      },
-      yellow: {
-        stylesheet: 'https://cdn.jsdelivr.net/gh/tuanphung2308/rjsf-shadcn-css@main/public/yellow.css',
-      },
-      zinc: {
-        stylesheet: 'https://cdn.jsdelivr.net/gh/tuanphung2308/rjsf-shadcn-css@main/public/zinc.css',
-      },
-    },
+  uswds: {
+    stylesheet: '//cdn.jsdelivr.net/npm/uswds/dist/css/uswds.min.css',
+    theme: UswdsTheme,
   },
 };
 
