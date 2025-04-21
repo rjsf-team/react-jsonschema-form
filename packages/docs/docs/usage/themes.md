@@ -53,4 +53,10 @@ To use the USWDS form, you should first install both `@rjsf/core` and `@rjsf/usw
 import Form from '@rjsf/uswds';
 ```
 
+To use the USWDS form, you should first install both `@rjsf/core` and `@rjsf/uswds`, and ensure you have included the USWDS CSS in your project. Then, you can run:
+
+```ts
+import Form from '@rjsf/uswds';
+```
+
 For more information on how to create a custom theme, see documentation on the `withTheme` component.
