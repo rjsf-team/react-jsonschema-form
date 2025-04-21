@@ -4,8 +4,11 @@ import { Theme as SuiTheme } from '@rjsf/semantic-ui';
 import { Theme as AntdTheme } from '@rjsf/antd';
 import { Theme as BootstrapTheme } from '@rjsf/react-bootstrap';
 import { Theme as ChakraUITheme } from '@rjsf/chakra-ui';
+<<<<<<< HEAD
 import { Theme as shadcnTheme } from '@rjsf/shadcn';
 import { Theme as DaisyUITheme } from '@rjsf/daisyui';
+=======
+>>>>>>> f066e3da (Add USWDS theme)
 import { Theme as UswdsTheme } from '@rjsf/uswds';
 import v8Validator, { customizeValidator } from '@rjsf/validator-ajv8';
 import Ajv2019 from 'ajv/dist/2019.js';
