@@ -16,6 +16,7 @@ meaning that you must load the Bootstrap stylesheet on the page to view the form
 | material-ui 4         | Published | `@rjsf/material-ui` |
 | material-ui 5         | Published | `@rjsf/mui`         |
 | Semantic UI           | Published | `@rjsf/semantic-ui` |
+| USWDS                 | Published | `@rjsf/uswds`       |
 
 ## Using themes
 
@@ -44,6 +45,12 @@ To use the material-ui 5 form, you should first install both `@rjsf/core` and `@
 
 ```ts
 import Form from '@rjsf/mui';
+```
+
+To use the USWDS form, you should first install both `@rjsf/core` and `@rjsf/uswds`, and ensure you have included the USWDS CSS in your project. Then, you can run:
+
+```ts
+import Form from '@rjsf/uswds';
 ```
 
 For more information on how to create a custom theme, see documentation on the `withTheme` component.

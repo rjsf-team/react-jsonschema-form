@@ -24,6 +24,7 @@ export default defineConfig({
       '@rjsf/material-ui': path.resolve(__dirname, '../material-ui/src'),
       '@rjsf/mui': path.resolve(__dirname, '../mui/src'),
       '@rjsf/semantic-ui': path.resolve(__dirname, '../semantic-ui/src'),
+      '@rjsf/uswds': path.resolve(__dirname, '../uswds/src'),
       '@rjsf/utils': path.resolve(__dirname, '../utils/src'),
       '@rjsf/validator-ajv8': path.resolve(__dirname, '../validator-ajv8/src'),
       // validator-ajv6 can not be mapped directly to the sources, because that causes wrong ajv version resolution
