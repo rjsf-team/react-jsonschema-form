@@ -37,7 +37,6 @@ export default function BaseInputTemplate<
     disabled,
   } = props;
   const inputProps = getInputProps<T, S, F>(schema, type, options);
-  // const chakraProps = getChakra({ uiSchema });
 
   const _onChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) =>
     onChange(value === '' ? options.emptyValue : value);
@@ -47,7 +46,6 @@ export default function BaseInputTemplate<
   return (
     <Field
       mb={1}
-      // {...chakraProps}
       disabled={disabled || readonly}
       required={required}
       readOnly={readonly}

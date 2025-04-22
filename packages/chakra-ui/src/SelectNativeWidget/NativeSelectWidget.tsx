@@ -40,7 +40,6 @@ export default function NativeSelectWidget<
     schema,
   } = props;
   const { enumOptions, enumDisabled, emptyValue } = options;
-  // const chakraProps = getChakra({ uiSchema });
 
   const _onChange = ({ target }: ChangeEvent<HTMLSelectElement>) => {
     return onChange(enumOptionsValueForIndex<S>(target && target.value, enumOptions, emptyValue));
@@ -97,7 +96,6 @@ export default function NativeSelectWidget<
   return (
     <Field
       mb={1}
-      // {...chakraProps}
       disabled={disabled || readonly}
       required={required}
       readOnly={readonly}

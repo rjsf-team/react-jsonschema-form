@@ -30,8 +30,6 @@ export default function TextareaWidget<
   required,
   rawErrors,
 }: WidgetProps<T, S, F>) {
-  // const chakraProps = getChakra({ uiSchema });
-
   const _onChange = ({ target: { value } }: ChangeEvent<HTMLTextAreaElement>) =>
     onChange(value === '' ? options.emptyValue : value);
   const _onBlur = ({ target }: FocusEvent<HTMLTextAreaElement>) => onBlur(id, target && target.value);
@@ -40,7 +38,6 @@ export default function TextareaWidget<
   return (
     <Field
       mb={1}
-      // {...chakraProps}
       disabled={disabled || readonly}
       required={required}
       readOnly={readonly}

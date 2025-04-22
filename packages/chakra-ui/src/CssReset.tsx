@@ -254,11 +254,6 @@ export const CSSReset = () => (
       select::-ms-expand {
         display: none;
       }
-      input {
-        // border-width: revert;
-        // border-color: revert;
-        // border-style: revert;
-      }
       .array-item > hr {
         margin-top: 16px;
         margin-bottom: 16px;

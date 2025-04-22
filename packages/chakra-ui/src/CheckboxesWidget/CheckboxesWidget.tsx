@@ -1,16 +1,16 @@
-import { FocusEvent } from 'react';
-import { CheckboxGroup, Text, Stack, FieldsetRoot } from '@chakra-ui/react';
+import { CheckboxGroup, FieldsetRoot, Stack, Text } from '@chakra-ui/react';
 import {
   ariaDescribedByIds,
   enumOptionsIndexForValue,
   enumOptionsValueForIndex,
+  FormContextType,
   labelValue,
   optionId,
-  FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
   WidgetProps,
 } from '@rjsf/utils';
+import { FocusEvent } from 'react';
 import { Checkbox } from '../components/ui/checkbox';
 
 export default function CheckboxesWidget<
@@ -33,7 +33,6 @@ export default function CheckboxesWidget<
     rawErrors = [],
   } = props;
   const { enumOptions, enumDisabled, emptyValue } = options;
-  // const chakraProps = getChakra({ uiSchema });
 
   const _onBlur = ({ target }: FocusEvent<HTMLInputElement | any>) =>
     onBlur(id, enumOptionsValueForIndex<S>(target && target.value, enumOptions, emptyValue));
@@ -46,7 +45,6 @@ export default function CheckboxesWidget<
   return (
     <FieldsetRoot
       mb={1}
-      // {...chakraProps}
       disabled={disabled || readonly}
       invalid={rawErrors && rawErrors.length > 0}
     >

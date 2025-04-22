@@ -34,7 +34,6 @@ export default function CheckboxWidget<
     uiSchema,
     schema,
   } = props;
-  // const chakraProps = getChakra({ uiSchema });
   // Because an unchecked checkbox will cause html5 validation to fail, only add
   // the "required" attribute if the field value must be "true", due to the
   // "const" or "enum" keywords

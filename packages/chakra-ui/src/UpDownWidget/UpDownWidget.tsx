@@ -17,8 +17,6 @@ export default function UpDownWidget<T = any, S extends StrictRJSFSchema = RJSFS
 ) {
   const { id, readonly, disabled, label, hideLabel, value, onChange, onBlur, onFocus, rawErrors, required } = props;
 
-  // const chakraProps = getChakra({ uiSchema }); TODO - adjust getChakra everywhere
-
   const _onChange = ({ value }: NumberInputValueChangeDetails) => onChange(value);
   const _onBlur = ({ target }: FocusEvent<HTMLInputElement | any>) => onBlur(id, target && target.value);
   const _onFocus = ({ target }: FocusEvent<HTMLInputElement | any>) => onFocus(id, target && target.value);
@@ -26,7 +24,6 @@ export default function UpDownWidget<T = any, S extends StrictRJSFSchema = RJSFS
   return (
     <Field
       mb={1}
-      // {...chakraProps}
       disabled={disabled || readonly}
       required={required}
       readOnly={readonly}

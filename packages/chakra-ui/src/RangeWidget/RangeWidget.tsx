@@ -25,7 +25,6 @@ export default function RangeWidget<T = any, S extends StrictRJSFSchema = RJSFSc
   hideLabel,
   id,
 }: WidgetProps<T, S, F>) {
-  // const chakraProps = getChakra({ uiSchema });
 
   const sliderWidgetProps = { value, label, id, ...rangeSpec<S>(schema) };
 

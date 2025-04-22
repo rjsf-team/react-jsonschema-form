@@ -28,7 +28,6 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
   onFocus,
 }: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, emptyValue } = options;
-  // const chakraProps = getChakra({ uiSchema });
 
   const _onChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) =>
     onChange(enumOptionsValueForIndex<S>(value, enumOptions, emptyValue));
@@ -43,7 +42,6 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
   return (
     <Field
       mb={1}
-      // {...chakraProps}
       disabled={disabled || readonly}
       required={required}
       readOnly={readonly}

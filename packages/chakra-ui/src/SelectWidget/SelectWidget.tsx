@@ -39,7 +39,6 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
     schema,
   } = props;
   const { enumOptions, enumDisabled, emptyValue } = options;
-  // const chakraProps = getChakra({ uiSchema });
 
   const _onMultiChange = ({ value }: SelectValueChangeDetails) => {
     return onChange(
@@ -120,7 +119,6 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
     <Field
       ref={containerRef}
       mb={1}
-      // {...chakraProps}
       disabled={disabled || readonly}
       required={required}
       readOnly={readonly}
