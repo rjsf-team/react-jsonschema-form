@@ -1,5 +1,5 @@
+import { forwardRef } from 'react';
 import { Slider as ChakraSlider, HStack } from '@chakra-ui/react';
-import * as React from 'react';
 
 export interface SliderProps extends ChakraSlider.RootProps {
   marks?: Array<number | { value: number; label: React.ReactNode }>;
@@ -7,7 +7,16 @@ export interface SliderProps extends ChakraSlider.RootProps {
   showValue?: boolean;
 }
 
-export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(function Slider(props, ref) {
+/**
+ * Slider component that allows users to select a value from a range.
+ *
+ * @param {SliderProps} props - The properties for the slider component.
+ * @param {Array<number | { value: number; label: React.ReactNode }>} [props.marks] - The marks to display on the slider.
+ * @param {React.ReactNode} [props.label] - The label for the slider.
+ * @param {boolean} [props.showValue] - Whether to show the current value of the slider.
+ * @returns {JSX.Element} The rendered slider component.
+ */
+export const Slider = forwardRef<HTMLDivElement, SliderProps>(function Slider(props, ref) {
   const { marks: marksProp, label, showValue, ...rest } = props;
   const value = props.defaultValue ?? props.value;
 
@@ -40,6 +49,13 @@ export const Slider = React.forwardRef<HTMLDivElement, SliderProps>(function Sli
   );
 });
 
+/**
+ * SliderThumbs component that renders the thumbs for the slider.
+ *
+ * @param {Object} props - The properties for the slider thumbs component.
+ * @param {number[]} [props.value] - The values for the thumbs.
+ * @returns {JSX.Element} The rendered slider thumbs component.
+ */
 function SliderThumbs(props: { value?: number[] }) {
   const { value } = props;
   return (
@@ -57,7 +73,14 @@ interface SliderMarksProps {
   marks?: Array<number | { value: number; label: React.ReactNode }>;
 }
 
-const SliderMarks = React.forwardRef<HTMLDivElement, SliderMarksProps>(function SliderMarks(props, ref) {
+/**
+ * SliderMarks component that renders the marks for the slider.
+ *
+ * @param {SliderMarksProps} props - The properties for the slider marks component.
+ * @param {Array<number | { value: number; label: React.ReactNode }>} [props.marks] - The marks to display on the slider.
+ * @returns {JSX.Element | null} The rendered slider marks component or null if no marks are provided.
+ */
+const SliderMarks = forwardRef<HTMLDivElement, SliderMarksProps>(function SliderMarks(props, ref) {
   const { marks } = props;
   if (!marks?.length) {
     return null;

@@ -43,11 +43,7 @@ export default function CheckboxesWidget<
   const selectedIndexes = enumOptionsIndexForValue<S>(value, enumOptions, true) as string[];
 
   return (
-    <FieldsetRoot
-      mb={1}
-      disabled={disabled || readonly}
-      invalid={rawErrors && rawErrors.length > 0}
-    >
+    <FieldsetRoot mb={1} disabled={disabled || readonly} invalid={rawErrors && rawErrors.length > 0}>
       <CheckboxGroup
         onValueChange={(option) => onChange(enumOptionsValueForIndex<S>(option, enumOptions, emptyValue))}
         value={selectedIndexes}

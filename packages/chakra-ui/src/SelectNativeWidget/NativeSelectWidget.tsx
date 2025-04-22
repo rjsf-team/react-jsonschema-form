@@ -1,5 +1,4 @@
 import { ChangeEvent, FocusEvent, useMemo } from 'react';
-
 import {
   ariaDescribedByIds,
   EnumOptionsType,
@@ -16,10 +15,21 @@ import { OptionsOrGroups } from 'chakra-react-select';
 import { createListCollection } from '@chakra-ui/react';
 import { NativeSelect as ChakraSelect } from '@chakra-ui/react';
 
+/**
+ * NativeSelectWidget is a React component that renders a native select input.
+ *
+ * @param {T} T - The type of the value.
+ * @param {S} S - The type of the schema.
+ * @param {F} F - The type of the form context.
+ * @param {WidgetProps<T, S, F>} props - The props for the component.
+ *
+ * @returns {JSX.Element} - The rendered component.
+ */
+
 export default function NativeSelectWidget<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(props: WidgetProps<T, S, F>) {
   const {
     id,

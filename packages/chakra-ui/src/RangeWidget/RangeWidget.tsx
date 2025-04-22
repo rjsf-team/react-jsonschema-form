@@ -25,7 +25,6 @@ export default function RangeWidget<T = any, S extends StrictRJSFSchema = RJSFSc
   hideLabel,
   id,
 }: WidgetProps<T, S, F>) {
-
   const sliderWidgetProps = { value, label, id, ...rangeSpec<S>(schema) };
 
   const _onChange = ({ value }: SliderValueChangeDetails) => onChange(value === undefined ? options.emptyValue : value);
