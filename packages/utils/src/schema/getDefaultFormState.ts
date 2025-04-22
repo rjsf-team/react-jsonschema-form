@@ -223,7 +223,9 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
     // For object defaults, only override parent defaults that are defined in
     // schema.default.
     defaults = mergeObjects(defaults!, schema.default as GenericObjectType) as T;
-  } else if (DEFAULT_KEY in schema) {
+  } else if (DEFAULT_KEY in schema && !schema[ANY_OF_KEY] && !schema[ONE_OF_KEY]) {
+    // If the schema has a default value, then we should use it as the default.
+    // And if the schema does not have anyOf or oneOf, this is done because we need to merge the defaults with the formData.
     defaults = schema.default as unknown as T;
   } else if (REF_KEY in schema) {
     const refName = schema[REF_KEY];
@@ -284,7 +286,7 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
       getClosestMatchingOption<T, S, F>(
         validator,
         rootSchema,
-        rawFormData,
+        rawFormData ?? (schema.default as T),
         oneOf as S[],
         0,
         discriminator,
@@ -302,7 +304,7 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
       getClosestMatchingOption<T, S, F>(
         validator,
         rootSchema,
-        rawFormData,
+        rawFormData ?? (schema.default as T),
         anyOf as S[],
         0,
         discriminator,
@@ -347,7 +349,9 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
       experimental_defaultFormStateBehavior,
       experimental_customMergeAllOf
     );
-    if (!isObject(rawFormData)) {
+    if (!isObject(rawFormData) || ALL_OF_KEY in schema) {
+      // If the formData is not an object which means it's a primitive field, then we need to merge the defaults into the formData.
+      // Or if the schema has allOf, we need to merge the defaults into the formData because we don't compute the defaults for allOf.
       defaultsWithFormData = mergeDefaultsWithFormData<T>(
         defaultsWithFormData as T,
         matchingFormData as T,

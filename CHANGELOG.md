@@ -30,6 +30,10 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Fixed issue in BaseInputTemplate where input props were passed to `slotProps.htmlInput`, which does not work in MUI v5.
 
+## @rjsf/utils
+
+- Fixed issue with schema combinators(allOf, anyOf, oneOf) could not be modified when defaults were set, fixing [#4555](https://github.com/rjsf-team/react-jsonschema-form/issues/4555)
+
 ## Dev / docs / playground
 
 - Updated docs for ArrayFieldItemTemplate to include prop `onCopyIndexClick`, fixing [#4507](https://github.com/rjsf-team/react-jsonschema-form/issues/4507)
