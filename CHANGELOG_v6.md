@@ -28,6 +28,8 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/chakra-ui
 
+- BREAKING CHANGE: upgrade from v2 to v3
+- BREAKING CHANGE: remove deprecated `@chakra-ui/icon` in favor of `lucide-react`
 - BREAKING CHANGE: Refactored `ArrayFieldItemTemplate` to use the new `ArrayFieldItemButtonsTemplate`
 - Updated the `ArrayFieldTemplate`, `ObjectFieldTemplate`, and `WrapIfAdditionalTemplate` to a unique id using the `buttonId()` function and adding consistent marker classes
 - Implemented the `GridTemplate` component, adding it to the `templates` for the theme
@@ -107,6 +109,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## Dev / docs / playground
 
+- Updated the playground to Chakra UI v3
 - Updated the playground to remove `fluent-ui` theme
 - Updated the `custom-templates.md` documentation for the changes to the `ArrayFieldTemplateItem` and add the two new templates
 - Updated the `utility-functions.md` documentation to add the `buttonId()` function
