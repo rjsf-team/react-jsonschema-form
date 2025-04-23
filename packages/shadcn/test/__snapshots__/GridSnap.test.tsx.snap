@@ -764,182 +764,194 @@ exports[`Complex grid renders person and address and employment in a complex gri
             className="gap-2 col-span-6 row-span-1 flex items-center"
             data-testid="1"
           >
-            <div
-              className="mb-0"
-            >
+            <div>
               <div
-                aria-describedby="root_employment__error root_employment__description root_employment__help"
-                aria-orientation="horizontal"
-                aria-required={false}
-                className="gap-2 flex flex-wrap"
-                data-orientation="horizontal"
-                dir="ltr"
-                onBlur={[Function]}
-                onFocus={[Function]}
-                onMouseDown={[Function]}
-                role="radiogroup"
-                style={
-                  {
-                    "outline": "none",
-                  }
-                }
-                tabIndex={0}
+                className="flex flex-col gap-2"
               >
-                <div
-                  className="flex items-center gap-2"
+                <label
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  htmlFor="root_employment"
                 >
-                  <button
-                    aria-checked={true}
-                    className="aspect-square h-4 w-4 rounded-full border border-primary text-primary shadow focus:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                  Employment
+                </label>
+                <div
+                  className="mb-0"
+                >
+                  <div
+                    aria-describedby="root_employment__error root_employment__description root_employment__help"
+                    aria-orientation="horizontal"
+                    aria-required={false}
+                    className="gap-2 flex flex-wrap"
                     data-orientation="horizontal"
-                    data-radix-collection-item=""
-                    data-state="checked"
-                    disabled={false}
-                    id="root_employment-0"
-                    onClick={[Function]}
+                    dir="ltr"
+                    onBlur={[Function]}
                     onFocus={[Function]}
-                    onKeyDown={[Function]}
                     onMouseDown={[Function]}
-                    role="radio"
-                    tabIndex={-1}
-                    type="button"
-                    value="0"
+                    role="radiogroup"
+                    style={
+                      {
+                        "outline": "none",
+                      }
+                    }
+                    tabIndex={0}
                   >
-                    <span
-                      className="flex items-center justify-center"
-                      data-state="checked"
+                    <div
+                      className="flex items-center gap-2"
                     >
-                      <svg
-                        className="h-3.5 w-3.5 fill-primary"
-                        fill="none"
-                        height="15"
-                        viewBox="0 0 15 15"
-                        width="15"
-                        xmlns="http://www.w3.org/2000/svg"
+                      <button
+                        aria-checked={true}
+                        className="aspect-square h-4 w-4 rounded-full border border-primary text-primary shadow focus:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                        data-orientation="horizontal"
+                        data-radix-collection-item=""
+                        data-state="checked"
+                        disabled={false}
+                        id="root_employment-0"
+                        onClick={[Function]}
+                        onFocus={[Function]}
+                        onKeyDown={[Function]}
+                        onMouseDown={[Function]}
+                        role="radio"
+                        tabIndex={-1}
+                        type="button"
+                        value="0"
                       >
-                        <path
-                          clipRule="evenodd"
-                          d="M11.4669 3.72684C11.7558 3.91574 11.8369 4.30308 11.648 4.59198L7.39799 11.092C7.29783 11.2452 7.13556 11.3467 6.95402 11.3699C6.77247 11.3931 6.58989 11.3355 6.45446 11.2124L3.70446 8.71241C3.44905 8.48022 3.43023 8.08494 3.66242 7.82953C3.89461 7.57412 4.28989 7.55529 4.5453 7.78749L6.75292 9.79441L10.6018 3.90792C10.7907 3.61902 11.178 3.53795 11.4669 3.72684Z"
-                          fill="currentColor"
-                          fillRule="evenodd"
-                        />
-                      </svg>
-                    </span>
-                  </button>
-                  <input
-                    aria-hidden={true}
-                    defaultChecked={true}
-                    disabled={false}
-                    required={false}
-                    style={
-                      {
-                        "margin": 0,
-                        "opacity": 0,
-                        "pointerEvents": "none",
-                        "position": "absolute",
-                        "transform": "translateX(-100%)",
-                      }
-                    }
-                    tabIndex={-1}
-                    type="radio"
-                    value="0"
-                  />
-                  <label
-                    className="text-sm font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 leading-tight"
-                    onMouseDown={[Function]}
-                  >
-                    Company
-                  </label>
-                </div>
-                <div
-                  className="flex items-center gap-2"
-                >
-                  <button
-                    aria-checked={false}
-                    className="aspect-square h-4 w-4 rounded-full border border-primary text-primary shadow focus:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-                    data-orientation="horizontal"
-                    data-radix-collection-item=""
-                    data-state="unchecked"
-                    disabled={false}
-                    id="root_employment-1"
-                    onClick={[Function]}
-                    onFocus={[Function]}
-                    onKeyDown={[Function]}
-                    onMouseDown={[Function]}
-                    role="radio"
-                    tabIndex={-1}
-                    type="button"
-                    value="1"
-                  />
-                  <input
-                    aria-hidden={true}
-                    defaultChecked={false}
-                    disabled={false}
-                    required={false}
-                    style={
-                      {
-                        "margin": 0,
-                        "opacity": 0,
-                        "pointerEvents": "none",
-                        "position": "absolute",
-                        "transform": "translateX(-100%)",
-                      }
-                    }
-                    tabIndex={-1}
-                    type="radio"
-                    value="1"
-                  />
-                  <label
-                    className="text-sm font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 leading-tight"
-                    onMouseDown={[Function]}
-                  >
-                    Education
-                  </label>
-                </div>
-                <div
-                  className="flex items-center gap-2"
-                >
-                  <button
-                    aria-checked={false}
-                    className="aspect-square h-4 w-4 rounded-full border border-primary text-primary shadow focus:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-                    data-orientation="horizontal"
-                    data-radix-collection-item=""
-                    data-state="unchecked"
-                    disabled={false}
-                    id="root_employment-2"
-                    onClick={[Function]}
-                    onFocus={[Function]}
-                    onKeyDown={[Function]}
-                    onMouseDown={[Function]}
-                    role="radio"
-                    tabIndex={-1}
-                    type="button"
-                    value="2"
-                  />
-                  <input
-                    aria-hidden={true}
-                    defaultChecked={false}
-                    disabled={false}
-                    required={false}
-                    style={
-                      {
-                        "margin": 0,
-                        "opacity": 0,
-                        "pointerEvents": "none",
-                        "position": "absolute",
-                        "transform": "translateX(-100%)",
-                      }
-                    }
-                    tabIndex={-1}
-                    type="radio"
-                    value="2"
-                  />
-                  <label
-                    className="text-sm font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 leading-tight"
-                    onMouseDown={[Function]}
-                  >
-                    Other
-                  </label>
+                        <span
+                          className="flex items-center justify-center"
+                          data-state="checked"
+                        >
+                          <svg
+                            className="h-3.5 w-3.5 fill-primary"
+                            fill="none"
+                            height="15"
+                            viewBox="0 0 15 15"
+                            width="15"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              clipRule="evenodd"
+                              d="M11.4669 3.72684C11.7558 3.91574 11.8369 4.30308 11.648 4.59198L7.39799 11.092C7.29783 11.2452 7.13556 11.3467 6.95402 11.3699C6.77247 11.3931 6.58989 11.3355 6.45446 11.2124L3.70446 8.71241C3.44905 8.48022 3.43023 8.08494 3.66242 7.82953C3.89461 7.57412 4.28989 7.55529 4.5453 7.78749L6.75292 9.79441L10.6018 3.90792C10.7907 3.61902 11.178 3.53795 11.4669 3.72684Z"
+                              fill="currentColor"
+                              fillRule="evenodd"
+                            />
+                          </svg>
+                        </span>
+                      </button>
+                      <input
+                        aria-hidden={true}
+                        defaultChecked={true}
+                        disabled={false}
+                        required={false}
+                        style={
+                          {
+                            "margin": 0,
+                            "opacity": 0,
+                            "pointerEvents": "none",
+                            "position": "absolute",
+                            "transform": "translateX(-100%)",
+                          }
+                        }
+                        tabIndex={-1}
+                        type="radio"
+                        value="0"
+                      />
+                      <label
+                        className="text-sm font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 leading-tight"
+                        onMouseDown={[Function]}
+                      >
+                        Company
+                      </label>
+                    </div>
+                    <div
+                      className="flex items-center gap-2"
+                    >
+                      <button
+                        aria-checked={false}
+                        className="aspect-square h-4 w-4 rounded-full border border-primary text-primary shadow focus:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                        data-orientation="horizontal"
+                        data-radix-collection-item=""
+                        data-state="unchecked"
+                        disabled={false}
+                        id="root_employment-1"
+                        onClick={[Function]}
+                        onFocus={[Function]}
+                        onKeyDown={[Function]}
+                        onMouseDown={[Function]}
+                        role="radio"
+                        tabIndex={-1}
+                        type="button"
+                        value="1"
+                      />
+                      <input
+                        aria-hidden={true}
+                        defaultChecked={false}
+                        disabled={false}
+                        required={false}
+                        style={
+                          {
+                            "margin": 0,
+                            "opacity": 0,
+                            "pointerEvents": "none",
+                            "position": "absolute",
+                            "transform": "translateX(-100%)",
+                          }
+                        }
+                        tabIndex={-1}
+                        type="radio"
+                        value="1"
+                      />
+                      <label
+                        className="text-sm font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 leading-tight"
+                        onMouseDown={[Function]}
+                      >
+                        Education
+                      </label>
+                    </div>
+                    <div
+                      className="flex items-center gap-2"
+                    >
+                      <button
+                        aria-checked={false}
+                        className="aspect-square h-4 w-4 rounded-full border border-primary text-primary shadow focus:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                        data-orientation="horizontal"
+                        data-radix-collection-item=""
+                        data-state="unchecked"
+                        disabled={false}
+                        id="root_employment-2"
+                        onClick={[Function]}
+                        onFocus={[Function]}
+                        onKeyDown={[Function]}
+                        onMouseDown={[Function]}
+                        role="radio"
+                        tabIndex={-1}
+                        type="button"
+                        value="2"
+                      />
+                      <input
+                        aria-hidden={true}
+                        defaultChecked={false}
+                        disabled={false}
+                        required={false}
+                        style={
+                          {
+                            "margin": 0,
+                            "opacity": 0,
+                            "pointerEvents": "none",
+                            "position": "absolute",
+                            "transform": "translateX(-100%)",
+                          }
+                        }
+                        tabIndex={-1}
+                        type="radio"
+                        value="2"
+                      />
+                      <label
+                        className="text-sm font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 leading-tight"
+                        onMouseDown={[Function]}
+                      >
+                        Other
+                      </label>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -1924,182 +1936,194 @@ exports[`Complex grid renders person and address and employment in a complex gri
             className="gap-2 col-span-6 row-span-1 flex items-center"
             data-testid="1"
           >
-            <div
-              className="mb-0"
-            >
+            <div>
               <div
-                aria-describedby="root_employment__error root_employment__description root_employment__help"
-                aria-orientation="horizontal"
-                aria-required={false}
-                className="gap-2 flex flex-wrap"
-                data-orientation="horizontal"
-                dir="ltr"
-                onBlur={[Function]}
-                onFocus={[Function]}
-                onMouseDown={[Function]}
-                role="radiogroup"
-                style={
-                  {
-                    "outline": "none",
-                  }
-                }
-                tabIndex={0}
+                className="flex flex-col gap-2"
               >
-                <div
-                  className="flex items-center gap-2"
+                <label
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  htmlFor="root_employment"
                 >
-                  <button
-                    aria-checked={false}
-                    className="aspect-square h-4 w-4 rounded-full border border-primary text-primary shadow focus:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                  Employment
+                </label>
+                <div
+                  className="mb-0"
+                >
+                  <div
+                    aria-describedby="root_employment__error root_employment__description root_employment__help"
+                    aria-orientation="horizontal"
+                    aria-required={false}
+                    className="gap-2 flex flex-wrap"
                     data-orientation="horizontal"
-                    data-radix-collection-item=""
-                    data-state="unchecked"
-                    disabled={false}
-                    id="root_employment-0"
-                    onClick={[Function]}
+                    dir="ltr"
+                    onBlur={[Function]}
                     onFocus={[Function]}
-                    onKeyDown={[Function]}
                     onMouseDown={[Function]}
-                    role="radio"
-                    tabIndex={-1}
-                    type="button"
-                    value="0"
-                  />
-                  <input
-                    aria-hidden={true}
-                    defaultChecked={false}
-                    disabled={false}
-                    required={false}
+                    role="radiogroup"
                     style={
                       {
-                        "margin": 0,
-                        "opacity": 0,
-                        "pointerEvents": "none",
-                        "position": "absolute",
-                        "transform": "translateX(-100%)",
+                        "outline": "none",
                       }
                     }
-                    tabIndex={-1}
-                    type="radio"
-                    value="0"
-                  />
-                  <label
-                    className="text-sm font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 leading-tight"
-                    onMouseDown={[Function]}
+                    tabIndex={0}
                   >
-                    Company
-                  </label>
-                </div>
-                <div
-                  className="flex items-center gap-2"
-                >
-                  <button
-                    aria-checked={true}
-                    className="aspect-square h-4 w-4 rounded-full border border-primary text-primary shadow focus:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-                    data-orientation="horizontal"
-                    data-radix-collection-item=""
-                    data-state="checked"
-                    disabled={false}
-                    id="root_employment-1"
-                    onClick={[Function]}
-                    onFocus={[Function]}
-                    onKeyDown={[Function]}
-                    onMouseDown={[Function]}
-                    role="radio"
-                    tabIndex={-1}
-                    type="button"
-                    value="1"
-                  >
-                    <span
-                      className="flex items-center justify-center"
-                      data-state="checked"
+                    <div
+                      className="flex items-center gap-2"
                     >
-                      <svg
-                        className="h-3.5 w-3.5 fill-primary"
-                        fill="none"
-                        height="15"
-                        viewBox="0 0 15 15"
-                        width="15"
-                        xmlns="http://www.w3.org/2000/svg"
+                      <button
+                        aria-checked={false}
+                        className="aspect-square h-4 w-4 rounded-full border border-primary text-primary shadow focus:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                        data-orientation="horizontal"
+                        data-radix-collection-item=""
+                        data-state="unchecked"
+                        disabled={false}
+                        id="root_employment-0"
+                        onClick={[Function]}
+                        onFocus={[Function]}
+                        onKeyDown={[Function]}
+                        onMouseDown={[Function]}
+                        role="radio"
+                        tabIndex={-1}
+                        type="button"
+                        value="0"
+                      />
+                      <input
+                        aria-hidden={true}
+                        defaultChecked={false}
+                        disabled={false}
+                        required={false}
+                        style={
+                          {
+                            "margin": 0,
+                            "opacity": 0,
+                            "pointerEvents": "none",
+                            "position": "absolute",
+                            "transform": "translateX(-100%)",
+                          }
+                        }
+                        tabIndex={-1}
+                        type="radio"
+                        value="0"
+                      />
+                      <label
+                        className="text-sm font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 leading-tight"
+                        onMouseDown={[Function]}
                       >
-                        <path
-                          clipRule="evenodd"
-                          d="M11.4669 3.72684C11.7558 3.91574 11.8369 4.30308 11.648 4.59198L7.39799 11.092C7.29783 11.2452 7.13556 11.3467 6.95402 11.3699C6.77247 11.3931 6.58989 11.3355 6.45446 11.2124L3.70446 8.71241C3.44905 8.48022 3.43023 8.08494 3.66242 7.82953C3.89461 7.57412 4.28989 7.55529 4.5453 7.78749L6.75292 9.79441L10.6018 3.90792C10.7907 3.61902 11.178 3.53795 11.4669 3.72684Z"
-                          fill="currentColor"
-                          fillRule="evenodd"
-                        />
-                      </svg>
-                    </span>
-                  </button>
-                  <input
-                    aria-hidden={true}
-                    defaultChecked={true}
-                    disabled={false}
-                    required={false}
-                    style={
-                      {
-                        "margin": 0,
-                        "opacity": 0,
-                        "pointerEvents": "none",
-                        "position": "absolute",
-                        "transform": "translateX(-100%)",
-                      }
-                    }
-                    tabIndex={-1}
-                    type="radio"
-                    value="1"
-                  />
-                  <label
-                    className="text-sm font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 leading-tight"
-                    onMouseDown={[Function]}
-                  >
-                    Education
-                  </label>
-                </div>
-                <div
-                  className="flex items-center gap-2"
-                >
-                  <button
-                    aria-checked={false}
-                    className="aspect-square h-4 w-4 rounded-full border border-primary text-primary shadow focus:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-                    data-orientation="horizontal"
-                    data-radix-collection-item=""
-                    data-state="unchecked"
-                    disabled={false}
-                    id="root_employment-2"
-                    onClick={[Function]}
-                    onFocus={[Function]}
-                    onKeyDown={[Function]}
-                    onMouseDown={[Function]}
-                    role="radio"
-                    tabIndex={-1}
-                    type="button"
-                    value="2"
-                  />
-                  <input
-                    aria-hidden={true}
-                    defaultChecked={false}
-                    disabled={false}
-                    required={false}
-                    style={
-                      {
-                        "margin": 0,
-                        "opacity": 0,
-                        "pointerEvents": "none",
-                        "position": "absolute",
-                        "transform": "translateX(-100%)",
-                      }
-                    }
-                    tabIndex={-1}
-                    type="radio"
-                    value="2"
-                  />
-                  <label
-                    className="text-sm font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 leading-tight"
-                    onMouseDown={[Function]}
-                  >
-                    Other
-                  </label>
+                        Company
+                      </label>
+                    </div>
+                    <div
+                      className="flex items-center gap-2"
+                    >
+                      <button
+                        aria-checked={true}
+                        className="aspect-square h-4 w-4 rounded-full border border-primary text-primary shadow focus:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                        data-orientation="horizontal"
+                        data-radix-collection-item=""
+                        data-state="checked"
+                        disabled={false}
+                        id="root_employment-1"
+                        onClick={[Function]}
+                        onFocus={[Function]}
+                        onKeyDown={[Function]}
+                        onMouseDown={[Function]}
+                        role="radio"
+                        tabIndex={-1}
+                        type="button"
+                        value="1"
+                      >
+                        <span
+                          className="flex items-center justify-center"
+                          data-state="checked"
+                        >
+                          <svg
+                            className="h-3.5 w-3.5 fill-primary"
+                            fill="none"
+                            height="15"
+                            viewBox="0 0 15 15"
+                            width="15"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              clipRule="evenodd"
+                              d="M11.4669 3.72684C11.7558 3.91574 11.8369 4.30308 11.648 4.59198L7.39799 11.092C7.29783 11.2452 7.13556 11.3467 6.95402 11.3699C6.77247 11.3931 6.58989 11.3355 6.45446 11.2124L3.70446 8.71241C3.44905 8.48022 3.43023 8.08494 3.66242 7.82953C3.89461 7.57412 4.28989 7.55529 4.5453 7.78749L6.75292 9.79441L10.6018 3.90792C10.7907 3.61902 11.178 3.53795 11.4669 3.72684Z"
+                              fill="currentColor"
+                              fillRule="evenodd"
+                            />
+                          </svg>
+                        </span>
+                      </button>
+                      <input
+                        aria-hidden={true}
+                        defaultChecked={true}
+                        disabled={false}
+                        required={false}
+                        style={
+                          {
+                            "margin": 0,
+                            "opacity": 0,
+                            "pointerEvents": "none",
+                            "position": "absolute",
+                            "transform": "translateX(-100%)",
+                          }
+                        }
+                        tabIndex={-1}
+                        type="radio"
+                        value="1"
+                      />
+                      <label
+                        className="text-sm font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 leading-tight"
+                        onMouseDown={[Function]}
+                      >
+                        Education
+                      </label>
+                    </div>
+                    <div
+                      className="flex items-center gap-2"
+                    >
+                      <button
+                        aria-checked={false}
+                        className="aspect-square h-4 w-4 rounded-full border border-primary text-primary shadow focus:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                        data-orientation="horizontal"
+                        data-radix-collection-item=""
+                        data-state="unchecked"
+                        disabled={false}
+                        id="root_employment-2"
+                        onClick={[Function]}
+                        onFocus={[Function]}
+                        onKeyDown={[Function]}
+                        onMouseDown={[Function]}
+                        role="radio"
+                        tabIndex={-1}
+                        type="button"
+                        value="2"
+                      />
+                      <input
+                        aria-hidden={true}
+                        defaultChecked={false}
+                        disabled={false}
+                        required={false}
+                        style={
+                          {
+                            "margin": 0,
+                            "opacity": 0,
+                            "pointerEvents": "none",
+                            "position": "absolute",
+                            "transform": "translateX(-100%)",
+                          }
+                        }
+                        tabIndex={-1}
+                        type="radio"
+                        value="2"
+                      />
+                      <label
+                        className="text-sm font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 leading-tight"
+                        onMouseDown={[Function]}
+                      >
+                        Other
+                      </label>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -3123,182 +3147,194 @@ exports[`Complex grid renders person and address and employment in a complex gri
             className="gap-2 col-span-6 row-span-1 flex items-center"
             data-testid="1"
           >
-            <div
-              className="mb-0"
-            >
+            <div>
               <div
-                aria-describedby="root_employment__error root_employment__description root_employment__help"
-                aria-orientation="horizontal"
-                aria-required={false}
-                className="gap-2 flex flex-wrap"
-                data-orientation="horizontal"
-                dir="ltr"
-                onBlur={[Function]}
-                onFocus={[Function]}
-                onMouseDown={[Function]}
-                role="radiogroup"
-                style={
-                  {
-                    "outline": "none",
-                  }
-                }
-                tabIndex={0}
+                className="flex flex-col gap-2"
               >
-                <div
-                  className="flex items-center gap-2"
+                <label
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  htmlFor="root_employment"
                 >
-                  <button
-                    aria-checked={false}
-                    className="aspect-square h-4 w-4 rounded-full border border-primary text-primary shadow focus:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                  Employment
+                </label>
+                <div
+                  className="mb-0"
+                >
+                  <div
+                    aria-describedby="root_employment__error root_employment__description root_employment__help"
+                    aria-orientation="horizontal"
+                    aria-required={false}
+                    className="gap-2 flex flex-wrap"
                     data-orientation="horizontal"
-                    data-radix-collection-item=""
-                    data-state="unchecked"
-                    disabled={false}
-                    id="root_employment-0"
-                    onClick={[Function]}
+                    dir="ltr"
+                    onBlur={[Function]}
                     onFocus={[Function]}
-                    onKeyDown={[Function]}
                     onMouseDown={[Function]}
-                    role="radio"
-                    tabIndex={-1}
-                    type="button"
-                    value="0"
-                  />
-                  <input
-                    aria-hidden={true}
-                    defaultChecked={false}
-                    disabled={false}
-                    required={false}
+                    role="radiogroup"
                     style={
                       {
-                        "margin": 0,
-                        "opacity": 0,
-                        "pointerEvents": "none",
-                        "position": "absolute",
-                        "transform": "translateX(-100%)",
+                        "outline": "none",
                       }
                     }
-                    tabIndex={-1}
-                    type="radio"
-                    value="0"
-                  />
-                  <label
-                    className="text-sm font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 leading-tight"
-                    onMouseDown={[Function]}
+                    tabIndex={0}
                   >
-                    Company
-                  </label>
-                </div>
-                <div
-                  className="flex items-center gap-2"
-                >
-                  <button
-                    aria-checked={false}
-                    className="aspect-square h-4 w-4 rounded-full border border-primary text-primary shadow focus:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-                    data-orientation="horizontal"
-                    data-radix-collection-item=""
-                    data-state="unchecked"
-                    disabled={false}
-                    id="root_employment-1"
-                    onClick={[Function]}
-                    onFocus={[Function]}
-                    onKeyDown={[Function]}
-                    onMouseDown={[Function]}
-                    role="radio"
-                    tabIndex={-1}
-                    type="button"
-                    value="1"
-                  />
-                  <input
-                    aria-hidden={true}
-                    defaultChecked={false}
-                    disabled={false}
-                    required={false}
-                    style={
-                      {
-                        "margin": 0,
-                        "opacity": 0,
-                        "pointerEvents": "none",
-                        "position": "absolute",
-                        "transform": "translateX(-100%)",
-                      }
-                    }
-                    tabIndex={-1}
-                    type="radio"
-                    value="1"
-                  />
-                  <label
-                    className="text-sm font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 leading-tight"
-                    onMouseDown={[Function]}
-                  >
-                    Education
-                  </label>
-                </div>
-                <div
-                  className="flex items-center gap-2"
-                >
-                  <button
-                    aria-checked={true}
-                    className="aspect-square h-4 w-4 rounded-full border border-primary text-primary shadow focus:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-                    data-orientation="horizontal"
-                    data-radix-collection-item=""
-                    data-state="checked"
-                    disabled={false}
-                    id="root_employment-2"
-                    onClick={[Function]}
-                    onFocus={[Function]}
-                    onKeyDown={[Function]}
-                    onMouseDown={[Function]}
-                    role="radio"
-                    tabIndex={-1}
-                    type="button"
-                    value="2"
-                  >
-                    <span
-                      className="flex items-center justify-center"
-                      data-state="checked"
+                    <div
+                      className="flex items-center gap-2"
                     >
-                      <svg
-                        className="h-3.5 w-3.5 fill-primary"
-                        fill="none"
-                        height="15"
-                        viewBox="0 0 15 15"
-                        width="15"
-                        xmlns="http://www.w3.org/2000/svg"
+                      <button
+                        aria-checked={false}
+                        className="aspect-square h-4 w-4 rounded-full border border-primary text-primary shadow focus:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                        data-orientation="horizontal"
+                        data-radix-collection-item=""
+                        data-state="unchecked"
+                        disabled={false}
+                        id="root_employment-0"
+                        onClick={[Function]}
+                        onFocus={[Function]}
+                        onKeyDown={[Function]}
+                        onMouseDown={[Function]}
+                        role="radio"
+                        tabIndex={-1}
+                        type="button"
+                        value="0"
+                      />
+                      <input
+                        aria-hidden={true}
+                        defaultChecked={false}
+                        disabled={false}
+                        required={false}
+                        style={
+                          {
+                            "margin": 0,
+                            "opacity": 0,
+                            "pointerEvents": "none",
+                            "position": "absolute",
+                            "transform": "translateX(-100%)",
+                          }
+                        }
+                        tabIndex={-1}
+                        type="radio"
+                        value="0"
+                      />
+                      <label
+                        className="text-sm font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 leading-tight"
+                        onMouseDown={[Function]}
                       >
-                        <path
-                          clipRule="evenodd"
-                          d="M11.4669 3.72684C11.7558 3.91574 11.8369 4.30308 11.648 4.59198L7.39799 11.092C7.29783 11.2452 7.13556 11.3467 6.95402 11.3699C6.77247 11.3931 6.58989 11.3355 6.45446 11.2124L3.70446 8.71241C3.44905 8.48022 3.43023 8.08494 3.66242 7.82953C3.89461 7.57412 4.28989 7.55529 4.5453 7.78749L6.75292 9.79441L10.6018 3.90792C10.7907 3.61902 11.178 3.53795 11.4669 3.72684Z"
-                          fill="currentColor"
-                          fillRule="evenodd"
-                        />
-                      </svg>
-                    </span>
-                  </button>
-                  <input
-                    aria-hidden={true}
-                    defaultChecked={true}
-                    disabled={false}
-                    required={false}
-                    style={
-                      {
-                        "margin": 0,
-                        "opacity": 0,
-                        "pointerEvents": "none",
-                        "position": "absolute",
-                        "transform": "translateX(-100%)",
-                      }
-                    }
-                    tabIndex={-1}
-                    type="radio"
-                    value="2"
-                  />
-                  <label
-                    className="text-sm font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 leading-tight"
-                    onMouseDown={[Function]}
-                  >
-                    Other
-                  </label>
+                        Company
+                      </label>
+                    </div>
+                    <div
+                      className="flex items-center gap-2"
+                    >
+                      <button
+                        aria-checked={false}
+                        className="aspect-square h-4 w-4 rounded-full border border-primary text-primary shadow focus:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                        data-orientation="horizontal"
+                        data-radix-collection-item=""
+                        data-state="unchecked"
+                        disabled={false}
+                        id="root_employment-1"
+                        onClick={[Function]}
+                        onFocus={[Function]}
+                        onKeyDown={[Function]}
+                        onMouseDown={[Function]}
+                        role="radio"
+                        tabIndex={-1}
+                        type="button"
+                        value="1"
+                      />
+                      <input
+                        aria-hidden={true}
+                        defaultChecked={false}
+                        disabled={false}
+                        required={false}
+                        style={
+                          {
+                            "margin": 0,
+                            "opacity": 0,
+                            "pointerEvents": "none",
+                            "position": "absolute",
+                            "transform": "translateX(-100%)",
+                          }
+                        }
+                        tabIndex={-1}
+                        type="radio"
+                        value="1"
+                      />
+                      <label
+                        className="text-sm font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 leading-tight"
+                        onMouseDown={[Function]}
+                      >
+                        Education
+                      </label>
+                    </div>
+                    <div
+                      className="flex items-center gap-2"
+                    >
+                      <button
+                        aria-checked={true}
+                        className="aspect-square h-4 w-4 rounded-full border border-primary text-primary shadow focus:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                        data-orientation="horizontal"
+                        data-radix-collection-item=""
+                        data-state="checked"
+                        disabled={false}
+                        id="root_employment-2"
+                        onClick={[Function]}
+                        onFocus={[Function]}
+                        onKeyDown={[Function]}
+                        onMouseDown={[Function]}
+                        role="radio"
+                        tabIndex={-1}
+                        type="button"
+                        value="2"
+                      >
+                        <span
+                          className="flex items-center justify-center"
+                          data-state="checked"
+                        >
+                          <svg
+                            className="h-3.5 w-3.5 fill-primary"
+                            fill="none"
+                            height="15"
+                            viewBox="0 0 15 15"
+                            width="15"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              clipRule="evenodd"
+                              d="M11.4669 3.72684C11.7558 3.91574 11.8369 4.30308 11.648 4.59198L7.39799 11.092C7.29783 11.2452 7.13556 11.3467 6.95402 11.3699C6.77247 11.3931 6.58989 11.3355 6.45446 11.2124L3.70446 8.71241C3.44905 8.48022 3.43023 8.08494 3.66242 7.82953C3.89461 7.57412 4.28989 7.55529 4.5453 7.78749L6.75292 9.79441L10.6018 3.90792C10.7907 3.61902 11.178 3.53795 11.4669 3.72684Z"
+                              fill="currentColor"
+                              fillRule="evenodd"
+                            />
+                          </svg>
+                        </span>
+                      </button>
+                      <input
+                        aria-hidden={true}
+                        defaultChecked={true}
+                        disabled={false}
+                        required={false}
+                        style={
+                          {
+                            "margin": 0,
+                            "opacity": 0,
+                            "pointerEvents": "none",
+                            "position": "absolute",
+                            "transform": "translateX(-100%)",
+                          }
+                        }
+                        tabIndex={-1}
+                        type="radio"
+                        value="2"
+                      />
+                      <label
+                        className="text-sm font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 leading-tight"
+                        onMouseDown={[Function]}
+                      >
+                        Other
+                      </label>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -4123,182 +4159,194 @@ exports[`Complex grid renders person and address and employment in a complex gri
             className="gap-2 col-span-6 row-span-1 flex items-center"
             data-testid="1"
           >
-            <div
-              className="mb-0"
-            >
+            <div>
               <div
-                aria-describedby="root_employment__error root_employment__description root_employment__help"
-                aria-orientation="horizontal"
-                aria-required={false}
-                className="gap-2 flex flex-wrap"
-                data-orientation="horizontal"
-                dir="ltr"
-                onBlur={[Function]}
-                onFocus={[Function]}
-                onMouseDown={[Function]}
-                role="radiogroup"
-                style={
-                  {
-                    "outline": "none",
-                  }
-                }
-                tabIndex={0}
+                className="flex flex-col gap-2"
               >
-                <div
-                  className="flex items-center gap-2"
+                <label
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  htmlFor="root_employment"
                 >
-                  <button
-                    aria-checked={true}
-                    className="aspect-square h-4 w-4 rounded-full border border-primary text-primary shadow focus:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                  Employment
+                </label>
+                <div
+                  className="mb-0"
+                >
+                  <div
+                    aria-describedby="root_employment__error root_employment__description root_employment__help"
+                    aria-orientation="horizontal"
+                    aria-required={false}
+                    className="gap-2 flex flex-wrap"
                     data-orientation="horizontal"
-                    data-radix-collection-item=""
-                    data-state="checked"
-                    disabled={false}
-                    id="root_employment-0"
-                    onClick={[Function]}
+                    dir="ltr"
+                    onBlur={[Function]}
                     onFocus={[Function]}
-                    onKeyDown={[Function]}
                     onMouseDown={[Function]}
-                    role="radio"
-                    tabIndex={-1}
-                    type="button"
-                    value="0"
+                    role="radiogroup"
+                    style={
+                      {
+                        "outline": "none",
+                      }
+                    }
+                    tabIndex={0}
                   >
-                    <span
-                      className="flex items-center justify-center"
-                      data-state="checked"
+                    <div
+                      className="flex items-center gap-2"
                     >
-                      <svg
-                        className="h-3.5 w-3.5 fill-primary"
-                        fill="none"
-                        height="15"
-                        viewBox="0 0 15 15"
-                        width="15"
-                        xmlns="http://www.w3.org/2000/svg"
+                      <button
+                        aria-checked={true}
+                        className="aspect-square h-4 w-4 rounded-full border border-primary text-primary shadow focus:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                        data-orientation="horizontal"
+                        data-radix-collection-item=""
+                        data-state="checked"
+                        disabled={false}
+                        id="root_employment-0"
+                        onClick={[Function]}
+                        onFocus={[Function]}
+                        onKeyDown={[Function]}
+                        onMouseDown={[Function]}
+                        role="radio"
+                        tabIndex={-1}
+                        type="button"
+                        value="0"
                       >
-                        <path
-                          clipRule="evenodd"
-                          d="M11.4669 3.72684C11.7558 3.91574 11.8369 4.30308 11.648 4.59198L7.39799 11.092C7.29783 11.2452 7.13556 11.3467 6.95402 11.3699C6.77247 11.3931 6.58989 11.3355 6.45446 11.2124L3.70446 8.71241C3.44905 8.48022 3.43023 8.08494 3.66242 7.82953C3.89461 7.57412 4.28989 7.55529 4.5453 7.78749L6.75292 9.79441L10.6018 3.90792C10.7907 3.61902 11.178 3.53795 11.4669 3.72684Z"
-                          fill="currentColor"
-                          fillRule="evenodd"
-                        />
-                      </svg>
-                    </span>
-                  </button>
-                  <input
-                    aria-hidden={true}
-                    defaultChecked={true}
-                    disabled={false}
-                    required={false}
-                    style={
-                      {
-                        "margin": 0,
-                        "opacity": 0,
-                        "pointerEvents": "none",
-                        "position": "absolute",
-                        "transform": "translateX(-100%)",
-                      }
-                    }
-                    tabIndex={-1}
-                    type="radio"
-                    value="0"
-                  />
-                  <label
-                    className="text-sm font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 leading-tight"
-                    onMouseDown={[Function]}
-                  >
-                    Company
-                  </label>
-                </div>
-                <div
-                  className="flex items-center gap-2"
-                >
-                  <button
-                    aria-checked={false}
-                    className="aspect-square h-4 w-4 rounded-full border border-primary text-primary shadow focus:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-                    data-orientation="horizontal"
-                    data-radix-collection-item=""
-                    data-state="unchecked"
-                    disabled={false}
-                    id="root_employment-1"
-                    onClick={[Function]}
-                    onFocus={[Function]}
-                    onKeyDown={[Function]}
-                    onMouseDown={[Function]}
-                    role="radio"
-                    tabIndex={-1}
-                    type="button"
-                    value="1"
-                  />
-                  <input
-                    aria-hidden={true}
-                    defaultChecked={false}
-                    disabled={false}
-                    required={false}
-                    style={
-                      {
-                        "margin": 0,
-                        "opacity": 0,
-                        "pointerEvents": "none",
-                        "position": "absolute",
-                        "transform": "translateX(-100%)",
-                      }
-                    }
-                    tabIndex={-1}
-                    type="radio"
-                    value="1"
-                  />
-                  <label
-                    className="text-sm font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 leading-tight"
-                    onMouseDown={[Function]}
-                  >
-                    Education
-                  </label>
-                </div>
-                <div
-                  className="flex items-center gap-2"
-                >
-                  <button
-                    aria-checked={false}
-                    className="aspect-square h-4 w-4 rounded-full border border-primary text-primary shadow focus:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-                    data-orientation="horizontal"
-                    data-radix-collection-item=""
-                    data-state="unchecked"
-                    disabled={false}
-                    id="root_employment-2"
-                    onClick={[Function]}
-                    onFocus={[Function]}
-                    onKeyDown={[Function]}
-                    onMouseDown={[Function]}
-                    role="radio"
-                    tabIndex={-1}
-                    type="button"
-                    value="2"
-                  />
-                  <input
-                    aria-hidden={true}
-                    defaultChecked={false}
-                    disabled={false}
-                    required={false}
-                    style={
-                      {
-                        "margin": 0,
-                        "opacity": 0,
-                        "pointerEvents": "none",
-                        "position": "absolute",
-                        "transform": "translateX(-100%)",
-                      }
-                    }
-                    tabIndex={-1}
-                    type="radio"
-                    value="2"
-                  />
-                  <label
-                    className="text-sm font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 leading-tight"
-                    onMouseDown={[Function]}
-                  >
-                    Other
-                  </label>
+                        <span
+                          className="flex items-center justify-center"
+                          data-state="checked"
+                        >
+                          <svg
+                            className="h-3.5 w-3.5 fill-primary"
+                            fill="none"
+                            height="15"
+                            viewBox="0 0 15 15"
+                            width="15"
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            <path
+                              clipRule="evenodd"
+                              d="M11.4669 3.72684C11.7558 3.91574 11.8369 4.30308 11.648 4.59198L7.39799 11.092C7.29783 11.2452 7.13556 11.3467 6.95402 11.3699C6.77247 11.3931 6.58989 11.3355 6.45446 11.2124L3.70446 8.71241C3.44905 8.48022 3.43023 8.08494 3.66242 7.82953C3.89461 7.57412 4.28989 7.55529 4.5453 7.78749L6.75292 9.79441L10.6018 3.90792C10.7907 3.61902 11.178 3.53795 11.4669 3.72684Z"
+                              fill="currentColor"
+                              fillRule="evenodd"
+                            />
+                          </svg>
+                        </span>
+                      </button>
+                      <input
+                        aria-hidden={true}
+                        defaultChecked={true}
+                        disabled={false}
+                        required={false}
+                        style={
+                          {
+                            "margin": 0,
+                            "opacity": 0,
+                            "pointerEvents": "none",
+                            "position": "absolute",
+                            "transform": "translateX(-100%)",
+                          }
+                        }
+                        tabIndex={-1}
+                        type="radio"
+                        value="0"
+                      />
+                      <label
+                        className="text-sm font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 leading-tight"
+                        onMouseDown={[Function]}
+                      >
+                        Company
+                      </label>
+                    </div>
+                    <div
+                      className="flex items-center gap-2"
+                    >
+                      <button
+                        aria-checked={false}
+                        className="aspect-square h-4 w-4 rounded-full border border-primary text-primary shadow focus:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                        data-orientation="horizontal"
+                        data-radix-collection-item=""
+                        data-state="unchecked"
+                        disabled={false}
+                        id="root_employment-1"
+                        onClick={[Function]}
+                        onFocus={[Function]}
+                        onKeyDown={[Function]}
+                        onMouseDown={[Function]}
+                        role="radio"
+                        tabIndex={-1}
+                        type="button"
+                        value="1"
+                      />
+                      <input
+                        aria-hidden={true}
+                        defaultChecked={false}
+                        disabled={false}
+                        required={false}
+                        style={
+                          {
+                            "margin": 0,
+                            "opacity": 0,
+                            "pointerEvents": "none",
+                            "position": "absolute",
+                            "transform": "translateX(-100%)",
+                          }
+                        }
+                        tabIndex={-1}
+                        type="radio"
+                        value="1"
+                      />
+                      <label
+                        className="text-sm font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 leading-tight"
+                        onMouseDown={[Function]}
+                      >
+                        Education
+                      </label>
+                    </div>
+                    <div
+                      className="flex items-center gap-2"
+                    >
+                      <button
+                        aria-checked={false}
+                        className="aspect-square h-4 w-4 rounded-full border border-primary text-primary shadow focus:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                        data-orientation="horizontal"
+                        data-radix-collection-item=""
+                        data-state="unchecked"
+                        disabled={false}
+                        id="root_employment-2"
+                        onClick={[Function]}
+                        onFocus={[Function]}
+                        onKeyDown={[Function]}
+                        onMouseDown={[Function]}
+                        role="radio"
+                        tabIndex={-1}
+                        type="button"
+                        value="2"
+                      />
+                      <input
+                        aria-hidden={true}
+                        defaultChecked={false}
+                        disabled={false}
+                        required={false}
+                        style={
+                          {
+                            "margin": 0,
+                            "opacity": 0,
+                            "pointerEvents": "none",
+                            "position": "absolute",
+                            "transform": "translateX(-100%)",
+                          }
+                        }
+                        tabIndex={-1}
+                        type="radio"
+                        value="2"
+                      />
+                      <label
+                        className="text-sm font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 leading-tight"
+                        onMouseDown={[Function]}
+                      >
+                        Other
+                      </label>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

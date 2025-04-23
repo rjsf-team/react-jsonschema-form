@@ -8,44 +8,44 @@
   "description": "The ajv-8 based validator for @rjsf/core",
   "exports": {
     ".": {
+      "types": "./lib/index.d.ts",
       "require": "./dist/index.js",
-      "import": "./lib/index.js",
-      "types": "./lib/index.d.ts"
+      "import": "./lib/index.js"
     },
     "./compileSchemaValidators": {
+      "types": "./lib/compileSchemaValidators.d.ts",
       "require": "./dist/compileSchemaValidators.js",
-      "import": "./lib/compileSchemaValidators.js",
-      "types": "./lib/compileSchemaValidators.d.ts"
+      "import": "./lib/compileSchemaValidators.js"
     },
     "./lib/compileSchemaValidators": {
+      "types": "./lib/compileSchemaValidators.d.ts",
       "require": "./dist/compileSchemaValidators.js",
-      "import": "./lib/compileSchemaValidators.js",
-      "types": "./lib/compileSchemaValidators.d.ts"
+      "import": "./lib/compileSchemaValidators.js"
     },
     "./dist/compileSchemaValidators": {
+      "types": "./lib/compileSchemaValidators.d.ts",
       "require": "./dist/compileSchemaValidators.js",
-      "import": "./lib/compileSchemaValidators.js",
-      "types": "./lib/compileSchemaValidators.d.ts"
+      "import": "./lib/compileSchemaValidators.js"
     },
     "./lib": {
+      "types": "./lib/index.d.ts",
       "require": "./dist/index.js",
-      "import": "./lib/index.js",
-      "types": "./lib/index.d.ts"
+      "import": "./lib/index.js"
     },
     "./lib/*.js": {
+      "types": "./lib/*.d.ts",
       "require": "./dist/*.js",
-      "import": "./lib/*.js",
-      "types": "./lib/*.d.ts"
+      "import": "./lib/*.js"
     },
     "./dist": {
+      "types": "./lib/index.d.ts",
       "require": "./dist/index.js",
-      "import": "./lib/index.js",
-      "types": "./lib/index.d.ts"
+      "import": "./lib/index.js"
     },
     "./dist/*.js": {
+      "types": "./lib/*.d.ts",
       "require": "./dist/*.js",
-      "import": "./lib/*.js",
-      "types": "./lib/*.d.ts"
+      "import": "./lib/*.js"
     }
   },
   "files": [
