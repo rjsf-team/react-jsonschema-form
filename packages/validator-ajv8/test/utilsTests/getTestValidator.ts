@@ -1,11 +1,4 @@
-import {
-  CustomValidator,
-  ErrorSchema,
-  ErrorTransformer,
-  RJSFSchema,
-  RJSFValidationError,
-  ValidationData,
-} from '@rjsf/utils';
+import { CustomValidator, ErrorTransformer, RJSFSchema, ValidationData } from '@rjsf/utils';
 // With Lerna active, the test world has access to the test suite via the symlink
 import { TestValidatorType } from '@rjsf/utils/test/schema';
 import { customizeValidator, CustomValidatorOptionsType } from '../../src';
@@ -26,9 +19,6 @@ export default function getTestValidator<T = any>(options: CustomValidatorOption
       transformErrors?: ErrorTransformer<T>,
     ): ValidationData<T> {
       return validator.validateFormData(formData, schema, customValidate, transformErrors);
-    },
-    toErrorList(errorSchema?: ErrorSchema<T>, fieldPath?: string[]): RJSFValidationError[] {
-      return validator.toErrorList(errorSchema, fieldPath);
     },
     isValid(schema: RJSFSchema, formData: T | undefined, rootSchema: RJSFSchema): boolean {
       return validator.isValid(schema, formData, rootSchema);

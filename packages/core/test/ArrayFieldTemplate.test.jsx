@@ -1,6 +1,8 @@
 import { PureComponent } from 'react';
 import { expect } from 'chai';
 import { Simulate } from 'react-dom/test-utils';
+import { getUiOptions } from '@rjsf/utils';
+
 import { createFormComponent, createSandbox } from './test_utils';
 
 describe('ArrayFieldTemplate', () => {
@@ -18,8 +20,9 @@ describe('ArrayFieldTemplate', () => {
 
   describe('Custom ArrayFieldTemplate of string array', () => {
     function ArrayFieldTemplate(props) {
+      const { classNames } = getUiOptions(props.uiSchema);
       return (
-        <div className={props.uiSchema.classNames}>
+        <div className={classNames}>
           {props.canAdd && <button className='custom-array-add' />}
           {props.items.map((element) => {
             return (
@@ -101,7 +104,7 @@ describe('ArrayFieldTemplate', () => {
 
       describe('with template globally configured', () => {
         const uiSchema = {
-          classNames: 'custom-array',
+          'ui:classNames': 'custom-array',
         };
 
         beforeEach(() => {
@@ -117,7 +120,7 @@ describe('ArrayFieldTemplate', () => {
       });
       describe('with template configured in ui:ArrayFieldTemplate', () => {
         const uiSchema = {
-          classNames: 'custom-array',
+          'ui:classNames': 'custom-array',
           'ui:ArrayFieldTemplate': ArrayFieldTemplate,
         };
 
@@ -132,7 +135,7 @@ describe('ArrayFieldTemplate', () => {
       });
       describe('with template configured globally being overriden in ui:ArrayFieldTemplate', () => {
         const uiSchema = {
-          classNames: 'custom-array',
+          'ui:classNames': 'custom-array',
           'ui:ArrayFieldTemplate': ArrayFieldTemplate,
         };
 
@@ -162,7 +165,7 @@ describe('ArrayFieldTemplate', () => {
 
         it('should render text input for each array item', () => {
           expect(node.querySelectorAll('.custom-array-item .field input[type=text]')).to.have.length.of(
-            formData.length
+            formData.length,
           );
         });
 
@@ -188,7 +191,7 @@ describe('ArrayFieldTemplate', () => {
 
       describe('with template globally configured', () => {
         const uiSchema = {
-          classNames: 'custom-array',
+          'ui:classNames': 'custom-array',
         };
         beforeEach(() => {
           node = createFormComponent({
@@ -203,7 +206,7 @@ describe('ArrayFieldTemplate', () => {
 
       describe('with template configured in ui:ArrayFieldTemplate', () => {
         const uiSchema = {
-          classNames: 'custom-array',
+          'ui:classNames': 'custom-array',
           'ui:ArrayFieldTemplate': ArrayFieldTemplate,
         };
         beforeEach(() => {
@@ -217,7 +220,7 @@ describe('ArrayFieldTemplate', () => {
       });
       describe('with template configured globally being overriden in ui:ArrayFieldTemplate', () => {
         const uiSchema = {
-          classNames: 'custom-array',
+          'ui:classNames': 'custom-array',
           'ui:ArrayFieldTemplate': ArrayFieldTemplate,
         };
         beforeEach(() => {
@@ -246,7 +249,7 @@ describe('ArrayFieldTemplate', () => {
 
         it('should render text input for each array item', () => {
           expect(node.querySelectorAll('.custom-array-item .field input[type=text]')).to.have.length.of(
-            formData.length
+            formData.length,
           );
         });
 

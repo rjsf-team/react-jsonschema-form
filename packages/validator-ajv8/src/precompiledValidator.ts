@@ -3,7 +3,6 @@ import get from 'lodash/get';
 import {
   CustomValidator,
   deepEquals,
-  ErrorSchema,
   ErrorTransformer,
   FormContextType,
   hashForSchema,
@@ -12,7 +11,6 @@ import {
   retrieveSchema,
   RJSFSchema,
   StrictRJSFSchema,
-  toErrorList,
   UiSchema,
   ValidationData,
   ValidatorType,
@@ -102,17 +100,6 @@ export default class AJV8PrecompiledValidator<
       }
     }
     return true;
-  }
-
-  /** Converts an `errorSchema` into a list of `RJSFValidationErrors`
-   *
-   * @param errorSchema - The `ErrorSchema` instance to convert
-   * @param [fieldPath=[]] - The current field path, defaults to [] if not specified
-   * @deprecated - Use the `toErrorList()` function provided by `@rjsf/utils` instead. This function will be removed in
-   *        the next major release.
-   */
-  toErrorList(errorSchema?: ErrorSchema<T>, fieldPath: string[] = []) {
-    return toErrorList(errorSchema, fieldPath);
   }
 
   /** Runs the pure validation of the `schema` and `formData` without any of the RJSF functionality. Provided for use

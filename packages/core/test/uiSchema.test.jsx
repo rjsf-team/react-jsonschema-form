@@ -46,7 +46,7 @@ describe('uiSchema', () => {
         },
       },
       baz: {
-        classNames: 'class-for-baz',
+        'ui:classNames': 'class-for-baz',
       },
     };
 
@@ -60,7 +60,6 @@ describe('uiSchema', () => {
       expect(bar.classList.contains('class-for-bar')).eql(true);
       expect(bar.classList.contains('another-for-bar')).eql(true);
       expect(baz.classList.contains('class-for-baz')).eql(true);
-      expect(console.warn.calledWithMatch(/'uiSchema.classNames' is deprecated/)).to.be.true;
     });
   });
 
@@ -476,7 +475,7 @@ describe('uiSchema', () => {
         expect(node.querySelectorAll('option:disabled')).to.have.length.of(disabledOptionsLen);
         expect(node.querySelectorAll('option:enabled')).to.have.length.of(
           // Two options, one disabled, plus the placeholder
-          2 - disabledOptionsLen + 1
+          2 - disabledOptionsLen + 1,
         );
       });
     });
@@ -506,7 +505,7 @@ describe('uiSchema', () => {
         expect(node.querySelectorAll('input:disabled')).to.have.length.of(disabledOptionsLen);
         expect(node.querySelectorAll('input:enabled')).to.have.length.of(
           // Two options, one disabled, plus the placeholder
-          2 - disabledOptionsLen
+          2 - disabledOptionsLen,
         );
       });
     });
@@ -597,7 +596,7 @@ describe('uiSchema', () => {
           {
             type: 'integer',
           },
-          { 'ui:autofocus': true }
+          { 'ui:autofocus': true },
         );
       });
 
@@ -609,7 +608,7 @@ describe('uiSchema', () => {
           {
             'ui:widget': 'updown',
             'ui:autofocus': true,
-          }
+          },
         );
       });
 
@@ -621,7 +620,7 @@ describe('uiSchema', () => {
           {
             'ui:widget': 'range',
             'ui:autofocus': true,
-          }
+          },
         );
       });
 
@@ -634,7 +633,7 @@ describe('uiSchema', () => {
           {
             'ui:autofocus': true,
           },
-          'select'
+          'select',
         );
       });
     });
@@ -645,7 +644,7 @@ describe('uiSchema', () => {
           {
             type: 'string',
           },
-          { 'ui:autofocus': true }
+          { 'ui:autofocus': true },
         );
       });
 
@@ -658,7 +657,7 @@ describe('uiSchema', () => {
             'ui:widget': 'textarea',
             'ui:autofocus': true,
           },
-          'textarea'
+          'textarea',
         );
       });
 
@@ -670,7 +669,7 @@ describe('uiSchema', () => {
           {
             'ui:widget': 'password',
             'ui:autofocus': true,
-          }
+          },
         );
       });
 
@@ -682,7 +681,7 @@ describe('uiSchema', () => {
           {
             'ui:widget': 'color',
             'ui:autofocus': true,
-          }
+          },
         );
       });
 
@@ -692,7 +691,7 @@ describe('uiSchema', () => {
             type: 'string',
             format: 'email',
           },
-          { 'ui:autofocus': true }
+          { 'ui:autofocus': true },
         );
       });
 
@@ -702,7 +701,7 @@ describe('uiSchema', () => {
             type: 'string',
             format: 'uri',
           },
-          { 'ui:autofocus': true }
+          { 'ui:autofocus': true },
         );
       });
 
@@ -712,7 +711,7 @@ describe('uiSchema', () => {
             type: 'string',
             format: 'data-url',
           },
-          { 'ui:autofocus': true }
+          { 'ui:autofocus': true },
         );
       });
     });
@@ -724,7 +723,7 @@ describe('uiSchema', () => {
             type: 'string',
             format: 'date',
           },
-          { 'ui:autofocus': true }
+          { 'ui:autofocus': true },
         );
       });
 
@@ -734,7 +733,7 @@ describe('uiSchema', () => {
             type: 'string',
             format: 'date-time',
           },
-          { 'ui:autofocus': true }
+          { 'ui:autofocus': true },
         );
       });
 
@@ -748,7 +747,7 @@ describe('uiSchema', () => {
             'ui:widget': 'alt-date',
             'ui:autofocus': true,
           },
-          'select'
+          'select',
         );
       });
 
@@ -762,7 +761,7 @@ describe('uiSchema', () => {
             'ui:widget': 'alt-datetime',
             'ui:autofocus': true,
           },
-          'select'
+          'select',
         );
       });
     });
@@ -777,7 +776,7 @@ describe('uiSchema', () => {
               format: 'data-url',
             },
           },
-          { 'ui:autofocus': true }
+          { 'ui:autofocus': true },
         );
       });
 
@@ -794,7 +793,7 @@ describe('uiSchema', () => {
             'ui:autofocus': true,
           },
           'input',
-          ['foo', 'bar']
+          ['foo', 'bar'],
         );
       });
 
@@ -813,7 +812,7 @@ describe('uiSchema', () => {
             'ui:autofocus': true,
           },
           'input',
-          ['bar']
+          ['bar'],
         );
       });
     });
@@ -824,7 +823,7 @@ describe('uiSchema', () => {
           {
             type: 'boolean',
           },
-          { 'ui:autofocus': true }
+          { 'ui:autofocus': true },
         );
       });
 
@@ -836,7 +835,7 @@ describe('uiSchema', () => {
           {
             'ui:widget': 'radio',
             'ui:autofocus': true,
-          }
+          },
         );
       });
 
@@ -849,7 +848,7 @@ describe('uiSchema', () => {
             'ui:widget': 'select',
             'ui:autofocus': true,
           },
-          'select'
+          'select',
         );
       });
     });
@@ -1196,7 +1195,7 @@ describe('uiSchema', () => {
           {
             formData: { foo: 6.28 },
           },
-          'root_foo'
+          'root_foo',
         );
       });
 
@@ -1285,7 +1284,7 @@ describe('uiSchema', () => {
           {
             formData: { foo: 6.28 },
           },
-          'root_foo'
+          'root_foo',
         );
       });
 
@@ -1384,7 +1383,7 @@ describe('uiSchema', () => {
           {
             formData: { foo: 1.4142 },
           },
-          'root_foo'
+          'root_foo',
         );
       });
     });
@@ -1489,7 +1488,7 @@ describe('uiSchema', () => {
           {
             formData: { foo: 6 },
           },
-          'root_foo'
+          'root_foo',
         );
       });
     });
@@ -1541,7 +1540,7 @@ describe('uiSchema', () => {
           {
             formData: { foo: 6 },
           },
-          'root_foo'
+          'root_foo',
         );
       });
     });
@@ -1599,7 +1598,7 @@ describe('uiSchema', () => {
           {
             formData: { foo: 2 },
           },
-          'root_foo'
+          'root_foo',
         );
       });
     });
@@ -1709,7 +1708,7 @@ describe('uiSchema', () => {
           {
             formData: { foo: false },
           },
-          'root_foo'
+          'root_foo',
         );
       });
 
@@ -1731,7 +1730,7 @@ describe('uiSchema', () => {
           {
             formData: { foo: true },
           },
-          'root_foo'
+          'root_foo',
         );
       });
     });
@@ -1779,7 +1778,7 @@ describe('uiSchema', () => {
           {
             formData: { foo: true },
           },
-          'root_foo'
+          'root_foo',
         );
       });
 
@@ -1805,7 +1804,7 @@ describe('uiSchema', () => {
           {
             formData: { foo: false },
           },
-          'root_foo'
+          'root_foo',
         );
       });
     });
@@ -2014,7 +2013,7 @@ describe('uiSchema', () => {
           {
             type: 'string',
           },
-          { 'ui:disabled': true }
+          { 'ui:disabled': true },
         );
       });
 
@@ -2040,7 +2039,7 @@ describe('uiSchema', () => {
           {
             'ui:disabled': true,
             'ui:widget': 'textarea',
-          }
+          },
         );
       });
 
@@ -2050,7 +2049,7 @@ describe('uiSchema', () => {
           {
             type: 'number',
           },
-          { 'ui:disabled': true }
+          { 'ui:disabled': true },
         );
       });
 
@@ -2063,7 +2062,7 @@ describe('uiSchema', () => {
           {
             'ui:disabled': true,
             'ui:widget': 'updown',
-          }
+          },
         );
       });
 
@@ -2076,7 +2075,7 @@ describe('uiSchema', () => {
           {
             'ui:disabled': true,
             'ui:widget': 'range',
-          }
+          },
         );
       });
 
@@ -2087,7 +2086,7 @@ describe('uiSchema', () => {
             type: 'string',
             enum: ['a', 'b'],
           },
-          { 'ui:disabled': true }
+          { 'ui:disabled': true },
         );
       });
 
@@ -2097,7 +2096,7 @@ describe('uiSchema', () => {
           {
             type: 'boolean',
           },
-          { 'ui:disabled': true }
+          { 'ui:disabled': true },
         );
       });
 
@@ -2110,7 +2109,7 @@ describe('uiSchema', () => {
           {
             'ui:disabled': true,
             'ui:widget': 'radio',
-          }
+          },
         );
       });
 
@@ -2121,7 +2120,7 @@ describe('uiSchema', () => {
             type: 'string',
             format: 'color',
           },
-          { 'ui:disabled': true }
+          { 'ui:disabled': true },
         );
       });
 
@@ -2134,7 +2133,7 @@ describe('uiSchema', () => {
           {
             'ui:disabled': true,
             'ui:widget': 'password',
-          }
+          },
         );
       });
 
@@ -2145,7 +2144,7 @@ describe('uiSchema', () => {
             type: 'string',
             format: 'email',
           },
-          { 'ui:disabled': true }
+          { 'ui:disabled': true },
         );
       });
 
@@ -2156,7 +2155,7 @@ describe('uiSchema', () => {
             type: 'string',
             format: 'date',
           },
-          { 'ui:disabled': true }
+          { 'ui:disabled': true },
         );
       });
 
@@ -2167,7 +2166,7 @@ describe('uiSchema', () => {
             type: 'string',
             format: 'date-time',
           },
-          { 'ui:disabled': true }
+          { 'ui:disabled': true },
         );
       });
 
@@ -2290,7 +2289,7 @@ describe('uiSchema', () => {
           {
             type: 'string',
           },
-          { 'ui:readonly': true }
+          { 'ui:readonly': true },
         );
       });
 
@@ -2317,7 +2316,7 @@ describe('uiSchema', () => {
           {
             'ui:readonly': true,
             'ui:widget': 'textarea',
-          }
+          },
         );
       });
 
@@ -2327,7 +2326,7 @@ describe('uiSchema', () => {
           {
             type: 'number',
           },
-          { 'ui:readonly': true }
+          { 'ui:readonly': true },
         );
       });
 
@@ -2340,7 +2339,7 @@ describe('uiSchema', () => {
           {
             'ui:readonly': true,
             'ui:widget': 'updown',
-          }
+          },
         );
       });
 
@@ -2353,7 +2352,7 @@ describe('uiSchema', () => {
           {
             'ui:readonly': true,
             'ui:widget': 'range',
-          }
+          },
         );
       });
 
@@ -2364,7 +2363,7 @@ describe('uiSchema', () => {
             type: 'string',
             enum: ['a', 'b'],
           },
-          { 'ui:readonly': true }
+          { 'ui:readonly': true },
         );
       });
 
@@ -2375,7 +2374,7 @@ describe('uiSchema', () => {
             type: 'string',
             format: 'color',
           },
-          { 'ui:readonly': true }
+          { 'ui:readonly': true },
         );
       });
 
@@ -2388,7 +2387,7 @@ describe('uiSchema', () => {
           {
             'ui:readonly': true,
             'ui:widget': 'password',
-          }
+          },
         );
       });
 
@@ -2399,7 +2398,7 @@ describe('uiSchema', () => {
             type: 'string',
             format: 'uri',
           },
-          { 'ui:readonly': true }
+          { 'ui:readonly': true },
         );
       });
 
@@ -2410,7 +2409,7 @@ describe('uiSchema', () => {
             type: 'string',
             format: 'email',
           },
-          { 'ui:readonly': true }
+          { 'ui:readonly': true },
         );
       });
 
@@ -2421,7 +2420,7 @@ describe('uiSchema', () => {
             type: 'string',
             format: 'date',
           },
-          { 'ui:readonly': true }
+          { 'ui:readonly': true },
         );
       });
 
@@ -2432,7 +2431,7 @@ describe('uiSchema', () => {
             type: 'string',
             format: 'date-time',
           },
-          { 'ui:readonly': true }
+          { 'ui:readonly': true },
         );
       });
 
@@ -2576,7 +2575,7 @@ describe('uiSchema', () => {
             type: 'string',
             readOnly: true,
           },
-          {}
+          {},
         );
       });
 
@@ -2602,7 +2601,7 @@ describe('uiSchema', () => {
           },
           {
             'ui:widget': 'textarea',
-          }
+          },
         );
       });
 
@@ -2613,7 +2612,7 @@ describe('uiSchema', () => {
             type: 'number',
             readOnly: true,
           },
-          {}
+          {},
         );
       });
 
@@ -2626,7 +2625,7 @@ describe('uiSchema', () => {
           },
           {
             'ui:widget': 'updown',
-          }
+          },
         );
       });
 
@@ -2639,7 +2638,7 @@ describe('uiSchema', () => {
           },
           {
             'ui:widget': 'range',
-          }
+          },
         );
       });
 
@@ -2651,7 +2650,7 @@ describe('uiSchema', () => {
             enum: ['a', 'b'],
             readOnly: true,
           },
-          {}
+          {},
         );
       });
 
@@ -2663,7 +2662,7 @@ describe('uiSchema', () => {
             format: 'color',
             readOnly: true,
           },
-          {}
+          {},
         );
       });
 
@@ -2676,7 +2675,7 @@ describe('uiSchema', () => {
           },
           {
             'ui:widget': 'password',
-          }
+          },
         );
       });
 
@@ -2688,7 +2687,7 @@ describe('uiSchema', () => {
             format: 'uri',
             readOnly: true,
           },
-          {}
+          {},
         );
       });
 

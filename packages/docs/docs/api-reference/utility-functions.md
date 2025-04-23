@@ -1140,39 +1140,6 @@ Always returns the first option if there is nothing that matches.
 
 - number: The index of the first matched option or 0 if none is available
 
-### getMatchingOption<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
-
-Given the `formData` and list of `options`, attempts to find the index of the option that best matches the data.
-Deprecated, use `getFirstMatchingOption()` instead.
-
-#### Parameters
-
-- validator: ValidatorType<T, S, F> - An implementation of the `ValidatorType` interface that will be used when necessary
-- [formData]: T | undefined - The current formData, if any, used to figure out a match
-- options: S[] - The list of options to find a matching options from
-- rootSchema: S - The root schema, used to primarily to look up `$ref`s
-- [discriminatorField]: string | undefined - The optional name of the field within the options object whose value is used to determine which option is selected
-
-#### Returns
-
-- number: The index of the matched option or 0 if none is available
-
-### isFilesArray<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
-
-Checks to see if the `schema` and `uiSchema` combination represents an array of files
-
-#### Parameters
-
-- validator: ValidatorType<T, S, F> - An implementation of the `ValidatorType` interface that will be used when necessary
-- schema: S - The schema for which check for array of files flag is desired
-- [uiSchema={}]: UiSchema<T, S, F> - The UI schema from which to check the widget
-- [rootSchema]: S | undefined - The root schema, used to primarily to look up `$ref`s
-- [experimental_customMergeAllOf]: Experimental_CustomMergeAllOf&lt;S&gt; - See `Form` documentation for the [experimental_customMergeAllOf](./form-props.md#experimental_custommergeallof) prop
-
-#### Returns
-
-- boolean: True if schema/uiSchema contains an array of files, otherwise false
-
 ### isMultiSelect<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
 
 Checks to see if the `schema` combination represents a multi-select
@@ -1202,24 +1169,6 @@ Checks to see if the `schema` combination represents a select
 #### Returns
 
 - boolean: True if schema contains a select, otherwise false
-
-### mergeValidationData<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
-
-Merges the errors in `additionalErrorSchema` into the existing `validationData` by combining the hierarchies in the two `ErrorSchema`s and then appending the error list from the `additionalErrorSchema` obtained by calling `validator.toErrorList()` onto the `errors` in the `validationData`.
-If no `additionalErrorSchema` is passed, then `validationData` is returned.
-
-> NOTE: This is function is deprecated. Use the `validationDataMerge()` function exported from `@rjsf/utils` instead. This function will be
-> removed in the next major release.
-
-#### Parameters
-
-- validator: ValidatorType&lt;T, S, F> - An implementation of the `ValidatorType` interface that will be used to convert an ErrorSchema to a list of errors
-- validationData: ValidationData&lt;T> - The current `ValidationData` into which to merge the additional errors
-- [additionalErrorSchema]: ErrorSchema&lt;T> | undefined - The additional set of errors in an `ErrorSchema`
-
-#### Returns
-
-- ValidationData&lt;T>: The `validationData` with the additional errors from `additionalErrorSchema` merged into it, if provided.
 
 ### retrieveSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
 

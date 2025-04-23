@@ -40,6 +40,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Updated the `ArrayFieldTemplate`, `ObjectFieldTemplate`, and `WrapIfAdditionalTemplate` to a unique id using the `buttonId()` function and adding consistent marker classes
 - Implemented the `GridTemplate` component, adding it to the `templates` for the theme
 - Implemented the new `LayoutGridField`, `LayoutMultiSchemaField` and `LayoutHeaderField` fields, adding them to the `fields` list
+- BREAKING CHANGE: Removed support for the deprecated `schema.enumNames` and `uiSchema.classNames` as well as the deprecated `acceptcharset` prop on `Form`
 
 ## @rjsf/daisyui
 
@@ -91,11 +92,18 @@ should change the heading of the (upcoming) version to include a major version b
   - `findFieldInSchema<T = undefined, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(validator: ValidatorType<T, S, F>, rootSchema: S, path: string | string[], schema: S, formData?: T, experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>): FoundFieldType<S>`: Finds the field specified by the `path` within the root or recursed `schema`
   - `findSelectedOptionInXxxOf<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(validator: ValidatorType<T, S, F>, rootSchema: S, schema: S, fallbackField: string,xxx: 'anyOf' | 'oneOf', formData?: T, experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>): S | undefined`: Finds the option that matches the selector field in the `schema` or undefined if nothing is selected
   - `getFromSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(validator: ValidatorType<T, S, F>, rootSchema: S, schema: S, path: string | string[], defaultValue: T | S, experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>): T | S`: Helper that acts like lodash's `get` but additionally retrieves `$ref`s as needed to get the path for schemas
-- Exported a `browser` version of the libraries with a browser-safe version of `getTestIds()`
+- BREAKING CHANGE: Removed support for the deprecated `schema.enumNames` from `getOptionsList()` while switching the order of its generic types
+- BREAKING CHANGE: Removed the deprecated `getMatchingOption()` and `mergeValidationData()` from the library export and the `SchemaUtilsType` interface
+- BREAKING CHANGE: Removed the deprecated `toErrorList()` function from the `ValidatorType` interface
+- BREAKING CHANGE: Removed the deprecated `RJSF_ADDITONAL_PROPERTIES_FLAG` constant
 
 ## @rjsf/validator-ajv6
 
 - BREAKING CHANGE: This deprecated validator has been removed
+
+## @rjsf/validator-ajv8
+
+- BREAKING CHANGE: Removed the implementation of the deprecated `toErrorList()` function from the validator implementations
 
 ## Dev / docs / playground
 
@@ -105,6 +113,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Added the `v6.x upgrade guide.md` documentation
 - Updated the `playground` to add a `Layout Grid` example and made the selected example now be part of the shared export
 - Replaced Lerna with Nx, updated all lerna commands to use the Nx CLI
+- BREAKING CHANGE: Updated all `peerDependencies` to change minimal `React` support to `>=18`
 
 # 6.0.0-alpha.0
 

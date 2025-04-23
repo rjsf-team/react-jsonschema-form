@@ -1,7 +1,6 @@
 import { createSchemaUtils, getFirstMatchingOption, RJSFSchema } from '../../src';
 import { TestValidatorType } from './types';
 
-// Since getFirstMatchingOption() simply calls getMatchingOption() there is no need to have tests for that
 export default function getFirstMatchingOptionTest(testValidator: TestValidatorType) {
   describe('getFirstMatchingOption()', () => {
     let rootSchema: RJSFSchema;
@@ -95,8 +94,7 @@ export default function getFirstMatchingOptionTest(testValidator: TestValidatorT
       expect(schemaUtils.getFirstMatchingOption(formData, options)).toEqual(1);
       // Mock again isValid fail the first non-nested value
       testValidator.setReturnValues({ isValid: [false, true] });
-      // Test getMatchingOption call from `schemaUtils` to maintain coverage, delete when getMatchingOption is removed
-      expect(schemaUtils.getMatchingOption(formData, options)).toEqual(1);
+      expect(schemaUtils.getFirstMatchingOption(formData, options)).toEqual(1);
     });
     it('should return 0 when schema has discriminator but no matching data', () => {
       // Mock isValid to fail both values

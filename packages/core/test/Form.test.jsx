@@ -34,7 +34,7 @@ describeRepeated('Form common', (createFormComponent) => {
     it('Should throw error when Form is missing validator', () => {
       expect(() => createFormComponent({ ref: React.createRef(), schema: {}, validator: undefined })).to.Throw(
         Error,
-        'A validator is required for Form functionality to work'
+        'A validator is required for Form functionality to work',
       );
     });
 
@@ -387,7 +387,7 @@ describeRepeated('Form common', (createFormComponent) => {
 
     it('should pass rawDescription as a string', () => {
       expect(node.querySelector('.raw-description').textContent).eql(
-        'this is description rendered from the raw format'
+        'this is description rendered from the raw format',
       );
     });
 
@@ -1208,7 +1208,7 @@ describeRepeated('Form common', (createFormComponent) => {
           schema,
           uiSchema,
         },
-        'root_foo'
+        'root_foo',
       );
     });
     it('should call last provided change handler', async () => {
@@ -1495,7 +1495,7 @@ describeRepeated('Form common', (createFormComponent) => {
           ref: comp.ref,
           ...formProps,
           formData: null,
-        })
+        }),
       );
 
       it('should call onChange', () => {
@@ -1528,7 +1528,7 @@ describeRepeated('Form common', (createFormComponent) => {
           ref: comp.ref,
           schema: newSchema,
           formData: 'some value',
-        })
+        }),
       );
 
       it('should not call onChange', () => {
@@ -1548,7 +1548,7 @@ describeRepeated('Form common', (createFormComponent) => {
           ref: comp.ref,
           schema: newSchema,
           formData: 'something else',
-        })
+        }),
       );
 
       it('should not call onChange', () => {
@@ -1568,7 +1568,7 @@ describeRepeated('Form common', (createFormComponent) => {
           ref: comp.ref,
           schema: newSchema,
           formData: null,
-        })
+        }),
       );
 
       it('should call onChange', () => {
@@ -1735,7 +1735,7 @@ describeRepeated('Form common', (createFormComponent) => {
         {
           formData: 'yo',
         },
-        'root'
+        'root',
       );
     });
     it('object', () => {
@@ -1760,7 +1760,7 @@ describeRepeated('Form common', (createFormComponent) => {
         {
           formData: { foo: 'yo' },
         },
-        'root_foo'
+        'root_foo',
       );
     });
     it('array of strings', () => {
@@ -1782,7 +1782,7 @@ describeRepeated('Form common', (createFormComponent) => {
         {
           formData: ['yo'],
         },
-        'root_0'
+        'root_0',
       );
     });
     it('array of objects', () => {
@@ -1808,7 +1808,7 @@ describeRepeated('Form common', (createFormComponent) => {
         {
           formData: [{ name: 'yo' }],
         },
-        'root_0'
+        'root_0',
       );
     });
     it('dependency with array of objects', () => {
@@ -1864,7 +1864,7 @@ describeRepeated('Form common', (createFormComponent) => {
             participants: [{ name: 'yo' }],
           },
         },
-        'root_participants_0_name'
+        'root_participants_0_name',
       );
     });
   });
@@ -1888,7 +1888,7 @@ describeRepeated('Form common', (createFormComponent) => {
             {
               errorSchema: {},
             },
-            'root'
+            'root',
           );
         });
 
@@ -1959,7 +1959,7 @@ describeRepeated('Form common', (createFormComponent) => {
                 __errors: ['must NOT have fewer than 8 characters'],
               },
             },
-            'root'
+            'root',
           );
         });
 
@@ -1975,7 +1975,7 @@ describeRepeated('Form common', (createFormComponent) => {
 
           expect(node.querySelectorAll('.field-error')).to.have.length.of(1);
           expect(node.querySelector('.field-string .error-detail').textContent).eql(
-            'must NOT have fewer than 8 characters'
+            'must NOT have fewer than 8 characters',
           );
         });
       });
@@ -1997,7 +1997,7 @@ describeRepeated('Form common', (createFormComponent) => {
             {
               errorSchema: {},
             },
-            'root'
+            'root',
           );
         });
       });
@@ -2049,7 +2049,7 @@ describeRepeated('Form common', (createFormComponent) => {
           onError,
           sinon.match((value) => {
             return value.length === 1 && value[0].message === 'must NOT have fewer than 8 characters';
-          })
+          }),
         );
         sinon.assert.calledOnce(focusSpy);
       });
@@ -2085,7 +2085,7 @@ describeRepeated('Form common', (createFormComponent) => {
           onError,
           sinon.match((value) => {
             return value.length === 1 && value[0].message === 'must NOT have fewer than 8 characters';
-          })
+          }),
         );
         sinon.assert.notCalled(focusSpy);
         sinon.assert.calledOnce(focusOnFirstError);
@@ -2124,7 +2124,7 @@ describeRepeated('Form common', (createFormComponent) => {
           onError,
           sinon.match((value) => {
             return value.length === 1 && value[0].message === 'foo';
-          })
+          }),
         );
         sinon.assert.notCalled(focusSpy);
         sinon.assert.calledOnce(focusOnFirstError);
@@ -2219,7 +2219,7 @@ describeRepeated('Form common', (createFormComponent) => {
 
         expect(node.querySelectorAll('.field-error')).to.have.length.of(1);
         expect(node.querySelector('.field-string .error-detail').textContent).eql(
-          'must NOT have fewer than 8 characters'
+          'must NOT have fewer than 8 characters',
         );
       });
     });
@@ -2614,7 +2614,7 @@ describeRepeated('Form common', (createFormComponent) => {
           {
             errorSchema: { field1: { __errors: ['must be number'] } },
           },
-          'root'
+          'root',
         );
       });
 
@@ -2644,7 +2644,7 @@ describeRepeated('Form common', (createFormComponent) => {
               },
             },
           },
-          'root_field1'
+          'root_field1',
         );
       });
 
@@ -2667,7 +2667,7 @@ describeRepeated('Form common', (createFormComponent) => {
           {
             errorSchema: {},
           },
-          'root_branch'
+          'root_branch',
         );
       });
     });
@@ -2721,7 +2721,7 @@ describeRepeated('Form common', (createFormComponent) => {
             errorSchema: {},
             errors: [],
           },
-          'root'
+          'root',
         );
 
         // Change the End field to a lesser value than Start field to raise customValidate errors.
@@ -2743,7 +2743,7 @@ describeRepeated('Form common', (createFormComponent) => {
               },
             },
           },
-          'root'
+          'root',
         );
       });
     });
@@ -2787,7 +2787,7 @@ describeRepeated('Form common', (createFormComponent) => {
         {
           formData: { bar: 'baz' },
         },
-        'root_bar'
+        'root_bar',
       );
     });
 
@@ -2820,7 +2820,7 @@ describeRepeated('Form common', (createFormComponent) => {
         {
           formData: { foo: 'foo', baz: 'baz' },
         },
-        'root_baz'
+        'root_baz',
       );
     });
   });
@@ -3062,7 +3062,7 @@ describeRepeated('Form common', (createFormComponent) => {
       action: '/users/list',
       autoComplete: 'off',
       enctype: 'multipart/form-data',
-      acceptcharset: 'ISO-8859-1',
+      acceptCharset: 'ISO-8859-1',
       noHtml5Validate: true,
     };
 
@@ -3100,8 +3100,8 @@ describeRepeated('Form common', (createFormComponent) => {
       expect(node.getAttribute('enctype')).eql(formProps.enctype);
     });
 
-    it('should set attr acceptcharset of form', () => {
-      expect(node.getAttribute('accept-charset')).eql(formProps.acceptcharset);
+    it('should set attr acceptCharset of form', () => {
+      expect(node.getAttribute('accept-charset')).eql(formProps.acceptCharset);
     });
 
     it('should set attr novalidate of form', () => {
@@ -3706,7 +3706,7 @@ describe('Form omitExtraData and liveOmit', () => {
           ['level1', 'level2'],
           ['level1', 'stringArray'],
           ['level1a'],
-        ].sort()
+        ].sort(),
       );
     });
 
@@ -3821,7 +3821,7 @@ describe('Form omitExtraData and liveOmit', () => {
           ['address_list', '1', 'city'],
           ['address_list', '1', 'state'],
           ['address_list', '1', 'street_address'],
-        ].sort()
+        ].sort(),
       );
     });
   });
@@ -3854,7 +3854,7 @@ describe('Form omitExtraData and liveOmit', () => {
       {
         formData: { foo: 'foobar', baz: 'baz' },
       },
-      'root_foo'
+      'root_foo',
     );
   });
 
@@ -3885,7 +3885,7 @@ describe('Form omitExtraData and liveOmit', () => {
       {
         formData: { foo: 'foobar', baz: 'baz' },
       },
-      'root_foo'
+      'root_foo',
     );
   });
 
@@ -3916,7 +3916,7 @@ describe('Form omitExtraData and liveOmit', () => {
       {
         formData: { foo: 'foobar', baz: 'baz' },
       },
-      'root_foo'
+      'root_foo',
     );
   });
 
@@ -3947,7 +3947,7 @@ describe('Form omitExtraData and liveOmit', () => {
       {
         formData: { foo: 'foobar' },
       },
-      'root_foo'
+      'root_foo',
     );
   });
 
@@ -3982,7 +3982,7 @@ describe('Form omitExtraData and liveOmit', () => {
       {
         formData: { foo: 'foobar', add: { prop: 123 } },
       },
-      'root_foo'
+      'root_foo',
     );
   });
 
@@ -3999,7 +3999,7 @@ describe('Form omitExtraData and liveOmit', () => {
         },
         formData: { nested: { key1: 'value' } },
       },
-      { omitExtraData: true, liveOmit: true }
+      { omitExtraData: true, liveOmit: true },
     );
 
     const textNode = node.querySelector('#root_nested_key1-key');
@@ -4012,7 +4012,7 @@ describe('Form omitExtraData and liveOmit', () => {
       {
         formData: { nested: { key1new: 'value' } },
       },
-      'root_nested'
+      'root_nested',
     );
   });
 
@@ -4042,7 +4042,7 @@ describe('Form omitExtraData and liveOmit', () => {
         },
         formData: { lorum: '' },
       },
-      { omitExtraData: true, liveOmit: true }
+      { omitExtraData: true, liveOmit: true },
     );
 
     const textNode = node.querySelector('#root_lorem');
@@ -4081,7 +4081,7 @@ describe('Form omitExtraData and liveOmit', () => {
         },
         formData: { ipsum: '' },
       },
-      { omitExtraData: true, liveOmit: true }
+      { omitExtraData: true, liveOmit: true },
     );
 
     const textNode = node.querySelector('#root_ipsum');
