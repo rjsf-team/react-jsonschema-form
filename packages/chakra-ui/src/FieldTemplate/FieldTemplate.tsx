@@ -1,4 +1,4 @@
-import { Fieldset, Text } from '@chakra-ui/react';
+import { Fieldset } from '@chakra-ui/react';
 import {
   FieldTemplateProps,
   FormContextType,
@@ -63,7 +63,7 @@ export default function FieldTemplate<
     >
       <Fieldset.Root disabled={disabled} invalid={rawErrors && rawErrors.length > 0}>
         {displayLabel && rawDescription ? <Fieldset.Legend mt={2}>{description}</Fieldset.Legend> : null}
-        {help && <Text>{help}</Text>}
+        {help}
         <Fieldset.Content>{children}</Fieldset.Content>
         {errors && <Fieldset.ErrorText>{errors}</Fieldset.ErrorText>}
       </Fieldset.Root>

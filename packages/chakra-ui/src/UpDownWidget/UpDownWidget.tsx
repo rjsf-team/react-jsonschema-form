@@ -11,7 +11,7 @@ import {
 import { NumberInputValueChangeDetails } from '@chakra-ui/react';
 
 import { Field } from '../components/ui/field';
-import { NumberInputField, NumberInputRoot } from '../components/ui/number-input';
+import { NumberInputRoot } from '../components/ui/number-input';
 
 export default function UpDownWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: WidgetProps<T, S, F>,
@@ -39,9 +39,7 @@ export default function UpDownWidget<T = any, S extends StrictRJSFSchema = RJSFS
         aria-describedby={ariaDescribedByIds<T>(id)}
         id={id}
         name={id}
-      >
-        <NumberInputField value={value} />
-      </NumberInputRoot>
+      />
     </Field>
   );
 }
