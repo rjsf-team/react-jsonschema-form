@@ -42,6 +42,7 @@
     "@rjsf/antd": "^6.0.0-alpha.0",
     "@rjsf/chakra-ui": "^6.0.0-alpha.0",
     "@rjsf/core": "^6.0.0-alpha.0",
+    "@rjsf/daisyui": "^6.0.0-alpha.0",
     "@rjsf/fluentui-rc": "^6.0.0-alpha.0",
     "@rjsf/mui": "^6.0.0-alpha.0",
     "@rjsf/react-bootstrap": "^6.0.0-alpha.0",
