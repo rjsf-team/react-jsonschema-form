@@ -26,19 +26,19 @@ export default function RangeWidget<T = any, S extends StrictRJSFSchema = RJSFSc
   hideLabel,
   id,
 }: WidgetProps<T, S, F>) {
-  const sliderWidgetProps = { value, label, id, ...rangeSpec<S>(schema) };
-
-  const _onChange = ({ value }: SliderValueChangeDetails) => onChange(value === undefined ? options.emptyValue : value);
+  const _onChange = ({ value }: SliderValueChangeDetails) =>
+    onChange(value === undefined ? options.emptyValue : value[0]);
   const _onBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target && target.value);
   const _onFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target && target.value);
 
   return (
     <Field mb={1} label={labelValue(label, hideLabel || !label)}>
       <Slider
-        {...sliderWidgetProps}
+        {...rangeSpec<S>(schema)}
         id={id}
         name={id}
         disabled={disabled || readonly}
+        value={[value]}
         onValueChange={_onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}

@@ -5354,6 +5354,10 @@ exports[`single fields slider field 1`] = `
   margin-bottom: var(--chakra-spacing-1);
 }
 
+.emotion-3 {
+  width: 200px;
+}
+
 .emotion-8 {
   margin-top: var(--chakra-spacing-3);
 }
@@ -5383,18 +5387,21 @@ exports[`single fields slider field 1`] = `
           role="group"
         >
           <div
+            aria-describedby="root__error root__description root__help"
             className="chakra-slider__root emotion-3"
             data-orientation="horizontal"
             data-part="root"
             data-scope="slider"
             dir="ltr"
-            id="slider::r2k:"
+            id="slider:root"
+            onBlur={[Function]}
+            onFocus={[Function]}
             style={
               {
-                "--slider-range-end": "60%",
+                "--slider-range-end": "43.103448275862064%",
                 "--slider-range-start": "0%",
                 "--slider-thumb-height": undefined,
-                "--slider-thumb-offset-0": "40%",
+                "--slider-thumb-offset-0": "56.896551724137936%",
                 "--slider-thumb-transform": "translateX(-50%)",
                 "--slider-thumb-width": undefined,
               }
@@ -5406,7 +5413,7 @@ exports[`single fields slider field 1`] = `
               data-part="control"
               data-scope="slider"
               dir="ltr"
-              id="slider::r2k::control"
+              id="slider:root:control"
               onPointerDown={[Function]}
               style={
                 {
@@ -5423,7 +5430,7 @@ exports[`single fields slider field 1`] = `
                 data-part="track"
                 data-scope="slider"
                 dir="ltr"
-                id="slider::r2k::track"
+                id="slider:root:track"
                 style={
                   {
                     "position": "relative",
@@ -5436,7 +5443,7 @@ exports[`single fields slider field 1`] = `
                   data-part="range"
                   data-scope="slider"
                   dir="ltr"
-                  id="slider::r2k::range"
+                  id="slider:root:range"
                   style={
                     {
                       "left": "var(--slider-range-start)",
@@ -5447,11 +5454,11 @@ exports[`single fields slider field 1`] = `
                 />
               </div>
               <div
-                aria-labelledby="slider::r2k::label"
+                aria-labelledby="slider:root:label"
                 aria-orientation="horizontal"
                 aria-valuemax={100}
-                aria-valuemin={0}
-                aria-valuenow={40}
+                aria-valuemin={42}
+                aria-valuenow={75}
                 className="chakra-slider__thumb emotion-7"
                 data-index={0}
                 data-orientation="horizontal"
@@ -5459,7 +5466,7 @@ exports[`single fields slider field 1`] = `
                 data-scope="slider"
                 dir="ltr"
                 draggable={false}
-                id="slider::r2k::thumb:0"
+                id="slider:root:thumb:0"
                 onBlur={[Function]}
                 onFocus={[Function]}
                 onKeyDown={[Function]}
@@ -5476,9 +5483,10 @@ exports[`single fields slider field 1`] = `
                 tabIndex={0}
               >
                 <input
-                  defaultValue={40}
+                  defaultValue={75}
                   hidden={true}
-                  id="slider::r2k::input:0"
+                  id="slider:root:input:0"
+                  name="root"
                   type="text"
                 />
               </div>

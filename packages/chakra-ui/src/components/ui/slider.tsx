@@ -3,7 +3,6 @@ import { Slider as ChakraSlider, HStack } from '@chakra-ui/react';
 
 export interface SliderProps extends ChakraSlider.RootProps {
   marks?: Array<number | { value: number; label: React.ReactNode }>;
-  label?: React.ReactNode;
   showValue?: boolean;
 }
 
@@ -17,7 +16,7 @@ export interface SliderProps extends ChakraSlider.RootProps {
  * @returns {JSX.Element} The rendered slider component.
  */
 export const Slider = forwardRef<HTMLDivElement, SliderProps>(function Slider(props, ref) {
-  const { marks: marksProp, label, showValue, ...rest } = props;
+  const { marks: marksProp, showValue, ...rest } = props;
   const value = props.defaultValue ?? props.value;
 
   const marks = marksProp?.map((mark) => {
@@ -30,11 +29,9 @@ export const Slider = forwardRef<HTMLDivElement, SliderProps>(function Slider(pr
   const hasMarkLabel = !!marks?.some((mark) => mark.label);
 
   return (
-    <ChakraSlider.Root ref={ref} thumbAlignment='center' {...rest}>
-      {label && !showValue && <ChakraSlider.Label>{label}</ChakraSlider.Label>}
-      {label && showValue && (
+    <ChakraSlider.Root ref={ref} width='200px' thumbAlignment='center' {...rest}>
+      {showValue && (
         <HStack justify='space-between'>
-          <ChakraSlider.Label>{label}</ChakraSlider.Label>
           <ChakraSlider.ValueText />
         </HStack>
       )}
