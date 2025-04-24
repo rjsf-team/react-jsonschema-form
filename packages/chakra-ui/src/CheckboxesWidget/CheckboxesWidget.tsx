@@ -11,6 +11,7 @@ import {
   WidgetProps,
 } from '@rjsf/utils';
 import { FocusEvent } from 'react';
+
 import { Checkbox } from '../components/ui/checkbox';
 
 export default function CheckboxesWidget<

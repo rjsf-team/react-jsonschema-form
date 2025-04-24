@@ -11,11 +11,11 @@ import {
   StrictRJSFSchema,
   WidgetProps,
 } from '@rjsf/utils';
+import { OptionsOrGroups } from 'chakra-react-select';
+import { createListCollection, Portal, SelectValueChangeDetails, Select as ChakraSelect } from '@chakra-ui/react';
+
 import { Field } from '../components/ui/field';
 import { SelectRoot, SelectTrigger, SelectValueText } from '../components/ui/select';
-import { OptionsOrGroups } from 'chakra-react-select';
-import { createListCollection, Portal, SelectValueChangeDetails } from '@chakra-ui/react';
-import { Select as ChakraSelect } from '@chakra-ui/react';
 
 export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: WidgetProps<T, S, F>,

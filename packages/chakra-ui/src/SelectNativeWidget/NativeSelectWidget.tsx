@@ -10,10 +10,10 @@ import {
   StrictRJSFSchema,
   WidgetProps,
 } from '@rjsf/utils';
-import { Field } from '../components/ui/field';
 import { OptionsOrGroups } from 'chakra-react-select';
-import { createListCollection } from '@chakra-ui/react';
-import { NativeSelect as ChakraSelect } from '@chakra-ui/react';
+import { createListCollection, NativeSelect as ChakraSelect } from '@chakra-ui/react';
+
+import { Field } from '../components/ui/field';
 
 /**
  * NativeSelectWidget is a React component that renders a native select input.

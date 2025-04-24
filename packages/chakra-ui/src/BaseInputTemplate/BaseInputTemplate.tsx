@@ -10,6 +10,7 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
 } from '@rjsf/utils';
+
 import { Field } from '../components/ui/field';
 
 export default function BaseInputTemplate<

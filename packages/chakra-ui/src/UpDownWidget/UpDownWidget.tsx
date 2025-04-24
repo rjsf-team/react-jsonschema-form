@@ -8,9 +8,10 @@ import {
   StrictRJSFSchema,
   WidgetProps,
 } from '@rjsf/utils';
+import { NumberInputValueChangeDetails } from '@chakra-ui/react';
+
 import { Field } from '../components/ui/field';
 import { NumberInputField, NumberInputRoot } from '../components/ui/number-input';
-import { NumberInputValueChangeDetails } from '@chakra-ui/react';
 
 export default function UpDownWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: WidgetProps<T, S, F>,

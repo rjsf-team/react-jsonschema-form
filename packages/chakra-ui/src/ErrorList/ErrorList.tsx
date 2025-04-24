@@ -1,6 +1,7 @@
 import { ErrorListProps, FormContextType, RJSFSchema, StrictRJSFSchema, TranslatableString } from '@rjsf/utils';
 import { ListIndicator, ListItem, ListRoot } from '@chakra-ui/react';
 import { TriangleAlert } from 'lucide-react';
+
 import { Alert } from '../components/ui/alert';
 
 export default function ErrorList<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
