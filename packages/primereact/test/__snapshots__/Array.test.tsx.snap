@@ -1,0 +1,3767 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`array fields array 1`] = `
+<form
+  className="ui form rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <h5
+        style={
+          {
+            "fontSize": "1.5rem",
+            "margin": 0,
+            "marginBottom": "0.2rem",
+          }
+        }
+      >
+         
+      </h5>
+      <fieldset
+        className="field field-array field-array-of-string sortable-form-fields p-fieldset p-component"
+        data-pc-name="fieldset"
+        data-pc-section="root"
+        formContext={{}}
+        formData={[]}
+        id={null}
+        onClick={null}
+        style={{}}
+      >
+        <div
+          aria-labelledby="null_header"
+          className="p-toggleable-content"
+          data-pc-section="toggleablecontent"
+          id="null_content"
+          role="region"
+        >
+          <div
+            className="p-fieldset-content"
+            data-pc-section="content"
+          >
+            <div>
+              <div />
+              <div
+                style={
+                  {
+                    "marginTop": "1rem",
+                    "position": "relative",
+                    "textAlign": "right",
+                  }
+                }
+              >
+                <button
+                  aria-label="Add Item"
+                  className="array-item-add p-button p-component p-button-outlined p-button-sm p-button-secondary"
+                  data-pc-name="button"
+                  data-pc-section="root"
+                  disabled={false}
+                  onClick={[Function]}
+                >
+                  <span
+                    className="p-button-icon p-c p-button-icon-left pi pi-plus"
+                    data-pc-section="icon"
+                  />
+                  <span
+                    className="p-button-label p-c"
+                    data-pc-section="label"
+                  >
+                    Add Item
+                  </span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`array fields checkboxes 1`] = `
+<form
+  className="ui form rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <div
+        aria-describedby="root__error root__description root__help"
+        autoFocus={false}
+        className="p-multiselect p-component p-inputwrapper"
+        data-pc-name="multiselect"
+        data-pc-section="root"
+        id="root"
+        onClick={[Function]}
+        style={
+          {
+            "position": "relative",
+          }
+        }
+      >
+        <div
+          className="p-hidden-accessible"
+          data-p-hidden-accessible={true}
+          data-pc-section="hiddeninputwrapper"
+        >
+          <input
+            aria-describedby="root__error root__description root__help"
+            aria-expanded={false}
+            data-pc-section="input"
+            disabled={false}
+            id={null}
+            name="root"
+            onBlur={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            readOnly={true}
+            role="combobox"
+            tabIndex={0}
+            type="text"
+            value=""
+          />
+        </div>
+        <div
+          className="p-multiselect-label-container"
+          data-pc-section="labelcontainer"
+        >
+          <div
+            className="p-multiselect-label p-multiselect-label-empty"
+            data-pc-section="label"
+          >
+            empty
+          </div>
+        </div>
+        <div
+          className="p-multiselect-trigger"
+          data-pc-section="trigger"
+        >
+          <svg
+            className="p-icon p-multiselect-trigger-icon p-c"
+            data-pc-section="triggericon"
+            fill="none"
+            height="14"
+            viewBox="0 0 14 14"
+            width="14"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M7.01744 10.398C6.91269 10.3985 6.8089 10.378 6.71215 10.3379C6.61541 10.2977 6.52766 10.2386 6.45405 10.1641L1.13907 4.84913C1.03306 4.69404 0.985221 4.5065 1.00399 4.31958C1.02276 4.13266 1.10693 3.95838 1.24166 3.82747C1.37639 3.69655 1.55301 3.61742 1.74039 3.60402C1.92777 3.59062 2.11386 3.64382 2.26584 3.75424L7.01744 8.47394L11.769 3.75424C11.9189 3.65709 12.097 3.61306 12.2748 3.62921C12.4527 3.64535 12.6199 3.72073 12.7498 3.84328C12.8797 3.96582 12.9647 4.12842 12.9912 4.30502C13.0177 4.48162 12.9841 4.662 12.8958 4.81724L7.58083 10.1322C7.50996 10.2125 7.42344 10.2775 7.32656 10.3232C7.22968 10.3689 7.12449 10.3944 7.01744 10.398Z"
+              fill="currentColor"
+            />
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`array fields empty errors array 1`] = `
+<form
+  className="ui form rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-object"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <div
+        className="form-group field field-string"
+      >
+        <div
+          style={
+            {
+              "display": "flex",
+              "flexDirection": "column",
+              "gap": "0.5rem",
+              "marginBottom": "1rem",
+            }
+          }
+        >
+          <label
+            htmlFor="root_name"
+          >
+            name
+             
+          </label>
+          <input
+            aria-describedby="root_name__error root_name__description root_name__help"
+            autoFocus={false}
+            className="p-inputtext p-component"
+            data-pc-name="inputtext"
+            data-pc-section="root"
+            disabled={false}
+            id="root_name"
+            name="root_name"
+            onBeforeInput={[Function]}
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            onInput={[Function]}
+            onKeyDown={[Function]}
+            onPaste={[Function]}
+            placeholder=""
+            required={false}
+            type="text"
+            value=""
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`array fields fixed array 1`] = `
+<form
+  className="ui form rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <h5
+        style={
+          {
+            "fontSize": "1.5rem",
+            "margin": 0,
+            "marginBottom": "0.2rem",
+          }
+        }
+      >
+         
+      </h5>
+      <fieldset
+        className="field field-array field-array-fixed-items  p-fieldset p-component"
+        data-pc-name="fieldset"
+        data-pc-section="root"
+        errorSchema={{}}
+        formContext={{}}
+        formData={
+          [
+            undefined,
+            undefined,
+          ]
+        }
+        id="pr_id_3"
+        onClick={null}
+        style={{}}
+      >
+        <div
+          aria-labelledby="pr_id_3_header"
+          className="p-toggleable-content"
+          data-pc-section="toggleablecontent"
+          id="pr_id_3_content"
+          role="region"
+        >
+          <div
+            className="p-fieldset-content"
+            data-pc-section="content"
+          >
+            <div>
+              <div>
+                <div
+                  style={
+                    {
+                      "position": "relative",
+                    }
+                  }
+                >
+                  <div
+                    className="form-group field field-string"
+                  >
+                    <div
+                      style={
+                        {
+                          "display": "flex",
+                          "flexDirection": "column",
+                          "gap": "0.5rem",
+                          "marginBottom": "1rem",
+                        }
+                      }
+                    >
+                      <input
+                        aria-describedby="root_0__error root_0__description root_0__help"
+                        autoFocus={false}
+                        className="p-inputtext p-component"
+                        data-pc-name="inputtext"
+                        data-pc-section="root"
+                        disabled={false}
+                        id="root_0"
+                        name="root_0"
+                        onBeforeInput={[Function]}
+                        onBlur={[Function]}
+                        onChange={[Function]}
+                        onFocus={[Function]}
+                        onInput={[Function]}
+                        onKeyDown={[Function]}
+                        onPaste={[Function]}
+                        placeholder=""
+                        required={true}
+                        type="text"
+                        value=""
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  style={
+                    {
+                      "position": "relative",
+                    }
+                  }
+                >
+                  <div
+                    className="form-group field field-number"
+                  >
+                    <div
+                      style={
+                        {
+                          "display": "flex",
+                          "flexDirection": "column",
+                          "gap": "0.5rem",
+                          "marginBottom": "1rem",
+                        }
+                      }
+                    >
+                      <input
+                        aria-describedby="root_1__error root_1__description root_1__help"
+                        autoFocus={false}
+                        className="p-inputtext p-component"
+                        data-pc-name="inputtext"
+                        data-pc-section="root"
+                        disabled={false}
+                        id="root_1"
+                        name="root_1"
+                        onBeforeInput={[Function]}
+                        onBlur={[Function]}
+                        onChange={[Function]}
+                        onFocus={[Function]}
+                        onInput={[Function]}
+                        onKeyDown={[Function]}
+                        onPaste={[Function]}
+                        placeholder=""
+                        required={true}
+                        step="any"
+                        type="number"
+                        value=""
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`array fields has errors 1`] = `
+<form
+  className="ui form rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    aria-atomic="true"
+    aria-live="polite"
+    className="p-message p-inline-message p-component p-inline-message-error"
+    data-pc-name="message"
+    data-pc-section="root"
+    id={null}
+    role="alert"
+    style={
+      {
+        "borderColor": "#ff5757",
+        "borderStyle": "solid",
+        "borderWidth": "0 0 0 6px",
+        "justifyContent": "start",
+        "marginBottom": "1rem",
+        "width": "100%",
+      }
+    }
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+        }
+      }
+    >
+      <div
+        style={
+          {
+            "alignItems": "center",
+            "display": "flex",
+            "flexDirection": "row",
+            "gap": "0.5rem",
+          }
+        }
+      >
+        <svg
+          className="p-icon"
+          fill="none"
+          height="14"
+          style={
+            {
+              "height": "1.5rem",
+              "width": "1.5rem",
+            }
+          }
+          viewBox="0 0 14 14"
+          width="14"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            clipRule="evenodd"
+            d="M7 14C5.61553 14 4.26215 13.5895 3.11101 12.8203C1.95987 12.0511 1.06266 10.9579 0.532846 9.67879C0.00303296 8.3997 -0.13559 6.99224 0.134506 5.63437C0.404603 4.2765 1.07129 3.02922 2.05026 2.05026C3.02922 1.07129 4.2765 0.404603 5.63437 0.134506C6.99224 -0.13559 8.3997 0.00303296 9.67879 0.532846C10.9579 1.06266 12.0511 1.95987 12.8203 3.11101C13.5895 4.26215 14 5.61553 14 7C14 8.85652 13.2625 10.637 11.9497 11.9497C10.637 13.2625 8.85652 14 7 14ZM7 1.16667C5.84628 1.16667 4.71846 1.50879 3.75918 2.14976C2.79989 2.79074 2.05222 3.70178 1.61071 4.76768C1.16919 5.83358 1.05367 7.00647 1.27876 8.13803C1.50384 9.26958 2.05941 10.309 2.87521 11.1248C3.69102 11.9406 4.73042 12.4962 5.86198 12.7212C6.99353 12.9463 8.16642 12.8308 9.23232 12.3893C10.2982 11.9478 11.2093 11.2001 11.8502 10.2408C12.4912 9.28154 12.8333 8.15373 12.8333 7C12.8333 5.45291 12.2188 3.96918 11.1248 2.87521C10.0308 1.78125 8.5471 1.16667 7 1.16667ZM4.66662 9.91668C4.58998 9.91704 4.51404 9.90209 4.44325 9.87271C4.37246 9.84333 4.30826 9.8001 4.2544 9.74557C4.14516 9.6362 4.0838 9.48793 4.0838 9.33335C4.0838 9.17876 4.14516 9.0305 4.2544 8.92113L6.17553 7L4.25443 5.07891C4.15139 4.96832 4.09529 4.82207 4.09796 4.67094C4.10063 4.51982 4.16185 4.37563 4.26872 4.26876C4.3756 4.16188 4.51979 4.10066 4.67091 4.09799C4.82204 4.09532 4.96829 4.15142 5.07887 4.25446L6.99997 6.17556L8.92106 4.25446C9.03164 4.15142 9.1779 4.09532 9.32903 4.09799C9.48015 4.10066 9.62434 4.16188 9.73121 4.26876C9.83809 4.37563 9.89931 4.51982 9.90198 4.67094C9.90464 4.82207 9.84855 4.96832 9.74551 5.07891L7.82441 7L9.74554 8.92113C9.85478 9.0305 9.91614 9.17876 9.91614 9.33335C9.91614 9.48793 9.85478 9.6362 9.74554 9.74557C9.69168 9.8001 9.62748 9.84333 9.55669 9.87271C9.4859 9.90209 9.40996 9.91704 9.33332 9.91668C9.25668 9.91704 9.18073 9.90209 9.10995 9.87271C9.03916 9.84333 8.97495 9.8001 8.9211 9.74557L6.99997 7.82444L5.07884 9.74557C5.02499 9.8001 4.96078 9.84333 4.88999 9.87271C4.81921 9.90209 4.74326 9.91704 4.66662 9.91668Z"
+            fill="currentColor"
+            fillRule="evenodd"
+          />
+        </svg>
+        <div
+          className="p-message-summary"
+        >
+          Errors
+        </div>
+      </div>
+      <ul
+        className="p-message-list"
+      >
+        <li>
+          .name Bad input
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div
+    className="form-group field field-object"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <div
+        className="form-group field field-string field-error has-error has-danger"
+      >
+        <div
+          style={
+            {
+              "display": "flex",
+              "flexDirection": "column",
+              "gap": "0.5rem",
+              "marginBottom": "1rem",
+            }
+          }
+        >
+          <label
+            htmlFor="root_name"
+          >
+            name
+             
+          </label>
+          <input
+            aria-describedby="root_name__error root_name__description root_name__help"
+            autoFocus={false}
+            className="p-inputtext p-component p-invalid"
+            data-pc-name="inputtext"
+            data-pc-section="root"
+            disabled={false}
+            id="root_name"
+            name="root_name"
+            onBeforeInput={[Function]}
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            onInput={[Function]}
+            onKeyDown={[Function]}
+            onPaste={[Function]}
+            placeholder=""
+            required={false}
+            type="text"
+            value=""
+          />
+          <div
+            aria-atomic="true"
+            aria-live="polite"
+            className="p-inline-message p-component p-inline-message-error"
+            data-pc-name="message"
+            data-pc-section="root"
+            id="root_name__error"
+            role="alert"
+            style={
+              {
+                "justifyContent": "left",
+              }
+            }
+          >
+            <svg
+              className="p-icon p-inline-message-icon"
+              data-pc-section="icon"
+              fill="none"
+              height="14"
+              viewBox="0 0 14 14"
+              width="14"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                clipRule="evenodd"
+                d="M7 14C5.61553 14 4.26215 13.5895 3.11101 12.8203C1.95987 12.0511 1.06266 10.9579 0.532846 9.67879C0.00303296 8.3997 -0.13559 6.99224 0.134506 5.63437C0.404603 4.2765 1.07129 3.02922 2.05026 2.05026C3.02922 1.07129 4.2765 0.404603 5.63437 0.134506C6.99224 -0.13559 8.3997 0.00303296 9.67879 0.532846C10.9579 1.06266 12.0511 1.95987 12.8203 3.11101C13.5895 4.26215 14 5.61553 14 7C14 8.85652 13.2625 10.637 11.9497 11.9497C10.637 13.2625 8.85652 14 7 14ZM7 1.16667C5.84628 1.16667 4.71846 1.50879 3.75918 2.14976C2.79989 2.79074 2.05222 3.70178 1.61071 4.76768C1.16919 5.83358 1.05367 7.00647 1.27876 8.13803C1.50384 9.26958 2.05941 10.309 2.87521 11.1248C3.69102 11.9406 4.73042 12.4962 5.86198 12.7212C6.99353 12.9463 8.16642 12.8308 9.23232 12.3893C10.2982 11.9478 11.2093 11.2001 11.8502 10.2408C12.4912 9.28154 12.8333 8.15373 12.8333 7C12.8333 5.45291 12.2188 3.96918 11.1248 2.87521C10.0308 1.78125 8.5471 1.16667 7 1.16667ZM4.66662 9.91668C4.58998 9.91704 4.51404 9.90209 4.44325 9.87271C4.37246 9.84333 4.30826 9.8001 4.2544 9.74557C4.14516 9.6362 4.0838 9.48793 4.0838 9.33335C4.0838 9.17876 4.14516 9.0305 4.2544 8.92113L6.17553 7L4.25443 5.07891C4.15139 4.96832 4.09529 4.82207 4.09796 4.67094C4.10063 4.51982 4.16185 4.37563 4.26872 4.26876C4.3756 4.16188 4.51979 4.10066 4.67091 4.09799C4.82204 4.09532 4.96829 4.15142 5.07887 4.25446L6.99997 6.17556L8.92106 4.25446C9.03164 4.15142 9.1779 4.09532 9.32903 4.09799C9.48015 4.10066 9.62434 4.16188 9.73121 4.26876C9.83809 4.37563 9.89931 4.51982 9.90198 4.67094C9.90464 4.82207 9.84855 4.96832 9.74551 5.07891L7.82441 7L9.74554 8.92113C9.85478 9.0305 9.91614 9.17876 9.91614 9.33335C9.91614 9.48793 9.85478 9.6362 9.74554 9.74557C9.69168 9.8001 9.62748 9.84333 9.55669 9.87271C9.4859 9.90209 9.40996 9.91704 9.33332 9.91668C9.25668 9.91704 9.18073 9.90209 9.10995 9.87271C9.03916 9.84333 8.97495 9.8001 8.9211 9.74557L6.99997 7.82444L5.07884 9.74557C5.02499 9.8001 4.96078 9.84333 4.88999 9.87271C4.81921 9.90209 4.74326 9.91704 4.66662 9.91668Z"
+                fill="currentColor"
+                fillRule="evenodd"
+              />
+            </svg>
+            <span
+              className="p-inline-message-text"
+              data-pc-section="text"
+              style={
+                {
+                  "fontSize": "smaller",
+                }
+              }
+            >
+              <div>
+                Bad input
+              </div>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`array fields no errors 1`] = `
+<form
+  className="ui form rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-object"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <div
+        className="form-group field field-string"
+      >
+        <div
+          style={
+            {
+              "display": "flex",
+              "flexDirection": "column",
+              "gap": "0.5rem",
+              "marginBottom": "1rem",
+            }
+          }
+        >
+          <label
+            htmlFor="root_name"
+          >
+            name
+             
+          </label>
+          <input
+            aria-describedby="root_name__error root_name__description root_name__help"
+            autoFocus={false}
+            className="p-inputtext p-component"
+            data-pc-name="inputtext"
+            data-pc-section="root"
+            disabled={false}
+            id="root_name"
+            name="root_name"
+            onBeforeInput={[Function]}
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            onInput={[Function]}
+            onKeyDown={[Function]}
+            onPaste={[Function]}
+            placeholder=""
+            required={false}
+            type="text"
+            value=""
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`with title and description array 1`] = `
+<form
+  className="ui form rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <h5
+        style={
+          {
+            "fontSize": "1.5rem",
+            "margin": 0,
+            "marginBottom": "0.2rem",
+          }
+        }
+      >
+        Test field
+         
+      </h5>
+      <fieldset
+        className="field field-array field-array-of-string sortable-form-fields p-fieldset p-component"
+        data-pc-name="fieldset"
+        data-pc-section="root"
+        formContext={{}}
+        formData={[]}
+        id="pr_id_28"
+        onClick={null}
+        style={{}}
+      >
+        <div
+          aria-labelledby="pr_id_28_header"
+          className="p-toggleable-content"
+          data-pc-section="toggleablecontent"
+          id="pr_id_28_content"
+          role="region"
+        >
+          <div
+            className="p-fieldset-content"
+            data-pc-section="content"
+          >
+            <span
+              id="root__description"
+            >
+              a test description
+            </span>
+            <div>
+              <div />
+              <div
+                style={
+                  {
+                    "marginTop": "1rem",
+                    "position": "relative",
+                    "textAlign": "right",
+                  }
+                }
+              >
+                <button
+                  aria-label="Add Item"
+                  className="array-item-add p-button p-component p-button-outlined p-button-sm p-button-secondary"
+                  data-pc-name="button"
+                  data-pc-section="root"
+                  disabled={false}
+                  onClick={[Function]}
+                >
+                  <span
+                    className="p-button-icon p-c p-button-icon-left pi pi-plus"
+                    data-pc-section="icon"
+                  />
+                  <span
+                    className="p-button-label p-c"
+                    data-pc-section="label"
+                  >
+                    Add Item
+                  </span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`with title and description array icons 1`] = `
+<form
+  className="ui form rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <h5
+        style={
+          {
+            "fontSize": "1.5rem",
+            "margin": 0,
+            "marginBottom": "0.2rem",
+          }
+        }
+      >
+        Test field
+         
+      </h5>
+      <fieldset
+        className="field field-array field-array-of-string sortable-form-fields p-fieldset p-component"
+        data-pc-name="fieldset"
+        data-pc-section="root"
+        formContext={{}}
+        formData={
+          [
+            "a",
+            "b",
+          ]
+        }
+        id={null}
+        onClick={null}
+        style={{}}
+      >
+        <div
+          aria-labelledby="null_header"
+          className="p-toggleable-content"
+          data-pc-section="toggleablecontent"
+          id="null_content"
+          role="region"
+        >
+          <div
+            className="p-fieldset-content"
+            data-pc-section="content"
+          >
+            <span
+              id="root__description"
+            >
+              a test description
+            </span>
+            <div>
+              <div>
+                <div
+                  style={
+                    {
+                      "position": "relative",
+                    }
+                  }
+                >
+                  <div
+                    style={
+                      {
+                        "position": "absolute",
+                        "right": 0,
+                        "top": "-10px",
+                      }
+                    }
+                  >
+                    <div
+                      style={
+                        {
+                          "flexDirection": "row",
+                        }
+                      }
+                    >
+                      <button
+                        className="array-item-move-up p-button p-component p-button-icon-only p-disabled p-button-text p-button-rounded p-button-secondary"
+                        data-pc-name="button"
+                        data-pc-section="root"
+                        disabled={true}
+                        id="root_0__moveUp"
+                        onClick={[Function]}
+                        title="Move up"
+                      >
+                        <span
+                          className="p-button-icon p-c pi pi-angle-up"
+                          data-pc-section="icon"
+                        />
+                        <span
+                          className="p-button-label p-c"
+                          dangerouslySetInnerHTML={
+                            {
+                              "__html": "&nbsp;",
+                            }
+                          }
+                          data-pc-section="label"
+                        />
+                      </button>
+                      <button
+                        className="array-item-move-down p-button p-component p-button-icon-only p-button-text p-button-rounded p-button-secondary"
+                        data-pc-name="button"
+                        data-pc-section="root"
+                        disabled={false}
+                        id="root_0__moveDown"
+                        onClick={[Function]}
+                        title="Move down"
+                      >
+                        <span
+                          className="p-button-icon p-c pi pi-angle-down"
+                          data-pc-section="icon"
+                        />
+                        <span
+                          className="p-button-label p-c"
+                          dangerouslySetInnerHTML={
+                            {
+                              "__html": "&nbsp;",
+                            }
+                          }
+                          data-pc-section="label"
+                        />
+                      </button>
+                      <button
+                        className="array-item-copy p-button p-component p-button-icon-only p-button-text p-button-rounded p-button-secondary"
+                        data-pc-name="button"
+                        data-pc-section="root"
+                        disabled={false}
+                        id="root_0__copy"
+                        onClick={[Function]}
+                        title="Copy"
+                      >
+                        <span
+                          className="p-button-icon p-c pi pi-copy"
+                          data-pc-section="icon"
+                        />
+                        <span
+                          className="p-button-label p-c"
+                          dangerouslySetInnerHTML={
+                            {
+                              "__html": "&nbsp;",
+                            }
+                          }
+                          data-pc-section="label"
+                        />
+                      </button>
+                      <button
+                        className="array-item-remove p-button p-component p-button-icon-only p-button-text p-button-rounded p-button-secondary"
+                        data-pc-name="button"
+                        data-pc-section="root"
+                        disabled={false}
+                        id="root_0__remove"
+                        onClick={[Function]}
+                        title="Remove"
+                      >
+                        <span
+                          className="p-button-icon p-c pi pi-trash"
+                          data-pc-section="icon"
+                        />
+                        <span
+                          className="p-button-label p-c"
+                          dangerouslySetInnerHTML={
+                            {
+                              "__html": "&nbsp;",
+                            }
+                          }
+                          data-pc-section="label"
+                        />
+                      </button>
+                    </div>
+                  </div>
+                  <div
+                    className="form-group field field-string"
+                  >
+                    <div
+                      style={
+                        {
+                          "display": "flex",
+                          "flexDirection": "column",
+                          "gap": "0.5rem",
+                          "marginBottom": "1rem",
+                        }
+                      }
+                    >
+                      <label
+                        htmlFor="root_0"
+                      >
+                        Test item
+                         
+                        *
+                      </label>
+                      <input
+                        aria-describedby="root_0__error root_0__description root_0__help"
+                        autoFocus={false}
+                        className="p-inputtext p-component p-filled"
+                        data-pc-name="inputtext"
+                        data-pc-section="root"
+                        disabled={false}
+                        id="root_0"
+                        name="root_0"
+                        onBeforeInput={[Function]}
+                        onBlur={[Function]}
+                        onChange={[Function]}
+                        onFocus={[Function]}
+                        onInput={[Function]}
+                        onKeyDown={[Function]}
+                        onPaste={[Function]}
+                        placeholder=""
+                        required={true}
+                        type="text"
+                        value="a"
+                      />
+                      <small>
+                        <span
+                          id="root_0__description"
+                        >
+                          a test item description
+                        </span>
+                      </small>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  style={
+                    {
+                      "position": "relative",
+                    }
+                  }
+                >
+                  <div
+                    style={
+                      {
+                        "position": "absolute",
+                        "right": 0,
+                        "top": "-10px",
+                      }
+                    }
+                  >
+                    <div
+                      style={
+                        {
+                          "flexDirection": "row",
+                        }
+                      }
+                    >
+                      <button
+                        className="array-item-move-up p-button p-component p-button-icon-only p-button-text p-button-rounded p-button-secondary"
+                        data-pc-name="button"
+                        data-pc-section="root"
+                        disabled={false}
+                        id="root_1__moveUp"
+                        onClick={[Function]}
+                        title="Move up"
+                      >
+                        <span
+                          className="p-button-icon p-c pi pi-angle-up"
+                          data-pc-section="icon"
+                        />
+                        <span
+                          className="p-button-label p-c"
+                          dangerouslySetInnerHTML={
+                            {
+                              "__html": "&nbsp;",
+                            }
+                          }
+                          data-pc-section="label"
+                        />
+                      </button>
+                      <button
+                        className="array-item-move-down p-button p-component p-button-icon-only p-disabled p-button-text p-button-rounded p-button-secondary"
+                        data-pc-name="button"
+                        data-pc-section="root"
+                        disabled={true}
+                        id="root_1__moveDown"
+                        onClick={[Function]}
+                        title="Move down"
+                      >
+                        <span
+                          className="p-button-icon p-c pi pi-angle-down"
+                          data-pc-section="icon"
+                        />
+                        <span
+                          className="p-button-label p-c"
+                          dangerouslySetInnerHTML={
+                            {
+                              "__html": "&nbsp;",
+                            }
+                          }
+                          data-pc-section="label"
+                        />
+                      </button>
+                      <button
+                        className="array-item-copy p-button p-component p-button-icon-only p-button-text p-button-rounded p-button-secondary"
+                        data-pc-name="button"
+                        data-pc-section="root"
+                        disabled={false}
+                        id="root_1__copy"
+                        onClick={[Function]}
+                        title="Copy"
+                      >
+                        <span
+                          className="p-button-icon p-c pi pi-copy"
+                          data-pc-section="icon"
+                        />
+                        <span
+                          className="p-button-label p-c"
+                          dangerouslySetInnerHTML={
+                            {
+                              "__html": "&nbsp;",
+                            }
+                          }
+                          data-pc-section="label"
+                        />
+                      </button>
+                      <button
+                        className="array-item-remove p-button p-component p-button-icon-only p-button-text p-button-rounded p-button-secondary"
+                        data-pc-name="button"
+                        data-pc-section="root"
+                        disabled={false}
+                        id="root_1__remove"
+                        onClick={[Function]}
+                        title="Remove"
+                      >
+                        <span
+                          className="p-button-icon p-c pi pi-trash"
+                          data-pc-section="icon"
+                        />
+                        <span
+                          className="p-button-label p-c"
+                          dangerouslySetInnerHTML={
+                            {
+                              "__html": "&nbsp;",
+                            }
+                          }
+                          data-pc-section="label"
+                        />
+                      </button>
+                    </div>
+                  </div>
+                  <div
+                    className="form-group field field-string"
+                  >
+                    <div
+                      style={
+                        {
+                          "display": "flex",
+                          "flexDirection": "column",
+                          "gap": "0.5rem",
+                          "marginBottom": "1rem",
+                        }
+                      }
+                    >
+                      <label
+                        htmlFor="root_1"
+                      >
+                        Test item
+                         
+                        *
+                      </label>
+                      <input
+                        aria-describedby="root_1__error root_1__description root_1__help"
+                        autoFocus={false}
+                        className="p-inputtext p-component p-filled"
+                        data-pc-name="inputtext"
+                        data-pc-section="root"
+                        disabled={false}
+                        id="root_1"
+                        name="root_1"
+                        onBeforeInput={[Function]}
+                        onBlur={[Function]}
+                        onChange={[Function]}
+                        onFocus={[Function]}
+                        onInput={[Function]}
+                        onKeyDown={[Function]}
+                        onPaste={[Function]}
+                        placeholder=""
+                        required={true}
+                        type="text"
+                        value="b"
+                      />
+                      <small>
+                        <span
+                          id="root_1__description"
+                        >
+                          a test item description
+                        </span>
+                      </small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                style={
+                  {
+                    "marginTop": "1rem",
+                    "position": "relative",
+                    "textAlign": "right",
+                  }
+                }
+              >
+                <button
+                  aria-label="Add Item"
+                  className="array-item-add p-button p-component p-button-outlined p-button-sm p-button-secondary"
+                  data-pc-name="button"
+                  data-pc-section="root"
+                  disabled={false}
+                  onClick={[Function]}
+                >
+                  <span
+                    className="p-button-icon p-c p-button-icon-left pi pi-plus"
+                    data-pc-section="icon"
+                  />
+                  <span
+                    className="p-button-label p-c"
+                    data-pc-section="label"
+                  >
+                    Add Item
+                  </span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`with title and description fixed array 1`] = `
+<form
+  className="ui form rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <h5
+        style={
+          {
+            "fontSize": "1.5rem",
+            "margin": 0,
+            "marginBottom": "0.2rem",
+          }
+        }
+      >
+        Test field
+         
+      </h5>
+      <fieldset
+        className="field field-array field-array-fixed-items  p-fieldset p-component"
+        data-pc-name="fieldset"
+        data-pc-section="root"
+        errorSchema={{}}
+        formContext={{}}
+        formData={
+          [
+            undefined,
+            undefined,
+          ]
+        }
+        id={null}
+        onClick={null}
+        style={{}}
+      >
+        <div
+          aria-labelledby="null_header"
+          className="p-toggleable-content"
+          data-pc-section="toggleablecontent"
+          id="null_content"
+          role="region"
+        >
+          <div
+            className="p-fieldset-content"
+            data-pc-section="content"
+          >
+            <span
+              id="root__description"
+            >
+              a test description
+            </span>
+            <div>
+              <div>
+                <div
+                  style={
+                    {
+                      "position": "relative",
+                    }
+                  }
+                >
+                  <div
+                    className="form-group field field-string"
+                  >
+                    <div
+                      style={
+                        {
+                          "display": "flex",
+                          "flexDirection": "column",
+                          "gap": "0.5rem",
+                          "marginBottom": "1rem",
+                        }
+                      }
+                    >
+                      <label
+                        htmlFor="root_0"
+                      >
+                        Test item
+                         
+                        *
+                      </label>
+                      <input
+                        aria-describedby="root_0__error root_0__description root_0__help"
+                        autoFocus={false}
+                        className="p-inputtext p-component"
+                        data-pc-name="inputtext"
+                        data-pc-section="root"
+                        disabled={false}
+                        id="root_0"
+                        name="root_0"
+                        onBeforeInput={[Function]}
+                        onBlur={[Function]}
+                        onChange={[Function]}
+                        onFocus={[Function]}
+                        onInput={[Function]}
+                        onKeyDown={[Function]}
+                        onPaste={[Function]}
+                        placeholder=""
+                        required={true}
+                        type="text"
+                        value=""
+                      />
+                      <small>
+                        <span
+                          id="root_0__description"
+                        >
+                          a test item description
+                        </span>
+                      </small>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  style={
+                    {
+                      "position": "relative",
+                    }
+                  }
+                >
+                  <div
+                    className="form-group field field-number"
+                  >
+                    <div
+                      style={
+                        {
+                          "display": "flex",
+                          "flexDirection": "column",
+                          "gap": "0.5rem",
+                          "marginBottom": "1rem",
+                        }
+                      }
+                    >
+                      <label
+                        htmlFor="root_1"
+                      >
+                        Test item
+                         
+                        *
+                      </label>
+                      <input
+                        aria-describedby="root_1__error root_1__description root_1__help"
+                        autoFocus={false}
+                        className="p-inputtext p-component"
+                        data-pc-name="inputtext"
+                        data-pc-section="root"
+                        disabled={false}
+                        id="root_1"
+                        name="root_1"
+                        onBeforeInput={[Function]}
+                        onBlur={[Function]}
+                        onChange={[Function]}
+                        onFocus={[Function]}
+                        onInput={[Function]}
+                        onKeyDown={[Function]}
+                        onPaste={[Function]}
+                        placeholder=""
+                        required={true}
+                        step="any"
+                        type="number"
+                        value=""
+                      />
+                      <small>
+                        <span
+                          id="root_1__description"
+                        >
+                          a test item description
+                        </span>
+                      </small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`with title and description from both array 1`] = `
+<form
+  className="ui form rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <h5
+        style={
+          {
+            "fontSize": "1.5rem",
+            "margin": 0,
+            "marginBottom": "0.2rem",
+          }
+        }
+      >
+        My Field
+         
+      </h5>
+      <fieldset
+        className="field field-array field-array-of-string sortable-form-fields p-fieldset p-component"
+        data-pc-name="fieldset"
+        data-pc-section="root"
+        formContext={{}}
+        formData={[]}
+        id="pr_id_67"
+        onClick={null}
+        style={{}}
+      >
+        <div
+          aria-labelledby="pr_id_67_header"
+          className="p-toggleable-content"
+          data-pc-section="toggleablecontent"
+          id="pr_id_67_content"
+          role="region"
+        >
+          <div
+            className="p-fieldset-content"
+            data-pc-section="content"
+          >
+            <span
+              id="root__description"
+            >
+              a fancier description
+            </span>
+            <div>
+              <div />
+              <div
+                style={
+                  {
+                    "marginTop": "1rem",
+                    "position": "relative",
+                    "textAlign": "right",
+                  }
+                }
+              >
+                <button
+                  aria-label="Add Item"
+                  className="array-item-add p-button p-component p-button-outlined p-button-sm p-button-secondary"
+                  data-pc-name="button"
+                  data-pc-section="root"
+                  disabled={false}
+                  onClick={[Function]}
+                >
+                  <span
+                    className="p-button-icon p-c p-button-icon-left pi pi-plus"
+                    data-pc-section="icon"
+                  />
+                  <span
+                    className="p-button-label p-c"
+                    data-pc-section="label"
+                  >
+                    Add Item
+                  </span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`with title and description from both array icons 1`] = `
+<form
+  className="ui form rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <h5
+        style={
+          {
+            "fontSize": "1.5rem",
+            "margin": 0,
+            "marginBottom": "0.2rem",
+          }
+        }
+      >
+        My Field
+         
+      </h5>
+      <fieldset
+        className="field field-array field-array-of-string sortable-form-fields p-fieldset p-component"
+        data-pc-name="fieldset"
+        data-pc-section="root"
+        formContext={{}}
+        formData={
+          [
+            "a",
+            "b",
+          ]
+        }
+        id={null}
+        onClick={null}
+        style={{}}
+      >
+        <div
+          aria-labelledby="null_header"
+          className="p-toggleable-content"
+          data-pc-section="toggleablecontent"
+          id="null_content"
+          role="region"
+        >
+          <div
+            className="p-fieldset-content"
+            data-pc-section="content"
+          >
+            <span
+              id="root__description"
+            >
+              a fancier description
+            </span>
+            <div>
+              <div>
+                <div
+                  style={
+                    {
+                      "position": "relative",
+                    }
+                  }
+                >
+                  <div
+                    style={
+                      {
+                        "position": "absolute",
+                        "right": 0,
+                        "top": "-10px",
+                      }
+                    }
+                  >
+                    <div
+                      style={
+                        {
+                          "flexDirection": "row",
+                        }
+                      }
+                    >
+                      <button
+                        className="array-item-move-up p-button p-component p-button-icon-only p-disabled p-button-text p-button-rounded p-button-secondary"
+                        data-pc-name="button"
+                        data-pc-section="root"
+                        disabled={true}
+                        id="root_0__moveUp"
+                        onClick={[Function]}
+                        title="Move up"
+                      >
+                        <span
+                          className="p-button-icon p-c pi pi-angle-up"
+                          data-pc-section="icon"
+                        />
+                        <span
+                          className="p-button-label p-c"
+                          dangerouslySetInnerHTML={
+                            {
+                              "__html": "&nbsp;",
+                            }
+                          }
+                          data-pc-section="label"
+                        />
+                      </button>
+                      <button
+                        className="array-item-move-down p-button p-component p-button-icon-only p-button-text p-button-rounded p-button-secondary"
+                        data-pc-name="button"
+                        data-pc-section="root"
+                        disabled={false}
+                        id="root_0__moveDown"
+                        onClick={[Function]}
+                        title="Move down"
+                      >
+                        <span
+                          className="p-button-icon p-c pi pi-angle-down"
+                          data-pc-section="icon"
+                        />
+                        <span
+                          className="p-button-label p-c"
+                          dangerouslySetInnerHTML={
+                            {
+                              "__html": "&nbsp;",
+                            }
+                          }
+                          data-pc-section="label"
+                        />
+                      </button>
+                      <button
+                        className="array-item-copy p-button p-component p-button-icon-only p-button-text p-button-rounded p-button-secondary"
+                        data-pc-name="button"
+                        data-pc-section="root"
+                        disabled={false}
+                        id="root_0__copy"
+                        onClick={[Function]}
+                        title="Copy"
+                      >
+                        <span
+                          className="p-button-icon p-c pi pi-copy"
+                          data-pc-section="icon"
+                        />
+                        <span
+                          className="p-button-label p-c"
+                          dangerouslySetInnerHTML={
+                            {
+                              "__html": "&nbsp;",
+                            }
+                          }
+                          data-pc-section="label"
+                        />
+                      </button>
+                      <button
+                        className="array-item-remove p-button p-component p-button-icon-only p-button-text p-button-rounded p-button-secondary"
+                        data-pc-name="button"
+                        data-pc-section="root"
+                        disabled={false}
+                        id="root_0__remove"
+                        onClick={[Function]}
+                        title="Remove"
+                      >
+                        <span
+                          className="p-button-icon p-c pi pi-trash"
+                          data-pc-section="icon"
+                        />
+                        <span
+                          className="p-button-label p-c"
+                          dangerouslySetInnerHTML={
+                            {
+                              "__html": "&nbsp;",
+                            }
+                          }
+                          data-pc-section="label"
+                        />
+                      </button>
+                    </div>
+                  </div>
+                  <div
+                    className="form-group field field-string"
+                  >
+                    <div
+                      style={
+                        {
+                          "display": "flex",
+                          "flexDirection": "column",
+                          "gap": "0.5rem",
+                          "marginBottom": "1rem",
+                        }
+                      }
+                    >
+                      <label
+                        htmlFor="root_0"
+                      >
+                        My Item
+                         
+                        *
+                      </label>
+                      <input
+                        aria-describedby="root_0__error root_0__description root_0__help"
+                        autoFocus={false}
+                        className="p-inputtext p-component p-filled"
+                        data-pc-name="inputtext"
+                        data-pc-section="root"
+                        disabled={false}
+                        id="root_0"
+                        name="root_0"
+                        onBeforeInput={[Function]}
+                        onBlur={[Function]}
+                        onChange={[Function]}
+                        onFocus={[Function]}
+                        onInput={[Function]}
+                        onKeyDown={[Function]}
+                        onPaste={[Function]}
+                        placeholder=""
+                        required={true}
+                        type="text"
+                        value="a"
+                      />
+                      <small>
+                        <span
+                          id="root_0__description"
+                        >
+                          a fancier item description
+                        </span>
+                      </small>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  style={
+                    {
+                      "position": "relative",
+                    }
+                  }
+                >
+                  <div
+                    style={
+                      {
+                        "position": "absolute",
+                        "right": 0,
+                        "top": "-10px",
+                      }
+                    }
+                  >
+                    <div
+                      style={
+                        {
+                          "flexDirection": "row",
+                        }
+                      }
+                    >
+                      <button
+                        className="array-item-move-up p-button p-component p-button-icon-only p-button-text p-button-rounded p-button-secondary"
+                        data-pc-name="button"
+                        data-pc-section="root"
+                        disabled={false}
+                        id="root_1__moveUp"
+                        onClick={[Function]}
+                        title="Move up"
+                      >
+                        <span
+                          className="p-button-icon p-c pi pi-angle-up"
+                          data-pc-section="icon"
+                        />
+                        <span
+                          className="p-button-label p-c"
+                          dangerouslySetInnerHTML={
+                            {
+                              "__html": "&nbsp;",
+                            }
+                          }
+                          data-pc-section="label"
+                        />
+                      </button>
+                      <button
+                        className="array-item-move-down p-button p-component p-button-icon-only p-disabled p-button-text p-button-rounded p-button-secondary"
+                        data-pc-name="button"
+                        data-pc-section="root"
+                        disabled={true}
+                        id="root_1__moveDown"
+                        onClick={[Function]}
+                        title="Move down"
+                      >
+                        <span
+                          className="p-button-icon p-c pi pi-angle-down"
+                          data-pc-section="icon"
+                        />
+                        <span
+                          className="p-button-label p-c"
+                          dangerouslySetInnerHTML={
+                            {
+                              "__html": "&nbsp;",
+                            }
+                          }
+                          data-pc-section="label"
+                        />
+                      </button>
+                      <button
+                        className="array-item-copy p-button p-component p-button-icon-only p-button-text p-button-rounded p-button-secondary"
+                        data-pc-name="button"
+                        data-pc-section="root"
+                        disabled={false}
+                        id="root_1__copy"
+                        onClick={[Function]}
+                        title="Copy"
+                      >
+                        <span
+                          className="p-button-icon p-c pi pi-copy"
+                          data-pc-section="icon"
+                        />
+                        <span
+                          className="p-button-label p-c"
+                          dangerouslySetInnerHTML={
+                            {
+                              "__html": "&nbsp;",
+                            }
+                          }
+                          data-pc-section="label"
+                        />
+                      </button>
+                      <button
+                        className="array-item-remove p-button p-component p-button-icon-only p-button-text p-button-rounded p-button-secondary"
+                        data-pc-name="button"
+                        data-pc-section="root"
+                        disabled={false}
+                        id="root_1__remove"
+                        onClick={[Function]}
+                        title="Remove"
+                      >
+                        <span
+                          className="p-button-icon p-c pi pi-trash"
+                          data-pc-section="icon"
+                        />
+                        <span
+                          className="p-button-label p-c"
+                          dangerouslySetInnerHTML={
+                            {
+                              "__html": "&nbsp;",
+                            }
+                          }
+                          data-pc-section="label"
+                        />
+                      </button>
+                    </div>
+                  </div>
+                  <div
+                    className="form-group field field-string"
+                  >
+                    <div
+                      style={
+                        {
+                          "display": "flex",
+                          "flexDirection": "column",
+                          "gap": "0.5rem",
+                          "marginBottom": "1rem",
+                        }
+                      }
+                    >
+                      <label
+                        htmlFor="root_1"
+                      >
+                        My Item
+                         
+                        *
+                      </label>
+                      <input
+                        aria-describedby="root_1__error root_1__description root_1__help"
+                        autoFocus={false}
+                        className="p-inputtext p-component p-filled"
+                        data-pc-name="inputtext"
+                        data-pc-section="root"
+                        disabled={false}
+                        id="root_1"
+                        name="root_1"
+                        onBeforeInput={[Function]}
+                        onBlur={[Function]}
+                        onChange={[Function]}
+                        onFocus={[Function]}
+                        onInput={[Function]}
+                        onKeyDown={[Function]}
+                        onPaste={[Function]}
+                        placeholder=""
+                        required={true}
+                        type="text"
+                        value="b"
+                      />
+                      <small>
+                        <span
+                          id="root_1__description"
+                        >
+                          a fancier item description
+                        </span>
+                      </small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                style={
+                  {
+                    "marginTop": "1rem",
+                    "position": "relative",
+                    "textAlign": "right",
+                  }
+                }
+              >
+                <button
+                  aria-label="Add Item"
+                  className="array-item-add p-button p-component p-button-outlined p-button-sm p-button-secondary"
+                  data-pc-name="button"
+                  data-pc-section="root"
+                  disabled={false}
+                  onClick={[Function]}
+                >
+                  <span
+                    className="p-button-icon p-c p-button-icon-left pi pi-plus"
+                    data-pc-section="icon"
+                  />
+                  <span
+                    className="p-button-label p-c"
+                    data-pc-section="label"
+                  >
+                    Add Item
+                  </span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`with title and description from both fixed array 1`] = `
+<form
+  className="ui form rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <h5
+        style={
+          {
+            "fontSize": "1.5rem",
+            "margin": 0,
+            "marginBottom": "0.2rem",
+          }
+        }
+      >
+        My Field
+         
+      </h5>
+      <fieldset
+        className="field field-array field-array-fixed-items  p-fieldset p-component"
+        data-pc-name="fieldset"
+        data-pc-section="root"
+        errorSchema={{}}
+        formContext={{}}
+        formData={
+          [
+            undefined,
+            undefined,
+          ]
+        }
+        id={null}
+        onClick={null}
+        style={{}}
+      >
+        <div
+          aria-labelledby="null_header"
+          className="p-toggleable-content"
+          data-pc-section="toggleablecontent"
+          id="null_content"
+          role="region"
+        >
+          <div
+            className="p-fieldset-content"
+            data-pc-section="content"
+          >
+            <span
+              id="root__description"
+            >
+              a fancier description
+            </span>
+            <div>
+              <div>
+                <div
+                  style={
+                    {
+                      "position": "relative",
+                    }
+                  }
+                >
+                  <div
+                    className="form-group field field-string"
+                  >
+                    <div
+                      style={
+                        {
+                          "display": "flex",
+                          "flexDirection": "column",
+                          "gap": "0.5rem",
+                          "marginBottom": "1rem",
+                        }
+                      }
+                    >
+                      <label
+                        htmlFor="root_0"
+                      >
+                        My Item
+                         
+                        *
+                      </label>
+                      <input
+                        aria-describedby="root_0__error root_0__description root_0__help"
+                        autoFocus={false}
+                        className="p-inputtext p-component"
+                        data-pc-name="inputtext"
+                        data-pc-section="root"
+                        disabled={false}
+                        id="root_0"
+                        name="root_0"
+                        onBeforeInput={[Function]}
+                        onBlur={[Function]}
+                        onChange={[Function]}
+                        onFocus={[Function]}
+                        onInput={[Function]}
+                        onKeyDown={[Function]}
+                        onPaste={[Function]}
+                        placeholder=""
+                        required={true}
+                        type="text"
+                        value=""
+                      />
+                      <small>
+                        <span
+                          id="root_0__description"
+                        >
+                          a fancier item description
+                        </span>
+                      </small>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  style={
+                    {
+                      "position": "relative",
+                    }
+                  }
+                >
+                  <div
+                    className="form-group field field-number"
+                  >
+                    <div
+                      style={
+                        {
+                          "display": "flex",
+                          "flexDirection": "column",
+                          "gap": "0.5rem",
+                          "marginBottom": "1rem",
+                        }
+                      }
+                    >
+                      <label
+                        htmlFor="root_1"
+                      >
+                        My Item
+                         
+                        *
+                      </label>
+                      <input
+                        aria-describedby="root_1__error root_1__description root_1__help"
+                        autoFocus={false}
+                        className="p-inputtext p-component"
+                        data-pc-name="inputtext"
+                        data-pc-section="root"
+                        disabled={false}
+                        id="root_1"
+                        name="root_1"
+                        onBeforeInput={[Function]}
+                        onBlur={[Function]}
+                        onChange={[Function]}
+                        onFocus={[Function]}
+                        onInput={[Function]}
+                        onKeyDown={[Function]}
+                        onPaste={[Function]}
+                        placeholder=""
+                        required={true}
+                        step="any"
+                        type="number"
+                        value=""
+                      />
+                      <small>
+                        <span
+                          id="root_1__description"
+                        >
+                          a fancier item description
+                        </span>
+                      </small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`with title and description from uiSchema array 1`] = `
+<form
+  className="ui form rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <h5
+        style={
+          {
+            "fontSize": "1.5rem",
+            "margin": 0,
+            "marginBottom": "0.2rem",
+          }
+        }
+      >
+        My Field
+         
+      </h5>
+      <fieldset
+        className="field field-array field-array-of-string sortable-form-fields p-fieldset p-component"
+        data-pc-name="fieldset"
+        data-pc-section="root"
+        formContext={{}}
+        formData={[]}
+        id="pr_id_43"
+        onClick={null}
+        style={{}}
+      >
+        <div
+          aria-labelledby="pr_id_43_header"
+          className="p-toggleable-content"
+          data-pc-section="toggleablecontent"
+          id="pr_id_43_content"
+          role="region"
+        >
+          <div
+            className="p-fieldset-content"
+            data-pc-section="content"
+          >
+            <span
+              id="root__description"
+            >
+              a fancier description
+            </span>
+            <div>
+              <div />
+              <div
+                style={
+                  {
+                    "marginTop": "1rem",
+                    "position": "relative",
+                    "textAlign": "right",
+                  }
+                }
+              >
+                <button
+                  aria-label="Add Item"
+                  className="array-item-add p-button p-component p-button-outlined p-button-sm p-button-secondary"
+                  data-pc-name="button"
+                  data-pc-section="root"
+                  disabled={false}
+                  onClick={[Function]}
+                >
+                  <span
+                    className="p-button-icon p-c p-button-icon-left pi pi-plus"
+                    data-pc-section="icon"
+                  />
+                  <span
+                    className="p-button-label p-c"
+                    data-pc-section="label"
+                  >
+                    Add Item
+                  </span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`with title and description from uiSchema array icons 1`] = `
+<form
+  className="ui form rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <h5
+        style={
+          {
+            "fontSize": "1.5rem",
+            "margin": 0,
+            "marginBottom": "0.2rem",
+          }
+        }
+      >
+        My Field
+         
+      </h5>
+      <fieldset
+        className="field field-array field-array-of-string sortable-form-fields p-fieldset p-component"
+        data-pc-name="fieldset"
+        data-pc-section="root"
+        formContext={{}}
+        formData={
+          [
+            "a",
+            "b",
+          ]
+        }
+        id={null}
+        onClick={null}
+        style={{}}
+      >
+        <div
+          aria-labelledby="null_header"
+          className="p-toggleable-content"
+          data-pc-section="toggleablecontent"
+          id="null_content"
+          role="region"
+        >
+          <div
+            className="p-fieldset-content"
+            data-pc-section="content"
+          >
+            <span
+              id="root__description"
+            >
+              a fancier description
+            </span>
+            <div>
+              <div>
+                <div
+                  style={
+                    {
+                      "position": "relative",
+                    }
+                  }
+                >
+                  <div
+                    style={
+                      {
+                        "position": "absolute",
+                        "right": 0,
+                        "top": "-10px",
+                      }
+                    }
+                  >
+                    <div
+                      style={
+                        {
+                          "flexDirection": "row",
+                        }
+                      }
+                    >
+                      <button
+                        className="array-item-move-up p-button p-component p-button-icon-only p-disabled p-button-text p-button-rounded p-button-secondary"
+                        data-pc-name="button"
+                        data-pc-section="root"
+                        disabled={true}
+                        id="root_0__moveUp"
+                        onClick={[Function]}
+                        title="Move up"
+                      >
+                        <span
+                          className="p-button-icon p-c pi pi-angle-up"
+                          data-pc-section="icon"
+                        />
+                        <span
+                          className="p-button-label p-c"
+                          dangerouslySetInnerHTML={
+                            {
+                              "__html": "&nbsp;",
+                            }
+                          }
+                          data-pc-section="label"
+                        />
+                      </button>
+                      <button
+                        className="array-item-move-down p-button p-component p-button-icon-only p-button-text p-button-rounded p-button-secondary"
+                        data-pc-name="button"
+                        data-pc-section="root"
+                        disabled={false}
+                        id="root_0__moveDown"
+                        onClick={[Function]}
+                        title="Move down"
+                      >
+                        <span
+                          className="p-button-icon p-c pi pi-angle-down"
+                          data-pc-section="icon"
+                        />
+                        <span
+                          className="p-button-label p-c"
+                          dangerouslySetInnerHTML={
+                            {
+                              "__html": "&nbsp;",
+                            }
+                          }
+                          data-pc-section="label"
+                        />
+                      </button>
+                      <button
+                        className="array-item-copy p-button p-component p-button-icon-only p-button-text p-button-rounded p-button-secondary"
+                        data-pc-name="button"
+                        data-pc-section="root"
+                        disabled={false}
+                        id="root_0__copy"
+                        onClick={[Function]}
+                        title="Copy"
+                      >
+                        <span
+                          className="p-button-icon p-c pi pi-copy"
+                          data-pc-section="icon"
+                        />
+                        <span
+                          className="p-button-label p-c"
+                          dangerouslySetInnerHTML={
+                            {
+                              "__html": "&nbsp;",
+                            }
+                          }
+                          data-pc-section="label"
+                        />
+                      </button>
+                      <button
+                        className="array-item-remove p-button p-component p-button-icon-only p-button-text p-button-rounded p-button-secondary"
+                        data-pc-name="button"
+                        data-pc-section="root"
+                        disabled={false}
+                        id="root_0__remove"
+                        onClick={[Function]}
+                        title="Remove"
+                      >
+                        <span
+                          className="p-button-icon p-c pi pi-trash"
+                          data-pc-section="icon"
+                        />
+                        <span
+                          className="p-button-label p-c"
+                          dangerouslySetInnerHTML={
+                            {
+                              "__html": "&nbsp;",
+                            }
+                          }
+                          data-pc-section="label"
+                        />
+                      </button>
+                    </div>
+                  </div>
+                  <div
+                    className="form-group field field-string"
+                  >
+                    <div
+                      style={
+                        {
+                          "display": "flex",
+                          "flexDirection": "column",
+                          "gap": "0.5rem",
+                          "marginBottom": "1rem",
+                        }
+                      }
+                    >
+                      <label
+                        htmlFor="root_0"
+                      >
+                        My Item
+                         
+                        *
+                      </label>
+                      <input
+                        aria-describedby="root_0__error root_0__description root_0__help"
+                        autoFocus={false}
+                        className="p-inputtext p-component p-filled"
+                        data-pc-name="inputtext"
+                        data-pc-section="root"
+                        disabled={false}
+                        id="root_0"
+                        name="root_0"
+                        onBeforeInput={[Function]}
+                        onBlur={[Function]}
+                        onChange={[Function]}
+                        onFocus={[Function]}
+                        onInput={[Function]}
+                        onKeyDown={[Function]}
+                        onPaste={[Function]}
+                        placeholder=""
+                        required={true}
+                        type="text"
+                        value="a"
+                      />
+                      <small>
+                        <span
+                          id="root_0__description"
+                        >
+                          a fancier item description
+                        </span>
+                      </small>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  style={
+                    {
+                      "position": "relative",
+                    }
+                  }
+                >
+                  <div
+                    style={
+                      {
+                        "position": "absolute",
+                        "right": 0,
+                        "top": "-10px",
+                      }
+                    }
+                  >
+                    <div
+                      style={
+                        {
+                          "flexDirection": "row",
+                        }
+                      }
+                    >
+                      <button
+                        className="array-item-move-up p-button p-component p-button-icon-only p-button-text p-button-rounded p-button-secondary"
+                        data-pc-name="button"
+                        data-pc-section="root"
+                        disabled={false}
+                        id="root_1__moveUp"
+                        onClick={[Function]}
+                        title="Move up"
+                      >
+                        <span
+                          className="p-button-icon p-c pi pi-angle-up"
+                          data-pc-section="icon"
+                        />
+                        <span
+                          className="p-button-label p-c"
+                          dangerouslySetInnerHTML={
+                            {
+                              "__html": "&nbsp;",
+                            }
+                          }
+                          data-pc-section="label"
+                        />
+                      </button>
+                      <button
+                        className="array-item-move-down p-button p-component p-button-icon-only p-disabled p-button-text p-button-rounded p-button-secondary"
+                        data-pc-name="button"
+                        data-pc-section="root"
+                        disabled={true}
+                        id="root_1__moveDown"
+                        onClick={[Function]}
+                        title="Move down"
+                      >
+                        <span
+                          className="p-button-icon p-c pi pi-angle-down"
+                          data-pc-section="icon"
+                        />
+                        <span
+                          className="p-button-label p-c"
+                          dangerouslySetInnerHTML={
+                            {
+                              "__html": "&nbsp;",
+                            }
+                          }
+                          data-pc-section="label"
+                        />
+                      </button>
+                      <button
+                        className="array-item-copy p-button p-component p-button-icon-only p-button-text p-button-rounded p-button-secondary"
+                        data-pc-name="button"
+                        data-pc-section="root"
+                        disabled={false}
+                        id="root_1__copy"
+                        onClick={[Function]}
+                        title="Copy"
+                      >
+                        <span
+                          className="p-button-icon p-c pi pi-copy"
+                          data-pc-section="icon"
+                        />
+                        <span
+                          className="p-button-label p-c"
+                          dangerouslySetInnerHTML={
+                            {
+                              "__html": "&nbsp;",
+                            }
+                          }
+                          data-pc-section="label"
+                        />
+                      </button>
+                      <button
+                        className="array-item-remove p-button p-component p-button-icon-only p-button-text p-button-rounded p-button-secondary"
+                        data-pc-name="button"
+                        data-pc-section="root"
+                        disabled={false}
+                        id="root_1__remove"
+                        onClick={[Function]}
+                        title="Remove"
+                      >
+                        <span
+                          className="p-button-icon p-c pi pi-trash"
+                          data-pc-section="icon"
+                        />
+                        <span
+                          className="p-button-label p-c"
+                          dangerouslySetInnerHTML={
+                            {
+                              "__html": "&nbsp;",
+                            }
+                          }
+                          data-pc-section="label"
+                        />
+                      </button>
+                    </div>
+                  </div>
+                  <div
+                    className="form-group field field-string"
+                  >
+                    <div
+                      style={
+                        {
+                          "display": "flex",
+                          "flexDirection": "column",
+                          "gap": "0.5rem",
+                          "marginBottom": "1rem",
+                        }
+                      }
+                    >
+                      <label
+                        htmlFor="root_1"
+                      >
+                        My Item
+                         
+                        *
+                      </label>
+                      <input
+                        aria-describedby="root_1__error root_1__description root_1__help"
+                        autoFocus={false}
+                        className="p-inputtext p-component p-filled"
+                        data-pc-name="inputtext"
+                        data-pc-section="root"
+                        disabled={false}
+                        id="root_1"
+                        name="root_1"
+                        onBeforeInput={[Function]}
+                        onBlur={[Function]}
+                        onChange={[Function]}
+                        onFocus={[Function]}
+                        onInput={[Function]}
+                        onKeyDown={[Function]}
+                        onPaste={[Function]}
+                        placeholder=""
+                        required={true}
+                        type="text"
+                        value="b"
+                      />
+                      <small>
+                        <span
+                          id="root_1__description"
+                        >
+                          a fancier item description
+                        </span>
+                      </small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                style={
+                  {
+                    "marginTop": "1rem",
+                    "position": "relative",
+                    "textAlign": "right",
+                  }
+                }
+              >
+                <button
+                  aria-label="Add Item"
+                  className="array-item-add p-button p-component p-button-outlined p-button-sm p-button-secondary"
+                  data-pc-name="button"
+                  data-pc-section="root"
+                  disabled={false}
+                  onClick={[Function]}
+                >
+                  <span
+                    className="p-button-icon p-c p-button-icon-left pi pi-plus"
+                    data-pc-section="icon"
+                  />
+                  <span
+                    className="p-button-label p-c"
+                    data-pc-section="label"
+                  >
+                    Add Item
+                  </span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`with title and description from uiSchema fixed array 1`] = `
+<form
+  className="ui form rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <h5
+        style={
+          {
+            "fontSize": "1.5rem",
+            "margin": 0,
+            "marginBottom": "0.2rem",
+          }
+        }
+      >
+        My Field
+         
+      </h5>
+      <fieldset
+        className="field field-array field-array-fixed-items  p-fieldset p-component"
+        data-pc-name="fieldset"
+        data-pc-section="root"
+        errorSchema={{}}
+        formContext={{}}
+        formData={
+          [
+            undefined,
+            undefined,
+          ]
+        }
+        id={null}
+        onClick={null}
+        style={{}}
+      >
+        <div
+          aria-labelledby="null_header"
+          className="p-toggleable-content"
+          data-pc-section="toggleablecontent"
+          id="null_content"
+          role="region"
+        >
+          <div
+            className="p-fieldset-content"
+            data-pc-section="content"
+          >
+            <span
+              id="root__description"
+            >
+              a fancier description
+            </span>
+            <div>
+              <div>
+                <div
+                  style={
+                    {
+                      "position": "relative",
+                    }
+                  }
+                >
+                  <div
+                    className="form-group field field-string"
+                  >
+                    <div
+                      style={
+                        {
+                          "display": "flex",
+                          "flexDirection": "column",
+                          "gap": "0.5rem",
+                          "marginBottom": "1rem",
+                        }
+                      }
+                    >
+                      <label
+                        htmlFor="root_0"
+                      >
+                        My Item
+                         
+                        *
+                      </label>
+                      <input
+                        aria-describedby="root_0__error root_0__description root_0__help"
+                        autoFocus={false}
+                        className="p-inputtext p-component"
+                        data-pc-name="inputtext"
+                        data-pc-section="root"
+                        disabled={false}
+                        id="root_0"
+                        name="root_0"
+                        onBeforeInput={[Function]}
+                        onBlur={[Function]}
+                        onChange={[Function]}
+                        onFocus={[Function]}
+                        onInput={[Function]}
+                        onKeyDown={[Function]}
+                        onPaste={[Function]}
+                        placeholder=""
+                        required={true}
+                        type="text"
+                        value=""
+                      />
+                      <small>
+                        <span
+                          id="root_0__description"
+                        >
+                          a fancier item description
+                        </span>
+                      </small>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  style={
+                    {
+                      "position": "relative",
+                    }
+                  }
+                >
+                  <div
+                    className="form-group field field-number"
+                  >
+                    <div
+                      style={
+                        {
+                          "display": "flex",
+                          "flexDirection": "column",
+                          "gap": "0.5rem",
+                          "marginBottom": "1rem",
+                        }
+                      }
+                    >
+                      <label
+                        htmlFor="root_1"
+                      >
+                        My Item
+                         
+                        *
+                      </label>
+                      <input
+                        aria-describedby="root_1__error root_1__description root_1__help"
+                        autoFocus={false}
+                        className="p-inputtext p-component"
+                        data-pc-name="inputtext"
+                        data-pc-section="root"
+                        disabled={false}
+                        id="root_1"
+                        name="root_1"
+                        onBeforeInput={[Function]}
+                        onBlur={[Function]}
+                        onChange={[Function]}
+                        onFocus={[Function]}
+                        onInput={[Function]}
+                        onKeyDown={[Function]}
+                        onPaste={[Function]}
+                        placeholder=""
+                        required={true}
+                        step="any"
+                        type="number"
+                        value=""
+                      />
+                      <small>
+                        <span
+                          id="root_1__description"
+                        >
+                          a fancier item description
+                        </span>
+                      </small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`with title and description with global label off array 1`] = `
+<form
+  className="ui form rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <h5
+        style={
+          {
+            "fontSize": "1.5rem",
+            "margin": 0,
+            "marginBottom": "0.2rem",
+          }
+        }
+      >
+        Test field
+         
+      </h5>
+      <fieldset
+        className="field field-array field-array-of-string sortable-form-fields p-fieldset p-component"
+        data-pc-name="fieldset"
+        data-pc-section="root"
+        formContext={{}}
+        formData={[]}
+        id="pr_id_91"
+        onClick={null}
+        style={{}}
+      >
+        <div
+          aria-labelledby="pr_id_91_header"
+          className="p-toggleable-content"
+          data-pc-section="toggleablecontent"
+          id="pr_id_91_content"
+          role="region"
+        >
+          <div
+            className="p-fieldset-content"
+            data-pc-section="content"
+          >
+            <div>
+              <div />
+              <div
+                style={
+                  {
+                    "marginTop": "1rem",
+                    "position": "relative",
+                    "textAlign": "right",
+                  }
+                }
+              >
+                <button
+                  aria-label="Add Item"
+                  className="array-item-add p-button p-component p-button-outlined p-button-sm p-button-secondary"
+                  data-pc-name="button"
+                  data-pc-section="root"
+                  disabled={false}
+                  onClick={[Function]}
+                >
+                  <span
+                    className="p-button-icon p-c p-button-icon-left pi pi-plus"
+                    data-pc-section="icon"
+                  />
+                  <span
+                    className="p-button-label p-c"
+                    data-pc-section="label"
+                  >
+                    Add Item
+                  </span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`with title and description with global label off array icons 1`] = `
+<form
+  className="ui form rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <h5
+        style={
+          {
+            "fontSize": "1.5rem",
+            "margin": 0,
+            "marginBottom": "0.2rem",
+          }
+        }
+      >
+        Test field
+         
+      </h5>
+      <fieldset
+        className="field field-array field-array-of-string sortable-form-fields p-fieldset p-component"
+        data-pc-name="fieldset"
+        data-pc-section="root"
+        formContext={{}}
+        formData={
+          [
+            "a",
+            "b",
+          ]
+        }
+        id={null}
+        onClick={null}
+        style={{}}
+      >
+        <div
+          aria-labelledby="null_header"
+          className="p-toggleable-content"
+          data-pc-section="toggleablecontent"
+          id="null_content"
+          role="region"
+        >
+          <div
+            className="p-fieldset-content"
+            data-pc-section="content"
+          >
+            <div>
+              <div>
+                <div
+                  style={
+                    {
+                      "position": "relative",
+                    }
+                  }
+                >
+                  <div
+                    style={
+                      {
+                        "position": "absolute",
+                        "right": 0,
+                        "top": "-10px",
+                      }
+                    }
+                  >
+                    <div
+                      style={
+                        {
+                          "flexDirection": "row",
+                        }
+                      }
+                    >
+                      <button
+                        className="array-item-move-up p-button p-component p-button-icon-only p-disabled p-button-text p-button-rounded p-button-secondary"
+                        data-pc-name="button"
+                        data-pc-section="root"
+                        disabled={true}
+                        id="root_0__moveUp"
+                        onClick={[Function]}
+                        title="Move up"
+                      >
+                        <span
+                          className="p-button-icon p-c pi pi-angle-up"
+                          data-pc-section="icon"
+                        />
+                        <span
+                          className="p-button-label p-c"
+                          dangerouslySetInnerHTML={
+                            {
+                              "__html": "&nbsp;",
+                            }
+                          }
+                          data-pc-section="label"
+                        />
+                      </button>
+                      <button
+                        className="array-item-move-down p-button p-component p-button-icon-only p-button-text p-button-rounded p-button-secondary"
+                        data-pc-name="button"
+                        data-pc-section="root"
+                        disabled={false}
+                        id="root_0__moveDown"
+                        onClick={[Function]}
+                        title="Move down"
+                      >
+                        <span
+                          className="p-button-icon p-c pi pi-angle-down"
+                          data-pc-section="icon"
+                        />
+                        <span
+                          className="p-button-label p-c"
+                          dangerouslySetInnerHTML={
+                            {
+                              "__html": "&nbsp;",
+                            }
+                          }
+                          data-pc-section="label"
+                        />
+                      </button>
+                      <button
+                        className="array-item-copy p-button p-component p-button-icon-only p-button-text p-button-rounded p-button-secondary"
+                        data-pc-name="button"
+                        data-pc-section="root"
+                        disabled={false}
+                        id="root_0__copy"
+                        onClick={[Function]}
+                        title="Copy"
+                      >
+                        <span
+                          className="p-button-icon p-c pi pi-copy"
+                          data-pc-section="icon"
+                        />
+                        <span
+                          className="p-button-label p-c"
+                          dangerouslySetInnerHTML={
+                            {
+                              "__html": "&nbsp;",
+                            }
+                          }
+                          data-pc-section="label"
+                        />
+                      </button>
+                      <button
+                        className="array-item-remove p-button p-component p-button-icon-only p-button-text p-button-rounded p-button-secondary"
+                        data-pc-name="button"
+                        data-pc-section="root"
+                        disabled={false}
+                        id="root_0__remove"
+                        onClick={[Function]}
+                        title="Remove"
+                      >
+                        <span
+                          className="p-button-icon p-c pi pi-trash"
+                          data-pc-section="icon"
+                        />
+                        <span
+                          className="p-button-label p-c"
+                          dangerouslySetInnerHTML={
+                            {
+                              "__html": "&nbsp;",
+                            }
+                          }
+                          data-pc-section="label"
+                        />
+                      </button>
+                    </div>
+                  </div>
+                  <div
+                    className="form-group field field-string"
+                  >
+                    <div
+                      style={
+                        {
+                          "display": "flex",
+                          "flexDirection": "column",
+                          "gap": "0.5rem",
+                          "marginBottom": "1rem",
+                        }
+                      }
+                    >
+                      <input
+                        aria-describedby="root_0__error root_0__description root_0__help"
+                        autoFocus={false}
+                        className="p-inputtext p-component p-filled"
+                        data-pc-name="inputtext"
+                        data-pc-section="root"
+                        disabled={false}
+                        id="root_0"
+                        name="root_0"
+                        onBeforeInput={[Function]}
+                        onBlur={[Function]}
+                        onChange={[Function]}
+                        onFocus={[Function]}
+                        onInput={[Function]}
+                        onKeyDown={[Function]}
+                        onPaste={[Function]}
+                        placeholder=""
+                        required={true}
+                        type="text"
+                        value="a"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  style={
+                    {
+                      "position": "relative",
+                    }
+                  }
+                >
+                  <div
+                    style={
+                      {
+                        "position": "absolute",
+                        "right": 0,
+                        "top": "-10px",
+                      }
+                    }
+                  >
+                    <div
+                      style={
+                        {
+                          "flexDirection": "row",
+                        }
+                      }
+                    >
+                      <button
+                        className="array-item-move-up p-button p-component p-button-icon-only p-button-text p-button-rounded p-button-secondary"
+                        data-pc-name="button"
+                        data-pc-section="root"
+                        disabled={false}
+                        id="root_1__moveUp"
+                        onClick={[Function]}
+                        title="Move up"
+                      >
+                        <span
+                          className="p-button-icon p-c pi pi-angle-up"
+                          data-pc-section="icon"
+                        />
+                        <span
+                          className="p-button-label p-c"
+                          dangerouslySetInnerHTML={
+                            {
+                              "__html": "&nbsp;",
+                            }
+                          }
+                          data-pc-section="label"
+                        />
+                      </button>
+                      <button
+                        className="array-item-move-down p-button p-component p-button-icon-only p-disabled p-button-text p-button-rounded p-button-secondary"
+                        data-pc-name="button"
+                        data-pc-section="root"
+                        disabled={true}
+                        id="root_1__moveDown"
+                        onClick={[Function]}
+                        title="Move down"
+                      >
+                        <span
+                          className="p-button-icon p-c pi pi-angle-down"
+                          data-pc-section="icon"
+                        />
+                        <span
+                          className="p-button-label p-c"
+                          dangerouslySetInnerHTML={
+                            {
+                              "__html": "&nbsp;",
+                            }
+                          }
+                          data-pc-section="label"
+                        />
+                      </button>
+                      <button
+                        className="array-item-copy p-button p-component p-button-icon-only p-button-text p-button-rounded p-button-secondary"
+                        data-pc-name="button"
+                        data-pc-section="root"
+                        disabled={false}
+                        id="root_1__copy"
+                        onClick={[Function]}
+                        title="Copy"
+                      >
+                        <span
+                          className="p-button-icon p-c pi pi-copy"
+                          data-pc-section="icon"
+                        />
+                        <span
+                          className="p-button-label p-c"
+                          dangerouslySetInnerHTML={
+                            {
+                              "__html": "&nbsp;",
+                            }
+                          }
+                          data-pc-section="label"
+                        />
+                      </button>
+                      <button
+                        className="array-item-remove p-button p-component p-button-icon-only p-button-text p-button-rounded p-button-secondary"
+                        data-pc-name="button"
+                        data-pc-section="root"
+                        disabled={false}
+                        id="root_1__remove"
+                        onClick={[Function]}
+                        title="Remove"
+                      >
+                        <span
+                          className="p-button-icon p-c pi pi-trash"
+                          data-pc-section="icon"
+                        />
+                        <span
+                          className="p-button-label p-c"
+                          dangerouslySetInnerHTML={
+                            {
+                              "__html": "&nbsp;",
+                            }
+                          }
+                          data-pc-section="label"
+                        />
+                      </button>
+                    </div>
+                  </div>
+                  <div
+                    className="form-group field field-string"
+                  >
+                    <div
+                      style={
+                        {
+                          "display": "flex",
+                          "flexDirection": "column",
+                          "gap": "0.5rem",
+                          "marginBottom": "1rem",
+                        }
+                      }
+                    >
+                      <input
+                        aria-describedby="root_1__error root_1__description root_1__help"
+                        autoFocus={false}
+                        className="p-inputtext p-component p-filled"
+                        data-pc-name="inputtext"
+                        data-pc-section="root"
+                        disabled={false}
+                        id="root_1"
+                        name="root_1"
+                        onBeforeInput={[Function]}
+                        onBlur={[Function]}
+                        onChange={[Function]}
+                        onFocus={[Function]}
+                        onInput={[Function]}
+                        onKeyDown={[Function]}
+                        onPaste={[Function]}
+                        placeholder=""
+                        required={true}
+                        type="text"
+                        value="b"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                style={
+                  {
+                    "marginTop": "1rem",
+                    "position": "relative",
+                    "textAlign": "right",
+                  }
+                }
+              >
+                <button
+                  aria-label="Add Item"
+                  className="array-item-add p-button p-component p-button-outlined p-button-sm p-button-secondary"
+                  data-pc-name="button"
+                  data-pc-section="root"
+                  disabled={false}
+                  onClick={[Function]}
+                >
+                  <span
+                    className="p-button-icon p-c p-button-icon-left pi pi-plus"
+                    data-pc-section="icon"
+                  />
+                  <span
+                    className="p-button-label p-c"
+                    data-pc-section="label"
+                  >
+                    Add Item
+                  </span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`with title and description with global label off fixed array 1`] = `
+<form
+  className="ui form rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <h5
+        style={
+          {
+            "fontSize": "1.5rem",
+            "margin": 0,
+            "marginBottom": "0.2rem",
+          }
+        }
+      >
+        Test field
+         
+      </h5>
+      <fieldset
+        className="field field-array field-array-fixed-items  p-fieldset p-component"
+        data-pc-name="fieldset"
+        data-pc-section="root"
+        errorSchema={{}}
+        formContext={{}}
+        formData={
+          [
+            undefined,
+            undefined,
+          ]
+        }
+        id={null}
+        onClick={null}
+        style={{}}
+      >
+        <div
+          aria-labelledby="null_header"
+          className="p-toggleable-content"
+          data-pc-section="toggleablecontent"
+          id="null_content"
+          role="region"
+        >
+          <div
+            className="p-fieldset-content"
+            data-pc-section="content"
+          >
+            <div>
+              <div>
+                <div
+                  style={
+                    {
+                      "position": "relative",
+                    }
+                  }
+                >
+                  <div
+                    className="form-group field field-string"
+                  >
+                    <div
+                      style={
+                        {
+                          "display": "flex",
+                          "flexDirection": "column",
+                          "gap": "0.5rem",
+                          "marginBottom": "1rem",
+                        }
+                      }
+                    >
+                      <input
+                        aria-describedby="root_0__error root_0__description root_0__help"
+                        autoFocus={false}
+                        className="p-inputtext p-component"
+                        data-pc-name="inputtext"
+                        data-pc-section="root"
+                        disabled={false}
+                        id="root_0"
+                        name="root_0"
+                        onBeforeInput={[Function]}
+                        onBlur={[Function]}
+                        onChange={[Function]}
+                        onFocus={[Function]}
+                        onInput={[Function]}
+                        onKeyDown={[Function]}
+                        onPaste={[Function]}
+                        placeholder=""
+                        required={true}
+                        type="text"
+                        value=""
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  style={
+                    {
+                      "position": "relative",
+                    }
+                  }
+                >
+                  <div
+                    className="form-group field field-number"
+                  >
+                    <div
+                      style={
+                        {
+                          "display": "flex",
+                          "flexDirection": "column",
+                          "gap": "0.5rem",
+                          "marginBottom": "1rem",
+                        }
+                      }
+                    >
+                      <input
+                        aria-describedby="root_1__error root_1__description root_1__help"
+                        autoFocus={false}
+                        className="p-inputtext p-component"
+                        data-pc-name="inputtext"
+                        data-pc-section="root"
+                        disabled={false}
+                        id="root_1"
+                        name="root_1"
+                        onBeforeInput={[Function]}
+                        onBlur={[Function]}
+                        onChange={[Function]}
+                        onFocus={[Function]}
+                        onInput={[Function]}
+                        onKeyDown={[Function]}
+                        onPaste={[Function]}
+                        placeholder=""
+                        required={true}
+                        step="any"
+                        type="number"
+                        value=""
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </fieldset>
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
