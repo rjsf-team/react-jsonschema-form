@@ -803,7 +803,10 @@ render(
 As you can see in the example, we've created a `FormContext` that has the named-lookup map containing the
 `css.STYLED_GRID` object mapped to `GridStyle`. In the `uiSchema` we then add `GridStyle` as the `className` for the
 grid rows. Under the hood, the `LayoutGridField` automatically goes through the `className` props and does a lookup of
-each class name in the `FormContext`, replacing the `GridStyle` with the generated `css.GRID_STYLE` name.
+each class name in the `FormContext`, replacing the `GridStyle` with the generated `css.GRID_STYLE` name. And because the
+other class name in the example, `anotherClass`, is not mapped in the named-lookup map, it will passed to the
+`GridTemplate` as is. In summary, if the CSS-in-JS class is called `StyledGrid-1asd123` then the `className` property
+passed to the `GridTemplate` will be `"StyledGrid-1asd123 anotherClass"`.
 
 ### Rendering a custom React element in the grid
 
