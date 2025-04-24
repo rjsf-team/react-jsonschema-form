@@ -12,7 +12,7 @@ import {
   WidgetProps,
 } from '@rjsf/utils';
 import { OptionsOrGroups } from 'chakra-react-select';
-import { createListCollection, Portal, SelectValueChangeDetails, Select as ChakraSelect } from '@chakra-ui/react';
+import { createListCollection, SelectValueChangeDetails, Select as ChakraSelect } from '@chakra-ui/react';
 
 import { Field } from '../components/ui/field';
 import { SelectRoot, SelectTrigger, SelectValueText } from '../components/ui/select';
@@ -145,18 +145,16 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
             <SelectValueText placeholder={placeholder} />
           </SelectTrigger>
         </ChakraSelect.Control>
-        <Portal container={containerRef}>
-          <ChakraSelect.Positioner minWidth='100% !important' zIndex='2 !important' top='calc(100% + 5px) !important'>
-            <ChakraSelect.Content>
-              {selectOptions.items.map((item) => (
-                <ChakraSelect.Item item={item} key={item.value}>
-                  {item.label}
-                  <ChakraSelect.ItemIndicator />
-                </ChakraSelect.Item>
-              ))}
-            </ChakraSelect.Content>
-          </ChakraSelect.Positioner>
-        </Portal>
+        <ChakraSelect.Positioner minWidth='100% !important' zIndex='2 !important' top='calc(100% + 5px) !important'>
+          <ChakraSelect.Content>
+            {selectOptions.items.map((item) => (
+              <ChakraSelect.Item item={item} key={item.value}>
+                {item.label}
+                <ChakraSelect.ItemIndicator />
+              </ChakraSelect.Item>
+            ))}
+          </ChakraSelect.Content>
+        </ChakraSelect.Positioner>
       </SelectRoot>
     </Field>
   );
