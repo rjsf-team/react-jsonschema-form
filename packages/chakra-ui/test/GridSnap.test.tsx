@@ -1,8 +1,8 @@
 import { gridTests } from '@rjsf/snapshot-tests';
 
-import Form from '../src';
+import WrappedForm from './WrappedForm';
 
-gridTests(Form, {
+gridTests(WrappedForm, {
   ColumnWidthAll: {},
   ColumnWidth4: {},
   ColumnWidth6: {},

@@ -1,70 +1,20 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`array fields array 1`] = `
-.emotion-2 {
+.emotion-3 {
   display: grid;
 }
 
-.emotion-4 {
+.emotion-5 {
   justify-self: flex-end;
 }
 
-.emotion-5 {
-  margin-top: 2px;
-}
-
 .emotion-6 {
-  display: inline-flex;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  -ms-appearance: none;
-  appearance: none;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  position: relative;
-  white-space: nowrap;
-  vertical-align: middle;
-  outline: 2px solid transparent;
-  outline-offset: 2px;
-  width: auto;
-}
-
-.emotion-7 {
-  display: inline-flex;
-  -webkit-align-self: center;
-  -ms-flex-item-align: center;
-  align-self: center;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
-  -webkit-margin-end: 0.5rem;
-  margin-inline-end: 0.5rem;
+  margin-top: var(--chakra-spacing-2);
 }
 
 .emotion-8 {
-  width: 1em;
-  height: 1em;
-  display: inline-block;
-  line-height: 1em;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
-  color: currentColor;
-  vertical-align: middle;
-}
-
-.emotion-9 {
-  margin-top: 3px;
+  margin-top: var(--chakra-spacing-3);
 }
 
 <form
@@ -75,60 +25,70 @@ exports[`array fields array 1`] = `
   <div
     className="form-group field field-array"
   >
-    <div
-      className="chakra-form-control emotion-0"
-      role="group"
+    <fieldset
+      className="fieldset__root emotion-0"
+      data-part="root"
+      data-scope="fieldset"
+      disabled={false}
     >
       <div
-        className="emotion-0"
+        className="fieldset__content emotion-1"
       >
         <div
           className="emotion-2"
         >
           <div
-            className="emotion-0"
-          />
-          <div
-            className="emotion-4"
+            className="emotion-3"
           >
+            <div
+              className="emotion-2"
+            />
             <div
               className="emotion-5"
             >
-              <button
-                className="chakra-button array-item-add emotion-6"
-                disabled={false}
-                id="root__add"
-                onClick={[Function]}
-                type="button"
+              <div
+                className="emotion-6"
               >
-                <span
-                  className="chakra-button__icon emotion-7"
+                <button
+                  className="chakra-button array-item-add emotion-7"
+                  disabled={false}
+                  id="root__add"
+                  onClick={[Function]}
+                  type="button"
                 >
                   <svg
-                    aria-hidden={true}
-                    className="chakra-icon emotion-8"
-                    focusable={false}
+                    className="lucide lucide-plus"
+                    fill="none"
+                    height={24}
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
                     viewBox="0 0 24 24"
+                    width={24}
+                    xmlns="http://www.w3.org/2000/svg"
                   >
                     <path
-                      d="M0,12a1.5,1.5,0,0,0,1.5,1.5h8.75a.25.25,0,0,1,.25.25V22.5a1.5,1.5,0,0,0,3,0V13.75a.25.25,0,0,1,.25-.25H22.5a1.5,1.5,0,0,0,0-3H13.75a.25.25,0,0,1-.25-.25V1.5a1.5,1.5,0,0,0-3,0v8.75a.25.25,0,0,1-.25.25H1.5A1.5,1.5,0,0,0,0,12Z"
-                      fill="currentColor"
+                      d="M5 12h14"
+                    />
+                    <path
+                      d="M12 5v14"
                     />
                   </svg>
-                </span>
-                Add Item
-              </button>
+                  Add Item
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </fieldset>
   </div>
   <div
-    className="emotion-9"
+    className="emotion-8"
   >
     <button
-      className="chakra-button emotion-6"
+      className="chakra-button emotion-7"
       disabled={false}
       type="submit"
     >
@@ -936,49 +896,18 @@ exports[`array fields checkboxes 1`] = `
 `;
 
 exports[`array fields empty errors array 1`] = `
-.emotion-1 {
+.emotion-2 {
   display: grid;
-  grid-gap: 6px;
-  margin-bottom: 4px;
+  gap: var(--chakra-spacing-6);
+  margin-bottom: var(--chakra-spacing-4);
 }
 
-.emotion-4 {
-  margin-bottom: 1px;
+.emotion-6 {
+  margin-bottom: var(--chakra-spacing-1);
 }
 
-.emotion-5 {
-  display: block;
-  text-align: start;
-}
-
-.emotion-7 {
-  margin-top: 3px;
-}
-
-.emotion-8 {
-  display: inline-flex;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  -ms-appearance: none;
-  appearance: none;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  position: relative;
-  white-space: nowrap;
-  vertical-align: middle;
-  outline: 2px solid transparent;
-  outline-offset: 2px;
-  width: auto;
+.emotion-9 {
+  margin-top: var(--chakra-spacing-3);
 }
 
 <form
@@ -989,62 +918,81 @@ exports[`array fields empty errors array 1`] = `
   <div
     className="form-group field field-object"
   >
-    <div
-      className="chakra-form-control emotion-0"
-      role="group"
+    <fieldset
+      className="fieldset__root emotion-0"
+      data-part="root"
+      data-scope="fieldset"
+      disabled={false}
     >
       <div
-        className="emotion-1"
+        className="fieldset__content emotion-1"
       >
         <div
-          className="emotion-0"
+          className="emotion-2"
         >
           <div
-            className="form-group field field-string"
+            className="emotion-3"
           >
             <div
-              className="chakra-form-control emotion-0"
-              role="group"
+              className="form-group field field-string"
             >
-              <div
-                className="chakra-form-control emotion-4"
-                role="group"
+              <fieldset
+                className="fieldset__root emotion-0"
+                data-part="root"
+                data-scope="fieldset"
+                disabled={false}
               >
-                <label
-                  className="chakra-form__label emotion-5"
-                  htmlFor="root_name"
-                  id="root_name-label"
+                <div
+                  className="fieldset__content emotion-1"
                 >
-                  name
-                </label>
-                <input
-                  aria-describedby="root_name__error root_name__description root_name__help"
-                  autoFocus={false}
-                  className="chakra-input emotion-0"
-                  disabled={false}
-                  id="root_name"
-                  name="root_name"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  onFocus={[Function]}
-                  placeholder=""
-                  readOnly={false}
-                  required={false}
-                  type="text"
-                  value=""
-                />
-              </div>
+                  <div
+                    className="chakra-field__root emotion-6"
+                    data-part="root"
+                    data-scope="field"
+                    id="field:::rm:"
+                    role="group"
+                  >
+                    <label
+                      className="chakra-field__label emotion-7"
+                      data-part="label"
+                      data-scope="field"
+                      htmlFor=":rm:"
+                      id="field:::rm:::label"
+                    >
+                      name
+                    </label>
+                    <input
+                      aria-describedby="root_name__error root_name__description root_name__help"
+                      autoFocus={false}
+                      className="chakra-input emotion-8"
+                      data-part="input"
+                      data-scope="field"
+                      disabled={false}
+                      id="root_name"
+                      name="root_name"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      onFocus={[Function]}
+                      placeholder=""
+                      readOnly={false}
+                      required={false}
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                </div>
+              </fieldset>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </fieldset>
   </div>
   <div
-    className="emotion-7"
+    className="emotion-9"
   >
     <button
-      className="chakra-button emotion-8"
+      className="chakra-button emotion-10"
       disabled={false}
       type="submit"
     >
@@ -1055,11 +1003,11 @@ exports[`array fields empty errors array 1`] = `
 `;
 
 exports[`array fields fixed array 1`] = `
-.emotion-2 {
+.emotion-3 {
   display: grid;
 }
 
-.emotion-4 {
+.emotion-5 {
   display: flex;
   -webkit-align-items: flex-end;
   -webkit-box-align: flex-end;
@@ -1068,55 +1016,20 @@ exports[`array fields fixed array 1`] = `
   -webkit-flex-direction: row;
   -ms-flex-direction: row;
   flex-direction: row;
-  padding-top: 1px;
-  padding-bottom: 1px;
+  gap: 0.5rem;
+  padding-block: var(--chakra-spacing-1);
 }
 
-.emotion-4>*:not(style)~*:not(style) {
-  margin-top: 0px;
-  -webkit-margin-end: 0px;
-  margin-inline-end: 0px;
-  margin-bottom: 0px;
-  -webkit-margin-start: 0.5rem;
-  margin-inline-start: 0.5rem;
-}
-
-.emotion-5 {
+.emotion-6 {
   width: 100%;
 }
 
-.emotion-7 {
-  margin-bottom: 1px;
+.emotion-9 {
+  margin-bottom: var(--chakra-spacing-1);
 }
 
-.emotion-14 {
-  margin-top: 3px;
-}
-
-.emotion-15 {
-  display: inline-flex;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  -ms-appearance: none;
-  appearance: none;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  position: relative;
-  white-space: nowrap;
-  vertical-align: middle;
-  outline: 2px solid transparent;
-  outline-offset: 2px;
-  width: auto;
+.emotion-17 {
+  margin-top: var(--chakra-spacing-3);
 }
 
 <form
@@ -1127,94 +1040,122 @@ exports[`array fields fixed array 1`] = `
   <div
     className="form-group field field-array"
   >
-    <div
-      className="chakra-form-control emotion-0"
-      role="group"
+    <fieldset
+      className="fieldset__root emotion-0"
+      data-part="root"
+      data-scope="fieldset"
+      disabled={false}
     >
       <div
-        className="emotion-0"
+        className="fieldset__content emotion-1"
       >
         <div
           className="emotion-2"
         >
           <div
-            className="emotion-0"
+            className="emotion-3"
           >
             <div
-              className="chakra-stack emotion-4"
+              className="emotion-2"
             >
               <div
-                className="emotion-5"
+                className="chakra-stack emotion-5"
               >
                 <div
-                  className="form-group field field-string"
+                  className="emotion-6"
                 >
                   <div
-                    className="chakra-form-control emotion-0"
-                    role="group"
+                    className="form-group field field-string"
                   >
-                    <div
-                      className="chakra-form-control emotion-7"
-                      role="group"
+                    <fieldset
+                      className="fieldset__root emotion-0"
+                      data-part="root"
+                      data-scope="fieldset"
+                      disabled={false}
                     >
-                      <input
-                        aria-describedby="root_0__error root_0__description root_0__help"
-                        aria-required={true}
-                        autoFocus={false}
-                        className="chakra-input emotion-0"
-                        disabled={false}
-                        id="root_0"
-                        name="root_0"
-                        onBlur={[Function]}
-                        onChange={[Function]}
-                        onFocus={[Function]}
-                        placeholder=""
-                        readOnly={false}
-                        required={true}
-                        type="text"
-                        value=""
-                      />
-                    </div>
+                      <div
+                        className="fieldset__content emotion-1"
+                      >
+                        <div
+                          className="chakra-field__root emotion-9"
+                          data-part="root"
+                          data-scope="field"
+                          id="field:::r3:"
+                          role="group"
+                        >
+                          <input
+                            aria-describedby="root_0__error root_0__description root_0__help"
+                            autoFocus={false}
+                            className="chakra-input emotion-10"
+                            data-part="input"
+                            data-required=""
+                            data-scope="field"
+                            disabled={false}
+                            id="root_0"
+                            name="root_0"
+                            onBlur={[Function]}
+                            onChange={[Function]}
+                            onFocus={[Function]}
+                            placeholder=""
+                            readOnly={false}
+                            required={true}
+                            type="text"
+                            value=""
+                          />
+                        </div>
+                      </div>
+                    </fieldset>
                   </div>
                 </div>
               </div>
-            </div>
-            <div
-              className="chakra-stack emotion-4"
-            >
               <div
-                className="emotion-5"
+                className="chakra-stack emotion-5"
               >
                 <div
-                  className="form-group field field-number"
+                  className="emotion-6"
                 >
                   <div
-                    className="chakra-form-control emotion-0"
-                    role="group"
+                    className="form-group field field-number"
                   >
-                    <div
-                      className="chakra-form-control emotion-7"
-                      role="group"
+                    <fieldset
+                      className="fieldset__root emotion-0"
+                      data-part="root"
+                      data-scope="fieldset"
+                      disabled={false}
                     >
-                      <input
-                        aria-describedby="root_1__error root_1__description root_1__help"
-                        aria-required={true}
-                        autoFocus={false}
-                        className="chakra-input emotion-0"
-                        disabled={false}
-                        id="root_1"
-                        name="root_1"
-                        onBlur={[Function]}
-                        onChange={[Function]}
-                        onFocus={[Function]}
-                        placeholder=""
-                        readOnly={false}
-                        required={true}
-                        step="any"
-                        type="number"
-                        value=""
-                      />
-                    </div>
+                      <div
+                        className="fieldset__content emotion-1"
+                      >
+                        <div
+                          className="chakra-field__root emotion-9"
+                          data-part="root"
+                          data-scope="field"
+                          id="field:::r5:"
+                          role="group"
+                        >
+                          <input
+                            aria-describedby="root_1__error root_1__description root_1__help"
+                            autoFocus={false}
+                            className="chakra-input emotion-10"
+                            data-part="input"
+                            data-required=""
+                            data-scope="field"
+                            disabled={false}
+                            id="root_1"
+                            name="root_1"
+                            onBlur={[Function]}
+                            onChange={[Function]}
+                            onFocus={[Function]}
+                            placeholder=""
+                            readOnly={false}
+                            required={true}
+                            step="any"
+                            type="number"
+                            value=""
+                          />
+                        </div>
+                      </div>
+                    </fieldset>
                   </div>
                 </div>
               </div>
@@ -1222,13 +1163,13 @@ exports[`array fields fixed array 1`] = `
           </div>
         </div>
       </div>
-    </div>
+    </fieldset>
   </div>
   <div
-    className="emotion-14"
+    className="emotion-17"
   >
     <button
-      className="chakra-button emotion-15"
+      className="chakra-button emotion-18"
       disabled={false}
       type="submit"
     >
@@ -1240,87 +1181,38 @@ exports[`array fields fixed array 1`] = `
 
 exports[`array fields has errors 1`] = `
 .emotion-0 {
-  width: 100%;
-  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
   -webkit-align-items: flex-start;
   -webkit-box-align: flex-start;
   -ms-flex-align: flex-start;
   align-items: flex-start;
-  position: relative;
-  overflow: hidden;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  gap: 3px;
+  gap: var(--chakra-spacing-3);
 }
 
 .emotion-2 {
-  list-style-type: none;
+  stroke: currentColor;
+  fill: currentColor;
+  stroke-width: 0;
 }
 
-.emotion-4 {
-  width: 1em;
-  height: 1em;
-  display: inline-block;
-  line-height: 1em;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
-  color: red.500;
-  vertical-align: middle;
+.emotion-8 {
+  color: var(--chakra-colors-red-500);
 }
 
-.emotion-6 {
+.emotion-11 {
   display: grid;
-  grid-gap: 6px;
-  margin-bottom: 4px;
-}
-
-.emotion-9 {
-  margin-bottom: 1px;
-}
-
-.emotion-10 {
-  display: block;
-  text-align: start;
-}
-
-.emotion-14 {
-  display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
+  gap: var(--chakra-spacing-6);
+  margin-bottom: var(--chakra-spacing-4);
 }
 
 .emotion-15 {
-  margin-top: 3px;
+  margin-bottom: var(--chakra-spacing-1);
 }
 
-.emotion-16 {
-  display: inline-flex;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  -ms-appearance: none;
-  appearance: none;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  position: relative;
-  white-space: nowrap;
-  vertical-align: middle;
-  outline: 2px solid transparent;
-  outline-offset: 2px;
-  width: auto;
+.emotion-22 {
+  margin-top: var(--chakra-spacing-3);
 }
 
 <form
@@ -1329,113 +1221,172 @@ exports[`array fields has errors 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="chakra-alert emotion-0"
-    role="alert"
+    className="chakra-alert__root emotion-0"
   >
-    <div
-      className="chakra-alert__title emotion-1"
+    <span
+      className="emotion-1"
     >
-      Errors
-    </div>
-    <ul
-      className="emotion-2"
-      role="list"
-    >
-      <li
-        className="emotion-1"
+      <svg
+        className="emotion-2"
+        viewBox="0 0 24 24"
       >
-        <svg
-          className="chakra-icon chakra-icon emotion-4"
-          focusable={false}
-          role="presentation"
-          viewBox="0 0 24 24"
-        >
-          <path
-            d="M11.983,0a12.206,12.206,0,0,0-8.51,3.653A11.8,11.8,0,0,0,0,12.207,11.779,11.779,0,0,0,11.8,24h.214A12.111,12.111,0,0,0,24,11.791h0A11.766,11.766,0,0,0,11.983,0ZM10.5,16.542a1.476,1.476,0,0,1,1.449-1.53h.027a1.527,1.527,0,0,1,1.523,1.47,1.475,1.475,0,0,1-1.449,1.53h-.027A1.529,1.529,0,0,1,10.5,16.542ZM11,12.5v-6a1,1,0,0,1,2,0v6a1,1,0,1,1-2,0Z"
-            fill="currentColor"
-          />
-        </svg>
-        .name Bad input
-      </li>
-    </ul>
-  </div>
-  <div
-    className="form-group field field-object"
-  >
+        <path
+          d="M12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22ZM12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4C7.58172 4 4 7.58172 4 12C4 16.4183 7.58172 20 12 20ZM11 15H13V17H11V15ZM11 7H13V13H11V7Z"
+        />
+      </svg>
+    </span>
     <div
-      className="chakra-form-control emotion-1"
-      role="group"
+      className="chakra-alert__content emotion-3"
     >
       <div
-        className="emotion-6"
+        className="chakra-alert__title emotion-4"
       >
-        <div
-          className="emotion-1"
+        Errors
+      </div>
+      <div
+        className="chakra-alert__description emotion-5"
+      >
+        <ul
+          className="chakra-list__root emotion-6"
+          role="list"
         >
-          <div
-            className="form-group field field-string field-error has-error has-danger"
+          <li
+            className="chakra-list__item emotion-7"
           >
-            <div
-              className="chakra-form-control emotion-1"
-              role="group"
+            <svg
+              className="lucide lucide-triangle-alert chakra-list__indicator emotion-8"
+              fill="none"
+              height={24}
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              viewBox="0 0 24 24"
+              width={24}
+              xmlns="http://www.w3.org/2000/svg"
             >
-              <div
-                className="chakra-form-control emotion-9"
-                role="group"
-              >
-                <label
-                  className="chakra-form__label emotion-10"
-                  data-invalid=""
-                  htmlFor="root_name"
-                  id="root_name-label"
-                >
-                  name
-                </label>
-                <input
-                  aria-describedby="root_name__error root_name__description root_name__help"
-                  aria-invalid={true}
-                  autoFocus={false}
-                  className="chakra-input emotion-1"
-                  disabled={false}
-                  id="root_name"
-                  name="root_name"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  onFocus={[Function]}
-                  placeholder=""
-                  readOnly={false}
-                  required={false}
-                  type="text"
-                  value=""
-                />
-              </div>
-              <ul
-                className="emotion-2"
-                role="list"
-              >
-                <li
-                  className="emotion-1"
-                >
-                  <div
-                    aria-live="polite"
-                    className="chakra-form__error-message emotion-14"
-                    id="root_name__error"
-                  >
-                    Bad input
-                  </div>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
+              <path
+                d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"
+              />
+              <path
+                d="M12 9v4"
+              />
+              <path
+                d="M12 17h.01"
+              />
+            </svg>
+            .name Bad input
+          </li>
+        </ul>
       </div>
     </div>
   </div>
   <div
-    className="emotion-15"
+    className="form-group field field-object"
+  >
+    <fieldset
+      className="fieldset__root emotion-9"
+      data-part="root"
+      data-scope="fieldset"
+      disabled={false}
+    >
+      <div
+        className="fieldset__content emotion-10"
+      >
+        <div
+          className="emotion-11"
+        >
+          <div
+            className="emotion-12"
+          >
+            <div
+              className="form-group field field-string field-error has-error has-danger"
+            >
+              <fieldset
+                className="fieldset__root emotion-9"
+                data-invalid="true"
+                data-part="root"
+                data-scope="fieldset"
+                disabled={false}
+              >
+                <div
+                  className="fieldset__content emotion-10"
+                >
+                  <div
+                    className="chakra-field__root emotion-15"
+                    data-invalid=""
+                    data-part="root"
+                    data-scope="field"
+                    id="field:::rg:"
+                    role="group"
+                  >
+                    <label
+                      className="chakra-field__label emotion-16"
+                      data-invalid=""
+                      data-part="label"
+                      data-scope="field"
+                      htmlFor=":rg:"
+                      id="field:::rg:::label"
+                    >
+                      name
+                    </label>
+                    <input
+                      aria-describedby="root_name__error root_name__description root_name__help"
+                      aria-invalid="true"
+                      autoFocus={false}
+                      className="chakra-input emotion-17"
+                      data-invalid=""
+                      data-part="input"
+                      data-scope="field"
+                      disabled={false}
+                      id="root_name"
+                      name="root_name"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      onFocus={[Function]}
+                      placeholder=""
+                      readOnly={false}
+                      required={false}
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                </div>
+                <span
+                  aria-live="polite"
+                  className="fieldset__errorText emotion-18"
+                  data-part="error-text"
+                  data-scope="fieldset"
+                  id="fieldset:::rf:::error-text"
+                >
+                  <ul
+                    className="chakra-list__root emotion-6"
+                    role="list"
+                  >
+                    <li
+                      className="chakra-list__item emotion-7"
+                    >
+                      <p
+                        className="emotion-12"
+                        id="root_name__error"
+                      >
+                        Bad input
+                      </p>
+                    </li>
+                  </ul>
+                </span>
+              </fieldset>
+            </div>
+          </div>
+        </div>
+      </div>
+    </fieldset>
+  </div>
+  <div
+    className="emotion-22"
   >
     <button
-      className="chakra-button emotion-16"
+      className="chakra-button emotion-23"
       disabled={false}
       type="submit"
     >
@@ -1446,49 +1397,18 @@ exports[`array fields has errors 1`] = `
 `;
 
 exports[`array fields no errors 1`] = `
-.emotion-1 {
+.emotion-2 {
   display: grid;
-  grid-gap: 6px;
-  margin-bottom: 4px;
+  gap: var(--chakra-spacing-6);
+  margin-bottom: var(--chakra-spacing-4);
 }
 
-.emotion-4 {
-  margin-bottom: 1px;
+.emotion-6 {
+  margin-bottom: var(--chakra-spacing-1);
 }
 
-.emotion-5 {
-  display: block;
-  text-align: start;
-}
-
-.emotion-7 {
-  margin-top: 3px;
-}
-
-.emotion-8 {
-  display: inline-flex;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  -ms-appearance: none;
-  appearance: none;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  position: relative;
-  white-space: nowrap;
-  vertical-align: middle;
-  outline: 2px solid transparent;
-  outline-offset: 2px;
-  width: auto;
+.emotion-9 {
+  margin-top: var(--chakra-spacing-3);
 }
 
 <form
@@ -1499,62 +1419,81 @@ exports[`array fields no errors 1`] = `
   <div
     className="form-group field field-object"
   >
-    <div
-      className="chakra-form-control emotion-0"
-      role="group"
+    <fieldset
+      className="fieldset__root emotion-0"
+      data-part="root"
+      data-scope="fieldset"
+      disabled={false}
     >
       <div
-        className="emotion-1"
+        className="fieldset__content emotion-1"
       >
         <div
-          className="emotion-0"
+          className="emotion-2"
         >
           <div
-            className="form-group field field-string"
+            className="emotion-3"
           >
             <div
-              className="chakra-form-control emotion-0"
-              role="group"
+              className="form-group field field-string"
             >
-              <div
-                className="chakra-form-control emotion-4"
-                role="group"
+              <fieldset
+                className="fieldset__root emotion-0"
+                data-part="root"
+                data-scope="fieldset"
+                disabled={false}
               >
-                <label
-                  className="chakra-form__label emotion-5"
-                  htmlFor="root_name"
-                  id="root_name-label"
+                <div
+                  className="fieldset__content emotion-1"
                 >
-                  name
-                </label>
-                <input
-                  aria-describedby="root_name__error root_name__description root_name__help"
-                  autoFocus={false}
-                  className="chakra-input emotion-0"
-                  disabled={false}
-                  id="root_name"
-                  name="root_name"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  onFocus={[Function]}
-                  placeholder=""
-                  readOnly={false}
-                  required={false}
-                  type="text"
-                  value=""
-                />
-              </div>
+                  <div
+                    className="chakra-field__root emotion-6"
+                    data-part="root"
+                    data-scope="field"
+                    id="field:::rj:"
+                    role="group"
+                  >
+                    <label
+                      className="chakra-field__label emotion-7"
+                      data-part="label"
+                      data-scope="field"
+                      htmlFor=":rj:"
+                      id="field:::rj:::label"
+                    >
+                      name
+                    </label>
+                    <input
+                      aria-describedby="root_name__error root_name__description root_name__help"
+                      autoFocus={false}
+                      className="chakra-input emotion-8"
+                      data-part="input"
+                      data-scope="field"
+                      disabled={false}
+                      id="root_name"
+                      name="root_name"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      onFocus={[Function]}
+                      placeholder=""
+                      readOnly={false}
+                      required={false}
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                </div>
+              </fieldset>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </fieldset>
   </div>
   <div
-    className="emotion-7"
+    className="emotion-9"
   >
     <button
-      className="chakra-button emotion-8"
+      className="chakra-button emotion-10"
       disabled={false}
       type="submit"
     >
@@ -1565,85 +1504,29 @@ exports[`array fields no errors 1`] = `
 `;
 
 exports[`with title and description array 1`] = `
-.emotion-2 {
-  margin-top: 1px;
-  margin-bottom: 4px;
-}
-
-.emotion-4 {
-  border: 0;
-  border-bottom-width: 1px;
-  width: 100%;
-}
-
-.emotion-5 {
-  font-size: md;
+.emotion-3 {
+  margin-top: var(--chakra-spacing-1);
+  margin-bottom: var(--chakra-spacing-4);
 }
 
 .emotion-6 {
+  font-size: var(--chakra-font-sizes-md);
+}
+
+.emotion-7 {
   display: grid;
 }
 
-.emotion-8 {
+.emotion-9 {
   justify-self: flex-end;
 }
 
-.emotion-9 {
-  margin-top: 2px;
-}
-
 .emotion-10 {
-  display: inline-flex;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  -ms-appearance: none;
-  appearance: none;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  position: relative;
-  white-space: nowrap;
-  vertical-align: middle;
-  outline: 2px solid transparent;
-  outline-offset: 2px;
-  width: auto;
-}
-
-.emotion-11 {
-  display: inline-flex;
-  -webkit-align-self: center;
-  -ms-flex-item-align: center;
-  align-self: center;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
-  -webkit-margin-end: 0.5rem;
-  margin-inline-end: 0.5rem;
+  margin-top: var(--chakra-spacing-2);
 }
 
 .emotion-12 {
-  width: 1em;
-  height: 1em;
-  display: inline-block;
-  line-height: 1em;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
-  color: currentColor;
-  vertical-align: middle;
-}
-
-.emotion-13 {
-  margin-top: 3px;
+  margin-top: var(--chakra-spacing-3);
 }
 
 <form
@@ -1654,80 +1537,91 @@ exports[`with title and description array 1`] = `
   <div
     className="form-group field field-array"
   >
-    <div
-      className="chakra-form-control emotion-0"
-      role="group"
+    <fieldset
+      className="fieldset__root emotion-0"
+      data-part="root"
+      data-scope="fieldset"
+      disabled={false}
     >
       <div
-        className="emotion-0"
+        className="fieldset__content emotion-1"
       >
         <div
           className="emotion-2"
-          id="root__title"
-        >
-          <h5
-            className="chakra-heading emotion-0"
-          >
-            Test field
-          </h5>
-          <hr
-            aria-orientation="horizontal"
-            className="chakra-divider emotion-4"
-          />
-        </div>
-        <sup
-          className="chakra-text emotion-5"
-          id="root__description"
-        >
-          a test description
-        </sup>
-        <div
-          className="emotion-6"
         >
           <div
-            className="emotion-0"
-          />
-          <div
-            className="emotion-8"
+            className="emotion-3"
+            id="root__title"
           >
+            <h5
+              className="chakra-heading emotion-4"
+            >
+              Test field
+            </h5>
+            <span
+              aria-orientation="horizontal"
+              className="chakra-separator emotion-5"
+              role="separator"
+            />
+          </div>
+          <sup
+            className="emotion-6"
+            id="root__description"
+          >
+            a test description
+          </sup>
+          <div
+            className="emotion-7"
+          >
+            <div
+              className="emotion-2"
+            />
             <div
               className="emotion-9"
             >
-              <button
-                className="chakra-button array-item-add emotion-10"
-                disabled={false}
-                id="root__add"
-                onClick={[Function]}
-                type="button"
+              <div
+                className="emotion-10"
               >
-                <span
-                  className="chakra-button__icon emotion-11"
+                <button
+                  className="chakra-button array-item-add emotion-11"
+                  disabled={false}
+                  id="root__add"
+                  onClick={[Function]}
+                  type="button"
                 >
                   <svg
-                    aria-hidden={true}
-                    className="chakra-icon emotion-12"
-                    focusable={false}
+                    className="lucide lucide-plus"
+                    fill="none"
+                    height={24}
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
                     viewBox="0 0 24 24"
+                    width={24}
+                    xmlns="http://www.w3.org/2000/svg"
                   >
                     <path
-                      d="M0,12a1.5,1.5,0,0,0,1.5,1.5h8.75a.25.25,0,0,1,.25.25V22.5a1.5,1.5,0,0,0,3,0V13.75a.25.25,0,0,1,.25-.25H22.5a1.5,1.5,0,0,0,0-3H13.75a.25.25,0,0,1-.25-.25V1.5a1.5,1.5,0,0,0-3,0v8.75a.25.25,0,0,1-.25.25H1.5A1.5,1.5,0,0,0,0,12Z"
-                      fill="currentColor"
+                      d="M5 12h14"
+                    />
+                    <path
+                      d="M12 5v14"
                     />
                   </svg>
-                </span>
-                Add Item
-              </button>
+                  Add Item
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </fieldset>
   </div>
   <div
-    className="emotion-13"
+    className="emotion-12"
   >
     <button
-      className="chakra-button emotion-10"
+      className="chakra-button emotion-11"
       disabled={false}
       type="submit"
     >
@@ -2653,26 +2547,20 @@ exports[`with title and description checkboxes 1`] = `
 `;
 
 exports[`with title and description fixed array 1`] = `
-.emotion-2 {
-  margin-top: 1px;
-  margin-bottom: 4px;
-}
-
-.emotion-4 {
-  border: 0;
-  border-bottom-width: 1px;
-  width: 100%;
-}
-
-.emotion-5 {
-  font-size: md;
+.emotion-3 {
+  margin-top: var(--chakra-spacing-1);
+  margin-bottom: var(--chakra-spacing-4);
 }
 
 .emotion-6 {
+  font-size: var(--chakra-font-sizes-md);
+}
+
+.emotion-7 {
   display: grid;
 }
 
-.emotion-8 {
+.emotion-9 {
   display: flex;
   -webkit-align-items: flex-end;
   -webkit-box-align: flex-end;
@@ -2681,64 +2569,24 @@ exports[`with title and description fixed array 1`] = `
   -webkit-flex-direction: row;
   -ms-flex-direction: row;
   flex-direction: row;
-  padding-top: 1px;
-  padding-bottom: 1px;
+  gap: 0.5rem;
+  padding-block: var(--chakra-spacing-1);
 }
 
-.emotion-8>*:not(style)~*:not(style) {
-  margin-top: 0px;
-  -webkit-margin-end: 0px;
-  margin-inline-end: 0px;
-  margin-bottom: 0px;
-  -webkit-margin-start: 0.5rem;
-  margin-inline-start: 0.5rem;
-}
-
-.emotion-9 {
+.emotion-10 {
   width: 100%;
 }
 
-.emotion-11 {
-  margin-bottom: 1px;
-}
-
 .emotion-12 {
-  display: block;
-  text-align: start;
+  margin-top: var(--chakra-spacing-2);
 }
 
 .emotion-15 {
-  margin-top: 2px;
+  margin-bottom: var(--chakra-spacing-1);
 }
 
-.emotion-26 {
-  margin-top: 3px;
-}
-
-.emotion-27 {
-  display: inline-flex;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  -ms-appearance: none;
-  appearance: none;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  position: relative;
-  white-space: nowrap;
-  vertical-align: middle;
-  outline: 2px solid transparent;
-  outline-offset: 2px;
-  width: auto;
+.emotion-29 {
+  margin-top: var(--chakra-spacing-3);
 }
 
 <form
@@ -2749,162 +2597,197 @@ exports[`with title and description fixed array 1`] = `
   <div
     className="form-group field field-array"
   >
-    <div
-      className="chakra-form-control emotion-0"
-      role="group"
+    <fieldset
+      className="fieldset__root emotion-0"
+      data-part="root"
+      data-scope="fieldset"
+      disabled={false}
     >
       <div
-        className="emotion-0"
+        className="fieldset__content emotion-1"
       >
         <div
           className="emotion-2"
-          id="root__title"
-        >
-          <h5
-            className="chakra-heading emotion-0"
-          >
-            Test field
-          </h5>
-          <hr
-            aria-orientation="horizontal"
-            className="chakra-divider emotion-4"
-          />
-        </div>
-        <sup
-          className="chakra-text emotion-5"
-          id="root__description"
-        >
-          a test description
-        </sup>
-        <div
-          className="emotion-6"
         >
           <div
-            className="emotion-0"
+            className="emotion-3"
+            id="root__title"
+          >
+            <h5
+              className="chakra-heading emotion-4"
+            >
+              Test field
+            </h5>
+            <span
+              aria-orientation="horizontal"
+              className="chakra-separator emotion-5"
+              role="separator"
+            />
+          </div>
+          <sup
+            className="emotion-6"
+            id="root__description"
+          >
+            a test description
+          </sup>
+          <div
+            className="emotion-7"
           >
             <div
-              className="chakra-stack emotion-8"
+              className="emotion-2"
             >
               <div
-                className="emotion-9"
+                className="chakra-stack emotion-9"
               >
                 <div
-                  className="form-group field field-string"
+                  className="emotion-10"
                 >
                   <div
-                    className="chakra-form-control emotion-0"
-                    role="group"
+                    className="form-group field field-string"
                   >
-                    <div
-                      className="chakra-form-control emotion-11"
-                      role="group"
+                    <fieldset
+                      className="fieldset__root emotion-0"
+                      data-part="root"
+                      data-scope="fieldset"
+                      disabled={false}
                     >
-                      <label
-                        className="chakra-form__label emotion-12"
-                        htmlFor="root_0"
-                        id="root_0-label"
+                      <legend
+                        className="fieldset__legend emotion-12"
+                        data-part="legend"
+                        data-scope="fieldset"
                       >
-                        Test item
-                        <span
-                          aria-hidden={true}
-                          className="chakra-form__required-indicator emotion-0"
-                          role="presentation"
+                        <sup
+                          className="emotion-6"
+                          id="root_0__description"
                         >
-                          *
-                        </span>
-                      </label>
-                      <input
-                        aria-describedby="root_0__error root_0__description root_0__help"
-                        aria-required={true}
-                        autoFocus={false}
-                        className="chakra-input emotion-0"
-                        disabled={false}
-                        id="root_0"
-                        name="root_0"
-                        onBlur={[Function]}
-                        onChange={[Function]}
-                        onFocus={[Function]}
-                        placeholder=""
-                        readOnly={false}
-                        required={true}
-                        type="text"
-                        value=""
-                      />
-                    </div>
-                    <p
-                      className="chakra-text emotion-15"
-                    >
-                      <sup
-                        className="chakra-text emotion-5"
-                        id="root_0__description"
+                          a test item description
+                        </sup>
+                      </legend>
+                      <div
+                        className="fieldset__content emotion-1"
                       >
-                        a test item description
-                      </sup>
-                    </p>
+                        <div
+                          className="chakra-field__root emotion-15"
+                          data-part="root"
+                          data-scope="field"
+                          id="field:::rq:"
+                          role="group"
+                        >
+                          <label
+                            className="chakra-field__label emotion-16"
+                            data-part="label"
+                            data-scope="field"
+                            htmlFor=":rq:"
+                            id="field:::rq:::label"
+                          >
+                            Test item
+                            <span
+                              aria-hidden="true"
+                              className="chakra-field__requiredIndicator emotion-17"
+                            >
+                              *
+                            </span>
+                          </label>
+                          <input
+                            aria-describedby="root_0__error root_0__description root_0__help"
+                            autoFocus={false}
+                            className="chakra-input emotion-18"
+                            data-part="input"
+                            data-required=""
+                            data-scope="field"
+                            disabled={false}
+                            id="root_0"
+                            name="root_0"
+                            onBlur={[Function]}
+                            onChange={[Function]}
+                            onFocus={[Function]}
+                            placeholder=""
+                            readOnly={false}
+                            required={true}
+                            type="text"
+                            value=""
+                          />
+                        </div>
+                      </div>
+                    </fieldset>
                   </div>
                 </div>
               </div>
-            </div>
-            <div
-              className="chakra-stack emotion-8"
-            >
               <div
-                className="emotion-9"
+                className="chakra-stack emotion-9"
               >
                 <div
-                  className="form-group field field-number"
+                  className="emotion-10"
                 >
                   <div
-                    className="chakra-form-control emotion-0"
-                    role="group"
+                    className="form-group field field-number"
                   >
-                    <div
-                      className="chakra-form-control emotion-11"
-                      role="group"
+                    <fieldset
+                      className="fieldset__root emotion-0"
+                      data-part="root"
+                      data-scope="fieldset"
+                      disabled={false}
                     >
-                      <label
-                        className="chakra-form__label emotion-12"
-                        htmlFor="root_1"
-                        id="root_1-label"
+                      <legend
+                        className="fieldset__legend emotion-12"
+                        data-part="legend"
+                        data-scope="fieldset"
                       >
-                        Test item
-                        <span
-                          aria-hidden={true}
-                          className="chakra-form__required-indicator emotion-0"
-                          role="presentation"
+                        <sup
+                          className="emotion-6"
+                          id="root_1__description"
                         >
-                          *
-                        </span>
-                      </label>
-                      <input
-                        aria-describedby="root_1__error root_1__description root_1__help"
-                        aria-required={true}
-                        autoFocus={false}
-                        className="chakra-input emotion-0"
-                        disabled={false}
-                        id="root_1"
-                        name="root_1"
-                        onBlur={[Function]}
-                        onChange={[Function]}
-                        onFocus={[Function]}
-                        placeholder=""
-                        readOnly={false}
-                        required={true}
-                        step="any"
-                        type="number"
-                        value=""
-                      />
-                    </div>
-                    <p
-                      className="chakra-text emotion-15"
-                    >
-                      <sup
-                        className="chakra-text emotion-5"
-                        id="root_1__description"
+                          a test item description
+                        </sup>
+                      </legend>
+                      <div
+                        className="fieldset__content emotion-1"
                       >
-                        a test item description
-                      </sup>
-                    </p>
+                        <div
+                          className="chakra-field__root emotion-15"
+                          data-part="root"
+                          data-scope="field"
+                          id="field:::rs:"
+                          role="group"
+                        >
+                          <label
+                            className="chakra-field__label emotion-16"
+                            data-part="label"
+                            data-scope="field"
+                            htmlFor=":rs:"
+                            id="field:::rs:::label"
+                          >
+                            Test item
+                            <span
+                              aria-hidden="true"
+                              className="chakra-field__requiredIndicator emotion-17"
+                            >
+                              *
+                            </span>
+                          </label>
+                          <input
+                            aria-describedby="root_1__error root_1__description root_1__help"
+                            autoFocus={false}
+                            className="chakra-input emotion-18"
+                            data-part="input"
+                            data-required=""
+                            data-scope="field"
+                            disabled={false}
+                            id="root_1"
+                            name="root_1"
+                            onBlur={[Function]}
+                            onChange={[Function]}
+                            onFocus={[Function]}
+                            placeholder=""
+                            readOnly={false}
+                            required={true}
+                            step="any"
+                            type="number"
+                            value=""
+                          />
+                        </div>
+                      </div>
+                    </fieldset>
                   </div>
                 </div>
               </div>
@@ -2912,13 +2795,13 @@ exports[`with title and description fixed array 1`] = `
           </div>
         </div>
       </div>
-    </div>
+    </fieldset>
   </div>
   <div
-    className="emotion-26"
+    className="emotion-29"
   >
     <button
-      className="chakra-button emotion-27"
+      className="chakra-button emotion-30"
       disabled={false}
       type="submit"
     >
@@ -2929,85 +2812,29 @@ exports[`with title and description fixed array 1`] = `
 `;
 
 exports[`with title and description from both array 1`] = `
-.emotion-2 {
-  margin-top: 1px;
-  margin-bottom: 4px;
-}
-
-.emotion-4 {
-  border: 0;
-  border-bottom-width: 1px;
-  width: 100%;
-}
-
-.emotion-5 {
-  font-size: md;
+.emotion-3 {
+  margin-top: var(--chakra-spacing-1);
+  margin-bottom: var(--chakra-spacing-4);
 }
 
 .emotion-6 {
+  font-size: var(--chakra-font-sizes-md);
+}
+
+.emotion-7 {
   display: grid;
 }
 
-.emotion-8 {
+.emotion-9 {
   justify-self: flex-end;
 }
 
-.emotion-9 {
-  margin-top: 2px;
-}
-
 .emotion-10 {
-  display: inline-flex;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  -ms-appearance: none;
-  appearance: none;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  position: relative;
-  white-space: nowrap;
-  vertical-align: middle;
-  outline: 2px solid transparent;
-  outline-offset: 2px;
-  width: auto;
-}
-
-.emotion-11 {
-  display: inline-flex;
-  -webkit-align-self: center;
-  -ms-flex-item-align: center;
-  align-self: center;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
-  -webkit-margin-end: 0.5rem;
-  margin-inline-end: 0.5rem;
+  margin-top: var(--chakra-spacing-2);
 }
 
 .emotion-12 {
-  width: 1em;
-  height: 1em;
-  display: inline-block;
-  line-height: 1em;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
-  color: currentColor;
-  vertical-align: middle;
-}
-
-.emotion-13 {
-  margin-top: 3px;
+  margin-top: var(--chakra-spacing-3);
 }
 
 <form
@@ -3018,80 +2845,91 @@ exports[`with title and description from both array 1`] = `
   <div
     className="form-group field field-array"
   >
-    <div
-      className="chakra-form-control emotion-0"
-      role="group"
+    <fieldset
+      className="fieldset__root emotion-0"
+      data-part="root"
+      data-scope="fieldset"
+      disabled={false}
     >
       <div
-        className="emotion-0"
+        className="fieldset__content emotion-1"
       >
         <div
           className="emotion-2"
-          id="root__title"
-        >
-          <h5
-            className="chakra-heading emotion-0"
-          >
-            My Field
-          </h5>
-          <hr
-            aria-orientation="horizontal"
-            className="chakra-divider emotion-4"
-          />
-        </div>
-        <sup
-          className="chakra-text emotion-5"
-          id="root__description"
-        >
-          a fancier description
-        </sup>
-        <div
-          className="emotion-6"
         >
           <div
-            className="emotion-0"
-          />
-          <div
-            className="emotion-8"
+            className="emotion-3"
+            id="root__title"
           >
+            <h5
+              className="chakra-heading emotion-4"
+            >
+              My Field
+            </h5>
+            <span
+              aria-orientation="horizontal"
+              className="chakra-separator emotion-5"
+              role="separator"
+            />
+          </div>
+          <sup
+            className="emotion-6"
+            id="root__description"
+          >
+            a fancier description
+          </sup>
+          <div
+            className="emotion-7"
+          >
+            <div
+              className="emotion-2"
+            />
             <div
               className="emotion-9"
             >
-              <button
-                className="chakra-button array-item-add emotion-10"
-                disabled={false}
-                id="root__add"
-                onClick={[Function]}
-                type="button"
+              <div
+                className="emotion-10"
               >
-                <span
-                  className="chakra-button__icon emotion-11"
+                <button
+                  className="chakra-button array-item-add emotion-11"
+                  disabled={false}
+                  id="root__add"
+                  onClick={[Function]}
+                  type="button"
                 >
                   <svg
-                    aria-hidden={true}
-                    className="chakra-icon emotion-12"
-                    focusable={false}
+                    className="lucide lucide-plus"
+                    fill="none"
+                    height={24}
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
                     viewBox="0 0 24 24"
+                    width={24}
+                    xmlns="http://www.w3.org/2000/svg"
                   >
                     <path
-                      d="M0,12a1.5,1.5,0,0,0,1.5,1.5h8.75a.25.25,0,0,1,.25.25V22.5a1.5,1.5,0,0,0,3,0V13.75a.25.25,0,0,1,.25-.25H22.5a1.5,1.5,0,0,0,0-3H13.75a.25.25,0,0,1-.25-.25V1.5a1.5,1.5,0,0,0-3,0v8.75a.25.25,0,0,1-.25.25H1.5A1.5,1.5,0,0,0,0,12Z"
-                      fill="currentColor"
+                      d="M5 12h14"
+                    />
+                    <path
+                      d="M12 5v14"
                     />
                   </svg>
-                </span>
-                Add Item
-              </button>
+                  Add Item
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </fieldset>
   </div>
   <div
-    className="emotion-13"
+    className="emotion-12"
   >
     <button
-      className="chakra-button emotion-10"
+      className="chakra-button emotion-11"
       disabled={false}
       type="submit"
     >
@@ -4017,26 +3855,20 @@ exports[`with title and description from both checkboxes 1`] = `
 `;
 
 exports[`with title and description from both fixed array 1`] = `
-.emotion-2 {
-  margin-top: 1px;
-  margin-bottom: 4px;
-}
-
-.emotion-4 {
-  border: 0;
-  border-bottom-width: 1px;
-  width: 100%;
-}
-
-.emotion-5 {
-  font-size: md;
+.emotion-3 {
+  margin-top: var(--chakra-spacing-1);
+  margin-bottom: var(--chakra-spacing-4);
 }
 
 .emotion-6 {
+  font-size: var(--chakra-font-sizes-md);
+}
+
+.emotion-7 {
   display: grid;
 }
 
-.emotion-8 {
+.emotion-9 {
   display: flex;
   -webkit-align-items: flex-end;
   -webkit-box-align: flex-end;
@@ -4045,64 +3877,24 @@ exports[`with title and description from both fixed array 1`] = `
   -webkit-flex-direction: row;
   -ms-flex-direction: row;
   flex-direction: row;
-  padding-top: 1px;
-  padding-bottom: 1px;
+  gap: 0.5rem;
+  padding-block: var(--chakra-spacing-1);
 }
 
-.emotion-8>*:not(style)~*:not(style) {
-  margin-top: 0px;
-  -webkit-margin-end: 0px;
-  margin-inline-end: 0px;
-  margin-bottom: 0px;
-  -webkit-margin-start: 0.5rem;
-  margin-inline-start: 0.5rem;
-}
-
-.emotion-9 {
+.emotion-10 {
   width: 100%;
 }
 
-.emotion-11 {
-  margin-bottom: 1px;
-}
-
 .emotion-12 {
-  display: block;
-  text-align: start;
+  margin-top: var(--chakra-spacing-2);
 }
 
 .emotion-15 {
-  margin-top: 2px;
+  margin-bottom: var(--chakra-spacing-1);
 }
 
-.emotion-26 {
-  margin-top: 3px;
-}
-
-.emotion-27 {
-  display: inline-flex;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  -ms-appearance: none;
-  appearance: none;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  position: relative;
-  white-space: nowrap;
-  vertical-align: middle;
-  outline: 2px solid transparent;
-  outline-offset: 2px;
-  width: auto;
+.emotion-29 {
+  margin-top: var(--chakra-spacing-3);
 }
 
 <form
@@ -4113,162 +3905,197 @@ exports[`with title and description from both fixed array 1`] = `
   <div
     className="form-group field field-array"
   >
-    <div
-      className="chakra-form-control emotion-0"
-      role="group"
+    <fieldset
+      className="fieldset__root emotion-0"
+      data-part="root"
+      data-scope="fieldset"
+      disabled={false}
     >
       <div
-        className="emotion-0"
+        className="fieldset__content emotion-1"
       >
         <div
           className="emotion-2"
-          id="root__title"
-        >
-          <h5
-            className="chakra-heading emotion-0"
-          >
-            My Field
-          </h5>
-          <hr
-            aria-orientation="horizontal"
-            className="chakra-divider emotion-4"
-          />
-        </div>
-        <sup
-          className="chakra-text emotion-5"
-          id="root__description"
-        >
-          a fancier description
-        </sup>
-        <div
-          className="emotion-6"
         >
           <div
-            className="emotion-0"
+            className="emotion-3"
+            id="root__title"
+          >
+            <h5
+              className="chakra-heading emotion-4"
+            >
+              My Field
+            </h5>
+            <span
+              aria-orientation="horizontal"
+              className="chakra-separator emotion-5"
+              role="separator"
+            />
+          </div>
+          <sup
+            className="emotion-6"
+            id="root__description"
+          >
+            a fancier description
+          </sup>
+          <div
+            className="emotion-7"
           >
             <div
-              className="chakra-stack emotion-8"
+              className="emotion-2"
             >
               <div
-                className="emotion-9"
+                className="chakra-stack emotion-9"
               >
                 <div
-                  className="form-group field field-string"
+                  className="emotion-10"
                 >
                   <div
-                    className="chakra-form-control emotion-0"
-                    role="group"
+                    className="form-group field field-string"
                   >
-                    <div
-                      className="chakra-form-control emotion-11"
-                      role="group"
+                    <fieldset
+                      className="fieldset__root emotion-0"
+                      data-part="root"
+                      data-scope="fieldset"
+                      disabled={false}
                     >
-                      <label
-                        className="chakra-form__label emotion-12"
-                        htmlFor="root_0"
-                        id="root_0-label"
+                      <legend
+                        className="fieldset__legend emotion-12"
+                        data-part="legend"
+                        data-scope="fieldset"
                       >
-                        My Item
-                        <span
-                          aria-hidden={true}
-                          className="chakra-form__required-indicator emotion-0"
-                          role="presentation"
+                        <sup
+                          className="emotion-6"
+                          id="root_0__description"
                         >
-                          *
-                        </span>
-                      </label>
-                      <input
-                        aria-describedby="root_0__error root_0__description root_0__help"
-                        aria-required={true}
-                        autoFocus={false}
-                        className="chakra-input emotion-0"
-                        disabled={false}
-                        id="root_0"
-                        name="root_0"
-                        onBlur={[Function]}
-                        onChange={[Function]}
-                        onFocus={[Function]}
-                        placeholder=""
-                        readOnly={false}
-                        required={true}
-                        type="text"
-                        value=""
-                      />
-                    </div>
-                    <p
-                      className="chakra-text emotion-15"
-                    >
-                      <sup
-                        className="chakra-text emotion-5"
-                        id="root_0__description"
+                          a fancier item description
+                        </sup>
+                      </legend>
+                      <div
+                        className="fieldset__content emotion-1"
                       >
-                        a fancier item description
-                      </sup>
-                    </p>
+                        <div
+                          className="chakra-field__root emotion-15"
+                          data-part="root"
+                          data-scope="field"
+                          id="field:::r1m:"
+                          role="group"
+                        >
+                          <label
+                            className="chakra-field__label emotion-16"
+                            data-part="label"
+                            data-scope="field"
+                            htmlFor=":r1m:"
+                            id="field:::r1m:::label"
+                          >
+                            My Item
+                            <span
+                              aria-hidden="true"
+                              className="chakra-field__requiredIndicator emotion-17"
+                            >
+                              *
+                            </span>
+                          </label>
+                          <input
+                            aria-describedby="root_0__error root_0__description root_0__help"
+                            autoFocus={false}
+                            className="chakra-input emotion-18"
+                            data-part="input"
+                            data-required=""
+                            data-scope="field"
+                            disabled={false}
+                            id="root_0"
+                            name="root_0"
+                            onBlur={[Function]}
+                            onChange={[Function]}
+                            onFocus={[Function]}
+                            placeholder=""
+                            readOnly={false}
+                            required={true}
+                            type="text"
+                            value=""
+                          />
+                        </div>
+                      </div>
+                    </fieldset>
                   </div>
                 </div>
               </div>
-            </div>
-            <div
-              className="chakra-stack emotion-8"
-            >
               <div
-                className="emotion-9"
+                className="chakra-stack emotion-9"
               >
                 <div
-                  className="form-group field field-number"
+                  className="emotion-10"
                 >
                   <div
-                    className="chakra-form-control emotion-0"
-                    role="group"
+                    className="form-group field field-number"
                   >
-                    <div
-                      className="chakra-form-control emotion-11"
-                      role="group"
+                    <fieldset
+                      className="fieldset__root emotion-0"
+                      data-part="root"
+                      data-scope="fieldset"
+                      disabled={false}
                     >
-                      <label
-                        className="chakra-form__label emotion-12"
-                        htmlFor="root_1"
-                        id="root_1-label"
+                      <legend
+                        className="fieldset__legend emotion-12"
+                        data-part="legend"
+                        data-scope="fieldset"
                       >
-                        My Item
-                        <span
-                          aria-hidden={true}
-                          className="chakra-form__required-indicator emotion-0"
-                          role="presentation"
+                        <sup
+                          className="emotion-6"
+                          id="root_1__description"
                         >
-                          *
-                        </span>
-                      </label>
-                      <input
-                        aria-describedby="root_1__error root_1__description root_1__help"
-                        aria-required={true}
-                        autoFocus={false}
-                        className="chakra-input emotion-0"
-                        disabled={false}
-                        id="root_1"
-                        name="root_1"
-                        onBlur={[Function]}
-                        onChange={[Function]}
-                        onFocus={[Function]}
-                        placeholder=""
-                        readOnly={false}
-                        required={true}
-                        step="any"
-                        type="number"
-                        value=""
-                      />
-                    </div>
-                    <p
-                      className="chakra-text emotion-15"
-                    >
-                      <sup
-                        className="chakra-text emotion-5"
-                        id="root_1__description"
+                          a fancier item description
+                        </sup>
+                      </legend>
+                      <div
+                        className="fieldset__content emotion-1"
                       >
-                        a fancier item description
-                      </sup>
-                    </p>
+                        <div
+                          className="chakra-field__root emotion-15"
+                          data-part="root"
+                          data-scope="field"
+                          id="field:::r1o:"
+                          role="group"
+                        >
+                          <label
+                            className="chakra-field__label emotion-16"
+                            data-part="label"
+                            data-scope="field"
+                            htmlFor=":r1o:"
+                            id="field:::r1o:::label"
+                          >
+                            My Item
+                            <span
+                              aria-hidden="true"
+                              className="chakra-field__requiredIndicator emotion-17"
+                            >
+                              *
+                            </span>
+                          </label>
+                          <input
+                            aria-describedby="root_1__error root_1__description root_1__help"
+                            autoFocus={false}
+                            className="chakra-input emotion-18"
+                            data-part="input"
+                            data-required=""
+                            data-scope="field"
+                            disabled={false}
+                            id="root_1"
+                            name="root_1"
+                            onBlur={[Function]}
+                            onChange={[Function]}
+                            onFocus={[Function]}
+                            placeholder=""
+                            readOnly={false}
+                            required={true}
+                            step="any"
+                            type="number"
+                            value=""
+                          />
+                        </div>
+                      </div>
+                    </fieldset>
                   </div>
                 </div>
               </div>
@@ -4276,13 +4103,13 @@ exports[`with title and description from both fixed array 1`] = `
           </div>
         </div>
       </div>
-    </div>
+    </fieldset>
   </div>
   <div
-    className="emotion-26"
+    className="emotion-29"
   >
     <button
-      className="chakra-button emotion-27"
+      className="chakra-button emotion-30"
       disabled={false}
       type="submit"
     >
@@ -4293,85 +4120,29 @@ exports[`with title and description from both fixed array 1`] = `
 `;
 
 exports[`with title and description from uiSchema array 1`] = `
-.emotion-2 {
-  margin-top: 1px;
-  margin-bottom: 4px;
-}
-
-.emotion-4 {
-  border: 0;
-  border-bottom-width: 1px;
-  width: 100%;
-}
-
-.emotion-5 {
-  font-size: md;
+.emotion-3 {
+  margin-top: var(--chakra-spacing-1);
+  margin-bottom: var(--chakra-spacing-4);
 }
 
 .emotion-6 {
+  font-size: var(--chakra-font-sizes-md);
+}
+
+.emotion-7 {
   display: grid;
 }
 
-.emotion-8 {
+.emotion-9 {
   justify-self: flex-end;
 }
 
-.emotion-9 {
-  margin-top: 2px;
-}
-
 .emotion-10 {
-  display: inline-flex;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  -ms-appearance: none;
-  appearance: none;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  position: relative;
-  white-space: nowrap;
-  vertical-align: middle;
-  outline: 2px solid transparent;
-  outline-offset: 2px;
-  width: auto;
-}
-
-.emotion-11 {
-  display: inline-flex;
-  -webkit-align-self: center;
-  -ms-flex-item-align: center;
-  align-self: center;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
-  -webkit-margin-end: 0.5rem;
-  margin-inline-end: 0.5rem;
+  margin-top: var(--chakra-spacing-2);
 }
 
 .emotion-12 {
-  width: 1em;
-  height: 1em;
-  display: inline-block;
-  line-height: 1em;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
-  color: currentColor;
-  vertical-align: middle;
-}
-
-.emotion-13 {
-  margin-top: 3px;
+  margin-top: var(--chakra-spacing-3);
 }
 
 <form
@@ -4382,80 +4153,91 @@ exports[`with title and description from uiSchema array 1`] = `
   <div
     className="form-group field field-array"
   >
-    <div
-      className="chakra-form-control emotion-0"
-      role="group"
+    <fieldset
+      className="fieldset__root emotion-0"
+      data-part="root"
+      data-scope="fieldset"
+      disabled={false}
     >
       <div
-        className="emotion-0"
+        className="fieldset__content emotion-1"
       >
         <div
           className="emotion-2"
-          id="root__title"
-        >
-          <h5
-            className="chakra-heading emotion-0"
-          >
-            My Field
-          </h5>
-          <hr
-            aria-orientation="horizontal"
-            className="chakra-divider emotion-4"
-          />
-        </div>
-        <sup
-          className="chakra-text emotion-5"
-          id="root__description"
-        >
-          a fancier description
-        </sup>
-        <div
-          className="emotion-6"
         >
           <div
-            className="emotion-0"
-          />
-          <div
-            className="emotion-8"
+            className="emotion-3"
+            id="root__title"
           >
+            <h5
+              className="chakra-heading emotion-4"
+            >
+              My Field
+            </h5>
+            <span
+              aria-orientation="horizontal"
+              className="chakra-separator emotion-5"
+              role="separator"
+            />
+          </div>
+          <sup
+            className="emotion-6"
+            id="root__description"
+          >
+            a fancier description
+          </sup>
+          <div
+            className="emotion-7"
+          >
+            <div
+              className="emotion-2"
+            />
             <div
               className="emotion-9"
             >
-              <button
-                className="chakra-button array-item-add emotion-10"
-                disabled={false}
-                id="root__add"
-                onClick={[Function]}
-                type="button"
+              <div
+                className="emotion-10"
               >
-                <span
-                  className="chakra-button__icon emotion-11"
+                <button
+                  className="chakra-button array-item-add emotion-11"
+                  disabled={false}
+                  id="root__add"
+                  onClick={[Function]}
+                  type="button"
                 >
                   <svg
-                    aria-hidden={true}
-                    className="chakra-icon emotion-12"
-                    focusable={false}
+                    className="lucide lucide-plus"
+                    fill="none"
+                    height={24}
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
                     viewBox="0 0 24 24"
+                    width={24}
+                    xmlns="http://www.w3.org/2000/svg"
                   >
                     <path
-                      d="M0,12a1.5,1.5,0,0,0,1.5,1.5h8.75a.25.25,0,0,1,.25.25V22.5a1.5,1.5,0,0,0,3,0V13.75a.25.25,0,0,1,.25-.25H22.5a1.5,1.5,0,0,0,0-3H13.75a.25.25,0,0,1-.25-.25V1.5a1.5,1.5,0,0,0-3,0v8.75a.25.25,0,0,1-.25.25H1.5A1.5,1.5,0,0,0,0,12Z"
-                      fill="currentColor"
+                      d="M5 12h14"
+                    />
+                    <path
+                      d="M12 5v14"
                     />
                   </svg>
-                </span>
-                Add Item
-              </button>
+                  Add Item
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </fieldset>
   </div>
   <div
-    className="emotion-13"
+    className="emotion-12"
   >
     <button
-      className="chakra-button emotion-10"
+      className="chakra-button emotion-11"
       disabled={false}
       type="submit"
     >
@@ -5381,26 +5163,20 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
 `;
 
 exports[`with title and description from uiSchema fixed array 1`] = `
-.emotion-2 {
-  margin-top: 1px;
-  margin-bottom: 4px;
-}
-
-.emotion-4 {
-  border: 0;
-  border-bottom-width: 1px;
-  width: 100%;
-}
-
-.emotion-5 {
-  font-size: md;
+.emotion-3 {
+  margin-top: var(--chakra-spacing-1);
+  margin-bottom: var(--chakra-spacing-4);
 }
 
 .emotion-6 {
+  font-size: var(--chakra-font-sizes-md);
+}
+
+.emotion-7 {
   display: grid;
 }
 
-.emotion-8 {
+.emotion-9 {
   display: flex;
   -webkit-align-items: flex-end;
   -webkit-box-align: flex-end;
@@ -5409,64 +5185,24 @@ exports[`with title and description from uiSchema fixed array 1`] = `
   -webkit-flex-direction: row;
   -ms-flex-direction: row;
   flex-direction: row;
-  padding-top: 1px;
-  padding-bottom: 1px;
+  gap: 0.5rem;
+  padding-block: var(--chakra-spacing-1);
 }
 
-.emotion-8>*:not(style)~*:not(style) {
-  margin-top: 0px;
-  -webkit-margin-end: 0px;
-  margin-inline-end: 0px;
-  margin-bottom: 0px;
-  -webkit-margin-start: 0.5rem;
-  margin-inline-start: 0.5rem;
-}
-
-.emotion-9 {
+.emotion-10 {
   width: 100%;
 }
 
-.emotion-11 {
-  margin-bottom: 1px;
-}
-
 .emotion-12 {
-  display: block;
-  text-align: start;
+  margin-top: var(--chakra-spacing-2);
 }
 
 .emotion-15 {
-  margin-top: 2px;
+  margin-bottom: var(--chakra-spacing-1);
 }
 
-.emotion-26 {
-  margin-top: 3px;
-}
-
-.emotion-27 {
-  display: inline-flex;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  -ms-appearance: none;
-  appearance: none;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  position: relative;
-  white-space: nowrap;
-  vertical-align: middle;
-  outline: 2px solid transparent;
-  outline-offset: 2px;
-  width: auto;
+.emotion-29 {
+  margin-top: var(--chakra-spacing-3);
 }
 
 <form
@@ -5477,162 +5213,197 @@ exports[`with title and description from uiSchema fixed array 1`] = `
   <div
     className="form-group field field-array"
   >
-    <div
-      className="chakra-form-control emotion-0"
-      role="group"
+    <fieldset
+      className="fieldset__root emotion-0"
+      data-part="root"
+      data-scope="fieldset"
+      disabled={false}
     >
       <div
-        className="emotion-0"
+        className="fieldset__content emotion-1"
       >
         <div
           className="emotion-2"
-          id="root__title"
-        >
-          <h5
-            className="chakra-heading emotion-0"
-          >
-            My Field
-          </h5>
-          <hr
-            aria-orientation="horizontal"
-            className="chakra-divider emotion-4"
-          />
-        </div>
-        <sup
-          className="chakra-text emotion-5"
-          id="root__description"
-        >
-          a fancier description
-        </sup>
-        <div
-          className="emotion-6"
         >
           <div
-            className="emotion-0"
+            className="emotion-3"
+            id="root__title"
+          >
+            <h5
+              className="chakra-heading emotion-4"
+            >
+              My Field
+            </h5>
+            <span
+              aria-orientation="horizontal"
+              className="chakra-separator emotion-5"
+              role="separator"
+            />
+          </div>
+          <sup
+            className="emotion-6"
+            id="root__description"
+          >
+            a fancier description
+          </sup>
+          <div
+            className="emotion-7"
           >
             <div
-              className="chakra-stack emotion-8"
+              className="emotion-2"
             >
               <div
-                className="emotion-9"
+                className="chakra-stack emotion-9"
               >
                 <div
-                  className="form-group field field-string"
+                  className="emotion-10"
                 >
                   <div
-                    className="chakra-form-control emotion-0"
-                    role="group"
+                    className="form-group field field-string"
                   >
-                    <div
-                      className="chakra-form-control emotion-11"
-                      role="group"
+                    <fieldset
+                      className="fieldset__root emotion-0"
+                      data-part="root"
+                      data-scope="fieldset"
+                      disabled={false}
                     >
-                      <label
-                        className="chakra-form__label emotion-12"
-                        htmlFor="root_0"
-                        id="root_0-label"
+                      <legend
+                        className="fieldset__legend emotion-12"
+                        data-part="legend"
+                        data-scope="fieldset"
                       >
-                        My Item
-                        <span
-                          aria-hidden={true}
-                          className="chakra-form__required-indicator emotion-0"
-                          role="presentation"
+                        <sup
+                          className="emotion-6"
+                          id="root_0__description"
                         >
-                          *
-                        </span>
-                      </label>
-                      <input
-                        aria-describedby="root_0__error root_0__description root_0__help"
-                        aria-required={true}
-                        autoFocus={false}
-                        className="chakra-input emotion-0"
-                        disabled={false}
-                        id="root_0"
-                        name="root_0"
-                        onBlur={[Function]}
-                        onChange={[Function]}
-                        onFocus={[Function]}
-                        placeholder=""
-                        readOnly={false}
-                        required={true}
-                        type="text"
-                        value=""
-                      />
-                    </div>
-                    <p
-                      className="chakra-text emotion-15"
-                    >
-                      <sup
-                        className="chakra-text emotion-5"
-                        id="root_0__description"
+                          a fancier item description
+                        </sup>
+                      </legend>
+                      <div
+                        className="fieldset__content emotion-1"
                       >
-                        a fancier item description
-                      </sup>
-                    </p>
+                        <div
+                          className="chakra-field__root emotion-15"
+                          data-part="root"
+                          data-scope="field"
+                          id="field:::r18:"
+                          role="group"
+                        >
+                          <label
+                            className="chakra-field__label emotion-16"
+                            data-part="label"
+                            data-scope="field"
+                            htmlFor=":r18:"
+                            id="field:::r18:::label"
+                          >
+                            My Item
+                            <span
+                              aria-hidden="true"
+                              className="chakra-field__requiredIndicator emotion-17"
+                            >
+                              *
+                            </span>
+                          </label>
+                          <input
+                            aria-describedby="root_0__error root_0__description root_0__help"
+                            autoFocus={false}
+                            className="chakra-input emotion-18"
+                            data-part="input"
+                            data-required=""
+                            data-scope="field"
+                            disabled={false}
+                            id="root_0"
+                            name="root_0"
+                            onBlur={[Function]}
+                            onChange={[Function]}
+                            onFocus={[Function]}
+                            placeholder=""
+                            readOnly={false}
+                            required={true}
+                            type="text"
+                            value=""
+                          />
+                        </div>
+                      </div>
+                    </fieldset>
                   </div>
                 </div>
               </div>
-            </div>
-            <div
-              className="chakra-stack emotion-8"
-            >
               <div
-                className="emotion-9"
+                className="chakra-stack emotion-9"
               >
                 <div
-                  className="form-group field field-number"
+                  className="emotion-10"
                 >
                   <div
-                    className="chakra-form-control emotion-0"
-                    role="group"
+                    className="form-group field field-number"
                   >
-                    <div
-                      className="chakra-form-control emotion-11"
-                      role="group"
+                    <fieldset
+                      className="fieldset__root emotion-0"
+                      data-part="root"
+                      data-scope="fieldset"
+                      disabled={false}
                     >
-                      <label
-                        className="chakra-form__label emotion-12"
-                        htmlFor="root_1"
-                        id="root_1-label"
+                      <legend
+                        className="fieldset__legend emotion-12"
+                        data-part="legend"
+                        data-scope="fieldset"
                       >
-                        My Item
-                        <span
-                          aria-hidden={true}
-                          className="chakra-form__required-indicator emotion-0"
-                          role="presentation"
+                        <sup
+                          className="emotion-6"
+                          id="root_1__description"
                         >
-                          *
-                        </span>
-                      </label>
-                      <input
-                        aria-describedby="root_1__error root_1__description root_1__help"
-                        aria-required={true}
-                        autoFocus={false}
-                        className="chakra-input emotion-0"
-                        disabled={false}
-                        id="root_1"
-                        name="root_1"
-                        onBlur={[Function]}
-                        onChange={[Function]}
-                        onFocus={[Function]}
-                        placeholder=""
-                        readOnly={false}
-                        required={true}
-                        step="any"
-                        type="number"
-                        value=""
-                      />
-                    </div>
-                    <p
-                      className="chakra-text emotion-15"
-                    >
-                      <sup
-                        className="chakra-text emotion-5"
-                        id="root_1__description"
+                          a fancier item description
+                        </sup>
+                      </legend>
+                      <div
+                        className="fieldset__content emotion-1"
                       >
-                        a fancier item description
-                      </sup>
-                    </p>
+                        <div
+                          className="chakra-field__root emotion-15"
+                          data-part="root"
+                          data-scope="field"
+                          id="field:::r1a:"
+                          role="group"
+                        >
+                          <label
+                            className="chakra-field__label emotion-16"
+                            data-part="label"
+                            data-scope="field"
+                            htmlFor=":r1a:"
+                            id="field:::r1a:::label"
+                          >
+                            My Item
+                            <span
+                              aria-hidden="true"
+                              className="chakra-field__requiredIndicator emotion-17"
+                            >
+                              *
+                            </span>
+                          </label>
+                          <input
+                            aria-describedby="root_1__error root_1__description root_1__help"
+                            autoFocus={false}
+                            className="chakra-input emotion-18"
+                            data-part="input"
+                            data-required=""
+                            data-scope="field"
+                            disabled={false}
+                            id="root_1"
+                            name="root_1"
+                            onBlur={[Function]}
+                            onChange={[Function]}
+                            onFocus={[Function]}
+                            placeholder=""
+                            readOnly={false}
+                            required={true}
+                            step="any"
+                            type="number"
+                            value=""
+                          />
+                        </div>
+                      </div>
+                    </fieldset>
                   </div>
                 </div>
               </div>
@@ -5640,13 +5411,13 @@ exports[`with title and description from uiSchema fixed array 1`] = `
           </div>
         </div>
       </div>
-    </div>
+    </fieldset>
   </div>
   <div
-    className="emotion-26"
+    className="emotion-29"
   >
     <button
-      className="chakra-button emotion-27"
+      className="chakra-button emotion-30"
       disabled={false}
       type="submit"
     >
@@ -5657,70 +5428,20 @@ exports[`with title and description from uiSchema fixed array 1`] = `
 `;
 
 exports[`with title and description with global label off array 1`] = `
-.emotion-2 {
+.emotion-3 {
   display: grid;
 }
 
-.emotion-4 {
+.emotion-5 {
   justify-self: flex-end;
 }
 
-.emotion-5 {
-  margin-top: 2px;
-}
-
 .emotion-6 {
-  display: inline-flex;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  -ms-appearance: none;
-  appearance: none;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  position: relative;
-  white-space: nowrap;
-  vertical-align: middle;
-  outline: 2px solid transparent;
-  outline-offset: 2px;
-  width: auto;
-}
-
-.emotion-7 {
-  display: inline-flex;
-  -webkit-align-self: center;
-  -ms-flex-item-align: center;
-  align-self: center;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
-  -webkit-margin-end: 0.5rem;
-  margin-inline-end: 0.5rem;
+  margin-top: var(--chakra-spacing-2);
 }
 
 .emotion-8 {
-  width: 1em;
-  height: 1em;
-  display: inline-block;
-  line-height: 1em;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
-  color: currentColor;
-  vertical-align: middle;
-}
-
-.emotion-9 {
-  margin-top: 3px;
+  margin-top: var(--chakra-spacing-3);
 }
 
 <form
@@ -5731,60 +5452,70 @@ exports[`with title and description with global label off array 1`] = `
   <div
     className="form-group field field-array"
   >
-    <div
-      className="chakra-form-control emotion-0"
-      role="group"
+    <fieldset
+      className="fieldset__root emotion-0"
+      data-part="root"
+      data-scope="fieldset"
+      disabled={false}
     >
       <div
-        className="emotion-0"
+        className="fieldset__content emotion-1"
       >
         <div
           className="emotion-2"
         >
           <div
-            className="emotion-0"
-          />
-          <div
-            className="emotion-4"
+            className="emotion-3"
           >
+            <div
+              className="emotion-2"
+            />
             <div
               className="emotion-5"
             >
-              <button
-                className="chakra-button array-item-add emotion-6"
-                disabled={false}
-                id="root__add"
-                onClick={[Function]}
-                type="button"
+              <div
+                className="emotion-6"
               >
-                <span
-                  className="chakra-button__icon emotion-7"
+                <button
+                  className="chakra-button array-item-add emotion-7"
+                  disabled={false}
+                  id="root__add"
+                  onClick={[Function]}
+                  type="button"
                 >
                   <svg
-                    aria-hidden={true}
-                    className="chakra-icon emotion-8"
-                    focusable={false}
+                    className="lucide lucide-plus"
+                    fill="none"
+                    height={24}
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
                     viewBox="0 0 24 24"
+                    width={24}
+                    xmlns="http://www.w3.org/2000/svg"
                   >
                     <path
-                      d="M0,12a1.5,1.5,0,0,0,1.5,1.5h8.75a.25.25,0,0,1,.25.25V22.5a1.5,1.5,0,0,0,3,0V13.75a.25.25,0,0,1,.25-.25H22.5a1.5,1.5,0,0,0,0-3H13.75a.25.25,0,0,1-.25-.25V1.5a1.5,1.5,0,0,0-3,0v8.75a.25.25,0,0,1-.25.25H1.5A1.5,1.5,0,0,0,0,12Z"
-                      fill="currentColor"
+                      d="M5 12h14"
+                    />
+                    <path
+                      d="M12 5v14"
                     />
                   </svg>
-                </span>
-                Add Item
-              </button>
+                  Add Item
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </fieldset>
   </div>
   <div
-    className="emotion-9"
+    className="emotion-8"
   >
     <button
-      className="chakra-button emotion-6"
+      className="chakra-button emotion-7"
       disabled={false}
       type="submit"
     >
@@ -6622,11 +6353,11 @@ exports[`with title and description with global label off checkboxes 1`] = `
 `;
 
 exports[`with title and description with global label off fixed array 1`] = `
-.emotion-2 {
+.emotion-3 {
   display: grid;
 }
 
-.emotion-4 {
+.emotion-5 {
   display: flex;
   -webkit-align-items: flex-end;
   -webkit-box-align: flex-end;
@@ -6635,55 +6366,20 @@ exports[`with title and description with global label off fixed array 1`] = `
   -webkit-flex-direction: row;
   -ms-flex-direction: row;
   flex-direction: row;
-  padding-top: 1px;
-  padding-bottom: 1px;
+  gap: 0.5rem;
+  padding-block: var(--chakra-spacing-1);
 }
 
-.emotion-4>*:not(style)~*:not(style) {
-  margin-top: 0px;
-  -webkit-margin-end: 0px;
-  margin-inline-end: 0px;
-  margin-bottom: 0px;
-  -webkit-margin-start: 0.5rem;
-  margin-inline-start: 0.5rem;
-}
-
-.emotion-5 {
+.emotion-6 {
   width: 100%;
 }
 
-.emotion-7 {
-  margin-bottom: 1px;
+.emotion-9 {
+  margin-bottom: var(--chakra-spacing-1);
 }
 
-.emotion-14 {
-  margin-top: 3px;
-}
-
-.emotion-15 {
-  display: inline-flex;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  -ms-appearance: none;
-  appearance: none;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  position: relative;
-  white-space: nowrap;
-  vertical-align: middle;
-  outline: 2px solid transparent;
-  outline-offset: 2px;
-  width: auto;
+.emotion-17 {
+  margin-top: var(--chakra-spacing-3);
 }
 
 <form
@@ -6694,94 +6390,122 @@ exports[`with title and description with global label off fixed array 1`] = `
   <div
     className="form-group field field-array"
   >
-    <div
-      className="chakra-form-control emotion-0"
-      role="group"
+    <fieldset
+      className="fieldset__root emotion-0"
+      data-part="root"
+      data-scope="fieldset"
+      disabled={false}
     >
       <div
-        className="emotion-0"
+        className="fieldset__content emotion-1"
       >
         <div
           className="emotion-2"
         >
           <div
-            className="emotion-0"
+            className="emotion-3"
           >
             <div
-              className="chakra-stack emotion-4"
+              className="emotion-2"
             >
               <div
-                className="emotion-5"
+                className="chakra-stack emotion-5"
               >
                 <div
-                  className="form-group field field-string"
+                  className="emotion-6"
                 >
                   <div
-                    className="chakra-form-control emotion-0"
-                    role="group"
+                    className="form-group field field-string"
                   >
-                    <div
-                      className="chakra-form-control emotion-7"
-                      role="group"
+                    <fieldset
+                      className="fieldset__root emotion-0"
+                      data-part="root"
+                      data-scope="fieldset"
+                      disabled={false}
                     >
-                      <input
-                        aria-describedby="root_0__error root_0__description root_0__help"
-                        aria-required={true}
-                        autoFocus={false}
-                        className="chakra-input emotion-0"
-                        disabled={false}
-                        id="root_0"
-                        name="root_0"
-                        onBlur={[Function]}
-                        onChange={[Function]}
-                        onFocus={[Function]}
-                        placeholder=""
-                        readOnly={false}
-                        required={true}
-                        type="text"
-                        value=""
-                      />
-                    </div>
+                      <div
+                        className="fieldset__content emotion-1"
+                      >
+                        <div
+                          className="chakra-field__root emotion-9"
+                          data-part="root"
+                          data-scope="field"
+                          id="field:::r24:"
+                          role="group"
+                        >
+                          <input
+                            aria-describedby="root_0__error root_0__description root_0__help"
+                            autoFocus={false}
+                            className="chakra-input emotion-10"
+                            data-part="input"
+                            data-required=""
+                            data-scope="field"
+                            disabled={false}
+                            id="root_0"
+                            name="root_0"
+                            onBlur={[Function]}
+                            onChange={[Function]}
+                            onFocus={[Function]}
+                            placeholder=""
+                            readOnly={false}
+                            required={true}
+                            type="text"
+                            value=""
+                          />
+                        </div>
+                      </div>
+                    </fieldset>
                   </div>
                 </div>
               </div>
-            </div>
-            <div
-              className="chakra-stack emotion-4"
-            >
               <div
-                className="emotion-5"
+                className="chakra-stack emotion-5"
               >
                 <div
-                  className="form-group field field-number"
+                  className="emotion-6"
                 >
                   <div
-                    className="chakra-form-control emotion-0"
-                    role="group"
+                    className="form-group field field-number"
                   >
-                    <div
-                      className="chakra-form-control emotion-7"
-                      role="group"
+                    <fieldset
+                      className="fieldset__root emotion-0"
+                      data-part="root"
+                      data-scope="fieldset"
+                      disabled={false}
                     >
-                      <input
-                        aria-describedby="root_1__error root_1__description root_1__help"
-                        aria-required={true}
-                        autoFocus={false}
-                        className="chakra-input emotion-0"
-                        disabled={false}
-                        id="root_1"
-                        name="root_1"
-                        onBlur={[Function]}
-                        onChange={[Function]}
-                        onFocus={[Function]}
-                        placeholder=""
-                        readOnly={false}
-                        required={true}
-                        step="any"
-                        type="number"
-                        value=""
-                      />
-                    </div>
+                      <div
+                        className="fieldset__content emotion-1"
+                      >
+                        <div
+                          className="chakra-field__root emotion-9"
+                          data-part="root"
+                          data-scope="field"
+                          id="field:::r26:"
+                          role="group"
+                        >
+                          <input
+                            aria-describedby="root_1__error root_1__description root_1__help"
+                            autoFocus={false}
+                            className="chakra-input emotion-10"
+                            data-part="input"
+                            data-required=""
+                            data-scope="field"
+                            disabled={false}
+                            id="root_1"
+                            name="root_1"
+                            onBlur={[Function]}
+                            onChange={[Function]}
+                            onFocus={[Function]}
+                            placeholder=""
+                            readOnly={false}
+                            required={true}
+                            step="any"
+                            type="number"
+                            value=""
+                          />
+                        </div>
+                      </div>
+                    </fieldset>
                   </div>
                 </div>
               </div>
@@ -6789,13 +6513,13 @@ exports[`with title and description with global label off fixed array 1`] = `
           </div>
         </div>
       </div>
-    </div>
+    </fieldset>
   </div>
   <div
-    className="emotion-14"
+    className="emotion-17"
   >
     <button
-      className="chakra-button emotion-15"
+      className="chakra-button emotion-18"
       disabled={false}
       type="submit"
     >

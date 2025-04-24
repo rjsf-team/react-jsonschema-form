@@ -303,95 +303,28 @@ exports[`single fields checkbox field with label 1`] = `
 `;
 
 exports[`single fields checkboxes field 1`] = `
-.emotion-1 {
-  margin-bottom: 1px;
-}
-
 .emotion-2 {
-  display: block;
-  text-align: start;
+  margin-bottom: var(--chakra-spacing-1);
 }
 
-.emotion-3 {
+.emotion-4 {
   display: flex;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
   flex-direction: column;
+  gap: 0.5rem;
 }
 
-.emotion-3>*:not(style)~*:not(style) {
-  margin-top: 0.5rem;
-  -webkit-margin-end: 0px;
-  margin-inline-end: 0px;
-  margin-bottom: 0px;
-  -webkit-margin-start: 0px;
-  margin-inline-start: 0px;
+.emotion-7 {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 3px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
-.emotion-4 {
-  cursor: pointer;
-  display: inline-flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  vertical-align: top;
-  position: relative;
-}
-
-.emotion-5 {
-  display: inline-flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  vertical-align: top;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
-}
-
-.emotion-6 {
-  -webkit-margin-start: 0.5rem;
-  margin-inline-start: 0.5rem;
-}
-
-.emotion-20 {
-  margin-top: 3px;
-}
-
-.emotion-21 {
-  display: inline-flex;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  -ms-appearance: none;
-  appearance: none;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  position: relative;
-  white-space: nowrap;
-  vertical-align: middle;
-  outline: 2px solid transparent;
-  outline-offset: 2px;
-  width: auto;
+.emotion-25 {
+  margin-top: var(--chakra-spacing-3);
 }
 
 <form
@@ -402,253 +335,324 @@ exports[`single fields checkboxes field 1`] = `
   <div
     className="form-group field field-array"
   >
-    <div
-      className="chakra-form-control emotion-0"
-      role="group"
+    <fieldset
+      className="fieldset__root emotion-0"
+      data-part="root"
+      data-scope="fieldset"
+      disabled={false}
     >
       <div
-        className="chakra-form-control emotion-1"
-        role="group"
+        className="fieldset__content emotion-1"
       >
-        <label
-          className="chakra-form__label emotion-2"
-          htmlFor="root"
-          id="root-label"
+        <fieldset
+          className="fieldset__root emotion-2"
+          data-part="root"
+          data-scope="fieldset"
+          disabled={false}
         >
-          An enum list rendered as checkboxes
-        </label>
-        <div
-          className="chakra-stack emotion-3"
-        >
-          <label
-            className="chakra-checkbox emotion-4"
-            onClick={[Function]}
+          <div
+            aria-describedby="root__error root__description root__help"
+            className="emotion-3"
+            data-part="group"
+            data-scope="checkbox"
+            label="An enum list rendered as checkboxes"
+            required={false}
+            role="group"
           >
-            <input
-              aria-disabled={false}
-              aria-invalid={false}
-              checked={false}
-              className="chakra-checkbox__input"
-              disabled={false}
-              id="root-0"
-              name="root"
-              onBlur={[Function]}
-              onChange={[Function]}
-              onFocus={[Function]}
-              onKeyDown={[Function]}
-              onKeyUp={[Function]}
-              readOnly={false}
-              required={false}
-              style={
-                {
-                  "border": "0px",
-                  "clip": "rect(0px, 0px, 0px, 0px)",
-                  "height": "1px",
-                  "margin": "-1px",
-                  "overflow": "hidden",
-                  "padding": "0px",
-                  "position": "absolute",
-                  "whiteSpace": "nowrap",
-                  "width": "1px",
-                }
-              }
-              type="checkbox"
-              value="0"
-            />
-            <span
-              aria-hidden={true}
-              className="chakra-checkbox__control emotion-5"
-              onMouseDown={[Function]}
-              onMouseEnter={[Function]}
-              onMouseLeave={[Function]}
-              onMouseUp={[Function]}
-            />
-            <span
-              className="chakra-checkbox__label emotion-6"
-              onMouseDown={[Function]}
-              onTouchStart={[Function]}
+            <div
+              className="chakra-stack emotion-4"
             >
-              <p
-                className="chakra-text emotion-0"
+              <label
+                className="chakra-checkbox__root emotion-5"
+                data-part="root"
+                data-scope="checkbox"
+                data-state="unchecked"
+                dir="ltr"
+                htmlFor="checkbox:root-0:input"
+                id="checkbox:root-0"
+                onBlur={[Function]}
+                onClick={[Function]}
+                onFocus={[Function]}
+                onPointerLeave={[Function]}
+                onPointerMove={[Function]}
               >
-                foo
-              </p>
-            </span>
-          </label>
-          <label
-            className="chakra-checkbox emotion-4"
-            onClick={[Function]}
-          >
-            <input
-              aria-disabled={false}
-              aria-invalid={false}
-              checked={false}
-              className="chakra-checkbox__input"
-              disabled={false}
-              id="root-1"
-              name="root"
-              onBlur={[Function]}
-              onChange={[Function]}
-              onFocus={[Function]}
-              onKeyDown={[Function]}
-              onKeyUp={[Function]}
-              readOnly={false}
-              required={false}
-              style={
-                {
-                  "border": "0px",
-                  "clip": "rect(0px, 0px, 0px, 0px)",
-                  "height": "1px",
-                  "margin": "-1px",
-                  "overflow": "hidden",
-                  "padding": "0px",
-                  "position": "absolute",
-                  "whiteSpace": "nowrap",
-                  "width": "1px",
-                }
-              }
-              type="checkbox"
-              value="1"
-            />
-            <span
-              aria-hidden={true}
-              className="chakra-checkbox__control emotion-5"
-              onMouseDown={[Function]}
-              onMouseEnter={[Function]}
-              onMouseLeave={[Function]}
-              onMouseUp={[Function]}
-            />
-            <span
-              className="chakra-checkbox__label emotion-6"
-              onMouseDown={[Function]}
-              onTouchStart={[Function]}
-            >
-              <p
-                className="chakra-text emotion-0"
+                <input
+                  aria-labelledby="checkbox:root-0:label"
+                  defaultChecked={false}
+                  disabled={false}
+                  id="checkbox:root-0:input"
+                  name="root"
+                  onBlur={[Function]}
+                  onClick={[Function]}
+                  onFocus={[Function]}
+                  style={
+                    {
+                      "border": "0",
+                      "clip": "rect(0 0 0 0)",
+                      "height": "1px",
+                      "margin": "-1px",
+                      "overflow": "hidden",
+                      "padding": "0",
+                      "position": "absolute",
+                      "whiteSpace": "nowrap",
+                      "width": "1px",
+                      "wordWrap": "normal",
+                    }
+                  }
+                  type="checkbox"
+                  value="0"
+                />
+                <div
+                  aria-hidden={true}
+                  className="chakra-checkbox__control emotion-6"
+                  data-part="control"
+                  data-scope="checkbox"
+                  data-state="unchecked"
+                  dir="ltr"
+                  id="checkbox:root-0:control"
+                >
+                  <svg
+                    className="emotion-7"
+                    data-state="unchecked"
+                    viewBox="0 0 24 24"
+                  />
+                </div>
+                <span
+                  className="chakra-checkbox__label emotion-8"
+                  data-part="label"
+                  data-scope="checkbox"
+                  data-state="unchecked"
+                  dir="ltr"
+                  id="checkbox:root-0:label"
+                >
+                  <p
+                    className="emotion-9"
+                  >
+                    foo
+                  </p>
+                </span>
+              </label>
+              <label
+                className="chakra-checkbox__root emotion-5"
+                data-part="root"
+                data-scope="checkbox"
+                data-state="unchecked"
+                dir="ltr"
+                htmlFor="checkbox:root-1:input"
+                id="checkbox:root-1"
+                onBlur={[Function]}
+                onClick={[Function]}
+                onFocus={[Function]}
+                onPointerLeave={[Function]}
+                onPointerMove={[Function]}
               >
-                bar
-              </p>
-            </span>
-          </label>
-          <label
-            className="chakra-checkbox emotion-4"
-            onClick={[Function]}
-          >
-            <input
-              aria-disabled={false}
-              aria-invalid={false}
-              checked={false}
-              className="chakra-checkbox__input"
-              disabled={false}
-              id="root-2"
-              name="root"
-              onBlur={[Function]}
-              onChange={[Function]}
-              onFocus={[Function]}
-              onKeyDown={[Function]}
-              onKeyUp={[Function]}
-              readOnly={false}
-              required={false}
-              style={
-                {
-                  "border": "0px",
-                  "clip": "rect(0px, 0px, 0px, 0px)",
-                  "height": "1px",
-                  "margin": "-1px",
-                  "overflow": "hidden",
-                  "padding": "0px",
-                  "position": "absolute",
-                  "whiteSpace": "nowrap",
-                  "width": "1px",
-                }
-              }
-              type="checkbox"
-              value="2"
-            />
-            <span
-              aria-hidden={true}
-              className="chakra-checkbox__control emotion-5"
-              onMouseDown={[Function]}
-              onMouseEnter={[Function]}
-              onMouseLeave={[Function]}
-              onMouseUp={[Function]}
-            />
-            <span
-              className="chakra-checkbox__label emotion-6"
-              onMouseDown={[Function]}
-              onTouchStart={[Function]}
-            >
-              <p
-                className="chakra-text emotion-0"
+                <input
+                  aria-labelledby="checkbox:root-1:label"
+                  defaultChecked={false}
+                  disabled={false}
+                  id="checkbox:root-1:input"
+                  name="root"
+                  onBlur={[Function]}
+                  onClick={[Function]}
+                  onFocus={[Function]}
+                  style={
+                    {
+                      "border": "0",
+                      "clip": "rect(0 0 0 0)",
+                      "height": "1px",
+                      "margin": "-1px",
+                      "overflow": "hidden",
+                      "padding": "0",
+                      "position": "absolute",
+                      "whiteSpace": "nowrap",
+                      "width": "1px",
+                      "wordWrap": "normal",
+                    }
+                  }
+                  type="checkbox"
+                  value="1"
+                />
+                <div
+                  aria-hidden={true}
+                  className="chakra-checkbox__control emotion-6"
+                  data-part="control"
+                  data-scope="checkbox"
+                  data-state="unchecked"
+                  dir="ltr"
+                  id="checkbox:root-1:control"
+                >
+                  <svg
+                    className="emotion-7"
+                    data-state="unchecked"
+                    viewBox="0 0 24 24"
+                  />
+                </div>
+                <span
+                  className="chakra-checkbox__label emotion-8"
+                  data-part="label"
+                  data-scope="checkbox"
+                  data-state="unchecked"
+                  dir="ltr"
+                  id="checkbox:root-1:label"
+                >
+                  <p
+                    className="emotion-9"
+                  >
+                    bar
+                  </p>
+                </span>
+              </label>
+              <label
+                className="chakra-checkbox__root emotion-5"
+                data-part="root"
+                data-scope="checkbox"
+                data-state="unchecked"
+                dir="ltr"
+                htmlFor="checkbox:root-2:input"
+                id="checkbox:root-2"
+                onBlur={[Function]}
+                onClick={[Function]}
+                onFocus={[Function]}
+                onPointerLeave={[Function]}
+                onPointerMove={[Function]}
               >
-                fuzz
-              </p>
-            </span>
-          </label>
-          <label
-            className="chakra-checkbox emotion-4"
-            onClick={[Function]}
-          >
-            <input
-              aria-disabled={false}
-              aria-invalid={false}
-              checked={false}
-              className="chakra-checkbox__input"
-              disabled={false}
-              id="root-3"
-              name="root"
-              onBlur={[Function]}
-              onChange={[Function]}
-              onFocus={[Function]}
-              onKeyDown={[Function]}
-              onKeyUp={[Function]}
-              readOnly={false}
-              required={false}
-              style={
-                {
-                  "border": "0px",
-                  "clip": "rect(0px, 0px, 0px, 0px)",
-                  "height": "1px",
-                  "margin": "-1px",
-                  "overflow": "hidden",
-                  "padding": "0px",
-                  "position": "absolute",
-                  "whiteSpace": "nowrap",
-                  "width": "1px",
-                }
-              }
-              type="checkbox"
-              value="3"
-            />
-            <span
-              aria-hidden={true}
-              className="chakra-checkbox__control emotion-5"
-              onMouseDown={[Function]}
-              onMouseEnter={[Function]}
-              onMouseLeave={[Function]}
-              onMouseUp={[Function]}
-            />
-            <span
-              className="chakra-checkbox__label emotion-6"
-              onMouseDown={[Function]}
-              onTouchStart={[Function]}
-            >
-              <p
-                className="chakra-text emotion-0"
+                <input
+                  aria-labelledby="checkbox:root-2:label"
+                  defaultChecked={false}
+                  disabled={false}
+                  id="checkbox:root-2:input"
+                  name="root"
+                  onBlur={[Function]}
+                  onClick={[Function]}
+                  onFocus={[Function]}
+                  style={
+                    {
+                      "border": "0",
+                      "clip": "rect(0 0 0 0)",
+                      "height": "1px",
+                      "margin": "-1px",
+                      "overflow": "hidden",
+                      "padding": "0",
+                      "position": "absolute",
+                      "whiteSpace": "nowrap",
+                      "width": "1px",
+                      "wordWrap": "normal",
+                    }
+                  }
+                  type="checkbox"
+                  value="2"
+                />
+                <div
+                  aria-hidden={true}
+                  className="chakra-checkbox__control emotion-6"
+                  data-part="control"
+                  data-scope="checkbox"
+                  data-state="unchecked"
+                  dir="ltr"
+                  id="checkbox:root-2:control"
+                >
+                  <svg
+                    className="emotion-7"
+                    data-state="unchecked"
+                    viewBox="0 0 24 24"
+                  />
+                </div>
+                <span
+                  className="chakra-checkbox__label emotion-8"
+                  data-part="label"
+                  data-scope="checkbox"
+                  data-state="unchecked"
+                  dir="ltr"
+                  id="checkbox:root-2:label"
+                >
+                  <p
+                    className="emotion-9"
+                  >
+                    fuzz
+                  </p>
+                </span>
+              </label>
+              <label
+                className="chakra-checkbox__root emotion-5"
+                data-part="root"
+                data-scope="checkbox"
+                data-state="unchecked"
+                dir="ltr"
+                htmlFor="checkbox:root-3:input"
+                id="checkbox:root-3"
+                onBlur={[Function]}
+                onClick={[Function]}
+                onFocus={[Function]}
+                onPointerLeave={[Function]}
+                onPointerMove={[Function]}
               >
-                qux
-              </p>
-            </span>
-          </label>
-        </div>
+                <input
+                  aria-labelledby="checkbox:root-3:label"
+                  defaultChecked={false}
+                  disabled={false}
+                  id="checkbox:root-3:input"
+                  name="root"
+                  onBlur={[Function]}
+                  onClick={[Function]}
+                  onFocus={[Function]}
+                  style={
+                    {
+                      "border": "0",
+                      "clip": "rect(0 0 0 0)",
+                      "height": "1px",
+                      "margin": "-1px",
+                      "overflow": "hidden",
+                      "padding": "0",
+                      "position": "absolute",
+                      "whiteSpace": "nowrap",
+                      "width": "1px",
+                      "wordWrap": "normal",
+                    }
+                  }
+                  type="checkbox"
+                  value="3"
+                />
+                <div
+                  aria-hidden={true}
+                  className="chakra-checkbox__control emotion-6"
+                  data-part="control"
+                  data-scope="checkbox"
+                  data-state="unchecked"
+                  dir="ltr"
+                  id="checkbox:root-3:control"
+                >
+                  <svg
+                    className="emotion-7"
+                    data-state="unchecked"
+                    viewBox="0 0 24 24"
+                  />
+                </div>
+                <span
+                  className="chakra-checkbox__label emotion-8"
+                  data-part="label"
+                  data-scope="checkbox"
+                  data-state="unchecked"
+                  dir="ltr"
+                  id="checkbox:root-3:label"
+                >
+                  <p
+                    className="emotion-9"
+                  >
+                    qux
+                  </p>
+                </span>
+              </label>
+            </div>
+          </div>
+        </fieldset>
       </div>
-    </div>
+    </fieldset>
   </div>
   <div
-    className="emotion-20"
+    className="emotion-25"
   >
     <button
-      className="chakra-button emotion-21"
+      className="chakra-button emotion-26"
       disabled={false}
       type="submit"
     >
@@ -659,57 +663,26 @@ exports[`single fields checkboxes field 1`] = `
 `;
 
 exports[`single fields field with description 1`] = `
-.emotion-1 {
+.emotion-2 {
   display: grid;
-  grid-gap: 6px;
-  margin-bottom: 4px;
-}
-
-.emotion-4 {
-  margin-bottom: 1px;
+  gap: var(--chakra-spacing-6);
+  margin-bottom: var(--chakra-spacing-4);
 }
 
 .emotion-5 {
-  display: block;
-  text-align: start;
+  margin-top: var(--chakra-spacing-2);
 }
 
-.emotion-7 {
-  margin-top: 2px;
+.emotion-6 {
+  font-size: var(--chakra-font-sizes-md);
 }
 
 .emotion-8 {
-  font-size: md;
+  margin-bottom: var(--chakra-spacing-1);
 }
 
-.emotion-9 {
-  margin-top: 3px;
-}
-
-.emotion-10 {
-  display: inline-flex;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  -ms-appearance: none;
-  appearance: none;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  position: relative;
-  white-space: nowrap;
-  vertical-align: middle;
-  outline: 2px solid transparent;
-  outline-offset: 2px;
-  width: auto;
+.emotion-11 {
+  margin-top: var(--chakra-spacing-3);
 }
 
 <form
@@ -720,72 +693,93 @@ exports[`single fields field with description 1`] = `
   <div
     className="form-group field field-object"
   >
-    <div
-      className="chakra-form-control emotion-0"
-      role="group"
+    <fieldset
+      className="fieldset__root emotion-0"
+      data-part="root"
+      data-scope="fieldset"
+      disabled={false}
     >
       <div
-        className="emotion-1"
+        className="fieldset__content emotion-1"
       >
         <div
-          className="emotion-0"
+          className="emotion-2"
         >
           <div
-            className="form-group field field-string"
+            className="emotion-3"
           >
             <div
-              className="chakra-form-control emotion-0"
-              role="group"
+              className="form-group field field-string"
             >
-              <div
-                className="chakra-form-control emotion-4"
-                role="group"
+              <fieldset
+                className="fieldset__root emotion-0"
+                data-part="root"
+                data-scope="fieldset"
+                disabled={false}
               >
-                <label
-                  className="chakra-form__label emotion-5"
-                  htmlFor="root_my-field"
-                  id="root_my-field-label"
+                <legend
+                  className="fieldset__legend emotion-5"
+                  data-part="legend"
+                  data-scope="fieldset"
                 >
-                  my-field
-                </label>
-                <input
-                  aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
-                  autoFocus={false}
-                  className="chakra-input emotion-0"
-                  disabled={false}
-                  id="root_my-field"
-                  name="root_my-field"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  onFocus={[Function]}
-                  placeholder=""
-                  readOnly={false}
-                  required={false}
-                  type="text"
-                  value=""
-                />
-              </div>
-              <p
-                className="chakra-text emotion-7"
-              >
-                <sup
-                  className="chakra-text emotion-8"
-                  id="root_my-field__description"
+                  <sup
+                    className="emotion-6"
+                    id="root_my-field__description"
+                  >
+                    some description
+                  </sup>
+                </legend>
+                <div
+                  className="fieldset__content emotion-1"
                 >
-                  some description
-                </sup>
-              </p>
+                  <div
+                    className="chakra-field__root emotion-8"
+                    data-part="root"
+                    data-scope="field"
+                    id="field:::r2o:"
+                    role="group"
+                  >
+                    <label
+                      className="chakra-field__label emotion-9"
+                      data-part="label"
+                      data-scope="field"
+                      htmlFor=":r2o:"
+                      id="field:::r2o:::label"
+                    >
+                      my-field
+                    </label>
+                    <input
+                      aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
+                      autoFocus={false}
+                      className="chakra-input emotion-10"
+                      data-part="input"
+                      data-scope="field"
+                      disabled={false}
+                      id="root_my-field"
+                      name="root_my-field"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      onFocus={[Function]}
+                      placeholder=""
+                      readOnly={false}
+                      required={false}
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                </div>
+              </fieldset>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </fieldset>
   </div>
   <div
-    className="emotion-9"
+    className="emotion-11"
   >
     <button
-      className="chakra-button emotion-10"
+      className="chakra-button emotion-12"
       disabled={false}
       type="submit"
     >
@@ -796,57 +790,26 @@ exports[`single fields field with description 1`] = `
 `;
 
 exports[`single fields field with description in uiSchema 1`] = `
-.emotion-1 {
+.emotion-2 {
   display: grid;
-  grid-gap: 6px;
-  margin-bottom: 4px;
-}
-
-.emotion-4 {
-  margin-bottom: 1px;
+  gap: var(--chakra-spacing-6);
+  margin-bottom: var(--chakra-spacing-4);
 }
 
 .emotion-5 {
-  display: block;
-  text-align: start;
+  margin-top: var(--chakra-spacing-2);
 }
 
-.emotion-7 {
-  margin-top: 2px;
+.emotion-6 {
+  font-size: var(--chakra-font-sizes-md);
 }
 
 .emotion-8 {
-  font-size: md;
+  margin-bottom: var(--chakra-spacing-1);
 }
 
-.emotion-9 {
-  margin-top: 3px;
-}
-
-.emotion-10 {
-  display: inline-flex;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  -ms-appearance: none;
-  appearance: none;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  position: relative;
-  white-space: nowrap;
-  vertical-align: middle;
-  outline: 2px solid transparent;
-  outline-offset: 2px;
-  width: auto;
+.emotion-11 {
+  margin-top: var(--chakra-spacing-3);
 }
 
 <form
@@ -857,72 +820,93 @@ exports[`single fields field with description in uiSchema 1`] = `
   <div
     className="form-group field field-object"
   >
-    <div
-      className="chakra-form-control emotion-0"
-      role="group"
+    <fieldset
+      className="fieldset__root emotion-0"
+      data-part="root"
+      data-scope="fieldset"
+      disabled={false}
     >
       <div
-        className="emotion-1"
+        className="fieldset__content emotion-1"
       >
         <div
-          className="emotion-0"
+          className="emotion-2"
         >
           <div
-            className="form-group field field-string"
+            className="emotion-3"
           >
             <div
-              className="chakra-form-control emotion-0"
-              role="group"
+              className="form-group field field-string"
             >
-              <div
-                className="chakra-form-control emotion-4"
-                role="group"
+              <fieldset
+                className="fieldset__root emotion-0"
+                data-part="root"
+                data-scope="fieldset"
+                disabled={false}
               >
-                <label
-                  className="chakra-form__label emotion-5"
-                  htmlFor="root_my-field"
-                  id="root_my-field-label"
+                <legend
+                  className="fieldset__legend emotion-5"
+                  data-part="legend"
+                  data-scope="fieldset"
                 >
-                  my-field
-                </label>
-                <input
-                  aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
-                  autoFocus={false}
-                  className="chakra-input emotion-0"
-                  disabled={false}
-                  id="root_my-field"
-                  name="root_my-field"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  onFocus={[Function]}
-                  placeholder=""
-                  readOnly={false}
-                  required={false}
-                  type="text"
-                  value=""
-                />
-              </div>
-              <p
-                className="chakra-text emotion-7"
-              >
-                <sup
-                  className="chakra-text emotion-8"
-                  id="root_my-field__description"
+                  <sup
+                    className="emotion-6"
+                    id="root_my-field__description"
+                  >
+                    some other description
+                  </sup>
+                </legend>
+                <div
+                  className="fieldset__content emotion-1"
                 >
-                  some other description
-                </sup>
-              </p>
+                  <div
+                    className="chakra-field__root emotion-8"
+                    data-part="root"
+                    data-scope="field"
+                    id="field:::r2r:"
+                    role="group"
+                  >
+                    <label
+                      className="chakra-field__label emotion-9"
+                      data-part="label"
+                      data-scope="field"
+                      htmlFor=":r2r:"
+                      id="field:::r2r:::label"
+                    >
+                      my-field
+                    </label>
+                    <input
+                      aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
+                      autoFocus={false}
+                      className="chakra-input emotion-10"
+                      data-part="input"
+                      data-scope="field"
+                      disabled={false}
+                      id="root_my-field"
+                      name="root_my-field"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      onFocus={[Function]}
+                      placeholder=""
+                      readOnly={false}
+                      required={false}
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                </div>
+              </fieldset>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </fieldset>
   </div>
   <div
-    className="emotion-9"
+    className="emotion-11"
   >
     <button
-      className="chakra-button emotion-10"
+      className="chakra-button emotion-12"
       disabled={false}
       type="submit"
     >
@@ -933,38 +917,12 @@ exports[`single fields field with description in uiSchema 1`] = `
 `;
 
 exports[`single fields format color 1`] = `
-.emotion-1 {
-  margin-bottom: 1px;
-}
-
-.emotion-3 {
-  margin-top: 3px;
+.emotion-2 {
+  margin-bottom: var(--chakra-spacing-1);
 }
 
 .emotion-4 {
-  display: inline-flex;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  -ms-appearance: none;
-  appearance: none;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  position: relative;
-  white-space: nowrap;
-  vertical-align: middle;
-  outline: 2px solid transparent;
-  outline-offset: 2px;
-  width: auto;
+  margin-top: var(--chakra-spacing-3);
 }
 
 <form
@@ -975,38 +933,49 @@ exports[`single fields format color 1`] = `
   <div
     className="form-group field field-string"
   >
-    <div
-      className="chakra-form-control emotion-0"
-      role="group"
+    <fieldset
+      className="fieldset__root emotion-0"
+      data-part="root"
+      data-scope="fieldset"
+      disabled={false}
     >
       <div
-        className="chakra-form-control emotion-1"
-        role="group"
+        className="fieldset__content emotion-1"
       >
-        <input
-          aria-describedby="root__error root__description root__help"
-          autoFocus={false}
-          className="chakra-input emotion-0"
-          disabled={false}
-          id="root"
-          name="root"
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          placeholder=""
-          readOnly={false}
-          required={false}
-          type="color"
-          value=""
-        />
+        <div
+          className="chakra-field__root emotion-2"
+          data-part="root"
+          data-scope="field"
+          id="field:::rh:"
+          role="group"
+        >
+          <input
+            aria-describedby="root__error root__description root__help"
+            autoFocus={false}
+            className="chakra-input emotion-3"
+            data-part="input"
+            data-scope="field"
+            disabled={false}
+            id="root"
+            name="root"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            placeholder=""
+            readOnly={false}
+            required={false}
+            type="color"
+            value=""
+          />
+        </div>
       </div>
-    </div>
+    </fieldset>
   </div>
   <div
-    className="emotion-3"
+    className="emotion-4"
   >
     <button
-      className="chakra-button emotion-4"
+      className="chakra-button emotion-5"
       disabled={false}
       type="submit"
     >
@@ -1017,38 +986,12 @@ exports[`single fields format color 1`] = `
 `;
 
 exports[`single fields format date 1`] = `
-.emotion-1 {
-  margin-bottom: 1px;
-}
-
-.emotion-3 {
-  margin-top: 3px;
+.emotion-2 {
+  margin-bottom: var(--chakra-spacing-1);
 }
 
 .emotion-4 {
-  display: inline-flex;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  -ms-appearance: none;
-  appearance: none;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  position: relative;
-  white-space: nowrap;
-  vertical-align: middle;
-  outline: 2px solid transparent;
-  outline-offset: 2px;
-  width: auto;
+  margin-top: var(--chakra-spacing-3);
 }
 
 <form
@@ -1059,38 +1002,49 @@ exports[`single fields format date 1`] = `
   <div
     className="form-group field field-string"
   >
-    <div
-      className="chakra-form-control emotion-0"
-      role="group"
+    <fieldset
+      className="fieldset__root emotion-0"
+      data-part="root"
+      data-scope="fieldset"
+      disabled={false}
     >
       <div
-        className="chakra-form-control emotion-1"
-        role="group"
+        className="fieldset__content emotion-1"
       >
-        <input
-          aria-describedby="root__error root__description root__help"
-          autoFocus={false}
-          className="chakra-input emotion-0"
-          disabled={false}
-          id="root"
-          name="root"
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          placeholder=""
-          readOnly={false}
-          required={false}
-          type="date"
-          value=""
-        />
+        <div
+          className="chakra-field__root emotion-2"
+          data-part="root"
+          data-scope="field"
+          id="field:::rj:"
+          role="group"
+        >
+          <input
+            aria-describedby="root__error root__description root__help"
+            autoFocus={false}
+            className="chakra-input emotion-3"
+            data-part="input"
+            data-scope="field"
+            disabled={false}
+            id="root"
+            name="root"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            placeholder=""
+            readOnly={false}
+            required={false}
+            type="date"
+            value=""
+          />
+        </div>
       </div>
-    </div>
+    </fieldset>
   </div>
   <div
-    className="emotion-3"
+    className="emotion-4"
   >
     <button
-      className="chakra-button emotion-4"
+      className="chakra-button emotion-5"
       disabled={false}
       type="submit"
     >
@@ -1101,38 +1055,12 @@ exports[`single fields format date 1`] = `
 `;
 
 exports[`single fields format datetime 1`] = `
-.emotion-1 {
-  margin-bottom: 1px;
-}
-
-.emotion-3 {
-  margin-top: 3px;
+.emotion-2 {
+  margin-bottom: var(--chakra-spacing-1);
 }
 
 .emotion-4 {
-  display: inline-flex;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  -ms-appearance: none;
-  appearance: none;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  position: relative;
-  white-space: nowrap;
-  vertical-align: middle;
-  outline: 2px solid transparent;
-  outline-offset: 2px;
-  width: auto;
+  margin-top: var(--chakra-spacing-3);
 }
 
 <form
@@ -1143,38 +1071,49 @@ exports[`single fields format datetime 1`] = `
   <div
     className="form-group field field-string"
   >
-    <div
-      className="chakra-form-control emotion-0"
-      role="group"
+    <fieldset
+      className="fieldset__root emotion-0"
+      data-part="root"
+      data-scope="fieldset"
+      disabled={false}
     >
       <div
-        className="chakra-form-control emotion-1"
-        role="group"
+        className="fieldset__content emotion-1"
       >
-        <input
-          aria-describedby="root__error root__description root__help"
-          autoFocus={false}
-          className="chakra-input emotion-0"
-          disabled={false}
-          id="root"
-          name="root"
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          placeholder=""
-          readOnly={false}
-          required={false}
-          type="datetime-local"
-          value=""
-        />
+        <div
+          className="chakra-field__root emotion-2"
+          data-part="root"
+          data-scope="field"
+          id="field:::rl:"
+          role="group"
+        >
+          <input
+            aria-describedby="root__error root__description root__help"
+            autoFocus={false}
+            className="chakra-input emotion-3"
+            data-part="input"
+            data-scope="field"
+            disabled={false}
+            id="root"
+            name="root"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            placeholder=""
+            readOnly={false}
+            required={false}
+            type="datetime-local"
+            value=""
+          />
+        </div>
       </div>
-    </div>
+    </fieldset>
   </div>
   <div
-    className="emotion-3"
+    className="emotion-4"
   >
     <button
-      className="chakra-button emotion-4"
+      className="chakra-button emotion-5"
       disabled={false}
       type="submit"
     >
@@ -1185,38 +1124,12 @@ exports[`single fields format datetime 1`] = `
 `;
 
 exports[`single fields format time 1`] = `
-.emotion-1 {
-  margin-bottom: 1px;
-}
-
-.emotion-3 {
-  margin-top: 3px;
+.emotion-2 {
+  margin-bottom: var(--chakra-spacing-1);
 }
 
 .emotion-4 {
-  display: inline-flex;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  -ms-appearance: none;
-  appearance: none;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  position: relative;
-  white-space: nowrap;
-  vertical-align: middle;
-  outline: 2px solid transparent;
-  outline-offset: 2px;
-  width: auto;
+  margin-top: var(--chakra-spacing-3);
 }
 
 <form
@@ -1227,38 +1140,49 @@ exports[`single fields format time 1`] = `
   <div
     className="form-group field field-string"
   >
-    <div
-      className="chakra-form-control emotion-0"
-      role="group"
+    <fieldset
+      className="fieldset__root emotion-0"
+      data-part="root"
+      data-scope="fieldset"
+      disabled={false}
     >
       <div
-        className="chakra-form-control emotion-1"
-        role="group"
+        className="fieldset__content emotion-1"
       >
-        <input
-          aria-describedby="root__error root__description root__help"
-          autoFocus={false}
-          className="chakra-input emotion-0"
-          disabled={false}
-          id="root"
-          name="root"
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          placeholder=""
-          readOnly={false}
-          required={false}
-          type="time"
-          value=""
-        />
+        <div
+          className="chakra-field__root emotion-2"
+          data-part="root"
+          data-scope="field"
+          id="field:::rn:"
+          role="group"
+        >
+          <input
+            aria-describedby="root__error root__description root__help"
+            autoFocus={false}
+            className="chakra-input emotion-3"
+            data-part="input"
+            data-scope="field"
+            disabled={false}
+            id="root"
+            name="root"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            placeholder=""
+            readOnly={false}
+            required={false}
+            type="time"
+            value=""
+          />
+        </div>
       </div>
-    </div>
+    </fieldset>
   </div>
   <div
-    className="emotion-3"
+    className="emotion-4"
   >
     <button
-      className="chakra-button emotion-4"
+      className="chakra-button emotion-5"
       disabled={false}
       type="submit"
     >
@@ -1270,76 +1194,32 @@ exports[`single fields format time 1`] = `
 
 exports[`single fields help and error display 1`] = `
 .emotion-0 {
-  width: 100%;
-  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
   -webkit-align-items: flex-start;
   -webkit-box-align: flex-start;
   -ms-flex-align: flex-start;
   align-items: flex-start;
-  position: relative;
-  overflow: hidden;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  gap: 3px;
+  gap: var(--chakra-spacing-3);
 }
 
 .emotion-2 {
-  list-style-type: none;
+  stroke: currentColor;
+  fill: currentColor;
+  stroke-width: 0;
 }
 
-.emotion-4 {
-  width: 1em;
-  height: 1em;
-  display: inline-block;
-  line-height: 1em;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
-  color: red.500;
-  vertical-align: middle;
-}
-
-.emotion-6 {
-  margin-bottom: 1px;
-}
-
-.emotion-10 {
-  display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
+.emotion-8 {
+  color: var(--chakra-colors-red-500);
 }
 
 .emotion-12 {
-  margin-top: 3px;
+  margin-bottom: var(--chakra-spacing-1);
 }
 
-.emotion-13 {
-  display: inline-flex;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  -ms-appearance: none;
-  appearance: none;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  position: relative;
-  white-space: nowrap;
-  vertical-align: middle;
-  outline: 2px solid transparent;
-  outline-offset: 2px;
-  width: auto;
+.emotion-18 {
+  margin-top: var(--chakra-spacing-3);
 }
 
 <form
@@ -1348,94 +1228,145 @@ exports[`single fields help and error display 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="chakra-alert emotion-0"
-    role="alert"
+    className="chakra-alert__root emotion-0"
   >
-    <div
-      className="chakra-alert__title emotion-1"
+    <span
+      className="emotion-1"
     >
-      Errors
-    </div>
-    <ul
-      className="emotion-2"
-      role="list"
-    >
-      <li
-        className="emotion-1"
+      <svg
+        className="emotion-2"
+        viewBox="0 0 24 24"
       >
-        <svg
-          className="chakra-icon chakra-icon emotion-4"
-          focusable={false}
-          role="presentation"
-          viewBox="0 0 24 24"
+        <path
+          d="M12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22ZM12 20C16.4183 20 20 16.4183 20 12C20 7.58172 16.4183 4 12 4C7.58172 4 4 7.58172 4 12C4 16.4183 7.58172 20 12 20ZM11 15H13V17H11V15ZM11 7H13V13H11V7Z"
+        />
+      </svg>
+    </span>
+    <div
+      className="chakra-alert__content emotion-3"
+    >
+      <div
+        className="chakra-alert__title emotion-4"
+      >
+        Errors
+      </div>
+      <div
+        className="chakra-alert__description emotion-5"
+      >
+        <ul
+          className="chakra-list__root emotion-6"
+          role="list"
         >
-          <path
-            d="M11.983,0a12.206,12.206,0,0,0-8.51,3.653A11.8,11.8,0,0,0,0,12.207,11.779,11.779,0,0,0,11.8,24h.214A12.111,12.111,0,0,0,24,11.791h0A11.766,11.766,0,0,0,11.983,0ZM10.5,16.542a1.476,1.476,0,0,1,1.449-1.53h.027a1.527,1.527,0,0,1,1.523,1.47,1.475,1.475,0,0,1-1.449,1.53h-.027A1.529,1.529,0,0,1,10.5,16.542ZM11,12.5v-6a1,1,0,0,1,2,0v6a1,1,0,1,1-2,0Z"
-            fill="currentColor"
-          />
-        </svg>
-        . an error
-      </li>
-    </ul>
+          <li
+            className="chakra-list__item emotion-7"
+          >
+            <svg
+              className="lucide lucide-triangle-alert chakra-list__indicator emotion-8"
+              fill="none"
+              height={24}
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              viewBox="0 0 24 24"
+              width={24}
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"
+              />
+              <path
+                d="M12 9v4"
+              />
+              <path
+                d="M12 17h.01"
+              />
+            </svg>
+            . an error
+          </li>
+        </ul>
+      </div>
+    </div>
   </div>
   <div
     className="form-group field field-string field-error has-error has-danger"
   >
-    <div
-      className="chakra-form-control emotion-1"
-      role="group"
+    <fieldset
+      className="fieldset__root emotion-9"
+      data-invalid="true"
+      data-part="root"
+      data-scope="fieldset"
+      disabled={false}
     >
-      <div
-        className="chakra-form-control emotion-6"
-        role="group"
-      >
-        <input
-          aria-describedby="root__error root__description root__help"
-          aria-invalid={true}
-          autoFocus={false}
-          className="chakra-input emotion-1"
-          disabled={false}
-          id="root"
-          name="root"
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          placeholder=""
-          readOnly={false}
-          required={false}
-          type="text"
-          value=""
-        />
-      </div>
-      <ul
-        className="emotion-2"
-        role="list"
-      >
-        <li
-          className="emotion-1"
-        >
-          <div
-            aria-live="polite"
-            className="chakra-form__error-message emotion-10"
-            id="root__error"
-          >
-            an error
-          </div>
-        </li>
-      </ul>
-      <div
-        className="chakra-form__helper-text emotion-1"
+      <p
+        className="emotion-10"
         id="root__help"
       >
         help me!
+      </p>
+      <div
+        className="fieldset__content emotion-11"
+      >
+        <div
+          className="chakra-field__root emotion-12"
+          data-invalid=""
+          data-part="root"
+          data-scope="field"
+          id="field:::r36:"
+          role="group"
+        >
+          <input
+            aria-describedby="root__error root__description root__help"
+            aria-invalid="true"
+            autoFocus={false}
+            className="chakra-input emotion-13"
+            data-invalid=""
+            data-part="input"
+            data-scope="field"
+            disabled={false}
+            id="root"
+            name="root"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            placeholder=""
+            readOnly={false}
+            required={false}
+            type="text"
+            value=""
+          />
+        </div>
       </div>
-    </div>
+      <span
+        aria-live="polite"
+        className="fieldset__errorText emotion-14"
+        data-part="error-text"
+        data-scope="fieldset"
+        id="fieldset:::r35:::error-text"
+      >
+        <ul
+          className="chakra-list__root emotion-6"
+          role="list"
+        >
+          <li
+            className="chakra-list__item emotion-7"
+          >
+            <p
+              className="emotion-10"
+              id="root__error"
+            >
+              an error
+            </p>
+          </li>
+        </ul>
+      </span>
+    </fieldset>
   </div>
   <div
-    className="emotion-12"
+    className="emotion-18"
   >
     <button
-      className="chakra-button emotion-13"
+      className="chakra-button emotion-19"
       disabled={false}
       type="submit"
     >
@@ -1446,40 +1377,14 @@ exports[`single fields help and error display 1`] = `
 `;
 
 exports[`single fields hidden field 1`] = `
-.emotion-1 {
-  display: grid;
-  grid-gap: 6px;
-  margin-bottom: 4px;
-}
-
 .emotion-2 {
-  margin-top: 3px;
+  display: grid;
+  gap: var(--chakra-spacing-6);
+  margin-bottom: var(--chakra-spacing-4);
 }
 
 .emotion-3 {
-  display: inline-flex;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  -ms-appearance: none;
-  appearance: none;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  position: relative;
-  white-space: nowrap;
-  vertical-align: middle;
-  outline: 2px solid transparent;
-  outline-offset: 2px;
-  width: auto;
+  margin-top: var(--chakra-spacing-3);
 }
 
 <form
@@ -1490,29 +1395,142 @@ exports[`single fields hidden field 1`] = `
   <div
     className="form-group field field-object"
   >
-    <div
-      className="chakra-form-control emotion-0"
-      role="group"
+    <fieldset
+      className="fieldset__root emotion-0"
+      data-part="root"
+      data-scope="fieldset"
+      disabled={false}
     >
       <div
-        className="emotion-1"
+        className="fieldset__content emotion-1"
       >
         <div
-          style={
-            {
-              "display": "none",
+          className="emotion-2"
+        >
+          <div
+            style={
+              {
+                "display": "none",
+              }
             }
-          }
+          >
+            <input
+              id="root_my-field"
+              name="root_my-field"
+              type="hidden"
+              value=""
+            />
+          </div>
+        </div>
+      </div>
+    </fieldset>
+  </div>
+  <div
+    className="emotion-3"
+  >
+    <button
+      className="chakra-button emotion-4"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields hidden label 1`] = `
+.emotion-2 {
+  margin-bottom: var(--chakra-spacing-1);
+}
+
+.emotion-4 {
+  margin-top: var(--chakra-spacing-3);
+}
+
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+  >
+    <fieldset
+      className="fieldset__root emotion-0"
+      data-part="root"
+      data-scope="fieldset"
+      disabled={false}
+    >
+      <div
+        className="fieldset__content emotion-1"
+      >
+        <div
+          className="chakra-field__root emotion-2"
+          data-part="root"
+          data-scope="field"
+          id="field:::r30:"
+          role="group"
         >
           <input
-            id="root_my-field"
-            name="root_my-field"
-            type="hidden"
+            aria-describedby="root__error root__description root__help"
+            autoFocus={false}
+            className="chakra-input emotion-3"
+            data-part="input"
+            data-scope="field"
+            disabled={false}
+            id="root"
+            name="root"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            placeholder=""
+            readOnly={false}
+            required={false}
+            type="text"
             value=""
           />
         </div>
       </div>
-    </div>
+    </fieldset>
+  </div>
+  <div
+    className="emotion-4"
+  >
+    <button
+      className="chakra-button emotion-5"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields null field 1`] = `
+.emotion-2 {
+  margin-top: var(--chakra-spacing-3);
+}
+
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-null"
+  >
+    <fieldset
+      className="fieldset__root emotion-0"
+      data-part="root"
+      data-scope="fieldset"
+      disabled={false}
+    >
+      <div
+        className="fieldset__content emotion-1"
+      />
+    </fieldset>
   </div>
   <div
     className="emotion-2"
@@ -1528,181 +1546,13 @@ exports[`single fields hidden field 1`] = `
 </form>
 `;
 
-exports[`single fields hidden label 1`] = `
-.emotion-1 {
-  margin-bottom: 1px;
-}
-
-.emotion-3 {
-  margin-top: 3px;
-}
-
-.emotion-4 {
-  display: inline-flex;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  -ms-appearance: none;
-  appearance: none;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  position: relative;
-  white-space: nowrap;
-  vertical-align: middle;
-  outline: 2px solid transparent;
-  outline-offset: 2px;
-  width: auto;
-}
-
-<form
-  className="rjsf"
-  noValidate={false}
-  onSubmit={[Function]}
->
-  <div
-    className="form-group field field-string"
-  >
-    <div
-      className="chakra-form-control emotion-0"
-      role="group"
-    >
-      <div
-        className="chakra-form-control emotion-1"
-        role="group"
-      >
-        <input
-          aria-describedby="root__error root__description root__help"
-          autoFocus={false}
-          className="chakra-input emotion-0"
-          disabled={false}
-          id="root"
-          name="root"
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          placeholder=""
-          readOnly={false}
-          required={false}
-          type="text"
-          value=""
-        />
-      </div>
-    </div>
-  </div>
-  <div
-    className="emotion-3"
-  >
-    <button
-      className="chakra-button emotion-4"
-      disabled={false}
-      type="submit"
-    >
-      Submit
-    </button>
-  </div>
-</form>
-`;
-
-exports[`single fields null field 1`] = `
-.emotion-1 {
-  margin-top: 3px;
-}
-
-.emotion-2 {
-  display: inline-flex;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  -ms-appearance: none;
-  appearance: none;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  position: relative;
-  white-space: nowrap;
-  vertical-align: middle;
-  outline: 2px solid transparent;
-  outline-offset: 2px;
-  width: auto;
-}
-
-<form
-  className="rjsf"
-  noValidate={false}
-  onSubmit={[Function]}
->
-  <div
-    className="form-group field field-null"
-  >
-    <div
-      className="chakra-form-control emotion-0"
-      role="group"
-    />
-  </div>
-  <div
-    className="emotion-1"
-  >
-    <button
-      className="chakra-button emotion-2"
-      disabled={false}
-      type="submit"
-    >
-      Submit
-    </button>
-  </div>
-</form>
-`;
-
 exports[`single fields number field 0 1`] = `
-.emotion-1 {
-  margin-bottom: 1px;
-}
-
-.emotion-3 {
-  margin-top: 3px;
+.emotion-2 {
+  margin-bottom: var(--chakra-spacing-1);
 }
 
 .emotion-4 {
-  display: inline-flex;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  -ms-appearance: none;
-  appearance: none;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  position: relative;
-  white-space: nowrap;
-  vertical-align: middle;
-  outline: 2px solid transparent;
-  outline-offset: 2px;
-  width: auto;
+  margin-top: var(--chakra-spacing-3);
 }
 
 <form
@@ -1713,39 +1563,50 @@ exports[`single fields number field 0 1`] = `
   <div
     className="form-group field field-number"
   >
-    <div
-      className="chakra-form-control emotion-0"
-      role="group"
+    <fieldset
+      className="fieldset__root emotion-0"
+      data-part="root"
+      data-scope="fieldset"
+      disabled={false}
     >
       <div
-        className="chakra-form-control emotion-1"
-        role="group"
+        className="fieldset__content emotion-1"
       >
-        <input
-          aria-describedby="root__error root__description root__help"
-          autoFocus={false}
-          className="chakra-input emotion-0"
-          disabled={false}
-          id="root"
-          name="root"
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          placeholder=""
-          readOnly={false}
-          required={false}
-          step="any"
-          type="number"
-          value={0}
-        />
+        <div
+          className="chakra-field__root emotion-2"
+          data-part="root"
+          data-scope="field"
+          id="field:::rd:"
+          role="group"
+        >
+          <input
+            aria-describedby="root__error root__description root__help"
+            autoFocus={false}
+            className="chakra-input emotion-3"
+            data-part="input"
+            data-scope="field"
+            disabled={false}
+            id="root"
+            name="root"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            placeholder=""
+            readOnly={false}
+            required={false}
+            step="any"
+            type="number"
+            value={0}
+          />
+        </div>
       </div>
-    </div>
+    </fieldset>
   </div>
   <div
-    className="emotion-3"
+    className="emotion-4"
   >
     <button
-      className="chakra-button emotion-4"
+      className="chakra-button emotion-5"
       disabled={false}
       type="submit"
     >
@@ -1756,38 +1617,12 @@ exports[`single fields number field 0 1`] = `
 `;
 
 exports[`single fields number field 1`] = `
-.emotion-1 {
-  margin-bottom: 1px;
-}
-
-.emotion-3 {
-  margin-top: 3px;
+.emotion-2 {
+  margin-bottom: var(--chakra-spacing-1);
 }
 
 .emotion-4 {
-  display: inline-flex;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  -ms-appearance: none;
-  appearance: none;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  position: relative;
-  white-space: nowrap;
-  vertical-align: middle;
-  outline: 2px solid transparent;
-  outline-offset: 2px;
-  width: auto;
+  margin-top: var(--chakra-spacing-3);
 }
 
 <form
@@ -1798,39 +1633,50 @@ exports[`single fields number field 1`] = `
   <div
     className="form-group field field-number"
   >
-    <div
-      className="chakra-form-control emotion-0"
-      role="group"
+    <fieldset
+      className="fieldset__root emotion-0"
+      data-part="root"
+      data-scope="fieldset"
+      disabled={false}
     >
       <div
-        className="chakra-form-control emotion-1"
-        role="group"
+        className="fieldset__content emotion-1"
       >
-        <input
-          aria-describedby="root__error root__description root__help"
-          autoFocus={false}
-          className="chakra-input emotion-0"
-          disabled={false}
-          id="root"
-          name="root"
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          placeholder=""
-          readOnly={false}
-          required={false}
-          step="any"
-          type="number"
-          value=""
-        />
+        <div
+          className="chakra-field__root emotion-2"
+          data-part="root"
+          data-scope="field"
+          id="field:::rb:"
+          role="group"
+        >
+          <input
+            aria-describedby="root__error root__description root__help"
+            autoFocus={false}
+            className="chakra-input emotion-3"
+            data-part="input"
+            data-scope="field"
+            disabled={false}
+            id="root"
+            name="root"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            placeholder=""
+            readOnly={false}
+            required={false}
+            step="any"
+            type="number"
+            value=""
+          />
+        </div>
       </div>
-    </div>
+    </fieldset>
   </div>
   <div
-    className="emotion-3"
+    className="emotion-4"
   >
     <button
-      className="chakra-button emotion-4"
+      className="chakra-button emotion-5"
       disabled={false}
       type="submit"
     >
@@ -1841,38 +1687,12 @@ exports[`single fields number field 1`] = `
 `;
 
 exports[`single fields password field 1`] = `
-.emotion-1 {
-  margin-bottom: 1px;
-}
-
-.emotion-3 {
-  margin-top: 3px;
+.emotion-2 {
+  margin-bottom: var(--chakra-spacing-1);
 }
 
 .emotion-4 {
-  display: inline-flex;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  -ms-appearance: none;
-  appearance: none;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  position: relative;
-  white-space: nowrap;
-  vertical-align: middle;
-  outline: 2px solid transparent;
-  outline-offset: 2px;
-  width: auto;
+  margin-top: var(--chakra-spacing-3);
 }
 
 <form
@@ -1883,38 +1703,49 @@ exports[`single fields password field 1`] = `
   <div
     className="form-group field field-string"
   >
-    <div
-      className="chakra-form-control emotion-0"
-      role="group"
+    <fieldset
+      className="fieldset__root emotion-0"
+      data-part="root"
+      data-scope="fieldset"
+      disabled={false}
     >
       <div
-        className="chakra-form-control emotion-1"
-        role="group"
+        className="fieldset__content emotion-1"
       >
-        <input
-          aria-describedby="root__error root__description root__help"
-          autoFocus={false}
-          className="chakra-input emotion-0"
-          disabled={false}
-          id="root"
-          name="root"
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          placeholder=""
-          readOnly={false}
-          required={false}
-          type="password"
-          value=""
-        />
+        <div
+          className="chakra-field__root emotion-2"
+          data-part="root"
+          data-scope="field"
+          id="field:::rp:"
+          role="group"
+        >
+          <input
+            aria-describedby="root__error root__description root__help"
+            autoFocus={false}
+            className="chakra-input emotion-3"
+            data-part="input"
+            data-scope="field"
+            disabled={false}
+            id="root"
+            name="root"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            placeholder=""
+            readOnly={false}
+            required={false}
+            type="password"
+            value=""
+          />
+        </div>
       </div>
-    </div>
+    </fieldset>
   </div>
   <div
-    className="emotion-3"
+    className="emotion-4"
   >
     <button
-      className="chakra-button emotion-4"
+      className="chakra-button emotion-5"
       disabled={false}
       type="submit"
     >
@@ -1925,88 +1756,20 @@ exports[`single fields password field 1`] = `
 `;
 
 exports[`single fields radio field 1`] = `
-.emotion-1 {
-  margin-bottom: 1px;
+.emotion-2 {
+  margin-bottom: var(--chakra-spacing-1);
 }
 
-.emotion-3 {
+.emotion-4 {
   display: flex;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
   flex-direction: column;
-}
-
-.emotion-3>*:not(style)~*:not(style) {
-  margin-top: 0.5rem;
-  -webkit-margin-end: 0px;
-  margin-inline-end: 0px;
-  margin-bottom: 0px;
-  -webkit-margin-start: 0px;
-  margin-inline-start: 0px;
-}
-
-.emotion-4 {
-  display: inline-flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  vertical-align: top;
-  cursor: pointer;
-}
-
-.emotion-5 {
-  display: inline-flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
-}
-
-.emotion-6 {
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  -webkit-margin-start: 0.5rem;
-  margin-inline-start: 0.5rem;
-}
-
-.emotion-10 {
-  margin-top: 3px;
+  gap: 0.5rem;
 }
 
 .emotion-11 {
-  display: inline-flex;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  -ms-appearance: none;
-  appearance: none;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  position: relative;
-  white-space: nowrap;
-  vertical-align: middle;
-  outline: 2px solid transparent;
-  outline-offset: 2px;
-  width: auto;
+  margin-top: var(--chakra-spacing-3);
 }
 
 <form
@@ -2017,132 +1780,192 @@ exports[`single fields radio field 1`] = `
   <div
     className="form-group field field-boolean"
   >
-    <div
-      className="chakra-form-control emotion-0"
-      role="group"
+    <fieldset
+      className="fieldset__root emotion-0"
+      data-part="root"
+      data-scope="fieldset"
+      disabled={false}
     >
       <div
-        className="chakra-form-control emotion-1"
-        role="group"
+        className="fieldset__content emotion-1"
       >
         <div
-          aria-describedby="root__error root__description root__help"
-          className="chakra-radio-group emotion-0"
-          onBlur={[Function]}
-          onFocus={[Function]}
-          role="radiogroup"
+          className="chakra-field__root emotion-2"
+          data-part="root"
+          data-scope="field"
+          id="field:::r2g:"
+          role="group"
         >
           <div
-            className="chakra-stack emotion-3"
+            aria-describedby="root__error root__description root__help"
+            aria-labelledby="radio-group::r2h::label"
+            aria-orientation="vertical"
+            className="chakra-radio-group__root emotion-3"
+            data-orientation="vertical"
+            data-part="root"
+            data-scope="radio-group"
+            dir="ltr"
+            id="radio-group::r2h:"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            role="radiogroup"
+            style={
+              {
+                "position": "relative",
+              }
+            }
           >
-            <label
-              className="chakra-radio emotion-4"
+            <div
+              className="chakra-stack emotion-4"
             >
-              <input
-                checked={false}
-                className="chakra-radio__input"
-                disabled={false}
+              <label
+                className="chakra-radio-group__item emotion-5"
+                data-orientation="vertical"
+                data-part="item"
+                data-scope="radio-group"
+                data-ssr=""
+                data-state="unchecked"
+                dir="ltr"
+                htmlFor="radio-group::r2h::radio:input:0"
                 id="root-0"
-                name="root"
-                onBlur={[Function]}
-                onChange={[Function]}
-                onFocus={[Function]}
-                onKeyDown={[Function]}
-                onKeyUp={[Function]}
-                readOnly={false}
-                required={false}
-                style={
-                  {
-                    "border": "0px",
-                    "clip": "rect(0px, 0px, 0px, 0px)",
-                    "height": "1px",
-                    "margin": "-1px",
-                    "overflow": "hidden",
-                    "padding": "0px",
-                    "position": "absolute",
-                    "whiteSpace": "nowrap",
-                    "width": "1px",
-                  }
-                }
-                type="radio"
-                value="0"
-              />
-              <span
-                aria-hidden={true}
-                className="chakra-radio__control emotion-5"
-                disabled={false}
-                onMouseDown={[Function]}
-                onMouseEnter={[Function]}
-                onMouseLeave={[Function]}
-                onMouseUp={[Function]}
-              />
-              <span
-                className="chakra-radio__label emotion-6"
-                onMouseDown={[Function]}
-                onTouchStart={[Function]}
+                onClick={[Function]}
+                onPointerDown={[Function]}
+                onPointerLeave={[Function]}
+                onPointerMove={[Function]}
+                onPointerUp={[Function]}
               >
-                Yes
-              </span>
-            </label>
-            <label
-              className="chakra-radio emotion-4"
-            >
-              <input
-                checked={false}
-                className="chakra-radio__input"
-                disabled={false}
+                <input
+                  data-ownedby="radio-group::r2h:"
+                  defaultChecked={false}
+                  disabled={false}
+                  id="radio-group::r2h::radio:input:0"
+                  name="root"
+                  onBlur={[Function]}
+                  onClick={[Function]}
+                  onFocus={[Function]}
+                  onKeyDown={[Function]}
+                  onKeyUp={[Function]}
+                  style={
+                    {
+                      "border": "0",
+                      "clip": "rect(0 0 0 0)",
+                      "height": "1px",
+                      "margin": "-1px",
+                      "overflow": "hidden",
+                      "padding": "0",
+                      "position": "absolute",
+                      "whiteSpace": "nowrap",
+                      "width": "1px",
+                      "wordWrap": "normal",
+                    }
+                  }
+                  type="radio"
+                  value="0"
+                />
+                <span
+                  aria-hidden={true}
+                  className="emotion-6"
+                  data-orientation="vertical"
+                  data-part="item-control"
+                  data-scope="radio-group"
+                  data-ssr=""
+                  data-state="unchecked"
+                  dir="ltr"
+                  id="radio-group::r2h::radio:control:0"
+                />
+                <span
+                  className="chakra-radio-group__itemText emotion-3"
+                  data-orientation="vertical"
+                  data-part="item-text"
+                  data-scope="radio-group"
+                  data-ssr=""
+                  data-state="unchecked"
+                  dir="ltr"
+                  id="radio-group::r2h::radio:label:0"
+                >
+                  Yes
+                </span>
+              </label>
+              <label
+                className="chakra-radio-group__item emotion-5"
+                data-orientation="vertical"
+                data-part="item"
+                data-scope="radio-group"
+                data-ssr=""
+                data-state="unchecked"
+                dir="ltr"
+                htmlFor="radio-group::r2h::radio:input:1"
                 id="root-1"
-                name="root"
-                onBlur={[Function]}
-                onChange={[Function]}
-                onFocus={[Function]}
-                onKeyDown={[Function]}
-                onKeyUp={[Function]}
-                readOnly={false}
-                required={false}
-                style={
-                  {
-                    "border": "0px",
-                    "clip": "rect(0px, 0px, 0px, 0px)",
-                    "height": "1px",
-                    "margin": "-1px",
-                    "overflow": "hidden",
-                    "padding": "0px",
-                    "position": "absolute",
-                    "whiteSpace": "nowrap",
-                    "width": "1px",
-                  }
-                }
-                type="radio"
-                value="1"
-              />
-              <span
-                aria-hidden={true}
-                className="chakra-radio__control emotion-5"
-                disabled={false}
-                onMouseDown={[Function]}
-                onMouseEnter={[Function]}
-                onMouseLeave={[Function]}
-                onMouseUp={[Function]}
-              />
-              <span
-                className="chakra-radio__label emotion-6"
-                onMouseDown={[Function]}
-                onTouchStart={[Function]}
+                onClick={[Function]}
+                onPointerDown={[Function]}
+                onPointerLeave={[Function]}
+                onPointerMove={[Function]}
+                onPointerUp={[Function]}
               >
-                No
-              </span>
-            </label>
+                <input
+                  data-ownedby="radio-group::r2h:"
+                  defaultChecked={false}
+                  disabled={false}
+                  id="radio-group::r2h::radio:input:1"
+                  name="root"
+                  onBlur={[Function]}
+                  onClick={[Function]}
+                  onFocus={[Function]}
+                  onKeyDown={[Function]}
+                  onKeyUp={[Function]}
+                  style={
+                    {
+                      "border": "0",
+                      "clip": "rect(0 0 0 0)",
+                      "height": "1px",
+                      "margin": "-1px",
+                      "overflow": "hidden",
+                      "padding": "0",
+                      "position": "absolute",
+                      "whiteSpace": "nowrap",
+                      "width": "1px",
+                      "wordWrap": "normal",
+                    }
+                  }
+                  type="radio"
+                  value="1"
+                />
+                <span
+                  aria-hidden={true}
+                  className="emotion-6"
+                  data-orientation="vertical"
+                  data-part="item-control"
+                  data-scope="radio-group"
+                  data-ssr=""
+                  data-state="unchecked"
+                  dir="ltr"
+                  id="radio-group::r2h::radio:control:1"
+                />
+                <span
+                  className="chakra-radio-group__itemText emotion-3"
+                  data-orientation="vertical"
+                  data-part="item-text"
+                  data-scope="radio-group"
+                  data-ssr=""
+                  data-state="unchecked"
+                  dir="ltr"
+                  id="radio-group::r2h::radio:label:1"
+                >
+                  No
+                </span>
+              </label>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </fieldset>
   </div>
   <div
-    className="emotion-10"
+    className="emotion-11"
   >
     <button
-      className="chakra-button emotion-11"
+      className="chakra-button emotion-12"
       disabled={false}
       type="submit"
     >
@@ -2153,38 +1976,12 @@ exports[`single fields radio field 1`] = `
 `;
 
 exports[`single fields schema examples 1`] = `
-.emotion-1 {
-  margin-bottom: 1px;
-}
-
-.emotion-3 {
-  margin-top: 3px;
+.emotion-2 {
+  margin-bottom: var(--chakra-spacing-1);
 }
 
 .emotion-4 {
-  display: inline-flex;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  -ms-appearance: none;
-  appearance: none;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  position: relative;
-  white-space: nowrap;
-  vertical-align: middle;
-  outline: 2px solid transparent;
-  outline-offset: 2px;
-  width: auto;
+  margin-top: var(--chakra-spacing-3);
 }
 
 <form
@@ -2195,58 +1992,69 @@ exports[`single fields schema examples 1`] = `
   <div
     className="form-group field field-string"
   >
-    <div
-      className="chakra-form-control emotion-0"
-      role="group"
+    <fieldset
+      className="fieldset__root emotion-0"
+      data-part="root"
+      data-scope="fieldset"
+      disabled={false}
     >
       <div
-        className="chakra-form-control emotion-1"
-        role="group"
+        className="fieldset__content emotion-1"
       >
-        <input
-          aria-describedby="root__error root__description root__help root__examples"
-          autoFocus={false}
-          className="chakra-input emotion-0"
-          disabled={false}
-          id="root"
-          list="root__examples"
-          name="root"
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          placeholder=""
-          readOnly={false}
-          required={false}
-          type="text"
-          value=""
-        />
-        <datalist
-          id="root__examples"
+        <div
+          className="chakra-field__root emotion-2"
+          data-part="root"
+          data-scope="field"
+          id="field:::r34:"
+          role="group"
         >
-          <option
-            value="Firefox"
+          <input
+            aria-describedby="root__error root__description root__help root__examples"
+            autoFocus={false}
+            className="chakra-input emotion-3"
+            data-part="input"
+            data-scope="field"
+            disabled={false}
+            id="root"
+            list="root__examples"
+            name="root"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            placeholder=""
+            readOnly={false}
+            required={false}
+            type="text"
+            value=""
           />
-          <option
-            value="Chrome"
-          />
-          <option
-            value="Opera"
-          />
-          <option
-            value="Vivaldi"
-          />
-          <option
-            value="Safari"
-          />
-        </datalist>
+          <datalist
+            id="root__examples"
+          >
+            <option
+              value="Firefox"
+            />
+            <option
+              value="Chrome"
+            />
+            <option
+              value="Opera"
+            />
+            <option
+              value="Vivaldi"
+            />
+            <option
+              value="Safari"
+            />
+          </datalist>
+        </div>
       </div>
-    </div>
+    </fieldset>
   </div>
   <div
-    className="emotion-3"
+    className="emotion-4"
   >
     <button
-      className="chakra-button emotion-4"
+      className="chakra-button emotion-5"
       disabled={false}
       type="submit"
     >
@@ -5542,38 +5350,12 @@ exports[`single fields select field single choice uiSchema disabled using radio 
 `;
 
 exports[`single fields slider field 1`] = `
-.emotion-1 {
-  margin-bottom: 1px;
+.emotion-2 {
+  margin-bottom: var(--chakra-spacing-1);
 }
 
-.emotion-6 {
-  margin-top: 3px;
-}
-
-.emotion-7 {
-  display: inline-flex;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  -ms-appearance: none;
-  appearance: none;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  position: relative;
-  white-space: nowrap;
-  vertical-align: middle;
-  outline: 2px solid transparent;
-  outline-offset: 2px;
-  width: auto;
+.emotion-8 {
+  margin-top: var(--chakra-spacing-3);
 }
 
 <form
@@ -5584,96 +5366,133 @@ exports[`single fields slider field 1`] = `
   <div
     className="form-group field field-integer"
   >
-    <div
-      className="chakra-form-control emotion-0"
-      role="group"
+    <fieldset
+      className="fieldset__root emotion-0"
+      data-part="root"
+      data-scope="fieldset"
+      disabled={false}
     >
       <div
-        className="chakra-form-control emotion-1"
-        role="group"
+        className="fieldset__content emotion-1"
       >
         <div
-          aria-describedby="root__error root__description root__help"
-          className="chakra-slider emotion-0"
-          label=""
-          onBlur={[Function]}
-          onFocus={[Function]}
-          style={
-            {
-              "WebkitTapHighlightColor": "rgba(0,0,0,0)",
-              "outline": 0,
-              "paddingBottom": 0,
-              "paddingTop": 0,
-              "position": "relative",
-              "touchAction": "none",
-              "userSelect": "none",
-            }
-          }
-          tabIndex={-1}
+          className="chakra-field__root emotion-2"
+          data-part="root"
+          data-scope="field"
+          id="field:::r2j:"
+          role="group"
         >
           <div
-            className="chakra-slider__track emotion-0"
-            id="slider-track-root"
+            className="chakra-slider__root emotion-3"
+            data-orientation="horizontal"
+            data-part="root"
+            data-scope="slider"
+            dir="ltr"
+            id="slider::r2k:"
             style={
               {
-                "position": "absolute",
-                "top": "50%",
-                "transform": "translateY(-50%)",
-                "width": "100%",
+                "--slider-range-end": "60%",
+                "--slider-range-start": "0%",
+                "--slider-thumb-height": undefined,
+                "--slider-thumb-offset-0": "40%",
+                "--slider-thumb-transform": "translateX(-50%)",
+                "--slider-thumb-width": undefined,
               }
             }
           >
             <div
-              className="chakra-slider__filled-track emotion-0"
+              className="chakra-slider__control emotion-4"
+              data-orientation="horizontal"
+              data-part="control"
+              data-scope="slider"
+              dir="ltr"
+              id="slider::r2k::control"
+              onPointerDown={[Function]}
               style={
                 {
-                  "left": "0%",
-                  "position": "absolute",
-                  "top": "50%",
-                  "transform": "translateY(-50%)",
-                  "width": "56.89655172413793%",
+                  "WebkitUserSelect": "none",
+                  "position": "relative",
+                  "touchAction": "none",
+                  "userSelect": "none",
                 }
               }
-            />
+            >
+              <div
+                className="chakra-slider__track emotion-5"
+                data-orientation="horizontal"
+                data-part="track"
+                data-scope="slider"
+                dir="ltr"
+                id="slider::r2k::track"
+                style={
+                  {
+                    "position": "relative",
+                  }
+                }
+              >
+                <div
+                  className="chakra-slider__range emotion-6"
+                  data-orientation="horizontal"
+                  data-part="range"
+                  data-scope="slider"
+                  dir="ltr"
+                  id="slider::r2k::range"
+                  style={
+                    {
+                      "left": "var(--slider-range-start)",
+                      "position": "absolute",
+                      "right": "var(--slider-range-end)",
+                    }
+                  }
+                />
+              </div>
+              <div
+                aria-labelledby="slider::r2k::label"
+                aria-orientation="horizontal"
+                aria-valuemax={100}
+                aria-valuemin={0}
+                aria-valuenow={40}
+                className="chakra-slider__thumb emotion-7"
+                data-index={0}
+                data-orientation="horizontal"
+                data-part="thumb"
+                data-scope="slider"
+                dir="ltr"
+                draggable={false}
+                id="slider::r2k::thumb:0"
+                onBlur={[Function]}
+                onFocus={[Function]}
+                onKeyDown={[Function]}
+                onPointerDown={[Function]}
+                role="slider"
+                style={
+                  {
+                    "insetInlineStart": "var(--slider-thumb-offset-0)",
+                    "position": "absolute",
+                    "transform": "var(--slider-thumb-transform)",
+                    "visibility": "visible",
+                  }
+                }
+                tabIndex={0}
+              >
+                <input
+                  defaultValue={40}
+                  hidden={true}
+                  id="slider::r2k::input:0"
+                  type="text"
+                />
+              </div>
+            </div>
           </div>
-          <div
-            aria-orientation="horizontal"
-            aria-valuemax={100}
-            aria-valuemin={42}
-            aria-valuenow={75}
-            className="chakra-slider__thumb emotion-0"
-            id="slider-thumb-root"
-            onBlur={[Function]}
-            onFocus={[Function]}
-            onKeyDown={[Function]}
-            role="slider"
-            style={
-              {
-                "MozUserSelect": "none",
-                "WebkitUserSelect": "none",
-                "left": "calc(56.89655172413793% - 0px)",
-                "msUserSelect": "none",
-                "position": "absolute",
-                "touchAction": "none",
-                "userSelect": "none",
-              }
-            }
-            tabIndex={0}
-          />
-          <input
-            name="root"
-            type="hidden"
-            value={75}
-          />
         </div>
       </div>
-    </div>
+    </fieldset>
   </div>
   <div
-    className="emotion-6"
+    className="emotion-8"
   >
     <button
-      className="chakra-button emotion-7"
+      className="chakra-button emotion-9"
       disabled={false}
       type="submit"
     >
@@ -5684,38 +5503,12 @@ exports[`single fields slider field 1`] = `
 `;
 
 exports[`single fields string field format data-url 1`] = `
-.emotion-1 {
-  margin-bottom: 1px;
-}
-
-.emotion-3 {
-  margin-top: 3px;
+.emotion-2 {
+  margin-bottom: var(--chakra-spacing-1);
 }
 
 .emotion-4 {
-  display: inline-flex;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  -ms-appearance: none;
-  appearance: none;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  position: relative;
-  white-space: nowrap;
-  vertical-align: middle;
-  outline: 2px solid transparent;
-  outline-offset: 2px;
-  width: auto;
+  margin-top: var(--chakra-spacing-3);
 }
 
 <form
@@ -5726,40 +5519,51 @@ exports[`single fields string field format data-url 1`] = `
   <div
     className="form-group field field-string"
   >
-    <div
-      className="chakra-form-control emotion-0"
-      role="group"
+    <fieldset
+      className="fieldset__root emotion-0"
+      data-part="root"
+      data-scope="fieldset"
+      disabled={false}
     >
-      <div>
-        <div
-          className="chakra-form-control emotion-1"
-          role="group"
-        >
-          <input
-            aria-describedby="root__error root__description root__help"
-            autoFocus={false}
-            className="chakra-input emotion-0"
-            disabled={false}
-            id="root"
-            name="root"
-            onBlur={[Function]}
-            onChange={[Function]}
-            onFocus={[Function]}
-            placeholder=""
-            readOnly={false}
-            required={false}
-            type="file"
-            value=""
-          />
+      <div
+        className="fieldset__content emotion-1"
+      >
+        <div>
+          <div
+            className="chakra-field__root emotion-2"
+            data-part="root"
+            data-scope="field"
+            id="field:::r7:"
+            role="group"
+          >
+            <input
+              aria-describedby="root__error root__description root__help"
+              autoFocus={false}
+              className="chakra-input emotion-3"
+              data-part="input"
+              data-scope="field"
+              disabled={false}
+              id="root"
+              name="root"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              placeholder=""
+              readOnly={false}
+              required={false}
+              type="file"
+              value=""
+            />
+          </div>
         </div>
       </div>
-    </div>
+    </fieldset>
   </div>
   <div
-    className="emotion-3"
+    className="emotion-4"
   >
     <button
-      className="chakra-button emotion-4"
+      className="chakra-button emotion-5"
       disabled={false}
       type="submit"
     >
@@ -5770,38 +5574,12 @@ exports[`single fields string field format data-url 1`] = `
 `;
 
 exports[`single fields string field format email 1`] = `
-.emotion-1 {
-  margin-bottom: 1px;
-}
-
-.emotion-3 {
-  margin-top: 3px;
+.emotion-2 {
+  margin-bottom: var(--chakra-spacing-1);
 }
 
 .emotion-4 {
-  display: inline-flex;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  -ms-appearance: none;
-  appearance: none;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  position: relative;
-  white-space: nowrap;
-  vertical-align: middle;
-  outline: 2px solid transparent;
-  outline-offset: 2px;
-  width: auto;
+  margin-top: var(--chakra-spacing-3);
 }
 
 <form
@@ -5812,38 +5590,49 @@ exports[`single fields string field format email 1`] = `
   <div
     className="form-group field field-string"
   >
-    <div
-      className="chakra-form-control emotion-0"
-      role="group"
+    <fieldset
+      className="fieldset__root emotion-0"
+      data-part="root"
+      data-scope="fieldset"
+      disabled={false}
     >
       <div
-        className="chakra-form-control emotion-1"
-        role="group"
+        className="fieldset__content emotion-1"
       >
-        <input
-          aria-describedby="root__error root__description root__help"
-          autoFocus={false}
-          className="chakra-input emotion-0"
-          disabled={false}
-          id="root"
-          name="root"
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          placeholder=""
-          readOnly={false}
-          required={false}
-          type="email"
-          value=""
-        />
+        <div
+          className="chakra-field__root emotion-2"
+          data-part="root"
+          data-scope="field"
+          id="field:::r3:"
+          role="group"
+        >
+          <input
+            aria-describedby="root__error root__description root__help"
+            autoFocus={false}
+            className="chakra-input emotion-3"
+            data-part="input"
+            data-scope="field"
+            disabled={false}
+            id="root"
+            name="root"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            placeholder=""
+            readOnly={false}
+            required={false}
+            type="email"
+            value=""
+          />
+        </div>
       </div>
-    </div>
+    </fieldset>
   </div>
   <div
-    className="emotion-3"
+    className="emotion-4"
   >
     <button
-      className="chakra-button emotion-4"
+      className="chakra-button emotion-5"
       disabled={false}
       type="submit"
     >
@@ -5854,38 +5643,12 @@ exports[`single fields string field format email 1`] = `
 `;
 
 exports[`single fields string field format uri 1`] = `
-.emotion-1 {
-  margin-bottom: 1px;
-}
-
-.emotion-3 {
-  margin-top: 3px;
+.emotion-2 {
+  margin-bottom: var(--chakra-spacing-1);
 }
 
 .emotion-4 {
-  display: inline-flex;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  -ms-appearance: none;
-  appearance: none;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  position: relative;
-  white-space: nowrap;
-  vertical-align: middle;
-  outline: 2px solid transparent;
-  outline-offset: 2px;
-  width: auto;
+  margin-top: var(--chakra-spacing-3);
 }
 
 <form
@@ -5896,38 +5659,49 @@ exports[`single fields string field format uri 1`] = `
   <div
     className="form-group field field-string"
   >
-    <div
-      className="chakra-form-control emotion-0"
-      role="group"
+    <fieldset
+      className="fieldset__root emotion-0"
+      data-part="root"
+      data-scope="fieldset"
+      disabled={false}
     >
       <div
-        className="chakra-form-control emotion-1"
-        role="group"
+        className="fieldset__content emotion-1"
       >
-        <input
-          aria-describedby="root__error root__description root__help"
-          autoFocus={false}
-          className="chakra-input emotion-0"
-          disabled={false}
-          id="root"
-          name="root"
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          placeholder=""
-          readOnly={false}
-          required={false}
-          type="url"
-          value=""
-        />
+        <div
+          className="chakra-field__root emotion-2"
+          data-part="root"
+          data-scope="field"
+          id="field:::r5:"
+          role="group"
+        >
+          <input
+            aria-describedby="root__error root__description root__help"
+            autoFocus={false}
+            className="chakra-input emotion-3"
+            data-part="input"
+            data-scope="field"
+            disabled={false}
+            id="root"
+            name="root"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            placeholder=""
+            readOnly={false}
+            required={false}
+            type="url"
+            value=""
+          />
+        </div>
       </div>
-    </div>
+    </fieldset>
   </div>
   <div
-    className="emotion-3"
+    className="emotion-4"
   >
     <button
-      className="chakra-button emotion-4"
+      className="chakra-button emotion-5"
       disabled={false}
       type="submit"
     >
@@ -5938,38 +5712,12 @@ exports[`single fields string field format uri 1`] = `
 `;
 
 exports[`single fields string field regular 1`] = `
-.emotion-1 {
-  margin-bottom: 1px;
-}
-
-.emotion-3 {
-  margin-top: 3px;
+.emotion-2 {
+  margin-bottom: var(--chakra-spacing-1);
 }
 
 .emotion-4 {
-  display: inline-flex;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  -ms-appearance: none;
-  appearance: none;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  position: relative;
-  white-space: nowrap;
-  vertical-align: middle;
-  outline: 2px solid transparent;
-  outline-offset: 2px;
-  width: auto;
+  margin-top: var(--chakra-spacing-3);
 }
 
 <form
@@ -5980,38 +5728,49 @@ exports[`single fields string field regular 1`] = `
   <div
     className="form-group field field-string"
   >
-    <div
-      className="chakra-form-control emotion-0"
-      role="group"
+    <fieldset
+      className="fieldset__root emotion-0"
+      data-part="root"
+      data-scope="fieldset"
+      disabled={false}
     >
       <div
-        className="chakra-form-control emotion-1"
-        role="group"
+        className="fieldset__content emotion-1"
       >
-        <input
-          aria-describedby="root__error root__description root__help"
-          autoFocus={false}
-          className="chakra-input emotion-0"
-          disabled={false}
-          id="root"
-          name="root"
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          placeholder=""
-          readOnly={false}
-          required={false}
-          type="text"
-          value=""
-        />
+        <div
+          className="chakra-field__root emotion-2"
+          data-part="root"
+          data-scope="field"
+          id="field:::r1:"
+          role="group"
+        >
+          <input
+            aria-describedby="root__error root__description root__help"
+            autoFocus={false}
+            className="chakra-input emotion-3"
+            data-part="input"
+            data-scope="field"
+            disabled={false}
+            id="root"
+            name="root"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            placeholder=""
+            readOnly={false}
+            required={false}
+            type="text"
+            value=""
+          />
+        </div>
       </div>
-    </div>
+    </fieldset>
   </div>
   <div
-    className="emotion-3"
+    className="emotion-4"
   >
     <button
-      className="chakra-button emotion-4"
+      className="chakra-button emotion-5"
       disabled={false}
       type="submit"
     >
@@ -6022,38 +5781,12 @@ exports[`single fields string field regular 1`] = `
 `;
 
 exports[`single fields string field with placeholder 1`] = `
-.emotion-1 {
-  margin-bottom: 1px;
-}
-
-.emotion-3 {
-  margin-top: 3px;
+.emotion-2 {
+  margin-bottom: var(--chakra-spacing-1);
 }
 
 .emotion-4 {
-  display: inline-flex;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  -ms-appearance: none;
-  appearance: none;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  position: relative;
-  white-space: nowrap;
-  vertical-align: middle;
-  outline: 2px solid transparent;
-  outline-offset: 2px;
-  width: auto;
+  margin-top: var(--chakra-spacing-3);
 }
 
 <form
@@ -6064,38 +5797,49 @@ exports[`single fields string field with placeholder 1`] = `
   <div
     className="form-group field field-string"
   >
-    <div
-      className="chakra-form-control emotion-0"
-      role="group"
+    <fieldset
+      className="fieldset__root emotion-0"
+      data-part="root"
+      data-scope="fieldset"
+      disabled={false}
     >
       <div
-        className="chakra-form-control emotion-1"
-        role="group"
+        className="fieldset__content emotion-1"
       >
-        <input
-          aria-describedby="root__error root__description root__help"
-          autoFocus={false}
-          className="chakra-input emotion-0"
-          disabled={false}
-          id="root"
-          name="root"
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          placeholder="placeholder"
-          readOnly={false}
-          required={false}
-          type="text"
-          value=""
-        />
+        <div
+          className="chakra-field__root emotion-2"
+          data-part="root"
+          data-scope="field"
+          id="field:::r9:"
+          role="group"
+        >
+          <input
+            aria-describedby="root__error root__description root__help"
+            autoFocus={false}
+            className="chakra-input emotion-3"
+            data-part="input"
+            data-scope="field"
+            disabled={false}
+            id="root"
+            name="root"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            placeholder="placeholder"
+            readOnly={false}
+            required={false}
+            type="text"
+            value=""
+          />
+        </div>
       </div>
-    </div>
+    </fieldset>
   </div>
   <div
-    className="emotion-3"
+    className="emotion-4"
   >
     <button
-      className="chakra-button emotion-4"
+      className="chakra-button emotion-5"
       disabled={false}
       type="submit"
     >
@@ -6106,38 +5850,12 @@ exports[`single fields string field with placeholder 1`] = `
 `;
 
 exports[`single fields textarea field 1`] = `
-.emotion-1 {
-  margin-bottom: 1px;
-}
-
-.emotion-3 {
-  margin-top: 3px;
+.emotion-2 {
+  margin-bottom: var(--chakra-spacing-1);
 }
 
 .emotion-4 {
-  display: inline-flex;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  -ms-appearance: none;
-  appearance: none;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  position: relative;
-  white-space: nowrap;
-  vertical-align: middle;
-  outline: 2px solid transparent;
-  outline-offset: 2px;
-  width: auto;
+  margin-top: var(--chakra-spacing-3);
 }
 
 <form
@@ -6148,37 +5866,53 @@ exports[`single fields textarea field 1`] = `
   <div
     className="form-group field field-string"
   >
-    <div
-      className="chakra-form-control emotion-0"
-      role="group"
+    <fieldset
+      className="fieldset__root emotion-0"
+      data-part="root"
+      data-scope="fieldset"
+      disabled={false}
     >
       <div
-        className="chakra-form-control emotion-1"
-        role="group"
+        className="fieldset__content emotion-1"
       >
-        <textarea
-          aria-describedby="root__error root__description root__help"
-          autoFocus={false}
-          className="chakra-textarea emotion-0"
-          disabled={false}
-          id="root"
-          name="root"
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          placeholder=""
-          readOnly={false}
-          required={false}
-          value=""
-        />
+        <div
+          className="chakra-field__root emotion-2"
+          data-part="root"
+          data-scope="field"
+          id="field:::ru:"
+          role="group"
+        >
+          <textarea
+            aria-describedby="root__error root__description root__help"
+            autoFocus={false}
+            className="chakra-textarea emotion-3"
+            data-part="textarea"
+            data-scope="field"
+            disabled={false}
+            id="root"
+            name="root"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            placeholder=""
+            readOnly={false}
+            required={false}
+            style={
+              {
+                "resize": undefined,
+              }
+            }
+            value=""
+          />
+        </div>
       </div>
-    </div>
+    </fieldset>
   </div>
   <div
-    className="emotion-3"
+    className="emotion-4"
   >
     <button
-      className="chakra-button emotion-4"
+      className="chakra-button emotion-5"
       disabled={false}
       type="submit"
     >
@@ -6189,60 +5923,23 @@ exports[`single fields textarea field 1`] = `
 `;
 
 exports[`single fields title field 1`] = `
-.emotion-1 {
-  margin-top: 1px;
-  margin-bottom: 4px;
+.emotion-2 {
+  margin-top: var(--chakra-spacing-1);
+  margin-bottom: var(--chakra-spacing-4);
 }
 
-.emotion-3 {
-  border: 0;
-  border-bottom-width: 1px;
-  width: 100%;
-}
-
-.emotion-4 {
+.emotion-5 {
   display: grid;
-  grid-gap: 6px;
-  margin-bottom: 4px;
+  gap: var(--chakra-spacing-6);
+  margin-bottom: var(--chakra-spacing-4);
 }
 
-.emotion-7 {
-  margin-bottom: 1px;
+.emotion-9 {
+  margin-bottom: var(--chakra-spacing-1);
 }
 
-.emotion-8 {
-  display: block;
-  text-align: start;
-}
-
-.emotion-10 {
-  margin-top: 3px;
-}
-
-.emotion-11 {
-  display: inline-flex;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  -ms-appearance: none;
-  appearance: none;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  position: relative;
-  white-space: nowrap;
-  vertical-align: middle;
-  outline: 2px solid transparent;
-  outline-offset: 2px;
-  width: auto;
+.emotion-12 {
+  margin-top: var(--chakra-spacing-3);
 }
 
 <form
@@ -6253,70 +5950,303 @@ exports[`single fields title field 1`] = `
   <div
     className="form-group field field-object"
   >
-    <div
-      className="chakra-form-control emotion-0"
-      role="group"
+    <fieldset
+      className="fieldset__root emotion-0"
+      data-part="root"
+      data-scope="fieldset"
+      disabled={false}
     >
       <div
-        className="emotion-1"
-        id="root__title"
-      >
-        <h5
-          className="chakra-heading emotion-0"
-        >
-          Titre 1
-        </h5>
-        <hr
-          aria-orientation="horizontal"
-          className="chakra-divider emotion-3"
-        />
-      </div>
-      <div
-        className="emotion-4"
+        className="fieldset__content emotion-1"
       >
         <div
-          className="emotion-0"
+          className="emotion-2"
+          id="root__title"
+        >
+          <h5
+            className="chakra-heading emotion-3"
+          >
+            Titre 1
+          </h5>
+          <span
+            aria-orientation="horizontal"
+            className="chakra-separator emotion-4"
+            role="separator"
+          />
+        </div>
+        <div
+          className="emotion-5"
         >
           <div
-            className="form-group field field-string"
+            className="emotion-6"
           >
             <div
-              className="chakra-form-control emotion-0"
-              role="group"
+              className="form-group field field-string"
             >
-              <div
-                className="chakra-form-control emotion-7"
-                role="group"
+              <fieldset
+                className="fieldset__root emotion-0"
+                data-part="root"
+                data-scope="fieldset"
+                disabled={false}
               >
-                <label
-                  className="chakra-form__label emotion-8"
-                  htmlFor="root_title"
-                  id="root_title-label"
+                <div
+                  className="fieldset__content emotion-1"
                 >
-                  Titre 2
-                </label>
-                <input
-                  aria-describedby="root_title__error root_title__description root_title__help"
-                  autoFocus={false}
-                  className="chakra-input emotion-0"
-                  disabled={false}
-                  id="root_title"
-                  name="root_title"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  onFocus={[Function]}
-                  placeholder=""
-                  readOnly={false}
-                  required={false}
-                  type="text"
-                  value=""
-                />
-              </div>
+                  <div
+                    className="chakra-field__root emotion-9"
+                    data-part="root"
+                    data-scope="field"
+                    id="field:::r2u:"
+                    role="group"
+                  >
+                    <label
+                      className="chakra-field__label emotion-10"
+                      data-part="label"
+                      data-scope="field"
+                      htmlFor=":r2u:"
+                      id="field:::r2u:::label"
+                    >
+                      Titre 2
+                    </label>
+                    <input
+                      aria-describedby="root_title__error root_title__description root_title__help"
+                      autoFocus={false}
+                      className="chakra-input emotion-11"
+                      data-part="input"
+                      data-scope="field"
+                      disabled={false}
+                      id="root_title"
+                      name="root_title"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      onFocus={[Function]}
+                      placeholder=""
+                      readOnly={false}
+                      required={false}
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                </div>
+              </fieldset>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </fieldset>
+  </div>
+  <div
+    className="emotion-12"
+  >
+    <button
+      className="chakra-button emotion-13"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields unsupported field 1`] = `
+.emotion-2 {
+  margin-top: var(--chakra-spacing-3);
+}
+
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-undefined"
+  >
+    <fieldset
+      className="fieldset__root emotion-0"
+      data-part="root"
+      data-scope="fieldset"
+      disabled={false}
+    >
+      <div
+        className="fieldset__content emotion-1"
+      >
+        <div
+          className="unsupported-field"
+        >
+          <p>
+            <span>
+              Unsupported field schema for field 
+              <code>
+                root
+              </code>
+              : 
+              <em>
+                Unknown field type undefined
+              </em>
+              .
+            </span>
+          </p>
+          <pre>
+            {}
+          </pre>
+        </div>
+      </div>
+    </fieldset>
+  </div>
+  <div
+    className="emotion-2"
+  >
+    <button
+      className="chakra-button emotion-3"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields up/down field 1`] = `
+.emotion-2 {
+  margin-bottom: var(--chakra-spacing-1);
+}
+
+.emotion-6 {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.emotion-10 {
+  margin-top: var(--chakra-spacing-3);
+}
+
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-number"
+  >
+    <fieldset
+      className="fieldset__root emotion-0"
+      data-part="root"
+      data-scope="fieldset"
+      disabled={false}
+    >
+      <div
+        className="fieldset__content emotion-1"
+      >
+        <div
+          className="chakra-field__root emotion-2"
+          data-part="root"
+          data-scope="field"
+          id="field:::rr:"
+          role="group"
+        >
+          <div
+            aria-describedby="root__error root__description root__help"
+            className="chakra-number-input__root emotion-3"
+            data-part="root"
+            data-scope="number-input"
+            dir="ltr"
+            id="number-input:root"
+            onBlur={[Function]}
+            onFocus={[Function]}
+          >
+            <div
+              aria-disabled={false}
+              className="chakra-number-input__control emotion-4"
+              data-part="control"
+              data-scope="number-input"
+              dir="ltr"
+              role="group"
+            >
+              <button
+                aria-controls=":rr:"
+                aria-label="increment value"
+                className="chakra-number-input__incrementTrigger emotion-5"
+                data-part="increment-trigger"
+                data-scope="number-input"
+                dir="ltr"
+                disabled={false}
+                id="number-input:root:inc"
+                onPointerDown={[Function]}
+                onPointerLeave={[Function]}
+                onPointerUp={[Function]}
+                tabIndex={-1}
+                type="button"
+              >
+                <svg
+                  className="emotion-6"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="m18 15-6-6-6 6"
+                  />
+                </svg>
+              </button>
+              <button
+                aria-controls=":rr:"
+                aria-label="decrease value"
+                className="chakra-number-input__decrementTrigger emotion-7"
+                data-part="decrement-trigger"
+                data-scope="number-input"
+                dir="ltr"
+                disabled={false}
+                id="number-input:root:dec"
+                onPointerDown={[Function]}
+                onPointerLeave={[Function]}
+                onPointerUp={[Function]}
+                tabIndex={-1}
+                type="button"
+              >
+                <svg
+                  className="emotion-6"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="m6 9 6 6 6-6"
+                  />
+                </svg>
+              </button>
+            </div>
+            <input
+              aria-roledescription="numberfield"
+              aria-valuemax={9007199254740991}
+              aria-valuemin={-9007199254740991}
+              autoComplete="off"
+              autoCorrect="off"
+              className="chakra-number-input__input emotion-9"
+              data-part="input"
+              data-scope="number-input"
+              defaultValue=""
+              dir="ltr"
+              disabled={false}
+              id=":rr:"
+              inputMode="decimal"
+              name="root"
+              onBeforeInput={[Function]}
+              onBlur={[Function]}
+              onFocus={[Function]}
+              onInput={[Function]}
+              onKeyDown={[Function]}
+              pattern="[0-9]*(.[0-9]+)?"
+              readOnly={false}
+              required={false}
+              role="spinbutton"
+              spellCheck="false"
+              type="text"
+            />
+          </div>
+        </div>
+      </div>
+    </fieldset>
   </div>
   <div
     className="emotion-10"
@@ -6332,317 +6262,13 @@ exports[`single fields title field 1`] = `
 </form>
 `;
 
-exports[`single fields unsupported field 1`] = `
-.emotion-1 {
-  margin-top: 3px;
-}
-
-.emotion-2 {
-  display: inline-flex;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  -ms-appearance: none;
-  appearance: none;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  position: relative;
-  white-space: nowrap;
-  vertical-align: middle;
-  outline: 2px solid transparent;
-  outline-offset: 2px;
-  width: auto;
-}
-
-<form
-  className="rjsf"
-  noValidate={false}
-  onSubmit={[Function]}
->
-  <div
-    className="form-group field field-undefined"
-  >
-    <div
-      className="chakra-form-control emotion-0"
-      role="group"
-    >
-      <div
-        className="unsupported-field"
-      >
-        <p>
-          <span>
-            Unsupported field schema for field 
-            <code>
-              root
-            </code>
-            : 
-            <em>
-              Unknown field type undefined
-            </em>
-            .
-          </span>
-        </p>
-        <pre>
-          {}
-        </pre>
-      </div>
-    </div>
-  </div>
-  <div
-    className="emotion-1"
-  >
-    <button
-      className="chakra-button emotion-2"
-      disabled={false}
-      type="submit"
-    >
-      Submit
-    </button>
-  </div>
-</form>
-`;
-
-exports[`single fields up/down field 1`] = `
-.emotion-1 {
-  margin-bottom: 1px;
-}
-
-.emotion-2 {
-  position: relative;
-  z-index: 0;
-}
-
-.emotion-3 {
-  width: 100%;
-}
-
-.emotion-4 {
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  position: absolute;
-  top: 0px;
-  right: 0px;
-  margin: 1px;
-  height: calc(100% - 2px);
-  z-index: 1;
-}
-
-.emotion-5 {
-  display: flex;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-flex: 1;
-  -ms-flex: 1;
-  flex: 1;
-  transition-property: common;
-  transition-duration: normal;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  cursor: pointer;
-  line-height: normal;
-}
-
-.emotion-6 {
-  width: 1em;
-  height: 1em;
-  display: inline-block;
-  line-height: 1em;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
-  color: currentColor;
-  vertical-align: middle;
-}
-
-.emotion-9 {
-  margin-top: 3px;
-}
-
-.emotion-10 {
-  display: inline-flex;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  -ms-appearance: none;
-  appearance: none;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  position: relative;
-  white-space: nowrap;
-  vertical-align: middle;
-  outline: 2px solid transparent;
-  outline-offset: 2px;
-  width: auto;
-}
-
-<form
-  className="rjsf"
-  noValidate={false}
-  onSubmit={[Function]}
->
-  <div
-    className="form-group field field-number"
-  >
-    <div
-      className="chakra-form-control emotion-0"
-      role="group"
-    >
-      <div
-        className="chakra-form-control emotion-1"
-        role="group"
-      >
-        <div
-          className="chakra-numberinput emotion-2"
-          value=""
-        >
-          <input
-            aria-describedby="root__error root__description root__help"
-            aria-readonly={false}
-            aria-required={false}
-            aria-valuemax={9007199254740991}
-            aria-valuemin={-9007199254740991}
-            autoComplete="off"
-            autoCorrect="off"
-            className="chakra-numberinput__field emotion-3"
-            disabled={false}
-            id="root"
-            inputMode="decimal"
-            name="root"
-            onBlur={[Function]}
-            onChange={[Function]}
-            onFocus={[Function]}
-            onKeyDown={[Function]}
-            pattern="[0-9]*(.[0-9]+)?"
-            readOnly={false}
-            required={false}
-            role="spinbutton"
-            type="text"
-            value=""
-          />
-          <div
-            aria-hidden={true}
-            className="emotion-4"
-          >
-            <div
-              className="emotion-5"
-              disabled={false}
-              onPointerDown={[Function]}
-              onPointerLeave={[Function]}
-              onPointerUp={[Function]}
-              role="button"
-              tabIndex={-1}
-            >
-              <svg
-                className="chakra-icon emotion-6"
-                focusable={false}
-                viewBox="0 0 24 24"
-              >
-                <path
-                  d="M12.8,5.4c-0.377-0.504-1.223-0.504-1.6,0l-9,12c-0.228,0.303-0.264,0.708-0.095,1.047 C2.275,18.786,2.621,19,3,19h18c0.379,0,0.725-0.214,0.895-0.553c0.169-0.339,0.133-0.744-0.095-1.047L12.8,5.4z"
-                  fill="currentColor"
-                />
-              </svg>
-            </div>
-            <div
-              className="emotion-5"
-              disabled={false}
-              onPointerDown={[Function]}
-              onPointerLeave={[Function]}
-              onPointerUp={[Function]}
-              role="button"
-              tabIndex={-1}
-            >
-              <svg
-                className="chakra-icon emotion-6"
-                focusable={false}
-                viewBox="0 0 24 24"
-              >
-                <path
-                  d="M21,5H3C2.621,5,2.275,5.214,2.105,5.553C1.937,5.892,1.973,6.297,2.2,6.6l9,12 c0.188,0.252,0.485,0.4,0.8,0.4s0.611-0.148,0.8-0.4l9-12c0.228-0.303,0.264-0.708,0.095-1.047C21.725,5.214,21.379,5,21,5z"
-                  fill="currentColor"
-                />
-              </svg>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div
-    className="emotion-9"
-  >
-    <button
-      className="chakra-button emotion-10"
-      disabled={false}
-      type="submit"
-    >
-      Submit
-    </button>
-  </div>
-</form>
-`;
-
 exports[`single fields using custom tagName 1`] = `
-.emotion-1 {
-  margin-bottom: 1px;
-}
-
-.emotion-3 {
-  margin-top: 3px;
+.emotion-2 {
+  margin-bottom: var(--chakra-spacing-1);
 }
 
 .emotion-4 {
-  display: inline-flex;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  -ms-appearance: none;
-  appearance: none;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  position: relative;
-  white-space: nowrap;
-  vertical-align: middle;
-  outline: 2px solid transparent;
-  outline-offset: 2px;
-  width: auto;
+  margin-top: var(--chakra-spacing-3);
 }
 
 <div
@@ -6653,38 +6279,49 @@ exports[`single fields using custom tagName 1`] = `
   <div
     className="form-group field field-string"
   >
-    <div
-      className="chakra-form-control emotion-0"
-      role="group"
+    <fieldset
+      className="fieldset__root emotion-0"
+      data-part="root"
+      data-scope="fieldset"
+      disabled={false}
     >
       <div
-        className="chakra-form-control emotion-1"
-        role="group"
+        className="fieldset__content emotion-1"
       >
-        <input
-          aria-describedby="root__error root__description root__help"
-          autoFocus={false}
-          className="chakra-input emotion-0"
-          disabled={false}
-          id="root"
-          name="root"
-          onBlur={[Function]}
-          onChange={[Function]}
-          onFocus={[Function]}
-          placeholder=""
-          readOnly={false}
-          required={false}
-          type="text"
-          value=""
-        />
+        <div
+          className="chakra-field__root emotion-2"
+          data-part="root"
+          data-scope="field"
+          id="field:::r32:"
+          role="group"
+        >
+          <input
+            aria-describedby="root__error root__description root__help"
+            autoFocus={false}
+            className="chakra-input emotion-3"
+            data-part="input"
+            data-scope="field"
+            disabled={false}
+            id="root"
+            name="root"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            placeholder=""
+            readOnly={false}
+            required={false}
+            type="text"
+            value=""
+          />
+        </div>
       </div>
-    </div>
+    </fieldset>
   </div>
   <div
-    className="emotion-3"
+    className="emotion-4"
   >
     <button
-      className="chakra-button emotion-4"
+      className="chakra-button emotion-5"
       disabled={false}
       type="submit"
     >
