@@ -1,6 +1,7 @@
 import { FocusEvent } from 'react';
 import {
   ADDITIONAL_PROPERTY_FLAG,
+  buttonId,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
@@ -12,7 +13,7 @@ import { InputText } from 'primereact/inputtext';
 export default function WrapIfAdditionalTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >({
   classNames,
   style,
@@ -64,7 +65,12 @@ export default function WrapIfAdditionalTemplate<
       </div>
       <div style={{ flex: 1 }}>{children}</div>
       <div>
-        <RemoveButton disabled={disabled || readonly} onClick={onDropPropertyClick(label)} registry={registry} />
+        <RemoveButton
+          id={buttonId<T>(id, 'remove')}
+          disabled={disabled || readonly}
+          onClick={onDropPropertyClick(label)}
+          registry={registry}
+        />
       </div>
     </div>
   );
