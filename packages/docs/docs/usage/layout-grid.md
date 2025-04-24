@@ -8,7 +8,7 @@ It even adds the ability to pass additional props to the rendering widget for ea
 The Layout Grid takes full advantage of the `UiSchema`'s ability to customize the `ui:field` that is used to render a field
 or collection of fields by providing a new out-of-the-box field implementation called `LayoutGridField` that you can
 assign to the whole of the `schema` or just a piece of it. It also comes with its own "syntax" that lets you define
-a `row`, a `col`umn, and a set of `columns`. It also provides `condition`al logic that describe how a subset of the grid
+a `row`, a `col`umn, and a set of `columns`. It also provides `condition`al logic that describes how a subset of the grid
 can be hidden/shown based upon the value(s) of a field. It even supports the inclusion of custom render components that
 are not associated with a field. Finally, there is built-in support for doing a named look up of data within a special
 location in the `FormContext`.
@@ -81,8 +81,10 @@ Person Info
   +------------------------------------------------------------------------------+
 ```
 
-If you wanted to switch the order of the fields or remove middle name entirely, you would have to change the JSON schema.
-At least you would have to if you didn't have the `LayoutGridField`.
+If you wanted to switch the order of the fields or remove middle name entirely, you could change the JSON schema, which
+is usually not desirable for most users. You could also use the `ui:order` feature and/or `ui:widget: "hidden"` in the
+`uiSchema` to accomplish this without changing the schema. And now you can also use the very flexible and powerful
+`LayoutGridField` field in the`uiSchema`.
 
 Now let's add a `uiSchema` that will allow us to change the order of the fields to be `Last Name`, `Middle Name` and `First Name`.
 This will highlight the first elements of the new "syntax"; `ui:layoutGrid` and `ui:row` :
@@ -312,7 +314,7 @@ Here is how the `LayoutGridField` "syntax" above is used.
 ### ui:row, part 2
 
 As the above examples show, the `ui:row` object can be nested inside of the `children` of a `ui:row`. This signifies the
-nesting of one row inside another row. It also show that any additional properties added to the `ui:row` object, in this
+nesting of one row inside another row. It also shows that any additional properties added to the `ui:row` object, in this
 case the `"className": "row"` will be spread onto the underlying theme's grid implementation. You may also pass other
 properties, such as `style` blocks or, in the case of other themes, properties that will affect the underlying grid system
 components.
@@ -322,7 +324,7 @@ components.
 The `ui:col` "syntax" represents a single column of data in the grid. Like `ui:row` this syntax will spread the
 `"className": "col-xs-12"` and `"className": "col-xs-4"` properties onto the underlying theme's grid implementation, as
 well as any other properties, such as `style` blocks, etc. In its most compact form, the `ui:col` can be written as
-`{ "ui:col": ["person"] }`, in a manner similar `ui:row` where the array is implicitly assumed to be the `children`
+`{ "ui:col": ["person"] }`, in a manner similar to `ui:row` where the array is implicitly assumed to be the `children`
 property.
 
 In its most expanded form, the `ui:col` contains an array of `children` in the form of objects with `"name": "<field id>"`
@@ -401,10 +403,10 @@ Person Info
 ### ui:columns
 
 The `ui:columns` "syntax" represents a group of columns in the grid. Like `ui:row` and `ui:col` this syntax will spread
-the `"className": "col-xs-4"` properties onto the underlying theme's grid implementation, as well as any other properties,
-such as `style` blocks, etc. It is short-hand notation for rendering a group of columns all with the same grid system
-properties. As shown in the above examples, the set of three `ui:col` definitions for first, middle and last names are
-the same as the single `ui:columns` definition with all three listed as children.
+the properties onto the underlying theme's grid implementation (in an earlier example `"className": "col-xs-4"` ), as
+well as any other properties, such as `style` blocks, etc. It is short-hand notation for rendering a group of columns
+all with the same grid system properties. As shown in the above examples, the set of three `ui:col` definitions for
+first, middle and last names are the same as the single `ui:columns` definition with all three listed as children.
 
 In its most compact form, the `ui:col` can be written as `{ "ui:columns": ["person.first", "person.last"] }`, in a
 manner similar `ui:row` and `ui:col` where the array is implicitly assumed to be the `children` property. The
@@ -776,7 +778,7 @@ const css = {
 
 // Define the style
 const StyledGrid = styled(Grid)`
-  ${`& .${css.StyledGrid}`} {
+  ${`& .${css.STYLED_GRID}`} {
     p {
       /* Override default presentation of <p> tags within a grid  */
       font-weight: bold

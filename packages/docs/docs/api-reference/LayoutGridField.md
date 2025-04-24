@@ -2,7 +2,7 @@
 
 The `LayoutGridField` will render a schema, uiSchema and formData combination out into a `GridTemplate` in the shape
 described in the uiSchema. To define the grid to use to render the elements within a field in the schema, provide in
-the uiSchema for that field the object contained under a `ui:ayoutGrid` element. E.g. (as a JSON object):
+the uiSchema for that field the object contained under a `ui:layoutGrid` element. E.g. (as a JSON object):
 
 ```json
 {
@@ -15,14 +15,14 @@ the uiSchema for that field the object contained under a `ui:ayoutGrid` element.
 }
 ```
 
-See the [LayoutGridField usage](../usage/layout-grid.md) for more detailed walk-through on how to use the component. This page is a more
-dense version of the `uiSchema` APIs for faster reference.
+See the [LayoutGridField usage](../usage/layout-grid.md) for more detailed walk-through on how to use the component. This page is condensed
+version of the `uiSchema` APIs for faster reference.
 
 ## ui:row
 
 The outermost level of a `LayoutGridField` is the `ui:row` that defines the nested rows, columns, and/or condition
 elements (i.e. "grid elements") in the grid. This definition is either a simple "grid elements" OR an object with
-native `GridTemplate` implementation specific props and a `children` array of "grid elements". E.g. (as JSON objects):
+native `GridTemplate` implementation-specific props and a `children` array of "grid elements". E.g. (as JSON objects):
 
 Simple `ui:row` definition, without additional `GridTemplate` props:
 
@@ -63,7 +63,8 @@ Complex `ui:row` definition, with additional `GridTemplate` (this example uses `
 > `cssInJs.GridRowClass`. This automatic lookup will happen for any of the "grid elements" when rendering with
 > `GridTemplate` props. If multiple className values are present, for example:
 > `{ className: 'GridRow GridColumn' }`, the classNames are split apart, looked up individually, and joined
-> together to form one className with the values from `cssInJs.GridRowClass` and `cssInJs.GridColumnClass`.
+> together to form one className with the values from `cssInJs.GridRowClass` and `cssInJs.GridColumnClass`. See the
+> [example](../usage/layout-grid.md#named-lookup-support-for-classname) in the usage documentation.
 
 ## ui:col
 
@@ -89,7 +90,7 @@ Complicated `ui:col` definition, without additional `GridTemplate` props and for
 {
   "ui:col": [
     { "name": "innerField", "fullWidth": true },
-    { "name": "inner.grandChild", "convertOther": true },
+    { "name": "inner.grandChild", "fullWidth": false },
     ...
   ]
 }
@@ -121,7 +122,7 @@ uses @mui/material/Grid2 native props):
     "className": "GridColumn",
     "children": [
       "innerField",
-      { "name": "inner.grandChild", "convertOther": true },
+      { "name": "inner.grandChild", "fullWidth": true },
       { "name": "customRender", "render": "CustomRender", "toSpread": "prop-value" },
       { "ui:row|ui:condition": ... },
       ...
@@ -191,7 +192,7 @@ One can write this instead:
       {
         "ui:columns": {
           "className": "GridColumn col-md-4",
-          "children": ["innerField", "inner.grandChild", { "name": "inner.grandChild2", "convertOther": true }]
+          "children": ["innerField", "inner.grandChild", { "name": "inner.grandChild2", "fullWidth": true }]
         }
       },
       {
