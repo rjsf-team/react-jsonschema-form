@@ -36,7 +36,7 @@ const layoutGrid: Sample = {
             type: 'string',
           },
           middle: {
-            title: 'Middle',
+            title: 'Middle Name',
             minLength: 1,
             maxLength: 200,
             type: 'string',
@@ -352,7 +352,6 @@ const layoutGrid: Sample = {
                                   {
                                     'ui:col': {
                                       xs: 24,
-                                      style: { margin: '44px 0 30px' },
                                       children: ['employment'],
                                     },
                                   },
@@ -1220,7 +1219,7 @@ const layoutGrid: Sample = {
                                   {
                                     'ui:col': {
                                       xs: 12,
-                                      style: { margin: '38px 0 6px' },
+                                      style: { margin: '6px 0 6px' },
                                       children: ['employment'],
                                     },
                                   },
@@ -1993,7 +1992,7 @@ const layoutGrid: Sample = {
                     {
                       'ui:col': {
                         className: 'col-xs-6',
-                        style: { margin: '26px 0' },
+                        style: { margin: '0 0 26px 0' },
                         children: ['employment'],
                       },
                     },

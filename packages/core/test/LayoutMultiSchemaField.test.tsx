@@ -7,6 +7,7 @@ import {
   ErrorSchemaBuilder,
   FieldErrorProps,
   FieldProps,
+  FieldTemplateProps,
   getDiscriminatorFieldFromSchema,
   ID_KEY,
   IdSchema,
@@ -132,6 +133,7 @@ const anyOfSchema = {
 
 const DEFAULT_ID = 'test-id';
 const FIELD_ERROR_TEST_ID = 'FakeFieldErrorTemplate-testId';
+const FIELD_TEMPLATE_TEST_ID = 'FakeFieldTemplate-testId';
 
 const NOT_SHOWN_ERROR_SCHEMA = new ErrorSchemaBuilder().addErrors(
   'error message will not be rendered due to hideError flag',
@@ -145,6 +147,16 @@ const user = userEvent.setup();
 function FakeFieldErrorTemplate(props: FieldErrorProps) {
   const { errors } = props;
   return <span data-testid={FIELD_ERROR_TEST_ID}>{errors}</span>;
+}
+
+function FakeFieldTemplate(props: FieldTemplateProps) {
+  const { children, errors } = props;
+  return (
+    <div data-testid={FIELD_TEMPLATE_TEST_ID}>
+      {children}
+      {errors}
+    </div>
+  );
 }
 
 const SelectWidgetTestId = 'select-widget-testid';
@@ -197,7 +209,7 @@ describe('LayoutMultiSchemaField', () => {
       registry: getTestRegistry(
         schema,
         {},
-        { FieldErrorTemplate: FakeFieldErrorTemplate },
+        { FieldErrorTemplate: FakeFieldErrorTemplate, FieldTemplate: FakeFieldTemplate },
         { SelectWidget: WrappedSelectWidget, RadioWidget: WrappedRadioWidget },
       ),
       schema,
@@ -252,8 +264,12 @@ describe('LayoutMultiSchemaField', () => {
 
     const { rerender } = render(<LayoutMultiSchemaField {...props} />);
 
+    // Renders the FakeFieldTemplate
+    const fakeFieldTemplate = screen.getByTestId(FIELD_TEMPLATE_TEST_ID);
+    expect(fakeFieldTemplate).toBeInTheDocument();
+
     // Renders the formControl that is the outer wrapper of the RadioWidget
-    const formControl = screen.getByTestId(RadioWidgetTestId);
+    const formControl = within(fakeFieldTemplate).getByTestId(SelectWidgetTestId);
     expect(formControl).toBeInTheDocument();
 
     // Renders formGroup
@@ -300,8 +316,12 @@ describe('LayoutMultiSchemaField', () => {
     });
     render(<LayoutMultiSchemaField {...props} />);
 
+    // Renders the FakeFieldTemplate
+    const fakeFieldTemplate = screen.getByTestId(FIELD_TEMPLATE_TEST_ID);
+    expect(fakeFieldTemplate).toBeInTheDocument();
+
     // Renders a form control
-    const formControl = screen.getByTestId(SelectWidgetTestId);
+    const formControl = within(fakeFieldTemplate).getByTestId(SelectWidgetTestId);
     expect(formControl).toBeInTheDocument();
 
     // Renders the select button with correct text
@@ -374,8 +394,12 @@ describe('LayoutMultiSchemaField', () => {
     // onFocus is called automatically because autofocus is true
     expect(props.onFocus).toHaveBeenCalledTimes(1);
 
+    // Renders the FakeFieldTemplate
+    const fakeFieldTemplate = screen.getByTestId(FIELD_TEMPLATE_TEST_ID);
+    expect(fakeFieldTemplate).toBeInTheDocument();
+
     // Renders a form control
-    const formControl = screen.getByTestId(SelectWidgetTestId);
+    const formControl = within(fakeFieldTemplate).getByTestId(SelectWidgetTestId);
     expect(formControl).toBeInTheDocument();
 
     // Renders the select button
@@ -438,8 +462,12 @@ describe('LayoutMultiSchemaField', () => {
     });
     render(<LayoutMultiSchemaField {...props} />);
 
+    // Renders the FakeFieldTemplate
+    const fakeFieldTemplate = screen.getByTestId(FIELD_TEMPLATE_TEST_ID);
+    expect(fakeFieldTemplate).toBeInTheDocument();
+
     // Renders a form control
-    const formControl = screen.getByTestId(SelectWidgetTestId);
+    const formControl = within(fakeFieldTemplate).getByTestId(SelectWidgetTestId);
     expect(formControl).toBeInTheDocument();
 
     // Renders the select button
@@ -462,8 +490,12 @@ describe('LayoutMultiSchemaField', () => {
     });
     render(<LayoutMultiSchemaField {...props} />);
 
+    // Renders the FakeFieldTemplate
+    const fakeFieldTemplate = screen.getByTestId(FIELD_TEMPLATE_TEST_ID);
+    expect(fakeFieldTemplate).toBeInTheDocument();
+
     // Renders the formControl that is the outer wrapper of the RadioWidget
-    const formControl = screen.getByTestId(RadioWidgetTestId);
+    const formControl = within(fakeFieldTemplate).getByTestId(SelectWidgetTestId);
     expect(formControl).toBeInTheDocument();
 
     const formGroup = within(formControl).getByRole('radiogroup');

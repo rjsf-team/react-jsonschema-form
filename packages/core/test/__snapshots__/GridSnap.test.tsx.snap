@@ -828,77 +828,85 @@ exports[`Complex grid renders person and address and employment in a complex gri
             }
           }
         >
-          <div
-            className="field-radio-group"
-            id="root_employment"
-            role="radiogroup"
-          >
+          <div>
             <label
-              className="radio-inline "
+              className="control-label"
+              htmlFor="root_employment"
             >
-              <span>
-                <input
-                  aria-describedby="root_employment__error root_employment__description root_employment__help"
-                  autoFocus={false}
-                  checked={true}
-                  id="root_employment-0"
-                  name="root_employment"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  onFocus={[Function]}
-                  required={false}
-                  type="radio"
-                  value="0"
-                />
-                <span>
-                  Company
-                </span>
-              </span>
+              Employment
             </label>
-            <label
-              className="radio-inline "
+            <div
+              className="field-radio-group"
+              id="root_employment"
+              role="radiogroup"
             >
-              <span>
-                <input
-                  aria-describedby="root_employment__error root_employment__description root_employment__help"
-                  autoFocus={false}
-                  checked={false}
-                  id="root_employment-1"
-                  name="root_employment"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  onFocus={[Function]}
-                  required={false}
-                  type="radio"
-                  value="1"
-                />
+              <label
+                className="radio-inline "
+              >
                 <span>
-                  Education
+                  <input
+                    aria-describedby="root_employment__error root_employment__description root_employment__help"
+                    autoFocus={false}
+                    checked={true}
+                    id="root_employment-0"
+                    name="root_employment"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    required={false}
+                    type="radio"
+                    value="0"
+                  />
+                  <span>
+                    Company
+                  </span>
                 </span>
-              </span>
-            </label>
-            <label
-              className="radio-inline "
-            >
-              <span>
-                <input
-                  aria-describedby="root_employment__error root_employment__description root_employment__help"
-                  autoFocus={false}
-                  checked={false}
-                  id="root_employment-2"
-                  name="root_employment"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  onFocus={[Function]}
-                  required={false}
-                  type="radio"
-                  value="2"
-                />
+              </label>
+              <label
+                className="radio-inline "
+              >
                 <span>
-                  Other
+                  <input
+                    aria-describedby="root_employment__error root_employment__description root_employment__help"
+                    autoFocus={false}
+                    checked={false}
+                    id="root_employment-1"
+                    name="root_employment"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    required={false}
+                    type="radio"
+                    value="1"
+                  />
+                  <span>
+                    Education
+                  </span>
                 </span>
-              </span>
-            </label>
+              </label>
+              <label
+                className="radio-inline "
+              >
+                <span>
+                  <input
+                    aria-describedby="root_employment__error root_employment__description root_employment__help"
+                    autoFocus={false}
+                    checked={false}
+                    id="root_employment-2"
+                    name="root_employment"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    required={false}
+                    type="radio"
+                    value="2"
+                  />
+                  <span>
+                    Other
+                  </span>
+                </span>
+              </label>
+            </div>
           </div>
         </div>
         <div
@@ -2169,77 +2177,85 @@ exports[`Complex grid renders person and address and employment in a complex gri
             }
           }
         >
-          <div
-            className="field-radio-group"
-            id="root_employment"
-            role="radiogroup"
-          >
+          <div>
             <label
-              className="radio-inline "
+              className="control-label"
+              htmlFor="root_employment"
             >
-              <span>
-                <input
-                  aria-describedby="root_employment__error root_employment__description root_employment__help"
-                  autoFocus={false}
-                  checked={false}
-                  id="root_employment-0"
-                  name="root_employment"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  onFocus={[Function]}
-                  required={false}
-                  type="radio"
-                  value="0"
-                />
-                <span>
-                  Company
-                </span>
-              </span>
+              Employment
             </label>
-            <label
-              className="radio-inline "
+            <div
+              className="field-radio-group"
+              id="root_employment"
+              role="radiogroup"
             >
-              <span>
-                <input
-                  aria-describedby="root_employment__error root_employment__description root_employment__help"
-                  autoFocus={false}
-                  checked={true}
-                  id="root_employment-1"
-                  name="root_employment"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  onFocus={[Function]}
-                  required={false}
-                  type="radio"
-                  value="1"
-                />
+              <label
+                className="radio-inline "
+              >
                 <span>
-                  Education
+                  <input
+                    aria-describedby="root_employment__error root_employment__description root_employment__help"
+                    autoFocus={false}
+                    checked={false}
+                    id="root_employment-0"
+                    name="root_employment"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    required={false}
+                    type="radio"
+                    value="0"
+                  />
+                  <span>
+                    Company
+                  </span>
                 </span>
-              </span>
-            </label>
-            <label
-              className="radio-inline "
-            >
-              <span>
-                <input
-                  aria-describedby="root_employment__error root_employment__description root_employment__help"
-                  autoFocus={false}
-                  checked={false}
-                  id="root_employment-2"
-                  name="root_employment"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  onFocus={[Function]}
-                  required={false}
-                  type="radio"
-                  value="2"
-                />
+              </label>
+              <label
+                className="radio-inline "
+              >
                 <span>
-                  Other
+                  <input
+                    aria-describedby="root_employment__error root_employment__description root_employment__help"
+                    autoFocus={false}
+                    checked={true}
+                    id="root_employment-1"
+                    name="root_employment"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    required={false}
+                    type="radio"
+                    value="1"
+                  />
+                  <span>
+                    Education
+                  </span>
                 </span>
-              </span>
-            </label>
+              </label>
+              <label
+                className="radio-inline "
+              >
+                <span>
+                  <input
+                    aria-describedby="root_employment__error root_employment__description root_employment__help"
+                    autoFocus={false}
+                    checked={false}
+                    id="root_employment-2"
+                    name="root_employment"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    required={false}
+                    type="radio"
+                    value="2"
+                  />
+                  <span>
+                    Other
+                  </span>
+                </span>
+              </label>
+            </div>
           </div>
         </div>
         <div
@@ -3542,77 +3558,85 @@ exports[`Complex grid renders person and address and employment in a complex gri
             }
           }
         >
-          <div
-            className="field-radio-group"
-            id="root_employment"
-            role="radiogroup"
-          >
+          <div>
             <label
-              className="radio-inline "
+              className="control-label"
+              htmlFor="root_employment"
             >
-              <span>
-                <input
-                  aria-describedby="root_employment__error root_employment__description root_employment__help"
-                  autoFocus={false}
-                  checked={false}
-                  id="root_employment-0"
-                  name="root_employment"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  onFocus={[Function]}
-                  required={false}
-                  type="radio"
-                  value="0"
-                />
-                <span>
-                  Company
-                </span>
-              </span>
+              Employment
             </label>
-            <label
-              className="radio-inline "
+            <div
+              className="field-radio-group"
+              id="root_employment"
+              role="radiogroup"
             >
-              <span>
-                <input
-                  aria-describedby="root_employment__error root_employment__description root_employment__help"
-                  autoFocus={false}
-                  checked={false}
-                  id="root_employment-1"
-                  name="root_employment"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  onFocus={[Function]}
-                  required={false}
-                  type="radio"
-                  value="1"
-                />
+              <label
+                className="radio-inline "
+              >
                 <span>
-                  Education
+                  <input
+                    aria-describedby="root_employment__error root_employment__description root_employment__help"
+                    autoFocus={false}
+                    checked={false}
+                    id="root_employment-0"
+                    name="root_employment"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    required={false}
+                    type="radio"
+                    value="0"
+                  />
+                  <span>
+                    Company
+                  </span>
                 </span>
-              </span>
-            </label>
-            <label
-              className="radio-inline "
-            >
-              <span>
-                <input
-                  aria-describedby="root_employment__error root_employment__description root_employment__help"
-                  autoFocus={false}
-                  checked={true}
-                  id="root_employment-2"
-                  name="root_employment"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  onFocus={[Function]}
-                  required={false}
-                  type="radio"
-                  value="2"
-                />
+              </label>
+              <label
+                className="radio-inline "
+              >
                 <span>
-                  Other
+                  <input
+                    aria-describedby="root_employment__error root_employment__description root_employment__help"
+                    autoFocus={false}
+                    checked={false}
+                    id="root_employment-1"
+                    name="root_employment"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    required={false}
+                    type="radio"
+                    value="1"
+                  />
+                  <span>
+                    Education
+                  </span>
                 </span>
-              </span>
-            </label>
+              </label>
+              <label
+                className="radio-inline "
+              >
+                <span>
+                  <input
+                    aria-describedby="root_employment__error root_employment__description root_employment__help"
+                    autoFocus={false}
+                    checked={true}
+                    id="root_employment-2"
+                    name="root_employment"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    required={false}
+                    type="radio"
+                    value="2"
+                  />
+                  <span>
+                    Other
+                  </span>
+                </span>
+              </label>
+            </div>
           </div>
         </div>
         <div
@@ -4494,77 +4518,85 @@ exports[`Complex grid renders person and address and employment in a complex gri
             }
           }
         >
-          <div
-            className="field-radio-group"
-            id="root_employment"
-            role="radiogroup"
-          >
+          <div>
             <label
-              className="radio-inline "
+              className="control-label"
+              htmlFor="root_employment"
             >
-              <span>
-                <input
-                  aria-describedby="root_employment__error root_employment__description root_employment__help"
-                  autoFocus={false}
-                  checked={true}
-                  id="root_employment-0"
-                  name="root_employment"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  onFocus={[Function]}
-                  required={false}
-                  type="radio"
-                  value="0"
-                />
-                <span>
-                  Company
-                </span>
-              </span>
+              Employment
             </label>
-            <label
-              className="radio-inline "
+            <div
+              className="field-radio-group"
+              id="root_employment"
+              role="radiogroup"
             >
-              <span>
-                <input
-                  aria-describedby="root_employment__error root_employment__description root_employment__help"
-                  autoFocus={false}
-                  checked={false}
-                  id="root_employment-1"
-                  name="root_employment"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  onFocus={[Function]}
-                  required={false}
-                  type="radio"
-                  value="1"
-                />
+              <label
+                className="radio-inline "
+              >
                 <span>
-                  Education
+                  <input
+                    aria-describedby="root_employment__error root_employment__description root_employment__help"
+                    autoFocus={false}
+                    checked={true}
+                    id="root_employment-0"
+                    name="root_employment"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    required={false}
+                    type="radio"
+                    value="0"
+                  />
+                  <span>
+                    Company
+                  </span>
                 </span>
-              </span>
-            </label>
-            <label
-              className="radio-inline "
-            >
-              <span>
-                <input
-                  aria-describedby="root_employment__error root_employment__description root_employment__help"
-                  autoFocus={false}
-                  checked={false}
-                  id="root_employment-2"
-                  name="root_employment"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  onFocus={[Function]}
-                  required={false}
-                  type="radio"
-                  value="2"
-                />
+              </label>
+              <label
+                className="radio-inline "
+              >
                 <span>
-                  Other
+                  <input
+                    aria-describedby="root_employment__error root_employment__description root_employment__help"
+                    autoFocus={false}
+                    checked={false}
+                    id="root_employment-1"
+                    name="root_employment"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    required={false}
+                    type="radio"
+                    value="1"
+                  />
+                  <span>
+                    Education
+                  </span>
                 </span>
-              </span>
-            </label>
+              </label>
+              <label
+                className="radio-inline "
+              >
+                <span>
+                  <input
+                    aria-describedby="root_employment__error root_employment__description root_employment__help"
+                    autoFocus={false}
+                    checked={false}
+                    id="root_employment-2"
+                    name="root_employment"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    required={false}
+                    type="radio"
+                    value="2"
+                  />
+                  <span>
+                    Other
+                  </span>
+                </span>
+              </label>
+            </div>
           </div>
         </div>
         <div

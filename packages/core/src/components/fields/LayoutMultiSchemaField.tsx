@@ -24,6 +24,7 @@ import {
 import get from 'lodash/get';
 import has from 'lodash/has';
 import isEmpty from 'lodash/isEmpty';
+import noop from 'lodash/noop';
 import omit from 'lodash/omit';
 import set from 'lodash/set';
 
@@ -115,6 +116,7 @@ export default function LayoutMultiSchemaField<
   const id = get(idSchema, ID_KEY);
   const discriminator = getDiscriminatorFieldFromSchema(schema);
   const FieldErrorTemplate = getTemplate<'FieldErrorTemplate', T, S, F>('FieldErrorTemplate', registry, options);
+  const FieldTemplate = getTemplate<'FieldTemplate', T, S, F>('FieldTemplate', registry, options);
   const schemaHash = hashObject(schema);
   const optionsHash = hashObject(options);
   const uiSchemaHash = uiSchema ? hashObject(uiSchema) : '';
@@ -174,9 +176,29 @@ export default function LayoutMultiSchemaField<
 
   // filtering the options based on the type of widget because `selectField` does not recognize the `convertOther` prop
   const widgetOptions = { enumOptions, ...uiOptions };
+  const errors =
+    !hideFieldError && rawErrors.length > 0 ? (
+      <FieldErrorTemplate idSchema={idSchema} schema={schema} errors={rawErrors} registry={registry} />
+    ) : undefined;
+  const ignored = (value: string) => noop;
 
   return (
-    <>
+    <FieldTemplate
+      id={id}
+      schema={schema}
+      label={(title || schema.title) ?? ''}
+      disabled={disabled || (Array.isArray(enumOptions) && isEmpty(enumOptions))}
+      uiSchema={uiSchema}
+      formContext={formContext}
+      required={required}
+      readonly={!!readonly}
+      registry={registry}
+      displayLabel={displayLabel}
+      errors={errors}
+      onChange={onChange}
+      onDropPropertyClick={ignored}
+      onKeyChange={ignored}
+    >
       <Widget
         id={id}
         name={name}
@@ -201,9 +223,6 @@ export default function LayoutMultiSchemaField<
         value={selectedOption}
         options={widgetOptions}
       />
-      {!hideFieldError && rawErrors.length > 0 && (
-        <FieldErrorTemplate idSchema={idSchema} schema={schema} errors={rawErrors} registry={registry} />
-      )}
-    </>
+    </FieldTemplate>
   );
 }

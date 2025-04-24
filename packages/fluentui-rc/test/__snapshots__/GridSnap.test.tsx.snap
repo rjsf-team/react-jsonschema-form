@@ -654,8 +654,8 @@ exports[`Complex grid renders person and address and employment in a complex gri
                         >
                           <label
                             className="fui-Label fui-Field__label ___1r7nw7g_1a9hq9n fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
-                            htmlFor="field-r2n__control"
-                            id="field-r2n__label"
+                            htmlFor="field-r2o__control"
+                            id="field-r2o__label"
                           >
                             State
                             <span
@@ -671,7 +671,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                             <button
                               aria-describedby="root_person_address_state__error root_person_address_state__description root_person_address_state__help"
                               aria-expanded={false}
-                              aria-labelledby="field-r2n__label"
+                              aria-labelledby="field-r2o__label"
                               aria-required={true}
                               autoFocus={false}
                               className="fui-Dropdown__button ___10ah4o2_6igl400 f122n59 f1c21dwh fre7gi1 f1358rze fqdk4by f1rvrf73 f1ewtqcl f19n0e5 f14mj54c f1k6fduh f13qh94s fk6fouc f12nh0o2 f1869bpl f1o700av fly5x3f ftqa4ok fkhj508 figsok6 f1i3iumi f1sbtcvk f11gcy0p fdghr9 f1e60jzv"
@@ -799,93 +799,99 @@ exports[`Complex grid renders person and address and employment in a complex gri
               }
             }
           >
-            <label
-              className="fui-Label ___1yevxz2_yljzsa0 fk6fouc f19n0e5 fkhj508 f1i3iumi"
-              htmlFor="root_employment"
-            >
-              Employment
-            </label>
-            <div
-              aria-describedby="root_employment__error root_employment__description root_employment__help"
-              className="fui-RadioGroup ___1o959zg_y6ivho0 f22iagw f6jr5hl"
-              id="root_employment"
-              onBlur={[Function]}
-              onChange={[Function]}
-              onFocus={[Function]}
-              role="radiogroup"
-            >
-              <span
-                className="fui-Radio rm0dkue"
+            <div>
+              <div
+                className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
               >
-                <input
-                  aria-describedby="root_employment__error root_employment__description root_employment__help"
-                  checked={true}
-                  className="fui-Radio__input rg1upok ___183j3wl_1dim0pv f9ma1gx"
-                  id="root_employment-0"
-                  name="root_employment"
-                  onChange={[Function]}
-                  type="radio"
-                  value="0"
-                />
-                <div
-                  aria-hidden={true}
-                  className="fui-Radio__indicator rwtekvw"
-                />
                 <label
-                  className="fui-Label fui-Radio__label ___1o91fp6_qunpvi0 fk6fouc f19n0e5 fkhj508 f1i3iumi f7nlbp4 f1kwiid1 f1vdfbxk f5b47ha fruq291 fjzwpt6 fh6j2fo"
-                  htmlFor="root_employment-0"
+                  className="fui-Label ___1yevxz2_yljzsa0 fk6fouc f19n0e5 fkhj508 f1i3iumi"
+                  htmlFor="root_employment"
                 >
-                  Company
+                  Employment
                 </label>
-              </span>
-              <span
-                className="fui-Radio rm0dkue"
-              >
-                <input
-                  aria-describedby="root_employment__error root_employment__description root_employment__help"
-                  checked={false}
-                  className="fui-Radio__input rg1upok ___183j3wl_1dim0pv f9ma1gx"
-                  id="root_employment-1"
-                  name="root_employment"
-                  onChange={[Function]}
-                  type="radio"
-                  value="1"
-                />
                 <div
-                  aria-hidden={true}
-                  className="fui-Radio__indicator rwtekvw"
-                />
-                <label
-                  className="fui-Label fui-Radio__label ___1o91fp6_qunpvi0 fk6fouc f19n0e5 fkhj508 f1i3iumi f7nlbp4 f1kwiid1 f1vdfbxk f5b47ha fruq291 fjzwpt6 fh6j2fo"
-                  htmlFor="root_employment-1"
-                >
-                  Education
-                </label>
-              </span>
-              <span
-                className="fui-Radio rm0dkue"
-              >
-                <input
                   aria-describedby="root_employment__error root_employment__description root_employment__help"
-                  checked={false}
-                  className="fui-Radio__input rg1upok ___183j3wl_1dim0pv f9ma1gx"
-                  id="root_employment-2"
-                  name="root_employment"
+                  className="fui-RadioGroup ___1o959zg_y6ivho0 f22iagw f6jr5hl"
+                  id="root_employment"
+                  onBlur={[Function]}
                   onChange={[Function]}
-                  type="radio"
-                  value="2"
-                />
-                <div
-                  aria-hidden={true}
-                  className="fui-Radio__indicator rwtekvw"
-                />
-                <label
-                  className="fui-Label fui-Radio__label ___1o91fp6_qunpvi0 fk6fouc f19n0e5 fkhj508 f1i3iumi f7nlbp4 f1kwiid1 f1vdfbxk f5b47ha fruq291 fjzwpt6 fh6j2fo"
-                  htmlFor="root_employment-2"
+                  onFocus={[Function]}
+                  role="radiogroup"
                 >
-                  Other
-                </label>
-              </span>
+                  <span
+                    className="fui-Radio rm0dkue"
+                  >
+                    <input
+                      aria-describedby="root_employment__error root_employment__description root_employment__help"
+                      checked={true}
+                      className="fui-Radio__input rg1upok ___183j3wl_1dim0pv f9ma1gx"
+                      id="root_employment-0"
+                      name="root_employment"
+                      onChange={[Function]}
+                      type="radio"
+                      value="0"
+                    />
+                    <div
+                      aria-hidden={true}
+                      className="fui-Radio__indicator rwtekvw"
+                    />
+                    <label
+                      className="fui-Label fui-Radio__label ___1o91fp6_qunpvi0 fk6fouc f19n0e5 fkhj508 f1i3iumi f7nlbp4 f1kwiid1 f1vdfbxk f5b47ha fruq291 fjzwpt6 fh6j2fo"
+                      htmlFor="root_employment-0"
+                    >
+                      Company
+                    </label>
+                  </span>
+                  <span
+                    className="fui-Radio rm0dkue"
+                  >
+                    <input
+                      aria-describedby="root_employment__error root_employment__description root_employment__help"
+                      checked={false}
+                      className="fui-Radio__input rg1upok ___183j3wl_1dim0pv f9ma1gx"
+                      id="root_employment-1"
+                      name="root_employment"
+                      onChange={[Function]}
+                      type="radio"
+                      value="1"
+                    />
+                    <div
+                      aria-hidden={true}
+                      className="fui-Radio__indicator rwtekvw"
+                    />
+                    <label
+                      className="fui-Label fui-Radio__label ___1o91fp6_qunpvi0 fk6fouc f19n0e5 fkhj508 f1i3iumi f7nlbp4 f1kwiid1 f1vdfbxk f5b47ha fruq291 fjzwpt6 fh6j2fo"
+                      htmlFor="root_employment-1"
+                    >
+                      Education
+                    </label>
+                  </span>
+                  <span
+                    className="fui-Radio rm0dkue"
+                  >
+                    <input
+                      aria-describedby="root_employment__error root_employment__description root_employment__help"
+                      checked={false}
+                      className="fui-Radio__input rg1upok ___183j3wl_1dim0pv f9ma1gx"
+                      id="root_employment-2"
+                      name="root_employment"
+                      onChange={[Function]}
+                      type="radio"
+                      value="2"
+                    />
+                    <div
+                      aria-hidden={true}
+                      className="fui-Radio__indicator rwtekvw"
+                    />
+                    <label
+                      className="fui-Label fui-Radio__label ___1o91fp6_qunpvi0 fk6fouc f19n0e5 fkhj508 f1i3iumi f7nlbp4 f1kwiid1 f1vdfbxk f5b47ha fruq291 fjzwpt6 fh6j2fo"
+                      htmlFor="root_employment-2"
+                    >
+                      Other
+                    </label>
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
           <div
@@ -1028,8 +1034,8 @@ exports[`Complex grid renders person and address and employment in a complex gri
                   >
                     <label
                       className="fui-Label fui-Field__label ___1r7nw7g_1a9hq9n fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
-                      htmlFor="field-r32__control"
-                      id="field-r32__label"
+                      htmlFor="field-r34__control"
+                      id="field-r34__label"
                     >
                       State
                       <span
@@ -1045,7 +1051,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       <button
                         aria-describedby="root_employment_location_state__error root_employment_location_state__description root_employment_location_state__help"
                         aria-expanded={false}
-                        aria-labelledby="field-r32__label"
+                        aria-labelledby="field-r34__label"
                         aria-required={true}
                         autoFocus={false}
                         className="fui-Dropdown__button ___10ah4o2_6igl400 f122n59 f1c21dwh fre7gi1 f1358rze fqdk4by f1rvrf73 f1ewtqcl f19n0e5 f14mj54c f1k6fduh f13qh94s fk6fouc f12nh0o2 f1869bpl f1o700av fly5x3f ftqa4ok fkhj508 figsok6 f1i3iumi f1sbtcvk f11gcy0p fdghr9 f1e60jzv"
@@ -1782,8 +1788,8 @@ exports[`Complex grid renders person and address and employment in a complex gri
                         >
                           <label
                             className="fui-Label fui-Field__label ___1r7nw7g_1a9hq9n fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
-                            htmlFor="field-r3m__control"
-                            id="field-r3m__label"
+                            htmlFor="field-r3o__control"
+                            id="field-r3o__label"
                           >
                             State
                             <span
@@ -1799,7 +1805,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                             <button
                               aria-describedby="root_person_address_state__error root_person_address_state__description root_person_address_state__help"
                               aria-expanded={false}
-                              aria-labelledby="field-r3m__label"
+                              aria-labelledby="field-r3o__label"
                               aria-required={true}
                               autoFocus={false}
                               className="fui-Dropdown__button ___10ah4o2_6igl400 f122n59 f1c21dwh fre7gi1 f1358rze fqdk4by f1rvrf73 f1ewtqcl f19n0e5 f14mj54c f1k6fduh f13qh94s fk6fouc f12nh0o2 f1869bpl f1o700av fly5x3f ftqa4ok fkhj508 figsok6 f1i3iumi f1sbtcvk f11gcy0p fdghr9 f1e60jzv"
@@ -1927,93 +1933,99 @@ exports[`Complex grid renders person and address and employment in a complex gri
               }
             }
           >
-            <label
-              className="fui-Label ___1yevxz2_yljzsa0 fk6fouc f19n0e5 fkhj508 f1i3iumi"
-              htmlFor="root_employment"
-            >
-              Employment
-            </label>
-            <div
-              aria-describedby="root_employment__error root_employment__description root_employment__help"
-              className="fui-RadioGroup ___1o959zg_y6ivho0 f22iagw f6jr5hl"
-              id="root_employment"
-              onBlur={[Function]}
-              onChange={[Function]}
-              onFocus={[Function]}
-              role="radiogroup"
-            >
-              <span
-                className="fui-Radio rm0dkue"
+            <div>
+              <div
+                className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
               >
-                <input
-                  aria-describedby="root_employment__error root_employment__description root_employment__help"
-                  checked={false}
-                  className="fui-Radio__input rg1upok ___183j3wl_1dim0pv f9ma1gx"
-                  id="root_employment-0"
-                  name="root_employment"
-                  onChange={[Function]}
-                  type="radio"
-                  value="0"
-                />
-                <div
-                  aria-hidden={true}
-                  className="fui-Radio__indicator rwtekvw"
-                />
                 <label
-                  className="fui-Label fui-Radio__label ___1o91fp6_qunpvi0 fk6fouc f19n0e5 fkhj508 f1i3iumi f7nlbp4 f1kwiid1 f1vdfbxk f5b47ha fruq291 fjzwpt6 fh6j2fo"
-                  htmlFor="root_employment-0"
+                  className="fui-Label ___1yevxz2_yljzsa0 fk6fouc f19n0e5 fkhj508 f1i3iumi"
+                  htmlFor="root_employment"
                 >
-                  Company
+                  Employment
                 </label>
-              </span>
-              <span
-                className="fui-Radio rm0dkue"
-              >
-                <input
-                  aria-describedby="root_employment__error root_employment__description root_employment__help"
-                  checked={true}
-                  className="fui-Radio__input rg1upok ___183j3wl_1dim0pv f9ma1gx"
-                  id="root_employment-1"
-                  name="root_employment"
-                  onChange={[Function]}
-                  type="radio"
-                  value="1"
-                />
                 <div
-                  aria-hidden={true}
-                  className="fui-Radio__indicator rwtekvw"
-                />
-                <label
-                  className="fui-Label fui-Radio__label ___1o91fp6_qunpvi0 fk6fouc f19n0e5 fkhj508 f1i3iumi f7nlbp4 f1kwiid1 f1vdfbxk f5b47ha fruq291 fjzwpt6 fh6j2fo"
-                  htmlFor="root_employment-1"
-                >
-                  Education
-                </label>
-              </span>
-              <span
-                className="fui-Radio rm0dkue"
-              >
-                <input
                   aria-describedby="root_employment__error root_employment__description root_employment__help"
-                  checked={false}
-                  className="fui-Radio__input rg1upok ___183j3wl_1dim0pv f9ma1gx"
-                  id="root_employment-2"
-                  name="root_employment"
+                  className="fui-RadioGroup ___1o959zg_y6ivho0 f22iagw f6jr5hl"
+                  id="root_employment"
+                  onBlur={[Function]}
                   onChange={[Function]}
-                  type="radio"
-                  value="2"
-                />
-                <div
-                  aria-hidden={true}
-                  className="fui-Radio__indicator rwtekvw"
-                />
-                <label
-                  className="fui-Label fui-Radio__label ___1o91fp6_qunpvi0 fk6fouc f19n0e5 fkhj508 f1i3iumi f7nlbp4 f1kwiid1 f1vdfbxk f5b47ha fruq291 fjzwpt6 fh6j2fo"
-                  htmlFor="root_employment-2"
+                  onFocus={[Function]}
+                  role="radiogroup"
                 >
-                  Other
-                </label>
-              </span>
+                  <span
+                    className="fui-Radio rm0dkue"
+                  >
+                    <input
+                      aria-describedby="root_employment__error root_employment__description root_employment__help"
+                      checked={false}
+                      className="fui-Radio__input rg1upok ___183j3wl_1dim0pv f9ma1gx"
+                      id="root_employment-0"
+                      name="root_employment"
+                      onChange={[Function]}
+                      type="radio"
+                      value="0"
+                    />
+                    <div
+                      aria-hidden={true}
+                      className="fui-Radio__indicator rwtekvw"
+                    />
+                    <label
+                      className="fui-Label fui-Radio__label ___1o91fp6_qunpvi0 fk6fouc f19n0e5 fkhj508 f1i3iumi f7nlbp4 f1kwiid1 f1vdfbxk f5b47ha fruq291 fjzwpt6 fh6j2fo"
+                      htmlFor="root_employment-0"
+                    >
+                      Company
+                    </label>
+                  </span>
+                  <span
+                    className="fui-Radio rm0dkue"
+                  >
+                    <input
+                      aria-describedby="root_employment__error root_employment__description root_employment__help"
+                      checked={true}
+                      className="fui-Radio__input rg1upok ___183j3wl_1dim0pv f9ma1gx"
+                      id="root_employment-1"
+                      name="root_employment"
+                      onChange={[Function]}
+                      type="radio"
+                      value="1"
+                    />
+                    <div
+                      aria-hidden={true}
+                      className="fui-Radio__indicator rwtekvw"
+                    />
+                    <label
+                      className="fui-Label fui-Radio__label ___1o91fp6_qunpvi0 fk6fouc f19n0e5 fkhj508 f1i3iumi f7nlbp4 f1kwiid1 f1vdfbxk f5b47ha fruq291 fjzwpt6 fh6j2fo"
+                      htmlFor="root_employment-1"
+                    >
+                      Education
+                    </label>
+                  </span>
+                  <span
+                    className="fui-Radio rm0dkue"
+                  >
+                    <input
+                      aria-describedby="root_employment__error root_employment__description root_employment__help"
+                      checked={false}
+                      className="fui-Radio__input rg1upok ___183j3wl_1dim0pv f9ma1gx"
+                      id="root_employment-2"
+                      name="root_employment"
+                      onChange={[Function]}
+                      type="radio"
+                      value="2"
+                    />
+                    <div
+                      aria-hidden={true}
+                      className="fui-Radio__indicator rwtekvw"
+                    />
+                    <label
+                      className="fui-Label fui-Radio__label ___1o91fp6_qunpvi0 fk6fouc f19n0e5 fkhj508 f1i3iumi f7nlbp4 f1kwiid1 f1vdfbxk f5b47ha fruq291 fjzwpt6 fh6j2fo"
+                      htmlFor="root_employment-2"
+                    >
+                      Other
+                    </label>
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
           <div
@@ -2193,8 +2205,8 @@ exports[`Complex grid renders person and address and employment in a complex gri
                   >
                     <label
                       className="fui-Label fui-Field__label ___1r7nw7g_1a9hq9n fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
-                      htmlFor="field-r42__control"
-                      id="field-r42__label"
+                      htmlFor="field-r45__control"
+                      id="field-r45__label"
                     >
                       State
                       <span
@@ -2210,7 +2222,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       <button
                         aria-describedby="root_employment_location_state__error root_employment_location_state__description root_employment_location_state__help"
                         aria-expanded={false}
-                        aria-labelledby="field-r42__label"
+                        aria-labelledby="field-r45__label"
                         aria-required={true}
                         autoFocus={false}
                         className="fui-Dropdown__button ___10ah4o2_6igl400 f122n59 f1c21dwh fre7gi1 f1358rze fqdk4by f1rvrf73 f1ewtqcl f19n0e5 f14mj54c f1k6fduh f13qh94s fk6fouc f12nh0o2 f1869bpl f1o700av fly5x3f ftqa4ok fkhj508 figsok6 f1i3iumi f1sbtcvk f11gcy0p fdghr9 f1e60jzv"
@@ -2947,8 +2959,8 @@ exports[`Complex grid renders person and address and employment in a complex gri
                         >
                           <label
                             className="fui-Label fui-Field__label ___1r7nw7g_1a9hq9n fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
-                            htmlFor="field-r4m__control"
-                            id="field-r4m__label"
+                            htmlFor="field-r4p__control"
+                            id="field-r4p__label"
                           >
                             State
                             <span
@@ -2964,7 +2976,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                             <button
                               aria-describedby="root_person_address_state__error root_person_address_state__description root_person_address_state__help"
                               aria-expanded={false}
-                              aria-labelledby="field-r4m__label"
+                              aria-labelledby="field-r4p__label"
                               aria-required={true}
                               autoFocus={false}
                               className="fui-Dropdown__button ___10ah4o2_6igl400 f122n59 f1c21dwh fre7gi1 f1358rze fqdk4by f1rvrf73 f1ewtqcl f19n0e5 f14mj54c f1k6fduh f13qh94s fk6fouc f12nh0o2 f1869bpl f1o700av fly5x3f ftqa4ok fkhj508 figsok6 f1i3iumi f1sbtcvk f11gcy0p fdghr9 f1e60jzv"
@@ -3092,93 +3104,99 @@ exports[`Complex grid renders person and address and employment in a complex gri
               }
             }
           >
-            <label
-              className="fui-Label ___1yevxz2_yljzsa0 fk6fouc f19n0e5 fkhj508 f1i3iumi"
-              htmlFor="root_employment"
-            >
-              Employment
-            </label>
-            <div
-              aria-describedby="root_employment__error root_employment__description root_employment__help"
-              className="fui-RadioGroup ___1o959zg_y6ivho0 f22iagw f6jr5hl"
-              id="root_employment"
-              onBlur={[Function]}
-              onChange={[Function]}
-              onFocus={[Function]}
-              role="radiogroup"
-            >
-              <span
-                className="fui-Radio rm0dkue"
+            <div>
+              <div
+                className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
               >
-                <input
-                  aria-describedby="root_employment__error root_employment__description root_employment__help"
-                  checked={false}
-                  className="fui-Radio__input rg1upok ___183j3wl_1dim0pv f9ma1gx"
-                  id="root_employment-0"
-                  name="root_employment"
-                  onChange={[Function]}
-                  type="radio"
-                  value="0"
-                />
-                <div
-                  aria-hidden={true}
-                  className="fui-Radio__indicator rwtekvw"
-                />
                 <label
-                  className="fui-Label fui-Radio__label ___1o91fp6_qunpvi0 fk6fouc f19n0e5 fkhj508 f1i3iumi f7nlbp4 f1kwiid1 f1vdfbxk f5b47ha fruq291 fjzwpt6 fh6j2fo"
-                  htmlFor="root_employment-0"
+                  className="fui-Label ___1yevxz2_yljzsa0 fk6fouc f19n0e5 fkhj508 f1i3iumi"
+                  htmlFor="root_employment"
                 >
-                  Company
+                  Employment
                 </label>
-              </span>
-              <span
-                className="fui-Radio rm0dkue"
-              >
-                <input
-                  aria-describedby="root_employment__error root_employment__description root_employment__help"
-                  checked={false}
-                  className="fui-Radio__input rg1upok ___183j3wl_1dim0pv f9ma1gx"
-                  id="root_employment-1"
-                  name="root_employment"
-                  onChange={[Function]}
-                  type="radio"
-                  value="1"
-                />
                 <div
-                  aria-hidden={true}
-                  className="fui-Radio__indicator rwtekvw"
-                />
-                <label
-                  className="fui-Label fui-Radio__label ___1o91fp6_qunpvi0 fk6fouc f19n0e5 fkhj508 f1i3iumi f7nlbp4 f1kwiid1 f1vdfbxk f5b47ha fruq291 fjzwpt6 fh6j2fo"
-                  htmlFor="root_employment-1"
-                >
-                  Education
-                </label>
-              </span>
-              <span
-                className="fui-Radio rm0dkue"
-              >
-                <input
                   aria-describedby="root_employment__error root_employment__description root_employment__help"
-                  checked={true}
-                  className="fui-Radio__input rg1upok ___183j3wl_1dim0pv f9ma1gx"
-                  id="root_employment-2"
-                  name="root_employment"
+                  className="fui-RadioGroup ___1o959zg_y6ivho0 f22iagw f6jr5hl"
+                  id="root_employment"
+                  onBlur={[Function]}
                   onChange={[Function]}
-                  type="radio"
-                  value="2"
-                />
-                <div
-                  aria-hidden={true}
-                  className="fui-Radio__indicator rwtekvw"
-                />
-                <label
-                  className="fui-Label fui-Radio__label ___1o91fp6_qunpvi0 fk6fouc f19n0e5 fkhj508 f1i3iumi f7nlbp4 f1kwiid1 f1vdfbxk f5b47ha fruq291 fjzwpt6 fh6j2fo"
-                  htmlFor="root_employment-2"
+                  onFocus={[Function]}
+                  role="radiogroup"
                 >
-                  Other
-                </label>
-              </span>
+                  <span
+                    className="fui-Radio rm0dkue"
+                  >
+                    <input
+                      aria-describedby="root_employment__error root_employment__description root_employment__help"
+                      checked={false}
+                      className="fui-Radio__input rg1upok ___183j3wl_1dim0pv f9ma1gx"
+                      id="root_employment-0"
+                      name="root_employment"
+                      onChange={[Function]}
+                      type="radio"
+                      value="0"
+                    />
+                    <div
+                      aria-hidden={true}
+                      className="fui-Radio__indicator rwtekvw"
+                    />
+                    <label
+                      className="fui-Label fui-Radio__label ___1o91fp6_qunpvi0 fk6fouc f19n0e5 fkhj508 f1i3iumi f7nlbp4 f1kwiid1 f1vdfbxk f5b47ha fruq291 fjzwpt6 fh6j2fo"
+                      htmlFor="root_employment-0"
+                    >
+                      Company
+                    </label>
+                  </span>
+                  <span
+                    className="fui-Radio rm0dkue"
+                  >
+                    <input
+                      aria-describedby="root_employment__error root_employment__description root_employment__help"
+                      checked={false}
+                      className="fui-Radio__input rg1upok ___183j3wl_1dim0pv f9ma1gx"
+                      id="root_employment-1"
+                      name="root_employment"
+                      onChange={[Function]}
+                      type="radio"
+                      value="1"
+                    />
+                    <div
+                      aria-hidden={true}
+                      className="fui-Radio__indicator rwtekvw"
+                    />
+                    <label
+                      className="fui-Label fui-Radio__label ___1o91fp6_qunpvi0 fk6fouc f19n0e5 fkhj508 f1i3iumi f7nlbp4 f1kwiid1 f1vdfbxk f5b47ha fruq291 fjzwpt6 fh6j2fo"
+                      htmlFor="root_employment-1"
+                    >
+                      Education
+                    </label>
+                  </span>
+                  <span
+                    className="fui-Radio rm0dkue"
+                  >
+                    <input
+                      aria-describedby="root_employment__error root_employment__description root_employment__help"
+                      checked={true}
+                      className="fui-Radio__input rg1upok ___183j3wl_1dim0pv f9ma1gx"
+                      id="root_employment-2"
+                      name="root_employment"
+                      onChange={[Function]}
+                      type="radio"
+                      value="2"
+                    />
+                    <div
+                      aria-hidden={true}
+                      className="fui-Radio__indicator rwtekvw"
+                    />
+                    <label
+                      className="fui-Label fui-Radio__label ___1o91fp6_qunpvi0 fk6fouc f19n0e5 fkhj508 f1i3iumi f7nlbp4 f1kwiid1 f1vdfbxk f5b47ha fruq291 fjzwpt6 fh6j2fo"
+                      htmlFor="root_employment-2"
+                    >
+                      Other
+                    </label>
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
           <div
@@ -4042,93 +4060,99 @@ exports[`Complex grid renders person and address and employment in a complex gri
               }
             }
           >
-            <label
-              className="fui-Label ___1yevxz2_yljzsa0 fk6fouc f19n0e5 fkhj508 f1i3iumi"
-              htmlFor="root_employment"
-            >
-              Employment
-            </label>
-            <div
-              aria-describedby="root_employment__error root_employment__description root_employment__help"
-              className="fui-RadioGroup ___1o959zg_y6ivho0 f22iagw f6jr5hl"
-              id="root_employment"
-              onBlur={[Function]}
-              onChange={[Function]}
-              onFocus={[Function]}
-              role="radiogroup"
-            >
-              <span
-                className="fui-Radio rm0dkue"
+            <div>
+              <div
+                className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
               >
-                <input
-                  aria-describedby="root_employment__error root_employment__description root_employment__help"
-                  checked={true}
-                  className="fui-Radio__input rg1upok ___183j3wl_1dim0pv f9ma1gx"
-                  id="root_employment-0"
-                  name="root_employment"
-                  onChange={[Function]}
-                  type="radio"
-                  value="0"
-                />
-                <div
-                  aria-hidden={true}
-                  className="fui-Radio__indicator rwtekvw"
-                />
                 <label
-                  className="fui-Label fui-Radio__label ___1o91fp6_qunpvi0 fk6fouc f19n0e5 fkhj508 f1i3iumi f7nlbp4 f1kwiid1 f1vdfbxk f5b47ha fruq291 fjzwpt6 fh6j2fo"
-                  htmlFor="root_employment-0"
+                  className="fui-Label ___1yevxz2_yljzsa0 fk6fouc f19n0e5 fkhj508 f1i3iumi"
+                  htmlFor="root_employment"
                 >
-                  Company
+                  Employment
                 </label>
-              </span>
-              <span
-                className="fui-Radio rm0dkue"
-              >
-                <input
-                  aria-describedby="root_employment__error root_employment__description root_employment__help"
-                  checked={false}
-                  className="fui-Radio__input rg1upok ___183j3wl_1dim0pv f9ma1gx"
-                  id="root_employment-1"
-                  name="root_employment"
-                  onChange={[Function]}
-                  type="radio"
-                  value="1"
-                />
                 <div
-                  aria-hidden={true}
-                  className="fui-Radio__indicator rwtekvw"
-                />
-                <label
-                  className="fui-Label fui-Radio__label ___1o91fp6_qunpvi0 fk6fouc f19n0e5 fkhj508 f1i3iumi f7nlbp4 f1kwiid1 f1vdfbxk f5b47ha fruq291 fjzwpt6 fh6j2fo"
-                  htmlFor="root_employment-1"
-                >
-                  Education
-                </label>
-              </span>
-              <span
-                className="fui-Radio rm0dkue"
-              >
-                <input
                   aria-describedby="root_employment__error root_employment__description root_employment__help"
-                  checked={false}
-                  className="fui-Radio__input rg1upok ___183j3wl_1dim0pv f9ma1gx"
-                  id="root_employment-2"
-                  name="root_employment"
+                  className="fui-RadioGroup ___1o959zg_y6ivho0 f22iagw f6jr5hl"
+                  id="root_employment"
+                  onBlur={[Function]}
                   onChange={[Function]}
-                  type="radio"
-                  value="2"
-                />
-                <div
-                  aria-hidden={true}
-                  className="fui-Radio__indicator rwtekvw"
-                />
-                <label
-                  className="fui-Label fui-Radio__label ___1o91fp6_qunpvi0 fk6fouc f19n0e5 fkhj508 f1i3iumi f7nlbp4 f1kwiid1 f1vdfbxk f5b47ha fruq291 fjzwpt6 fh6j2fo"
-                  htmlFor="root_employment-2"
+                  onFocus={[Function]}
+                  role="radiogroup"
                 >
-                  Other
-                </label>
-              </span>
+                  <span
+                    className="fui-Radio rm0dkue"
+                  >
+                    <input
+                      aria-describedby="root_employment__error root_employment__description root_employment__help"
+                      checked={true}
+                      className="fui-Radio__input rg1upok ___183j3wl_1dim0pv f9ma1gx"
+                      id="root_employment-0"
+                      name="root_employment"
+                      onChange={[Function]}
+                      type="radio"
+                      value="0"
+                    />
+                    <div
+                      aria-hidden={true}
+                      className="fui-Radio__indicator rwtekvw"
+                    />
+                    <label
+                      className="fui-Label fui-Radio__label ___1o91fp6_qunpvi0 fk6fouc f19n0e5 fkhj508 f1i3iumi f7nlbp4 f1kwiid1 f1vdfbxk f5b47ha fruq291 fjzwpt6 fh6j2fo"
+                      htmlFor="root_employment-0"
+                    >
+                      Company
+                    </label>
+                  </span>
+                  <span
+                    className="fui-Radio rm0dkue"
+                  >
+                    <input
+                      aria-describedby="root_employment__error root_employment__description root_employment__help"
+                      checked={false}
+                      className="fui-Radio__input rg1upok ___183j3wl_1dim0pv f9ma1gx"
+                      id="root_employment-1"
+                      name="root_employment"
+                      onChange={[Function]}
+                      type="radio"
+                      value="1"
+                    />
+                    <div
+                      aria-hidden={true}
+                      className="fui-Radio__indicator rwtekvw"
+                    />
+                    <label
+                      className="fui-Label fui-Radio__label ___1o91fp6_qunpvi0 fk6fouc f19n0e5 fkhj508 f1i3iumi f7nlbp4 f1kwiid1 f1vdfbxk f5b47ha fruq291 fjzwpt6 fh6j2fo"
+                      htmlFor="root_employment-1"
+                    >
+                      Education
+                    </label>
+                  </span>
+                  <span
+                    className="fui-Radio rm0dkue"
+                  >
+                    <input
+                      aria-describedby="root_employment__error root_employment__description root_employment__help"
+                      checked={false}
+                      className="fui-Radio__input rg1upok ___183j3wl_1dim0pv f9ma1gx"
+                      id="root_employment-2"
+                      name="root_employment"
+                      onChange={[Function]}
+                      type="radio"
+                      value="2"
+                    />
+                    <div
+                      aria-hidden={true}
+                      className="fui-Radio__indicator rwtekvw"
+                    />
+                    <label
+                      className="fui-Label fui-Radio__label ___1o91fp6_qunpvi0 fk6fouc f19n0e5 fkhj508 f1i3iumi f7nlbp4 f1kwiid1 f1vdfbxk f5b47ha fruq291 fjzwpt6 fh6j2fo"
+                      htmlFor="root_employment-2"
+                    >
+                      Other
+                    </label>
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
           <div
@@ -4271,8 +4295,8 @@ exports[`Complex grid renders person and address and employment in a complex gri
                   >
                     <label
                       className="fui-Label fui-Field__label ___1r7nw7g_1a9hq9n fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
-                      htmlFor="field-r23__control"
-                      id="field-r23__label"
+                      htmlFor="field-r24__control"
+                      id="field-r24__label"
                     >
                       State
                       <span
@@ -4288,7 +4312,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       <button
                         aria-describedby="root_employment_location_state__error root_employment_location_state__description root_employment_location_state__help"
                         aria-expanded={false}
-                        aria-labelledby="field-r23__label"
+                        aria-labelledby="field-r24__label"
                         aria-required={true}
                         autoFocus={false}
                         className="fui-Dropdown__button ___10ah4o2_6igl400 f122n59 f1c21dwh fre7gi1 f1358rze fqdk4by f1rvrf73 f1ewtqcl f19n0e5 f14mj54c f1k6fduh f13qh94s fk6fouc f12nh0o2 f1869bpl f1o700av fly5x3f ftqa4ok fkhj508 figsok6 f1i3iumi f1sbtcvk f11gcy0p fdghr9 f1e60jzv"

@@ -135,13 +135,13 @@ function getNonNullishValue<T = unknown>(value?: T, fallback?: T): T | undefined
 
 /** The `LayoutGridField` will render a schema, uiSchema and formData combination out into a GridTemplate in the shape
  * described in the uiSchema. To define the grid to use to render the elements within a field in the schema, provide in
- * the uiSchema for that field the object contained under a `ui:LayoutGridField` element. E.g. (as a JSON object):
+ * the uiSchema for that field the object contained under a `ui:layoutGrid` element. E.g. (as a JSON object):
  *
  * ```
  * {
  *   "field1" : {
  *     "ui:field": "LayoutGridField",
- *     "ui:LayoutGridField": {
+ *     "ui:layoutGrid": {
  *       "ui:row": { ... }
  *     }
  *   }
@@ -155,7 +155,7 @@ function getNonNullishValue<T = unknown>(value?: T, fallback?: T): T | undefined
  * Simple `ui:row` definition, without additional `GridTemplate` props:
  * ```
  *  "ui:row": [
- *    { "ui:row"|"ui:column"|"ui:condition": ... },
+ *    { "ui:row"|"ui:col"|"ui:columns"|"ui:condition": ... },
  *    ...
  *  ]
  * ```
@@ -168,7 +168,7 @@ function getNonNullishValue<T = unknown>(value?: T, fallback?: T): T | undefined
  *    "alignContent": "flex-start",
  *    "className": "GridRow",
  *    "children": [
- *      { "ui:row"|"ui:column"|"ui:condition": ... },
+ *      { "ui:row"|"ui:col"|"ui:columns"|"ui:condition": ... },
  *      ...
  *    ]
  *  }

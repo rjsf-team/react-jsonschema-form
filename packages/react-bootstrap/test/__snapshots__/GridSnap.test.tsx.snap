@@ -953,83 +953,93 @@ exports[`Complex grid renders person and address and employment in a complex gri
                   }
                 }
               >
-                <div
-                  className="mb-0"
-                >
-                  <div
-                    className="form-check form-check-inline"
-                  >
-                    <input
-                      aria-describedby="root_employment__error root_employment__description root_employment__help"
-                      checked={true}
-                      className="form-check-input"
-                      disabled={false}
-                      id="root_employment-0"
-                      name="root_employment"
-                      onBlur={[Function]}
-                      onChange={[Function]}
-                      onFocus={[Function]}
-                      required={false}
-                      type="radio"
-                      value="0"
-                    />
+                <div>
+                  <div>
                     <label
-                      className="form-check-label"
-                      htmlFor="root_employment-0"
-                      title=""
+                      className="form-label"
+                      htmlFor="root_employment"
                     >
-                      Company
+                      Employment
                     </label>
-                  </div>
-                  <div
-                    className="form-check form-check-inline"
-                  >
-                    <input
-                      aria-describedby="root_employment__error root_employment__description root_employment__help"
-                      checked={false}
-                      className="form-check-input"
-                      disabled={false}
-                      id="root_employment-1"
-                      name="root_employment"
-                      onBlur={[Function]}
-                      onChange={[Function]}
-                      onFocus={[Function]}
-                      required={false}
-                      type="radio"
-                      value="1"
-                    />
-                    <label
-                      className="form-check-label"
-                      htmlFor="root_employment-1"
-                      title=""
+                    <div
+                      className="mb-0"
                     >
-                      Education
-                    </label>
-                  </div>
-                  <div
-                    className="form-check form-check-inline"
-                  >
-                    <input
-                      aria-describedby="root_employment__error root_employment__description root_employment__help"
-                      checked={false}
-                      className="form-check-input"
-                      disabled={false}
-                      id="root_employment-2"
-                      name="root_employment"
-                      onBlur={[Function]}
-                      onChange={[Function]}
-                      onFocus={[Function]}
-                      required={false}
-                      type="radio"
-                      value="2"
-                    />
-                    <label
-                      className="form-check-label"
-                      htmlFor="root_employment-2"
-                      title=""
-                    >
-                      Other
-                    </label>
+                      <div
+                        className="form-check form-check-inline"
+                      >
+                        <input
+                          aria-describedby="root_employment__error root_employment__description root_employment__help"
+                          checked={true}
+                          className="form-check-input"
+                          disabled={false}
+                          id="root_employment-0"
+                          name="root_employment"
+                          onBlur={[Function]}
+                          onChange={[Function]}
+                          onFocus={[Function]}
+                          required={false}
+                          type="radio"
+                          value="0"
+                        />
+                        <label
+                          className="form-check-label"
+                          htmlFor="root_employment-0"
+                          title=""
+                        >
+                          Company
+                        </label>
+                      </div>
+                      <div
+                        className="form-check form-check-inline"
+                      >
+                        <input
+                          aria-describedby="root_employment__error root_employment__description root_employment__help"
+                          checked={false}
+                          className="form-check-input"
+                          disabled={false}
+                          id="root_employment-1"
+                          name="root_employment"
+                          onBlur={[Function]}
+                          onChange={[Function]}
+                          onFocus={[Function]}
+                          required={false}
+                          type="radio"
+                          value="1"
+                        />
+                        <label
+                          className="form-check-label"
+                          htmlFor="root_employment-1"
+                          title=""
+                        >
+                          Education
+                        </label>
+                      </div>
+                      <div
+                        className="form-check form-check-inline"
+                      >
+                        <input
+                          aria-describedby="root_employment__error root_employment__description root_employment__help"
+                          checked={false}
+                          className="form-check-input"
+                          disabled={false}
+                          id="root_employment-2"
+                          name="root_employment"
+                          onBlur={[Function]}
+                          onChange={[Function]}
+                          onFocus={[Function]}
+                          required={false}
+                          type="radio"
+                          value="2"
+                        />
+                        <label
+                          className="form-check-label"
+                          htmlFor="root_employment-2"
+                          title=""
+                        >
+                          Other
+                        </label>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -2532,83 +2542,93 @@ exports[`Complex grid renders person and address and employment in a complex gri
                   }
                 }
               >
-                <div
-                  className="mb-0"
-                >
-                  <div
-                    className="form-check form-check-inline"
-                  >
-                    <input
-                      aria-describedby="root_employment__error root_employment__description root_employment__help"
-                      checked={false}
-                      className="form-check-input"
-                      disabled={false}
-                      id="root_employment-0"
-                      name="root_employment"
-                      onBlur={[Function]}
-                      onChange={[Function]}
-                      onFocus={[Function]}
-                      required={false}
-                      type="radio"
-                      value="0"
-                    />
+                <div>
+                  <div>
                     <label
-                      className="form-check-label"
-                      htmlFor="root_employment-0"
-                      title=""
+                      className="form-label"
+                      htmlFor="root_employment"
                     >
-                      Company
+                      Employment
                     </label>
-                  </div>
-                  <div
-                    className="form-check form-check-inline"
-                  >
-                    <input
-                      aria-describedby="root_employment__error root_employment__description root_employment__help"
-                      checked={true}
-                      className="form-check-input"
-                      disabled={false}
-                      id="root_employment-1"
-                      name="root_employment"
-                      onBlur={[Function]}
-                      onChange={[Function]}
-                      onFocus={[Function]}
-                      required={false}
-                      type="radio"
-                      value="1"
-                    />
-                    <label
-                      className="form-check-label"
-                      htmlFor="root_employment-1"
-                      title=""
+                    <div
+                      className="mb-0"
                     >
-                      Education
-                    </label>
-                  </div>
-                  <div
-                    className="form-check form-check-inline"
-                  >
-                    <input
-                      aria-describedby="root_employment__error root_employment__description root_employment__help"
-                      checked={false}
-                      className="form-check-input"
-                      disabled={false}
-                      id="root_employment-2"
-                      name="root_employment"
-                      onBlur={[Function]}
-                      onChange={[Function]}
-                      onFocus={[Function]}
-                      required={false}
-                      type="radio"
-                      value="2"
-                    />
-                    <label
-                      className="form-check-label"
-                      htmlFor="root_employment-2"
-                      title=""
-                    >
-                      Other
-                    </label>
+                      <div
+                        className="form-check form-check-inline"
+                      >
+                        <input
+                          aria-describedby="root_employment__error root_employment__description root_employment__help"
+                          checked={false}
+                          className="form-check-input"
+                          disabled={false}
+                          id="root_employment-0"
+                          name="root_employment"
+                          onBlur={[Function]}
+                          onChange={[Function]}
+                          onFocus={[Function]}
+                          required={false}
+                          type="radio"
+                          value="0"
+                        />
+                        <label
+                          className="form-check-label"
+                          htmlFor="root_employment-0"
+                          title=""
+                        >
+                          Company
+                        </label>
+                      </div>
+                      <div
+                        className="form-check form-check-inline"
+                      >
+                        <input
+                          aria-describedby="root_employment__error root_employment__description root_employment__help"
+                          checked={true}
+                          className="form-check-input"
+                          disabled={false}
+                          id="root_employment-1"
+                          name="root_employment"
+                          onBlur={[Function]}
+                          onChange={[Function]}
+                          onFocus={[Function]}
+                          required={false}
+                          type="radio"
+                          value="1"
+                        />
+                        <label
+                          className="form-check-label"
+                          htmlFor="root_employment-1"
+                          title=""
+                        >
+                          Education
+                        </label>
+                      </div>
+                      <div
+                        className="form-check form-check-inline"
+                      >
+                        <input
+                          aria-describedby="root_employment__error root_employment__description root_employment__help"
+                          checked={false}
+                          className="form-check-input"
+                          disabled={false}
+                          id="root_employment-2"
+                          name="root_employment"
+                          onBlur={[Function]}
+                          onChange={[Function]}
+                          onFocus={[Function]}
+                          required={false}
+                          type="radio"
+                          value="2"
+                        />
+                        <label
+                          className="form-check-label"
+                          htmlFor="root_employment-2"
+                          title=""
+                        >
+                          Other
+                        </label>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -4144,83 +4164,93 @@ exports[`Complex grid renders person and address and employment in a complex gri
                   }
                 }
               >
-                <div
-                  className="mb-0"
-                >
-                  <div
-                    className="form-check form-check-inline"
-                  >
-                    <input
-                      aria-describedby="root_employment__error root_employment__description root_employment__help"
-                      checked={false}
-                      className="form-check-input"
-                      disabled={false}
-                      id="root_employment-0"
-                      name="root_employment"
-                      onBlur={[Function]}
-                      onChange={[Function]}
-                      onFocus={[Function]}
-                      required={false}
-                      type="radio"
-                      value="0"
-                    />
+                <div>
+                  <div>
                     <label
-                      className="form-check-label"
-                      htmlFor="root_employment-0"
-                      title=""
+                      className="form-label"
+                      htmlFor="root_employment"
                     >
-                      Company
+                      Employment
                     </label>
-                  </div>
-                  <div
-                    className="form-check form-check-inline"
-                  >
-                    <input
-                      aria-describedby="root_employment__error root_employment__description root_employment__help"
-                      checked={false}
-                      className="form-check-input"
-                      disabled={false}
-                      id="root_employment-1"
-                      name="root_employment"
-                      onBlur={[Function]}
-                      onChange={[Function]}
-                      onFocus={[Function]}
-                      required={false}
-                      type="radio"
-                      value="1"
-                    />
-                    <label
-                      className="form-check-label"
-                      htmlFor="root_employment-1"
-                      title=""
+                    <div
+                      className="mb-0"
                     >
-                      Education
-                    </label>
-                  </div>
-                  <div
-                    className="form-check form-check-inline"
-                  >
-                    <input
-                      aria-describedby="root_employment__error root_employment__description root_employment__help"
-                      checked={true}
-                      className="form-check-input"
-                      disabled={false}
-                      id="root_employment-2"
-                      name="root_employment"
-                      onBlur={[Function]}
-                      onChange={[Function]}
-                      onFocus={[Function]}
-                      required={false}
-                      type="radio"
-                      value="2"
-                    />
-                    <label
-                      className="form-check-label"
-                      htmlFor="root_employment-2"
-                      title=""
-                    >
-                      Other
-                    </label>
+                      <div
+                        className="form-check form-check-inline"
+                      >
+                        <input
+                          aria-describedby="root_employment__error root_employment__description root_employment__help"
+                          checked={false}
+                          className="form-check-input"
+                          disabled={false}
+                          id="root_employment-0"
+                          name="root_employment"
+                          onBlur={[Function]}
+                          onChange={[Function]}
+                          onFocus={[Function]}
+                          required={false}
+                          type="radio"
+                          value="0"
+                        />
+                        <label
+                          className="form-check-label"
+                          htmlFor="root_employment-0"
+                          title=""
+                        >
+                          Company
+                        </label>
+                      </div>
+                      <div
+                        className="form-check form-check-inline"
+                      >
+                        <input
+                          aria-describedby="root_employment__error root_employment__description root_employment__help"
+                          checked={false}
+                          className="form-check-input"
+                          disabled={false}
+                          id="root_employment-1"
+                          name="root_employment"
+                          onBlur={[Function]}
+                          onChange={[Function]}
+                          onFocus={[Function]}
+                          required={false}
+                          type="radio"
+                          value="1"
+                        />
+                        <label
+                          className="form-check-label"
+                          htmlFor="root_employment-1"
+                          title=""
+                        >
+                          Education
+                        </label>
+                      </div>
+                      <div
+                        className="form-check form-check-inline"
+                      >
+                        <input
+                          aria-describedby="root_employment__error root_employment__description root_employment__help"
+                          checked={true}
+                          className="form-check-input"
+                          disabled={false}
+                          id="root_employment-2"
+                          name="root_employment"
+                          onBlur={[Function]}
+                          onChange={[Function]}
+                          onFocus={[Function]}
+                          required={false}
+                          type="radio"
+                          value="2"
+                        />
+                        <label
+                          className="form-check-label"
+                          htmlFor="root_employment-2"
+                          title=""
+                        >
+                          Other
+                        </label>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -5232,83 +5262,93 @@ exports[`Complex grid renders person and address and employment in a complex gri
                   }
                 }
               >
-                <div
-                  className="mb-0"
-                >
-                  <div
-                    className="form-check form-check-inline"
-                  >
-                    <input
-                      aria-describedby="root_employment__error root_employment__description root_employment__help"
-                      checked={true}
-                      className="form-check-input"
-                      disabled={false}
-                      id="root_employment-0"
-                      name="root_employment"
-                      onBlur={[Function]}
-                      onChange={[Function]}
-                      onFocus={[Function]}
-                      required={false}
-                      type="radio"
-                      value="0"
-                    />
+                <div>
+                  <div>
                     <label
-                      className="form-check-label"
-                      htmlFor="root_employment-0"
-                      title=""
+                      className="form-label"
+                      htmlFor="root_employment"
                     >
-                      Company
+                      Employment
                     </label>
-                  </div>
-                  <div
-                    className="form-check form-check-inline"
-                  >
-                    <input
-                      aria-describedby="root_employment__error root_employment__description root_employment__help"
-                      checked={false}
-                      className="form-check-input"
-                      disabled={false}
-                      id="root_employment-1"
-                      name="root_employment"
-                      onBlur={[Function]}
-                      onChange={[Function]}
-                      onFocus={[Function]}
-                      required={false}
-                      type="radio"
-                      value="1"
-                    />
-                    <label
-                      className="form-check-label"
-                      htmlFor="root_employment-1"
-                      title=""
+                    <div
+                      className="mb-0"
                     >
-                      Education
-                    </label>
-                  </div>
-                  <div
-                    className="form-check form-check-inline"
-                  >
-                    <input
-                      aria-describedby="root_employment__error root_employment__description root_employment__help"
-                      checked={false}
-                      className="form-check-input"
-                      disabled={false}
-                      id="root_employment-2"
-                      name="root_employment"
-                      onBlur={[Function]}
-                      onChange={[Function]}
-                      onFocus={[Function]}
-                      required={false}
-                      type="radio"
-                      value="2"
-                    />
-                    <label
-                      className="form-check-label"
-                      htmlFor="root_employment-2"
-                      title=""
-                    >
-                      Other
-                    </label>
+                      <div
+                        className="form-check form-check-inline"
+                      >
+                        <input
+                          aria-describedby="root_employment__error root_employment__description root_employment__help"
+                          checked={true}
+                          className="form-check-input"
+                          disabled={false}
+                          id="root_employment-0"
+                          name="root_employment"
+                          onBlur={[Function]}
+                          onChange={[Function]}
+                          onFocus={[Function]}
+                          required={false}
+                          type="radio"
+                          value="0"
+                        />
+                        <label
+                          className="form-check-label"
+                          htmlFor="root_employment-0"
+                          title=""
+                        >
+                          Company
+                        </label>
+                      </div>
+                      <div
+                        className="form-check form-check-inline"
+                      >
+                        <input
+                          aria-describedby="root_employment__error root_employment__description root_employment__help"
+                          checked={false}
+                          className="form-check-input"
+                          disabled={false}
+                          id="root_employment-1"
+                          name="root_employment"
+                          onBlur={[Function]}
+                          onChange={[Function]}
+                          onFocus={[Function]}
+                          required={false}
+                          type="radio"
+                          value="1"
+                        />
+                        <label
+                          className="form-check-label"
+                          htmlFor="root_employment-1"
+                          title=""
+                        >
+                          Education
+                        </label>
+                      </div>
+                      <div
+                        className="form-check form-check-inline"
+                      >
+                        <input
+                          aria-describedby="root_employment__error root_employment__description root_employment__help"
+                          checked={false}
+                          className="form-check-input"
+                          disabled={false}
+                          id="root_employment-2"
+                          name="root_employment"
+                          onBlur={[Function]}
+                          onChange={[Function]}
+                          onFocus={[Function]}
+                          required={false}
+                          type="radio"
+                          value="2"
+                        />
+                        <label
+                          className="form-check-label"
+                          htmlFor="root_employment-2"
+                          title=""
+                        >
+                          Other
+                        </label>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>

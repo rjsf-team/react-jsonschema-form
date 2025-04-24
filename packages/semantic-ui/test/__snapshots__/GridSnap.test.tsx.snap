@@ -1836,106 +1836,112 @@ exports[`Complex grid renders person and address and employment in a complex gri
                   }
                 }
               >
-                <div
-                  className="inline fields"
-                >
+                <div>
                   <div
-                    className="field"
+                    className="grouped equal width fields"
                   >
                     <div
-                      className="ui checked radio checkbox"
-                      fluid={true}
-                      inverted={false}
-                      onBlur={[Function]}
-                      onChange={[Function]}
-                      onClick={[Function]}
-                      onFocus={[Function]}
-                      onMouseDown={[Function]}
-                      onMouseUp={[Function]}
+                      className="inline fields"
                     >
-                      <input
-                        aria-describedby="root_employment__error root_employment__description root_employment__help"
-                        checked={true}
-                        className="hidden"
-                        id="root_employment-0"
-                        name="root_employment"
-                        readOnly={true}
-                        required={false}
-                        tabIndex={0}
-                        type="radio"
-                        value="0"
-                      />
-                      <label
-                        htmlFor="root_employment-0"
+                      <div
+                        className="field"
                       >
-                        Company
-                      </label>
-                    </div>
-                  </div>
-                  <div
-                    className="field"
-                  >
-                    <div
-                      className="ui radio checkbox"
-                      fluid={true}
-                      inverted={false}
-                      onBlur={[Function]}
-                      onChange={[Function]}
-                      onClick={[Function]}
-                      onFocus={[Function]}
-                      onMouseDown={[Function]}
-                      onMouseUp={[Function]}
-                    >
-                      <input
-                        aria-describedby="root_employment__error root_employment__description root_employment__help"
-                        checked={false}
-                        className="hidden"
-                        id="root_employment-1"
-                        name="root_employment"
-                        readOnly={true}
-                        required={false}
-                        tabIndex={0}
-                        type="radio"
-                        value="1"
-                      />
-                      <label
-                        htmlFor="root_employment-1"
+                        <div
+                          className="ui checked radio checkbox"
+                          fluid={true}
+                          inverted={false}
+                          onBlur={[Function]}
+                          onChange={[Function]}
+                          onClick={[Function]}
+                          onFocus={[Function]}
+                          onMouseDown={[Function]}
+                          onMouseUp={[Function]}
+                        >
+                          <input
+                            aria-describedby="root_employment__error root_employment__description root_employment__help"
+                            checked={true}
+                            className="hidden"
+                            id="root_employment-0"
+                            name="root_employment"
+                            readOnly={true}
+                            required={false}
+                            tabIndex={0}
+                            type="radio"
+                            value="0"
+                          />
+                          <label
+                            htmlFor="root_employment-0"
+                          >
+                            Company
+                          </label>
+                        </div>
+                      </div>
+                      <div
+                        className="field"
                       >
-                        Education
-                      </label>
-                    </div>
-                  </div>
-                  <div
-                    className="field"
-                  >
-                    <div
-                      className="ui radio checkbox"
-                      fluid={true}
-                      inverted={false}
-                      onBlur={[Function]}
-                      onChange={[Function]}
-                      onClick={[Function]}
-                      onFocus={[Function]}
-                      onMouseDown={[Function]}
-                      onMouseUp={[Function]}
-                    >
-                      <input
-                        aria-describedby="root_employment__error root_employment__description root_employment__help"
-                        checked={false}
-                        className="hidden"
-                        id="root_employment-2"
-                        name="root_employment"
-                        readOnly={true}
-                        required={false}
-                        tabIndex={0}
-                        type="radio"
-                        value="2"
-                      />
-                      <label
-                        htmlFor="root_employment-2"
+                        <div
+                          className="ui radio checkbox"
+                          fluid={true}
+                          inverted={false}
+                          onBlur={[Function]}
+                          onChange={[Function]}
+                          onClick={[Function]}
+                          onFocus={[Function]}
+                          onMouseDown={[Function]}
+                          onMouseUp={[Function]}
+                        >
+                          <input
+                            aria-describedby="root_employment__error root_employment__description root_employment__help"
+                            checked={false}
+                            className="hidden"
+                            id="root_employment-1"
+                            name="root_employment"
+                            readOnly={true}
+                            required={false}
+                            tabIndex={0}
+                            type="radio"
+                            value="1"
+                          />
+                          <label
+                            htmlFor="root_employment-1"
+                          >
+                            Education
+                          </label>
+                        </div>
+                      </div>
+                      <div
+                        className="field"
                       >
-                        Other
-                      </label>
+                        <div
+                          className="ui radio checkbox"
+                          fluid={true}
+                          inverted={false}
+                          onBlur={[Function]}
+                          onChange={[Function]}
+                          onClick={[Function]}
+                          onFocus={[Function]}
+                          onMouseDown={[Function]}
+                          onMouseUp={[Function]}
+                        >
+                          <input
+                            aria-describedby="root_employment__error root_employment__description root_employment__help"
+                            checked={false}
+                            className="hidden"
+                            id="root_employment-2"
+                            name="root_employment"
+                            readOnly={true}
+                            required={false}
+                            tabIndex={0}
+                            type="radio"
+                            value="2"
+                          />
+                          <label
+                            htmlFor="root_employment-2"
+                          >
+                            Other
+                          </label>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -5075,106 +5081,112 @@ exports[`Complex grid renders person and address and employment in a complex gri
                   }
                 }
               >
-                <div
-                  className="inline fields"
-                >
+                <div>
                   <div
-                    className="field"
+                    className="grouped equal width fields"
                   >
                     <div
-                      className="ui radio checkbox"
-                      fluid={true}
-                      inverted={false}
-                      onBlur={[Function]}
-                      onChange={[Function]}
-                      onClick={[Function]}
-                      onFocus={[Function]}
-                      onMouseDown={[Function]}
-                      onMouseUp={[Function]}
+                      className="inline fields"
                     >
-                      <input
-                        aria-describedby="root_employment__error root_employment__description root_employment__help"
-                        checked={false}
-                        className="hidden"
-                        id="root_employment-0"
-                        name="root_employment"
-                        readOnly={true}
-                        required={false}
-                        tabIndex={0}
-                        type="radio"
-                        value="0"
-                      />
-                      <label
-                        htmlFor="root_employment-0"
+                      <div
+                        className="field"
                       >
-                        Company
-                      </label>
-                    </div>
-                  </div>
-                  <div
-                    className="field"
-                  >
-                    <div
-                      className="ui checked radio checkbox"
-                      fluid={true}
-                      inverted={false}
-                      onBlur={[Function]}
-                      onChange={[Function]}
-                      onClick={[Function]}
-                      onFocus={[Function]}
-                      onMouseDown={[Function]}
-                      onMouseUp={[Function]}
-                    >
-                      <input
-                        aria-describedby="root_employment__error root_employment__description root_employment__help"
-                        checked={true}
-                        className="hidden"
-                        id="root_employment-1"
-                        name="root_employment"
-                        readOnly={true}
-                        required={false}
-                        tabIndex={0}
-                        type="radio"
-                        value="1"
-                      />
-                      <label
-                        htmlFor="root_employment-1"
+                        <div
+                          className="ui radio checkbox"
+                          fluid={true}
+                          inverted={false}
+                          onBlur={[Function]}
+                          onChange={[Function]}
+                          onClick={[Function]}
+                          onFocus={[Function]}
+                          onMouseDown={[Function]}
+                          onMouseUp={[Function]}
+                        >
+                          <input
+                            aria-describedby="root_employment__error root_employment__description root_employment__help"
+                            checked={false}
+                            className="hidden"
+                            id="root_employment-0"
+                            name="root_employment"
+                            readOnly={true}
+                            required={false}
+                            tabIndex={0}
+                            type="radio"
+                            value="0"
+                          />
+                          <label
+                            htmlFor="root_employment-0"
+                          >
+                            Company
+                          </label>
+                        </div>
+                      </div>
+                      <div
+                        className="field"
                       >
-                        Education
-                      </label>
-                    </div>
-                  </div>
-                  <div
-                    className="field"
-                  >
-                    <div
-                      className="ui radio checkbox"
-                      fluid={true}
-                      inverted={false}
-                      onBlur={[Function]}
-                      onChange={[Function]}
-                      onClick={[Function]}
-                      onFocus={[Function]}
-                      onMouseDown={[Function]}
-                      onMouseUp={[Function]}
-                    >
-                      <input
-                        aria-describedby="root_employment__error root_employment__description root_employment__help"
-                        checked={false}
-                        className="hidden"
-                        id="root_employment-2"
-                        name="root_employment"
-                        readOnly={true}
-                        required={false}
-                        tabIndex={0}
-                        type="radio"
-                        value="2"
-                      />
-                      <label
-                        htmlFor="root_employment-2"
+                        <div
+                          className="ui checked radio checkbox"
+                          fluid={true}
+                          inverted={false}
+                          onBlur={[Function]}
+                          onChange={[Function]}
+                          onClick={[Function]}
+                          onFocus={[Function]}
+                          onMouseDown={[Function]}
+                          onMouseUp={[Function]}
+                        >
+                          <input
+                            aria-describedby="root_employment__error root_employment__description root_employment__help"
+                            checked={true}
+                            className="hidden"
+                            id="root_employment-1"
+                            name="root_employment"
+                            readOnly={true}
+                            required={false}
+                            tabIndex={0}
+                            type="radio"
+                            value="1"
+                          />
+                          <label
+                            htmlFor="root_employment-1"
+                          >
+                            Education
+                          </label>
+                        </div>
+                      </div>
+                      <div
+                        className="field"
                       >
-                        Other
-                      </label>
+                        <div
+                          className="ui radio checkbox"
+                          fluid={true}
+                          inverted={false}
+                          onBlur={[Function]}
+                          onChange={[Function]}
+                          onClick={[Function]}
+                          onFocus={[Function]}
+                          onMouseDown={[Function]}
+                          onMouseUp={[Function]}
+                        >
+                          <input
+                            aria-describedby="root_employment__error root_employment__description root_employment__help"
+                            checked={false}
+                            className="hidden"
+                            id="root_employment-2"
+                            name="root_employment"
+                            readOnly={true}
+                            required={false}
+                            tabIndex={0}
+                            type="radio"
+                            value="2"
+                          />
+                          <label
+                            htmlFor="root_employment-2"
+                          >
+                            Other
+                          </label>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -8360,106 +8372,112 @@ exports[`Complex grid renders person and address and employment in a complex gri
                   }
                 }
               >
-                <div
-                  className="inline fields"
-                >
+                <div>
                   <div
-                    className="field"
+                    className="grouped equal width fields"
                   >
                     <div
-                      className="ui radio checkbox"
-                      fluid={true}
-                      inverted={false}
-                      onBlur={[Function]}
-                      onChange={[Function]}
-                      onClick={[Function]}
-                      onFocus={[Function]}
-                      onMouseDown={[Function]}
-                      onMouseUp={[Function]}
+                      className="inline fields"
                     >
-                      <input
-                        aria-describedby="root_employment__error root_employment__description root_employment__help"
-                        checked={false}
-                        className="hidden"
-                        id="root_employment-0"
-                        name="root_employment"
-                        readOnly={true}
-                        required={false}
-                        tabIndex={0}
-                        type="radio"
-                        value="0"
-                      />
-                      <label
-                        htmlFor="root_employment-0"
+                      <div
+                        className="field"
                       >
-                        Company
-                      </label>
-                    </div>
-                  </div>
-                  <div
-                    className="field"
-                  >
-                    <div
-                      className="ui radio checkbox"
-                      fluid={true}
-                      inverted={false}
-                      onBlur={[Function]}
-                      onChange={[Function]}
-                      onClick={[Function]}
-                      onFocus={[Function]}
-                      onMouseDown={[Function]}
-                      onMouseUp={[Function]}
-                    >
-                      <input
-                        aria-describedby="root_employment__error root_employment__description root_employment__help"
-                        checked={false}
-                        className="hidden"
-                        id="root_employment-1"
-                        name="root_employment"
-                        readOnly={true}
-                        required={false}
-                        tabIndex={0}
-                        type="radio"
-                        value="1"
-                      />
-                      <label
-                        htmlFor="root_employment-1"
+                        <div
+                          className="ui radio checkbox"
+                          fluid={true}
+                          inverted={false}
+                          onBlur={[Function]}
+                          onChange={[Function]}
+                          onClick={[Function]}
+                          onFocus={[Function]}
+                          onMouseDown={[Function]}
+                          onMouseUp={[Function]}
+                        >
+                          <input
+                            aria-describedby="root_employment__error root_employment__description root_employment__help"
+                            checked={false}
+                            className="hidden"
+                            id="root_employment-0"
+                            name="root_employment"
+                            readOnly={true}
+                            required={false}
+                            tabIndex={0}
+                            type="radio"
+                            value="0"
+                          />
+                          <label
+                            htmlFor="root_employment-0"
+                          >
+                            Company
+                          </label>
+                        </div>
+                      </div>
+                      <div
+                        className="field"
                       >
-                        Education
-                      </label>
-                    </div>
-                  </div>
-                  <div
-                    className="field"
-                  >
-                    <div
-                      className="ui checked radio checkbox"
-                      fluid={true}
-                      inverted={false}
-                      onBlur={[Function]}
-                      onChange={[Function]}
-                      onClick={[Function]}
-                      onFocus={[Function]}
-                      onMouseDown={[Function]}
-                      onMouseUp={[Function]}
-                    >
-                      <input
-                        aria-describedby="root_employment__error root_employment__description root_employment__help"
-                        checked={true}
-                        className="hidden"
-                        id="root_employment-2"
-                        name="root_employment"
-                        readOnly={true}
-                        required={false}
-                        tabIndex={0}
-                        type="radio"
-                        value="2"
-                      />
-                      <label
-                        htmlFor="root_employment-2"
+                        <div
+                          className="ui radio checkbox"
+                          fluid={true}
+                          inverted={false}
+                          onBlur={[Function]}
+                          onChange={[Function]}
+                          onClick={[Function]}
+                          onFocus={[Function]}
+                          onMouseDown={[Function]}
+                          onMouseUp={[Function]}
+                        >
+                          <input
+                            aria-describedby="root_employment__error root_employment__description root_employment__help"
+                            checked={false}
+                            className="hidden"
+                            id="root_employment-1"
+                            name="root_employment"
+                            readOnly={true}
+                            required={false}
+                            tabIndex={0}
+                            type="radio"
+                            value="1"
+                          />
+                          <label
+                            htmlFor="root_employment-1"
+                          >
+                            Education
+                          </label>
+                        </div>
+                      </div>
+                      <div
+                        className="field"
                       >
-                        Other
-                      </label>
+                        <div
+                          className="ui checked radio checkbox"
+                          fluid={true}
+                          inverted={false}
+                          onBlur={[Function]}
+                          onChange={[Function]}
+                          onClick={[Function]}
+                          onFocus={[Function]}
+                          onMouseDown={[Function]}
+                          onMouseUp={[Function]}
+                        >
+                          <input
+                            aria-describedby="root_employment__error root_employment__description root_employment__help"
+                            checked={true}
+                            className="hidden"
+                            id="root_employment-2"
+                            name="root_employment"
+                            readOnly={true}
+                            required={false}
+                            tabIndex={0}
+                            type="radio"
+                            value="2"
+                          />
+                          <label
+                            htmlFor="root_employment-2"
+                          >
+                            Other
+                          </label>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -10360,106 +10378,112 @@ exports[`Complex grid renders person and address and employment in a complex gri
                   }
                 }
               >
-                <div
-                  className="inline fields"
-                >
+                <div>
                   <div
-                    className="field"
+                    className="grouped equal width fields"
                   >
                     <div
-                      className="ui checked radio checkbox"
-                      fluid={true}
-                      inverted={false}
-                      onBlur={[Function]}
-                      onChange={[Function]}
-                      onClick={[Function]}
-                      onFocus={[Function]}
-                      onMouseDown={[Function]}
-                      onMouseUp={[Function]}
+                      className="inline fields"
                     >
-                      <input
-                        aria-describedby="root_employment__error root_employment__description root_employment__help"
-                        checked={true}
-                        className="hidden"
-                        id="root_employment-0"
-                        name="root_employment"
-                        readOnly={true}
-                        required={false}
-                        tabIndex={0}
-                        type="radio"
-                        value="0"
-                      />
-                      <label
-                        htmlFor="root_employment-0"
+                      <div
+                        className="field"
                       >
-                        Company
-                      </label>
-                    </div>
-                  </div>
-                  <div
-                    className="field"
-                  >
-                    <div
-                      className="ui radio checkbox"
-                      fluid={true}
-                      inverted={false}
-                      onBlur={[Function]}
-                      onChange={[Function]}
-                      onClick={[Function]}
-                      onFocus={[Function]}
-                      onMouseDown={[Function]}
-                      onMouseUp={[Function]}
-                    >
-                      <input
-                        aria-describedby="root_employment__error root_employment__description root_employment__help"
-                        checked={false}
-                        className="hidden"
-                        id="root_employment-1"
-                        name="root_employment"
-                        readOnly={true}
-                        required={false}
-                        tabIndex={0}
-                        type="radio"
-                        value="1"
-                      />
-                      <label
-                        htmlFor="root_employment-1"
+                        <div
+                          className="ui checked radio checkbox"
+                          fluid={true}
+                          inverted={false}
+                          onBlur={[Function]}
+                          onChange={[Function]}
+                          onClick={[Function]}
+                          onFocus={[Function]}
+                          onMouseDown={[Function]}
+                          onMouseUp={[Function]}
+                        >
+                          <input
+                            aria-describedby="root_employment__error root_employment__description root_employment__help"
+                            checked={true}
+                            className="hidden"
+                            id="root_employment-0"
+                            name="root_employment"
+                            readOnly={true}
+                            required={false}
+                            tabIndex={0}
+                            type="radio"
+                            value="0"
+                          />
+                          <label
+                            htmlFor="root_employment-0"
+                          >
+                            Company
+                          </label>
+                        </div>
+                      </div>
+                      <div
+                        className="field"
                       >
-                        Education
-                      </label>
-                    </div>
-                  </div>
-                  <div
-                    className="field"
-                  >
-                    <div
-                      className="ui radio checkbox"
-                      fluid={true}
-                      inverted={false}
-                      onBlur={[Function]}
-                      onChange={[Function]}
-                      onClick={[Function]}
-                      onFocus={[Function]}
-                      onMouseDown={[Function]}
-                      onMouseUp={[Function]}
-                    >
-                      <input
-                        aria-describedby="root_employment__error root_employment__description root_employment__help"
-                        checked={false}
-                        className="hidden"
-                        id="root_employment-2"
-                        name="root_employment"
-                        readOnly={true}
-                        required={false}
-                        tabIndex={0}
-                        type="radio"
-                        value="2"
-                      />
-                      <label
-                        htmlFor="root_employment-2"
+                        <div
+                          className="ui radio checkbox"
+                          fluid={true}
+                          inverted={false}
+                          onBlur={[Function]}
+                          onChange={[Function]}
+                          onClick={[Function]}
+                          onFocus={[Function]}
+                          onMouseDown={[Function]}
+                          onMouseUp={[Function]}
+                        >
+                          <input
+                            aria-describedby="root_employment__error root_employment__description root_employment__help"
+                            checked={false}
+                            className="hidden"
+                            id="root_employment-1"
+                            name="root_employment"
+                            readOnly={true}
+                            required={false}
+                            tabIndex={0}
+                            type="radio"
+                            value="1"
+                          />
+                          <label
+                            htmlFor="root_employment-1"
+                          >
+                            Education
+                          </label>
+                        </div>
+                      </div>
+                      <div
+                        className="field"
                       >
-                        Other
-                      </label>
+                        <div
+                          className="ui radio checkbox"
+                          fluid={true}
+                          inverted={false}
+                          onBlur={[Function]}
+                          onChange={[Function]}
+                          onClick={[Function]}
+                          onFocus={[Function]}
+                          onMouseDown={[Function]}
+                          onMouseUp={[Function]}
+                        >
+                          <input
+                            aria-describedby="root_employment__error root_employment__description root_employment__help"
+                            checked={false}
+                            className="hidden"
+                            id="root_employment-2"
+                            name="root_employment"
+                            readOnly={true}
+                            required={false}
+                            tabIndex={0}
+                            type="radio"
+                            value="2"
+                          />
+                          <label
+                            htmlFor="root_employment-2"
+                          >
+                            Other
+                          </label>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>

@@ -1280,103 +1280,143 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           }
                         }
                       >
-                        <div
-                          aria-describedby="root_employment__error root_employment__description root_employment__help"
-                          className="ant-radio-group ant-radio-group-outline css-dev-only-do-not-override-1d4w9r2"
-                          id="root_employment"
-                          onBlur={[Function]}
-                          onFocus={[Function]}
-                        >
-                          <label
-                            className="ant-radio-wrapper ant-radio-wrapper-checked ant-radio-wrapper-in-form-item css-dev-only-do-not-override-1d4w9r2"
-                            onClick={[Function]}
-                            style={{}}
+                        <div>
+                          <div
+                            className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
                           >
-                            <span
-                              className="ant-radio ant-wave-target ant-radio-checked"
+                            <div
+                              className="ant-row ant-form-item-row css-dev-only-do-not-override-1d4w9r2"
+                              style={
+                                {
+                                  "rowGap": undefined,
+                                }
+                              }
                             >
-                              <input
-                                autoFocus={false}
-                                checked={true}
-                                className="ant-radio-input"
-                                disabled={false}
-                                id="root_employment-0"
-                                name="root_employment"
-                                onChange={[Function]}
-                                onClick={[Function]}
-                                type="radio"
-                                value="0"
-                              />
-                              <span
-                                className="ant-radio-inner"
-                              />
-                            </span>
-                            <span
-                              className="ant-radio-label"
-                            >
-                              Company
-                            </span>
-                          </label>
-                          <label
-                            className="ant-radio-wrapper ant-radio-wrapper-in-form-item css-dev-only-do-not-override-1d4w9r2"
-                            onClick={[Function]}
-                            style={{}}
-                          >
-                            <span
-                              className="ant-radio ant-wave-target"
-                            >
-                              <input
-                                autoFocus={false}
-                                checked={false}
-                                className="ant-radio-input"
-                                disabled={false}
-                                id="root_employment-1"
-                                name="root_employment"
-                                onChange={[Function]}
-                                onClick={[Function]}
-                                type="radio"
-                                value="1"
-                              />
-                              <span
-                                className="ant-radio-inner"
-                              />
-                            </span>
-                            <span
-                              className="ant-radio-label"
-                            >
-                              Education
-                            </span>
-                          </label>
-                          <label
-                            className="ant-radio-wrapper ant-radio-wrapper-in-form-item css-dev-only-do-not-override-1d4w9r2"
-                            onClick={[Function]}
-                            style={{}}
-                          >
-                            <span
-                              className="ant-radio ant-wave-target"
-                            >
-                              <input
-                                autoFocus={false}
-                                checked={false}
-                                className="ant-radio-input"
-                                disabled={false}
-                                id="root_employment-2"
-                                name="root_employment"
-                                onChange={[Function]}
-                                onClick={[Function]}
-                                type="radio"
-                                value="2"
-                              />
-                              <span
-                                className="ant-radio-inner"
-                              />
-                            </span>
-                            <span
-                              className="ant-radio-label"
-                            >
-                              Other
-                            </span>
-                          </label>
+                              <div
+                                className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-1d4w9r2"
+                                style={{}}
+                              >
+                                <label
+                                  className=""
+                                  htmlFor="root_employment"
+                                  title="Employment"
+                                >
+                                  Employment
+                                </label>
+                              </div>
+                              <div
+                                className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1d4w9r2"
+                                style={{}}
+                              >
+                                <div
+                                  className="ant-form-item-control-input"
+                                >
+                                  <div
+                                    className="ant-form-item-control-input-content"
+                                  >
+                                    <div
+                                      aria-describedby="root_employment__error root_employment__description root_employment__help"
+                                      className="ant-radio-group ant-radio-group-outline css-dev-only-do-not-override-1d4w9r2"
+                                      id="root_employment"
+                                      onBlur={[Function]}
+                                      onFocus={[Function]}
+                                    >
+                                      <label
+                                        className="ant-radio-wrapper ant-radio-wrapper-checked ant-radio-wrapper-in-form-item css-dev-only-do-not-override-1d4w9r2"
+                                        onClick={[Function]}
+                                        style={{}}
+                                      >
+                                        <span
+                                          className="ant-radio ant-wave-target ant-radio-checked"
+                                        >
+                                          <input
+                                            autoFocus={false}
+                                            checked={true}
+                                            className="ant-radio-input"
+                                            disabled={false}
+                                            id="root_employment-0"
+                                            name="root_employment"
+                                            onChange={[Function]}
+                                            onClick={[Function]}
+                                            type="radio"
+                                            value="0"
+                                          />
+                                          <span
+                                            className="ant-radio-inner"
+                                          />
+                                        </span>
+                                        <span
+                                          className="ant-radio-label"
+                                        >
+                                          Company
+                                        </span>
+                                      </label>
+                                      <label
+                                        className="ant-radio-wrapper ant-radio-wrapper-in-form-item css-dev-only-do-not-override-1d4w9r2"
+                                        onClick={[Function]}
+                                        style={{}}
+                                      >
+                                        <span
+                                          className="ant-radio ant-wave-target"
+                                        >
+                                          <input
+                                            autoFocus={false}
+                                            checked={false}
+                                            className="ant-radio-input"
+                                            disabled={false}
+                                            id="root_employment-1"
+                                            name="root_employment"
+                                            onChange={[Function]}
+                                            onClick={[Function]}
+                                            type="radio"
+                                            value="1"
+                                          />
+                                          <span
+                                            className="ant-radio-inner"
+                                          />
+                                        </span>
+                                        <span
+                                          className="ant-radio-label"
+                                        >
+                                          Education
+                                        </span>
+                                      </label>
+                                      <label
+                                        className="ant-radio-wrapper ant-radio-wrapper-in-form-item css-dev-only-do-not-override-1d4w9r2"
+                                        onClick={[Function]}
+                                        style={{}}
+                                      >
+                                        <span
+                                          className="ant-radio ant-wave-target"
+                                        >
+                                          <input
+                                            autoFocus={false}
+                                            checked={false}
+                                            className="ant-radio-input"
+                                            disabled={false}
+                                            id="root_employment-2"
+                                            name="root_employment"
+                                            onChange={[Function]}
+                                            onClick={[Function]}
+                                            type="radio"
+                                            value="2"
+                                          />
+                                          <span
+                                            className="ant-radio-inner"
+                                          />
+                                        </span>
+                                        <span
+                                          className="ant-radio-label"
+                                        >
+                                          Other
+                                        </span>
+                                      </label>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
                         </div>
                       </div>
                       <div
@@ -3082,103 +3122,143 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           }
                         }
                       >
-                        <div
-                          aria-describedby="root_employment__error root_employment__description root_employment__help"
-                          className="ant-radio-group ant-radio-group-outline css-dev-only-do-not-override-1d4w9r2"
-                          id="root_employment"
-                          onBlur={[Function]}
-                          onFocus={[Function]}
-                        >
-                          <label
-                            className="ant-radio-wrapper ant-radio-wrapper-in-form-item css-dev-only-do-not-override-1d4w9r2"
-                            onClick={[Function]}
-                            style={{}}
+                        <div>
+                          <div
+                            className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
                           >
-                            <span
-                              className="ant-radio ant-wave-target"
+                            <div
+                              className="ant-row ant-form-item-row css-dev-only-do-not-override-1d4w9r2"
+                              style={
+                                {
+                                  "rowGap": undefined,
+                                }
+                              }
                             >
-                              <input
-                                autoFocus={false}
-                                checked={false}
-                                className="ant-radio-input"
-                                disabled={false}
-                                id="root_employment-0"
-                                name="root_employment"
-                                onChange={[Function]}
-                                onClick={[Function]}
-                                type="radio"
-                                value="0"
-                              />
-                              <span
-                                className="ant-radio-inner"
-                              />
-                            </span>
-                            <span
-                              className="ant-radio-label"
-                            >
-                              Company
-                            </span>
-                          </label>
-                          <label
-                            className="ant-radio-wrapper ant-radio-wrapper-checked ant-radio-wrapper-in-form-item css-dev-only-do-not-override-1d4w9r2"
-                            onClick={[Function]}
-                            style={{}}
-                          >
-                            <span
-                              className="ant-radio ant-wave-target ant-radio-checked"
-                            >
-                              <input
-                                autoFocus={false}
-                                checked={true}
-                                className="ant-radio-input"
-                                disabled={false}
-                                id="root_employment-1"
-                                name="root_employment"
-                                onChange={[Function]}
-                                onClick={[Function]}
-                                type="radio"
-                                value="1"
-                              />
-                              <span
-                                className="ant-radio-inner"
-                              />
-                            </span>
-                            <span
-                              className="ant-radio-label"
-                            >
-                              Education
-                            </span>
-                          </label>
-                          <label
-                            className="ant-radio-wrapper ant-radio-wrapper-in-form-item css-dev-only-do-not-override-1d4w9r2"
-                            onClick={[Function]}
-                            style={{}}
-                          >
-                            <span
-                              className="ant-radio ant-wave-target"
-                            >
-                              <input
-                                autoFocus={false}
-                                checked={false}
-                                className="ant-radio-input"
-                                disabled={false}
-                                id="root_employment-2"
-                                name="root_employment"
-                                onChange={[Function]}
-                                onClick={[Function]}
-                                type="radio"
-                                value="2"
-                              />
-                              <span
-                                className="ant-radio-inner"
-                              />
-                            </span>
-                            <span
-                              className="ant-radio-label"
-                            >
-                              Other
-                            </span>
-                          </label>
+                              <div
+                                className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-1d4w9r2"
+                                style={{}}
+                              >
+                                <label
+                                  className=""
+                                  htmlFor="root_employment"
+                                  title="Employment"
+                                >
+                                  Employment
+                                </label>
+                              </div>
+                              <div
+                                className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1d4w9r2"
+                                style={{}}
+                              >
+                                <div
+                                  className="ant-form-item-control-input"
+                                >
+                                  <div
+                                    className="ant-form-item-control-input-content"
+                                  >
+                                    <div
+                                      aria-describedby="root_employment__error root_employment__description root_employment__help"
+                                      className="ant-radio-group ant-radio-group-outline css-dev-only-do-not-override-1d4w9r2"
+                                      id="root_employment"
+                                      onBlur={[Function]}
+                                      onFocus={[Function]}
+                                    >
+                                      <label
+                                        className="ant-radio-wrapper ant-radio-wrapper-in-form-item css-dev-only-do-not-override-1d4w9r2"
+                                        onClick={[Function]}
+                                        style={{}}
+                                      >
+                                        <span
+                                          className="ant-radio ant-wave-target"
+                                        >
+                                          <input
+                                            autoFocus={false}
+                                            checked={false}
+                                            className="ant-radio-input"
+                                            disabled={false}
+                                            id="root_employment-0"
+                                            name="root_employment"
+                                            onChange={[Function]}
+                                            onClick={[Function]}
+                                            type="radio"
+                                            value="0"
+                                          />
+                                          <span
+                                            className="ant-radio-inner"
+                                          />
+                                        </span>
+                                        <span
+                                          className="ant-radio-label"
+                                        >
+                                          Company
+                                        </span>
+                                      </label>
+                                      <label
+                                        className="ant-radio-wrapper ant-radio-wrapper-checked ant-radio-wrapper-in-form-item css-dev-only-do-not-override-1d4w9r2"
+                                        onClick={[Function]}
+                                        style={{}}
+                                      >
+                                        <span
+                                          className="ant-radio ant-wave-target ant-radio-checked"
+                                        >
+                                          <input
+                                            autoFocus={false}
+                                            checked={true}
+                                            className="ant-radio-input"
+                                            disabled={false}
+                                            id="root_employment-1"
+                                            name="root_employment"
+                                            onChange={[Function]}
+                                            onClick={[Function]}
+                                            type="radio"
+                                            value="1"
+                                          />
+                                          <span
+                                            className="ant-radio-inner"
+                                          />
+                                        </span>
+                                        <span
+                                          className="ant-radio-label"
+                                        >
+                                          Education
+                                        </span>
+                                      </label>
+                                      <label
+                                        className="ant-radio-wrapper ant-radio-wrapper-in-form-item css-dev-only-do-not-override-1d4w9r2"
+                                        onClick={[Function]}
+                                        style={{}}
+                                      >
+                                        <span
+                                          className="ant-radio ant-wave-target"
+                                        >
+                                          <input
+                                            autoFocus={false}
+                                            checked={false}
+                                            className="ant-radio-input"
+                                            disabled={false}
+                                            id="root_employment-2"
+                                            name="root_employment"
+                                            onChange={[Function]}
+                                            onClick={[Function]}
+                                            type="radio"
+                                            value="2"
+                                          />
+                                          <span
+                                            className="ant-radio-inner"
+                                          />
+                                        </span>
+                                        <span
+                                          className="ant-radio-label"
+                                        >
+                                          Other
+                                        </span>
+                                      </label>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
                         </div>
                       </div>
                       <div
@@ -4962,103 +5042,143 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           }
                         }
                       >
-                        <div
-                          aria-describedby="root_employment__error root_employment__description root_employment__help"
-                          className="ant-radio-group ant-radio-group-outline css-dev-only-do-not-override-1d4w9r2"
-                          id="root_employment"
-                          onBlur={[Function]}
-                          onFocus={[Function]}
-                        >
-                          <label
-                            className="ant-radio-wrapper ant-radio-wrapper-in-form-item css-dev-only-do-not-override-1d4w9r2"
-                            onClick={[Function]}
-                            style={{}}
+                        <div>
+                          <div
+                            className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
                           >
-                            <span
-                              className="ant-radio ant-wave-target"
+                            <div
+                              className="ant-row ant-form-item-row css-dev-only-do-not-override-1d4w9r2"
+                              style={
+                                {
+                                  "rowGap": undefined,
+                                }
+                              }
                             >
-                              <input
-                                autoFocus={false}
-                                checked={false}
-                                className="ant-radio-input"
-                                disabled={false}
-                                id="root_employment-0"
-                                name="root_employment"
-                                onChange={[Function]}
-                                onClick={[Function]}
-                                type="radio"
-                                value="0"
-                              />
-                              <span
-                                className="ant-radio-inner"
-                              />
-                            </span>
-                            <span
-                              className="ant-radio-label"
-                            >
-                              Company
-                            </span>
-                          </label>
-                          <label
-                            className="ant-radio-wrapper ant-radio-wrapper-in-form-item css-dev-only-do-not-override-1d4w9r2"
-                            onClick={[Function]}
-                            style={{}}
-                          >
-                            <span
-                              className="ant-radio ant-wave-target"
-                            >
-                              <input
-                                autoFocus={false}
-                                checked={false}
-                                className="ant-radio-input"
-                                disabled={false}
-                                id="root_employment-1"
-                                name="root_employment"
-                                onChange={[Function]}
-                                onClick={[Function]}
-                                type="radio"
-                                value="1"
-                              />
-                              <span
-                                className="ant-radio-inner"
-                              />
-                            </span>
-                            <span
-                              className="ant-radio-label"
-                            >
-                              Education
-                            </span>
-                          </label>
-                          <label
-                            className="ant-radio-wrapper ant-radio-wrapper-checked ant-radio-wrapper-in-form-item css-dev-only-do-not-override-1d4w9r2"
-                            onClick={[Function]}
-                            style={{}}
-                          >
-                            <span
-                              className="ant-radio ant-wave-target ant-radio-checked"
-                            >
-                              <input
-                                autoFocus={false}
-                                checked={true}
-                                className="ant-radio-input"
-                                disabled={false}
-                                id="root_employment-2"
-                                name="root_employment"
-                                onChange={[Function]}
-                                onClick={[Function]}
-                                type="radio"
-                                value="2"
-                              />
-                              <span
-                                className="ant-radio-inner"
-                              />
-                            </span>
-                            <span
-                              className="ant-radio-label"
-                            >
-                              Other
-                            </span>
-                          </label>
+                              <div
+                                className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-1d4w9r2"
+                                style={{}}
+                              >
+                                <label
+                                  className=""
+                                  htmlFor="root_employment"
+                                  title="Employment"
+                                >
+                                  Employment
+                                </label>
+                              </div>
+                              <div
+                                className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1d4w9r2"
+                                style={{}}
+                              >
+                                <div
+                                  className="ant-form-item-control-input"
+                                >
+                                  <div
+                                    className="ant-form-item-control-input-content"
+                                  >
+                                    <div
+                                      aria-describedby="root_employment__error root_employment__description root_employment__help"
+                                      className="ant-radio-group ant-radio-group-outline css-dev-only-do-not-override-1d4w9r2"
+                                      id="root_employment"
+                                      onBlur={[Function]}
+                                      onFocus={[Function]}
+                                    >
+                                      <label
+                                        className="ant-radio-wrapper ant-radio-wrapper-in-form-item css-dev-only-do-not-override-1d4w9r2"
+                                        onClick={[Function]}
+                                        style={{}}
+                                      >
+                                        <span
+                                          className="ant-radio ant-wave-target"
+                                        >
+                                          <input
+                                            autoFocus={false}
+                                            checked={false}
+                                            className="ant-radio-input"
+                                            disabled={false}
+                                            id="root_employment-0"
+                                            name="root_employment"
+                                            onChange={[Function]}
+                                            onClick={[Function]}
+                                            type="radio"
+                                            value="0"
+                                          />
+                                          <span
+                                            className="ant-radio-inner"
+                                          />
+                                        </span>
+                                        <span
+                                          className="ant-radio-label"
+                                        >
+                                          Company
+                                        </span>
+                                      </label>
+                                      <label
+                                        className="ant-radio-wrapper ant-radio-wrapper-in-form-item css-dev-only-do-not-override-1d4w9r2"
+                                        onClick={[Function]}
+                                        style={{}}
+                                      >
+                                        <span
+                                          className="ant-radio ant-wave-target"
+                                        >
+                                          <input
+                                            autoFocus={false}
+                                            checked={false}
+                                            className="ant-radio-input"
+                                            disabled={false}
+                                            id="root_employment-1"
+                                            name="root_employment"
+                                            onChange={[Function]}
+                                            onClick={[Function]}
+                                            type="radio"
+                                            value="1"
+                                          />
+                                          <span
+                                            className="ant-radio-inner"
+                                          />
+                                        </span>
+                                        <span
+                                          className="ant-radio-label"
+                                        >
+                                          Education
+                                        </span>
+                                      </label>
+                                      <label
+                                        className="ant-radio-wrapper ant-radio-wrapper-checked ant-radio-wrapper-in-form-item css-dev-only-do-not-override-1d4w9r2"
+                                        onClick={[Function]}
+                                        style={{}}
+                                      >
+                                        <span
+                                          className="ant-radio ant-wave-target ant-radio-checked"
+                                        >
+                                          <input
+                                            autoFocus={false}
+                                            checked={true}
+                                            className="ant-radio-input"
+                                            disabled={false}
+                                            id="root_employment-2"
+                                            name="root_employment"
+                                            onChange={[Function]}
+                                            onClick={[Function]}
+                                            type="radio"
+                                            value="2"
+                                          />
+                                          <span
+                                            className="ant-radio-inner"
+                                          />
+                                        </span>
+                                        <span
+                                          className="ant-radio-label"
+                                        >
+                                          Other
+                                        </span>
+                                      </label>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
                         </div>
                       </div>
                       <div
@@ -6453,103 +6573,143 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           }
                         }
                       >
-                        <div
-                          aria-describedby="root_employment__error root_employment__description root_employment__help"
-                          className="ant-radio-group ant-radio-group-outline css-dev-only-do-not-override-1d4w9r2"
-                          id="root_employment"
-                          onBlur={[Function]}
-                          onFocus={[Function]}
-                        >
-                          <label
-                            className="ant-radio-wrapper ant-radio-wrapper-checked ant-radio-wrapper-in-form-item css-dev-only-do-not-override-1d4w9r2"
-                            onClick={[Function]}
-                            style={{}}
+                        <div>
+                          <div
+                            className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
                           >
-                            <span
-                              className="ant-radio ant-wave-target ant-radio-checked"
+                            <div
+                              className="ant-row ant-form-item-row css-dev-only-do-not-override-1d4w9r2"
+                              style={
+                                {
+                                  "rowGap": undefined,
+                                }
+                              }
                             >
-                              <input
-                                autoFocus={false}
-                                checked={true}
-                                className="ant-radio-input"
-                                disabled={false}
-                                id="root_employment-0"
-                                name="root_employment"
-                                onChange={[Function]}
-                                onClick={[Function]}
-                                type="radio"
-                                value="0"
-                              />
-                              <span
-                                className="ant-radio-inner"
-                              />
-                            </span>
-                            <span
-                              className="ant-radio-label"
-                            >
-                              Company
-                            </span>
-                          </label>
-                          <label
-                            className="ant-radio-wrapper ant-radio-wrapper-in-form-item css-dev-only-do-not-override-1d4w9r2"
-                            onClick={[Function]}
-                            style={{}}
-                          >
-                            <span
-                              className="ant-radio ant-wave-target"
-                            >
-                              <input
-                                autoFocus={false}
-                                checked={false}
-                                className="ant-radio-input"
-                                disabled={false}
-                                id="root_employment-1"
-                                name="root_employment"
-                                onChange={[Function]}
-                                onClick={[Function]}
-                                type="radio"
-                                value="1"
-                              />
-                              <span
-                                className="ant-radio-inner"
-                              />
-                            </span>
-                            <span
-                              className="ant-radio-label"
-                            >
-                              Education
-                            </span>
-                          </label>
-                          <label
-                            className="ant-radio-wrapper ant-radio-wrapper-in-form-item css-dev-only-do-not-override-1d4w9r2"
-                            onClick={[Function]}
-                            style={{}}
-                          >
-                            <span
-                              className="ant-radio ant-wave-target"
-                            >
-                              <input
-                                autoFocus={false}
-                                checked={false}
-                                className="ant-radio-input"
-                                disabled={false}
-                                id="root_employment-2"
-                                name="root_employment"
-                                onChange={[Function]}
-                                onClick={[Function]}
-                                type="radio"
-                                value="2"
-                              />
-                              <span
-                                className="ant-radio-inner"
-                              />
-                            </span>
-                            <span
-                              className="ant-radio-label"
-                            >
-                              Other
-                            </span>
-                          </label>
+                              <div
+                                className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-1d4w9r2"
+                                style={{}}
+                              >
+                                <label
+                                  className=""
+                                  htmlFor="root_employment"
+                                  title="Employment"
+                                >
+                                  Employment
+                                </label>
+                              </div>
+                              <div
+                                className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1d4w9r2"
+                                style={{}}
+                              >
+                                <div
+                                  className="ant-form-item-control-input"
+                                >
+                                  <div
+                                    className="ant-form-item-control-input-content"
+                                  >
+                                    <div
+                                      aria-describedby="root_employment__error root_employment__description root_employment__help"
+                                      className="ant-radio-group ant-radio-group-outline css-dev-only-do-not-override-1d4w9r2"
+                                      id="root_employment"
+                                      onBlur={[Function]}
+                                      onFocus={[Function]}
+                                    >
+                                      <label
+                                        className="ant-radio-wrapper ant-radio-wrapper-checked ant-radio-wrapper-in-form-item css-dev-only-do-not-override-1d4w9r2"
+                                        onClick={[Function]}
+                                        style={{}}
+                                      >
+                                        <span
+                                          className="ant-radio ant-wave-target ant-radio-checked"
+                                        >
+                                          <input
+                                            autoFocus={false}
+                                            checked={true}
+                                            className="ant-radio-input"
+                                            disabled={false}
+                                            id="root_employment-0"
+                                            name="root_employment"
+                                            onChange={[Function]}
+                                            onClick={[Function]}
+                                            type="radio"
+                                            value="0"
+                                          />
+                                          <span
+                                            className="ant-radio-inner"
+                                          />
+                                        </span>
+                                        <span
+                                          className="ant-radio-label"
+                                        >
+                                          Company
+                                        </span>
+                                      </label>
+                                      <label
+                                        className="ant-radio-wrapper ant-radio-wrapper-in-form-item css-dev-only-do-not-override-1d4w9r2"
+                                        onClick={[Function]}
+                                        style={{}}
+                                      >
+                                        <span
+                                          className="ant-radio ant-wave-target"
+                                        >
+                                          <input
+                                            autoFocus={false}
+                                            checked={false}
+                                            className="ant-radio-input"
+                                            disabled={false}
+                                            id="root_employment-1"
+                                            name="root_employment"
+                                            onChange={[Function]}
+                                            onClick={[Function]}
+                                            type="radio"
+                                            value="1"
+                                          />
+                                          <span
+                                            className="ant-radio-inner"
+                                          />
+                                        </span>
+                                        <span
+                                          className="ant-radio-label"
+                                        >
+                                          Education
+                                        </span>
+                                      </label>
+                                      <label
+                                        className="ant-radio-wrapper ant-radio-wrapper-in-form-item css-dev-only-do-not-override-1d4w9r2"
+                                        onClick={[Function]}
+                                        style={{}}
+                                      >
+                                        <span
+                                          className="ant-radio ant-wave-target"
+                                        >
+                                          <input
+                                            autoFocus={false}
+                                            checked={false}
+                                            className="ant-radio-input"
+                                            disabled={false}
+                                            id="root_employment-2"
+                                            name="root_employment"
+                                            onChange={[Function]}
+                                            onClick={[Function]}
+                                            type="radio"
+                                            value="2"
+                                          />
+                                          <span
+                                            className="ant-radio-inner"
+                                          />
+                                        </span>
+                                        <span
+                                          className="ant-radio-label"
+                                        >
+                                          Other
+                                        </span>
+                                      </label>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
                         </div>
                       </div>
                       <div

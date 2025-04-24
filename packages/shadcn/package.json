@@ -8,29 +8,29 @@
   "description": "shadcn theme, fields and widgets for react-jsonschema-form",
   "exports": {
     ".": {
+      "types": "./lib/index.d.ts",
       "require": "./dist/index.js",
-      "import": "./lib/index.js",
-      "types": "./lib/index.d.ts"
+      "import": "./lib/index.js"
     },
     "./lib": {
+      "types": "./lib/index.d.ts",
       "require": "./dist/index.js",
-      "import": "./lib/index.js",
-      "types": "./lib/index.d.ts"
+      "import": "./lib/index.js"
     },
     "./lib/*.js": {
+      "types": "./lib/*.d.ts",
       "require": "./dist/*.js",
-      "import": "./lib/*.js",
-      "types": "./lib/*.d.ts"
+      "import": "./lib/*.js"
     },
     "./dist": {
+      "types": "./lib/index.d.ts",
       "require": "./dist/index.js",
-      "import": "./lib/index.js",
-      "types": "./lib/index.d.ts"
+      "import": "./lib/index.js"
     },
     "./dist/*.js": {
+      "types": "./lib/*.d.ts",
       "require": "./dist/*.js",
-      "import": "./lib/*.js",
-      "types": "./lib/*.d.ts"
+      "import": "./lib/*.js"
     }
   },
   "files": [
