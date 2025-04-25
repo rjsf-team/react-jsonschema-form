@@ -9,7 +9,7 @@ import { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjs
 export default function TextareaWidget<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(props: WidgetProps<T, S, F>) {
   const { id, value, required, disabled, readonly, autofocus, onChange, onBlur, onFocus, options } = props;
   const primeProps = (options.prime || {}) as object;

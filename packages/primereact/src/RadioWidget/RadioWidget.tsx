@@ -16,7 +16,7 @@ import { RadioButton, RadioButtonChangeEvent } from 'primereact/radiobutton';
  * @param props - The `WidgetProps` for this component
  */
 export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: WidgetProps<T, S, F>
+  props: WidgetProps<T, S, F>,
 ) {
   const { id, value, disabled, readonly, onChange, onBlur, onFocus, options } = props;
   const primeProps = (options.prime || {}) as object;

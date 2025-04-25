@@ -20,7 +20,7 @@ export type PrimePropsTypes<T = any, S extends StrictRJSFSchema = RJSFSchema, F 
 export type PrimeErrorPropsType<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 > = {
   formContext?: F;
   uiSchema?: UiSchema<T, S, F>;
@@ -64,7 +64,7 @@ export function getPrimeProps<T = any, S extends StrictRJSFSchema = RJSFSchema, 
     { ...defaultContextProps },
     schemaProps,
     optionProps,
-    formContextProps
+    formContextProps,
   );
 }
 
@@ -80,7 +80,7 @@ export function getPrimeProps<T = any, S extends StrictRJSFSchema = RJSFSchema, 
 export function getPrimeErrorProps<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >({
   formContext = {} as F,
   uiSchema = {},

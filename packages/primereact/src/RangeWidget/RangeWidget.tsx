@@ -8,7 +8,7 @@ import { ariaDescribedByIds, FormContextType, RJSFSchema, StrictRJSFSchema, Widg
  * @param props - The `WidgetProps` for this component
  */
 export default function RangeWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: WidgetProps<T, S, F>
+  props: WidgetProps<T, S, F>,
 ) {
   const { value, readonly, disabled, onBlur, onFocus, options, schema, onChange, id } = props;
   const primeProps = (options.prime || {}) as object;

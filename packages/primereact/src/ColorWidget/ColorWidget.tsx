@@ -10,7 +10,7 @@ import {
 import { ColorPicker } from 'primereact/colorpicker';
 
 export default function ColorWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: WidgetProps<T, S, F>
+  props: WidgetProps<T, S, F>,
 ) {
   const {
     id,

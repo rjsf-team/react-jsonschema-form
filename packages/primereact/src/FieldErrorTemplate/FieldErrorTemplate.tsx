@@ -8,7 +8,7 @@ import { Message } from 'primereact/message';
 export default function FieldErrorTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >({ errors, idSchema }: FieldErrorProps<T, S, F>) {
   if (errors && errors.length > 0) {
     const id = errorId<T>(idSchema);

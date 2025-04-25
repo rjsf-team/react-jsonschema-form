@@ -12,7 +12,7 @@ import { AutoComplete, AutoCompleteCompleteEvent } from 'primereact/autocomplete
 export default function AutoCompleteWidget<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(props: WidgetProps<T, S, F>) {
   const {
     id,
@@ -41,7 +41,7 @@ export default function AutoCompleteWidget<
   const examples = (schema.examples as string[]).concat(
     schema.default && !(schema.examples as string[]).includes(schema.default.toString())
       ? [schema.default.toString()]
-      : []
+      : [],
   );
 
   const [items, setItems] = useState<string[]>([]);
