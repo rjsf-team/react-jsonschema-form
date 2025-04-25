@@ -7,7 +7,7 @@ exports[`object fields additionalProperties 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="field-object"
   >
     <div>
       <div
@@ -26,7 +26,7 @@ exports[`object fields additionalProperties 1`] = `
           >
              
             <div
-              className="form-group field field-string row"
+              className="field-string row"
             >
               <div
                 className="col-5"
@@ -181,7 +181,7 @@ exports[`object fields object 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="field-object"
   >
     <div>
       <div
@@ -200,7 +200,7 @@ exports[`object fields object 1`] = `
           >
              
             <div
-              className="form-group field field-string"
+              className="field-string"
             >
               <div>
                 <label
@@ -242,7 +242,7 @@ exports[`object fields object 1`] = `
           >
              
             <div
-              className="form-group field field-number"
+              className="field-number"
             >
               <div>
                 <label
@@ -294,7 +294,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="field-object"
   >
     <div>
       <div
@@ -313,7 +313,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
           >
              
             <div
-              className="form-group field field-string row"
+              className="field-string row"
             >
               <div
                 className="col-5"
@@ -468,7 +468,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="field-object"
   >
     <div>
       <div
@@ -511,7 +511,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
           >
              
             <div
-              className="form-group field field-string row"
+              className="field-string row"
             >
               <div
                 className="col-5"
@@ -666,7 +666,7 @@ exports[`object fields with title and description from both additionalProperties
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="field-object"
   >
     <div>
       <div
@@ -709,7 +709,7 @@ exports[`object fields with title and description from both additionalProperties
           >
              
             <div
-              className="form-group field field-string row"
+              className="field-string row"
             >
               <div
                 className="col-5"
@@ -864,7 +864,7 @@ exports[`object fields with title and description from both object 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="field-object"
   >
     <div>
       <div
@@ -907,7 +907,7 @@ exports[`object fields with title and description from both object 1`] = `
           >
              
             <div
-              className="form-group field field-string"
+              className="field-string"
             >
               <div>
                 <label
@@ -961,7 +961,7 @@ exports[`object fields with title and description from both object 1`] = `
           >
              
             <div
-              className="form-group field field-number"
+              className="field-number"
             >
               <div>
                 <label
@@ -1025,7 +1025,7 @@ exports[`object fields with title and description from uiSchema additionalProper
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="field-object"
   >
     <div>
       <div
@@ -1068,7 +1068,7 @@ exports[`object fields with title and description from uiSchema additionalProper
           >
              
             <div
-              className="form-group field field-string row"
+              className="field-string row"
             >
               <div
                 className="col-5"
@@ -1223,7 +1223,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="field-object"
   >
     <div>
       <div
@@ -1266,7 +1266,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
           >
              
             <div
-              className="form-group field field-string"
+              className="field-string"
             >
               <div>
                 <label
@@ -1320,7 +1320,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
           >
              
             <div
-              className="form-group field field-number"
+              className="field-number"
             >
               <div>
                 <label
@@ -1384,7 +1384,7 @@ exports[`object fields with title and description from uiSchema show add button 
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="field-object"
   >
     <div>
       <div
@@ -1427,7 +1427,7 @@ exports[`object fields with title and description from uiSchema show add button 
           >
              
             <div
-              className="form-group field field-string row"
+              className="field-string row"
             >
               <div
                 className="col-5"
@@ -1582,7 +1582,7 @@ exports[`object fields with title and description object 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="field-object"
   >
     <div>
       <div
@@ -1625,7 +1625,7 @@ exports[`object fields with title and description object 1`] = `
           >
              
             <div
-              className="form-group field field-string"
+              className="field-string"
             >
               <div>
                 <label
@@ -1679,7 +1679,7 @@ exports[`object fields with title and description object 1`] = `
           >
              
             <div
-              className="form-group field field-number"
+              className="field-number"
             >
               <div>
                 <label
@@ -1743,7 +1743,7 @@ exports[`object fields with title and description show add button and fields if 
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="field-object"
   >
     <div>
       <div
@@ -1786,7 +1786,7 @@ exports[`object fields with title and description show add button and fields if 
           >
              
             <div
-              className="form-group field field-string row"
+              className="field-string row"
             >
               <div
                 className="col-5"
@@ -1941,7 +1941,7 @@ exports[`object fields with title and description with global label off addition
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="field-object"
   >
     <div>
       <div
@@ -1960,7 +1960,7 @@ exports[`object fields with title and description with global label off addition
           >
              
             <div
-              className="form-group field field-string row"
+              className="field-string row"
             >
               <div
                 className="col-5"
@@ -2109,7 +2109,7 @@ exports[`object fields with title and description with global label off object 1
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="field-object"
   >
     <div>
       <div
@@ -2128,7 +2128,7 @@ exports[`object fields with title and description with global label off object 1
           >
              
             <div
-              className="form-group field field-string"
+              className="field-string"
             >
               <div>
                 <input
@@ -2164,7 +2164,7 @@ exports[`object fields with title and description with global label off object 1
           >
              
             <div
-              className="form-group field field-number"
+              className="field-number"
             >
               <div>
                 <input
@@ -2210,7 +2210,7 @@ exports[`object fields with title and description with global label off show add
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="field-object"
   >
     <div>
       <div
@@ -2229,7 +2229,7 @@ exports[`object fields with title and description with global label off show add
           >
              
             <div
-              className="form-group field field-string row"
+              className="field-string row"
             >
               <div
                 className="col-5"

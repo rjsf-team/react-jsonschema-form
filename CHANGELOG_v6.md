@@ -25,6 +25,7 @@ should change the heading of the (upcoming) version to include a major version b
 - BREAKING CHANGE: Removed support for version 4 of `antd`
 - Updated `ArrayFieldItemTemplate` to replace `Button.Group` with `Space.Compact` since `Button.Group` is deprecated in `antd` version 5
 - Upgraded to `@ant-design/icon@5`
+- BREAKING CHANGE: Removed the addition of `Bootstrap 3` marker classes from the `SchemaField`, thereby changing theme `FieldTemplate` className prop output and associated snapshots
 
 ## @rjsf/chakra-ui
 
@@ -33,6 +34,7 @@ should change the heading of the (upcoming) version to include a major version b
 - BREAKING CHANGE: Refactored `ArrayFieldItemTemplate` to use the new `ArrayFieldItemButtonsTemplate`
 - Updated the `ArrayFieldTemplate`, `ObjectFieldTemplate`, and `WrapIfAdditionalTemplate` to a unique id using the `buttonId()` function and adding consistent marker classes
 - Implemented the `GridTemplate` component, adding it to the `templates` for the theme
+- BREAKING CHANGE: Removed the addition of `Bootstrap 3` marker classes from the `SchemaField`, thereby changing theme `FieldTemplate` className prop output and associated snapshots
 
 ## @rjsf/core
 
@@ -43,6 +45,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Implemented the `GridTemplate` component, adding it to the `templates` for the theme
 - Implemented the new `LayoutGridField`, `LayoutMultiSchemaField` and `LayoutHeaderField` fields, adding them to the `fields` list
 - BREAKING CHANGE: Removed support for the deprecated `schema.enumNames` and `uiSchema.classNames` as well as the deprecated `acceptcharset` prop on `Form`
+- BREAKING CHANGE: Moved the addition of `Bootstrap 3` marker classes from the `SchemaField` to the `WrapIfAdditionalTemplate`, thereby affecting all of the other themes, fixing [#2280](https://github.com/rjsf-team/react-jsonschema-form/issues/2280)
 
 ## @rjsf/daisyui
 
@@ -57,6 +60,11 @@ should change the heading of the (upcoming) version to include a major version b
 - BREAKING CHANGE: Refactored `ArrayFieldItemTemplate` to use the new `ArrayFieldItemButtonsTemplate`
 - Updated the `ArrayFieldTemplate`, `ObjectFieldTemplate`, and `WrapIfAdditionalTemplate` to a unique id using the `buttonId()` function and adding consistent marker classes
 - Implemented the `GridTemplate` component, adding it to the `templates` for the theme
+- BREAKING CHANGE: Removed the addition of `Bootstrap 3` marker classes from the `SchemaField`, thereby changing theme `FieldTemplate` className prop output and associated snapshots
+
+## @rjsf/material-ui
+
+- BREAKING CHANGE: Deleted this theme in favor of `mui`
 
 ## @rjsf/mui
 
@@ -64,12 +72,15 @@ should change the heading of the (upcoming) version to include a major version b
 - Updated the `ArrayFieldTemplate`, `ObjectFieldTemplate`, and `WrapIfAdditionalTemplate` to a unique id using the `buttonId()` function and adding consistent marker classes
 - Updated the theme to use `Grid2` instead of the deprecated `Grid`
 - Implemented the `GridTemplate` component, adding it to the `templates` for the theme
+- BREAKING CHANGE: Removed the addition of `Bootstrap 3` marker classes from the `SchemaField`, thereby changing theme `FieldTemplate` className prop output and associated snapshots
 
 ## @rjsf/semantic-ui
 
 - BREAKING CHANGE: Refactored `ArrayFieldItemTemplate` to use the new `ArrayFieldItemButtonsTemplate`
 - Updated the `ArrayFieldTemplate`, `ObjectFieldTemplate`, and `WrapIfAdditionalTemplate` to a unique id using the `buttonId()` function and adding consistent marker classes
 - Implemented the `GridTemplate` component, adding it to the `templates` for the theme
+- BREAKING CHANGE: Removed the addition of `Bootstrap 3` marker classes from the `SchemaField`, thereby changing theme `FieldTemplate` className prop output and associated snapshots
+- BREAKING CHANGE: Removed the addition of `Bootstrap 3` marker classes from the `SchemaField`, thereby changing theme `FieldTemplate` className prop output and associated snapshots
 
 ## @rjsf/shadcn
 
@@ -98,6 +109,7 @@ should change the heading of the (upcoming) version to include a major version b
 - BREAKING CHANGE: Removed the deprecated `getMatchingOption()` and `mergeValidationData()` from the library export and the `SchemaUtilsType` interface
 - BREAKING CHANGE: Removed the deprecated `toErrorList()` function from the `ValidatorType` interface
 - BREAKING CHANGE: Removed the deprecated `RJSF_ADDITONAL_PROPERTIES_FLAG` constant
+- Updated the `WrapIfAdditionalTemplateProps` to include `hideError` and `rawErrors` in support of moving `Bootstrap 3` marker classes out of `SchemaField`
 
 ## @rjsf/validator-ajv6
 

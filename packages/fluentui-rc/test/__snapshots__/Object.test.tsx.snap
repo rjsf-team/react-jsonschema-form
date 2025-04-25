@@ -7,7 +7,7 @@ exports[`object fields additionalProperties 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="field-object"
   >
     <div
       className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -24,7 +24,7 @@ exports[`object fields additionalProperties 1`] = `
           }
         >
           <div
-            className="fui-Flex form-group field field-string ___8gv6eg0_pb6o3x0 f22iagw f122n59 f1lv1r8n"
+            className="fui-Flex field-string ___8gv6eg0_pb6o3x0 f22iagw f122n59 f1lv1r8n"
           >
             <div>
               <div
@@ -181,7 +181,7 @@ exports[`object fields object 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="field-object"
   >
     <div
       className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -198,7 +198,7 @@ exports[`object fields object 1`] = `
           }
         >
           <div
-            className="form-group field field-string"
+            className="field-string"
           >
             <div
               className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -240,7 +240,7 @@ exports[`object fields object 1`] = `
           }
         >
           <div
-            className="form-group field field-number"
+            className="field-number"
           >
             <div
               className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -299,7 +299,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="field-object"
   >
     <div
       className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -316,7 +316,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
           }
         >
           <div
-            className="fui-Flex form-group field field-string ___8gv6eg0_pb6o3x0 f22iagw f122n59 f1lv1r8n"
+            className="fui-Flex field-string ___8gv6eg0_pb6o3x0 f22iagw f122n59 f1lv1r8n"
           >
             <div>
               <div
@@ -473,7 +473,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="field-object"
   >
     <div
       className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -511,7 +511,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
           }
         >
           <div
-            className="fui-Flex form-group field field-string ___8gv6eg0_pb6o3x0 f22iagw f122n59 f1lv1r8n"
+            className="fui-Flex field-string ___8gv6eg0_pb6o3x0 f22iagw f122n59 f1lv1r8n"
           >
             <div>
               <div
@@ -668,7 +668,7 @@ exports[`object fields with title and description from both additionalProperties
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="field-object"
   >
     <div
       className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -706,7 +706,7 @@ exports[`object fields with title and description from both additionalProperties
           }
         >
           <div
-            className="fui-Flex form-group field field-string ___8gv6eg0_pb6o3x0 f22iagw f122n59 f1lv1r8n"
+            className="fui-Flex field-string ___8gv6eg0_pb6o3x0 f22iagw f122n59 f1lv1r8n"
           >
             <div>
               <div
@@ -863,7 +863,7 @@ exports[`object fields with title and description from both object 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="field-object"
   >
     <div
       className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -901,7 +901,7 @@ exports[`object fields with title and description from both object 1`] = `
           }
         >
           <div
-            className="form-group field field-string"
+            className="field-string"
           >
             <div
               className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -959,7 +959,7 @@ exports[`object fields with title and description from both object 1`] = `
           }
         >
           <div
-            className="form-group field field-number"
+            className="field-number"
           >
             <div
               className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -1034,7 +1034,7 @@ exports[`object fields with title and description from uiSchema additionalProper
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="field-object"
   >
     <div
       className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -1072,7 +1072,7 @@ exports[`object fields with title and description from uiSchema additionalProper
           }
         >
           <div
-            className="fui-Flex form-group field field-string ___8gv6eg0_pb6o3x0 f22iagw f122n59 f1lv1r8n"
+            className="fui-Flex field-string ___8gv6eg0_pb6o3x0 f22iagw f122n59 f1lv1r8n"
           >
             <div>
               <div
@@ -1229,7 +1229,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="field-object"
   >
     <div
       className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -1267,7 +1267,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
           }
         >
           <div
-            className="form-group field field-string"
+            className="field-string"
           >
             <div
               className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -1325,7 +1325,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
           }
         >
           <div
-            className="form-group field field-number"
+            className="field-number"
           >
             <div
               className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -1400,7 +1400,7 @@ exports[`object fields with title and description from uiSchema show add button 
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="field-object"
   >
     <div
       className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -1438,7 +1438,7 @@ exports[`object fields with title and description from uiSchema show add button 
           }
         >
           <div
-            className="fui-Flex form-group field field-string ___8gv6eg0_pb6o3x0 f22iagw f122n59 f1lv1r8n"
+            className="fui-Flex field-string ___8gv6eg0_pb6o3x0 f22iagw f122n59 f1lv1r8n"
           >
             <div>
               <div
@@ -1595,7 +1595,7 @@ exports[`object fields with title and description object 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="field-object"
   >
     <div
       className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -1633,7 +1633,7 @@ exports[`object fields with title and description object 1`] = `
           }
         >
           <div
-            className="form-group field field-string"
+            className="field-string"
           >
             <div
               className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -1691,7 +1691,7 @@ exports[`object fields with title and description object 1`] = `
           }
         >
           <div
-            className="form-group field field-number"
+            className="field-number"
           >
             <div
               className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -1766,7 +1766,7 @@ exports[`object fields with title and description show add button and fields if 
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="field-object"
   >
     <div
       className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -1804,7 +1804,7 @@ exports[`object fields with title and description show add button and fields if 
           }
         >
           <div
-            className="fui-Flex form-group field field-string ___8gv6eg0_pb6o3x0 f22iagw f122n59 f1lv1r8n"
+            className="fui-Flex field-string ___8gv6eg0_pb6o3x0 f22iagw f122n59 f1lv1r8n"
           >
             <div>
               <div
@@ -1961,7 +1961,7 @@ exports[`object fields with title and description with global label off addition
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="field-object"
   >
     <div
       className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -1978,7 +1978,7 @@ exports[`object fields with title and description with global label off addition
           }
         >
           <div
-            className="fui-Flex form-group field field-string ___8gv6eg0_pb6o3x0 f22iagw f122n59 f1lv1r8n"
+            className="fui-Flex field-string ___8gv6eg0_pb6o3x0 f22iagw f122n59 f1lv1r8n"
           >
             <div>
               <div
@@ -2129,7 +2129,7 @@ exports[`object fields with title and description with global label off object 1
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="field-object"
   >
     <div
       className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -2146,7 +2146,7 @@ exports[`object fields with title and description with global label off object 1
           }
         >
           <div
-            className="form-group field field-string"
+            className="field-string"
           >
             <div
               className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -2182,7 +2182,7 @@ exports[`object fields with title and description with global label off object 1
           }
         >
           <div
-            className="form-group field field-number"
+            className="field-number"
           >
             <div
               className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -2235,7 +2235,7 @@ exports[`object fields with title and description with global label off show add
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="field-object"
   >
     <div
       className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -2252,7 +2252,7 @@ exports[`object fields with title and description with global label off show add
           }
         >
           <div
-            className="fui-Flex form-group field field-string ___8gv6eg0_pb6o3x0 f22iagw f122n59 f1lv1r8n"
+            className="fui-Flex field-string ___8gv6eg0_pb6o3x0 f22iagw f122n59 f1lv1r8n"
           >
             <div>
               <div

@@ -31,6 +31,8 @@ export default function WrapIfAdditionalTemplate<
     readonly,
     required,
     schema,
+    hideError,
+    rawErrors,
     children,
     uiSchema,
     registry,
@@ -41,16 +43,22 @@ export default function WrapIfAdditionalTemplate<
   const keyLabel = translateString(TranslatableString.KeyLabel, [label]);
   const additional = ADDITIONAL_PROPERTY_FLAG in schema;
 
+  const classNamesList = ['form-group', 'field', classNames];
+  if (!hideError && rawErrors && rawErrors.length > 0) {
+    classNamesList.push('field-error has-error has-danger');
+  }
+  const uiClassNames = classNamesList.join(' ').trim();
+
   if (!additional) {
     return (
-      <div className={classNames} style={style}>
+      <div className={uiClassNames} style={style}>
         {children}
       </div>
     );
   }
 
   return (
-    <div className={classNames} style={style}>
+    <div className={uiClassNames} style={style}>
       <div className='row'>
         <div className='col-xs-5 form-additional'>
           <div className='form-group'>

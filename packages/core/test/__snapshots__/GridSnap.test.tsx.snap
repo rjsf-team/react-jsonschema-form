@@ -828,7 +828,9 @@ exports[`Complex grid renders person and address and employment in a complex gri
             }
           }
         >
-          <div>
+          <div
+            className="form-group field"
+          >
             <label
               className="control-label"
               htmlFor="root_employment"
@@ -2177,7 +2179,9 @@ exports[`Complex grid renders person and address and employment in a complex gri
             }
           }
         >
-          <div>
+          <div
+            className="form-group field"
+          >
             <label
               className="control-label"
               htmlFor="root_employment"
@@ -3558,7 +3562,9 @@ exports[`Complex grid renders person and address and employment in a complex gri
             }
           }
         >
-          <div>
+          <div
+            className="form-group field"
+          >
             <label
               className="control-label"
               htmlFor="root_employment"
@@ -4518,7 +4524,9 @@ exports[`Complex grid renders person and address and employment in a complex gri
             }
           }
         >
-          <div>
+          <div
+            className="form-group field"
+          >
             <label
               className="control-label"
               htmlFor="root_employment"

@@ -7,7 +7,7 @@ exports[`antd specific tests descriptionLocation tooltip in formContext 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="field-object"
   >
     <div
       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -53,7 +53,7 @@ exports[`antd specific tests descriptionLocation tooltip in formContext 1`] = `
                     }
                   >
                     <div
-                      className="form-group field field-string"
+                      className="field-string"
                     >
                       <div
                         className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -184,7 +184,7 @@ exports[`single fields checkbox field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-boolean"
+    className="field-boolean"
   >
     <div
       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -264,7 +264,7 @@ exports[`single fields checkbox field with label 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-boolean"
+    className="field-boolean"
   >
     <div
       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -346,7 +346,7 @@ exports[`single fields checkboxes field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="field-array"
   >
     <div
       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -549,7 +549,7 @@ exports[`single fields field with description 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="field-object"
   >
     <div
       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -595,7 +595,7 @@ exports[`single fields field with description 1`] = `
                     }
                   >
                     <div
-                      className="form-group field field-string"
+                      className="field-string"
                     >
                       <div
                         className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -710,7 +710,7 @@ exports[`single fields field with description in uiSchema 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="field-object"
   >
     <div
       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -756,7 +756,7 @@ exports[`single fields field with description in uiSchema 1`] = `
                     }
                   >
                     <div
-                      className="form-group field field-string"
+                      className="field-string"
                     >
                       <div
                         className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -871,7 +871,7 @@ exports[`single fields format color 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="field-string"
   >
     <div
       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -951,7 +951,7 @@ exports[`single fields format date 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="field-string"
   >
     <div
       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -1054,7 +1054,7 @@ exports[`single fields format datetime 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="field-string"
   >
     <div
       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -1157,7 +1157,7 @@ exports[`single fields format time 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="field-string"
   >
     <div
       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -1310,7 +1310,7 @@ exports[`single fields help and error display 1`] = `
     </div>
   </div>
   <div
-    className="form-group field field-string field-error has-error has-danger"
+    className="field-string"
   >
     <div
       className="ant-form-item css-dev-only-do-not-override-1d4w9r2 ant-form-item-with-help ant-form-item-has-feedback ant-form-item-has-error"
@@ -1415,7 +1415,7 @@ exports[`single fields hidden field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="field-object"
   >
     <div
       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -1479,7 +1479,7 @@ exports[`single fields hidden label 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="field-string"
   >
     <div
       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -1559,7 +1559,7 @@ exports[`single fields null field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-null"
+    className="field-null"
   >
     <div
       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -1608,7 +1608,7 @@ exports[`single fields number field 0 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-number"
+    className="field-number"
   >
     <div
       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -1767,7 +1767,7 @@ exports[`single fields number field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-number"
+    className="field-number"
   >
     <div
       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -1926,7 +1926,7 @@ exports[`single fields password field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="field-string"
   >
     <div
       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -2029,7 +2029,7 @@ exports[`single fields radio field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-boolean"
+    className="field-boolean"
   >
     <div
       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -2147,7 +2147,7 @@ exports[`single fields schema examples 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="field-string"
   >
     <div
       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -2247,7 +2247,7 @@ exports[`single fields select field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="field-string"
   >
     <div
       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -2392,7 +2392,7 @@ exports[`single fields select field multiple choice 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="field-array"
   >
     <div
       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -2568,7 +2568,7 @@ exports[`single fields select field multiple choice enumDisabled 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="field-array"
   >
     <div
       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -2744,7 +2744,7 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="field-array"
   >
     <div
       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -2935,7 +2935,7 @@ exports[`single fields select field multiple choice formData 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="field-array"
   >
     <div
       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -3224,7 +3224,7 @@ exports[`single fields select field multiple choice with labels 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="field-array"
   >
     <div
       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -3400,7 +3400,7 @@ exports[`single fields select field single choice enumDisabled 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="field-string"
   >
     <div
       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -3545,7 +3545,7 @@ exports[`single fields select field single choice enumDisabled using radio widge
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="field-string"
   >
     <div
       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -3663,7 +3663,7 @@ exports[`single fields select field single choice form disabled using radio widg
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="field-string"
   >
     <div
       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -3781,7 +3781,7 @@ exports[`single fields select field single choice formData 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="field-string"
   >
     <div
       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -3929,7 +3929,7 @@ exports[`single fields select field single choice uiSchema disabled using radio 
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="field-string"
   >
     <div
       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -4047,7 +4047,7 @@ exports[`single fields slider field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-integer"
+    className="field-integer"
   >
     <div
       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -4149,7 +4149,7 @@ exports[`single fields string field format data-url 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="field-string"
   >
     <div
       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -4231,7 +4231,7 @@ exports[`single fields string field format email 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="field-string"
   >
     <div
       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -4311,7 +4311,7 @@ exports[`single fields string field format uri 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="field-string"
   >
     <div
       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -4391,7 +4391,7 @@ exports[`single fields string field regular 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="field-string"
   >
     <div
       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -4471,7 +4471,7 @@ exports[`single fields string field with placeholder 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="field-string"
   >
     <div
       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -4551,7 +4551,7 @@ exports[`single fields textarea field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="field-string"
   >
     <div
       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -4641,7 +4641,7 @@ exports[`single fields title field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="field-object"
   >
     <div
       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -4705,7 +4705,7 @@ exports[`single fields title field 1`] = `
                     }
                   >
                     <div
-                      className="form-group field field-string"
+                      className="field-string"
                     >
                       <div
                         className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -4806,7 +4806,7 @@ exports[`single fields unsupported field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-undefined"
+    className="field-undefined"
   >
     <div
       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -4876,7 +4876,7 @@ exports[`single fields up/down field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-number"
+    className="field-number"
   >
     <div
       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -5035,7 +5035,7 @@ exports[`single fields using custom tagName 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="field-string"
   >
     <div
       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"

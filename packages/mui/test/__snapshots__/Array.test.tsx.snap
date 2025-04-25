@@ -282,7 +282,7 @@ exports[`array fields array 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="field-array"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -1061,7 +1061,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="field-array"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -1103,7 +1103,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                     className="MuiBox-root emotion-2"
                   >
                     <div
-                      className="form-group field field-string"
+                      className="field-string"
                     >
                       <div
                         className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -1318,7 +1318,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                     className="MuiBox-root emotion-2"
                   >
                     <div
-                      className="form-group field field-string"
+                      className="field-string"
                     >
                       <div
                         className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -1978,7 +1978,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="field-array"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -2493,7 +2493,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="field-object"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -2515,7 +2515,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
           }
         >
           <div
-            className="form-group field field-string"
+            className="field-string"
           >
             <div
               className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -2985,7 +2985,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="field-array"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -3027,7 +3027,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                     className="MuiBox-root emotion-2"
                   >
                     <div
-                      className="form-group field field-string"
+                      className="field-string"
                     >
                       <div
                         className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -3106,7 +3106,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                     className="MuiBox-root emotion-2"
                   >
                     <div
-                      className="form-group field field-number"
+                      className="field-number"
                     >
                       <div
                         className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -3812,7 +3812,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-16:focus::-ms-input-
     </div>
   </div>
   <div
-    className="form-group field field-object"
+    className="field-object"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-9"
@@ -3834,7 +3834,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-16:focus::-ms-input-
           }
         >
           <div
-            className="form-group field field-string field-error has-error has-danger"
+            className="field-string"
           >
             <div
               className="MuiFormControl-root MuiFormControl-fullWidth emotion-9"
@@ -4345,7 +4345,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="field-object"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -4367,7 +4367,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
           }
         >
           <div
-            className="form-group field field-string"
+            className="field-string"
           >
             <div
               className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -4768,7 +4768,7 @@ exports[`with title and description array 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="field-array"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -5676,7 +5676,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="field-array"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -5743,7 +5743,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                     className="MuiBox-root emotion-2"
                   >
                     <div
-                      className="form-group field field-string"
+                      className="field-string"
                     >
                       <div
                         className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -5988,7 +5988,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                     className="MuiBox-root emotion-2"
                   >
                     <div
-                      className="form-group field field-string"
+                      className="field-string"
                     >
                       <div
                         className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -6749,7 +6749,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="field-array"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -7359,7 +7359,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="field-array"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -7426,7 +7426,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                     className="MuiBox-root emotion-2"
                   >
                     <div
-                      className="form-group field field-string"
+                      className="field-string"
                     >
                       <div
                         className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -7535,7 +7535,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                     className="MuiBox-root emotion-2"
                   >
                     <div
-                      className="form-group field field-number"
+                      className="field-number"
                     >
                       <div
                         className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -7967,7 +7967,7 @@ exports[`with title and description from both array 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="field-array"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -8875,7 +8875,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="field-array"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -8942,7 +8942,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                     className="MuiBox-root emotion-2"
                   >
                     <div
-                      className="form-group field field-string"
+                      className="field-string"
                     >
                       <div
                         className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -9187,7 +9187,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                     className="MuiBox-root emotion-2"
                   >
                     <div
-                      className="form-group field field-string"
+                      className="field-string"
                     >
                       <div
                         className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -9948,7 +9948,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="field-array"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -10558,7 +10558,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="field-array"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -10625,7 +10625,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                     className="MuiBox-root emotion-2"
                   >
                     <div
-                      className="form-group field field-string"
+                      className="field-string"
                     >
                       <div
                         className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -10734,7 +10734,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                     className="MuiBox-root emotion-2"
                   >
                     <div
-                      className="form-group field field-number"
+                      className="field-number"
                     >
                       <div
                         className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -11166,7 +11166,7 @@ exports[`with title and description from uiSchema array 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="field-array"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -12074,7 +12074,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="field-array"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -12141,7 +12141,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                     className="MuiBox-root emotion-2"
                   >
                     <div
-                      className="form-group field field-string"
+                      className="field-string"
                     >
                       <div
                         className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -12386,7 +12386,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                     className="MuiBox-root emotion-2"
                   >
                     <div
-                      className="form-group field field-string"
+                      className="field-string"
                     >
                       <div
                         className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -13147,7 +13147,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="field-array"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -13757,7 +13757,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="field-array"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -13824,7 +13824,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                     className="MuiBox-root emotion-2"
                   >
                     <div
-                      className="form-group field field-string"
+                      className="field-string"
                     >
                       <div
                         className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -13933,7 +13933,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                     className="MuiBox-root emotion-2"
                   >
                     <div
-                      className="form-group field field-number"
+                      className="field-number"
                     >
                       <div
                         className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -14331,7 +14331,7 @@ exports[`with title and description with global label off array 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="field-array"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -15110,7 +15110,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="field-array"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -15152,7 +15152,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                     className="MuiBox-root emotion-2"
                   >
                     <div
-                      className="form-group field field-string"
+                      className="field-string"
                     >
                       <div
                         className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -15367,7 +15367,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                     className="MuiBox-root emotion-2"
                   >
                     <div
-                      className="form-group field field-string"
+                      className="field-string"
                     >
                       <div
                         className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -16098,7 +16098,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="field-array"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -16608,7 +16608,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="field-array"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -16650,7 +16650,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                     className="MuiBox-root emotion-2"
                   >
                     <div
-                      className="form-group field field-string"
+                      className="field-string"
                     >
                       <div
                         className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -16729,7 +16729,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                     className="MuiBox-root emotion-2"
                   >
                     <div
-                      className="form-group field field-number"
+                      className="field-number"
                     >
                       <div
                         className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"

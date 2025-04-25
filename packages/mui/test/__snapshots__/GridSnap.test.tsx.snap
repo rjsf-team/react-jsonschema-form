@@ -1137,7 +1137,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="field-object"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -1155,7 +1155,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
             data-testid="1"
           >
             <div
-              className="form-group field field-object"
+              className="field-object"
             >
               <div
                 className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -1187,7 +1187,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
             data-testid="1"
           >
             <div
-              className="form-group field field-string"
+              className="field-string"
             >
               <div
                 className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -1255,7 +1255,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
             data-testid="1"
           >
             <div
-              className="form-group field field-string"
+              className="field-string"
             >
               <div
                 className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -1314,7 +1314,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
             data-testid="1"
           >
             <div
-              className="form-group field field-string"
+              className="field-string"
             >
               <div
                 className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -1387,7 +1387,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
             data-testid="1"
           >
             <div
-              className="form-group field field-string"
+              className="field-string"
             >
               <div
                 className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -1455,7 +1455,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
             data-testid="1"
           >
             <div
-              className="form-group field field-array"
+              className="field-array"
             >
               <div
                 className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -1762,7 +1762,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
             data-testid="1"
           >
             <div
-              className="form-group field field-object"
+              className="field-object"
             >
               <div
                 className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -1776,7 +1776,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                     data-testid="1"
                   >
                     <div
-                      className="form-group field field-string"
+                      className="field-string"
                     >
                       <div
                         className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -1844,7 +1844,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                     data-testid="1"
                   >
                     <div
-                      className="form-group field field-string"
+                      className="field-string"
                     >
                       <div
                         className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -1903,7 +1903,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                     data-testid="1"
                   >
                     <div
-                      className="form-group field field-string"
+                      className="field-string"
                     >
                       <div
                         className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -1975,7 +1975,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                       data-testid="1"
                     >
                       <div
-                        className="form-group field field-string"
+                        className="field-string"
                       >
                         <div
                           className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -2073,7 +2073,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                       data-testid="1"
                     >
                       <div
-                        className="form-group field field-string"
+                        className="field-string"
                       >
                         <div
                           className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -2366,7 +2366,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                 data-testid="1"
               >
                 <div
-                  className="form-group field field-string"
+                  className="field-string"
                 >
                   <div
                     className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -2434,7 +2434,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                 data-testid="1"
               >
                 <div
-                  className="form-group field field-string"
+                  className="field-string"
                 >
                   <div
                     className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -2493,7 +2493,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                 data-testid="1"
               >
                 <div
-                  className="form-group field field-string"
+                  className="field-string"
                 >
                   <div
                     className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -2561,7 +2561,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                 data-testid="1"
               >
                 <div
-                  className="form-group field field-string"
+                  className="field-string"
                 >
                   <div
                     className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -3825,7 +3825,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="field-object"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -3843,7 +3843,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
             data-testid="1"
           >
             <div
-              className="form-group field field-object"
+              className="field-object"
             >
               <div
                 className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -3875,7 +3875,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
             data-testid="1"
           >
             <div
-              className="form-group field field-string"
+              className="field-string"
             >
               <div
                 className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -3943,7 +3943,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
             data-testid="1"
           >
             <div
-              className="form-group field field-string"
+              className="field-string"
             >
               <div
                 className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -4002,7 +4002,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
             data-testid="1"
           >
             <div
-              className="form-group field field-string"
+              className="field-string"
             >
               <div
                 className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -4075,7 +4075,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
             data-testid="1"
           >
             <div
-              className="form-group field field-string"
+              className="field-string"
             >
               <div
                 className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -4143,7 +4143,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
             data-testid="1"
           >
             <div
-              className="form-group field field-array"
+              className="field-array"
             >
               <div
                 className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -4450,7 +4450,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
             data-testid="1"
           >
             <div
-              className="form-group field field-object"
+              className="field-object"
             >
               <div
                 className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -4464,7 +4464,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                     data-testid="1"
                   >
                     <div
-                      className="form-group field field-string"
+                      className="field-string"
                     >
                       <div
                         className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -4532,7 +4532,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                     data-testid="1"
                   >
                     <div
-                      className="form-group field field-string"
+                      className="field-string"
                     >
                       <div
                         className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -4591,7 +4591,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                     data-testid="1"
                   >
                     <div
-                      className="form-group field field-string"
+                      className="field-string"
                     >
                       <div
                         className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -4663,7 +4663,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                       data-testid="1"
                     >
                       <div
-                        className="form-group field field-string"
+                        className="field-string"
                       >
                         <div
                           className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -4761,7 +4761,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                       data-testid="1"
                     >
                       <div
-                        className="form-group field field-string"
+                        className="field-string"
                       >
                         <div
                           className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -5054,7 +5054,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                 data-testid="1"
               >
                 <div
-                  className="form-group field field-string"
+                  className="field-string"
                 >
                   <div
                     className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -5113,7 +5113,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                 data-testid="1"
               >
                 <div
-                  className="form-group field field-string"
+                  className="field-string"
                 >
                   <div
                     className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -5181,7 +5181,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                 data-testid="1"
               >
                 <div
-                  className="form-group field field-string"
+                  className="field-string"
                 >
                   <div
                     className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -5240,7 +5240,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                 data-testid="1"
               >
                 <div
-                  className="form-group field field-string"
+                  className="field-string"
                 >
                   <div
                     className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -5308,7 +5308,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                 data-testid="1"
               >
                 <div
-                  className="form-group field field-string"
+                  className="field-string"
                 >
                   <div
                     className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -6717,7 +6717,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-160:focus::-ms-input
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="field-object"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -6735,7 +6735,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-160:focus::-ms-input
             data-testid="1"
           >
             <div
-              className="form-group field field-object"
+              className="field-object"
             >
               <div
                 className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -6767,7 +6767,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-160:focus::-ms-input
             data-testid="1"
           >
             <div
-              className="form-group field field-string"
+              className="field-string"
             >
               <div
                 className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -6835,7 +6835,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-160:focus::-ms-input
             data-testid="1"
           >
             <div
-              className="form-group field field-string"
+              className="field-string"
             >
               <div
                 className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -6894,7 +6894,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-160:focus::-ms-input
             data-testid="1"
           >
             <div
-              className="form-group field field-string"
+              className="field-string"
             >
               <div
                 className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -6967,7 +6967,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-160:focus::-ms-input
             data-testid="1"
           >
             <div
-              className="form-group field field-string"
+              className="field-string"
             >
               <div
                 className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -7035,7 +7035,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-160:focus::-ms-input
             data-testid="1"
           >
             <div
-              className="form-group field field-array"
+              className="field-array"
             >
               <div
                 className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -7342,7 +7342,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-160:focus::-ms-input
             data-testid="1"
           >
             <div
-              className="form-group field field-object"
+              className="field-object"
             >
               <div
                 className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -7356,7 +7356,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-160:focus::-ms-input
                     data-testid="1"
                   >
                     <div
-                      className="form-group field field-string"
+                      className="field-string"
                     >
                       <div
                         className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -7424,7 +7424,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-160:focus::-ms-input
                     data-testid="1"
                   >
                     <div
-                      className="form-group field field-string"
+                      className="field-string"
                     >
                       <div
                         className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -7483,7 +7483,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-160:focus::-ms-input
                     data-testid="1"
                   >
                     <div
-                      className="form-group field field-string"
+                      className="field-string"
                     >
                       <div
                         className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -7555,7 +7555,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-160:focus::-ms-input
                       data-testid="1"
                     >
                       <div
-                        className="form-group field field-string"
+                        className="field-string"
                       >
                         <div
                           className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -7653,7 +7653,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-160:focus::-ms-input
                       data-testid="1"
                     >
                       <div
-                        className="form-group field field-string"
+                        className="field-string"
                       >
                         <div
                           className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -7946,7 +7946,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-160:focus::-ms-input
                 data-testid="1"
               >
                 <div
-                  className="form-group field field-string"
+                  className="field-string"
                 >
                   <div
                     className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -9199,7 +9199,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="field-object"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -9217,7 +9217,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
             data-testid="1"
           >
             <div
-              className="form-group field field-object"
+              className="field-object"
             >
               <div
                 className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -9249,7 +9249,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
             data-testid="1"
           >
             <div
-              className="form-group field field-string"
+              className="field-string"
             >
               <div
                 className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -9317,7 +9317,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
             data-testid="1"
           >
             <div
-              className="form-group field field-string"
+              className="field-string"
             >
               <div
                 className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -9376,7 +9376,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
             data-testid="1"
           >
             <div
-              className="form-group field field-string"
+              className="field-string"
             >
               <div
                 className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -9449,7 +9449,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
             data-testid="1"
           >
             <div
-              className="form-group field field-string"
+              className="field-string"
             >
               <div
                 className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -9517,7 +9517,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
             data-testid="1"
           >
             <div
-              className="form-group field field-array"
+              className="field-array"
             >
               <div
                 className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -9824,7 +9824,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
             data-testid="1"
           >
             <div
-              className="form-group field field-object"
+              className="field-object"
             >
               <div
                 className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -9838,7 +9838,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                     data-testid="1"
                   >
                     <div
-                      className="form-group field field-string"
+                      className="field-string"
                     >
                       <div
                         className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -9906,7 +9906,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                     data-testid="1"
                   >
                     <div
-                      className="form-group field field-string"
+                      className="field-string"
                     >
                       <div
                         className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -9965,7 +9965,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                     data-testid="1"
                   >
                     <div
-                      className="form-group field field-string"
+                      className="field-string"
                     >
                       <div
                         className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -10037,7 +10037,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                       data-testid="1"
                     >
                       <div
-                        className="form-group field field-string"
+                        className="field-string"
                       >
                         <div
                           className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -10135,7 +10135,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                       data-testid="1"
                     >
                       <div
-                        className="form-group field field-string"
+                        className="field-string"
                       >
                         <div
                           className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -10428,7 +10428,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                 data-testid="1"
               >
                 <div
-                  className="form-group field field-string"
+                  className="field-string"
                 >
                   <div
                     className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -10496,7 +10496,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                 data-testid="1"
               >
                 <div
-                  className="form-group field field-string"
+                  className="field-string"
                 >
                   <div
                     className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -10555,7 +10555,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                 data-testid="1"
               >
                 <div
-                  className="form-group field field-string"
+                  className="field-string"
                 >
                   <div
                     className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -10623,7 +10623,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                 data-testid="1"
               >
                 <div
-                  className="form-group field field-string"
+                  className="field-string"
                 >
                   <div
                     className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -11645,7 +11645,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="field-object"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -11659,7 +11659,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
           data-testid="1"
         >
           <div
-            className="form-group field field-object"
+            className="field-object"
           >
             <div
               className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -11686,7 +11686,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
           data-testid="1"
         >
           <div
-            className="form-group field field-string"
+            className="field-string"
           >
             <div
               className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -11754,7 +11754,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
           data-testid="1"
         >
           <div
-            className="form-group field field-string"
+            className="field-string"
           >
             <div
               className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -11813,7 +11813,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
           data-testid="1"
         >
           <div
-            className="form-group field field-string"
+            className="field-string"
           >
             <div
               className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -11881,7 +11881,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
           data-testid="1"
         >
           <div
-            className="form-group field field-string"
+            className="field-string"
           >
             <div
               className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -11949,7 +11949,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
           data-testid="1"
         >
           <div
-            className="form-group field field-array"
+            className="field-array"
           >
             <div
               className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -12251,7 +12251,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
           data-testid="1"
         >
           <div
-            className="form-group field field-string"
+            className="field-string"
           >
             <div
               className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -12319,7 +12319,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
           data-testid="1"
         >
           <div
-            className="form-group field field-string"
+            className="field-string"
           >
             <div
               className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -12378,7 +12378,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
           data-testid="1"
         >
           <div
-            className="form-group field field-string"
+            className="field-string"
           >
             <div
               className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -12446,7 +12446,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
           data-testid="1"
         >
           <div
-            className="form-group field field-string"
+            className="field-string"
           >
             <div
               className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -13443,7 +13443,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="field-object"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -13457,7 +13457,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
           data-testid="1"
         >
           <div
-            className="form-group field field-object"
+            className="field-object"
           >
             <div
               className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -13484,7 +13484,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
           data-testid="1"
         >
           <div
-            className="form-group field field-string"
+            className="field-string"
           >
             <div
               className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -13552,7 +13552,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
           data-testid="1"
         >
           <div
-            className="form-group field field-string"
+            className="field-string"
           >
             <div
               className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -13611,7 +13611,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
           data-testid="1"
         >
           <div
-            className="form-group field field-string"
+            className="field-string"
           >
             <div
               className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -13679,7 +13679,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
           data-testid="1"
         >
           <div
-            className="form-group field field-string"
+            className="field-string"
           >
             <div
               className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -13747,7 +13747,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
           data-testid="1"
         >
           <div
-            className="form-group field field-array"
+            className="field-array"
           >
             <div
               className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -14049,7 +14049,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
           data-testid="1"
         >
           <div
-            className="form-group field field-string"
+            className="field-string"
           >
             <div
               className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -14117,7 +14117,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
           data-testid="1"
         >
           <div
-            className="form-group field field-string"
+            className="field-string"
           >
             <div
               className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -14176,7 +14176,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
           data-testid="1"
         >
           <div
-            className="form-group field field-string"
+            className="field-string"
           >
             <div
               className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -14244,7 +14244,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
           data-testid="1"
         >
           <div
-            className="form-group field field-string"
+            className="field-string"
           >
             <div
               className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"

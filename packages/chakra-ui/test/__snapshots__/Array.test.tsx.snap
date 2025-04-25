@@ -23,7 +23,7 @@ exports[`array fields array 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="field-array"
   >
     <fieldset
       className="fieldset__root emotion-0"
@@ -163,7 +163,7 @@ exports[`array fields array icons 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="field-array"
   >
     <fieldset
       className="fieldset__root emotion-0"
@@ -190,7 +190,7 @@ exports[`array fields array icons 1`] = `
                   className="emotion-6"
                 >
                   <div
-                    className="form-group field field-string"
+                    className="field-string"
                   >
                     <fieldset
                       className="fieldset__root emotion-0"
@@ -372,7 +372,7 @@ exports[`array fields array icons 1`] = `
                   className="emotion-6"
                 >
                   <div
-                    className="form-group field field-string"
+                    className="field-string"
                   >
                     <fieldset
                       className="fieldset__root emotion-0"
@@ -633,7 +633,7 @@ exports[`array fields checkboxes 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="field-array"
   >
     <fieldset
       className="fieldset__root emotion-0"
@@ -954,7 +954,7 @@ exports[`array fields empty errors array 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="field-object"
   >
     <fieldset
       className="fieldset__root emotion-0"
@@ -972,7 +972,7 @@ exports[`array fields empty errors array 1`] = `
             className="emotion-3"
           >
             <div
-              className="form-group field field-string"
+              className="field-string"
             >
               <fieldset
                 className="fieldset__root emotion-0"
@@ -1076,7 +1076,7 @@ exports[`array fields fixed array 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="field-array"
   >
     <fieldset
       className="fieldset__root emotion-0"
@@ -1103,7 +1103,7 @@ exports[`array fields fixed array 1`] = `
                   className="emotion-6"
                 >
                   <div
-                    className="form-group field field-string"
+                    className="field-string"
                   >
                     <fieldset
                       className="fieldset__root emotion-0"
@@ -1153,7 +1153,7 @@ exports[`array fields fixed array 1`] = `
                   className="emotion-6"
                 >
                   <div
-                    className="form-group field field-number"
+                    className="field-number"
                   >
                     <fieldset
                       className="fieldset__root emotion-0"
@@ -1320,7 +1320,7 @@ exports[`array fields has errors 1`] = `
     </div>
   </div>
   <div
-    className="form-group field field-object"
+    className="field-object"
   >
     <fieldset
       className="fieldset__root emotion-9"
@@ -1338,7 +1338,7 @@ exports[`array fields has errors 1`] = `
             className="emotion-12"
           >
             <div
-              className="form-group field field-string field-error has-error has-danger"
+              className="field-string"
             >
               <fieldset
                 className="fieldset__root emotion-9"
@@ -1455,7 +1455,7 @@ exports[`array fields no errors 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="field-object"
   >
     <fieldset
       className="fieldset__root emotion-0"
@@ -1473,7 +1473,7 @@ exports[`array fields no errors 1`] = `
             className="emotion-3"
           >
             <div
-              className="form-group field field-string"
+              className="field-string"
             >
               <fieldset
                 className="fieldset__root emotion-0"
@@ -1573,7 +1573,7 @@ exports[`with title and description array 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="field-array"
   >
     <fieldset
       className="fieldset__root emotion-0"
@@ -1747,7 +1747,7 @@ exports[`with title and description array icons 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="field-array"
   >
     <fieldset
       className="fieldset__root emotion-0"
@@ -1795,7 +1795,7 @@ exports[`with title and description array icons 1`] = `
                   className="emotion-10"
                 >
                   <div
-                    className="form-group field field-string"
+                    className="field-string"
                   >
                     <fieldset
                       className="fieldset__root emotion-0"
@@ -2004,7 +2004,7 @@ exports[`with title and description array icons 1`] = `
                   className="emotion-10"
                 >
                   <div
-                    className="form-group field field-string"
+                    className="field-string"
                   >
                     <fieldset
                       className="fieldset__root emotion-0"
@@ -2300,7 +2300,7 @@ exports[`with title and description checkboxes 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="field-array"
   >
     <fieldset
       className="fieldset__root emotion-0"
@@ -2670,7 +2670,7 @@ exports[`with title and description fixed array 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="field-array"
   >
     <fieldset
       className="fieldset__root emotion-0"
@@ -2718,7 +2718,7 @@ exports[`with title and description fixed array 1`] = `
                   className="emotion-10"
                 >
                   <div
-                    className="form-group field field-string"
+                    className="field-string"
                   >
                     <fieldset
                       className="fieldset__root emotion-0"
@@ -2795,7 +2795,7 @@ exports[`with title and description fixed array 1`] = `
                   className="emotion-10"
                 >
                   <div
-                    className="form-group field field-number"
+                    className="field-number"
                   >
                     <fieldset
                       className="fieldset__root emotion-0"
@@ -2918,7 +2918,7 @@ exports[`with title and description from both array 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="field-array"
   >
     <fieldset
       className="fieldset__root emotion-0"
@@ -3092,7 +3092,7 @@ exports[`with title and description from both array icons 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="field-array"
   >
     <fieldset
       className="fieldset__root emotion-0"
@@ -3140,7 +3140,7 @@ exports[`with title and description from both array icons 1`] = `
                   className="emotion-10"
                 >
                   <div
-                    className="form-group field field-string"
+                    className="field-string"
                   >
                     <fieldset
                       className="fieldset__root emotion-0"
@@ -3349,7 +3349,7 @@ exports[`with title and description from both array icons 1`] = `
                   className="emotion-10"
                 >
                   <div
-                    className="form-group field field-string"
+                    className="field-string"
                   >
                     <fieldset
                       className="fieldset__root emotion-0"
@@ -3645,7 +3645,7 @@ exports[`with title and description from both checkboxes 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="field-array"
   >
     <fieldset
       className="fieldset__root emotion-0"
@@ -4015,7 +4015,7 @@ exports[`with title and description from both fixed array 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="field-array"
   >
     <fieldset
       className="fieldset__root emotion-0"
@@ -4063,7 +4063,7 @@ exports[`with title and description from both fixed array 1`] = `
                   className="emotion-10"
                 >
                   <div
-                    className="form-group field field-string"
+                    className="field-string"
                   >
                     <fieldset
                       className="fieldset__root emotion-0"
@@ -4140,7 +4140,7 @@ exports[`with title and description from both fixed array 1`] = `
                   className="emotion-10"
                 >
                   <div
-                    className="form-group field field-number"
+                    className="field-number"
                   >
                     <fieldset
                       className="fieldset__root emotion-0"
@@ -4263,7 +4263,7 @@ exports[`with title and description from uiSchema array 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="field-array"
   >
     <fieldset
       className="fieldset__root emotion-0"
@@ -4437,7 +4437,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="field-array"
   >
     <fieldset
       className="fieldset__root emotion-0"
@@ -4485,7 +4485,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                   className="emotion-10"
                 >
                   <div
-                    className="form-group field field-string"
+                    className="field-string"
                   >
                     <fieldset
                       className="fieldset__root emotion-0"
@@ -4694,7 +4694,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                   className="emotion-10"
                 >
                   <div
-                    className="form-group field field-string"
+                    className="field-string"
                   >
                     <fieldset
                       className="fieldset__root emotion-0"
@@ -4990,7 +4990,7 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="field-array"
   >
     <fieldset
       className="fieldset__root emotion-0"
@@ -5360,7 +5360,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="field-array"
   >
     <fieldset
       className="fieldset__root emotion-0"
@@ -5408,7 +5408,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                   className="emotion-10"
                 >
                   <div
-                    className="form-group field field-string"
+                    className="field-string"
                   >
                     <fieldset
                       className="fieldset__root emotion-0"
@@ -5485,7 +5485,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                   className="emotion-10"
                 >
                   <div
-                    className="form-group field field-number"
+                    className="field-number"
                   >
                     <fieldset
                       className="fieldset__root emotion-0"
@@ -5599,7 +5599,7 @@ exports[`with title and description with global label off array 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="field-array"
   >
     <fieldset
       className="fieldset__root emotion-0"
@@ -5739,7 +5739,7 @@ exports[`with title and description with global label off array icons 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="field-array"
   >
     <fieldset
       className="fieldset__root emotion-0"
@@ -5766,7 +5766,7 @@ exports[`with title and description with global label off array icons 1`] = `
                   className="emotion-6"
                 >
                   <div
-                    className="form-group field field-string"
+                    className="field-string"
                   >
                     <fieldset
                       className="fieldset__root emotion-0"
@@ -5948,7 +5948,7 @@ exports[`with title and description with global label off array icons 1`] = `
                   className="emotion-6"
                 >
                   <div
-                    className="form-group field field-string"
+                    className="field-string"
                   >
                     <fieldset
                       className="fieldset__root emotion-0"
@@ -6217,7 +6217,7 @@ exports[`with title and description with global label off checkboxes 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="field-array"
   >
     <fieldset
       className="fieldset__root emotion-0"
@@ -6574,7 +6574,7 @@ exports[`with title and description with global label off fixed array 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="field-array"
   >
     <fieldset
       className="fieldset__root emotion-0"
@@ -6601,7 +6601,7 @@ exports[`with title and description with global label off fixed array 1`] = `
                   className="emotion-6"
                 >
                   <div
-                    className="form-group field field-string"
+                    className="field-string"
                   >
                     <fieldset
                       className="fieldset__root emotion-0"
@@ -6651,7 +6651,7 @@ exports[`with title and description with global label off fixed array 1`] = `
                   className="emotion-6"
                 >
                   <div
-                    className="form-group field field-number"
+                    className="field-number"
                   >
                     <fieldset
                       className="fieldset__root emotion-0"

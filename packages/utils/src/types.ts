@@ -784,6 +784,8 @@ export type WrapIfAdditionalTemplateProps<
   FieldTemplateProps<T, S, F>,
   | 'id'
   | 'classNames'
+  | 'hideError'
+  | 'rawErrors'
   | 'style'
   | 'label'
   | 'required'
