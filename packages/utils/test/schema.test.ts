@@ -10,7 +10,6 @@ import {
   isFilesArrayTest,
   isMultiSelectTest,
   isSelectTest,
-  mergeValidationDataTest,
   retrieveSchemaTest,
   sanitizeDataForNewSchemaTest,
   toIdSchemaTest,
@@ -30,7 +29,6 @@ getFromSchemaTest(testValidator);
 isFilesArrayTest(testValidator);
 isMultiSelectTest(testValidator);
 isSelectTest(testValidator);
-mergeValidationDataTest(testValidator);
 retrieveSchemaTest(testValidator);
 sanitizeDataForNewSchemaTest(testValidator);
 toIdSchemaTest(testValidator);

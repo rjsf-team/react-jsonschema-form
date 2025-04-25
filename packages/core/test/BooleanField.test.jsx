@@ -375,19 +375,15 @@ describe('BooleanField', () => {
     expect(labels).eql(['No', 'Yes']);
   });
 
-  it('should support enumNames for radio widgets', () => {
+  it('should support ui:enumNames for radio widgets', () => {
     const { node } = createFormComponent({
-      schema: {
-        type: 'boolean',
-        enumNames: ['Yes', 'No'],
-      },
+      schema: { type: 'boolean' },
       formData: true,
-      uiSchema: { 'ui:widget': 'radio' },
+      uiSchema: { 'ui:widget': 'radio', 'ui:enumNames': ['Yes', 'No'] },
     });
 
     const labels = [].map.call(node.querySelectorAll('.field-radio-group label'), (label) => label.textContent);
     expect(labels).eql(['Yes', 'No']);
-    expect(console.warn.calledWithMatch(/The "enumNames" property in the schema is deprecated/)).to.be.true;
   });
 
   it('should support oneOf titles for radio widgets', () => {
@@ -518,19 +514,15 @@ describe('BooleanField', () => {
     expect(onBlur.calledWith(element.id, false)).to.be.true;
   });
 
-  it('should support enumNames for select, with overrides in uiSchema', () => {
+  it('should support ui:enumNames for select, with overrides in uiSchema', () => {
     const { node } = createFormComponent({
-      schema: {
-        type: 'boolean',
-        enumNames: ['Yes', 'No'],
-      },
+      schema: { type: 'boolean' },
       formData: true,
       uiSchema: { 'ui:widget': 'select', 'ui:enumNames': ['Si!', 'No!'] },
     });
 
     const labels = [].map.call(node.querySelectorAll('.field option'), (label) => label.textContent);
     expect(labels).eql(['', 'Si!', 'No!']);
-    expect(console.warn.calledWithMatch(/TThe "enumNames" property in the schema is deprecated/)).to.be.false;
   });
 
   it('should handle a focus event with checkbox', () => {
@@ -769,7 +761,7 @@ describe('BooleanField', () => {
         {
           formData: false,
         },
-        'root'
+        'root',
       );
     });
 

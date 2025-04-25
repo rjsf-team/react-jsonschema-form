@@ -8,7 +8,6 @@ import getFromSchemaTest from './getFromSchemaTest';
 import isFilesArrayTest from './isFilesArrayTest';
 import isMultiSelectTest from './isMultiSelectTest';
 import isSelectTest from './isSelectTest';
-import mergeValidationDataTest from './mergeValidationDataTest';
 import retrieveSchemaTest from './retrieveSchemaTest';
 import sanitizeDataForNewSchemaTest from './sanitizeDataForNewSchemaTest';
 import toIdSchemaTest from './toIdSchemaTest';
@@ -27,7 +26,6 @@ export {
   isFilesArrayTest,
   isMultiSelectTest,
   isSelectTest,
-  mergeValidationDataTest,
   retrieveSchemaTest,
   sanitizeDataForNewSchemaTest,
   toIdSchemaTest,

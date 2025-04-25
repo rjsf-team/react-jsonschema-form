@@ -66,7 +66,7 @@
   },
   "peerDependencies": {
     "@rjsf/utils": "^6.x",
-    "react": "^16.14.0 || >=17"
+    "react": ">=18"
   },
   "dependencies": {
     "@fluentui/react-components": "^9.46.3",

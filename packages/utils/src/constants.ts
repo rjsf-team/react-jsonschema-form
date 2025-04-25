@@ -35,10 +35,6 @@ export const FORM_CONTEXT_NAME = 'formContext';
 /** The name of the `layoutGridLookupMap` attribute in the form context
  */
 export const LOOKUP_MAP_NAME = 'layoutGridLookupMap';
-/**
- * @deprecated Replace with correctly spelled constant `RJSF_ADDITIONAL_PROPERTIES_FLAG`
- */
-export const RJSF_ADDITONAL_PROPERTIES_FLAG = '__rjsf_additionalProperties';
 export const RJSF_ADDITIONAL_PROPERTIES_FLAG = '__rjsf_additionalProperties';
 export const ROOT_SCHEMA_PREFIX = '__rjsf_rootSchema';
 export const UI_FIELD_KEY = 'ui:field';

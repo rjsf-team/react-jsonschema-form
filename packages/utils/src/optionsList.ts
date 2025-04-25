@@ -7,8 +7,7 @@ import toConstant from './toConstant';
 import { RJSFSchema, EnumOptionsType, StrictRJSFSchema, FormContextType, UiSchema } from './types';
 
 /** Gets the list of options from the `schema`. If the schema has an enum list, then those enum values are returned. The
- * labels for the options will be extracted from the non-standard, RJSF-deprecated `enumNames` if it exists, otherwise
- * the label will be the same as the `value`.
+ * label will be the same as the `value`.
  *
  * If the schema has a `oneOf` or `anyOf`, then the value is the list of either:
  * - The `const` values from the schema if present
@@ -24,22 +23,11 @@ export default function optionsList<T = any, S extends StrictRJSFSchema = RJSFSc
   schema: S,
   uiSchema?: UiSchema<T, S, F>,
 ): EnumOptionsType<S>[] | undefined {
-  const schemaWithEnumNames = schema as S & { enumNames?: string[] };
   if (schema.enum) {
     let enumNames: string[] | undefined;
     if (uiSchema) {
       const { enumNames: uiEnumNames } = getUiOptions<T, S, F>(uiSchema);
       enumNames = uiEnumNames;
-    }
-    if (!enumNames && schemaWithEnumNames.enumNames) {
-      // enumNames was deprecated in v5 and is intentionally omitted from the RJSFSchema type.
-      // Cast the type to include enumNames so the feature still works.
-      if (process.env.NODE_ENV !== 'production') {
-        console.warn(
-          'The "enumNames" property in the schema is deprecated and will be removed in a future major release. Use the "ui:enumNames" property in the uiSchema instead.',
-        );
-      }
-      enumNames = schemaWithEnumNames.enumNames;
     }
     return schema.enum.map((value, i) => {
       const label = enumNames?.[i] || String(value);

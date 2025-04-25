@@ -4,7 +4,7 @@ title: <Form /> Props
 
 # &lt;Form /> props
 
-## acceptcharset
+## acceptCharset
 
 The value of this prop will be passed to the `accept-charset` [HTML attribute on the form](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/form#attr-accept-charset).
 
@@ -17,10 +17,6 @@ Note that this just renders the `action` attribute in the HTML markup. There is 
 ## autoComplete
 
 The value of this prop will be passed to the `autocomplete` [HTML attribute on the form](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/form#attr-autocomplete).
-
-## autocomplete
-
-Deprecated, same functionality as `autoComplete`
 
 ## className
 
@@ -48,7 +44,7 @@ render(
       <button type='button'>Cancel</button>
     </div>
   </Form>,
-  document.getElementById('app')
+  document.getElementById('app'),
 );
 ```
 
@@ -184,7 +180,7 @@ render(
       emptyObjectFields: 'populateRequiredDefaults',
     }}
   />,
-  document.getElementById('app')
+  document.getElementById('app'),
 );
 ```
 
@@ -247,7 +243,7 @@ render(
       allOf: 'populateDefaults',
     }}
   />,
-  document.getElementById('app')
+  document.getElementById('app'),
 );
 ```
 
@@ -294,7 +290,7 @@ const customMergeAllOf = (schema: RJSFSchema): RJSFSchema => {
 
 render(
   <Form schema={schema} validator={validator} experimental_customMergeAllOf={customMergeAllOf} />,
-  document.getElementById('app')
+  document.getElementById('app'),
 );
 ```
 

@@ -39,13 +39,6 @@ export default function getTestValidator<T = any>({
         }
         return true;
       }),
-      toErrorList: jest.fn().mockImplementation(() => {
-        // console.warn('isValid',  JSON.stringify(args));
-        if (Array.isArray(testValidator._errorList) && testValidator._errorList.length > 0) {
-          return testValidator._errorList.shift();
-        }
-        return [];
-      }),
       rawValidation: jest.fn().mockImplementation(() => {}),
       setReturnValues({ isValid, data, errorList }: TestValidatorParams) {
         if (isValid !== undefined) {

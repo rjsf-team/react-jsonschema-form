@@ -67,7 +67,7 @@
     "@rjsf/utils": "^6.x",
     "antd": "^5.8.5",
     "dayjs": "^1.8.0",
-    "react": "^16.14.0 || >=17"
+    "react": ">=18"
   },
   "dependencies": {
     "classnames": "^2.5.1",

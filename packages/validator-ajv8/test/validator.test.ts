@@ -145,24 +145,6 @@ describe('AJV8Validator', () => {
         expect(compileSpy).toHaveBeenCalledTimes(1);
       });
     });
-    describe('validator.toErrorList()', () => {
-      it('should return empty list for unspecified errorSchema', () => {
-        expect(validator.toErrorList()).toEqual([]);
-      });
-      it('should convert an errorSchema into a flat list', () => {
-        const errorSchema = builder
-          .addErrors(['err1', 'err2'])
-          .addErrors(['err3', 'err4'], 'a.b')
-          .addErrors(['err5'], 'c').ErrorSchema;
-        expect(validator.toErrorList(errorSchema)).toEqual([
-          { property: '.', message: 'err1', stack: '. err1' },
-          { property: '.', message: 'err2', stack: '. err2' },
-          { property: '.a.b', message: 'err3', stack: '.a.b err3' },
-          { property: '.a.b', message: 'err4', stack: '.a.b err4' },
-          { property: '.c', message: 'err5', stack: '.c err5' },
-        ]);
-      });
-    });
     describe('validator.validateFormData()', () => {
       describe('No custom validate function, single value', () => {
         let errors: RJSFValidationError[];
@@ -597,24 +579,6 @@ describe('AJV8Validator', () => {
         expect(addSchemaSpy).toHaveBeenCalledTimes(2);
         expect(addSchemaSpy).toHaveBeenNthCalledWith(1, expect.objectContaining(rootSchema), rootSchema.$id);
         expect(addSchemaSpy).toHaveBeenNthCalledWith(2, expect.objectContaining(schema), schema.$id);
-      });
-    });
-    describe('validator.toErrorList()', () => {
-      it('should return empty list for unspecified errorSchema', () => {
-        expect(validator.toErrorList()).toEqual([]);
-      });
-      it('should convert an errorSchema into a flat list', () => {
-        const errorSchema = builder
-          .addErrors(['err1', 'err2'])
-          .addErrors(['err3', 'err4'], 'a.b')
-          .addErrors(['err5'], 'c').ErrorSchema;
-        expect(validator.toErrorList(errorSchema)).toEqual([
-          { property: '.', message: 'err1', stack: '. err1' },
-          { property: '.', message: 'err2', stack: '. err2' },
-          { property: '.a.b', message: 'err3', stack: '.a.b err3' },
-          { property: '.a.b', message: 'err4', stack: '.a.b err4' },
-          { property: '.c', message: 'err5', stack: '.c err5' },
-        ]);
       });
     });
     describe('validator.validateFormData()', () => {
@@ -1052,24 +1016,6 @@ describe('AJV8Validator', () => {
         expect(addSchemaSpy).toHaveBeenCalledTimes(2);
         expect(addSchemaSpy).toHaveBeenNthCalledWith(1, expect.objectContaining(rootSchema), rootSchema.$id);
         expect(addSchemaSpy).toHaveBeenNthCalledWith(2, expect.objectContaining(schema), schema.$id);
-      });
-    });
-    describe('validator.toErrorList()', () => {
-      it('should return empty list for unspecified errorSchema', () => {
-        expect(validator.toErrorList()).toEqual([]);
-      });
-      it('should convert an errorSchema into a flat list', () => {
-        const errorSchema = builder
-          .addErrors(['err1', 'err2'])
-          .addErrors(['err3', 'err4'], 'a.b')
-          .addErrors(['err5'], 'c').ErrorSchema;
-        expect(validator.toErrorList(errorSchema)).toEqual([
-          { property: '.', message: 'err1', stack: '. err1' },
-          { property: '.', message: 'err2', stack: '. err2' },
-          { property: '.a.b', message: 'err3', stack: '.a.b err3' },
-          { property: '.a.b', message: 'err4', stack: '.a.b err4' },
-          { property: '.c', message: 'err5', stack: '.c err5' },
-        ]);
       });
     });
     describe('validator.validateFormData()', () => {

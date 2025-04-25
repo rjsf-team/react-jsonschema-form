@@ -44,69 +44,6 @@ describe('optionsList()', () => {
         }),
       );
     });
-    it('generates options and favors uiSchema if schema.enumNames is present', () => {
-      const enumSchema: RJSFSchema = {
-        type: 'string',
-        enum: ['Opt1', 'Opt2', 'Opt3'],
-      };
-      const uiSchema: UiSchema = {
-        'ui:enumNames': ['Option1', 'Option2', 'Option3'],
-      };
-
-      const enumNameSchema = {
-        ...enumSchema,
-        enumNames: ['Option One', 'Option Two', 'Option Three'],
-      };
-
-      expect(optionsList(enumNameSchema, uiSchema)).toEqual(
-        enumNameSchema.enum!.map((opt, index) => {
-          const label: string = uiSchema['ui:enumNames']![index] ?? opt;
-          return { label, value: opt };
-        }),
-      );
-      expect(console.warn).not.toHaveBeenCalled();
-    });
-    it('generates options and does not emit a deprecation warning for a schema with enumNames in production', () => {
-      process.env.NODE_ENV = 'production';
-      const enumSchema: RJSFSchema = {
-        type: 'string',
-        enum: ['Opt1', 'Opt2', 'Opt3'],
-      };
-
-      const enumNameSchema = {
-        ...enumSchema,
-        enumNames: ['Option1', 'Option2', 'Option3'],
-      };
-
-      expect(optionsList(enumNameSchema)).toEqual(
-        enumNameSchema.enum!.map((opt, index) => {
-          const label = enumNameSchema.enumNames[index] || opt;
-          return { label, value: opt };
-        }),
-      );
-      expect(console.warn).not.toHaveBeenCalled();
-    });
-    it('generates options and emits a deprecation warning for a schema with enumNames', () => {
-      const enumSchema: RJSFSchema = {
-        type: 'string',
-        enum: ['Opt1', 'Opt2', 'Opt3'],
-      };
-
-      const enumNameSchema = {
-        ...enumSchema,
-        enumNames: ['Option1', 'Option2', 'Option3'],
-      };
-
-      expect(optionsList(enumNameSchema)).toEqual(
-        enumNameSchema.enum!.map((opt, index) => {
-          const label = enumNameSchema.enumNames[index] || opt;
-          return { label, value: opt };
-        }),
-      );
-      expect(console.warn).toHaveBeenCalledWith(
-        expect.stringMatching(/The "enumNames" property in the schema is deprecated/),
-      );
-    });
   });
   describe('anyOf', () => {
     it('should generate options for an anyOf schema', () => {

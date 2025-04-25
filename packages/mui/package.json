@@ -67,7 +67,7 @@
     "@mui/material": "^6.0.0",
     "@rjsf/core": "^6.x",
     "@rjsf/utils": "^6.x",
-    "react": ">=17"
+    "react": ">=18"
   },
   "devDependencies": {
     "@babel/core": "^7.23.9",

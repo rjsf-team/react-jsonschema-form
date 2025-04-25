@@ -62,7 +62,7 @@
     ]
   },
   "peerDependencies": {
-    "react": "^16.14.0 || >=17"
+    "react": ">=18"
   },
   "dependencies": {
     "json-schema-merge-allof": "^0.8.1",

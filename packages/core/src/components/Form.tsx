@@ -116,11 +116,6 @@ export interface FormProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
    * an `onFocus` handler, which will receive the id of the input that is focused and the field value
    */
   onFocus?: (id: string, data: any) => void;
-  // <form /> HTML attributes
-  /** The value of this prop will be passed to the `accept-charset` HTML attribute on the form
-   * @deprecated replaced with `acceptCharset` which will supercede this value if both are specified
-   */
-  acceptcharset?: string;
   /** The value of this prop will be passed to the `accept-charset` HTML attribute on the form */
   acceptCharset?: string;
   /** The value of this prop will be passed to the `action` HTML attribute on the form
@@ -348,9 +343,6 @@ export default class Form<
    * Here, it checks if an update is necessary based on the `shouldUpdate` flag received from `getSnapshotBeforeUpdate`.
    * If an update is required, it applies the next state and, if needed, triggers the `onChange` handler to inform about
    * changes.
-   *
-   * This method effectively replaces the deprecated `UNSAFE_componentWillReceiveProps`, providing a safer alternative
-   * to handle prop changes and state updates.
    *
    * @param _ - The previous set of props.
    * @param prevState - The previous state of the component before the update.
@@ -1029,7 +1021,6 @@ export default class Form<
       action,
       autoComplete,
       enctype,
-      acceptcharset,
       acceptCharset,
       noHtml5Validate = false,
       disabled,
@@ -1065,7 +1056,7 @@ export default class Form<
         action={action}
         autoComplete={autoComplete}
         encType={enctype}
-        acceptCharset={acceptCharset || acceptcharset}
+        acceptCharset={acceptCharset}
         noValidate={noHtml5Validate}
         onSubmit={this.onSubmit}
         as={as}

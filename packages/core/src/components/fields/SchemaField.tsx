@@ -213,14 +213,6 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   if (!hideError && __errors && __errors.length > 0) {
     classNames.push('field-error has-error has-danger');
   }
-  if (uiSchema?.classNames) {
-    if (process.env.NODE_ENV !== 'production') {
-      console.warn(
-        "'uiSchema.classNames' is deprecated and may be removed in a major release; Use 'ui:classNames' instead.",
-      );
-    }
-    classNames.push(uiSchema.classNames);
-  }
   if (uiOptions.classNames) {
     classNames.push(uiOptions.classNames);
   }

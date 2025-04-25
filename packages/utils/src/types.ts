@@ -1074,14 +1074,6 @@ export interface ValidatorType<T = any, S extends StrictRJSFSchema = RJSFSchema,
     transformErrors?: ErrorTransformer<T, S, F>,
     uiSchema?: UiSchema<T, S, F>,
   ): ValidationData<T>;
-  /** Converts an `errorSchema` into a list of `RJSFValidationErrors`
-   *
-   * @param errorSchema - The `ErrorSchema` instance to convert
-   * @param [fieldPath=[]] - The current field path, defaults to [] if not specified
-   * @deprecated - Use the `toErrorList()` function provided by `@rjsf/utils` instead. This function will be removed in
-   *        the next major release.
-   */
-  toErrorList(errorSchema?: ErrorSchema<T>, fieldPath?: string[]): RJSFValidationError[];
   /** Validates data against a schema, returning true if the data is valid, or
    * false otherwise. If the schema is invalid, then this function will return
    * false.
@@ -1215,17 +1207,6 @@ export interface SchemaUtilsType<T = any, S extends StrictRJSFSchema = RJSFSchem
    * @returns - The firstindex of the matched option or 0 if none is available
    */
   getFirstMatchingOption(formData: T | undefined, options: S[], discriminatorField?: string): number;
-  /** Given the `formData` and list of `options`, attempts to find the index of the option that best matches the data.
-   * Deprecated, use `getFirstMatchingOption()` instead.
-   *
-   * @param formData - The current formData, if any, onto which to provide any missing defaults
-   * @param options - The list of options to find a matching options from
-   * @param [discriminatorField] - The optional name of the field within the options object whose value is used to
-   *          determine which option is selected
-   * @returns - The index of the matched option or 0 if none is available
-   * @deprecated
-   */
-  getMatchingOption(formData: T | undefined, options: S[], discriminatorField?: string): number;
   /** Helper that acts like lodash's `get` but additionally retrieves `$ref`s as needed to get the path for schemas
    * containing potentially nested `$ref`s.
    *
@@ -1256,18 +1237,6 @@ export interface SchemaUtilsType<T = any, S extends StrictRJSFSchema = RJSFSchem
    * @returns - True if schema contains a select, otherwise false
    */
   isSelect(schema: S): boolean;
-  /** Merges the errors in `additionalErrorSchema` into the existing `validationData` by combining the hierarchies in
-   * the two `ErrorSchema`s and then appending the error list from the `additionalErrorSchema` obtained by calling
-   * `validator.toErrorList()` onto the `errors` in the `validationData`. If no `additionalErrorSchema` is passed, then
-   * `validationData` is returned.
-   *
-   * @param validationData - The current `ValidationData` into which to merge the additional errors
-   * @param [additionalErrorSchema] - The additional set of errors
-   * @returns - The `validationData` with the additional errors from `additionalErrorSchema` merged into it, if provided
-   * @deprecated - Use the `validationDataMerge()` function exported from `@rjsf/utils` instead. This function will be
-   *        removed in the next major release.
-   */
-  mergeValidationData(validationData: ValidationData<T>, additionalErrorSchema?: ErrorSchema<T>): ValidationData<T>;
   /** Retrieves an expanded schema that has had all of its conditions, additional properties, references and
    * dependencies resolved and merged into the `schema` given a `rawFormData` that is used to do the potentially
    * recursive resolution.

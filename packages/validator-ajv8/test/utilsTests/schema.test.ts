@@ -12,7 +12,6 @@ import {
   isFilesArrayTest,
   isMultiSelectTest,
   isSelectTest,
-  mergeValidationDataTest,
   retrieveSchemaTest,
   sanitizeDataForNewSchemaTest,
   toIdSchemaTest,
@@ -33,7 +32,6 @@ getFromSchemaTest(testValidator);
 isFilesArrayTest(testValidator);
 isMultiSelectTest(testValidator);
 isSelectTest(testValidator);
-mergeValidationDataTest(testValidator);
 retrieveSchemaTest(testValidator);
 sanitizeDataForNewSchemaTest(testValidator);
 toIdSchemaTest(testValidator);
@@ -54,7 +52,6 @@ getFromSchemaTest(testValidatorDiscriminated);
 isFilesArrayTest(testValidatorDiscriminated);
 isMultiSelectTest(testValidatorDiscriminated);
 isSelectTest(testValidatorDiscriminated);
-mergeValidationDataTest(testValidatorDiscriminated);
 retrieveSchemaTest(testValidatorDiscriminated);
 sanitizeDataForNewSchemaTest(testValidatorDiscriminated);
 toIdSchemaTest(testValidatorDiscriminated);
@@ -73,7 +70,6 @@ getFromSchemaTest(testValidator2019);
 isFilesArrayTest(testValidator2019);
 isMultiSelectTest(testValidator2019);
 isSelectTest(testValidator2019);
-mergeValidationDataTest(testValidator2019);
 retrieveSchemaTest(testValidator2019);
 sanitizeDataForNewSchemaTest(testValidator2019);
 toIdSchemaTest(testValidator2019);
@@ -92,7 +88,6 @@ getFromSchemaTest(testValidator2020);
 isFilesArrayTest(testValidator2020);
 isMultiSelectTest(testValidator2020);
 isSelectTest(testValidator2020);
-mergeValidationDataTest(testValidator2020);
 retrieveSchemaTest(testValidator2020);
 retrieveSchemaTest(testValidator2020);
 toIdSchemaTest(testValidator2020);

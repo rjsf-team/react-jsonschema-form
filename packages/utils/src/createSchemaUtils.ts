@@ -1,6 +1,5 @@
 import deepEquals from './deepEquals';
 import {
-  ErrorSchema,
   Experimental_CustomMergeAllOf,
   Experimental_DefaultFormStateBehavior,
   FormContextType,
@@ -12,7 +11,6 @@ import {
   SchemaUtilsType,
   StrictRJSFSchema,
   UiSchema,
-  ValidationData,
   ValidatorType,
 } from './types';
 import {
@@ -23,11 +21,9 @@ import {
   getClosestMatchingOption,
   getFirstMatchingOption,
   getFromSchema,
-  getMatchingOption,
   isFilesArray,
   isMultiSelect,
   isSelect,
-  mergeValidationData,
   retrieveSchema,
   sanitizeDataForNewSchema,
   toIdSchema,
@@ -233,20 +229,6 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
     return getFirstMatchingOption<T, S, F>(this.validator, formData, options, this.rootSchema, discriminatorField);
   }
 
-  /** Given the `formData` and list of `options`, attempts to find the index of the option that best matches the data.
-   * Deprecated, use `getFirstMatchingOption()` instead.
-   *
-   * @param formData - The current formData, if any, onto which to provide any missing defaults
-   * @param options - The list of options to find a matching options from
-   * @param [discriminatorField] - The optional name of the field within the options object whose value is used to
-   *          determine which option is selected
-   * @returns - The index of the matched option or 0 if none is available
-   * @deprecated
-   */
-  getMatchingOption(formData: T | undefined, options: S[], discriminatorField?: string) {
-    return getMatchingOption<T, S, F>(this.validator, formData, options, this.rootSchema, discriminatorField);
-  }
-
   /** Helper that acts like lodash's `get` but additionally retrieves `$ref`s as needed to get the path for schemas
    * containing potentially nested `$ref`s.
    *
@@ -295,21 +277,6 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
    */
   isSelect(schema: S) {
     return isSelect<T, S, F>(this.validator, schema, this.rootSchema, this.experimental_customMergeAllOf);
-  }
-
-  /** Merges the errors in `additionalErrorSchema` into the existing `validationData` by combining the hierarchies in
-   * the two `ErrorSchema`s and then appending the error list from the `additionalErrorSchema` obtained by calling
-   * `getValidator().toErrorList()` onto the `errors` in the `validationData`. If no `additionalErrorSchema` is passed,
-   * then `validationData` is returned.
-   *
-   * @param validationData - The current `ValidationData` into which to merge the additional errors
-   * @param [additionalErrorSchema] - The additional set of errors
-   * @returns - The `validationData` with the additional errors from `additionalErrorSchema` merged into it, if provided.
-   * @deprecated - Use the `validationDataMerge()` function exported from `@rjsf/utils` instead. This function will be
-   *        removed in the next major release.
-   */
-  mergeValidationData(validationData: ValidationData<T>, additionalErrorSchema?: ErrorSchema<T>): ValidationData<T> {
-    return mergeValidationData<T, S, F>(this.validator, validationData, additionalErrorSchema);
   }
 
   /** Retrieves an expanded schema that has had all of its conditions, additional properties, references and
