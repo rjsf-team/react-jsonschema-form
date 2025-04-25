@@ -2,6 +2,5 @@
   "packages": ["packages/*"],
   "version": "5.24.8",
   "$schema": "node_modules/lerna/schemas/lerna-schema.json",
-  "useNx": true,
-  "useWorkspaces": true
+  "useNx": true
 }
