@@ -63,7 +63,7 @@
     "node": ">=20"
   },
   "peerDependencies": {
-    "@chakra-ui/react": ">=3.4.0",
+    "@chakra-ui/react": ">=3.16.1",
     "@rjsf/core": "^6.x",
     "@rjsf/utils": "^6.x",
     "chakra-react-select": ">=3.3.8",
@@ -87,8 +87,8 @@
     "@babel/preset-env": "^7.23.9",
     "@babel/preset-react": "^7.23.3",
     "@babel/preset-typescript": "^7.23.3",
-    "@chakra-ui/cli": "^3.4.0",
-    "@chakra-ui/react": "^3.4.0",
+    "@chakra-ui/cli": "^3.16.1",
+    "@chakra-ui/react": "^3.16.1",
     "@emotion/eslint-plugin": "^11.11.0",
     "@emotion/jest": "^11.11.0",
     "@emotion/react": "^11.14.0",
