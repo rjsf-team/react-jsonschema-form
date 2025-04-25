@@ -12,7 +12,7 @@ import { Password } from 'primereact/password';
 export default function PasswordWidget<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(props: WidgetProps<T, S, F>) {
   const {
     id,

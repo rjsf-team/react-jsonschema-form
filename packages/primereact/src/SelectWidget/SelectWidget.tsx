@@ -17,7 +17,7 @@ import { MultiSelect } from 'primereact/multiselect';
  * @param props - The `WidgetProps` for this component
  */
 export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: WidgetProps<T, S, F>
+  props: WidgetProps<T, S, F>,
 ) {
   const multiple = typeof props.multiple === 'undefined' ? false : props.multiple;
 

@@ -9,7 +9,7 @@ import {
 import { InputNumber, InputNumberChangeEvent } from 'primereact/inputnumber';
 
 export default function UpDownWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: WidgetProps<T, S, F>
+  props: WidgetProps<T, S, F>,
 ) {
   const {
     id,

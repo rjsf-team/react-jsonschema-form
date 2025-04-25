@@ -3,7 +3,7 @@ import { ArrayFieldTitleProps, FormContextType, getUiOptions, RJSFSchema, Strict
 export default function ArrayFieldTitleTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >({ title, uiSchema, required }: ArrayFieldTitleProps<T, S, F>) {
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   return (
