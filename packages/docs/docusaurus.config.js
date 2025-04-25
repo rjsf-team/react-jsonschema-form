@@ -49,9 +49,9 @@ const config = {
               label: `Current (v${currentProjectVersion})`,
               path: '',
             },
-            '5.24.9': {
+            '5.24.10': {
               label: 'v5',
-              path: 'version-5.24.9',
+              path: 'version-5.24.10',
             },
             '4.2.3': {
               label: 'v4',
