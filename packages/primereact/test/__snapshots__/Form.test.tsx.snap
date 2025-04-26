@@ -1,8 +1,97 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`single fields checkbox field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-boolean"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <div
+        className="field-checkbox"
+        style={
+          {
+            "alignItems": "center",
+            "display": "flex",
+            "flexDirection": "row",
+            "gap": "0.5rem",
+          }
+        }
+      >
+        <div
+          aria-describedby="root__error root__description root__help"
+          className="p-checkbox p-component"
+          data-p-disabled={false}
+          data-p-highlight={false}
+          data-pc-name="checkbox"
+          data-pc-section="root"
+          id={null}
+          onBlur={[Function]}
+          onContextMenu={null}
+          onFocus={[Function]}
+          onMouseDown={null}
+          style={{}}
+        >
+          <input
+            aria-describedby="root__error root__description root__help"
+            aria-invalid={false}
+            checked={false}
+            className="p-checkbox-input"
+            data-pc-section="input"
+            disabled={false}
+            id="root"
+            name="root"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            readOnly={false}
+            required={false}
+            tabIndex={null}
+            type="checkbox"
+          />
+          <div
+            className="p-checkbox-box"
+            data-p-disabled={false}
+            data-p-highlight={false}
+            data-pc-section="box"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
 exports[`single fields checkbox field with label 1`] = `
 <form
-  className="ui form rjsf"
+  className="rjsf"
   noValidate={false}
   onSubmit={[Function]}
 >
@@ -97,7 +186,7 @@ exports[`single fields checkbox field with label 1`] = `
 
 exports[`single fields checkboxes field 1`] = `
 <form
-  className="ui form rjsf"
+  className="rjsf"
   noValidate={false}
   onSubmit={[Function]}
 >
@@ -379,7 +468,7 @@ exports[`single fields checkboxes field 1`] = `
 
 exports[`single fields field with description 1`] = `
 <form
-  className="ui form rjsf"
+  className="rjsf"
   noValidate={false}
   onSubmit={[Function]}
 >
@@ -467,7 +556,7 @@ exports[`single fields field with description 1`] = `
 
 exports[`single fields field with description in uiSchema 1`] = `
 <form
-  className="ui form rjsf"
+  className="rjsf"
   noValidate={false}
   onSubmit={[Function]}
 >
@@ -555,7 +644,7 @@ exports[`single fields field with description in uiSchema 1`] = `
 
 exports[`single fields format color 1`] = `
 <form
-  className="ui form rjsf"
+  className="rjsf"
   noValidate={false}
   onSubmit={[Function]}
 >
@@ -625,7 +714,7 @@ exports[`single fields format color 1`] = `
 
 exports[`single fields format date 1`] = `
 <form
-  className="ui form rjsf"
+  className="rjsf"
   noValidate={false}
   onSubmit={[Function]}
 >
@@ -684,7 +773,7 @@ exports[`single fields format date 1`] = `
 
 exports[`single fields format datetime 1`] = `
 <form
-  className="ui form rjsf"
+  className="rjsf"
   noValidate={false}
   onSubmit={[Function]}
 >
@@ -743,7 +832,7 @@ exports[`single fields format datetime 1`] = `
 
 exports[`single fields format time 1`] = `
 <form
-  className="ui form rjsf"
+  className="rjsf"
   noValidate={false}
   onSubmit={[Function]}
 >
@@ -802,7 +891,7 @@ exports[`single fields format time 1`] = `
 
 exports[`single fields help and error display 1`] = `
 <form
-  className="ui form rjsf"
+  className="rjsf"
   noValidate={false}
   onSubmit={[Function]}
 >
@@ -983,7 +1072,7 @@ exports[`single fields help and error display 1`] = `
 
 exports[`single fields hidden field 1`] = `
 <form
-  className="ui form rjsf"
+  className="rjsf"
   noValidate={false}
   onSubmit={[Function]}
 >
@@ -1036,7 +1125,7 @@ exports[`single fields hidden field 1`] = `
 
 exports[`single fields hidden label 1`] = `
 <form
-  className="ui form rjsf"
+  className="rjsf"
   noValidate={false}
   onSubmit={[Function]}
 >
@@ -1095,7 +1184,7 @@ exports[`single fields hidden label 1`] = `
 
 exports[`single fields null field 1`] = `
 <form
-  className="ui form rjsf"
+  className="rjsf"
   noValidate={false}
   onSubmit={[Function]}
 >
@@ -1133,7 +1222,7 @@ exports[`single fields null field 1`] = `
 
 exports[`single fields number field 0 1`] = `
 <form
-  className="ui form rjsf"
+  className="rjsf"
   noValidate={false}
   onSubmit={[Function]}
 >
@@ -1193,7 +1282,7 @@ exports[`single fields number field 0 1`] = `
 
 exports[`single fields number field 1`] = `
 <form
-  className="ui form rjsf"
+  className="rjsf"
   noValidate={false}
   onSubmit={[Function]}
 >
@@ -1253,7 +1342,7 @@ exports[`single fields number field 1`] = `
 
 exports[`single fields password field 1`] = `
 <form
-  className="ui form rjsf"
+  className="rjsf"
   noValidate={false}
   onSubmit={[Function]}
 >
@@ -1328,7 +1417,7 @@ exports[`single fields password field 1`] = `
 
 exports[`single fields radio field 1`] = `
 <form
-  className="ui form rjsf"
+  className="rjsf"
   noValidate={false}
   onSubmit={[Function]}
 >
@@ -1487,7 +1576,7 @@ exports[`single fields radio field 1`] = `
 
 exports[`single fields schema examples 1`] = `
 <form
-  className="ui form rjsf"
+  className="rjsf"
   noValidate={false}
   onSubmit={[Function]}
 >
@@ -1606,7 +1695,7 @@ exports[`single fields schema examples 1`] = `
 
 exports[`single fields select field 1`] = `
 <form
-  className="ui form rjsf"
+  className="rjsf"
   noValidate={false}
   onSubmit={[Function]}
 >
@@ -1623,87 +1712,202 @@ exports[`single fields select field 1`] = `
         }
       }
     >
-      <div
-        className="p-dropdown p-component p-inputwrapper p-inputwrapper-filled"
-        data-p-disabled={false}
-        data-p-focus={false}
-        data-pc-name="dropdown"
-        data-pc-section="root"
+      <select
+        aria-describedby="root__error root__description root__help"
+        autoFocus={false}
+        disabled={false}
         id="root"
-        onClick={[Function]}
-        onContextMenu={null}
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
         onFocus={[Function]}
-        onMouseDown={null}
-        style={{}}
-      >
-        <div
-          className="p-hidden-accessible"
-          data-pc-section="hiddenselectedmessage"
-        >
-          <input
-            aria-describedby="root__error root__description root__help"
-            aria-haspopup="listbox"
-            data-pc-section="input"
-            defaultValue={null}
-            disabled={false}
-            id={null}
-            onBlur={[Function]}
-            onFocus={[Function]}
-            onKeyDown={[Function]}
-            readOnly={true}
-            tabIndex={0}
-            type="text"
-          />
-        </div>
-        <div
-          className="p-hidden-accessible p-dropdown-hidden-select"
-          data-pc-section="hiddenselectedmessage"
-        >
-          <select
-            data-pc-section="select"
-            defaultValue=""
-            name="root"
-            required={false}
-            tabIndex={-1}
-          >
-            <option
-              data-pc-section="option"
-              value=""
-            />
-          </select>
-        </div>
-        <span
-          className="p-dropdown-label p-inputtext p-dropdown-label-empty"
-          data-pc-section="input"
-          tabIndex="-1"
-        >
-           
-        </span>
-        <div
-          aria-expanded={false}
-          aria-haspopup="listbox"
-          aria-label={null}
-          className="p-dropdown-trigger"
-          data-pc-section="trigger"
-          role="button"
-        >
-          <svg
-            className="p-icon p-dropdown-trigger-icon p-clickable"
-            data-pc-section="dropdownicon"
-            data-pr-overlay-visible={false}
-            fill="none"
-            height="14"
-            viewBox="0 0 14 14"
-            width="14"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M7.01744 10.398C6.91269 10.3985 6.8089 10.378 6.71215 10.3379C6.61541 10.2977 6.52766 10.2386 6.45405 10.1641L1.13907 4.84913C1.03306 4.69404 0.985221 4.5065 1.00399 4.31958C1.02276 4.13266 1.10693 3.95838 1.24166 3.82747C1.37639 3.69655 1.55301 3.61742 1.74039 3.60402C1.92777 3.59062 2.11386 3.64382 2.26584 3.75424L7.01744 8.47394L11.769 3.75424C11.9189 3.65709 12.097 3.61306 12.2748 3.62921C12.4527 3.64535 12.6199 3.72073 12.7498 3.84328C12.8797 3.96582 12.9647 4.12842 12.9912 4.30502C13.0177 4.48162 12.9841 4.662 12.8958 4.81724L7.58083 10.1322C7.50996 10.2125 7.42344 10.2775 7.32656 10.3232C7.22968 10.3689 7.12449 10.3944 7.01744 10.398Z"
-              fill="currentColor"
-            />
-          </svg>
-        </div>
-      </div>
+        options={
+          [
+            {
+              "disabled": false,
+              "label": "foo",
+              "value": "0",
+            },
+            {
+              "disabled": false,
+              "label": "bar",
+              "value": "1",
+            },
+          ]
+        }
+        placeholder=""
+        value=""
+      />
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields select field multiple choice 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <select
+        aria-describedby="root__error root__description root__help"
+        autoFocus={false}
+        disabled={false}
+        display="comma"
+        id="root"
+        multiple={true}
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        options={
+          [
+            {
+              "disabled": false,
+              "label": "foo",
+              "value": "0",
+            },
+            {
+              "disabled": false,
+              "label": "bar",
+              "value": "1",
+            },
+            {
+              "disabled": false,
+              "label": "fuzz",
+              "value": "2",
+            },
+            {
+              "disabled": false,
+              "label": "qux",
+              "value": "3",
+            },
+          ]
+        }
+        pt={
+          {
+            "root": {
+              "style": {
+                "position": "relative",
+              },
+            },
+          }
+        }
+        value={[]}
+      />
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields select field multiple choice enumDisabled 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <select
+        aria-describedby="root__error root__description root__help"
+        autoFocus={false}
+        disabled={false}
+        display="comma"
+        id="root"
+        multiple={true}
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        options={
+          [
+            {
+              "disabled": false,
+              "label": "foo",
+              "value": "0",
+            },
+            {
+              "disabled": true,
+              "label": "bar",
+              "value": "1",
+            },
+            {
+              "disabled": false,
+              "label": "fuzz",
+              "value": "2",
+            },
+            {
+              "disabled": false,
+              "label": "qux",
+              "value": "3",
+            },
+          ]
+        }
+        pt={
+          {
+            "root": {
+              "style": {
+                "position": "relative",
+              },
+            },
+          }
+        }
+        value={[]}
+      />
     </div>
   </div>
   <button
@@ -1726,7 +1930,7 @@ exports[`single fields select field 1`] = `
 
 exports[`single fields select field multiple choice enumDisabled using checkboxes 1`] = `
 <form
-  className="ui form rjsf"
+  className="rjsf"
   noValidate={false}
   onSubmit={[Function]}
 >
@@ -2002,7 +2206,7 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
 
 exports[`single fields select field multiple choice formData 1`] = `
 <form
-  className="ui form rjsf"
+  className="rjsf"
   noValidate={false}
   onSubmit={[Function]}
 >
@@ -2019,71 +2223,742 @@ exports[`single fields select field multiple choice formData 1`] = `
         }
       }
     >
-      <div
+      <select
         aria-describedby="root__error root__description root__help"
         autoFocus={false}
-        className="p-multiselect p-component p-inputwrapper p-inputwrapper-filled"
-        data-pc-name="multiselect"
-        data-pc-section="root"
+        disabled={false}
+        display="comma"
         id="root"
-        onClick={[Function]}
+        multiple={true}
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        options={
+          [
+            {
+              "disabled": false,
+              "label": "foo",
+              "value": "0",
+            },
+            {
+              "disabled": false,
+              "label": "bar",
+              "value": "1",
+            },
+            {
+              "disabled": false,
+              "label": "fuzz",
+              "value": "2",
+            },
+            {
+              "disabled": false,
+              "label": "qux",
+              "value": "3",
+            },
+          ]
+        }
+        pt={
+          {
+            "root": {
+              "style": {
+                "position": "relative",
+              },
+            },
+          }
+        }
+        value={
+          [
+            "0",
+            "1",
+          ]
+        }
+      />
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields select field multiple choice with labels 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <select
+        aria-describedby="root__error root__description root__help"
+        autoFocus={false}
+        disabled={false}
+        display="comma"
+        id="root"
+        multiple={true}
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        options={
+          [
+            {
+              "disabled": false,
+              "label": "Blue",
+              "value": "0",
+            },
+            {
+              "disabled": false,
+              "label": "Red",
+              "value": "1",
+            },
+            {
+              "disabled": false,
+              "label": "Green",
+              "value": "2",
+            },
+          ]
+        }
+        pt={
+          {
+            "root": {
+              "style": {
+                "position": "relative",
+              },
+            },
+          }
+        }
+        value={[]}
+      />
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields select field single choice enumDisabled 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <select
+        aria-describedby="root__error root__description root__help"
+        autoFocus={false}
+        disabled={false}
+        id="root"
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        options={
+          [
+            {
+              "disabled": false,
+              "label": "foo",
+              "value": "0",
+            },
+            {
+              "disabled": true,
+              "label": "bar",
+              "value": "1",
+            },
+          ]
+        }
+        placeholder=""
+        value=""
+      />
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields select field single choice enumDisabled using radio widget 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <div
         style={
           {
-            "position": "relative",
+            "display": "flex",
+            "flexDirection": "row",
+            "gap": "1rem",
           }
         }
       >
         <div
-          className="p-hidden-accessible"
-          data-p-hidden-accessible={true}
-          data-pc-section="hiddeninputwrapper"
-        >
-          <input
-            aria-describedby="root__error root__description root__help"
-            aria-expanded={false}
-            data-pc-section="input"
-            disabled={false}
-            id={null}
-            name="root"
-            onBlur={[Function]}
-            onFocus={[Function]}
-            onKeyDown={[Function]}
-            readOnly={true}
-            role="combobox"
-            tabIndex={0}
-            type="text"
-            value="foo, bar"
-          />
-        </div>
-        <div
-          className="p-multiselect-label-container"
-          data-pc-section="labelcontainer"
+          style={
+            {
+              "alignItems": "center",
+              "display": "flex",
+            }
+          }
         >
           <div
-            className="p-multiselect-label p-multiselect-items-label"
-            data-pc-section="label"
+            aria-describedby="root__error root__description root__help"
+            className="p-radiobutton p-component"
+            data-p-checked={false}
+            data-pc-name="radiobutton"
+            data-pc-section="root"
+            id={null}
+            onBlur={[Function]}
+            onFocus={[Function]}
+            style={{}}
           >
-            foo, bar
+            <input
+              aria-describedby="root__error root__description root__help"
+              className="p-radiobutton-input"
+              data-pc-section="input"
+              defaultChecked={false}
+              disabled={false}
+              id="root-0"
+              name="root"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              required={false}
+              tabIndex={null}
+              type="radio"
+            />
+            <div
+              className="p-radiobutton-box"
+              data-pc-section="box"
+            >
+              <div
+                className="p-radiobutton-icon"
+                data-pc-section="icon"
+              />
+            </div>
           </div>
+          <label
+            htmlFor="root-0"
+            style={
+              {
+                "marginLeft": "8px",
+              }
+            }
+          >
+            foo
+          </label>
         </div>
         <div
-          className="p-multiselect-trigger"
-          data-pc-section="trigger"
+          style={
+            {
+              "alignItems": "center",
+              "display": "flex",
+            }
+          }
         >
-          <svg
-            className="p-icon p-multiselect-trigger-icon p-c"
-            data-pc-section="triggericon"
-            fill="none"
-            height="14"
-            viewBox="0 0 14 14"
-            width="14"
-            xmlns="http://www.w3.org/2000/svg"
+          <div
+            aria-describedby="root__error root__description root__help"
+            className="p-radiobutton p-component p-disabled"
+            data-p-checked={false}
+            data-pc-name="radiobutton"
+            data-pc-section="root"
+            id={null}
+            onBlur={[Function]}
+            onFocus={[Function]}
+            style={{}}
           >
-            <path
-              d="M7.01744 10.398C6.91269 10.3985 6.8089 10.378 6.71215 10.3379C6.61541 10.2977 6.52766 10.2386 6.45405 10.1641L1.13907 4.84913C1.03306 4.69404 0.985221 4.5065 1.00399 4.31958C1.02276 4.13266 1.10693 3.95838 1.24166 3.82747C1.37639 3.69655 1.55301 3.61742 1.74039 3.60402C1.92777 3.59062 2.11386 3.64382 2.26584 3.75424L7.01744 8.47394L11.769 3.75424C11.9189 3.65709 12.097 3.61306 12.2748 3.62921C12.4527 3.64535 12.6199 3.72073 12.7498 3.84328C12.8797 3.96582 12.9647 4.12842 12.9912 4.30502C13.0177 4.48162 12.9841 4.662 12.8958 4.81724L7.58083 10.1322C7.50996 10.2125 7.42344 10.2775 7.32656 10.3232C7.22968 10.3689 7.12449 10.3944 7.01744 10.398Z"
-              fill="currentColor"
+            <input
+              aria-describedby="root__error root__description root__help"
+              className="p-radiobutton-input"
+              data-pc-section="input"
+              defaultChecked={false}
+              disabled={true}
+              id="root-1"
+              name="root"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              required={false}
+              tabIndex={null}
+              type="radio"
             />
-          </svg>
+            <div
+              className="p-radiobutton-box"
+              data-pc-section="box"
+            >
+              <div
+                className="p-radiobutton-icon"
+                data-pc-section="icon"
+              />
+            </div>
+          </div>
+          <label
+            htmlFor="root-1"
+            style={
+              {
+                "marginLeft": "8px",
+              }
+            }
+          >
+            bar
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields select field single choice form disabled using radio widget 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <div
+        style={
+          {
+            "display": "flex",
+            "flexDirection": "row",
+            "gap": "1rem",
+          }
+        }
+      >
+        <div
+          style={
+            {
+              "alignItems": "center",
+              "display": "flex",
+            }
+          }
+        >
+          <div
+            aria-describedby="root__error root__description root__help"
+            className="p-radiobutton p-component p-disabled"
+            data-p-checked={false}
+            data-pc-name="radiobutton"
+            data-pc-section="root"
+            id={null}
+            onBlur={[Function]}
+            onFocus={[Function]}
+            style={{}}
+          >
+            <input
+              aria-describedby="root__error root__description root__help"
+              className="p-radiobutton-input"
+              data-pc-section="input"
+              defaultChecked={false}
+              disabled={true}
+              id="root-0"
+              name="root"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              required={false}
+              tabIndex={null}
+              type="radio"
+            />
+            <div
+              className="p-radiobutton-box"
+              data-pc-section="box"
+            >
+              <div
+                className="p-radiobutton-icon"
+                data-pc-section="icon"
+              />
+            </div>
+          </div>
+          <label
+            htmlFor="root-0"
+            style={
+              {
+                "marginLeft": "8px",
+              }
+            }
+          >
+            foo
+          </label>
+        </div>
+        <div
+          style={
+            {
+              "alignItems": "center",
+              "display": "flex",
+            }
+          }
+        >
+          <div
+            aria-describedby="root__error root__description root__help"
+            className="p-radiobutton p-component p-disabled"
+            data-p-checked={false}
+            data-pc-name="radiobutton"
+            data-pc-section="root"
+            id={null}
+            onBlur={[Function]}
+            onFocus={[Function]}
+            style={{}}
+          >
+            <input
+              aria-describedby="root__error root__description root__help"
+              className="p-radiobutton-input"
+              data-pc-section="input"
+              defaultChecked={false}
+              disabled={true}
+              id="root-1"
+              name="root"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              required={false}
+              tabIndex={null}
+              type="radio"
+            />
+            <div
+              className="p-radiobutton-box"
+              data-pc-section="box"
+            >
+              <div
+                className="p-radiobutton-icon"
+                data-pc-section="icon"
+              />
+            </div>
+          </div>
+          <label
+            htmlFor="root-1"
+            style={
+              {
+                "marginLeft": "8px",
+              }
+            }
+          >
+            bar
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component p-disabled"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={true}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields select field single choice formData 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <select
+        aria-describedby="root__error root__description root__help"
+        autoFocus={false}
+        disabled={false}
+        id="root"
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        options={
+          [
+            {
+              "disabled": false,
+              "label": "foo",
+              "value": "0",
+            },
+            {
+              "disabled": false,
+              "label": "bar",
+              "value": "1",
+            },
+          ]
+        }
+        placeholder=""
+        value="1"
+      />
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields select field single choice uiSchema disabled using radio widget 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <div
+        style={
+          {
+            "display": "flex",
+            "flexDirection": "row",
+            "gap": "1rem",
+          }
+        }
+      >
+        <div
+          style={
+            {
+              "alignItems": "center",
+              "display": "flex",
+            }
+          }
+        >
+          <div
+            aria-describedby="root__error root__description root__help"
+            className="p-radiobutton p-component p-disabled"
+            data-p-checked={false}
+            data-pc-name="radiobutton"
+            data-pc-section="root"
+            id={null}
+            onBlur={[Function]}
+            onFocus={[Function]}
+            style={{}}
+          >
+            <input
+              aria-describedby="root__error root__description root__help"
+              className="p-radiobutton-input"
+              data-pc-section="input"
+              defaultChecked={false}
+              disabled={true}
+              id="root-0"
+              name="root"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              required={false}
+              tabIndex={null}
+              type="radio"
+            />
+            <div
+              className="p-radiobutton-box"
+              data-pc-section="box"
+            >
+              <div
+                className="p-radiobutton-icon"
+                data-pc-section="icon"
+              />
+            </div>
+          </div>
+          <label
+            htmlFor="root-0"
+            style={
+              {
+                "marginLeft": "8px",
+              }
+            }
+          >
+            foo
+          </label>
+        </div>
+        <div
+          style={
+            {
+              "alignItems": "center",
+              "display": "flex",
+            }
+          }
+        >
+          <div
+            aria-describedby="root__error root__description root__help"
+            className="p-radiobutton p-component p-disabled"
+            data-p-checked={false}
+            data-pc-name="radiobutton"
+            data-pc-section="root"
+            id={null}
+            onBlur={[Function]}
+            onFocus={[Function]}
+            style={{}}
+          >
+            <input
+              aria-describedby="root__error root__description root__help"
+              className="p-radiobutton-input"
+              data-pc-section="input"
+              defaultChecked={false}
+              disabled={true}
+              id="root-1"
+              name="root"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              required={false}
+              tabIndex={null}
+              type="radio"
+            />
+            <div
+              className="p-radiobutton-box"
+              data-pc-section="box"
+            >
+              <div
+                className="p-radiobutton-icon"
+                data-pc-section="icon"
+              />
+            </div>
+          </div>
+          <label
+            htmlFor="root-1"
+            style={
+              {
+                "marginLeft": "8px",
+              }
+            }
+          >
+            bar
+          </label>
         </div>
       </div>
     </div>
@@ -2108,7 +2983,7 @@ exports[`single fields select field multiple choice formData 1`] = `
 
 exports[`single fields slider field 1`] = `
 <form
-  className="ui form rjsf"
+  className="rjsf"
   noValidate={false}
   onSubmit={[Function]}
 >
@@ -2125,51 +3000,19 @@ exports[`single fields slider field 1`] = `
         }
       }
     >
-      <div
+      <input
         aria-describedby="root__error root__description root__help"
-        className="p-slider p-component p-slider-horizontal"
-        data-pc-name="slider"
-        data-pc-section="root"
+        disabled={false}
         id="root"
+        max={100}
+        min={42}
         onBlur={[Function]}
-        onClick={[Function]}
+        onChange={[Function]}
         onFocus={[Function]}
         onMouseDown={[Function]}
-        style={{}}
-      >
-        <span
-          className="p-slider-range"
-          data-pc-section="range"
-          style={
-            {
-              "position": "absolute",
-              "width": "56.89655172413793%",
-            }
-          }
-        />
-        <span
-          aria-describedby="root__error root__description root__help"
-          aria-orientation="horizontal"
-          aria-valuemax={100}
-          aria-valuemin={42}
-          aria-valuenow={56.89655172413793}
-          className="p-slider-handle"
-          data-pc-section="handle"
-          onKeyDown={[Function]}
-          onMouseDown={[Function]}
-          onTouchStart={[Function]}
-          role="slider"
-          style={
-            {
-              "bottom": null,
-              "left": "56.89655172413793%",
-              "position": "absolute",
-              "transition": null,
-            }
-          }
-          tabIndex={0}
-        />
-      </div>
+        type="range"
+        value={75}
+      />
     </div>
   </div>
   <button
@@ -2192,7 +3035,7 @@ exports[`single fields slider field 1`] = `
 
 exports[`single fields string field format data-url 1`] = `
 <form
-  className="ui form rjsf"
+  className="rjsf"
   noValidate={false}
   onSubmit={[Function]}
 >
@@ -2253,7 +3096,7 @@ exports[`single fields string field format data-url 1`] = `
 
 exports[`single fields string field format email 1`] = `
 <form
-  className="ui form rjsf"
+  className="rjsf"
   noValidate={false}
   onSubmit={[Function]}
 >
@@ -2312,7 +3155,7 @@ exports[`single fields string field format email 1`] = `
 
 exports[`single fields string field format uri 1`] = `
 <form
-  className="ui form rjsf"
+  className="rjsf"
   noValidate={false}
   onSubmit={[Function]}
 >
@@ -2371,7 +3214,7 @@ exports[`single fields string field format uri 1`] = `
 
 exports[`single fields string field regular 1`] = `
 <form
-  className="ui form rjsf"
+  className="rjsf"
   noValidate={false}
   onSubmit={[Function]}
 >
@@ -2430,7 +3273,7 @@ exports[`single fields string field regular 1`] = `
 
 exports[`single fields string field with placeholder 1`] = `
 <form
-  className="ui form rjsf"
+  className="rjsf"
   noValidate={false}
   onSubmit={[Function]}
 >
@@ -2489,7 +3332,7 @@ exports[`single fields string field with placeholder 1`] = `
 
 exports[`single fields textarea field 1`] = `
 <form
-  className="ui form rjsf"
+  className="rjsf"
   noValidate={false}
   onSubmit={[Function]}
 >
@@ -2546,7 +3389,7 @@ exports[`single fields textarea field 1`] = `
 
 exports[`single fields title field 1`] = `
 <form
-  className="ui form rjsf"
+  className="rjsf"
   noValidate={false}
   onSubmit={[Function]}
 >
@@ -2661,7 +3504,7 @@ exports[`single fields title field 1`] = `
 
 exports[`single fields unsupported field 1`] = `
 <form
-  className="ui form rjsf"
+  className="rjsf"
   noValidate={false}
   onSubmit={[Function]}
 >
@@ -2720,7 +3563,7 @@ exports[`single fields unsupported field 1`] = `
 
 exports[`single fields up/down field 1`] = `
 <form
-  className="ui form rjsf"
+  className="rjsf"
   noValidate={false}
   onSubmit={[Function]}
 >
@@ -2863,7 +3706,7 @@ exports[`single fields up/down field 1`] = `
 
 exports[`single fields using custom tagName 1`] = `
 <div
-  className="ui form rjsf"
+  className="rjsf"
   noValidate={false}
   onSubmit={[Function]}
 >
