@@ -2,7 +2,7 @@
 
 exports[`object fields additionalProperties 1`] = `
 <form
-  className="ui form rjsf"
+  className="rjsf"
   noValidate={false}
   onSubmit={[Function]}
 >
@@ -120,6 +120,7 @@ exports[`object fields additionalProperties 1`] = `
             data-pc-name="button"
             data-pc-section="root"
             disabled={false}
+            id="root_foo__remove"
             onClick={[Function]}
             title="Remove"
           >
@@ -153,6 +154,7 @@ exports[`object fields additionalProperties 1`] = `
           data-pc-name="button"
           data-pc-section="root"
           disabled={false}
+          id="root__add"
           onClick={[Function]}
         >
           <span
@@ -189,7 +191,7 @@ exports[`object fields additionalProperties 1`] = `
 
 exports[`object fields object 1`] = `
 <form
-  className="ui form rjsf"
+  className="rjsf"
   noValidate={false}
   onSubmit={[Function]}
 >
@@ -313,7 +315,7 @@ exports[`object fields object 1`] = `
 
 exports[`object fields show add button and fields if additionalProperties is true and not an object 1`] = `
 <form
-  className="ui form rjsf"
+  className="rjsf"
   noValidate={false}
   onSubmit={[Function]}
 >
@@ -431,6 +433,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
             data-pc-name="button"
             data-pc-section="root"
             disabled={false}
+            id="root_additionalProperty__remove"
             onClick={[Function]}
             title="Remove"
           >
@@ -464,6 +467,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
           data-pc-name="button"
           data-pc-section="root"
           disabled={false}
+          id="root__add"
           onClick={[Function]}
         >
           <span
@@ -500,7 +504,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
 
 exports[`object fields with title and description additionalProperties 1`] = `
 <form
-  className="ui form rjsf"
+  className="rjsf"
   noValidate={false}
   onSubmit={[Function]}
 >
@@ -665,6 +669,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
             data-pc-name="button"
             data-pc-section="root"
             disabled={false}
+            id="root_foo__remove"
             onClick={[Function]}
             title="Remove"
           >
@@ -698,6 +703,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
           data-pc-name="button"
           data-pc-section="root"
           disabled={false}
+          id="root__add"
           onClick={[Function]}
         >
           <span
@@ -734,7 +740,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
 
 exports[`object fields with title and description from both additionalProperties 1`] = `
 <form
-  className="ui form rjsf"
+  className="rjsf"
   noValidate={false}
   onSubmit={[Function]}
 >
@@ -899,6 +905,7 @@ exports[`object fields with title and description from both additionalProperties
             data-pc-name="button"
             data-pc-section="root"
             disabled={false}
+            id="root_foo__remove"
             onClick={[Function]}
             title="Remove"
           >
@@ -932,6 +939,7 @@ exports[`object fields with title and description from both additionalProperties
           data-pc-name="button"
           data-pc-section="root"
           disabled={false}
+          id="root__add"
           onClick={[Function]}
         >
           <span
@@ -968,7 +976,7 @@ exports[`object fields with title and description from both additionalProperties
 
 exports[`object fields with title and description from both object 1`] = `
 <form
-  className="ui form rjsf"
+  className="rjsf"
   noValidate={false}
   onSubmit={[Function]}
 >
@@ -1153,7 +1161,7 @@ exports[`object fields with title and description from both object 1`] = `
 
 exports[`object fields with title and description from uiSchema additionalProperties 1`] = `
 <form
-  className="ui form rjsf"
+  className="rjsf"
   noValidate={false}
   onSubmit={[Function]}
 >
@@ -1318,6 +1326,7 @@ exports[`object fields with title and description from uiSchema additionalProper
             data-pc-name="button"
             data-pc-section="root"
             disabled={false}
+            id="root_foo__remove"
             onClick={[Function]}
             title="Remove"
           >
@@ -1351,6 +1360,7 @@ exports[`object fields with title and description from uiSchema additionalProper
           data-pc-name="button"
           data-pc-section="root"
           disabled={false}
+          id="root__add"
           onClick={[Function]}
         >
           <span
@@ -1387,7 +1397,7 @@ exports[`object fields with title and description from uiSchema additionalProper
 
 exports[`object fields with title and description from uiSchema object 1`] = `
 <form
-  className="ui form rjsf"
+  className="rjsf"
   noValidate={false}
   onSubmit={[Function]}
 >
@@ -1572,7 +1582,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
 
 exports[`object fields with title and description from uiSchema show add button and fields if additionalProperties is true and not an object 1`] = `
 <form
-  className="ui form rjsf"
+  className="rjsf"
   noValidate={false}
   onSubmit={[Function]}
 >
@@ -1737,6 +1747,7 @@ exports[`object fields with title and description from uiSchema show add button 
             data-pc-name="button"
             data-pc-section="root"
             disabled={false}
+            id="root_additionalProperty__remove"
             onClick={[Function]}
             title="Remove"
           >
@@ -1770,6 +1781,7 @@ exports[`object fields with title and description from uiSchema show add button 
           data-pc-name="button"
           data-pc-section="root"
           disabled={false}
+          id="root__add"
           onClick={[Function]}
         >
           <span
@@ -1806,7 +1818,7 @@ exports[`object fields with title and description from uiSchema show add button 
 
 exports[`object fields with title and description object 1`] = `
 <form
-  className="ui form rjsf"
+  className="rjsf"
   noValidate={false}
   onSubmit={[Function]}
 >
@@ -1991,7 +2003,7 @@ exports[`object fields with title and description object 1`] = `
 
 exports[`object fields with title and description show add button and fields if additionalProperties is true and not an object 1`] = `
 <form
-  className="ui form rjsf"
+  className="rjsf"
   noValidate={false}
   onSubmit={[Function]}
 >
@@ -2156,6 +2168,7 @@ exports[`object fields with title and description show add button and fields if 
             data-pc-name="button"
             data-pc-section="root"
             disabled={false}
+            id="root_additionalProperty__remove"
             onClick={[Function]}
             title="Remove"
           >
@@ -2189,6 +2202,7 @@ exports[`object fields with title and description show add button and fields if 
           data-pc-name="button"
           data-pc-section="root"
           disabled={false}
+          id="root__add"
           onClick={[Function]}
         >
           <span
@@ -2225,7 +2239,7 @@ exports[`object fields with title and description show add button and fields if 
 
 exports[`object fields with title and description with global label off additionalProperties 1`] = `
 <form
-  className="ui form rjsf"
+  className="rjsf"
   noValidate={false}
   onSubmit={[Function]}
 >
@@ -2337,6 +2351,7 @@ exports[`object fields with title and description with global label off addition
             data-pc-name="button"
             data-pc-section="root"
             disabled={false}
+            id="root_foo__remove"
             onClick={[Function]}
             title="Remove"
           >
@@ -2370,6 +2385,7 @@ exports[`object fields with title and description with global label off addition
           data-pc-name="button"
           data-pc-section="root"
           disabled={false}
+          id="root__add"
           onClick={[Function]}
         >
           <span
@@ -2406,7 +2422,7 @@ exports[`object fields with title and description with global label off addition
 
 exports[`object fields with title and description with global label off object 1`] = `
 <form
-  className="ui form rjsf"
+  className="rjsf"
   noValidate={false}
   onSubmit={[Function]}
 >
@@ -2518,7 +2534,7 @@ exports[`object fields with title and description with global label off object 1
 
 exports[`object fields with title and description with global label off show add button and fields if additionalProperties is true and not an object 1`] = `
 <form
-  className="ui form rjsf"
+  className="rjsf"
   noValidate={false}
   onSubmit={[Function]}
 >
@@ -2630,6 +2646,7 @@ exports[`object fields with title and description with global label off show add
             data-pc-name="button"
             data-pc-section="root"
             disabled={false}
+            id="root_additionalProperty__remove"
             onClick={[Function]}
             title="Remove"
           >
@@ -2663,6 +2680,7 @@ exports[`object fields with title and description with global label off show add
           data-pc-name="button"
           data-pc-section="root"
           disabled={false}
+          id="root__add"
           onClick={[Function]}
         >
           <span
