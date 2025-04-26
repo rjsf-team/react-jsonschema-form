@@ -6,6 +6,7 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
 } from '@rjsf/utils';
+
 import { Label } from '../util';
 
 export default function FieldTemplate<

@@ -1,3 +1,4 @@
+import { ChangeEvent } from 'react';
 import {
   ariaDescribedByIds,
   FormContextType,
@@ -6,7 +7,6 @@ import {
   StrictRJSFSchema,
   WidgetProps,
 } from '@rjsf/utils';
-import { ChangeEvent } from 'react';
 import { ColorPicker } from 'primereact/colorpicker';
 
 export default function ColorWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(

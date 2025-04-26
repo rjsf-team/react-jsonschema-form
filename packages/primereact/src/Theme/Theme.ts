@@ -13,7 +13,6 @@ export function generateTheme<
   return {
     templates: generateTemplates<T, S, F>(),
     widgets: generateWidgets<T, S, F>(),
-    _internalFormWrapper: SuiForm,
   };
 }
 

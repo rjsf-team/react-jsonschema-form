@@ -12,6 +12,7 @@ import {
   descriptionId,
   getTemplate,
 } from '@rjsf/utils';
+
 import { Label } from '../util';
 
 /** The `CheckboxesWidget` is a widget for rendering checkbox groups.

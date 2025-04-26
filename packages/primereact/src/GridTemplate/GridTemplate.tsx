@@ -1,5 +1,5 @@
-import { GridTemplateProps } from '@rjsf/utils';
 import { useEffect, useState } from 'react';
+import { GridTemplateProps } from '@rjsf/utils';
 
 const breakpoints = {
   xs: 0,
