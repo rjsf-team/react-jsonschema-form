@@ -1,3 +1,4 @@
+import { ChangeEvent, useState } from 'react';
 import {
   ariaDescribedByIds,
   FormContextType,
@@ -6,7 +7,6 @@ import {
   StrictRJSFSchema,
   WidgetProps,
 } from '@rjsf/utils';
-import { ChangeEvent, useState } from 'react';
 import { AutoComplete, AutoCompleteCompleteEvent } from 'primereact/autocomplete';
 
 export default function AutoCompleteWidget<

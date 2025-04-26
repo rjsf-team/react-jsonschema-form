@@ -10,6 +10,7 @@ import {
   WidgetProps,
 } from '@rjsf/utils';
 import { Checkbox, CheckboxChangeEvent } from 'primereact/checkbox';
+
 import { Label } from '../util';
 
 /** The `CheckBoxWidget` is a widget for rendering boolean properties.

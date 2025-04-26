@@ -1,3 +1,4 @@
+import { ChangeEvent } from 'react';
 import {
   ariaDescribedByIds,
   BaseInputTemplateProps,
@@ -7,7 +8,6 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
 } from '@rjsf/utils';
-import { ChangeEvent } from 'react';
 import { InputText } from 'primereact/inputtext';
 
 /** The `BaseInputTemplate` is the template the fallback if no widget is specified.

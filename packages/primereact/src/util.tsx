@@ -9,7 +9,7 @@ import {
   UIOptionsType,
 } from '@rjsf/utils';
 
-export type SemanticPropsTypes<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any> = {
+export type PrimePropsTypes<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any> = {
   formContext?: F;
   uiSchema?: UiSchema<T, S, F>;
   options?: UIOptionsType<T, S, F>;
@@ -17,7 +17,7 @@ export type SemanticPropsTypes<T = any, S extends StrictRJSFSchema = RJSFSchema,
   defaultContextProps?: GenericObjectType;
 };
 
-export type SemanticErrorPropsType<
+export type PrimeErrorPropsType<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
@@ -34,7 +34,7 @@ export type WrapProps = GenericObjectType & {
 };
 
 /**
- * Extract props meant for semantic UI components from props that are
+ * Extract props meant for prime UI components from props that are
  * passed to Widgets, Templates and Fields.
  * @param {Object} params
  * @param {Object?} params.formContext
@@ -44,7 +44,7 @@ export type WrapProps = GenericObjectType & {
  * @param {Object?} params.defaultContextProps
  * @returns {any}
  */
-export function getSemanticProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
+export function getPrimeProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
   formContext = {} as F,
   uiSchema = {},
   options = {},
@@ -53,7 +53,7 @@ export function getSemanticProps<T = any, S extends StrictRJSFSchema = RJSFSchem
     inverted: false,
   },
   defaultContextProps = {},
-}: SemanticPropsTypes<T, S, F>) {
+}: PrimePropsTypes<T, S, F>) {
   const formContextProps = formContext.semantic;
   const schemaProps = getUiOptions<T, S, F>(uiSchema).semantic;
   const optionProps = options.semantic;
@@ -69,7 +69,7 @@ export function getSemanticProps<T = any, S extends StrictRJSFSchema = RJSFSchem
 }
 
 /**
- * Extract error props meant for semantic UI components from props that are
+ * Extract error props meant for prime UI components from props that are
  * passed to Widgets, Templates and Fields.
  * @param {Object} params
  * @param {Object?} params.formContext
@@ -77,7 +77,7 @@ export function getSemanticProps<T = any, S extends StrictRJSFSchema = RJSFSchem
  * @param {Object?} params.defaultProps
  * @returns {any}
  */
-export function getSemanticErrorProps<
+export function getPrimeErrorProps<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
@@ -86,7 +86,7 @@ export function getSemanticErrorProps<
   uiSchema = {},
   options = {},
   defaultProps = { size: 'small', pointing: 'above' },
-}: SemanticErrorPropsType<T, S, F>) {
+}: PrimeErrorPropsType<T, S, F>) {
   const formContextProps = formContext.semantic && formContext.semantic.errorOptions;
   const semanticOptions: GenericObjectType = getUiOptions<T, S, F>(uiSchema).semantic as GenericObjectType;
   const schemaProps = semanticOptions && semanticOptions.errorOptions;

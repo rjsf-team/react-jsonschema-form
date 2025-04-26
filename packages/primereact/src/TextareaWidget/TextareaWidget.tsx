@@ -1,4 +1,4 @@
-import React from 'react';
+import { ChangeEvent } from 'react';
 import { InputTextarea } from 'primereact/inputtextarea';
 import { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
 
@@ -20,7 +20,7 @@ export default function TextareaWidget<
     rows = Number(options.rows);
   }
 
-  const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const handleChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
     onChange(event.target.value === '' ? options.emptyValue : event.target.value);
   };
 
