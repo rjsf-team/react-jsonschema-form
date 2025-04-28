@@ -1,5 +1,5 @@
 import { errorId, FieldErrorProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { FormErrorMessage, List, ListItem } from '@chakra-ui/react';
+import { ListItem, ListRoot, Text } from '@chakra-ui/react';
 
 /** The `FieldErrorTemplate` component renders the errors local to the particular field
  *
@@ -17,14 +17,14 @@ export default function FieldErrorTemplate<
   const id = errorId<T>(idSchema);
 
   return (
-    <List>
+    <ListRoot>
       {errors.map((error, i: number) => {
         return (
           <ListItem key={i}>
-            <FormErrorMessage id={id}>{error}</FormErrorMessage>
+            <Text id={id}>{error}</Text>
           </ListItem>
         );
       })}
-    </List>
+    </ListRoot>
   );
 }

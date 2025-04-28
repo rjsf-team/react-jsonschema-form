@@ -1,5 +1,5 @@
-import { FocusEvent } from 'react';
-import { FormControl, FormLabel, Radio, RadioGroup, Stack } from '@chakra-ui/react';
+import { ChangeEvent, FocusEvent } from 'react';
+import { Stack } from '@chakra-ui/react';
 import {
   ariaDescribedByIds,
   enumOptionsIndexForValue,
@@ -11,7 +11,9 @@ import {
   StrictRJSFSchema,
   WidgetProps,
 } from '@rjsf/utils';
-import { getChakra } from '../utils';
+
+import { Field } from '../components/ui/field';
+import { Radio, RadioGroup } from '../components/ui/radio';
 
 export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
   id,
@@ -25,12 +27,11 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
   onChange,
   onBlur,
   onFocus,
-  uiSchema,
 }: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, emptyValue } = options;
-  const chakraProps = getChakra({ uiSchema });
 
-  const _onChange = (nextValue: any) => onChange(enumOptionsValueForIndex<S>(nextValue, enumOptions, emptyValue));
+  const _onChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) =>
+    onChange(enumOptionsValueForIndex<S>(value, enumOptions, emptyValue));
   const _onBlur = ({ target: { value } }: FocusEvent<HTMLInputElement>) =>
     onBlur(id, enumOptionsValueForIndex<S>(value, enumOptions, emptyValue));
   const _onFocus = ({ target: { value } }: FocusEvent<HTMLInputElement>) =>
@@ -40,13 +41,13 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
   const selectedIndex = (enumOptionsIndexForValue<S>(value, enumOptions) as string) ?? null;
 
   return (
-    <FormControl mb={1} {...chakraProps} isDisabled={disabled || readonly} isRequired={required} isReadOnly={readonly}>
-      {labelValue(
-        <FormLabel htmlFor={id} id={`${id}-label`}>
-          {label}
-        </FormLabel>,
-        hideLabel || !label,
-      )}
+    <Field
+      mb={1}
+      disabled={disabled || readonly}
+      required={required}
+      readOnly={readonly}
+      label={labelValue(label, hideLabel || !label)}
+    >
       <RadioGroup
         onChange={_onChange}
         onBlur={_onBlur}
@@ -73,6 +74,6 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
             })}
         </Stack>
       </RadioGroup>
-    </FormControl>
+    </Field>
   );
 }

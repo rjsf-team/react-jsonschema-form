@@ -1,6 +1,6 @@
 import { FormContextType, IconButtonProps, RJSFSchema, StrictRJSFSchema, TranslatableString } from '@rjsf/utils';
 
-import { ArrowUpIcon, ArrowDownIcon, CopyIcon, DeleteIcon } from '@chakra-ui/icons';
+import { ArrowUpIcon, ArrowDownIcon, CopyIcon, DeleteIcon } from 'lucide-react';
 import ChakraIconButton from './ChakraIconButton';
 
 export function CopyButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(

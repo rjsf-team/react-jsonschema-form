@@ -1,3 +1,4 @@
+import { Fieldset } from '@chakra-ui/react';
 import {
   FieldTemplateProps,
   FormContextType,
@@ -6,7 +7,6 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
 } from '@rjsf/utils';
-import { Text, FormControl } from '@chakra-ui/react';
 
 export default function FieldTemplate<
   T = any,
@@ -61,12 +61,12 @@ export default function FieldTemplate<
       uiSchema={uiSchema}
       registry={registry}
     >
-      <FormControl isRequired={required} isInvalid={rawErrors && rawErrors.length > 0}>
-        {children}
-        {displayLabel && rawDescription ? <Text mt={2}>{description}</Text> : null}
-        {errors}
+      <Fieldset.Root disabled={disabled} invalid={rawErrors && rawErrors.length > 0}>
+        {displayLabel && rawDescription ? <Fieldset.Legend mt={2}>{description}</Fieldset.Legend> : null}
         {help}
-      </FormControl>
+        <Fieldset.Content>{children}</Fieldset.Content>
+        {errors && <Fieldset.ErrorText>{errors}</Fieldset.ErrorText>}
+      </Fieldset.Root>
     </WrapIfAdditionalTemplate>
   );
 }
