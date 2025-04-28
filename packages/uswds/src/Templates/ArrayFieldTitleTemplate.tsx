@@ -1,34 +1,23 @@
-import React from "react";
-import {
-  TitleFieldProps,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-} from "@rjsf/utils";
+import React from 'react';
+import { ArrayFieldTitleProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 
-/** The `ArrayFieldTitleTemplate` component renders a title for an array field.
+/** The `ArrayFieldTitleTemplate` component renders the title for an array field
  *
- * @param props - The `TitleFieldProps` for the component
+ * @param props - The `ArrayFieldTitleProps` for this component
  */
-const ArrayFieldTitleTemplate = <
+export default function ArrayFieldTitleTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
->({
-  title,
-  idSchema,
-  required,
-}: TitleFieldProps<T, S, F>) => {
+>({ id, title, required }: ArrayFieldTitleProps<T, S, F>) {
   if (!title) {
     return null;
   }
-  const id = `${idSchema.$id}__title`;
+
   return (
-    <legend id={id} className="usa-legend">
+    <legend id={id}>
       {title}
-      {required && <span className="usa-label--required"> *</span>}
+      {required && <span className="required">*</span>}
     </legend>
   );
-};
-
-export default ArrayFieldTitleTemplate;
+}

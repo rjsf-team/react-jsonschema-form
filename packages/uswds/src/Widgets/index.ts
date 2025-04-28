@@ -1,2 +1,1 @@
-export { default } from './Widgets';
-export * from './Widgets';
+export { default as generateWidgets } from './Widgets';

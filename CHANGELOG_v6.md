@@ -25,6 +25,7 @@ should change the heading of the (upcoming) version to include a major version b
 - BREAKING CHANGE: Removed support for version 4 of `antd`
 - Updated `ArrayFieldItemTemplate` to replace `Button.Group` with `Space.Compact` since `Button.Group` is deprecated in `antd` version 5
 - Upgraded to `@ant-design/icon@5`
+- fix: Ensure peer dependencies align with v6 beta versions.
 
 ## @rjsf/chakra-ui
 
@@ -33,6 +34,7 @@ should change the heading of the (upcoming) version to include a major version b
 - BREAKING CHANGE: Refactored `ArrayFieldItemTemplate` to use the new `ArrayFieldItemButtonsTemplate`
 - Updated the `ArrayFieldTemplate`, `ObjectFieldTemplate`, and `WrapIfAdditionalTemplate` to a unique id using the `buttonId()` function and adding consistent marker classes
 - Implemented the `GridTemplate` component, adding it to the `templates` for the theme
+- fix: Ensure peer dependencies align with v6 beta versions.
 
 ## @rjsf/core
 
@@ -47,6 +49,8 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/daisyui
 
 - Added new theme!
+- fix: Ensure peer dependencies align with v6 beta versions.
+- fix: Remove unused FontAwesome dependency causing build issues.
 
 ## @rjsf/fluent-ui
 
@@ -57,6 +61,7 @@ should change the heading of the (upcoming) version to include a major version b
 - BREAKING CHANGE: Refactored `ArrayFieldItemTemplate` to use the new `ArrayFieldItemButtonsTemplate`
 - Updated the `ArrayFieldTemplate`, `ObjectFieldTemplate`, and `WrapIfAdditionalTemplate` to a unique id using the `buttonId()` function and adding consistent marker classes
 - Implemented the `GridTemplate` component, adding it to the `templates` for the theme
+- fix: Ensure peer dependencies align with v6 beta versions.
 
 ## @rjsf/mui
 
@@ -64,26 +69,46 @@ should change the heading of the (upcoming) version to include a major version b
 - Updated the `ArrayFieldTemplate`, `ObjectFieldTemplate`, and `WrapIfAdditionalTemplate` to a unique id using the `buttonId()` function and adding consistent marker classes
 - Updated the theme to use `Grid2` instead of the deprecated `Grid`
 - Implemented the `GridTemplate` component, adding it to the `templates` for the theme
+- fix: Ensure peer dependencies align with v6 beta versions.
+
+## @rjsf/react-bootstrap
+
+- Added new package to replace `@rjsf/bootstrap-4`
+- `react-bootstrap` peer dependency bumped to `^2.0.0`, corresponding to Bootstrap 5
+- CheckboxesWidget: Remove deprecated prop `custom`
+- IconButton: Remove deprecated `block` prop
+- RangeWidget: Use `FormRange` component
+- SelectWidget: Use new FormSelect component, remove `bsPrefix` prop to achieve correct styling
+- fix: Ensure peer dependencies align with v6 beta versions.
 
 ## @rjsf/semantic-ui
 
 - BREAKING CHANGE: Refactored `ArrayFieldItemTemplate` to use the new `ArrayFieldItemButtonsTemplate`
 - Updated the `ArrayFieldTemplate`, `ObjectFieldTemplate`, and `WrapIfAdditionalTemplate` to a unique id using the `buttonId()` function and adding consistent marker classes
 - Implemented the `GridTemplate` component, adding it to the `templates` for the theme
+- fix: Ensure peer dependencies align with v6 beta versions.
 
 ## @rjsf/shadcn
 
 - Added new theme!
+- fix: Ensure peer dependencies align with v6 beta versions.
 
 ## @rjsf/uswds
 
 - BREAKING: Initial release of the USWDS theme package (`@rjsf/uswds`).
 - BREAKING: Uses components from `@trussworks/react-uswds` library for core form elements, templates, and buttons.
 - feat: Implemented `GridTemplate` using `@trussworks/react-uswds` Grid components.
-- fix: Extensible for custom props `@rjsf/uswds` *if needed but defaults to `@trussworks/react-uswds` components (`FormGroup`, `Label`, `TextInput`, `Grid`).
+- fix: Refactored `WrapIfAdditionalTemplate` to use `@trussworks/react-uswds` components (`FormGroup`, `Label`, `TextInput`, `Grid`).
 - fix: Refactored all Widgets to use components from `@trussworks/react-uswds`.
-- fix: Refactored all Templates (Field, ErrorList, Buttons, etc.) to use components from `@trussworks/react-uswds`.
-- test: Uses standard `@rjsf/snapshot-tests` tests for `@rjsf/uswds`.
+- fix: Refactored all Templates (Field, ErrorList, Buttons, ArrayField*, ObjectField*, TitleField*, etc.) to use components from `@trussworks/react-uswds`.
+- fix: Removed unused `BaseInputTemplate` and `Templates.tsx`.
+- fix: Updated `GridTemplate` to accept `className` and `style` props for consistency.
+- fix: Ensure `Widgets/index.ts` correctly exports `generateWidgets`.
+- fix: Remove unused FontAwesome dependency causing build issues.
+- fix: Remove deprecated `defaultProps` from `TextareaWidget`.
+- fix: Ensure peer dependencies align with v6 beta versions.
+- test: Uses standard snapshot tests for `@rjsf/uswds`.
+- test: Added `@testing-library/react` for testing components.
 
 ## @rjsf/utils
 
@@ -126,6 +151,9 @@ should change the heading of the (upcoming) version to include a major version b
 - Added the `v6.x upgrade guide.md` documentation
 - Updated the `playground` to add a `Layout Grid` example and made the selected example now be part of the shared export
 - Replaced Lerna with Nx, updated all lerna commands to use the Nx CLI
+- fix(playground): Update dependencies to use `workspace:` protocol for local linking.
+- fix(playground): Update `index.tsx` to use React 18 `createRoot` API.
+- fix(docs): Update theme table for v6 changes (add USWDS, remove deprecated).
 - BREAKING CHANGE: Updated all `peerDependencies` to change minimal `React` support to `>=18`
 
 # 6.0.0-alpha.0

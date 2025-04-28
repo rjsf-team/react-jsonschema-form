@@ -1,6 +1,6 @@
-import { gridTests } from "@rjsf/snapshot-tests";
+import Form from '../src';
+import { createSchemaTest } from '../schemaTests';
 
-import Theme from "../src";
-
-// Run the snapshot tests for the GridTemplate using the theme and directory context
-gridTests(Theme, __dirname);
+createSchemaTest(Form, {
+  // Add test schema and options specific to GridTemplate if needed
+});

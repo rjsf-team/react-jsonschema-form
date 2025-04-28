@@ -1,43 +1,27 @@
-import React from "react";
 import {
   ErrorListProps,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
   TranslatableString,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
+import { Alert } from '@trussworks/react-uswds';
 
-/** The `ErrorListTemplate` component renders the errors in the form
+/** The `ErrorList` component is the template that renders the all the errors associated with the fields in the `Form`
  *
- * @param props - The `ErrorListProps` for the component
+ * @param props - The `ErrorListProps` for this component
  */
-const ErrorListTemplate = <
+export default function ErrorListTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
->({
-  errors,
-  registry,
-}: ErrorListProps<T, S, F>) => {
+>({ errors, registry }: ErrorListProps<T, S, F>) {
   const { translateString } = registry;
   return (
-    <div className="usa-alert usa-alert--error" role="alert">
-      <div className="usa-alert__body">
-        <h4 className="usa-alert__heading">
-          {translateString(TranslatableString.ErrorsLabel)}
-        </h4>
-        <ul className="usa-list usa-list--unstyled">
-          {errors.map((error, i: number) => {
-            return (
-              <li key={i} className="usa-alert__text">
-                {error.stack}
-              </li>
-            );
-          })}
-        </ul>
-      </div>
-    </div>
+    <Alert type="error" heading={translateString(TranslatableString.Errors)} headingLevel="h4" slim>
+      {errors.map((error, i: number) => {
+        return <li key={i}>{error.stack}</li>;
+      })}
+    </Alert>
   );
-};
-
-export default ErrorListTemplate;
+}

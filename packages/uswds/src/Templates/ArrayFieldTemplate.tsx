@@ -1,4 +1,3 @@
-import React from "react";
 import {
   getTemplate,
   getUiOptions,
@@ -7,90 +6,97 @@ import {
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
+import { Fieldset, Grid } from '@trussworks/react-uswds';
 
-const ArrayFieldTemplate = <
+/** The `ArrayFieldTemplate` component is the template used to render all items in an array.
+ *
+ * @param props - The `ArrayFieldTemplateProps` for this component
+ */
+export default function ArrayFieldTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
->(
-  props: ArrayFieldTemplateProps<T, S, F>,
-) => {
+>(props: ArrayFieldTemplateProps<T, S, F>) {
   const {
     canAdd,
     className,
-    disabled,
-    formContext,
+    disabled = false,
     idSchema,
     items,
     onAddClick,
-    readonly,
+    readonly = false,
     registry,
     required,
     schema,
     title,
     uiSchema,
   } = props;
-
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const ArrayFieldDescriptionTemplate = getTemplate<
-    "ArrayFieldDescriptionTemplate",
-    T,
-    S,
-    F
-  >("ArrayFieldDescriptionTemplate", registry, uiOptions);
-  const ArrayFieldItemTemplate = getTemplate<"ArrayFieldItemTemplate", T, S, F>(
-    "ArrayFieldItemTemplate",
+  const ArrayFieldDescriptionTemplate = getTemplate<'ArrayFieldDescriptionTemplate', T, S, F>(
+    'ArrayFieldDescriptionTemplate',
     registry,
     uiOptions,
   );
-  const ArrayFieldTitleTemplate = getTemplate<
-    "ArrayFieldTitleTemplate",
-    T,
-    S,
-    F
-  >("ArrayFieldTitleTemplate", registry, uiOptions);
-  // ButtonTemplates are specified in the registry
-  const { AddButton } = registry.templates.ButtonTemplates;
+  const ArrayFieldItemTemplate = getTemplate<'ArrayFieldItemTemplate', T, S, F>(
+    'ArrayFieldItemTemplate',
+    registry,
+    uiOptions,
+  );
+  const ArrayFieldTitleTemplate = getTemplate<'ArrayFieldTitleTemplate', T, S, F>(
+    'ArrayFieldTitleTemplate',
+    registry,
+    uiOptions,
+  );
+  const { AddButton } = registry.templates.ButtonTemplates!;
+  const fieldTitle = uiOptions.title ?? title;
+  const fieldDescription = uiOptions.description ?? schema.description;
+  const hideTitle = !fieldTitle;
 
   return (
-    <fieldset className={className} id={idSchema.$id}>
-      <ArrayFieldTitleTemplate
-        idSchema={idSchema}
-        title={uiOptions.title || title}
-        required={required}
-        schema={schema}
-        uiSchema={uiSchema}
-        registry={registry}
-      />
-      <ArrayFieldDescriptionTemplate
-        idSchema={idSchema}
-        description={uiOptions.description || schema.description}
-        schema={schema}
-        uiSchema={uiSchema}
-        registry={registry}
-      />
-      <div className="rjsf-uswds-array-items-list">
-        {items &&
-          items.map(({ key, ...itemProps }: ArrayFieldTemplateItemType<T, S, F>) => (
-            <ArrayFieldItemTemplate key={key} {...itemProps} />
-          ))}
-      </div>
-
-      {canAdd && (
-        <div className="margin-top-2 text-right">
-          <AddButton
-            className="array-item-add"
-            onClick={onAddClick}
-            disabled={disabled || readonly}
+    <div className={className}>
+      <Fieldset>
+        {!hideTitle && (
+          <ArrayFieldTitleTemplate
+            key={`array-field-title-${idSchema.$id}`}
+            id={idSchema.$id}
+            title={fieldTitle}
+            required={required}
+            schema={schema}
             uiSchema={uiSchema}
             registry={registry}
           />
+        )}
+        {(uiOptions.description || schema.description) && (
+          <ArrayFieldDescriptionTemplate
+            key={`array-field-description-${idSchema.$id}`}
+            id={`${idSchema.$id}__description`}
+            description={fieldDescription!}
+            schema={schema}
+            uiSchema={uiSchema}
+            registry={registry}
+          />
+        )}
+        <div key={`array-item-list-${idSchema.$id}`} className="rjsf-uswds-array-item-list">
+          {items &&
+            items.map(({ key, ...itemProps }: ArrayFieldTemplateItemType<T, S, F>) => (
+              <ArrayFieldItemTemplate key={key} {...itemProps} />
+            ))}
         </div>
-      )}
-    </fieldset>
+        {canAdd && (
+          <div className="row rjsf-uswds-array-add-button">
+            <Grid col="auto">
+              <AddButton
+                className="array-item-add"
+                onClick={onAddClick}
+                disabled={disabled || readonly}
+                uiSchema={uiSchema}
+                registry={registry}
+              />
+            </Grid>
+          </div>
+        )}
+      </Fieldset>
+    </div>
   );
-};
-
-export default ArrayFieldTemplate;
-
+}

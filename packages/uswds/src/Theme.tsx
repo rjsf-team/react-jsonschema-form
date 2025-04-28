@@ -1,31 +1,31 @@
 import {
-  ThemeProps,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
-} from "@rjsf/utils";
+  TemplatesType,
+  RegistryWidgetsType,
+} from '@rjsf/utils';
+import templates from './Templates';
+import { generateWidgets } from './Widgets'; // Import the named export
 
-import { generateTemplates } from "./Templates";
-import { generateWidgets } from "./Widgets";
-
-/** The `generateTheme` function generates the theme object for the USWDS theme.
- * It is used to merge the generated templates and widgets into a single theme object.
+/** Create a theme object using the Form, Templates and Widgets defined in the theme
  *
- * @returns The `ThemeProps` object for the USWDS theme
+ * @param props - The `ThemeProps` for the theme
+ * @returns - The theme object
  */
 export function generateTheme<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
->(): ThemeProps<T, S, F> {
-  // Always use the generated templates and widgets (which now use @trussworks/react-uswds)
+>(): {
+  templates: TemplatesType<T, S, F>;
+  widgets: RegistryWidgetsType<T, S, F>;
+} {
+  const widgets = generateWidgets<T, S, F>(); // Call generateWidgets here
   return {
-    templates: generateTemplates<T, S, F>(),
-    widgets: generateWidgets<T, S, F>(),
+    templates: templates as TemplatesType<T, S, F>,
+    widgets: widgets, // Use the generated widgets
   };
 }
 
-// Generate the default theme
-const Theme = generateTheme();
-
-export default Theme;
+export default generateTheme();

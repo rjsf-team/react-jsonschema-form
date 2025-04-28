@@ -1,33 +1,21 @@
-import React from "react";
-import {
-  DescriptionFieldProps,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-} from "@rjsf/utils";
+import { DescriptionFieldProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 
-/** The `DescriptionFieldTemplate` component renders a field's description.
+/** The `DescriptionField` component renders the description of a field
  *
- * @param props - The `DescriptionFieldProps` for the component
+ * @param props - The `DescriptionFieldProps` for this component
  */
-const DescriptionFieldTemplate = <
+export default function DescriptionFieldTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
->({
-  description,
-  idSchema,
-}: DescriptionFieldProps<T, S, F>) => {
+>({ description, id }: DescriptionFieldProps<T, S, F>) {
   if (!description) {
     return null;
   }
 
-  const id = `${idSchema.$id}__description`;
   return (
-    <span id={id} className="usa-hint">
+    <span id={id} className="field-description">
       {description}
     </span>
   );
-};
-
-export default DescriptionFieldTemplate;
+}

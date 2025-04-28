@@ -1,35 +1,43 @@
-import React from "react";
+import React, { ChangeEvent, FocusEvent } from 'react';
 import {
-  getTemplate,
-  getUiOptions,
   WidgetProps,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
-  RegistryWidgetsType,
-  optionId, // Import optionId helper
-  ariaDescribedByIds, // Import ariaDescribedByIds helper
-  enumOptionsIsSelected, // Import enumOptionsIsSelected helper
-  enumOptionsValueForIndex, // Import enumOptionsValueForIndex helper
-} from "@rjsf/utils";
+  ariaDescribedByIds,
+  enumOptionsValueForIndex,
+  getTemplate,
+  getUiOptions,
+  optionId,
+} from '@rjsf/utils';
+import {
+  Checkbox,
+  Fieldset,
+  FileInput,
+  FileInputProps,
+  Label,
+  Radio,
+  RangeInput,
+  Select,
+  Textarea,
+} from '@trussworks/react-uswds';
 
-// Define USWDS specific widgets here
-// Example for TextWidget:
-function TextWidget<
+// BaseInputTemplate usage
+function BaseInputWidget<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
 >(props: WidgetProps<T, S, F>) {
   const { registry } = props;
-  const BaseInputTemplate = getTemplate<"BaseInputTemplate", T, S, F>(
-    "BaseInputTemplate",
+  const BaseInputTemplate = getTemplate<'BaseInputTemplate', T, S, F>(
+    'BaseInputTemplate',
     registry,
     getUiOptions(props.uiSchema),
   );
   return <BaseInputTemplate {...props} />;
 }
 
-// Example for CheckboxWidget
+// CheckboxWidget
 function CheckboxWidget<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
@@ -42,448 +50,433 @@ function CheckboxWidget<
     readonly,
     label,
     schema,
-    autofocus,
-    required,
+    autofocus = false,
     onChange,
     onBlur,
     onFocus,
+    registry,
+    uiSchema,
   } = props;
-  const _onChange = ({ target: { checked } }: React.ChangeEvent<HTMLInputElement>) =>
-    onChange(checked);
-  const _onBlur = ({ target: { checked } }: React.FocusEvent<HTMLInputElement>) =>
-    onBlur(id, checked);
-  const _onFocus = ({ target: { checked } }: React.FocusEvent<HTMLInputElement>) =>
-    onFocus(id, checked);
+  const readOnly = readonly;
+  const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
+    'DescriptionFieldTemplate',
+    registry,
+    getUiOptions(uiSchema),
+  );
   const description = schema.description;
+  const descId = ariaDescribedByIds(id);
+
+  const _onChange = ({ target: { checked } }: ChangeEvent<HTMLInputElement>) => onChange(checked);
+  const _onBlur = ({ target: { checked } }: FocusEvent<HTMLInputElement>) => onBlur(id, checked);
+  const _onFocus = ({ target: { checked } }: FocusEvent<HTMLInputElement>) => onFocus(id, checked);
 
   return (
-    <div className="usa-checkbox">
-      <input
+    <>
+      <Checkbox
         id={id}
         name={id}
-        type="checkbox"
-        className="usa-checkbox__input"
-        checked={typeof value === "undefined" ? false : value}
-        required={required}
-        disabled={disabled || readonly}
+        label={label || ''}
+        checked={typeof value === 'undefined' ? false : value}
+        required={props.required}
+        disabled={disabled || readOnly}
         autoFocus={autofocus}
         onChange={_onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
-        aria-describedby={`${id}__description`}
+        aria-describedby={descId}
       />
-      <label className="usa-checkbox__label" htmlFor={id}>
-        {label || schema.title}
-        {description && (
-          <span id={`${id}__description`} className="usa-hint">
-            {description}
-          </span>
-        )}
-      </label>
-    </div>
-  );
-}
-
-// DateWidget using USWDS Date Picker structure
-function DateWidget<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
->(props: WidgetProps<T, S, F>) {
-  const {
-    id,
-    value,
-    disabled,
-    readonly,
-    label,
-    schema,
-    autofocus,
-    required,
-    onChange,
-    onBlur,
-    onFocus,
-  } = props;
-  const _onChange = ({ target }: React.ChangeEvent<HTMLInputElement>) =>
-    onChange(target.value || undefined);
-  const _onBlur = ({ target }: React.FocusEvent<HTMLInputElement>) =>
-    onBlur(id, target.value);
-  const _onFocus = ({ target }: React.FocusEvent<HTMLInputElement>) =>
-    onFocus(id, target.value);
-
-  // Note: This provides the basic structure. A full implementation
-  // might require JavaScript for the USWDS date picker interaction.
-  // The prompt requested native React without additional JS, so this is structural.
-  return (
-    <div className="usa-form-group"> {/* Removed conditional error class comment */}
-      <label className="usa-label" htmlFor={id}>
-        {label || schema.title}
-        {required && <span className="usa-label--required"> *</span>}
-      </label>
-      <div className="usa-date-picker">
-        <div className="usa-date-picker__wrapper">
-          <input
-            id={id}
-            name={id}
-            className="usa-input usa-date-picker__external-input"
-            type="text" // USWDS uses text input visually, JS handles date picking
-            placeholder="mm/dd/yyyy" // Or other format based on locale/schema
-            value={value || ""}
-            required={required}
-            disabled={disabled || readonly}
-            autoFocus={autofocus}
-            onChange={_onChange}
-            onBlur={_onBlur}
-            onFocus={_onFocus}
-            aria-describedby={`${id}__description`}
-          />
-          {/* USWDS Date Picker includes a button, handled by their JS */}
-          {/* <button type="button" className="usa-date-picker__button" aria-haspopup="true" aria-label="Toggle calendar"> */}
-          {/* </button> */}
-          {/* <div className="usa-date-picker__calendar" role="dialog" aria-modal="true"> */}
-          {/* Calendar markup goes here, typically managed by USWDS JS */}
-          {/* </div> */}
-        </div>
-      </div>
-      {schema.description && (
-        <span id={`${id}__description`} className="usa-hint">
-          {schema.description}
-        </span>
+      {description && (
+        <DescriptionFieldTemplate id={descId} description={description} registry={registry} />
       )}
-    </div>
+    </>
   );
 }
 
-// SelectWidget using USWDS Combo Box structure
-function SelectWidget<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
->(props: WidgetProps<T, S, F>) {
-  const {
-    schema,
-    id,
-    options, // Contains enumOptions, enumDisabled, emptyValue
-    label,
-    required,
-    disabled,
-    readonly,
-    value,
-    multiple, // Not directly supported by USWDS Combo Box visually, but handle logic
-    autofocus,
-    onChange,
-    onBlur,
-    onFocus,
-    placeholder,
-  } = props;
-  const { enumOptions, enumDisabled, emptyValue } = options;
-  const _onChange = ({ target }: React.ChangeEvent<HTMLSelectElement>) => {
-    const newValue = target.value;
-    onChange(newValue === "" ? emptyValue : newValue);
-  };
-  const _onBlur = ({ target }: React.FocusEvent<HTMLSelectElement>) =>
-    onBlur(id, target.value);
-  const _onFocus = ({ target }: React.FocusEvent<HTMLSelectElement>) =>
-    onFocus(id, target.value);
-
-  // Note: USWDS Combo Box requires JavaScript for full functionality (filtering).
-  // This provides the basic structure.
-  return (
-    <div className="usa-form-group">
-      <label className="usa-label" htmlFor={id}>
-        {label || schema.title}
-        {required && <span className="usa-label--required"> *</span>}
-      </label>
-      <div className="usa-combo-box">
-        <select
-          id={id}
-          name={id}
-          className="usa-select usa-combo-box__select"
-          value={typeof value === "undefined" ? "" : value}
-          required={required}
-          disabled={disabled || readonly}
-          autoFocus={autofocus}
-          onChange={_onChange}
-          onBlur={_onBlur}
-          onFocus={_onFocus}
-          // multiple={multiple} // Standard select multiple attribute
-          aria-describedby={`${id}__description`}
-        >
-          {!multiple && schema.default === undefined && (
-            <option value="">{placeholder || "- Select -"}</option>
-          )}
-          {(enumOptions || []).map(({ value: optionValue, label: optionLabel }, i) => {
-            const isDisabled =
-              enumDisabled && enumDisabled.includes(optionValue);
-            return (
-              <option
-                key={optionId(id, i)}
-                value={optionValue}
-                disabled={isDisabled}
-              >
-                {optionLabel}
-              </option>
-            );
-          })}
-        </select>
-      </div>
-      {schema.description && (
-        <span id={`${id}__description`} className="usa-hint">
-          {schema.description}
-        </span>
-      )}
-    </div>
-  );
-}
-
-// RadioWidget using USWDS Radio button structure
-function RadioWidget<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
->(props: WidgetProps<T, S, F>) {
-  const {
-    id,
-    schema,
-    options,
-    value,
-    required,
-    disabled,
-    readonly,
-    label,
-    onChange,
-    onBlur,
-    onFocus,
-  } = props;
-  const { enumOptions, enumDisabled, emptyValue } = options;
-
-  const _onChange = ({ target: { value: eventValue } }: React.ChangeEvent<HTMLInputElement>) =>
-    onChange(schema.type === "boolean" ? eventValue !== "false" : eventValue);
-  const _onBlur = ({ target: { value: eventValue } }: React.FocusEvent<HTMLInputElement>) =>
-    onBlur(id, schema.type === "boolean" ? eventValue !== "false" : eventValue);
-  const _onFocus = ({ target: { value: eventValue } }: React.FocusEvent<HTMLInputElement>) =>
-    onFocus(id, schema.type === "boolean" ? eventValue !== "false" : eventValue);
-
-  const inline = Boolean(options && options.inline); // Check for inline option if needed
-
-  return (
-    <div className="usa-form-group">
-      <fieldset className="usa-fieldset">
-        <legend className="usa-legend">
-          {label || schema.title}
-          {required && <span className="usa-label--required"> *</span>}
-        </legend>
-        {schema.description && (
-          <span className="usa-hint">{schema.description}</span>
-        )}
-        {(enumOptions || []).map((option, i) => {
-          const itemDisabled =
-            enumDisabled && enumDisabled.includes(option.value);
-          const checked = option.value === value;
-          const radioId = optionId(id, i);
-
-          const radio = (
-            <div
-              key={radioId}
-              className={`usa-radio ${inline ? "usa-radio--inline" : ""}`}
-            >
-              <input
-                type="radio"
-                id={radioId}
-                name={id}
-                className="usa-radio__input"
-                value={String(option.value)}
-                checked={checked}
-                required={required}
-                disabled={disabled || itemDisabled || readonly}
-                onChange={_onChange}
-                onBlur={_onBlur}
-                onFocus={_onFocus}
-                aria-describedby={`${id}-legend`} // Referencing the legend
-              />
-              <label className="usa-radio__label" htmlFor={radioId}>
-                {option.label}
-              </label>
-            </div>
-          );
-          return radio;
-        })}
-      </fieldset>
-    </div>
-  );
-}
-
-// TextareaWidget using USWDS Textarea structure
-function TextareaWidget<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
->(props: WidgetProps<T, S, F>) {
-  const {
-    id,
-    options,
-    placeholder,
-    value,
-    required,
-    disabled,
-    readonly,
-    label,
-    schema,
-    autofocus,
-    onChange,
-    onBlur,
-    onFocus,
-  } = props;
-
-  const _onChange = ({ target: { value: eventValue } }: React.ChangeEvent<HTMLTextAreaElement>) =>
-    onChange(eventValue === "" ? options.emptyValue : eventValue);
-  const _onBlur = ({ target: { value: eventValue } }: React.FocusEvent<HTMLTextAreaElement>) =>
-    onBlur(id, eventValue);
-  const _onFocus = ({ target: { value: eventValue } }: React.FocusEvent<HTMLTextAreaElement>) =>
-    onFocus(id, eventValue);
-
-  return (
-    <div className="usa-form-group">
-      <label className="usa-label" htmlFor={id}>
-        {label || schema.title}
-        {required && <span className="usa-label--required"> *</span>}
-      </label>
-      {schema.description && (
-        <span id={ariaDescribedByIds(id, true)} className="usa-hint">
-          {schema.description}
-        </span>
-      )}
-      <textarea
-        id={id}
-        name={id}
-        className="usa-textarea"
-        value={value ? value : ""}
-        placeholder={placeholder}
-        required={required}
-        disabled={disabled}
-        readOnly={readonly}
-        autoFocus={autofocus}
-        rows={options.rows || 5} // Default to 5 rows, allow customization via ui:options
-        onChange={_onChange}
-        onBlur={_onBlur}
-        onFocus={_onFocus}
-        aria-describedby={ariaDescribedByIds(id)}
-      />
-    </div>
-  );
-}
-
-// CheckboxesWidget using USWDS Checkbox structure for multiple items
+// CheckboxesWidget
 function CheckboxesWidget<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
->(props: WidgetProps<T, S, F>) {
-  const {
-    id,
-    disabled,
-    options,
-    value,
-    autofocus,
-    readonly,
-    required,
-    label,
-    schema,
-    onChange,
-    onBlur,
-    onFocus,
-  } = props;
-  const { enumOptions, enumDisabled, inline, emptyValue } = options;
+>({
+  id,
+  disabled,
+  options,
+  value,
+  autofocus = false,
+  readonly,
+  onChange,
+  onBlur,
+  onFocus,
+  required,
+  label,
+  rawErrors,
+  schema,
+}: WidgetProps<T, S, F>) {
+  const { enumOptions, enumDisabled, inline } = options;
+  const readOnly = readonly;
+  const checkboxesValues = Array.isArray(value) ? value : [value];
 
-  const _onChange = (index: number) => ({
-    target: { checked },
-  }: React.ChangeEvent<HTMLInputElement>) => {
-    const all = (enumOptions || []).map(({ value: val }) => val);
-    const currentVal = enumOptionsValueForIndex<S>(index, all);
-    if (checked) {
-      onChange(Array.isArray(value) ? value.concat(currentVal) : [currentVal]);
-    } else {
-      onChange((value as any[]).filter((v) => v !== currentVal));
-    }
-  };
+  const _onChange =
+    (index: number) =>
+    ({ target: { checked } }: ChangeEvent<HTMLInputElement>) => {
+      const all = (enumOptions as any).map(({ value: val }: { value: any }) => val);
+      if (checked) {
+        onChange(enumOptionsValueForIndex<S>([...checkboxesValues, all[index]], all, options));
+      } else {
+        onChange(
+          enumOptionsValueForIndex<S>(
+            checkboxesValues.filter((v) => v !== all[index]),
+            all,
+            options,
+          ),
+        );
+      }
+    };
 
-  const _onBlur = ({
-    target: { value: eventValue },
-  }: React.FocusEvent<HTMLInputElement>) =>
-    onBlur(id, enumOptionsValueForIndex<S>(eventValue, enumOptions));
-  const _onFocus = ({
-    target: { value: eventValue },
-  }: React.FocusEvent<HTMLInputElement>) =>
-    onFocus(id, enumOptionsValueForIndex<S>(eventValue, enumOptions));
+  const _onBlur = ({ target: { value: eventValue } }: FocusEvent<HTMLInputElement>) =>
+    onBlur(id, eventValue);
+  const _onFocus = ({ target: { value: eventValue } }: FocusEvent<HTMLInputElement>) =>
+    onFocus(id, eventValue);
 
   return (
-    <div className="usa-form-group">
-      <fieldset className="usa-fieldset">
-        <legend className="usa-legend">
-          {label || schema.title}
-          {required && <span className="usa-label--required"> *</span>}
-        </legend>
-        {schema.description && (
-          <span className="usa-hint">{schema.description}</span>
-        )}
-        {(enumOptions || []).map((option, index) => {
-          const checked = enumOptionsIsSelected<S>(option.value, value);
-          const itemDisabled =
-            enumDisabled && enumDisabled.includes(option.value);
-          const checkboxId = optionId(id, index);
-
-          return (
-            <div
-              key={checkboxId}
-              className={`usa-checkbox ${inline ? "usa-checkbox--inline" : ""}`}
-            >
-              <input
-                type="checkbox"
-                id={checkboxId}
-                name={id}
-                className="usa-checkbox__input"
-                value={String(index)}
-                checked={checked}
-                required={required} // Note: Required on CheckboxesWidget doesn't force selection of one. Schema validation should handle minItems if needed.
-                disabled={disabled || itemDisabled || readonly}
-                autoFocus={autofocus && index === 0}
-                onChange={_onChange(index)}
-                onBlur={_onBlur}
-                onFocus={_onFocus}
-                aria-describedby={`${id}-legend`} // Referencing the legend
-              />
-              <label className="usa-checkbox__label" htmlFor={checkboxId}>
-                {option.label}
-              </label>
-            </div>
+    <Fieldset className="usa-fieldset">
+      <legend className="usa-legend">
+        {label || schema.title}
+        {required && <span className="usa-label--required"> *</span>}
+      </legend>
+      {schema.description && <span className="usa-hint">{schema.description}</span>}
+      {Array.isArray(enumOptions) &&
+        enumOptions.map((option, index: number) => {
+          const checked = checkboxesValues.includes(option.value);
+          const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.includes(option.value);
+          const checkbox = (
+            <Checkbox
+              id={optionId(id, index)}
+              name={id}
+              label={option.label}
+              checked={checked}
+              required={required}
+              disabled={disabled || itemDisabled || readOnly}
+              autoFocus={autofocus && index === 0}
+              onChange={_onChange(index)}
+              onBlur={_onBlur}
+              onFocus={_onFocus}
+            />
+          );
+          return inline ? (
+            <span key={index} style={{ marginRight: '1em' }}>
+              {checkbox}
+            </span>
+          ) : (
+            <div key={index}>{checkbox}</div>
           );
         })}
-      </fieldset>
-    </div>
+    </Fieldset>
   );
 }
 
-// Add implementations for other widgets (e.g. UpDownWidget) using USWDS classes
-// Note: Accordion functionality for nested objects/arrays should be implemented
-// within ObjectFieldTemplate and ArrayFieldTemplate, potentially using ui:options.
-// Note: Add/Remove buttons with usa-button-group styling for array items
-// should be implemented within ArrayFieldTemplate.
-
-export function generateWidgets<
+// RadioWidget
+function RadioWidget<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
->(): RegistryWidgetsType<T, S, F> {
-  return {
-    TextWidget,
-    CheckboxWidget,
-    CheckboxesWidget, // Register CheckboxesWidget
-    DateWidget, // Register DateWidget
-    SelectWidget, // Register SelectWidget
-    RadioWidget, // Register RadioWidget
-    TextareaWidget, // Register TextareaWidget
-    // Add other implemented widgets here (e.g., UpDownWidget)
-    // Ensure they use appropriate USWDS classes.
-  };
+>({
+  id,
+  options,
+  value,
+  required,
+  disabled,
+  readonly,
+  autofocus = false,
+  onChange,
+  onBlur,
+  onFocus,
+  rawErrors,
+  label,
+  schema,
+}: WidgetProps<T, S, F>) {
+  const { enumOptions, enumDisabled, inline } = options;
+  const readOnly = readonly;
+
+  const _onChange = ({ target: { value: eventValue } }: ChangeEvent<HTMLInputElement>) =>
+    onChange(schema.type == 'boolean' ? eventValue !== 'false' : eventValue);
+  const _onBlur = ({ target: { value: eventValue } }: FocusEvent<HTMLInputElement>) =>
+    onBlur(id, eventValue);
+  const _onFocus = ({ target: { value: eventValue } }: FocusEvent<HTMLInputElement>) =>
+    onFocus(id, eventValue);
+
+  return (
+    <Fieldset className="usa-fieldset">
+      <legend className="usa-legend">
+        {label || schema.title}
+        {required && <span className="usa-label--required"> *</span>}
+      </legend>
+      {schema.description && <span className="usa-hint">{schema.description}</span>}
+      {Array.isArray(enumOptions) &&
+        enumOptions.map((option, index: number) => {
+          const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.includes(option.value);
+          const radio = (
+            <Radio
+              id={optionId(id, index)}
+              name={id}
+              label={option.label}
+              value={String(option.value)}
+              checked={String(value) === String(option.value)}
+              required={required}
+              disabled={disabled || itemDisabled || readOnly}
+              autoFocus={autofocus && index === 0}
+              onChange={_onChange}
+              onBlur={_onBlur}
+              onFocus={_onFocus}
+            />
+          );
+          return inline ? (
+            <span key={index} style={{ marginRight: '1em' }}>
+              {radio}
+            </span>
+          ) : (
+            <div key={index}>{radio}</div>
+          );
+        })}
+    </Fieldset>
+  );
 }
 
-export default generateWidgets();
+// RangeWidget
+function RangeWidget<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any,
+>(props: WidgetProps<T, S, F>) {
+  const { value, readonly, disabled, options, schema, onChange, label, id } = props;
+  const readOnly = readonly;
+
+  const _onChange = ({ target: { value: eventValue } }: ChangeEvent<HTMLInputElement>) =>
+    onChange(eventValue === '' ? options.emptyValue : eventValue);
+
+  return (
+    <>
+      <Label htmlFor={id}>{label || schema.title}</Label>
+      <RangeInput
+        id={id}
+        name={id}
+        min={schema.minimum}
+        max={schema.maximum}
+        step={schema.multipleOf}
+        value={value ?? ''}
+        disabled={disabled || readOnly}
+        onChange={_onChange}
+      />
+    </>
+  );
+}
+
+// SelectWidget
+function SelectWidget<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any,
+>({
+  schema,
+  id,
+  options,
+  label,
+  required,
+  disabled,
+  readonly,
+  value,
+  multiple = false,
+  autofocus = false,
+  onChange,
+  onBlur,
+  onFocus,
+  rawErrors,
+}: WidgetProps<T, S, F>) {
+  const { enumOptions, enumDisabled } = options;
+  const readOnly = readonly;
+  const emptyValue = multiple ? [] : '';
+
+  function getValue(event: ChangeEvent<HTMLSelectElement> | FocusEvent<HTMLSelectElement>) {
+    if (multiple) {
+      return [].slice
+        .call(event.target.options)
+        .filter((o) => o.selected)
+        .map((o) => o.value);
+    } else {
+      return event.target.value;
+    }
+  }
+
+  const _onChange = (event: ChangeEvent<HTMLSelectElement>) => {
+    const newValue = getValue(event);
+    onChange(enumOptionsValueForIndex<S>(newValue, enumOptions, options));
+  };
+  const _onBlur = (event: FocusEvent<HTMLSelectElement>) => {
+    const newValue = getValue(event);
+    onBlur(id, enumOptionsValueForIndex<S>(newValue, enumOptions, options));
+  };
+  const _onFocus = (event: FocusEvent<HTMLSelectElement>) => {
+    const newValue = getValue(event);
+    onFocus(id, enumOptionsValueForIndex<S>(newValue, enumOptions, options));
+  };
+
+  return (
+    <>
+      <Label htmlFor={id}>
+        {label || schema.title}
+        {required && <span className="usa-label--required">*</span>}
+      </Label>
+      <Select
+        id={id}
+        name={id}
+        multiple={multiple}
+        value={typeof value === 'undefined' ? emptyValue : value}
+        required={required}
+        disabled={disabled || readOnly}
+        autoFocus={autofocus}
+        onChange={_onChange}
+        onBlur={_onBlur}
+        onFocus={_onFocus}
+        aria-describedby={ariaDescribedByIds(id)}
+      >
+        {!multiple && schema.default === undefined && <option value="">{'- Select -'}</option>}
+        {Array.isArray(enumOptions) &&
+          enumOptions.map(({ value: optionValue, label: optionLabel }, i) => {
+            const disabled = Array.isArray(enumDisabled) && enumDisabled.includes(optionValue);
+            return (
+              <option key={i} value={optionValue} disabled={disabled}>
+                {optionLabel}
+              </option>
+            );
+          })}
+      </Select>
+    </>
+  );
+}
+
+// TextareaWidget
+function TextareaWidget<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any,
+>({
+  id,
+  options,
+  placeholder,
+  value,
+  required,
+  disabled,
+  readonly,
+  autofocus = false,
+  onChange,
+  onBlur,
+  onFocus,
+  rawErrors,
+}: WidgetProps<T, S, F>) {
+  const readOnly = readonly;
+  const _onChange = ({ target: { value: eventValue } }: ChangeEvent<HTMLTextAreaElement>) =>
+    onChange(eventValue === '' ? options.emptyValue : eventValue);
+  const _onBlur = ({ target: { value: eventValue } }: FocusEvent<HTMLTextAreaElement>) =>
+    onBlur(id, eventValue);
+  const _onFocus = ({ target: { value: eventValue } }: FocusEvent<HTMLTextAreaElement>) =>
+    onFocus(id, eventValue);
+
+  return (
+    <Textarea
+      id={id}
+      name={id}
+      value={value ?? ''}
+      placeholder={placeholder}
+      required={required}
+      disabled={disabled || readOnly}
+      autoFocus={autofocus}
+      rows={options.rows || 5}
+      onChange={_onChange}
+      onBlur={_onBlur}
+      onFocus={_onFocus}
+      aria-describedby={ariaDescribedByIds(id)}
+    />
+  );
+}
+
+// UpDownWidget
+function UpDownWidget<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any,
+>(props: WidgetProps<T, S, F>) {
+  const { registry, readonly, ...rest } = props;
+  const readOnly = readonly;
+  const BaseInputTemplate = getTemplate<'BaseInputTemplate', T, S, F>(
+    'BaseInputTemplate',
+    registry,
+    getUiOptions(props.uiSchema),
+  );
+  return <BaseInputTemplate {...rest} readonly={readOnly} type="number" />;
+}
+
+// FileWidget
+function FileWidget<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any,
+>(props: WidgetProps<T, S, F>) {
+  const { id, readonly, disabled, onChange, multiple = false, autofocus = false, required } = props;
+  const readOnly = readonly;
+
+  const _onChange = ({ target }: ChangeEvent<HTMLInputElement>) => {
+    if (!target.files) {
+      return;
+    }
+    onChange(multiple ? target.files : target.files[0]);
+  };
+  const _onBlur = (event: FocusEvent<HTMLInputElement>) => props.onBlur(id, event.target?.value);
+  const _onFocus = (event: FocusEvent<HTMLInputElement>) => props.onFocus(id, event.target?.value);
+
+  const fileInputProps: FileInputProps & React.InputHTMLAttributes<HTMLInputElement> = {
+    id: id,
+    name: id,
+    multiple: multiple,
+    required: required,
+    disabled: disabled || readOnly,
+    onChange: _onChange,
+    onBlur: _onBlur,
+    onFocus: _onFocus,
+    autoFocus: autofocus,
+    'aria-describedby': ariaDescribedByIds(id),
+  };
+
+  return <FileInput {...fileInputProps} />;
+}
+
+// HiddenWidget
+function HiddenWidget<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any,
+>({ id, value }: WidgetProps<T, S, F>) {
+  return (
+    <input type="hidden" id={id} name={id} value={typeof value === 'undefined' ? '' : value} />
+  );
+}
+
+export default {
+  PasswordWidget: BaseInputWidget,
+  RadioWidget,
+  UpDownWidget,
+  RangeWidget,
+  SelectWidget,
+  TextWidget: BaseInputWidget,
+  DateWidget: BaseInputWidget,
+  DateTimeWidget: BaseInputWidget,
+  AltDateWidget: BaseInputWidget,
+  AltDateTimeWidget: BaseInputWidget,
+  EmailWidget: BaseInputWidget,
+  URLWidget: BaseInputWidget,
+  TextareaWidget,
+  HiddenWidget,
+  ColorWidget: BaseInputWidget,
+  FileWidget,
+  CheckboxWidget,
+  CheckboxesWidget,
+};
