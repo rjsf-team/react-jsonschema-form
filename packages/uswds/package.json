@@ -9,7 +9,7 @@
     "build": "tsc",
     "cs-check": "prettier -c --ignore-path ../../.prettierignore \"src/**/*.{js,jsx,ts,tsx,json}\"",
     "cs-format": "prettier -w --ignore-path ../../.prettierignore \"src/**/*.{js,jsx,ts,tsx,json}\"",
-    "lint": "eslint src",
+    "lint": "eslint src test",
     "test": "jest",
     "test:update": "jest --u"
   },
