@@ -1,32 +1,27 @@
-import React from "react";
+import { Fieldset } from '@trussworks/react-uswds';
 import {
-  ObjectFieldTemplateProps,
   FormContextType,
+  ObjectFieldTemplateProps,
   RJSFSchema,
   StrictRJSFSchema,
   getTemplate,
   getUiOptions,
-  canExpand,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
+import { Grid } from '@trussworks/react-uswds';
 
-/** The `ObjectFieldTemplate` is the template to use to render all the inner properties of an object along with the
- * title and description if available. If the object is expandable, then an `AddButton` is also rendered after all
- * the properties.
+/** The `ObjectFieldTemplate` is the template to use to render all the properties of an object field as identified by
+ * the `SchemaField`. The properties are rendered using the `PropertyTemplate` template inside of a `Fieldset`.
  *
  * @param props - The `ObjectFieldTemplateProps` for this component
  */
-const ObjectFieldTemplate = <
+export default function ObjectFieldTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
->(
-  props: ObjectFieldTemplateProps<T, S, F>,
-) => {
+>(props: ObjectFieldTemplateProps<T, S, F>) {
   const {
     description,
     disabled,
-    formContext,
-    formData,
     idSchema,
     onAddClick,
     properties,
@@ -39,25 +34,23 @@ const ObjectFieldTemplate = <
   } = props;
 
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const TitleFieldTemplate = getTemplate<"TitleFieldTemplate", T, S, F>(
-    "TitleFieldTemplate",
+  const TitleFieldTemplate = getTemplate<'TitleFieldTemplate', T, S, F>(
+    'TitleFieldTemplate',
     registry,
     uiOptions,
   );
-  const DescriptionFieldTemplate = getTemplate<
-    "DescriptionFieldTemplate",
-    T,
-    S,
-    F
-  >("DescriptionFieldTemplate", registry, uiOptions);
-  // ButtonTemplates are specified in the registry
+  const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
+    'DescriptionFieldTemplate',
+    registry,
+    uiOptions,
+  );
   const { AddButton } = registry.templates.ButtonTemplates;
 
   return (
-    <fieldset id={idSchema.$id} className="rjsf-uswds-object">
-      {(uiOptions.title || title) && (
+    <Fieldset className="rjsf-uswds-object-fieldset">
+      {title && (
         <TitleFieldTemplate
-          id={`${idSchema.$id}-__title`}
+          id={`${idSchema.$id}-title`}
           title={title}
           required={required}
           schema={schema}
@@ -65,43 +58,39 @@ const ObjectFieldTemplate = <
           registry={registry}
         />
       )}
-      {(uiOptions.description || description) && (
+      {description && (
         <DescriptionFieldTemplate
-          id={`${idSchema.$id}-__description`}
-          description={uiOptions.description || description!}
+          id={`${idSchema.$id}-description`}
+          description={description}
           schema={schema}
           uiSchema={uiSchema}
           registry={registry}
-          idSchema={idSchema}
         />
       )}
-      {properties.map((element, index) =>
-        // Remove the <div className="grid-row"> if you don't want each property to be wrapped in a grid row
-        element.hidden ? (
-          element.content
-        ) : (
-          <div className="grid-row grid-gap" key={index}>
-            <div className="grid-col-12">{element.content}</div>
-          </div>
-        ),
-      )}
-      {canExpand<T, S, F>(schema, uiSchema, formData) && (
-        <div className="grid-row">
-          <div
-            className="grid-col-12 margin-top-2 text-right"
+      <Grid container className="rjsf-uswds-object-properties">
+        {properties.map((element, index) => (
+          <Grid
+            key={index}
+            col={12}
+            className={`rjsf-uswds-object-property ${element.hidden ? 'hidden' : ''}`}
           >
-            <AddButton
-              className="object-property-expand"
-              onClick={onAddClick(schema)}
-              disabled={disabled || readonly}
-              uiSchema={uiSchema}
-              registry={registry}
-            />
-          </div>
-        </div>
-      )}
-    </fieldset>
+            {element.content}
+          </Grid>
+        ))}
+        {onAddClick && schema.additionalProperties && (
+          <Grid col={12} className="rjsf-uswds-object-add-button">
+            <Grid col="auto">
+              <AddButton
+                className="object-property-expand"
+                onClick={() => onAddClick(schema)}
+                disabled={disabled || readonly}
+                uiSchema={uiSchema}
+                registry={registry}
+              />
+            </Grid>
+          </Grid>
+        )}
+      </Grid>
+    </Fieldset>
   );
-};
-
-export default ObjectFieldTemplate;
+}

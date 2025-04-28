@@ -1,88 +1,101 @@
-import React from "react";
+import { ChangeEvent, FocusEvent } from 'react';
 import {
-  WidgetProps,
+  ariaDescribedByIds,
+  BaseInputTemplateProps,
+  examplesId,
   FormContextType,
+  getInputProps,
+  labelValue,
   RJSFSchema,
   StrictRJSFSchema,
-  ariaDescribedByIds, // Correctly imported
-} from "@rjsf/utils";
+} from '@rjsf/utils';
+import { Label, TextInput } from '@trussworks/react-uswds';
 
+/** The `BaseInputTemplate` is the template to use to render the basic `<input>` component for the `core` theme.
+ * It is used as the template for rendering many of the <input> based widgets that differ by `type` and options only.
+ * It can be customized/overridden for other themes or individual implementations as needed.
+ *
+ * @param props - The `WidgetProps` for this template
+ */
 export default function BaseInputTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
->(props: WidgetProps<T, S, F>) {
+>(props: BaseInputTemplateProps<T, S, F>) {
   const {
     id,
     placeholder,
     required,
     readonly,
     disabled,
-    type,
-    label, // Destructured but correctly not used directly here
+    label,
+    hideLabel,
     value,
     onChange,
-    onChangeOverride, // Correctly handled
+    onChangeOverride,
     onBlur,
     onFocus,
-    autofocus,
+    autofocus = false,
     options,
     schema,
-    uiSchema, // Destructured but not used directly
-    formContext, // Destructured but not used directly
-    registry, // Destructured but not used directly
-    rawErrors, // Destructured but correctly not used for input styling here
-    hideLabel, // Destructured but not used directly
-    hideError, // Destructured but not used directly
-    ...rest
+    type,
+    rawErrors = [],
+    // Unused variables commented out
+    // formContext,
+    // registry,
+    // hideError,
+    // uiSchema,
   } = props;
+  const inputProps = getInputProps<T, S, F>(schema, type, options);
+  // const inputProps = { ...props, ...(options.props || {}) }; // Safely spread options.props
 
-  // Merging extra props from ui:options
-  const inputProps = {
-    ...rest,
-    ...options.props,
+  const _onChange = ({ target: { value: eventValue } }: ChangeEvent<HTMLInputElement>) => {
+    onChange(eventValue === '' ? options.emptyValue : eventValue);
   };
-
-  // Standard event handlers using RJSF logic
-  const _onChange = ({
-    target: { value: eventValue },
-  }: React.ChangeEvent<HTMLInputElement>) =>
-    onChange(eventValue === "" ? options.emptyValue : eventValue);
-  const _onBlur = ({ target: { value: eventValue } }: React.FocusEvent<HTMLInputElement>) =>
+  const _onBlur = ({ target: { value: eventValue } }: FocusEvent<HTMLInputElement>) =>
     onBlur(id, eventValue);
-  const _onFocus = ({ target: { value: eventValue } }: React.FocusEvent<HTMLInputElement>) =>
+  const _onFocus = ({ target: { value: eventValue } }: FocusEvent<HTMLInputElement>) =>
     onFocus(id, eventValue);
+  const InputElement = type === 'number' || type === 'integer' ? TextInput : TextInput;
+
+  const hasError = rawErrors.length > 0;
 
   return (
     <>
-      <input
+      {labelValue(
+        <Label htmlFor={id}>
+          {label || schema.title}
+          {required && <span className="usa-label--required">*</span>}
+        </Label>,
+        hideLabel,
+      )}
+      <InputElement
         id={id}
-        name={id} // Correct: name attribute is important
-        type={type}
+        name={id}
         placeholder={placeholder}
         autoFocus={autofocus}
         required={required}
         disabled={disabled}
         readOnly={readonly}
-        className="usa-input" // Correct: USWDS specific class
-        list={schema.examples ? `examples_${id}` : undefined} // Correct: Datalist handling
-        value={value || value === 0 ? value : ""} // Correct: Handling empty/zero values
-        onChange={onChangeOverride || _onChange} // Correct: Prioritizes override
+        className={hasError ? 'usa-input--error' : ''}
+        list={schema.examples ? examplesId<T>(id) : undefined}
+        {...inputProps}
+        value={value || value === 0 ? value : ''}
+        onChange={onChangeOverride || _onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
-        aria-describedby={ariaDescribedByIds<T>(id)} // Correct: Accessibility attribute
-        {...inputProps} // Spreading extra props
+        aria-describedby={ariaDescribedByIds<T>(id, !!schema.examples)}
+        type={type}
       />
-      {/* Correct: Datalist rendering */}
-      {schema.examples ? (
-        <datalist id={`examples_${id}`}>
+      {Array.isArray(schema.examples) && (
+        <datalist id={examplesId<T>(id)}>
           {(schema.examples as string[])
             .concat(schema.default ? ([schema.default] as string[]) : [])
             .map((example: any) => {
               return <option key={example} value={example} />;
             })}
         </datalist>
-      ) : null}
+      )}
     </>
   );
 }

@@ -1,13 +1,11 @@
-import Form from "./Form"; // Assuming Form component exists
-import { generateTheme } from "./Theme"; // Import named export
-import Theme from "./Theme"; // Import default export
+import Form from './Form';
+import widgets from './Widgets'; // Correctly import from the Widgets directory index
+import generateTemplates from './Templates';
+import Theme from './Theme';
 
-export { default as Form, generateForm } from './Form';
-export { default as Templates, generateTemplates } from './Templates';
-export { generateTheme, Theme }; // Export both
-export { default as Widgets, generateWidgets } from './Widgets';
+// Assign the imported widgets object to the Theme
+Theme.widgets = widgets;
 
-// If you add specific UiSchema options, export the type here
-// export type { UswdsUiSchema as UiSchema } from './utils';
-
-export default Form; // Assuming Form is the main default export
+// Export the theme, templates, and potentially the widgets object itself
+export { generateTemplates, widgets, Theme }; // Export the widgets object instead
+export default Form;

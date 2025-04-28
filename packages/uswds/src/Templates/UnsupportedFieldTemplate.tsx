@@ -1,45 +1,29 @@
-import React from "react";
+import { Alert } from '@trussworks/react-uswds';
 import {
-  UnsupportedFieldProps,
+  FieldProps,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
   TranslatableString,
-} from "@rjsf/utils";
+} from '@rjsf/utils';
 
-/** The `UnsupportedFieldTemplate` component is used to render a field in the schema is is not supported by the
- * renderer. It will display a warning message asking the developer to specify a widget for the field.
+/** The `UnsupportedField` component is used to render a field in the schema is one that is not supported by
+ * react-jsonschema-form.
  *
- * @param props - The `UnsupportedFieldProps` for the component
+ * @param props - The `FieldProps` for this component
  */
-const UnsupportedFieldTemplate = <
+export default function UnsupportedFieldTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
->({
-  schema,
-  idSchema,
-  reason,
-  registry,
-}: UnsupportedFieldProps<T, S, F>) => {
+>({ schema, idSchema, reason, registry }: FieldProps<T, S, F>) {
   const { translateString } = registry;
-  return (
-    <div className="usa-alert usa-alert--warning unsupported-field">
-      <div className="usa-alert__body">
-        <p className="usa-alert__text">
-          {translateString(TranslatableString.UnsupportedField, [
-            String(schema.type),
-          ])}{" "}
-          {reason && <i>({reason})</i>}.{" "}
-          {idSchema && idSchema.$id && (
-            <span>
-              {translateString(TranslatableString.MaybeAddWidget, [idSchema.$id])}
-            </span>
-          )}
-        </p>
-      </div>
-    </div>
-  );
-};
+  const translateEnum = TranslatableString.UnsupportedField;
+  const message = translateString(translateEnum, [String(idSchema.$id), reason]);
 
-export default UnsupportedFieldTemplate;
+  return (
+    <Alert type="error" heading={message} headingLevel="h4" slim>
+      <pre>{JSON.stringify(schema, null, 2)}</pre>
+    </Alert>
+  );
+}

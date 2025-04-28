@@ -1,34 +1,24 @@
-import React from "react";
-import {
-  TitleFieldProps,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-} from "@rjsf/utils";
+import { FormContextType, RJSFSchema, StrictRJSFSchema, TitleFieldProps } from '@rjsf/utils';
 
-/** The `TitleFieldTemplate` component renders the title of a field
+/** The `TitleField` is the template to use to render the title of a field
  *
- * @param props - The `TitleFieldProps` for the component
+ * @param props - The `TitleFieldProps` for this component
  */
-const TitleFieldTemplate = <
+export default function TitleFieldTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
->({
-  id,
-  title,
-  required,
-}: TitleFieldProps<T, S, F>) => {
-  // Use legend for root object/array titles (usually rendered within fieldset), label otherwise
-  const Tag = id === "root__title" ? "legend" : "label";
-  const className = Tag === "legend" ? "usa-legend" : "usa-label";
+>(props: TitleFieldProps<T, S, F>) {
+  const { id, title, required } = props;
+
+  if (!title) {
+    return null;
+  }
 
   return (
-    <Tag id={id} className={className}>
+    <legend id={id} className="rjsf-uswds-title">
       {title}
-      {required && <span className="usa-label--required"> *</span>}
-    </Tag>
+      {required && <span className="required">*</span>}
+    </legend>
   );
-};
-
-export default TitleFieldTemplate;
+}

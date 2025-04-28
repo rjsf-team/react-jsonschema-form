@@ -22,7 +22,7 @@
     "allowSyntheticDefaultImports": true,
     "moduleResolution": "node",
     "isolatedModules": true,
-    "jsx": "react-jsx",
+    "jsx": "react-jsx", // This is correct for React 17+
     "esModuleInterop": true,
     "allowJs": true
   }
