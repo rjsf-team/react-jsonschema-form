@@ -72,6 +72,16 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Added new theme!
 
+## @rjsf/uswds
+
+- BREAKING: Initial release of the USWDS theme package (`@rjsf/uswds`).
+- BREAKING: Uses components from `@trussworks/react-uswds` library for core form elements, templates, and buttons.
+- feat: Implemented `GridTemplate` using `@trussworks/react-uswds` Grid components.
+- fix: Extensible for custom props `@rjsf/uswds` *if needed but defaults to `@trussworks/react-uswds` components (`FormGroup`, `Label`, `TextInput`, `Grid`).
+- fix: Refactored all Widgets to use components from `@trussworks/react-uswds`.
+- fix: Refactored all Templates (Field, ErrorList, Buttons, etc.) to use components from `@trussworks/react-uswds`.
+- test: Uses standard `@rjsf/snapshot-tests` tests for `@rjsf/uswds`.
+
 ## @rjsf/utils
 
 - BREAKING CHANGE: Refactored the `ArrayFieldItemTemplateType` to extract out all the button related props to `ArrayFieldItemButtonsTemplateType`, adding `buttonsProps: ArrayFieldItemButtonsTemplateType` as a new prop

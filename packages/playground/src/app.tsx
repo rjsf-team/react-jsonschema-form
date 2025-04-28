@@ -162,7 +162,7 @@ const themes: PlaygroundProps['themes'] = {
     theme: ShadcnTheme,
   },
   uswds: {
-    stylesheet: '//cdn.jsdelivr.net/npm/uswds/dist/css/uswds.min.css',
+    stylesheet: '//cdn.jsdelivr.net/npm/uswds@2.14.0/dist/css/uswds.min.css',
     theme: UswdsTheme,
   },
 };

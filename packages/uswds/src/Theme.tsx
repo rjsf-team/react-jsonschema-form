@@ -5,8 +5,8 @@ import {
   StrictRJSFSchema,
 } from "@rjsf/utils";
 
-import { generateTemplates } from "./Templates"; // Import the generator function
-import { generateWidgets } from "./Widgets"; // Import the generator function
+import { generateTemplates } from "./Templates";
+import { generateWidgets } from "./Widgets";
 
 /** The `generateTheme` function generates the theme object for the USWDS theme.
  * It is used to merge the generated templates and widgets into a single theme object.
@@ -18,12 +18,14 @@ export function generateTheme<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
 >(): ThemeProps<T, S, F> {
+  // Always use the generated templates and widgets (which now use @trussworks/react-uswds)
   return {
     templates: generateTemplates<T, S, F>(),
     widgets: generateWidgets<T, S, F>(),
   };
 }
 
-const Theme = generateTheme(); // Generate the theme for the default export
+// Generate the default theme
+const Theme = generateTheme();
 
 export default Theme;

@@ -12,6 +12,7 @@ USWDS theme, fields and widgets for [`react-jsonschema-form`](https://github.com
 ```bash
 npm install @rjsf/core @rjsf/uswds @uswds/uswds react react-dom
 ```
+## Usage
 
 ## Prerequisites: USWDS CSS
 
@@ -31,8 +32,6 @@ npm install @rjsf/core @rjsf/uswds @uswds/uswds react react-dom
     <!-- In your public/index.html or equivalent -->
     <link rel="stylesheet" href="/path/to/node_modules/@uswds/uswds/dist/css/uswds.min.css" />
     ```
-
-## Usage
 
 ### Option 1: Use the themed Form component
 
