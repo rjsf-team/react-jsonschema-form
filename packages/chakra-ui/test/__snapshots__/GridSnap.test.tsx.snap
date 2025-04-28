@@ -88,7 +88,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
   grid-column: span 3/span 3;
 }
 
-.emotion-294 {
+.emotion-296 {
   display: flex;
   -webkit-flex-direction: row;
   -ms-flex-direction: row;
@@ -96,7 +96,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
   gap: 0.5rem;
 }
 
-.emotion-508 {
+.emotion-510 {
   margin-top: var(--chakra-spacing-3);
 }
 
@@ -185,15 +185,15 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       className="chakra-field__root emotion-14"
                       data-part="root"
                       data-scope="field"
-                      id="field:::r2v:"
+                      id="field:::r30:"
                       role="group"
                     >
                       <label
                         className="chakra-field__label emotion-15"
                         data-part="label"
                         data-scope="field"
-                        htmlFor=":r2v:"
-                        id="field:::r2v:::label"
+                        htmlFor=":r30:"
+                        id="field:::r30:::label"
                       >
                         First Name
                         <span
@@ -247,15 +247,15 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       className="chakra-field__root emotion-14"
                       data-part="root"
                       data-scope="field"
-                      id="field:::r31:"
+                      id="field:::r32:"
                       role="group"
                     >
                       <label
                         className="chakra-field__label emotion-15"
                         data-part="label"
                         data-scope="field"
-                        htmlFor=":r31:"
-                        id="field:::r31:::label"
+                        htmlFor=":r32:"
+                        id="field:::r32:::label"
                       >
                         Middle
                       </label>
@@ -302,15 +302,15 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       className="chakra-field__root emotion-14"
                       data-part="root"
                       data-scope="field"
-                      id="field:::r33:"
+                      id="field:::r34:"
                       role="group"
                     >
                       <label
                         className="chakra-field__label emotion-15"
                         data-part="label"
                         data-scope="field"
-                        htmlFor=":r33:"
-                        id="field:::r33:::label"
+                        htmlFor=":r34:"
+                        id="field:::r34:::label"
                       >
                         Last Name
                         <span
@@ -369,15 +369,15 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       className="chakra-field__root emotion-14"
                       data-part="root"
                       data-scope="field"
-                      id="field:::r35:"
+                      id="field:::r36:"
                       role="group"
                     >
                       <label
                         className="chakra-field__label emotion-15"
                         data-part="label"
                         data-scope="field"
-                        htmlFor=":r35:"
-                        id="field:::r35:::label"
+                        htmlFor=":r36:"
+                        id="field:::r36:::label"
                       >
                         Date of Birth
                         <span
@@ -859,15 +859,15 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                 className="chakra-field__root emotion-14"
                                 data-part="root"
                                 data-scope="field"
-                                id="field:::r3f:"
+                                id="field:::r3g:"
                                 role="group"
                               >
                                 <label
                                   className="chakra-field__label emotion-15"
                                   data-part="label"
                                   data-scope="field"
-                                  htmlFor=":r3f:"
-                                  id="field:::r3f:::label"
+                                  htmlFor=":r3g:"
+                                  id="field:::r3g:::label"
                                 >
                                   Address
                                   <span
@@ -921,15 +921,15 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                 className="chakra-field__root emotion-14"
                                 data-part="root"
                                 data-scope="field"
-                                id="field:::r3h:"
+                                id="field:::r3i:"
                                 role="group"
                               >
                                 <label
                                   className="chakra-field__label emotion-15"
                                   data-part="label"
                                   data-scope="field"
-                                  htmlFor=":r3h:"
-                                  id="field:::r3h:::label"
+                                  htmlFor=":r3i:"
+                                  id="field:::r3i:::label"
                                 >
                                   Address 2
                                 </label>
@@ -976,15 +976,15 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                 className="chakra-field__root emotion-14"
                                 data-part="root"
                                 data-scope="field"
-                                id="field:::r3j:"
+                                id="field:::r3k:"
                                 role="group"
                               >
                                 <label
                                   className="chakra-field__label emotion-15"
                                   data-part="label"
                                   data-scope="field"
-                                  htmlFor=":r3j:"
-                                  id="field:::r3j:::label"
+                                  htmlFor=":r3k:"
+                                  id="field:::r3k:::label"
                                 >
                                   City
                                   <span
@@ -1039,15 +1039,15 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                 className="chakra-field__root emotion-100"
                                 data-part="root"
                                 data-scope="field"
-                                id="field:::r3l:"
+                                id="field:::r3m:"
                                 role="group"
                               >
                                 <label
                                   className="chakra-field__label emotion-15"
                                   data-part="label"
                                   data-scope="field"
-                                  htmlFor=":r3l:"
-                                  id="field:::r3l:::label"
+                                  htmlFor=":r3m:"
+                                  id="field:::r3m:::label"
                                 >
                                   State
                                   <span
@@ -1070,9 +1070,9 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                 >
                                   <select
                                     aria-hidden={true}
-                                    aria-labelledby="field:::r3l:::label"
+                                    aria-labelledby="field:::r3m:::label"
                                     disabled={false}
-                                    id=":r3l:"
+                                    id=":r3m:"
                                     multiple={false}
                                     name="root_person_address_state"
                                     onFocus={[Function]}
@@ -1454,7 +1454,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                         aria-expanded={false}
                                         aria-haspopup="listbox"
                                         aria-invalid={false}
-                                        aria-labelledby="field:::r3l:::label"
+                                        aria-labelledby="field:::r3m:::label"
                                         className="chakra-select__trigger emotion-106"
                                         data-part="trigger"
                                         data-placeholder-shown=""
@@ -1523,7 +1523,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                     }
                                   >
                                     <div
-                                      aria-labelledby="field:::r3l:::label"
+                                      aria-labelledby="field:::r3m:::label"
                                       className="chakra-select__content emotion-112"
                                       data-part="content"
                                       data-scope="select"
@@ -3412,15 +3412,15 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                 className="chakra-field__root emotion-14"
                                 data-part="root"
                                 data-scope="field"
-                                id="field:::r3o:"
+                                id="field:::r3p:"
                                 role="group"
                               >
                                 <label
                                   className="chakra-field__label emotion-15"
                                   data-part="label"
                                   data-scope="field"
-                                  htmlFor=":r3o:"
-                                  id="field:::r3o:::label"
+                                  htmlFor=":r3p:"
+                                  id="field:::r3p:::label"
                                 >
                                   ZIP Code
                                   <span
@@ -3476,256 +3476,269 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     }
                   }
                 >
-                  <div
-                    className="chakra-field__root emotion-14"
-                    data-part="root"
-                    data-scope="field"
-                    id="field:::r3p:"
-                    role="group"
-                  >
-                    <label
-                      className="chakra-field__label emotion-15"
-                      data-part="label"
-                      data-scope="field"
-                      htmlFor=":r3p:"
-                      id="field:::r3p:::label"
-                    >
-                      Employment
-                    </label>
-                    <div
-                      aria-describedby="root_employment__error root_employment__description root_employment__help"
-                      aria-labelledby="radio-group::r3q::label"
-                      aria-orientation="vertical"
-                      className="chakra-radio-group__root emotion-4"
-                      data-orientation="vertical"
+                  <div>
+                    <fieldset
+                      className="fieldset__root emotion-0"
                       data-part="root"
-                      data-scope="radio-group"
-                      dir="ltr"
-                      id="radio-group::r3q:"
-                      onBlur={[Function]}
-                      onChange={[Function]}
-                      onFocus={[Function]}
-                      role="radiogroup"
-                      style={
-                        {
-                          "position": "relative",
-                        }
-                      }
+                      data-scope="fieldset"
+                      disabled={false}
                     >
                       <div
-                        className="chakra-stack emotion-294"
+                        className="fieldset__content emotion-1"
                       >
-                        <label
-                          className="chakra-radio-group__item emotion-295"
-                          data-orientation="vertical"
-                          data-part="item"
-                          data-scope="radio-group"
-                          data-ssr=""
-                          data-state="checked"
-                          dir="ltr"
-                          htmlFor="radio-group::r3q::radio:input:0"
-                          id="root_employment-0"
-                          onClick={[Function]}
-                          onPointerDown={[Function]}
-                          onPointerLeave={[Function]}
-                          onPointerMove={[Function]}
-                          onPointerUp={[Function]}
+                        <div
+                          className="chakra-field__root emotion-14"
+                          data-part="root"
+                          data-scope="field"
+                          id="field:::r3r:"
+                          role="group"
                         >
-                          <input
-                            data-ownedby="radio-group::r3q:"
-                            defaultChecked={true}
-                            disabled={false}
-                            id="radio-group::r3q::radio:input:0"
-                            name="root_employment"
+                          <label
+                            className="chakra-field__label emotion-15"
+                            data-part="label"
+                            data-scope="field"
+                            htmlFor=":r3r:"
+                            id="field:::r3r:::label"
+                          >
+                            Employment
+                          </label>
+                          <div
+                            aria-describedby="root_employment__error root_employment__description root_employment__help"
+                            aria-labelledby="radio-group::r3s::label"
+                            aria-orientation="vertical"
+                            className="chakra-radio-group__root emotion-4"
+                            data-orientation="vertical"
+                            data-part="root"
+                            data-scope="radio-group"
+                            dir="ltr"
+                            id="radio-group::r3s:"
                             onBlur={[Function]}
-                            onClick={[Function]}
+                            onChange={[Function]}
                             onFocus={[Function]}
-                            onKeyDown={[Function]}
-                            onKeyUp={[Function]}
+                            role="radiogroup"
                             style={
                               {
-                                "border": "0",
-                                "clip": "rect(0 0 0 0)",
-                                "height": "1px",
-                                "margin": "-1px",
-                                "overflow": "hidden",
-                                "padding": "0",
-                                "position": "absolute",
-                                "whiteSpace": "nowrap",
-                                "width": "1px",
-                                "wordWrap": "normal",
+                                "position": "relative",
                               }
                             }
-                            type="radio"
-                            value="0"
-                          />
-                          <span
-                            aria-hidden={true}
-                            className="emotion-296"
-                            data-checked=""
-                            data-orientation="vertical"
-                            data-part="item-control"
-                            data-scope="radio-group"
-                            data-ssr=""
-                            data-state="checked"
-                            dir="ltr"
-                            id="radio-group::r3q::radio:control:0"
                           >
-                            <span
-                              className="dot"
-                            />
-                          </span>
-                          <span
-                            className="chakra-radio-group__itemText emotion-4"
-                            data-orientation="vertical"
-                            data-part="item-text"
-                            data-scope="radio-group"
-                            data-ssr=""
-                            data-state="checked"
-                            dir="ltr"
-                            id="radio-group::r3q::radio:label:0"
-                          >
-                            Company
-                          </span>
-                        </label>
-                        <label
-                          className="chakra-radio-group__item emotion-295"
-                          data-orientation="vertical"
-                          data-part="item"
-                          data-scope="radio-group"
-                          data-ssr=""
-                          data-state="unchecked"
-                          dir="ltr"
-                          htmlFor="radio-group::r3q::radio:input:1"
-                          id="root_employment-1"
-                          onClick={[Function]}
-                          onPointerDown={[Function]}
-                          onPointerLeave={[Function]}
-                          onPointerMove={[Function]}
-                          onPointerUp={[Function]}
-                        >
-                          <input
-                            data-ownedby="radio-group::r3q:"
-                            defaultChecked={false}
-                            disabled={false}
-                            id="radio-group::r3q::radio:input:1"
-                            name="root_employment"
-                            onBlur={[Function]}
-                            onClick={[Function]}
-                            onFocus={[Function]}
-                            onKeyDown={[Function]}
-                            onKeyUp={[Function]}
-                            style={
-                              {
-                                "border": "0",
-                                "clip": "rect(0 0 0 0)",
-                                "height": "1px",
-                                "margin": "-1px",
-                                "overflow": "hidden",
-                                "padding": "0",
-                                "position": "absolute",
-                                "whiteSpace": "nowrap",
-                                "width": "1px",
-                                "wordWrap": "normal",
-                              }
-                            }
-                            type="radio"
-                            value="1"
-                          />
-                          <span
-                            aria-hidden={true}
-                            className="emotion-296"
-                            data-orientation="vertical"
-                            data-part="item-control"
-                            data-scope="radio-group"
-                            data-ssr=""
-                            data-state="unchecked"
-                            dir="ltr"
-                            id="radio-group::r3q::radio:control:1"
-                          />
-                          <span
-                            className="chakra-radio-group__itemText emotion-4"
-                            data-orientation="vertical"
-                            data-part="item-text"
-                            data-scope="radio-group"
-                            data-ssr=""
-                            data-state="unchecked"
-                            dir="ltr"
-                            id="radio-group::r3q::radio:label:1"
-                          >
-                            Education
-                          </span>
-                        </label>
-                        <label
-                          className="chakra-radio-group__item emotion-295"
-                          data-orientation="vertical"
-                          data-part="item"
-                          data-scope="radio-group"
-                          data-ssr=""
-                          data-state="unchecked"
-                          dir="ltr"
-                          htmlFor="radio-group::r3q::radio:input:2"
-                          id="root_employment-2"
-                          onClick={[Function]}
-                          onPointerDown={[Function]}
-                          onPointerLeave={[Function]}
-                          onPointerMove={[Function]}
-                          onPointerUp={[Function]}
-                        >
-                          <input
-                            data-ownedby="radio-group::r3q:"
-                            defaultChecked={false}
-                            disabled={false}
-                            id="radio-group::r3q::radio:input:2"
-                            name="root_employment"
-                            onBlur={[Function]}
-                            onClick={[Function]}
-                            onFocus={[Function]}
-                            onKeyDown={[Function]}
-                            onKeyUp={[Function]}
-                            style={
-                              {
-                                "border": "0",
-                                "clip": "rect(0 0 0 0)",
-                                "height": "1px",
-                                "margin": "-1px",
-                                "overflow": "hidden",
-                                "padding": "0",
-                                "position": "absolute",
-                                "whiteSpace": "nowrap",
-                                "width": "1px",
-                                "wordWrap": "normal",
-                              }
-                            }
-                            type="radio"
-                            value="2"
-                          />
-                          <span
-                            aria-hidden={true}
-                            className="emotion-296"
-                            data-orientation="vertical"
-                            data-part="item-control"
-                            data-scope="radio-group"
-                            data-ssr=""
-                            data-state="unchecked"
-                            dir="ltr"
-                            id="radio-group::r3q::radio:control:2"
-                          />
-                          <span
-                            className="chakra-radio-group__itemText emotion-4"
-                            data-orientation="vertical"
-                            data-part="item-text"
-                            data-scope="radio-group"
-                            data-ssr=""
-                            data-state="unchecked"
-                            dir="ltr"
-                            id="radio-group::r3q::radio:label:2"
-                          >
-                            Other
-                          </span>
-                        </label>
+                            <div
+                              className="chakra-stack emotion-296"
+                            >
+                              <label
+                                className="chakra-radio-group__item emotion-297"
+                                data-orientation="vertical"
+                                data-part="item"
+                                data-scope="radio-group"
+                                data-ssr=""
+                                data-state="checked"
+                                dir="ltr"
+                                htmlFor="radio-group::r3s::radio:input:0"
+                                id="root_employment-0"
+                                onClick={[Function]}
+                                onPointerDown={[Function]}
+                                onPointerLeave={[Function]}
+                                onPointerMove={[Function]}
+                                onPointerUp={[Function]}
+                              >
+                                <input
+                                  data-ownedby="radio-group::r3s:"
+                                  defaultChecked={true}
+                                  disabled={false}
+                                  id="radio-group::r3s::radio:input:0"
+                                  name="root_employment"
+                                  onBlur={[Function]}
+                                  onClick={[Function]}
+                                  onFocus={[Function]}
+                                  onKeyDown={[Function]}
+                                  onKeyUp={[Function]}
+                                  style={
+                                    {
+                                      "border": "0",
+                                      "clip": "rect(0 0 0 0)",
+                                      "height": "1px",
+                                      "margin": "-1px",
+                                      "overflow": "hidden",
+                                      "padding": "0",
+                                      "position": "absolute",
+                                      "whiteSpace": "nowrap",
+                                      "width": "1px",
+                                      "wordWrap": "normal",
+                                    }
+                                  }
+                                  type="radio"
+                                  value="0"
+                                />
+                                <span
+                                  aria-hidden={true}
+                                  className="emotion-298"
+                                  data-checked=""
+                                  data-orientation="vertical"
+                                  data-part="item-control"
+                                  data-scope="radio-group"
+                                  data-ssr=""
+                                  data-state="checked"
+                                  dir="ltr"
+                                  id="radio-group::r3s::radio:control:0"
+                                >
+                                  <span
+                                    className="dot"
+                                  />
+                                </span>
+                                <span
+                                  className="chakra-radio-group__itemText emotion-4"
+                                  data-orientation="vertical"
+                                  data-part="item-text"
+                                  data-scope="radio-group"
+                                  data-ssr=""
+                                  data-state="checked"
+                                  dir="ltr"
+                                  id="radio-group::r3s::radio:label:0"
+                                >
+                                  Company
+                                </span>
+                              </label>
+                              <label
+                                className="chakra-radio-group__item emotion-297"
+                                data-orientation="vertical"
+                                data-part="item"
+                                data-scope="radio-group"
+                                data-ssr=""
+                                data-state="unchecked"
+                                dir="ltr"
+                                htmlFor="radio-group::r3s::radio:input:1"
+                                id="root_employment-1"
+                                onClick={[Function]}
+                                onPointerDown={[Function]}
+                                onPointerLeave={[Function]}
+                                onPointerMove={[Function]}
+                                onPointerUp={[Function]}
+                              >
+                                <input
+                                  data-ownedby="radio-group::r3s:"
+                                  defaultChecked={false}
+                                  disabled={false}
+                                  id="radio-group::r3s::radio:input:1"
+                                  name="root_employment"
+                                  onBlur={[Function]}
+                                  onClick={[Function]}
+                                  onFocus={[Function]}
+                                  onKeyDown={[Function]}
+                                  onKeyUp={[Function]}
+                                  style={
+                                    {
+                                      "border": "0",
+                                      "clip": "rect(0 0 0 0)",
+                                      "height": "1px",
+                                      "margin": "-1px",
+                                      "overflow": "hidden",
+                                      "padding": "0",
+                                      "position": "absolute",
+                                      "whiteSpace": "nowrap",
+                                      "width": "1px",
+                                      "wordWrap": "normal",
+                                    }
+                                  }
+                                  type="radio"
+                                  value="1"
+                                />
+                                <span
+                                  aria-hidden={true}
+                                  className="emotion-298"
+                                  data-orientation="vertical"
+                                  data-part="item-control"
+                                  data-scope="radio-group"
+                                  data-ssr=""
+                                  data-state="unchecked"
+                                  dir="ltr"
+                                  id="radio-group::r3s::radio:control:1"
+                                />
+                                <span
+                                  className="chakra-radio-group__itemText emotion-4"
+                                  data-orientation="vertical"
+                                  data-part="item-text"
+                                  data-scope="radio-group"
+                                  data-ssr=""
+                                  data-state="unchecked"
+                                  dir="ltr"
+                                  id="radio-group::r3s::radio:label:1"
+                                >
+                                  Education
+                                </span>
+                              </label>
+                              <label
+                                className="chakra-radio-group__item emotion-297"
+                                data-orientation="vertical"
+                                data-part="item"
+                                data-scope="radio-group"
+                                data-ssr=""
+                                data-state="unchecked"
+                                dir="ltr"
+                                htmlFor="radio-group::r3s::radio:input:2"
+                                id="root_employment-2"
+                                onClick={[Function]}
+                                onPointerDown={[Function]}
+                                onPointerLeave={[Function]}
+                                onPointerMove={[Function]}
+                                onPointerUp={[Function]}
+                              >
+                                <input
+                                  data-ownedby="radio-group::r3s:"
+                                  defaultChecked={false}
+                                  disabled={false}
+                                  id="radio-group::r3s::radio:input:2"
+                                  name="root_employment"
+                                  onBlur={[Function]}
+                                  onClick={[Function]}
+                                  onFocus={[Function]}
+                                  onKeyDown={[Function]}
+                                  onKeyUp={[Function]}
+                                  style={
+                                    {
+                                      "border": "0",
+                                      "clip": "rect(0 0 0 0)",
+                                      "height": "1px",
+                                      "margin": "-1px",
+                                      "overflow": "hidden",
+                                      "padding": "0",
+                                      "position": "absolute",
+                                      "whiteSpace": "nowrap",
+                                      "width": "1px",
+                                      "wordWrap": "normal",
+                                    }
+                                  }
+                                  type="radio"
+                                  value="2"
+                                />
+                                <span
+                                  aria-hidden={true}
+                                  className="emotion-298"
+                                  data-orientation="vertical"
+                                  data-part="item-control"
+                                  data-scope="radio-group"
+                                  data-ssr=""
+                                  data-state="unchecked"
+                                  dir="ltr"
+                                  id="radio-group::r3s::radio:control:2"
+                                />
+                                <span
+                                  className="chakra-radio-group__itemText emotion-4"
+                                  data-orientation="vertical"
+                                  data-part="item-text"
+                                  data-scope="radio-group"
+                                  data-ssr=""
+                                  data-state="unchecked"
+                                  dir="ltr"
+                                  id="radio-group::r3s::radio:label:2"
+                                >
+                                  Other
+                                </span>
+                              </label>
+                            </div>
+                          </div>
+                        </div>
                       </div>
-                    </div>
+                    </fieldset>
                   </div>
                 </div>
                 <div
@@ -3748,15 +3761,15 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           className="chakra-field__root emotion-14"
                           data-part="root"
                           data-scope="field"
-                          id="field:::r3s:"
+                          id="field:::r3u:"
                           role="group"
                         >
                           <label
                             className="chakra-field__label emotion-15"
                             data-part="label"
                             data-scope="field"
-                            htmlFor=":r3s:"
-                            id="field:::r3s:::label"
+                            htmlFor=":r3u:"
+                            id="field:::r3u:::label"
                           >
                             Company Name
                             <span
@@ -3810,15 +3823,15 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           className="chakra-field__root emotion-14"
                           data-part="root"
                           data-scope="field"
-                          id="field:::r3u:"
+                          id="field:::r40:"
                           role="group"
                         >
                           <label
                             className="chakra-field__label emotion-15"
                             data-part="label"
                             data-scope="field"
-                            htmlFor=":r3u:"
-                            id="field:::r3u:::label"
+                            htmlFor=":r40:"
+                            id="field:::r40:::label"
                           >
                             Job Title
                           </label>
@@ -3865,15 +3878,15 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           className="chakra-field__root emotion-14"
                           data-part="root"
                           data-scope="field"
-                          id="field:::r40:"
+                          id="field:::r42:"
                           role="group"
                         >
                           <label
                             className="chakra-field__label emotion-15"
                             data-part="label"
                             data-scope="field"
-                            htmlFor=":r40:"
-                            id="field:::r40:::label"
+                            htmlFor=":r42:"
+                            id="field:::r42:::label"
                           >
                             City
                             <span
@@ -3927,15 +3940,15 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           className="chakra-field__root emotion-100"
                           data-part="root"
                           data-scope="field"
-                          id="field:::r42:"
+                          id="field:::r44:"
                           role="group"
                         >
                           <label
                             className="chakra-field__label emotion-15"
                             data-part="label"
                             data-scope="field"
-                            htmlFor=":r42:"
-                            id="field:::r42:::label"
+                            htmlFor=":r44:"
+                            id="field:::r44:::label"
                           >
                             State
                             <span
@@ -3958,9 +3971,9 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           >
                             <select
                               aria-hidden={true}
-                              aria-labelledby="field:::r42:::label"
+                              aria-labelledby="field:::r44:::label"
                               disabled={false}
-                              id=":r42:"
+                              id=":r44:"
                               multiple={false}
                               name="root_employment_location_state"
                               onFocus={[Function]}
@@ -4342,7 +4355,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                   aria-expanded={false}
                                   aria-haspopup="listbox"
                                   aria-invalid={false}
-                                  aria-labelledby="field:::r42:::label"
+                                  aria-labelledby="field:::r44:::label"
                                   className="chakra-select__trigger emotion-106"
                                   data-part="trigger"
                                   data-placeholder-shown=""
@@ -4411,7 +4424,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                               }
                             >
                               <div
-                                aria-labelledby="field:::r42:::label"
+                                aria-labelledby="field:::r44:::label"
                                 className="chakra-select__content emotion-112"
                                 data-part="content"
                                 data-scope="select"
@@ -6287,10 +6300,10 @@ exports[`Complex grid renders person and address and employment in a complex gri
     </fieldset>
   </div>
   <div
-    className="emotion-508"
+    className="emotion-510"
   >
     <button
-      className="chakra-button emotion-509"
+      className="chakra-button emotion-511"
       disabled={false}
       type="submit"
     >
@@ -6388,7 +6401,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
   grid-column: span 3/span 3;
 }
 
-.emotion-294 {
+.emotion-296 {
   display: flex;
   -webkit-flex-direction: row;
   -ms-flex-direction: row;
@@ -6396,7 +6409,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
   gap: 0.5rem;
 }
 
-.emotion-514 {
+.emotion-516 {
   margin-top: var(--chakra-spacing-3);
 }
 
@@ -6485,15 +6498,15 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       className="chakra-field__root emotion-14"
                       data-part="root"
                       data-scope="field"
-                      id="field:::r47:"
+                      id="field:::r49:"
                       role="group"
                     >
                       <label
                         className="chakra-field__label emotion-15"
                         data-part="label"
                         data-scope="field"
-                        htmlFor=":r47:"
-                        id="field:::r47:::label"
+                        htmlFor=":r49:"
+                        id="field:::r49:::label"
                       >
                         First Name
                         <span
@@ -6547,15 +6560,15 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       className="chakra-field__root emotion-14"
                       data-part="root"
                       data-scope="field"
-                      id="field:::r49:"
+                      id="field:::r4b:"
                       role="group"
                     >
                       <label
                         className="chakra-field__label emotion-15"
                         data-part="label"
                         data-scope="field"
-                        htmlFor=":r49:"
-                        id="field:::r49:::label"
+                        htmlFor=":r4b:"
+                        id="field:::r4b:::label"
                       >
                         Middle
                       </label>
@@ -6602,15 +6615,15 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       className="chakra-field__root emotion-14"
                       data-part="root"
                       data-scope="field"
-                      id="field:::r4b:"
+                      id="field:::r4d:"
                       role="group"
                     >
                       <label
                         className="chakra-field__label emotion-15"
                         data-part="label"
                         data-scope="field"
-                        htmlFor=":r4b:"
-                        id="field:::r4b:::label"
+                        htmlFor=":r4d:"
+                        id="field:::r4d:::label"
                       >
                         Last Name
                         <span
@@ -6669,15 +6682,15 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       className="chakra-field__root emotion-14"
                       data-part="root"
                       data-scope="field"
-                      id="field:::r4d:"
+                      id="field:::r4f:"
                       role="group"
                     >
                       <label
                         className="chakra-field__label emotion-15"
                         data-part="label"
                         data-scope="field"
-                        htmlFor=":r4d:"
-                        id="field:::r4d:::label"
+                        htmlFor=":r4f:"
+                        id="field:::r4f:::label"
                       >
                         Date of Birth
                         <span
@@ -7159,15 +7172,15 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                 className="chakra-field__root emotion-14"
                                 data-part="root"
                                 data-scope="field"
-                                id="field:::r4n:"
+                                id="field:::r4p:"
                                 role="group"
                               >
                                 <label
                                   className="chakra-field__label emotion-15"
                                   data-part="label"
                                   data-scope="field"
-                                  htmlFor=":r4n:"
-                                  id="field:::r4n:::label"
+                                  htmlFor=":r4p:"
+                                  id="field:::r4p:::label"
                                 >
                                   Address
                                   <span
@@ -7221,15 +7234,15 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                 className="chakra-field__root emotion-14"
                                 data-part="root"
                                 data-scope="field"
-                                id="field:::r4p:"
+                                id="field:::r4r:"
                                 role="group"
                               >
                                 <label
                                   className="chakra-field__label emotion-15"
                                   data-part="label"
                                   data-scope="field"
-                                  htmlFor=":r4p:"
-                                  id="field:::r4p:::label"
+                                  htmlFor=":r4r:"
+                                  id="field:::r4r:::label"
                                 >
                                   Address 2
                                 </label>
@@ -7276,15 +7289,15 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                 className="chakra-field__root emotion-14"
                                 data-part="root"
                                 data-scope="field"
-                                id="field:::r4r:"
+                                id="field:::r4t:"
                                 role="group"
                               >
                                 <label
                                   className="chakra-field__label emotion-15"
                                   data-part="label"
                                   data-scope="field"
-                                  htmlFor=":r4r:"
-                                  id="field:::r4r:::label"
+                                  htmlFor=":r4t:"
+                                  id="field:::r4t:::label"
                                 >
                                   City
                                   <span
@@ -7339,15 +7352,15 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                 className="chakra-field__root emotion-100"
                                 data-part="root"
                                 data-scope="field"
-                                id="field:::r4t:"
+                                id="field:::r4v:"
                                 role="group"
                               >
                                 <label
                                   className="chakra-field__label emotion-15"
                                   data-part="label"
                                   data-scope="field"
-                                  htmlFor=":r4t:"
-                                  id="field:::r4t:::label"
+                                  htmlFor=":r4v:"
+                                  id="field:::r4v:::label"
                                 >
                                   State
                                   <span
@@ -7370,9 +7383,9 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                 >
                                   <select
                                     aria-hidden={true}
-                                    aria-labelledby="field:::r4t:::label"
+                                    aria-labelledby="field:::r4v:::label"
                                     disabled={false}
-                                    id=":r4t:"
+                                    id=":r4v:"
                                     multiple={false}
                                     name="root_person_address_state"
                                     onFocus={[Function]}
@@ -7754,7 +7767,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                         aria-expanded={false}
                                         aria-haspopup="listbox"
                                         aria-invalid={false}
-                                        aria-labelledby="field:::r4t:::label"
+                                        aria-labelledby="field:::r4v:::label"
                                         className="chakra-select__trigger emotion-106"
                                         data-part="trigger"
                                         data-placeholder-shown=""
@@ -7823,7 +7836,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                     }
                                   >
                                     <div
-                                      aria-labelledby="field:::r4t:::label"
+                                      aria-labelledby="field:::r4v:::label"
                                       className="chakra-select__content emotion-112"
                                       data-part="content"
                                       data-scope="select"
@@ -9712,15 +9725,15 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                 className="chakra-field__root emotion-14"
                                 data-part="root"
                                 data-scope="field"
-                                id="field:::r50:"
+                                id="field:::r52:"
                                 role="group"
                               >
                                 <label
                                   className="chakra-field__label emotion-15"
                                   data-part="label"
                                   data-scope="field"
-                                  htmlFor=":r50:"
-                                  id="field:::r50:::label"
+                                  htmlFor=":r52:"
+                                  id="field:::r52:::label"
                                 >
                                   ZIP Code
                                   <span
@@ -9776,265 +9789,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     }
                   }
                 >
-                  <div
-                    className="chakra-field__root emotion-14"
-                    data-part="root"
-                    data-scope="field"
-                    id="field:::r51:"
-                    role="group"
-                  >
-                    <label
-                      className="chakra-field__label emotion-15"
-                      data-part="label"
-                      data-scope="field"
-                      htmlFor=":r51:"
-                      id="field:::r51:::label"
-                    >
-                      Employment
-                    </label>
-                    <div
-                      aria-describedby="root_employment__error root_employment__description root_employment__help"
-                      aria-labelledby="radio-group::r52::label"
-                      aria-orientation="vertical"
-                      className="chakra-radio-group__root emotion-4"
-                      data-orientation="vertical"
-                      data-part="root"
-                      data-scope="radio-group"
-                      dir="ltr"
-                      id="radio-group::r52:"
-                      onBlur={[Function]}
-                      onChange={[Function]}
-                      onFocus={[Function]}
-                      role="radiogroup"
-                      style={
-                        {
-                          "position": "relative",
-                        }
-                      }
-                    >
-                      <div
-                        className="chakra-stack emotion-294"
-                      >
-                        <label
-                          className="chakra-radio-group__item emotion-295"
-                          data-orientation="vertical"
-                          data-part="item"
-                          data-scope="radio-group"
-                          data-ssr=""
-                          data-state="unchecked"
-                          dir="ltr"
-                          htmlFor="radio-group::r52::radio:input:0"
-                          id="root_employment-0"
-                          onClick={[Function]}
-                          onPointerDown={[Function]}
-                          onPointerLeave={[Function]}
-                          onPointerMove={[Function]}
-                          onPointerUp={[Function]}
-                        >
-                          <input
-                            data-ownedby="radio-group::r52:"
-                            defaultChecked={false}
-                            disabled={false}
-                            id="radio-group::r52::radio:input:0"
-                            name="root_employment"
-                            onBlur={[Function]}
-                            onClick={[Function]}
-                            onFocus={[Function]}
-                            onKeyDown={[Function]}
-                            onKeyUp={[Function]}
-                            style={
-                              {
-                                "border": "0",
-                                "clip": "rect(0 0 0 0)",
-                                "height": "1px",
-                                "margin": "-1px",
-                                "overflow": "hidden",
-                                "padding": "0",
-                                "position": "absolute",
-                                "whiteSpace": "nowrap",
-                                "width": "1px",
-                                "wordWrap": "normal",
-                              }
-                            }
-                            type="radio"
-                            value="0"
-                          />
-                          <span
-                            aria-hidden={true}
-                            className="emotion-296"
-                            data-orientation="vertical"
-                            data-part="item-control"
-                            data-scope="radio-group"
-                            data-ssr=""
-                            data-state="unchecked"
-                            dir="ltr"
-                            id="radio-group::r52::radio:control:0"
-                          />
-                          <span
-                            className="chakra-radio-group__itemText emotion-4"
-                            data-orientation="vertical"
-                            data-part="item-text"
-                            data-scope="radio-group"
-                            data-ssr=""
-                            data-state="unchecked"
-                            dir="ltr"
-                            id="radio-group::r52::radio:label:0"
-                          >
-                            Company
-                          </span>
-                        </label>
-                        <label
-                          className="chakra-radio-group__item emotion-295"
-                          data-orientation="vertical"
-                          data-part="item"
-                          data-scope="radio-group"
-                          data-ssr=""
-                          data-state="checked"
-                          dir="ltr"
-                          htmlFor="radio-group::r52::radio:input:1"
-                          id="root_employment-1"
-                          onClick={[Function]}
-                          onPointerDown={[Function]}
-                          onPointerLeave={[Function]}
-                          onPointerMove={[Function]}
-                          onPointerUp={[Function]}
-                        >
-                          <input
-                            data-ownedby="radio-group::r52:"
-                            defaultChecked={true}
-                            disabled={false}
-                            id="radio-group::r52::radio:input:1"
-                            name="root_employment"
-                            onBlur={[Function]}
-                            onClick={[Function]}
-                            onFocus={[Function]}
-                            onKeyDown={[Function]}
-                            onKeyUp={[Function]}
-                            style={
-                              {
-                                "border": "0",
-                                "clip": "rect(0 0 0 0)",
-                                "height": "1px",
-                                "margin": "-1px",
-                                "overflow": "hidden",
-                                "padding": "0",
-                                "position": "absolute",
-                                "whiteSpace": "nowrap",
-                                "width": "1px",
-                                "wordWrap": "normal",
-                              }
-                            }
-                            type="radio"
-                            value="1"
-                          />
-                          <span
-                            aria-hidden={true}
-                            className="emotion-296"
-                            data-checked=""
-                            data-orientation="vertical"
-                            data-part="item-control"
-                            data-scope="radio-group"
-                            data-ssr=""
-                            data-state="checked"
-                            dir="ltr"
-                            id="radio-group::r52::radio:control:1"
-                          >
-                            <span
-                              className="dot"
-                            />
-                          </span>
-                          <span
-                            className="chakra-radio-group__itemText emotion-4"
-                            data-orientation="vertical"
-                            data-part="item-text"
-                            data-scope="radio-group"
-                            data-ssr=""
-                            data-state="checked"
-                            dir="ltr"
-                            id="radio-group::r52::radio:label:1"
-                          >
-                            Education
-                          </span>
-                        </label>
-                        <label
-                          className="chakra-radio-group__item emotion-295"
-                          data-orientation="vertical"
-                          data-part="item"
-                          data-scope="radio-group"
-                          data-ssr=""
-                          data-state="unchecked"
-                          dir="ltr"
-                          htmlFor="radio-group::r52::radio:input:2"
-                          id="root_employment-2"
-                          onClick={[Function]}
-                          onPointerDown={[Function]}
-                          onPointerLeave={[Function]}
-                          onPointerMove={[Function]}
-                          onPointerUp={[Function]}
-                        >
-                          <input
-                            data-ownedby="radio-group::r52:"
-                            defaultChecked={false}
-                            disabled={false}
-                            id="radio-group::r52::radio:input:2"
-                            name="root_employment"
-                            onBlur={[Function]}
-                            onClick={[Function]}
-                            onFocus={[Function]}
-                            onKeyDown={[Function]}
-                            onKeyUp={[Function]}
-                            style={
-                              {
-                                "border": "0",
-                                "clip": "rect(0 0 0 0)",
-                                "height": "1px",
-                                "margin": "-1px",
-                                "overflow": "hidden",
-                                "padding": "0",
-                                "position": "absolute",
-                                "whiteSpace": "nowrap",
-                                "width": "1px",
-                                "wordWrap": "normal",
-                              }
-                            }
-                            type="radio"
-                            value="2"
-                          />
-                          <span
-                            aria-hidden={true}
-                            className="emotion-296"
-                            data-orientation="vertical"
-                            data-part="item-control"
-                            data-scope="radio-group"
-                            data-ssr=""
-                            data-state="unchecked"
-                            dir="ltr"
-                            id="radio-group::r52::radio:control:2"
-                          />
-                          <span
-                            className="chakra-radio-group__itemText emotion-4"
-                            data-orientation="vertical"
-                            data-part="item-text"
-                            data-scope="radio-group"
-                            data-ssr=""
-                            data-state="unchecked"
-                            dir="ltr"
-                            id="radio-group::r52::radio:label:2"
-                          >
-                            Other
-                          </span>
-                        </label>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div
-                  className="emotion-290"
-                  data-testid="1"
-                >
-                  <div
-                    className="form-group field field-string"
-                  >
+                  <div>
                     <fieldset
                       className="fieldset__root emotion-0"
                       data-part="root"
@@ -10057,6 +9812,277 @@ exports[`Complex grid renders person and address and employment in a complex gri
                             data-scope="field"
                             htmlFor=":r54:"
                             id="field:::r54:::label"
+                          >
+                            Employment
+                          </label>
+                          <div
+                            aria-describedby="root_employment__error root_employment__description root_employment__help"
+                            aria-labelledby="radio-group::r55::label"
+                            aria-orientation="vertical"
+                            className="chakra-radio-group__root emotion-4"
+                            data-orientation="vertical"
+                            data-part="root"
+                            data-scope="radio-group"
+                            dir="ltr"
+                            id="radio-group::r55:"
+                            onBlur={[Function]}
+                            onChange={[Function]}
+                            onFocus={[Function]}
+                            role="radiogroup"
+                            style={
+                              {
+                                "position": "relative",
+                              }
+                            }
+                          >
+                            <div
+                              className="chakra-stack emotion-296"
+                            >
+                              <label
+                                className="chakra-radio-group__item emotion-297"
+                                data-orientation="vertical"
+                                data-part="item"
+                                data-scope="radio-group"
+                                data-ssr=""
+                                data-state="unchecked"
+                                dir="ltr"
+                                htmlFor="radio-group::r55::radio:input:0"
+                                id="root_employment-0"
+                                onClick={[Function]}
+                                onPointerDown={[Function]}
+                                onPointerLeave={[Function]}
+                                onPointerMove={[Function]}
+                                onPointerUp={[Function]}
+                              >
+                                <input
+                                  data-ownedby="radio-group::r55:"
+                                  defaultChecked={false}
+                                  disabled={false}
+                                  id="radio-group::r55::radio:input:0"
+                                  name="root_employment"
+                                  onBlur={[Function]}
+                                  onClick={[Function]}
+                                  onFocus={[Function]}
+                                  onKeyDown={[Function]}
+                                  onKeyUp={[Function]}
+                                  style={
+                                    {
+                                      "border": "0",
+                                      "clip": "rect(0 0 0 0)",
+                                      "height": "1px",
+                                      "margin": "-1px",
+                                      "overflow": "hidden",
+                                      "padding": "0",
+                                      "position": "absolute",
+                                      "whiteSpace": "nowrap",
+                                      "width": "1px",
+                                      "wordWrap": "normal",
+                                    }
+                                  }
+                                  type="radio"
+                                  value="0"
+                                />
+                                <span
+                                  aria-hidden={true}
+                                  className="emotion-298"
+                                  data-orientation="vertical"
+                                  data-part="item-control"
+                                  data-scope="radio-group"
+                                  data-ssr=""
+                                  data-state="unchecked"
+                                  dir="ltr"
+                                  id="radio-group::r55::radio:control:0"
+                                />
+                                <span
+                                  className="chakra-radio-group__itemText emotion-4"
+                                  data-orientation="vertical"
+                                  data-part="item-text"
+                                  data-scope="radio-group"
+                                  data-ssr=""
+                                  data-state="unchecked"
+                                  dir="ltr"
+                                  id="radio-group::r55::radio:label:0"
+                                >
+                                  Company
+                                </span>
+                              </label>
+                              <label
+                                className="chakra-radio-group__item emotion-297"
+                                data-orientation="vertical"
+                                data-part="item"
+                                data-scope="radio-group"
+                                data-ssr=""
+                                data-state="checked"
+                                dir="ltr"
+                                htmlFor="radio-group::r55::radio:input:1"
+                                id="root_employment-1"
+                                onClick={[Function]}
+                                onPointerDown={[Function]}
+                                onPointerLeave={[Function]}
+                                onPointerMove={[Function]}
+                                onPointerUp={[Function]}
+                              >
+                                <input
+                                  data-ownedby="radio-group::r55:"
+                                  defaultChecked={true}
+                                  disabled={false}
+                                  id="radio-group::r55::radio:input:1"
+                                  name="root_employment"
+                                  onBlur={[Function]}
+                                  onClick={[Function]}
+                                  onFocus={[Function]}
+                                  onKeyDown={[Function]}
+                                  onKeyUp={[Function]}
+                                  style={
+                                    {
+                                      "border": "0",
+                                      "clip": "rect(0 0 0 0)",
+                                      "height": "1px",
+                                      "margin": "-1px",
+                                      "overflow": "hidden",
+                                      "padding": "0",
+                                      "position": "absolute",
+                                      "whiteSpace": "nowrap",
+                                      "width": "1px",
+                                      "wordWrap": "normal",
+                                    }
+                                  }
+                                  type="radio"
+                                  value="1"
+                                />
+                                <span
+                                  aria-hidden={true}
+                                  className="emotion-298"
+                                  data-checked=""
+                                  data-orientation="vertical"
+                                  data-part="item-control"
+                                  data-scope="radio-group"
+                                  data-ssr=""
+                                  data-state="checked"
+                                  dir="ltr"
+                                  id="radio-group::r55::radio:control:1"
+                                >
+                                  <span
+                                    className="dot"
+                                  />
+                                </span>
+                                <span
+                                  className="chakra-radio-group__itemText emotion-4"
+                                  data-orientation="vertical"
+                                  data-part="item-text"
+                                  data-scope="radio-group"
+                                  data-ssr=""
+                                  data-state="checked"
+                                  dir="ltr"
+                                  id="radio-group::r55::radio:label:1"
+                                >
+                                  Education
+                                </span>
+                              </label>
+                              <label
+                                className="chakra-radio-group__item emotion-297"
+                                data-orientation="vertical"
+                                data-part="item"
+                                data-scope="radio-group"
+                                data-ssr=""
+                                data-state="unchecked"
+                                dir="ltr"
+                                htmlFor="radio-group::r55::radio:input:2"
+                                id="root_employment-2"
+                                onClick={[Function]}
+                                onPointerDown={[Function]}
+                                onPointerLeave={[Function]}
+                                onPointerMove={[Function]}
+                                onPointerUp={[Function]}
+                              >
+                                <input
+                                  data-ownedby="radio-group::r55:"
+                                  defaultChecked={false}
+                                  disabled={false}
+                                  id="radio-group::r55::radio:input:2"
+                                  name="root_employment"
+                                  onBlur={[Function]}
+                                  onClick={[Function]}
+                                  onFocus={[Function]}
+                                  onKeyDown={[Function]}
+                                  onKeyUp={[Function]}
+                                  style={
+                                    {
+                                      "border": "0",
+                                      "clip": "rect(0 0 0 0)",
+                                      "height": "1px",
+                                      "margin": "-1px",
+                                      "overflow": "hidden",
+                                      "padding": "0",
+                                      "position": "absolute",
+                                      "whiteSpace": "nowrap",
+                                      "width": "1px",
+                                      "wordWrap": "normal",
+                                    }
+                                  }
+                                  type="radio"
+                                  value="2"
+                                />
+                                <span
+                                  aria-hidden={true}
+                                  className="emotion-298"
+                                  data-orientation="vertical"
+                                  data-part="item-control"
+                                  data-scope="radio-group"
+                                  data-ssr=""
+                                  data-state="unchecked"
+                                  dir="ltr"
+                                  id="radio-group::r55::radio:control:2"
+                                />
+                                <span
+                                  className="chakra-radio-group__itemText emotion-4"
+                                  data-orientation="vertical"
+                                  data-part="item-text"
+                                  data-scope="radio-group"
+                                  data-ssr=""
+                                  data-state="unchecked"
+                                  dir="ltr"
+                                  id="radio-group::r55::radio:label:2"
+                                >
+                                  Other
+                                </span>
+                              </label>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </fieldset>
+                  </div>
+                </div>
+                <div
+                  className="emotion-290"
+                  data-testid="1"
+                >
+                  <div
+                    className="form-group field field-string"
+                  >
+                    <fieldset
+                      className="fieldset__root emotion-0"
+                      data-part="root"
+                      data-scope="fieldset"
+                      disabled={false}
+                    >
+                      <div
+                        className="fieldset__content emotion-1"
+                      >
+                        <div
+                          className="chakra-field__root emotion-14"
+                          data-part="root"
+                          data-scope="field"
+                          id="field:::r57:"
+                          role="group"
+                        >
+                          <label
+                            className="chakra-field__label emotion-15"
+                            data-part="label"
+                            data-scope="field"
+                            htmlFor=":r57:"
+                            id="field:::r57:::label"
                           >
                             District Name
                           </label>
@@ -10103,15 +10129,15 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           className="chakra-field__root emotion-14"
                           data-part="root"
                           data-scope="field"
-                          id="field:::r56:"
+                          id="field:::r59:"
                           role="group"
                         >
                           <label
                             className="chakra-field__label emotion-15"
                             data-part="label"
                             data-scope="field"
-                            htmlFor=":r56:"
-                            id="field:::r56:::label"
+                            htmlFor=":r59:"
+                            id="field:::r59:::label"
                           >
                             School Name
                             <span
@@ -10165,15 +10191,15 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           className="chakra-field__root emotion-14"
                           data-part="root"
                           data-scope="field"
-                          id="field:::r58:"
+                          id="field:::r5b:"
                           role="group"
                         >
                           <label
                             className="chakra-field__label emotion-15"
                             data-part="label"
                             data-scope="field"
-                            htmlFor=":r58:"
-                            id="field:::r58:::label"
+                            htmlFor=":r5b:"
+                            id="field:::r5b:::label"
                           >
                             Job Title
                           </label>
@@ -10220,15 +10246,15 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           className="chakra-field__root emotion-14"
                           data-part="root"
                           data-scope="field"
-                          id="field:::r5a:"
+                          id="field:::r5d:"
                           role="group"
                         >
                           <label
                             className="chakra-field__label emotion-15"
                             data-part="label"
                             data-scope="field"
-                            htmlFor=":r5a:"
-                            id="field:::r5a:::label"
+                            htmlFor=":r5d:"
+                            id="field:::r5d:::label"
                           >
                             City
                             <span
@@ -10282,15 +10308,15 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           className="chakra-field__root emotion-100"
                           data-part="root"
                           data-scope="field"
-                          id="field:::r5c:"
+                          id="field:::r5f:"
                           role="group"
                         >
                           <label
                             className="chakra-field__label emotion-15"
                             data-part="label"
                             data-scope="field"
-                            htmlFor=":r5c:"
-                            id="field:::r5c:::label"
+                            htmlFor=":r5f:"
+                            id="field:::r5f:::label"
                           >
                             State
                             <span
@@ -10313,9 +10339,9 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           >
                             <select
                               aria-hidden={true}
-                              aria-labelledby="field:::r5c:::label"
+                              aria-labelledby="field:::r5f:::label"
                               disabled={false}
-                              id=":r5c:"
+                              id=":r5f:"
                               multiple={false}
                               name="root_employment_location_state"
                               onFocus={[Function]}
@@ -10697,7 +10723,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                   aria-expanded={false}
                                   aria-haspopup="listbox"
                                   aria-invalid={false}
-                                  aria-labelledby="field:::r5c:::label"
+                                  aria-labelledby="field:::r5f:::label"
                                   className="chakra-select__trigger emotion-106"
                                   data-part="trigger"
                                   data-placeholder-shown=""
@@ -10766,7 +10792,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                               }
                             >
                               <div
-                                aria-labelledby="field:::r5c:::label"
+                                aria-labelledby="field:::r5f:::label"
                                 className="chakra-select__content emotion-112"
                                 data-part="content"
                                 data-scope="select"
@@ -12642,10 +12668,10 @@ exports[`Complex grid renders person and address and employment in a complex gri
     </fieldset>
   </div>
   <div
-    className="emotion-514"
+    className="emotion-516"
   >
     <button
-      className="chakra-button emotion-515"
+      className="chakra-button emotion-517"
       disabled={false}
       type="submit"
     >
@@ -12743,7 +12769,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
   grid-column: span 3/span 3;
 }
 
-.emotion-294 {
+.emotion-296 {
   display: flex;
   -webkit-flex-direction: row;
   -ms-flex-direction: row;
@@ -12751,7 +12777,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
   gap: 0.5rem;
 }
 
-.emotion-311 {
+.emotion-313 {
   margin-top: var(--chakra-spacing-3);
 }
 
@@ -12840,15 +12866,15 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       className="chakra-field__root emotion-14"
                       data-part="root"
                       data-scope="field"
-                      id="field:::r5h:"
+                      id="field:::r5k:"
                       role="group"
                     >
                       <label
                         className="chakra-field__label emotion-15"
                         data-part="label"
                         data-scope="field"
-                        htmlFor=":r5h:"
-                        id="field:::r5h:::label"
+                        htmlFor=":r5k:"
+                        id="field:::r5k:::label"
                       >
                         First Name
                         <span
@@ -12902,15 +12928,15 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       className="chakra-field__root emotion-14"
                       data-part="root"
                       data-scope="field"
-                      id="field:::r5j:"
+                      id="field:::r5m:"
                       role="group"
                     >
                       <label
                         className="chakra-field__label emotion-15"
                         data-part="label"
                         data-scope="field"
-                        htmlFor=":r5j:"
-                        id="field:::r5j:::label"
+                        htmlFor=":r5m:"
+                        id="field:::r5m:::label"
                       >
                         Middle
                       </label>
@@ -12957,15 +12983,15 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       className="chakra-field__root emotion-14"
                       data-part="root"
                       data-scope="field"
-                      id="field:::r5l:"
+                      id="field:::r5o:"
                       role="group"
                     >
                       <label
                         className="chakra-field__label emotion-15"
                         data-part="label"
                         data-scope="field"
-                        htmlFor=":r5l:"
-                        id="field:::r5l:::label"
+                        htmlFor=":r5o:"
+                        id="field:::r5o:::label"
                       >
                         Last Name
                         <span
@@ -13024,15 +13050,15 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       className="chakra-field__root emotion-14"
                       data-part="root"
                       data-scope="field"
-                      id="field:::r5n:"
+                      id="field:::r5q:"
                       role="group"
                     >
                       <label
                         className="chakra-field__label emotion-15"
                         data-part="label"
                         data-scope="field"
-                        htmlFor=":r5n:"
-                        id="field:::r5n:::label"
+                        htmlFor=":r5q:"
+                        id="field:::r5q:::label"
                       >
                         Date of Birth
                         <span
@@ -13514,15 +13540,15 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                 className="chakra-field__root emotion-14"
                                 data-part="root"
                                 data-scope="field"
-                                id="field:::r61:"
+                                id="field:::r64:"
                                 role="group"
                               >
                                 <label
                                   className="chakra-field__label emotion-15"
                                   data-part="label"
                                   data-scope="field"
-                                  htmlFor=":r61:"
-                                  id="field:::r61:::label"
+                                  htmlFor=":r64:"
+                                  id="field:::r64:::label"
                                 >
                                   Address
                                   <span
@@ -13576,15 +13602,15 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                 className="chakra-field__root emotion-14"
                                 data-part="root"
                                 data-scope="field"
-                                id="field:::r63:"
+                                id="field:::r66:"
                                 role="group"
                               >
                                 <label
                                   className="chakra-field__label emotion-15"
                                   data-part="label"
                                   data-scope="field"
-                                  htmlFor=":r63:"
-                                  id="field:::r63:::label"
+                                  htmlFor=":r66:"
+                                  id="field:::r66:::label"
                                 >
                                   Address 2
                                 </label>
@@ -13631,15 +13657,15 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                 className="chakra-field__root emotion-14"
                                 data-part="root"
                                 data-scope="field"
-                                id="field:::r65:"
+                                id="field:::r68:"
                                 role="group"
                               >
                                 <label
                                   className="chakra-field__label emotion-15"
                                   data-part="label"
                                   data-scope="field"
-                                  htmlFor=":r65:"
-                                  id="field:::r65:::label"
+                                  htmlFor=":r68:"
+                                  id="field:::r68:::label"
                                 >
                                   City
                                   <span
@@ -13694,15 +13720,15 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                 className="chakra-field__root emotion-100"
                                 data-part="root"
                                 data-scope="field"
-                                id="field:::r67:"
+                                id="field:::r6a:"
                                 role="group"
                               >
                                 <label
                                   className="chakra-field__label emotion-15"
                                   data-part="label"
                                   data-scope="field"
-                                  htmlFor=":r67:"
-                                  id="field:::r67:::label"
+                                  htmlFor=":r6a:"
+                                  id="field:::r6a:::label"
                                 >
                                   State
                                   <span
@@ -13725,9 +13751,9 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                 >
                                   <select
                                     aria-hidden={true}
-                                    aria-labelledby="field:::r67:::label"
+                                    aria-labelledby="field:::r6a:::label"
                                     disabled={false}
-                                    id=":r67:"
+                                    id=":r6a:"
                                     multiple={false}
                                     name="root_person_address_state"
                                     onFocus={[Function]}
@@ -14109,7 +14135,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                         aria-expanded={false}
                                         aria-haspopup="listbox"
                                         aria-invalid={false}
-                                        aria-labelledby="field:::r67:::label"
+                                        aria-labelledby="field:::r6a:::label"
                                         className="chakra-select__trigger emotion-106"
                                         data-part="trigger"
                                         data-placeholder-shown=""
@@ -14178,7 +14204,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                     }
                                   >
                                     <div
-                                      aria-labelledby="field:::r67:::label"
+                                      aria-labelledby="field:::r6a:::label"
                                       className="chakra-select__content emotion-112"
                                       data-part="content"
                                       data-scope="select"
@@ -16067,15 +16093,15 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                 className="chakra-field__root emotion-14"
                                 data-part="root"
                                 data-scope="field"
-                                id="field:::r6a:"
+                                id="field:::r6d:"
                                 role="group"
                               >
                                 <label
                                   className="chakra-field__label emotion-15"
                                   data-part="label"
                                   data-scope="field"
-                                  htmlFor=":r6a:"
-                                  id="field:::r6a:::label"
+                                  htmlFor=":r6d:"
+                                  id="field:::r6d:::label"
                                 >
                                   ZIP Code
                                   <span
@@ -16131,256 +16157,269 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     }
                   }
                 >
-                  <div
-                    className="chakra-field__root emotion-14"
-                    data-part="root"
-                    data-scope="field"
-                    id="field:::r6b:"
-                    role="group"
-                  >
-                    <label
-                      className="chakra-field__label emotion-15"
-                      data-part="label"
-                      data-scope="field"
-                      htmlFor=":r6b:"
-                      id="field:::r6b:::label"
-                    >
-                      Employment
-                    </label>
-                    <div
-                      aria-describedby="root_employment__error root_employment__description root_employment__help"
-                      aria-labelledby="radio-group::r6c::label"
-                      aria-orientation="vertical"
-                      className="chakra-radio-group__root emotion-4"
-                      data-orientation="vertical"
+                  <div>
+                    <fieldset
+                      className="fieldset__root emotion-0"
                       data-part="root"
-                      data-scope="radio-group"
-                      dir="ltr"
-                      id="radio-group::r6c:"
-                      onBlur={[Function]}
-                      onChange={[Function]}
-                      onFocus={[Function]}
-                      role="radiogroup"
-                      style={
-                        {
-                          "position": "relative",
-                        }
-                      }
+                      data-scope="fieldset"
+                      disabled={false}
                     >
                       <div
-                        className="chakra-stack emotion-294"
+                        className="fieldset__content emotion-1"
                       >
-                        <label
-                          className="chakra-radio-group__item emotion-295"
-                          data-orientation="vertical"
-                          data-part="item"
-                          data-scope="radio-group"
-                          data-ssr=""
-                          data-state="unchecked"
-                          dir="ltr"
-                          htmlFor="radio-group::r6c::radio:input:0"
-                          id="root_employment-0"
-                          onClick={[Function]}
-                          onPointerDown={[Function]}
-                          onPointerLeave={[Function]}
-                          onPointerMove={[Function]}
-                          onPointerUp={[Function]}
+                        <div
+                          className="chakra-field__root emotion-14"
+                          data-part="root"
+                          data-scope="field"
+                          id="field:::r6f:"
+                          role="group"
                         >
-                          <input
-                            data-ownedby="radio-group::r6c:"
-                            defaultChecked={false}
-                            disabled={false}
-                            id="radio-group::r6c::radio:input:0"
-                            name="root_employment"
+                          <label
+                            className="chakra-field__label emotion-15"
+                            data-part="label"
+                            data-scope="field"
+                            htmlFor=":r6f:"
+                            id="field:::r6f:::label"
+                          >
+                            Employment
+                          </label>
+                          <div
+                            aria-describedby="root_employment__error root_employment__description root_employment__help"
+                            aria-labelledby="radio-group::r6g::label"
+                            aria-orientation="vertical"
+                            className="chakra-radio-group__root emotion-4"
+                            data-orientation="vertical"
+                            data-part="root"
+                            data-scope="radio-group"
+                            dir="ltr"
+                            id="radio-group::r6g:"
                             onBlur={[Function]}
-                            onClick={[Function]}
+                            onChange={[Function]}
                             onFocus={[Function]}
-                            onKeyDown={[Function]}
-                            onKeyUp={[Function]}
+                            role="radiogroup"
                             style={
                               {
-                                "border": "0",
-                                "clip": "rect(0 0 0 0)",
-                                "height": "1px",
-                                "margin": "-1px",
-                                "overflow": "hidden",
-                                "padding": "0",
-                                "position": "absolute",
-                                "whiteSpace": "nowrap",
-                                "width": "1px",
-                                "wordWrap": "normal",
+                                "position": "relative",
                               }
                             }
-                            type="radio"
-                            value="0"
-                          />
-                          <span
-                            aria-hidden={true}
-                            className="emotion-296"
-                            data-orientation="vertical"
-                            data-part="item-control"
-                            data-scope="radio-group"
-                            data-ssr=""
-                            data-state="unchecked"
-                            dir="ltr"
-                            id="radio-group::r6c::radio:control:0"
-                          />
-                          <span
-                            className="chakra-radio-group__itemText emotion-4"
-                            data-orientation="vertical"
-                            data-part="item-text"
-                            data-scope="radio-group"
-                            data-ssr=""
-                            data-state="unchecked"
-                            dir="ltr"
-                            id="radio-group::r6c::radio:label:0"
                           >
-                            Company
-                          </span>
-                        </label>
-                        <label
-                          className="chakra-radio-group__item emotion-295"
-                          data-orientation="vertical"
-                          data-part="item"
-                          data-scope="radio-group"
-                          data-ssr=""
-                          data-state="unchecked"
-                          dir="ltr"
-                          htmlFor="radio-group::r6c::radio:input:1"
-                          id="root_employment-1"
-                          onClick={[Function]}
-                          onPointerDown={[Function]}
-                          onPointerLeave={[Function]}
-                          onPointerMove={[Function]}
-                          onPointerUp={[Function]}
-                        >
-                          <input
-                            data-ownedby="radio-group::r6c:"
-                            defaultChecked={false}
-                            disabled={false}
-                            id="radio-group::r6c::radio:input:1"
-                            name="root_employment"
-                            onBlur={[Function]}
-                            onClick={[Function]}
-                            onFocus={[Function]}
-                            onKeyDown={[Function]}
-                            onKeyUp={[Function]}
-                            style={
-                              {
-                                "border": "0",
-                                "clip": "rect(0 0 0 0)",
-                                "height": "1px",
-                                "margin": "-1px",
-                                "overflow": "hidden",
-                                "padding": "0",
-                                "position": "absolute",
-                                "whiteSpace": "nowrap",
-                                "width": "1px",
-                                "wordWrap": "normal",
-                              }
-                            }
-                            type="radio"
-                            value="1"
-                          />
-                          <span
-                            aria-hidden={true}
-                            className="emotion-296"
-                            data-orientation="vertical"
-                            data-part="item-control"
-                            data-scope="radio-group"
-                            data-ssr=""
-                            data-state="unchecked"
-                            dir="ltr"
-                            id="radio-group::r6c::radio:control:1"
-                          />
-                          <span
-                            className="chakra-radio-group__itemText emotion-4"
-                            data-orientation="vertical"
-                            data-part="item-text"
-                            data-scope="radio-group"
-                            data-ssr=""
-                            data-state="unchecked"
-                            dir="ltr"
-                            id="radio-group::r6c::radio:label:1"
-                          >
-                            Education
-                          </span>
-                        </label>
-                        <label
-                          className="chakra-radio-group__item emotion-295"
-                          data-orientation="vertical"
-                          data-part="item"
-                          data-scope="radio-group"
-                          data-ssr=""
-                          data-state="checked"
-                          dir="ltr"
-                          htmlFor="radio-group::r6c::radio:input:2"
-                          id="root_employment-2"
-                          onClick={[Function]}
-                          onPointerDown={[Function]}
-                          onPointerLeave={[Function]}
-                          onPointerMove={[Function]}
-                          onPointerUp={[Function]}
-                        >
-                          <input
-                            data-ownedby="radio-group::r6c:"
-                            defaultChecked={true}
-                            disabled={false}
-                            id="radio-group::r6c::radio:input:2"
-                            name="root_employment"
-                            onBlur={[Function]}
-                            onClick={[Function]}
-                            onFocus={[Function]}
-                            onKeyDown={[Function]}
-                            onKeyUp={[Function]}
-                            style={
-                              {
-                                "border": "0",
-                                "clip": "rect(0 0 0 0)",
-                                "height": "1px",
-                                "margin": "-1px",
-                                "overflow": "hidden",
-                                "padding": "0",
-                                "position": "absolute",
-                                "whiteSpace": "nowrap",
-                                "width": "1px",
-                                "wordWrap": "normal",
-                              }
-                            }
-                            type="radio"
-                            value="2"
-                          />
-                          <span
-                            aria-hidden={true}
-                            className="emotion-296"
-                            data-checked=""
-                            data-orientation="vertical"
-                            data-part="item-control"
-                            data-scope="radio-group"
-                            data-ssr=""
-                            data-state="checked"
-                            dir="ltr"
-                            id="radio-group::r6c::radio:control:2"
-                          >
-                            <span
-                              className="dot"
-                            />
-                          </span>
-                          <span
-                            className="chakra-radio-group__itemText emotion-4"
-                            data-orientation="vertical"
-                            data-part="item-text"
-                            data-scope="radio-group"
-                            data-ssr=""
-                            data-state="checked"
-                            dir="ltr"
-                            id="radio-group::r6c::radio:label:2"
-                          >
-                            Other
-                          </span>
-                        </label>
+                            <div
+                              className="chakra-stack emotion-296"
+                            >
+                              <label
+                                className="chakra-radio-group__item emotion-297"
+                                data-orientation="vertical"
+                                data-part="item"
+                                data-scope="radio-group"
+                                data-ssr=""
+                                data-state="unchecked"
+                                dir="ltr"
+                                htmlFor="radio-group::r6g::radio:input:0"
+                                id="root_employment-0"
+                                onClick={[Function]}
+                                onPointerDown={[Function]}
+                                onPointerLeave={[Function]}
+                                onPointerMove={[Function]}
+                                onPointerUp={[Function]}
+                              >
+                                <input
+                                  data-ownedby="radio-group::r6g:"
+                                  defaultChecked={false}
+                                  disabled={false}
+                                  id="radio-group::r6g::radio:input:0"
+                                  name="root_employment"
+                                  onBlur={[Function]}
+                                  onClick={[Function]}
+                                  onFocus={[Function]}
+                                  onKeyDown={[Function]}
+                                  onKeyUp={[Function]}
+                                  style={
+                                    {
+                                      "border": "0",
+                                      "clip": "rect(0 0 0 0)",
+                                      "height": "1px",
+                                      "margin": "-1px",
+                                      "overflow": "hidden",
+                                      "padding": "0",
+                                      "position": "absolute",
+                                      "whiteSpace": "nowrap",
+                                      "width": "1px",
+                                      "wordWrap": "normal",
+                                    }
+                                  }
+                                  type="radio"
+                                  value="0"
+                                />
+                                <span
+                                  aria-hidden={true}
+                                  className="emotion-298"
+                                  data-orientation="vertical"
+                                  data-part="item-control"
+                                  data-scope="radio-group"
+                                  data-ssr=""
+                                  data-state="unchecked"
+                                  dir="ltr"
+                                  id="radio-group::r6g::radio:control:0"
+                                />
+                                <span
+                                  className="chakra-radio-group__itemText emotion-4"
+                                  data-orientation="vertical"
+                                  data-part="item-text"
+                                  data-scope="radio-group"
+                                  data-ssr=""
+                                  data-state="unchecked"
+                                  dir="ltr"
+                                  id="radio-group::r6g::radio:label:0"
+                                >
+                                  Company
+                                </span>
+                              </label>
+                              <label
+                                className="chakra-radio-group__item emotion-297"
+                                data-orientation="vertical"
+                                data-part="item"
+                                data-scope="radio-group"
+                                data-ssr=""
+                                data-state="unchecked"
+                                dir="ltr"
+                                htmlFor="radio-group::r6g::radio:input:1"
+                                id="root_employment-1"
+                                onClick={[Function]}
+                                onPointerDown={[Function]}
+                                onPointerLeave={[Function]}
+                                onPointerMove={[Function]}
+                                onPointerUp={[Function]}
+                              >
+                                <input
+                                  data-ownedby="radio-group::r6g:"
+                                  defaultChecked={false}
+                                  disabled={false}
+                                  id="radio-group::r6g::radio:input:1"
+                                  name="root_employment"
+                                  onBlur={[Function]}
+                                  onClick={[Function]}
+                                  onFocus={[Function]}
+                                  onKeyDown={[Function]}
+                                  onKeyUp={[Function]}
+                                  style={
+                                    {
+                                      "border": "0",
+                                      "clip": "rect(0 0 0 0)",
+                                      "height": "1px",
+                                      "margin": "-1px",
+                                      "overflow": "hidden",
+                                      "padding": "0",
+                                      "position": "absolute",
+                                      "whiteSpace": "nowrap",
+                                      "width": "1px",
+                                      "wordWrap": "normal",
+                                    }
+                                  }
+                                  type="radio"
+                                  value="1"
+                                />
+                                <span
+                                  aria-hidden={true}
+                                  className="emotion-298"
+                                  data-orientation="vertical"
+                                  data-part="item-control"
+                                  data-scope="radio-group"
+                                  data-ssr=""
+                                  data-state="unchecked"
+                                  dir="ltr"
+                                  id="radio-group::r6g::radio:control:1"
+                                />
+                                <span
+                                  className="chakra-radio-group__itemText emotion-4"
+                                  data-orientation="vertical"
+                                  data-part="item-text"
+                                  data-scope="radio-group"
+                                  data-ssr=""
+                                  data-state="unchecked"
+                                  dir="ltr"
+                                  id="radio-group::r6g::radio:label:1"
+                                >
+                                  Education
+                                </span>
+                              </label>
+                              <label
+                                className="chakra-radio-group__item emotion-297"
+                                data-orientation="vertical"
+                                data-part="item"
+                                data-scope="radio-group"
+                                data-ssr=""
+                                data-state="checked"
+                                dir="ltr"
+                                htmlFor="radio-group::r6g::radio:input:2"
+                                id="root_employment-2"
+                                onClick={[Function]}
+                                onPointerDown={[Function]}
+                                onPointerLeave={[Function]}
+                                onPointerMove={[Function]}
+                                onPointerUp={[Function]}
+                              >
+                                <input
+                                  data-ownedby="radio-group::r6g:"
+                                  defaultChecked={true}
+                                  disabled={false}
+                                  id="radio-group::r6g::radio:input:2"
+                                  name="root_employment"
+                                  onBlur={[Function]}
+                                  onClick={[Function]}
+                                  onFocus={[Function]}
+                                  onKeyDown={[Function]}
+                                  onKeyUp={[Function]}
+                                  style={
+                                    {
+                                      "border": "0",
+                                      "clip": "rect(0 0 0 0)",
+                                      "height": "1px",
+                                      "margin": "-1px",
+                                      "overflow": "hidden",
+                                      "padding": "0",
+                                      "position": "absolute",
+                                      "whiteSpace": "nowrap",
+                                      "width": "1px",
+                                      "wordWrap": "normal",
+                                    }
+                                  }
+                                  type="radio"
+                                  value="2"
+                                />
+                                <span
+                                  aria-hidden={true}
+                                  className="emotion-298"
+                                  data-checked=""
+                                  data-orientation="vertical"
+                                  data-part="item-control"
+                                  data-scope="radio-group"
+                                  data-ssr=""
+                                  data-state="checked"
+                                  dir="ltr"
+                                  id="radio-group::r6g::radio:control:2"
+                                >
+                                  <span
+                                    className="dot"
+                                  />
+                                </span>
+                                <span
+                                  className="chakra-radio-group__itemText emotion-4"
+                                  data-orientation="vertical"
+                                  data-part="item-text"
+                                  data-scope="radio-group"
+                                  data-ssr=""
+                                  data-state="checked"
+                                  dir="ltr"
+                                  id="radio-group::r6g::radio:label:2"
+                                >
+                                  Other
+                                </span>
+                              </label>
+                            </div>
+                          </div>
+                        </div>
                       </div>
-                    </div>
+                    </fieldset>
                   </div>
                 </div>
                 <div
@@ -16403,15 +16442,15 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           className="chakra-field__root emotion-14"
                           data-part="root"
                           data-scope="field"
-                          id="field:::r6e:"
+                          id="field:::r6i:"
                           role="group"
                         >
                           <label
                             className="chakra-field__label emotion-15"
                             data-part="label"
                             data-scope="field"
-                            htmlFor=":r6e:"
-                            id="field:::r6e:::label"
+                            htmlFor=":r6i:"
+                            id="field:::r6i:::label"
                           >
                             Describe your job
                             <span
@@ -16424,7 +16463,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           <textarea
                             aria-describedby="root_employment_description__error root_employment_description__description root_employment_description__help"
                             autoFocus={false}
-                            className="chakra-textarea emotion-310"
+                            className="chakra-textarea emotion-312"
                             data-part="textarea"
                             data-required=""
                             data-scope="field"
@@ -16458,10 +16497,10 @@ exports[`Complex grid renders person and address and employment in a complex gri
     </fieldset>
   </div>
   <div
-    className="emotion-311"
+    className="emotion-313"
   >
     <button
-      className="chakra-button emotion-312"
+      className="chakra-button emotion-314"
       disabled={false}
       type="submit"
     >
@@ -16559,7 +16598,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
   grid-column: span 3/span 3;
 }
 
-.emotion-294 {
+.emotion-296 {
   display: flex;
   -webkit-flex-direction: row;
   -ms-flex-direction: row;
@@ -16567,7 +16606,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
   gap: 0.5rem;
 }
 
-.emotion-508 {
+.emotion-510 {
   margin-top: var(--chakra-spacing-3);
 }
 
@@ -19947,256 +19986,269 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     }
                   }
                 >
-                  <div
-                    className="chakra-field__root emotion-14"
-                    data-part="root"
-                    data-scope="field"
-                    id="field:::r2h:"
-                    role="group"
-                  >
-                    <label
-                      className="chakra-field__label emotion-15"
-                      data-part="label"
-                      data-scope="field"
-                      htmlFor=":r2h:"
-                      id="field:::r2h:::label"
-                    >
-                      Employment
-                    </label>
-                    <div
-                      aria-describedby="root_employment__error root_employment__description root_employment__help"
-                      aria-labelledby="radio-group::r2i::label"
-                      aria-orientation="vertical"
-                      className="chakra-radio-group__root emotion-4"
-                      data-orientation="vertical"
+                  <div>
+                    <fieldset
+                      className="fieldset__root emotion-0"
                       data-part="root"
-                      data-scope="radio-group"
-                      dir="ltr"
-                      id="radio-group::r2i:"
-                      onBlur={[Function]}
-                      onChange={[Function]}
-                      onFocus={[Function]}
-                      role="radiogroup"
-                      style={
-                        {
-                          "position": "relative",
-                        }
-                      }
+                      data-scope="fieldset"
+                      disabled={false}
                     >
                       <div
-                        className="chakra-stack emotion-294"
+                        className="fieldset__content emotion-1"
                       >
-                        <label
-                          className="chakra-radio-group__item emotion-295"
-                          data-orientation="vertical"
-                          data-part="item"
-                          data-scope="radio-group"
-                          data-ssr=""
-                          data-state="checked"
-                          dir="ltr"
-                          htmlFor="radio-group::r2i::radio:input:0"
-                          id="root_employment-0"
-                          onClick={[Function]}
-                          onPointerDown={[Function]}
-                          onPointerLeave={[Function]}
-                          onPointerMove={[Function]}
-                          onPointerUp={[Function]}
+                        <div
+                          className="chakra-field__root emotion-14"
+                          data-part="root"
+                          data-scope="field"
+                          id="field:::r2i:"
+                          role="group"
                         >
-                          <input
-                            data-ownedby="radio-group::r2i:"
-                            defaultChecked={true}
-                            disabled={false}
-                            id="radio-group::r2i::radio:input:0"
-                            name="root_employment"
+                          <label
+                            className="chakra-field__label emotion-15"
+                            data-part="label"
+                            data-scope="field"
+                            htmlFor=":r2i:"
+                            id="field:::r2i:::label"
+                          >
+                            Employment
+                          </label>
+                          <div
+                            aria-describedby="root_employment__error root_employment__description root_employment__help"
+                            aria-labelledby="radio-group::r2j::label"
+                            aria-orientation="vertical"
+                            className="chakra-radio-group__root emotion-4"
+                            data-orientation="vertical"
+                            data-part="root"
+                            data-scope="radio-group"
+                            dir="ltr"
+                            id="radio-group::r2j:"
                             onBlur={[Function]}
-                            onClick={[Function]}
+                            onChange={[Function]}
                             onFocus={[Function]}
-                            onKeyDown={[Function]}
-                            onKeyUp={[Function]}
+                            role="radiogroup"
                             style={
                               {
-                                "border": "0",
-                                "clip": "rect(0 0 0 0)",
-                                "height": "1px",
-                                "margin": "-1px",
-                                "overflow": "hidden",
-                                "padding": "0",
-                                "position": "absolute",
-                                "whiteSpace": "nowrap",
-                                "width": "1px",
-                                "wordWrap": "normal",
+                                "position": "relative",
                               }
                             }
-                            type="radio"
-                            value="0"
-                          />
-                          <span
-                            aria-hidden={true}
-                            className="emotion-296"
-                            data-checked=""
-                            data-orientation="vertical"
-                            data-part="item-control"
-                            data-scope="radio-group"
-                            data-ssr=""
-                            data-state="checked"
-                            dir="ltr"
-                            id="radio-group::r2i::radio:control:0"
                           >
-                            <span
-                              className="dot"
-                            />
-                          </span>
-                          <span
-                            className="chakra-radio-group__itemText emotion-4"
-                            data-orientation="vertical"
-                            data-part="item-text"
-                            data-scope="radio-group"
-                            data-ssr=""
-                            data-state="checked"
-                            dir="ltr"
-                            id="radio-group::r2i::radio:label:0"
-                          >
-                            Company
-                          </span>
-                        </label>
-                        <label
-                          className="chakra-radio-group__item emotion-295"
-                          data-orientation="vertical"
-                          data-part="item"
-                          data-scope="radio-group"
-                          data-ssr=""
-                          data-state="unchecked"
-                          dir="ltr"
-                          htmlFor="radio-group::r2i::radio:input:1"
-                          id="root_employment-1"
-                          onClick={[Function]}
-                          onPointerDown={[Function]}
-                          onPointerLeave={[Function]}
-                          onPointerMove={[Function]}
-                          onPointerUp={[Function]}
-                        >
-                          <input
-                            data-ownedby="radio-group::r2i:"
-                            defaultChecked={false}
-                            disabled={false}
-                            id="radio-group::r2i::radio:input:1"
-                            name="root_employment"
-                            onBlur={[Function]}
-                            onClick={[Function]}
-                            onFocus={[Function]}
-                            onKeyDown={[Function]}
-                            onKeyUp={[Function]}
-                            style={
-                              {
-                                "border": "0",
-                                "clip": "rect(0 0 0 0)",
-                                "height": "1px",
-                                "margin": "-1px",
-                                "overflow": "hidden",
-                                "padding": "0",
-                                "position": "absolute",
-                                "whiteSpace": "nowrap",
-                                "width": "1px",
-                                "wordWrap": "normal",
-                              }
-                            }
-                            type="radio"
-                            value="1"
-                          />
-                          <span
-                            aria-hidden={true}
-                            className="emotion-296"
-                            data-orientation="vertical"
-                            data-part="item-control"
-                            data-scope="radio-group"
-                            data-ssr=""
-                            data-state="unchecked"
-                            dir="ltr"
-                            id="radio-group::r2i::radio:control:1"
-                          />
-                          <span
-                            className="chakra-radio-group__itemText emotion-4"
-                            data-orientation="vertical"
-                            data-part="item-text"
-                            data-scope="radio-group"
-                            data-ssr=""
-                            data-state="unchecked"
-                            dir="ltr"
-                            id="radio-group::r2i::radio:label:1"
-                          >
-                            Education
-                          </span>
-                        </label>
-                        <label
-                          className="chakra-radio-group__item emotion-295"
-                          data-orientation="vertical"
-                          data-part="item"
-                          data-scope="radio-group"
-                          data-ssr=""
-                          data-state="unchecked"
-                          dir="ltr"
-                          htmlFor="radio-group::r2i::radio:input:2"
-                          id="root_employment-2"
-                          onClick={[Function]}
-                          onPointerDown={[Function]}
-                          onPointerLeave={[Function]}
-                          onPointerMove={[Function]}
-                          onPointerUp={[Function]}
-                        >
-                          <input
-                            data-ownedby="radio-group::r2i:"
-                            defaultChecked={false}
-                            disabled={false}
-                            id="radio-group::r2i::radio:input:2"
-                            name="root_employment"
-                            onBlur={[Function]}
-                            onClick={[Function]}
-                            onFocus={[Function]}
-                            onKeyDown={[Function]}
-                            onKeyUp={[Function]}
-                            style={
-                              {
-                                "border": "0",
-                                "clip": "rect(0 0 0 0)",
-                                "height": "1px",
-                                "margin": "-1px",
-                                "overflow": "hidden",
-                                "padding": "0",
-                                "position": "absolute",
-                                "whiteSpace": "nowrap",
-                                "width": "1px",
-                                "wordWrap": "normal",
-                              }
-                            }
-                            type="radio"
-                            value="2"
-                          />
-                          <span
-                            aria-hidden={true}
-                            className="emotion-296"
-                            data-orientation="vertical"
-                            data-part="item-control"
-                            data-scope="radio-group"
-                            data-ssr=""
-                            data-state="unchecked"
-                            dir="ltr"
-                            id="radio-group::r2i::radio:control:2"
-                          />
-                          <span
-                            className="chakra-radio-group__itemText emotion-4"
-                            data-orientation="vertical"
-                            data-part="item-text"
-                            data-scope="radio-group"
-                            data-ssr=""
-                            data-state="unchecked"
-                            dir="ltr"
-                            id="radio-group::r2i::radio:label:2"
-                          >
-                            Other
-                          </span>
-                        </label>
+                            <div
+                              className="chakra-stack emotion-296"
+                            >
+                              <label
+                                className="chakra-radio-group__item emotion-297"
+                                data-orientation="vertical"
+                                data-part="item"
+                                data-scope="radio-group"
+                                data-ssr=""
+                                data-state="checked"
+                                dir="ltr"
+                                htmlFor="radio-group::r2j::radio:input:0"
+                                id="root_employment-0"
+                                onClick={[Function]}
+                                onPointerDown={[Function]}
+                                onPointerLeave={[Function]}
+                                onPointerMove={[Function]}
+                                onPointerUp={[Function]}
+                              >
+                                <input
+                                  data-ownedby="radio-group::r2j:"
+                                  defaultChecked={true}
+                                  disabled={false}
+                                  id="radio-group::r2j::radio:input:0"
+                                  name="root_employment"
+                                  onBlur={[Function]}
+                                  onClick={[Function]}
+                                  onFocus={[Function]}
+                                  onKeyDown={[Function]}
+                                  onKeyUp={[Function]}
+                                  style={
+                                    {
+                                      "border": "0",
+                                      "clip": "rect(0 0 0 0)",
+                                      "height": "1px",
+                                      "margin": "-1px",
+                                      "overflow": "hidden",
+                                      "padding": "0",
+                                      "position": "absolute",
+                                      "whiteSpace": "nowrap",
+                                      "width": "1px",
+                                      "wordWrap": "normal",
+                                    }
+                                  }
+                                  type="radio"
+                                  value="0"
+                                />
+                                <span
+                                  aria-hidden={true}
+                                  className="emotion-298"
+                                  data-checked=""
+                                  data-orientation="vertical"
+                                  data-part="item-control"
+                                  data-scope="radio-group"
+                                  data-ssr=""
+                                  data-state="checked"
+                                  dir="ltr"
+                                  id="radio-group::r2j::radio:control:0"
+                                >
+                                  <span
+                                    className="dot"
+                                  />
+                                </span>
+                                <span
+                                  className="chakra-radio-group__itemText emotion-4"
+                                  data-orientation="vertical"
+                                  data-part="item-text"
+                                  data-scope="radio-group"
+                                  data-ssr=""
+                                  data-state="checked"
+                                  dir="ltr"
+                                  id="radio-group::r2j::radio:label:0"
+                                >
+                                  Company
+                                </span>
+                              </label>
+                              <label
+                                className="chakra-radio-group__item emotion-297"
+                                data-orientation="vertical"
+                                data-part="item"
+                                data-scope="radio-group"
+                                data-ssr=""
+                                data-state="unchecked"
+                                dir="ltr"
+                                htmlFor="radio-group::r2j::radio:input:1"
+                                id="root_employment-1"
+                                onClick={[Function]}
+                                onPointerDown={[Function]}
+                                onPointerLeave={[Function]}
+                                onPointerMove={[Function]}
+                                onPointerUp={[Function]}
+                              >
+                                <input
+                                  data-ownedby="radio-group::r2j:"
+                                  defaultChecked={false}
+                                  disabled={false}
+                                  id="radio-group::r2j::radio:input:1"
+                                  name="root_employment"
+                                  onBlur={[Function]}
+                                  onClick={[Function]}
+                                  onFocus={[Function]}
+                                  onKeyDown={[Function]}
+                                  onKeyUp={[Function]}
+                                  style={
+                                    {
+                                      "border": "0",
+                                      "clip": "rect(0 0 0 0)",
+                                      "height": "1px",
+                                      "margin": "-1px",
+                                      "overflow": "hidden",
+                                      "padding": "0",
+                                      "position": "absolute",
+                                      "whiteSpace": "nowrap",
+                                      "width": "1px",
+                                      "wordWrap": "normal",
+                                    }
+                                  }
+                                  type="radio"
+                                  value="1"
+                                />
+                                <span
+                                  aria-hidden={true}
+                                  className="emotion-298"
+                                  data-orientation="vertical"
+                                  data-part="item-control"
+                                  data-scope="radio-group"
+                                  data-ssr=""
+                                  data-state="unchecked"
+                                  dir="ltr"
+                                  id="radio-group::r2j::radio:control:1"
+                                />
+                                <span
+                                  className="chakra-radio-group__itemText emotion-4"
+                                  data-orientation="vertical"
+                                  data-part="item-text"
+                                  data-scope="radio-group"
+                                  data-ssr=""
+                                  data-state="unchecked"
+                                  dir="ltr"
+                                  id="radio-group::r2j::radio:label:1"
+                                >
+                                  Education
+                                </span>
+                              </label>
+                              <label
+                                className="chakra-radio-group__item emotion-297"
+                                data-orientation="vertical"
+                                data-part="item"
+                                data-scope="radio-group"
+                                data-ssr=""
+                                data-state="unchecked"
+                                dir="ltr"
+                                htmlFor="radio-group::r2j::radio:input:2"
+                                id="root_employment-2"
+                                onClick={[Function]}
+                                onPointerDown={[Function]}
+                                onPointerLeave={[Function]}
+                                onPointerMove={[Function]}
+                                onPointerUp={[Function]}
+                              >
+                                <input
+                                  data-ownedby="radio-group::r2j:"
+                                  defaultChecked={false}
+                                  disabled={false}
+                                  id="radio-group::r2j::radio:input:2"
+                                  name="root_employment"
+                                  onBlur={[Function]}
+                                  onClick={[Function]}
+                                  onFocus={[Function]}
+                                  onKeyDown={[Function]}
+                                  onKeyUp={[Function]}
+                                  style={
+                                    {
+                                      "border": "0",
+                                      "clip": "rect(0 0 0 0)",
+                                      "height": "1px",
+                                      "margin": "-1px",
+                                      "overflow": "hidden",
+                                      "padding": "0",
+                                      "position": "absolute",
+                                      "whiteSpace": "nowrap",
+                                      "width": "1px",
+                                      "wordWrap": "normal",
+                                    }
+                                  }
+                                  type="radio"
+                                  value="2"
+                                />
+                                <span
+                                  aria-hidden={true}
+                                  className="emotion-298"
+                                  data-orientation="vertical"
+                                  data-part="item-control"
+                                  data-scope="radio-group"
+                                  data-ssr=""
+                                  data-state="unchecked"
+                                  dir="ltr"
+                                  id="radio-group::r2j::radio:control:2"
+                                />
+                                <span
+                                  className="chakra-radio-group__itemText emotion-4"
+                                  data-orientation="vertical"
+                                  data-part="item-text"
+                                  data-scope="radio-group"
+                                  data-ssr=""
+                                  data-state="unchecked"
+                                  dir="ltr"
+                                  id="radio-group::r2j::radio:label:2"
+                                >
+                                  Other
+                                </span>
+                              </label>
+                            </div>
+                          </div>
+                        </div>
                       </div>
-                    </div>
+                    </fieldset>
                   </div>
                 </div>
                 <div
@@ -20219,15 +20271,15 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           className="chakra-field__root emotion-14"
                           data-part="root"
                           data-scope="field"
-                          id="field:::r2k:"
+                          id="field:::r2l:"
                           role="group"
                         >
                           <label
                             className="chakra-field__label emotion-15"
                             data-part="label"
                             data-scope="field"
-                            htmlFor=":r2k:"
-                            id="field:::r2k:::label"
+                            htmlFor=":r2l:"
+                            id="field:::r2l:::label"
                           >
                             Company Name
                             <span
@@ -20281,15 +20333,15 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           className="chakra-field__root emotion-14"
                           data-part="root"
                           data-scope="field"
-                          id="field:::r2m:"
+                          id="field:::r2n:"
                           role="group"
                         >
                           <label
                             className="chakra-field__label emotion-15"
                             data-part="label"
                             data-scope="field"
-                            htmlFor=":r2m:"
-                            id="field:::r2m:::label"
+                            htmlFor=":r2n:"
+                            id="field:::r2n:::label"
                           >
                             Job Title
                           </label>
@@ -20336,15 +20388,15 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           className="chakra-field__root emotion-14"
                           data-part="root"
                           data-scope="field"
-                          id="field:::r2o:"
+                          id="field:::r2p:"
                           role="group"
                         >
                           <label
                             className="chakra-field__label emotion-15"
                             data-part="label"
                             data-scope="field"
-                            htmlFor=":r2o:"
-                            id="field:::r2o:::label"
+                            htmlFor=":r2p:"
+                            id="field:::r2p:::label"
                           >
                             City
                             <span
@@ -20398,15 +20450,15 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           className="chakra-field__root emotion-100"
                           data-part="root"
                           data-scope="field"
-                          id="field:::r2q:"
+                          id="field:::r2r:"
                           role="group"
                         >
                           <label
                             className="chakra-field__label emotion-15"
                             data-part="label"
                             data-scope="field"
-                            htmlFor=":r2q:"
-                            id="field:::r2q:::label"
+                            htmlFor=":r2r:"
+                            id="field:::r2r:::label"
                           >
                             State
                             <span
@@ -20429,9 +20481,9 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           >
                             <select
                               aria-hidden={true}
-                              aria-labelledby="field:::r2q:::label"
+                              aria-labelledby="field:::r2r:::label"
                               disabled={false}
-                              id=":r2q:"
+                              id=":r2r:"
                               multiple={false}
                               name="root_employment_location_state"
                               onFocus={[Function]}
@@ -20813,7 +20865,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                   aria-expanded={false}
                                   aria-haspopup="listbox"
                                   aria-invalid={false}
-                                  aria-labelledby="field:::r2q:::label"
+                                  aria-labelledby="field:::r2r:::label"
                                   className="chakra-select__trigger emotion-106"
                                   data-part="trigger"
                                   data-placeholder-shown=""
@@ -20882,7 +20934,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                               }
                             >
                               <div
-                                aria-labelledby="field:::r2q:::label"
+                                aria-labelledby="field:::r2r:::label"
                                 className="chakra-select__content emotion-112"
                                 data-part="content"
                                 data-scope="select"
@@ -22758,10 +22810,10 @@ exports[`Complex grid renders person and address and employment in a complex gri
     </fieldset>
   </div>
   <div
-    className="emotion-508"
+    className="emotion-510"
   >
     <button
-      className="chakra-button emotion-509"
+      className="chakra-button emotion-511"
       disabled={false}
       type="submit"
     >
