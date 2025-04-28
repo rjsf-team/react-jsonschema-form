@@ -6,8 +6,6 @@
     "node": ">=20"
   },
   "scripts": {
-    "publish-repo": "lerna publish",
-    "changed": "lerna changed",
     "test": "lerna run test --stream --concurrency=1",
     "test:ci": "lerna run test:ci --stream --concurrency=1",
     "test:update": "lerna run --concurrency 2 --stream test:update",
@@ -84,6 +82,7 @@
     "packages/utils",
     "packages/validator-ajv8",
     "packages/snapshot-tests",
-    "packages/shadcn"
+    "packages/shadcn",
+    "packages/uswds"
   ]
 }
