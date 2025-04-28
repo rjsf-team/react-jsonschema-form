@@ -7,37 +7,42 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
-    "cs-check": "prettier -c --ignore-path ../../.prettierignore \"src/**/*.{js,jsx,ts,tsx,json}\"",
-    "cs-format": "prettier -w --ignore-path ../../.prettierignore \"src/**/*.{js,jsx,ts,tsx,json}\"",
+    "cs-check": "prettier -l \"{src,test}/**/*.ts?(x)\"",
+    "cs-format": "prettier \"{src,test}/**/*.ts?(x)\" --write",
     "lint": "eslint src test",
     "test": "jest",
     "test:update": "jest --u"
   },
-  "dependencies": {
-    "@rjsf/utils": "^5.19.2"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@babel/core": "^7.22.8",
     "@babel/preset-env": "^7.22.7",
     "@babel/preset-react": "^7.22.5",
     "@babel/preset-typescript": "^7.22.5",
-    "@rjsf/snapshot-tests": "^5.19.2",
-    "@rjsf/validator-ajv8": "^5.19.2",
+    "@rjsf/snapshot-tests": "^6.0.0-alpha.0",
+    "@rjsf/utils": "^6.0.0-alpha.0",
+    "@rjsf/validator-ajv8": "^6.0.0-alpha.0",
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/jest-dom": "^6.4.2",
+    "@testing-library/react": "^14.2.1",
+    "@testing-library/user-event": "^14.5.2",
     "@types/jest": "^29.5.3",
     "@types/react": "^18.2.14",
     "@types/react-dom": "^18.2.6",
     "eslint": "^8.44.0",
-    "jest": "^29.6.1",
+    "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.6.1",
     "prettier": "^3.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-test-renderer": "^18.2.0",
-    "typescript": "^5.1.6"
+    "typescript": "^5.1.6",
+    "@trussworks/react-uswds": "^6.1.0"
   },
   "peerDependencies": {
-    "@rjsf/core": "^5.19.2",
-    "@uswds/uswds": "^3.0.0",
+    "@rjsf/core": "^6",
+    "@rjsf/utils": "^6",
+    "@trussworks/react-uswds": "^5.0.0 || ^6.0.0",
     "react": "^16.14.0 || ^17.0.0 || ^18.0.0",
     "react-dom": "^16.14.0 || ^17.0.0 || ^18.0.0"
   },

@@ -5,18 +5,18 @@ meaning that you must load the Bootstrap stylesheet on the page to view the form
 
 ## Supported themes
 
-| Theme Name            | Status    | Package Name / Link |
-| --------------------- | --------- | ------------------- |
-| antd                  | Published | `@rjsf/antd`        |
-| Bootstrap 3 (default) | Published | `@rjsf/core`        |
-| Bootstrap 4           | Published | `@rjsf/bootstrap-4` |
-| Chakra UI             | Published | `@rjsf/chakra-ui`   |
-| fluent-ui             | Published | `@rjsf/fluent-ui`   |
-| fluentui-rc           | Published | `@rjsf/fluentui-rc` |
-| material-ui 4         | Published | `@rjsf/material-ui` |
-| material-ui 5         | Published | `@rjsf/mui`         |
-| Semantic UI           | Published | `@rjsf/semantic-ui` |
-| USWDS                 | Published | `@rjsf/uswds`       |
+| Theme Name                 | Status    | Package Name / Link                                                                                                     |
+| -------------------------- | --------- | ----------------------------------------------------------------------------------------------------------------------- |
+| antd                       | Published | [`@rjsf/antd`](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/antd#readme)                       |
+| Chakra UI                  | Published | [`@rjsf/chakra-ui`](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/chakra-ui#readme)             |
+| Core (default)             | Published | [`@rjsf/core`](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/core#readme)                       |
+| DaisyUI                    | Published | [`@rjsf/daisyui`](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/daisyui#readme)                 |
+| Fluent UI React Components | Published | [`@rjsf/fluentui-rc`](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/fluentui-rc#readme)         |
+| MUI                        | Published | [`@rjsf/mui`](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/mui#readme)                         |
+| React Bootstrap            | Published | [`@rjsf/react-bootstrap`](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/react-bootstrap#readme) |
+| Semantic UI                | Published | [`@rjsf/semantic-ui`](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/semantic-ui#readme)         |
+| Shadcn                     | Published | [`@rjsf/shadcn`](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/shadcn#readme)                   |
+| USWDS                      | Published | [`@rjsf/uswds`](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/uswds#readme)                     |
 
 ## Using themes
 
