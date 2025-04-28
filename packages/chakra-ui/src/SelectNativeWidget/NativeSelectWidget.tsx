@@ -25,7 +25,6 @@ import { Field } from '../components/ui/field';
  *
  * @returns {JSX.Element} - The rendered component.
  */
-
 export default function NativeSelectWidget<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,

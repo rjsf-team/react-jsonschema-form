@@ -574,7 +574,7 @@ const layoutGrid: Sample = {
                                   {
                                     'ui:col': {
                                       colSpan: 3,
-                                      style: { margin: '0 0 16px' },
+                                      style: { margin: '4px 0 16px' },
                                       children: ['employment'],
                                     },
                                   },
