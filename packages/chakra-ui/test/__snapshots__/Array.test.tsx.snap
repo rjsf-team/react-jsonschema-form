@@ -1338,7 +1338,7 @@ exports[`array fields has errors 1`] = `
             className="emotion-12"
           >
             <div
-              className="rjsf-field rjsf-field-string"
+              className="rjsf-field rjsf-field-string rjsf-field-error"
             >
               <fieldset
                 className="fieldset__root emotion-9"

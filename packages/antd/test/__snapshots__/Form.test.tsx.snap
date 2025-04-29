@@ -1310,7 +1310,7 @@ exports[`single fields help and error display 1`] = `
     </div>
   </div>
   <div
-    className="rjsf-field rjsf-field-string"
+    className="rjsf-field rjsf-field-string rjsf-field-error"
   >
     <div
       className="ant-form-item css-dev-only-do-not-override-1d4w9r2 ant-form-item-with-help ant-form-item-has-feedback ant-form-item-has-error"

@@ -601,7 +601,7 @@ exports[`single fields help and error display 1`] = `
     </div>
   </div>
   <div
-    className="rjsf-field rjsf-field-string"
+    className="rjsf-field rjsf-field-string rjsf-field-error"
   >
     <div>
       <label

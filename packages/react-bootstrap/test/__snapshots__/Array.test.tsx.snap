@@ -812,7 +812,7 @@ exports[`array fields has errors 1`] = `
           >
              
             <div
-              className="rjsf-field rjsf-field-string"
+              className="rjsf-field rjsf-field-string rjsf-field-error"
             >
               <div>
                 <label

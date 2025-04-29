@@ -4441,7 +4441,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
     </div>
   </div>
   <div
-    className="rjsf-field rjsf-field-string"
+    className="rjsf-field rjsf-field-string rjsf-field-error"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-9"

@@ -15,7 +15,7 @@ type TestType = {
   bar: boolean;
 };
 
-const validateFns = superSchemaFns as ValidatorFunctions;
+const validateFns = superSchemaFns as unknown as ValidatorFunctions;
 const rootSchema = superSchema as unknown as RJSFSchema;
 const mockedValidator = jest.mocked(AJV8PrecompiledValidator);
 
