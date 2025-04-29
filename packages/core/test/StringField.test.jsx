@@ -59,7 +59,7 @@ describe('StringField', () => {
         },
       });
 
-      expect(node.querySelectorAll('.field input[type=text]')).to.have.length.of(1);
+      expect(node.querySelectorAll('.rjsf-field input[type=text]')).to.have.length.of(1);
     });
 
     it('should render a string field with a label', () => {
@@ -70,7 +70,7 @@ describe('StringField', () => {
         },
       });
 
-      expect(node.querySelector('.field label').textContent).eql('foo');
+      expect(node.querySelector('.rjsf-field label').textContent).eql('foo');
     });
 
     it('should render a string field with a description', () => {
@@ -92,8 +92,8 @@ describe('StringField', () => {
         },
       });
 
-      expect(node.querySelector('.field input').value).eql('plop');
-      expect(node.querySelectorAll('.field datalist > option')).to.have.length.of(0);
+      expect(node.querySelector('.rjsf-field input').value).eql('plop');
+      expect(node.querySelectorAll('.rjsf-field datalist > option')).to.have.length.of(0);
     });
 
     it('should render a string field with examples', () => {
@@ -104,9 +104,9 @@ describe('StringField', () => {
         },
       });
 
-      expect(node.querySelectorAll('.field datalist > option')).to.have.length.of(3);
-      const datalistId = node.querySelector('.field datalist').id;
-      expect(node.querySelector('.field input').getAttribute('list')).eql(datalistId);
+      expect(node.querySelectorAll('.rjsf-field datalist > option')).to.have.length.of(3);
+      const datalistId = node.querySelector('.rjsf-field datalist').id;
+      expect(node.querySelector('.rjsf-field input').getAttribute('list')).eql(datalistId);
     });
 
     it('should render a string with examples that includes the default value', () => {
@@ -117,9 +117,9 @@ describe('StringField', () => {
           examples: ['Chrome', 'Vivaldi'],
         },
       });
-      expect(node.querySelectorAll('.field datalist > option')).to.have.length.of(3);
-      const datalistId = node.querySelector('.field datalist').id;
-      expect(node.querySelector('.field input').getAttribute('list')).eql(datalistId);
+      expect(node.querySelectorAll('.rjsf-field datalist > option')).to.have.length.of(3);
+      const datalistId = node.querySelector('.rjsf-field datalist').id;
+      expect(node.querySelector('.rjsf-field input').getAttribute('list')).eql(datalistId);
     });
 
     it('should render a string with examples that overlaps with the default value', () => {
@@ -130,9 +130,9 @@ describe('StringField', () => {
           examples: ['Firefox', 'Chrome', 'Vivaldi'],
         },
       });
-      expect(node.querySelectorAll('.field datalist > option')).to.have.length.of(3);
-      const datalistId = node.querySelector('.field datalist').id;
-      expect(node.querySelector('.field input').getAttribute('list')).eql(datalistId);
+      expect(node.querySelectorAll('.rjsf-field datalist > option')).to.have.length.of(3);
+      const datalistId = node.querySelector('.rjsf-field datalist').id;
+      expect(node.querySelector('.rjsf-field input').getAttribute('list')).eql(datalistId);
     });
 
     it('should default submit value to undefined', () => {
@@ -165,7 +165,7 @@ describe('StringField', () => {
         {
           formData: 'yo',
         },
-        'root'
+        'root',
       );
     });
 
@@ -230,7 +230,7 @@ describe('StringField', () => {
         {
           formData: 'default',
         },
-        'root'
+        'root',
       );
     });
 
@@ -251,7 +251,7 @@ describe('StringField', () => {
         {
           formData: undefined,
         },
-        'root'
+        'root',
       );
     });
 
@@ -263,7 +263,7 @@ describe('StringField', () => {
         formData: 'plip',
       });
 
-      expect(node.querySelector('.field input').value).eql('plip');
+      expect(node.querySelector('.rjsf-field input').value).eql('plip');
     });
 
     it('should render the widget with the expected id', () => {
@@ -324,7 +324,7 @@ describe('StringField', () => {
         },
       });
 
-      const inputs = node.querySelectorAll('.field-string input[type=text]');
+      const inputs = node.querySelectorAll('.rjsf-field-string input[type=text]');
       act(() => {
         fireEvent.change(inputs[0], { target: { value: 'hello' } });
       });
@@ -343,7 +343,7 @@ describe('StringField', () => {
         },
       });
 
-      const inputs = node.querySelectorAll('.field-string input[type=text]');
+      const inputs = node.querySelectorAll('.rjsf-field-string input[type=text]');
       act(() => {
         fireEvent.change(inputs[0], { target: { value: 'test' } });
       });
@@ -360,7 +360,7 @@ describe('StringField', () => {
         },
       });
 
-      const inputs = node.querySelectorAll('.field-string input[type=text]');
+      const inputs = node.querySelectorAll('.rjsf-field-string input[type=text]');
       act(() => {
         fireEvent.change(inputs[0], { target: { value: 'hello' } });
       });
@@ -379,7 +379,7 @@ describe('StringField', () => {
         },
       });
 
-      const inputs = node.querySelectorAll('.field-string input[type=text]');
+      const inputs = node.querySelectorAll('.rjsf-field-string input[type=text]');
       act(() => {
         fireEvent.change(inputs[0], { target: { value: 'test' } });
       });
@@ -398,7 +398,7 @@ describe('StringField', () => {
         },
       });
 
-      expect(node.querySelectorAll('.field select')).to.have.length.of(1);
+      expect(node.querySelectorAll('.rjsf-field select')).to.have.length.of(1);
     });
 
     it('should render a string field for an enum without a type', () => {
@@ -408,7 +408,7 @@ describe('StringField', () => {
         },
       });
 
-      expect(node.querySelectorAll('.field select')).to.have.length.of(1);
+      expect(node.querySelectorAll('.rjsf-field select')).to.have.length.of(1);
     });
 
     it('should render a string field with a label', () => {
@@ -420,7 +420,7 @@ describe('StringField', () => {
         },
       });
 
-      expect(node.querySelector('.field label').textContent).eql('foo');
+      expect(node.querySelector('.rjsf-field label').textContent).eql('foo');
     });
 
     it('should render empty option', () => {
@@ -431,7 +431,7 @@ describe('StringField', () => {
         },
       });
 
-      expect(node.querySelectorAll('.field option')[0].value).eql('');
+      expect(node.querySelectorAll('.rjsf-field option')[0].value).eql('');
     });
 
     it('should render empty option with placeholder text', () => {
@@ -447,7 +447,7 @@ describe('StringField', () => {
         },
       });
 
-      expect(node.querySelectorAll('.field option')[0].textContent).eql('Test');
+      expect(node.querySelectorAll('.rjsf-field option')[0].textContent).eql('Test');
     });
 
     it('should assign a default value', () => {
@@ -483,7 +483,7 @@ describe('StringField', () => {
         {
           formData: 'foo',
         },
-        'root'
+        'root',
       );
     });
 
@@ -506,7 +506,7 @@ describe('StringField', () => {
         {
           formData: undefined,
         },
-        'root'
+        'root',
       );
     });
 
@@ -667,7 +667,7 @@ describe('StringField', () => {
         {
           formData: undefined,
         },
-        'root'
+        'root',
       );
     });
 
@@ -692,7 +692,7 @@ describe('StringField', () => {
         {
           formData: 'default',
         },
-        'root'
+        'root',
       );
     });
 
@@ -719,7 +719,7 @@ describe('StringField', () => {
         },
       });
 
-      expect(node.querySelectorAll('.field [type=datetime-local]')).to.have.length.of(1);
+      expect(node.querySelectorAll('.rjsf-field [type=datetime-local]')).to.have.length.of(1);
     });
 
     it('should assign a default value', () => {
@@ -790,7 +790,7 @@ describe('StringField', () => {
         },
         liveValidate: true,
       });
-      let inputs = node.querySelectorAll('.form-group.field-error input[type=datetime-local]');
+      let inputs = node.querySelectorAll('.form-group.rjsf-field-error input[type=datetime-local]');
       expect(inputs).to.have.length.of(0);
       act(() => {
         Simulate.change(node.querySelector('[type=datetime-local]'), {
@@ -810,7 +810,7 @@ describe('StringField', () => {
           },
         ],
       });
-      inputs = node.querySelectorAll('.form-group.field-error input[type=datetime-local]');
+      inputs = node.querySelectorAll('.form-group.rjsf-field-error input[type=datetime-local]');
       expect(inputs).to.have.length.of(1);
     });
     it('should reject an invalid entered datetime and hides error', () => {
@@ -824,7 +824,7 @@ describe('StringField', () => {
         },
         liveValidate: true,
       });
-      let inputs = node.querySelectorAll('.form-group.field-error input[type=datetime-local]');
+      let inputs = node.querySelectorAll('.form-group.rjsf-field-error input[type=datetime-local]');
 
       expect(inputs).to.have.length.of(0);
       act(() => {
@@ -845,7 +845,7 @@ describe('StringField', () => {
           },
         ],
       });
-      inputs = node.querySelectorAll('.form-group.field-error input[type=datetime-local]');
+      inputs = node.querySelectorAll('.form-group.rjsf-field-error input[type=datetime-local]');
       expect(inputs).to.have.length.of(0);
     });
 
@@ -890,7 +890,7 @@ describe('StringField', () => {
         uiSchema,
       });
 
-      expect(node.querySelectorAll('.field [type=date]')).to.have.length.of(1);
+      expect(node.querySelectorAll('.rjsf-field [type=date]')).to.have.length.of(1);
     });
 
     it('should assign a default value', () => {
@@ -1052,7 +1052,7 @@ describe('StringField', () => {
         },
       });
 
-      expect(node.querySelectorAll('.field [type=time]')).to.have.length.of(1);
+      expect(node.querySelectorAll('.rjsf-field [type=time]')).to.have.length.of(1);
     });
 
     it('should assign a default value', () => {
@@ -1186,7 +1186,7 @@ describe('StringField', () => {
         uiSchema,
       });
 
-      expect(node.querySelectorAll('.field select')).to.have.length.of(6);
+      expect(node.querySelectorAll('.rjsf-field select')).to.have.length.of(6);
     });
 
     it('should render a string field with a main label', () => {
@@ -1199,7 +1199,7 @@ describe('StringField', () => {
         uiSchema,
       });
 
-      expect(node.querySelector('.field label').textContent).eql('foo');
+      expect(node.querySelector('.rjsf-field label').textContent).eql('foo');
     });
 
     it('should assign a default value', () => {
@@ -1531,7 +1531,7 @@ describe('StringField', () => {
         uiSchema,
       });
 
-      expect(node.querySelectorAll('.field select')).to.have.length.of(3);
+      expect(node.querySelectorAll('.rjsf-field select')).to.have.length.of(3);
     });
 
     it('should render a string field with a main label', () => {
@@ -1544,7 +1544,7 @@ describe('StringField', () => {
         uiSchema,
       });
 
-      expect(node.querySelector('.field label').textContent).eql('foo');
+      expect(node.querySelector('.rjsf-field label').textContent).eql('foo');
     });
 
     it('should assign a default value', () => {
@@ -1836,7 +1836,7 @@ describe('StringField', () => {
         },
       });
 
-      expect(node.querySelectorAll('.field [type=email]')).to.have.length.of(1);
+      expect(node.querySelectorAll('.rjsf-field [type=email]')).to.have.length.of(1);
     });
 
     it('should render a string field with a label', () => {
@@ -1848,7 +1848,7 @@ describe('StringField', () => {
         },
       });
 
-      expect(node.querySelector('.field label').textContent).eql('foo');
+      expect(node.querySelector('.rjsf-field label').textContent).eql('foo');
     });
 
     it('should render a select field with a description', () => {
@@ -1976,7 +1976,7 @@ describe('StringField', () => {
         },
       });
 
-      expect(node.querySelectorAll('.field [type=url]')).to.have.length.of(1);
+      expect(node.querySelectorAll('.rjsf-field [type=url]')).to.have.length.of(1);
     });
 
     it('should render a string field with a label', () => {
@@ -1988,7 +1988,7 @@ describe('StringField', () => {
         },
       });
 
-      expect(node.querySelector('.field label').textContent).eql('foo');
+      expect(node.querySelector('.rjsf-field label').textContent).eql('foo');
     });
 
     it('should render a select field with a placeholder', () => {
@@ -2120,7 +2120,7 @@ describe('StringField', () => {
         uiSchema,
       });
 
-      expect(node.querySelectorAll('.field [type=color]')).to.have.length.of(1);
+      expect(node.querySelectorAll('.rjsf-field [type=color]')).to.have.length.of(1);
     });
 
     it('should assign a default value', () => {
@@ -2239,7 +2239,7 @@ describe('StringField', () => {
         },
       });
 
-      expect(node.querySelectorAll('.field [type=file]')).to.have.length.of(1);
+      expect(node.querySelectorAll('.rjsf-field [type=file]')).to.have.length.of(1);
     });
 
     it('should assign a default value', () => {

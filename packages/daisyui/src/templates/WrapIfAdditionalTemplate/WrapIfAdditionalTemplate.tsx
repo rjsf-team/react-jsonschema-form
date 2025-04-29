@@ -60,7 +60,7 @@ export default function WrapIfAdditionalTemplate<
         {schema.additionalProperties && (
           <button
             id={buttonId<T>(id, 'remove')}
-            className='array-item-remove btn btn-danger ml-2'
+            className='rjsf-array-item-remove btn btn-danger ml-2'
             onClick={handleRemove}
             disabled={disabled || readonly}
           >

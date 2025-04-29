@@ -7,13 +7,13 @@ exports[`object fields additionalProperties 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="grouped equal width fields"
     >
       <div
-        className="form-group field field-string"
+        className="rjsf-field rjsf-field-string"
       >
         <div
           className="ui equal width grid"
@@ -94,7 +94,7 @@ exports[`object fields additionalProperties 1`] = `
               className="column"
             >
               <button
-                className="ui mini icon button array-item-remove"
+                className="ui mini icon button rjsf-object-property-remove"
                 id="root_foo__remove"
                 onClick={[Function]}
                 title="Remove"
@@ -125,7 +125,7 @@ exports[`object fields additionalProperties 1`] = `
             }
           >
             <button
-              className="ui tiny icon button object-property-expand"
+              className="ui tiny icon button rjsf-object-property-expand"
               id="root__add"
               onClick={[Function]}
               title="Add Item"
@@ -158,13 +158,13 @@ exports[`object fields object 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="grouped equal width fields"
     >
       <div
-        className="form-group field field-string"
+        className="rjsf-field rjsf-field-string"
       >
         <div
           className="grouped equal width fields"
@@ -199,7 +199,7 @@ exports[`object fields object 1`] = `
         </div>
       </div>
       <div
-        className="form-group field field-number"
+        className="rjsf-field rjsf-field-number"
       >
         <div
           className="grouped equal width fields"
@@ -253,13 +253,13 @@ exports[`object fields show add button and fields if additionalProperties is tru
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="grouped equal width fields"
     >
       <div
-        className="form-group field field-string"
+        className="rjsf-field rjsf-field-string"
       >
         <div
           className="ui equal width grid"
@@ -340,7 +340,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
               className="column"
             >
               <button
-                className="ui mini icon button array-item-remove"
+                className="ui mini icon button rjsf-object-property-remove"
                 id="root_additionalProperty__remove"
                 onClick={[Function]}
                 title="Remove"
@@ -371,7 +371,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
             }
           >
             <button
-              className="ui tiny icon button object-property-expand"
+              className="ui tiny icon button rjsf-object-property-expand"
               id="root__add"
               onClick={[Function]}
               title="Add Item"
@@ -404,7 +404,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="grouped equal width fields"
@@ -422,7 +422,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
         a test description
       </p>
       <div
-        className="form-group field field-string"
+        className="rjsf-field rjsf-field-string"
       >
         <div
           className="ui equal width grid"
@@ -503,7 +503,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
               className="column"
             >
               <button
-                className="ui mini icon button array-item-remove"
+                className="ui mini icon button rjsf-object-property-remove"
                 id="root_foo__remove"
                 onClick={[Function]}
                 title="Remove"
@@ -534,7 +534,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
             }
           >
             <button
-              className="ui tiny icon button object-property-expand"
+              className="ui tiny icon button rjsf-object-property-expand"
               id="root__add"
               onClick={[Function]}
               title="Add Item"
@@ -567,7 +567,7 @@ exports[`object fields with title and description from both additionalProperties
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="grouped equal width fields"
@@ -585,7 +585,7 @@ exports[`object fields with title and description from both additionalProperties
         a fancier description
       </p>
       <div
-        className="form-group field field-string"
+        className="rjsf-field rjsf-field-string"
       >
         <div
           className="ui equal width grid"
@@ -666,7 +666,7 @@ exports[`object fields with title and description from both additionalProperties
               className="column"
             >
               <button
-                className="ui mini icon button array-item-remove"
+                className="ui mini icon button rjsf-object-property-remove"
                 id="root_foo__remove"
                 onClick={[Function]}
                 title="Remove"
@@ -697,7 +697,7 @@ exports[`object fields with title and description from both additionalProperties
             }
           >
             <button
-              className="ui tiny icon button object-property-expand"
+              className="ui tiny icon button rjsf-object-property-expand"
               id="root__add"
               onClick={[Function]}
               title="Add Item"
@@ -730,7 +730,7 @@ exports[`object fields with title and description from both object 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="grouped equal width fields"
@@ -748,7 +748,7 @@ exports[`object fields with title and description from both object 1`] = `
         a fancier description
       </p>
       <div
-        className="form-group field field-string"
+        className="rjsf-field rjsf-field-string"
       >
         <div
           className="grouped equal width fields"
@@ -789,7 +789,7 @@ exports[`object fields with title and description from both object 1`] = `
         </div>
       </div>
       <div
-        className="form-group field field-number"
+        className="rjsf-field rjsf-field-number"
       >
         <div
           className="grouped equal width fields"
@@ -849,7 +849,7 @@ exports[`object fields with title and description from uiSchema additionalProper
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="grouped equal width fields"
@@ -867,7 +867,7 @@ exports[`object fields with title and description from uiSchema additionalProper
         a fancier description
       </p>
       <div
-        className="form-group field field-string"
+        className="rjsf-field rjsf-field-string"
       >
         <div
           className="ui equal width grid"
@@ -948,7 +948,7 @@ exports[`object fields with title and description from uiSchema additionalProper
               className="column"
             >
               <button
-                className="ui mini icon button array-item-remove"
+                className="ui mini icon button rjsf-object-property-remove"
                 id="root_foo__remove"
                 onClick={[Function]}
                 title="Remove"
@@ -979,7 +979,7 @@ exports[`object fields with title and description from uiSchema additionalProper
             }
           >
             <button
-              className="ui tiny icon button object-property-expand"
+              className="ui tiny icon button rjsf-object-property-expand"
               id="root__add"
               onClick={[Function]}
               title="Add Item"
@@ -1012,7 +1012,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="grouped equal width fields"
@@ -1030,7 +1030,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
         a fancier description
       </p>
       <div
-        className="form-group field field-string"
+        className="rjsf-field rjsf-field-string"
       >
         <div
           className="grouped equal width fields"
@@ -1071,7 +1071,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
         </div>
       </div>
       <div
-        className="form-group field field-number"
+        className="rjsf-field rjsf-field-number"
       >
         <div
           className="grouped equal width fields"
@@ -1131,7 +1131,7 @@ exports[`object fields with title and description from uiSchema show add button 
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="grouped equal width fields"
@@ -1149,7 +1149,7 @@ exports[`object fields with title and description from uiSchema show add button 
         a fancier description
       </p>
       <div
-        className="form-group field field-string"
+        className="rjsf-field rjsf-field-string"
       >
         <div
           className="ui equal width grid"
@@ -1230,7 +1230,7 @@ exports[`object fields with title and description from uiSchema show add button 
               className="column"
             >
               <button
-                className="ui mini icon button array-item-remove"
+                className="ui mini icon button rjsf-object-property-remove"
                 id="root_additionalProperty__remove"
                 onClick={[Function]}
                 title="Remove"
@@ -1261,7 +1261,7 @@ exports[`object fields with title and description from uiSchema show add button 
             }
           >
             <button
-              className="ui tiny icon button object-property-expand"
+              className="ui tiny icon button rjsf-object-property-expand"
               id="root__add"
               onClick={[Function]}
               title="Add Item"
@@ -1294,7 +1294,7 @@ exports[`object fields with title and description object 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="grouped equal width fields"
@@ -1312,7 +1312,7 @@ exports[`object fields with title and description object 1`] = `
         a test description
       </p>
       <div
-        className="form-group field field-string"
+        className="rjsf-field rjsf-field-string"
       >
         <div
           className="grouped equal width fields"
@@ -1353,7 +1353,7 @@ exports[`object fields with title and description object 1`] = `
         </div>
       </div>
       <div
-        className="form-group field field-number"
+        className="rjsf-field rjsf-field-number"
       >
         <div
           className="grouped equal width fields"
@@ -1413,7 +1413,7 @@ exports[`object fields with title and description show add button and fields if 
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="grouped equal width fields"
@@ -1431,7 +1431,7 @@ exports[`object fields with title and description show add button and fields if 
         a test description
       </p>
       <div
-        className="form-group field field-string"
+        className="rjsf-field rjsf-field-string"
       >
         <div
           className="ui equal width grid"
@@ -1512,7 +1512,7 @@ exports[`object fields with title and description show add button and fields if 
               className="column"
             >
               <button
-                className="ui mini icon button array-item-remove"
+                className="ui mini icon button rjsf-object-property-remove"
                 id="root_additionalProperty__remove"
                 onClick={[Function]}
                 title="Remove"
@@ -1543,7 +1543,7 @@ exports[`object fields with title and description show add button and fields if 
             }
           >
             <button
-              className="ui tiny icon button object-property-expand"
+              className="ui tiny icon button rjsf-object-property-expand"
               id="root__add"
               onClick={[Function]}
               title="Add Item"
@@ -1576,13 +1576,13 @@ exports[`object fields with title and description with global label off addition
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="grouped equal width fields"
     >
       <div
-        className="form-group field field-string"
+        className="rjsf-field rjsf-field-string"
       >
         <div
           className="ui equal width grid"
@@ -1658,7 +1658,7 @@ exports[`object fields with title and description with global label off addition
               className="column"
             >
               <button
-                className="ui mini icon button array-item-remove"
+                className="ui mini icon button rjsf-object-property-remove"
                 id="root_foo__remove"
                 onClick={[Function]}
                 title="Remove"
@@ -1689,7 +1689,7 @@ exports[`object fields with title and description with global label off addition
             }
           >
             <button
-              className="ui tiny icon button object-property-expand"
+              className="ui tiny icon button rjsf-object-property-expand"
               id="root__add"
               onClick={[Function]}
               title="Add Item"
@@ -1722,13 +1722,13 @@ exports[`object fields with title and description with global label off object 1
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="grouped equal width fields"
     >
       <div
-        className="form-group field field-string"
+        className="rjsf-field rjsf-field-string"
       >
         <div
           className="grouped equal width fields"
@@ -1758,7 +1758,7 @@ exports[`object fields with title and description with global label off object 1
         </div>
       </div>
       <div
-        className="form-group field field-number"
+        className="rjsf-field rjsf-field-number"
       >
         <div
           className="grouped equal width fields"
@@ -1807,13 +1807,13 @@ exports[`object fields with title and description with global label off show add
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="grouped equal width fields"
     >
       <div
-        className="form-group field field-string"
+        className="rjsf-field rjsf-field-string"
       >
         <div
           className="ui equal width grid"
@@ -1889,7 +1889,7 @@ exports[`object fields with title and description with global label off show add
               className="column"
             >
               <button
-                className="ui mini icon button array-item-remove"
+                className="ui mini icon button rjsf-object-property-remove"
                 id="root_additionalProperty__remove"
                 onClick={[Function]}
                 title="Remove"
@@ -1920,7 +1920,7 @@ exports[`object fields with title and description with global label off show add
             }
           >
             <button
-              className="ui tiny icon button object-property-expand"
+              className="ui tiny icon button rjsf-object-property-expand"
               id="root__add"
               onClick={[Function]}
               title="Add Item"

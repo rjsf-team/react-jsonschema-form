@@ -7,7 +7,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="grouped equal width fields"
@@ -35,7 +35,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
             }
           >
             <div
-              className="form-group field field-object"
+              className="rjsf-field rjsf-field-object"
             >
               <div
                 className="grouped equal width fields"
@@ -69,7 +69,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
             }
           >
             <div
-              className="form-group field field-string"
+              className="rjsf-field rjsf-field-string"
             >
               <div
                 className="grouped equal width fields"
@@ -114,7 +114,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
             }
           >
             <div
-              className="form-group field field-string"
+              className="rjsf-field rjsf-field-string"
             >
               <div
                 className="grouped equal width fields"
@@ -159,7 +159,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
             }
           >
             <div
-              className="form-group field field-string"
+              className="rjsf-field rjsf-field-string"
             >
               <div
                 className="grouped equal width fields"
@@ -216,7 +216,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
             }
           >
             <div
-              className="form-group field field-string"
+              className="rjsf-field rjsf-field-string"
             >
               <div
                 className="grouped equal width fields"
@@ -261,7 +261,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
             }
           >
             <div
-              className="form-group field field-array"
+              className="rjsf-field rjsf-field-array"
             >
               <div
                 className="grouped equal width fields"
@@ -463,7 +463,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
             data-testid="1"
           >
             <div
-              className="form-group field field-object"
+              className="rjsf-field rjsf-field-object"
             >
               <div
                 className="grouped equal width fields"
@@ -489,7 +489,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     }
                   >
                     <div
-                      className="form-group field field-string"
+                      className="rjsf-field rjsf-field-string"
                     >
                       <div
                         className="grouped equal width fields"
@@ -535,7 +535,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     }
                   >
                     <div
-                      className="form-group field field-string"
+                      className="rjsf-field rjsf-field-string"
                     >
                       <div
                         className="grouped equal width fields"
@@ -581,7 +581,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     }
                   >
                     <div
-                      className="form-group field field-string"
+                      className="rjsf-field rjsf-field-string"
                     >
                       <div
                         className="grouped equal width fields"
@@ -635,7 +635,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       }
                     >
                       <div
-                        className="form-group field field-string"
+                        className="rjsf-field rjsf-field-string"
                       >
                         <div
                           className="grouped equal width fields"
@@ -1779,7 +1779,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       }
                     >
                       <div
-                        className="form-group field field-string"
+                        className="rjsf-field rjsf-field-string"
                       >
                         <div
                           className="grouped equal width fields"
@@ -1957,7 +1957,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                 }
               >
                 <div
-                  className="form-group field field-string"
+                  className="rjsf-field rjsf-field-string"
                 >
                   <div
                     className="grouped equal width fields"
@@ -2003,7 +2003,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                 }
               >
                 <div
-                  className="form-group field field-string"
+                  className="rjsf-field rjsf-field-string"
                 >
                   <div
                     className="grouped equal width fields"
@@ -2049,7 +2049,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                 }
               >
                 <div
-                  className="form-group field field-string"
+                  className="rjsf-field rjsf-field-string"
                 >
                   <div
                     className="grouped equal width fields"
@@ -2095,7 +2095,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                 }
               >
                 <div
-                  className="form-group field field-string"
+                  className="rjsf-field rjsf-field-string"
                 >
                   <div
                     className="grouped equal width fields"
@@ -3252,7 +3252,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="grouped equal width fields"
@@ -3280,7 +3280,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
             }
           >
             <div
-              className="form-group field field-object"
+              className="rjsf-field rjsf-field-object"
             >
               <div
                 className="grouped equal width fields"
@@ -3314,7 +3314,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
             }
           >
             <div
-              className="form-group field field-string"
+              className="rjsf-field rjsf-field-string"
             >
               <div
                 className="grouped equal width fields"
@@ -3359,7 +3359,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
             }
           >
             <div
-              className="form-group field field-string"
+              className="rjsf-field rjsf-field-string"
             >
               <div
                 className="grouped equal width fields"
@@ -3404,7 +3404,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
             }
           >
             <div
-              className="form-group field field-string"
+              className="rjsf-field rjsf-field-string"
             >
               <div
                 className="grouped equal width fields"
@@ -3461,7 +3461,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
             }
           >
             <div
-              className="form-group field field-string"
+              className="rjsf-field rjsf-field-string"
             >
               <div
                 className="grouped equal width fields"
@@ -3506,7 +3506,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
             }
           >
             <div
-              className="form-group field field-array"
+              className="rjsf-field rjsf-field-array"
             >
               <div
                 className="grouped equal width fields"
@@ -3708,7 +3708,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
             data-testid="1"
           >
             <div
-              className="form-group field field-object"
+              className="rjsf-field rjsf-field-object"
             >
               <div
                 className="grouped equal width fields"
@@ -3734,7 +3734,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     }
                   >
                     <div
-                      className="form-group field field-string"
+                      className="rjsf-field rjsf-field-string"
                     >
                       <div
                         className="grouped equal width fields"
@@ -3780,7 +3780,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     }
                   >
                     <div
-                      className="form-group field field-string"
+                      className="rjsf-field rjsf-field-string"
                     >
                       <div
                         className="grouped equal width fields"
@@ -3826,7 +3826,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     }
                   >
                     <div
-                      className="form-group field field-string"
+                      className="rjsf-field rjsf-field-string"
                     >
                       <div
                         className="grouped equal width fields"
@@ -3880,7 +3880,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       }
                     >
                       <div
-                        className="form-group field field-string"
+                        className="rjsf-field rjsf-field-string"
                       >
                         <div
                           className="grouped equal width fields"
@@ -5024,7 +5024,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       }
                     >
                       <div
-                        className="form-group field field-string"
+                        className="rjsf-field rjsf-field-string"
                       >
                         <div
                           className="grouped equal width fields"
@@ -5202,7 +5202,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                 }
               >
                 <div
-                  className="form-group field field-string"
+                  className="rjsf-field rjsf-field-string"
                 >
                   <div
                     className="grouped equal width fields"
@@ -5248,7 +5248,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                 }
               >
                 <div
-                  className="form-group field field-string"
+                  className="rjsf-field rjsf-field-string"
                 >
                   <div
                     className="grouped equal width fields"
@@ -5294,7 +5294,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                 }
               >
                 <div
-                  className="form-group field field-string"
+                  className="rjsf-field rjsf-field-string"
                 >
                   <div
                     className="grouped equal width fields"
@@ -5340,7 +5340,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                 }
               >
                 <div
-                  className="form-group field field-string"
+                  className="rjsf-field rjsf-field-string"
                 >
                   <div
                     className="grouped equal width fields"
@@ -5386,7 +5386,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                 }
               >
                 <div
-                  className="form-group field field-string"
+                  className="rjsf-field rjsf-field-string"
                 >
                   <div
                     className="grouped equal width fields"
@@ -6543,7 +6543,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="grouped equal width fields"
@@ -6571,7 +6571,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
             }
           >
             <div
-              className="form-group field field-object"
+              className="rjsf-field rjsf-field-object"
             >
               <div
                 className="grouped equal width fields"
@@ -6605,7 +6605,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
             }
           >
             <div
-              className="form-group field field-string"
+              className="rjsf-field rjsf-field-string"
             >
               <div
                 className="grouped equal width fields"
@@ -6650,7 +6650,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
             }
           >
             <div
-              className="form-group field field-string"
+              className="rjsf-field rjsf-field-string"
             >
               <div
                 className="grouped equal width fields"
@@ -6695,7 +6695,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
             }
           >
             <div
-              className="form-group field field-string"
+              className="rjsf-field rjsf-field-string"
             >
               <div
                 className="grouped equal width fields"
@@ -6752,7 +6752,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
             }
           >
             <div
-              className="form-group field field-string"
+              className="rjsf-field rjsf-field-string"
             >
               <div
                 className="grouped equal width fields"
@@ -6797,7 +6797,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
             }
           >
             <div
-              className="form-group field field-array"
+              className="rjsf-field rjsf-field-array"
             >
               <div
                 className="grouped equal width fields"
@@ -6999,7 +6999,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
             data-testid="1"
           >
             <div
-              className="form-group field field-object"
+              className="rjsf-field rjsf-field-object"
             >
               <div
                 className="grouped equal width fields"
@@ -7025,7 +7025,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     }
                   >
                     <div
-                      className="form-group field field-string"
+                      className="rjsf-field rjsf-field-string"
                     >
                       <div
                         className="grouped equal width fields"
@@ -7071,7 +7071,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     }
                   >
                     <div
-                      className="form-group field field-string"
+                      className="rjsf-field rjsf-field-string"
                     >
                       <div
                         className="grouped equal width fields"
@@ -7117,7 +7117,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     }
                   >
                     <div
-                      className="form-group field field-string"
+                      className="rjsf-field rjsf-field-string"
                     >
                       <div
                         className="grouped equal width fields"
@@ -7171,7 +7171,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       }
                     >
                       <div
-                        className="form-group field field-string"
+                        className="rjsf-field rjsf-field-string"
                       >
                         <div
                           className="grouped equal width fields"
@@ -8315,7 +8315,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       }
                     >
                       <div
-                        className="form-group field field-string"
+                        className="rjsf-field rjsf-field-string"
                       >
                         <div
                           className="grouped equal width fields"
@@ -8493,7 +8493,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                 }
               >
                 <div
-                  className="form-group field field-string"
+                  className="rjsf-field rjsf-field-string"
                 >
                   <div
                     className="grouped equal width fields"
@@ -8549,7 +8549,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="grouped equal width fields"
@@ -8577,7 +8577,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
             }
           >
             <div
-              className="form-group field field-object"
+              className="rjsf-field rjsf-field-object"
             >
               <div
                 className="grouped equal width fields"
@@ -8611,7 +8611,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
             }
           >
             <div
-              className="form-group field field-string"
+              className="rjsf-field rjsf-field-string"
             >
               <div
                 className="grouped equal width fields"
@@ -8656,7 +8656,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
             }
           >
             <div
-              className="form-group field field-string"
+              className="rjsf-field rjsf-field-string"
             >
               <div
                 className="grouped equal width fields"
@@ -8701,7 +8701,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
             }
           >
             <div
-              className="form-group field field-string"
+              className="rjsf-field rjsf-field-string"
             >
               <div
                 className="grouped equal width fields"
@@ -8758,7 +8758,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
             }
           >
             <div
-              className="form-group field field-string"
+              className="rjsf-field rjsf-field-string"
             >
               <div
                 className="grouped equal width fields"
@@ -8803,7 +8803,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
             }
           >
             <div
-              className="form-group field field-array"
+              className="rjsf-field rjsf-field-array"
             >
               <div
                 className="grouped equal width fields"
@@ -9005,7 +9005,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
             data-testid="1"
           >
             <div
-              className="form-group field field-object"
+              className="rjsf-field rjsf-field-object"
             >
               <div
                 className="grouped equal width fields"
@@ -9031,7 +9031,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     }
                   >
                     <div
-                      className="form-group field field-string"
+                      className="rjsf-field rjsf-field-string"
                     >
                       <div
                         className="grouped equal width fields"
@@ -9077,7 +9077,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     }
                   >
                     <div
-                      className="form-group field field-string"
+                      className="rjsf-field rjsf-field-string"
                     >
                       <div
                         className="grouped equal width fields"
@@ -9123,7 +9123,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     }
                   >
                     <div
-                      className="form-group field field-string"
+                      className="rjsf-field rjsf-field-string"
                     >
                       <div
                         className="grouped equal width fields"
@@ -9177,7 +9177,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       }
                     >
                       <div
-                        className="form-group field field-string"
+                        className="rjsf-field rjsf-field-string"
                       >
                         <div
                           className="grouped equal width fields"
@@ -10321,7 +10321,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       }
                     >
                       <div
-                        className="form-group field field-string"
+                        className="rjsf-field rjsf-field-string"
                       >
                         <div
                           className="grouped equal width fields"
@@ -10499,7 +10499,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                 }
               >
                 <div
-                  className="form-group field field-string"
+                  className="rjsf-field rjsf-field-string"
                 >
                   <div
                     className="grouped equal width fields"
@@ -10545,7 +10545,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                 }
               >
                 <div
-                  className="form-group field field-string"
+                  className="rjsf-field rjsf-field-string"
                 >
                   <div
                     className="grouped equal width fields"
@@ -10591,7 +10591,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                 }
               >
                 <div
-                  className="form-group field field-string"
+                  className="rjsf-field rjsf-field-string"
                 >
                   <div
                     className="grouped equal width fields"
@@ -10637,7 +10637,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                 }
               >
                 <div
-                  className="form-group field field-string"
+                  className="rjsf-field rjsf-field-string"
                 >
                   <div
                     className="grouped equal width fields"
@@ -11794,7 +11794,7 @@ exports[`Three even column grid renders person and address in three columns, no 
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="grouped equal width fields"
@@ -11818,7 +11818,7 @@ exports[`Three even column grid renders person and address in three columns, no 
           }
         >
           <div
-            className="form-group field field-object"
+            className="rjsf-field rjsf-field-object"
           >
             <div
               className="grouped equal width fields"
@@ -11842,7 +11842,7 @@ exports[`Three even column grid renders person and address in three columns, no 
           }
         >
           <div
-            className="form-group field field-string"
+            className="rjsf-field rjsf-field-string"
           >
             <div
               className="grouped equal width fields"
@@ -11887,7 +11887,7 @@ exports[`Three even column grid renders person and address in three columns, no 
           }
         >
           <div
-            className="form-group field field-string"
+            className="rjsf-field rjsf-field-string"
           >
             <div
               className="grouped equal width fields"
@@ -11932,7 +11932,7 @@ exports[`Three even column grid renders person and address in three columns, no 
           }
         >
           <div
-            className="form-group field field-string"
+            className="rjsf-field rjsf-field-string"
           >
             <div
               className="grouped equal width fields"
@@ -11977,7 +11977,7 @@ exports[`Three even column grid renders person and address in three columns, no 
           }
         >
           <div
-            className="form-group field field-string"
+            className="rjsf-field rjsf-field-string"
           >
             <div
               className="grouped equal width fields"
@@ -12022,7 +12022,7 @@ exports[`Three even column grid renders person and address in three columns, no 
           }
         >
           <div
-            className="form-group field field-array"
+            className="rjsf-field rjsf-field-array"
           >
             <div
               className="grouped equal width fields"
@@ -12218,7 +12218,7 @@ exports[`Three even column grid renders person and address in three columns, no 
           }
         >
           <div
-            className="form-group field field-string"
+            className="rjsf-field rjsf-field-string"
           >
             <div
               className="grouped equal width fields"
@@ -12263,7 +12263,7 @@ exports[`Three even column grid renders person and address in three columns, no 
           }
         >
           <div
-            className="form-group field field-string"
+            className="rjsf-field rjsf-field-string"
           >
             <div
               className="grouped equal width fields"
@@ -12308,7 +12308,7 @@ exports[`Three even column grid renders person and address in three columns, no 
           }
         >
           <div
-            className="form-group field field-string"
+            className="rjsf-field rjsf-field-string"
           >
             <div
               className="grouped equal width fields"
@@ -12353,7 +12353,7 @@ exports[`Three even column grid renders person and address in three columns, no 
           }
         >
           <div
-            className="form-group field field-string"
+            className="rjsf-field rjsf-field-string"
           >
             <div
               className="grouped equal width fields"
@@ -13516,7 +13516,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="grouped equal width fields"
@@ -13540,7 +13540,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
           }
         >
           <div
-            className="form-group field field-object"
+            className="rjsf-field rjsf-field-object"
           >
             <div
               className="grouped equal width fields"
@@ -13564,7 +13564,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
           }
         >
           <div
-            className="form-group field field-string"
+            className="rjsf-field rjsf-field-string"
           >
             <div
               className="grouped equal width fields"
@@ -13609,7 +13609,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
           }
         >
           <div
-            className="form-group field field-string"
+            className="rjsf-field rjsf-field-string"
           >
             <div
               className="grouped equal width fields"
@@ -13654,7 +13654,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
           }
         >
           <div
-            className="form-group field field-string"
+            className="rjsf-field rjsf-field-string"
           >
             <div
               className="grouped equal width fields"
@@ -13699,7 +13699,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
           }
         >
           <div
-            className="form-group field field-string"
+            className="rjsf-field rjsf-field-string"
           >
             <div
               className="grouped equal width fields"
@@ -13744,7 +13744,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
           }
         >
           <div
-            className="form-group field field-array"
+            className="rjsf-field rjsf-field-array"
           >
             <div
               className="grouped equal width fields"
@@ -13940,7 +13940,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
           }
         >
           <div
-            className="form-group field field-string"
+            className="rjsf-field rjsf-field-string"
           >
             <div
               className="grouped equal width fields"
@@ -13985,7 +13985,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
           }
         >
           <div
-            className="form-group field field-string"
+            className="rjsf-field rjsf-field-string"
           >
             <div
               className="grouped equal width fields"
@@ -14030,7 +14030,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
           }
         >
           <div
-            className="form-group field field-string"
+            className="rjsf-field rjsf-field-string"
           >
             <div
               className="grouped equal width fields"
@@ -14075,7 +14075,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
           }
         >
           <div
-            className="form-group field field-string"
+            className="rjsf-field rjsf-field-string"
           >
             <div
               className="grouped equal width fields"

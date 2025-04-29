@@ -35,7 +35,7 @@ export default function ArrayFieldItemTemplate<
   const { rowGutter = 24, toolbarAlign = 'top' } = registry.formContext;
 
   return (
-    <Row align={toolbarAlign} key={`array-item-${index}`} gutter={rowGutter}>
+    <Row align={toolbarAlign} key={`rjsf-array-item-${index}`} gutter={rowGutter}>
       <Col flex='1'>{children}</Col>
 
       {hasToolbar && (

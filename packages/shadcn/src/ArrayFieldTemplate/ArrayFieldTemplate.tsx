@@ -68,7 +68,7 @@ export default function ArrayFieldTemplate<
               <div className='mt-2 flex'>
                 <AddButton
                   id={buttonId<T>(idSchema, 'add')}
-                  className='array-item-add'
+                  className='rjsf-array-item-add'
                   onClick={onAddClick}
                   disabled={disabled || readonly}
                   uiSchema={uiSchema}

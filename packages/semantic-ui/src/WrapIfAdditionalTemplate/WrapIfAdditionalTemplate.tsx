@@ -83,7 +83,7 @@ export default function WrapIfAdditionalTemplate<
             <RemoveButton
               id={buttonId<T>(id, 'remove')}
               iconType='mini'
-              className='array-item-remove'
+              className='rjsf-object-property-remove'
               disabled={disabled || readonly}
               onClick={onDropPropertyClick(label)}
               uiSchema={uiSchema}

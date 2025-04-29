@@ -54,7 +54,7 @@ describe('uiSchema', () => {
       sandbox.stub(console, 'warn');
 
       const { node } = createFormComponent({ schema, uiSchema });
-      const [foo, bar, baz] = node.querySelectorAll('.field-string');
+      const [foo, bar, baz] = node.querySelectorAll('.rjsf-field-string');
 
       expect(foo.classList.contains('class-for-foo')).eql(true);
       expect(bar.classList.contains('class-for-bar')).eql(true);
@@ -92,7 +92,7 @@ describe('uiSchema', () => {
 
     it('should apply custom style to target widgets', () => {
       const { node } = createFormComponent({ schema, uiSchema });
-      const [foo, bar] = node.querySelectorAll('.field-string');
+      const [foo, bar] = node.querySelectorAll('.rjsf-field-string');
 
       expect(foo.style.paddingRight).eql('1em');
       expect(bar.style.paddingLeft).eql('1.5em');
@@ -1963,11 +1963,11 @@ describe('uiSchema', () => {
         });
 
         it('should disable the Add button', () => {
-          expect(node.querySelector('.array-item-add button').disabled).eql(true);
+          expect(node.querySelector('.rjsf-array-item-add button').disabled).eql(true);
         });
 
         it('should disable the Delete button', () => {
-          expect(node.querySelector('.array-item-remove').disabled).eql(true);
+          expect(node.querySelector('.rjsf-array-item-remove').disabled).eql(true);
         });
       });
 
@@ -2235,11 +2235,11 @@ describe('uiSchema', () => {
         });
 
         it('should disable the Add button', () => {
-          expect(node.querySelector('.array-item-add button').disabled).eql(true);
+          expect(node.querySelector('.rjsf-array-item-add button').disabled).eql(true);
         });
 
         it('should disable the Delete button', () => {
-          expect(node.querySelector('.array-item-remove').disabled).eql(true);
+          expect(node.querySelector('.rjsf-array-item-remove').disabled).eql(true);
         });
       });
 
@@ -2495,11 +2495,11 @@ describe('uiSchema', () => {
         });
 
         it('should disable the Add button', () => {
-          expect(node.querySelector('.array-item-add button').disabled).eql(true);
+          expect(node.querySelector('.rjsf-array-item-add button').disabled).eql(true);
         });
 
         it('should disable the Delete button', () => {
-          expect(node.querySelector('.array-item-remove').disabled).eql(true);
+          expect(node.querySelector('.rjsf-array-item-remove').disabled).eql(true);
         });
       });
 

@@ -282,7 +282,7 @@ exports[`array fields array 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -308,7 +308,7 @@ exports[`array fields array 1`] = `
                 className="MuiBox-root emotion-5"
               >
                 <button
-                  className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorPrimary MuiIconButton-sizeMedium array-item-add emotion-6"
+                  className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorPrimary MuiIconButton-sizeMedium rjsf-array-item-add emotion-6"
                   disabled={null}
                   id="root__add"
                   onBlur={[Function]}
@@ -1061,7 +1061,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -1103,7 +1103,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                     className="MuiBox-root emotion-2"
                   >
                     <div
-                      className="form-group field field-string"
+                      className="rjsf-field rjsf-field-string"
                     >
                       <div
                         className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -1159,7 +1159,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
               className="MuiGrid2-root MuiGrid2-direction-xs-row emotion-14"
             >
               <button
-                className="MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeSmall array-item-move-up emotion-15"
+                className="MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeSmall rjsf-array-item-move-up emotion-15"
                 disabled={true}
                 id="root_0__moveUp"
                 onBlur={[Function]}
@@ -1192,7 +1192,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                 </svg>
               </button>
               <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall array-item-move-down emotion-15"
+                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall rjsf-array-item-move-down emotion-15"
                 disabled={null}
                 id="root_0__moveDown"
                 onBlur={[Function]}
@@ -1225,7 +1225,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                 </svg>
               </button>
               <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall array-item-copy emotion-15"
+                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall rjsf-array-item-copy emotion-15"
                 disabled={null}
                 id="root_0__copy"
                 onBlur={[Function]}
@@ -1258,7 +1258,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                 </svg>
               </button>
               <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeSmall array-item-remove emotion-21"
+                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeSmall rjsf-array-item-remove emotion-21"
                 disabled={null}
                 id="root_0__remove"
                 onBlur={[Function]}
@@ -1318,7 +1318,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                     className="MuiBox-root emotion-2"
                   >
                     <div
-                      className="form-group field field-string"
+                      className="rjsf-field rjsf-field-string"
                     >
                       <div
                         className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -1374,7 +1374,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
               className="MuiGrid2-root MuiGrid2-direction-xs-row emotion-14"
             >
               <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall array-item-move-up emotion-15"
+                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall rjsf-array-item-move-up emotion-15"
                 disabled={null}
                 id="root_1__moveUp"
                 onBlur={[Function]}
@@ -1407,7 +1407,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                 </svg>
               </button>
               <button
-                className="MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeSmall array-item-move-down emotion-15"
+                className="MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeSmall rjsf-array-item-move-down emotion-15"
                 disabled={true}
                 id="root_1__moveDown"
                 onBlur={[Function]}
@@ -1440,7 +1440,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                 </svg>
               </button>
               <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall array-item-copy emotion-15"
+                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall rjsf-array-item-copy emotion-15"
                 disabled={null}
                 id="root_1__copy"
                 onBlur={[Function]}
@@ -1473,7 +1473,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                 </svg>
               </button>
               <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeSmall array-item-remove emotion-21"
+                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeSmall rjsf-array-item-remove emotion-21"
                 disabled={null}
                 id="root_1__remove"
                 onBlur={[Function]}
@@ -1517,7 +1517,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                 className="MuiBox-root emotion-45"
               >
                 <button
-                  className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorPrimary MuiIconButton-sizeMedium array-item-add emotion-46"
+                  className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorPrimary MuiIconButton-sizeMedium rjsf-array-item-add emotion-46"
                   disabled={null}
                   id="root__add"
                   onBlur={[Function]}
@@ -1978,7 +1978,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -2493,7 +2493,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -2515,7 +2515,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
           }
         >
           <div
-            className="form-group field field-string"
+            className="rjsf-field rjsf-field-string"
           >
             <div
               className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -2985,7 +2985,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -3027,7 +3027,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                     className="MuiBox-root emotion-2"
                   >
                     <div
-                      className="form-group field field-string"
+                      className="rjsf-field rjsf-field-string"
                     >
                       <div
                         className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -3106,7 +3106,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                     className="MuiBox-root emotion-2"
                   >
                     <div
-                      className="form-group field field-number"
+                      className="rjsf-field rjsf-field-number"
                     >
                       <div
                         className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -3812,7 +3812,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-16:focus::-ms-input-
     </div>
   </div>
   <div
-    className="form-group field field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-9"
@@ -3834,7 +3834,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-16:focus::-ms-input-
           }
         >
           <div
-            className="form-group field field-string field-error has-error has-danger"
+            className="rjsf-field rjsf-field-string rjsf-field-error"
           >
             <div
               className="MuiFormControl-root MuiFormControl-fullWidth emotion-9"
@@ -4345,7 +4345,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -4367,7 +4367,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
           }
         >
           <div
-            className="form-group field field-string"
+            className="rjsf-field rjsf-field-string"
           >
             <div
               className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -4768,7 +4768,7 @@ exports[`with title and description array 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -4819,7 +4819,7 @@ exports[`with title and description array 1`] = `
                 className="MuiBox-root emotion-9"
               >
                 <button
-                  className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorPrimary MuiIconButton-sizeMedium array-item-add emotion-10"
+                  className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorPrimary MuiIconButton-sizeMedium rjsf-array-item-add emotion-10"
                   disabled={null}
                   id="root__add"
                   onBlur={[Function]}
@@ -5676,7 +5676,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -5743,7 +5743,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                     className="MuiBox-root emotion-2"
                   >
                     <div
-                      className="form-group field field-string"
+                      className="rjsf-field rjsf-field-string"
                     >
                       <div
                         className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -5829,7 +5829,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
               className="MuiGrid2-root MuiGrid2-direction-xs-row emotion-22"
             >
               <button
-                className="MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeSmall array-item-move-up emotion-23"
+                className="MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeSmall rjsf-array-item-move-up emotion-23"
                 disabled={true}
                 id="root_0__moveUp"
                 onBlur={[Function]}
@@ -5862,7 +5862,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                 </svg>
               </button>
               <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall array-item-move-down emotion-23"
+                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall rjsf-array-item-move-down emotion-23"
                 disabled={null}
                 id="root_0__moveDown"
                 onBlur={[Function]}
@@ -5895,7 +5895,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                 </svg>
               </button>
               <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall array-item-copy emotion-23"
+                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall rjsf-array-item-copy emotion-23"
                 disabled={null}
                 id="root_0__copy"
                 onBlur={[Function]}
@@ -5928,7 +5928,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                 </svg>
               </button>
               <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeSmall array-item-remove emotion-29"
+                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeSmall rjsf-array-item-remove emotion-29"
                 disabled={null}
                 id="root_0__remove"
                 onBlur={[Function]}
@@ -5988,7 +5988,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                     className="MuiBox-root emotion-2"
                   >
                     <div
-                      className="form-group field field-string"
+                      className="rjsf-field rjsf-field-string"
                     >
                       <div
                         className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -6074,7 +6074,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
               className="MuiGrid2-root MuiGrid2-direction-xs-row emotion-22"
             >
               <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall array-item-move-up emotion-23"
+                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall rjsf-array-item-move-up emotion-23"
                 disabled={null}
                 id="root_1__moveUp"
                 onBlur={[Function]}
@@ -6107,7 +6107,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                 </svg>
               </button>
               <button
-                className="MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeSmall array-item-move-down emotion-23"
+                className="MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeSmall rjsf-array-item-move-down emotion-23"
                 disabled={true}
                 id="root_1__moveDown"
                 onBlur={[Function]}
@@ -6140,7 +6140,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                 </svg>
               </button>
               <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall array-item-copy emotion-23"
+                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall rjsf-array-item-copy emotion-23"
                 disabled={null}
                 id="root_1__copy"
                 onBlur={[Function]}
@@ -6173,7 +6173,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                 </svg>
               </button>
               <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeSmall array-item-remove emotion-29"
+                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeSmall rjsf-array-item-remove emotion-29"
                 disabled={null}
                 id="root_1__remove"
                 onBlur={[Function]}
@@ -6217,7 +6217,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                 className="MuiBox-root emotion-57"
               >
                 <button
-                  className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorPrimary MuiIconButton-sizeMedium array-item-add emotion-58"
+                  className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorPrimary MuiIconButton-sizeMedium rjsf-array-item-add emotion-58"
                   disabled={null}
                   id="root__add"
                   onBlur={[Function]}
@@ -6749,7 +6749,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -7359,7 +7359,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -7426,7 +7426,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                     className="MuiBox-root emotion-2"
                   >
                     <div
-                      className="form-group field field-string"
+                      className="rjsf-field rjsf-field-string"
                     >
                       <div
                         className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -7535,7 +7535,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                     className="MuiBox-root emotion-2"
                   >
                     <div
-                      className="form-group field field-number"
+                      className="rjsf-field rjsf-field-number"
                     >
                       <div
                         className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -7967,7 +7967,7 @@ exports[`with title and description from both array 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -8018,7 +8018,7 @@ exports[`with title and description from both array 1`] = `
                 className="MuiBox-root emotion-9"
               >
                 <button
-                  className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorPrimary MuiIconButton-sizeMedium array-item-add emotion-10"
+                  className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorPrimary MuiIconButton-sizeMedium rjsf-array-item-add emotion-10"
                   disabled={null}
                   id="root__add"
                   onBlur={[Function]}
@@ -8875,7 +8875,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -8942,7 +8942,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                     className="MuiBox-root emotion-2"
                   >
                     <div
-                      className="form-group field field-string"
+                      className="rjsf-field rjsf-field-string"
                     >
                       <div
                         className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -9028,7 +9028,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
               className="MuiGrid2-root MuiGrid2-direction-xs-row emotion-22"
             >
               <button
-                className="MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeSmall array-item-move-up emotion-23"
+                className="MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeSmall rjsf-array-item-move-up emotion-23"
                 disabled={true}
                 id="root_0__moveUp"
                 onBlur={[Function]}
@@ -9061,7 +9061,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                 </svg>
               </button>
               <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall array-item-move-down emotion-23"
+                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall rjsf-array-item-move-down emotion-23"
                 disabled={null}
                 id="root_0__moveDown"
                 onBlur={[Function]}
@@ -9094,7 +9094,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                 </svg>
               </button>
               <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall array-item-copy emotion-23"
+                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall rjsf-array-item-copy emotion-23"
                 disabled={null}
                 id="root_0__copy"
                 onBlur={[Function]}
@@ -9127,7 +9127,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                 </svg>
               </button>
               <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeSmall array-item-remove emotion-29"
+                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeSmall rjsf-array-item-remove emotion-29"
                 disabled={null}
                 id="root_0__remove"
                 onBlur={[Function]}
@@ -9187,7 +9187,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                     className="MuiBox-root emotion-2"
                   >
                     <div
-                      className="form-group field field-string"
+                      className="rjsf-field rjsf-field-string"
                     >
                       <div
                         className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -9273,7 +9273,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
               className="MuiGrid2-root MuiGrid2-direction-xs-row emotion-22"
             >
               <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall array-item-move-up emotion-23"
+                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall rjsf-array-item-move-up emotion-23"
                 disabled={null}
                 id="root_1__moveUp"
                 onBlur={[Function]}
@@ -9306,7 +9306,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                 </svg>
               </button>
               <button
-                className="MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeSmall array-item-move-down emotion-23"
+                className="MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeSmall rjsf-array-item-move-down emotion-23"
                 disabled={true}
                 id="root_1__moveDown"
                 onBlur={[Function]}
@@ -9339,7 +9339,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                 </svg>
               </button>
               <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall array-item-copy emotion-23"
+                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall rjsf-array-item-copy emotion-23"
                 disabled={null}
                 id="root_1__copy"
                 onBlur={[Function]}
@@ -9372,7 +9372,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                 </svg>
               </button>
               <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeSmall array-item-remove emotion-29"
+                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeSmall rjsf-array-item-remove emotion-29"
                 disabled={null}
                 id="root_1__remove"
                 onBlur={[Function]}
@@ -9416,7 +9416,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                 className="MuiBox-root emotion-57"
               >
                 <button
-                  className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorPrimary MuiIconButton-sizeMedium array-item-add emotion-58"
+                  className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorPrimary MuiIconButton-sizeMedium rjsf-array-item-add emotion-58"
                   disabled={null}
                   id="root__add"
                   onBlur={[Function]}
@@ -9948,7 +9948,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -10558,7 +10558,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -10625,7 +10625,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                     className="MuiBox-root emotion-2"
                   >
                     <div
-                      className="form-group field field-string"
+                      className="rjsf-field rjsf-field-string"
                     >
                       <div
                         className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -10734,7 +10734,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                     className="MuiBox-root emotion-2"
                   >
                     <div
-                      className="form-group field field-number"
+                      className="rjsf-field rjsf-field-number"
                     >
                       <div
                         className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -11166,7 +11166,7 @@ exports[`with title and description from uiSchema array 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -11217,7 +11217,7 @@ exports[`with title and description from uiSchema array 1`] = `
                 className="MuiBox-root emotion-9"
               >
                 <button
-                  className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorPrimary MuiIconButton-sizeMedium array-item-add emotion-10"
+                  className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorPrimary MuiIconButton-sizeMedium rjsf-array-item-add emotion-10"
                   disabled={null}
                   id="root__add"
                   onBlur={[Function]}
@@ -12074,7 +12074,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -12141,7 +12141,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                     className="MuiBox-root emotion-2"
                   >
                     <div
-                      className="form-group field field-string"
+                      className="rjsf-field rjsf-field-string"
                     >
                       <div
                         className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -12227,7 +12227,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
               className="MuiGrid2-root MuiGrid2-direction-xs-row emotion-22"
             >
               <button
-                className="MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeSmall array-item-move-up emotion-23"
+                className="MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeSmall rjsf-array-item-move-up emotion-23"
                 disabled={true}
                 id="root_0__moveUp"
                 onBlur={[Function]}
@@ -12260,7 +12260,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                 </svg>
               </button>
               <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall array-item-move-down emotion-23"
+                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall rjsf-array-item-move-down emotion-23"
                 disabled={null}
                 id="root_0__moveDown"
                 onBlur={[Function]}
@@ -12293,7 +12293,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                 </svg>
               </button>
               <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall array-item-copy emotion-23"
+                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall rjsf-array-item-copy emotion-23"
                 disabled={null}
                 id="root_0__copy"
                 onBlur={[Function]}
@@ -12326,7 +12326,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                 </svg>
               </button>
               <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeSmall array-item-remove emotion-29"
+                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeSmall rjsf-array-item-remove emotion-29"
                 disabled={null}
                 id="root_0__remove"
                 onBlur={[Function]}
@@ -12386,7 +12386,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                     className="MuiBox-root emotion-2"
                   >
                     <div
-                      className="form-group field field-string"
+                      className="rjsf-field rjsf-field-string"
                     >
                       <div
                         className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -12472,7 +12472,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
               className="MuiGrid2-root MuiGrid2-direction-xs-row emotion-22"
             >
               <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall array-item-move-up emotion-23"
+                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall rjsf-array-item-move-up emotion-23"
                 disabled={null}
                 id="root_1__moveUp"
                 onBlur={[Function]}
@@ -12505,7 +12505,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                 </svg>
               </button>
               <button
-                className="MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeSmall array-item-move-down emotion-23"
+                className="MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeSmall rjsf-array-item-move-down emotion-23"
                 disabled={true}
                 id="root_1__moveDown"
                 onBlur={[Function]}
@@ -12538,7 +12538,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                 </svg>
               </button>
               <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall array-item-copy emotion-23"
+                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall rjsf-array-item-copy emotion-23"
                 disabled={null}
                 id="root_1__copy"
                 onBlur={[Function]}
@@ -12571,7 +12571,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                 </svg>
               </button>
               <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeSmall array-item-remove emotion-29"
+                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeSmall rjsf-array-item-remove emotion-29"
                 disabled={null}
                 id="root_1__remove"
                 onBlur={[Function]}
@@ -12615,7 +12615,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                 className="MuiBox-root emotion-57"
               >
                 <button
-                  className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorPrimary MuiIconButton-sizeMedium array-item-add emotion-58"
+                  className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorPrimary MuiIconButton-sizeMedium rjsf-array-item-add emotion-58"
                   disabled={null}
                   id="root__add"
                   onBlur={[Function]}
@@ -13147,7 +13147,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -13757,7 +13757,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -13824,7 +13824,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                     className="MuiBox-root emotion-2"
                   >
                     <div
-                      className="form-group field field-string"
+                      className="rjsf-field rjsf-field-string"
                     >
                       <div
                         className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -13933,7 +13933,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
                     className="MuiBox-root emotion-2"
                   >
                     <div
-                      className="form-group field field-number"
+                      className="rjsf-field rjsf-field-number"
                     >
                       <div
                         className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -14331,7 +14331,7 @@ exports[`with title and description with global label off array 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -14357,7 +14357,7 @@ exports[`with title and description with global label off array 1`] = `
                 className="MuiBox-root emotion-5"
               >
                 <button
-                  className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorPrimary MuiIconButton-sizeMedium array-item-add emotion-6"
+                  className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorPrimary MuiIconButton-sizeMedium rjsf-array-item-add emotion-6"
                   disabled={null}
                   id="root__add"
                   onBlur={[Function]}
@@ -15110,7 +15110,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -15152,7 +15152,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                     className="MuiBox-root emotion-2"
                   >
                     <div
-                      className="form-group field field-string"
+                      className="rjsf-field rjsf-field-string"
                     >
                       <div
                         className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -15208,7 +15208,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
               className="MuiGrid2-root MuiGrid2-direction-xs-row emotion-14"
             >
               <button
-                className="MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeSmall array-item-move-up emotion-15"
+                className="MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeSmall rjsf-array-item-move-up emotion-15"
                 disabled={true}
                 id="root_0__moveUp"
                 onBlur={[Function]}
@@ -15241,7 +15241,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                 </svg>
               </button>
               <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall array-item-move-down emotion-15"
+                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall rjsf-array-item-move-down emotion-15"
                 disabled={null}
                 id="root_0__moveDown"
                 onBlur={[Function]}
@@ -15274,7 +15274,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                 </svg>
               </button>
               <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall array-item-copy emotion-15"
+                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall rjsf-array-item-copy emotion-15"
                 disabled={null}
                 id="root_0__copy"
                 onBlur={[Function]}
@@ -15307,7 +15307,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                 </svg>
               </button>
               <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeSmall array-item-remove emotion-21"
+                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeSmall rjsf-array-item-remove emotion-21"
                 disabled={null}
                 id="root_0__remove"
                 onBlur={[Function]}
@@ -15367,7 +15367,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                     className="MuiBox-root emotion-2"
                   >
                     <div
-                      className="form-group field field-string"
+                      className="rjsf-field rjsf-field-string"
                     >
                       <div
                         className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -15423,7 +15423,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
               className="MuiGrid2-root MuiGrid2-direction-xs-row emotion-14"
             >
               <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall array-item-move-up emotion-15"
+                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall rjsf-array-item-move-up emotion-15"
                 disabled={null}
                 id="root_1__moveUp"
                 onBlur={[Function]}
@@ -15456,7 +15456,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                 </svg>
               </button>
               <button
-                className="MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeSmall array-item-move-down emotion-15"
+                className="MuiButtonBase-root Mui-disabled MuiIconButton-root Mui-disabled MuiIconButton-sizeSmall rjsf-array-item-move-down emotion-15"
                 disabled={true}
                 id="root_1__moveDown"
                 onBlur={[Function]}
@@ -15489,7 +15489,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                 </svg>
               </button>
               <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall array-item-copy emotion-15"
+                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall rjsf-array-item-copy emotion-15"
                 disabled={null}
                 id="root_1__copy"
                 onBlur={[Function]}
@@ -15522,7 +15522,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                 </svg>
               </button>
               <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeSmall array-item-remove emotion-21"
+                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeSmall rjsf-array-item-remove emotion-21"
                 disabled={null}
                 id="root_1__remove"
                 onBlur={[Function]}
@@ -15566,7 +15566,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                 className="MuiBox-root emotion-45"
               >
                 <button
-                  className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorPrimary MuiIconButton-sizeMedium array-item-add emotion-46"
+                  className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorPrimary MuiIconButton-sizeMedium rjsf-array-item-add emotion-46"
                   disabled={null}
                   id="root__add"
                   onBlur={[Function]}
@@ -16098,7 +16098,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-4:focus::-ms-input-p
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -16608,7 +16608,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -16650,7 +16650,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                     className="MuiBox-root emotion-2"
                   >
                     <div
-                      className="form-group field field-string"
+                      className="rjsf-field rjsf-field-string"
                     >
                       <div
                         className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -16729,7 +16729,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                     className="MuiBox-root emotion-2"
                   >
                     <div
-                      className="form-group field field-number"
+                      className="rjsf-field rjsf-field-number"
                     >
                       <div
                         className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"

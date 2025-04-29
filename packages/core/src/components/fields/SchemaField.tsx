@@ -209,9 +209,9 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   const help = uiOptions.help;
   const hidden = uiOptions.widget === 'hidden';
 
-  const classNames = ['form-group', 'field', `field-${getSchemaType(schema)}`];
+  const classNames = ['rjsf-field', `rjsf-field-${getSchemaType(schema)}`];
   if (!hideError && __errors && __errors.length > 0) {
-    classNames.push('field-error has-error has-danger');
+    classNames.push('rjsf-field-error');
   }
   if (uiOptions.classNames) {
     classNames.push(uiOptions.classNames);

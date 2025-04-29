@@ -14,11 +14,11 @@ const ExposedArrayKeyTemplate = function (props) {
     <div className='array'>
       {props.items &&
         props.items.map((element) => (
-          <div key={element.key} className='array-item' data-rjsf-itemkey={element.key}>
+          <div key={element.key} className='rjsf-array-item' data-rjsf-itemkey={element.key}>
             <div>{element.children}</div>
             {(element.buttonsProps.hasMoveUp || element.buttonsProps.hasMoveDown) && (
               <button
-                className='array-item-move-down'
+                className='rjsf-array-item-move-down'
                 onClick={element.buttonsProps.onReorderClick(element.index, element.index + 1)}
               >
                 Down
@@ -26,19 +26,19 @@ const ExposedArrayKeyTemplate = function (props) {
             )}
             {(element.buttonsProps.hasMoveUp || element.buttonsProps.hasMoveDown) && (
               <button
-                className='array-item-move-up'
+                className='rjsf-array-item-move-up'
                 onClick={element.buttonsProps.onReorderClick(element.index, element.index - 1)}
               >
                 Up
               </button>
             )}
             {element.buttonsProps.hasCopy && (
-              <button className='array-item-copy' onClick={element.buttonsProps.onCopyIndexClick(element.index)}>
+              <button className='rjsf-array-item-copy' onClick={element.buttonsProps.onCopyIndexClick(element.index)}>
                 Copy
               </button>
             )}
             {element.buttonsProps.hasRemove && (
-              <button className='array-item-remove' onClick={element.buttonsProps.onDropIndexClick(element.index)}>
+              <button className='rjsf-array-item-remove' onClick={element.buttonsProps.onDropIndexClick(element.index)}>
                 Remove
               </button>
             )}
@@ -48,7 +48,7 @@ const ExposedArrayKeyTemplate = function (props) {
         ))}
 
       {props.canAdd && (
-        <div className='array-item-add'>
+        <div className='rjsf-array-item-add'>
           <button onClick={props.onAddClick} type='button'>
             Add New
           </button>
@@ -63,13 +63,13 @@ const CustomOnAddClickTemplate = function (props) {
     <div className='array'>
       {props.items &&
         props.items.map((element) => (
-          <div key={element.key} className='array-item'>
+          <div key={element.key} className='rjsf-array-item'>
             <div>{element.children}</div>
           </div>
         ))}
 
       {props.canAdd && (
-        <div className='array-item-add'>
+        <div className='rjsf-array-item-add'>
           <button onClick={() => props.onAddClick()} type='button'>
             Add New
           </button>
@@ -213,8 +213,8 @@ describe('ArrayField', () => {
     it('should warn on missing items descriptor', () => {
       const { node } = createFormComponent({ schema: { type: 'array' } });
 
-      expect(node.querySelector('.field-array > .unsupported-field').textContent).to.contain(
-        'Missing items definition'
+      expect(node.querySelector('.rjsf-field-array > .unsupported-field').textContent).to.contain(
+        'Missing items definition',
       );
     });
 
@@ -249,7 +249,7 @@ describe('ArrayField', () => {
         schema,
         formData: { foo: null },
       });
-      expect(node.querySelectorAll('.field-string')).to.have.length.of(0);
+      expect(node.querySelectorAll('.rjsf-field-string')).to.have.length.of(0);
     });
   });
 
@@ -269,14 +269,14 @@ describe('ArrayField', () => {
         schema,
         formData: { foo: null },
       });
-      expect(node.querySelectorAll('.field-string')).to.have.length.of(0);
+      expect(node.querySelectorAll('.rjsf-field-string')).to.have.length.of(0);
     });
     it('should contain a field in the list when nested array formData is a single item', () => {
       const { node } = createFormComponent({
         schema,
         formData: { foo: ['test'] },
       });
-      expect(node.querySelectorAll('.field-string')).to.have.length.of(1);
+      expect(node.querySelectorAll('.rjsf-field-string')).to.have.length.of(1);
     });
   });
 
@@ -408,13 +408,13 @@ describe('ArrayField', () => {
     it('should contain no field in the list by default', () => {
       const { node } = createFormComponent({ schema });
 
-      expect(node.querySelectorAll('.field-string')).to.have.length.of(0);
+      expect(node.querySelectorAll('.rjsf-field-string')).to.have.length.of(0);
     });
 
     it('should have an add button', () => {
       const { node } = createFormComponent({ schema });
 
-      expect(node.querySelector('.array-item-add button')).not.eql(null);
+      expect(node.querySelector('.rjsf-array-item-add button')).not.eql(null);
     });
 
     it('should not have an add button if addable is false', () => {
@@ -423,17 +423,17 @@ describe('ArrayField', () => {
         uiSchema: { 'ui:options': { addable: false } },
       });
 
-      expect(node.querySelector('.array-item-add button')).to.be.null;
+      expect(node.querySelector('.rjsf-array-item-add button')).to.be.null;
     });
 
     it('should add a new field when clicking the add button', () => {
       const { node } = createFormComponent({ schema });
 
       act(() => {
-        fireEvent.click(node.querySelector('.array-item-add button'));
+        fireEvent.click(node.querySelector('.rjsf-array-item-add button'));
       });
 
-      expect(node.querySelectorAll('.field-string')).to.have.length.of(1);
+      expect(node.querySelectorAll('.rjsf-field-string')).to.have.length.of(1);
     });
 
     it('should assign new keys/ids when clicking the add button', () => {
@@ -443,10 +443,10 @@ describe('ArrayField', () => {
       });
 
       act(() => {
-        fireEvent.click(node.querySelector('.array-item-add button'));
+        fireEvent.click(node.querySelector('.rjsf-array-item-add button'));
       });
 
-      expect(node.querySelector('.array-item').hasAttribute(ArrayKeyDataAttr)).to.be.true;
+      expect(node.querySelector('.rjsf-array-item').hasAttribute(ArrayKeyDataAttr)).to.be.true;
     });
 
     it('should add a field when clicking add button even if event is not passed to onAddClick', () => {
@@ -456,10 +456,10 @@ describe('ArrayField', () => {
       });
 
       act(() => {
-        fireEvent.click(node.querySelector('.array-item-add button'));
+        fireEvent.click(node.querySelector('.rjsf-array-item-add button'));
       });
 
-      expect(node.querySelector('.array-item')).not.to.be.null;
+      expect(node.querySelector('.rjsf-array-item')).not.to.be.null;
     });
 
     it('should not provide an add button if length equals maxItems', () => {
@@ -468,7 +468,7 @@ describe('ArrayField', () => {
         formData: ['foo', 'bar'],
       });
 
-      expect(node.querySelector('.array-item-add button')).to.be.null;
+      expect(node.querySelector('.rjsf-array-item-add button')).to.be.null;
     });
 
     it('should provide an add button if length is lesser than maxItems', () => {
@@ -477,7 +477,7 @@ describe('ArrayField', () => {
         formData: ['foo'],
       });
 
-      expect(node.querySelector('.array-item-add button')).not.eql(null);
+      expect(node.querySelector('.rjsf-array-item-add button')).not.eql(null);
     });
 
     it('should retain existing row keys/ids when adding new row', () => {
@@ -487,15 +487,15 @@ describe('ArrayField', () => {
         templates: { ArrayFieldTemplate: ExposedArrayKeyTemplate },
       });
 
-      const startRows = node.querySelectorAll('.array-item');
+      const startRows = node.querySelectorAll('.rjsf-array-item');
       const startRow1_key = startRows[0].getAttribute(ArrayKeyDataAttr);
       const startRow2_key = startRows[1] ? startRows[1].getAttribute(ArrayKeyDataAttr) : undefined;
 
       act(() => {
-        fireEvent.click(node.querySelector('.array-item-add button'));
+        fireEvent.click(node.querySelector('.rjsf-array-item-add button'));
       });
 
-      const endRows = node.querySelectorAll('.array-item');
+      const endRows = node.querySelectorAll('.rjsf-array-item');
       const endRow1_key = endRows[0].getAttribute(ArrayKeyDataAttr);
       const endRow2_key = endRows[1].getAttribute(ArrayKeyDataAttr);
 
@@ -513,7 +513,7 @@ describe('ArrayField', () => {
         const addBeforeButton = (
           <button
             key={`array-item-add-before-${item.key}`}
-            className={'array-item-move-before array-item-move-before-to-' + beforeIndex}
+            className={'rjsf-array-item-move-before array-item-move-before-to-' + beforeIndex}
             onClick={item.buttonsProps.onAddIndexClick(beforeIndex)}
           >
             {'Add Item Above'}
@@ -524,7 +524,7 @@ describe('ArrayField', () => {
         const addAfterButton = (
           <button
             key={`array-item-add-after-${item.key}`}
-            className={'array-item-move-after array-item-move-after-to-' + afterIndex}
+            className={'rjsf-array-item-move-after array-item-move-after-to-' + afterIndex}
             onClick={item.buttonsProps.onAddIndexClick(afterIndex)}
           >
             {'Add Item Below'}
@@ -532,7 +532,7 @@ describe('ArrayField', () => {
         );
 
         return (
-          <div key={item.key} data-rjsf-itemkey={item.key} className={`array-item item-${item.index}`}>
+          <div key={item.key} data-rjsf-itemkey={item.key} className={`rjsf-array-item item-${item.index}`}>
             <div>{addBeforeButton}</div>
             {item.children}
             <div>{addAfterButton}</div>
@@ -551,10 +551,10 @@ describe('ArrayField', () => {
         templates: { ArrayFieldTemplate: addAboveOrBelowArrayFieldTemplate },
       });
 
-      const addBeforeButtons = node.querySelectorAll('.array-item-move-before');
-      const addAfterButtons = node.querySelectorAll('.array-item-move-after');
+      const addBeforeButtons = node.querySelectorAll('.rjsf-array-item-move-before');
+      const addAfterButtons = node.querySelectorAll('.rjsf-array-item-move-after');
 
-      const startRows = node.querySelectorAll('.array-item');
+      const startRows = node.querySelectorAll('.rjsf-array-item');
       const startRow1_key = startRows[0].getAttribute(ArrayKeyDataAttr);
       const startRow2_key = startRows[1].getAttribute(ArrayKeyDataAttr);
       const startRow3_key = startRows[2].getAttribute(ArrayKeyDataAttr);
@@ -567,7 +567,7 @@ describe('ArrayField', () => {
         fireEvent.click(addAfterButtons[0]);
       });
 
-      const endRows = node.querySelectorAll('.array-item');
+      const endRows = node.querySelectorAll('.rjsf-array-item');
       const endRow2_key = endRows[1].getAttribute(ArrayKeyDataAttr);
       const endRow4_key = endRows[3].getAttribute(ArrayKeyDataAttr);
       const endRow5_key = endRows[4].getAttribute(ArrayKeyDataAttr);
@@ -594,7 +594,7 @@ describe('ArrayField', () => {
         },
       });
 
-      expect(node.querySelector('.array-item-add button')).to.be.null;
+      expect(node.querySelector('.rjsf-array-item-add button')).to.be.null;
     });
 
     it('should ignore addable value if maxItems constraint is not satisfied', () => {
@@ -608,17 +608,17 @@ describe('ArrayField', () => {
         },
       });
 
-      expect(node.querySelector('.array-item-add button')).to.be.null;
+      expect(node.querySelector('.rjsf-array-item-add button')).to.be.null;
     });
 
     it('should mark a non-null array item widget as required', () => {
       const { node } = createFormComponent({ schema });
 
       act(() => {
-        fireEvent.click(node.querySelector('.array-item-add button'));
+        fireEvent.click(node.querySelector('.rjsf-array-item-add button'));
       });
 
-      expect(node.querySelector('.field-string input[type=text]').required).eql(true);
+      expect(node.querySelector('.rjsf-field-string input[type=text]').required).eql(true);
     });
 
     it('should fill an array field with data', () => {
@@ -626,7 +626,7 @@ describe('ArrayField', () => {
         schema,
         formData: ['foo', 'bar'],
       });
-      const inputs = node.querySelectorAll('.field-string input[type=text]');
+      const inputs = node.querySelectorAll('.rjsf-field-string input[type=text]');
 
       expect(inputs).to.have.length.of(2);
       expect(inputs[0].value).eql('foo');
@@ -636,8 +636,8 @@ describe('ArrayField', () => {
     it("shouldn't have reorder buttons when list length <= 1", () => {
       const { node } = createFormComponent({ schema, formData: ['foo'] });
 
-      expect(node.querySelector('.array-item-move-up')).eql(null);
-      expect(node.querySelector('.array-item-move-down')).eql(null);
+      expect(node.querySelector('.rjsf-array-item-move-up')).eql(null);
+      expect(node.querySelector('.rjsf-array-item-move-down')).eql(null);
     });
 
     it('should have reorder buttons when list length >= 2', () => {
@@ -646,8 +646,8 @@ describe('ArrayField', () => {
         formData: ['foo', 'bar'],
       });
 
-      expect(node.querySelector('.array-item-move-up')).not.eql(null);
-      expect(node.querySelector('.array-item-move-down')).not.eql(null);
+      expect(node.querySelector('.rjsf-array-item-move-up')).not.eql(null);
+      expect(node.querySelector('.rjsf-array-item-move-down')).not.eql(null);
     });
 
     it('should move down a field from the list', () => {
@@ -655,13 +655,13 @@ describe('ArrayField', () => {
         schema,
         formData: ['foo', 'bar', 'baz'],
       });
-      const moveDownBtns = node.querySelectorAll('.array-item-move-down');
+      const moveDownBtns = node.querySelectorAll('.rjsf-array-item-move-down');
 
       act(() => {
         fireEvent.click(moveDownBtns[0]);
       });
 
-      const inputs = node.querySelectorAll('.field-string input[type=text]');
+      const inputs = node.querySelectorAll('.rjsf-field-string input[type=text]');
       expect(inputs).to.have.length.of(3);
       expect(inputs[0].value).eql('bar');
       expect(inputs[1].value).eql('foo');
@@ -673,13 +673,13 @@ describe('ArrayField', () => {
         schema,
         formData: ['foo', 'bar', 'baz'],
       });
-      const moveUpBtns = node.querySelectorAll('.array-item-move-up');
+      const moveUpBtns = node.querySelectorAll('.rjsf-array-item-move-up');
 
       act(() => {
         fireEvent.click(moveUpBtns[2]);
       });
 
-      const inputs = node.querySelectorAll('.field-string input[type=text]');
+      const inputs = node.querySelectorAll('.rjsf-field-string input[type=text]');
       expect(inputs).to.have.length.of(3);
       expect(inputs[0].value).eql('foo');
       expect(inputs[1].value).eql('baz');
@@ -692,8 +692,8 @@ describe('ArrayField', () => {
         formData: ['foo', 'bar', 'baz'],
         templates: { ArrayFieldTemplate: ExposedArrayKeyTemplate },
       });
-      const moveDownBtns = node.querySelectorAll('.array-item-move-down');
-      const startRows = node.querySelectorAll('.array-item');
+      const moveDownBtns = node.querySelectorAll('.rjsf-array-item-move-down');
+      const startRows = node.querySelectorAll('.rjsf-array-item');
       const startRow1_key = startRows[0].getAttribute(ArrayKeyDataAttr);
       const startRow2_key = startRows[1].getAttribute(ArrayKeyDataAttr);
       const startRow3_key = startRows[2].getAttribute(ArrayKeyDataAttr);
@@ -702,7 +702,7 @@ describe('ArrayField', () => {
         fireEvent.click(moveDownBtns[0]);
       });
 
-      const endRows = node.querySelectorAll('.array-item');
+      const endRows = node.querySelectorAll('.rjsf-array-item');
       const endRow1_key = endRows[0].getAttribute(ArrayKeyDataAttr);
       const endRow2_key = endRows[1].getAttribute(ArrayKeyDataAttr);
       const endRow3_key = endRows[2].getAttribute(ArrayKeyDataAttr);
@@ -722,8 +722,8 @@ describe('ArrayField', () => {
         formData: ['foo', 'bar', 'baz'],
         templates: { ArrayFieldTemplate: ExposedArrayKeyTemplate },
       });
-      const moveUpBtns = node.querySelectorAll('.array-item-move-up');
-      const startRows = node.querySelectorAll('.array-item');
+      const moveUpBtns = node.querySelectorAll('.rjsf-array-item-move-up');
+      const startRows = node.querySelectorAll('.rjsf-array-item');
       const startRow1_key = startRows[0].getAttribute(ArrayKeyDataAttr);
       const startRow2_key = startRows[1].getAttribute(ArrayKeyDataAttr);
       const startRow3_key = startRows[2].getAttribute(ArrayKeyDataAttr);
@@ -732,7 +732,7 @@ describe('ArrayField', () => {
         fireEvent.click(moveUpBtns[2]);
       });
 
-      const endRows = node.querySelectorAll('.array-item');
+      const endRows = node.querySelectorAll('.rjsf-array-item');
       const endRow1_key = endRows[0].getAttribute(ArrayKeyDataAttr);
       const endRow2_key = endRows[1].getAttribute(ArrayKeyDataAttr);
       const endRow3_key = endRows[2].getAttribute(ArrayKeyDataAttr);
@@ -757,11 +757,11 @@ describe('ArrayField', () => {
               onClick={props.buttonsProps.onReorderClick(props.index, i)}
             >
               {'Move item to index ' + i}
-            </button>
+            </button>,
           );
         }
         return (
-          <div key={props.key} data-rjsf-itemkey={props.key} className={`array-item item-${props.index}`}>
+          <div key={props.key} data-rjsf-itemkey={props.key} className={`rjsf-array-item item-${props.index}`}>
             {props.children}
             {buttons}
           </div>
@@ -778,7 +778,7 @@ describe('ArrayField', () => {
         templates: { ArrayFieldTemplate: moveAnywhereArrayFieldTemplate },
       });
 
-      const startRows = node.querySelectorAll('.array-item');
+      const startRows = node.querySelectorAll('.rjsf-array-item');
       const startRow1_key = startRows[0].getAttribute(ArrayKeyDataAttr);
       const startRow2_key = startRows[1].getAttribute(ArrayKeyDataAttr);
       const startRow3_key = startRows[2].getAttribute(ArrayKeyDataAttr);
@@ -788,12 +788,12 @@ describe('ArrayField', () => {
         fireEvent.click(button);
       });
 
-      const inputs = node.querySelectorAll('.field-string input[type=text]');
+      const inputs = node.querySelectorAll('.rjsf-field-string input[type=text]');
       expect(inputs[0].value).eql('bar');
       expect(inputs[1].value).eql('baz');
       expect(inputs[2].value).eql('foo');
 
-      const endRows = node.querySelectorAll('.array-item');
+      const endRows = node.querySelectorAll('.rjsf-array-item');
       const endRow1_key = endRows[0].getAttribute(ArrayKeyDataAttr);
       const endRow2_key = endRows[1].getAttribute(ArrayKeyDataAttr);
       const endRow3_key = endRows[2].getAttribute(ArrayKeyDataAttr);
@@ -812,8 +812,8 @@ describe('ArrayField', () => {
         schema,
         formData: ['foo', 'bar'],
       });
-      const moveUpBtns = node.querySelectorAll('.array-item-move-up');
-      const moveDownBtns = node.querySelectorAll('.array-item-move-down');
+      const moveUpBtns = node.querySelectorAll('.rjsf-array-item-move-up');
+      const moveDownBtns = node.querySelectorAll('.rjsf-array-item-move-down');
 
       expect(moveUpBtns[0].disabled).eql(true);
       expect(moveDownBtns[0].disabled).eql(false);
@@ -827,8 +827,8 @@ describe('ArrayField', () => {
         formData: ['foo', 'bar'],
         uiSchema: { 'ui:globalOptions': { orderable: false } },
       });
-      const moveUpBtns = node.querySelector('.array-item-move-up');
-      const moveDownBtns = node.querySelector('.array-item-move-down');
+      const moveUpBtns = node.querySelector('.rjsf-array-item-move-up');
+      const moveDownBtns = node.querySelector('.rjsf-array-item-move-down');
 
       expect(moveUpBtns).to.be.null;
       expect(moveDownBtns).to.be.null;
@@ -840,8 +840,8 @@ describe('ArrayField', () => {
         formData: ['foo', 'bar'],
         uiSchema: { 'ui:options': { orderable: false } },
       });
-      const moveUpBtns = node.querySelector('.array-item-move-up');
-      const moveDownBtns = node.querySelector('.array-item-move-down');
+      const moveUpBtns = node.querySelector('.rjsf-array-item-move-up');
+      const moveDownBtns = node.querySelector('.rjsf-array-item-move-down');
 
       expect(moveUpBtns).to.be.null;
       expect(moveDownBtns).to.be.null;
@@ -853,8 +853,8 @@ describe('ArrayField', () => {
         formData: ['foo', 'bar'],
         uiSchema: { 'ui:orderable': false },
       });
-      const moveUpBtns = node.querySelector('.array-item-move-up');
-      const moveDownBtns = node.querySelector('.array-item-move-down');
+      const moveUpBtns = node.querySelector('.rjsf-array-item-move-up');
+      const moveDownBtns = node.querySelector('.rjsf-array-item-move-down');
 
       expect(moveUpBtns).to.be.null;
       expect(moveDownBtns).to.be.null;
@@ -865,13 +865,13 @@ describe('ArrayField', () => {
         schema,
         formData: ['foo', 'bar'],
       });
-      const dropBtns = node.querySelectorAll('.array-item-remove');
+      const dropBtns = node.querySelectorAll('.rjsf-array-item-remove');
 
       act(() => {
         fireEvent.click(dropBtns[0]);
       });
 
-      const inputs = node.querySelectorAll('.field-string input[type=text]');
+      const inputs = node.querySelectorAll('.rjsf-field-string input[type=text]');
       expect(inputs).to.have.length.of(1);
       expect(inputs[0].value).eql('bar');
     });
@@ -881,13 +881,13 @@ describe('ArrayField', () => {
         schema,
         formData: ['foo', 'bar', 'baz'],
       });
-      const deleteBtns = node.querySelectorAll('.array-item-remove');
+      const deleteBtns = node.querySelectorAll('.rjsf-array-item-remove');
 
       act(() => {
         fireEvent.click(deleteBtns[0]);
       });
 
-      const inputs = node.querySelectorAll('.field-string input[type=text]');
+      const inputs = node.querySelectorAll('.rjsf-field-string input[type=text]');
 
       act(() => {
         fireEvent.change(inputs[0], { target: { value: 'fuzz' } });
@@ -905,15 +905,15 @@ describe('ArrayField', () => {
         templates: { ArrayFieldTemplate: ExposedArrayKeyTemplate },
       });
 
-      const startRows = node.querySelectorAll('.array-item');
+      const startRows = node.querySelectorAll('.rjsf-array-item');
       const startRow2_key = startRows[1].getAttribute(ArrayKeyDataAttr);
 
-      const dropBtns = node.querySelectorAll('.array-item-remove');
+      const dropBtns = node.querySelectorAll('.rjsf-array-item-remove');
       act(() => {
         fireEvent.click(dropBtns[0]);
       });
 
-      const endRows = node.querySelectorAll('.array-item');
+      const endRows = node.querySelectorAll('.rjsf-array-item');
       const endRow1_key = endRows[0].getAttribute(ArrayKeyDataAttr);
 
       expect(startRow2_key).to.equal(endRow1_key);
@@ -926,7 +926,7 @@ describe('ArrayField', () => {
         formData: ['foo', 'bar'],
         uiSchema: { 'ui:globalOptions': { removable: false } },
       });
-      const dropBtn = node.querySelector('.array-item-remove');
+      const dropBtn = node.querySelector('.rjsf-array-item-remove');
 
       expect(dropBtn).to.be.null;
     });
@@ -937,7 +937,7 @@ describe('ArrayField', () => {
         formData: ['foo', 'bar'],
         uiSchema: { 'ui:options': { removable: false } },
       });
-      const dropBtn = node.querySelector('.array-item-remove');
+      const dropBtn = node.querySelector('.rjsf-array-item-remove');
 
       expect(dropBtn).to.be.null;
     });
@@ -948,7 +948,7 @@ describe('ArrayField', () => {
         formData: ['foo', 'bar'],
         uiSchema: { 'ui:removable': false },
       });
-      const dropBtn = node.querySelector('.array-item-remove');
+      const dropBtn = node.querySelector('.rjsf-array-item-remove');
 
       expect(dropBtn).to.be.null;
     });
@@ -967,13 +967,13 @@ describe('ArrayField', () => {
         act(() => {
           fireEvent.submit(node);
         });
-      } catch (e) {
+      } catch {
         // Silencing error thrown as failure is expected here
       }
 
       expect(node.querySelectorAll('.has-error .error-detail')).to.have.length.of(1);
 
-      const dropBtns = node.querySelectorAll('.array-item-remove');
+      const dropBtns = node.querySelectorAll('.rjsf-array-item-remove');
 
       act(() => {
         fireEvent.click(dropBtns[0]);
@@ -987,7 +987,7 @@ describe('ArrayField', () => {
         schema,
         formData: ['foo', 'bar'],
       });
-      const dropBtn = node.querySelector('.array-item-copy');
+      const dropBtn = node.querySelector('.rjsf-array-item-copy');
 
       expect(dropBtn).to.be.null;
     });
@@ -998,7 +998,7 @@ describe('ArrayField', () => {
         formData: ['foo', 'bar'],
         uiSchema: { 'ui:globalOptions': { copyable: true } },
       });
-      const dropBtn = node.querySelector('.array-item-copy');
+      const dropBtn = node.querySelector('.rjsf-array-item-copy');
 
       expect(dropBtn).not.to.be.null;
     });
@@ -1009,7 +1009,7 @@ describe('ArrayField', () => {
         formData: ['foo', 'bar'],
         uiSchema: { 'ui:options': { copyable: true } },
       });
-      const dropBtn = node.querySelector('.array-item-copy');
+      const dropBtn = node.querySelector('.rjsf-array-item-copy');
 
       expect(dropBtn).not.to.be.null;
     });
@@ -1020,7 +1020,7 @@ describe('ArrayField', () => {
         formData: ['foo', 'bar'],
         uiSchema: { 'ui:copyable': true },
       });
-      const dropBtn = node.querySelector('.array-item-copy');
+      const dropBtn = node.querySelector('.rjsf-array-item-copy');
 
       expect(dropBtn).not.to.be.null;
     });
@@ -1031,13 +1031,13 @@ describe('ArrayField', () => {
         formData: ['foo', 'bar'],
         uiSchema: { 'ui:copyable': true },
       });
-      const copyBtns = node.querySelectorAll('.array-item-copy');
+      const copyBtns = node.querySelectorAll('.rjsf-array-item-copy');
 
       act(() => {
         fireEvent.click(copyBtns[0]);
       });
 
-      const inputs = node.querySelectorAll('.field-string input[type=text]');
+      const inputs = node.querySelectorAll('.rjsf-field-string input[type=text]');
       expect(inputs).to.have.length.of(3);
       expect(inputs[0].value).eql('foo');
       expect(inputs[1].value).eql('foo');
@@ -1078,7 +1078,7 @@ describe('ArrayField', () => {
           ],
           formData: [1, null, 3],
         },
-        'root_1'
+        'root_1',
       );
 
       submitForm(node);
@@ -1349,13 +1349,13 @@ describe('ArrayField', () => {
       it('should render a select widget with a label', () => {
         const { node } = createFormComponent({ schema });
 
-        expect(node.querySelector('.field label').textContent).eql('My field');
+        expect(node.querySelector('.rjsf-field label').textContent).eql('My field');
       });
 
       it('should render a select widget with multiple attribute', () => {
         const { node } = createFormComponent({ schema });
 
-        expect(node.querySelector('.field select').getAttribute('multiple')).not.to.be.null;
+        expect(node.querySelector('.rjsf-field select').getAttribute('multiple')).not.to.be.null;
       });
 
       it('should render options', () => {
@@ -1368,7 +1368,7 @@ describe('ArrayField', () => {
         const { node, onChange } = createFormComponent({ schema });
 
         act(() => {
-          Simulate.change(node.querySelector('.field select'), {
+          Simulate.change(node.querySelector('.rjsf-field select'), {
             target: {
               options: [
                 { selected: true, value: 0 }, // use index
@@ -1384,7 +1384,7 @@ describe('ArrayField', () => {
           {
             formData: ['foo', 'bar'],
           },
-          'root'
+          'root',
         );
       });
 
@@ -1392,7 +1392,7 @@ describe('ArrayField', () => {
         const onBlur = sandbox.spy();
         const { node } = createFormComponent({ schema, onBlur });
 
-        const select = node.querySelector('.field select');
+        const select = node.querySelector('.rjsf-field select');
         Simulate.blur(select, {
           target: {
             options: [
@@ -1410,7 +1410,7 @@ describe('ArrayField', () => {
         const onFocus = sandbox.spy();
         const { node } = createFormComponent({ schema, onFocus });
 
-        const select = node.querySelector('.field select');
+        const select = node.querySelector('.rjsf-field select');
         Simulate.focus(select, {
           target: {
             options: [
@@ -1430,7 +1430,7 @@ describe('ArrayField', () => {
           formData: ['foo', 'bar'],
         });
 
-        const options = node.querySelectorAll('.field select option');
+        const options = node.querySelectorAll('.rjsf-field select option');
         expect(options).to.have.length.of(3);
         expect(options[0].selected).eql(true); // foo
         expect(options[1].selected).eql(true); // bar
@@ -1520,7 +1520,7 @@ describe('ArrayField', () => {
           {
             formData: ['foo', 'fuzz'],
           },
-          'root'
+          'root',
         );
       });
 
@@ -1543,7 +1543,7 @@ describe('ArrayField', () => {
           {
             formData: ['foo', 'fuzz'],
           },
-          'root'
+          'root',
         );
         labels = [].map.call(node.querySelectorAll('[type=checkbox]'), (node) => node.checked);
         expect(labels).eql([true, false, true]);
@@ -1649,13 +1649,13 @@ describe('ArrayField', () => {
     it('should render a select widget with a label', () => {
       const { node } = createFormComponent({ schema });
 
-      expect(node.querySelector('.field label').textContent).eql('My field');
+      expect(node.querySelector('.rjsf-field label').textContent).eql('My field');
     });
 
     it('should render a file widget with multiple attribute', () => {
       const { node } = createFormComponent({ schema });
 
-      expect(node.querySelector('.field [type=file]').getAttribute('multiple')).not.to.be.null;
+      expect(node.querySelector('.rjsf-field [type=file]').getAttribute('multiple')).not.to.be.null;
     });
 
     it('should handle a two change events that results in two items in the list', async () => {
@@ -1670,7 +1670,7 @@ describe('ArrayField', () => {
       const { node, onChange } = createFormComponent({ schema });
 
       act(() => {
-        fireEvent.change(node.querySelector('.field input[type=file]'), {
+        fireEvent.change(node.querySelector('.rjsf-field input[type=file]'), {
           target: {
             files: [{ name: 'file1.txt', size: 1, type: 'type' }],
           },
@@ -1686,11 +1686,11 @@ describe('ArrayField', () => {
         {
           formData: ['data:text/plain;name=file1.txt;base64,x='],
         },
-        'root'
+        'root',
       );
 
       act(() => {
-        fireEvent.change(node.querySelector('.field input[type=file]'), {
+        fireEvent.change(node.querySelector('.rjsf-field input[type=file]'), {
           target: {
             files: [{ name: 'file2.txt', size: 2, type: 'type' }],
           },
@@ -1706,7 +1706,7 @@ describe('ArrayField', () => {
         {
           formData: ['data:text/plain;name=file1.txt;base64,x=', 'data:text/plain;name=file2.txt;base64,x='],
         },
-        'root'
+        'root',
       );
     });
 
@@ -1722,7 +1722,7 @@ describe('ArrayField', () => {
       const { node, onChange } = createFormComponent({ schema });
 
       act(() => {
-        fireEvent.change(node.querySelector('.field input[type=file]'), {
+        fireEvent.change(node.querySelector('.rjsf-field input[type=file]'), {
           target: {
             files: [
               { name: 'file1.txt', size: 1, type: 'type' },
@@ -1741,7 +1741,7 @@ describe('ArrayField', () => {
         {
           formData: ['data:text/plain;name=file1.txt;base64,x=', 'data:text/plain;name=file2.txt;base64,x='],
         },
-        'root'
+        'root',
       );
     });
 
@@ -1845,7 +1845,7 @@ describe('ArrayField', () => {
       expect(node.querySelectorAll('fieldset fieldset')).to.be.empty;
 
       act(() => {
-        fireEvent.click(node.querySelector('.array-item-add button'));
+        fireEvent.click(node.querySelector('.rjsf-array-item-add button'));
       });
 
       expect(node.querySelectorAll('fieldset fieldset')).to.have.length.of(1);
@@ -1940,16 +1940,16 @@ describe('ArrayField', () => {
 
     it('should render field widgets', () => {
       const { node } = createFormComponent({ schema });
-      const strInput = node.querySelector('fieldset .field-string input[type=text]');
-      const numInput = node.querySelector('fieldset .field-number input[type=number]');
+      const strInput = node.querySelector('fieldset .rjsf-field-string input[type=text]');
+      const numInput = node.querySelector('fieldset .rjsf-field-number input[type=number]');
       expect(strInput.id).eql('root_0');
       expect(numInput.id).eql('root_1');
     });
 
     it('should mark non-null item widgets as required', () => {
       const { node } = createFormComponent({ schema });
-      const strInput = node.querySelector('fieldset .field-string input[type=text]');
-      const numInput = node.querySelector('fieldset .field-number input[type=number]');
+      const strInput = node.querySelector('fieldset .rjsf-field-string input[type=text]');
+      const numInput = node.querySelector('fieldset .rjsf-field-number input[type=number]');
       expect(strInput.required).eql(true);
       expect(numInput.required).eql(true);
     });
@@ -1959,16 +1959,16 @@ describe('ArrayField', () => {
         schema,
         formData: ['foo', 42],
       });
-      const strInput = node.querySelector('fieldset .field-string input[type=text]');
-      const numInput = node.querySelector('fieldset .field-number input[type=number]');
+      const strInput = node.querySelector('fieldset .rjsf-field-string input[type=text]');
+      const numInput = node.querySelector('fieldset .rjsf-field-number input[type=number]');
       expect(strInput.value).eql('foo');
       expect(numInput.value).eql('42');
     });
 
     it('should handle change events', () => {
       const { node, onChange } = createFormComponent({ schema });
-      const strInput = node.querySelector('fieldset .field-string input[type=text]');
-      const numInput = node.querySelector('fieldset .field-number input[type=number]');
+      const strInput = node.querySelector('fieldset .rjsf-field-string input[type=text]');
+      const numInput = node.querySelector('fieldset .rjsf-field-number input[type=number]');
 
       act(() => {
         fireEvent.change(strInput, { target: { value: 'bar' } });
@@ -1983,7 +1983,7 @@ describe('ArrayField', () => {
         {
           formData: ['bar', 101],
         },
-        'root'
+        'root',
       );
     });
 
@@ -1992,7 +1992,7 @@ describe('ArrayField', () => {
         schema: schemaAdditional,
         formData: [1, 2, 'bar'],
       });
-      const addInput = node.querySelector('fieldset .field-string input[type=text]');
+      const addInput = node.querySelector('fieldset .rjsf-field-string input[type=text]');
       expect(addInput.id).eql('root_2');
       expect(addInput.value).eql('bar');
     });
@@ -2007,18 +2007,18 @@ describe('ArrayField', () => {
         },
         formData: [1, 2, 'bar'],
       });
-      const label = node.querySelector('fieldset .field-string label.control-label');
+      const label = node.querySelector('fieldset .rjsf-field-string label.control-label');
       expect(label.textContent).eql('Custom title*');
     });
 
     it('should have an add button if additionalItems is an object', () => {
       const { node } = createFormComponent({ schema: schemaAdditional });
-      expect(node.querySelector('.array-item-add button')).not.to.be.null;
+      expect(node.querySelector('.rjsf-array-item-add button')).not.to.be.null;
     });
 
     it('should not have an add button if additionalItems is not set', () => {
       const { node } = createFormComponent({ schema });
-      expect(node.querySelector('.array-item-add button')).to.be.null;
+      expect(node.querySelector('.rjsf-array-item-add button')).to.be.null;
     });
 
     it('should not have an add button if global addable is false', () => {
@@ -2026,7 +2026,7 @@ describe('ArrayField', () => {
         schema,
         uiSchema: { 'ui:globalOptions': { addable: false } },
       });
-      expect(node.querySelector('.array-item-add button')).to.be.null;
+      expect(node.querySelector('.rjsf-array-item-add button')).to.be.null;
     });
 
     it('should not have an add button if addable is false', () => {
@@ -2034,7 +2034,7 @@ describe('ArrayField', () => {
         schema,
         uiSchema: { 'ui:options': { addable: false } },
       });
-      expect(node.querySelector('.array-item-add button')).to.be.null;
+      expect(node.querySelector('.rjsf-array-item-add button')).to.be.null;
     });
 
     it('[fixed-noadditional] should not provide an add button regardless maxItems', () => {
@@ -2042,7 +2042,7 @@ describe('ArrayField', () => {
         schema: { maxItems: 3, ...schema },
       });
 
-      expect(node.querySelector('.array-item-add button')).to.be.null;
+      expect(node.querySelector('.rjsf-array-item-add button')).to.be.null;
     });
 
     it('[fixed] should not provide an add button if length equals maxItems', () => {
@@ -2050,7 +2050,7 @@ describe('ArrayField', () => {
         schema: { maxItems: 2, ...schemaAdditional },
       });
 
-      expect(node.querySelector('.array-item-add button')).to.be.null;
+      expect(node.querySelector('.rjsf-array-item-add button')).to.be.null;
     });
 
     it('[fixed] should provide an add button if length is lesser than maxItems', () => {
@@ -2058,7 +2058,7 @@ describe('ArrayField', () => {
         schema: { maxItems: 3, ...schemaAdditional },
       });
 
-      expect(node.querySelector('.array-item-add button')).not.to.be.null;
+      expect(node.querySelector('.rjsf-array-item-add button')).not.to.be.null;
     });
 
     it('[fixed] should not provide an add button if addable is expliclty false regardless maxItems value', () => {
@@ -2071,7 +2071,7 @@ describe('ArrayField', () => {
         },
       });
 
-      expect(node.querySelector('.array-item-add button')).to.be.null;
+      expect(node.querySelector('.rjsf-array-item-add button')).to.be.null;
     });
 
     it('[fixed] should ignore addable value if maxItems constraint is not satisfied', () => {
@@ -2084,7 +2084,7 @@ describe('ArrayField', () => {
         },
       });
 
-      expect(node.querySelector('.array-item-add button')).to.be.null;
+      expect(node.querySelector('.rjsf-array-item-add button')).to.be.null;
     });
 
     it('[fixed] should pass uiSchema to fixed array', () => {
@@ -2141,20 +2141,20 @@ describe('ArrayField', () => {
           templates: { ArrayFieldTemplate: ExposedArrayKeyTemplate },
         });
 
-        const addBtn = node.querySelector('.array-item-add button');
+        const addBtn = node.querySelector('.rjsf-array-item-add button');
 
         act(() => {
           fireEvent.click(addBtn);
         });
 
-        expect(node.querySelectorAll('.field-string')).to.have.length.of(2);
+        expect(node.querySelectorAll('.rjsf-field-string')).to.have.length.of(2);
 
         sinon.assert.calledWithMatch(
           onChange.lastCall,
           {
             formData: [1, 2, 'foo', undefined],
           },
-          'root'
+          'root',
         );
       });
 
@@ -2165,19 +2165,19 @@ describe('ArrayField', () => {
           templates: { ArrayFieldTemplate: ExposedArrayKeyTemplate },
         });
 
-        const startRows = node.querySelectorAll('.array-item');
+        const startRows = node.querySelectorAll('.rjsf-array-item');
         const startRow1_key = startRows[0].getAttribute(ArrayKeyDataAttr);
         const startRow2_key = startRows[1].getAttribute(ArrayKeyDataAttr);
         const startRow3_key = startRows[2].getAttribute(ArrayKeyDataAttr);
         const startRow4_key = startRows[3] ? startRows[3].getAttribute(ArrayKeyDataAttr) : undefined;
 
-        const addBtn = node.querySelector('.array-item-add button');
+        const addBtn = node.querySelector('.rjsf-array-item-add button');
 
         act(() => {
           fireEvent.click(addBtn);
         });
 
-        const endRows = node.querySelectorAll('.array-item');
+        const endRows = node.querySelectorAll('.rjsf-array-item');
         const endRow1_key = endRows[0].getAttribute(ArrayKeyDataAttr);
         const endRow2_key = endRows[1].getAttribute(ArrayKeyDataAttr);
         const endRow3_key = endRows[2].getAttribute(ArrayKeyDataAttr);
@@ -2202,13 +2202,13 @@ describe('ArrayField', () => {
           templates: { ArrayFieldTemplate: ExposedArrayKeyTemplate },
         });
 
-        const addBtn = node.querySelector('.array-item-add button');
+        const addBtn = node.querySelector('.rjsf-array-item-add button');
 
         act(() => {
           fireEvent.click(addBtn);
         });
 
-        const inputs = node.querySelectorAll('.field-string input[type=text]');
+        const inputs = node.querySelectorAll('.rjsf-field-string input[type=text]');
 
         act(() => {
           fireEvent.change(inputs[0], { target: { value: 'bar' } });
@@ -2223,7 +2223,7 @@ describe('ArrayField', () => {
           {
             formData: [1, 2, 'bar', 'baz'],
           },
-          'root'
+          'root',
         );
       });
 
@@ -2234,20 +2234,20 @@ describe('ArrayField', () => {
           templates: { ArrayFieldTemplate: ExposedArrayKeyTemplate },
         });
 
-        const addBtn = node.querySelector('.array-item-add button');
+        const addBtn = node.querySelector('.rjsf-array-item-add button');
 
         act(() => {
           fireEvent.click(addBtn);
         });
 
-        let dropBtns = node.querySelectorAll('.array-item-remove');
+        let dropBtns = node.querySelectorAll('.rjsf-array-item-remove');
 
         act(() => {
           fireEvent.click(dropBtns[0]);
         });
 
-        expect(node.querySelectorAll('.field-string')).to.have.length.of(1);
-        const inputs = node.querySelectorAll('.field-string input[type=text]');
+        expect(node.querySelectorAll('.rjsf-field-string')).to.have.length.of(1);
+        const inputs = node.querySelectorAll('.rjsf-field-string input[type=text]');
         act(() => {
           fireEvent.change(inputs[0], { target: { value: 'baz' } });
         });
@@ -2257,21 +2257,21 @@ describe('ArrayField', () => {
           {
             formData: [1, 2, 'baz'],
           },
-          'root'
+          'root',
         );
 
-        dropBtns = node.querySelectorAll('.array-item-remove');
+        dropBtns = node.querySelectorAll('.rjsf-array-item-remove');
         act(() => {
           fireEvent.click(dropBtns[0]);
         });
 
-        expect(node.querySelectorAll('.field-string')).to.be.empty;
+        expect(node.querySelectorAll('.rjsf-field-string')).to.be.empty;
         sinon.assert.calledWithMatch(
           onChange.lastCall,
           {
             formData: [1, 2],
           },
-          'root'
+          'root',
         );
       });
     });
@@ -2292,7 +2292,7 @@ describe('ArrayField', () => {
       const { node, onChange } = createFormComponent({ schema });
 
       act(() => {
-        Simulate.change(node.querySelector('.field select'), {
+        Simulate.change(node.querySelector('.rjsf-field select'), {
           target: {
             options: [
               { selected: true, value: '0' }, // use index
@@ -2308,7 +2308,7 @@ describe('ArrayField', () => {
         {
           formData: [1, 2],
         },
-        'root'
+        'root',
       );
     });
   });
@@ -2611,7 +2611,7 @@ describe('ArrayField', () => {
         });
 
         act(() => {
-          fireEvent.click(node.querySelector('.array-item-add button'));
+          fireEvent.click(node.querySelector('.rjsf-array-item-add button'));
         });
 
         expect(node.querySelector('#title-Array-1')).to.not.be.null;
@@ -2637,7 +2637,7 @@ describe('ArrayField', () => {
         });
 
         act(() => {
-          fireEvent.click(node.querySelector('.array-item-add button'));
+          fireEvent.click(node.querySelector('.rjsf-array-item-add button'));
         });
 
         expect(node.querySelector('#title-Boolean')).to.not.be.null;
@@ -2663,11 +2663,11 @@ describe('ArrayField', () => {
           });
 
           act(() => {
-            fireEvent.click(node.querySelector('.array-item-add button'));
+            fireEvent.click(node.querySelector('.rjsf-array-item-add button'));
           });
 
           expect(node.querySelector('label[for="root_0"]').textContent).to.contain('Array-1');
-        }
+        },
       );
 
       it.each(widgetTestData)(
@@ -2692,14 +2692,14 @@ describe('ArrayField', () => {
           });
 
           act(() => {
-            fireEvent.click(node.querySelector('.array-item-add button'));
+            fireEvent.click(node.querySelector('.rjsf-array-item-add button'));
           });
 
           const widgetLabelTextContent = node.querySelector('label[for="root_0"]').textContent;
 
           expect(widgetLabelTextContent).not.to.contain('Array-1');
           expect(widgetLabelTextContent).to.contain('Item Title');
-        }
+        },
       );
     });
 
@@ -2794,11 +2794,11 @@ describe('ArrayField', () => {
           });
 
           act(() => {
-            fireEvent.click(node.querySelector('.array-item-add button'));
+            fireEvent.click(node.querySelector('.rjsf-array-item-add button'));
           });
 
           expect(node.querySelector('legend#root_0__title').textContent).to.contain('Array-1');
-        }
+        },
       );
 
       it.each(fieldTestDataWithLegend)(
@@ -2818,14 +2818,14 @@ describe('ArrayField', () => {
           });
 
           act(() => {
-            fireEvent.click(node.querySelector('.array-item-add button'));
+            fireEvent.click(node.querySelector('.rjsf-array-item-add button'));
           });
 
           const legendTextContent = node.querySelector('legend#root_0__title').textContent;
 
           expect(legendTextContent).to.contain('Item Field Title');
           expect(legendTextContent).not.to.contain('Array-1');
-        }
+        },
       );
 
       it.each(fieldTestDataWithLabel)(
@@ -2842,11 +2842,11 @@ describe('ArrayField', () => {
           });
 
           act(() => {
-            fireEvent.click(node.querySelector('.array-item-add button'));
+            fireEvent.click(node.querySelector('.rjsf-array-item-add button'));
           });
 
           expect(node.querySelector('label[for="root_0"]').textContent).to.contain('Array-1');
-        }
+        },
       );
 
       it.each(fieldTestDataWithLabel)(
@@ -2866,14 +2866,14 @@ describe('ArrayField', () => {
           });
 
           act(() => {
-            fireEvent.click(node.querySelector('.array-item-add button'));
+            fireEvent.click(node.querySelector('.rjsf-array-item-add button'));
           });
 
           const labelTextContent = node.querySelector('label[for="root_0"]').textContent;
 
           expect(labelTextContent).to.contain('Item Field Title');
           expect(labelTextContent).to.not.contain('Array-1');
-        }
+        },
       );
     });
   });
@@ -2949,7 +2949,7 @@ describe('ArrayField', () => {
         fireEvent.submit(node);
       });
 
-      const inputs = node.querySelectorAll('.form-group.field-error input[type=text]');
+      const inputs = node.querySelectorAll('.form-group.rjsf-field-error input[type=text]');
       expect(inputs[0].id).eql('root_foo_0_bar');
       expect(inputs[1].id).eql('root_foo_1_bar');
     });
@@ -2967,7 +2967,7 @@ describe('ArrayField', () => {
       });
       fireEvent.submit(node);
 
-      const inputsNoError = node.querySelectorAll('.form-group.field-error input[type=text]');
+      const inputsNoError = node.querySelectorAll('.form-group.rjsf-field-error input[type=text]');
       expect(inputsNoError).to.have.length.of(0);
     });
   });
@@ -3300,7 +3300,7 @@ describe('ArrayField', () => {
         },
       });
 
-      const inputs = node.querySelectorAll('.field-string input[type=text]');
+      const inputs = node.querySelectorAll('.rjsf-field-string input[type=text]');
       act(() => {
         fireEvent.change(inputs[0], { target: { value: 'test' } });
       });
@@ -3325,7 +3325,7 @@ describe('ArrayField', () => {
         },
       });
 
-      const inputs = node.querySelectorAll('.field-string input[type=text]');
+      const inputs = node.querySelectorAll('.rjsf-field-string input[type=text]');
       act(() => {
         fireEvent.change(inputs[0], { target: { value: 'Appie' } });
       });
@@ -3348,7 +3348,7 @@ describe('ArrayField', () => {
         },
       });
 
-      const inputs = node.querySelectorAll('.field-string input[type=text]');
+      const inputs = node.querySelectorAll('.rjsf-field-string input[type=text]');
       act(() => {
         fireEvent.change(inputs[0], { target: { value: 'hello' } });
       });
@@ -3373,7 +3373,7 @@ describe('ArrayField', () => {
         },
       });
 
-      const inputs = node.querySelectorAll('.field-string input[type=text]');
+      const inputs = node.querySelectorAll('.rjsf-field-string input[type=text]');
       act(() => {
         fireEvent.change(inputs[0], { target: { value: 'test' } });
       });

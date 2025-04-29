@@ -78,7 +78,7 @@ export default function ObjectFieldTemplate<
                 id={buttonId<T>(idSchema, 'add')}
                 onClick={onAddClick(schema)}
                 disabled={disabled || readonly}
-                className='object-property-expand'
+                className='rjsf-object-property-expand'
                 uiSchema={uiSchema}
                 registry={registry}
               />

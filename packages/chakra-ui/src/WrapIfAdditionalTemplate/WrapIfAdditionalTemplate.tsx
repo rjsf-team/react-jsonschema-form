@@ -66,7 +66,7 @@ export default function WrapIfAdditionalTemplate<
       <GridItem>
         <RemoveButton
           id={buttonId<T>(id, 'remove')}
-          className='array-item-remove'
+          className='rjsf-object-property-remove'
           disabled={disabled || readonly}
           onClick={onDropPropertyClick(label)}
           uiSchema={uiSchema}

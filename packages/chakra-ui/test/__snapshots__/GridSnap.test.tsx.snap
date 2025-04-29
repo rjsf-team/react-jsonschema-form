@@ -106,7 +106,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <fieldset
       className="fieldset__root emotion-0"
@@ -130,7 +130,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               data-testid="1"
             >
               <div
-                className="form-group field field-object"
+                className="rjsf-field rjsf-field-object"
               >
                 <fieldset
                   className="fieldset__root emotion-0"
@@ -170,7 +170,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               data-testid="1"
             >
               <div
-                className="form-group field field-string"
+                className="rjsf-field rjsf-field-string"
               >
                 <fieldset
                   className="fieldset__root emotion-0"
@@ -232,7 +232,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               data-testid="1"
             >
               <div
-                className="form-group field field-string"
+                className="rjsf-field rjsf-field-string"
               >
                 <fieldset
                   className="fieldset__root emotion-0"
@@ -287,7 +287,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               data-testid="1"
             >
               <div
-                className="form-group field field-string"
+                className="rjsf-field rjsf-field-string"
               >
                 <fieldset
                   className="fieldset__root emotion-0"
@@ -354,7 +354,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               data-testid="1"
             >
               <div
-                className="form-group field field-string"
+                className="rjsf-field rjsf-field-string"
               >
                 <fieldset
                   className="fieldset__root emotion-0"
@@ -416,7 +416,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               data-testid="1"
             >
               <div
-                className="form-group field field-array"
+                className="rjsf-field rjsf-field-array"
               >
                 <fieldset
                   className="fieldset__root emotion-0"
@@ -824,7 +824,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               data-testid="1"
             >
               <div
-                className="form-group field field-object"
+                className="rjsf-field rjsf-field-object"
               >
                 <fieldset
                   className="fieldset__root emotion-0"
@@ -844,7 +844,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                         data-testid="1"
                       >
                         <div
-                          className="form-group field field-string"
+                          className="rjsf-field rjsf-field-string"
                         >
                           <fieldset
                             className="fieldset__root emotion-0"
@@ -906,7 +906,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                         data-testid="1"
                       >
                         <div
-                          className="form-group field field-string"
+                          className="rjsf-field rjsf-field-string"
                         >
                           <fieldset
                             className="fieldset__root emotion-0"
@@ -961,7 +961,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                         data-testid="1"
                       >
                         <div
-                          className="form-group field field-string"
+                          className="rjsf-field rjsf-field-string"
                         >
                           <fieldset
                             className="fieldset__root emotion-0"
@@ -1024,7 +1024,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                         size={6}
                       >
                         <div
-                          className="form-group field field-string"
+                          className="rjsf-field rjsf-field-string"
                         >
                           <fieldset
                             className="fieldset__root emotion-0"
@@ -3397,7 +3397,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                         size={6}
                       >
                         <div
-                          className="form-group field field-string"
+                          className="rjsf-field rjsf-field-string"
                         >
                           <fieldset
                             className="fieldset__root emotion-0"
@@ -3746,7 +3746,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                   data-testid="1"
                 >
                   <div
-                    className="form-group field field-string"
+                    className="rjsf-field rjsf-field-string"
                   >
                     <fieldset
                       className="fieldset__root emotion-0"
@@ -3808,7 +3808,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                   data-testid="1"
                 >
                   <div
-                    className="form-group field field-string"
+                    className="rjsf-field rjsf-field-string"
                   >
                     <fieldset
                       className="fieldset__root emotion-0"
@@ -3863,7 +3863,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                   data-testid="1"
                 >
                   <div
-                    className="form-group field field-string"
+                    className="rjsf-field rjsf-field-string"
                   >
                     <fieldset
                       className="fieldset__root emotion-0"
@@ -3925,7 +3925,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                   data-testid="1"
                 >
                   <div
-                    className="form-group field field-string"
+                    className="rjsf-field rjsf-field-string"
                   >
                     <fieldset
                       className="fieldset__root emotion-0"
@@ -6419,7 +6419,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <fieldset
       className="fieldset__root emotion-0"
@@ -6443,7 +6443,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               data-testid="1"
             >
               <div
-                className="form-group field field-object"
+                className="rjsf-field rjsf-field-object"
               >
                 <fieldset
                   className="fieldset__root emotion-0"
@@ -6483,7 +6483,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               data-testid="1"
             >
               <div
-                className="form-group field field-string"
+                className="rjsf-field rjsf-field-string"
               >
                 <fieldset
                   className="fieldset__root emotion-0"
@@ -6545,7 +6545,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               data-testid="1"
             >
               <div
-                className="form-group field field-string"
+                className="rjsf-field rjsf-field-string"
               >
                 <fieldset
                   className="fieldset__root emotion-0"
@@ -6600,7 +6600,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               data-testid="1"
             >
               <div
-                className="form-group field field-string"
+                className="rjsf-field rjsf-field-string"
               >
                 <fieldset
                   className="fieldset__root emotion-0"
@@ -6667,7 +6667,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               data-testid="1"
             >
               <div
-                className="form-group field field-string"
+                className="rjsf-field rjsf-field-string"
               >
                 <fieldset
                   className="fieldset__root emotion-0"
@@ -6729,7 +6729,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               data-testid="1"
             >
               <div
-                className="form-group field field-array"
+                className="rjsf-field rjsf-field-array"
               >
                 <fieldset
                   className="fieldset__root emotion-0"
@@ -7137,7 +7137,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               data-testid="1"
             >
               <div
-                className="form-group field field-object"
+                className="rjsf-field rjsf-field-object"
               >
                 <fieldset
                   className="fieldset__root emotion-0"
@@ -7157,7 +7157,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                         data-testid="1"
                       >
                         <div
-                          className="form-group field field-string"
+                          className="rjsf-field rjsf-field-string"
                         >
                           <fieldset
                             className="fieldset__root emotion-0"
@@ -7219,7 +7219,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                         data-testid="1"
                       >
                         <div
-                          className="form-group field field-string"
+                          className="rjsf-field rjsf-field-string"
                         >
                           <fieldset
                             className="fieldset__root emotion-0"
@@ -7274,7 +7274,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                         data-testid="1"
                       >
                         <div
-                          className="form-group field field-string"
+                          className="rjsf-field rjsf-field-string"
                         >
                           <fieldset
                             className="fieldset__root emotion-0"
@@ -7337,7 +7337,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                         size={6}
                       >
                         <div
-                          className="form-group field field-string"
+                          className="rjsf-field rjsf-field-string"
                         >
                           <fieldset
                             className="fieldset__root emotion-0"
@@ -9710,7 +9710,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                         size={6}
                       >
                         <div
-                          className="form-group field field-string"
+                          className="rjsf-field rjsf-field-string"
                         >
                           <fieldset
                             className="fieldset__root emotion-0"
@@ -10059,7 +10059,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                   data-testid="1"
                 >
                   <div
-                    className="form-group field field-string"
+                    className="rjsf-field rjsf-field-string"
                   >
                     <fieldset
                       className="fieldset__root emotion-0"
@@ -10114,7 +10114,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                   data-testid="1"
                 >
                   <div
-                    className="form-group field field-string"
+                    className="rjsf-field rjsf-field-string"
                   >
                     <fieldset
                       className="fieldset__root emotion-0"
@@ -10176,7 +10176,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                   data-testid="1"
                 >
                   <div
-                    className="form-group field field-string"
+                    className="rjsf-field rjsf-field-string"
                   >
                     <fieldset
                       className="fieldset__root emotion-0"
@@ -10231,7 +10231,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                   data-testid="1"
                 >
                   <div
-                    className="form-group field field-string"
+                    className="rjsf-field rjsf-field-string"
                   >
                     <fieldset
                       className="fieldset__root emotion-0"
@@ -10293,7 +10293,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                   data-testid="1"
                 >
                   <div
-                    className="form-group field field-string"
+                    className="rjsf-field rjsf-field-string"
                   >
                     <fieldset
                       className="fieldset__root emotion-0"
@@ -12787,7 +12787,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <fieldset
       className="fieldset__root emotion-0"
@@ -12811,7 +12811,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               data-testid="1"
             >
               <div
-                className="form-group field field-object"
+                className="rjsf-field rjsf-field-object"
               >
                 <fieldset
                   className="fieldset__root emotion-0"
@@ -12851,7 +12851,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               data-testid="1"
             >
               <div
-                className="form-group field field-string"
+                className="rjsf-field rjsf-field-string"
               >
                 <fieldset
                   className="fieldset__root emotion-0"
@@ -12913,7 +12913,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               data-testid="1"
             >
               <div
-                className="form-group field field-string"
+                className="rjsf-field rjsf-field-string"
               >
                 <fieldset
                   className="fieldset__root emotion-0"
@@ -12968,7 +12968,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               data-testid="1"
             >
               <div
-                className="form-group field field-string"
+                className="rjsf-field rjsf-field-string"
               >
                 <fieldset
                   className="fieldset__root emotion-0"
@@ -13035,7 +13035,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               data-testid="1"
             >
               <div
-                className="form-group field field-string"
+                className="rjsf-field rjsf-field-string"
               >
                 <fieldset
                   className="fieldset__root emotion-0"
@@ -13097,7 +13097,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               data-testid="1"
             >
               <div
-                className="form-group field field-array"
+                className="rjsf-field rjsf-field-array"
               >
                 <fieldset
                   className="fieldset__root emotion-0"
@@ -13505,7 +13505,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               data-testid="1"
             >
               <div
-                className="form-group field field-object"
+                className="rjsf-field rjsf-field-object"
               >
                 <fieldset
                   className="fieldset__root emotion-0"
@@ -13525,7 +13525,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                         data-testid="1"
                       >
                         <div
-                          className="form-group field field-string"
+                          className="rjsf-field rjsf-field-string"
                         >
                           <fieldset
                             className="fieldset__root emotion-0"
@@ -13587,7 +13587,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                         data-testid="1"
                       >
                         <div
-                          className="form-group field field-string"
+                          className="rjsf-field rjsf-field-string"
                         >
                           <fieldset
                             className="fieldset__root emotion-0"
@@ -13642,7 +13642,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                         data-testid="1"
                       >
                         <div
-                          className="form-group field field-string"
+                          className="rjsf-field rjsf-field-string"
                         >
                           <fieldset
                             className="fieldset__root emotion-0"
@@ -13705,7 +13705,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                         size={6}
                       >
                         <div
-                          className="form-group field field-string"
+                          className="rjsf-field rjsf-field-string"
                         >
                           <fieldset
                             className="fieldset__root emotion-0"
@@ -16078,7 +16078,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                         size={6}
                       >
                         <div
-                          className="form-group field field-string"
+                          className="rjsf-field rjsf-field-string"
                         >
                           <fieldset
                             className="fieldset__root emotion-0"
@@ -16427,7 +16427,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                   data-testid="1"
                 >
                   <div
-                    className="form-group field field-string"
+                    className="rjsf-field rjsf-field-string"
                   >
                     <fieldset
                       className="fieldset__root emotion-0"
@@ -16616,7 +16616,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <fieldset
       className="fieldset__root emotion-0"
@@ -16640,7 +16640,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               data-testid="1"
             >
               <div
-                className="form-group field field-object"
+                className="rjsf-field rjsf-field-object"
               >
                 <fieldset
                   className="fieldset__root emotion-0"
@@ -16680,7 +16680,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               data-testid="1"
             >
               <div
-                className="form-group field field-string"
+                className="rjsf-field rjsf-field-string"
               >
                 <fieldset
                   className="fieldset__root emotion-0"
@@ -16742,7 +16742,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               data-testid="1"
             >
               <div
-                className="form-group field field-string"
+                className="rjsf-field rjsf-field-string"
               >
                 <fieldset
                   className="fieldset__root emotion-0"
@@ -16797,7 +16797,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               data-testid="1"
             >
               <div
-                className="form-group field field-string"
+                className="rjsf-field rjsf-field-string"
               >
                 <fieldset
                   className="fieldset__root emotion-0"
@@ -16864,7 +16864,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               data-testid="1"
             >
               <div
-                className="form-group field field-string"
+                className="rjsf-field rjsf-field-string"
               >
                 <fieldset
                   className="fieldset__root emotion-0"
@@ -16926,7 +16926,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               data-testid="1"
             >
               <div
-                className="form-group field field-array"
+                className="rjsf-field rjsf-field-array"
               >
                 <fieldset
                   className="fieldset__root emotion-0"
@@ -17334,7 +17334,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               data-testid="1"
             >
               <div
-                className="form-group field field-object"
+                className="rjsf-field rjsf-field-object"
               >
                 <fieldset
                   className="fieldset__root emotion-0"
@@ -17354,7 +17354,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                         data-testid="1"
                       >
                         <div
-                          className="form-group field field-string"
+                          className="rjsf-field rjsf-field-string"
                         >
                           <fieldset
                             className="fieldset__root emotion-0"
@@ -17416,7 +17416,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                         data-testid="1"
                       >
                         <div
-                          className="form-group field field-string"
+                          className="rjsf-field rjsf-field-string"
                         >
                           <fieldset
                             className="fieldset__root emotion-0"
@@ -17471,7 +17471,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                         data-testid="1"
                       >
                         <div
-                          className="form-group field field-string"
+                          className="rjsf-field rjsf-field-string"
                         >
                           <fieldset
                             className="fieldset__root emotion-0"
@@ -17534,7 +17534,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                         size={6}
                       >
                         <div
-                          className="form-group field field-string"
+                          className="rjsf-field rjsf-field-string"
                         >
                           <fieldset
                             className="fieldset__root emotion-0"
@@ -19907,7 +19907,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                         size={6}
                       >
                         <div
-                          className="form-group field field-string"
+                          className="rjsf-field rjsf-field-string"
                         >
                           <fieldset
                             className="fieldset__root emotion-0"
@@ -20256,7 +20256,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                   data-testid="1"
                 >
                   <div
-                    className="form-group field field-string"
+                    className="rjsf-field rjsf-field-string"
                   >
                     <fieldset
                       className="fieldset__root emotion-0"
@@ -20318,7 +20318,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                   data-testid="1"
                 >
                   <div
-                    className="form-group field field-string"
+                    className="rjsf-field rjsf-field-string"
                   >
                     <fieldset
                       className="fieldset__root emotion-0"
@@ -20373,7 +20373,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                   data-testid="1"
                 >
                   <div
-                    className="form-group field field-string"
+                    className="rjsf-field rjsf-field-string"
                   >
                     <fieldset
                       className="fieldset__root emotion-0"
@@ -20435,7 +20435,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                   data-testid="1"
                 >
                   <div
-                    className="form-group field field-string"
+                    className="rjsf-field rjsf-field-string"
                   >
                     <fieldset
                       className="fieldset__root emotion-0"
@@ -22895,7 +22895,7 @@ exports[`Three even column grid renders person and address in three columns, no 
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <fieldset
       className="fieldset__root emotion-0"
@@ -22915,7 +22915,7 @@ exports[`Three even column grid renders person and address in three columns, no 
             data-testid="1"
           >
             <div
-              className="form-group field field-object"
+              className="rjsf-field rjsf-field-object"
             >
               <fieldset
                 className="fieldset__root emotion-0"
@@ -22950,7 +22950,7 @@ exports[`Three even column grid renders person and address in three columns, no 
             data-testid="1"
           >
             <div
-              className="form-group field field-string"
+              className="rjsf-field rjsf-field-string"
             >
               <fieldset
                 className="fieldset__root emotion-0"
@@ -23012,7 +23012,7 @@ exports[`Three even column grid renders person and address in three columns, no 
             data-testid="1"
           >
             <div
-              className="form-group field field-string"
+              className="rjsf-field rjsf-field-string"
             >
               <fieldset
                 className="fieldset__root emotion-0"
@@ -23067,7 +23067,7 @@ exports[`Three even column grid renders person and address in three columns, no 
             data-testid="1"
           >
             <div
-              className="form-group field field-string"
+              className="rjsf-field rjsf-field-string"
             >
               <fieldset
                 className="fieldset__root emotion-0"
@@ -23129,7 +23129,7 @@ exports[`Three even column grid renders person and address in three columns, no 
             data-testid="1"
           >
             <div
-              className="form-group field field-string"
+              className="rjsf-field rjsf-field-string"
             >
               <fieldset
                 className="fieldset__root emotion-0"
@@ -23191,7 +23191,7 @@ exports[`Three even column grid renders person and address in three columns, no 
             data-testid="1"
           >
             <div
-              className="form-group field field-array"
+              className="rjsf-field rjsf-field-array"
             >
               <fieldset
                 className="fieldset__root emotion-0"
@@ -23594,7 +23594,7 @@ exports[`Three even column grid renders person and address in three columns, no 
             data-testid="1"
           >
             <div
-              className="form-group field field-string"
+              className="rjsf-field rjsf-field-string"
             >
               <fieldset
                 className="fieldset__root emotion-0"
@@ -23656,7 +23656,7 @@ exports[`Three even column grid renders person and address in three columns, no 
             data-testid="1"
           >
             <div
-              className="form-group field field-string"
+              className="rjsf-field rjsf-field-string"
             >
               <fieldset
                 className="fieldset__root emotion-0"
@@ -23711,7 +23711,7 @@ exports[`Three even column grid renders person and address in three columns, no 
             data-testid="1"
           >
             <div
-              className="form-group field field-string"
+              className="rjsf-field rjsf-field-string"
             >
               <fieldset
                 className="fieldset__root emotion-0"
@@ -23773,7 +23773,7 @@ exports[`Three even column grid renders person and address in three columns, no 
             data-testid="1"
           >
             <div
-              className="form-group field field-string"
+              className="rjsf-field rjsf-field-string"
             >
               <fieldset
                 className="fieldset__root emotion-0"
@@ -26234,7 +26234,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <fieldset
       className="fieldset__root emotion-0"
@@ -26254,7 +26254,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
             data-testid="1"
           >
             <div
-              className="form-group field field-object"
+              className="rjsf-field rjsf-field-object"
             >
               <fieldset
                 className="fieldset__root emotion-0"
@@ -26289,7 +26289,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
             data-testid="1"
           >
             <div
-              className="form-group field field-string"
+              className="rjsf-field rjsf-field-string"
             >
               <fieldset
                 className="fieldset__root emotion-0"
@@ -26351,7 +26351,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
             data-testid="1"
           >
             <div
-              className="form-group field field-string"
+              className="rjsf-field rjsf-field-string"
             >
               <fieldset
                 className="fieldset__root emotion-0"
@@ -26406,7 +26406,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
             data-testid="1"
           >
             <div
-              className="form-group field field-string"
+              className="rjsf-field rjsf-field-string"
             >
               <fieldset
                 className="fieldset__root emotion-0"
@@ -26468,7 +26468,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
             data-testid="1"
           >
             <div
-              className="form-group field field-string"
+              className="rjsf-field rjsf-field-string"
             >
               <fieldset
                 className="fieldset__root emotion-0"
@@ -26530,7 +26530,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
             data-testid="1"
           >
             <div
-              className="form-group field field-array"
+              className="rjsf-field rjsf-field-array"
             >
               <fieldset
                 className="fieldset__root emotion-0"
@@ -26933,7 +26933,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
             data-testid="1"
           >
             <div
-              className="form-group field field-string"
+              className="rjsf-field rjsf-field-string"
             >
               <fieldset
                 className="fieldset__root emotion-0"
@@ -26995,7 +26995,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
             data-testid="1"
           >
             <div
-              className="form-group field field-string"
+              className="rjsf-field rjsf-field-string"
             >
               <fieldset
                 className="fieldset__root emotion-0"
@@ -27050,7 +27050,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
             data-testid="1"
           >
             <div
-              className="form-group field field-string"
+              className="rjsf-field rjsf-field-string"
             >
               <fieldset
                 className="fieldset__root emotion-0"
@@ -27112,7 +27112,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
             data-testid="1"
           >
             <div
-              className="form-group field field-string"
+              className="rjsf-field rjsf-field-string"
             >
               <fieldset
                 className="fieldset__root emotion-0"

@@ -7,7 +7,7 @@ exports[`array fields array 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div
       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -31,7 +31,7 @@ exports[`array fields array 1`] = `
               className="ant-form-item-control-input-content"
             >
               <fieldset
-                className="field field-array field-array-of-string"
+                className="rjsf-field rjsf-field-array rjsf-field-array-of-string"
                 id="root"
               >
                 <div
@@ -83,7 +83,7 @@ exports[`array fields array 1`] = `
                         }
                       >
                         <button
-                          className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block array-item-add"
+                          className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-array-item-add"
                           disabled={false}
                           id="root__add"
                           onClick={[Function]}
@@ -151,7 +151,7 @@ exports[`array fields array icons 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div
       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -175,7 +175,7 @@ exports[`array fields array icons 1`] = `
               className="ant-form-item-control-input-content"
             >
               <fieldset
-                className="field field-array field-array-of-string"
+                className="rjsf-field rjsf-field-array rjsf-field-array-of-string"
                 id="root"
               >
                 <div
@@ -218,7 +218,7 @@ exports[`array fields array icons 1`] = `
                         }
                       >
                         <div
-                          className="form-group field field-string"
+                          className="rjsf-field rjsf-field-string"
                         >
                           <div
                             className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -297,7 +297,7 @@ exports[`array fields array icons 1`] = `
                           }
                         >
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item array-item-move-up"
+                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item rjsf-array-item-move-up"
                             disabled={true}
                             id="root_0__moveUp"
                             onClick={[Function]}
@@ -331,7 +331,7 @@ exports[`array fields array icons 1`] = `
                             </span>
                           </button>
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item array-item-move-down"
+                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item rjsf-array-item-move-down"
                             disabled={false}
                             id="root_0__moveDown"
                             onClick={[Function]}
@@ -365,7 +365,7 @@ exports[`array fields array icons 1`] = `
                             </span>
                           </button>
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item array-item-copy"
+                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item rjsf-array-item-copy"
                             disabled={false}
                             id="root_0__copy"
                             onClick={[Function]}
@@ -399,7 +399,7 @@ exports[`array fields array icons 1`] = `
                             </span>
                           </button>
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-primary ant-btn-dangerous ant-btn-color-dangerous ant-btn-variant-solid ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item array-item-remove"
+                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-primary ant-btn-dangerous ant-btn-color-dangerous ant-btn-variant-solid ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item rjsf-array-item-remove"
                             disabled={false}
                             id="root_0__remove"
                             onClick={[Function]}
@@ -456,7 +456,7 @@ exports[`array fields array icons 1`] = `
                         }
                       >
                         <div
-                          className="form-group field field-string"
+                          className="rjsf-field rjsf-field-string"
                         >
                           <div
                             className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -535,7 +535,7 @@ exports[`array fields array icons 1`] = `
                           }
                         >
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item array-item-move-up"
+                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item rjsf-array-item-move-up"
                             disabled={false}
                             id="root_1__moveUp"
                             onClick={[Function]}
@@ -569,7 +569,7 @@ exports[`array fields array icons 1`] = `
                             </span>
                           </button>
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item array-item-move-down"
+                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item rjsf-array-item-move-down"
                             disabled={true}
                             id="root_1__moveDown"
                             onClick={[Function]}
@@ -603,7 +603,7 @@ exports[`array fields array icons 1`] = `
                             </span>
                           </button>
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item array-item-copy"
+                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item rjsf-array-item-copy"
                             disabled={false}
                             id="root_1__copy"
                             onClick={[Function]}
@@ -637,7 +637,7 @@ exports[`array fields array icons 1`] = `
                             </span>
                           </button>
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-primary ant-btn-dangerous ant-btn-color-dangerous ant-btn-variant-solid ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item array-item-remove"
+                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-primary ant-btn-dangerous ant-btn-color-dangerous ant-btn-variant-solid ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item rjsf-array-item-remove"
                             disabled={false}
                             id="root_1__remove"
                             onClick={[Function]}
@@ -704,7 +704,7 @@ exports[`array fields array icons 1`] = `
                         }
                       >
                         <button
-                          className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block array-item-add"
+                          className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-array-item-add"
                           disabled={false}
                           id="root__add"
                           onClick={[Function]}
@@ -772,7 +772,7 @@ exports[`array fields checkboxes 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div
       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -948,7 +948,7 @@ exports[`array fields empty errors array 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -994,7 +994,7 @@ exports[`array fields empty errors array 1`] = `
                     }
                   >
                     <div
-                      className="form-group field field-string"
+                      className="rjsf-field rjsf-field-string"
                     >
                       <div
                         className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -1095,7 +1095,7 @@ exports[`array fields fixed array 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div
       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -1119,7 +1119,7 @@ exports[`array fields fixed array 1`] = `
               className="ant-form-item-control-input-content"
             >
               <fieldset
-                className="field field-array field-array-fixed-items"
+                className="rjsf-field rjsf-field-array rjsf-field-array-fixed-items"
                 id="root"
               >
                 <div
@@ -1162,7 +1162,7 @@ exports[`array fields fixed array 1`] = `
                         }
                       >
                         <div
-                          className="form-group field field-string"
+                          className="rjsf-field rjsf-field-string"
                         >
                           <div
                             className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -1244,7 +1244,7 @@ exports[`array fields fixed array 1`] = `
                         }
                       >
                         <div
-                          className="form-group field field-number"
+                          className="rjsf-field rjsf-field-number"
                         >
                           <div
                             className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -1487,7 +1487,7 @@ exports[`array fields has errors 1`] = `
     </div>
   </div>
   <div
-    className="form-group field field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -1533,7 +1533,7 @@ exports[`array fields has errors 1`] = `
                     }
                   >
                     <div
-                      className="form-group field field-string field-error has-error has-danger"
+                      className="rjsf-field rjsf-field-string rjsf-field-error"
                     >
                       <div
                         className="ant-form-item css-dev-only-do-not-override-1d4w9r2 ant-form-item-with-help ant-form-item-has-feedback ant-form-item-has-error"
@@ -1659,7 +1659,7 @@ exports[`array fields no errors 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -1705,7 +1705,7 @@ exports[`array fields no errors 1`] = `
                     }
                   >
                     <div
-                      className="form-group field field-string"
+                      className="rjsf-field rjsf-field-string"
                     >
                       <div
                         className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -1806,7 +1806,7 @@ exports[`with title and description array 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div
       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -1830,7 +1830,7 @@ exports[`with title and description array 1`] = `
               className="ant-form-item-control-input-content"
             >
               <fieldset
-                className="field field-array field-array-of-string"
+                className="rjsf-field rjsf-field-array rjsf-field-array-of-string"
                 id="root"
               >
                 <div
@@ -1916,7 +1916,7 @@ exports[`with title and description array 1`] = `
                         }
                       >
                         <button
-                          className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block array-item-add"
+                          className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-array-item-add"
                           disabled={false}
                           id="root__add"
                           onClick={[Function]}
@@ -1998,7 +1998,7 @@ exports[`with title and description array icons 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div
       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -2022,7 +2022,7 @@ exports[`with title and description array icons 1`] = `
               className="ant-form-item-control-input-content"
             >
               <fieldset
-                className="field field-array field-array-of-string"
+                className="rjsf-field rjsf-field-array rjsf-field-array-of-string"
                 id="root"
               >
                 <div
@@ -2099,7 +2099,7 @@ exports[`with title and description array icons 1`] = `
                         }
                       >
                         <div
-                          className="form-group field field-string"
+                          className="rjsf-field rjsf-field-string"
                         >
                           <div
                             className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -2204,7 +2204,7 @@ exports[`with title and description array icons 1`] = `
                           }
                         >
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item array-item-move-up"
+                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item rjsf-array-item-move-up"
                             disabled={true}
                             id="root_0__moveUp"
                             onClick={[Function]}
@@ -2238,7 +2238,7 @@ exports[`with title and description array icons 1`] = `
                             </span>
                           </button>
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item array-item-move-down"
+                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item rjsf-array-item-move-down"
                             disabled={false}
                             id="root_0__moveDown"
                             onClick={[Function]}
@@ -2272,7 +2272,7 @@ exports[`with title and description array icons 1`] = `
                             </span>
                           </button>
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item array-item-copy"
+                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item rjsf-array-item-copy"
                             disabled={false}
                             id="root_0__copy"
                             onClick={[Function]}
@@ -2306,7 +2306,7 @@ exports[`with title and description array icons 1`] = `
                             </span>
                           </button>
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-primary ant-btn-dangerous ant-btn-color-dangerous ant-btn-variant-solid ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item array-item-remove"
+                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-primary ant-btn-dangerous ant-btn-color-dangerous ant-btn-variant-solid ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item rjsf-array-item-remove"
                             disabled={false}
                             id="root_0__remove"
                             onClick={[Function]}
@@ -2363,7 +2363,7 @@ exports[`with title and description array icons 1`] = `
                         }
                       >
                         <div
-                          className="form-group field field-string"
+                          className="rjsf-field rjsf-field-string"
                         >
                           <div
                             className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -2468,7 +2468,7 @@ exports[`with title and description array icons 1`] = `
                           }
                         >
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item array-item-move-up"
+                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item rjsf-array-item-move-up"
                             disabled={false}
                             id="root_1__moveUp"
                             onClick={[Function]}
@@ -2502,7 +2502,7 @@ exports[`with title and description array icons 1`] = `
                             </span>
                           </button>
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item array-item-move-down"
+                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item rjsf-array-item-move-down"
                             disabled={true}
                             id="root_1__moveDown"
                             onClick={[Function]}
@@ -2536,7 +2536,7 @@ exports[`with title and description array icons 1`] = `
                             </span>
                           </button>
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item array-item-copy"
+                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item rjsf-array-item-copy"
                             disabled={false}
                             id="root_1__copy"
                             onClick={[Function]}
@@ -2570,7 +2570,7 @@ exports[`with title and description array icons 1`] = `
                             </span>
                           </button>
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-primary ant-btn-dangerous ant-btn-color-dangerous ant-btn-variant-solid ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item array-item-remove"
+                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-primary ant-btn-dangerous ant-btn-color-dangerous ant-btn-variant-solid ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item rjsf-array-item-remove"
                             disabled={false}
                             id="root_1__remove"
                             onClick={[Function]}
@@ -2637,7 +2637,7 @@ exports[`with title and description array icons 1`] = `
                         }
                       >
                         <button
-                          className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block array-item-add"
+                          className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-array-item-add"
                           disabled={false}
                           id="root__add"
                           onClick={[Function]}
@@ -2719,7 +2719,7 @@ exports[`with title and description checkboxes 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div
       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -2921,7 +2921,7 @@ exports[`with title and description fixed array 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div
       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -2945,7 +2945,7 @@ exports[`with title and description fixed array 1`] = `
               className="ant-form-item-control-input-content"
             >
               <fieldset
-                className="field field-array field-array-fixed-items"
+                className="rjsf-field rjsf-field-array rjsf-field-array-fixed-items"
                 id="root"
               >
                 <div
@@ -3022,7 +3022,7 @@ exports[`with title and description fixed array 1`] = `
                         }
                       >
                         <div
-                          className="form-group field field-string"
+                          className="rjsf-field rjsf-field-string"
                         >
                           <div
                             className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -3130,7 +3130,7 @@ exports[`with title and description fixed array 1`] = `
                         }
                       >
                         <div
-                          className="form-group field field-number"
+                          className="rjsf-field rjsf-field-number"
                         >
                           <div
                             className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -3340,7 +3340,7 @@ exports[`with title and description from both array 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div
       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -3364,7 +3364,7 @@ exports[`with title and description from both array 1`] = `
               className="ant-form-item-control-input-content"
             >
               <fieldset
-                className="field field-array field-array-of-string"
+                className="rjsf-field rjsf-field-array rjsf-field-array-of-string"
                 id="root"
               >
                 <div
@@ -3450,7 +3450,7 @@ exports[`with title and description from both array 1`] = `
                         }
                       >
                         <button
-                          className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block array-item-add"
+                          className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-array-item-add"
                           disabled={false}
                           id="root__add"
                           onClick={[Function]}
@@ -3532,7 +3532,7 @@ exports[`with title and description from both array icons 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div
       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -3556,7 +3556,7 @@ exports[`with title and description from both array icons 1`] = `
               className="ant-form-item-control-input-content"
             >
               <fieldset
-                className="field field-array field-array-of-string"
+                className="rjsf-field rjsf-field-array rjsf-field-array-of-string"
                 id="root"
               >
                 <div
@@ -3633,7 +3633,7 @@ exports[`with title and description from both array icons 1`] = `
                         }
                       >
                         <div
-                          className="form-group field field-string"
+                          className="rjsf-field rjsf-field-string"
                         >
                           <div
                             className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -3738,7 +3738,7 @@ exports[`with title and description from both array icons 1`] = `
                           }
                         >
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item array-item-move-up"
+                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item rjsf-array-item-move-up"
                             disabled={true}
                             id="root_0__moveUp"
                             onClick={[Function]}
@@ -3772,7 +3772,7 @@ exports[`with title and description from both array icons 1`] = `
                             </span>
                           </button>
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item array-item-move-down"
+                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item rjsf-array-item-move-down"
                             disabled={false}
                             id="root_0__moveDown"
                             onClick={[Function]}
@@ -3806,7 +3806,7 @@ exports[`with title and description from both array icons 1`] = `
                             </span>
                           </button>
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item array-item-copy"
+                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item rjsf-array-item-copy"
                             disabled={false}
                             id="root_0__copy"
                             onClick={[Function]}
@@ -3840,7 +3840,7 @@ exports[`with title and description from both array icons 1`] = `
                             </span>
                           </button>
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-primary ant-btn-dangerous ant-btn-color-dangerous ant-btn-variant-solid ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item array-item-remove"
+                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-primary ant-btn-dangerous ant-btn-color-dangerous ant-btn-variant-solid ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item rjsf-array-item-remove"
                             disabled={false}
                             id="root_0__remove"
                             onClick={[Function]}
@@ -3897,7 +3897,7 @@ exports[`with title and description from both array icons 1`] = `
                         }
                       >
                         <div
-                          className="form-group field field-string"
+                          className="rjsf-field rjsf-field-string"
                         >
                           <div
                             className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -4002,7 +4002,7 @@ exports[`with title and description from both array icons 1`] = `
                           }
                         >
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item array-item-move-up"
+                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item rjsf-array-item-move-up"
                             disabled={false}
                             id="root_1__moveUp"
                             onClick={[Function]}
@@ -4036,7 +4036,7 @@ exports[`with title and description from both array icons 1`] = `
                             </span>
                           </button>
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item array-item-move-down"
+                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item rjsf-array-item-move-down"
                             disabled={true}
                             id="root_1__moveDown"
                             onClick={[Function]}
@@ -4070,7 +4070,7 @@ exports[`with title and description from both array icons 1`] = `
                             </span>
                           </button>
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item array-item-copy"
+                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item rjsf-array-item-copy"
                             disabled={false}
                             id="root_1__copy"
                             onClick={[Function]}
@@ -4104,7 +4104,7 @@ exports[`with title and description from both array icons 1`] = `
                             </span>
                           </button>
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-primary ant-btn-dangerous ant-btn-color-dangerous ant-btn-variant-solid ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item array-item-remove"
+                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-primary ant-btn-dangerous ant-btn-color-dangerous ant-btn-variant-solid ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item rjsf-array-item-remove"
                             disabled={false}
                             id="root_1__remove"
                             onClick={[Function]}
@@ -4171,7 +4171,7 @@ exports[`with title and description from both array icons 1`] = `
                         }
                       >
                         <button
-                          className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block array-item-add"
+                          className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-array-item-add"
                           disabled={false}
                           id="root__add"
                           onClick={[Function]}
@@ -4253,7 +4253,7 @@ exports[`with title and description from both checkboxes 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div
       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -4455,7 +4455,7 @@ exports[`with title and description from both fixed array 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div
       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -4479,7 +4479,7 @@ exports[`with title and description from both fixed array 1`] = `
               className="ant-form-item-control-input-content"
             >
               <fieldset
-                className="field field-array field-array-fixed-items"
+                className="rjsf-field rjsf-field-array rjsf-field-array-fixed-items"
                 id="root"
               >
                 <div
@@ -4556,7 +4556,7 @@ exports[`with title and description from both fixed array 1`] = `
                         }
                       >
                         <div
-                          className="form-group field field-string"
+                          className="rjsf-field rjsf-field-string"
                         >
                           <div
                             className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -4664,7 +4664,7 @@ exports[`with title and description from both fixed array 1`] = `
                         }
                       >
                         <div
-                          className="form-group field field-number"
+                          className="rjsf-field rjsf-field-number"
                         >
                           <div
                             className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -4874,7 +4874,7 @@ exports[`with title and description from uiSchema array 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div
       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -4898,7 +4898,7 @@ exports[`with title and description from uiSchema array 1`] = `
               className="ant-form-item-control-input-content"
             >
               <fieldset
-                className="field field-array field-array-of-string"
+                className="rjsf-field rjsf-field-array rjsf-field-array-of-string"
                 id="root"
               >
                 <div
@@ -4984,7 +4984,7 @@ exports[`with title and description from uiSchema array 1`] = `
                         }
                       >
                         <button
-                          className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block array-item-add"
+                          className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-array-item-add"
                           disabled={false}
                           id="root__add"
                           onClick={[Function]}
@@ -5066,7 +5066,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div
       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -5090,7 +5090,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
               className="ant-form-item-control-input-content"
             >
               <fieldset
-                className="field field-array field-array-of-string"
+                className="rjsf-field rjsf-field-array rjsf-field-array-of-string"
                 id="root"
               >
                 <div
@@ -5167,7 +5167,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                         }
                       >
                         <div
-                          className="form-group field field-string"
+                          className="rjsf-field rjsf-field-string"
                         >
                           <div
                             className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -5272,7 +5272,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                           }
                         >
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item array-item-move-up"
+                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item rjsf-array-item-move-up"
                             disabled={true}
                             id="root_0__moveUp"
                             onClick={[Function]}
@@ -5306,7 +5306,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                             </span>
                           </button>
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item array-item-move-down"
+                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item rjsf-array-item-move-down"
                             disabled={false}
                             id="root_0__moveDown"
                             onClick={[Function]}
@@ -5340,7 +5340,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                             </span>
                           </button>
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item array-item-copy"
+                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item rjsf-array-item-copy"
                             disabled={false}
                             id="root_0__copy"
                             onClick={[Function]}
@@ -5374,7 +5374,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                             </span>
                           </button>
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-primary ant-btn-dangerous ant-btn-color-dangerous ant-btn-variant-solid ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item array-item-remove"
+                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-primary ant-btn-dangerous ant-btn-color-dangerous ant-btn-variant-solid ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item rjsf-array-item-remove"
                             disabled={false}
                             id="root_0__remove"
                             onClick={[Function]}
@@ -5431,7 +5431,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                         }
                       >
                         <div
-                          className="form-group field field-string"
+                          className="rjsf-field rjsf-field-string"
                         >
                           <div
                             className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -5536,7 +5536,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                           }
                         >
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item array-item-move-up"
+                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item rjsf-array-item-move-up"
                             disabled={false}
                             id="root_1__moveUp"
                             onClick={[Function]}
@@ -5570,7 +5570,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                             </span>
                           </button>
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item array-item-move-down"
+                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item rjsf-array-item-move-down"
                             disabled={true}
                             id="root_1__moveDown"
                             onClick={[Function]}
@@ -5604,7 +5604,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                             </span>
                           </button>
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item array-item-copy"
+                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item rjsf-array-item-copy"
                             disabled={false}
                             id="root_1__copy"
                             onClick={[Function]}
@@ -5638,7 +5638,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                             </span>
                           </button>
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-primary ant-btn-dangerous ant-btn-color-dangerous ant-btn-variant-solid ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item array-item-remove"
+                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-primary ant-btn-dangerous ant-btn-color-dangerous ant-btn-variant-solid ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item rjsf-array-item-remove"
                             disabled={false}
                             id="root_1__remove"
                             onClick={[Function]}
@@ -5705,7 +5705,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                         }
                       >
                         <button
-                          className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block array-item-add"
+                          className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-array-item-add"
                           disabled={false}
                           id="root__add"
                           onClick={[Function]}
@@ -5787,7 +5787,7 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div
       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -5989,7 +5989,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div
       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -6013,7 +6013,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
               className="ant-form-item-control-input-content"
             >
               <fieldset
-                className="field field-array field-array-fixed-items"
+                className="rjsf-field rjsf-field-array rjsf-field-array-fixed-items"
                 id="root"
               >
                 <div
@@ -6090,7 +6090,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                         }
                       >
                         <div
-                          className="form-group field field-string"
+                          className="rjsf-field rjsf-field-string"
                         >
                           <div
                             className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -6198,7 +6198,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                         }
                       >
                         <div
-                          className="form-group field field-number"
+                          className="rjsf-field rjsf-field-number"
                         >
                           <div
                             className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -6408,7 +6408,7 @@ exports[`with title and description with global label off array 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div
       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -6432,7 +6432,7 @@ exports[`with title and description with global label off array 1`] = `
               className="ant-form-item-control-input-content"
             >
               <fieldset
-                className="field field-array field-array-of-string"
+                className="rjsf-field rjsf-field-array rjsf-field-array-of-string"
                 id="root"
               >
                 <div
@@ -6503,7 +6503,7 @@ exports[`with title and description with global label off array 1`] = `
                         }
                       >
                         <button
-                          className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block array-item-add"
+                          className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-array-item-add"
                           disabled={false}
                           id="root__add"
                           onClick={[Function]}
@@ -6585,7 +6585,7 @@ exports[`with title and description with global label off array icons 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div
       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -6609,7 +6609,7 @@ exports[`with title and description with global label off array icons 1`] = `
               className="ant-form-item-control-input-content"
             >
               <fieldset
-                className="field field-array field-array-of-string"
+                className="rjsf-field rjsf-field-array rjsf-field-array-of-string"
                 id="root"
               >
                 <div
@@ -6671,7 +6671,7 @@ exports[`with title and description with global label off array icons 1`] = `
                         }
                       >
                         <div
-                          className="form-group field field-string"
+                          className="rjsf-field rjsf-field-string"
                         >
                           <div
                             className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -6764,7 +6764,7 @@ exports[`with title and description with global label off array icons 1`] = `
                           }
                         >
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item array-item-move-up"
+                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item rjsf-array-item-move-up"
                             disabled={true}
                             id="root_0__moveUp"
                             onClick={[Function]}
@@ -6798,7 +6798,7 @@ exports[`with title and description with global label off array icons 1`] = `
                             </span>
                           </button>
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item array-item-move-down"
+                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item rjsf-array-item-move-down"
                             disabled={false}
                             id="root_0__moveDown"
                             onClick={[Function]}
@@ -6832,7 +6832,7 @@ exports[`with title and description with global label off array icons 1`] = `
                             </span>
                           </button>
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item array-item-copy"
+                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item rjsf-array-item-copy"
                             disabled={false}
                             id="root_0__copy"
                             onClick={[Function]}
@@ -6866,7 +6866,7 @@ exports[`with title and description with global label off array icons 1`] = `
                             </span>
                           </button>
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-primary ant-btn-dangerous ant-btn-color-dangerous ant-btn-variant-solid ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item array-item-remove"
+                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-primary ant-btn-dangerous ant-btn-color-dangerous ant-btn-variant-solid ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item rjsf-array-item-remove"
                             disabled={false}
                             id="root_0__remove"
                             onClick={[Function]}
@@ -6923,7 +6923,7 @@ exports[`with title and description with global label off array icons 1`] = `
                         }
                       >
                         <div
-                          className="form-group field field-string"
+                          className="rjsf-field rjsf-field-string"
                         >
                           <div
                             className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -7016,7 +7016,7 @@ exports[`with title and description with global label off array icons 1`] = `
                           }
                         >
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item array-item-move-up"
+                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item rjsf-array-item-move-up"
                             disabled={false}
                             id="root_1__moveUp"
                             onClick={[Function]}
@@ -7050,7 +7050,7 @@ exports[`with title and description with global label off array icons 1`] = `
                             </span>
                           </button>
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item array-item-move-down"
+                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item rjsf-array-item-move-down"
                             disabled={true}
                             id="root_1__moveDown"
                             onClick={[Function]}
@@ -7084,7 +7084,7 @@ exports[`with title and description with global label off array icons 1`] = `
                             </span>
                           </button>
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item array-item-copy"
+                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item rjsf-array-item-copy"
                             disabled={false}
                             id="root_1__copy"
                             onClick={[Function]}
@@ -7118,7 +7118,7 @@ exports[`with title and description with global label off array icons 1`] = `
                             </span>
                           </button>
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-primary ant-btn-dangerous ant-btn-color-dangerous ant-btn-variant-solid ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item array-item-remove"
+                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-primary ant-btn-dangerous ant-btn-color-dangerous ant-btn-variant-solid ant-btn-icon-only ant-btn-compact-item ant-btn-compact-first-item ant-btn-compact-last-item rjsf-array-item-remove"
                             disabled={false}
                             id="root_1__remove"
                             onClick={[Function]}
@@ -7185,7 +7185,7 @@ exports[`with title and description with global label off array icons 1`] = `
                         }
                       >
                         <button
-                          className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block array-item-add"
+                          className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-array-item-add"
                           disabled={false}
                           id="root__add"
                           onClick={[Function]}
@@ -7267,7 +7267,7 @@ exports[`with title and description with global label off checkboxes 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div
       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -7469,7 +7469,7 @@ exports[`with title and description with global label off fixed array 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div
       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -7493,7 +7493,7 @@ exports[`with title and description with global label off fixed array 1`] = `
               className="ant-form-item-control-input-content"
             >
               <fieldset
-                className="field field-array field-array-fixed-items"
+                className="rjsf-field rjsf-field-array rjsf-field-array-fixed-items"
                 id="root"
               >
                 <div
@@ -7555,7 +7555,7 @@ exports[`with title and description with global label off fixed array 1`] = `
                         }
                       >
                         <div
-                          className="form-group field field-string"
+                          className="rjsf-field rjsf-field-string"
                         >
                           <div
                             className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -7651,7 +7651,7 @@ exports[`with title and description with global label off fixed array 1`] = `
                         }
                       >
                         <div
-                          className="form-group field field-number"
+                          className="rjsf-field rjsf-field-number"
                         >
                           <div
                             className="ant-form-item css-dev-only-do-not-override-1d4w9r2"

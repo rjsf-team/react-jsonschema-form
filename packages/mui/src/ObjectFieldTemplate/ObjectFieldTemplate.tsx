@@ -86,7 +86,7 @@ export default function ObjectFieldTemplate<
             <Grid2>
               <AddButton
                 id={buttonId<T>(idSchema, 'add')}
-                className='object-property-expand'
+                className='rjsf-object-property-expand'
                 onClick={onAddClick(schema)}
                 disabled={disabled || readonly}
                 uiSchema={uiSchema}

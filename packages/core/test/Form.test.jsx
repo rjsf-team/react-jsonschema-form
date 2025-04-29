@@ -378,7 +378,7 @@ describeRepeated('Form common', (createFormComponent) => {
 
     it('should use the provided template for labels', () => {
       expect(node.querySelector('.my-template > label').textContent).eql('root object');
-      expect(node.querySelector('.my-template .field-string > label').textContent).eql('foo*');
+      expect(node.querySelector('.my-template .rjsf-field-string > label').textContent).eql('foo*');
     });
 
     it('should pass description as the provided React element', () => {
@@ -674,7 +674,7 @@ describeRepeated('Form common', (createFormComponent) => {
 
       const { node } = createFormComponent({ schema });
 
-      fireEvent.click(node.querySelector('.array-item-add button'));
+      fireEvent.click(node.querySelector('.rjsf-array-item-add button'));
 
       expect(node.querySelector('input[type=text]').value).eql('hello');
     });
@@ -741,7 +741,7 @@ describeRepeated('Form common', (createFormComponent) => {
 
       expect(node.querySelector('#root_children_0_name')).to.not.exist;
 
-      fireEvent.click(node.querySelector('.array-item-add button'));
+      fireEvent.click(node.querySelector('.rjsf-array-item-add button'));
 
       expect(node.querySelector('#root_children_0_name')).to.exist;
     });
@@ -897,7 +897,7 @@ describeRepeated('Form common', (createFormComponent) => {
     it('should propagate deeply nested defaults to submit handler', () => {
       const { node, onSubmit } = createFormComponent({ schema });
 
-      fireEvent.click(node.querySelector('.array-item-add button'));
+      fireEvent.click(node.querySelector('.rjsf-array-item-add button'));
       fireEvent.submit(node);
 
       sinon.assert.calledWithMatch(onSubmit.lastCall, {
@@ -1772,7 +1772,7 @@ describeRepeated('Form common', (createFormComponent) => {
       };
       const { node, onChange } = createFormComponent({ ref: React.createRef(), schema });
 
-      fireEvent.click(node.querySelector('.array-item-add button'));
+      fireEvent.click(node.querySelector('.rjsf-array-item-add button'));
 
       fireEvent.change(node.querySelector('input[type=text]'), {
         target: { value: 'yo' },
@@ -1797,7 +1797,7 @@ describeRepeated('Form common', (createFormComponent) => {
       };
       const { node, onChange } = createFormComponent({ ref: React.createRef(), schema });
 
-      fireEvent.click(node.querySelector('.array-item-add button'));
+      fireEvent.click(node.querySelector('.rjsf-array-item-add button'));
 
       fireEvent.change(node.querySelector('input[type=text]'), {
         target: { value: 'yo' },
@@ -1850,7 +1850,7 @@ describeRepeated('Form common', (createFormComponent) => {
       const checkbox = node.querySelector('[type=checkbox]');
       fireEvent.click(checkbox);
 
-      fireEvent.click(node.querySelector('.array-item-add button'));
+      fireEvent.click(node.querySelector('.rjsf-array-item-add button'));
 
       fireEvent.change(node.querySelector('input[type=text]'), {
         target: { value: 'yo' },
@@ -1899,7 +1899,7 @@ describeRepeated('Form common', (createFormComponent) => {
             target: { value: 'short' },
           });
 
-          expect(node.querySelectorAll('.field-error')).to.have.length.of(0);
+          expect(node.querySelectorAll('.rjsf-field-error')).to.have.length.of(0);
         });
 
         it("should clean contextualized errors up when they're fixed", () => {
@@ -1926,7 +1926,7 @@ describeRepeated('Form common', (createFormComponent) => {
           });
           fireEvent.submit(node);
 
-          expect(node.querySelectorAll('.field-error')).to.have.length.of(1);
+          expect(node.querySelectorAll('.rjsf-field-error')).to.have.length.of(1);
 
           // Fix the second field
           fireEvent.change(node.querySelectorAll('input[type=text]')[1], {
@@ -1937,7 +1937,7 @@ describeRepeated('Form common', (createFormComponent) => {
           // No error remaining, shouldn't throw.
           fireEvent.submit(node);
 
-          expect(node.querySelectorAll('.field-error')).to.have.length.of(0);
+          expect(node.querySelectorAll('.rjsf-field-error')).to.have.length.of(0);
         });
       });
 
@@ -1973,8 +1973,8 @@ describeRepeated('Form common', (createFormComponent) => {
             target: { value: 'short' },
           });
 
-          expect(node.querySelectorAll('.field-error')).to.have.length.of(1);
-          expect(node.querySelector('.field-string .error-detail').textContent).eql(
+          expect(node.querySelectorAll('.rjsf-field-error')).to.have.length.of(1);
+          expect(node.querySelector('.rjsf-field-string .error-detail').textContent).eql(
             'must NOT have fewer than 8 characters',
           );
         });
@@ -2217,8 +2217,8 @@ describeRepeated('Form common', (createFormComponent) => {
       it('should denote the error in the field', () => {
         const { node } = createFormComponent(formProps);
 
-        expect(node.querySelectorAll('.field-error')).to.have.length.of(1);
-        expect(node.querySelector('.field-string .error-detail').textContent).eql(
+        expect(node.querySelectorAll('.rjsf-field-error')).to.have.length.of(1);
+        expect(node.querySelector('.rjsf-field-string .error-detail').textContent).eql(
           'must NOT have fewer than 8 characters',
         );
       });
@@ -2261,7 +2261,7 @@ describeRepeated('Form common', (createFormComponent) => {
       it('should denote the error in the field', () => {
         const { node } = createFormComponent(formProps);
 
-        const liNodes = node.querySelectorAll('.field-string .error-detail li');
+        const liNodes = node.querySelectorAll('.rjsf-field-string .error-detail li');
         const errors = [].map.call(liNodes, (li) => li.textContent);
 
         expect(errors).eql(['must NOT have fewer than 8 characters', 'must match pattern "d+"']);
@@ -2312,9 +2312,9 @@ describeRepeated('Form common', (createFormComponent) => {
 
       it('should denote the error in the field', () => {
         const { node } = createFormComponent(formProps);
-        const errorDetail = node.querySelector('.field-object .field-string .error-detail');
+        const errorDetail = node.querySelector('.rjsf-field-object .rjsf-field-string .error-detail');
 
-        expect(node.querySelectorAll('.field-error')).to.have.length.of(1);
+        expect(node.querySelectorAll('.rjsf-field-error')).to.have.length.of(1);
         expect(errorDetail.textContent).eql('must NOT have fewer than 8 characters');
       });
     });
@@ -2352,21 +2352,21 @@ describeRepeated('Form common', (createFormComponent) => {
 
       it('should denote the error in the item field in error', () => {
         const { node } = createFormComponent(formProps);
-        const fieldNodes = node.querySelectorAll('.field-string');
+        const fieldNodes = node.querySelectorAll('.rjsf-field-string');
 
-        const liNodes = fieldNodes[1].querySelectorAll('.field-string .error-detail li');
+        const liNodes = fieldNodes[1].querySelectorAll('.rjsf-field-string .error-detail li');
         const errors = [].map.call(liNodes, (li) => li.textContent);
 
-        expect(fieldNodes[1].classList.contains('field-error')).eql(true);
+        expect(fieldNodes[1].classList.contains('rjsf-field-error')).eql(true);
         expect(errors).eql(['must NOT have fewer than 4 characters']);
       });
 
       it('should not denote errors on non impacted fields', () => {
         const { node } = createFormComponent(formProps);
-        const fieldNodes = node.querySelectorAll('.field-string');
+        const fieldNodes = node.querySelectorAll('.rjsf-field-string');
 
-        expect(fieldNodes[0].classList.contains('field-error')).eql(false);
-        expect(fieldNodes[2].classList.contains('field-error')).eql(false);
+        expect(fieldNodes[0].classList.contains('rjsf-field-error')).eql(false);
+        expect(fieldNodes[2].classList.contains('rjsf-field-error')).eql(false);
       });
     });
 
@@ -2422,7 +2422,7 @@ describeRepeated('Form common', (createFormComponent) => {
           },
         });
 
-        const liNodes = node.querySelectorAll('.field-string .error-detail li');
+        const liNodes = node.querySelectorAll('.rjsf-field-string .error-detail li');
         const errors = [].map.call(liNodes, (li) => li.textContent);
 
         expect(errors).eql(['must NOT have fewer than 4 characters']);
@@ -2490,7 +2490,7 @@ describeRepeated('Form common', (createFormComponent) => {
 
       it('should denote the error in the nested item field in error', () => {
         const { node } = createFormComponent(formProps);
-        const fields = node.querySelectorAll('.field-string');
+        const fields = node.querySelectorAll('.rjsf-field-string');
         const errors = [].map.call(fields, (field) => {
           const li = field.querySelector('.error-detail li');
           return li && li.textContent;
@@ -2543,12 +2543,12 @@ describeRepeated('Form common', (createFormComponent) => {
 
       it('should denote the error in the array nested item', () => {
         const { node } = createFormComponent(formProps);
-        const fieldNodes = node.querySelectorAll('.field-string');
+        const fieldNodes = node.querySelectorAll('.rjsf-field-string');
 
-        const liNodes = fieldNodes[1].querySelectorAll('.field-string .error-detail li');
+        const liNodes = fieldNodes[1].querySelectorAll('.rjsf-field-string .error-detail li');
         const errors = [].map.call(liNodes, (li) => li.textContent);
 
-        expect(fieldNodes[1].classList.contains('field-error')).eql(true);
+        expect(fieldNodes[1].classList.contains('rjsf-field-error')).eql(true);
         expect(errors).eql(['must NOT have fewer than 4 characters']);
       });
     });
@@ -4363,7 +4363,7 @@ describe('Form omitExtraData and liveOmit', () => {
     it("doesn't cause a race condition", () => {
       const { node } = createComponent(Container, { ...props });
 
-      fireEvent.click(node.querySelector('.array-item-add button'));
+      fireEvent.click(node.querySelector('.rjsf-array-item-add button'));
 
       expect(node.querySelector('#root_0')).to.exist;
       expect(node.querySelector('#root_1').getAttribute('value')).to.eq('test');

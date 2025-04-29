@@ -93,7 +93,7 @@ export default function ArrayFieldTemplate<T = any, S extends RJSFSchema = RJSFS
         registry={registry}
       />
       <div className='flex flex-col gap-4'>
-        <div className='array-item-list'>
+        <div className='rjsf-array-item-list'>
           {items &&
             items.map(({ key, ...itemProps }, index) => (
               <ArrayFieldItemTemplate key={key} {...itemProps} index={index} totalItems={items.length} />
@@ -106,7 +106,7 @@ export default function ArrayFieldTemplate<T = any, S extends RJSFSchema = RJSFS
           <div className='flex justify-end'>
             <AddButton
               id={buttonId<T>(idSchema, 'add')}
-              className='array-item-add btn btn-primary btn-sm'
+              className='rjsf-array-item-add btn btn-primary btn-sm'
               onClick={handleAddClick}
               disabled={disabled || readonly}
               uiSchema={uiSchema}

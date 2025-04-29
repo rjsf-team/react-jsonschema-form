@@ -7,7 +7,7 @@ exports[`object fields additionalProperties 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -53,7 +53,7 @@ exports[`object fields additionalProperties 1`] = `
                     }
                   >
                     <div
-                      className="form-group field field-string"
+                      className="rjsf-field rjsf-field-string"
                     >
                       <div
                         className="ant-row ant-row-top css-dev-only-do-not-override-1d4w9r2"
@@ -236,7 +236,7 @@ exports[`object fields additionalProperties 1`] = `
                           }
                         >
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-primary ant-btn-dangerous ant-btn-color-dangerous ant-btn-variant-solid ant-btn-icon-only ant-btn-block array-item-remove"
+                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-primary ant-btn-dangerous ant-btn-color-dangerous ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-object-property-remove"
                             disabled={false}
                             id="root_foo__remove"
                             onClick={[Function]}
@@ -299,7 +299,7 @@ exports[`object fields additionalProperties 1`] = `
                       }
                     >
                       <button
-                        className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block object-property-expand"
+                        className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-object-property-expand"
                         disabled={false}
                         id="root__add"
                         onClick={[Function]}
@@ -366,7 +366,7 @@ exports[`object fields object 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -412,7 +412,7 @@ exports[`object fields object 1`] = `
                     }
                   >
                     <div
-                      className="form-group field field-string"
+                      className="rjsf-field rjsf-field-string"
                     >
                       <div
                         className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -494,7 +494,7 @@ exports[`object fields object 1`] = `
                     }
                   >
                     <div
-                      className="form-group field field-number"
+                      className="rjsf-field rjsf-field-number"
                     >
                       <div
                         className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -674,7 +674,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -720,7 +720,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
                     }
                   >
                     <div
-                      className="form-group field field-string"
+                      className="rjsf-field rjsf-field-string"
                     >
                       <div
                         className="ant-row ant-row-top css-dev-only-do-not-override-1d4w9r2"
@@ -903,7 +903,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
                           }
                         >
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-primary ant-btn-dangerous ant-btn-color-dangerous ant-btn-variant-solid ant-btn-icon-only ant-btn-block array-item-remove"
+                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-primary ant-btn-dangerous ant-btn-color-dangerous ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-object-property-remove"
                             disabled={false}
                             id="root_additionalProperty__remove"
                             onClick={[Function]}
@@ -966,7 +966,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
                       }
                     >
                       <button
-                        className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block object-property-expand"
+                        className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-object-property-expand"
                         disabled={false}
                         id="root__add"
                         onClick={[Function]}
@@ -1033,7 +1033,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -1113,7 +1113,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
                     }
                   >
                     <div
-                      className="form-group field field-string"
+                      className="rjsf-field rjsf-field-string"
                     >
                       <div
                         className="ant-row ant-row-top css-dev-only-do-not-override-1d4w9r2"
@@ -1296,7 +1296,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
                           }
                         >
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-primary ant-btn-dangerous ant-btn-color-dangerous ant-btn-variant-solid ant-btn-icon-only ant-btn-block array-item-remove"
+                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-primary ant-btn-dangerous ant-btn-color-dangerous ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-object-property-remove"
                             disabled={false}
                             id="root_foo__remove"
                             onClick={[Function]}
@@ -1359,7 +1359,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
                       }
                     >
                       <button
-                        className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block object-property-expand"
+                        className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-object-property-expand"
                         disabled={false}
                         id="root__add"
                         onClick={[Function]}
@@ -1440,7 +1440,7 @@ exports[`object fields with title and description from both additionalProperties
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -1520,7 +1520,7 @@ exports[`object fields with title and description from both additionalProperties
                     }
                   >
                     <div
-                      className="form-group field field-string"
+                      className="rjsf-field rjsf-field-string"
                     >
                       <div
                         className="ant-row ant-row-top css-dev-only-do-not-override-1d4w9r2"
@@ -1703,7 +1703,7 @@ exports[`object fields with title and description from both additionalProperties
                           }
                         >
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-primary ant-btn-dangerous ant-btn-color-dangerous ant-btn-variant-solid ant-btn-icon-only ant-btn-block array-item-remove"
+                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-primary ant-btn-dangerous ant-btn-color-dangerous ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-object-property-remove"
                             disabled={false}
                             id="root_foo__remove"
                             onClick={[Function]}
@@ -1766,7 +1766,7 @@ exports[`object fields with title and description from both additionalProperties
                       }
                     >
                       <button
-                        className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block object-property-expand"
+                        className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-object-property-expand"
                         disabled={false}
                         id="root__add"
                         onClick={[Function]}
@@ -1847,7 +1847,7 @@ exports[`object fields with title and description from both object 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -1927,7 +1927,7 @@ exports[`object fields with title and description from both object 1`] = `
                     }
                   >
                     <div
-                      className="form-group field field-string"
+                      className="rjsf-field rjsf-field-string"
                     >
                       <div
                         className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -2023,7 +2023,7 @@ exports[`object fields with title and description from both object 1`] = `
                     }
                   >
                     <div
-                      className="form-group field field-number"
+                      className="rjsf-field rjsf-field-number"
                     >
                       <div
                         className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -2231,7 +2231,7 @@ exports[`object fields with title and description from uiSchema additionalProper
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -2311,7 +2311,7 @@ exports[`object fields with title and description from uiSchema additionalProper
                     }
                   >
                     <div
-                      className="form-group field field-string"
+                      className="rjsf-field rjsf-field-string"
                     >
                       <div
                         className="ant-row ant-row-top css-dev-only-do-not-override-1d4w9r2"
@@ -2494,7 +2494,7 @@ exports[`object fields with title and description from uiSchema additionalProper
                           }
                         >
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-primary ant-btn-dangerous ant-btn-color-dangerous ant-btn-variant-solid ant-btn-icon-only ant-btn-block array-item-remove"
+                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-primary ant-btn-dangerous ant-btn-color-dangerous ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-object-property-remove"
                             disabled={false}
                             id="root_foo__remove"
                             onClick={[Function]}
@@ -2557,7 +2557,7 @@ exports[`object fields with title and description from uiSchema additionalProper
                       }
                     >
                       <button
-                        className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block object-property-expand"
+                        className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-object-property-expand"
                         disabled={false}
                         id="root__add"
                         onClick={[Function]}
@@ -2638,7 +2638,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -2718,7 +2718,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
                     }
                   >
                     <div
-                      className="form-group field field-string"
+                      className="rjsf-field rjsf-field-string"
                     >
                       <div
                         className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -2814,7 +2814,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
                     }
                   >
                     <div
-                      className="form-group field field-number"
+                      className="rjsf-field rjsf-field-number"
                     >
                       <div
                         className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -3022,7 +3022,7 @@ exports[`object fields with title and description from uiSchema show add button 
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -3102,7 +3102,7 @@ exports[`object fields with title and description from uiSchema show add button 
                     }
                   >
                     <div
-                      className="form-group field field-string"
+                      className="rjsf-field rjsf-field-string"
                     >
                       <div
                         className="ant-row ant-row-top css-dev-only-do-not-override-1d4w9r2"
@@ -3285,7 +3285,7 @@ exports[`object fields with title and description from uiSchema show add button 
                           }
                         >
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-primary ant-btn-dangerous ant-btn-color-dangerous ant-btn-variant-solid ant-btn-icon-only ant-btn-block array-item-remove"
+                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-primary ant-btn-dangerous ant-btn-color-dangerous ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-object-property-remove"
                             disabled={false}
                             id="root_additionalProperty__remove"
                             onClick={[Function]}
@@ -3348,7 +3348,7 @@ exports[`object fields with title and description from uiSchema show add button 
                       }
                     >
                       <button
-                        className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block object-property-expand"
+                        className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-object-property-expand"
                         disabled={false}
                         id="root__add"
                         onClick={[Function]}
@@ -3429,7 +3429,7 @@ exports[`object fields with title and description object 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -3509,7 +3509,7 @@ exports[`object fields with title and description object 1`] = `
                     }
                   >
                     <div
-                      className="form-group field field-string"
+                      className="rjsf-field rjsf-field-string"
                     >
                       <div
                         className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -3605,7 +3605,7 @@ exports[`object fields with title and description object 1`] = `
                     }
                   >
                     <div
-                      className="form-group field field-number"
+                      className="rjsf-field rjsf-field-number"
                     >
                       <div
                         className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -3813,7 +3813,7 @@ exports[`object fields with title and description show add button and fields if 
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -3893,7 +3893,7 @@ exports[`object fields with title and description show add button and fields if 
                     }
                   >
                     <div
-                      className="form-group field field-string"
+                      className="rjsf-field rjsf-field-string"
                     >
                       <div
                         className="ant-row ant-row-top css-dev-only-do-not-override-1d4w9r2"
@@ -4076,7 +4076,7 @@ exports[`object fields with title and description show add button and fields if 
                           }
                         >
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-primary ant-btn-dangerous ant-btn-color-dangerous ant-btn-variant-solid ant-btn-icon-only ant-btn-block array-item-remove"
+                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-primary ant-btn-dangerous ant-btn-color-dangerous ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-object-property-remove"
                             disabled={false}
                             id="root_additionalProperty__remove"
                             onClick={[Function]}
@@ -4139,7 +4139,7 @@ exports[`object fields with title and description show add button and fields if 
                       }
                     >
                       <button
-                        className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block object-property-expand"
+                        className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-object-property-expand"
                         disabled={false}
                         id="root__add"
                         onClick={[Function]}
@@ -4220,7 +4220,7 @@ exports[`object fields with title and description with global label off addition
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -4266,7 +4266,7 @@ exports[`object fields with title and description with global label off addition
                     }
                   >
                     <div
-                      className="form-group field field-string"
+                      className="rjsf-field rjsf-field-string"
                     >
                       <div
                         className="ant-row ant-row-top css-dev-only-do-not-override-1d4w9r2"
@@ -4437,7 +4437,7 @@ exports[`object fields with title and description with global label off addition
                           }
                         >
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-primary ant-btn-dangerous ant-btn-color-dangerous ant-btn-variant-solid ant-btn-icon-only ant-btn-block array-item-remove"
+                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-primary ant-btn-dangerous ant-btn-color-dangerous ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-object-property-remove"
                             disabled={false}
                             id="root_foo__remove"
                             onClick={[Function]}
@@ -4500,7 +4500,7 @@ exports[`object fields with title and description with global label off addition
                       }
                     >
                       <button
-                        className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block object-property-expand"
+                        className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-object-property-expand"
                         disabled={false}
                         id="root__add"
                         onClick={[Function]}
@@ -4581,7 +4581,7 @@ exports[`object fields with title and description with global label off object 1
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -4627,7 +4627,7 @@ exports[`object fields with title and description with global label off object 1
                     }
                   >
                     <div
-                      className="form-group field field-string"
+                      className="rjsf-field rjsf-field-string"
                     >
                       <div
                         className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -4711,7 +4711,7 @@ exports[`object fields with title and description with global label off object 1
                     }
                   >
                     <div
-                      className="form-group field field-number"
+                      className="rjsf-field rjsf-field-number"
                     >
                       <div
                         className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -4907,7 +4907,7 @@ exports[`object fields with title and description with global label off show add
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -4953,7 +4953,7 @@ exports[`object fields with title and description with global label off show add
                     }
                   >
                     <div
-                      className="form-group field field-string"
+                      className="rjsf-field rjsf-field-string"
                     >
                       <div
                         className="ant-row ant-row-top css-dev-only-do-not-override-1d4w9r2"
@@ -5124,7 +5124,7 @@ exports[`object fields with title and description with global label off show add
                           }
                         >
                           <button
-                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-primary ant-btn-dangerous ant-btn-color-dangerous ant-btn-variant-solid ant-btn-icon-only ant-btn-block array-item-remove"
+                            className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-primary ant-btn-dangerous ant-btn-color-dangerous ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-object-property-remove"
                             disabled={false}
                             id="root_additionalProperty__remove"
                             onClick={[Function]}
@@ -5187,7 +5187,7 @@ exports[`object fields with title and description with global label off show add
                       }
                     >
                       <button
-                        className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block object-property-expand"
+                        className="ant-btn css-dev-only-do-not-override-1d4w9r2 ant-btn-primary ant-btn-color-primary ant-btn-variant-solid ant-btn-icon-only ant-btn-block rjsf-object-property-expand"
                         disabled={false}
                         id="root__add"
                         onClick={[Function]}

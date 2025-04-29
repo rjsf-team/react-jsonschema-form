@@ -59,7 +59,7 @@ describe('ArrayFieldTemplate', () => {
             templates: { ArrayFieldTemplate },
           });
 
-          expect(node.querySelectorAll('.field-array .field-content div')).to.have.length.of(3);
+          expect(node.querySelectorAll('.rjsf-field-array .field-content div')).to.have.length.of(3);
         });
       });
       describe('with template configured in ui:ArrayFieldTemplate', () => {
@@ -72,7 +72,7 @@ describe('ArrayFieldTemplate', () => {
             },
           });
 
-          expect(node.querySelectorAll('.field-array .field-content div')).to.have.length.of(3);
+          expect(node.querySelectorAll('.rjsf-field-array .field-content div')).to.have.length.of(3);
         });
       });
       describe('with template configured globally being overriden in ui:ArrayFieldTemplate', () => {
@@ -87,7 +87,7 @@ describe('ArrayFieldTemplate', () => {
             templates: { ArrayFieldTemplate: () => <div /> },
           });
 
-          expect(node.querySelectorAll('.field-array .field-content div')).to.have.length.of(3);
+          expect(node.querySelectorAll('.rjsf-field-array .field-content div')).to.have.length.of(3);
         });
       });
     });
@@ -164,7 +164,7 @@ describe('ArrayFieldTemplate', () => {
         });
 
         it('should render text input for each array item', () => {
-          expect(node.querySelectorAll('.custom-array-item .field input[type=text]')).to.have.length.of(
+          expect(node.querySelectorAll('.custom-array-item .rjsf-field input[type=text]')).to.have.length.of(
             formData.length,
           );
         });
@@ -248,7 +248,7 @@ describe('ArrayFieldTemplate', () => {
         });
 
         it('should render text input for each array item', () => {
-          expect(node.querySelectorAll('.custom-array-item .field input[type=text]')).to.have.length.of(
+          expect(node.querySelectorAll('.custom-array-item .rjsf-field input[type=text]')).to.have.length.of(
             formData.length,
           );
         });
@@ -283,7 +283,7 @@ describe('ArrayFieldTemplate', () => {
         formData,
         templates: { ArrayFieldTemplate },
       });
-      expect(node.querySelectorAll('.field-array .field-content div')).to.have.length.of(3);
+      expect(node.querySelectorAll('.rjsf-field-array .field-content div')).to.have.length.of(3);
     });
   });
 
@@ -312,7 +312,7 @@ describe('ArrayFieldTemplate', () => {
             {items.map((item, i) => (
               <span key={i}>value: {formData[i]}</span>
             ))}
-            <button className='array-item-add' onClick={onAddClick} />
+            <button className='rjsf-array-item-add' onClick={onAddClick} />
           </div>
         );
       };
@@ -321,7 +321,7 @@ describe('ArrayFieldTemplate', () => {
         formData,
         templates: { ArrayFieldTemplate },
       });
-      Simulate.click(node.querySelector('.array-item-add'));
+      Simulate.click(node.querySelector('.rjsf-array-item-add'));
     });
   });
 });

@@ -261,7 +261,7 @@ exports[`single fields checkbox field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-boolean"
+    className="rjsf-field rjsf-field-boolean"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -606,7 +606,7 @@ exports[`single fields checkbox field with label 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-boolean"
+    className="rjsf-field rjsf-field-boolean"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -987,7 +987,7 @@ exports[`single fields checkboxes field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -1667,7 +1667,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -1689,7 +1689,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
           }
         >
           <div
-            className="form-group field field-string"
+            className="rjsf-field rjsf-field-string"
           >
             <div
               className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -2220,7 +2220,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -2242,7 +2242,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
           }
         >
           <div
-            className="form-group field field-string"
+            className="rjsf-field rjsf-field-string"
           >
             <div
               className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -2660,7 +2660,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="rjsf-field rjsf-field-string"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -3053,7 +3053,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="rjsf-field rjsf-field-string"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -3446,7 +3446,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="rjsf-field rjsf-field-string"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -3839,7 +3839,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="rjsf-field rjsf-field-string"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -4441,7 +4441,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
     </div>
   </div>
   <div
-    className="form-group field field-string field-error has-error has-danger"
+    className="rjsf-field rjsf-field-string rjsf-field-error"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-9"
@@ -4701,7 +4701,7 @@ exports[`single fields hidden field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -5076,7 +5076,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="rjsf-field rjsf-field-string"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -5286,7 +5286,7 @@ exports[`single fields null field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-null"
+    className="rjsf-field rjsf-field-null"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -5637,7 +5637,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-number"
+    className="rjsf-field rjsf-field-number"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -6031,7 +6031,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-number"
+    className="rjsf-field rjsf-field-number"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -6425,7 +6425,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="rjsf-field rjsf-field-string"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -6827,7 +6827,7 @@ exports[`single fields radio field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-boolean"
+    className="rjsf-field rjsf-field-boolean"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -7320,7 +7320,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="rjsf-field rjsf-field-string"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -7810,7 +7810,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="rjsf-field rjsf-field-string"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -8309,7 +8309,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -8807,7 +8807,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -9206,7 +9206,7 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -9849,7 +9849,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -10344,7 +10344,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -10842,7 +10842,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="rjsf-field rjsf-field-string"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -11331,7 +11331,7 @@ exports[`single fields select field single choice enumDisabled using radio widge
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="rjsf-field rjsf-field-string"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -11826,7 +11826,7 @@ exports[`single fields select field single choice form disabled using radio widg
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="rjsf-field rjsf-field-string"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -12398,7 +12398,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="rjsf-field rjsf-field-string"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -12816,7 +12816,7 @@ exports[`single fields select field single choice uiSchema disabled using radio 
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="rjsf-field rjsf-field-string"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -13343,7 +13343,7 @@ exports[`single fields slider field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-integer"
+    className="rjsf-field rjsf-field-integer"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -13781,7 +13781,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="rjsf-field rjsf-field-string"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -14176,7 +14176,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="rjsf-field rjsf-field-string"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -14569,7 +14569,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="rjsf-field rjsf-field-string"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -14962,7 +14962,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="rjsf-field rjsf-field-string"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -15355,7 +15355,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="rjsf-field rjsf-field-string"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -15751,7 +15751,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="rjsf-field rjsf-field-string"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -16282,7 +16282,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-10:focus::-ms-input-
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -16318,7 +16318,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-10:focus::-ms-input-
           }
         >
           <div
-            className="form-group field field-string"
+            className="rjsf-field rjsf-field-string"
           >
             <div
               className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -16537,7 +16537,7 @@ exports[`single fields unsupported field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-undefined"
+    className="rjsf-field rjsf-field-undefined"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -16909,7 +16909,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-number"
+    className="rjsf-field rjsf-field-number"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -17302,7 +17302,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-3:focus::-ms-input-p
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="rjsf-field rjsf-field-string"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"

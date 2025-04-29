@@ -7,7 +7,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -54,7 +54,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     style={{}}
                   >
                     <div
-                      className="form-group field field-object"
+                      className="rjsf-field rjsf-field-object"
                     >
                       <div
                         className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -115,7 +115,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     }
                   >
                     <div
-                      className="form-group field field-string"
+                      className="rjsf-field rjsf-field-string"
                     >
                       <div
                         className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -198,7 +198,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     }
                   >
                     <div
-                      className="form-group field field-string"
+                      className="rjsf-field rjsf-field-string"
                     >
                       <div
                         className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -281,7 +281,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     }
                   >
                     <div
-                      className="form-group field field-string"
+                      className="rjsf-field rjsf-field-string"
                     >
                       <div
                         className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -376,7 +376,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     }
                   >
                     <div
-                      className="form-group field field-string"
+                      className="rjsf-field rjsf-field-string"
                     >
                       <div
                         className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -482,7 +482,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     }
                   >
                     <div
-                      className="form-group field field-array"
+                      className="rjsf-field rjsf-field-array"
                     >
                       <div
                         className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -735,7 +735,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     }
                   >
                     <div
-                      className="form-group field field-object"
+                      className="rjsf-field rjsf-field-object"
                     >
                       <div
                         className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -773,7 +773,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                     style={{}}
                                   >
                                     <div
-                                      className="form-group field field-string"
+                                      className="rjsf-field rjsf-field-string"
                                     >
                                       <div
                                         className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -851,7 +851,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                     style={{}}
                                   >
                                     <div
-                                      className="form-group field field-string"
+                                      className="rjsf-field rjsf-field-string"
                                     >
                                       <div
                                         className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -929,7 +929,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                     style={{}}
                                   >
                                     <div
-                                      className="form-group field field-string"
+                                      className="rjsf-field rjsf-field-string"
                                     >
                                       <div
                                         className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -1023,7 +1023,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                       }
                                     >
                                       <div
-                                        className="form-group field field-string"
+                                        className="rjsf-field rjsf-field-string"
                                       >
                                         <div
                                           className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -1171,7 +1171,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                       }
                                     >
                                       <div
-                                        className="form-group field field-string"
+                                        className="rjsf-field rjsf-field-string"
                                       >
                                         <div
                                           className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -1425,7 +1425,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                         style={{}}
                       >
                         <div
-                          className="form-group field field-string"
+                          className="rjsf-field rjsf-field-string"
                         >
                           <div
                             className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -1503,7 +1503,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                         style={{}}
                       >
                         <div
-                          className="form-group field field-string"
+                          className="rjsf-field rjsf-field-string"
                         >
                           <div
                             className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -1597,7 +1597,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           }
                         >
                           <div
-                            className="form-group field field-string"
+                            className="rjsf-field rjsf-field-string"
                           >
                             <div
                               className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -1680,7 +1680,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           }
                         >
                           <div
-                            className="form-group field field-string"
+                            className="rjsf-field rjsf-field-string"
                           >
                             <div
                               className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -1849,7 +1849,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -1896,7 +1896,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     style={{}}
                   >
                     <div
-                      className="form-group field field-object"
+                      className="rjsf-field rjsf-field-object"
                     >
                       <div
                         className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -1957,7 +1957,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     }
                   >
                     <div
-                      className="form-group field field-string"
+                      className="rjsf-field rjsf-field-string"
                     >
                       <div
                         className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -2040,7 +2040,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     }
                   >
                     <div
-                      className="form-group field field-string"
+                      className="rjsf-field rjsf-field-string"
                     >
                       <div
                         className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -2123,7 +2123,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     }
                   >
                     <div
-                      className="form-group field field-string"
+                      className="rjsf-field rjsf-field-string"
                     >
                       <div
                         className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -2218,7 +2218,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     }
                   >
                     <div
-                      className="form-group field field-string"
+                      className="rjsf-field rjsf-field-string"
                     >
                       <div
                         className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -2324,7 +2324,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     }
                   >
                     <div
-                      className="form-group field field-array"
+                      className="rjsf-field rjsf-field-array"
                     >
                       <div
                         className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -2577,7 +2577,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     }
                   >
                     <div
-                      className="form-group field field-object"
+                      className="rjsf-field rjsf-field-object"
                     >
                       <div
                         className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -2615,7 +2615,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                     style={{}}
                                   >
                                     <div
-                                      className="form-group field field-string"
+                                      className="rjsf-field rjsf-field-string"
                                     >
                                       <div
                                         className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -2693,7 +2693,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                     style={{}}
                                   >
                                     <div
-                                      className="form-group field field-string"
+                                      className="rjsf-field rjsf-field-string"
                                     >
                                       <div
                                         className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -2771,7 +2771,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                     style={{}}
                                   >
                                     <div
-                                      className="form-group field field-string"
+                                      className="rjsf-field rjsf-field-string"
                                     >
                                       <div
                                         className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -2865,7 +2865,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                       }
                                     >
                                       <div
-                                        className="form-group field field-string"
+                                        className="rjsf-field rjsf-field-string"
                                       >
                                         <div
                                           className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -3013,7 +3013,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                       }
                                     >
                                       <div
-                                        className="form-group field field-string"
+                                        className="rjsf-field rjsf-field-string"
                                       >
                                         <div
                                           className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -3267,7 +3267,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                         style={{}}
                       >
                         <div
-                          className="form-group field field-string"
+                          className="rjsf-field rjsf-field-string"
                         >
                           <div
                             className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -3345,7 +3345,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                         style={{}}
                       >
                         <div
-                          className="form-group field field-string"
+                          className="rjsf-field rjsf-field-string"
                         >
                           <div
                             className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -3423,7 +3423,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                         style={{}}
                       >
                         <div
-                          className="form-group field field-string"
+                          className="rjsf-field rjsf-field-string"
                         >
                           <div
                             className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -3517,7 +3517,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           }
                         >
                           <div
-                            className="form-group field field-string"
+                            className="rjsf-field rjsf-field-string"
                           >
                             <div
                               className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -3600,7 +3600,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           }
                         >
                           <div
-                            className="form-group field field-string"
+                            className="rjsf-field rjsf-field-string"
                           >
                             <div
                               className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -3769,7 +3769,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -3816,7 +3816,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     style={{}}
                   >
                     <div
-                      className="form-group field field-object"
+                      className="rjsf-field rjsf-field-object"
                     >
                       <div
                         className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -3877,7 +3877,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     }
                   >
                     <div
-                      className="form-group field field-string"
+                      className="rjsf-field rjsf-field-string"
                     >
                       <div
                         className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -3960,7 +3960,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     }
                   >
                     <div
-                      className="form-group field field-string"
+                      className="rjsf-field rjsf-field-string"
                     >
                       <div
                         className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -4043,7 +4043,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     }
                   >
                     <div
-                      className="form-group field field-string"
+                      className="rjsf-field rjsf-field-string"
                     >
                       <div
                         className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -4138,7 +4138,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     }
                   >
                     <div
-                      className="form-group field field-string"
+                      className="rjsf-field rjsf-field-string"
                     >
                       <div
                         className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -4244,7 +4244,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     }
                   >
                     <div
-                      className="form-group field field-array"
+                      className="rjsf-field rjsf-field-array"
                     >
                       <div
                         className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -4497,7 +4497,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     }
                   >
                     <div
-                      className="form-group field field-object"
+                      className="rjsf-field rjsf-field-object"
                     >
                       <div
                         className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -4535,7 +4535,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                     style={{}}
                                   >
                                     <div
-                                      className="form-group field field-string"
+                                      className="rjsf-field rjsf-field-string"
                                     >
                                       <div
                                         className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -4613,7 +4613,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                     style={{}}
                                   >
                                     <div
-                                      className="form-group field field-string"
+                                      className="rjsf-field rjsf-field-string"
                                     >
                                       <div
                                         className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -4691,7 +4691,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                     style={{}}
                                   >
                                     <div
-                                      className="form-group field field-string"
+                                      className="rjsf-field rjsf-field-string"
                                     >
                                       <div
                                         className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -4785,7 +4785,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                       }
                                     >
                                       <div
-                                        className="form-group field field-string"
+                                        className="rjsf-field rjsf-field-string"
                                       >
                                         <div
                                           className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -4933,7 +4933,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                       }
                                     >
                                       <div
-                                        className="form-group field field-string"
+                                        className="rjsf-field rjsf-field-string"
                                       >
                                         <div
                                           className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -5187,7 +5187,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                         style={{}}
                       >
                         <div
-                          className="form-group field field-string"
+                          className="rjsf-field rjsf-field-string"
                         >
                           <div
                             className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -5300,7 +5300,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -5347,7 +5347,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     style={{}}
                   >
                     <div
-                      className="form-group field field-object"
+                      className="rjsf-field rjsf-field-object"
                     >
                       <div
                         className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -5408,7 +5408,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     }
                   >
                     <div
-                      className="form-group field field-string"
+                      className="rjsf-field rjsf-field-string"
                     >
                       <div
                         className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -5491,7 +5491,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     }
                   >
                     <div
-                      className="form-group field field-string"
+                      className="rjsf-field rjsf-field-string"
                     >
                       <div
                         className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -5574,7 +5574,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     }
                   >
                     <div
-                      className="form-group field field-string"
+                      className="rjsf-field rjsf-field-string"
                     >
                       <div
                         className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -5669,7 +5669,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     }
                   >
                     <div
-                      className="form-group field field-string"
+                      className="rjsf-field rjsf-field-string"
                     >
                       <div
                         className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -5775,7 +5775,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     }
                   >
                     <div
-                      className="form-group field field-array"
+                      className="rjsf-field rjsf-field-array"
                     >
                       <div
                         className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -6028,7 +6028,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     }
                   >
                     <div
-                      className="form-group field field-object"
+                      className="rjsf-field rjsf-field-object"
                     >
                       <div
                         className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -6066,7 +6066,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                     style={{}}
                                   >
                                     <div
-                                      className="form-group field field-string"
+                                      className="rjsf-field rjsf-field-string"
                                     >
                                       <div
                                         className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -6144,7 +6144,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                     style={{}}
                                   >
                                     <div
-                                      className="form-group field field-string"
+                                      className="rjsf-field rjsf-field-string"
                                     >
                                       <div
                                         className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -6222,7 +6222,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                     style={{}}
                                   >
                                     <div
-                                      className="form-group field field-string"
+                                      className="rjsf-field rjsf-field-string"
                                     >
                                       <div
                                         className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -6316,7 +6316,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                       }
                                     >
                                       <div
-                                        className="form-group field field-string"
+                                        className="rjsf-field rjsf-field-string"
                                       >
                                         <div
                                           className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -6464,7 +6464,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                       }
                                     >
                                       <div
-                                        className="form-group field field-string"
+                                        className="rjsf-field rjsf-field-string"
                                       >
                                         <div
                                           className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -6718,7 +6718,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                         style={{}}
                       >
                         <div
-                          className="form-group field field-string"
+                          className="rjsf-field rjsf-field-string"
                         >
                           <div
                             className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -6796,7 +6796,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                         style={{}}
                       >
                         <div
-                          className="form-group field field-string"
+                          className="rjsf-field rjsf-field-string"
                         >
                           <div
                             className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -6890,7 +6890,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           }
                         >
                           <div
-                            className="form-group field field-string"
+                            className="rjsf-field rjsf-field-string"
                           >
                             <div
                               className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -6973,7 +6973,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           }
                         >
                           <div
-                            className="form-group field field-string"
+                            className="rjsf-field rjsf-field-string"
                           >
                             <div
                               className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -7142,7 +7142,7 @@ exports[`Three even column grid renders person and address in three columns, no 
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -7180,7 +7180,7 @@ exports[`Three even column grid renders person and address in three columns, no 
                   style={{}}
                 >
                   <div
-                    className="form-group field field-object"
+                    className="rjsf-field rjsf-field-object"
                   >
                     <div
                       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -7224,7 +7224,7 @@ exports[`Three even column grid renders person and address in three columns, no 
                   style={{}}
                 >
                   <div
-                    className="form-group field field-string"
+                    className="rjsf-field rjsf-field-string"
                   >
                     <div
                       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -7302,7 +7302,7 @@ exports[`Three even column grid renders person and address in three columns, no 
                   style={{}}
                 >
                   <div
-                    className="form-group field field-string"
+                    className="rjsf-field rjsf-field-string"
                   >
                     <div
                       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -7380,7 +7380,7 @@ exports[`Three even column grid renders person and address in three columns, no 
                   style={{}}
                 >
                   <div
-                    className="form-group field field-string"
+                    className="rjsf-field rjsf-field-string"
                   >
                     <div
                       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -7458,7 +7458,7 @@ exports[`Three even column grid renders person and address in three columns, no 
                   style={{}}
                 >
                   <div
-                    className="form-group field field-string"
+                    className="rjsf-field rjsf-field-string"
                   >
                     <div
                       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -7559,7 +7559,7 @@ exports[`Three even column grid renders person and address in three columns, no 
                   style={{}}
                 >
                   <div
-                    className="form-group field field-array"
+                    className="rjsf-field rjsf-field-array"
                   >
                     <div
                       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -7795,7 +7795,7 @@ exports[`Three even column grid renders person and address in three columns, no 
                   style={{}}
                 >
                   <div
-                    className="form-group field field-string"
+                    className="rjsf-field rjsf-field-string"
                   >
                     <div
                       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -7873,7 +7873,7 @@ exports[`Three even column grid renders person and address in three columns, no 
                   style={{}}
                 >
                   <div
-                    className="form-group field field-string"
+                    className="rjsf-field rjsf-field-string"
                   >
                     <div
                       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -7951,7 +7951,7 @@ exports[`Three even column grid renders person and address in three columns, no 
                   style={{}}
                 >
                   <div
-                    className="form-group field field-string"
+                    className="rjsf-field rjsf-field-string"
                   >
                     <div
                       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -8029,7 +8029,7 @@ exports[`Three even column grid renders person and address in three columns, no 
                   style={{}}
                 >
                   <div
-                    className="form-group field field-string"
+                    className="rjsf-field rjsf-field-string"
                   >
                     <div
                       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -8199,7 +8199,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -8237,7 +8237,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
                   style={{}}
                 >
                   <div
-                    className="form-group field field-object"
+                    className="rjsf-field rjsf-field-object"
                   >
                     <div
                       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -8281,7 +8281,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
                   style={{}}
                 >
                   <div
-                    className="form-group field field-string"
+                    className="rjsf-field rjsf-field-string"
                   >
                     <div
                       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -8359,7 +8359,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
                   style={{}}
                 >
                   <div
-                    className="form-group field field-string"
+                    className="rjsf-field rjsf-field-string"
                   >
                     <div
                       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -8437,7 +8437,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
                   style={{}}
                 >
                   <div
-                    className="form-group field field-string"
+                    className="rjsf-field rjsf-field-string"
                   >
                     <div
                       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -8515,7 +8515,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
                   style={{}}
                 >
                   <div
-                    className="form-group field field-string"
+                    className="rjsf-field rjsf-field-string"
                   >
                     <div
                       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -8616,7 +8616,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
                   style={{}}
                 >
                   <div
-                    className="form-group field field-array"
+                    className="rjsf-field rjsf-field-array"
                   >
                     <div
                       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -8852,7 +8852,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
                   style={{}}
                 >
                   <div
-                    className="form-group field field-string"
+                    className="rjsf-field rjsf-field-string"
                   >
                     <div
                       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -8930,7 +8930,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
                   style={{}}
                 >
                   <div
-                    className="form-group field field-string"
+                    className="rjsf-field rjsf-field-string"
                   >
                     <div
                       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -9008,7 +9008,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
                   style={{}}
                 >
                   <div
-                    className="form-group field field-string"
+                    className="rjsf-field rjsf-field-string"
                   >
                     <div
                       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"
@@ -9086,7 +9086,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
                   style={{}}
                 >
                   <div
-                    className="form-group field field-string"
+                    className="rjsf-field rjsf-field-string"
                   >
                     <div
                       className="ant-form-item css-dev-only-do-not-override-1d4w9r2"

@@ -266,7 +266,7 @@ class ObjectField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
     } catch (err) {
       return (
         <div>
-          <p className='config-error' style={{ color: 'red' }}>
+          <p className='rjsf-config-error' style={{ color: 'red' }}>
             <Markdown options={{ disableParsingRawHTML: true }}>
               {translateString(TranslatableString.InvalidObjectField, [name || 'root', (err as Error).message])}
             </Markdown>

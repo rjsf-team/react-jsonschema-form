@@ -17,14 +17,7 @@ export function CopyButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   const {
     registry: { translateString },
   } = props;
-  return (
-    <IconButton
-      title={translateString(TranslatableString.CopyButton)}
-      className='array-item-copy'
-      {...props}
-      icon='copy'
-    />
-  );
+  return <IconButton title={translateString(TranslatableString.CopyButton)} {...props} icon='copy' />;
 }
 
 export function MoveDownButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
@@ -33,14 +26,7 @@ export function MoveDownButton<T = any, S extends StrictRJSFSchema = RJSFSchema,
   const {
     registry: { translateString },
   } = props;
-  return (
-    <IconButton
-      title={translateString(TranslatableString.MoveDownButton)}
-      className='array-item-move-down'
-      {...props}
-      icon='arrow-down'
-    />
-  );
+  return <IconButton title={translateString(TranslatableString.MoveDownButton)} {...props} icon='arrow-down' />;
 }
 
 export function MoveUpButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
@@ -49,14 +35,7 @@ export function MoveUpButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F
   const {
     registry: { translateString },
   } = props;
-  return (
-    <IconButton
-      title={translateString(TranslatableString.MoveUpButton)}
-      className='array-item-move-up'
-      {...props}
-      icon='arrow-up'
-    />
-  );
+  return <IconButton title={translateString(TranslatableString.MoveUpButton)} {...props} icon='arrow-up' />;
 }
 
 export function RemoveButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
@@ -66,12 +45,6 @@ export function RemoveButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F
     registry: { translateString },
   } = props;
   return (
-    <IconButton
-      title={translateString(TranslatableString.RemoveButton)}
-      className='array-item-remove'
-      {...props}
-      iconType='danger'
-      icon='remove'
-    />
+    <IconButton title={translateString(TranslatableString.RemoveButton)} {...props} iconType='danger' icon='remove' />
   );
 }
