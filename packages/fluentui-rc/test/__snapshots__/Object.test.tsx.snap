@@ -31,18 +31,18 @@ exports[`object fields additionalProperties 1`] = `
                 className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
               >
                 <label
-                  className="fui-Label fui-Field__label ___1r7nw7g_1a9hq9n fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
+                  className="fui-Label fui-Field__label ___1r7nw7g_2qzl200 fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
                   htmlFor="field-r4__control"
                   id="field-r4__label"
                 >
                   foo Key
                 </label>
                 <span
-                  className="fui-Input r1jtohuq ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                  className="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                 >
                   <input
                     aria-labelledby="field-r4__label"
-                    className="fui-Input__input rvp2gzh ___cqaz2i0_9xw1o20 fly5x3f"
+                    className="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                     disabled={false}
                     id="root_foo-key"
                     name="root_foo-key"
@@ -66,12 +66,12 @@ exports[`object fields additionalProperties 1`] = `
                   foo
                 </label>
                 <span
-                  className="fui-Input r1jtohuq ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                  className="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                 >
                   <input
                     aria-describedby="root_foo__error root_foo__description root_foo__help"
                     autoFocus={false}
-                    className="fui-Input__input rvp2gzh ___cqaz2i0_9xw1o20 fly5x3f"
+                    className="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                     disabled={false}
                     id="root_foo"
                     name="root_foo"
@@ -88,7 +88,7 @@ exports[`object fields additionalProperties 1`] = `
             </div>
             <div>
               <button
-                className="fui-Button r1alrhcs rjsf-object-property-remove ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+                className="fui-Button r1alrhcs rjsf-object-property-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
                 disabled={false}
                 id="root_foo__remove"
                 onClick={[Function]}
@@ -129,7 +129,7 @@ exports[`object fields additionalProperties 1`] = `
           className="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
         >
           <button
-            className="fui-Button r1alrhcs rjsf-object-property-expand ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+            className="fui-Button r1alrhcs rjsf-object-property-expand ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
             disabled={false}
             id="root__add"
             onClick={[Function]}
@@ -149,7 +149,7 @@ exports[`object fields additionalProperties 1`] = `
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <path
-                  d="M10 2.5a.5.5 0 0 0-1 0V9H2.5a.5.5 0 0 0 0 1H9v6.5a.5.5 0 0 0 1 0V10h6.5a.5.5 0 0 0 0-1H10V2.5Z"
+                  d="M10 2.5c.28 0 .5.22.5.5v6.5H17a.5.5 0 0 1 0 1h-6.5V17a.5.5 0 0 1-1 0v-6.5H3a.5.5 0 0 1 0-1h6.5V3c0-.28.22-.5.5-.5Z"
                   fill="currentColor"
                 />
               </svg>
@@ -210,12 +210,12 @@ exports[`object fields object 1`] = `
                 A
               </label>
               <span
-                className="fui-Input r1jtohuq ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                className="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
               >
                 <input
                   aria-describedby="root_a__error root_a__description root_a__help"
                   autoFocus={false}
-                  className="fui-Input__input rvp2gzh ___cqaz2i0_9xw1o20 fly5x3f"
+                  className="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                   disabled={false}
                   id="root_a"
                   name="root_a"
@@ -252,12 +252,12 @@ exports[`object fields object 1`] = `
                 B
               </label>
               <span
-                className="fui-Input r1jtohuq ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                className="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
               >
                 <input
                   aria-describedby="root_b__error root_b__description root_b__help"
                   autoFocus={false}
-                  className="fui-Input__input rvp2gzh ___cqaz2i0_9xw1o20 fly5x3f"
+                  className="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                   disabled={false}
                   id="root_b"
                   name="root_b"
@@ -323,18 +323,18 @@ exports[`object fields show add button and fields if additionalProperties is tru
                 className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
               >
                 <label
-                  className="fui-Label fui-Field__label ___1r7nw7g_1a9hq9n fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
+                  className="fui-Label fui-Field__label ___1r7nw7g_2qzl200 fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
                   htmlFor="field-r7__control"
                   id="field-r7__label"
                 >
                   additionalProperty Key
                 </label>
                 <span
-                  className="fui-Input r1jtohuq ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                  className="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                 >
                   <input
                     aria-labelledby="field-r7__label"
-                    className="fui-Input__input rvp2gzh ___cqaz2i0_9xw1o20 fly5x3f"
+                    className="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                     disabled={false}
                     id="root_additionalProperty-key"
                     name="root_additionalProperty-key"
@@ -358,12 +358,12 @@ exports[`object fields show add button and fields if additionalProperties is tru
                   additionalProperty
                 </label>
                 <span
-                  className="fui-Input r1jtohuq ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                  className="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                 >
                   <input
                     aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
                     autoFocus={false}
-                    className="fui-Input__input rvp2gzh ___cqaz2i0_9xw1o20 fly5x3f"
+                    className="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                     disabled={false}
                     id="root_additionalProperty"
                     name="root_additionalProperty"
@@ -380,7 +380,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
             </div>
             <div>
               <button
-                className="fui-Button r1alrhcs rjsf-object-property-remove ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+                className="fui-Button r1alrhcs rjsf-object-property-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
                 disabled={false}
                 id="root_additionalProperty__remove"
                 onClick={[Function]}
@@ -421,7 +421,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
           className="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
         >
           <button
-            className="fui-Button r1alrhcs rjsf-object-property-expand ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+            className="fui-Button r1alrhcs rjsf-object-property-expand ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
             disabled={false}
             id="root__add"
             onClick={[Function]}
@@ -441,7 +441,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <path
-                  d="M10 2.5a.5.5 0 0 0-1 0V9H2.5a.5.5 0 0 0 0 1H9v6.5a.5.5 0 0 0 1 0V10h6.5a.5.5 0 0 0 0-1H10V2.5Z"
+                  d="M10 2.5c.28 0 .5.22.5.5v6.5H17a.5.5 0 0 1 0 1h-6.5V17a.5.5 0 0 1-1 0v-6.5H3a.5.5 0 0 1 0-1h6.5V3c0-.28.22-.5.5-.5Z"
                   fill="currentColor"
                 />
               </svg>
@@ -483,7 +483,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
         id="root__title"
       >
         <h5
-          className="fui-Text ___piw0oj0_6kpfnf0 fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1mtd64y f1y7q3j9 f2jf649"
+          className="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
         >
           Test field
         </h5>
@@ -494,7 +494,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
         />
       </div>
       <span
-        className="fui-Text ___1e3hxnw_shn9n80 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649 frnwi6n f18zxyen"
+        className="fui-Text ___6s2bv30_bwsv0h0 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649 frnwi6n f18zxyen"
         id="root__description"
       >
         a test description
@@ -518,18 +518,18 @@ exports[`object fields with title and description additionalProperties 1`] = `
                 className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
               >
                 <label
-                  className="fui-Label fui-Field__label ___1r7nw7g_1a9hq9n fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
+                  className="fui-Label fui-Field__label ___1r7nw7g_2qzl200 fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
                   htmlFor="field-rf__control"
                   id="field-rf__label"
                 >
                   foo Key
                 </label>
                 <span
-                  className="fui-Input r1jtohuq ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                  className="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                 >
                   <input
                     aria-labelledby="field-rf__label"
-                    className="fui-Input__input rvp2gzh ___cqaz2i0_9xw1o20 fly5x3f"
+                    className="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                     disabled={false}
                     id="root_foo-key"
                     name="root_foo-key"
@@ -553,12 +553,12 @@ exports[`object fields with title and description additionalProperties 1`] = `
                   foo
                 </label>
                 <span
-                  className="fui-Input r1jtohuq ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                  className="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                 >
                   <input
                     aria-describedby="root_foo__error root_foo__description root_foo__help"
                     autoFocus={false}
-                    className="fui-Input__input rvp2gzh ___cqaz2i0_9xw1o20 fly5x3f"
+                    className="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                     disabled={false}
                     id="root_foo"
                     name="root_foo"
@@ -575,7 +575,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
             </div>
             <div>
               <button
-                className="fui-Button r1alrhcs rjsf-object-property-remove ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+                className="fui-Button r1alrhcs rjsf-object-property-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
                 disabled={false}
                 id="root_foo__remove"
                 onClick={[Function]}
@@ -616,7 +616,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
           className="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
         >
           <button
-            className="fui-Button r1alrhcs rjsf-object-property-expand ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+            className="fui-Button r1alrhcs rjsf-object-property-expand ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
             disabled={false}
             id="root__add"
             onClick={[Function]}
@@ -636,7 +636,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <path
-                  d="M10 2.5a.5.5 0 0 0-1 0V9H2.5a.5.5 0 0 0 0 1H9v6.5a.5.5 0 0 0 1 0V10h6.5a.5.5 0 0 0 0-1H10V2.5Z"
+                  d="M10 2.5c.28 0 .5.22.5.5v6.5H17a.5.5 0 0 1 0 1h-6.5V17a.5.5 0 0 1-1 0v-6.5H3a.5.5 0 0 1 0-1h6.5V3c0-.28.22-.5.5-.5Z"
                   fill="currentColor"
                 />
               </svg>
@@ -678,7 +678,7 @@ exports[`object fields with title and description from both additionalProperties
         id="root__title"
       >
         <h5
-          className="fui-Text ___piw0oj0_6kpfnf0 fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1mtd64y f1y7q3j9 f2jf649"
+          className="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
         >
           My Field
         </h5>
@@ -689,7 +689,7 @@ exports[`object fields with title and description from both additionalProperties
         />
       </div>
       <span
-        className="fui-Text ___1e3hxnw_shn9n80 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649 frnwi6n f18zxyen"
+        className="fui-Text ___6s2bv30_bwsv0h0 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649 frnwi6n f18zxyen"
         id="root__description"
       >
         a fancier description
@@ -713,18 +713,18 @@ exports[`object fields with title and description from both additionalProperties
                 className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
               >
                 <label
-                  className="fui-Label fui-Field__label ___1r7nw7g_1a9hq9n fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
+                  className="fui-Label fui-Field__label ___1r7nw7g_2qzl200 fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
                   htmlFor="field-r17__control"
                   id="field-r17__label"
                 >
                   foo Key
                 </label>
                 <span
-                  className="fui-Input r1jtohuq ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                  className="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                 >
                   <input
                     aria-labelledby="field-r17__label"
-                    className="fui-Input__input rvp2gzh ___cqaz2i0_9xw1o20 fly5x3f"
+                    className="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                     disabled={false}
                     id="root_foo-key"
                     name="root_foo-key"
@@ -748,12 +748,12 @@ exports[`object fields with title and description from both additionalProperties
                   foo
                 </label>
                 <span
-                  className="fui-Input r1jtohuq ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                  className="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                 >
                   <input
                     aria-describedby="root_foo__error root_foo__description root_foo__help"
                     autoFocus={false}
-                    className="fui-Input__input rvp2gzh ___cqaz2i0_9xw1o20 fly5x3f"
+                    className="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                     disabled={false}
                     id="root_foo"
                     name="root_foo"
@@ -770,7 +770,7 @@ exports[`object fields with title and description from both additionalProperties
             </div>
             <div>
               <button
-                className="fui-Button r1alrhcs rjsf-object-property-remove ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+                className="fui-Button r1alrhcs rjsf-object-property-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
                 disabled={false}
                 id="root_foo__remove"
                 onClick={[Function]}
@@ -811,7 +811,7 @@ exports[`object fields with title and description from both additionalProperties
           className="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
         >
           <button
-            className="fui-Button r1alrhcs rjsf-object-property-expand ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+            className="fui-Button r1alrhcs rjsf-object-property-expand ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
             disabled={false}
             id="root__add"
             onClick={[Function]}
@@ -831,7 +831,7 @@ exports[`object fields with title and description from both additionalProperties
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <path
-                  d="M10 2.5a.5.5 0 0 0-1 0V9H2.5a.5.5 0 0 0 0 1H9v6.5a.5.5 0 0 0 1 0V10h6.5a.5.5 0 0 0 0-1H10V2.5Z"
+                  d="M10 2.5c.28 0 .5.22.5.5v6.5H17a.5.5 0 0 1 0 1h-6.5V17a.5.5 0 0 1-1 0v-6.5H3a.5.5 0 0 1 0-1h6.5V3c0-.28.22-.5.5-.5Z"
                   fill="currentColor"
                 />
               </svg>
@@ -873,7 +873,7 @@ exports[`object fields with title and description from both object 1`] = `
         id="root__title"
       >
         <h5
-          className="fui-Text ___piw0oj0_6kpfnf0 fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1mtd64y f1y7q3j9 f2jf649"
+          className="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
         >
           My Field
         </h5>
@@ -884,7 +884,7 @@ exports[`object fields with title and description from both object 1`] = `
         />
       </div>
       <span
-        className="fui-Text ___1e3hxnw_shn9n80 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649 frnwi6n f18zxyen"
+        className="fui-Text ___6s2bv30_bwsv0h0 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649 frnwi6n f18zxyen"
         id="root__description"
       >
         a fancier description
@@ -913,12 +913,12 @@ exports[`object fields with title and description from both object 1`] = `
                 My Item A
               </label>
               <span
-                className="fui-Input r1jtohuq ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                className="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
               >
                 <input
                   aria-describedby="root_a__error root_a__description root_a__help"
                   autoFocus={false}
-                  className="fui-Input__input rvp2gzh ___cqaz2i0_9xw1o20 fly5x3f"
+                  className="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                   disabled={false}
                   id="root_a"
                   name="root_a"
@@ -932,7 +932,7 @@ exports[`object fields with title and description from both object 1`] = `
                 />
               </span>
               <p
-                className="fui-Text ___149as9o_18y0df8 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649"
+                className="fui-Text ___3772g50_1srj68j fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649"
                 style={
                   {
                     "marginBottom": 0,
@@ -941,7 +941,7 @@ exports[`object fields with title and description from both object 1`] = `
                 }
               >
                 <span
-                  className="fui-Text ___1e3hxnw_shn9n80 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649 frnwi6n f18zxyen"
+                  className="fui-Text ___6s2bv30_bwsv0h0 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649 frnwi6n f18zxyen"
                   id="root_a__description"
                 >
                   a fancier item A description
@@ -971,12 +971,12 @@ exports[`object fields with title and description from both object 1`] = `
                 My Item B
               </label>
               <span
-                className="fui-Input r1jtohuq ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                className="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
               >
                 <input
                   aria-describedby="root_b__error root_b__description root_b__help"
                   autoFocus={false}
-                  className="fui-Input__input rvp2gzh ___cqaz2i0_9xw1o20 fly5x3f"
+                  className="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                   disabled={false}
                   id="root_b"
                   name="root_b"
@@ -991,7 +991,7 @@ exports[`object fields with title and description from both object 1`] = `
                 />
               </span>
               <p
-                className="fui-Text ___149as9o_18y0df8 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649"
+                className="fui-Text ___3772g50_1srj68j fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649"
                 style={
                   {
                     "marginBottom": 0,
@@ -1000,7 +1000,7 @@ exports[`object fields with title and description from both object 1`] = `
                 }
               >
                 <span
-                  className="fui-Text ___1e3hxnw_shn9n80 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649 frnwi6n f18zxyen"
+                  className="fui-Text ___6s2bv30_bwsv0h0 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649 frnwi6n f18zxyen"
                   id="root_b__description"
                 >
                   a fancier item B description
@@ -1044,7 +1044,7 @@ exports[`object fields with title and description from uiSchema additionalProper
         id="root__title"
       >
         <h5
-          className="fui-Text ___piw0oj0_6kpfnf0 fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1mtd64y f1y7q3j9 f2jf649"
+          className="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
         >
           My Field
         </h5>
@@ -1055,7 +1055,7 @@ exports[`object fields with title and description from uiSchema additionalProper
         />
       </div>
       <span
-        className="fui-Text ___1e3hxnw_shn9n80 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649 frnwi6n f18zxyen"
+        className="fui-Text ___6s2bv30_bwsv0h0 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649 frnwi6n f18zxyen"
         id="root__description"
       >
         a fancier description
@@ -1079,18 +1079,18 @@ exports[`object fields with title and description from uiSchema additionalProper
                 className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
               >
                 <label
-                  className="fui-Label fui-Field__label ___1r7nw7g_1a9hq9n fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
+                  className="fui-Label fui-Field__label ___1r7nw7g_2qzl200 fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
                   htmlFor="field-rr__control"
                   id="field-rr__label"
                 >
                   foo Key
                 </label>
                 <span
-                  className="fui-Input r1jtohuq ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                  className="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                 >
                   <input
                     aria-labelledby="field-rr__label"
-                    className="fui-Input__input rvp2gzh ___cqaz2i0_9xw1o20 fly5x3f"
+                    className="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                     disabled={false}
                     id="root_foo-key"
                     name="root_foo-key"
@@ -1114,12 +1114,12 @@ exports[`object fields with title and description from uiSchema additionalProper
                   foo
                 </label>
                 <span
-                  className="fui-Input r1jtohuq ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                  className="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                 >
                   <input
                     aria-describedby="root_foo__error root_foo__description root_foo__help"
                     autoFocus={false}
-                    className="fui-Input__input rvp2gzh ___cqaz2i0_9xw1o20 fly5x3f"
+                    className="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                     disabled={false}
                     id="root_foo"
                     name="root_foo"
@@ -1136,7 +1136,7 @@ exports[`object fields with title and description from uiSchema additionalProper
             </div>
             <div>
               <button
-                className="fui-Button r1alrhcs rjsf-object-property-remove ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+                className="fui-Button r1alrhcs rjsf-object-property-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
                 disabled={false}
                 id="root_foo__remove"
                 onClick={[Function]}
@@ -1177,7 +1177,7 @@ exports[`object fields with title and description from uiSchema additionalProper
           className="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
         >
           <button
-            className="fui-Button r1alrhcs rjsf-object-property-expand ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+            className="fui-Button r1alrhcs rjsf-object-property-expand ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
             disabled={false}
             id="root__add"
             onClick={[Function]}
@@ -1197,7 +1197,7 @@ exports[`object fields with title and description from uiSchema additionalProper
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <path
-                  d="M10 2.5a.5.5 0 0 0-1 0V9H2.5a.5.5 0 0 0 0 1H9v6.5a.5.5 0 0 0 1 0V10h6.5a.5.5 0 0 0 0-1H10V2.5Z"
+                  d="M10 2.5c.28 0 .5.22.5.5v6.5H17a.5.5 0 0 1 0 1h-6.5V17a.5.5 0 0 1-1 0v-6.5H3a.5.5 0 0 1 0-1h6.5V3c0-.28.22-.5.5-.5Z"
                   fill="currentColor"
                 />
               </svg>
@@ -1239,7 +1239,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
         id="root__title"
       >
         <h5
-          className="fui-Text ___piw0oj0_6kpfnf0 fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1mtd64y f1y7q3j9 f2jf649"
+          className="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
         >
           My Field
         </h5>
@@ -1250,7 +1250,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
         />
       </div>
       <span
-        className="fui-Text ___1e3hxnw_shn9n80 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649 frnwi6n f18zxyen"
+        className="fui-Text ___6s2bv30_bwsv0h0 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649 frnwi6n f18zxyen"
         id="root__description"
       >
         a fancier description
@@ -1279,12 +1279,12 @@ exports[`object fields with title and description from uiSchema object 1`] = `
                 My Item A
               </label>
               <span
-                className="fui-Input r1jtohuq ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                className="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
               >
                 <input
                   aria-describedby="root_a__error root_a__description root_a__help"
                   autoFocus={false}
-                  className="fui-Input__input rvp2gzh ___cqaz2i0_9xw1o20 fly5x3f"
+                  className="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                   disabled={false}
                   id="root_a"
                   name="root_a"
@@ -1298,7 +1298,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
                 />
               </span>
               <p
-                className="fui-Text ___149as9o_18y0df8 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649"
+                className="fui-Text ___3772g50_1srj68j fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649"
                 style={
                   {
                     "marginBottom": 0,
@@ -1307,7 +1307,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
                 }
               >
                 <span
-                  className="fui-Text ___1e3hxnw_shn9n80 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649 frnwi6n f18zxyen"
+                  className="fui-Text ___6s2bv30_bwsv0h0 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649 frnwi6n f18zxyen"
                   id="root_a__description"
                 >
                   a fancier item A description
@@ -1337,12 +1337,12 @@ exports[`object fields with title and description from uiSchema object 1`] = `
                 My Item B
               </label>
               <span
-                className="fui-Input r1jtohuq ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                className="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
               >
                 <input
                   aria-describedby="root_b__error root_b__description root_b__help"
                   autoFocus={false}
-                  className="fui-Input__input rvp2gzh ___cqaz2i0_9xw1o20 fly5x3f"
+                  className="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                   disabled={false}
                   id="root_b"
                   name="root_b"
@@ -1357,7 +1357,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
                 />
               </span>
               <p
-                className="fui-Text ___149as9o_18y0df8 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649"
+                className="fui-Text ___3772g50_1srj68j fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649"
                 style={
                   {
                     "marginBottom": 0,
@@ -1366,7 +1366,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
                 }
               >
                 <span
-                  className="fui-Text ___1e3hxnw_shn9n80 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649 frnwi6n f18zxyen"
+                  className="fui-Text ___6s2bv30_bwsv0h0 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649 frnwi6n f18zxyen"
                   id="root_b__description"
                 >
                   a fancier item B description
@@ -1410,7 +1410,7 @@ exports[`object fields with title and description from uiSchema show add button 
         id="root__title"
       >
         <h5
-          className="fui-Text ___piw0oj0_6kpfnf0 fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1mtd64y f1y7q3j9 f2jf649"
+          className="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
         >
           My Field
         </h5>
@@ -1421,7 +1421,7 @@ exports[`object fields with title and description from uiSchema show add button 
         />
       </div>
       <span
-        className="fui-Text ___1e3hxnw_shn9n80 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649 frnwi6n f18zxyen"
+        className="fui-Text ___6s2bv30_bwsv0h0 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649 frnwi6n f18zxyen"
         id="root__description"
       >
         a fancier description
@@ -1445,18 +1445,18 @@ exports[`object fields with title and description from uiSchema show add button 
                 className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
               >
                 <label
-                  className="fui-Label fui-Field__label ___1r7nw7g_1a9hq9n fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
+                  className="fui-Label fui-Field__label ___1r7nw7g_2qzl200 fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
                   htmlFor="field-rv__control"
                   id="field-rv__label"
                 >
                   additionalProperty Key
                 </label>
                 <span
-                  className="fui-Input r1jtohuq ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                  className="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                 >
                   <input
                     aria-labelledby="field-rv__label"
-                    className="fui-Input__input rvp2gzh ___cqaz2i0_9xw1o20 fly5x3f"
+                    className="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                     disabled={false}
                     id="root_additionalProperty-key"
                     name="root_additionalProperty-key"
@@ -1480,12 +1480,12 @@ exports[`object fields with title and description from uiSchema show add button 
                   additionalProperty
                 </label>
                 <span
-                  className="fui-Input r1jtohuq ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                  className="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                 >
                   <input
                     aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
                     autoFocus={false}
-                    className="fui-Input__input rvp2gzh ___cqaz2i0_9xw1o20 fly5x3f"
+                    className="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                     disabled={false}
                     id="root_additionalProperty"
                     name="root_additionalProperty"
@@ -1502,7 +1502,7 @@ exports[`object fields with title and description from uiSchema show add button 
             </div>
             <div>
               <button
-                className="fui-Button r1alrhcs rjsf-object-property-remove ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+                className="fui-Button r1alrhcs rjsf-object-property-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
                 disabled={false}
                 id="root_additionalProperty__remove"
                 onClick={[Function]}
@@ -1543,7 +1543,7 @@ exports[`object fields with title and description from uiSchema show add button 
           className="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
         >
           <button
-            className="fui-Button r1alrhcs rjsf-object-property-expand ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+            className="fui-Button r1alrhcs rjsf-object-property-expand ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
             disabled={false}
             id="root__add"
             onClick={[Function]}
@@ -1563,7 +1563,7 @@ exports[`object fields with title and description from uiSchema show add button 
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <path
-                  d="M10 2.5a.5.5 0 0 0-1 0V9H2.5a.5.5 0 0 0 0 1H9v6.5a.5.5 0 0 0 1 0V10h6.5a.5.5 0 0 0 0-1H10V2.5Z"
+                  d="M10 2.5c.28 0 .5.22.5.5v6.5H17a.5.5 0 0 1 0 1h-6.5V17a.5.5 0 0 1-1 0v-6.5H3a.5.5 0 0 1 0-1h6.5V3c0-.28.22-.5.5-.5Z"
                   fill="currentColor"
                 />
               </svg>
@@ -1605,7 +1605,7 @@ exports[`object fields with title and description object 1`] = `
         id="root__title"
       >
         <h5
-          className="fui-Text ___piw0oj0_6kpfnf0 fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1mtd64y f1y7q3j9 f2jf649"
+          className="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
         >
           Test field
         </h5>
@@ -1616,7 +1616,7 @@ exports[`object fields with title and description object 1`] = `
         />
       </div>
       <span
-        className="fui-Text ___1e3hxnw_shn9n80 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649 frnwi6n f18zxyen"
+        className="fui-Text ___6s2bv30_bwsv0h0 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649 frnwi6n f18zxyen"
         id="root__description"
       >
         a test description
@@ -1645,12 +1645,12 @@ exports[`object fields with title and description object 1`] = `
                 A
               </label>
               <span
-                className="fui-Input r1jtohuq ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                className="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
               >
                 <input
                   aria-describedby="root_a__error root_a__description root_a__help"
                   autoFocus={false}
-                  className="fui-Input__input rvp2gzh ___cqaz2i0_9xw1o20 fly5x3f"
+                  className="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                   disabled={false}
                   id="root_a"
                   name="root_a"
@@ -1664,7 +1664,7 @@ exports[`object fields with title and description object 1`] = `
                 />
               </span>
               <p
-                className="fui-Text ___149as9o_18y0df8 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649"
+                className="fui-Text ___3772g50_1srj68j fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649"
                 style={
                   {
                     "marginBottom": 0,
@@ -1673,7 +1673,7 @@ exports[`object fields with title and description object 1`] = `
                 }
               >
                 <span
-                  className="fui-Text ___1e3hxnw_shn9n80 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649 frnwi6n f18zxyen"
+                  className="fui-Text ___6s2bv30_bwsv0h0 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649 frnwi6n f18zxyen"
                   id="root_a__description"
                 >
                   A description
@@ -1703,12 +1703,12 @@ exports[`object fields with title and description object 1`] = `
                 B
               </label>
               <span
-                className="fui-Input r1jtohuq ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                className="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
               >
                 <input
                   aria-describedby="root_b__error root_b__description root_b__help"
                   autoFocus={false}
-                  className="fui-Input__input rvp2gzh ___cqaz2i0_9xw1o20 fly5x3f"
+                  className="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                   disabled={false}
                   id="root_b"
                   name="root_b"
@@ -1723,7 +1723,7 @@ exports[`object fields with title and description object 1`] = `
                 />
               </span>
               <p
-                className="fui-Text ___149as9o_18y0df8 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649"
+                className="fui-Text ___3772g50_1srj68j fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649"
                 style={
                   {
                     "marginBottom": 0,
@@ -1732,7 +1732,7 @@ exports[`object fields with title and description object 1`] = `
                 }
               >
                 <span
-                  className="fui-Text ___1e3hxnw_shn9n80 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649 frnwi6n f18zxyen"
+                  className="fui-Text ___6s2bv30_bwsv0h0 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649 frnwi6n f18zxyen"
                   id="root_b__description"
                 >
                   B description
@@ -1776,7 +1776,7 @@ exports[`object fields with title and description show add button and fields if 
         id="root__title"
       >
         <h5
-          className="fui-Text ___piw0oj0_6kpfnf0 fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1mtd64y f1y7q3j9 f2jf649"
+          className="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
         >
           Test field
         </h5>
@@ -1787,7 +1787,7 @@ exports[`object fields with title and description show add button and fields if 
         />
       </div>
       <span
-        className="fui-Text ___1e3hxnw_shn9n80 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1mtd64y f1y7q3j9 f2jf649 frnwi6n f18zxyen"
+        className="fui-Text ___6s2bv30_bwsv0h0 fk6fouc fkhj508 f1i3iumi figsok6 fpgzoln ftgm304 f6juhto f1gl81tg f2jf649 frnwi6n f18zxyen"
         id="root__description"
       >
         a test description
@@ -1811,18 +1811,18 @@ exports[`object fields with title and description show add button and fields if 
                 className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
               >
                 <label
-                  className="fui-Label fui-Field__label ___1r7nw7g_1a9hq9n fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
+                  className="fui-Label fui-Field__label ___1r7nw7g_2qzl200 fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
                   htmlFor="field-rj__control"
                   id="field-rj__label"
                 >
                   additionalProperty Key
                 </label>
                 <span
-                  className="fui-Input r1jtohuq ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                  className="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                 >
                   <input
                     aria-labelledby="field-rj__label"
-                    className="fui-Input__input rvp2gzh ___cqaz2i0_9xw1o20 fly5x3f"
+                    className="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                     disabled={false}
                     id="root_additionalProperty-key"
                     name="root_additionalProperty-key"
@@ -1846,12 +1846,12 @@ exports[`object fields with title and description show add button and fields if 
                   additionalProperty
                 </label>
                 <span
-                  className="fui-Input r1jtohuq ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                  className="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                 >
                   <input
                     aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
                     autoFocus={false}
-                    className="fui-Input__input rvp2gzh ___cqaz2i0_9xw1o20 fly5x3f"
+                    className="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                     disabled={false}
                     id="root_additionalProperty"
                     name="root_additionalProperty"
@@ -1868,7 +1868,7 @@ exports[`object fields with title and description show add button and fields if 
             </div>
             <div>
               <button
-                className="fui-Button r1alrhcs rjsf-object-property-remove ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+                className="fui-Button r1alrhcs rjsf-object-property-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
                 disabled={false}
                 id="root_additionalProperty__remove"
                 onClick={[Function]}
@@ -1909,7 +1909,7 @@ exports[`object fields with title and description show add button and fields if 
           className="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
         >
           <button
-            className="fui-Button r1alrhcs rjsf-object-property-expand ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+            className="fui-Button r1alrhcs rjsf-object-property-expand ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
             disabled={false}
             id="root__add"
             onClick={[Function]}
@@ -1929,7 +1929,7 @@ exports[`object fields with title and description show add button and fields if 
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <path
-                  d="M10 2.5a.5.5 0 0 0-1 0V9H2.5a.5.5 0 0 0 0 1H9v6.5a.5.5 0 0 0 1 0V10h6.5a.5.5 0 0 0 0-1H10V2.5Z"
+                  d="M10 2.5c.28 0 .5.22.5.5v6.5H17a.5.5 0 0 1 0 1h-6.5V17a.5.5 0 0 1-1 0v-6.5H3a.5.5 0 0 1 0-1h6.5V3c0-.28.22-.5.5-.5Z"
                   fill="currentColor"
                 />
               </svg>
@@ -1985,18 +1985,18 @@ exports[`object fields with title and description with global label off addition
                 className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
               >
                 <label
-                  className="fui-Label fui-Field__label ___1r7nw7g_1a9hq9n fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
+                  className="fui-Label fui-Field__label ___1r7nw7g_2qzl200 fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
                   htmlFor="field-r1d__control"
                   id="field-r1d__label"
                 >
                   foo Key
                 </label>
                 <span
-                  className="fui-Input r1jtohuq ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                  className="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                 >
                   <input
                     aria-labelledby="field-r1d__label"
-                    className="fui-Input__input rvp2gzh ___cqaz2i0_9xw1o20 fly5x3f"
+                    className="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                     disabled={false}
                     id="root_foo-key"
                     name="root_foo-key"
@@ -2014,12 +2014,12 @@ exports[`object fields with title and description with global label off addition
                 className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
               >
                 <span
-                  className="fui-Input r1jtohuq ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                  className="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                 >
                   <input
                     aria-describedby="root_foo__error root_foo__description root_foo__help"
                     autoFocus={false}
-                    className="fui-Input__input rvp2gzh ___cqaz2i0_9xw1o20 fly5x3f"
+                    className="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                     disabled={false}
                     id="root_foo"
                     name="root_foo"
@@ -2036,7 +2036,7 @@ exports[`object fields with title and description with global label off addition
             </div>
             <div>
               <button
-                className="fui-Button r1alrhcs rjsf-object-property-remove ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+                className="fui-Button r1alrhcs rjsf-object-property-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
                 disabled={false}
                 id="root_foo__remove"
                 onClick={[Function]}
@@ -2077,7 +2077,7 @@ exports[`object fields with title and description with global label off addition
           className="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
         >
           <button
-            className="fui-Button r1alrhcs rjsf-object-property-expand ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+            className="fui-Button r1alrhcs rjsf-object-property-expand ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
             disabled={false}
             id="root__add"
             onClick={[Function]}
@@ -2097,7 +2097,7 @@ exports[`object fields with title and description with global label off addition
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <path
-                  d="M10 2.5a.5.5 0 0 0-1 0V9H2.5a.5.5 0 0 0 0 1H9v6.5a.5.5 0 0 0 1 0V10h6.5a.5.5 0 0 0 0-1H10V2.5Z"
+                  d="M10 2.5c.28 0 .5.22.5.5v6.5H17a.5.5 0 0 1 0 1h-6.5V17a.5.5 0 0 1-1 0v-6.5H3a.5.5 0 0 1 0-1h6.5V3c0-.28.22-.5.5-.5Z"
                   fill="currentColor"
                 />
               </svg>
@@ -2152,12 +2152,12 @@ exports[`object fields with title and description with global label off object 1
               className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
             >
               <span
-                className="fui-Input r1jtohuq ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                className="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
               >
                 <input
                   aria-describedby="root_a__error root_a__description root_a__help"
                   autoFocus={false}
-                  className="fui-Input__input rvp2gzh ___cqaz2i0_9xw1o20 fly5x3f"
+                  className="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                   disabled={false}
                   id="root_a"
                   name="root_a"
@@ -2188,12 +2188,12 @@ exports[`object fields with title and description with global label off object 1
               className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
             >
               <span
-                className="fui-Input r1jtohuq ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                className="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
               >
                 <input
                   aria-describedby="root_b__error root_b__description root_b__help"
                   autoFocus={false}
-                  className="fui-Input__input rvp2gzh ___cqaz2i0_9xw1o20 fly5x3f"
+                  className="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                   disabled={false}
                   id="root_b"
                   name="root_b"
@@ -2259,18 +2259,18 @@ exports[`object fields with title and description with global label off show add
                 className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
               >
                 <label
-                  className="fui-Label fui-Field__label ___1r7nw7g_1a9hq9n fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
+                  className="fui-Label fui-Field__label ___1r7nw7g_2qzl200 fk6fouc f19n0e5 fkhj508 f1i3iumi fclwglc fywfov9 fyacil5"
                   htmlFor="field-r1g__control"
                   id="field-r1g__label"
                 >
                   additionalProperty Key
                 </label>
                 <span
-                  className="fui-Input r1jtohuq ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                  className="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                 >
                   <input
                     aria-labelledby="field-r1g__label"
-                    className="fui-Input__input rvp2gzh ___cqaz2i0_9xw1o20 fly5x3f"
+                    className="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                     disabled={false}
                     id="root_additionalProperty-key"
                     name="root_additionalProperty-key"
@@ -2288,12 +2288,12 @@ exports[`object fields with title and description with global label off show add
                 className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
               >
                 <span
-                  className="fui-Input r1jtohuq ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
+                  className="fui-Input r1oeeo9n ___1v9icnz_137yv9i fvcxoqz f1ub3y4t f1l4zc64 f1m52nbi f8vnjqi fz1etlk f1klwx88 f1hc16gm"
                 >
                   <input
                     aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
                     autoFocus={false}
-                    className="fui-Input__input rvp2gzh ___cqaz2i0_9xw1o20 fly5x3f"
+                    className="fui-Input__input r12stul0 ___cqaz2i0_9xw1o20 fly5x3f"
                     disabled={false}
                     id="root_additionalProperty"
                     name="root_additionalProperty"
@@ -2310,7 +2310,7 @@ exports[`object fields with title and description with global label off show add
             </div>
             <div>
               <button
-                className="fui-Button r1alrhcs rjsf-object-property-remove ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+                className="fui-Button r1alrhcs rjsf-object-property-remove ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
                 disabled={false}
                 id="root_additionalProperty__remove"
                 onClick={[Function]}
@@ -2351,7 +2351,7 @@ exports[`object fields with title and description with global label off show add
           className="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
         >
           <button
-            className="fui-Button r1alrhcs rjsf-object-property-expand ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+            className="fui-Button r1alrhcs rjsf-object-property-expand ___1j82qye_10z14xp f18ktai2 fwbmr0d f44c6la"
             disabled={false}
             id="root__add"
             onClick={[Function]}
@@ -2371,7 +2371,7 @@ exports[`object fields with title and description with global label off show add
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <path
-                  d="M10 2.5a.5.5 0 0 0-1 0V9H2.5a.5.5 0 0 0 0 1H9v6.5a.5.5 0 0 0 1 0V10h6.5a.5.5 0 0 0 0-1H10V2.5Z"
+                  d="M10 2.5c.28 0 .5.22.5.5v6.5H17a.5.5 0 0 1 0 1h-6.5V17a.5.5 0 0 1-1 0v-6.5H3a.5.5 0 0 1 0-1h6.5V3c0-.28.22-.5.5-.5Z"
                   fill="currentColor"
                 />
               </svg>

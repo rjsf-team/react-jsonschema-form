@@ -58,7 +58,7 @@ export default function optionsList<T = any, S extends StrictRJSFSchema = RJSFSc
       let value: EnumOptionsType<S>['value'];
       let label = title;
       if (selectorField) {
-        const innerSchema: S = get(aSchema, [PROPERTIES_KEY, selectorField]);
+        const innerSchema: S = get(aSchema, [PROPERTIES_KEY, selectorField], {}) as S;
         value = get(innerSchema, DEFAULT_KEY, get(innerSchema, CONST_KEY));
         label = label || innerSchema?.title || aSchema.title || String(value);
       } else {

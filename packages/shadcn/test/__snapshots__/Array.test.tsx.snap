@@ -36,6 +36,7 @@ exports[`array fields array 1`] = `
                     type="button"
                   >
                     <svg
+                      aria-hidden="true"
                       className="lucide lucide-circle-plus"
                       fill="none"
                       height={16}
@@ -161,6 +162,7 @@ exports[`array fields array icons 1`] = `
                         type="button"
                       >
                         <svg
+                          aria-hidden="true"
                           className="lucide lucide-chevron-up h-4 w-4"
                           fill="none"
                           height={24}
@@ -186,6 +188,7 @@ exports[`array fields array icons 1`] = `
                         type="button"
                       >
                         <svg
+                          aria-hidden="true"
                           className="lucide lucide-chevron-down h-4 w-4"
                           fill="none"
                           height={24}
@@ -211,6 +214,7 @@ exports[`array fields array icons 1`] = `
                         type="button"
                       >
                         <svg
+                          aria-hidden="true"
                           className="lucide lucide-copy h-4 w-4"
                           fill="none"
                           height={24}
@@ -244,7 +248,8 @@ exports[`array fields array icons 1`] = `
                         type="button"
                       >
                         <svg
-                          className="lucide lucide-trash2 h-4 w-4 stroke-destructive"
+                          aria-hidden="true"
+                          className="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
                           fill="none"
                           height={24}
                           stroke="currentColor"
@@ -339,6 +344,7 @@ exports[`array fields array icons 1`] = `
                         type="button"
                       >
                         <svg
+                          aria-hidden="true"
                           className="lucide lucide-chevron-up h-4 w-4"
                           fill="none"
                           height={24}
@@ -364,6 +370,7 @@ exports[`array fields array icons 1`] = `
                         type="button"
                       >
                         <svg
+                          aria-hidden="true"
                           className="lucide lucide-chevron-down h-4 w-4"
                           fill="none"
                           height={24}
@@ -389,6 +396,7 @@ exports[`array fields array icons 1`] = `
                         type="button"
                       >
                         <svg
+                          aria-hidden="true"
                           className="lucide lucide-copy h-4 w-4"
                           fill="none"
                           height={24}
@@ -422,7 +430,8 @@ exports[`array fields array icons 1`] = `
                         type="button"
                       >
                         <svg
-                          className="lucide lucide-trash2 h-4 w-4 stroke-destructive"
+                          aria-hidden="true"
+                          className="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
                           fill="none"
                           height={24}
                           stroke="currentColor"
@@ -474,6 +483,7 @@ exports[`array fields array icons 1`] = `
                     type="button"
                   >
                     <svg
+                      aria-hidden="true"
                       className="lucide lucide-circle-plus"
                       fill="none"
                       height={16}
@@ -830,6 +840,7 @@ exports[`array fields has errors 1`] = `
     role="alert"
   >
     <svg
+      aria-hidden="true"
       className="lucide lucide-circle-alert h-4 w-4"
       fill="none"
       height={24}
@@ -1086,6 +1097,7 @@ exports[`with title and description array 1`] = `
                     type="button"
                   >
                     <svg
+                      aria-hidden="true"
                       className="lucide lucide-circle-plus"
                       fill="none"
                       height={16}
@@ -1251,6 +1263,7 @@ exports[`with title and description array icons 1`] = `
                         type="button"
                       >
                         <svg
+                          aria-hidden="true"
                           className="lucide lucide-chevron-up h-4 w-4"
                           fill="none"
                           height={24}
@@ -1276,6 +1289,7 @@ exports[`with title and description array icons 1`] = `
                         type="button"
                       >
                         <svg
+                          aria-hidden="true"
                           className="lucide lucide-chevron-down h-4 w-4"
                           fill="none"
                           height={24}
@@ -1301,6 +1315,7 @@ exports[`with title and description array icons 1`] = `
                         type="button"
                       >
                         <svg
+                          aria-hidden="true"
                           className="lucide lucide-copy h-4 w-4"
                           fill="none"
                           height={24}
@@ -1334,7 +1349,8 @@ exports[`with title and description array icons 1`] = `
                         type="button"
                       >
                         <svg
-                          className="lucide lucide-trash2 h-4 w-4 stroke-destructive"
+                          aria-hidden="true"
+                          className="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
                           fill="none"
                           height={24}
                           stroke="currentColor"
@@ -1442,6 +1458,7 @@ exports[`with title and description array icons 1`] = `
                         type="button"
                       >
                         <svg
+                          aria-hidden="true"
                           className="lucide lucide-chevron-up h-4 w-4"
                           fill="none"
                           height={24}
@@ -1467,6 +1484,7 @@ exports[`with title and description array icons 1`] = `
                         type="button"
                       >
                         <svg
+                          aria-hidden="true"
                           className="lucide lucide-chevron-down h-4 w-4"
                           fill="none"
                           height={24}
@@ -1492,6 +1510,7 @@ exports[`with title and description array icons 1`] = `
                         type="button"
                       >
                         <svg
+                          aria-hidden="true"
                           className="lucide lucide-copy h-4 w-4"
                           fill="none"
                           height={24}
@@ -1525,7 +1544,8 @@ exports[`with title and description array icons 1`] = `
                         type="button"
                       >
                         <svg
-                          className="lucide lucide-trash2 h-4 w-4 stroke-destructive"
+                          aria-hidden="true"
+                          className="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
                           fill="none"
                           height={24}
                           stroke="currentColor"
@@ -1577,6 +1597,7 @@ exports[`with title and description array icons 1`] = `
                     type="button"
                   >
                     <svg
+                      aria-hidden="true"
                       className="lucide lucide-circle-plus"
                       fill="none"
                       height={16}
@@ -1979,6 +2000,7 @@ exports[`with title and description from both array 1`] = `
                     type="button"
                   >
                     <svg
+                      aria-hidden="true"
                       className="lucide lucide-circle-plus"
                       fill="none"
                       height={16}
@@ -2144,6 +2166,7 @@ exports[`with title and description from both array icons 1`] = `
                         type="button"
                       >
                         <svg
+                          aria-hidden="true"
                           className="lucide lucide-chevron-up h-4 w-4"
                           fill="none"
                           height={24}
@@ -2169,6 +2192,7 @@ exports[`with title and description from both array icons 1`] = `
                         type="button"
                       >
                         <svg
+                          aria-hidden="true"
                           className="lucide lucide-chevron-down h-4 w-4"
                           fill="none"
                           height={24}
@@ -2194,6 +2218,7 @@ exports[`with title and description from both array icons 1`] = `
                         type="button"
                       >
                         <svg
+                          aria-hidden="true"
                           className="lucide lucide-copy h-4 w-4"
                           fill="none"
                           height={24}
@@ -2227,7 +2252,8 @@ exports[`with title and description from both array icons 1`] = `
                         type="button"
                       >
                         <svg
-                          className="lucide lucide-trash2 h-4 w-4 stroke-destructive"
+                          aria-hidden="true"
+                          className="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
                           fill="none"
                           height={24}
                           stroke="currentColor"
@@ -2335,6 +2361,7 @@ exports[`with title and description from both array icons 1`] = `
                         type="button"
                       >
                         <svg
+                          aria-hidden="true"
                           className="lucide lucide-chevron-up h-4 w-4"
                           fill="none"
                           height={24}
@@ -2360,6 +2387,7 @@ exports[`with title and description from both array icons 1`] = `
                         type="button"
                       >
                         <svg
+                          aria-hidden="true"
                           className="lucide lucide-chevron-down h-4 w-4"
                           fill="none"
                           height={24}
@@ -2385,6 +2413,7 @@ exports[`with title and description from both array icons 1`] = `
                         type="button"
                       >
                         <svg
+                          aria-hidden="true"
                           className="lucide lucide-copy h-4 w-4"
                           fill="none"
                           height={24}
@@ -2418,7 +2447,8 @@ exports[`with title and description from both array icons 1`] = `
                         type="button"
                       >
                         <svg
-                          className="lucide lucide-trash2 h-4 w-4 stroke-destructive"
+                          aria-hidden="true"
+                          className="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
                           fill="none"
                           height={24}
                           stroke="currentColor"
@@ -2470,6 +2500,7 @@ exports[`with title and description from both array icons 1`] = `
                     type="button"
                   >
                     <svg
+                      aria-hidden="true"
                       className="lucide lucide-circle-plus"
                       fill="none"
                       height={16}
@@ -2872,6 +2903,7 @@ exports[`with title and description from uiSchema array 1`] = `
                     type="button"
                   >
                     <svg
+                      aria-hidden="true"
                       className="lucide lucide-circle-plus"
                       fill="none"
                       height={16}
@@ -3037,6 +3069,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                         type="button"
                       >
                         <svg
+                          aria-hidden="true"
                           className="lucide lucide-chevron-up h-4 w-4"
                           fill="none"
                           height={24}
@@ -3062,6 +3095,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                         type="button"
                       >
                         <svg
+                          aria-hidden="true"
                           className="lucide lucide-chevron-down h-4 w-4"
                           fill="none"
                           height={24}
@@ -3087,6 +3121,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                         type="button"
                       >
                         <svg
+                          aria-hidden="true"
                           className="lucide lucide-copy h-4 w-4"
                           fill="none"
                           height={24}
@@ -3120,7 +3155,8 @@ exports[`with title and description from uiSchema array icons 1`] = `
                         type="button"
                       >
                         <svg
-                          className="lucide lucide-trash2 h-4 w-4 stroke-destructive"
+                          aria-hidden="true"
+                          className="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
                           fill="none"
                           height={24}
                           stroke="currentColor"
@@ -3228,6 +3264,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                         type="button"
                       >
                         <svg
+                          aria-hidden="true"
                           className="lucide lucide-chevron-up h-4 w-4"
                           fill="none"
                           height={24}
@@ -3253,6 +3290,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                         type="button"
                       >
                         <svg
+                          aria-hidden="true"
                           className="lucide lucide-chevron-down h-4 w-4"
                           fill="none"
                           height={24}
@@ -3278,6 +3316,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                         type="button"
                       >
                         <svg
+                          aria-hidden="true"
                           className="lucide lucide-copy h-4 w-4"
                           fill="none"
                           height={24}
@@ -3311,7 +3350,8 @@ exports[`with title and description from uiSchema array icons 1`] = `
                         type="button"
                       >
                         <svg
-                          className="lucide lucide-trash2 h-4 w-4 stroke-destructive"
+                          aria-hidden="true"
+                          className="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
                           fill="none"
                           height={24}
                           stroke="currentColor"
@@ -3363,6 +3403,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                     type="button"
                   >
                     <svg
+                      aria-hidden="true"
                       className="lucide lucide-circle-plus"
                       fill="none"
                       height={16}
@@ -3738,6 +3779,7 @@ exports[`with title and description with global label off array 1`] = `
                     type="button"
                   >
                     <svg
+                      aria-hidden="true"
                       className="lucide lucide-circle-plus"
                       fill="none"
                       height={16}
@@ -3857,6 +3899,7 @@ exports[`with title and description with global label off array icons 1`] = `
                         type="button"
                       >
                         <svg
+                          aria-hidden="true"
                           className="lucide lucide-chevron-up h-4 w-4"
                           fill="none"
                           height={24}
@@ -3882,6 +3925,7 @@ exports[`with title and description with global label off array icons 1`] = `
                         type="button"
                       >
                         <svg
+                          aria-hidden="true"
                           className="lucide lucide-chevron-down h-4 w-4"
                           fill="none"
                           height={24}
@@ -3907,6 +3951,7 @@ exports[`with title and description with global label off array icons 1`] = `
                         type="button"
                       >
                         <svg
+                          aria-hidden="true"
                           className="lucide lucide-copy h-4 w-4"
                           fill="none"
                           height={24}
@@ -3940,7 +3985,8 @@ exports[`with title and description with global label off array icons 1`] = `
                         type="button"
                       >
                         <svg
-                          className="lucide lucide-trash2 h-4 w-4 stroke-destructive"
+                          aria-hidden="true"
+                          className="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
                           fill="none"
                           height={24}
                           stroke="currentColor"
@@ -4029,6 +4075,7 @@ exports[`with title and description with global label off array icons 1`] = `
                         type="button"
                       >
                         <svg
+                          aria-hidden="true"
                           className="lucide lucide-chevron-up h-4 w-4"
                           fill="none"
                           height={24}
@@ -4054,6 +4101,7 @@ exports[`with title and description with global label off array icons 1`] = `
                         type="button"
                       >
                         <svg
+                          aria-hidden="true"
                           className="lucide lucide-chevron-down h-4 w-4"
                           fill="none"
                           height={24}
@@ -4079,6 +4127,7 @@ exports[`with title and description with global label off array icons 1`] = `
                         type="button"
                       >
                         <svg
+                          aria-hidden="true"
                           className="lucide lucide-copy h-4 w-4"
                           fill="none"
                           height={24}
@@ -4112,7 +4161,8 @@ exports[`with title and description with global label off array icons 1`] = `
                         type="button"
                       >
                         <svg
-                          className="lucide lucide-trash2 h-4 w-4 stroke-destructive"
+                          aria-hidden="true"
+                          className="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
                           fill="none"
                           height={24}
                           stroke="currentColor"
@@ -4164,6 +4214,7 @@ exports[`with title and description with global label off array icons 1`] = `
                     type="button"
                   >
                     <svg
+                      aria-hidden="true"
                       className="lucide lucide-circle-plus"
                       fill="none"
                       height={16}

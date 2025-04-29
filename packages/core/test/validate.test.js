@@ -161,7 +161,7 @@ describe('Validation', () => {
             errors: [{ property: '.', message: 'Invalid', stack: '. Invalid' }],
             formData: '1234',
           },
-          'root'
+          'root',
         );
       });
 

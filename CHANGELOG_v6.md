@@ -83,6 +83,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Updated the `ArrayFieldTemplate`, `ObjectFieldTemplate`, and `WrapIfAdditionalTemplate` to a unique id using the `buttonId()` function and adding consistent marker classes
 - Implemented the `GridTemplate` component, adding it to the `templates` for the theme
 - BREAKING CHANGE: Removed the addition of `Bootstrap 3` classes from the `SchemaField` and added `rjsf-` prefix to marker classes, thereby changing theme `FieldTemplate` className prop output and associated snapshots
+- BREAKING CHANGE: Removed support for the v1 version of `semantic-ui-react`
 
 ## @rjsf/shadcn
 

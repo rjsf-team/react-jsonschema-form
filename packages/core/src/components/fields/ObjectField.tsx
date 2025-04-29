@@ -298,7 +298,7 @@ class ObjectField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
               key={name}
               name={name}
               required={this.isRequired(name)}
-              schema={get(schema, [PROPERTIES_KEY, name], {})}
+              schema={get(schema, [PROPERTIES_KEY, name], {}) as S}
               uiSchema={fieldUiSchema}
               errorSchema={get(errorSchema, name)}
               idSchema={fieldIdSchema}

@@ -539,7 +539,7 @@ export default class LayoutGridField<
     parts.forEach((part) => {
       // dive into the properties of the current schema (when it exists) and get the schema for the next part
       if (has(schema, PROPERTIES_KEY)) {
-        rawSchema = get(schema, [PROPERTIES_KEY, part]);
+        rawSchema = get(schema, [PROPERTIES_KEY, part], {}) as S;
         idSchema = get(idSchema, part, {}) as IdSchema<T>;
       } else if (schema && (has(schema, ONE_OF_KEY) || has(schema, ANY_OF_KEY))) {
         const xxx = has(schema, ONE_OF_KEY) ? ONE_OF_KEY : ANY_OF_KEY;

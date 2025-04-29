@@ -2,6 +2,9 @@
 
 exports[`Complex grid renders person and address and employment in a complex grid, job_type = company 1`] = `
 .emotion-0 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
@@ -24,6 +27,9 @@ exports[`Complex grid renders person and address and employment in a complex gri
   flex-direction: row;
   min-width: 0;
   box-sizing: border-box;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
   -webkit-box-flex-wrap: wrap;
   -webkit-flex-wrap: wrap;
@@ -61,6 +67,9 @@ exports[`Complex grid renders person and address and employment in a complex gri
   flex-direction: row;
   min-width: 0;
   box-sizing: border-box;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
   -webkit-box-flex-wrap: wrap;
   -webkit-flex-wrap: wrap;
@@ -133,6 +142,9 @@ exports[`Complex grid renders person and address and employment in a complex gri
 }
 
 .emotion-11 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
@@ -153,23 +165,29 @@ exports[`Complex grid renders person and address and employment in a complex gri
   line-height: 1.4375em;
   letter-spacing: 0.00938em;
   padding: 0;
-  position: absolute;
+  position: relative;
   display: block;
   transform-origin: top left;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: calc(100% - 24px);
+  max-width: 100%;
+  position: absolute;
   left: 0;
   top: 0;
-  -webkit-transform: translate(14px, 16px) scale(1);
-  -moz-transform: translate(14px, 16px) scale(1);
-  -ms-transform: translate(14px, 16px) scale(1);
-  transform: translate(14px, 16px) scale(1);
+  -webkit-transform: translate(0, 20px) scale(1);
+  -moz-transform: translate(0, 20px) scale(1);
+  -ms-transform: translate(0, 20px) scale(1);
+  transform: translate(0, 20px) scale(1);
   -webkit-transition: color 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,-webkit-transform 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,max-width 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
   transition: color 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,transform 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,max-width 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
   z-index: 1;
   pointer-events: none;
+  -webkit-transform: translate(14px, 16px) scale(1);
+  -moz-transform: translate(14px, 16px) scale(1);
+  -ms-transform: translate(14px, 16px) scale(1);
+  transform: translate(14px, 16px) scale(1);
+  max-width: calc(100% - 24px);
 }
 
 .emotion-12.Mui-focused {
@@ -198,11 +216,15 @@ exports[`Complex grid renders person and address and employment in a complex gri
   box-sizing: border-box;
   position: relative;
   cursor: text;
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
+  position: relative;
   border-radius: 4px;
 }
 
@@ -241,7 +263,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
   font: inherit;
   letter-spacing: inherit;
   color: currentColor;
-  padding: 16.5px 14px;
+  padding: 4px 0 5px;
   border: 0;
   box-sizing: content-box;
   background: none;
@@ -255,6 +277,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
   animation-name: mui-auto-fill-cancel;
   -webkit-animation-duration: 10ms;
   animation-duration: 10ms;
+  padding: 16.5px 14px;
 }
 
 .emotion-15::-webkit-input-placeholder {
@@ -379,27 +402,45 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
   line-height: 1.4375em;
   letter-spacing: 0.00938em;
   padding: 0;
-  position: absolute;
+  position: relative;
   display: block;
   transform-origin: top left;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: calc(133% - 32px);
+  max-width: 100%;
+  position: absolute;
   left: 0;
   top: 0;
-  -webkit-transform: translate(14px, -9px) scale(0.75);
-  -moz-transform: translate(14px, -9px) scale(0.75);
-  -ms-transform: translate(14px, -9px) scale(0.75);
-  transform: translate(14px, -9px) scale(0.75);
+  -webkit-transform: translate(0, 20px) scale(1);
+  -moz-transform: translate(0, 20px) scale(1);
+  -ms-transform: translate(0, 20px) scale(1);
+  transform: translate(0, 20px) scale(1);
+  -webkit-transform: translate(0, -1.5px) scale(0.75);
+  -moz-transform: translate(0, -1.5px) scale(0.75);
+  -ms-transform: translate(0, -1.5px) scale(0.75);
+  transform: translate(0, -1.5px) scale(0.75);
+  transform-origin: top left;
+  max-width: 133%;
   -webkit-transition: color 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,-webkit-transform 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,max-width 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
   transition: color 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,transform 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,max-width 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
   z-index: 1;
-  pointer-events: auto;
+  pointer-events: none;
+  -webkit-transform: translate(14px, 16px) scale(1);
+  -moz-transform: translate(14px, 16px) scale(1);
+  -ms-transform: translate(14px, 16px) scale(1);
+  transform: translate(14px, 16px) scale(1);
+  max-width: calc(100% - 24px);
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+  pointer-events: auto;
+  max-width: calc(133% - 32px);
+  -webkit-transform: translate(14px, -9px) scale(0.75);
+  -moz-transform: translate(14px, -9px) scale(0.75);
+  -ms-transform: translate(14px, -9px) scale(0.75);
+  transform: translate(14px, -9px) scale(0.75);
 }
 
 .emotion-39.Mui-focused {
@@ -423,10 +464,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
   height: 11px;
   font-size: 0.75em;
   visibility: hidden;
+  max-width: 0.01px;
+  -webkit-transition: max-width 50ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+  transition: max-width 50ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+  white-space: nowrap;
   max-width: 100%;
   -webkit-transition: max-width 100ms cubic-bezier(0.0, 0, 0.2, 1) 50ms;
   transition: max-width 100ms cubic-bezier(0.0, 0, 0.2, 1) 50ms;
-  white-space: nowrap;
 }
 
 .emotion-44>span {
@@ -474,6 +518,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
 }
 
 .emotion-49 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
@@ -485,6 +532,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
 }
 
 .emotion-50 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -506,6 +556,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
 }
 
 .emotion-51 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -522,8 +575,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
   outline: 0;
   border: 0;
   margin: 0;
-  border-radius: 50%;
-  padding: 9px;
+  border-radius: 0;
+  padding: 0;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -534,6 +587,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
+  color: inherit;
+  padding: 9px;
+  border-radius: 50%;
   color: rgba(0, 0, 0, 0.6);
 }
 
@@ -663,12 +719,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-  border-radius: 4px;
+  border-radius: 0;
   cursor: pointer;
+  border-radius: 4px;
   font: inherit;
   letter-spacing: inherit;
   color: currentColor;
-  padding: 16.5px 14px;
+  padding: 4px 0 5px;
   border: 0;
   box-sizing: content-box;
   background: none;
@@ -682,6 +739,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
   animation-name: mui-auto-fill-cancel;
   -webkit-animation-duration: 10ms;
   animation-duration: 10ms;
+  padding: 16.5px 14px;
 }
 
 .emotion-114:focus {
@@ -816,10 +874,11 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
   fill: currentColor;
   font-size: 1.5rem;
   position: absolute;
-  right: 7px;
+  right: 0;
   top: calc(50% - .5em);
   pointer-events: none;
   color: rgba(0, 0, 0, 0.54);
+  right: 7px;
 }
 
 .emotion-116.Mui-disabled {
@@ -848,6 +907,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
   flex-direction: row;
   min-width: 0;
   box-sizing: border-box;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
   -webkit-box-flex-wrap: wrap;
   -webkit-flex-wrap: wrap;
@@ -870,17 +932,26 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
 }
 
 .emotion-132 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
   -webkit-box-flex-wrap: wrap;
   -webkit-flex-wrap: wrap;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
 }
 
 .emotion-134 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -897,8 +968,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
   outline: 0;
   border: 0;
   margin: 0;
-  border-radius: 50%;
-  padding: 9px;
+  border-radius: 0;
+  padding: 0;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -909,6 +980,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
+  color: inherit;
+  padding: 9px;
+  border-radius: 50%;
   color: rgba(0, 0, 0, 0.6);
 }
 
@@ -948,6 +1022,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
 
 .emotion-136 {
   position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
 }
 
@@ -983,16 +1060,24 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
   -webkit-flex-shrink: 0;
   -ms-flex-negative: 0;
   flex-shrink: 0;
-  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
-  transition: transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+  -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   fill: currentColor;
   font-size: 1.5rem;
   left: 0;
   position: absolute;
+  -webkit-transform: scale(0);
+  -moz-transform: scale(0);
+  -ms-transform: scale(0);
+  transform: scale(0);
+  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
+  transition: transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
   -webkit-transform: scale(1);
   -moz-transform: scale(1);
   -ms-transform: scale(1);
   transform: scale(1);
+  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+  transition: transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
 }
 
 .emotion-145 {
@@ -1006,8 +1091,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
   -webkit-flex-shrink: 0;
   -ms-flex-negative: 0;
   flex-shrink: 0;
-  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
-  transition: transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
+  -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   fill: currentColor;
   font-size: 1.5rem;
   left: 0;
@@ -1016,6 +1101,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
   -moz-transform: scale(0);
   -ms-transform: scale(0);
   transform: scale(0);
+  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
+  transition: transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
 }
 
 .emotion-191 {
@@ -1023,6 +1110,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
 }
 
 .emotion-192 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -1035,12 +1125,12 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
   position: relative;
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
-  background-color: var(--variant-containedBg);
+  background-color: transparent;
   outline: 0;
   border: 0;
   margin: 0;
-  border-radius: 4px;
-  padding: 6px 16px;
+  border-radius: 0;
+  padding: 0;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -1051,7 +1141,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: var(--variant-containedColor);
+  color: inherit;
   font-family: "Roboto","Helvetica","Arial",sans-serif;
   font-weight: 500;
   font-size: 0.875rem;
@@ -1059,14 +1149,21 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
   letter-spacing: 0.02857em;
   text-transform: uppercase;
   min-width: 64px;
-  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  padding: 6px 16px;
+  border: 0;
+  border-radius: 4px;
+  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  color: var(--variant-containedColor);
+  background-color: var(--variant-containedBg);
   box-shadow: 0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12);
   --variant-textColor: #1976d2;
   --variant-outlinedColor: #1976d2;
   --variant-outlinedBorder: rgba(25, 118, 210, 0.5);
   --variant-containedColor: #fff;
   --variant-containedBg: #1976d2;
+  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
 }
 
 .emotion-192::-moz-focus-inner {
@@ -2666,7 +2763,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
     <button
       className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary emotion-192"
       disabled={null}
-      id=":r1l:"
       onBlur={[Function]}
       onContextMenu={[Function]}
       onDragLeave={[Function]}
@@ -2690,6 +2786,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
 
 exports[`Complex grid renders person and address and employment in a complex grid, job_type = education 1`] = `
 .emotion-0 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
@@ -2712,6 +2811,9 @@ exports[`Complex grid renders person and address and employment in a complex gri
   flex-direction: row;
   min-width: 0;
   box-sizing: border-box;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
   -webkit-box-flex-wrap: wrap;
   -webkit-flex-wrap: wrap;
@@ -2749,6 +2851,9 @@ exports[`Complex grid renders person and address and employment in a complex gri
   flex-direction: row;
   min-width: 0;
   box-sizing: border-box;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
   -webkit-box-flex-wrap: wrap;
   -webkit-flex-wrap: wrap;
@@ -2821,6 +2926,9 @@ exports[`Complex grid renders person and address and employment in a complex gri
 }
 
 .emotion-11 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
@@ -2841,23 +2949,29 @@ exports[`Complex grid renders person and address and employment in a complex gri
   line-height: 1.4375em;
   letter-spacing: 0.00938em;
   padding: 0;
-  position: absolute;
+  position: relative;
   display: block;
   transform-origin: top left;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: calc(100% - 24px);
+  max-width: 100%;
+  position: absolute;
   left: 0;
   top: 0;
-  -webkit-transform: translate(14px, 16px) scale(1);
-  -moz-transform: translate(14px, 16px) scale(1);
-  -ms-transform: translate(14px, 16px) scale(1);
-  transform: translate(14px, 16px) scale(1);
+  -webkit-transform: translate(0, 20px) scale(1);
+  -moz-transform: translate(0, 20px) scale(1);
+  -ms-transform: translate(0, 20px) scale(1);
+  transform: translate(0, 20px) scale(1);
   -webkit-transition: color 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,-webkit-transform 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,max-width 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
   transition: color 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,transform 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,max-width 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
   z-index: 1;
   pointer-events: none;
+  -webkit-transform: translate(14px, 16px) scale(1);
+  -moz-transform: translate(14px, 16px) scale(1);
+  -ms-transform: translate(14px, 16px) scale(1);
+  transform: translate(14px, 16px) scale(1);
+  max-width: calc(100% - 24px);
 }
 
 .emotion-12.Mui-focused {
@@ -2886,11 +3000,15 @@ exports[`Complex grid renders person and address and employment in a complex gri
   box-sizing: border-box;
   position: relative;
   cursor: text;
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
+  position: relative;
   border-radius: 4px;
 }
 
@@ -2929,7 +3047,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
   font: inherit;
   letter-spacing: inherit;
   color: currentColor;
-  padding: 16.5px 14px;
+  padding: 4px 0 5px;
   border: 0;
   box-sizing: content-box;
   background: none;
@@ -2943,6 +3061,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
   animation-name: mui-auto-fill-cancel;
   -webkit-animation-duration: 10ms;
   animation-duration: 10ms;
+  padding: 16.5px 14px;
 }
 
 .emotion-15::-webkit-input-placeholder {
@@ -3067,27 +3186,45 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
   line-height: 1.4375em;
   letter-spacing: 0.00938em;
   padding: 0;
-  position: absolute;
+  position: relative;
   display: block;
   transform-origin: top left;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: calc(133% - 32px);
+  max-width: 100%;
+  position: absolute;
   left: 0;
   top: 0;
-  -webkit-transform: translate(14px, -9px) scale(0.75);
-  -moz-transform: translate(14px, -9px) scale(0.75);
-  -ms-transform: translate(14px, -9px) scale(0.75);
-  transform: translate(14px, -9px) scale(0.75);
+  -webkit-transform: translate(0, 20px) scale(1);
+  -moz-transform: translate(0, 20px) scale(1);
+  -ms-transform: translate(0, 20px) scale(1);
+  transform: translate(0, 20px) scale(1);
+  -webkit-transform: translate(0, -1.5px) scale(0.75);
+  -moz-transform: translate(0, -1.5px) scale(0.75);
+  -ms-transform: translate(0, -1.5px) scale(0.75);
+  transform: translate(0, -1.5px) scale(0.75);
+  transform-origin: top left;
+  max-width: 133%;
   -webkit-transition: color 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,-webkit-transform 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,max-width 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
   transition: color 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,transform 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,max-width 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
   z-index: 1;
-  pointer-events: auto;
+  pointer-events: none;
+  -webkit-transform: translate(14px, 16px) scale(1);
+  -moz-transform: translate(14px, 16px) scale(1);
+  -ms-transform: translate(14px, 16px) scale(1);
+  transform: translate(14px, 16px) scale(1);
+  max-width: calc(100% - 24px);
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+  pointer-events: auto;
+  max-width: calc(133% - 32px);
+  -webkit-transform: translate(14px, -9px) scale(0.75);
+  -moz-transform: translate(14px, -9px) scale(0.75);
+  -ms-transform: translate(14px, -9px) scale(0.75);
+  transform: translate(14px, -9px) scale(0.75);
 }
 
 .emotion-39.Mui-focused {
@@ -3111,10 +3248,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
   height: 11px;
   font-size: 0.75em;
   visibility: hidden;
+  max-width: 0.01px;
+  -webkit-transition: max-width 50ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+  transition: max-width 50ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+  white-space: nowrap;
   max-width: 100%;
   -webkit-transition: max-width 100ms cubic-bezier(0.0, 0, 0.2, 1) 50ms;
   transition: max-width 100ms cubic-bezier(0.0, 0, 0.2, 1) 50ms;
-  white-space: nowrap;
 }
 
 .emotion-44>span {
@@ -3162,6 +3302,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
 }
 
 .emotion-49 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
@@ -3173,6 +3316,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
 }
 
 .emotion-50 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -3194,6 +3340,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
 }
 
 .emotion-51 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -3210,8 +3359,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
   outline: 0;
   border: 0;
   margin: 0;
-  border-radius: 50%;
-  padding: 9px;
+  border-radius: 0;
+  padding: 0;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -3222,6 +3371,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
+  color: inherit;
+  padding: 9px;
+  border-radius: 50%;
   color: rgba(0, 0, 0, 0.6);
 }
 
@@ -3351,12 +3503,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-  border-radius: 4px;
+  border-radius: 0;
   cursor: pointer;
+  border-radius: 4px;
   font: inherit;
   letter-spacing: inherit;
   color: currentColor;
-  padding: 16.5px 14px;
+  padding: 4px 0 5px;
   border: 0;
   box-sizing: content-box;
   background: none;
@@ -3370,6 +3523,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
   animation-name: mui-auto-fill-cancel;
   -webkit-animation-duration: 10ms;
   animation-duration: 10ms;
+  padding: 16.5px 14px;
 }
 
 .emotion-114:focus {
@@ -3504,10 +3658,11 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
   fill: currentColor;
   font-size: 1.5rem;
   position: absolute;
-  right: 7px;
+  right: 0;
   top: calc(50% - .5em);
   pointer-events: none;
   color: rgba(0, 0, 0, 0.54);
+  right: 7px;
 }
 
 .emotion-116.Mui-disabled {
@@ -3536,6 +3691,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
   flex-direction: row;
   min-width: 0;
   box-sizing: border-box;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
   -webkit-box-flex-wrap: wrap;
   -webkit-flex-wrap: wrap;
@@ -3558,17 +3716,26 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
 }
 
 .emotion-132 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
   -webkit-box-flex-wrap: wrap;
   -webkit-flex-wrap: wrap;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
 }
 
 .emotion-134 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -3585,8 +3752,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
   outline: 0;
   border: 0;
   margin: 0;
-  border-radius: 50%;
-  padding: 9px;
+  border-radius: 0;
+  padding: 0;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -3597,6 +3764,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
+  color: inherit;
+  padding: 9px;
+  border-radius: 50%;
   color: rgba(0, 0, 0, 0.6);
 }
 
@@ -3636,6 +3806,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
 
 .emotion-136 {
   position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
 }
 
@@ -3671,8 +3844,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
   -webkit-flex-shrink: 0;
   -ms-flex-negative: 0;
   flex-shrink: 0;
-  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
-  transition: transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
+  -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   fill: currentColor;
   font-size: 1.5rem;
   left: 0;
@@ -3681,6 +3854,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
   -moz-transform: scale(0);
   -ms-transform: scale(0);
   transform: scale(0);
+  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
+  transition: transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
 }
 
 .emotion-145 {
@@ -3694,16 +3869,24 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
   -webkit-flex-shrink: 0;
   -ms-flex-negative: 0;
   flex-shrink: 0;
-  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
-  transition: transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+  -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   fill: currentColor;
   font-size: 1.5rem;
   left: 0;
   position: absolute;
+  -webkit-transform: scale(0);
+  -moz-transform: scale(0);
+  -ms-transform: scale(0);
+  transform: scale(0);
+  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
+  transition: transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
   -webkit-transform: scale(1);
   -moz-transform: scale(1);
   -ms-transform: scale(1);
   transform: scale(1);
+  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+  transition: transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
 }
 
 .emotion-199 {
@@ -3711,6 +3894,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
 }
 
 .emotion-200 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -3723,12 +3909,12 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
   position: relative;
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
-  background-color: var(--variant-containedBg);
+  background-color: transparent;
   outline: 0;
   border: 0;
   margin: 0;
-  border-radius: 4px;
-  padding: 6px 16px;
+  border-radius: 0;
+  padding: 0;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -3739,7 +3925,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: var(--variant-containedColor);
+  color: inherit;
   font-family: "Roboto","Helvetica","Arial",sans-serif;
   font-weight: 500;
   font-size: 0.875rem;
@@ -3747,14 +3933,21 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
   letter-spacing: 0.02857em;
   text-transform: uppercase;
   min-width: 64px;
-  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  padding: 6px 16px;
+  border: 0;
+  border-radius: 4px;
+  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  color: var(--variant-containedColor);
+  background-color: var(--variant-containedBg);
   box-shadow: 0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12);
   --variant-textColor: #1976d2;
   --variant-outlinedColor: #1976d2;
   --variant-outlinedBorder: rgba(25, 118, 210, 0.5);
   --variant-containedColor: #fff;
   --variant-containedBg: #1976d2;
+  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
 }
 
 .emotion-200::-moz-focus-inner {
@@ -5413,7 +5606,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
     <button
       className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary emotion-200"
       disabled={null}
-      id=":r27:"
       onBlur={[Function]}
       onContextMenu={[Function]}
       onDragLeave={[Function]}
@@ -5437,6 +5629,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
 
 exports[`Complex grid renders person and address and employment in a complex grid, job_type = other 1`] = `
 .emotion-0 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
@@ -5459,6 +5654,9 @@ exports[`Complex grid renders person and address and employment in a complex gri
   flex-direction: row;
   min-width: 0;
   box-sizing: border-box;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
   -webkit-box-flex-wrap: wrap;
   -webkit-flex-wrap: wrap;
@@ -5496,6 +5694,9 @@ exports[`Complex grid renders person and address and employment in a complex gri
   flex-direction: row;
   min-width: 0;
   box-sizing: border-box;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
   -webkit-box-flex-wrap: wrap;
   -webkit-flex-wrap: wrap;
@@ -5568,6 +5769,9 @@ exports[`Complex grid renders person and address and employment in a complex gri
 }
 
 .emotion-11 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
@@ -5588,23 +5792,29 @@ exports[`Complex grid renders person and address and employment in a complex gri
   line-height: 1.4375em;
   letter-spacing: 0.00938em;
   padding: 0;
-  position: absolute;
+  position: relative;
   display: block;
   transform-origin: top left;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: calc(100% - 24px);
+  max-width: 100%;
+  position: absolute;
   left: 0;
   top: 0;
-  -webkit-transform: translate(14px, 16px) scale(1);
-  -moz-transform: translate(14px, 16px) scale(1);
-  -ms-transform: translate(14px, 16px) scale(1);
-  transform: translate(14px, 16px) scale(1);
+  -webkit-transform: translate(0, 20px) scale(1);
+  -moz-transform: translate(0, 20px) scale(1);
+  -ms-transform: translate(0, 20px) scale(1);
+  transform: translate(0, 20px) scale(1);
   -webkit-transition: color 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,-webkit-transform 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,max-width 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
   transition: color 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,transform 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,max-width 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
   z-index: 1;
   pointer-events: none;
+  -webkit-transform: translate(14px, 16px) scale(1);
+  -moz-transform: translate(14px, 16px) scale(1);
+  -ms-transform: translate(14px, 16px) scale(1);
+  transform: translate(14px, 16px) scale(1);
+  max-width: calc(100% - 24px);
 }
 
 .emotion-12.Mui-focused {
@@ -5633,11 +5843,15 @@ exports[`Complex grid renders person and address and employment in a complex gri
   box-sizing: border-box;
   position: relative;
   cursor: text;
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
+  position: relative;
   border-radius: 4px;
 }
 
@@ -5676,7 +5890,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
   font: inherit;
   letter-spacing: inherit;
   color: currentColor;
-  padding: 16.5px 14px;
+  padding: 4px 0 5px;
   border: 0;
   box-sizing: content-box;
   background: none;
@@ -5690,6 +5904,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
   animation-name: mui-auto-fill-cancel;
   -webkit-animation-duration: 10ms;
   animation-duration: 10ms;
+  padding: 16.5px 14px;
 }
 
 .emotion-15::-webkit-input-placeholder {
@@ -5814,27 +6029,45 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
   line-height: 1.4375em;
   letter-spacing: 0.00938em;
   padding: 0;
-  position: absolute;
+  position: relative;
   display: block;
   transform-origin: top left;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: calc(133% - 32px);
+  max-width: 100%;
+  position: absolute;
   left: 0;
   top: 0;
-  -webkit-transform: translate(14px, -9px) scale(0.75);
-  -moz-transform: translate(14px, -9px) scale(0.75);
-  -ms-transform: translate(14px, -9px) scale(0.75);
-  transform: translate(14px, -9px) scale(0.75);
+  -webkit-transform: translate(0, 20px) scale(1);
+  -moz-transform: translate(0, 20px) scale(1);
+  -ms-transform: translate(0, 20px) scale(1);
+  transform: translate(0, 20px) scale(1);
+  -webkit-transform: translate(0, -1.5px) scale(0.75);
+  -moz-transform: translate(0, -1.5px) scale(0.75);
+  -ms-transform: translate(0, -1.5px) scale(0.75);
+  transform: translate(0, -1.5px) scale(0.75);
+  transform-origin: top left;
+  max-width: 133%;
   -webkit-transition: color 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,-webkit-transform 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,max-width 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
   transition: color 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,transform 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,max-width 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
   z-index: 1;
-  pointer-events: auto;
+  pointer-events: none;
+  -webkit-transform: translate(14px, 16px) scale(1);
+  -moz-transform: translate(14px, 16px) scale(1);
+  -ms-transform: translate(14px, 16px) scale(1);
+  transform: translate(14px, 16px) scale(1);
+  max-width: calc(100% - 24px);
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+  pointer-events: auto;
+  max-width: calc(133% - 32px);
+  -webkit-transform: translate(14px, -9px) scale(0.75);
+  -moz-transform: translate(14px, -9px) scale(0.75);
+  -ms-transform: translate(14px, -9px) scale(0.75);
+  transform: translate(14px, -9px) scale(0.75);
 }
 
 .emotion-39.Mui-focused {
@@ -5858,10 +6091,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
   height: 11px;
   font-size: 0.75em;
   visibility: hidden;
+  max-width: 0.01px;
+  -webkit-transition: max-width 50ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+  transition: max-width 50ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+  white-space: nowrap;
   max-width: 100%;
   -webkit-transition: max-width 100ms cubic-bezier(0.0, 0, 0.2, 1) 50ms;
   transition: max-width 100ms cubic-bezier(0.0, 0, 0.2, 1) 50ms;
-  white-space: nowrap;
 }
 
 .emotion-44>span {
@@ -5909,6 +6145,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
 }
 
 .emotion-49 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
@@ -5920,6 +6159,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
 }
 
 .emotion-50 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -5941,6 +6183,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
 }
 
 .emotion-51 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -5957,8 +6202,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
   outline: 0;
   border: 0;
   margin: 0;
-  border-radius: 50%;
-  padding: 9px;
+  border-radius: 0;
+  padding: 0;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -5969,6 +6214,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
+  color: inherit;
+  padding: 9px;
+  border-radius: 50%;
   color: rgba(0, 0, 0, 0.6);
 }
 
@@ -6098,12 +6346,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-  border-radius: 4px;
+  border-radius: 0;
   cursor: pointer;
+  border-radius: 4px;
   font: inherit;
   letter-spacing: inherit;
   color: currentColor;
-  padding: 16.5px 14px;
+  padding: 4px 0 5px;
   border: 0;
   box-sizing: content-box;
   background: none;
@@ -6117,6 +6366,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
   animation-name: mui-auto-fill-cancel;
   -webkit-animation-duration: 10ms;
   animation-duration: 10ms;
+  padding: 16.5px 14px;
 }
 
 .emotion-114:focus {
@@ -6251,10 +6501,11 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
   fill: currentColor;
   font-size: 1.5rem;
   position: absolute;
-  right: 7px;
+  right: 0;
   top: calc(50% - .5em);
   pointer-events: none;
   color: rgba(0, 0, 0, 0.54);
+  right: 7px;
 }
 
 .emotion-116.Mui-disabled {
@@ -6283,6 +6534,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
   flex-direction: row;
   min-width: 0;
   box-sizing: border-box;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
   -webkit-box-flex-wrap: wrap;
   -webkit-flex-wrap: wrap;
@@ -6305,17 +6559,26 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
 }
 
 .emotion-132 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
   -webkit-box-flex-wrap: wrap;
   -webkit-flex-wrap: wrap;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
 }
 
 .emotion-134 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -6332,8 +6595,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
   outline: 0;
   border: 0;
   margin: 0;
-  border-radius: 50%;
-  padding: 9px;
+  border-radius: 0;
+  padding: 0;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -6344,6 +6607,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
+  color: inherit;
+  padding: 9px;
+  border-radius: 50%;
   color: rgba(0, 0, 0, 0.6);
 }
 
@@ -6383,6 +6649,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
 
 .emotion-136 {
   position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
 }
 
@@ -6418,8 +6687,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
   -webkit-flex-shrink: 0;
   -ms-flex-negative: 0;
   flex-shrink: 0;
-  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
-  transition: transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
+  -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   fill: currentColor;
   font-size: 1.5rem;
   left: 0;
@@ -6428,6 +6697,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
   -moz-transform: scale(0);
   -ms-transform: scale(0);
   transform: scale(0);
+  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
+  transition: transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
 }
 
 .emotion-152 {
@@ -6441,16 +6712,24 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
   -webkit-flex-shrink: 0;
   -ms-flex-negative: 0;
   flex-shrink: 0;
-  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
-  transition: transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+  -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   fill: currentColor;
   font-size: 1.5rem;
   left: 0;
   position: absolute;
+  -webkit-transform: scale(0);
+  -moz-transform: scale(0);
+  -ms-transform: scale(0);
+  transform: scale(0);
+  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
+  transition: transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
   -webkit-transform: scale(1);
   -moz-transform: scale(1);
   -ms-transform: scale(1);
   transform: scale(1);
+  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+  transition: transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
 }
 
 .emotion-159 {
@@ -6463,13 +6742,18 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
   box-sizing: border-box;
   position: relative;
   cursor: text;
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  padding: 16.5px 14px;
+  padding: 4px 0 5px;
+  position: relative;
   border-radius: 4px;
+  padding: 16.5px 14px;
 }
 
 .emotion-159.Mui-disabled {
@@ -6507,11 +6791,11 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
   font: inherit;
   letter-spacing: inherit;
   color: currentColor;
-  padding: 0;
+  padding: 4px 0 5px;
   border: 0;
   box-sizing: content-box;
   background: none;
-  height: auto;
+  height: 1.4375em;
   margin: 0;
   -webkit-tap-highlight-color: transparent;
   display: block;
@@ -6521,8 +6805,12 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
   animation-name: mui-auto-fill-cancel;
   -webkit-animation-duration: 10ms;
   animation-duration: 10ms;
+  height: auto;
   resize: none;
+  padding: 0;
   padding-top: 0;
+  padding: 16.5px 14px;
+  padding: 0;
 }
 
 .emotion-160::-webkit-input-placeholder {
@@ -6603,6 +6891,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-160:focus::-ms-input
 }
 
 .emotion-165 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -6615,12 +6906,12 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-160:focus::-ms-input
   position: relative;
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
-  background-color: var(--variant-containedBg);
+  background-color: transparent;
   outline: 0;
   border: 0;
   margin: 0;
-  border-radius: 4px;
-  padding: 6px 16px;
+  border-radius: 0;
+  padding: 0;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -6631,7 +6922,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-160:focus::-ms-input
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: var(--variant-containedColor);
+  color: inherit;
   font-family: "Roboto","Helvetica","Arial",sans-serif;
   font-weight: 500;
   font-size: 0.875rem;
@@ -6639,14 +6930,21 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-160:focus::-ms-input
   letter-spacing: 0.02857em;
   text-transform: uppercase;
   min-width: 64px;
-  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  padding: 6px 16px;
+  border: 0;
+  border-radius: 4px;
+  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  color: var(--variant-containedColor);
+  background-color: var(--variant-containedBg);
   box-shadow: 0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12);
   --variant-textColor: #1976d2;
   --variant-outlinedColor: #1976d2;
   --variant-outlinedBorder: rgba(25, 118, 210, 0.5);
   --variant-containedColor: #fff;
   --variant-containedBg: #1976d2;
+  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
 }
 
 .emotion-165::-moz-focus-inner {
@@ -8040,7 +8338,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-160:focus::-ms-input
     <button
       className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary emotion-165"
       disabled={null}
-      id=":r2k:"
       onBlur={[Function]}
       onContextMenu={[Function]}
       onDragLeave={[Function]}
@@ -8064,6 +8361,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-160:focus::-ms-input
 
 exports[`Complex grid renders person and address and employment in a complex grid, no form data 1`] = `
 .emotion-0 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
@@ -8086,6 +8386,9 @@ exports[`Complex grid renders person and address and employment in a complex gri
   flex-direction: row;
   min-width: 0;
   box-sizing: border-box;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
   -webkit-box-flex-wrap: wrap;
   -webkit-flex-wrap: wrap;
@@ -8123,6 +8426,9 @@ exports[`Complex grid renders person and address and employment in a complex gri
   flex-direction: row;
   min-width: 0;
   box-sizing: border-box;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
   -webkit-box-flex-wrap: wrap;
   -webkit-flex-wrap: wrap;
@@ -8195,6 +8501,9 @@ exports[`Complex grid renders person and address and employment in a complex gri
 }
 
 .emotion-11 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
@@ -8215,23 +8524,29 @@ exports[`Complex grid renders person and address and employment in a complex gri
   line-height: 1.4375em;
   letter-spacing: 0.00938em;
   padding: 0;
-  position: absolute;
+  position: relative;
   display: block;
   transform-origin: top left;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: calc(100% - 24px);
+  max-width: 100%;
+  position: absolute;
   left: 0;
   top: 0;
-  -webkit-transform: translate(14px, 16px) scale(1);
-  -moz-transform: translate(14px, 16px) scale(1);
-  -ms-transform: translate(14px, 16px) scale(1);
-  transform: translate(14px, 16px) scale(1);
+  -webkit-transform: translate(0, 20px) scale(1);
+  -moz-transform: translate(0, 20px) scale(1);
+  -ms-transform: translate(0, 20px) scale(1);
+  transform: translate(0, 20px) scale(1);
   -webkit-transition: color 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,-webkit-transform 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,max-width 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
   transition: color 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,transform 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,max-width 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
   z-index: 1;
   pointer-events: none;
+  -webkit-transform: translate(14px, 16px) scale(1);
+  -moz-transform: translate(14px, 16px) scale(1);
+  -ms-transform: translate(14px, 16px) scale(1);
+  transform: translate(14px, 16px) scale(1);
+  max-width: calc(100% - 24px);
 }
 
 .emotion-12.Mui-focused {
@@ -8260,11 +8575,15 @@ exports[`Complex grid renders person and address and employment in a complex gri
   box-sizing: border-box;
   position: relative;
   cursor: text;
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
+  position: relative;
   border-radius: 4px;
 }
 
@@ -8303,7 +8622,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
   font: inherit;
   letter-spacing: inherit;
   color: currentColor;
-  padding: 16.5px 14px;
+  padding: 4px 0 5px;
   border: 0;
   box-sizing: content-box;
   background: none;
@@ -8317,6 +8636,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
   animation-name: mui-auto-fill-cancel;
   -webkit-animation-duration: 10ms;
   animation-duration: 10ms;
+  padding: 16.5px 14px;
 }
 
 .emotion-15::-webkit-input-placeholder {
@@ -8441,27 +8761,45 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
   line-height: 1.4375em;
   letter-spacing: 0.00938em;
   padding: 0;
-  position: absolute;
+  position: relative;
   display: block;
   transform-origin: top left;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: calc(133% - 32px);
+  max-width: 100%;
+  position: absolute;
   left: 0;
   top: 0;
-  -webkit-transform: translate(14px, -9px) scale(0.75);
-  -moz-transform: translate(14px, -9px) scale(0.75);
-  -ms-transform: translate(14px, -9px) scale(0.75);
-  transform: translate(14px, -9px) scale(0.75);
+  -webkit-transform: translate(0, 20px) scale(1);
+  -moz-transform: translate(0, 20px) scale(1);
+  -ms-transform: translate(0, 20px) scale(1);
+  transform: translate(0, 20px) scale(1);
+  -webkit-transform: translate(0, -1.5px) scale(0.75);
+  -moz-transform: translate(0, -1.5px) scale(0.75);
+  -ms-transform: translate(0, -1.5px) scale(0.75);
+  transform: translate(0, -1.5px) scale(0.75);
+  transform-origin: top left;
+  max-width: 133%;
   -webkit-transition: color 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,-webkit-transform 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,max-width 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
   transition: color 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,transform 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,max-width 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
   z-index: 1;
-  pointer-events: auto;
+  pointer-events: none;
+  -webkit-transform: translate(14px, 16px) scale(1);
+  -moz-transform: translate(14px, 16px) scale(1);
+  -ms-transform: translate(14px, 16px) scale(1);
+  transform: translate(14px, 16px) scale(1);
+  max-width: calc(100% - 24px);
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+  pointer-events: auto;
+  max-width: calc(133% - 32px);
+  -webkit-transform: translate(14px, -9px) scale(0.75);
+  -moz-transform: translate(14px, -9px) scale(0.75);
+  -ms-transform: translate(14px, -9px) scale(0.75);
+  transform: translate(14px, -9px) scale(0.75);
 }
 
 .emotion-39.Mui-focused {
@@ -8485,10 +8823,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
   height: 11px;
   font-size: 0.75em;
   visibility: hidden;
+  max-width: 0.01px;
+  -webkit-transition: max-width 50ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+  transition: max-width 50ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+  white-space: nowrap;
   max-width: 100%;
   -webkit-transition: max-width 100ms cubic-bezier(0.0, 0, 0.2, 1) 50ms;
   transition: max-width 100ms cubic-bezier(0.0, 0, 0.2, 1) 50ms;
-  white-space: nowrap;
 }
 
 .emotion-44>span {
@@ -8536,6 +8877,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
 }
 
 .emotion-49 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
@@ -8547,6 +8891,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
 }
 
 .emotion-50 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -8568,6 +8915,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
 }
 
 .emotion-51 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -8584,8 +8934,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
   outline: 0;
   border: 0;
   margin: 0;
-  border-radius: 50%;
-  padding: 9px;
+  border-radius: 0;
+  padding: 0;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -8596,6 +8946,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
+  color: inherit;
+  padding: 9px;
+  border-radius: 50%;
   color: rgba(0, 0, 0, 0.6);
 }
 
@@ -8725,12 +9078,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-  border-radius: 4px;
+  border-radius: 0;
   cursor: pointer;
+  border-radius: 4px;
   font: inherit;
   letter-spacing: inherit;
   color: currentColor;
-  padding: 16.5px 14px;
+  padding: 4px 0 5px;
   border: 0;
   box-sizing: content-box;
   background: none;
@@ -8744,6 +9098,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-15:focus::-ms-input-
   animation-name: mui-auto-fill-cancel;
   -webkit-animation-duration: 10ms;
   animation-duration: 10ms;
+  padding: 16.5px 14px;
 }
 
 .emotion-114:focus {
@@ -8878,10 +9233,11 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
   fill: currentColor;
   font-size: 1.5rem;
   position: absolute;
-  right: 7px;
+  right: 0;
   top: calc(50% - .5em);
   pointer-events: none;
   color: rgba(0, 0, 0, 0.54);
+  right: 7px;
 }
 
 .emotion-116.Mui-disabled {
@@ -8910,6 +9266,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
   flex-direction: row;
   min-width: 0;
   box-sizing: border-box;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
   -webkit-box-flex-wrap: wrap;
   -webkit-flex-wrap: wrap;
@@ -8932,17 +9291,26 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
 }
 
 .emotion-132 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
-  flex-direction: row;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
   -webkit-box-flex-wrap: wrap;
   -webkit-flex-wrap: wrap;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
 }
 
 .emotion-134 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -8959,8 +9327,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
   outline: 0;
   border: 0;
   margin: 0;
-  border-radius: 50%;
-  padding: 9px;
+  border-radius: 0;
+  padding: 0;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -8971,6 +9339,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
+  color: inherit;
+  padding: 9px;
+  border-radius: 50%;
   color: rgba(0, 0, 0, 0.6);
 }
 
@@ -9010,6 +9381,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
 
 .emotion-136 {
   position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
 }
 
@@ -9045,16 +9419,24 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
   -webkit-flex-shrink: 0;
   -ms-flex-negative: 0;
   flex-shrink: 0;
-  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
-  transition: transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+  -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   fill: currentColor;
   font-size: 1.5rem;
   left: 0;
   position: absolute;
+  -webkit-transform: scale(0);
+  -moz-transform: scale(0);
+  -ms-transform: scale(0);
+  transform: scale(0);
+  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
+  transition: transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
   -webkit-transform: scale(1);
   -moz-transform: scale(1);
   -ms-transform: scale(1);
   transform: scale(1);
+  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+  transition: transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
 }
 
 .emotion-145 {
@@ -9068,8 +9450,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
   -webkit-flex-shrink: 0;
   -ms-flex-negative: 0;
   flex-shrink: 0;
-  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
-  transition: transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
+  -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   fill: currentColor;
   font-size: 1.5rem;
   left: 0;
@@ -9078,6 +9460,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
   -moz-transform: scale(0);
   -ms-transform: scale(0);
   transform: scale(0);
+  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
+  transition: transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
 }
 
 .emotion-191 {
@@ -9085,6 +9469,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
 }
 
 .emotion-192 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -9097,12 +9484,12 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
   position: relative;
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
-  background-color: var(--variant-containedBg);
+  background-color: transparent;
   outline: 0;
   border: 0;
   margin: 0;
-  border-radius: 4px;
-  padding: 6px 16px;
+  border-radius: 0;
+  padding: 0;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -9113,7 +9500,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: var(--variant-containedColor);
+  color: inherit;
   font-family: "Roboto","Helvetica","Arial",sans-serif;
   font-weight: 500;
   font-size: 0.875rem;
@@ -9121,14 +9508,21 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
   letter-spacing: 0.02857em;
   text-transform: uppercase;
   min-width: 64px;
-  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  padding: 6px 16px;
+  border: 0;
+  border-radius: 4px;
+  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  color: var(--variant-containedColor);
+  background-color: var(--variant-containedBg);
   box-shadow: 0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12);
   --variant-textColor: #1976d2;
   --variant-outlinedColor: #1976d2;
   --variant-outlinedBorder: rgba(25, 118, 210, 0.5);
   --variant-containedColor: #fff;
   --variant-containedBg: #1976d2;
+  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
 }
 
 .emotion-192::-moz-focus-inner {
@@ -10728,7 +11122,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
     <button
       className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary emotion-192"
       disabled={null}
-      id=":r14:"
       onBlur={[Function]}
       onContextMenu={[Function]}
       onDragLeave={[Function]}
@@ -10752,6 +11145,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
 
 exports[`Three even column grid renders person and address in three columns, no employment 1`] = `
 .emotion-0 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
@@ -10774,6 +11170,9 @@ exports[`Three even column grid renders person and address in three columns, no 
   flex-direction: row;
   min-width: 0;
   box-sizing: border-box;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
   -webkit-box-flex-wrap: wrap;
   -webkit-flex-wrap: wrap;
@@ -10846,6 +11245,9 @@ exports[`Three even column grid renders person and address in three columns, no 
 }
 
 .emotion-9 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
@@ -10866,23 +11268,29 @@ exports[`Three even column grid renders person and address in three columns, no 
   line-height: 1.4375em;
   letter-spacing: 0.00938em;
   padding: 0;
-  position: absolute;
+  position: relative;
   display: block;
   transform-origin: top left;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: calc(100% - 24px);
+  max-width: 100%;
+  position: absolute;
   left: 0;
   top: 0;
-  -webkit-transform: translate(14px, 16px) scale(1);
-  -moz-transform: translate(14px, 16px) scale(1);
-  -ms-transform: translate(14px, 16px) scale(1);
-  transform: translate(14px, 16px) scale(1);
+  -webkit-transform: translate(0, 20px) scale(1);
+  -moz-transform: translate(0, 20px) scale(1);
+  -ms-transform: translate(0, 20px) scale(1);
+  transform: translate(0, 20px) scale(1);
   -webkit-transition: color 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,-webkit-transform 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,max-width 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
   transition: color 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,transform 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,max-width 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
   z-index: 1;
   pointer-events: none;
+  -webkit-transform: translate(14px, 16px) scale(1);
+  -moz-transform: translate(14px, 16px) scale(1);
+  -ms-transform: translate(14px, 16px) scale(1);
+  transform: translate(14px, 16px) scale(1);
+  max-width: calc(100% - 24px);
 }
 
 .emotion-10.Mui-focused {
@@ -10911,11 +11319,15 @@ exports[`Three even column grid renders person and address in three columns, no 
   box-sizing: border-box;
   position: relative;
   cursor: text;
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
+  position: relative;
   border-radius: 4px;
 }
 
@@ -10954,7 +11366,7 @@ exports[`Three even column grid renders person and address in three columns, no 
   font: inherit;
   letter-spacing: inherit;
   color: currentColor;
-  padding: 16.5px 14px;
+  padding: 4px 0 5px;
   border: 0;
   box-sizing: content-box;
   background: none;
@@ -10968,6 +11380,7 @@ exports[`Three even column grid renders person and address in three columns, no 
   animation-name: mui-auto-fill-cancel;
   -webkit-animation-duration: 10ms;
   animation-duration: 10ms;
+  padding: 16.5px 14px;
 }
 
 .emotion-13::-webkit-input-placeholder {
@@ -11092,27 +11505,45 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-13:focus::-ms-input-
   line-height: 1.4375em;
   letter-spacing: 0.00938em;
   padding: 0;
-  position: absolute;
+  position: relative;
   display: block;
   transform-origin: top left;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: calc(133% - 32px);
+  max-width: 100%;
+  position: absolute;
   left: 0;
   top: 0;
-  -webkit-transform: translate(14px, -9px) scale(0.75);
-  -moz-transform: translate(14px, -9px) scale(0.75);
-  -ms-transform: translate(14px, -9px) scale(0.75);
-  transform: translate(14px, -9px) scale(0.75);
+  -webkit-transform: translate(0, 20px) scale(1);
+  -moz-transform: translate(0, 20px) scale(1);
+  -ms-transform: translate(0, 20px) scale(1);
+  transform: translate(0, 20px) scale(1);
+  -webkit-transform: translate(0, -1.5px) scale(0.75);
+  -moz-transform: translate(0, -1.5px) scale(0.75);
+  -ms-transform: translate(0, -1.5px) scale(0.75);
+  transform: translate(0, -1.5px) scale(0.75);
+  transform-origin: top left;
+  max-width: 133%;
   -webkit-transition: color 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,-webkit-transform 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,max-width 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
   transition: color 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,transform 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,max-width 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
   z-index: 1;
-  pointer-events: auto;
+  pointer-events: none;
+  -webkit-transform: translate(14px, 16px) scale(1);
+  -moz-transform: translate(14px, 16px) scale(1);
+  -ms-transform: translate(14px, 16px) scale(1);
+  transform: translate(14px, 16px) scale(1);
+  max-width: calc(100% - 24px);
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+  pointer-events: auto;
+  max-width: calc(133% - 32px);
+  -webkit-transform: translate(14px, -9px) scale(0.75);
+  -moz-transform: translate(14px, -9px) scale(0.75);
+  -ms-transform: translate(14px, -9px) scale(0.75);
+  transform: translate(14px, -9px) scale(0.75);
 }
 
 .emotion-36.Mui-focused {
@@ -11136,10 +11567,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-13:focus::-ms-input-
   height: 11px;
   font-size: 0.75em;
   visibility: hidden;
+  max-width: 0.01px;
+  -webkit-transition: max-width 50ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+  transition: max-width 50ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+  white-space: nowrap;
   max-width: 100%;
   -webkit-transition: max-width 100ms cubic-bezier(0.0, 0, 0.2, 1) 50ms;
   transition: max-width 100ms cubic-bezier(0.0, 0, 0.2, 1) 50ms;
-  white-space: nowrap;
 }
 
 .emotion-41>span {
@@ -11187,6 +11621,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-13:focus::-ms-input-
 }
 
 .emotion-46 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
@@ -11198,6 +11635,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-13:focus::-ms-input-
 }
 
 .emotion-47 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -11219,6 +11659,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-13:focus::-ms-input-
 }
 
 .emotion-48 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -11235,8 +11678,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-13:focus::-ms-input-
   outline: 0;
   border: 0;
   margin: 0;
-  border-radius: 50%;
-  padding: 9px;
+  border-radius: 0;
+  padding: 0;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -11247,6 +11690,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-13:focus::-ms-input-
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
+  color: inherit;
+  padding: 9px;
+  border-radius: 50%;
   color: rgba(0, 0, 0, 0.6);
 }
 
@@ -11363,12 +11809,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-13:focus::-ms-input-
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-  border-radius: 4px;
+  border-radius: 0;
   cursor: pointer;
+  border-radius: 4px;
   font: inherit;
   letter-spacing: inherit;
   color: currentColor;
-  padding: 16.5px 14px;
+  padding: 4px 0 5px;
   border: 0;
   box-sizing: content-box;
   background: none;
@@ -11382,6 +11829,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-13:focus::-ms-input-
   animation-name: mui-auto-fill-cancel;
   -webkit-animation-duration: 10ms;
   animation-duration: 10ms;
+  padding: 16.5px 14px;
 }
 
 .emotion-106:focus {
@@ -11516,10 +11964,11 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
   fill: currentColor;
   font-size: 1.5rem;
   position: absolute;
-  right: 7px;
+  right: 0;
   top: calc(50% - .5em);
   pointer-events: none;
   color: rgba(0, 0, 0, 0.54);
+  right: 7px;
 }
 
 .emotion-108.Mui-disabled {
@@ -11531,6 +11980,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
 }
 
 .emotion-113 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -11543,12 +11995,12 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
   position: relative;
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
-  background-color: var(--variant-containedBg);
+  background-color: transparent;
   outline: 0;
   border: 0;
   margin: 0;
-  border-radius: 4px;
-  padding: 6px 16px;
+  border-radius: 0;
+  padding: 0;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -11559,7 +12011,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: var(--variant-containedColor);
+  color: inherit;
   font-family: "Roboto","Helvetica","Arial",sans-serif;
   font-weight: 500;
   font-size: 0.875rem;
@@ -11567,14 +12019,21 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
   letter-spacing: 0.02857em;
   text-transform: uppercase;
   min-width: 64px;
-  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  padding: 6px 16px;
+  border: 0;
+  border-radius: 4px;
+  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  color: var(--variant-containedColor);
+  background-color: var(--variant-containedBg);
   box-shadow: 0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12);
   --variant-textColor: #1976d2;
   --variant-outlinedColor: #1976d2;
   --variant-outlinedBorder: rgba(25, 118, 210, 0.5);
   --variant-containedColor: #fff;
   --variant-containedBg: #1976d2;
+  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
 }
 
 .emotion-113::-moz-focus-inner {
@@ -12552,7 +13011,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
     <button
       className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary emotion-113"
       disabled={null}
-      id=":rj:"
       onBlur={[Function]}
       onContextMenu={[Function]}
       onDragLeave={[Function]}
@@ -12576,6 +13034,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
 
 exports[`Two even column grid renders person and address in two columns, no employment 1`] = `
 .emotion-0 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
@@ -12598,6 +13059,9 @@ exports[`Two even column grid renders person and address in two columns, no empl
   flex-direction: row;
   min-width: 0;
   box-sizing: border-box;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
   -webkit-box-flex-wrap: wrap;
   -webkit-flex-wrap: wrap;
@@ -12670,6 +13134,9 @@ exports[`Two even column grid renders person and address in two columns, no empl
 }
 
 .emotion-9 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
@@ -12690,23 +13157,29 @@ exports[`Two even column grid renders person and address in two columns, no empl
   line-height: 1.4375em;
   letter-spacing: 0.00938em;
   padding: 0;
-  position: absolute;
+  position: relative;
   display: block;
   transform-origin: top left;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: calc(100% - 24px);
+  max-width: 100%;
+  position: absolute;
   left: 0;
   top: 0;
-  -webkit-transform: translate(14px, 16px) scale(1);
-  -moz-transform: translate(14px, 16px) scale(1);
-  -ms-transform: translate(14px, 16px) scale(1);
-  transform: translate(14px, 16px) scale(1);
+  -webkit-transform: translate(0, 20px) scale(1);
+  -moz-transform: translate(0, 20px) scale(1);
+  -ms-transform: translate(0, 20px) scale(1);
+  transform: translate(0, 20px) scale(1);
   -webkit-transition: color 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,-webkit-transform 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,max-width 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
   transition: color 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,transform 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,max-width 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
   z-index: 1;
   pointer-events: none;
+  -webkit-transform: translate(14px, 16px) scale(1);
+  -moz-transform: translate(14px, 16px) scale(1);
+  -ms-transform: translate(14px, 16px) scale(1);
+  transform: translate(14px, 16px) scale(1);
+  max-width: calc(100% - 24px);
 }
 
 .emotion-10.Mui-focused {
@@ -12735,11 +13208,15 @@ exports[`Two even column grid renders person and address in two columns, no empl
   box-sizing: border-box;
   position: relative;
   cursor: text;
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
+  position: relative;
   border-radius: 4px;
 }
 
@@ -12778,7 +13255,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
   font: inherit;
   letter-spacing: inherit;
   color: currentColor;
-  padding: 16.5px 14px;
+  padding: 4px 0 5px;
   border: 0;
   box-sizing: content-box;
   background: none;
@@ -12792,6 +13269,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
   animation-name: mui-auto-fill-cancel;
   -webkit-animation-duration: 10ms;
   animation-duration: 10ms;
+  padding: 16.5px 14px;
 }
 
 .emotion-13::-webkit-input-placeholder {
@@ -12916,27 +13394,45 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-13:focus::-ms-input-
   line-height: 1.4375em;
   letter-spacing: 0.00938em;
   padding: 0;
-  position: absolute;
+  position: relative;
   display: block;
   transform-origin: top left;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: calc(133% - 32px);
+  max-width: 100%;
+  position: absolute;
   left: 0;
   top: 0;
-  -webkit-transform: translate(14px, -9px) scale(0.75);
-  -moz-transform: translate(14px, -9px) scale(0.75);
-  -ms-transform: translate(14px, -9px) scale(0.75);
-  transform: translate(14px, -9px) scale(0.75);
+  -webkit-transform: translate(0, 20px) scale(1);
+  -moz-transform: translate(0, 20px) scale(1);
+  -ms-transform: translate(0, 20px) scale(1);
+  transform: translate(0, 20px) scale(1);
+  -webkit-transform: translate(0, -1.5px) scale(0.75);
+  -moz-transform: translate(0, -1.5px) scale(0.75);
+  -ms-transform: translate(0, -1.5px) scale(0.75);
+  transform: translate(0, -1.5px) scale(0.75);
+  transform-origin: top left;
+  max-width: 133%;
   -webkit-transition: color 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,-webkit-transform 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,max-width 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
   transition: color 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,transform 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms,max-width 200ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
   z-index: 1;
-  pointer-events: auto;
+  pointer-events: none;
+  -webkit-transform: translate(14px, 16px) scale(1);
+  -moz-transform: translate(14px, 16px) scale(1);
+  -ms-transform: translate(14px, 16px) scale(1);
+  transform: translate(14px, 16px) scale(1);
+  max-width: calc(100% - 24px);
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+  pointer-events: auto;
+  max-width: calc(133% - 32px);
+  -webkit-transform: translate(14px, -9px) scale(0.75);
+  -moz-transform: translate(14px, -9px) scale(0.75);
+  -ms-transform: translate(14px, -9px) scale(0.75);
+  transform: translate(14px, -9px) scale(0.75);
 }
 
 .emotion-36.Mui-focused {
@@ -12960,10 +13456,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-13:focus::-ms-input-
   height: 11px;
   font-size: 0.75em;
   visibility: hidden;
+  max-width: 0.01px;
+  -webkit-transition: max-width 50ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+  transition: max-width 50ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+  white-space: nowrap;
   max-width: 100%;
   -webkit-transition: max-width 100ms cubic-bezier(0.0, 0, 0.2, 1) 50ms;
   transition: max-width 100ms cubic-bezier(0.0, 0, 0.2, 1) 50ms;
-  white-space: nowrap;
 }
 
 .emotion-41>span {
@@ -12998,6 +13497,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-13:focus::-ms-input-
 }
 
 .emotion-46 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
   -webkit-flex-direction: column;
   -ms-flex-direction: column;
@@ -13009,6 +13511,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-13:focus::-ms-input-
 }
 
 .emotion-47 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -13030,6 +13535,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-13:focus::-ms-input-
 }
 
 .emotion-48 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -13046,8 +13554,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-13:focus::-ms-input-
   outline: 0;
   border: 0;
   margin: 0;
-  border-radius: 50%;
-  padding: 9px;
+  border-radius: 0;
+  padding: 0;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -13058,6 +13566,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-13:focus::-ms-input-
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
+  color: inherit;
+  padding: 9px;
+  border-radius: 50%;
   color: rgba(0, 0, 0, 0.6);
 }
 
@@ -13161,12 +13672,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-13:focus::-ms-input-
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-  border-radius: 4px;
+  border-radius: 0;
   cursor: pointer;
+  border-radius: 4px;
   font: inherit;
   letter-spacing: inherit;
   color: currentColor;
-  padding: 16.5px 14px;
+  padding: 4px 0 5px;
   border: 0;
   box-sizing: content-box;
   background: none;
@@ -13180,6 +13692,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-13:focus::-ms-input-
   animation-name: mui-auto-fill-cancel;
   -webkit-animation-duration: 10ms;
   animation-duration: 10ms;
+  padding: 16.5px 14px;
 }
 
 .emotion-106:focus {
@@ -13314,10 +13827,11 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
   fill: currentColor;
   font-size: 1.5rem;
   position: absolute;
-  right: 7px;
+  right: 0;
   top: calc(50% - .5em);
   pointer-events: none;
   color: rgba(0, 0, 0, 0.54);
+  right: 7px;
 }
 
 .emotion-108.Mui-disabled {
@@ -13329,6 +13843,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
 }
 
 .emotion-113 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
   display: inline-flex;
   -webkit-align-items: center;
   -webkit-box-align: center;
@@ -13341,12 +13858,12 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
   position: relative;
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
-  background-color: var(--variant-containedBg);
+  background-color: transparent;
   outline: 0;
   border: 0;
   margin: 0;
-  border-radius: 4px;
-  padding: 6px 16px;
+  border-radius: 0;
+  padding: 0;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -13357,7 +13874,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
   -webkit-appearance: none;
   -webkit-text-decoration: none;
   text-decoration: none;
-  color: var(--variant-containedColor);
+  color: inherit;
   font-family: "Roboto","Helvetica","Arial",sans-serif;
   font-weight: 500;
   font-size: 0.875rem;
@@ -13365,14 +13882,21 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
   letter-spacing: 0.02857em;
   text-transform: uppercase;
   min-width: 64px;
-  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  padding: 6px 16px;
+  border: 0;
+  border-radius: 4px;
+  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  color: var(--variant-containedColor);
+  background-color: var(--variant-containedBg);
   box-shadow: 0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12);
   --variant-textColor: #1976d2;
   --variant-outlinedColor: #1976d2;
   --variant-outlinedBorder: rgba(25, 118, 210, 0.5);
   --variant-containedColor: #fff;
   --variant-containedBg: #1976d2;
+  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
 }
 
 .emotion-113::-moz-focus-inner {
@@ -14350,7 +14874,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
     <button
       className="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-colorPrimary emotion-113"
       disabled={null}
-      id=":r9:"
       onBlur={[Function]}
       onContextMenu={[Function]}
       onDragLeave={[Function]}

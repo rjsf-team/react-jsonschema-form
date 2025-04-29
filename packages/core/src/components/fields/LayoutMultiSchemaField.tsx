@@ -139,7 +139,7 @@ export default function LayoutMultiSchemaField<
     throw new Error('No selector field provided for the LayoutMultiSchemaField');
   }
   const selectedOption = get(formData, selectorField);
-  let optionSchema = get(enumOptions[0]?.schema, [PROPERTIES_KEY, selectorField]);
+  let optionSchema: S = get(enumOptions[0]?.schema, [PROPERTIES_KEY, selectorField], {}) as S;
   const option = getSelectedOption<S>(enumOptions, selectorField, selectedOption);
   // If the subschema doesn't declare a type, infer the type from the parent schema
   optionSchema = optionSchema?.type ? optionSchema : ({ ...optionSchema, type: option?.type || baseType } as S);

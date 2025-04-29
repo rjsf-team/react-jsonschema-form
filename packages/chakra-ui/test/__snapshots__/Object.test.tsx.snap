@@ -1,6 +1,39 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`object fields additionalProperties 1`] = `
+@layer recipes {
+  .emotion-0 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    width: var(--chakra-sizes-full);
+  }
+
+  .emotion-0>:not(style, [hidden])~:not(style, [hidden]) {
+    --space-y-reverse: 0;
+    margin-top: calc(var(--chakra-spacing-4) * calc(1 - var(--space-y-reverse)));
+    margin-bottom: calc(var(--chakra-spacing-4) * var(--space-y-reverse));
+  }
+}
+
+@layer recipes {
+  .emotion-1 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    width: var(--chakra-sizes-full);
+    gap: var(--chakra-spacing-4);
+  }
+}
+
 .emotion-2 {
   display: grid;
   gap: var(--chakra-spacing-6);
@@ -16,17 +49,255 @@ exports[`object fields additionalProperties 1`] = `
   gap: var(--chakra-spacing-2);
 }
 
+@layer recipes {
+  .emotion-6 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    width: 100%;
+    position: relative;
+    gap: var(--chakra-spacing-1\\.5);
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-align-items: flex-start;
+    -webkit-box-align: flex-start;
+    -ms-flex-align: flex-start;
+    align-items: flex-start;
+  }
+}
+
+@layer recipes {
+  .emotion-7 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    text-align: start;
+    font-size: var(--chakra-font-sizes-sm);
+    line-height: 1.25rem;
+    font-weight: var(--chakra-font-weights-medium);
+    gap: var(--chakra-spacing-1);
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+
+  .emotion-7:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+  }
+}
+
 .emotion-8 {
   margin-bottom: var(--chakra-spacing-1);
+}
+
+@layer recipes {
+  .emotion-8 {
+    width: 100%;
+    min-width: var(--input-height);
+    outline: 0;
+    position: relative;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    text-align: start;
+    border-radius: var(--chakra-radii-l2);
+    height: var(--input-height);
+    --focus-color: var(--chakra-colors-color-palette-focus-ring);
+    --error-color: var(--chakra-colors-border-error);
+    font-size: var(--chakra-font-sizes-sm);
+    line-height: 1.25rem;
+    padding-inline: var(--chakra-spacing-3);
+    --input-height: var(--chakra-sizes-10);
+    background: var(--chakra-colors-transparent);
+    --bg-currentcolor: var(--chakra-colors-transparent);
+    border-width: 1px;
+    border-color: var(--chakra-colors-border);
+    --focus-ring-color: var(--focus-color);
+  }
+
+  .emotion-8:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-8:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+    --focus-ring-color: var(--error-color);
+    border-color: var(--error-color);
+  }
+
+  .emotion-8:is(:focus-visible, [data-focus-visible]) {
+    outline-offset: 0px;
+    outline-width: var(--focus-ring-width, 1px);
+    outline-color: var(--focus-ring-color);
+    outline-style: var(--focus-ring-style, solid);
+    border-color: var(--focus-ring-color);
+  }
 }
 
 .emotion-12 {
   margin-bottom: var(--chakra-spacing-1);
 }
 
+@layer recipes {
+  .emotion-12 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    width: 100%;
+    position: relative;
+    gap: var(--chakra-spacing-1\\.5);
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-align-items: flex-start;
+    -webkit-box-align: flex-start;
+    -ms-flex-align: flex-start;
+    align-items: flex-start;
+  }
+}
+
+@layer recipes {
+  .emotion-14 {
+    width: 100%;
+    min-width: var(--input-height);
+    outline: 0;
+    position: relative;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    text-align: start;
+    border-radius: var(--chakra-radii-l2);
+    height: var(--input-height);
+    --focus-color: var(--chakra-colors-color-palette-focus-ring);
+    --error-color: var(--chakra-colors-border-error);
+    font-size: var(--chakra-font-sizes-sm);
+    line-height: 1.25rem;
+    padding-inline: var(--chakra-spacing-3);
+    --input-height: var(--chakra-sizes-10);
+    background: var(--chakra-colors-transparent);
+    --bg-currentcolor: var(--chakra-colors-transparent);
+    border-width: 1px;
+    border-color: var(--chakra-colors-border);
+    --focus-ring-color: var(--focus-color);
+  }
+
+  .emotion-14:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-14:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+    --focus-ring-color: var(--error-color);
+    border-color: var(--error-color);
+  }
+
+  .emotion-14:is(:focus-visible, [data-focus-visible]) {
+    outline-offset: 0px;
+    outline-width: var(--focus-ring-width, 1px);
+    outline-color: var(--focus-ring-color);
+    outline-style: var(--focus-ring-style, solid);
+    border-color: var(--focus-ring-color);
+  }
+}
+
 .emotion-16 {
   padding-inline: 0;
   padding-block: 0;
+}
+
+@layer recipes {
+  .emotion-16 {
+    display: -webkit-inline-box;
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    position: relative;
+    border-radius: var(--chakra-radii-l2);
+    white-space: nowrap;
+    vertical-align: middle;
+    border-width: 1px;
+    border-color: var(--chakra-colors-transparent);
+    cursor: var(--chakra-cursor-button);
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    outline: 0;
+    line-height: 1.25rem;
+    isolation: isolate;
+    font-weight: var(--chakra-font-weights-medium);
+    transition-property: background-color,border-color,color,fill,stroke,opacity,box-shadow,translate,transform;
+    transition-duration: var(--chakra-durations-moderate);
+    --focus-ring-color: var(--chakra-colors-color-palette-focus-ring);
+    height: var(--chakra-sizes-10);
+    min-width: var(--chakra-sizes-10);
+    font-size: var(--chakra-font-sizes-sm);
+    padding-inline: var(--chakra-spacing-4);
+    gap: var(--chakra-spacing-2);
+    background: var(--chakra-colors-color-palette-solid);
+    --bg-currentcolor: var(--chakra-colors-color-palette-solid);
+    color: var(--chakra-colors-color-palette-contrast);
+  }
+
+  .emotion-16:is(:focus-visible, [data-focus-visible]) {
+    outline-width: var(--focus-ring-width, 2px);
+    outline-offset: var(--focus-ring-offset, 2px);
+    outline-style: var(--focus-ring-style, solid);
+    outline-color: var(--focus-ring-color);
+  }
+
+  .emotion-16:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-16 :where(svg) {
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    width: var(--chakra-sizes-5);
+    height: var(--chakra-sizes-5);
+  }
+
+  .emotion-16:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+    --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+    background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+  }
+
+  @media (hover: hover) {
+    .emotion-16:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+      --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+      background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+      --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    }
+  }
 }
 
 .emotion-16 :where(svg) {
@@ -35,6 +306,90 @@ exports[`object fields additionalProperties 1`] = `
 
 .emotion-17 {
   justify-self: flex-end;
+}
+
+@layer recipes {
+  .emotion-18 {
+    display: -webkit-inline-box;
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    position: relative;
+    border-radius: var(--chakra-radii-l2);
+    white-space: nowrap;
+    vertical-align: middle;
+    border-width: 1px;
+    border-color: var(--chakra-colors-transparent);
+    cursor: var(--chakra-cursor-button);
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    outline: 0;
+    line-height: 1.25rem;
+    isolation: isolate;
+    font-weight: var(--chakra-font-weights-medium);
+    transition-property: background-color,border-color,color,fill,stroke,opacity,box-shadow,translate,transform;
+    transition-duration: var(--chakra-durations-moderate);
+    --focus-ring-color: var(--chakra-colors-color-palette-focus-ring);
+    height: var(--chakra-sizes-10);
+    min-width: var(--chakra-sizes-10);
+    font-size: var(--chakra-font-sizes-sm);
+    padding-inline: var(--chakra-spacing-4);
+    gap: var(--chakra-spacing-2);
+    background: var(--chakra-colors-color-palette-solid);
+    --bg-currentcolor: var(--chakra-colors-color-palette-solid);
+    color: var(--chakra-colors-color-palette-contrast);
+  }
+
+  .emotion-18:is(:focus-visible, [data-focus-visible]) {
+    outline-width: var(--focus-ring-width, 2px);
+    outline-offset: var(--focus-ring-offset, 2px);
+    outline-style: var(--focus-ring-style, solid);
+    outline-color: var(--focus-ring-color);
+  }
+
+  .emotion-18:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-18 :where(svg) {
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    width: var(--chakra-sizes-5);
+    height: var(--chakra-sizes-5);
+  }
+
+  .emotion-18:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+    --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+    background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+  }
+
+  @media (hover: hover) {
+    .emotion-18:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+      --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+      background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+      --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    }
+  }
 }
 
 .emotion-19 {
@@ -240,6 +595,39 @@ exports[`object fields additionalProperties 1`] = `
 `;
 
 exports[`object fields object 1`] = `
+@layer recipes {
+  .emotion-0 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    width: var(--chakra-sizes-full);
+  }
+
+  .emotion-0>:not(style, [hidden])~:not(style, [hidden]) {
+    --space-y-reverse: 0;
+    margin-top: calc(var(--chakra-spacing-4) * calc(1 - var(--space-y-reverse)));
+    margin-bottom: calc(var(--chakra-spacing-4) * var(--space-y-reverse));
+  }
+}
+
+@layer recipes {
+  .emotion-1 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    width: var(--chakra-sizes-full);
+    gap: var(--chakra-spacing-4);
+  }
+}
+
 .emotion-2 {
   display: grid;
   gap: var(--chakra-spacing-6);
@@ -250,8 +638,182 @@ exports[`object fields object 1`] = `
   margin-bottom: var(--chakra-spacing-1);
 }
 
+@layer recipes {
+  .emotion-6 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    width: 100%;
+    position: relative;
+    gap: var(--chakra-spacing-1\\.5);
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-align-items: flex-start;
+    -webkit-box-align: flex-start;
+    -ms-flex-align: flex-start;
+    align-items: flex-start;
+  }
+}
+
+@layer recipes {
+  .emotion-7 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    text-align: start;
+    font-size: var(--chakra-font-sizes-sm);
+    line-height: 1.25rem;
+    font-weight: var(--chakra-font-weights-medium);
+    gap: var(--chakra-spacing-1);
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+
+  .emotion-7:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+  }
+}
+
+@layer recipes {
+  .emotion-8 {
+    width: 100%;
+    min-width: var(--input-height);
+    outline: 0;
+    position: relative;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    text-align: start;
+    border-radius: var(--chakra-radii-l2);
+    height: var(--input-height);
+    --focus-color: var(--chakra-colors-color-palette-focus-ring);
+    --error-color: var(--chakra-colors-border-error);
+    font-size: var(--chakra-font-sizes-sm);
+    line-height: 1.25rem;
+    padding-inline: var(--chakra-spacing-3);
+    --input-height: var(--chakra-sizes-10);
+    background: var(--chakra-colors-transparent);
+    --bg-currentcolor: var(--chakra-colors-transparent);
+    border-width: 1px;
+    border-color: var(--chakra-colors-border);
+    --focus-ring-color: var(--focus-color);
+  }
+
+  .emotion-8:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-8:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+    --focus-ring-color: var(--error-color);
+    border-color: var(--error-color);
+  }
+
+  .emotion-8:is(:focus-visible, [data-focus-visible]) {
+    outline-offset: 0px;
+    outline-width: var(--focus-ring-width, 1px);
+    outline-color: var(--focus-ring-color);
+    outline-style: var(--focus-ring-style, solid);
+    border-color: var(--focus-ring-color);
+  }
+}
+
 .emotion-15 {
   margin-top: var(--chakra-spacing-3);
+}
+
+@layer recipes {
+  .emotion-16 {
+    display: -webkit-inline-box;
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    position: relative;
+    border-radius: var(--chakra-radii-l2);
+    white-space: nowrap;
+    vertical-align: middle;
+    border-width: 1px;
+    border-color: var(--chakra-colors-transparent);
+    cursor: var(--chakra-cursor-button);
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    outline: 0;
+    line-height: 1.25rem;
+    isolation: isolate;
+    font-weight: var(--chakra-font-weights-medium);
+    transition-property: background-color,border-color,color,fill,stroke,opacity,box-shadow,translate,transform;
+    transition-duration: var(--chakra-durations-moderate);
+    --focus-ring-color: var(--chakra-colors-color-palette-focus-ring);
+    height: var(--chakra-sizes-10);
+    min-width: var(--chakra-sizes-10);
+    font-size: var(--chakra-font-sizes-sm);
+    padding-inline: var(--chakra-spacing-4);
+    gap: var(--chakra-spacing-2);
+    background: var(--chakra-colors-color-palette-solid);
+    --bg-currentcolor: var(--chakra-colors-color-palette-solid);
+    color: var(--chakra-colors-color-palette-contrast);
+  }
+
+  .emotion-16:is(:focus-visible, [data-focus-visible]) {
+    outline-width: var(--focus-ring-width, 2px);
+    outline-offset: var(--focus-ring-offset, 2px);
+    outline-style: var(--focus-ring-style, solid);
+    outline-color: var(--focus-ring-color);
+  }
+
+  .emotion-16:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-16 :where(svg) {
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    width: var(--chakra-sizes-5);
+    height: var(--chakra-sizes-5);
+  }
+
+  .emotion-16:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+    --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+    background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+  }
+
+  @media (hover: hover) {
+    .emotion-16:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+      --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+      background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+      --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    }
+  }
 }
 
 <form
@@ -402,6 +964,39 @@ exports[`object fields object 1`] = `
 `;
 
 exports[`object fields show add button and fields if additionalProperties is true and not an object 1`] = `
+@layer recipes {
+  .emotion-0 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    width: var(--chakra-sizes-full);
+  }
+
+  .emotion-0>:not(style, [hidden])~:not(style, [hidden]) {
+    --space-y-reverse: 0;
+    margin-top: calc(var(--chakra-spacing-4) * calc(1 - var(--space-y-reverse)));
+    margin-bottom: calc(var(--chakra-spacing-4) * var(--space-y-reverse));
+  }
+}
+
+@layer recipes {
+  .emotion-1 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    width: var(--chakra-sizes-full);
+    gap: var(--chakra-spacing-4);
+  }
+}
+
 .emotion-2 {
   display: grid;
   gap: var(--chakra-spacing-6);
@@ -417,17 +1012,255 @@ exports[`object fields show add button and fields if additionalProperties is tru
   gap: var(--chakra-spacing-2);
 }
 
+@layer recipes {
+  .emotion-6 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    width: 100%;
+    position: relative;
+    gap: var(--chakra-spacing-1\\.5);
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-align-items: flex-start;
+    -webkit-box-align: flex-start;
+    -ms-flex-align: flex-start;
+    align-items: flex-start;
+  }
+}
+
+@layer recipes {
+  .emotion-7 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    text-align: start;
+    font-size: var(--chakra-font-sizes-sm);
+    line-height: 1.25rem;
+    font-weight: var(--chakra-font-weights-medium);
+    gap: var(--chakra-spacing-1);
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+
+  .emotion-7:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+  }
+}
+
 .emotion-8 {
   margin-bottom: var(--chakra-spacing-1);
+}
+
+@layer recipes {
+  .emotion-8 {
+    width: 100%;
+    min-width: var(--input-height);
+    outline: 0;
+    position: relative;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    text-align: start;
+    border-radius: var(--chakra-radii-l2);
+    height: var(--input-height);
+    --focus-color: var(--chakra-colors-color-palette-focus-ring);
+    --error-color: var(--chakra-colors-border-error);
+    font-size: var(--chakra-font-sizes-sm);
+    line-height: 1.25rem;
+    padding-inline: var(--chakra-spacing-3);
+    --input-height: var(--chakra-sizes-10);
+    background: var(--chakra-colors-transparent);
+    --bg-currentcolor: var(--chakra-colors-transparent);
+    border-width: 1px;
+    border-color: var(--chakra-colors-border);
+    --focus-ring-color: var(--focus-color);
+  }
+
+  .emotion-8:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-8:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+    --focus-ring-color: var(--error-color);
+    border-color: var(--error-color);
+  }
+
+  .emotion-8:is(:focus-visible, [data-focus-visible]) {
+    outline-offset: 0px;
+    outline-width: var(--focus-ring-width, 1px);
+    outline-color: var(--focus-ring-color);
+    outline-style: var(--focus-ring-style, solid);
+    border-color: var(--focus-ring-color);
+  }
 }
 
 .emotion-12 {
   margin-bottom: var(--chakra-spacing-1);
 }
 
+@layer recipes {
+  .emotion-12 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    width: 100%;
+    position: relative;
+    gap: var(--chakra-spacing-1\\.5);
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-align-items: flex-start;
+    -webkit-box-align: flex-start;
+    -ms-flex-align: flex-start;
+    align-items: flex-start;
+  }
+}
+
+@layer recipes {
+  .emotion-14 {
+    width: 100%;
+    min-width: var(--input-height);
+    outline: 0;
+    position: relative;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    text-align: start;
+    border-radius: var(--chakra-radii-l2);
+    height: var(--input-height);
+    --focus-color: var(--chakra-colors-color-palette-focus-ring);
+    --error-color: var(--chakra-colors-border-error);
+    font-size: var(--chakra-font-sizes-sm);
+    line-height: 1.25rem;
+    padding-inline: var(--chakra-spacing-3);
+    --input-height: var(--chakra-sizes-10);
+    background: var(--chakra-colors-transparent);
+    --bg-currentcolor: var(--chakra-colors-transparent);
+    border-width: 1px;
+    border-color: var(--chakra-colors-border);
+    --focus-ring-color: var(--focus-color);
+  }
+
+  .emotion-14:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-14:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+    --focus-ring-color: var(--error-color);
+    border-color: var(--error-color);
+  }
+
+  .emotion-14:is(:focus-visible, [data-focus-visible]) {
+    outline-offset: 0px;
+    outline-width: var(--focus-ring-width, 1px);
+    outline-color: var(--focus-ring-color);
+    outline-style: var(--focus-ring-style, solid);
+    border-color: var(--focus-ring-color);
+  }
+}
+
 .emotion-16 {
   padding-inline: 0;
   padding-block: 0;
+}
+
+@layer recipes {
+  .emotion-16 {
+    display: -webkit-inline-box;
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    position: relative;
+    border-radius: var(--chakra-radii-l2);
+    white-space: nowrap;
+    vertical-align: middle;
+    border-width: 1px;
+    border-color: var(--chakra-colors-transparent);
+    cursor: var(--chakra-cursor-button);
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    outline: 0;
+    line-height: 1.25rem;
+    isolation: isolate;
+    font-weight: var(--chakra-font-weights-medium);
+    transition-property: background-color,border-color,color,fill,stroke,opacity,box-shadow,translate,transform;
+    transition-duration: var(--chakra-durations-moderate);
+    --focus-ring-color: var(--chakra-colors-color-palette-focus-ring);
+    height: var(--chakra-sizes-10);
+    min-width: var(--chakra-sizes-10);
+    font-size: var(--chakra-font-sizes-sm);
+    padding-inline: var(--chakra-spacing-4);
+    gap: var(--chakra-spacing-2);
+    background: var(--chakra-colors-color-palette-solid);
+    --bg-currentcolor: var(--chakra-colors-color-palette-solid);
+    color: var(--chakra-colors-color-palette-contrast);
+  }
+
+  .emotion-16:is(:focus-visible, [data-focus-visible]) {
+    outline-width: var(--focus-ring-width, 2px);
+    outline-offset: var(--focus-ring-offset, 2px);
+    outline-style: var(--focus-ring-style, solid);
+    outline-color: var(--focus-ring-color);
+  }
+
+  .emotion-16:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-16 :where(svg) {
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    width: var(--chakra-sizes-5);
+    height: var(--chakra-sizes-5);
+  }
+
+  .emotion-16:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+    --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+    background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+  }
+
+  @media (hover: hover) {
+    .emotion-16:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+      --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+      background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+      --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    }
+  }
 }
 
 .emotion-16 :where(svg) {
@@ -436,6 +1269,90 @@ exports[`object fields show add button and fields if additionalProperties is tru
 
 .emotion-17 {
   justify-self: flex-end;
+}
+
+@layer recipes {
+  .emotion-18 {
+    display: -webkit-inline-box;
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    position: relative;
+    border-radius: var(--chakra-radii-l2);
+    white-space: nowrap;
+    vertical-align: middle;
+    border-width: 1px;
+    border-color: var(--chakra-colors-transparent);
+    cursor: var(--chakra-cursor-button);
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    outline: 0;
+    line-height: 1.25rem;
+    isolation: isolate;
+    font-weight: var(--chakra-font-weights-medium);
+    transition-property: background-color,border-color,color,fill,stroke,opacity,box-shadow,translate,transform;
+    transition-duration: var(--chakra-durations-moderate);
+    --focus-ring-color: var(--chakra-colors-color-palette-focus-ring);
+    height: var(--chakra-sizes-10);
+    min-width: var(--chakra-sizes-10);
+    font-size: var(--chakra-font-sizes-sm);
+    padding-inline: var(--chakra-spacing-4);
+    gap: var(--chakra-spacing-2);
+    background: var(--chakra-colors-color-palette-solid);
+    --bg-currentcolor: var(--chakra-colors-color-palette-solid);
+    color: var(--chakra-colors-color-palette-contrast);
+  }
+
+  .emotion-18:is(:focus-visible, [data-focus-visible]) {
+    outline-width: var(--focus-ring-width, 2px);
+    outline-offset: var(--focus-ring-offset, 2px);
+    outline-style: var(--focus-ring-style, solid);
+    outline-color: var(--focus-ring-color);
+  }
+
+  .emotion-18:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-18 :where(svg) {
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    width: var(--chakra-sizes-5);
+    height: var(--chakra-sizes-5);
+  }
+
+  .emotion-18:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+    --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+    background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+  }
+
+  @media (hover: hover) {
+    .emotion-18:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+      --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+      background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+      --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    }
+  }
 }
 
 .emotion-19 {
@@ -641,9 +1558,61 @@ exports[`object fields show add button and fields if additionalProperties is tru
 `;
 
 exports[`object fields with title and description additionalProperties 1`] = `
+@layer recipes {
+  .emotion-0 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    width: var(--chakra-sizes-full);
+  }
+
+  .emotion-0>:not(style, [hidden])~:not(style, [hidden]) {
+    --space-y-reverse: 0;
+    margin-top: calc(var(--chakra-spacing-4) * calc(1 - var(--space-y-reverse)));
+    margin-bottom: calc(var(--chakra-spacing-4) * var(--space-y-reverse));
+  }
+}
+
+@layer recipes {
+  .emotion-1 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    width: var(--chakra-sizes-full);
+    gap: var(--chakra-spacing-4);
+  }
+}
+
 .emotion-2 {
   margin-top: var(--chakra-spacing-1);
   margin-bottom: var(--chakra-spacing-4);
+}
+
+@layer recipes {
+  .emotion-3 {
+    font-family: var(--chakra-fonts-heading);
+    font-weight: var(--chakra-font-weights-semibold);
+    font-size: var(--chakra-font-sizes-xl);
+    line-height: 1.875rem;
+  }
+}
+
+@layer recipes {
+  .emotion-4 {
+    display: block;
+    border-color: var(--chakra-colors-border);
+    --separator-thickness: 1px;
+    border-style: solid;
+    border-top-width: var(--separator-thickness);
+  }
 }
 
 .emotion-5 {
@@ -665,17 +1634,255 @@ exports[`object fields with title and description additionalProperties 1`] = `
   gap: var(--chakra-spacing-2);
 }
 
+@layer recipes {
+  .emotion-10 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    width: 100%;
+    position: relative;
+    gap: var(--chakra-spacing-1\\.5);
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-align-items: flex-start;
+    -webkit-box-align: flex-start;
+    -ms-flex-align: flex-start;
+    align-items: flex-start;
+  }
+}
+
+@layer recipes {
+  .emotion-11 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    text-align: start;
+    font-size: var(--chakra-font-sizes-sm);
+    line-height: 1.25rem;
+    font-weight: var(--chakra-font-weights-medium);
+    gap: var(--chakra-spacing-1);
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+
+  .emotion-11:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+  }
+}
+
 .emotion-12 {
   margin-bottom: var(--chakra-spacing-1);
+}
+
+@layer recipes {
+  .emotion-12 {
+    width: 100%;
+    min-width: var(--input-height);
+    outline: 0;
+    position: relative;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    text-align: start;
+    border-radius: var(--chakra-radii-l2);
+    height: var(--input-height);
+    --focus-color: var(--chakra-colors-color-palette-focus-ring);
+    --error-color: var(--chakra-colors-border-error);
+    font-size: var(--chakra-font-sizes-sm);
+    line-height: 1.25rem;
+    padding-inline: var(--chakra-spacing-3);
+    --input-height: var(--chakra-sizes-10);
+    background: var(--chakra-colors-transparent);
+    --bg-currentcolor: var(--chakra-colors-transparent);
+    border-width: 1px;
+    border-color: var(--chakra-colors-border);
+    --focus-ring-color: var(--focus-color);
+  }
+
+  .emotion-12:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-12:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+    --focus-ring-color: var(--error-color);
+    border-color: var(--error-color);
+  }
+
+  .emotion-12:is(:focus-visible, [data-focus-visible]) {
+    outline-offset: 0px;
+    outline-width: var(--focus-ring-width, 1px);
+    outline-color: var(--focus-ring-color);
+    outline-style: var(--focus-ring-style, solid);
+    border-color: var(--focus-ring-color);
+  }
 }
 
 .emotion-16 {
   margin-bottom: var(--chakra-spacing-1);
 }
 
+@layer recipes {
+  .emotion-16 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    width: 100%;
+    position: relative;
+    gap: var(--chakra-spacing-1\\.5);
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-align-items: flex-start;
+    -webkit-box-align: flex-start;
+    -ms-flex-align: flex-start;
+    align-items: flex-start;
+  }
+}
+
+@layer recipes {
+  .emotion-18 {
+    width: 100%;
+    min-width: var(--input-height);
+    outline: 0;
+    position: relative;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    text-align: start;
+    border-radius: var(--chakra-radii-l2);
+    height: var(--input-height);
+    --focus-color: var(--chakra-colors-color-palette-focus-ring);
+    --error-color: var(--chakra-colors-border-error);
+    font-size: var(--chakra-font-sizes-sm);
+    line-height: 1.25rem;
+    padding-inline: var(--chakra-spacing-3);
+    --input-height: var(--chakra-sizes-10);
+    background: var(--chakra-colors-transparent);
+    --bg-currentcolor: var(--chakra-colors-transparent);
+    border-width: 1px;
+    border-color: var(--chakra-colors-border);
+    --focus-ring-color: var(--focus-color);
+  }
+
+  .emotion-18:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-18:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+    --focus-ring-color: var(--error-color);
+    border-color: var(--error-color);
+  }
+
+  .emotion-18:is(:focus-visible, [data-focus-visible]) {
+    outline-offset: 0px;
+    outline-width: var(--focus-ring-width, 1px);
+    outline-color: var(--focus-ring-color);
+    outline-style: var(--focus-ring-style, solid);
+    border-color: var(--focus-ring-color);
+  }
+}
+
 .emotion-20 {
   padding-inline: 0;
   padding-block: 0;
+}
+
+@layer recipes {
+  .emotion-20 {
+    display: -webkit-inline-box;
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    position: relative;
+    border-radius: var(--chakra-radii-l2);
+    white-space: nowrap;
+    vertical-align: middle;
+    border-width: 1px;
+    border-color: var(--chakra-colors-transparent);
+    cursor: var(--chakra-cursor-button);
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    outline: 0;
+    line-height: 1.25rem;
+    isolation: isolate;
+    font-weight: var(--chakra-font-weights-medium);
+    transition-property: background-color,border-color,color,fill,stroke,opacity,box-shadow,translate,transform;
+    transition-duration: var(--chakra-durations-moderate);
+    --focus-ring-color: var(--chakra-colors-color-palette-focus-ring);
+    height: var(--chakra-sizes-10);
+    min-width: var(--chakra-sizes-10);
+    font-size: var(--chakra-font-sizes-sm);
+    padding-inline: var(--chakra-spacing-4);
+    gap: var(--chakra-spacing-2);
+    background: var(--chakra-colors-color-palette-solid);
+    --bg-currentcolor: var(--chakra-colors-color-palette-solid);
+    color: var(--chakra-colors-color-palette-contrast);
+  }
+
+  .emotion-20:is(:focus-visible, [data-focus-visible]) {
+    outline-width: var(--focus-ring-width, 2px);
+    outline-offset: var(--focus-ring-offset, 2px);
+    outline-style: var(--focus-ring-style, solid);
+    outline-color: var(--focus-ring-color);
+  }
+
+  .emotion-20:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-20 :where(svg) {
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    width: var(--chakra-sizes-5);
+    height: var(--chakra-sizes-5);
+  }
+
+  .emotion-20:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+    --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+    background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+  }
+
+  @media (hover: hover) {
+    .emotion-20:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+      --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+      background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+      --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    }
+  }
 }
 
 .emotion-20 :where(svg) {
@@ -684,6 +1891,90 @@ exports[`object fields with title and description additionalProperties 1`] = `
 
 .emotion-21 {
   justify-self: flex-end;
+}
+
+@layer recipes {
+  .emotion-22 {
+    display: -webkit-inline-box;
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    position: relative;
+    border-radius: var(--chakra-radii-l2);
+    white-space: nowrap;
+    vertical-align: middle;
+    border-width: 1px;
+    border-color: var(--chakra-colors-transparent);
+    cursor: var(--chakra-cursor-button);
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    outline: 0;
+    line-height: 1.25rem;
+    isolation: isolate;
+    font-weight: var(--chakra-font-weights-medium);
+    transition-property: background-color,border-color,color,fill,stroke,opacity,box-shadow,translate,transform;
+    transition-duration: var(--chakra-durations-moderate);
+    --focus-ring-color: var(--chakra-colors-color-palette-focus-ring);
+    height: var(--chakra-sizes-10);
+    min-width: var(--chakra-sizes-10);
+    font-size: var(--chakra-font-sizes-sm);
+    padding-inline: var(--chakra-spacing-4);
+    gap: var(--chakra-spacing-2);
+    background: var(--chakra-colors-color-palette-solid);
+    --bg-currentcolor: var(--chakra-colors-color-palette-solid);
+    color: var(--chakra-colors-color-palette-contrast);
+  }
+
+  .emotion-22:is(:focus-visible, [data-focus-visible]) {
+    outline-width: var(--focus-ring-width, 2px);
+    outline-offset: var(--focus-ring-offset, 2px);
+    outline-style: var(--focus-ring-style, solid);
+    outline-color: var(--focus-ring-color);
+  }
+
+  .emotion-22:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-22 :where(svg) {
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    width: var(--chakra-sizes-5);
+    height: var(--chakra-sizes-5);
+  }
+
+  .emotion-22:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+    --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+    background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+  }
+
+  @media (hover: hover) {
+    .emotion-22:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+      --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+      background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+      --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    }
+  }
 }
 
 .emotion-23 {
@@ -910,9 +2201,61 @@ exports[`object fields with title and description additionalProperties 1`] = `
 `;
 
 exports[`object fields with title and description from both additionalProperties 1`] = `
+@layer recipes {
+  .emotion-0 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    width: var(--chakra-sizes-full);
+  }
+
+  .emotion-0>:not(style, [hidden])~:not(style, [hidden]) {
+    --space-y-reverse: 0;
+    margin-top: calc(var(--chakra-spacing-4) * calc(1 - var(--space-y-reverse)));
+    margin-bottom: calc(var(--chakra-spacing-4) * var(--space-y-reverse));
+  }
+}
+
+@layer recipes {
+  .emotion-1 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    width: var(--chakra-sizes-full);
+    gap: var(--chakra-spacing-4);
+  }
+}
+
 .emotion-2 {
   margin-top: var(--chakra-spacing-1);
   margin-bottom: var(--chakra-spacing-4);
+}
+
+@layer recipes {
+  .emotion-3 {
+    font-family: var(--chakra-fonts-heading);
+    font-weight: var(--chakra-font-weights-semibold);
+    font-size: var(--chakra-font-sizes-xl);
+    line-height: 1.875rem;
+  }
+}
+
+@layer recipes {
+  .emotion-4 {
+    display: block;
+    border-color: var(--chakra-colors-border);
+    --separator-thickness: 1px;
+    border-style: solid;
+    border-top-width: var(--separator-thickness);
+  }
 }
 
 .emotion-5 {
@@ -934,17 +2277,255 @@ exports[`object fields with title and description from both additionalProperties
   gap: var(--chakra-spacing-2);
 }
 
+@layer recipes {
+  .emotion-10 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    width: 100%;
+    position: relative;
+    gap: var(--chakra-spacing-1\\.5);
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-align-items: flex-start;
+    -webkit-box-align: flex-start;
+    -ms-flex-align: flex-start;
+    align-items: flex-start;
+  }
+}
+
+@layer recipes {
+  .emotion-11 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    text-align: start;
+    font-size: var(--chakra-font-sizes-sm);
+    line-height: 1.25rem;
+    font-weight: var(--chakra-font-weights-medium);
+    gap: var(--chakra-spacing-1);
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+
+  .emotion-11:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+  }
+}
+
 .emotion-12 {
   margin-bottom: var(--chakra-spacing-1);
+}
+
+@layer recipes {
+  .emotion-12 {
+    width: 100%;
+    min-width: var(--input-height);
+    outline: 0;
+    position: relative;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    text-align: start;
+    border-radius: var(--chakra-radii-l2);
+    height: var(--input-height);
+    --focus-color: var(--chakra-colors-color-palette-focus-ring);
+    --error-color: var(--chakra-colors-border-error);
+    font-size: var(--chakra-font-sizes-sm);
+    line-height: 1.25rem;
+    padding-inline: var(--chakra-spacing-3);
+    --input-height: var(--chakra-sizes-10);
+    background: var(--chakra-colors-transparent);
+    --bg-currentcolor: var(--chakra-colors-transparent);
+    border-width: 1px;
+    border-color: var(--chakra-colors-border);
+    --focus-ring-color: var(--focus-color);
+  }
+
+  .emotion-12:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-12:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+    --focus-ring-color: var(--error-color);
+    border-color: var(--error-color);
+  }
+
+  .emotion-12:is(:focus-visible, [data-focus-visible]) {
+    outline-offset: 0px;
+    outline-width: var(--focus-ring-width, 1px);
+    outline-color: var(--focus-ring-color);
+    outline-style: var(--focus-ring-style, solid);
+    border-color: var(--focus-ring-color);
+  }
 }
 
 .emotion-16 {
   margin-bottom: var(--chakra-spacing-1);
 }
 
+@layer recipes {
+  .emotion-16 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    width: 100%;
+    position: relative;
+    gap: var(--chakra-spacing-1\\.5);
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-align-items: flex-start;
+    -webkit-box-align: flex-start;
+    -ms-flex-align: flex-start;
+    align-items: flex-start;
+  }
+}
+
+@layer recipes {
+  .emotion-18 {
+    width: 100%;
+    min-width: var(--input-height);
+    outline: 0;
+    position: relative;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    text-align: start;
+    border-radius: var(--chakra-radii-l2);
+    height: var(--input-height);
+    --focus-color: var(--chakra-colors-color-palette-focus-ring);
+    --error-color: var(--chakra-colors-border-error);
+    font-size: var(--chakra-font-sizes-sm);
+    line-height: 1.25rem;
+    padding-inline: var(--chakra-spacing-3);
+    --input-height: var(--chakra-sizes-10);
+    background: var(--chakra-colors-transparent);
+    --bg-currentcolor: var(--chakra-colors-transparent);
+    border-width: 1px;
+    border-color: var(--chakra-colors-border);
+    --focus-ring-color: var(--focus-color);
+  }
+
+  .emotion-18:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-18:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+    --focus-ring-color: var(--error-color);
+    border-color: var(--error-color);
+  }
+
+  .emotion-18:is(:focus-visible, [data-focus-visible]) {
+    outline-offset: 0px;
+    outline-width: var(--focus-ring-width, 1px);
+    outline-color: var(--focus-ring-color);
+    outline-style: var(--focus-ring-style, solid);
+    border-color: var(--focus-ring-color);
+  }
+}
+
 .emotion-20 {
   padding-inline: 0;
   padding-block: 0;
+}
+
+@layer recipes {
+  .emotion-20 {
+    display: -webkit-inline-box;
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    position: relative;
+    border-radius: var(--chakra-radii-l2);
+    white-space: nowrap;
+    vertical-align: middle;
+    border-width: 1px;
+    border-color: var(--chakra-colors-transparent);
+    cursor: var(--chakra-cursor-button);
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    outline: 0;
+    line-height: 1.25rem;
+    isolation: isolate;
+    font-weight: var(--chakra-font-weights-medium);
+    transition-property: background-color,border-color,color,fill,stroke,opacity,box-shadow,translate,transform;
+    transition-duration: var(--chakra-durations-moderate);
+    --focus-ring-color: var(--chakra-colors-color-palette-focus-ring);
+    height: var(--chakra-sizes-10);
+    min-width: var(--chakra-sizes-10);
+    font-size: var(--chakra-font-sizes-sm);
+    padding-inline: var(--chakra-spacing-4);
+    gap: var(--chakra-spacing-2);
+    background: var(--chakra-colors-color-palette-solid);
+    --bg-currentcolor: var(--chakra-colors-color-palette-solid);
+    color: var(--chakra-colors-color-palette-contrast);
+  }
+
+  .emotion-20:is(:focus-visible, [data-focus-visible]) {
+    outline-width: var(--focus-ring-width, 2px);
+    outline-offset: var(--focus-ring-offset, 2px);
+    outline-style: var(--focus-ring-style, solid);
+    outline-color: var(--focus-ring-color);
+  }
+
+  .emotion-20:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-20 :where(svg) {
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    width: var(--chakra-sizes-5);
+    height: var(--chakra-sizes-5);
+  }
+
+  .emotion-20:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+    --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+    background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+  }
+
+  @media (hover: hover) {
+    .emotion-20:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+      --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+      background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+      --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    }
+  }
 }
 
 .emotion-20 :where(svg) {
@@ -953,6 +2534,90 @@ exports[`object fields with title and description from both additionalProperties
 
 .emotion-21 {
   justify-self: flex-end;
+}
+
+@layer recipes {
+  .emotion-22 {
+    display: -webkit-inline-box;
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    position: relative;
+    border-radius: var(--chakra-radii-l2);
+    white-space: nowrap;
+    vertical-align: middle;
+    border-width: 1px;
+    border-color: var(--chakra-colors-transparent);
+    cursor: var(--chakra-cursor-button);
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    outline: 0;
+    line-height: 1.25rem;
+    isolation: isolate;
+    font-weight: var(--chakra-font-weights-medium);
+    transition-property: background-color,border-color,color,fill,stroke,opacity,box-shadow,translate,transform;
+    transition-duration: var(--chakra-durations-moderate);
+    --focus-ring-color: var(--chakra-colors-color-palette-focus-ring);
+    height: var(--chakra-sizes-10);
+    min-width: var(--chakra-sizes-10);
+    font-size: var(--chakra-font-sizes-sm);
+    padding-inline: var(--chakra-spacing-4);
+    gap: var(--chakra-spacing-2);
+    background: var(--chakra-colors-color-palette-solid);
+    --bg-currentcolor: var(--chakra-colors-color-palette-solid);
+    color: var(--chakra-colors-color-palette-contrast);
+  }
+
+  .emotion-22:is(:focus-visible, [data-focus-visible]) {
+    outline-width: var(--focus-ring-width, 2px);
+    outline-offset: var(--focus-ring-offset, 2px);
+    outline-style: var(--focus-ring-style, solid);
+    outline-color: var(--focus-ring-color);
+  }
+
+  .emotion-22:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-22 :where(svg) {
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    width: var(--chakra-sizes-5);
+    height: var(--chakra-sizes-5);
+  }
+
+  .emotion-22:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+    --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+    background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+  }
+
+  @media (hover: hover) {
+    .emotion-22:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+      --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+      background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+      --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    }
+  }
 }
 
 .emotion-23 {
@@ -1179,9 +2844,61 @@ exports[`object fields with title and description from both additionalProperties
 `;
 
 exports[`object fields with title and description from both object 1`] = `
+@layer recipes {
+  .emotion-0 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    width: var(--chakra-sizes-full);
+  }
+
+  .emotion-0>:not(style, [hidden])~:not(style, [hidden]) {
+    --space-y-reverse: 0;
+    margin-top: calc(var(--chakra-spacing-4) * calc(1 - var(--space-y-reverse)));
+    margin-bottom: calc(var(--chakra-spacing-4) * var(--space-y-reverse));
+  }
+}
+
+@layer recipes {
+  .emotion-1 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    width: var(--chakra-sizes-full);
+    gap: var(--chakra-spacing-4);
+  }
+}
+
 .emotion-2 {
   margin-top: var(--chakra-spacing-1);
   margin-bottom: var(--chakra-spacing-4);
+}
+
+@layer recipes {
+  .emotion-3 {
+    font-family: var(--chakra-fonts-heading);
+    font-weight: var(--chakra-font-weights-semibold);
+    font-size: var(--chakra-font-sizes-xl);
+    line-height: 1.875rem;
+  }
+}
+
+@layer recipes {
+  .emotion-4 {
+    display: block;
+    border-color: var(--chakra-colors-border);
+    --separator-thickness: 1px;
+    border-style: solid;
+    border-top-width: var(--separator-thickness);
+  }
 }
 
 .emotion-5 {
@@ -1198,12 +2915,199 @@ exports[`object fields with title and description from both object 1`] = `
   margin-top: var(--chakra-spacing-2);
 }
 
+@layer recipes {
+  .emotion-9 {
+    color: var(--chakra-colors-fg);
+    font-weight: var(--chakra-font-weights-medium);
+    font-size: var(--chakra-font-sizes-sm);
+    line-height: 1.25rem;
+  }
+
+  .emotion-9:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+  }
+}
+
 .emotion-12 {
   margin-bottom: var(--chakra-spacing-1);
 }
 
+@layer recipes {
+  .emotion-12 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    width: 100%;
+    position: relative;
+    gap: var(--chakra-spacing-1\\.5);
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-align-items: flex-start;
+    -webkit-box-align: flex-start;
+    -ms-flex-align: flex-start;
+    align-items: flex-start;
+  }
+}
+
+@layer recipes {
+  .emotion-13 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    text-align: start;
+    font-size: var(--chakra-font-sizes-sm);
+    line-height: 1.25rem;
+    font-weight: var(--chakra-font-weights-medium);
+    gap: var(--chakra-spacing-1);
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+
+  .emotion-13:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+  }
+}
+
+@layer recipes {
+  .emotion-14 {
+    width: 100%;
+    min-width: var(--input-height);
+    outline: 0;
+    position: relative;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    text-align: start;
+    border-radius: var(--chakra-radii-l2);
+    height: var(--input-height);
+    --focus-color: var(--chakra-colors-color-palette-focus-ring);
+    --error-color: var(--chakra-colors-border-error);
+    font-size: var(--chakra-font-sizes-sm);
+    line-height: 1.25rem;
+    padding-inline: var(--chakra-spacing-3);
+    --input-height: var(--chakra-sizes-10);
+    background: var(--chakra-colors-transparent);
+    --bg-currentcolor: var(--chakra-colors-transparent);
+    border-width: 1px;
+    border-color: var(--chakra-colors-border);
+    --focus-ring-color: var(--focus-color);
+  }
+
+  .emotion-14:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-14:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+    --focus-ring-color: var(--error-color);
+    border-color: var(--error-color);
+  }
+
+  .emotion-14:is(:focus-visible, [data-focus-visible]) {
+    outline-offset: 0px;
+    outline-width: var(--focus-ring-width, 1px);
+    outline-color: var(--focus-ring-color);
+    outline-style: var(--focus-ring-style, solid);
+    border-color: var(--focus-ring-color);
+  }
+}
+
 .emotion-23 {
   margin-top: var(--chakra-spacing-3);
+}
+
+@layer recipes {
+  .emotion-24 {
+    display: -webkit-inline-box;
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    position: relative;
+    border-radius: var(--chakra-radii-l2);
+    white-space: nowrap;
+    vertical-align: middle;
+    border-width: 1px;
+    border-color: var(--chakra-colors-transparent);
+    cursor: var(--chakra-cursor-button);
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    outline: 0;
+    line-height: 1.25rem;
+    isolation: isolate;
+    font-weight: var(--chakra-font-weights-medium);
+    transition-property: background-color,border-color,color,fill,stroke,opacity,box-shadow,translate,transform;
+    transition-duration: var(--chakra-durations-moderate);
+    --focus-ring-color: var(--chakra-colors-color-palette-focus-ring);
+    height: var(--chakra-sizes-10);
+    min-width: var(--chakra-sizes-10);
+    font-size: var(--chakra-font-sizes-sm);
+    padding-inline: var(--chakra-spacing-4);
+    gap: var(--chakra-spacing-2);
+    background: var(--chakra-colors-color-palette-solid);
+    --bg-currentcolor: var(--chakra-colors-color-palette-solid);
+    color: var(--chakra-colors-color-palette-contrast);
+  }
+
+  .emotion-24:is(:focus-visible, [data-focus-visible]) {
+    outline-width: var(--focus-ring-width, 2px);
+    outline-offset: var(--focus-ring-offset, 2px);
+    outline-style: var(--focus-ring-style, solid);
+    outline-color: var(--focus-ring-color);
+  }
+
+  .emotion-24:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-24 :where(svg) {
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    width: var(--chakra-sizes-5);
+    height: var(--chakra-sizes-5);
+  }
+
+  .emotion-24:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+    --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+    background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+  }
+
+  @media (hover: hover) {
+    .emotion-24:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+      --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+      background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+      --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    }
+  }
 }
 
 <form
@@ -1399,9 +3303,61 @@ exports[`object fields with title and description from both object 1`] = `
 `;
 
 exports[`object fields with title and description from uiSchema additionalProperties 1`] = `
+@layer recipes {
+  .emotion-0 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    width: var(--chakra-sizes-full);
+  }
+
+  .emotion-0>:not(style, [hidden])~:not(style, [hidden]) {
+    --space-y-reverse: 0;
+    margin-top: calc(var(--chakra-spacing-4) * calc(1 - var(--space-y-reverse)));
+    margin-bottom: calc(var(--chakra-spacing-4) * var(--space-y-reverse));
+  }
+}
+
+@layer recipes {
+  .emotion-1 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    width: var(--chakra-sizes-full);
+    gap: var(--chakra-spacing-4);
+  }
+}
+
 .emotion-2 {
   margin-top: var(--chakra-spacing-1);
   margin-bottom: var(--chakra-spacing-4);
+}
+
+@layer recipes {
+  .emotion-3 {
+    font-family: var(--chakra-fonts-heading);
+    font-weight: var(--chakra-font-weights-semibold);
+    font-size: var(--chakra-font-sizes-xl);
+    line-height: 1.875rem;
+  }
+}
+
+@layer recipes {
+  .emotion-4 {
+    display: block;
+    border-color: var(--chakra-colors-border);
+    --separator-thickness: 1px;
+    border-style: solid;
+    border-top-width: var(--separator-thickness);
+  }
 }
 
 .emotion-5 {
@@ -1423,17 +3379,255 @@ exports[`object fields with title and description from uiSchema additionalProper
   gap: var(--chakra-spacing-2);
 }
 
+@layer recipes {
+  .emotion-10 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    width: 100%;
+    position: relative;
+    gap: var(--chakra-spacing-1\\.5);
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-align-items: flex-start;
+    -webkit-box-align: flex-start;
+    -ms-flex-align: flex-start;
+    align-items: flex-start;
+  }
+}
+
+@layer recipes {
+  .emotion-11 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    text-align: start;
+    font-size: var(--chakra-font-sizes-sm);
+    line-height: 1.25rem;
+    font-weight: var(--chakra-font-weights-medium);
+    gap: var(--chakra-spacing-1);
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+
+  .emotion-11:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+  }
+}
+
 .emotion-12 {
   margin-bottom: var(--chakra-spacing-1);
+}
+
+@layer recipes {
+  .emotion-12 {
+    width: 100%;
+    min-width: var(--input-height);
+    outline: 0;
+    position: relative;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    text-align: start;
+    border-radius: var(--chakra-radii-l2);
+    height: var(--input-height);
+    --focus-color: var(--chakra-colors-color-palette-focus-ring);
+    --error-color: var(--chakra-colors-border-error);
+    font-size: var(--chakra-font-sizes-sm);
+    line-height: 1.25rem;
+    padding-inline: var(--chakra-spacing-3);
+    --input-height: var(--chakra-sizes-10);
+    background: var(--chakra-colors-transparent);
+    --bg-currentcolor: var(--chakra-colors-transparent);
+    border-width: 1px;
+    border-color: var(--chakra-colors-border);
+    --focus-ring-color: var(--focus-color);
+  }
+
+  .emotion-12:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-12:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+    --focus-ring-color: var(--error-color);
+    border-color: var(--error-color);
+  }
+
+  .emotion-12:is(:focus-visible, [data-focus-visible]) {
+    outline-offset: 0px;
+    outline-width: var(--focus-ring-width, 1px);
+    outline-color: var(--focus-ring-color);
+    outline-style: var(--focus-ring-style, solid);
+    border-color: var(--focus-ring-color);
+  }
 }
 
 .emotion-16 {
   margin-bottom: var(--chakra-spacing-1);
 }
 
+@layer recipes {
+  .emotion-16 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    width: 100%;
+    position: relative;
+    gap: var(--chakra-spacing-1\\.5);
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-align-items: flex-start;
+    -webkit-box-align: flex-start;
+    -ms-flex-align: flex-start;
+    align-items: flex-start;
+  }
+}
+
+@layer recipes {
+  .emotion-18 {
+    width: 100%;
+    min-width: var(--input-height);
+    outline: 0;
+    position: relative;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    text-align: start;
+    border-radius: var(--chakra-radii-l2);
+    height: var(--input-height);
+    --focus-color: var(--chakra-colors-color-palette-focus-ring);
+    --error-color: var(--chakra-colors-border-error);
+    font-size: var(--chakra-font-sizes-sm);
+    line-height: 1.25rem;
+    padding-inline: var(--chakra-spacing-3);
+    --input-height: var(--chakra-sizes-10);
+    background: var(--chakra-colors-transparent);
+    --bg-currentcolor: var(--chakra-colors-transparent);
+    border-width: 1px;
+    border-color: var(--chakra-colors-border);
+    --focus-ring-color: var(--focus-color);
+  }
+
+  .emotion-18:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-18:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+    --focus-ring-color: var(--error-color);
+    border-color: var(--error-color);
+  }
+
+  .emotion-18:is(:focus-visible, [data-focus-visible]) {
+    outline-offset: 0px;
+    outline-width: var(--focus-ring-width, 1px);
+    outline-color: var(--focus-ring-color);
+    outline-style: var(--focus-ring-style, solid);
+    border-color: var(--focus-ring-color);
+  }
+}
+
 .emotion-20 {
   padding-inline: 0;
   padding-block: 0;
+}
+
+@layer recipes {
+  .emotion-20 {
+    display: -webkit-inline-box;
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    position: relative;
+    border-radius: var(--chakra-radii-l2);
+    white-space: nowrap;
+    vertical-align: middle;
+    border-width: 1px;
+    border-color: var(--chakra-colors-transparent);
+    cursor: var(--chakra-cursor-button);
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    outline: 0;
+    line-height: 1.25rem;
+    isolation: isolate;
+    font-weight: var(--chakra-font-weights-medium);
+    transition-property: background-color,border-color,color,fill,stroke,opacity,box-shadow,translate,transform;
+    transition-duration: var(--chakra-durations-moderate);
+    --focus-ring-color: var(--chakra-colors-color-palette-focus-ring);
+    height: var(--chakra-sizes-10);
+    min-width: var(--chakra-sizes-10);
+    font-size: var(--chakra-font-sizes-sm);
+    padding-inline: var(--chakra-spacing-4);
+    gap: var(--chakra-spacing-2);
+    background: var(--chakra-colors-color-palette-solid);
+    --bg-currentcolor: var(--chakra-colors-color-palette-solid);
+    color: var(--chakra-colors-color-palette-contrast);
+  }
+
+  .emotion-20:is(:focus-visible, [data-focus-visible]) {
+    outline-width: var(--focus-ring-width, 2px);
+    outline-offset: var(--focus-ring-offset, 2px);
+    outline-style: var(--focus-ring-style, solid);
+    outline-color: var(--focus-ring-color);
+  }
+
+  .emotion-20:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-20 :where(svg) {
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    width: var(--chakra-sizes-5);
+    height: var(--chakra-sizes-5);
+  }
+
+  .emotion-20:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+    --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+    background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+  }
+
+  @media (hover: hover) {
+    .emotion-20:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+      --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+      background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+      --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    }
+  }
 }
 
 .emotion-20 :where(svg) {
@@ -1442,6 +3636,90 @@ exports[`object fields with title and description from uiSchema additionalProper
 
 .emotion-21 {
   justify-self: flex-end;
+}
+
+@layer recipes {
+  .emotion-22 {
+    display: -webkit-inline-box;
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    position: relative;
+    border-radius: var(--chakra-radii-l2);
+    white-space: nowrap;
+    vertical-align: middle;
+    border-width: 1px;
+    border-color: var(--chakra-colors-transparent);
+    cursor: var(--chakra-cursor-button);
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    outline: 0;
+    line-height: 1.25rem;
+    isolation: isolate;
+    font-weight: var(--chakra-font-weights-medium);
+    transition-property: background-color,border-color,color,fill,stroke,opacity,box-shadow,translate,transform;
+    transition-duration: var(--chakra-durations-moderate);
+    --focus-ring-color: var(--chakra-colors-color-palette-focus-ring);
+    height: var(--chakra-sizes-10);
+    min-width: var(--chakra-sizes-10);
+    font-size: var(--chakra-font-sizes-sm);
+    padding-inline: var(--chakra-spacing-4);
+    gap: var(--chakra-spacing-2);
+    background: var(--chakra-colors-color-palette-solid);
+    --bg-currentcolor: var(--chakra-colors-color-palette-solid);
+    color: var(--chakra-colors-color-palette-contrast);
+  }
+
+  .emotion-22:is(:focus-visible, [data-focus-visible]) {
+    outline-width: var(--focus-ring-width, 2px);
+    outline-offset: var(--focus-ring-offset, 2px);
+    outline-style: var(--focus-ring-style, solid);
+    outline-color: var(--focus-ring-color);
+  }
+
+  .emotion-22:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-22 :where(svg) {
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    width: var(--chakra-sizes-5);
+    height: var(--chakra-sizes-5);
+  }
+
+  .emotion-22:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+    --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+    background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+  }
+
+  @media (hover: hover) {
+    .emotion-22:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+      --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+      background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+      --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    }
+  }
 }
 
 .emotion-23 {
@@ -1668,9 +3946,61 @@ exports[`object fields with title and description from uiSchema additionalProper
 `;
 
 exports[`object fields with title and description from uiSchema object 1`] = `
+@layer recipes {
+  .emotion-0 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    width: var(--chakra-sizes-full);
+  }
+
+  .emotion-0>:not(style, [hidden])~:not(style, [hidden]) {
+    --space-y-reverse: 0;
+    margin-top: calc(var(--chakra-spacing-4) * calc(1 - var(--space-y-reverse)));
+    margin-bottom: calc(var(--chakra-spacing-4) * var(--space-y-reverse));
+  }
+}
+
+@layer recipes {
+  .emotion-1 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    width: var(--chakra-sizes-full);
+    gap: var(--chakra-spacing-4);
+  }
+}
+
 .emotion-2 {
   margin-top: var(--chakra-spacing-1);
   margin-bottom: var(--chakra-spacing-4);
+}
+
+@layer recipes {
+  .emotion-3 {
+    font-family: var(--chakra-fonts-heading);
+    font-weight: var(--chakra-font-weights-semibold);
+    font-size: var(--chakra-font-sizes-xl);
+    line-height: 1.875rem;
+  }
+}
+
+@layer recipes {
+  .emotion-4 {
+    display: block;
+    border-color: var(--chakra-colors-border);
+    --separator-thickness: 1px;
+    border-style: solid;
+    border-top-width: var(--separator-thickness);
+  }
 }
 
 .emotion-5 {
@@ -1687,12 +4017,199 @@ exports[`object fields with title and description from uiSchema object 1`] = `
   margin-top: var(--chakra-spacing-2);
 }
 
+@layer recipes {
+  .emotion-9 {
+    color: var(--chakra-colors-fg);
+    font-weight: var(--chakra-font-weights-medium);
+    font-size: var(--chakra-font-sizes-sm);
+    line-height: 1.25rem;
+  }
+
+  .emotion-9:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+  }
+}
+
 .emotion-12 {
   margin-bottom: var(--chakra-spacing-1);
 }
 
+@layer recipes {
+  .emotion-12 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    width: 100%;
+    position: relative;
+    gap: var(--chakra-spacing-1\\.5);
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-align-items: flex-start;
+    -webkit-box-align: flex-start;
+    -ms-flex-align: flex-start;
+    align-items: flex-start;
+  }
+}
+
+@layer recipes {
+  .emotion-13 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    text-align: start;
+    font-size: var(--chakra-font-sizes-sm);
+    line-height: 1.25rem;
+    font-weight: var(--chakra-font-weights-medium);
+    gap: var(--chakra-spacing-1);
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+
+  .emotion-13:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+  }
+}
+
+@layer recipes {
+  .emotion-14 {
+    width: 100%;
+    min-width: var(--input-height);
+    outline: 0;
+    position: relative;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    text-align: start;
+    border-radius: var(--chakra-radii-l2);
+    height: var(--input-height);
+    --focus-color: var(--chakra-colors-color-palette-focus-ring);
+    --error-color: var(--chakra-colors-border-error);
+    font-size: var(--chakra-font-sizes-sm);
+    line-height: 1.25rem;
+    padding-inline: var(--chakra-spacing-3);
+    --input-height: var(--chakra-sizes-10);
+    background: var(--chakra-colors-transparent);
+    --bg-currentcolor: var(--chakra-colors-transparent);
+    border-width: 1px;
+    border-color: var(--chakra-colors-border);
+    --focus-ring-color: var(--focus-color);
+  }
+
+  .emotion-14:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-14:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+    --focus-ring-color: var(--error-color);
+    border-color: var(--error-color);
+  }
+
+  .emotion-14:is(:focus-visible, [data-focus-visible]) {
+    outline-offset: 0px;
+    outline-width: var(--focus-ring-width, 1px);
+    outline-color: var(--focus-ring-color);
+    outline-style: var(--focus-ring-style, solid);
+    border-color: var(--focus-ring-color);
+  }
+}
+
 .emotion-23 {
   margin-top: var(--chakra-spacing-3);
+}
+
+@layer recipes {
+  .emotion-24 {
+    display: -webkit-inline-box;
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    position: relative;
+    border-radius: var(--chakra-radii-l2);
+    white-space: nowrap;
+    vertical-align: middle;
+    border-width: 1px;
+    border-color: var(--chakra-colors-transparent);
+    cursor: var(--chakra-cursor-button);
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    outline: 0;
+    line-height: 1.25rem;
+    isolation: isolate;
+    font-weight: var(--chakra-font-weights-medium);
+    transition-property: background-color,border-color,color,fill,stroke,opacity,box-shadow,translate,transform;
+    transition-duration: var(--chakra-durations-moderate);
+    --focus-ring-color: var(--chakra-colors-color-palette-focus-ring);
+    height: var(--chakra-sizes-10);
+    min-width: var(--chakra-sizes-10);
+    font-size: var(--chakra-font-sizes-sm);
+    padding-inline: var(--chakra-spacing-4);
+    gap: var(--chakra-spacing-2);
+    background: var(--chakra-colors-color-palette-solid);
+    --bg-currentcolor: var(--chakra-colors-color-palette-solid);
+    color: var(--chakra-colors-color-palette-contrast);
+  }
+
+  .emotion-24:is(:focus-visible, [data-focus-visible]) {
+    outline-width: var(--focus-ring-width, 2px);
+    outline-offset: var(--focus-ring-offset, 2px);
+    outline-style: var(--focus-ring-style, solid);
+    outline-color: var(--focus-ring-color);
+  }
+
+  .emotion-24:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-24 :where(svg) {
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    width: var(--chakra-sizes-5);
+    height: var(--chakra-sizes-5);
+  }
+
+  .emotion-24:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+    --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+    background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+  }
+
+  @media (hover: hover) {
+    .emotion-24:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+      --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+      background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+      --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    }
+  }
 }
 
 <form
@@ -1888,9 +4405,61 @@ exports[`object fields with title and description from uiSchema object 1`] = `
 `;
 
 exports[`object fields with title and description from uiSchema show add button and fields if additionalProperties is true and not an object 1`] = `
+@layer recipes {
+  .emotion-0 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    width: var(--chakra-sizes-full);
+  }
+
+  .emotion-0>:not(style, [hidden])~:not(style, [hidden]) {
+    --space-y-reverse: 0;
+    margin-top: calc(var(--chakra-spacing-4) * calc(1 - var(--space-y-reverse)));
+    margin-bottom: calc(var(--chakra-spacing-4) * var(--space-y-reverse));
+  }
+}
+
+@layer recipes {
+  .emotion-1 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    width: var(--chakra-sizes-full);
+    gap: var(--chakra-spacing-4);
+  }
+}
+
 .emotion-2 {
   margin-top: var(--chakra-spacing-1);
   margin-bottom: var(--chakra-spacing-4);
+}
+
+@layer recipes {
+  .emotion-3 {
+    font-family: var(--chakra-fonts-heading);
+    font-weight: var(--chakra-font-weights-semibold);
+    font-size: var(--chakra-font-sizes-xl);
+    line-height: 1.875rem;
+  }
+}
+
+@layer recipes {
+  .emotion-4 {
+    display: block;
+    border-color: var(--chakra-colors-border);
+    --separator-thickness: 1px;
+    border-style: solid;
+    border-top-width: var(--separator-thickness);
+  }
 }
 
 .emotion-5 {
@@ -1912,17 +4481,255 @@ exports[`object fields with title and description from uiSchema show add button 
   gap: var(--chakra-spacing-2);
 }
 
+@layer recipes {
+  .emotion-10 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    width: 100%;
+    position: relative;
+    gap: var(--chakra-spacing-1\\.5);
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-align-items: flex-start;
+    -webkit-box-align: flex-start;
+    -ms-flex-align: flex-start;
+    align-items: flex-start;
+  }
+}
+
+@layer recipes {
+  .emotion-11 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    text-align: start;
+    font-size: var(--chakra-font-sizes-sm);
+    line-height: 1.25rem;
+    font-weight: var(--chakra-font-weights-medium);
+    gap: var(--chakra-spacing-1);
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+
+  .emotion-11:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+  }
+}
+
 .emotion-12 {
   margin-bottom: var(--chakra-spacing-1);
+}
+
+@layer recipes {
+  .emotion-12 {
+    width: 100%;
+    min-width: var(--input-height);
+    outline: 0;
+    position: relative;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    text-align: start;
+    border-radius: var(--chakra-radii-l2);
+    height: var(--input-height);
+    --focus-color: var(--chakra-colors-color-palette-focus-ring);
+    --error-color: var(--chakra-colors-border-error);
+    font-size: var(--chakra-font-sizes-sm);
+    line-height: 1.25rem;
+    padding-inline: var(--chakra-spacing-3);
+    --input-height: var(--chakra-sizes-10);
+    background: var(--chakra-colors-transparent);
+    --bg-currentcolor: var(--chakra-colors-transparent);
+    border-width: 1px;
+    border-color: var(--chakra-colors-border);
+    --focus-ring-color: var(--focus-color);
+  }
+
+  .emotion-12:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-12:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+    --focus-ring-color: var(--error-color);
+    border-color: var(--error-color);
+  }
+
+  .emotion-12:is(:focus-visible, [data-focus-visible]) {
+    outline-offset: 0px;
+    outline-width: var(--focus-ring-width, 1px);
+    outline-color: var(--focus-ring-color);
+    outline-style: var(--focus-ring-style, solid);
+    border-color: var(--focus-ring-color);
+  }
 }
 
 .emotion-16 {
   margin-bottom: var(--chakra-spacing-1);
 }
 
+@layer recipes {
+  .emotion-16 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    width: 100%;
+    position: relative;
+    gap: var(--chakra-spacing-1\\.5);
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-align-items: flex-start;
+    -webkit-box-align: flex-start;
+    -ms-flex-align: flex-start;
+    align-items: flex-start;
+  }
+}
+
+@layer recipes {
+  .emotion-18 {
+    width: 100%;
+    min-width: var(--input-height);
+    outline: 0;
+    position: relative;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    text-align: start;
+    border-radius: var(--chakra-radii-l2);
+    height: var(--input-height);
+    --focus-color: var(--chakra-colors-color-palette-focus-ring);
+    --error-color: var(--chakra-colors-border-error);
+    font-size: var(--chakra-font-sizes-sm);
+    line-height: 1.25rem;
+    padding-inline: var(--chakra-spacing-3);
+    --input-height: var(--chakra-sizes-10);
+    background: var(--chakra-colors-transparent);
+    --bg-currentcolor: var(--chakra-colors-transparent);
+    border-width: 1px;
+    border-color: var(--chakra-colors-border);
+    --focus-ring-color: var(--focus-color);
+  }
+
+  .emotion-18:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-18:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+    --focus-ring-color: var(--error-color);
+    border-color: var(--error-color);
+  }
+
+  .emotion-18:is(:focus-visible, [data-focus-visible]) {
+    outline-offset: 0px;
+    outline-width: var(--focus-ring-width, 1px);
+    outline-color: var(--focus-ring-color);
+    outline-style: var(--focus-ring-style, solid);
+    border-color: var(--focus-ring-color);
+  }
+}
+
 .emotion-20 {
   padding-inline: 0;
   padding-block: 0;
+}
+
+@layer recipes {
+  .emotion-20 {
+    display: -webkit-inline-box;
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    position: relative;
+    border-radius: var(--chakra-radii-l2);
+    white-space: nowrap;
+    vertical-align: middle;
+    border-width: 1px;
+    border-color: var(--chakra-colors-transparent);
+    cursor: var(--chakra-cursor-button);
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    outline: 0;
+    line-height: 1.25rem;
+    isolation: isolate;
+    font-weight: var(--chakra-font-weights-medium);
+    transition-property: background-color,border-color,color,fill,stroke,opacity,box-shadow,translate,transform;
+    transition-duration: var(--chakra-durations-moderate);
+    --focus-ring-color: var(--chakra-colors-color-palette-focus-ring);
+    height: var(--chakra-sizes-10);
+    min-width: var(--chakra-sizes-10);
+    font-size: var(--chakra-font-sizes-sm);
+    padding-inline: var(--chakra-spacing-4);
+    gap: var(--chakra-spacing-2);
+    background: var(--chakra-colors-color-palette-solid);
+    --bg-currentcolor: var(--chakra-colors-color-palette-solid);
+    color: var(--chakra-colors-color-palette-contrast);
+  }
+
+  .emotion-20:is(:focus-visible, [data-focus-visible]) {
+    outline-width: var(--focus-ring-width, 2px);
+    outline-offset: var(--focus-ring-offset, 2px);
+    outline-style: var(--focus-ring-style, solid);
+    outline-color: var(--focus-ring-color);
+  }
+
+  .emotion-20:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-20 :where(svg) {
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    width: var(--chakra-sizes-5);
+    height: var(--chakra-sizes-5);
+  }
+
+  .emotion-20:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+    --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+    background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+  }
+
+  @media (hover: hover) {
+    .emotion-20:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+      --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+      background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+      --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    }
+  }
 }
 
 .emotion-20 :where(svg) {
@@ -1931,6 +4738,90 @@ exports[`object fields with title and description from uiSchema show add button 
 
 .emotion-21 {
   justify-self: flex-end;
+}
+
+@layer recipes {
+  .emotion-22 {
+    display: -webkit-inline-box;
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    position: relative;
+    border-radius: var(--chakra-radii-l2);
+    white-space: nowrap;
+    vertical-align: middle;
+    border-width: 1px;
+    border-color: var(--chakra-colors-transparent);
+    cursor: var(--chakra-cursor-button);
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    outline: 0;
+    line-height: 1.25rem;
+    isolation: isolate;
+    font-weight: var(--chakra-font-weights-medium);
+    transition-property: background-color,border-color,color,fill,stroke,opacity,box-shadow,translate,transform;
+    transition-duration: var(--chakra-durations-moderate);
+    --focus-ring-color: var(--chakra-colors-color-palette-focus-ring);
+    height: var(--chakra-sizes-10);
+    min-width: var(--chakra-sizes-10);
+    font-size: var(--chakra-font-sizes-sm);
+    padding-inline: var(--chakra-spacing-4);
+    gap: var(--chakra-spacing-2);
+    background: var(--chakra-colors-color-palette-solid);
+    --bg-currentcolor: var(--chakra-colors-color-palette-solid);
+    color: var(--chakra-colors-color-palette-contrast);
+  }
+
+  .emotion-22:is(:focus-visible, [data-focus-visible]) {
+    outline-width: var(--focus-ring-width, 2px);
+    outline-offset: var(--focus-ring-offset, 2px);
+    outline-style: var(--focus-ring-style, solid);
+    outline-color: var(--focus-ring-color);
+  }
+
+  .emotion-22:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-22 :where(svg) {
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    width: var(--chakra-sizes-5);
+    height: var(--chakra-sizes-5);
+  }
+
+  .emotion-22:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+    --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+    background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+  }
+
+  @media (hover: hover) {
+    .emotion-22:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+      --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+      background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+      --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    }
+  }
 }
 
 .emotion-23 {
@@ -2157,9 +5048,61 @@ exports[`object fields with title and description from uiSchema show add button 
 `;
 
 exports[`object fields with title and description object 1`] = `
+@layer recipes {
+  .emotion-0 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    width: var(--chakra-sizes-full);
+  }
+
+  .emotion-0>:not(style, [hidden])~:not(style, [hidden]) {
+    --space-y-reverse: 0;
+    margin-top: calc(var(--chakra-spacing-4) * calc(1 - var(--space-y-reverse)));
+    margin-bottom: calc(var(--chakra-spacing-4) * var(--space-y-reverse));
+  }
+}
+
+@layer recipes {
+  .emotion-1 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    width: var(--chakra-sizes-full);
+    gap: var(--chakra-spacing-4);
+  }
+}
+
 .emotion-2 {
   margin-top: var(--chakra-spacing-1);
   margin-bottom: var(--chakra-spacing-4);
+}
+
+@layer recipes {
+  .emotion-3 {
+    font-family: var(--chakra-fonts-heading);
+    font-weight: var(--chakra-font-weights-semibold);
+    font-size: var(--chakra-font-sizes-xl);
+    line-height: 1.875rem;
+  }
+}
+
+@layer recipes {
+  .emotion-4 {
+    display: block;
+    border-color: var(--chakra-colors-border);
+    --separator-thickness: 1px;
+    border-style: solid;
+    border-top-width: var(--separator-thickness);
+  }
 }
 
 .emotion-5 {
@@ -2176,12 +5119,199 @@ exports[`object fields with title and description object 1`] = `
   margin-top: var(--chakra-spacing-2);
 }
 
+@layer recipes {
+  .emotion-9 {
+    color: var(--chakra-colors-fg);
+    font-weight: var(--chakra-font-weights-medium);
+    font-size: var(--chakra-font-sizes-sm);
+    line-height: 1.25rem;
+  }
+
+  .emotion-9:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+  }
+}
+
 .emotion-12 {
   margin-bottom: var(--chakra-spacing-1);
 }
 
+@layer recipes {
+  .emotion-12 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    width: 100%;
+    position: relative;
+    gap: var(--chakra-spacing-1\\.5);
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-align-items: flex-start;
+    -webkit-box-align: flex-start;
+    -ms-flex-align: flex-start;
+    align-items: flex-start;
+  }
+}
+
+@layer recipes {
+  .emotion-13 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    text-align: start;
+    font-size: var(--chakra-font-sizes-sm);
+    line-height: 1.25rem;
+    font-weight: var(--chakra-font-weights-medium);
+    gap: var(--chakra-spacing-1);
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+
+  .emotion-13:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+  }
+}
+
+@layer recipes {
+  .emotion-14 {
+    width: 100%;
+    min-width: var(--input-height);
+    outline: 0;
+    position: relative;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    text-align: start;
+    border-radius: var(--chakra-radii-l2);
+    height: var(--input-height);
+    --focus-color: var(--chakra-colors-color-palette-focus-ring);
+    --error-color: var(--chakra-colors-border-error);
+    font-size: var(--chakra-font-sizes-sm);
+    line-height: 1.25rem;
+    padding-inline: var(--chakra-spacing-3);
+    --input-height: var(--chakra-sizes-10);
+    background: var(--chakra-colors-transparent);
+    --bg-currentcolor: var(--chakra-colors-transparent);
+    border-width: 1px;
+    border-color: var(--chakra-colors-border);
+    --focus-ring-color: var(--focus-color);
+  }
+
+  .emotion-14:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-14:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+    --focus-ring-color: var(--error-color);
+    border-color: var(--error-color);
+  }
+
+  .emotion-14:is(:focus-visible, [data-focus-visible]) {
+    outline-offset: 0px;
+    outline-width: var(--focus-ring-width, 1px);
+    outline-color: var(--focus-ring-color);
+    outline-style: var(--focus-ring-style, solid);
+    border-color: var(--focus-ring-color);
+  }
+}
+
 .emotion-23 {
   margin-top: var(--chakra-spacing-3);
+}
+
+@layer recipes {
+  .emotion-24 {
+    display: -webkit-inline-box;
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    position: relative;
+    border-radius: var(--chakra-radii-l2);
+    white-space: nowrap;
+    vertical-align: middle;
+    border-width: 1px;
+    border-color: var(--chakra-colors-transparent);
+    cursor: var(--chakra-cursor-button);
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    outline: 0;
+    line-height: 1.25rem;
+    isolation: isolate;
+    font-weight: var(--chakra-font-weights-medium);
+    transition-property: background-color,border-color,color,fill,stroke,opacity,box-shadow,translate,transform;
+    transition-duration: var(--chakra-durations-moderate);
+    --focus-ring-color: var(--chakra-colors-color-palette-focus-ring);
+    height: var(--chakra-sizes-10);
+    min-width: var(--chakra-sizes-10);
+    font-size: var(--chakra-font-sizes-sm);
+    padding-inline: var(--chakra-spacing-4);
+    gap: var(--chakra-spacing-2);
+    background: var(--chakra-colors-color-palette-solid);
+    --bg-currentcolor: var(--chakra-colors-color-palette-solid);
+    color: var(--chakra-colors-color-palette-contrast);
+  }
+
+  .emotion-24:is(:focus-visible, [data-focus-visible]) {
+    outline-width: var(--focus-ring-width, 2px);
+    outline-offset: var(--focus-ring-offset, 2px);
+    outline-style: var(--focus-ring-style, solid);
+    outline-color: var(--focus-ring-color);
+  }
+
+  .emotion-24:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-24 :where(svg) {
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    width: var(--chakra-sizes-5);
+    height: var(--chakra-sizes-5);
+  }
+
+  .emotion-24:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+    --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+    background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+  }
+
+  @media (hover: hover) {
+    .emotion-24:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+      --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+      background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+      --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    }
+  }
 }
 
 <form
@@ -2377,9 +5507,61 @@ exports[`object fields with title and description object 1`] = `
 `;
 
 exports[`object fields with title and description show add button and fields if additionalProperties is true and not an object 1`] = `
+@layer recipes {
+  .emotion-0 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    width: var(--chakra-sizes-full);
+  }
+
+  .emotion-0>:not(style, [hidden])~:not(style, [hidden]) {
+    --space-y-reverse: 0;
+    margin-top: calc(var(--chakra-spacing-4) * calc(1 - var(--space-y-reverse)));
+    margin-bottom: calc(var(--chakra-spacing-4) * var(--space-y-reverse));
+  }
+}
+
+@layer recipes {
+  .emotion-1 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    width: var(--chakra-sizes-full);
+    gap: var(--chakra-spacing-4);
+  }
+}
+
 .emotion-2 {
   margin-top: var(--chakra-spacing-1);
   margin-bottom: var(--chakra-spacing-4);
+}
+
+@layer recipes {
+  .emotion-3 {
+    font-family: var(--chakra-fonts-heading);
+    font-weight: var(--chakra-font-weights-semibold);
+    font-size: var(--chakra-font-sizes-xl);
+    line-height: 1.875rem;
+  }
+}
+
+@layer recipes {
+  .emotion-4 {
+    display: block;
+    border-color: var(--chakra-colors-border);
+    --separator-thickness: 1px;
+    border-style: solid;
+    border-top-width: var(--separator-thickness);
+  }
 }
 
 .emotion-5 {
@@ -2401,17 +5583,255 @@ exports[`object fields with title and description show add button and fields if 
   gap: var(--chakra-spacing-2);
 }
 
+@layer recipes {
+  .emotion-10 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    width: 100%;
+    position: relative;
+    gap: var(--chakra-spacing-1\\.5);
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-align-items: flex-start;
+    -webkit-box-align: flex-start;
+    -ms-flex-align: flex-start;
+    align-items: flex-start;
+  }
+}
+
+@layer recipes {
+  .emotion-11 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    text-align: start;
+    font-size: var(--chakra-font-sizes-sm);
+    line-height: 1.25rem;
+    font-weight: var(--chakra-font-weights-medium);
+    gap: var(--chakra-spacing-1);
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+
+  .emotion-11:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+  }
+}
+
 .emotion-12 {
   margin-bottom: var(--chakra-spacing-1);
+}
+
+@layer recipes {
+  .emotion-12 {
+    width: 100%;
+    min-width: var(--input-height);
+    outline: 0;
+    position: relative;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    text-align: start;
+    border-radius: var(--chakra-radii-l2);
+    height: var(--input-height);
+    --focus-color: var(--chakra-colors-color-palette-focus-ring);
+    --error-color: var(--chakra-colors-border-error);
+    font-size: var(--chakra-font-sizes-sm);
+    line-height: 1.25rem;
+    padding-inline: var(--chakra-spacing-3);
+    --input-height: var(--chakra-sizes-10);
+    background: var(--chakra-colors-transparent);
+    --bg-currentcolor: var(--chakra-colors-transparent);
+    border-width: 1px;
+    border-color: var(--chakra-colors-border);
+    --focus-ring-color: var(--focus-color);
+  }
+
+  .emotion-12:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-12:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+    --focus-ring-color: var(--error-color);
+    border-color: var(--error-color);
+  }
+
+  .emotion-12:is(:focus-visible, [data-focus-visible]) {
+    outline-offset: 0px;
+    outline-width: var(--focus-ring-width, 1px);
+    outline-color: var(--focus-ring-color);
+    outline-style: var(--focus-ring-style, solid);
+    border-color: var(--focus-ring-color);
+  }
 }
 
 .emotion-16 {
   margin-bottom: var(--chakra-spacing-1);
 }
 
+@layer recipes {
+  .emotion-16 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    width: 100%;
+    position: relative;
+    gap: var(--chakra-spacing-1\\.5);
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-align-items: flex-start;
+    -webkit-box-align: flex-start;
+    -ms-flex-align: flex-start;
+    align-items: flex-start;
+  }
+}
+
+@layer recipes {
+  .emotion-18 {
+    width: 100%;
+    min-width: var(--input-height);
+    outline: 0;
+    position: relative;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    text-align: start;
+    border-radius: var(--chakra-radii-l2);
+    height: var(--input-height);
+    --focus-color: var(--chakra-colors-color-palette-focus-ring);
+    --error-color: var(--chakra-colors-border-error);
+    font-size: var(--chakra-font-sizes-sm);
+    line-height: 1.25rem;
+    padding-inline: var(--chakra-spacing-3);
+    --input-height: var(--chakra-sizes-10);
+    background: var(--chakra-colors-transparent);
+    --bg-currentcolor: var(--chakra-colors-transparent);
+    border-width: 1px;
+    border-color: var(--chakra-colors-border);
+    --focus-ring-color: var(--focus-color);
+  }
+
+  .emotion-18:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-18:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+    --focus-ring-color: var(--error-color);
+    border-color: var(--error-color);
+  }
+
+  .emotion-18:is(:focus-visible, [data-focus-visible]) {
+    outline-offset: 0px;
+    outline-width: var(--focus-ring-width, 1px);
+    outline-color: var(--focus-ring-color);
+    outline-style: var(--focus-ring-style, solid);
+    border-color: var(--focus-ring-color);
+  }
+}
+
 .emotion-20 {
   padding-inline: 0;
   padding-block: 0;
+}
+
+@layer recipes {
+  .emotion-20 {
+    display: -webkit-inline-box;
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    position: relative;
+    border-radius: var(--chakra-radii-l2);
+    white-space: nowrap;
+    vertical-align: middle;
+    border-width: 1px;
+    border-color: var(--chakra-colors-transparent);
+    cursor: var(--chakra-cursor-button);
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    outline: 0;
+    line-height: 1.25rem;
+    isolation: isolate;
+    font-weight: var(--chakra-font-weights-medium);
+    transition-property: background-color,border-color,color,fill,stroke,opacity,box-shadow,translate,transform;
+    transition-duration: var(--chakra-durations-moderate);
+    --focus-ring-color: var(--chakra-colors-color-palette-focus-ring);
+    height: var(--chakra-sizes-10);
+    min-width: var(--chakra-sizes-10);
+    font-size: var(--chakra-font-sizes-sm);
+    padding-inline: var(--chakra-spacing-4);
+    gap: var(--chakra-spacing-2);
+    background: var(--chakra-colors-color-palette-solid);
+    --bg-currentcolor: var(--chakra-colors-color-palette-solid);
+    color: var(--chakra-colors-color-palette-contrast);
+  }
+
+  .emotion-20:is(:focus-visible, [data-focus-visible]) {
+    outline-width: var(--focus-ring-width, 2px);
+    outline-offset: var(--focus-ring-offset, 2px);
+    outline-style: var(--focus-ring-style, solid);
+    outline-color: var(--focus-ring-color);
+  }
+
+  .emotion-20:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-20 :where(svg) {
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    width: var(--chakra-sizes-5);
+    height: var(--chakra-sizes-5);
+  }
+
+  .emotion-20:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+    --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+    background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+  }
+
+  @media (hover: hover) {
+    .emotion-20:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+      --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+      background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+      --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    }
+  }
 }
 
 .emotion-20 :where(svg) {
@@ -2420,6 +5840,90 @@ exports[`object fields with title and description show add button and fields if 
 
 .emotion-21 {
   justify-self: flex-end;
+}
+
+@layer recipes {
+  .emotion-22 {
+    display: -webkit-inline-box;
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    position: relative;
+    border-radius: var(--chakra-radii-l2);
+    white-space: nowrap;
+    vertical-align: middle;
+    border-width: 1px;
+    border-color: var(--chakra-colors-transparent);
+    cursor: var(--chakra-cursor-button);
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    outline: 0;
+    line-height: 1.25rem;
+    isolation: isolate;
+    font-weight: var(--chakra-font-weights-medium);
+    transition-property: background-color,border-color,color,fill,stroke,opacity,box-shadow,translate,transform;
+    transition-duration: var(--chakra-durations-moderate);
+    --focus-ring-color: var(--chakra-colors-color-palette-focus-ring);
+    height: var(--chakra-sizes-10);
+    min-width: var(--chakra-sizes-10);
+    font-size: var(--chakra-font-sizes-sm);
+    padding-inline: var(--chakra-spacing-4);
+    gap: var(--chakra-spacing-2);
+    background: var(--chakra-colors-color-palette-solid);
+    --bg-currentcolor: var(--chakra-colors-color-palette-solid);
+    color: var(--chakra-colors-color-palette-contrast);
+  }
+
+  .emotion-22:is(:focus-visible, [data-focus-visible]) {
+    outline-width: var(--focus-ring-width, 2px);
+    outline-offset: var(--focus-ring-offset, 2px);
+    outline-style: var(--focus-ring-style, solid);
+    outline-color: var(--focus-ring-color);
+  }
+
+  .emotion-22:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-22 :where(svg) {
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    width: var(--chakra-sizes-5);
+    height: var(--chakra-sizes-5);
+  }
+
+  .emotion-22:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+    --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+    background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+  }
+
+  @media (hover: hover) {
+    .emotion-22:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+      --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+      background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+      --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    }
+  }
 }
 
 .emotion-23 {
@@ -2646,6 +6150,39 @@ exports[`object fields with title and description show add button and fields if 
 `;
 
 exports[`object fields with title and description with global label off additionalProperties 1`] = `
+@layer recipes {
+  .emotion-0 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    width: var(--chakra-sizes-full);
+  }
+
+  .emotion-0>:not(style, [hidden])~:not(style, [hidden]) {
+    --space-y-reverse: 0;
+    margin-top: calc(var(--chakra-spacing-4) * calc(1 - var(--space-y-reverse)));
+    margin-bottom: calc(var(--chakra-spacing-4) * var(--space-y-reverse));
+  }
+}
+
+@layer recipes {
+  .emotion-1 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    width: var(--chakra-sizes-full);
+    gap: var(--chakra-spacing-4);
+  }
+}
+
 .emotion-2 {
   display: grid;
   gap: var(--chakra-spacing-6);
@@ -2661,17 +6198,255 @@ exports[`object fields with title and description with global label off addition
   gap: var(--chakra-spacing-2);
 }
 
+@layer recipes {
+  .emotion-6 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    width: 100%;
+    position: relative;
+    gap: var(--chakra-spacing-1\\.5);
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-align-items: flex-start;
+    -webkit-box-align: flex-start;
+    -ms-flex-align: flex-start;
+    align-items: flex-start;
+  }
+}
+
+@layer recipes {
+  .emotion-7 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    text-align: start;
+    font-size: var(--chakra-font-sizes-sm);
+    line-height: 1.25rem;
+    font-weight: var(--chakra-font-weights-medium);
+    gap: var(--chakra-spacing-1);
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+
+  .emotion-7:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+  }
+}
+
 .emotion-8 {
   margin-bottom: var(--chakra-spacing-1);
+}
+
+@layer recipes {
+  .emotion-8 {
+    width: 100%;
+    min-width: var(--input-height);
+    outline: 0;
+    position: relative;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    text-align: start;
+    border-radius: var(--chakra-radii-l2);
+    height: var(--input-height);
+    --focus-color: var(--chakra-colors-color-palette-focus-ring);
+    --error-color: var(--chakra-colors-border-error);
+    font-size: var(--chakra-font-sizes-sm);
+    line-height: 1.25rem;
+    padding-inline: var(--chakra-spacing-3);
+    --input-height: var(--chakra-sizes-10);
+    background: var(--chakra-colors-transparent);
+    --bg-currentcolor: var(--chakra-colors-transparent);
+    border-width: 1px;
+    border-color: var(--chakra-colors-border);
+    --focus-ring-color: var(--focus-color);
+  }
+
+  .emotion-8:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-8:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+    --focus-ring-color: var(--error-color);
+    border-color: var(--error-color);
+  }
+
+  .emotion-8:is(:focus-visible, [data-focus-visible]) {
+    outline-offset: 0px;
+    outline-width: var(--focus-ring-width, 1px);
+    outline-color: var(--focus-ring-color);
+    outline-style: var(--focus-ring-style, solid);
+    border-color: var(--focus-ring-color);
+  }
 }
 
 .emotion-12 {
   margin-bottom: var(--chakra-spacing-1);
 }
 
+@layer recipes {
+  .emotion-12 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    width: 100%;
+    position: relative;
+    gap: var(--chakra-spacing-1\\.5);
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-align-items: flex-start;
+    -webkit-box-align: flex-start;
+    -ms-flex-align: flex-start;
+    align-items: flex-start;
+  }
+}
+
+@layer recipes {
+  .emotion-13 {
+    width: 100%;
+    min-width: var(--input-height);
+    outline: 0;
+    position: relative;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    text-align: start;
+    border-radius: var(--chakra-radii-l2);
+    height: var(--input-height);
+    --focus-color: var(--chakra-colors-color-palette-focus-ring);
+    --error-color: var(--chakra-colors-border-error);
+    font-size: var(--chakra-font-sizes-sm);
+    line-height: 1.25rem;
+    padding-inline: var(--chakra-spacing-3);
+    --input-height: var(--chakra-sizes-10);
+    background: var(--chakra-colors-transparent);
+    --bg-currentcolor: var(--chakra-colors-transparent);
+    border-width: 1px;
+    border-color: var(--chakra-colors-border);
+    --focus-ring-color: var(--focus-color);
+  }
+
+  .emotion-13:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-13:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+    --focus-ring-color: var(--error-color);
+    border-color: var(--error-color);
+  }
+
+  .emotion-13:is(:focus-visible, [data-focus-visible]) {
+    outline-offset: 0px;
+    outline-width: var(--focus-ring-width, 1px);
+    outline-color: var(--focus-ring-color);
+    outline-style: var(--focus-ring-style, solid);
+    border-color: var(--focus-ring-color);
+  }
+}
+
 .emotion-15 {
   padding-inline: 0;
   padding-block: 0;
+}
+
+@layer recipes {
+  .emotion-15 {
+    display: -webkit-inline-box;
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    position: relative;
+    border-radius: var(--chakra-radii-l2);
+    white-space: nowrap;
+    vertical-align: middle;
+    border-width: 1px;
+    border-color: var(--chakra-colors-transparent);
+    cursor: var(--chakra-cursor-button);
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    outline: 0;
+    line-height: 1.25rem;
+    isolation: isolate;
+    font-weight: var(--chakra-font-weights-medium);
+    transition-property: background-color,border-color,color,fill,stroke,opacity,box-shadow,translate,transform;
+    transition-duration: var(--chakra-durations-moderate);
+    --focus-ring-color: var(--chakra-colors-color-palette-focus-ring);
+    height: var(--chakra-sizes-10);
+    min-width: var(--chakra-sizes-10);
+    font-size: var(--chakra-font-sizes-sm);
+    padding-inline: var(--chakra-spacing-4);
+    gap: var(--chakra-spacing-2);
+    background: var(--chakra-colors-color-palette-solid);
+    --bg-currentcolor: var(--chakra-colors-color-palette-solid);
+    color: var(--chakra-colors-color-palette-contrast);
+  }
+
+  .emotion-15:is(:focus-visible, [data-focus-visible]) {
+    outline-width: var(--focus-ring-width, 2px);
+    outline-offset: var(--focus-ring-offset, 2px);
+    outline-style: var(--focus-ring-style, solid);
+    outline-color: var(--focus-ring-color);
+  }
+
+  .emotion-15:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-15 :where(svg) {
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    width: var(--chakra-sizes-5);
+    height: var(--chakra-sizes-5);
+  }
+
+  .emotion-15:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+    --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+    background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+  }
+
+  @media (hover: hover) {
+    .emotion-15:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+      --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+      background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+      --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    }
+  }
 }
 
 .emotion-15 :where(svg) {
@@ -2680,6 +6455,90 @@ exports[`object fields with title and description with global label off addition
 
 .emotion-16 {
   justify-self: flex-end;
+}
+
+@layer recipes {
+  .emotion-17 {
+    display: -webkit-inline-box;
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    position: relative;
+    border-radius: var(--chakra-radii-l2);
+    white-space: nowrap;
+    vertical-align: middle;
+    border-width: 1px;
+    border-color: var(--chakra-colors-transparent);
+    cursor: var(--chakra-cursor-button);
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    outline: 0;
+    line-height: 1.25rem;
+    isolation: isolate;
+    font-weight: var(--chakra-font-weights-medium);
+    transition-property: background-color,border-color,color,fill,stroke,opacity,box-shadow,translate,transform;
+    transition-duration: var(--chakra-durations-moderate);
+    --focus-ring-color: var(--chakra-colors-color-palette-focus-ring);
+    height: var(--chakra-sizes-10);
+    min-width: var(--chakra-sizes-10);
+    font-size: var(--chakra-font-sizes-sm);
+    padding-inline: var(--chakra-spacing-4);
+    gap: var(--chakra-spacing-2);
+    background: var(--chakra-colors-color-palette-solid);
+    --bg-currentcolor: var(--chakra-colors-color-palette-solid);
+    color: var(--chakra-colors-color-palette-contrast);
+  }
+
+  .emotion-17:is(:focus-visible, [data-focus-visible]) {
+    outline-width: var(--focus-ring-width, 2px);
+    outline-offset: var(--focus-ring-offset, 2px);
+    outline-style: var(--focus-ring-style, solid);
+    outline-color: var(--focus-ring-color);
+  }
+
+  .emotion-17:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-17 :where(svg) {
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    width: var(--chakra-sizes-5);
+    height: var(--chakra-sizes-5);
+  }
+
+  .emotion-17:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+    --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+    background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+  }
+
+  @media (hover: hover) {
+    .emotion-17:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+      --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+      background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+      --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    }
+  }
 }
 
 .emotion-18 {
@@ -2876,6 +6735,39 @@ exports[`object fields with title and description with global label off addition
 `;
 
 exports[`object fields with title and description with global label off object 1`] = `
+@layer recipes {
+  .emotion-0 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    width: var(--chakra-sizes-full);
+  }
+
+  .emotion-0>:not(style, [hidden])~:not(style, [hidden]) {
+    --space-y-reverse: 0;
+    margin-top: calc(var(--chakra-spacing-4) * calc(1 - var(--space-y-reverse)));
+    margin-bottom: calc(var(--chakra-spacing-4) * var(--space-y-reverse));
+  }
+}
+
+@layer recipes {
+  .emotion-1 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    width: var(--chakra-sizes-full);
+    gap: var(--chakra-spacing-4);
+  }
+}
+
 .emotion-2 {
   display: grid;
   gap: var(--chakra-spacing-6);
@@ -2886,8 +6778,156 @@ exports[`object fields with title and description with global label off object 1
   margin-bottom: var(--chakra-spacing-1);
 }
 
+@layer recipes {
+  .emotion-6 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    width: 100%;
+    position: relative;
+    gap: var(--chakra-spacing-1\\.5);
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-align-items: flex-start;
+    -webkit-box-align: flex-start;
+    -ms-flex-align: flex-start;
+    align-items: flex-start;
+  }
+}
+
+@layer recipes {
+  .emotion-7 {
+    width: 100%;
+    min-width: var(--input-height);
+    outline: 0;
+    position: relative;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    text-align: start;
+    border-radius: var(--chakra-radii-l2);
+    height: var(--input-height);
+    --focus-color: var(--chakra-colors-color-palette-focus-ring);
+    --error-color: var(--chakra-colors-border-error);
+    font-size: var(--chakra-font-sizes-sm);
+    line-height: 1.25rem;
+    padding-inline: var(--chakra-spacing-3);
+    --input-height: var(--chakra-sizes-10);
+    background: var(--chakra-colors-transparent);
+    --bg-currentcolor: var(--chakra-colors-transparent);
+    border-width: 1px;
+    border-color: var(--chakra-colors-border);
+    --focus-ring-color: var(--focus-color);
+  }
+
+  .emotion-7:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-7:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+    --focus-ring-color: var(--error-color);
+    border-color: var(--error-color);
+  }
+
+  .emotion-7:is(:focus-visible, [data-focus-visible]) {
+    outline-offset: 0px;
+    outline-width: var(--focus-ring-width, 1px);
+    outline-color: var(--focus-ring-color);
+    outline-style: var(--focus-ring-style, solid);
+    border-color: var(--focus-ring-color);
+  }
+}
+
 .emotion-13 {
   margin-top: var(--chakra-spacing-3);
+}
+
+@layer recipes {
+  .emotion-14 {
+    display: -webkit-inline-box;
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    position: relative;
+    border-radius: var(--chakra-radii-l2);
+    white-space: nowrap;
+    vertical-align: middle;
+    border-width: 1px;
+    border-color: var(--chakra-colors-transparent);
+    cursor: var(--chakra-cursor-button);
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    outline: 0;
+    line-height: 1.25rem;
+    isolation: isolate;
+    font-weight: var(--chakra-font-weights-medium);
+    transition-property: background-color,border-color,color,fill,stroke,opacity,box-shadow,translate,transform;
+    transition-duration: var(--chakra-durations-moderate);
+    --focus-ring-color: var(--chakra-colors-color-palette-focus-ring);
+    height: var(--chakra-sizes-10);
+    min-width: var(--chakra-sizes-10);
+    font-size: var(--chakra-font-sizes-sm);
+    padding-inline: var(--chakra-spacing-4);
+    gap: var(--chakra-spacing-2);
+    background: var(--chakra-colors-color-palette-solid);
+    --bg-currentcolor: var(--chakra-colors-color-palette-solid);
+    color: var(--chakra-colors-color-palette-contrast);
+  }
+
+  .emotion-14:is(:focus-visible, [data-focus-visible]) {
+    outline-width: var(--focus-ring-width, 2px);
+    outline-offset: var(--focus-ring-offset, 2px);
+    outline-style: var(--focus-ring-style, solid);
+    outline-color: var(--focus-ring-color);
+  }
+
+  .emotion-14:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-14 :where(svg) {
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    width: var(--chakra-sizes-5);
+    height: var(--chakra-sizes-5);
+  }
+
+  .emotion-14:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+    --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+    background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+  }
+
+  @media (hover: hover) {
+    .emotion-14:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+      --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+      background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+      --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    }
+  }
 }
 
 <form
@@ -3020,6 +7060,39 @@ exports[`object fields with title and description with global label off object 1
 `;
 
 exports[`object fields with title and description with global label off show add button and fields if additionalProperties is true and not an object 1`] = `
+@layer recipes {
+  .emotion-0 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    width: var(--chakra-sizes-full);
+  }
+
+  .emotion-0>:not(style, [hidden])~:not(style, [hidden]) {
+    --space-y-reverse: 0;
+    margin-top: calc(var(--chakra-spacing-4) * calc(1 - var(--space-y-reverse)));
+    margin-bottom: calc(var(--chakra-spacing-4) * var(--space-y-reverse));
+  }
+}
+
+@layer recipes {
+  .emotion-1 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    width: var(--chakra-sizes-full);
+    gap: var(--chakra-spacing-4);
+  }
+}
+
 .emotion-2 {
   display: grid;
   gap: var(--chakra-spacing-6);
@@ -3035,17 +7108,255 @@ exports[`object fields with title and description with global label off show add
   gap: var(--chakra-spacing-2);
 }
 
+@layer recipes {
+  .emotion-6 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    width: 100%;
+    position: relative;
+    gap: var(--chakra-spacing-1\\.5);
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-align-items: flex-start;
+    -webkit-box-align: flex-start;
+    -ms-flex-align: flex-start;
+    align-items: flex-start;
+  }
+}
+
+@layer recipes {
+  .emotion-7 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    text-align: start;
+    font-size: var(--chakra-font-sizes-sm);
+    line-height: 1.25rem;
+    font-weight: var(--chakra-font-weights-medium);
+    gap: var(--chakra-spacing-1);
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+
+  .emotion-7:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+  }
+}
+
 .emotion-8 {
   margin-bottom: var(--chakra-spacing-1);
+}
+
+@layer recipes {
+  .emotion-8 {
+    width: 100%;
+    min-width: var(--input-height);
+    outline: 0;
+    position: relative;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    text-align: start;
+    border-radius: var(--chakra-radii-l2);
+    height: var(--input-height);
+    --focus-color: var(--chakra-colors-color-palette-focus-ring);
+    --error-color: var(--chakra-colors-border-error);
+    font-size: var(--chakra-font-sizes-sm);
+    line-height: 1.25rem;
+    padding-inline: var(--chakra-spacing-3);
+    --input-height: var(--chakra-sizes-10);
+    background: var(--chakra-colors-transparent);
+    --bg-currentcolor: var(--chakra-colors-transparent);
+    border-width: 1px;
+    border-color: var(--chakra-colors-border);
+    --focus-ring-color: var(--focus-color);
+  }
+
+  .emotion-8:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-8:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+    --focus-ring-color: var(--error-color);
+    border-color: var(--error-color);
+  }
+
+  .emotion-8:is(:focus-visible, [data-focus-visible]) {
+    outline-offset: 0px;
+    outline-width: var(--focus-ring-width, 1px);
+    outline-color: var(--focus-ring-color);
+    outline-style: var(--focus-ring-style, solid);
+    border-color: var(--focus-ring-color);
+  }
 }
 
 .emotion-12 {
   margin-bottom: var(--chakra-spacing-1);
 }
 
+@layer recipes {
+  .emotion-12 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    width: 100%;
+    position: relative;
+    gap: var(--chakra-spacing-1\\.5);
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-align-items: flex-start;
+    -webkit-box-align: flex-start;
+    -ms-flex-align: flex-start;
+    align-items: flex-start;
+  }
+}
+
+@layer recipes {
+  .emotion-13 {
+    width: 100%;
+    min-width: var(--input-height);
+    outline: 0;
+    position: relative;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    text-align: start;
+    border-radius: var(--chakra-radii-l2);
+    height: var(--input-height);
+    --focus-color: var(--chakra-colors-color-palette-focus-ring);
+    --error-color: var(--chakra-colors-border-error);
+    font-size: var(--chakra-font-sizes-sm);
+    line-height: 1.25rem;
+    padding-inline: var(--chakra-spacing-3);
+    --input-height: var(--chakra-sizes-10);
+    background: var(--chakra-colors-transparent);
+    --bg-currentcolor: var(--chakra-colors-transparent);
+    border-width: 1px;
+    border-color: var(--chakra-colors-border);
+    --focus-ring-color: var(--focus-color);
+  }
+
+  .emotion-13:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-13:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+    --focus-ring-color: var(--error-color);
+    border-color: var(--error-color);
+  }
+
+  .emotion-13:is(:focus-visible, [data-focus-visible]) {
+    outline-offset: 0px;
+    outline-width: var(--focus-ring-width, 1px);
+    outline-color: var(--focus-ring-color);
+    outline-style: var(--focus-ring-style, solid);
+    border-color: var(--focus-ring-color);
+  }
+}
+
 .emotion-15 {
   padding-inline: 0;
   padding-block: 0;
+}
+
+@layer recipes {
+  .emotion-15 {
+    display: -webkit-inline-box;
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    position: relative;
+    border-radius: var(--chakra-radii-l2);
+    white-space: nowrap;
+    vertical-align: middle;
+    border-width: 1px;
+    border-color: var(--chakra-colors-transparent);
+    cursor: var(--chakra-cursor-button);
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    outline: 0;
+    line-height: 1.25rem;
+    isolation: isolate;
+    font-weight: var(--chakra-font-weights-medium);
+    transition-property: background-color,border-color,color,fill,stroke,opacity,box-shadow,translate,transform;
+    transition-duration: var(--chakra-durations-moderate);
+    --focus-ring-color: var(--chakra-colors-color-palette-focus-ring);
+    height: var(--chakra-sizes-10);
+    min-width: var(--chakra-sizes-10);
+    font-size: var(--chakra-font-sizes-sm);
+    padding-inline: var(--chakra-spacing-4);
+    gap: var(--chakra-spacing-2);
+    background: var(--chakra-colors-color-palette-solid);
+    --bg-currentcolor: var(--chakra-colors-color-palette-solid);
+    color: var(--chakra-colors-color-palette-contrast);
+  }
+
+  .emotion-15:is(:focus-visible, [data-focus-visible]) {
+    outline-width: var(--focus-ring-width, 2px);
+    outline-offset: var(--focus-ring-offset, 2px);
+    outline-style: var(--focus-ring-style, solid);
+    outline-color: var(--focus-ring-color);
+  }
+
+  .emotion-15:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-15 :where(svg) {
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    width: var(--chakra-sizes-5);
+    height: var(--chakra-sizes-5);
+  }
+
+  .emotion-15:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+    --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+    background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+  }
+
+  @media (hover: hover) {
+    .emotion-15:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+      --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+      background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+      --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    }
+  }
 }
 
 .emotion-15 :where(svg) {
@@ -3054,6 +7365,90 @@ exports[`object fields with title and description with global label off show add
 
 .emotion-16 {
   justify-self: flex-end;
+}
+
+@layer recipes {
+  .emotion-17 {
+    display: -webkit-inline-box;
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    position: relative;
+    border-radius: var(--chakra-radii-l2);
+    white-space: nowrap;
+    vertical-align: middle;
+    border-width: 1px;
+    border-color: var(--chakra-colors-transparent);
+    cursor: var(--chakra-cursor-button);
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    outline: 0;
+    line-height: 1.25rem;
+    isolation: isolate;
+    font-weight: var(--chakra-font-weights-medium);
+    transition-property: background-color,border-color,color,fill,stroke,opacity,box-shadow,translate,transform;
+    transition-duration: var(--chakra-durations-moderate);
+    --focus-ring-color: var(--chakra-colors-color-palette-focus-ring);
+    height: var(--chakra-sizes-10);
+    min-width: var(--chakra-sizes-10);
+    font-size: var(--chakra-font-sizes-sm);
+    padding-inline: var(--chakra-spacing-4);
+    gap: var(--chakra-spacing-2);
+    background: var(--chakra-colors-color-palette-solid);
+    --bg-currentcolor: var(--chakra-colors-color-palette-solid);
+    color: var(--chakra-colors-color-palette-contrast);
+  }
+
+  .emotion-17:is(:focus-visible, [data-focus-visible]) {
+    outline-width: var(--focus-ring-width, 2px);
+    outline-offset: var(--focus-ring-offset, 2px);
+    outline-style: var(--focus-ring-style, solid);
+    outline-color: var(--focus-ring-color);
+  }
+
+  .emotion-17:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-17 :where(svg) {
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    width: var(--chakra-sizes-5);
+    height: var(--chakra-sizes-5);
+  }
+
+  .emotion-17:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+    --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+    background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+  }
+
+  @media (hover: hover) {
+    .emotion-17:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+      --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+      background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+      --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    }
+  }
 }
 
 .emotion-18 {
