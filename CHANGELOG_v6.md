@@ -47,7 +47,7 @@ should change the heading of the (upcoming) version to include a major version b
 - BREAKING CHANGE: Removed support for the deprecated `schema.enumNames` and `uiSchema.classNames` as well as the deprecated `acceptcharset` prop on `Form`
 - BREAKING CHANGE: Moved the addition of `Bootstrap 3` classes from the `SchemaField` to the `WrapIfAdditionalTemplate`, thereby affecting all the other themes, fixing [#2280](https://github.com/rjsf-team/react-jsonschema-form/issues/2280)
 - BREAKING CHANGE: Added `rjsf-` prefix onto the following marker classes used in the fields and templates:
-  - `field`, `field-<schema.type>`, `field-error`, `field-array`, `field-array-of-<schema.type>`, `field-array-fixed-items`, `array-item`, `config-error`, `array-item-add`, `array-item-copy`, `array-item-move-down`, `array-item-move-up`, `array-item-remove`, `object-property-expand`
+  - `field`, `field-<schema.type>`, `field-error`, `field-hidden`, `field-array`, `field-array-of-<schema.type>`, `field-array-fixed-items`, `array-item`, `config-error`, `array-item-add`, `array-item-copy`, `array-item-move-down`, `array-item-move-up`, `array-item-remove`, `object-property-expand`
 
 ## @rjsf/daisyui
 
