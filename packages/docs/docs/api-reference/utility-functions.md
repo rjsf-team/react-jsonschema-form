@@ -96,7 +96,7 @@ The UI for the field can expand if it has additional properties, is not forced a
 
 #### Returns
 
-- boolean: True if the schema element has additionalProperties, is expandable, and not at the maxProperties limit
+- boolean: True if the schema element has additionalProperties or patternProperties keywords, is expandable, and not at the maxProperties limit
 
 ### createErrorHandler<T = any>()
 
@@ -392,6 +392,7 @@ If the type is not explicitly defined, then an attempt is made to infer it from 
 - schema.enum: Returns `string`
 - schema.properties: Returns `object`
 - schema.additionalProperties: Returns `object`
+- schema.patternProperties: Returns `object`
 - type is an array with a length of 2 and one type is 'null': Returns the other type
 
 #### Parameters

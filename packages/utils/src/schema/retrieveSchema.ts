@@ -16,6 +16,7 @@ import {
   IF_KEY,
   ITEMS_KEY,
   ONE_OF_KEY,
+  PATTERN_PROPERTIES_KEY,
   PROPERTIES_KEY,
   REF_KEY,
 } from '../constants';
@@ -395,35 +396,60 @@ export function stubExistingAdditionalProperties<
       // No need to stub, our schema already has the property
       return;
     }
-
-    let additionalProperties: S['additionalProperties'] = {};
-    if (typeof schema.additionalProperties !== 'boolean') {
-      if (REF_KEY in schema.additionalProperties!) {
-        additionalProperties = retrieveSchema<T, S, F>(
+    if (PATTERN_PROPERTIES_KEY in schema) {
+      const patternProperties = Object.keys(schema.patternProperties!)
+        .filter((pattern) => RegExp(pattern).test(key))
+        .reduce((obj, pattern) => {
+          obj[pattern] = schema.patternProperties![pattern];
+          return obj;
+        }, {} as NonNullable<S['patternProperties']>);
+      if (Object.keys(patternProperties).length > 0) {
+        schema.properties[key] = retrieveSchema<T, S, F>(
           validator,
-          { $ref: get(schema.additionalProperties, [REF_KEY]) } as S,
+          { allOf: Object.values(patternProperties) } as S,
           rootSchema,
           formData as T,
           experimental_customMergeAllOf,
         );
-      } else if ('type' in schema.additionalProperties!) {
-        additionalProperties = { ...schema.additionalProperties };
-      } else if (ANY_OF_KEY in schema.additionalProperties! || ONE_OF_KEY in schema.additionalProperties!) {
-        additionalProperties = {
-          type: 'object',
-          ...schema.additionalProperties,
-        };
+        set(schema.properties, [key, ADDITIONAL_PROPERTY_FLAG], true);
+        return;
+      }
+    }
+    if (ADDITIONAL_PROPERTIES_KEY in schema && schema.additionalProperties !== false) {
+      let additionalProperties: S['additionalProperties'] = {};
+      if (typeof schema.additionalProperties !== 'boolean') {
+        if (REF_KEY in schema.additionalProperties!) {
+          additionalProperties = retrieveSchema<T, S, F>(
+            validator,
+            { $ref: get(schema.additionalProperties, [REF_KEY]) } as S,
+            rootSchema,
+            formData as T,
+            experimental_customMergeAllOf
+          );
+        } else if ('type' in schema.additionalProperties!) {
+          additionalProperties = { ...schema.additionalProperties };
+        } else if (ANY_OF_KEY in schema.additionalProperties! || ONE_OF_KEY in schema.additionalProperties!) {
+          additionalProperties = {
+            type: 'object',
+            ...schema.additionalProperties,
+          };
+        } else {
+          additionalProperties = { type: guessType(get(formData, [key])) };
+        }
       } else {
         additionalProperties = { type: guessType(get(formData, [key])) };
       }
-    } else {
-      additionalProperties = { type: guessType(get(formData, [key])) };
-    }
 
-    // The type of our new key should match the additionalProperties value;
-    schema.properties[key] = additionalProperties;
-    // Set our additional property flag so we know it was dynamically added
-    set(schema.properties, [key, ADDITIONAL_PROPERTY_FLAG], true);
+      // The type of our new key should match the additionalProperties value;
+      schema.properties[key] = additionalProperties;
+      // Set our additional property flag so we know it was dynamically added
+      set(schema.properties, [key, ADDITIONAL_PROPERTY_FLAG], true);
+    } else {
+      // Invalid property
+      schema.properties[key] = { type: 'null' };
+      // Set our additional property flag so we know it was dynamically added
+      set(schema.properties, [key, ADDITIONAL_PROPERTY_FLAG], true);
+    }
   });
 
   return schema;
@@ -516,8 +542,35 @@ export function retrieveSchemaInternal<
         return resolvedSchemaWithoutAllOf as S;
       }
     }
+    if (PROPERTIES_KEY in resolvedSchema && PATTERN_PROPERTIES_KEY in resolvedSchema) {
+      resolvedSchema = Object.keys(resolvedSchema.properties!).reduce(
+        (schema, key) => {
+          const patternProperties = Object.keys(schema.patternProperties!)
+            .filter((pattern) => RegExp(pattern).test(key))
+            .reduce((obj, pattern) => {
+              obj[pattern] = schema.patternProperties![pattern];
+              return obj;
+            }, {} as NonNullable<S['patternProperties']>);
+          if (Object.keys(patternProperties).length > 0) {
+            schema.properties[key] = retrieveSchema<T, S, F>(
+              validator,
+              { allOf: [schema.properties[key], ...Object.values(patternProperties)] } as S,
+              rootSchema,
+              rawFormData as T,
+              experimental_customMergeAllOf
+            );
+          }
+          return schema;
+        },
+        {
+          ...resolvedSchema,
+          properties: { ...resolvedSchema.properties },
+        }
+      );
+    }
     const hasAdditionalProperties =
-      ADDITIONAL_PROPERTIES_KEY in resolvedSchema && resolvedSchema.additionalProperties !== false;
+      PATTERN_PROPERTIES_KEY in resolvedSchema ||
+      (ADDITIONAL_PROPERTIES_KEY in resolvedSchema && resolvedSchema.additionalProperties !== false);
     if (hasAdditionalProperties) {
       return stubExistingAdditionalProperties<T, S, F>(
         validator,
