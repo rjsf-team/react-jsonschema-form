@@ -7,13 +7,13 @@ exports[`object fields additionalProperties 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="form-group rjsf-field rjsf-field-object"
   >
     <fieldset
       id="root"
     >
       <div
-        className="form-group field field-string"
+        className="form-group rjsf-field rjsf-field-string"
       >
         <div
           className="row"
@@ -70,7 +70,7 @@ exports[`object fields additionalProperties 1`] = `
             className="col-xs-2"
           >
             <button
-              className="btn btn-danger array-item-remove btn-block"
+              className="btn btn-danger rjsf-object-property-remove btn-block"
               disabled={false}
               id="root_foo__remove"
               onClick={[Function]}
@@ -93,7 +93,7 @@ exports[`object fields additionalProperties 1`] = `
         className="row"
       >
         <p
-          className="col-xs-3 col-xs-offset-9 text-right object-property-expand"
+          className="col-xs-3 col-xs-offset-9 text-right rjsf-object-property-expand"
         >
           <button
             className="btn btn-info btn-add col-xs-12"
@@ -129,13 +129,13 @@ exports[`object fields object 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="form-group rjsf-field rjsf-field-object"
   >
     <fieldset
       id="root"
     >
       <div
-        className="form-group field field-string"
+        className="form-group rjsf-field rjsf-field-string"
       >
         <label
           className="control-label"
@@ -162,7 +162,7 @@ exports[`object fields object 1`] = `
         />
       </div>
       <div
-        className="form-group field field-number"
+        className="form-group rjsf-field rjsf-field-number"
       >
         <label
           className="control-label"
@@ -210,13 +210,13 @@ exports[`object fields show add button and fields if additionalProperties is tru
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="form-group rjsf-field rjsf-field-object"
   >
     <fieldset
       id="root"
     >
       <div
-        className="form-group field field-string"
+        className="form-group rjsf-field rjsf-field-string"
       >
         <div
           className="row"
@@ -273,7 +273,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
             className="col-xs-2"
           >
             <button
-              className="btn btn-danger array-item-remove btn-block"
+              className="btn btn-danger rjsf-object-property-remove btn-block"
               disabled={false}
               id="root_additionalProperty__remove"
               onClick={[Function]}
@@ -296,7 +296,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
         className="row"
       >
         <p
-          className="col-xs-3 col-xs-offset-9 text-right object-property-expand"
+          className="col-xs-3 col-xs-offset-9 text-right rjsf-object-property-expand"
         >
           <button
             className="btn btn-info btn-add col-xs-12"
@@ -332,7 +332,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="form-group rjsf-field rjsf-field-object"
   >
     <fieldset
       id="root"
@@ -349,7 +349,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
         a test description
       </p>
       <div
-        className="form-group field field-string"
+        className="form-group rjsf-field rjsf-field-string"
       >
         <div
           className="row"
@@ -406,7 +406,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
             className="col-xs-2"
           >
             <button
-              className="btn btn-danger array-item-remove btn-block"
+              className="btn btn-danger rjsf-object-property-remove btn-block"
               disabled={false}
               id="root_foo__remove"
               onClick={[Function]}
@@ -429,7 +429,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
         className="row"
       >
         <p
-          className="col-xs-3 col-xs-offset-9 text-right object-property-expand"
+          className="col-xs-3 col-xs-offset-9 text-right rjsf-object-property-expand"
         >
           <button
             className="btn btn-info btn-add col-xs-12"
@@ -465,7 +465,7 @@ exports[`object fields with title and description from both additionalProperties
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="form-group rjsf-field rjsf-field-object"
   >
     <fieldset
       id="root"
@@ -482,7 +482,7 @@ exports[`object fields with title and description from both additionalProperties
         a fancier description
       </p>
       <div
-        className="form-group field field-string"
+        className="form-group rjsf-field rjsf-field-string"
       >
         <div
           className="row"
@@ -539,7 +539,7 @@ exports[`object fields with title and description from both additionalProperties
             className="col-xs-2"
           >
             <button
-              className="btn btn-danger array-item-remove btn-block"
+              className="btn btn-danger rjsf-object-property-remove btn-block"
               disabled={false}
               id="root_foo__remove"
               onClick={[Function]}
@@ -562,7 +562,7 @@ exports[`object fields with title and description from both additionalProperties
         className="row"
       >
         <p
-          className="col-xs-3 col-xs-offset-9 text-right object-property-expand"
+          className="col-xs-3 col-xs-offset-9 text-right rjsf-object-property-expand"
         >
           <button
             className="btn btn-info btn-add col-xs-12"
@@ -598,7 +598,7 @@ exports[`object fields with title and description from both object 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="form-group rjsf-field rjsf-field-object"
   >
     <fieldset
       id="root"
@@ -615,7 +615,7 @@ exports[`object fields with title and description from both object 1`] = `
         a fancier description
       </p>
       <div
-        className="form-group field field-string"
+        className="form-group rjsf-field rjsf-field-string"
       >
         <label
           className="control-label"
@@ -648,7 +648,7 @@ exports[`object fields with title and description from both object 1`] = `
         />
       </div>
       <div
-        className="form-group field field-number"
+        className="form-group rjsf-field rjsf-field-number"
       >
         <label
           className="control-label"
@@ -702,7 +702,7 @@ exports[`object fields with title and description from uiSchema additionalProper
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="form-group rjsf-field rjsf-field-object"
   >
     <fieldset
       id="root"
@@ -719,7 +719,7 @@ exports[`object fields with title and description from uiSchema additionalProper
         a fancier description
       </p>
       <div
-        className="form-group field field-string"
+        className="form-group rjsf-field rjsf-field-string"
       >
         <div
           className="row"
@@ -776,7 +776,7 @@ exports[`object fields with title and description from uiSchema additionalProper
             className="col-xs-2"
           >
             <button
-              className="btn btn-danger array-item-remove btn-block"
+              className="btn btn-danger rjsf-object-property-remove btn-block"
               disabled={false}
               id="root_foo__remove"
               onClick={[Function]}
@@ -799,7 +799,7 @@ exports[`object fields with title and description from uiSchema additionalProper
         className="row"
       >
         <p
-          className="col-xs-3 col-xs-offset-9 text-right object-property-expand"
+          className="col-xs-3 col-xs-offset-9 text-right rjsf-object-property-expand"
         >
           <button
             className="btn btn-info btn-add col-xs-12"
@@ -835,7 +835,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="form-group rjsf-field rjsf-field-object"
   >
     <fieldset
       id="root"
@@ -852,7 +852,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
         a fancier description
       </p>
       <div
-        className="form-group field field-string"
+        className="form-group rjsf-field rjsf-field-string"
       >
         <label
           className="control-label"
@@ -885,7 +885,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
         />
       </div>
       <div
-        className="form-group field field-number"
+        className="form-group rjsf-field rjsf-field-number"
       >
         <label
           className="control-label"
@@ -939,7 +939,7 @@ exports[`object fields with title and description from uiSchema show add button 
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="form-group rjsf-field rjsf-field-object"
   >
     <fieldset
       id="root"
@@ -956,7 +956,7 @@ exports[`object fields with title and description from uiSchema show add button 
         a fancier description
       </p>
       <div
-        className="form-group field field-string"
+        className="form-group rjsf-field rjsf-field-string"
       >
         <div
           className="row"
@@ -1013,7 +1013,7 @@ exports[`object fields with title and description from uiSchema show add button 
             className="col-xs-2"
           >
             <button
-              className="btn btn-danger array-item-remove btn-block"
+              className="btn btn-danger rjsf-object-property-remove btn-block"
               disabled={false}
               id="root_additionalProperty__remove"
               onClick={[Function]}
@@ -1036,7 +1036,7 @@ exports[`object fields with title and description from uiSchema show add button 
         className="row"
       >
         <p
-          className="col-xs-3 col-xs-offset-9 text-right object-property-expand"
+          className="col-xs-3 col-xs-offset-9 text-right rjsf-object-property-expand"
         >
           <button
             className="btn btn-info btn-add col-xs-12"
@@ -1072,7 +1072,7 @@ exports[`object fields with title and description object 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="form-group rjsf-field rjsf-field-object"
   >
     <fieldset
       id="root"
@@ -1089,7 +1089,7 @@ exports[`object fields with title and description object 1`] = `
         a test description
       </p>
       <div
-        className="form-group field field-string"
+        className="form-group rjsf-field rjsf-field-string"
       >
         <label
           className="control-label"
@@ -1122,7 +1122,7 @@ exports[`object fields with title and description object 1`] = `
         />
       </div>
       <div
-        className="form-group field field-number"
+        className="form-group rjsf-field rjsf-field-number"
       >
         <label
           className="control-label"
@@ -1176,7 +1176,7 @@ exports[`object fields with title and description show add button and fields if 
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="form-group rjsf-field rjsf-field-object"
   >
     <fieldset
       id="root"
@@ -1193,7 +1193,7 @@ exports[`object fields with title and description show add button and fields if 
         a test description
       </p>
       <div
-        className="form-group field field-string"
+        className="form-group rjsf-field rjsf-field-string"
       >
         <div
           className="row"
@@ -1250,7 +1250,7 @@ exports[`object fields with title and description show add button and fields if 
             className="col-xs-2"
           >
             <button
-              className="btn btn-danger array-item-remove btn-block"
+              className="btn btn-danger rjsf-object-property-remove btn-block"
               disabled={false}
               id="root_additionalProperty__remove"
               onClick={[Function]}
@@ -1273,7 +1273,7 @@ exports[`object fields with title and description show add button and fields if 
         className="row"
       >
         <p
-          className="col-xs-3 col-xs-offset-9 text-right object-property-expand"
+          className="col-xs-3 col-xs-offset-9 text-right rjsf-object-property-expand"
         >
           <button
             className="btn btn-info btn-add col-xs-12"
@@ -1309,13 +1309,13 @@ exports[`object fields with title and description with global label off addition
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="form-group rjsf-field rjsf-field-object"
   >
     <fieldset
       id="root"
     >
       <div
-        className="form-group field field-string"
+        className="form-group rjsf-field rjsf-field-string"
       >
         <div
           className="row"
@@ -1366,7 +1366,7 @@ exports[`object fields with title and description with global label off addition
             className="col-xs-2"
           >
             <button
-              className="btn btn-danger array-item-remove btn-block"
+              className="btn btn-danger rjsf-object-property-remove btn-block"
               disabled={false}
               id="root_foo__remove"
               onClick={[Function]}
@@ -1389,7 +1389,7 @@ exports[`object fields with title and description with global label off addition
         className="row"
       >
         <p
-          className="col-xs-3 col-xs-offset-9 text-right object-property-expand"
+          className="col-xs-3 col-xs-offset-9 text-right rjsf-object-property-expand"
         >
           <button
             className="btn btn-info btn-add col-xs-12"
@@ -1425,13 +1425,13 @@ exports[`object fields with title and description with global label off object 1
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="form-group rjsf-field rjsf-field-object"
   >
     <fieldset
       id="root"
     >
       <div
-        className="form-group field field-string"
+        className="form-group rjsf-field rjsf-field-string"
       >
         <input
           aria-describedby="root_a__error root_a__description root_a__help"
@@ -1452,7 +1452,7 @@ exports[`object fields with title and description with global label off object 1
         />
       </div>
       <div
-        className="form-group field field-number"
+        className="form-group rjsf-field rjsf-field-number"
       >
         <input
           aria-describedby="root_b__error root_b__description root_b__help"
@@ -1494,13 +1494,13 @@ exports[`object fields with title and description with global label off show add
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="form-group rjsf-field rjsf-field-object"
   >
     <fieldset
       id="root"
     >
       <div
-        className="form-group field field-string"
+        className="form-group rjsf-field rjsf-field-string"
       >
         <div
           className="row"
@@ -1551,7 +1551,7 @@ exports[`object fields with title and description with global label off show add
             className="col-xs-2"
           >
             <button
-              className="btn btn-danger array-item-remove btn-block"
+              className="btn btn-danger rjsf-object-property-remove btn-block"
               disabled={false}
               id="root_additionalProperty__remove"
               onClick={[Function]}
@@ -1574,7 +1574,7 @@ exports[`object fields with title and description with global label off show add
         className="row"
       >
         <p
-          className="col-xs-3 col-xs-offset-9 text-right object-property-expand"
+          className="col-xs-3 col-xs-offset-9 text-right rjsf-object-property-expand"
         >
           <button
             className="btn btn-info btn-add col-xs-12"

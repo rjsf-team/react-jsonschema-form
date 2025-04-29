@@ -720,7 +720,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
   onSubmit={[Function]}
 >
   <div
-    className="field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -742,7 +742,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
           }
         >
           <div
-            className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 field-string emotion-3"
+            className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 rjsf-field rjsf-field-string emotion-3"
           >
             <div
               className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-4"
@@ -850,7 +850,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
               className="MuiGrid2-root MuiGrid2-direction-xs-row emotion-19"
             >
               <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeSmall array-item-remove emotion-20"
+                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeSmall rjsf-object-property-remove emotion-20"
                 disabled={null}
                 id="root_foo__remove"
                 onBlur={[Function]}
@@ -900,7 +900,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
             className="MuiGrid2-root MuiGrid2-direction-xs-row emotion-19"
           >
             <button
-              className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorPrimary MuiIconButton-sizeMedium object-property-expand emotion-24"
+              className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorPrimary MuiIconButton-sizeMedium rjsf-object-property-expand emotion-24"
               disabled={null}
               id="root__add"
               onBlur={[Function]}
@@ -1376,7 +1376,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
   onSubmit={[Function]}
 >
   <div
-    className="field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -1398,7 +1398,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
           }
         >
           <div
-            className="field-string"
+            className="rjsf-field rjsf-field-string"
           >
             <div
               className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -1461,7 +1461,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
           }
         >
           <div
-            className="field-number"
+            className="rjsf-field rjsf-field-number"
           >
             <div
               className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -2263,7 +2263,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
   onSubmit={[Function]}
 >
   <div
-    className="field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -2285,7 +2285,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
           }
         >
           <div
-            className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 field-string emotion-3"
+            className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 rjsf-field rjsf-field-string emotion-3"
           >
             <div
               className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-4"
@@ -2393,7 +2393,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
               className="MuiGrid2-root MuiGrid2-direction-xs-row emotion-19"
             >
               <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeSmall array-item-remove emotion-20"
+                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeSmall rjsf-object-property-remove emotion-20"
                 disabled={null}
                 id="root_additionalProperty__remove"
                 onBlur={[Function]}
@@ -2443,7 +2443,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
             className="MuiGrid2-root MuiGrid2-direction-xs-row emotion-19"
           >
             <button
-              className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorPrimary MuiIconButton-sizeMedium object-property-expand emotion-24"
+              className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorPrimary MuiIconButton-sizeMedium rjsf-object-property-expand emotion-24"
               disabled={null}
               id="root__add"
               onBlur={[Function]}
@@ -3262,7 +3262,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
   onSubmit={[Function]}
 >
   <div
-    className="field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -3309,7 +3309,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
           }
         >
           <div
-            className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 field-string emotion-7"
+            className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 rjsf-field rjsf-field-string emotion-7"
           >
             <div
               className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-8"
@@ -3417,7 +3417,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
               className="MuiGrid2-root MuiGrid2-direction-xs-row emotion-23"
             >
               <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeSmall array-item-remove emotion-24"
+                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeSmall rjsf-object-property-remove emotion-24"
                 disabled={null}
                 id="root_foo__remove"
                 onBlur={[Function]}
@@ -3467,7 +3467,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
             className="MuiGrid2-root MuiGrid2-direction-xs-row emotion-23"
           >
             <button
-              className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorPrimary MuiIconButton-sizeMedium object-property-expand emotion-28"
+              className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorPrimary MuiIconButton-sizeMedium rjsf-object-property-expand emotion-28"
               disabled={null}
               id="root__add"
               onBlur={[Function]}
@@ -4286,7 +4286,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
   onSubmit={[Function]}
 >
   <div
-    className="field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -4333,7 +4333,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
           }
         >
           <div
-            className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 field-string emotion-7"
+            className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 rjsf-field rjsf-field-string emotion-7"
           >
             <div
               className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-8"
@@ -4441,7 +4441,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
               className="MuiGrid2-root MuiGrid2-direction-xs-row emotion-23"
             >
               <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeSmall array-item-remove emotion-24"
+                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeSmall rjsf-object-property-remove emotion-24"
                 disabled={null}
                 id="root_foo__remove"
                 onBlur={[Function]}
@@ -4491,7 +4491,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
             className="MuiGrid2-root MuiGrid2-direction-xs-row emotion-23"
           >
             <button
-              className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorPrimary MuiIconButton-sizeMedium object-property-expand emotion-28"
+              className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorPrimary MuiIconButton-sizeMedium rjsf-object-property-expand emotion-28"
               disabled={null}
               id="root__add"
               onBlur={[Function]}
@@ -5011,7 +5011,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
   onSubmit={[Function]}
 >
   <div
-    className="field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -5058,7 +5058,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
           }
         >
           <div
-            className="field-string"
+            className="rjsf-field rjsf-field-string"
           >
             <div
               className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -5137,7 +5137,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
           }
         >
           <div
-            className="field-number"
+            className="rjsf-field rjsf-field-number"
           >
             <div
               className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -5993,7 +5993,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
   onSubmit={[Function]}
 >
   <div
-    className="field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -6040,7 +6040,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
           }
         >
           <div
-            className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 field-string emotion-7"
+            className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 rjsf-field rjsf-field-string emotion-7"
           >
             <div
               className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-8"
@@ -6148,7 +6148,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
               className="MuiGrid2-root MuiGrid2-direction-xs-row emotion-23"
             >
               <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeSmall array-item-remove emotion-24"
+                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeSmall rjsf-object-property-remove emotion-24"
                 disabled={null}
                 id="root_foo__remove"
                 onBlur={[Function]}
@@ -6198,7 +6198,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
             className="MuiGrid2-root MuiGrid2-direction-xs-row emotion-23"
           >
             <button
-              className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorPrimary MuiIconButton-sizeMedium object-property-expand emotion-28"
+              className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorPrimary MuiIconButton-sizeMedium rjsf-object-property-expand emotion-28"
               disabled={null}
               id="root__add"
               onBlur={[Function]}
@@ -6718,7 +6718,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
   onSubmit={[Function]}
 >
   <div
-    className="field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -6765,7 +6765,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
           }
         >
           <div
-            className="field-string"
+            className="rjsf-field rjsf-field-string"
           >
             <div
               className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -6844,7 +6844,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
           }
         >
           <div
-            className="field-number"
+            className="rjsf-field rjsf-field-number"
           >
             <div
               className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -7696,7 +7696,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
   onSubmit={[Function]}
 >
   <div
-    className="field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -7743,7 +7743,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
           }
         >
           <div
-            className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 field-string emotion-7"
+            className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 rjsf-field rjsf-field-string emotion-7"
           >
             <div
               className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-8"
@@ -7851,7 +7851,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
               className="MuiGrid2-root MuiGrid2-direction-xs-row emotion-23"
             >
               <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeSmall array-item-remove emotion-24"
+                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeSmall rjsf-object-property-remove emotion-24"
                 disabled={null}
                 id="root_additionalProperty__remove"
                 onBlur={[Function]}
@@ -7901,7 +7901,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
             className="MuiGrid2-root MuiGrid2-direction-xs-row emotion-23"
           >
             <button
-              className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorPrimary MuiIconButton-sizeMedium object-property-expand emotion-28"
+              className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorPrimary MuiIconButton-sizeMedium rjsf-object-property-expand emotion-28"
               disabled={null}
               id="root__add"
               onBlur={[Function]}
@@ -8421,7 +8421,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
   onSubmit={[Function]}
 >
   <div
-    className="field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -8468,7 +8468,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
           }
         >
           <div
-            className="field-string"
+            className="rjsf-field rjsf-field-string"
           >
             <div
               className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -8547,7 +8547,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
           }
         >
           <div
-            className="field-number"
+            className="rjsf-field rjsf-field-number"
           >
             <div
               className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -9399,7 +9399,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
   onSubmit={[Function]}
 >
   <div
-    className="field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -9446,7 +9446,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
           }
         >
           <div
-            className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 field-string emotion-7"
+            className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 rjsf-field rjsf-field-string emotion-7"
           >
             <div
               className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-8"
@@ -9554,7 +9554,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
               className="MuiGrid2-root MuiGrid2-direction-xs-row emotion-23"
             >
               <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeSmall array-item-remove emotion-24"
+                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeSmall rjsf-object-property-remove emotion-24"
                 disabled={null}
                 id="root_additionalProperty__remove"
                 onBlur={[Function]}
@@ -9604,7 +9604,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
             className="MuiGrid2-root MuiGrid2-direction-xs-row emotion-23"
           >
             <button
-              className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorPrimary MuiIconButton-sizeMedium object-property-expand emotion-28"
+              className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorPrimary MuiIconButton-sizeMedium rjsf-object-property-expand emotion-28"
               disabled={null}
               id="root__add"
               onBlur={[Function]}
@@ -10395,7 +10395,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
   onSubmit={[Function]}
 >
   <div
-    className="field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -10417,7 +10417,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
           }
         >
           <div
-            className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 field-string emotion-3"
+            className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 rjsf-field rjsf-field-string emotion-3"
           >
             <div
               className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-4"
@@ -10520,7 +10520,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
               className="MuiGrid2-root MuiGrid2-direction-xs-row emotion-18"
             >
               <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeSmall array-item-remove emotion-19"
+                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeSmall rjsf-object-property-remove emotion-19"
                 disabled={null}
                 id="root_foo__remove"
                 onBlur={[Function]}
@@ -10570,7 +10570,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
             className="MuiGrid2-root MuiGrid2-direction-xs-row emotion-18"
           >
             <button
-              className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorPrimary MuiIconButton-sizeMedium object-property-expand emotion-23"
+              className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorPrimary MuiIconButton-sizeMedium rjsf-object-property-expand emotion-23"
               disabled={null}
               id="root__add"
               onBlur={[Function]}
@@ -10994,7 +10994,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-6:focus::-ms-input-p
   onSubmit={[Function]}
 >
   <div
-    className="field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -11016,7 +11016,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-6:focus::-ms-input-p
           }
         >
           <div
-            className="field-string"
+            className="rjsf-field rjsf-field-string"
           >
             <div
               className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -11074,7 +11074,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-6:focus::-ms-input-p
           }
         >
           <div
-            className="field-number"
+            className="rjsf-field rjsf-field-number"
           >
             <div
               className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -11881,7 +11881,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
   onSubmit={[Function]}
 >
   <div
-    className="field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -11903,7 +11903,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
           }
         >
           <div
-            className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 field-string emotion-3"
+            className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 rjsf-field rjsf-field-string emotion-3"
           >
             <div
               className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-4"
@@ -12006,7 +12006,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
               className="MuiGrid2-root MuiGrid2-direction-xs-row emotion-18"
             >
               <button
-                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeSmall array-item-remove emotion-19"
+                className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeSmall rjsf-object-property-remove emotion-19"
                 disabled={null}
                 id="root_additionalProperty__remove"
                 onBlur={[Function]}
@@ -12056,7 +12056,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
             className="MuiGrid2-root MuiGrid2-direction-xs-row emotion-18"
           >
             <button
-              className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorPrimary MuiIconButton-sizeMedium object-property-expand emotion-23"
+              className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorPrimary MuiIconButton-sizeMedium rjsf-object-property-expand emotion-23"
               disabled={null}
               id="root__add"
               onBlur={[Function]}

@@ -25,7 +25,7 @@ should change the heading of the (upcoming) version to include a major version b
 - BREAKING CHANGE: Removed support for version 4 of `antd`
 - Updated `ArrayFieldItemTemplate` to replace `Button.Group` with `Space.Compact` since `Button.Group` is deprecated in `antd` version 5
 - Upgraded to `@ant-design/icon@5`
-- BREAKING CHANGE: Removed the addition of `Bootstrap 3` marker classes from the `SchemaField`, thereby changing theme `FieldTemplate` className prop output and associated snapshots
+- BREAKING CHANGE: Removed the addition of `Bootstrap 3` classes from the `SchemaField` and added `rjsf-` prefix to marker classes, thereby changing theme `FieldTemplate` className prop output and associated snapshots
 
 ## @rjsf/chakra-ui
 
@@ -34,7 +34,7 @@ should change the heading of the (upcoming) version to include a major version b
 - BREAKING CHANGE: Refactored `ArrayFieldItemTemplate` to use the new `ArrayFieldItemButtonsTemplate`
 - Updated the `ArrayFieldTemplate`, `ObjectFieldTemplate`, and `WrapIfAdditionalTemplate` to a unique id using the `buttonId()` function and adding consistent marker classes
 - Implemented the `GridTemplate` component, adding it to the `templates` for the theme
-- BREAKING CHANGE: Removed the addition of `Bootstrap 3` marker classes from the `SchemaField`, thereby changing theme `FieldTemplate` className prop output and associated snapshots
+- BREAKING CHANGE: Removed the addition of `Bootstrap 3` classes from the `SchemaField` and added `rjsf-` prefix to marker classes, thereby changing theme `FieldTemplate` className prop output and associated snapshots
 
 ## @rjsf/core
 
@@ -45,7 +45,9 @@ should change the heading of the (upcoming) version to include a major version b
 - Implemented the `GridTemplate` component, adding it to the `templates` for the theme
 - Implemented the new `LayoutGridField`, `LayoutMultiSchemaField` and `LayoutHeaderField` fields, adding them to the `fields` list
 - BREAKING CHANGE: Removed support for the deprecated `schema.enumNames` and `uiSchema.classNames` as well as the deprecated `acceptcharset` prop on `Form`
-- BREAKING CHANGE: Moved the addition of `Bootstrap 3` marker classes from the `SchemaField` to the `WrapIfAdditionalTemplate`, thereby affecting all of the other themes, fixing [#2280](https://github.com/rjsf-team/react-jsonschema-form/issues/2280)
+- BREAKING CHANGE: Moved the addition of `Bootstrap 3` classes from the `SchemaField` to the `WrapIfAdditionalTemplate`, thereby affecting all the other themes, fixing [#2280](https://github.com/rjsf-team/react-jsonschema-form/issues/2280)
+- BREAKING CHANGE: Added `rjsf-` prefix onto the following marker classes used in the fields and templates:
+  - `field`, `field-<schema.type>`, `field-error`, `field-array`, `field-array-of-<schema.type>`, `field-array-fixed-items`, `array-item`, `config-error`, `array-item-add`, `array-item-copy`, `array-item-move-down`, `array-item-move-up`, `array-item-remove`, `object-property-expand`
 
 ## @rjsf/daisyui
 
@@ -60,7 +62,7 @@ should change the heading of the (upcoming) version to include a major version b
 - BREAKING CHANGE: Refactored `ArrayFieldItemTemplate` to use the new `ArrayFieldItemButtonsTemplate`
 - Updated the `ArrayFieldTemplate`, `ObjectFieldTemplate`, and `WrapIfAdditionalTemplate` to a unique id using the `buttonId()` function and adding consistent marker classes
 - Implemented the `GridTemplate` component, adding it to the `templates` for the theme
-- BREAKING CHANGE: Removed the addition of `Bootstrap 3` marker classes from the `SchemaField`, thereby changing theme `FieldTemplate` className prop output and associated snapshots
+- BREAKING CHANGE: Removed the addition of `Bootstrap 3` classes from the `SchemaField` and added `rjsf-` prefix to marker classes, thereby changing theme `FieldTemplate` className prop output and associated snapshots
 
 ## @rjsf/material-ui
 
@@ -72,15 +74,14 @@ should change the heading of the (upcoming) version to include a major version b
 - Updated the `ArrayFieldTemplate`, `ObjectFieldTemplate`, and `WrapIfAdditionalTemplate` to a unique id using the `buttonId()` function and adding consistent marker classes
 - Updated the theme to use `Grid2` instead of the deprecated `Grid`
 - Implemented the `GridTemplate` component, adding it to the `templates` for the theme
-- BREAKING CHANGE: Removed the addition of `Bootstrap 3` marker classes from the `SchemaField`, thereby changing theme `FieldTemplate` className prop output and associated snapshots
+- BREAKING CHANGE: Removed the addition of `Bootstrap 3` classes from the `SchemaField` and added `rjsf-` prefix to marker classes, thereby changing theme `FieldTemplate` className prop output and associated snapshots
 
 ## @rjsf/semantic-ui
 
 - BREAKING CHANGE: Refactored `ArrayFieldItemTemplate` to use the new `ArrayFieldItemButtonsTemplate`
 - Updated the `ArrayFieldTemplate`, `ObjectFieldTemplate`, and `WrapIfAdditionalTemplate` to a unique id using the `buttonId()` function and adding consistent marker classes
 - Implemented the `GridTemplate` component, adding it to the `templates` for the theme
-- BREAKING CHANGE: Removed the addition of `Bootstrap 3` marker classes from the `SchemaField`, thereby changing theme `FieldTemplate` className prop output and associated snapshots
-- BREAKING CHANGE: Removed the addition of `Bootstrap 3` marker classes from the `SchemaField`, thereby changing theme `FieldTemplate` className prop output and associated snapshots
+- BREAKING CHANGE: Removed the addition of `Bootstrap 3` classes from the `SchemaField` and added `rjsf-` prefix to marker classes, thereby changing theme `FieldTemplate` className prop output and associated snapshots
 
 ## @rjsf/shadcn
 

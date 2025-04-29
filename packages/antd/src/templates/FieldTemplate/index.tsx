@@ -62,7 +62,7 @@ export default function FieldTemplate<
   );
 
   if (hidden) {
-    return <div className='field-hidden'>{children}</div>;
+    return <div className='rjsf-field-hidden'>{children}</div>;
   }
 
   // check to see if there is rawDescription(string) before using description(ReactNode)

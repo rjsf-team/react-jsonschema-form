@@ -155,7 +155,7 @@ export default function ObjectFieldTemplate<
             <Col flex='192px'>
               <AddButton
                 id={buttonId<T>(idSchema, 'add')}
-                className='object-property-expand'
+                className='rjsf-object-property-expand'
                 disabled={disabled || readonly}
                 onClick={onAddClick(schema)}
                 uiSchema={uiSchema}

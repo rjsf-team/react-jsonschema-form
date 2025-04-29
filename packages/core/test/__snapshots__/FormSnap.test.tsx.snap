@@ -7,7 +7,7 @@ exports[`single fields checkbox field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-boolean"
+    className="form-group rjsf-field rjsf-field-boolean"
   >
     <div
       className="checkbox "
@@ -49,7 +49,7 @@ exports[`single fields checkbox field with label 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-boolean"
+    className="form-group rjsf-field rjsf-field-boolean"
   >
     <div
       className="checkbox "
@@ -93,7 +93,7 @@ exports[`single fields checkboxes field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="form-group rjsf-field rjsf-field-array"
   >
     <label
       className="control-label"
@@ -222,13 +222,13 @@ exports[`single fields field with description 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="form-group rjsf-field rjsf-field-object"
   >
     <fieldset
       id="root"
     >
       <div
-        className="form-group field field-string"
+        className="form-group rjsf-field rjsf-field-string"
       >
         <label
           className="control-label"
@@ -281,13 +281,13 @@ exports[`single fields field with description in uiSchema 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="form-group rjsf-field rjsf-field-object"
   >
     <fieldset
       id="root"
     >
       <div
-        className="form-group field field-string"
+        className="form-group rjsf-field rjsf-field-string"
       >
         <label
           className="control-label"
@@ -340,7 +340,7 @@ exports[`single fields format color 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="form-group rjsf-field rjsf-field-string"
   >
     <input
       aria-describedby="root__error root__description root__help"
@@ -378,7 +378,7 @@ exports[`single fields format date 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="form-group rjsf-field rjsf-field-string"
   >
     <input
       aria-describedby="root__error root__description root__help"
@@ -416,7 +416,7 @@ exports[`single fields format datetime 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="form-group rjsf-field rjsf-field-string"
   >
     <input
       aria-describedby="root__error root__description root__help"
@@ -454,7 +454,7 @@ exports[`single fields format time 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="form-group rjsf-field rjsf-field-string"
   >
     <input
       aria-describedby="root__error root__description root__help"
@@ -514,7 +514,7 @@ exports[`single fields help and error display 1`] = `
     </ul>
   </div>
   <div
-    className="form-group field field-string field-error has-error has-danger"
+    className="form-group rjsf-field rjsf-field-string rjsf-field-error has-error has-danger"
   >
     <input
       aria-describedby="root__error root__description root__help"
@@ -570,7 +570,7 @@ exports[`single fields hidden field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="form-group rjsf-field rjsf-field-object"
   >
     <fieldset
       id="root"
@@ -606,7 +606,7 @@ exports[`single fields hidden label 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="form-group rjsf-field rjsf-field-string"
   >
     <input
       aria-describedby="root__error root__description root__help"
@@ -644,7 +644,7 @@ exports[`single fields null field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-null"
+    className="form-group rjsf-field rjsf-field-null"
   />
   <div>
     <button
@@ -665,7 +665,7 @@ exports[`single fields number field 0 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-number"
+    className="form-group rjsf-field rjsf-field-number"
   >
     <input
       aria-describedby="root__error root__description root__help"
@@ -704,7 +704,7 @@ exports[`single fields number field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-number"
+    className="form-group rjsf-field rjsf-field-number"
   >
     <input
       aria-describedby="root__error root__description root__help"
@@ -743,7 +743,7 @@ exports[`single fields password field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="form-group rjsf-field rjsf-field-string"
   >
     <input
       aria-describedby="root__error root__description root__help"
@@ -781,7 +781,7 @@ exports[`single fields radio field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-boolean"
+    className="form-group rjsf-field rjsf-field-boolean"
   >
     <div
       className="field-radio-group"
@@ -857,7 +857,7 @@ exports[`single fields schema examples 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="form-group rjsf-field rjsf-field-string"
   >
     <input
       aria-describedby="root__error root__description root__help root__examples"
@@ -915,7 +915,7 @@ exports[`single fields select field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="form-group rjsf-field rjsf-field-string"
   >
     <select
       aria-describedby="root__error root__description root__help"
@@ -965,7 +965,7 @@ exports[`single fields select field multiple choice 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="form-group rjsf-field rjsf-field-array"
   >
     <select
       aria-describedby="root__error root__description root__help"
@@ -1023,7 +1023,7 @@ exports[`single fields select field multiple choice enumDisabled 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="form-group rjsf-field rjsf-field-array"
   >
     <select
       aria-describedby="root__error root__description root__help"
@@ -1085,7 +1085,7 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="form-group rjsf-field rjsf-field-array"
   >
     <div
       className="checkboxes"
@@ -1208,7 +1208,7 @@ exports[`single fields select field multiple choice formData 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="form-group rjsf-field rjsf-field-array"
   >
     <select
       aria-describedby="root__error root__description root__help"
@@ -1271,7 +1271,7 @@ exports[`single fields select field multiple choice with labels 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="form-group rjsf-field rjsf-field-array"
   >
     <select
       aria-describedby="root__error root__description root__help"
@@ -1324,7 +1324,7 @@ exports[`single fields select field single choice enumDisabled 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="form-group rjsf-field rjsf-field-string"
   >
     <select
       aria-describedby="root__error root__description root__help"
@@ -1376,7 +1376,7 @@ exports[`single fields select field single choice enumDisabled using radio widge
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="form-group rjsf-field rjsf-field-string"
   >
     <div
       className="field-radio-group"
@@ -1452,7 +1452,7 @@ exports[`single fields select field single choice form disabled using radio widg
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="form-group rjsf-field rjsf-field-string"
   >
     <div
       className="field-radio-group"
@@ -1528,7 +1528,7 @@ exports[`single fields select field single choice formData 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="form-group rjsf-field rjsf-field-string"
   >
     <select
       aria-describedby="root__error root__description root__help"
@@ -1578,7 +1578,7 @@ exports[`single fields select field single choice uiSchema disabled using radio 
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="form-group rjsf-field rjsf-field-string"
   >
     <div
       className="field-radio-group"
@@ -1654,7 +1654,7 @@ exports[`single fields slider field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-integer"
+    className="form-group rjsf-field rjsf-field-integer"
   >
     <div
       className="field-range-wrapper"
@@ -1703,7 +1703,7 @@ exports[`single fields string field format data-url 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="form-group rjsf-field rjsf-field-string"
   >
     <div>
       <input
@@ -1743,7 +1743,7 @@ exports[`single fields string field format email 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="form-group rjsf-field rjsf-field-string"
   >
     <input
       aria-describedby="root__error root__description root__help"
@@ -1781,7 +1781,7 @@ exports[`single fields string field format uri 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="form-group rjsf-field rjsf-field-string"
   >
     <input
       aria-describedby="root__error root__description root__help"
@@ -1819,7 +1819,7 @@ exports[`single fields string field regular 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="form-group rjsf-field rjsf-field-string"
   >
     <input
       aria-describedby="root__error root__description root__help"
@@ -1857,7 +1857,7 @@ exports[`single fields string field with placeholder 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="form-group rjsf-field rjsf-field-string"
   >
     <input
       aria-describedby="root__error root__description root__help"
@@ -1895,7 +1895,7 @@ exports[`single fields textarea field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="form-group rjsf-field rjsf-field-string"
   >
     <textarea
       aria-describedby="root__error root__description root__help"
@@ -1931,7 +1931,7 @@ exports[`single fields title field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="form-group rjsf-field rjsf-field-object"
   >
     <fieldset
       id="root"
@@ -1942,7 +1942,7 @@ exports[`single fields title field 1`] = `
         Titre 1
       </legend>
       <div
-        className="form-group field field-string"
+        className="form-group rjsf-field rjsf-field-string"
       >
         <label
           className="control-label"
@@ -1989,7 +1989,7 @@ exports[`single fields unsupported field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-undefined"
+    className="form-group rjsf-field rjsf-field-undefined"
   >
     <div
       className="unsupported-field"
@@ -2031,7 +2031,7 @@ exports[`single fields up/down field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-number"
+    className="form-group rjsf-field rjsf-field-number"
   >
     <input
       aria-describedby="root__error root__description root__help"
@@ -2069,7 +2069,7 @@ exports[`single fields using custom tagName 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="form-group rjsf-field rjsf-field-string"
   >
     <input
       aria-describedby="root__error root__description root__help"

@@ -15,7 +15,7 @@ export default function FieldErrorTemplate<
 >(props: FieldErrorProps<T, S, F>) {
   const { errors } = props;
   return (
-    <div className='field-error-template text-red-600'>
+    <div className='rjsf-field-error-template text-red-600'>
       <ul className='list-disc list-inside'>{errors?.map((error, index) => <li key={index}>{error}</li>) ?? []}</ul>
     </div>
   );

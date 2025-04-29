@@ -77,7 +77,7 @@ export default function WrapIfAdditionalTemplate<
       <Grid2>
         <RemoveButton
           id={buttonId<T>(id, 'remove')}
-          className='array-item-remove'
+          className='rjsf-object-property-remove'
           iconType='default'
           style={btnStyle}
           disabled={disabled || readonly}

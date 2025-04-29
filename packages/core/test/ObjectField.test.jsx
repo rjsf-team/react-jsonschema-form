@@ -109,26 +109,26 @@ describe('ObjectField', () => {
     it('should render a default property label', () => {
       const { node } = createFormComponent({ schema });
 
-      expect(node.querySelector('.field-boolean label').textContent).eql('bar');
+      expect(node.querySelector('.rjsf-field-boolean label').textContent).eql('bar');
     });
 
     it('should render a string property', () => {
       const { node } = createFormComponent({ schema });
 
-      expect(node.querySelectorAll('.field input[type=text]')).to.have.length.of(1);
+      expect(node.querySelectorAll('.rjsf-field input[type=text]')).to.have.length.of(1);
     });
 
     it('should render a boolean property', () => {
       const { node } = createFormComponent({ schema });
 
-      expect(node.querySelectorAll('.field input[type=checkbox]')).to.have.length.of(1);
+      expect(node.querySelectorAll('.rjsf-field input[type=checkbox]')).to.have.length.of(1);
     });
 
     it('should handle a default object value', () => {
       const { node } = createFormComponent({ schema });
 
-      expect(node.querySelector('.field input[type=text]').value).eql('hey');
-      expect(node.querySelector('.field input[type=checkbox]').checked).eql(true);
+      expect(node.querySelector('.rjsf-field input[type=text]').value).eql('hey');
+      expect(node.querySelector('.rjsf-field input[type=checkbox]').checked).eql(true);
     });
 
     it('should handle required values', () => {
@@ -136,7 +136,7 @@ describe('ObjectField', () => {
 
       // Required field is <input type="text" required="">
       expect(node.querySelector('input[type=text]').getAttribute('required')).eql('');
-      expect(node.querySelector('.field-string label').textContent).eql('Foo*');
+      expect(node.querySelector('.rjsf-field-string label').textContent).eql('Foo*');
     });
 
     it('should fill fields with form data', () => {
@@ -148,8 +148,8 @@ describe('ObjectField', () => {
         },
       });
 
-      expect(node.querySelector('.field input[type=text]').value).eql('hey');
-      expect(node.querySelector('.field input[type=checkbox]').checked).eql(true);
+      expect(node.querySelector('.rjsf-field input[type=text]').value).eql('hey');
+      expect(node.querySelector('.rjsf-field input[type=checkbox]').checked).eql(true);
     });
 
     it('should handle object fields change events', () => {
@@ -164,7 +164,7 @@ describe('ObjectField', () => {
         {
           formData: { foo: 'changed' },
         },
-        'root_foo'
+        'root_foo',
       );
     });
 
@@ -273,7 +273,7 @@ describe('ObjectField', () => {
           errorSchema: {},
           errors: [],
         },
-        'root_checkbox'
+        'root_checkbox',
       );
     });
 
@@ -347,7 +347,7 @@ describe('ObjectField', () => {
         },
       });
 
-      const inputs = node.querySelectorAll('.field-string input[type=text]');
+      const inputs = node.querySelectorAll('.rjsf-field-string input[type=text]');
       act(() => {
         fireEvent.change(inputs[0], { target: { value: 'hello' } });
       });
@@ -366,7 +366,7 @@ describe('ObjectField', () => {
         },
       });
 
-      const inputs = node.querySelectorAll('.field-string input[type=text]');
+      const inputs = node.querySelectorAll('.rjsf-field-string input[type=text]');
       act(() => {
         fireEvent.change(inputs[0], { target: { value: 'test' } });
       });
@@ -383,7 +383,7 @@ describe('ObjectField', () => {
         },
       });
 
-      const inputs = node.querySelectorAll('.field-string input[type=text]');
+      const inputs = node.querySelectorAll('.rjsf-field-string input[type=text]');
       act(() => {
         fireEvent.change(inputs[0], { target: { value: 'hello' } });
       });
@@ -402,7 +402,7 @@ describe('ObjectField', () => {
         },
       });
 
-      const inputs = node.querySelectorAll('.field-string input[type=text]');
+      const inputs = node.querySelectorAll('.rjsf-field-string input[type=text]');
       act(() => {
         fireEvent.change(inputs[0], { target: { value: 'test' } });
       });
@@ -430,7 +430,7 @@ describe('ObjectField', () => {
           'ui:order': ['baz', 'qux', 'bar', 'foo'],
         },
       });
-      const labels = [].map.call(node.querySelectorAll('.field > label'), (l) => l.textContent);
+      const labels = [].map.call(node.querySelectorAll('.rjsf-field > label'), (l) => l.textContent);
 
       expect(labels).eql(['baz', 'qux', 'bar', 'foo']);
     });
@@ -442,7 +442,7 @@ describe('ObjectField', () => {
           'ui:order': ['baz', '*', 'foo'],
         },
       });
-      const labels = [].map.call(node.querySelectorAll('.field > label'), (l) => l.textContent);
+      const labels = [].map.call(node.querySelectorAll('.rjsf-field > label'), (l) => l.textContent);
 
       expect(labels).eql(['baz', 'bar', 'qux', 'foo']);
     });
@@ -455,7 +455,7 @@ describe('ObjectField', () => {
         },
       });
 
-      const labels = [].map.call(node.querySelectorAll('.field > label'), (l) => l.textContent);
+      const labels = [].map.call(node.querySelectorAll('.rjsf-field > label'), (l) => l.textContent);
 
       expect(labels).eql(['baz', 'qux', 'bar', 'foo']);
     });
@@ -468,7 +468,7 @@ describe('ObjectField', () => {
         },
       });
 
-      expect(node.querySelector('.config-error').textContent).to.match(/does not contain properties 'foo', 'qux'/);
+      expect(node.querySelector('.rjsf-config-error').textContent).to.match(/does not contain properties 'foo', 'qux'/);
     });
 
     it('should throw when more than one wildcard is present', () => {
@@ -479,7 +479,7 @@ describe('ObjectField', () => {
         },
       });
 
-      expect(node.querySelector('.config-error').textContent).to.match(/contains more than one wildcard/);
+      expect(node.querySelector('.rjsf-config-error').textContent).to.match(/contains more than one wildcard/);
     });
 
     it('should order referenced schema definitions', () => {
@@ -500,7 +500,7 @@ describe('ObjectField', () => {
           'ui:order': ['bar', 'foo'],
         },
       });
-      const labels = [].map.call(node.querySelectorAll('.field > label'), (l) => l.textContent);
+      const labels = [].map.call(node.querySelectorAll('.rjsf-field > label'), (l) => l.textContent);
 
       expect(labels).eql(['bar', 'foo']);
     });
@@ -530,7 +530,7 @@ describe('ObjectField', () => {
           },
         },
       });
-      const labels = [].map.call(node.querySelectorAll('.field > label'), (l) => l.textContent);
+      const labels = [].map.call(node.querySelectorAll('.rjsf-field > label'), (l) => l.textContent);
 
       expect(labels).eql(['bar', 'foo']);
     });
@@ -612,7 +612,7 @@ describe('ObjectField', () => {
         formData: { first: 1 },
       });
 
-      expect(node.querySelectorAll('.field-string')).to.have.length.of(1);
+      expect(node.querySelectorAll('.rjsf-field-string')).to.have.length.of(1);
     });
 
     it('uiSchema title should not affect additionalProperties', () => {
@@ -730,7 +730,7 @@ describe('ObjectField', () => {
         },
       });
 
-      expect(node.querySelectorAll('.field-string')).to.have.length.of(1);
+      expect(node.querySelectorAll('.rjsf-field-string')).to.have.length.of(1);
     });
 
     it('should render a label for the additional property key', () => {
@@ -803,7 +803,7 @@ describe('ObjectField', () => {
         {
           formData: { newFirst: 1, first: undefined },
         },
-        'root'
+        'root',
       );
     });
 
@@ -829,7 +829,7 @@ describe('ObjectField', () => {
         {
           formData: { 'Renamed custom title': 1 },
         },
-        'root'
+        'root',
       );
 
       const keyInput = node.querySelector('#root_Renamed\\ custom\\ title-key');
@@ -876,7 +876,7 @@ describe('ObjectField', () => {
         {
           formData: { first: 1, newSecond: 2, third: 3 },
         },
-        'root'
+        'root',
       );
 
       expect(Object.keys(onChange.lastCall.args[0].formData)).eql(['first', 'newSecond', 'third']);
@@ -902,7 +902,7 @@ describe('ObjectField', () => {
         {
           formData: { second: 2, 'second-1': 1 },
         },
-        'root'
+        'root',
       );
     });
 
@@ -929,7 +929,7 @@ describe('ObjectField', () => {
         {
           formData: { second: 2, second_1: 1 },
         },
-        'root'
+        'root',
       );
     });
 
@@ -958,7 +958,7 @@ describe('ObjectField', () => {
         {
           formData: { second: 2, second_1: 1 },
         },
-        'root'
+        'root',
       );
     });
 
@@ -1015,7 +1015,7 @@ describe('ObjectField', () => {
     it('should have an expand button', () => {
       const { node } = createFormComponent({ schema });
 
-      expect(node.querySelector('.object-property-expand button')).not.eql(null);
+      expect(node.querySelector('.rjsf-object-property-expand button')).not.eql(null);
     });
 
     it('should not have an expand button if expandable is false', () => {
@@ -1024,13 +1024,13 @@ describe('ObjectField', () => {
         uiSchema: { 'ui:options': { expandable: false } },
       });
 
-      expect(node.querySelector('.object-property-expand button')).to.be.null;
+      expect(node.querySelector('.rjsf-object-property-expand button')).to.be.null;
     });
 
     it('should add a new property when clicking the expand button', () => {
       const { node, onChange } = createFormComponent({ schema });
 
-      fireEvent.click(node.querySelector('.object-property-expand button'));
+      fireEvent.click(node.querySelector('.rjsf-object-property-expand button'));
 
       sinon.assert.calledWithMatch(onChange.lastCall, {
         formData: {
@@ -1045,7 +1045,7 @@ describe('ObjectField', () => {
         formData: { newKey: 1 },
       });
 
-      fireEvent.click(node.querySelector('.object-property-expand button'));
+      fireEvent.click(node.querySelector('.rjsf-object-property-expand button'));
       sinon.assert.calledWithMatch(onChange.lastCall, {
         formData: {
           'newKey-1': 'New Value',
@@ -1069,7 +1069,7 @@ describe('ObjectField', () => {
         formData: {},
       });
 
-      fireEvent.click(node.querySelector('.object-property-expand button'));
+      fireEvent.click(node.querySelector('.rjsf-object-property-expand button'));
 
       sinon.assert.calledWithMatch(onChange.lastCall, {
         formData: {
@@ -1089,7 +1089,7 @@ describe('ObjectField', () => {
         formData: {},
       });
 
-      fireEvent.click(node.querySelector('.object-property-expand button'));
+      fireEvent.click(node.querySelector('.rjsf-object-property-expand button'));
 
       sinon.assert.calledWithMatch(onChange.lastCall, {
         formData: {
@@ -1111,7 +1111,7 @@ describe('ObjectField', () => {
         formData: {},
       });
 
-      fireEvent.click(node.querySelector('.object-property-expand button'));
+      fireEvent.click(node.querySelector('.rjsf-object-property-expand button'));
 
       sinon.assert.calledWithMatch(onChange.lastCall, {
         formData: {
@@ -1133,7 +1133,7 @@ describe('ObjectField', () => {
         formData: {},
       });
 
-      fireEvent.click(node.querySelector('.object-property-expand button'));
+      fireEvent.click(node.querySelector('.rjsf-object-property-expand button'));
 
       sinon.assert.calledWithMatch(onChange.lastCall, {
         formData: {
@@ -1148,7 +1148,7 @@ describe('ObjectField', () => {
         formData: { first: 1 },
       });
 
-      expect(node.querySelector('.object-property-expand button')).to.be.null;
+      expect(node.querySelector('.rjsf-object-property-expand button')).to.be.null;
     });
 
     it('should provide an expand button if length is less than maxProperties', () => {
@@ -1157,7 +1157,7 @@ describe('ObjectField', () => {
         formData: { first: 1 },
       });
 
-      expect(node.querySelector('.object-property-expand button')).not.eql(null);
+      expect(node.querySelector('.rjsf-object-property-expand button')).not.eql(null);
     });
 
     it('should not provide an expand button if expandable is expliclty false regardless of maxProperties value', () => {
@@ -1171,7 +1171,7 @@ describe('ObjectField', () => {
         },
       });
 
-      expect(node.querySelector('.object-property-expand button')).to.be.null;
+      expect(node.querySelector('.rjsf-object-property-expand button')).to.be.null;
     });
 
     it('should ignore expandable value if maxProperties constraint is not satisfied', () => {
@@ -1185,7 +1185,7 @@ describe('ObjectField', () => {
         },
       });
 
-      expect(node.querySelector('.object-property-expand button')).to.be.null;
+      expect(node.querySelector('.rjsf-object-property-expand button')).to.be.null;
     });
 
     it('should not have delete button if expand button has not been clicked', () => {
@@ -1201,7 +1201,7 @@ describe('ObjectField', () => {
 
       expect(node.querySelector('.form-group > .form-additional > .form-additional + .col-xs-2 .btn-danger')).eql(null);
 
-      fireEvent.click(node.querySelector('.object-property-expand button'));
+      fireEvent.click(node.querySelector('.rjsf-object-property-expand button'));
 
       expect(node.querySelector('.form-group > .row > .form-additional + .col-xs-2 > .btn-danger')).to.not.be.null;
     });

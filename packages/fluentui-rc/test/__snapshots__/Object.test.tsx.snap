@@ -7,7 +7,7 @@ exports[`object fields additionalProperties 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -24,7 +24,7 @@ exports[`object fields additionalProperties 1`] = `
           }
         >
           <div
-            className="fui-Flex field-string ___8gv6eg0_pb6o3x0 f22iagw f122n59 f1lv1r8n"
+            className="fui-Flex rjsf-field rjsf-field-string ___8gv6eg0_pb6o3x0 f22iagw f122n59 f1lv1r8n"
           >
             <div>
               <div
@@ -88,7 +88,7 @@ exports[`object fields additionalProperties 1`] = `
             </div>
             <div>
               <button
-                className="fui-Button r1alrhcs array-item-remove ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+                className="fui-Button r1alrhcs rjsf-object-property-remove ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
                 disabled={false}
                 id="root_foo__remove"
                 onClick={[Function]}
@@ -129,7 +129,7 @@ exports[`object fields additionalProperties 1`] = `
           className="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
         >
           <button
-            className="fui-Button r1alrhcs object-property-expand ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+            className="fui-Button r1alrhcs rjsf-object-property-expand ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
             disabled={false}
             id="root__add"
             onClick={[Function]}
@@ -181,7 +181,7 @@ exports[`object fields object 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -198,7 +198,7 @@ exports[`object fields object 1`] = `
           }
         >
           <div
-            className="field-string"
+            className="rjsf-field rjsf-field-string"
           >
             <div
               className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -240,7 +240,7 @@ exports[`object fields object 1`] = `
           }
         >
           <div
-            className="field-number"
+            className="rjsf-field rjsf-field-number"
           >
             <div
               className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -299,7 +299,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
   onSubmit={[Function]}
 >
   <div
-    className="field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -316,7 +316,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
           }
         >
           <div
-            className="fui-Flex field-string ___8gv6eg0_pb6o3x0 f22iagw f122n59 f1lv1r8n"
+            className="fui-Flex rjsf-field rjsf-field-string ___8gv6eg0_pb6o3x0 f22iagw f122n59 f1lv1r8n"
           >
             <div>
               <div
@@ -380,7 +380,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
             </div>
             <div>
               <button
-                className="fui-Button r1alrhcs array-item-remove ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+                className="fui-Button r1alrhcs rjsf-object-property-remove ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
                 disabled={false}
                 id="root_additionalProperty__remove"
                 onClick={[Function]}
@@ -421,7 +421,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
           className="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
         >
           <button
-            className="fui-Button r1alrhcs object-property-expand ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+            className="fui-Button r1alrhcs rjsf-object-property-expand ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
             disabled={false}
             id="root__add"
             onClick={[Function]}
@@ -473,7 +473,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -511,7 +511,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
           }
         >
           <div
-            className="fui-Flex field-string ___8gv6eg0_pb6o3x0 f22iagw f122n59 f1lv1r8n"
+            className="fui-Flex rjsf-field rjsf-field-string ___8gv6eg0_pb6o3x0 f22iagw f122n59 f1lv1r8n"
           >
             <div>
               <div
@@ -575,7 +575,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
             </div>
             <div>
               <button
-                className="fui-Button r1alrhcs array-item-remove ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+                className="fui-Button r1alrhcs rjsf-object-property-remove ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
                 disabled={false}
                 id="root_foo__remove"
                 onClick={[Function]}
@@ -616,7 +616,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
           className="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
         >
           <button
-            className="fui-Button r1alrhcs object-property-expand ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+            className="fui-Button r1alrhcs rjsf-object-property-expand ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
             disabled={false}
             id="root__add"
             onClick={[Function]}
@@ -668,7 +668,7 @@ exports[`object fields with title and description from both additionalProperties
   onSubmit={[Function]}
 >
   <div
-    className="field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -706,7 +706,7 @@ exports[`object fields with title and description from both additionalProperties
           }
         >
           <div
-            className="fui-Flex field-string ___8gv6eg0_pb6o3x0 f22iagw f122n59 f1lv1r8n"
+            className="fui-Flex rjsf-field rjsf-field-string ___8gv6eg0_pb6o3x0 f22iagw f122n59 f1lv1r8n"
           >
             <div>
               <div
@@ -770,7 +770,7 @@ exports[`object fields with title and description from both additionalProperties
             </div>
             <div>
               <button
-                className="fui-Button r1alrhcs array-item-remove ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+                className="fui-Button r1alrhcs rjsf-object-property-remove ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
                 disabled={false}
                 id="root_foo__remove"
                 onClick={[Function]}
@@ -811,7 +811,7 @@ exports[`object fields with title and description from both additionalProperties
           className="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
         >
           <button
-            className="fui-Button r1alrhcs object-property-expand ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+            className="fui-Button r1alrhcs rjsf-object-property-expand ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
             disabled={false}
             id="root__add"
             onClick={[Function]}
@@ -863,7 +863,7 @@ exports[`object fields with title and description from both object 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -901,7 +901,7 @@ exports[`object fields with title and description from both object 1`] = `
           }
         >
           <div
-            className="field-string"
+            className="rjsf-field rjsf-field-string"
           >
             <div
               className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -959,7 +959,7 @@ exports[`object fields with title and description from both object 1`] = `
           }
         >
           <div
-            className="field-number"
+            className="rjsf-field rjsf-field-number"
           >
             <div
               className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -1034,7 +1034,7 @@ exports[`object fields with title and description from uiSchema additionalProper
   onSubmit={[Function]}
 >
   <div
-    className="field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -1072,7 +1072,7 @@ exports[`object fields with title and description from uiSchema additionalProper
           }
         >
           <div
-            className="fui-Flex field-string ___8gv6eg0_pb6o3x0 f22iagw f122n59 f1lv1r8n"
+            className="fui-Flex rjsf-field rjsf-field-string ___8gv6eg0_pb6o3x0 f22iagw f122n59 f1lv1r8n"
           >
             <div>
               <div
@@ -1136,7 +1136,7 @@ exports[`object fields with title and description from uiSchema additionalProper
             </div>
             <div>
               <button
-                className="fui-Button r1alrhcs array-item-remove ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+                className="fui-Button r1alrhcs rjsf-object-property-remove ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
                 disabled={false}
                 id="root_foo__remove"
                 onClick={[Function]}
@@ -1177,7 +1177,7 @@ exports[`object fields with title and description from uiSchema additionalProper
           className="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
         >
           <button
-            className="fui-Button r1alrhcs object-property-expand ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+            className="fui-Button r1alrhcs rjsf-object-property-expand ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
             disabled={false}
             id="root__add"
             onClick={[Function]}
@@ -1229,7 +1229,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -1267,7 +1267,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
           }
         >
           <div
-            className="field-string"
+            className="rjsf-field rjsf-field-string"
           >
             <div
               className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -1325,7 +1325,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
           }
         >
           <div
-            className="field-number"
+            className="rjsf-field rjsf-field-number"
           >
             <div
               className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -1400,7 +1400,7 @@ exports[`object fields with title and description from uiSchema show add button 
   onSubmit={[Function]}
 >
   <div
-    className="field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -1438,7 +1438,7 @@ exports[`object fields with title and description from uiSchema show add button 
           }
         >
           <div
-            className="fui-Flex field-string ___8gv6eg0_pb6o3x0 f22iagw f122n59 f1lv1r8n"
+            className="fui-Flex rjsf-field rjsf-field-string ___8gv6eg0_pb6o3x0 f22iagw f122n59 f1lv1r8n"
           >
             <div>
               <div
@@ -1502,7 +1502,7 @@ exports[`object fields with title and description from uiSchema show add button 
             </div>
             <div>
               <button
-                className="fui-Button r1alrhcs array-item-remove ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+                className="fui-Button r1alrhcs rjsf-object-property-remove ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
                 disabled={false}
                 id="root_additionalProperty__remove"
                 onClick={[Function]}
@@ -1543,7 +1543,7 @@ exports[`object fields with title and description from uiSchema show add button 
           className="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
         >
           <button
-            className="fui-Button r1alrhcs object-property-expand ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+            className="fui-Button r1alrhcs rjsf-object-property-expand ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
             disabled={false}
             id="root__add"
             onClick={[Function]}
@@ -1595,7 +1595,7 @@ exports[`object fields with title and description object 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -1633,7 +1633,7 @@ exports[`object fields with title and description object 1`] = `
           }
         >
           <div
-            className="field-string"
+            className="rjsf-field rjsf-field-string"
           >
             <div
               className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -1691,7 +1691,7 @@ exports[`object fields with title and description object 1`] = `
           }
         >
           <div
-            className="field-number"
+            className="rjsf-field rjsf-field-number"
           >
             <div
               className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -1766,7 +1766,7 @@ exports[`object fields with title and description show add button and fields if 
   onSubmit={[Function]}
 >
   <div
-    className="field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -1804,7 +1804,7 @@ exports[`object fields with title and description show add button and fields if 
           }
         >
           <div
-            className="fui-Flex field-string ___8gv6eg0_pb6o3x0 f22iagw f122n59 f1lv1r8n"
+            className="fui-Flex rjsf-field rjsf-field-string ___8gv6eg0_pb6o3x0 f22iagw f122n59 f1lv1r8n"
           >
             <div>
               <div
@@ -1868,7 +1868,7 @@ exports[`object fields with title and description show add button and fields if 
             </div>
             <div>
               <button
-                className="fui-Button r1alrhcs array-item-remove ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+                className="fui-Button r1alrhcs rjsf-object-property-remove ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
                 disabled={false}
                 id="root_additionalProperty__remove"
                 onClick={[Function]}
@@ -1909,7 +1909,7 @@ exports[`object fields with title and description show add button and fields if 
           className="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
         >
           <button
-            className="fui-Button r1alrhcs object-property-expand ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+            className="fui-Button r1alrhcs rjsf-object-property-expand ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
             disabled={false}
             id="root__add"
             onClick={[Function]}
@@ -1961,7 +1961,7 @@ exports[`object fields with title and description with global label off addition
   onSubmit={[Function]}
 >
   <div
-    className="field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -1978,7 +1978,7 @@ exports[`object fields with title and description with global label off addition
           }
         >
           <div
-            className="fui-Flex field-string ___8gv6eg0_pb6o3x0 f22iagw f122n59 f1lv1r8n"
+            className="fui-Flex rjsf-field rjsf-field-string ___8gv6eg0_pb6o3x0 f22iagw f122n59 f1lv1r8n"
           >
             <div>
               <div
@@ -2036,7 +2036,7 @@ exports[`object fields with title and description with global label off addition
             </div>
             <div>
               <button
-                className="fui-Button r1alrhcs array-item-remove ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+                className="fui-Button r1alrhcs rjsf-object-property-remove ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
                 disabled={false}
                 id="root_foo__remove"
                 onClick={[Function]}
@@ -2077,7 +2077,7 @@ exports[`object fields with title and description with global label off addition
           className="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
         >
           <button
-            className="fui-Button r1alrhcs object-property-expand ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+            className="fui-Button r1alrhcs rjsf-object-property-expand ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
             disabled={false}
             id="root__add"
             onClick={[Function]}
@@ -2129,7 +2129,7 @@ exports[`object fields with title and description with global label off object 1
   onSubmit={[Function]}
 >
   <div
-    className="field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -2146,7 +2146,7 @@ exports[`object fields with title and description with global label off object 1
           }
         >
           <div
-            className="field-string"
+            className="rjsf-field rjsf-field-string"
           >
             <div
               className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -2182,7 +2182,7 @@ exports[`object fields with title and description with global label off object 1
           }
         >
           <div
-            className="field-number"
+            className="rjsf-field rjsf-field-number"
           >
             <div
               className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -2235,7 +2235,7 @@ exports[`object fields with title and description with global label off show add
   onSubmit={[Function]}
 >
   <div
-    className="field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="fui-Field ___keyyzl0_1dbn5sh f13qh94s"
@@ -2252,7 +2252,7 @@ exports[`object fields with title and description with global label off show add
           }
         >
           <div
-            className="fui-Flex field-string ___8gv6eg0_pb6o3x0 f22iagw f122n59 f1lv1r8n"
+            className="fui-Flex rjsf-field rjsf-field-string ___8gv6eg0_pb6o3x0 f22iagw f122n59 f1lv1r8n"
           >
             <div>
               <div
@@ -2310,7 +2310,7 @@ exports[`object fields with title and description with global label off show add
             </div>
             <div>
               <button
-                className="fui-Button r1alrhcs array-item-remove ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+                className="fui-Button r1alrhcs rjsf-object-property-remove ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
                 disabled={false}
                 id="root_additionalProperty__remove"
                 onClick={[Function]}
@@ -2351,7 +2351,7 @@ exports[`object fields with title and description with global label off show add
           className="fui-Flex ___1ncave0_cx496c0 f22iagw f9c4gz4"
         >
           <button
-            className="fui-Button r1alrhcs object-property-expand ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
+            className="fui-Button r1alrhcs rjsf-object-property-expand ___mzo0df0_1ut924j f1sbtcvk fwiuce9 fdghr9 f15vdbe4 fwbmr0d f44c6la"
             disabled={false}
             id="root__add"
             onClick={[Function]}

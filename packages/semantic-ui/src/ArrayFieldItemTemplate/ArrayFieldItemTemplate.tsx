@@ -35,7 +35,7 @@ export default function ArrayFieldItemTemplate<
   // Pull the semantic props out of the uiOptions that were put in via the ArrayFieldTemplate
   const { horizontalButtons = true, wrapItem = false } = uiOptions.semantic as GenericObjectType;
   return (
-    <div className='array-item'>
+    <div className='rjsf-array-item'>
       <MaybeWrap wrap={wrapItem} component={Segment}>
         <Grid style={{ ...gridStyle(!horizontalButtons), alignItems: 'center' }}>
           <Grid.Column width={16} verticalAlign='middle'>

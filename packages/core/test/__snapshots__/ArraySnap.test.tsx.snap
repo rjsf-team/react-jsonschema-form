@@ -7,10 +7,10 @@ exports[`array fields array 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="form-group rjsf-field rjsf-field-array"
   >
     <fieldset
-      className="field field-array field-array-of-string"
+      className="rjsf-field rjsf-field-array rjsf-field-array-of-string"
       id="root"
     >
       <div
@@ -20,7 +20,7 @@ exports[`array fields array 1`] = `
         className="row"
       >
         <p
-          className="col-xs-3 col-xs-offset-9 text-right array-item-add"
+          className="col-xs-3 col-xs-offset-9 text-right rjsf-array-item-add"
         >
           <button
             className="btn btn-info btn-add col-xs-12"
@@ -56,23 +56,23 @@ exports[`array fields array icons 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="form-group rjsf-field rjsf-field-array"
   >
     <fieldset
-      className="field field-array field-array-of-string"
+      className="rjsf-field rjsf-field-array rjsf-field-array-of-string"
       id="root"
     >
       <div
         className="row array-item-list"
       >
         <div
-          className="array-item"
+          className="rjsf-array-item"
         >
           <div
             className="col-xs-9"
           >
             <div
-              className="form-group field field-string"
+              className="form-group rjsf-field rjsf-field-string"
             >
               <input
                 aria-describedby="root_0__error root_0__description root_0__help"
@@ -106,7 +106,7 @@ exports[`array fields array icons 1`] = `
               }
             >
               <button
-                className="btn btn-default array-item-move-up"
+                className="btn btn-default rjsf-array-item-move-up"
                 disabled={true}
                 id="root_0__moveUp"
                 onClick={[Function]}
@@ -118,7 +118,7 @@ exports[`array fields array icons 1`] = `
                 />
               </button>
               <button
-                className="btn btn-default array-item-move-down"
+                className="btn btn-default rjsf-array-item-move-down"
                 disabled={false}
                 id="root_0__moveDown"
                 onClick={[Function]}
@@ -130,7 +130,7 @@ exports[`array fields array icons 1`] = `
                 />
               </button>
               <button
-                className="btn btn-default array-item-copy"
+                className="btn btn-default rjsf-array-item-copy"
                 disabled={false}
                 id="root_0__copy"
                 onClick={[Function]}
@@ -142,7 +142,7 @@ exports[`array fields array icons 1`] = `
                 />
               </button>
               <button
-                className="btn btn-danger array-item-remove"
+                className="btn btn-danger rjsf-array-item-remove"
                 disabled={false}
                 id="root_0__remove"
                 onClick={[Function]}
@@ -157,13 +157,13 @@ exports[`array fields array icons 1`] = `
           </div>
         </div>
         <div
-          className="array-item"
+          className="rjsf-array-item"
         >
           <div
             className="col-xs-9"
           >
             <div
-              className="form-group field field-string"
+              className="form-group rjsf-field rjsf-field-string"
             >
               <input
                 aria-describedby="root_1__error root_1__description root_1__help"
@@ -197,7 +197,7 @@ exports[`array fields array icons 1`] = `
               }
             >
               <button
-                className="btn btn-default array-item-move-up"
+                className="btn btn-default rjsf-array-item-move-up"
                 disabled={false}
                 id="root_1__moveUp"
                 onClick={[Function]}
@@ -209,7 +209,7 @@ exports[`array fields array icons 1`] = `
                 />
               </button>
               <button
-                className="btn btn-default array-item-move-down"
+                className="btn btn-default rjsf-array-item-move-down"
                 disabled={true}
                 id="root_1__moveDown"
                 onClick={[Function]}
@@ -221,7 +221,7 @@ exports[`array fields array icons 1`] = `
                 />
               </button>
               <button
-                className="btn btn-default array-item-copy"
+                className="btn btn-default rjsf-array-item-copy"
                 disabled={false}
                 id="root_1__copy"
                 onClick={[Function]}
@@ -233,7 +233,7 @@ exports[`array fields array icons 1`] = `
                 />
               </button>
               <button
-                className="btn btn-danger array-item-remove"
+                className="btn btn-danger rjsf-array-item-remove"
                 disabled={false}
                 id="root_1__remove"
                 onClick={[Function]}
@@ -252,7 +252,7 @@ exports[`array fields array icons 1`] = `
         className="row"
       >
         <p
-          className="col-xs-3 col-xs-offset-9 text-right array-item-add"
+          className="col-xs-3 col-xs-offset-9 text-right rjsf-array-item-add"
         >
           <button
             className="btn btn-info btn-add col-xs-12"
@@ -288,7 +288,7 @@ exports[`array fields checkboxes 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="form-group rjsf-field rjsf-field-array"
   >
     <select
       aria-describedby="root__error root__description root__help"
@@ -341,13 +341,13 @@ exports[`array fields empty errors array 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="form-group rjsf-field rjsf-field-object"
   >
     <fieldset
       id="root"
     >
       <div
-        className="form-group field field-string"
+        className="form-group rjsf-field rjsf-field-string"
       >
         <label
           className="control-label"
@@ -394,23 +394,23 @@ exports[`array fields fixed array 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="form-group rjsf-field rjsf-field-array"
   >
     <fieldset
-      className="field field-array field-array-fixed-items"
+      className="rjsf-field rjsf-field-array rjsf-field-array-fixed-items"
       id="root"
     >
       <div
         className="row array-item-list"
       >
         <div
-          className="array-item"
+          className="rjsf-array-item"
         >
           <div
             className="col-xs-12"
           >
             <div
-              className="form-group field field-string"
+              className="form-group rjsf-field rjsf-field-string"
             >
               <input
                 aria-describedby="root_0__error root_0__description root_0__help"
@@ -433,13 +433,13 @@ exports[`array fields fixed array 1`] = `
           </div>
         </div>
         <div
-          className="array-item"
+          className="rjsf-array-item"
         >
           <div
             className="col-xs-12"
           >
             <div
-              className="form-group field field-number"
+              className="form-group rjsf-field rjsf-field-number"
             >
               <input
                 aria-describedby="root_1__error root_1__description root_1__help"
@@ -506,13 +506,13 @@ exports[`array fields has errors 1`] = `
     </ul>
   </div>
   <div
-    className="form-group field field-object"
+    className="form-group rjsf-field rjsf-field-object"
   >
     <fieldset
       id="root"
     >
       <div
-        className="form-group field field-string field-error has-error has-danger"
+        className="form-group rjsf-field rjsf-field-string rjsf-field-error has-error has-danger"
       >
         <label
           className="control-label"
@@ -571,13 +571,13 @@ exports[`array fields no errors 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="form-group rjsf-field rjsf-field-object"
   >
     <fieldset
       id="root"
     >
       <div
-        className="form-group field field-string"
+        className="form-group rjsf-field rjsf-field-string"
       >
         <label
           className="control-label"
@@ -624,10 +624,10 @@ exports[`with title and description array 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="form-group rjsf-field rjsf-field-array"
   >
     <fieldset
-      className="field field-array field-array-of-string"
+      className="rjsf-field rjsf-field-array rjsf-field-array-of-string"
       id="root"
     >
       <legend
@@ -648,7 +648,7 @@ exports[`with title and description array 1`] = `
         className="row"
       >
         <p
-          className="col-xs-3 col-xs-offset-9 text-right array-item-add"
+          className="col-xs-3 col-xs-offset-9 text-right rjsf-array-item-add"
         >
           <button
             className="btn btn-info btn-add col-xs-12"
@@ -684,10 +684,10 @@ exports[`with title and description array icons 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="form-group rjsf-field rjsf-field-array"
   >
     <fieldset
-      className="field field-array field-array-of-string"
+      className="rjsf-field rjsf-field-array rjsf-field-array-of-string"
       id="root"
     >
       <legend
@@ -705,13 +705,13 @@ exports[`with title and description array icons 1`] = `
         className="row array-item-list"
       >
         <div
-          className="array-item"
+          className="rjsf-array-item"
         >
           <div
             className="col-xs-9"
           >
             <div
-              className="form-group field field-string"
+              className="form-group rjsf-field rjsf-field-string"
             >
               <label
                 className="control-label"
@@ -762,7 +762,7 @@ exports[`with title and description array icons 1`] = `
               }
             >
               <button
-                className="btn btn-default array-item-move-up"
+                className="btn btn-default rjsf-array-item-move-up"
                 disabled={true}
                 id="root_0__moveUp"
                 onClick={[Function]}
@@ -774,7 +774,7 @@ exports[`with title and description array icons 1`] = `
                 />
               </button>
               <button
-                className="btn btn-default array-item-move-down"
+                className="btn btn-default rjsf-array-item-move-down"
                 disabled={false}
                 id="root_0__moveDown"
                 onClick={[Function]}
@@ -786,7 +786,7 @@ exports[`with title and description array icons 1`] = `
                 />
               </button>
               <button
-                className="btn btn-default array-item-copy"
+                className="btn btn-default rjsf-array-item-copy"
                 disabled={false}
                 id="root_0__copy"
                 onClick={[Function]}
@@ -798,7 +798,7 @@ exports[`with title and description array icons 1`] = `
                 />
               </button>
               <button
-                className="btn btn-danger array-item-remove"
+                className="btn btn-danger rjsf-array-item-remove"
                 disabled={false}
                 id="root_0__remove"
                 onClick={[Function]}
@@ -813,13 +813,13 @@ exports[`with title and description array icons 1`] = `
           </div>
         </div>
         <div
-          className="array-item"
+          className="rjsf-array-item"
         >
           <div
             className="col-xs-9"
           >
             <div
-              className="form-group field field-string"
+              className="form-group rjsf-field rjsf-field-string"
             >
               <label
                 className="control-label"
@@ -870,7 +870,7 @@ exports[`with title and description array icons 1`] = `
               }
             >
               <button
-                className="btn btn-default array-item-move-up"
+                className="btn btn-default rjsf-array-item-move-up"
                 disabled={false}
                 id="root_1__moveUp"
                 onClick={[Function]}
@@ -882,7 +882,7 @@ exports[`with title and description array icons 1`] = `
                 />
               </button>
               <button
-                className="btn btn-default array-item-move-down"
+                className="btn btn-default rjsf-array-item-move-down"
                 disabled={true}
                 id="root_1__moveDown"
                 onClick={[Function]}
@@ -894,7 +894,7 @@ exports[`with title and description array icons 1`] = `
                 />
               </button>
               <button
-                className="btn btn-default array-item-copy"
+                className="btn btn-default rjsf-array-item-copy"
                 disabled={false}
                 id="root_1__copy"
                 onClick={[Function]}
@@ -906,7 +906,7 @@ exports[`with title and description array icons 1`] = `
                 />
               </button>
               <button
-                className="btn btn-danger array-item-remove"
+                className="btn btn-danger rjsf-array-item-remove"
                 disabled={false}
                 id="root_1__remove"
                 onClick={[Function]}
@@ -925,7 +925,7 @@ exports[`with title and description array icons 1`] = `
         className="row"
       >
         <p
-          className="col-xs-3 col-xs-offset-9 text-right array-item-add"
+          className="col-xs-3 col-xs-offset-9 text-right rjsf-array-item-add"
         >
           <button
             className="btn btn-info btn-add col-xs-12"
@@ -961,7 +961,7 @@ exports[`with title and description checkboxes 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="form-group rjsf-field rjsf-field-array"
   >
     <label
       className="control-label"
@@ -1026,10 +1026,10 @@ exports[`with title and description fixed array 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="form-group rjsf-field rjsf-field-array"
   >
     <fieldset
-      className="field field-array field-array-fixed-items"
+      className="rjsf-field rjsf-field-array rjsf-field-array-fixed-items"
       id="root"
     >
       <legend
@@ -1047,13 +1047,13 @@ exports[`with title and description fixed array 1`] = `
         className="row array-item-list"
       >
         <div
-          className="array-item"
+          className="rjsf-array-item"
         >
           <div
             className="col-xs-12"
           >
             <div
-              className="form-group field field-string"
+              className="form-group rjsf-field rjsf-field-string"
             >
               <label
                 className="control-label"
@@ -1093,13 +1093,13 @@ exports[`with title and description fixed array 1`] = `
           </div>
         </div>
         <div
-          className="array-item"
+          className="rjsf-array-item"
         >
           <div
             className="col-xs-12"
           >
             <div
-              className="form-group field field-number"
+              className="form-group rjsf-field rjsf-field-number"
             >
               <label
                 className="control-label"
@@ -1161,10 +1161,10 @@ exports[`with title and description from both array 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="form-group rjsf-field rjsf-field-array"
   >
     <fieldset
-      className="field field-array field-array-of-string"
+      className="rjsf-field rjsf-field-array rjsf-field-array-of-string"
       id="root"
     >
       <legend
@@ -1185,7 +1185,7 @@ exports[`with title and description from both array 1`] = `
         className="row"
       >
         <p
-          className="col-xs-3 col-xs-offset-9 text-right array-item-add"
+          className="col-xs-3 col-xs-offset-9 text-right rjsf-array-item-add"
         >
           <button
             className="btn btn-info btn-add col-xs-12"
@@ -1221,10 +1221,10 @@ exports[`with title and description from both array icons 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="form-group rjsf-field rjsf-field-array"
   >
     <fieldset
-      className="field field-array field-array-of-string"
+      className="rjsf-field rjsf-field-array rjsf-field-array-of-string"
       id="root"
     >
       <legend
@@ -1242,13 +1242,13 @@ exports[`with title and description from both array icons 1`] = `
         className="row array-item-list"
       >
         <div
-          className="array-item"
+          className="rjsf-array-item"
         >
           <div
             className="col-xs-9"
           >
             <div
-              className="form-group field field-string"
+              className="form-group rjsf-field rjsf-field-string"
             >
               <label
                 className="control-label"
@@ -1299,7 +1299,7 @@ exports[`with title and description from both array icons 1`] = `
               }
             >
               <button
-                className="btn btn-default array-item-move-up"
+                className="btn btn-default rjsf-array-item-move-up"
                 disabled={true}
                 id="root_0__moveUp"
                 onClick={[Function]}
@@ -1311,7 +1311,7 @@ exports[`with title and description from both array icons 1`] = `
                 />
               </button>
               <button
-                className="btn btn-default array-item-move-down"
+                className="btn btn-default rjsf-array-item-move-down"
                 disabled={false}
                 id="root_0__moveDown"
                 onClick={[Function]}
@@ -1323,7 +1323,7 @@ exports[`with title and description from both array icons 1`] = `
                 />
               </button>
               <button
-                className="btn btn-default array-item-copy"
+                className="btn btn-default rjsf-array-item-copy"
                 disabled={false}
                 id="root_0__copy"
                 onClick={[Function]}
@@ -1335,7 +1335,7 @@ exports[`with title and description from both array icons 1`] = `
                 />
               </button>
               <button
-                className="btn btn-danger array-item-remove"
+                className="btn btn-danger rjsf-array-item-remove"
                 disabled={false}
                 id="root_0__remove"
                 onClick={[Function]}
@@ -1350,13 +1350,13 @@ exports[`with title and description from both array icons 1`] = `
           </div>
         </div>
         <div
-          className="array-item"
+          className="rjsf-array-item"
         >
           <div
             className="col-xs-9"
           >
             <div
-              className="form-group field field-string"
+              className="form-group rjsf-field rjsf-field-string"
             >
               <label
                 className="control-label"
@@ -1407,7 +1407,7 @@ exports[`with title and description from both array icons 1`] = `
               }
             >
               <button
-                className="btn btn-default array-item-move-up"
+                className="btn btn-default rjsf-array-item-move-up"
                 disabled={false}
                 id="root_1__moveUp"
                 onClick={[Function]}
@@ -1419,7 +1419,7 @@ exports[`with title and description from both array icons 1`] = `
                 />
               </button>
               <button
-                className="btn btn-default array-item-move-down"
+                className="btn btn-default rjsf-array-item-move-down"
                 disabled={true}
                 id="root_1__moveDown"
                 onClick={[Function]}
@@ -1431,7 +1431,7 @@ exports[`with title and description from both array icons 1`] = `
                 />
               </button>
               <button
-                className="btn btn-default array-item-copy"
+                className="btn btn-default rjsf-array-item-copy"
                 disabled={false}
                 id="root_1__copy"
                 onClick={[Function]}
@@ -1443,7 +1443,7 @@ exports[`with title and description from both array icons 1`] = `
                 />
               </button>
               <button
-                className="btn btn-danger array-item-remove"
+                className="btn btn-danger rjsf-array-item-remove"
                 disabled={false}
                 id="root_1__remove"
                 onClick={[Function]}
@@ -1462,7 +1462,7 @@ exports[`with title and description from both array icons 1`] = `
         className="row"
       >
         <p
-          className="col-xs-3 col-xs-offset-9 text-right array-item-add"
+          className="col-xs-3 col-xs-offset-9 text-right rjsf-array-item-add"
         >
           <button
             className="btn btn-info btn-add col-xs-12"
@@ -1498,7 +1498,7 @@ exports[`with title and description from both checkboxes 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="form-group rjsf-field rjsf-field-array"
   >
     <label
       className="control-label"
@@ -1563,10 +1563,10 @@ exports[`with title and description from both fixed array 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="form-group rjsf-field rjsf-field-array"
   >
     <fieldset
-      className="field field-array field-array-fixed-items"
+      className="rjsf-field rjsf-field-array rjsf-field-array-fixed-items"
       id="root"
     >
       <legend
@@ -1584,13 +1584,13 @@ exports[`with title and description from both fixed array 1`] = `
         className="row array-item-list"
       >
         <div
-          className="array-item"
+          className="rjsf-array-item"
         >
           <div
             className="col-xs-12"
           >
             <div
-              className="form-group field field-string"
+              className="form-group rjsf-field rjsf-field-string"
             >
               <label
                 className="control-label"
@@ -1630,13 +1630,13 @@ exports[`with title and description from both fixed array 1`] = `
           </div>
         </div>
         <div
-          className="array-item"
+          className="rjsf-array-item"
         >
           <div
             className="col-xs-12"
           >
             <div
-              className="form-group field field-number"
+              className="form-group rjsf-field rjsf-field-number"
             >
               <label
                 className="control-label"
@@ -1698,10 +1698,10 @@ exports[`with title and description from uiSchema array 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="form-group rjsf-field rjsf-field-array"
   >
     <fieldset
-      className="field field-array field-array-of-string"
+      className="rjsf-field rjsf-field-array rjsf-field-array-of-string"
       id="root"
     >
       <legend
@@ -1722,7 +1722,7 @@ exports[`with title and description from uiSchema array 1`] = `
         className="row"
       >
         <p
-          className="col-xs-3 col-xs-offset-9 text-right array-item-add"
+          className="col-xs-3 col-xs-offset-9 text-right rjsf-array-item-add"
         >
           <button
             className="btn btn-info btn-add col-xs-12"
@@ -1758,10 +1758,10 @@ exports[`with title and description from uiSchema array icons 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="form-group rjsf-field rjsf-field-array"
   >
     <fieldset
-      className="field field-array field-array-of-string"
+      className="rjsf-field rjsf-field-array rjsf-field-array-of-string"
       id="root"
     >
       <legend
@@ -1779,13 +1779,13 @@ exports[`with title and description from uiSchema array icons 1`] = `
         className="row array-item-list"
       >
         <div
-          className="array-item"
+          className="rjsf-array-item"
         >
           <div
             className="col-xs-9"
           >
             <div
-              className="form-group field field-string"
+              className="form-group rjsf-field rjsf-field-string"
             >
               <label
                 className="control-label"
@@ -1836,7 +1836,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
               }
             >
               <button
-                className="btn btn-default array-item-move-up"
+                className="btn btn-default rjsf-array-item-move-up"
                 disabled={true}
                 id="root_0__moveUp"
                 onClick={[Function]}
@@ -1848,7 +1848,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                 />
               </button>
               <button
-                className="btn btn-default array-item-move-down"
+                className="btn btn-default rjsf-array-item-move-down"
                 disabled={false}
                 id="root_0__moveDown"
                 onClick={[Function]}
@@ -1860,7 +1860,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                 />
               </button>
               <button
-                className="btn btn-default array-item-copy"
+                className="btn btn-default rjsf-array-item-copy"
                 disabled={false}
                 id="root_0__copy"
                 onClick={[Function]}
@@ -1872,7 +1872,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                 />
               </button>
               <button
-                className="btn btn-danger array-item-remove"
+                className="btn btn-danger rjsf-array-item-remove"
                 disabled={false}
                 id="root_0__remove"
                 onClick={[Function]}
@@ -1887,13 +1887,13 @@ exports[`with title and description from uiSchema array icons 1`] = `
           </div>
         </div>
         <div
-          className="array-item"
+          className="rjsf-array-item"
         >
           <div
             className="col-xs-9"
           >
             <div
-              className="form-group field field-string"
+              className="form-group rjsf-field rjsf-field-string"
             >
               <label
                 className="control-label"
@@ -1944,7 +1944,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
               }
             >
               <button
-                className="btn btn-default array-item-move-up"
+                className="btn btn-default rjsf-array-item-move-up"
                 disabled={false}
                 id="root_1__moveUp"
                 onClick={[Function]}
@@ -1956,7 +1956,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                 />
               </button>
               <button
-                className="btn btn-default array-item-move-down"
+                className="btn btn-default rjsf-array-item-move-down"
                 disabled={true}
                 id="root_1__moveDown"
                 onClick={[Function]}
@@ -1968,7 +1968,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                 />
               </button>
               <button
-                className="btn btn-default array-item-copy"
+                className="btn btn-default rjsf-array-item-copy"
                 disabled={false}
                 id="root_1__copy"
                 onClick={[Function]}
@@ -1980,7 +1980,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                 />
               </button>
               <button
-                className="btn btn-danger array-item-remove"
+                className="btn btn-danger rjsf-array-item-remove"
                 disabled={false}
                 id="root_1__remove"
                 onClick={[Function]}
@@ -1999,7 +1999,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
         className="row"
       >
         <p
-          className="col-xs-3 col-xs-offset-9 text-right array-item-add"
+          className="col-xs-3 col-xs-offset-9 text-right rjsf-array-item-add"
         >
           <button
             className="btn btn-info btn-add col-xs-12"
@@ -2035,7 +2035,7 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="form-group rjsf-field rjsf-field-array"
   >
     <label
       className="control-label"
@@ -2100,10 +2100,10 @@ exports[`with title and description from uiSchema fixed array 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="form-group rjsf-field rjsf-field-array"
   >
     <fieldset
-      className="field field-array field-array-fixed-items"
+      className="rjsf-field rjsf-field-array rjsf-field-array-fixed-items"
       id="root"
     >
       <legend
@@ -2121,13 +2121,13 @@ exports[`with title and description from uiSchema fixed array 1`] = `
         className="row array-item-list"
       >
         <div
-          className="array-item"
+          className="rjsf-array-item"
         >
           <div
             className="col-xs-12"
           >
             <div
-              className="form-group field field-string"
+              className="form-group rjsf-field rjsf-field-string"
             >
               <label
                 className="control-label"
@@ -2167,13 +2167,13 @@ exports[`with title and description from uiSchema fixed array 1`] = `
           </div>
         </div>
         <div
-          className="array-item"
+          className="rjsf-array-item"
         >
           <div
             className="col-xs-12"
           >
             <div
-              className="form-group field field-number"
+              className="form-group rjsf-field rjsf-field-number"
             >
               <label
                 className="control-label"
@@ -2235,10 +2235,10 @@ exports[`with title and description with global label off array 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="form-group rjsf-field rjsf-field-array"
   >
     <fieldset
-      className="field field-array field-array-of-string"
+      className="rjsf-field rjsf-field-array rjsf-field-array-of-string"
       id="root"
     >
       <div
@@ -2248,7 +2248,7 @@ exports[`with title and description with global label off array 1`] = `
         className="row"
       >
         <p
-          className="col-xs-3 col-xs-offset-9 text-right array-item-add"
+          className="col-xs-3 col-xs-offset-9 text-right rjsf-array-item-add"
         >
           <button
             className="btn btn-info btn-add col-xs-12"
@@ -2284,23 +2284,23 @@ exports[`with title and description with global label off array icons 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="form-group rjsf-field rjsf-field-array"
   >
     <fieldset
-      className="field field-array field-array-of-string"
+      className="rjsf-field rjsf-field-array rjsf-field-array-of-string"
       id="root"
     >
       <div
         className="row array-item-list"
       >
         <div
-          className="array-item"
+          className="rjsf-array-item"
         >
           <div
             className="col-xs-9"
           >
             <div
-              className="form-group field field-string"
+              className="form-group rjsf-field rjsf-field-string"
             >
               <input
                 aria-describedby="root_0__error root_0__description root_0__help"
@@ -2334,7 +2334,7 @@ exports[`with title and description with global label off array icons 1`] = `
               }
             >
               <button
-                className="btn btn-default array-item-move-up"
+                className="btn btn-default rjsf-array-item-move-up"
                 disabled={true}
                 id="root_0__moveUp"
                 onClick={[Function]}
@@ -2346,7 +2346,7 @@ exports[`with title and description with global label off array icons 1`] = `
                 />
               </button>
               <button
-                className="btn btn-default array-item-move-down"
+                className="btn btn-default rjsf-array-item-move-down"
                 disabled={false}
                 id="root_0__moveDown"
                 onClick={[Function]}
@@ -2358,7 +2358,7 @@ exports[`with title and description with global label off array icons 1`] = `
                 />
               </button>
               <button
-                className="btn btn-default array-item-copy"
+                className="btn btn-default rjsf-array-item-copy"
                 disabled={false}
                 id="root_0__copy"
                 onClick={[Function]}
@@ -2370,7 +2370,7 @@ exports[`with title and description with global label off array icons 1`] = `
                 />
               </button>
               <button
-                className="btn btn-danger array-item-remove"
+                className="btn btn-danger rjsf-array-item-remove"
                 disabled={false}
                 id="root_0__remove"
                 onClick={[Function]}
@@ -2385,13 +2385,13 @@ exports[`with title and description with global label off array icons 1`] = `
           </div>
         </div>
         <div
-          className="array-item"
+          className="rjsf-array-item"
         >
           <div
             className="col-xs-9"
           >
             <div
-              className="form-group field field-string"
+              className="form-group rjsf-field rjsf-field-string"
             >
               <input
                 aria-describedby="root_1__error root_1__description root_1__help"
@@ -2425,7 +2425,7 @@ exports[`with title and description with global label off array icons 1`] = `
               }
             >
               <button
-                className="btn btn-default array-item-move-up"
+                className="btn btn-default rjsf-array-item-move-up"
                 disabled={false}
                 id="root_1__moveUp"
                 onClick={[Function]}
@@ -2437,7 +2437,7 @@ exports[`with title and description with global label off array icons 1`] = `
                 />
               </button>
               <button
-                className="btn btn-default array-item-move-down"
+                className="btn btn-default rjsf-array-item-move-down"
                 disabled={true}
                 id="root_1__moveDown"
                 onClick={[Function]}
@@ -2449,7 +2449,7 @@ exports[`with title and description with global label off array icons 1`] = `
                 />
               </button>
               <button
-                className="btn btn-default array-item-copy"
+                className="btn btn-default rjsf-array-item-copy"
                 disabled={false}
                 id="root_1__copy"
                 onClick={[Function]}
@@ -2461,7 +2461,7 @@ exports[`with title and description with global label off array icons 1`] = `
                 />
               </button>
               <button
-                className="btn btn-danger array-item-remove"
+                className="btn btn-danger rjsf-array-item-remove"
                 disabled={false}
                 id="root_1__remove"
                 onClick={[Function]}
@@ -2480,7 +2480,7 @@ exports[`with title and description with global label off array icons 1`] = `
         className="row"
       >
         <p
-          className="col-xs-3 col-xs-offset-9 text-right array-item-add"
+          className="col-xs-3 col-xs-offset-9 text-right rjsf-array-item-add"
         >
           <button
             className="btn btn-info btn-add col-xs-12"
@@ -2516,7 +2516,7 @@ exports[`with title and description with global label off checkboxes 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="form-group rjsf-field rjsf-field-array"
   >
     <label
       className="control-label"
@@ -2581,23 +2581,23 @@ exports[`with title and description with global label off fixed array 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="form-group rjsf-field rjsf-field-array"
   >
     <fieldset
-      className="field field-array field-array-fixed-items"
+      className="rjsf-field rjsf-field-array rjsf-field-array-fixed-items"
       id="root"
     >
       <div
         className="row array-item-list"
       >
         <div
-          className="array-item"
+          className="rjsf-array-item"
         >
           <div
             className="col-xs-12"
           >
             <div
-              className="form-group field field-string"
+              className="form-group rjsf-field rjsf-field-string"
             >
               <input
                 aria-describedby="root_0__error root_0__description root_0__help"
@@ -2620,13 +2620,13 @@ exports[`with title and description with global label off fixed array 1`] = `
           </div>
         </div>
         <div
-          className="array-item"
+          className="rjsf-array-item"
         >
           <div
             className="col-xs-12"
           >
             <div
-              className="form-group field field-number"
+              className="form-group rjsf-field rjsf-field-number"
             >
               <input
                 aria-describedby="root_1__error root_1__description root_1__help"

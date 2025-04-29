@@ -7,7 +7,7 @@ exports[`array fields array 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div>
       <div>
@@ -33,7 +33,7 @@ exports[`array fields array 1`] = `
                     className="py-4 col-lg-3 col-3 col-3"
                   >
                     <button
-                      className="ml-1 array-item-add btn btn-primary"
+                      className="ml-1 rjsf-array-item-add btn btn-primary"
                       disabled={false}
                       id="root__add"
                       onClick={[Function]}
@@ -99,7 +99,7 @@ exports[`array fields array icons 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div>
       <div>
@@ -120,7 +120,7 @@ exports[`array fields array icons 1`] = `
                     className="col-lg-9 col-9"
                   >
                     <div
-                      className="field-string"
+                      className="rjsf-field rjsf-field-string"
                     >
                       <div>
                         <label
@@ -280,7 +280,7 @@ exports[`array fields array icons 1`] = `
                     className="col-lg-9 col-9"
                   >
                     <div
-                      className="field-string"
+                      className="rjsf-field rjsf-field-string"
                     >
                       <div>
                         <label
@@ -445,7 +445,7 @@ exports[`array fields array icons 1`] = `
                     className="py-4 col-lg-3 col-3 col-3"
                   >
                     <button
-                      className="ml-1 array-item-add btn btn-primary"
+                      className="ml-1 rjsf-array-item-add btn btn-primary"
                       disabled={false}
                       id="root__add"
                       onClick={[Function]}
@@ -511,7 +511,7 @@ exports[`array fields checkboxes 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div>
       <label
@@ -575,7 +575,7 @@ exports[`array fields empty errors array 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div>
       <div
@@ -594,7 +594,7 @@ exports[`array fields empty errors array 1`] = `
           >
              
             <div
-              className="field-string"
+              className="rjsf-field rjsf-field-string"
             >
               <div>
                 <label
@@ -645,7 +645,7 @@ exports[`array fields fixed array 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div>
       <div>
@@ -666,7 +666,7 @@ exports[`array fields fixed array 1`] = `
                     className="col-lg-9 col-9"
                   >
                     <div
-                      className="field-string"
+                      className="rjsf-field rjsf-field-string"
                     >
                       <div>
                         <label
@@ -707,7 +707,7 @@ exports[`array fields fixed array 1`] = `
                     className="col-lg-9 col-9"
                   >
                     <div
-                      className="field-number"
+                      className="rjsf-field rjsf-field-number"
                     >
                       <div>
                         <label
@@ -793,7 +793,7 @@ exports[`array fields has errors 1`] = `
     </div>
   </div>
   <div
-    className="field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div>
       <div
@@ -812,7 +812,7 @@ exports[`array fields has errors 1`] = `
           >
              
             <div
-              className="field-string"
+              className="rjsf-field rjsf-field-string"
             >
               <div>
                 <label
@@ -880,7 +880,7 @@ exports[`array fields no errors 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div>
       <div
@@ -899,7 +899,7 @@ exports[`array fields no errors 1`] = `
           >
              
             <div
-              className="field-string"
+              className="rjsf-field rjsf-field-string"
             >
               <div>
                 <label
@@ -950,7 +950,7 @@ exports[`with title and description array 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div>
       <div>
@@ -1000,7 +1000,7 @@ exports[`with title and description array 1`] = `
                     className="py-4 col-lg-3 col-3 col-3"
                   >
                     <button
-                      className="ml-1 array-item-add btn btn-primary"
+                      className="ml-1 rjsf-array-item-add btn btn-primary"
                       disabled={false}
                       id="root__add"
                       onClick={[Function]}
@@ -1066,7 +1066,7 @@ exports[`with title and description array icons 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div>
       <div>
@@ -1111,7 +1111,7 @@ exports[`with title and description array icons 1`] = `
                     className="col-lg-9 col-9"
                   >
                     <div
-                      className="field-string"
+                      className="rjsf-field rjsf-field-string"
                     >
                       <div>
                         <label
@@ -1284,7 +1284,7 @@ exports[`with title and description array icons 1`] = `
                     className="col-lg-9 col-9"
                   >
                     <div
-                      className="field-string"
+                      className="rjsf-field rjsf-field-string"
                     >
                       <div>
                         <label
@@ -1462,7 +1462,7 @@ exports[`with title and description array icons 1`] = `
                     className="py-4 col-lg-3 col-3 col-3"
                   >
                     <button
-                      className="ml-1 array-item-add btn btn-primary"
+                      className="ml-1 rjsf-array-item-add btn btn-primary"
                       disabled={false}
                       id="root__add"
                       onClick={[Function]}
@@ -1528,7 +1528,7 @@ exports[`with title and description checkboxes 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div>
       <label
@@ -1606,7 +1606,7 @@ exports[`with title and description fixed array 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div>
       <div>
@@ -1651,7 +1651,7 @@ exports[`with title and description fixed array 1`] = `
                     className="col-lg-9 col-9"
                   >
                     <div
-                      className="field-string"
+                      className="rjsf-field rjsf-field-string"
                     >
                       <div>
                         <label
@@ -1705,7 +1705,7 @@ exports[`with title and description fixed array 1`] = `
                     className="col-lg-9 col-9"
                   >
                     <div
-                      className="field-number"
+                      className="rjsf-field rjsf-field-number"
                     >
                       <div>
                         <label
@@ -1777,7 +1777,7 @@ exports[`with title and description from both array 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div>
       <div>
@@ -1827,7 +1827,7 @@ exports[`with title and description from both array 1`] = `
                     className="py-4 col-lg-3 col-3 col-3"
                   >
                     <button
-                      className="ml-1 array-item-add btn btn-primary"
+                      className="ml-1 rjsf-array-item-add btn btn-primary"
                       disabled={false}
                       id="root__add"
                       onClick={[Function]}
@@ -1893,7 +1893,7 @@ exports[`with title and description from both array icons 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div>
       <div>
@@ -1938,7 +1938,7 @@ exports[`with title and description from both array icons 1`] = `
                     className="col-lg-9 col-9"
                   >
                     <div
-                      className="field-string"
+                      className="rjsf-field rjsf-field-string"
                     >
                       <div>
                         <label
@@ -2111,7 +2111,7 @@ exports[`with title and description from both array icons 1`] = `
                     className="col-lg-9 col-9"
                   >
                     <div
-                      className="field-string"
+                      className="rjsf-field rjsf-field-string"
                     >
                       <div>
                         <label
@@ -2289,7 +2289,7 @@ exports[`with title and description from both array icons 1`] = `
                     className="py-4 col-lg-3 col-3 col-3"
                   >
                     <button
-                      className="ml-1 array-item-add btn btn-primary"
+                      className="ml-1 rjsf-array-item-add btn btn-primary"
                       disabled={false}
                       id="root__add"
                       onClick={[Function]}
@@ -2355,7 +2355,7 @@ exports[`with title and description from both checkboxes 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div>
       <label
@@ -2433,7 +2433,7 @@ exports[`with title and description from both fixed array 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div>
       <div>
@@ -2478,7 +2478,7 @@ exports[`with title and description from both fixed array 1`] = `
                     className="col-lg-9 col-9"
                   >
                     <div
-                      className="field-string"
+                      className="rjsf-field rjsf-field-string"
                     >
                       <div>
                         <label
@@ -2532,7 +2532,7 @@ exports[`with title and description from both fixed array 1`] = `
                     className="col-lg-9 col-9"
                   >
                     <div
-                      className="field-number"
+                      className="rjsf-field rjsf-field-number"
                     >
                       <div>
                         <label
@@ -2604,7 +2604,7 @@ exports[`with title and description from uiSchema array 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div>
       <div>
@@ -2654,7 +2654,7 @@ exports[`with title and description from uiSchema array 1`] = `
                     className="py-4 col-lg-3 col-3 col-3"
                   >
                     <button
-                      className="ml-1 array-item-add btn btn-primary"
+                      className="ml-1 rjsf-array-item-add btn btn-primary"
                       disabled={false}
                       id="root__add"
                       onClick={[Function]}
@@ -2720,7 +2720,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div>
       <div>
@@ -2765,7 +2765,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                     className="col-lg-9 col-9"
                   >
                     <div
-                      className="field-string"
+                      className="rjsf-field rjsf-field-string"
                     >
                       <div>
                         <label
@@ -2938,7 +2938,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                     className="col-lg-9 col-9"
                   >
                     <div
-                      className="field-string"
+                      className="rjsf-field rjsf-field-string"
                     >
                       <div>
                         <label
@@ -3116,7 +3116,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                     className="py-4 col-lg-3 col-3 col-3"
                   >
                     <button
-                      className="ml-1 array-item-add btn btn-primary"
+                      className="ml-1 rjsf-array-item-add btn btn-primary"
                       disabled={false}
                       id="root__add"
                       onClick={[Function]}
@@ -3182,7 +3182,7 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div>
       <label
@@ -3260,7 +3260,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div>
       <div>
@@ -3305,7 +3305,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                     className="col-lg-9 col-9"
                   >
                     <div
-                      className="field-string"
+                      className="rjsf-field rjsf-field-string"
                     >
                       <div>
                         <label
@@ -3359,7 +3359,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                     className="col-lg-9 col-9"
                   >
                     <div
-                      className="field-number"
+                      className="rjsf-field rjsf-field-number"
                     >
                       <div>
                         <label
@@ -3431,7 +3431,7 @@ exports[`with title and description with global label off array 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div>
       <div>
@@ -3457,7 +3457,7 @@ exports[`with title and description with global label off array 1`] = `
                     className="py-4 col-lg-3 col-3 col-3"
                   >
                     <button
-                      className="ml-1 array-item-add btn btn-primary"
+                      className="ml-1 rjsf-array-item-add btn btn-primary"
                       disabled={false}
                       id="root__add"
                       onClick={[Function]}
@@ -3523,7 +3523,7 @@ exports[`with title and description with global label off array icons 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div>
       <div>
@@ -3544,7 +3544,7 @@ exports[`with title and description with global label off array icons 1`] = `
                     className="col-lg-9 col-9"
                   >
                     <div
-                      className="field-string"
+                      className="rjsf-field rjsf-field-string"
                     >
                       <div>
                         <input
@@ -3698,7 +3698,7 @@ exports[`with title and description with global label off array icons 1`] = `
                     className="col-lg-9 col-9"
                   >
                     <div
-                      className="field-string"
+                      className="rjsf-field rjsf-field-string"
                     >
                       <div>
                         <input
@@ -3857,7 +3857,7 @@ exports[`with title and description with global label off array icons 1`] = `
                     className="py-4 col-lg-3 col-3 col-3"
                   >
                     <button
-                      className="ml-1 array-item-add btn btn-primary"
+                      className="ml-1 rjsf-array-item-add btn btn-primary"
                       disabled={false}
                       id="root__add"
                       onClick={[Function]}
@@ -3923,7 +3923,7 @@ exports[`with title and description with global label off checkboxes 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div>
       <label
@@ -4001,7 +4001,7 @@ exports[`with title and description with global label off fixed array 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div>
       <div>
@@ -4022,7 +4022,7 @@ exports[`with title and description with global label off fixed array 1`] = `
                     className="col-lg-9 col-9"
                   >
                     <div
-                      className="field-string"
+                      className="rjsf-field rjsf-field-string"
                     >
                       <div>
                         <input
@@ -4057,7 +4057,7 @@ exports[`with title and description with global label off fixed array 1`] = `
                     className="col-lg-9 col-9"
                   >
                     <div
-                      className="field-number"
+                      className="rjsf-field rjsf-field-number"
                     >
                       <div>
                         <input

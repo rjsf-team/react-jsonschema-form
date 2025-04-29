@@ -73,7 +73,7 @@ export default function ObjectFieldTemplate<
       {canExpand<T, S, F>(schema, uiSchema, formData) && (
         <AddButton
           id={buttonId<T>(idSchema, 'add')}
-          className='object-property-expand'
+          className='rjsf-object-property-expand'
           onClick={onAddClick(schema)}
           disabled={disabled || readonly}
           uiSchema={uiSchema}

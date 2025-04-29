@@ -43,9 +43,9 @@ export default function WrapIfAdditionalTemplate<
   const keyLabel = translateString(TranslatableString.KeyLabel, [label]);
   const additional = ADDITIONAL_PROPERTY_FLAG in schema;
 
-  const classNamesList = ['form-group', 'field', classNames];
+  const classNamesList = ['form-group', classNames];
   if (!hideError && rawErrors && rawErrors.length > 0) {
-    classNamesList.push('field-error has-error has-danger');
+    classNamesList.push('has-error has-danger');
   }
   const uiClassNames = classNamesList.join(' ').trim();
 
@@ -76,7 +76,7 @@ export default function WrapIfAdditionalTemplate<
         <div className='col-xs-2'>
           <RemoveButton
             id={buttonId<T>(id, 'remove')}
-            className='array-item-remove btn-block'
+            className='rjsf-object-property-remove btn-block'
             style={{ border: '0' }}
             disabled={disabled || readonly}
             onClick={onDropPropertyClick(label)}

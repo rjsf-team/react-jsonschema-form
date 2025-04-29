@@ -7,7 +7,7 @@ exports[`object fields additionalProperties 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="flex flex-col gap-2"
@@ -23,7 +23,7 @@ exports[`object fields additionalProperties 1`] = `
           >
              
             <div
-              className="flex flex-row items-center gap-2 relative w-full field-string"
+              className="flex flex-row items-center gap-2 relative w-full rjsf-field rjsf-field-string"
             >
               <div
                 className="flex flex-col w-full gap-2 line-clamp-1"
@@ -199,7 +199,7 @@ exports[`object fields object 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="flex flex-col gap-2"
@@ -215,7 +215,7 @@ exports[`object fields object 1`] = `
           >
              
             <div
-              className="field-string"
+              className="rjsf-field rjsf-field-string"
             >
               <div
                 className="flex flex-col gap-2"
@@ -258,7 +258,7 @@ exports[`object fields object 1`] = `
           >
              
             <div
-              className="field-number"
+              className="rjsf-field rjsf-field-number"
             >
               <div
                 className="flex flex-col gap-2"
@@ -316,7 +316,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
   onSubmit={[Function]}
 >
   <div
-    className="field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="flex flex-col gap-2"
@@ -332,7 +332,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
           >
              
             <div
-              className="flex flex-row items-center gap-2 relative w-full field-string"
+              className="flex flex-row items-center gap-2 relative w-full rjsf-field rjsf-field-string"
             >
               <div
                 className="flex flex-col w-full gap-2 line-clamp-1"
@@ -508,7 +508,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="flex flex-col gap-2"
@@ -551,7 +551,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
           >
              
             <div
-              className="flex flex-row items-center gap-2 relative w-full field-string"
+              className="flex flex-row items-center gap-2 relative w-full rjsf-field rjsf-field-string"
             >
               <div
                 className="flex flex-col w-full gap-2 line-clamp-1"
@@ -727,7 +727,7 @@ exports[`object fields with title and description from both additionalProperties
   onSubmit={[Function]}
 >
   <div
-    className="field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="flex flex-col gap-2"
@@ -770,7 +770,7 @@ exports[`object fields with title and description from both additionalProperties
           >
              
             <div
-              className="flex flex-row items-center gap-2 relative w-full field-string"
+              className="flex flex-row items-center gap-2 relative w-full rjsf-field rjsf-field-string"
             >
               <div
                 className="flex flex-col w-full gap-2 line-clamp-1"
@@ -946,7 +946,7 @@ exports[`object fields with title and description from both object 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="flex flex-col gap-2"
@@ -989,7 +989,7 @@ exports[`object fields with title and description from both object 1`] = `
           >
              
             <div
-              className="field-string"
+              className="rjsf-field rjsf-field-string"
             >
               <div
                 className="flex flex-col gap-2"
@@ -1044,7 +1044,7 @@ exports[`object fields with title and description from both object 1`] = `
           >
              
             <div
-              className="field-number"
+              className="rjsf-field rjsf-field-number"
             >
               <div
                 className="flex flex-col gap-2"
@@ -1114,7 +1114,7 @@ exports[`object fields with title and description from uiSchema additionalProper
   onSubmit={[Function]}
 >
   <div
-    className="field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="flex flex-col gap-2"
@@ -1157,7 +1157,7 @@ exports[`object fields with title and description from uiSchema additionalProper
           >
              
             <div
-              className="flex flex-row items-center gap-2 relative w-full field-string"
+              className="flex flex-row items-center gap-2 relative w-full rjsf-field rjsf-field-string"
             >
               <div
                 className="flex flex-col w-full gap-2 line-clamp-1"
@@ -1333,7 +1333,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="flex flex-col gap-2"
@@ -1376,7 +1376,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
           >
              
             <div
-              className="field-string"
+              className="rjsf-field rjsf-field-string"
             >
               <div
                 className="flex flex-col gap-2"
@@ -1431,7 +1431,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
           >
              
             <div
-              className="field-number"
+              className="rjsf-field rjsf-field-number"
             >
               <div
                 className="flex flex-col gap-2"
@@ -1501,7 +1501,7 @@ exports[`object fields with title and description from uiSchema show add button 
   onSubmit={[Function]}
 >
   <div
-    className="field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="flex flex-col gap-2"
@@ -1544,7 +1544,7 @@ exports[`object fields with title and description from uiSchema show add button 
           >
              
             <div
-              className="flex flex-row items-center gap-2 relative w-full field-string"
+              className="flex flex-row items-center gap-2 relative w-full rjsf-field rjsf-field-string"
             >
               <div
                 className="flex flex-col w-full gap-2 line-clamp-1"
@@ -1720,7 +1720,7 @@ exports[`object fields with title and description object 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="flex flex-col gap-2"
@@ -1763,7 +1763,7 @@ exports[`object fields with title and description object 1`] = `
           >
              
             <div
-              className="field-string"
+              className="rjsf-field rjsf-field-string"
             >
               <div
                 className="flex flex-col gap-2"
@@ -1818,7 +1818,7 @@ exports[`object fields with title and description object 1`] = `
           >
              
             <div
-              className="field-number"
+              className="rjsf-field rjsf-field-number"
             >
               <div
                 className="flex flex-col gap-2"
@@ -1888,7 +1888,7 @@ exports[`object fields with title and description show add button and fields if 
   onSubmit={[Function]}
 >
   <div
-    className="field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="flex flex-col gap-2"
@@ -1931,7 +1931,7 @@ exports[`object fields with title and description show add button and fields if 
           >
              
             <div
-              className="flex flex-row items-center gap-2 relative w-full field-string"
+              className="flex flex-row items-center gap-2 relative w-full rjsf-field rjsf-field-string"
             >
               <div
                 className="flex flex-col w-full gap-2 line-clamp-1"
@@ -2107,7 +2107,7 @@ exports[`object fields with title and description with global label off addition
   onSubmit={[Function]}
 >
   <div
-    className="field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="flex flex-col gap-2"
@@ -2123,7 +2123,7 @@ exports[`object fields with title and description with global label off addition
           >
              
             <div
-              className="flex flex-row items-center gap-2 relative w-full field-string"
+              className="flex flex-row items-center gap-2 relative w-full rjsf-field rjsf-field-string"
             >
               <div
                 className="flex flex-col w-full gap-2 line-clamp-1"
@@ -2293,7 +2293,7 @@ exports[`object fields with title and description with global label off object 1
   onSubmit={[Function]}
 >
   <div
-    className="field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="flex flex-col gap-2"
@@ -2309,7 +2309,7 @@ exports[`object fields with title and description with global label off object 1
           >
              
             <div
-              className="field-string"
+              className="rjsf-field rjsf-field-string"
             >
               <div
                 className="flex flex-col gap-2"
@@ -2346,7 +2346,7 @@ exports[`object fields with title and description with global label off object 1
           >
              
             <div
-              className="field-number"
+              className="rjsf-field rjsf-field-number"
             >
               <div
                 className="flex flex-col gap-2"
@@ -2398,7 +2398,7 @@ exports[`object fields with title and description with global label off show add
   onSubmit={[Function]}
 >
   <div
-    className="field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="flex flex-col gap-2"
@@ -2414,7 +2414,7 @@ exports[`object fields with title and description with global label off show add
           >
              
             <div
-              className="flex flex-row items-center gap-2 relative w-full field-string"
+              className="flex flex-row items-center gap-2 relative w-full rjsf-field rjsf-field-string"
             >
               <div
                 className="flex flex-col w-full gap-2 line-clamp-1"

@@ -47,7 +47,7 @@ exports[`object fields additionalProperties 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <fieldset
       className="fieldset__root emotion-0"
@@ -65,7 +65,7 @@ exports[`object fields additionalProperties 1`] = `
             className="emotion-3"
           >
             <div
-              className="field-string emotion-4"
+              className="rjsf-field rjsf-field-string emotion-4"
             >
               <div
                 className="emotion-3"
@@ -156,7 +156,7 @@ exports[`object fields additionalProperties 1`] = `
               >
                 <button
                   aria-label="Remove"
-                  className="chakra-button array-item-remove emotion-16"
+                  className="chakra-button rjsf-object-property-remove emotion-16"
                   disabled={false}
                   id="root_foo__remove"
                   onClick={[Function]}
@@ -193,7 +193,7 @@ exports[`object fields additionalProperties 1`] = `
             className="emotion-17"
           >
             <button
-              className="chakra-button object-property-expand emotion-18"
+              className="chakra-button rjsf-object-property-expand emotion-18"
               disabled={false}
               id="root__add"
               onClick={[Function]}
@@ -260,7 +260,7 @@ exports[`object fields object 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <fieldset
       className="fieldset__root emotion-0"
@@ -278,7 +278,7 @@ exports[`object fields object 1`] = `
             className="emotion-3"
           >
             <div
-              className="field-string"
+              className="rjsf-field rjsf-field-string"
             >
               <fieldset
                 className="fieldset__root emotion-0"
@@ -332,7 +332,7 @@ exports[`object fields object 1`] = `
             className="emotion-3"
           >
             <div
-              className="field-number"
+              className="rjsf-field rjsf-field-number"
             >
               <fieldset
                 className="fieldset__root emotion-0"
@@ -448,7 +448,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
   onSubmit={[Function]}
 >
   <div
-    className="field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <fieldset
       className="fieldset__root emotion-0"
@@ -466,7 +466,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
             className="emotion-3"
           >
             <div
-              className="field-string emotion-4"
+              className="rjsf-field rjsf-field-string emotion-4"
             >
               <div
                 className="emotion-3"
@@ -557,7 +557,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
               >
                 <button
                   aria-label="Remove"
-                  className="chakra-button array-item-remove emotion-16"
+                  className="chakra-button rjsf-object-property-remove emotion-16"
                   disabled={false}
                   id="root_additionalProperty__remove"
                   onClick={[Function]}
@@ -594,7 +594,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
             className="emotion-17"
           >
             <button
-              className="chakra-button object-property-expand emotion-18"
+              className="chakra-button rjsf-object-property-expand emotion-18"
               disabled={false}
               id="root__add"
               onClick={[Function]}
@@ -696,7 +696,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <fieldset
       className="fieldset__root emotion-0"
@@ -735,7 +735,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
             className="emotion-7"
           >
             <div
-              className="field-string emotion-8"
+              className="rjsf-field rjsf-field-string emotion-8"
             >
               <div
                 className="emotion-7"
@@ -826,7 +826,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
               >
                 <button
                   aria-label="Remove"
-                  className="chakra-button array-item-remove emotion-20"
+                  className="chakra-button rjsf-object-property-remove emotion-20"
                   disabled={false}
                   id="root_foo__remove"
                   onClick={[Function]}
@@ -863,7 +863,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
             className="emotion-21"
           >
             <button
-              className="chakra-button object-property-expand emotion-22"
+              className="chakra-button rjsf-object-property-expand emotion-22"
               disabled={false}
               id="root__add"
               onClick={[Function]}
@@ -965,7 +965,7 @@ exports[`object fields with title and description from both additionalProperties
   onSubmit={[Function]}
 >
   <div
-    className="field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <fieldset
       className="fieldset__root emotion-0"
@@ -1004,7 +1004,7 @@ exports[`object fields with title and description from both additionalProperties
             className="emotion-7"
           >
             <div
-              className="field-string emotion-8"
+              className="rjsf-field rjsf-field-string emotion-8"
             >
               <div
                 className="emotion-7"
@@ -1095,7 +1095,7 @@ exports[`object fields with title and description from both additionalProperties
               >
                 <button
                   aria-label="Remove"
-                  className="chakra-button array-item-remove emotion-20"
+                  className="chakra-button rjsf-object-property-remove emotion-20"
                   disabled={false}
                   id="root_foo__remove"
                   onClick={[Function]}
@@ -1132,7 +1132,7 @@ exports[`object fields with title and description from both additionalProperties
             className="emotion-21"
           >
             <button
-              className="chakra-button object-property-expand emotion-22"
+              className="chakra-button rjsf-object-property-expand emotion-22"
               disabled={false}
               id="root__add"
               onClick={[Function]}
@@ -1212,7 +1212,7 @@ exports[`object fields with title and description from both object 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <fieldset
       className="fieldset__root emotion-0"
@@ -1251,7 +1251,7 @@ exports[`object fields with title and description from both object 1`] = `
             className="emotion-7"
           >
             <div
-              className="field-string"
+              className="rjsf-field rjsf-field-string"
             >
               <fieldset
                 className="fieldset__root emotion-0"
@@ -1317,7 +1317,7 @@ exports[`object fields with title and description from both object 1`] = `
             className="emotion-7"
           >
             <div
-              className="field-number"
+              className="rjsf-field rjsf-field-number"
             >
               <fieldset
                 className="fieldset__root emotion-0"
@@ -1454,7 +1454,7 @@ exports[`object fields with title and description from uiSchema additionalProper
   onSubmit={[Function]}
 >
   <div
-    className="field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <fieldset
       className="fieldset__root emotion-0"
@@ -1493,7 +1493,7 @@ exports[`object fields with title and description from uiSchema additionalProper
             className="emotion-7"
           >
             <div
-              className="field-string emotion-8"
+              className="rjsf-field rjsf-field-string emotion-8"
             >
               <div
                 className="emotion-7"
@@ -1584,7 +1584,7 @@ exports[`object fields with title and description from uiSchema additionalProper
               >
                 <button
                   aria-label="Remove"
-                  className="chakra-button array-item-remove emotion-20"
+                  className="chakra-button rjsf-object-property-remove emotion-20"
                   disabled={false}
                   id="root_foo__remove"
                   onClick={[Function]}
@@ -1621,7 +1621,7 @@ exports[`object fields with title and description from uiSchema additionalProper
             className="emotion-21"
           >
             <button
-              className="chakra-button object-property-expand emotion-22"
+              className="chakra-button rjsf-object-property-expand emotion-22"
               disabled={false}
               id="root__add"
               onClick={[Function]}
@@ -1701,7 +1701,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <fieldset
       className="fieldset__root emotion-0"
@@ -1740,7 +1740,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
             className="emotion-7"
           >
             <div
-              className="field-string"
+              className="rjsf-field rjsf-field-string"
             >
               <fieldset
                 className="fieldset__root emotion-0"
@@ -1806,7 +1806,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
             className="emotion-7"
           >
             <div
-              className="field-number"
+              className="rjsf-field rjsf-field-number"
             >
               <fieldset
                 className="fieldset__root emotion-0"
@@ -1943,7 +1943,7 @@ exports[`object fields with title and description from uiSchema show add button 
   onSubmit={[Function]}
 >
   <div
-    className="field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <fieldset
       className="fieldset__root emotion-0"
@@ -1982,7 +1982,7 @@ exports[`object fields with title and description from uiSchema show add button 
             className="emotion-7"
           >
             <div
-              className="field-string emotion-8"
+              className="rjsf-field rjsf-field-string emotion-8"
             >
               <div
                 className="emotion-7"
@@ -2073,7 +2073,7 @@ exports[`object fields with title and description from uiSchema show add button 
               >
                 <button
                   aria-label="Remove"
-                  className="chakra-button array-item-remove emotion-20"
+                  className="chakra-button rjsf-object-property-remove emotion-20"
                   disabled={false}
                   id="root_additionalProperty__remove"
                   onClick={[Function]}
@@ -2110,7 +2110,7 @@ exports[`object fields with title and description from uiSchema show add button 
             className="emotion-21"
           >
             <button
-              className="chakra-button object-property-expand emotion-22"
+              className="chakra-button rjsf-object-property-expand emotion-22"
               disabled={false}
               id="root__add"
               onClick={[Function]}
@@ -2190,7 +2190,7 @@ exports[`object fields with title and description object 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <fieldset
       className="fieldset__root emotion-0"
@@ -2229,7 +2229,7 @@ exports[`object fields with title and description object 1`] = `
             className="emotion-7"
           >
             <div
-              className="field-string"
+              className="rjsf-field rjsf-field-string"
             >
               <fieldset
                 className="fieldset__root emotion-0"
@@ -2295,7 +2295,7 @@ exports[`object fields with title and description object 1`] = `
             className="emotion-7"
           >
             <div
-              className="field-number"
+              className="rjsf-field rjsf-field-number"
             >
               <fieldset
                 className="fieldset__root emotion-0"
@@ -2432,7 +2432,7 @@ exports[`object fields with title and description show add button and fields if 
   onSubmit={[Function]}
 >
   <div
-    className="field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <fieldset
       className="fieldset__root emotion-0"
@@ -2471,7 +2471,7 @@ exports[`object fields with title and description show add button and fields if 
             className="emotion-7"
           >
             <div
-              className="field-string emotion-8"
+              className="rjsf-field rjsf-field-string emotion-8"
             >
               <div
                 className="emotion-7"
@@ -2562,7 +2562,7 @@ exports[`object fields with title and description show add button and fields if 
               >
                 <button
                   aria-label="Remove"
-                  className="chakra-button array-item-remove emotion-20"
+                  className="chakra-button rjsf-object-property-remove emotion-20"
                   disabled={false}
                   id="root_additionalProperty__remove"
                   onClick={[Function]}
@@ -2599,7 +2599,7 @@ exports[`object fields with title and description show add button and fields if 
             className="emotion-21"
           >
             <button
-              className="chakra-button object-property-expand emotion-22"
+              className="chakra-button rjsf-object-property-expand emotion-22"
               disabled={false}
               id="root__add"
               onClick={[Function]}
@@ -2692,7 +2692,7 @@ exports[`object fields with title and description with global label off addition
   onSubmit={[Function]}
 >
   <div
-    className="field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <fieldset
       className="fieldset__root emotion-0"
@@ -2710,7 +2710,7 @@ exports[`object fields with title and description with global label off addition
             className="emotion-3"
           >
             <div
-              className="field-string emotion-4"
+              className="rjsf-field rjsf-field-string emotion-4"
             >
               <div
                 className="emotion-3"
@@ -2792,7 +2792,7 @@ exports[`object fields with title and description with global label off addition
               >
                 <button
                   aria-label="Remove"
-                  className="chakra-button array-item-remove emotion-15"
+                  className="chakra-button rjsf-object-property-remove emotion-15"
                   disabled={false}
                   id="root_foo__remove"
                   onClick={[Function]}
@@ -2829,7 +2829,7 @@ exports[`object fields with title and description with global label off addition
             className="emotion-16"
           >
             <button
-              className="chakra-button object-property-expand emotion-17"
+              className="chakra-button rjsf-object-property-expand emotion-17"
               disabled={false}
               id="root__add"
               onClick={[Function]}
@@ -2896,7 +2896,7 @@ exports[`object fields with title and description with global label off object 1
   onSubmit={[Function]}
 >
   <div
-    className="field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <fieldset
       className="fieldset__root emotion-0"
@@ -2914,7 +2914,7 @@ exports[`object fields with title and description with global label off object 1
             className="emotion-3"
           >
             <div
-              className="field-string"
+              className="rjsf-field rjsf-field-string"
             >
               <fieldset
                 className="fieldset__root emotion-0"
@@ -2959,7 +2959,7 @@ exports[`object fields with title and description with global label off object 1
             className="emotion-3"
           >
             <div
-              className="field-number"
+              className="rjsf-field rjsf-field-number"
             >
               <fieldset
                 className="fieldset__root emotion-0"
@@ -3066,7 +3066,7 @@ exports[`object fields with title and description with global label off show add
   onSubmit={[Function]}
 >
   <div
-    className="field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <fieldset
       className="fieldset__root emotion-0"
@@ -3084,7 +3084,7 @@ exports[`object fields with title and description with global label off show add
             className="emotion-3"
           >
             <div
-              className="field-string emotion-4"
+              className="rjsf-field rjsf-field-string emotion-4"
             >
               <div
                 className="emotion-3"
@@ -3166,7 +3166,7 @@ exports[`object fields with title and description with global label off show add
               >
                 <button
                   aria-label="Remove"
-                  className="chakra-button array-item-remove emotion-15"
+                  className="chakra-button rjsf-object-property-remove emotion-15"
                   disabled={false}
                   id="root_additionalProperty__remove"
                   onClick={[Function]}
@@ -3203,7 +3203,7 @@ exports[`object fields with title and description with global label off show add
             className="emotion-16"
           >
             <button
-              className="chakra-button object-property-expand emotion-17"
+              className="chakra-button rjsf-object-property-expand emotion-17"
               disabled={false}
               id="root__add"
               onClick={[Function]}

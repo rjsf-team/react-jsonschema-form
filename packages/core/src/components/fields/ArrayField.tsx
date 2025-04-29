@@ -520,7 +520,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
           totalItems: keyedFormData.length,
         });
       }),
-      className: `field field-array field-array-of-${itemsSchema.type}`,
+      className: `rjsf-field rjsf-field-array rjsf-field-array-of-${itemsSchema.type}`,
       disabled,
       idSchema,
       uiSchema,
@@ -736,7 +736,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
     const canAdd = this.canAddItem(items) && !!additionalSchema;
     const arrayProps: ArrayFieldTemplateProps<T[], S, F> = {
       canAdd,
-      className: 'field field-array field-array-fixed-items',
+      className: 'rjsf-field rjsf-field-array rjsf-field-array-fixed-items',
       disabled,
       idSchema,
       formData,
@@ -901,7 +901,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
         schema: itemSchema,
         uiSchema: itemUiSchema,
       },
-      className: 'array-item',
+      className: 'rjsf-array-item',
       disabled,
       hasToolbar: has.toolbar,
       index,

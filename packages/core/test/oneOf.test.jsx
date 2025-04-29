@@ -134,7 +134,7 @@ describe('oneOf', () => {
       {
         formData: { foo: 'defaultbar' },
       },
-      'root__oneof_select'
+      'root__oneof_select',
     );
   });
 
@@ -178,7 +178,7 @@ describe('oneOf', () => {
       {
         formData: { foo: 'defaultbar' },
       },
-      'root__oneof_select'
+      'root__oneof_select',
     );
   });
 
@@ -218,7 +218,7 @@ describe('oneOf', () => {
       {
         formData: { foo: 'defaultbar' },
       },
-      'root__oneof_select'
+      'root__oneof_select',
     );
   });
 
@@ -351,7 +351,7 @@ describe('oneOf', () => {
       {
         formData: { foo: 'Lorem ipsum dolor sit amet' },
       },
-      'root_foo'
+      'root_foo',
     );
   });
 
@@ -392,7 +392,7 @@ describe('oneOf', () => {
           buzz: 'Lorem ipsum dolor sit amet',
         },
       },
-      'root_buzz'
+      'root_buzz',
     );
 
     act(() => {
@@ -409,7 +409,7 @@ describe('oneOf', () => {
           foo: 'Consectetur adipiscing elit',
         },
       },
-      'root_foo'
+      'root_foo',
     );
 
     const $select = node.querySelector('select');
@@ -462,7 +462,7 @@ describe('oneOf', () => {
           userId: 12345,
         },
       },
-      'root_userId'
+      'root_userId',
     );
 
     const $select = node.querySelector('select');
@@ -480,7 +480,7 @@ describe('oneOf', () => {
           userId: undefined,
         },
       },
-      'root_userId'
+      'root_userId',
     );
 
     act(() => {
@@ -496,7 +496,7 @@ describe('oneOf', () => {
           userId: 'Lorem ipsum dolor sit amet',
         },
       },
-      'root_userId'
+      'root_userId',
     );
   });
 
@@ -822,7 +822,7 @@ describe('oneOf', () => {
       {
         formData: { ipsum: {}, lorem: undefined },
       },
-      'root__oneof_select'
+      'root__oneof_select',
     );
   });
 
@@ -998,9 +998,9 @@ describe('oneOf', () => {
         schema,
       });
 
-      expect(node.querySelector('.array-item-add button')).not.eql(null);
+      expect(node.querySelector('.rjsf-array-item-add button')).not.eql(null);
 
-      fireEvent.click(node.querySelector('.array-item-add button'));
+      fireEvent.click(node.querySelector('.rjsf-array-item-add button'));
 
       const $select = node.querySelector('select');
       expect($select).not.eql(null);
@@ -1059,7 +1059,7 @@ describe('oneOf', () => {
       expect(selects[0].value).eql('0');
       expect(selects[1].value).eql('1');
 
-      const moveUpBtns = node.querySelectorAll('.array-item-move-up');
+      const moveUpBtns = node.querySelectorAll('.rjsf-array-item-move-up');
       fireEvent.click(moveUpBtns[1]);
 
       selects = node.querySelectorAll('select');
@@ -1103,10 +1103,10 @@ describe('oneOf', () => {
         },
       });
 
-      const moveDownBtns = node.querySelectorAll('.array-item-move-down');
+      const moveDownBtns = node.querySelectorAll('.rjsf-array-item-move-down');
       fireEvent.click(moveDownBtns[0]);
 
-      const strInputs = node.querySelectorAll('fieldset .field-string input[type=text]');
+      const strInputs = node.querySelectorAll('fieldset .rjsf-field-string input[type=text]');
 
       act(() => {
         fireEvent.change(strInputs[1], { target: { value: 'bar' } });
@@ -1218,9 +1218,9 @@ describe('oneOf', () => {
         schema,
       });
 
-      expect(node.querySelector('.array-item-add button')).not.eql(null);
+      expect(node.querySelector('.rjsf-array-item-add button')).not.eql(null);
 
-      fireEvent.click(node.querySelector('.array-item-add button'));
+      fireEvent.click(node.querySelector('.rjsf-array-item-add button'));
 
       const $select = node.querySelector('select');
       expect($select).not.eql(null);
@@ -1233,7 +1233,7 @@ describe('oneOf', () => {
       // This works because the nested "add" button will now be the first to
       // appear in the dom
       act(() => {
-        fireEvent.click(node.querySelector('.array-item-add button'));
+        fireEvent.click(node.querySelector('.rjsf-array-item-add button'));
       });
 
       expect($select.value).to.eql($select.options[1].value);
@@ -1499,9 +1499,9 @@ describe('oneOf', () => {
         schema,
       });
 
-      expect(node.querySelector('.array-item-add button')).not.eql(null);
+      expect(node.querySelector('.rjsf-array-item-add button')).not.eql(null);
 
-      fireEvent.click(node.querySelector('.array-item-add button'));
+      fireEvent.click(node.querySelector('.rjsf-array-item-add button'));
 
       const $select = node.querySelector('select');
       expect($select).not.eql(null);
@@ -1724,7 +1724,7 @@ describe('oneOf', () => {
       });
       fireEvent.submit(node);
 
-      let inputs = node.querySelectorAll('.form-group.field-error input[type=number]');
+      let inputs = node.querySelectorAll('.form-group.rjsf-field-error input[type=number]');
       expect(inputs[0].id).eql('root_userId');
 
       const $select = node.querySelector('select');
@@ -1742,7 +1742,7 @@ describe('oneOf', () => {
       });
       fireEvent.submit(node);
 
-      inputs = node.querySelectorAll('.form-group.field-error input[type=text]');
+      inputs = node.querySelectorAll('.form-group.rjsf-field-error input[type=text]');
       expect(inputs[0].id).eql('root_userId');
     });
     it('should NOT show error on options with different types when hideError: true', () => {
@@ -1761,7 +1761,7 @@ describe('oneOf', () => {
       });
       fireEvent.submit(node);
 
-      let inputs = node.querySelectorAll('.form-group.field-error input[type=number]');
+      let inputs = node.querySelectorAll('.form-group.rjsf-field-error input[type=number]');
       expect(inputs).to.have.length.of(0);
 
       const $select = node.querySelector('select');
@@ -1779,7 +1779,7 @@ describe('oneOf', () => {
       });
       fireEvent.submit(node);
 
-      inputs = node.querySelectorAll('.form-group.field-error input[type=text]');
+      inputs = node.querySelectorAll('.form-group.rjsf-field-error input[type=text]');
       expect(inputs).to.have.length.of(0);
     });
   });

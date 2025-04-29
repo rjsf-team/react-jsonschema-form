@@ -7,7 +7,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="form-group rjsf-field rjsf-field-object"
   >
     <div
       data-testid="0"
@@ -21,7 +21,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
           data-testid="1"
         >
           <div
-            className="form-group field field-object"
+            className="form-group rjsf-field rjsf-field-object"
           >
             <legend
               id="root_person__title"
@@ -40,7 +40,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
           data-testid="1"
         >
           <div
-            className="form-group field field-string"
+            className="form-group rjsf-field rjsf-field-string"
           >
             <label
               className="control-label"
@@ -77,7 +77,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
           data-testid="1"
         >
           <div
-            className="form-group field field-string"
+            className="form-group rjsf-field rjsf-field-string"
           >
             <label
               className="control-label"
@@ -109,7 +109,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
           data-testid="1"
         >
           <div
-            className="form-group field field-string"
+            className="form-group rjsf-field rjsf-field-string"
           >
             <label
               className="control-label"
@@ -151,7 +151,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
           data-testid="1"
         >
           <div
-            className="form-group field field-string"
+            className="form-group rjsf-field rjsf-field-string"
           >
             <label
               className="control-label"
@@ -188,7 +188,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
           data-testid="1"
         >
           <div
-            className="form-group field field-array"
+            className="form-group rjsf-field rjsf-field-array"
           >
             <label
               className="control-label"
@@ -344,7 +344,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
           data-testid="1"
         >
           <div
-            className="form-group field field-object"
+            className="form-group rjsf-field rjsf-field-object"
           >
             <div
               className="row"
@@ -355,7 +355,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                 data-testid="1"
               >
                 <div
-                  className="form-group field field-string"
+                  className="form-group rjsf-field rjsf-field-string"
                 >
                   <label
                     className="control-label"
@@ -392,7 +392,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                 data-testid="1"
               >
                 <div
-                  className="form-group field field-string"
+                  className="form-group rjsf-field rjsf-field-string"
                 >
                   <label
                     className="control-label"
@@ -424,7 +424,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                 data-testid="1"
               >
                 <div
-                  className="form-group field field-string"
+                  className="form-group rjsf-field rjsf-field-string"
                 >
                   <label
                     className="control-label"
@@ -464,7 +464,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                   data-testid="1"
                 >
                   <div
-                    className="form-group field field-string"
+                    className="form-group rjsf-field rjsf-field-string"
                   >
                     <label
                       className="control-label"
@@ -783,7 +783,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                   data-testid="1"
                 >
                   <div
-                    className="form-group field field-string"
+                    className="form-group rjsf-field rjsf-field-string"
                   >
                     <label
                       className="control-label"
@@ -829,7 +829,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
           }
         >
           <div
-            className="form-group field"
+            className="form-group"
           >
             <label
               className="control-label"
@@ -916,7 +916,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
           data-testid="1"
         >
           <div
-            className="form-group field field-string"
+            className="form-group rjsf-field rjsf-field-string"
           >
             <label
               className="control-label"
@@ -953,7 +953,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
           data-testid="1"
         >
           <div
-            className="form-group field field-string"
+            className="form-group rjsf-field rjsf-field-string"
           >
             <label
               className="control-label"
@@ -985,7 +985,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
           data-testid="1"
         >
           <div
-            className="form-group field field-string"
+            className="form-group rjsf-field rjsf-field-string"
           >
             <label
               className="control-label"
@@ -1022,7 +1022,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
           data-testid="1"
         >
           <div
-            className="form-group field field-string"
+            className="form-group rjsf-field rjsf-field-string"
           >
             <label
               className="control-label"
@@ -1358,7 +1358,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="form-group rjsf-field rjsf-field-object"
   >
     <div
       data-testid="0"
@@ -1372,7 +1372,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
           data-testid="1"
         >
           <div
-            className="form-group field field-object"
+            className="form-group rjsf-field rjsf-field-object"
           >
             <legend
               id="root_person__title"
@@ -1391,7 +1391,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
           data-testid="1"
         >
           <div
-            className="form-group field field-string"
+            className="form-group rjsf-field rjsf-field-string"
           >
             <label
               className="control-label"
@@ -1428,7 +1428,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
           data-testid="1"
         >
           <div
-            className="form-group field field-string"
+            className="form-group rjsf-field rjsf-field-string"
           >
             <label
               className="control-label"
@@ -1460,7 +1460,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
           data-testid="1"
         >
           <div
-            className="form-group field field-string"
+            className="form-group rjsf-field rjsf-field-string"
           >
             <label
               className="control-label"
@@ -1502,7 +1502,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
           data-testid="1"
         >
           <div
-            className="form-group field field-string"
+            className="form-group rjsf-field rjsf-field-string"
           >
             <label
               className="control-label"
@@ -1539,7 +1539,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
           data-testid="1"
         >
           <div
-            className="form-group field field-array"
+            className="form-group rjsf-field rjsf-field-array"
           >
             <label
               className="control-label"
@@ -1695,7 +1695,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
           data-testid="1"
         >
           <div
-            className="form-group field field-object"
+            className="form-group rjsf-field rjsf-field-object"
           >
             <div
               className="row"
@@ -1706,7 +1706,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                 data-testid="1"
               >
                 <div
-                  className="form-group field field-string"
+                  className="form-group rjsf-field rjsf-field-string"
                 >
                   <label
                     className="control-label"
@@ -1743,7 +1743,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                 data-testid="1"
               >
                 <div
-                  className="form-group field field-string"
+                  className="form-group rjsf-field rjsf-field-string"
                 >
                   <label
                     className="control-label"
@@ -1775,7 +1775,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                 data-testid="1"
               >
                 <div
-                  className="form-group field field-string"
+                  className="form-group rjsf-field rjsf-field-string"
                 >
                   <label
                     className="control-label"
@@ -1815,7 +1815,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                   data-testid="1"
                 >
                   <div
-                    className="form-group field field-string"
+                    className="form-group rjsf-field rjsf-field-string"
                   >
                     <label
                       className="control-label"
@@ -2134,7 +2134,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                   data-testid="1"
                 >
                   <div
-                    className="form-group field field-string"
+                    className="form-group rjsf-field rjsf-field-string"
                   >
                     <label
                       className="control-label"
@@ -2180,7 +2180,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
           }
         >
           <div
-            className="form-group field"
+            className="form-group"
           >
             <label
               className="control-label"
@@ -2267,7 +2267,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
           data-testid="1"
         >
           <div
-            className="form-group field field-string"
+            className="form-group rjsf-field rjsf-field-string"
           >
             <label
               className="control-label"
@@ -2299,7 +2299,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
           data-testid="1"
         >
           <div
-            className="form-group field field-string"
+            className="form-group rjsf-field rjsf-field-string"
           >
             <label
               className="control-label"
@@ -2336,7 +2336,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
           data-testid="1"
         >
           <div
-            className="form-group field field-string"
+            className="form-group rjsf-field rjsf-field-string"
           >
             <label
               className="control-label"
@@ -2368,7 +2368,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
           data-testid="1"
         >
           <div
-            className="form-group field field-string"
+            className="form-group rjsf-field rjsf-field-string"
           >
             <label
               className="control-label"
@@ -2405,7 +2405,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
           data-testid="1"
         >
           <div
-            className="form-group field field-string"
+            className="form-group rjsf-field rjsf-field-string"
           >
             <label
               className="control-label"
@@ -2741,7 +2741,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="form-group rjsf-field rjsf-field-object"
   >
     <div
       data-testid="0"
@@ -2755,7 +2755,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
           data-testid="1"
         >
           <div
-            className="form-group field field-object"
+            className="form-group rjsf-field rjsf-field-object"
           >
             <legend
               id="root_person__title"
@@ -2774,7 +2774,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
           data-testid="1"
         >
           <div
-            className="form-group field field-string"
+            className="form-group rjsf-field rjsf-field-string"
           >
             <label
               className="control-label"
@@ -2811,7 +2811,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
           data-testid="1"
         >
           <div
-            className="form-group field field-string"
+            className="form-group rjsf-field rjsf-field-string"
           >
             <label
               className="control-label"
@@ -2843,7 +2843,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
           data-testid="1"
         >
           <div
-            className="form-group field field-string"
+            className="form-group rjsf-field rjsf-field-string"
           >
             <label
               className="control-label"
@@ -2885,7 +2885,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
           data-testid="1"
         >
           <div
-            className="form-group field field-string"
+            className="form-group rjsf-field rjsf-field-string"
           >
             <label
               className="control-label"
@@ -2922,7 +2922,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
           data-testid="1"
         >
           <div
-            className="form-group field field-array"
+            className="form-group rjsf-field rjsf-field-array"
           >
             <label
               className="control-label"
@@ -3078,7 +3078,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
           data-testid="1"
         >
           <div
-            className="form-group field field-object"
+            className="form-group rjsf-field rjsf-field-object"
           >
             <div
               className="row"
@@ -3089,7 +3089,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                 data-testid="1"
               >
                 <div
-                  className="form-group field field-string"
+                  className="form-group rjsf-field rjsf-field-string"
                 >
                   <label
                     className="control-label"
@@ -3126,7 +3126,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                 data-testid="1"
               >
                 <div
-                  className="form-group field field-string"
+                  className="form-group rjsf-field rjsf-field-string"
                 >
                   <label
                     className="control-label"
@@ -3158,7 +3158,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                 data-testid="1"
               >
                 <div
-                  className="form-group field field-string"
+                  className="form-group rjsf-field rjsf-field-string"
                 >
                   <label
                     className="control-label"
@@ -3198,7 +3198,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                   data-testid="1"
                 >
                   <div
-                    className="form-group field field-string"
+                    className="form-group rjsf-field rjsf-field-string"
                   >
                     <label
                       className="control-label"
@@ -3517,7 +3517,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                   data-testid="1"
                 >
                   <div
-                    className="form-group field field-string"
+                    className="form-group rjsf-field rjsf-field-string"
                   >
                     <label
                       className="control-label"
@@ -3563,7 +3563,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
           }
         >
           <div
-            className="form-group field"
+            className="form-group"
           >
             <label
               className="control-label"
@@ -3650,7 +3650,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
           data-testid="1"
         >
           <div
-            className="form-group field field-string"
+            className="form-group rjsf-field rjsf-field-string"
           >
             <label
               className="control-label"
@@ -3703,7 +3703,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="form-group rjsf-field rjsf-field-object"
   >
     <div
       data-testid="0"
@@ -3717,7 +3717,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
           data-testid="1"
         >
           <div
-            className="form-group field field-object"
+            className="form-group rjsf-field rjsf-field-object"
           >
             <legend
               id="root_person__title"
@@ -3736,7 +3736,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
           data-testid="1"
         >
           <div
-            className="form-group field field-string"
+            className="form-group rjsf-field rjsf-field-string"
           >
             <label
               className="control-label"
@@ -3773,7 +3773,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
           data-testid="1"
         >
           <div
-            className="form-group field field-string"
+            className="form-group rjsf-field rjsf-field-string"
           >
             <label
               className="control-label"
@@ -3805,7 +3805,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
           data-testid="1"
         >
           <div
-            className="form-group field field-string"
+            className="form-group rjsf-field rjsf-field-string"
           >
             <label
               className="control-label"
@@ -3847,7 +3847,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
           data-testid="1"
         >
           <div
-            className="form-group field field-string"
+            className="form-group rjsf-field rjsf-field-string"
           >
             <label
               className="control-label"
@@ -3884,7 +3884,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
           data-testid="1"
         >
           <div
-            className="form-group field field-array"
+            className="form-group rjsf-field rjsf-field-array"
           >
             <label
               className="control-label"
@@ -4040,7 +4040,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
           data-testid="1"
         >
           <div
-            className="form-group field field-object"
+            className="form-group rjsf-field rjsf-field-object"
           >
             <div
               className="row"
@@ -4051,7 +4051,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                 data-testid="1"
               >
                 <div
-                  className="form-group field field-string"
+                  className="form-group rjsf-field rjsf-field-string"
                 >
                   <label
                     className="control-label"
@@ -4088,7 +4088,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                 data-testid="1"
               >
                 <div
-                  className="form-group field field-string"
+                  className="form-group rjsf-field rjsf-field-string"
                 >
                   <label
                     className="control-label"
@@ -4120,7 +4120,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                 data-testid="1"
               >
                 <div
-                  className="form-group field field-string"
+                  className="form-group rjsf-field rjsf-field-string"
                 >
                   <label
                     className="control-label"
@@ -4160,7 +4160,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                   data-testid="1"
                 >
                   <div
-                    className="form-group field field-string"
+                    className="form-group rjsf-field rjsf-field-string"
                   >
                     <label
                       className="control-label"
@@ -4479,7 +4479,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                   data-testid="1"
                 >
                   <div
-                    className="form-group field field-string"
+                    className="form-group rjsf-field rjsf-field-string"
                   >
                     <label
                       className="control-label"
@@ -4525,7 +4525,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
           }
         >
           <div
-            className="form-group field"
+            className="form-group"
           >
             <label
               className="control-label"
@@ -4612,7 +4612,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
           data-testid="1"
         >
           <div
-            className="form-group field field-string"
+            className="form-group rjsf-field rjsf-field-string"
           >
             <label
               className="control-label"
@@ -4649,7 +4649,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
           data-testid="1"
         >
           <div
-            className="form-group field field-string"
+            className="form-group rjsf-field rjsf-field-string"
           >
             <label
               className="control-label"
@@ -4681,7 +4681,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
           data-testid="1"
         >
           <div
-            className="form-group field field-string"
+            className="form-group rjsf-field rjsf-field-string"
           >
             <label
               className="control-label"
@@ -4718,7 +4718,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
           data-testid="1"
         >
           <div
-            className="form-group field field-string"
+            className="form-group rjsf-field rjsf-field-string"
           >
             <label
               className="control-label"
@@ -5054,7 +5054,7 @@ exports[`Three even column grid renders person and address in three columns, no 
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="form-group rjsf-field rjsf-field-object"
   >
     <div
       className="row"
@@ -5065,7 +5065,7 @@ exports[`Three even column grid renders person and address in three columns, no 
         data-testid="1"
       >
         <div
-          className="form-group field field-object"
+          className="form-group rjsf-field rjsf-field-object"
         >
           <legend
             id="root_person__title"
@@ -5079,7 +5079,7 @@ exports[`Three even column grid renders person and address in three columns, no 
         data-testid="1"
       >
         <div
-          className="form-group field field-string"
+          className="form-group rjsf-field rjsf-field-string"
         >
           <label
             className="control-label"
@@ -5116,7 +5116,7 @@ exports[`Three even column grid renders person and address in three columns, no 
         data-testid="1"
       >
         <div
-          className="form-group field field-string"
+          className="form-group rjsf-field rjsf-field-string"
         >
           <label
             className="control-label"
@@ -5148,7 +5148,7 @@ exports[`Three even column grid renders person and address in three columns, no 
         data-testid="1"
       >
         <div
-          className="form-group field field-string"
+          className="form-group rjsf-field rjsf-field-string"
         >
           <label
             className="control-label"
@@ -5185,7 +5185,7 @@ exports[`Three even column grid renders person and address in three columns, no 
         data-testid="1"
       >
         <div
-          className="form-group field field-string"
+          className="form-group rjsf-field rjsf-field-string"
         >
           <label
             className="control-label"
@@ -5222,7 +5222,7 @@ exports[`Three even column grid renders person and address in three columns, no 
         data-testid="1"
       >
         <div
-          className="form-group field field-array"
+          className="form-group rjsf-field rjsf-field-array"
         >
           <label
             className="control-label"
@@ -5373,7 +5373,7 @@ exports[`Three even column grid renders person and address in three columns, no 
         data-testid="1"
       >
         <div
-          className="form-group field field-string"
+          className="form-group rjsf-field rjsf-field-string"
         >
           <label
             className="control-label"
@@ -5410,7 +5410,7 @@ exports[`Three even column grid renders person and address in three columns, no 
         data-testid="1"
       >
         <div
-          className="form-group field field-string"
+          className="form-group rjsf-field rjsf-field-string"
         >
           <label
             className="control-label"
@@ -5442,7 +5442,7 @@ exports[`Three even column grid renders person and address in three columns, no 
         data-testid="1"
       >
         <div
-          className="form-group field field-string"
+          className="form-group rjsf-field rjsf-field-string"
         >
           <label
             className="control-label"
@@ -5479,7 +5479,7 @@ exports[`Three even column grid renders person and address in three columns, no 
         data-testid="1"
       >
         <div
-          className="form-group field field-string"
+          className="form-group rjsf-field rjsf-field-string"
         >
           <label
             className="control-label"
@@ -5818,7 +5818,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="form-group rjsf-field rjsf-field-object"
   >
     <div
       className="row"
@@ -5829,7 +5829,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
         data-testid="1"
       >
         <div
-          className="form-group field field-object"
+          className="form-group rjsf-field rjsf-field-object"
         >
           <legend
             id="root_person__title"
@@ -5843,7 +5843,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
         data-testid="1"
       >
         <div
-          className="form-group field field-string"
+          className="form-group rjsf-field rjsf-field-string"
         >
           <label
             className="control-label"
@@ -5880,7 +5880,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
         data-testid="1"
       >
         <div
-          className="form-group field field-string"
+          className="form-group rjsf-field rjsf-field-string"
         >
           <label
             className="control-label"
@@ -5912,7 +5912,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
         data-testid="1"
       >
         <div
-          className="form-group field field-string"
+          className="form-group rjsf-field rjsf-field-string"
         >
           <label
             className="control-label"
@@ -5949,7 +5949,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
         data-testid="1"
       >
         <div
-          className="form-group field field-string"
+          className="form-group rjsf-field rjsf-field-string"
         >
           <label
             className="control-label"
@@ -5986,7 +5986,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
         data-testid="1"
       >
         <div
-          className="form-group field field-array"
+          className="form-group rjsf-field rjsf-field-array"
         >
           <label
             className="control-label"
@@ -6137,7 +6137,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
         data-testid="1"
       >
         <div
-          className="form-group field field-string"
+          className="form-group rjsf-field rjsf-field-string"
         >
           <label
             className="control-label"
@@ -6174,7 +6174,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
         data-testid="1"
       >
         <div
-          className="form-group field field-string"
+          className="form-group rjsf-field rjsf-field-string"
         >
           <label
             className="control-label"
@@ -6206,7 +6206,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
         data-testid="1"
       >
         <div
-          className="form-group field field-string"
+          className="form-group rjsf-field rjsf-field-string"
         >
           <label
             className="control-label"
@@ -6243,7 +6243,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
         data-testid="1"
       >
         <div
-          className="form-group field field-string"
+          className="form-group rjsf-field rjsf-field-string"
         >
           <label
             className="control-label"

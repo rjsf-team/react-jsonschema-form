@@ -111,7 +111,7 @@ export default function ArrayFieldTemplate<
               <Col flex='192px'>
                 <AddButton
                   id={buttonId<T>(idSchema, 'add')}
-                  className='array-item-add'
+                  className='rjsf-array-item-add'
                   disabled={disabled || readonly}
                   onClick={onAddClick}
                   uiSchema={uiSchema}

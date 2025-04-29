@@ -79,7 +79,7 @@ export default function RatingWidget<
   };
 
   return (
-    <div className='field field-array'>
+    <>
       <div
         className='rating-widget'
         style={{
@@ -124,6 +124,6 @@ export default function RatingWidget<
           aria-hidden='true'
         />
       </div>
-    </div>
+    </>
   );
 }

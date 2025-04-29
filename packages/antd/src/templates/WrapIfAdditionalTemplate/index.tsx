@@ -110,7 +110,7 @@ export default function WrapIfAdditionalTemplate<
         <Col flex='192px'>
           <RemoveButton
             id={buttonId<T>(id, 'remove')}
-            className='array-item-remove'
+            className='rjsf-object-property-remove'
             disabled={disabled || readonly}
             onClick={onDropPropertyClick(label)}
             uiSchema={buttonUiOptions}
