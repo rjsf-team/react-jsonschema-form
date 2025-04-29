@@ -1,11 +1,12 @@
 import Form from './Form';
-import widgets from './Widgets'; // Correctly import from the Widgets directory index
+import generateWidgets from './Widgets';
 import generateTemplates from './Templates';
 import Theme from './Theme';
 
-// Assign the imported widgets object to the Theme
+// Assign the real widget registry to Theme
+const widgets = generateWidgets();
 Theme.widgets = widgets;
 
-// Export the theme, templates, and potentially the widgets object itself
-export { generateTemplates, widgets, Theme }; // Export the widgets object instead
+// Export everything
+export { Form, widgets, generateTemplates as templates, Theme };
 export default Form;
