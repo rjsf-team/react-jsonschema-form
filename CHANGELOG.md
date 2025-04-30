@@ -26,9 +26,17 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Restricted the chakra-react-select peerDependency to <6.0.0, fixing [#4539](https://github.com/rjsf-team/react-jsonschema-form/issues/4539)
 
+## @rjsf/core
+
+- Do not display input field in MultiSchemaField with null type
+
 ## @rjsf/mui
 
 - Fixed issue in BaseInputTemplate where input props were passed to `slotProps.htmlInput`, which does not work in MUI v5.
+
+## @rjsf/utils
+
+- Fixed issue with schema combinators(allOf, anyOf, oneOf) could not be modified when defaults were set, fixing [#4555](https://github.com/rjsf-team/react-jsonschema-form/issues/4555)
 
 ## Dev / docs / playground
 
