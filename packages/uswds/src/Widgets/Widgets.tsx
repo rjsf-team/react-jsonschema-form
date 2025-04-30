@@ -227,15 +227,23 @@ function RadioWidget<
   );
 }
 
-// RangeWidget - Use USWDS RangeSlider directly
+// RangeWidget - Simplified, remove wrapper/label
 function RangeWidget<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
 >(props: WidgetProps<T, S, F>) {
-  const { value, label, hideLabel, id, schema, disabled, readonly, required, onChange, onBlur, onFocus, options, rawErrors = [] } = props;
+  const {
+    value,
+    id,
+    schema,
+    disabled,
+    readonly,
+    required,
+    onChange,
+    options,
+  } = props;
   const { min, max, step } = rangeSpec(schema);
-  const hasErrors = rawErrors.length > 0;
   const description = schema.description || options.help;
   const ariaDescribedById = ariaDescribedByIds<T>(id, !!description);
 
@@ -245,21 +253,18 @@ function RangeWidget<
   };
 
   return (
-    <div>
-      {labelValue(<label htmlFor={id} error={hasErrors}>{label || schema.title}{required && <span className="usa-label--required">*</span>}</label>, hideLabel)}
-      <RangeSlider
-        id={id}
-        name={id}
-        min={min ?? 0}
-        max={max ?? 100}
-        step={step ?? 1}
-        defaultValue={value ?? ''}
-        disabled={disabled || readonly}
-        required={required}
-        onChange={!readonly ? _onChange : undefined}
-        aria-describedby={ariaDescribedById}
-      />
-    </div>
+    <RangeSlider
+      id={id}
+      name={id}
+      min={min ?? 0}
+      max={max ?? 100}
+      step={step ?? 1}
+      defaultValue={value ?? ''}
+      disabled={disabled || readonly}
+      required={required}
+      onChange={!readonly ? _onChange : undefined}
+      aria-describedby={ariaDescribedById}
+    />
   );
 }
 
@@ -283,7 +288,6 @@ function _SelectWidget<
   disabled,
   readonly,
   value,
-  multiple,
   autofocus,
   onChange,
   onBlur,
@@ -298,11 +302,6 @@ function _SelectWidget<
   const hasErrors = rawErrors.length > 0;
   const description = schema.description || options.help;
   const ariaDescribedById = ariaDescribedByIds<T>(id, !!description);
-
-  if (multiple) {
-    console.warn('SelectWidget received multiple=true, CheckboxesWidget is used instead.');
-    return null;
-  }
 
   const useComboBox = enumOptions && enumOptions.length > COMBOBOX_THRESHOLD;
 

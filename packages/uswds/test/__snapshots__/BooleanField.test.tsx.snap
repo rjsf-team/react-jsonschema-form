@@ -1,0 +1,2378 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`single fields checkbox field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-boolean"
+    data-mock-props="{"error":false,"className":"form-group field field-boolean"}"
+    data-testid="mock-FormGroup"
+    error={false}
+  >
+    <div
+      aria-describedby="root__error root__description root__help"
+      autoFocus={false}
+      checked={false}
+      data-mock-props="{"id":"root","name":"root","checked":false,"disabled":false,"autoFocus":false,"aria-describedby":"root__error root__description root__help"}"
+      data-testid="mock-Checkbox"
+      disabled={false}
+      id="root"
+      name="root"
+      onBlur={[Function]}
+      onChange={[Function]}
+      onFocus={[Function]}
+    />
+     
+     
+     
+  </div>
+  <div
+    className="usa-button  margin-top-4"
+    data-mock-props="{"type":"submit","disabled":false,"className":"usa-button  margin-top-4","data-testid":"submit-button"}"
+    data-testid="submit-button"
+    disabled={false}
+    type="submit"
+  >
+    Submit
+  </div>
+</form>
+`;
+
+exports[`single fields checkbox field with label 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-boolean"
+    data-mock-props="{"error":false,"className":"form-group field field-boolean"}"
+    data-testid="mock-FormGroup"
+    error={false}
+  >
+    <div
+      aria-describedby="root__error root__description root__help"
+      autoFocus={false}
+      checked={false}
+      data-mock-props="{"id":"root","name":"root","label":"test","checked":false,"disabled":false,"autoFocus":false,"aria-describedby":"root__error root__description root__help"}"
+      data-testid="mock-Checkbox"
+      disabled={false}
+      id="root"
+      label="test"
+      name="root"
+      onBlur={[Function]}
+      onChange={[Function]}
+      onFocus={[Function]}
+    />
+     
+     
+     
+  </div>
+  <div
+    className="usa-button  margin-top-4"
+    data-mock-props="{"type":"submit","disabled":false,"className":"usa-button  margin-top-4","data-testid":"submit-button"}"
+    data-testid="submit-button"
+    disabled={false}
+    type="submit"
+  >
+    Submit
+  </div>
+</form>
+`;
+
+exports[`single fields checkboxes field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+    data-mock-props="{"error":false,"className":"form-group field field-array"}"
+    data-testid="mock-FormGroup"
+    error={false}
+  >
+    <div
+      className="checkboxes "
+      id="root"
+    >
+      <div
+        aria-describedby="root__error root__description root__help"
+        autoFocus={false}
+        checked={false}
+        data-mock-props="{"id":"root_0","name":"root","label":"foo","checked":false,"required":false,"disabled":false,"autoFocus":false,"aria-describedby":"root__error root__description root__help"}"
+        data-testid="mock-Checkbox"
+        disabled={false}
+        id="root_0"
+        label="foo"
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        required={false}
+      />
+      <div
+        aria-describedby="root__error root__description root__help"
+        autoFocus={false}
+        checked={false}
+        data-mock-props="{"id":"root_1","name":"root","label":"bar","checked":false,"required":false,"disabled":false,"autoFocus":false,"aria-describedby":"root__error root__description root__help"}"
+        data-testid="mock-Checkbox"
+        disabled={false}
+        id="root_1"
+        label="bar"
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        required={false}
+      />
+      <div
+        aria-describedby="root__error root__description root__help"
+        autoFocus={false}
+        checked={false}
+        data-mock-props="{"id":"root_2","name":"root","label":"fuzz","checked":false,"required":false,"disabled":false,"autoFocus":false,"aria-describedby":"root__error root__description root__help"}"
+        data-testid="mock-Checkbox"
+        disabled={false}
+        id="root_2"
+        label="fuzz"
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        required={false}
+      />
+      <div
+        aria-describedby="root__error root__description root__help"
+        autoFocus={false}
+        checked={false}
+        data-mock-props="{"id":"root_3","name":"root","label":"qux","checked":false,"required":false,"disabled":false,"autoFocus":false,"aria-describedby":"root__error root__description root__help"}"
+        data-testid="mock-Checkbox"
+        disabled={false}
+        id="root_3"
+        label="qux"
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        required={false}
+      />
+    </div>
+     
+     
+     
+  </div>
+  <div
+    className="usa-button  margin-top-4"
+    data-mock-props="{"type":"submit","disabled":false,"className":"usa-button  margin-top-4","data-testid":"submit-button"}"
+    data-testid="submit-button"
+    disabled={false}
+    type="submit"
+  >
+    Submit
+  </div>
+</form>
+`;
+
+exports[`single fields field with description 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-object"
+    data-mock-props="{"error":false,"className":"form-group field field-object"}"
+    data-testid="mock-FormGroup"
+    error={false}
+  >
+    <div
+      className="rjsf-object-properties"
+    >
+      <div
+        className="form-group field field-string"
+        data-mock-props="{"error":false,"className":"form-group field field-string"}"
+        data-testid="mock-FormGroup"
+        error={false}
+      >
+        <div
+          data-mock-props="{"error":false}"
+          data-testid="mock-FormGroup"
+          error={false}
+        >
+          <div
+            data-mock-props="{"htmlFor":"root_my-field","error":false}"
+            data-testid="mock-Label"
+            error={false}
+            htmlFor="root_my-field"
+          >
+            my-field
+          </div>
+          <div
+            aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
+            className=""
+            data-mock-props="{"id":"root_my-field","name":"root_my-field","className":"","type":"text","value":"","aria-describedby":"root_my-field__error root_my-field__description root_my-field__help"}"
+            data-testid="mock-TextInput"
+            id="root_my-field"
+            name="root_my-field"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            type="text"
+            value=""
+          />
+        </div>
+         
+         
+         
+      </div>
+    </div>
+     
+     
+     
+  </div>
+  <div
+    className="usa-button  margin-top-4"
+    data-mock-props="{"type":"submit","disabled":false,"className":"usa-button  margin-top-4","data-testid":"submit-button"}"
+    data-testid="submit-button"
+    disabled={false}
+    type="submit"
+  >
+    Submit
+  </div>
+</form>
+`;
+
+exports[`single fields field with description in uiSchema 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-object"
+    data-mock-props="{"error":false,"className":"form-group field field-object"}"
+    data-testid="mock-FormGroup"
+    error={false}
+  >
+    <div
+      className="rjsf-object-properties"
+    >
+      <div
+        className="form-group field field-string"
+        data-mock-props="{"error":false,"className":"form-group field field-string"}"
+        data-testid="mock-FormGroup"
+        error={false}
+      >
+        <div
+          data-mock-props="{"error":false}"
+          data-testid="mock-FormGroup"
+          error={false}
+        >
+          <div
+            data-mock-props="{"htmlFor":"root_my-field","error":false}"
+            data-testid="mock-Label"
+            error={false}
+            htmlFor="root_my-field"
+          >
+            my-field
+          </div>
+          <div
+            aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
+            className=""
+            data-mock-props="{"id":"root_my-field","name":"root_my-field","className":"","type":"text","value":"","aria-describedby":"root_my-field__error root_my-field__description root_my-field__help"}"
+            data-testid="mock-TextInput"
+            id="root_my-field"
+            name="root_my-field"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            type="text"
+            value=""
+          />
+        </div>
+         
+         
+         
+      </div>
+    </div>
+     
+     
+     
+  </div>
+  <div
+    className="usa-button  margin-top-4"
+    data-mock-props="{"type":"submit","disabled":false,"className":"usa-button  margin-top-4","data-testid":"submit-button"}"
+    data-testid="submit-button"
+    disabled={false}
+    type="submit"
+  >
+    Submit
+  </div>
+</form>
+`;
+
+exports[`single fields format color 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+    data-mock-props="{"error":false,"className":"form-group field field-string"}"
+    data-testid="mock-FormGroup"
+    error={false}
+  >
+    <div
+      data-mock-props="{"error":false}"
+      data-testid="mock-FormGroup"
+      error={false}
+    >
+      <div
+        data-mock-props="{"htmlFor":"root","error":false}"
+        data-testid="mock-Label"
+        error={false}
+        htmlFor="root"
+      />
+      <div
+        aria-describedby="root__error root__description root__help"
+        className=""
+        data-mock-props="{"id":"root","name":"root","className":"","type":"text","value":"","aria-describedby":"root__error root__description root__help"}"
+        data-testid="mock-TextInput"
+        id="root"
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        type="text"
+        value=""
+      />
+    </div>
+     
+     
+     
+  </div>
+  <div
+    className="usa-button  margin-top-4"
+    data-mock-props="{"type":"submit","disabled":false,"className":"usa-button  margin-top-4","data-testid":"submit-button"}"
+    data-testid="submit-button"
+    disabled={false}
+    type="submit"
+  >
+    Submit
+  </div>
+</form>
+`;
+
+exports[`single fields format date 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+    data-mock-props="{"error":false,"className":"form-group field field-string"}"
+    data-testid="mock-FormGroup"
+    error={false}
+  >
+    <div
+      data-mock-props="{"error":false}"
+      data-testid="mock-FormGroup"
+      error={false}
+    >
+      <div
+        data-mock-props="{"htmlFor":"root","error":false}"
+        data-testid="mock-Label"
+        error={false}
+        htmlFor="root"
+      />
+      <div
+        aria-describedby="root__error root__description root__help"
+        className=""
+        data-mock-props="{"id":"root","name":"root","className":"","type":"text","value":"","aria-describedby":"root__error root__description root__help"}"
+        data-testid="mock-TextInput"
+        id="root"
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        type="text"
+        value=""
+      />
+    </div>
+     
+     
+     
+  </div>
+  <div
+    className="usa-button  margin-top-4"
+    data-mock-props="{"type":"submit","disabled":false,"className":"usa-button  margin-top-4","data-testid":"submit-button"}"
+    data-testid="submit-button"
+    disabled={false}
+    type="submit"
+  >
+    Submit
+  </div>
+</form>
+`;
+
+exports[`single fields format datetime 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+    data-mock-props="{"error":false,"className":"form-group field field-string"}"
+    data-testid="mock-FormGroup"
+    error={false}
+  >
+    <div
+      data-mock-props="{"error":false}"
+      data-testid="mock-FormGroup"
+      error={false}
+    >
+      <div
+        data-mock-props="{"htmlFor":"root","error":false}"
+        data-testid="mock-Label"
+        error={false}
+        htmlFor="root"
+      />
+      <div
+        aria-describedby="root__error root__description root__help"
+        className=""
+        data-mock-props="{"id":"root","name":"root","className":"","type":"text","value":"","aria-describedby":"root__error root__description root__help"}"
+        data-testid="mock-TextInput"
+        id="root"
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        type="text"
+        value=""
+      />
+    </div>
+     
+     
+     
+  </div>
+  <div
+    className="usa-button  margin-top-4"
+    data-mock-props="{"type":"submit","disabled":false,"className":"usa-button  margin-top-4","data-testid":"submit-button"}"
+    data-testid="submit-button"
+    disabled={false}
+    type="submit"
+  >
+    Submit
+  </div>
+</form>
+`;
+
+exports[`single fields format time 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+    data-mock-props="{"error":false,"className":"form-group field field-string"}"
+    data-testid="mock-FormGroup"
+    error={false}
+  >
+    <div
+      data-mock-props="{"error":false}"
+      data-testid="mock-FormGroup"
+      error={false}
+    >
+      <div
+        data-mock-props="{"htmlFor":"root","error":false}"
+        data-testid="mock-Label"
+        error={false}
+        htmlFor="root"
+      />
+      <div
+        aria-describedby="root__error root__description root__help"
+        className=""
+        data-mock-props="{"id":"root","name":"root","className":"","type":"time","value":"","aria-describedby":"root__error root__description root__help"}"
+        data-testid="mock-TextInput"
+        id="root"
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        type="time"
+        value=""
+      />
+    </div>
+     
+     
+     
+  </div>
+  <div
+    className="usa-button  margin-top-4"
+    data-mock-props="{"type":"submit","disabled":false,"className":"usa-button  margin-top-4","data-testid":"submit-button"}"
+    data-testid="submit-button"
+    disabled={false}
+    type="submit"
+  >
+    Submit
+  </div>
+</form>
+`;
+
+exports[`single fields help and error display 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="panel panel-danger errors"
+  >
+    <div
+      data-mock-props="{"type":"error","heading":"Errors","headingLevel":"h4","slim":true}"
+      data-testid="mock-Alert"
+      heading="Errors"
+      headingLevel="h4"
+      slim={true}
+      type="error"
+    >
+      <ul
+        className="error-detail bs-callout bs-callout-danger"
+      >
+        <li
+          className="text-danger"
+        >
+          . an error
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div
+    className="form-group field field-string field-error has-error has-danger"
+    data-mock-props="{"error":true,"className":"form-group field field-string field-error has-error has-danger"}"
+    data-testid="mock-FormGroup"
+    error={true}
+  >
+    <div
+      data-mock-props="{"error":true}"
+      data-testid="mock-FormGroup"
+      error={true}
+    >
+      <div
+        data-mock-props="{"htmlFor":"root","error":true}"
+        data-testid="mock-Label"
+        error={true}
+        htmlFor="root"
+      />
+      <div
+        aria-describedby="root__error root__description root__help"
+        className="usa-input--error"
+        data-mock-props="{"id":"root","name":"root","className":"usa-input--error","type":"text","value":"","aria-describedby":"root__error root__description root__help"}"
+        data-testid="mock-TextInput"
+        id="root"
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        type="text"
+        value=""
+      />
+    </div>
+     
+    <div>
+      <ul
+        className="error-detail bs-callout bs-callout-info"
+        id="root__error"
+      >
+        <li
+          className="text-danger"
+        >
+          an error
+        </li>
+      </ul>
+    </div>
+     
+    <p
+      className="help-block"
+      id="root__help"
+    >
+      help me!
+    </p>
+     
+  </div>
+  <div
+    className="usa-button  margin-top-4"
+    data-mock-props="{"type":"submit","disabled":false,"className":"usa-button  margin-top-4","data-testid":"submit-button"}"
+    data-testid="submit-button"
+    disabled={false}
+    type="submit"
+  >
+    Submit
+  </div>
+</form>
+`;
+
+exports[`single fields hidden field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-object"
+    data-mock-props="{"error":false,"className":"form-group field field-object"}"
+    data-testid="mock-FormGroup"
+    error={false}
+  >
+    <div
+      className="rjsf-object-properties"
+    >
+      <div
+        style={
+          {
+            "display": "none",
+          }
+        }
+      >
+        <input
+          id="root_my-field"
+          name="root_my-field"
+          type="hidden"
+          value=""
+        />
+      </div>
+    </div>
+     
+     
+     
+  </div>
+  <div
+    className="usa-button  margin-top-4"
+    data-mock-props="{"type":"submit","disabled":false,"className":"usa-button  margin-top-4","data-testid":"submit-button"}"
+    data-testid="submit-button"
+    disabled={false}
+    type="submit"
+  >
+    Submit
+  </div>
+</form>
+`;
+
+exports[`single fields hidden label 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+    data-mock-props="{"error":false,"className":"form-group field field-string"}"
+    data-testid="mock-FormGroup"
+    error={false}
+  >
+    <div
+      data-mock-props="{"error":false}"
+      data-testid="mock-FormGroup"
+      error={false}
+    >
+      <div
+        aria-describedby="root__error root__description root__help"
+        className=""
+        data-mock-props="{"id":"root","name":"root","className":"","type":"text","value":"","aria-describedby":"root__error root__description root__help"}"
+        data-testid="mock-TextInput"
+        id="root"
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        type="text"
+        value=""
+      />
+    </div>
+     
+     
+     
+  </div>
+  <div
+    className="usa-button  margin-top-4"
+    data-mock-props="{"type":"submit","disabled":false,"className":"usa-button  margin-top-4","data-testid":"submit-button"}"
+    data-testid="submit-button"
+    disabled={false}
+    type="submit"
+  >
+    Submit
+  </div>
+</form>
+`;
+
+exports[`single fields null field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-null"
+    data-mock-props="{"error":false,"className":"form-group field field-null"}"
+    data-testid="mock-FormGroup"
+    error={false}
+  >
+     
+     
+     
+  </div>
+  <div
+    className="usa-button  margin-top-4"
+    data-mock-props="{"type":"submit","disabled":false,"className":"usa-button  margin-top-4","data-testid":"submit-button"}"
+    data-testid="submit-button"
+    disabled={false}
+    type="submit"
+  >
+    Submit
+  </div>
+</form>
+`;
+
+exports[`single fields number field 0 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-number"
+    data-mock-props="{"error":false,"className":"form-group field field-number"}"
+    data-testid="mock-FormGroup"
+    error={false}
+  >
+    <div
+      data-mock-props="{"error":false}"
+      data-testid="mock-FormGroup"
+      error={false}
+    >
+      <div
+        data-mock-props="{"htmlFor":"root","error":false}"
+        data-testid="mock-Label"
+        error={false}
+        htmlFor="root"
+      />
+      <div
+        aria-describedby="root__error root__description root__help"
+        className=""
+        data-mock-props="{"id":"root","name":"root","className":"","type":"number","step":"any","value":0,"aria-describedby":"root__error root__description root__help"}"
+        data-testid="mock-TextInput"
+        id="root"
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        step="any"
+        type="number"
+        value={0}
+      />
+    </div>
+     
+     
+     
+  </div>
+  <div
+    className="usa-button  margin-top-4"
+    data-mock-props="{"type":"submit","disabled":false,"className":"usa-button  margin-top-4","data-testid":"submit-button"}"
+    data-testid="submit-button"
+    disabled={false}
+    type="submit"
+  >
+    Submit
+  </div>
+</form>
+`;
+
+exports[`single fields number field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-number"
+    data-mock-props="{"error":false,"className":"form-group field field-number"}"
+    data-testid="mock-FormGroup"
+    error={false}
+  >
+    <div
+      data-mock-props="{"error":false}"
+      data-testid="mock-FormGroup"
+      error={false}
+    >
+      <div
+        data-mock-props="{"htmlFor":"root","error":false}"
+        data-testid="mock-Label"
+        error={false}
+        htmlFor="root"
+      />
+      <div
+        aria-describedby="root__error root__description root__help"
+        className=""
+        data-mock-props="{"id":"root","name":"root","className":"","type":"number","step":"any","value":"","aria-describedby":"root__error root__description root__help"}"
+        data-testid="mock-TextInput"
+        id="root"
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        step="any"
+        type="number"
+        value=""
+      />
+    </div>
+     
+     
+     
+  </div>
+  <div
+    className="usa-button  margin-top-4"
+    data-mock-props="{"type":"submit","disabled":false,"className":"usa-button  margin-top-4","data-testid":"submit-button"}"
+    data-testid="submit-button"
+    disabled={false}
+    type="submit"
+  >
+    Submit
+  </div>
+</form>
+`;
+
+exports[`single fields password field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+    data-mock-props="{"error":false,"className":"form-group field field-string"}"
+    data-testid="mock-FormGroup"
+    error={false}
+  >
+    <div
+      data-mock-props="{"error":false}"
+      data-testid="mock-FormGroup"
+      error={false}
+    >
+      <div
+        data-mock-props="{"htmlFor":"root","error":false}"
+        data-testid="mock-Label"
+        error={false}
+        htmlFor="root"
+      />
+      <div
+        aria-describedby="root__error root__description root__help"
+        className=""
+        data-mock-props="{"id":"root","name":"root","className":"","type":"text","value":"","aria-describedby":"root__error root__description root__help"}"
+        data-testid="mock-TextInput"
+        id="root"
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        type="text"
+        value=""
+      />
+    </div>
+     
+     
+     
+  </div>
+  <div
+    className="usa-button  margin-top-4"
+    data-mock-props="{"type":"submit","disabled":false,"className":"usa-button  margin-top-4","data-testid":"submit-button"}"
+    data-testid="submit-button"
+    disabled={false}
+    type="submit"
+  >
+    Submit
+  </div>
+</form>
+`;
+
+exports[`single fields radio field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-boolean"
+    data-mock-props="{"error":false,"className":"form-group field field-boolean"}"
+    data-testid="mock-FormGroup"
+    error={false}
+  >
+    <div
+      className="radio "
+      id="root"
+    >
+      <div
+        aria-describedby="root__error root__description root__help"
+        autoFocus={false}
+        checked={false}
+        data-mock-props="{"id":"root_0","name":"root","label":"Yes","value":"true","checked":false,"disabled":false,"autoFocus":false,"aria-describedby":"root__error root__description root__help"}"
+        data-testid="mock-Radio"
+        disabled={false}
+        id="root_0"
+        label="Yes"
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        value="true"
+      />
+      <div
+        aria-describedby="root__error root__description root__help"
+        autoFocus={false}
+        checked={false}
+        data-mock-props="{"id":"root_1","name":"root","label":"No","value":"false","checked":false,"disabled":false,"autoFocus":false,"aria-describedby":"root__error root__description root__help"}"
+        data-testid="mock-Radio"
+        disabled={false}
+        id="root_1"
+        label="No"
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        value="false"
+      />
+    </div>
+     
+     
+     
+  </div>
+  <div
+    className="usa-button  margin-top-4"
+    data-mock-props="{"type":"submit","disabled":false,"className":"usa-button  margin-top-4","data-testid":"submit-button"}"
+    data-testid="submit-button"
+    disabled={false}
+    type="submit"
+  >
+    Submit
+  </div>
+</form>
+`;
+
+exports[`single fields schema examples 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+    data-mock-props="{"error":false,"className":"form-group field field-string"}"
+    data-testid="mock-FormGroup"
+    error={false}
+  >
+    <div
+      data-mock-props="{"error":false}"
+      data-testid="mock-FormGroup"
+      error={false}
+    >
+      <div
+        data-mock-props="{"htmlFor":"root","error":false}"
+        data-testid="mock-Label"
+        error={false}
+        htmlFor="root"
+      />
+      <div
+        aria-describedby="root__error root__description root__help root__examples"
+        className=""
+        data-mock-props="{"id":"root","name":"root","className":"","list":"root__examples","type":"text","value":"","aria-describedby":"root__error root__description root__help root__examples"}"
+        data-testid="mock-TextInput"
+        id="root"
+        list="root__examples"
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        type="text"
+        value=""
+      />
+      <datalist
+        id="root__examples"
+      >
+        <option
+          value="Firefox"
+        />
+        <option
+          value="Chrome"
+        />
+        <option
+          value="Opera"
+        />
+        <option
+          value="Vivaldi"
+        />
+        <option
+          value="Safari"
+        />
+      </datalist>
+    </div>
+     
+     
+     
+  </div>
+  <div
+    className="usa-button  margin-top-4"
+    data-mock-props="{"type":"submit","disabled":false,"className":"usa-button  margin-top-4","data-testid":"submit-button"}"
+    data-testid="submit-button"
+    disabled={false}
+    type="submit"
+  >
+    Submit
+  </div>
+</form>
+`;
+
+exports[`single fields select field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+    data-mock-props="{"error":false,"className":"form-group field field-string"}"
+    data-testid="mock-FormGroup"
+    error={false}
+  >
+    <div
+      className="radio "
+      id="root"
+    >
+      <div
+        aria-describedby="root__error root__description root__help"
+        autoFocus={false}
+        checked={false}
+        data-mock-props="{"id":"root_0","name":"root","label":"foo","value":"foo","checked":false,"disabled":false,"autoFocus":false,"aria-describedby":"root__error root__description root__help"}"
+        data-testid="mock-Radio"
+        disabled={false}
+        id="root_0"
+        label="foo"
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        value="foo"
+      />
+      <div
+        aria-describedby="root__error root__description root__help"
+        autoFocus={false}
+        checked={false}
+        data-mock-props="{"id":"root_1","name":"root","label":"bar","value":"bar","checked":false,"disabled":false,"autoFocus":false,"aria-describedby":"root__error root__description root__help"}"
+        data-testid="mock-Radio"
+        disabled={false}
+        id="root_1"
+        label="bar"
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        value="bar"
+      />
+    </div>
+     
+     
+     
+  </div>
+  <div
+    className="usa-button  margin-top-4"
+    data-mock-props="{"type":"submit","disabled":false,"className":"usa-button  margin-top-4","data-testid":"submit-button"}"
+    data-testid="submit-button"
+    disabled={false}
+    type="submit"
+  >
+    Submit
+  </div>
+</form>
+`;
+
+exports[`single fields select field multiple choice 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+    data-mock-props="{"error":false,"className":"form-group field field-array"}"
+    data-testid="mock-FormGroup"
+    error={false}
+  >
+    <div>
+      <label
+        error={false}
+        htmlFor="root"
+      />
+      <div
+        aria-describedby="root__error root__description root__help"
+        autoFocus={false}
+        data-mock-props="{"id":"root","name":"root","value":[],"disabled":false,"autoFocus":false,"required":false,"multiple":false,"aria-describedby":"root__error root__description root__help"}"
+        data-testid="mock-Select"
+        disabled={false}
+        id="root"
+        multiple={false}
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        required={false}
+        value={[]}
+      >
+        <option
+          value=""
+        />
+        <option
+          disabled={false}
+          value="foo"
+        >
+          foo
+        </option>
+        <option
+          disabled={false}
+          value="bar"
+        >
+          bar
+        </option>
+        <option
+          disabled={false}
+          value="fuzz"
+        >
+          fuzz
+        </option>
+        <option
+          disabled={false}
+          value="qux"
+        >
+          qux
+        </option>
+      </div>
+    </div>
+     
+     
+     
+  </div>
+  <div
+    className="usa-button  margin-top-4"
+    data-mock-props="{"type":"submit","disabled":false,"className":"usa-button  margin-top-4","data-testid":"submit-button"}"
+    data-testid="submit-button"
+    disabled={false}
+    type="submit"
+  >
+    Submit
+  </div>
+</form>
+`;
+
+exports[`single fields select field multiple choice enumDisabled 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+    data-mock-props="{"error":false,"className":"form-group field field-array"}"
+    data-testid="mock-FormGroup"
+    error={false}
+  >
+    <div>
+      <label
+        error={false}
+        htmlFor="root"
+      />
+      <div
+        aria-describedby="root__error root__description root__help"
+        autoFocus={false}
+        data-mock-props="{"id":"root","name":"root","value":[],"disabled":false,"autoFocus":false,"required":false,"multiple":false,"aria-describedby":"root__error root__description root__help"}"
+        data-testid="mock-Select"
+        disabled={false}
+        id="root"
+        multiple={false}
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        required={false}
+        value={[]}
+      >
+        <option
+          value=""
+        />
+        <option
+          disabled={false}
+          value="foo"
+        >
+          foo
+        </option>
+        <option
+          disabled={true}
+          value="bar"
+        >
+          bar
+        </option>
+        <option
+          disabled={false}
+          value="fuzz"
+        >
+          fuzz
+        </option>
+        <option
+          disabled={false}
+          value="qux"
+        >
+          qux
+        </option>
+      </div>
+    </div>
+     
+     
+     
+  </div>
+  <div
+    className="usa-button  margin-top-4"
+    data-mock-props="{"type":"submit","disabled":false,"className":"usa-button  margin-top-4","data-testid":"submit-button"}"
+    data-testid="submit-button"
+    disabled={false}
+    type="submit"
+  >
+    Submit
+  </div>
+</form>
+`;
+
+exports[`single fields select field multiple choice enumDisabled using checkboxes 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+    data-mock-props="{"error":false,"className":"form-group field field-array"}"
+    data-testid="mock-FormGroup"
+    error={false}
+  >
+    <div
+      className="checkboxes "
+      id="root"
+    >
+      <div
+        aria-describedby="root__error root__description root__help"
+        autoFocus={false}
+        checked={false}
+        data-mock-props="{"id":"root_0","name":"root","label":"foo","checked":false,"required":false,"disabled":false,"autoFocus":false,"aria-describedby":"root__error root__description root__help"}"
+        data-testid="mock-Checkbox"
+        disabled={false}
+        id="root_0"
+        label="foo"
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        required={false}
+      />
+      <div
+        aria-describedby="root__error root__description root__help"
+        autoFocus={false}
+        checked={false}
+        data-mock-props="{"id":"root_1","name":"root","label":"bar","checked":false,"required":false,"disabled":true,"autoFocus":false,"aria-describedby":"root__error root__description root__help"}"
+        data-testid="mock-Checkbox"
+        disabled={true}
+        id="root_1"
+        label="bar"
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        required={false}
+      />
+      <div
+        aria-describedby="root__error root__description root__help"
+        autoFocus={false}
+        checked={false}
+        data-mock-props="{"id":"root_2","name":"root","label":"fuzz","checked":false,"required":false,"disabled":false,"autoFocus":false,"aria-describedby":"root__error root__description root__help"}"
+        data-testid="mock-Checkbox"
+        disabled={false}
+        id="root_2"
+        label="fuzz"
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        required={false}
+      />
+      <div
+        aria-describedby="root__error root__description root__help"
+        autoFocus={false}
+        checked={false}
+        data-mock-props="{"id":"root_3","name":"root","label":"qux","checked":false,"required":false,"disabled":false,"autoFocus":false,"aria-describedby":"root__error root__description root__help"}"
+        data-testid="mock-Checkbox"
+        disabled={false}
+        id="root_3"
+        label="qux"
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        required={false}
+      />
+    </div>
+     
+     
+     
+  </div>
+  <div
+    className="usa-button  margin-top-4"
+    data-mock-props="{"type":"submit","disabled":false,"className":"usa-button  margin-top-4","data-testid":"submit-button"}"
+    data-testid="submit-button"
+    disabled={false}
+    type="submit"
+  >
+    Submit
+  </div>
+</form>
+`;
+
+exports[`single fields select field multiple choice formData 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+    data-mock-props="{"error":false,"className":"form-group field field-array"}"
+    data-testid="mock-FormGroup"
+    error={false}
+  >
+    <div>
+      <label
+        error={false}
+        htmlFor="root"
+      />
+      <div
+        aria-describedby="root__error root__description root__help"
+        autoFocus={false}
+        data-mock-props="{"id":"root","name":"root","value":["foo","bar"],"disabled":false,"autoFocus":false,"required":false,"multiple":false,"aria-describedby":"root__error root__description root__help"}"
+        data-testid="mock-Select"
+        disabled={false}
+        id="root"
+        multiple={false}
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        required={false}
+        value={
+          [
+            "foo",
+            "bar",
+          ]
+        }
+      >
+        <option
+          value=""
+        />
+        <option
+          disabled={false}
+          value="foo"
+        >
+          foo
+        </option>
+        <option
+          disabled={false}
+          value="bar"
+        >
+          bar
+        </option>
+        <option
+          disabled={false}
+          value="fuzz"
+        >
+          fuzz
+        </option>
+        <option
+          disabled={false}
+          value="qux"
+        >
+          qux
+        </option>
+      </div>
+    </div>
+     
+     
+     
+  </div>
+  <div
+    className="usa-button  margin-top-4"
+    data-mock-props="{"type":"submit","disabled":false,"className":"usa-button  margin-top-4","data-testid":"submit-button"}"
+    data-testid="submit-button"
+    disabled={false}
+    type="submit"
+  >
+    Submit
+  </div>
+</form>
+`;
+
+exports[`single fields select field multiple choice with labels 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+    data-mock-props="{"error":false,"className":"form-group field field-array"}"
+    data-testid="mock-FormGroup"
+    error={false}
+  >
+    <div>
+      <label
+        error={false}
+        htmlFor="root"
+      />
+      <div
+        aria-describedby="root__error root__description root__help"
+        autoFocus={false}
+        data-mock-props="{"id":"root","name":"root","value":[],"disabled":false,"autoFocus":false,"required":false,"multiple":false,"aria-describedby":"root__error root__description root__help"}"
+        data-testid="mock-Select"
+        disabled={false}
+        id="root"
+        multiple={false}
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        required={false}
+        value={[]}
+      >
+        <option
+          value=""
+        />
+        <option
+          disabled={false}
+          value={1}
+        >
+          Blue
+        </option>
+        <option
+          disabled={false}
+          value={2}
+        >
+          Red
+        </option>
+        <option
+          disabled={false}
+          value={3}
+        >
+          Green
+        </option>
+      </div>
+    </div>
+     
+     
+     
+  </div>
+  <div
+    className="usa-button  margin-top-4"
+    data-mock-props="{"type":"submit","disabled":false,"className":"usa-button  margin-top-4","data-testid":"submit-button"}"
+    data-testid="submit-button"
+    disabled={false}
+    type="submit"
+  >
+    Submit
+  </div>
+</form>
+`;
+
+exports[`single fields select field single choice enumDisabled 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+    data-mock-props="{"error":false,"className":"form-group field field-string"}"
+    data-testid="mock-FormGroup"
+    error={false}
+  >
+    <div
+      className="radio "
+      id="root"
+    >
+      <div
+        aria-describedby="root__error root__description root__help"
+        autoFocus={false}
+        checked={false}
+        data-mock-props="{"id":"root_0","name":"root","label":"foo","value":"foo","checked":false,"disabled":false,"autoFocus":false,"aria-describedby":"root__error root__description root__help"}"
+        data-testid="mock-Radio"
+        disabled={false}
+        id="root_0"
+        label="foo"
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        value="foo"
+      />
+      <div
+        aria-describedby="root__error root__description root__help"
+        autoFocus={false}
+        checked={false}
+        data-mock-props="{"id":"root_1","name":"root","label":"bar","value":"bar","checked":false,"disabled":true,"autoFocus":false,"aria-describedby":"root__error root__description root__help"}"
+        data-testid="mock-Radio"
+        disabled={true}
+        id="root_1"
+        label="bar"
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        value="bar"
+      />
+    </div>
+     
+     
+     
+  </div>
+  <div
+    className="usa-button  margin-top-4"
+    data-mock-props="{"type":"submit","disabled":false,"className":"usa-button  margin-top-4","data-testid":"submit-button"}"
+    data-testid="submit-button"
+    disabled={false}
+    type="submit"
+  >
+    Submit
+  </div>
+</form>
+`;
+
+exports[`single fields select field single choice enumDisabled using radio widget 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+    data-mock-props="{"error":false,"className":"form-group field field-string"}"
+    data-testid="mock-FormGroup"
+    error={false}
+  >
+    <div
+      className="radio "
+      id="root"
+    >
+      <div
+        aria-describedby="root__error root__description root__help"
+        autoFocus={false}
+        checked={false}
+        data-mock-props="{"id":"root_0","name":"root","label":"foo","value":"foo","checked":false,"disabled":false,"autoFocus":false,"aria-describedby":"root__error root__description root__help"}"
+        data-testid="mock-Radio"
+        disabled={false}
+        id="root_0"
+        label="foo"
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        value="foo"
+      />
+      <div
+        aria-describedby="root__error root__description root__help"
+        autoFocus={false}
+        checked={false}
+        data-mock-props="{"id":"root_1","name":"root","label":"bar","value":"bar","checked":false,"disabled":true,"autoFocus":false,"aria-describedby":"root__error root__description root__help"}"
+        data-testid="mock-Radio"
+        disabled={true}
+        id="root_1"
+        label="bar"
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        value="bar"
+      />
+    </div>
+     
+     
+     
+  </div>
+  <div
+    className="usa-button  margin-top-4"
+    data-mock-props="{"type":"submit","disabled":false,"className":"usa-button  margin-top-4","data-testid":"submit-button"}"
+    data-testid="submit-button"
+    disabled={false}
+    type="submit"
+  >
+    Submit
+  </div>
+</form>
+`;
+
+exports[`single fields select field single choice form disabled using radio widget 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+    data-mock-props="{"error":false,"className":"form-group field field-string"}"
+    data-testid="mock-FormGroup"
+    error={false}
+  >
+    <div
+      className="radio "
+      id="root"
+    >
+      <div
+        aria-describedby="root__error root__description root__help"
+        autoFocus={false}
+        checked={false}
+        data-mock-props="{"id":"root_0","name":"root","label":"foo","value":"foo","checked":false,"disabled":true,"autoFocus":false,"aria-describedby":"root__error root__description root__help"}"
+        data-testid="mock-Radio"
+        disabled={true}
+        id="root_0"
+        label="foo"
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        value="foo"
+      />
+      <div
+        aria-describedby="root__error root__description root__help"
+        autoFocus={false}
+        checked={false}
+        data-mock-props="{"id":"root_1","name":"root","label":"bar","value":"bar","checked":false,"disabled":true,"autoFocus":false,"aria-describedby":"root__error root__description root__help"}"
+        data-testid="mock-Radio"
+        disabled={true}
+        id="root_1"
+        label="bar"
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        value="bar"
+      />
+    </div>
+     
+     
+     
+  </div>
+  <div
+    className="usa-button  margin-top-4"
+    data-mock-props="{"type":"submit","disabled":true,"className":"usa-button  margin-top-4","data-testid":"submit-button"}"
+    data-testid="submit-button"
+    disabled={true}
+    type="submit"
+  >
+    Submit
+  </div>
+</form>
+`;
+
+exports[`single fields select field single choice formData 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+    data-mock-props="{"error":false,"className":"form-group field field-string"}"
+    data-testid="mock-FormGroup"
+    error={false}
+  >
+    <div
+      className="radio "
+      id="root"
+    >
+      <div
+        aria-describedby="root__error root__description root__help"
+        autoFocus={false}
+        checked={false}
+        data-mock-props="{"id":"root_0","name":"root","label":"foo","value":"foo","checked":false,"disabled":false,"autoFocus":false,"aria-describedby":"root__error root__description root__help"}"
+        data-testid="mock-Radio"
+        disabled={false}
+        id="root_0"
+        label="foo"
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        value="foo"
+      />
+      <div
+        aria-describedby="root__error root__description root__help"
+        autoFocus={false}
+        checked={true}
+        data-mock-props="{"id":"root_1","name":"root","label":"bar","value":"bar","checked":true,"disabled":false,"autoFocus":false,"aria-describedby":"root__error root__description root__help"}"
+        data-testid="mock-Radio"
+        disabled={false}
+        id="root_1"
+        label="bar"
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        value="bar"
+      />
+    </div>
+     
+     
+     
+  </div>
+  <div
+    className="usa-button  margin-top-4"
+    data-mock-props="{"type":"submit","disabled":false,"className":"usa-button  margin-top-4","data-testid":"submit-button"}"
+    data-testid="submit-button"
+    disabled={false}
+    type="submit"
+  >
+    Submit
+  </div>
+</form>
+`;
+
+exports[`single fields select field single choice uiSchema disabled using radio widget 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+    data-mock-props="{"error":false,"className":"form-group field field-string"}"
+    data-testid="mock-FormGroup"
+    error={false}
+  >
+    <div
+      className="radio "
+      id="root"
+    >
+      <div
+        aria-describedby="root__error root__description root__help"
+        autoFocus={false}
+        checked={false}
+        data-mock-props="{"id":"root_0","name":"root","label":"foo","value":"foo","checked":false,"disabled":true,"autoFocus":false,"aria-describedby":"root__error root__description root__help"}"
+        data-testid="mock-Radio"
+        disabled={true}
+        id="root_0"
+        label="foo"
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        value="foo"
+      />
+      <div
+        aria-describedby="root__error root__description root__help"
+        autoFocus={false}
+        checked={false}
+        data-mock-props="{"id":"root_1","name":"root","label":"bar","value":"bar","checked":false,"disabled":true,"autoFocus":false,"aria-describedby":"root__error root__description root__help"}"
+        data-testid="mock-Radio"
+        disabled={true}
+        id="root_1"
+        label="bar"
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        value="bar"
+      />
+    </div>
+     
+     
+     
+  </div>
+  <div
+    className="usa-button  margin-top-4"
+    data-mock-props="{"type":"submit","disabled":false,"className":"usa-button  margin-top-4","data-testid":"submit-button"}"
+    data-testid="submit-button"
+    disabled={false}
+    type="submit"
+  >
+    Submit
+  </div>
+</form>
+`;
+
+exports[`single fields slider field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-integer"
+    data-mock-props="{"error":false,"className":"form-group field field-integer"}"
+    data-testid="mock-FormGroup"
+    error={false}
+  >
+    <div
+      aria-describedby="root__error root__description root__help"
+      data-mock-props="{"id":"root","name":"root","min":42,"max":100,"step":1,"defaultValue":75,"disabled":false,"aria-describedby":"root__error root__description root__help"}"
+      data-testid="mock-RangeSlider"
+      defaultValue={75}
+      disabled={false}
+      id="root"
+      max={100}
+      min={42}
+      name="root"
+      onChange={[Function]}
+      step={1}
+    />
+     
+     
+     
+  </div>
+  <div
+    className="usa-button  margin-top-4"
+    data-mock-props="{"type":"submit","disabled":false,"className":"usa-button  margin-top-4","data-testid":"submit-button"}"
+    data-testid="submit-button"
+    disabled={false}
+    type="submit"
+  >
+    Submit
+  </div>
+</form>
+`;
+
+exports[`single fields string field format data-url 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+    data-mock-props="{"error":false,"className":"form-group field field-string"}"
+    data-testid="mock-FormGroup"
+    error={false}
+  >
+    <div
+      aria-describedby="root__error root__description root__help"
+      autoFocus={false}
+      data-mock-props="{"id":"root","name":"root","multiple":false,"disabled":false,"autoFocus":false,"aria-describedby":"root__error root__description root__help"}"
+      data-testid="mock-FileInput"
+      disabled={false}
+      id="root"
+      multiple={false}
+      name="root"
+      onBlur={[Function]}
+      onChange={[Function]}
+      onFocus={[Function]}
+    />
+     
+     
+     
+  </div>
+  <div
+    className="usa-button  margin-top-4"
+    data-mock-props="{"type":"submit","disabled":false,"className":"usa-button  margin-top-4","data-testid":"submit-button"}"
+    data-testid="submit-button"
+    disabled={false}
+    type="submit"
+  >
+    Submit
+  </div>
+</form>
+`;
+
+exports[`single fields string field format email 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+    data-mock-props="{"error":false,"className":"form-group field field-string"}"
+    data-testid="mock-FormGroup"
+    error={false}
+  >
+    <div
+      data-mock-props="{"error":false}"
+      data-testid="mock-FormGroup"
+      error={false}
+    >
+      <div
+        data-mock-props="{"htmlFor":"root","error":false}"
+        data-testid="mock-Label"
+        error={false}
+        htmlFor="root"
+      />
+      <div
+        aria-describedby="root__error root__description root__help"
+        className=""
+        data-mock-props="{"id":"root","name":"root","className":"","type":"text","value":"","aria-describedby":"root__error root__description root__help"}"
+        data-testid="mock-TextInput"
+        id="root"
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        type="text"
+        value=""
+      />
+    </div>
+     
+     
+     
+  </div>
+  <div
+    className="usa-button  margin-top-4"
+    data-mock-props="{"type":"submit","disabled":false,"className":"usa-button  margin-top-4","data-testid":"submit-button"}"
+    data-testid="submit-button"
+    disabled={false}
+    type="submit"
+  >
+    Submit
+  </div>
+</form>
+`;
+
+exports[`single fields string field format uri 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+    data-mock-props="{"error":false,"className":"form-group field field-string"}"
+    data-testid="mock-FormGroup"
+    error={false}
+  >
+    <div
+      data-mock-props="{"error":false}"
+      data-testid="mock-FormGroup"
+      error={false}
+    >
+      <div
+        data-mock-props="{"htmlFor":"root","error":false}"
+        data-testid="mock-Label"
+        error={false}
+        htmlFor="root"
+      />
+      <div
+        aria-describedby="root__error root__description root__help"
+        className=""
+        data-mock-props="{"id":"root","name":"root","className":"","type":"text","value":"","aria-describedby":"root__error root__description root__help"}"
+        data-testid="mock-TextInput"
+        id="root"
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        type="text"
+        value=""
+      />
+    </div>
+     
+     
+     
+  </div>
+  <div
+    className="usa-button  margin-top-4"
+    data-mock-props="{"type":"submit","disabled":false,"className":"usa-button  margin-top-4","data-testid":"submit-button"}"
+    data-testid="submit-button"
+    disabled={false}
+    type="submit"
+  >
+    Submit
+  </div>
+</form>
+`;
+
+exports[`single fields string field regular 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+    data-mock-props="{"error":false,"className":"form-group field field-string"}"
+    data-testid="mock-FormGroup"
+    error={false}
+  >
+    <div
+      data-mock-props="{"error":false}"
+      data-testid="mock-FormGroup"
+      error={false}
+    >
+      <div
+        data-mock-props="{"htmlFor":"root","error":false}"
+        data-testid="mock-Label"
+        error={false}
+        htmlFor="root"
+      />
+      <div
+        aria-describedby="root__error root__description root__help"
+        className=""
+        data-mock-props="{"id":"root","name":"root","className":"","type":"text","value":"","aria-describedby":"root__error root__description root__help"}"
+        data-testid="mock-TextInput"
+        id="root"
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        type="text"
+        value=""
+      />
+    </div>
+     
+     
+     
+  </div>
+  <div
+    className="usa-button  margin-top-4"
+    data-mock-props="{"type":"submit","disabled":false,"className":"usa-button  margin-top-4","data-testid":"submit-button"}"
+    data-testid="submit-button"
+    disabled={false}
+    type="submit"
+  >
+    Submit
+  </div>
+</form>
+`;
+
+exports[`single fields string field with placeholder 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+    data-mock-props="{"error":false,"className":"form-group field field-string"}"
+    data-testid="mock-FormGroup"
+    error={false}
+  >
+    <div
+      data-mock-props="{"error":false}"
+      data-testid="mock-FormGroup"
+      error={false}
+    >
+      <div
+        data-mock-props="{"htmlFor":"root","error":false}"
+        data-testid="mock-Label"
+        error={false}
+        htmlFor="root"
+      />
+      <div
+        aria-describedby="root__error root__description root__help"
+        className=""
+        data-mock-props="{"id":"root","name":"root","className":"","type":"text","value":"","aria-describedby":"root__error root__description root__help"}"
+        data-testid="mock-TextInput"
+        id="root"
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        type="text"
+        value=""
+      />
+    </div>
+     
+     
+     
+  </div>
+  <div
+    className="usa-button  margin-top-4"
+    data-mock-props="{"type":"submit","disabled":false,"className":"usa-button  margin-top-4","data-testid":"submit-button"}"
+    data-testid="submit-button"
+    disabled={false}
+    type="submit"
+  >
+    Submit
+  </div>
+</form>
+`;
+
+exports[`single fields textarea field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+    data-mock-props="{"error":false,"className":"form-group field field-string"}"
+    data-testid="mock-FormGroup"
+    error={false}
+  >
+    <div>
+      <div
+        aria-describedby="root__error root__description root__help"
+        autoFocus={false}
+        data-mock-props="{"id":"root","name":"root","value":"","placeholder":"","disabled":false,"autoFocus":false,"rows":5,"aria-describedby":"root__error root__description root__help"}"
+        data-testid="mock-Textarea"
+        disabled={false}
+        id="root"
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        placeholder=""
+        rows={5}
+        value=""
+      />
+    </div>
+     
+     
+     
+  </div>
+  <div
+    className="usa-button  margin-top-4"
+    data-mock-props="{"type":"submit","disabled":false,"className":"usa-button  margin-top-4","data-testid":"submit-button"}"
+    data-testid="submit-button"
+    disabled={false}
+    type="submit"
+  >
+    Submit
+  </div>
+</form>
+`;
+
+exports[`single fields title field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-object"
+    data-mock-props="{"error":false,"className":"form-group field field-object"}"
+    data-testid="mock-FormGroup"
+    error={false}
+  >
+    <h1
+      className="usa-heading"
+      id="root-title"
+    >
+       
+      Titre 1
+       
+    </h1>
+    <div
+      className="rjsf-object-properties"
+    >
+      <div
+        className="form-group field field-string"
+        data-mock-props="{"error":false,"className":"form-group field field-string"}"
+        data-testid="mock-FormGroup"
+        error={false}
+      >
+        <div
+          data-mock-props="{"error":false}"
+          data-testid="mock-FormGroup"
+          error={false}
+        >
+          <div
+            data-mock-props="{"htmlFor":"root_title","error":false}"
+            data-testid="mock-Label"
+            error={false}
+            htmlFor="root_title"
+          >
+            Titre 2
+          </div>
+          <div
+            aria-describedby="root_title__error root_title__description root_title__help"
+            className=""
+            data-mock-props="{"id":"root_title","name":"root_title","className":"","type":"text","value":"","aria-describedby":"root_title__error root_title__description root_title__help"}"
+            data-testid="mock-TextInput"
+            id="root_title"
+            name="root_title"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            type="text"
+            value=""
+          />
+        </div>
+         
+         
+         
+      </div>
+    </div>
+     
+     
+     
+  </div>
+  <div
+    className="usa-button  margin-top-4"
+    data-mock-props="{"type":"submit","disabled":false,"className":"usa-button  margin-top-4","data-testid":"submit-button"}"
+    data-testid="submit-button"
+    disabled={false}
+    type="submit"
+  >
+    Submit
+  </div>
+</form>
+`;
+
+exports[`single fields unsupported field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-undefined"
+    data-mock-props="{"error":false,"className":"form-group field field-undefined"}"
+    data-testid="mock-FormGroup"
+    error={false}
+  >
+    <div
+      data-mock-props="{"type":"error","heading":"Unsupported field schema.","headingLevel":"h4","slim":true}"
+      data-testid="mock-Alert"
+      heading="Unsupported field schema."
+      headingLevel="h4"
+      slim={true}
+      type="error"
+    >
+      <pre>
+        {}
+      </pre>
+    </div>
+     
+     
+     
+  </div>
+  <div
+    className="usa-button  margin-top-4"
+    data-mock-props="{"type":"submit","disabled":false,"className":"usa-button  margin-top-4","data-testid":"submit-button"}"
+    data-testid="submit-button"
+    disabled={false}
+    type="submit"
+  >
+    Submit
+  </div>
+</form>
+`;
+
+exports[`single fields up/down field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-number"
+    data-mock-props="{"error":false,"className":"form-group field field-number"}"
+    data-testid="mock-FormGroup"
+    error={false}
+  >
+    <div
+      data-mock-props="{"error":false}"
+      data-testid="mock-FormGroup"
+      error={false}
+    >
+      <div
+        data-mock-props="{"htmlFor":"root","error":false}"
+        data-testid="mock-Label"
+        error={false}
+        htmlFor="root"
+      />
+      <div
+        aria-describedby="root__error root__description root__help"
+        className=""
+        data-mock-props="{"id":"root","name":"root","className":"","type":"number","value":"","aria-describedby":"root__error root__description root__help"}"
+        data-testid="mock-TextInput"
+        id="root"
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        type="number"
+        value=""
+      />
+    </div>
+     
+     
+     
+  </div>
+  <div
+    className="usa-button  margin-top-4"
+    data-mock-props="{"type":"submit","disabled":false,"className":"usa-button  margin-top-4","data-testid":"submit-button"}"
+    data-testid="submit-button"
+    disabled={false}
+    type="submit"
+  >
+    Submit
+  </div>
+</form>
+`;
+
+exports[`single fields using custom tagName 1`] = `
+<div
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-string"
+    data-mock-props="{"error":false,"className":"form-group field field-string"}"
+    data-testid="mock-FormGroup"
+    error={false}
+  >
+    <div
+      data-mock-props="{"error":false}"
+      data-testid="mock-FormGroup"
+      error={false}
+    >
+      <div
+        data-mock-props="{"htmlFor":"root","error":false}"
+        data-testid="mock-Label"
+        error={false}
+        htmlFor="root"
+      />
+      <div
+        aria-describedby="root__error root__description root__help"
+        className=""
+        data-mock-props="{"id":"root","name":"root","className":"","type":"text","value":"","aria-describedby":"root__error root__description root__help"}"
+        data-testid="mock-TextInput"
+        id="root"
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        type="text"
+        value=""
+      />
+    </div>
+     
+     
+     
+  </div>
+  <div
+    className="usa-button  margin-top-4"
+    data-mock-props="{"type":"submit","disabled":false,"className":"usa-button  margin-top-4","data-testid":"submit-button"}"
+    data-testid="submit-button"
+    disabled={false}
+    type="submit"
+  >
+    Submit
+  </div>
+</div>
+`;

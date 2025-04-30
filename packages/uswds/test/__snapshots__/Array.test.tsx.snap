@@ -1,0 +1,2956 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`array fields array 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+    data-mock-props="{"error":false,"className":"form-group field field-array"}"
+    data-testid="mock-FormGroup"
+    error={false}
+  >
+    <div
+      className="field field-array field-array-of-string rjsf-uswds-array-field-container border border-base-lighter padding-2 margin-left-1"
+    >
+      <div
+        data-mock-props="{}"
+        data-testid="mock-Fieldset"
+      >
+        <div
+          className="rjsf-uswds-array-item-list"
+        >
+          <div
+            className="margin-top-1"
+            containerSize="fluid"
+            data-mock-props="{"containerSize":"fluid","className":"margin-top-1"}"
+            data-testid="mock-GridContainer"
+          >
+            <div
+              data-mock-props="{"row":true}"
+              data-testid="mock-Grid"
+              row={true}
+            >
+              <div
+                className="array-item-add text-right"
+                col={12}
+                data-mock-props="{"col":12,"className":"array-item-add text-right"}"
+                data-testid="mock-Grid"
+              >
+                <div
+                  aria-label="Add Item"
+                  className="usa-button usa-button--outline usa-button usa-button--outline"
+                  data-mock-props="{"type":"button","className":"usa-button usa-button--outline usa-button usa-button--outline","disabled":false,"uiSchema":{},"data-testid":"add-button","aria-label":"Add Item"}"
+                  data-testid="add-button"
+                  disabled={false}
+                  onClick={[Function]}
+                  type="button"
+                  uiSchema={{}}
+                >
+                  <div
+                    aria-hidden="true"
+                    data-testid="mock-Icon.Add"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+     
+     
+     
+  </div>
+  <div
+    className="usa-button  margin-top-4"
+    data-mock-props="{"type":"submit","disabled":false,"className":"usa-button  margin-top-4","data-testid":"submit-button"}"
+    data-testid="submit-button"
+    disabled={false}
+    type="submit"
+  >
+    Submit
+  </div>
+</form>
+`;
+
+exports[`array fields array icons 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+    data-mock-props="{"error":false,"className":"form-group field field-array"}"
+    data-testid="mock-FormGroup"
+    error={false}
+  >
+    <div
+      className="field field-array field-array-of-string rjsf-uswds-array-field-container border border-base-lighter padding-2 margin-left-1"
+    >
+      <div
+        data-mock-props="{}"
+        data-testid="mock-Fieldset"
+      >
+        <div
+          className="rjsf-uswds-array-item-list"
+        >
+          <div
+            className="array-item"
+            container={true}
+            data-mock-props="{"container":true,"gap":2,"className":"array-item"}"
+            data-testid="mock-Grid"
+            gap={2}
+          >
+            <div
+              className="rjsf-uswds-array-item-content"
+              col="auto"
+              data-mock-props="{"col":"auto","className":"rjsf-uswds-array-item-content"}"
+              data-testid="mock-Grid"
+            >
+              <div
+                className="form-group field field-string"
+                data-mock-props="{"error":false,"className":"form-group field field-string"}"
+                data-testid="mock-FormGroup"
+                error={false}
+              >
+                <div
+                  data-mock-props="{"error":false}"
+                  data-testid="mock-FormGroup"
+                  error={false}
+                >
+                  <div
+                    data-mock-props="{"htmlFor":"root_0","error":false}"
+                    data-testid="mock-Label"
+                    error={false}
+                    htmlFor="root_0"
+                  >
+                    <span
+                      className="usa-label--required"
+                    >
+                      *
+                    </span>
+                  </div>
+                  <div
+                    aria-describedby="root_0__error root_0__description root_0__help"
+                    className=""
+                    data-mock-props="{"id":"root_0","name":"root_0","className":"","type":"text","value":"a","aria-describedby":"root_0__error root_0__description root_0__help"}"
+                    data-testid="mock-TextInput"
+                    id="root_0"
+                    name="root_0"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    type="text"
+                    value="a"
+                  />
+                </div>
+                 
+                 
+                 
+              </div>
+            </div>
+            <div
+              className="rjsf-uswds-array-item-toolbox"
+              col="auto"
+              data-mock-props="{"col":"auto","className":"rjsf-uswds-array-item-toolbox"}"
+              data-testid="mock-Grid"
+            />
+          </div>
+          <div
+            className="array-item"
+            container={true}
+            data-mock-props="{"container":true,"gap":2,"className":"array-item"}"
+            data-testid="mock-Grid"
+            gap={2}
+          >
+            <div
+              className="rjsf-uswds-array-item-content"
+              col="auto"
+              data-mock-props="{"col":"auto","className":"rjsf-uswds-array-item-content"}"
+              data-testid="mock-Grid"
+            >
+              <div
+                className="form-group field field-string"
+                data-mock-props="{"error":false,"className":"form-group field field-string"}"
+                data-testid="mock-FormGroup"
+                error={false}
+              >
+                <div
+                  data-mock-props="{"error":false}"
+                  data-testid="mock-FormGroup"
+                  error={false}
+                >
+                  <div
+                    data-mock-props="{"htmlFor":"root_1","error":false}"
+                    data-testid="mock-Label"
+                    error={false}
+                    htmlFor="root_1"
+                  >
+                    <span
+                      className="usa-label--required"
+                    >
+                      *
+                    </span>
+                  </div>
+                  <div
+                    aria-describedby="root_1__error root_1__description root_1__help"
+                    className=""
+                    data-mock-props="{"id":"root_1","name":"root_1","className":"","type":"text","value":"b","aria-describedby":"root_1__error root_1__description root_1__help"}"
+                    data-testid="mock-TextInput"
+                    id="root_1"
+                    name="root_1"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    type="text"
+                    value="b"
+                  />
+                </div>
+                 
+                 
+                 
+              </div>
+            </div>
+            <div
+              className="rjsf-uswds-array-item-toolbox"
+              col="auto"
+              data-mock-props="{"col":"auto","className":"rjsf-uswds-array-item-toolbox"}"
+              data-testid="mock-Grid"
+            />
+          </div>
+          <div
+            className="margin-top-1"
+            containerSize="fluid"
+            data-mock-props="{"containerSize":"fluid","className":"margin-top-1"}"
+            data-testid="mock-GridContainer"
+          >
+            <div
+              data-mock-props="{"row":true}"
+              data-testid="mock-Grid"
+              row={true}
+            >
+              <div
+                className="array-item-add text-right"
+                col={12}
+                data-mock-props="{"col":12,"className":"array-item-add text-right"}"
+                data-testid="mock-Grid"
+              >
+                <div
+                  aria-label="Add Item"
+                  className="usa-button usa-button--outline usa-button usa-button--outline"
+                  data-mock-props="{"type":"button","className":"usa-button usa-button--outline usa-button usa-button--outline","disabled":false,"uiSchema":{"ui:options":{"copyable":true}},"data-testid":"add-button","aria-label":"Add Item"}"
+                  data-testid="add-button"
+                  disabled={false}
+                  onClick={[Function]}
+                  type="button"
+                  uiSchema={
+                    {
+                      "ui:options": {
+                        "copyable": true,
+                      },
+                    }
+                  }
+                >
+                  <div
+                    aria-hidden="true"
+                    data-testid="mock-Icon.Add"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+     
+     
+     
+  </div>
+  <div
+    className="usa-button  margin-top-4"
+    data-mock-props="{"type":"submit","disabled":false,"className":"usa-button  margin-top-4","data-testid":"submit-button"}"
+    data-testid="submit-button"
+    disabled={false}
+    type="submit"
+  >
+    Submit
+  </div>
+</form>
+`;
+
+exports[`array fields checkboxes 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+    data-mock-props="{"error":false,"className":"form-group field field-array"}"
+    data-testid="mock-FormGroup"
+    error={false}
+  >
+    <div>
+      <label
+        error={false}
+        htmlFor="root"
+      />
+      <div
+        aria-describedby="root__error root__description root__help"
+        autoFocus={false}
+        data-mock-props="{"id":"root","name":"root","value":[],"disabled":false,"autoFocus":false,"required":false,"multiple":false,"aria-describedby":"root__error root__description root__help"}"
+        data-testid="mock-Select"
+        disabled={false}
+        id="root"
+        multiple={false}
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        required={false}
+        value={[]}
+      >
+        <option
+          value=""
+        />
+        <option
+          disabled={false}
+          value="a"
+        >
+          a
+        </option>
+        <option
+          disabled={false}
+          value="b"
+        >
+          b
+        </option>
+        <option
+          disabled={false}
+          value="c"
+        >
+          c
+        </option>
+      </div>
+    </div>
+     
+     
+     
+  </div>
+  <div
+    className="usa-button  margin-top-4"
+    data-mock-props="{"type":"submit","disabled":false,"className":"usa-button  margin-top-4","data-testid":"submit-button"}"
+    data-testid="submit-button"
+    disabled={false}
+    type="submit"
+  >
+    Submit
+  </div>
+</form>
+`;
+
+exports[`array fields empty errors array 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-object"
+    data-mock-props="{"error":false,"className":"form-group field field-object"}"
+    data-testid="mock-FormGroup"
+    error={false}
+  >
+    <div
+      className="rjsf-object-properties"
+    >
+      <div
+        className="form-group field field-string"
+        data-mock-props="{"error":false,"className":"form-group field field-string"}"
+        data-testid="mock-FormGroup"
+        error={false}
+      >
+        <div
+          data-mock-props="{"error":false}"
+          data-testid="mock-FormGroup"
+          error={false}
+        >
+          <div
+            data-mock-props="{"htmlFor":"root_name","error":false}"
+            data-testid="mock-Label"
+            error={false}
+            htmlFor="root_name"
+          >
+            name
+          </div>
+          <div
+            aria-describedby="root_name__error root_name__description root_name__help"
+            className=""
+            data-mock-props="{"id":"root_name","name":"root_name","className":"","type":"text","value":"","aria-describedby":"root_name__error root_name__description root_name__help"}"
+            data-testid="mock-TextInput"
+            id="root_name"
+            name="root_name"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            type="text"
+            value=""
+          />
+        </div>
+         
+         
+         
+      </div>
+    </div>
+     
+     
+     
+  </div>
+  <div
+    className="usa-button  margin-top-4"
+    data-mock-props="{"type":"submit","disabled":false,"className":"usa-button  margin-top-4","data-testid":"submit-button"}"
+    data-testid="submit-button"
+    disabled={false}
+    type="submit"
+  >
+    Submit
+  </div>
+</form>
+`;
+
+exports[`array fields fixed array 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+    data-mock-props="{"error":false,"className":"form-group field field-array"}"
+    data-testid="mock-FormGroup"
+    error={false}
+  >
+    <div
+      className="field field-array field-array-fixed-items rjsf-uswds-array-field-container border border-base-lighter padding-2 margin-left-1"
+    >
+      <div
+        data-mock-props="{}"
+        data-testid="mock-Fieldset"
+      >
+        <div
+          className="rjsf-uswds-array-item-list"
+        >
+          <div
+            className="array-item"
+            container={true}
+            data-mock-props="{"container":true,"gap":2,"className":"array-item"}"
+            data-testid="mock-Grid"
+            gap={2}
+          >
+            <div
+              className="rjsf-uswds-array-item-content"
+              col="auto"
+              data-mock-props="{"col":"auto","className":"rjsf-uswds-array-item-content"}"
+              data-testid="mock-Grid"
+            >
+              <div
+                className="form-group field field-string"
+                data-mock-props="{"error":false,"className":"form-group field field-string"}"
+                data-testid="mock-FormGroup"
+                error={false}
+              >
+                <div
+                  data-mock-props="{"error":false}"
+                  data-testid="mock-FormGroup"
+                  error={false}
+                >
+                  <div
+                    data-mock-props="{"htmlFor":"root_0","error":false}"
+                    data-testid="mock-Label"
+                    error={false}
+                    htmlFor="root_0"
+                  >
+                    <span
+                      className="usa-label--required"
+                    >
+                      *
+                    </span>
+                  </div>
+                  <div
+                    aria-describedby="root_0__error root_0__description root_0__help"
+                    className=""
+                    data-mock-props="{"id":"root_0","name":"root_0","className":"","type":"text","value":"","aria-describedby":"root_0__error root_0__description root_0__help"}"
+                    data-testid="mock-TextInput"
+                    id="root_0"
+                    name="root_0"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    type="text"
+                    value=""
+                  />
+                </div>
+                 
+                 
+                 
+              </div>
+            </div>
+          </div>
+          <div
+            className="array-item"
+            container={true}
+            data-mock-props="{"container":true,"gap":2,"className":"array-item"}"
+            data-testid="mock-Grid"
+            gap={2}
+          >
+            <div
+              className="rjsf-uswds-array-item-content"
+              col="auto"
+              data-mock-props="{"col":"auto","className":"rjsf-uswds-array-item-content"}"
+              data-testid="mock-Grid"
+            >
+              <div
+                className="form-group field field-number"
+                data-mock-props="{"error":false,"className":"form-group field field-number"}"
+                data-testid="mock-FormGroup"
+                error={false}
+              >
+                <div
+                  data-mock-props="{"error":false}"
+                  data-testid="mock-FormGroup"
+                  error={false}
+                >
+                  <div
+                    data-mock-props="{"htmlFor":"root_1","error":false}"
+                    data-testid="mock-Label"
+                    error={false}
+                    htmlFor="root_1"
+                  >
+                    <span
+                      className="usa-label--required"
+                    >
+                      *
+                    </span>
+                  </div>
+                  <div
+                    aria-describedby="root_1__error root_1__description root_1__help"
+                    className=""
+                    data-mock-props="{"id":"root_1","name":"root_1","className":"","type":"number","step":"any","value":"","aria-describedby":"root_1__error root_1__description root_1__help"}"
+                    data-testid="mock-TextInput"
+                    id="root_1"
+                    name="root_1"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    step="any"
+                    type="number"
+                    value=""
+                  />
+                </div>
+                 
+                 
+                 
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+     
+     
+     
+  </div>
+  <div
+    className="usa-button  margin-top-4"
+    data-mock-props="{"type":"submit","disabled":false,"className":"usa-button  margin-top-4","data-testid":"submit-button"}"
+    data-testid="submit-button"
+    disabled={false}
+    type="submit"
+  >
+    Submit
+  </div>
+</form>
+`;
+
+exports[`array fields has errors 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="panel panel-danger errors"
+  >
+    <div
+      data-mock-props="{"type":"error","heading":"Errors","headingLevel":"h4","slim":true}"
+      data-testid="mock-Alert"
+      heading="Errors"
+      headingLevel="h4"
+      slim={true}
+      type="error"
+    >
+      <ul
+        className="error-detail bs-callout bs-callout-danger"
+      >
+        <li
+          className="text-danger"
+        >
+          .name Bad input
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div
+    className="form-group field field-object"
+    data-mock-props="{"error":false,"className":"form-group field field-object"}"
+    data-testid="mock-FormGroup"
+    error={false}
+  >
+    <div
+      className="rjsf-object-properties"
+    >
+      <div
+        className="form-group field field-string field-error has-error has-danger"
+        data-mock-props="{"error":true,"className":"form-group field field-string field-error has-error has-danger"}"
+        data-testid="mock-FormGroup"
+        error={true}
+      >
+        <div
+          data-mock-props="{"error":true}"
+          data-testid="mock-FormGroup"
+          error={true}
+        >
+          <div
+            data-mock-props="{"htmlFor":"root_name","error":true}"
+            data-testid="mock-Label"
+            error={true}
+            htmlFor="root_name"
+          >
+            name
+          </div>
+          <div
+            aria-describedby="root_name__error root_name__description root_name__help"
+            className="usa-input--error"
+            data-mock-props="{"id":"root_name","name":"root_name","className":"usa-input--error","type":"text","value":"","aria-describedby":"root_name__error root_name__description root_name__help"}"
+            data-testid="mock-TextInput"
+            id="root_name"
+            name="root_name"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            type="text"
+            value=""
+          />
+        </div>
+         
+        <div>
+          <ul
+            className="error-detail bs-callout bs-callout-info"
+            id="root_name__error"
+          >
+            <li
+              className="text-danger"
+            >
+              Bad input
+            </li>
+          </ul>
+        </div>
+         
+         
+      </div>
+    </div>
+     
+     
+     
+  </div>
+  <div
+    className="usa-button  margin-top-4"
+    data-mock-props="{"type":"submit","disabled":false,"className":"usa-button  margin-top-4","data-testid":"submit-button"}"
+    data-testid="submit-button"
+    disabled={false}
+    type="submit"
+  >
+    Submit
+  </div>
+</form>
+`;
+
+exports[`array fields no errors 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-object"
+    data-mock-props="{"error":false,"className":"form-group field field-object"}"
+    data-testid="mock-FormGroup"
+    error={false}
+  >
+    <div
+      className="rjsf-object-properties"
+    >
+      <div
+        className="form-group field field-string"
+        data-mock-props="{"error":false,"className":"form-group field field-string"}"
+        data-testid="mock-FormGroup"
+        error={false}
+      >
+        <div
+          data-mock-props="{"error":false}"
+          data-testid="mock-FormGroup"
+          error={false}
+        >
+          <div
+            data-mock-props="{"htmlFor":"root_name","error":false}"
+            data-testid="mock-Label"
+            error={false}
+            htmlFor="root_name"
+          >
+            name
+          </div>
+          <div
+            aria-describedby="root_name__error root_name__description root_name__help"
+            className=""
+            data-mock-props="{"id":"root_name","name":"root_name","className":"","type":"text","value":"","aria-describedby":"root_name__error root_name__description root_name__help"}"
+            data-testid="mock-TextInput"
+            id="root_name"
+            name="root_name"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            type="text"
+            value=""
+          />
+        </div>
+         
+         
+         
+      </div>
+    </div>
+     
+     
+     
+  </div>
+  <div
+    className="usa-button  margin-top-4"
+    data-mock-props="{"type":"submit","disabled":false,"className":"usa-button  margin-top-4","data-testid":"submit-button"}"
+    data-testid="submit-button"
+    disabled={false}
+    type="submit"
+  >
+    Submit
+  </div>
+</form>
+`;
+
+exports[`with title and description array 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+    data-mock-props="{"error":false,"className":"form-group field field-array"}"
+    data-testid="mock-FormGroup"
+    error={false}
+  >
+    <div
+      className="field field-array field-array-of-string rjsf-uswds-array-field-container border border-base-lighter padding-2 margin-left-1"
+    >
+      <div
+        data-mock-props="{}"
+        data-testid="mock-Fieldset"
+      >
+        <legend
+          id="root"
+        >
+          Test field
+        </legend>
+        <div
+          className="usa-prose"
+        >
+           
+          <span>
+            a test description
+          </span>
+        </div>
+        <div
+          className="rjsf-uswds-array-item-list"
+        >
+          <div
+            className="margin-top-1"
+            containerSize="fluid"
+            data-mock-props="{"containerSize":"fluid","className":"margin-top-1"}"
+            data-testid="mock-GridContainer"
+          >
+            <div
+              data-mock-props="{"row":true}"
+              data-testid="mock-Grid"
+              row={true}
+            >
+              <div
+                className="array-item-add text-right"
+                col={12}
+                data-mock-props="{"col":12,"className":"array-item-add text-right"}"
+                data-testid="mock-Grid"
+              >
+                <div
+                  aria-label="Add Item"
+                  className="usa-button usa-button--outline usa-button usa-button--outline"
+                  data-mock-props="{"type":"button","className":"usa-button usa-button--outline usa-button usa-button--outline","disabled":false,"uiSchema":{},"data-testid":"add-button","aria-label":"Add Item"}"
+                  data-testid="add-button"
+                  disabled={false}
+                  onClick={[Function]}
+                  type="button"
+                  uiSchema={{}}
+                >
+                  <div
+                    aria-hidden="true"
+                    data-testid="mock-Icon.Add"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+     
+     
+     
+  </div>
+  <div
+    className="usa-button  margin-top-4"
+    data-mock-props="{"type":"submit","disabled":false,"className":"usa-button  margin-top-4","data-testid":"submit-button"}"
+    data-testid="submit-button"
+    disabled={false}
+    type="submit"
+  >
+    Submit
+  </div>
+</form>
+`;
+
+exports[`with title and description array icons 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+    data-mock-props="{"error":false,"className":"form-group field field-array"}"
+    data-testid="mock-FormGroup"
+    error={false}
+  >
+    <div
+      className="field field-array field-array-of-string rjsf-uswds-array-field-container border border-base-lighter padding-2 margin-left-1"
+    >
+      <div
+        data-mock-props="{}"
+        data-testid="mock-Fieldset"
+      >
+        <legend
+          id="root"
+        >
+          Test field
+        </legend>
+        <div
+          className="usa-prose"
+        >
+           
+          <span>
+            a test description
+          </span>
+        </div>
+        <div
+          className="rjsf-uswds-array-item-list"
+        >
+          <div
+            className="array-item"
+            container={true}
+            data-mock-props="{"container":true,"gap":2,"className":"array-item"}"
+            data-testid="mock-Grid"
+            gap={2}
+          >
+            <div
+              className="rjsf-uswds-array-item-content"
+              col="auto"
+              data-mock-props="{"col":"auto","className":"rjsf-uswds-array-item-content"}"
+              data-testid="mock-Grid"
+            >
+              <div
+                className="form-group field field-string"
+                data-mock-props="{"error":false,"className":"form-group field field-string"}"
+                data-testid="mock-FormGroup"
+                error={false}
+              >
+                <div
+                  data-mock-props="{"error":false}"
+                  data-testid="mock-FormGroup"
+                  error={false}
+                >
+                  <div
+                    data-mock-props="{"htmlFor":"root_0","error":false}"
+                    data-testid="mock-Label"
+                    error={false}
+                    htmlFor="root_0"
+                  >
+                    Test item
+                    <span
+                      className="usa-label--required"
+                    >
+                      *
+                    </span>
+                  </div>
+                  <div
+                    aria-describedby="root_0__error root_0__description root_0__help"
+                    className=""
+                    data-mock-props="{"id":"root_0","name":"root_0","className":"","type":"text","value":"a","aria-describedby":"root_0__error root_0__description root_0__help"}"
+                    data-testid="mock-TextInput"
+                    id="root_0"
+                    name="root_0"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    type="text"
+                    value="a"
+                  />
+                </div>
+                 
+                 
+                 
+              </div>
+            </div>
+            <div
+              className="rjsf-uswds-array-item-toolbox"
+              col="auto"
+              data-mock-props="{"col":"auto","className":"rjsf-uswds-array-item-toolbox"}"
+              data-testid="mock-Grid"
+            />
+          </div>
+          <div
+            className="array-item"
+            container={true}
+            data-mock-props="{"container":true,"gap":2,"className":"array-item"}"
+            data-testid="mock-Grid"
+            gap={2}
+          >
+            <div
+              className="rjsf-uswds-array-item-content"
+              col="auto"
+              data-mock-props="{"col":"auto","className":"rjsf-uswds-array-item-content"}"
+              data-testid="mock-Grid"
+            >
+              <div
+                className="form-group field field-string"
+                data-mock-props="{"error":false,"className":"form-group field field-string"}"
+                data-testid="mock-FormGroup"
+                error={false}
+              >
+                <div
+                  data-mock-props="{"error":false}"
+                  data-testid="mock-FormGroup"
+                  error={false}
+                >
+                  <div
+                    data-mock-props="{"htmlFor":"root_1","error":false}"
+                    data-testid="mock-Label"
+                    error={false}
+                    htmlFor="root_1"
+                  >
+                    Test item
+                    <span
+                      className="usa-label--required"
+                    >
+                      *
+                    </span>
+                  </div>
+                  <div
+                    aria-describedby="root_1__error root_1__description root_1__help"
+                    className=""
+                    data-mock-props="{"id":"root_1","name":"root_1","className":"","type":"text","value":"b","aria-describedby":"root_1__error root_1__description root_1__help"}"
+                    data-testid="mock-TextInput"
+                    id="root_1"
+                    name="root_1"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    type="text"
+                    value="b"
+                  />
+                </div>
+                 
+                 
+                 
+              </div>
+            </div>
+            <div
+              className="rjsf-uswds-array-item-toolbox"
+              col="auto"
+              data-mock-props="{"col":"auto","className":"rjsf-uswds-array-item-toolbox"}"
+              data-testid="mock-Grid"
+            />
+          </div>
+          <div
+            className="margin-top-1"
+            containerSize="fluid"
+            data-mock-props="{"containerSize":"fluid","className":"margin-top-1"}"
+            data-testid="mock-GridContainer"
+          >
+            <div
+              data-mock-props="{"row":true}"
+              data-testid="mock-Grid"
+              row={true}
+            >
+              <div
+                className="array-item-add text-right"
+                col={12}
+                data-mock-props="{"col":12,"className":"array-item-add text-right"}"
+                data-testid="mock-Grid"
+              >
+                <div
+                  aria-label="Add Item"
+                  className="usa-button usa-button--outline usa-button usa-button--outline"
+                  data-mock-props="{"type":"button","className":"usa-button usa-button--outline usa-button usa-button--outline","disabled":false,"uiSchema":{"ui:options":{"copyable":true}},"data-testid":"add-button","aria-label":"Add Item"}"
+                  data-testid="add-button"
+                  disabled={false}
+                  onClick={[Function]}
+                  type="button"
+                  uiSchema={
+                    {
+                      "ui:options": {
+                        "copyable": true,
+                      },
+                    }
+                  }
+                >
+                  <div
+                    aria-hidden="true"
+                    data-testid="mock-Icon.Add"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+     
+     
+     
+  </div>
+  <div
+    className="usa-button  margin-top-4"
+    data-mock-props="{"type":"submit","disabled":false,"className":"usa-button  margin-top-4","data-testid":"submit-button"}"
+    data-testid="submit-button"
+    disabled={false}
+    type="submit"
+  >
+    Submit
+  </div>
+</form>
+`;
+
+exports[`with title and description checkboxes 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+    data-mock-props="{"error":false,"className":"form-group field field-array"}"
+    data-testid="mock-FormGroup"
+    error={false}
+  >
+    <div>
+      <label
+        error={false}
+        htmlFor="root"
+      >
+        Test field
+      </label>
+      <div
+        aria-describedby="root__error root__description root__help root__examples"
+        autoFocus={false}
+        data-mock-props="{"id":"root","name":"root","value":[],"disabled":false,"autoFocus":false,"required":false,"multiple":false,"aria-describedby":"root__error root__description root__help root__examples"}"
+        data-testid="mock-Select"
+        disabled={false}
+        id="root"
+        multiple={false}
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        required={false}
+        value={[]}
+      >
+        <option
+          value=""
+        />
+        <option
+          disabled={false}
+          value="a"
+        >
+          a
+        </option>
+        <option
+          disabled={false}
+          value="b"
+        >
+          b
+        </option>
+        <option
+          disabled={false}
+          value="c"
+        >
+          c
+        </option>
+      </div>
+    </div>
+     
+     
+     
+  </div>
+  <div
+    className="usa-button  margin-top-4"
+    data-mock-props="{"type":"submit","disabled":false,"className":"usa-button  margin-top-4","data-testid":"submit-button"}"
+    data-testid="submit-button"
+    disabled={false}
+    type="submit"
+  >
+    Submit
+  </div>
+</form>
+`;
+
+exports[`with title and description fixed array 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+    data-mock-props="{"error":false,"className":"form-group field field-array"}"
+    data-testid="mock-FormGroup"
+    error={false}
+  >
+    <div
+      className="field field-array field-array-fixed-items rjsf-uswds-array-field-container border border-base-lighter padding-2 margin-left-1"
+    >
+      <div
+        data-mock-props="{}"
+        data-testid="mock-Fieldset"
+      >
+        <legend
+          id="root"
+        >
+          Test field
+        </legend>
+        <div
+          className="usa-prose"
+        >
+           
+          <span>
+            a test description
+          </span>
+        </div>
+        <div
+          className="rjsf-uswds-array-item-list"
+        >
+          <div
+            className="array-item"
+            container={true}
+            data-mock-props="{"container":true,"gap":2,"className":"array-item"}"
+            data-testid="mock-Grid"
+            gap={2}
+          >
+            <div
+              className="rjsf-uswds-array-item-content"
+              col="auto"
+              data-mock-props="{"col":"auto","className":"rjsf-uswds-array-item-content"}"
+              data-testid="mock-Grid"
+            >
+              <div
+                className="form-group field field-string"
+                data-mock-props="{"error":false,"className":"form-group field field-string"}"
+                data-testid="mock-FormGroup"
+                error={false}
+              >
+                <div
+                  data-mock-props="{"error":false}"
+                  data-testid="mock-FormGroup"
+                  error={false}
+                >
+                  <div
+                    data-mock-props="{"htmlFor":"root_0","error":false}"
+                    data-testid="mock-Label"
+                    error={false}
+                    htmlFor="root_0"
+                  >
+                    Test item
+                    <span
+                      className="usa-label--required"
+                    >
+                      *
+                    </span>
+                  </div>
+                  <div
+                    aria-describedby="root_0__error root_0__description root_0__help"
+                    className=""
+                    data-mock-props="{"id":"root_0","name":"root_0","className":"","type":"text","value":"","aria-describedby":"root_0__error root_0__description root_0__help"}"
+                    data-testid="mock-TextInput"
+                    id="root_0"
+                    name="root_0"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    type="text"
+                    value=""
+                  />
+                </div>
+                 
+                 
+                 
+              </div>
+            </div>
+          </div>
+          <div
+            className="array-item"
+            container={true}
+            data-mock-props="{"container":true,"gap":2,"className":"array-item"}"
+            data-testid="mock-Grid"
+            gap={2}
+          >
+            <div
+              className="rjsf-uswds-array-item-content"
+              col="auto"
+              data-mock-props="{"col":"auto","className":"rjsf-uswds-array-item-content"}"
+              data-testid="mock-Grid"
+            >
+              <div
+                className="form-group field field-number"
+                data-mock-props="{"error":false,"className":"form-group field field-number"}"
+                data-testid="mock-FormGroup"
+                error={false}
+              >
+                <div
+                  data-mock-props="{"error":false}"
+                  data-testid="mock-FormGroup"
+                  error={false}
+                >
+                  <div
+                    data-mock-props="{"htmlFor":"root_1","error":false}"
+                    data-testid="mock-Label"
+                    error={false}
+                    htmlFor="root_1"
+                  >
+                    Test item
+                    <span
+                      className="usa-label--required"
+                    >
+                      *
+                    </span>
+                  </div>
+                  <div
+                    aria-describedby="root_1__error root_1__description root_1__help"
+                    className=""
+                    data-mock-props="{"id":"root_1","name":"root_1","className":"","type":"number","step":"any","value":"","aria-describedby":"root_1__error root_1__description root_1__help"}"
+                    data-testid="mock-TextInput"
+                    id="root_1"
+                    name="root_1"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    step="any"
+                    type="number"
+                    value=""
+                  />
+                </div>
+                 
+                 
+                 
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+     
+     
+     
+  </div>
+  <div
+    className="usa-button  margin-top-4"
+    data-mock-props="{"type":"submit","disabled":false,"className":"usa-button  margin-top-4","data-testid":"submit-button"}"
+    data-testid="submit-button"
+    disabled={false}
+    type="submit"
+  >
+    Submit
+  </div>
+</form>
+`;
+
+exports[`with title and description from both array 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+    data-mock-props="{"error":false,"className":"form-group field field-array"}"
+    data-testid="mock-FormGroup"
+    error={false}
+  >
+    <div
+      className="field field-array field-array-of-string rjsf-uswds-array-field-container border border-base-lighter padding-2 margin-left-1"
+    >
+      <div
+        data-mock-props="{}"
+        data-testid="mock-Fieldset"
+      >
+        <legend
+          id="root"
+        >
+          My Field
+        </legend>
+        <div
+          className="usa-prose"
+        >
+           
+          <span>
+            a fancier description
+          </span>
+        </div>
+        <div
+          className="rjsf-uswds-array-item-list"
+        >
+          <div
+            className="margin-top-1"
+            containerSize="fluid"
+            data-mock-props="{"containerSize":"fluid","className":"margin-top-1"}"
+            data-testid="mock-GridContainer"
+          >
+            <div
+              data-mock-props="{"row":true}"
+              data-testid="mock-Grid"
+              row={true}
+            >
+              <div
+                className="array-item-add text-right"
+                col={12}
+                data-mock-props="{"col":12,"className":"array-item-add text-right"}"
+                data-testid="mock-Grid"
+              >
+                <div
+                  aria-label="Add Item"
+                  className="usa-button usa-button--outline usa-button usa-button--outline"
+                  data-mock-props="{"type":"button","className":"usa-button usa-button--outline usa-button usa-button--outline","disabled":false,"uiSchema":{"ui:options":{"title":"My Field","description":"a fancier description"},"items":{"ui:options":{"title":"My Item","description":"a fancier item description"}}},"data-testid":"add-button","aria-label":"Add Item"}"
+                  data-testid="add-button"
+                  disabled={false}
+                  onClick={[Function]}
+                  type="button"
+                  uiSchema={
+                    {
+                      "items": {
+                        "ui:options": {
+                          "description": "a fancier item description",
+                          "title": "My Item",
+                        },
+                      },
+                      "ui:options": {
+                        "description": "a fancier description",
+                        "title": "My Field",
+                      },
+                    }
+                  }
+                >
+                  <div
+                    aria-hidden="true"
+                    data-testid="mock-Icon.Add"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+     
+     
+     
+  </div>
+  <div
+    className="usa-button  margin-top-4"
+    data-mock-props="{"type":"submit","disabled":false,"className":"usa-button  margin-top-4","data-testid":"submit-button"}"
+    data-testid="submit-button"
+    disabled={false}
+    type="submit"
+  >
+    Submit
+  </div>
+</form>
+`;
+
+exports[`with title and description from both array icons 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+    data-mock-props="{"error":false,"className":"form-group field field-array"}"
+    data-testid="mock-FormGroup"
+    error={false}
+  >
+    <div
+      className="field field-array field-array-of-string rjsf-uswds-array-field-container border border-base-lighter padding-2 margin-left-1"
+    >
+      <div
+        data-mock-props="{}"
+        data-testid="mock-Fieldset"
+      >
+        <legend
+          id="root"
+        >
+          My Field
+        </legend>
+        <div
+          className="usa-prose"
+        >
+           
+          <span>
+            a fancier description
+          </span>
+        </div>
+        <div
+          className="rjsf-uswds-array-item-list"
+        >
+          <div
+            className="array-item"
+            container={true}
+            data-mock-props="{"container":true,"gap":2,"className":"array-item"}"
+            data-testid="mock-Grid"
+            gap={2}
+          >
+            <div
+              className="rjsf-uswds-array-item-content"
+              col="auto"
+              data-mock-props="{"col":"auto","className":"rjsf-uswds-array-item-content"}"
+              data-testid="mock-Grid"
+            >
+              <div
+                className="form-group field field-string"
+                data-mock-props="{"error":false,"className":"form-group field field-string"}"
+                data-testid="mock-FormGroup"
+                error={false}
+              >
+                <div
+                  data-mock-props="{"error":false}"
+                  data-testid="mock-FormGroup"
+                  error={false}
+                >
+                  <div
+                    data-mock-props="{"htmlFor":"root_0","error":false}"
+                    data-testid="mock-Label"
+                    error={false}
+                    htmlFor="root_0"
+                  >
+                    My Item
+                    <span
+                      className="usa-label--required"
+                    >
+                      *
+                    </span>
+                  </div>
+                  <div
+                    aria-describedby="root_0__error root_0__description root_0__help"
+                    className=""
+                    data-mock-props="{"id":"root_0","name":"root_0","className":"","type":"text","value":"a","aria-describedby":"root_0__error root_0__description root_0__help"}"
+                    data-testid="mock-TextInput"
+                    id="root_0"
+                    name="root_0"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    type="text"
+                    value="a"
+                  />
+                </div>
+                 
+                 
+                 
+              </div>
+            </div>
+            <div
+              className="rjsf-uswds-array-item-toolbox"
+              col="auto"
+              data-mock-props="{"col":"auto","className":"rjsf-uswds-array-item-toolbox"}"
+              data-testid="mock-Grid"
+            />
+          </div>
+          <div
+            className="array-item"
+            container={true}
+            data-mock-props="{"container":true,"gap":2,"className":"array-item"}"
+            data-testid="mock-Grid"
+            gap={2}
+          >
+            <div
+              className="rjsf-uswds-array-item-content"
+              col="auto"
+              data-mock-props="{"col":"auto","className":"rjsf-uswds-array-item-content"}"
+              data-testid="mock-Grid"
+            >
+              <div
+                className="form-group field field-string"
+                data-mock-props="{"error":false,"className":"form-group field field-string"}"
+                data-testid="mock-FormGroup"
+                error={false}
+              >
+                <div
+                  data-mock-props="{"error":false}"
+                  data-testid="mock-FormGroup"
+                  error={false}
+                >
+                  <div
+                    data-mock-props="{"htmlFor":"root_1","error":false}"
+                    data-testid="mock-Label"
+                    error={false}
+                    htmlFor="root_1"
+                  >
+                    My Item
+                    <span
+                      className="usa-label--required"
+                    >
+                      *
+                    </span>
+                  </div>
+                  <div
+                    aria-describedby="root_1__error root_1__description root_1__help"
+                    className=""
+                    data-mock-props="{"id":"root_1","name":"root_1","className":"","type":"text","value":"b","aria-describedby":"root_1__error root_1__description root_1__help"}"
+                    data-testid="mock-TextInput"
+                    id="root_1"
+                    name="root_1"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    type="text"
+                    value="b"
+                  />
+                </div>
+                 
+                 
+                 
+              </div>
+            </div>
+            <div
+              className="rjsf-uswds-array-item-toolbox"
+              col="auto"
+              data-mock-props="{"col":"auto","className":"rjsf-uswds-array-item-toolbox"}"
+              data-testid="mock-Grid"
+            />
+          </div>
+          <div
+            className="margin-top-1"
+            containerSize="fluid"
+            data-mock-props="{"containerSize":"fluid","className":"margin-top-1"}"
+            data-testid="mock-GridContainer"
+          >
+            <div
+              data-mock-props="{"row":true}"
+              data-testid="mock-Grid"
+              row={true}
+            >
+              <div
+                className="array-item-add text-right"
+                col={12}
+                data-mock-props="{"col":12,"className":"array-item-add text-right"}"
+                data-testid="mock-Grid"
+              >
+                <div
+                  aria-label="Add Item"
+                  className="usa-button usa-button--outline usa-button usa-button--outline"
+                  data-mock-props="{"type":"button","className":"usa-button usa-button--outline usa-button usa-button--outline","disabled":false,"uiSchema":{"ui:copyable":true,"ui:options":{"title":"My Field","description":"a fancier description"},"items":{"ui:options":{"title":"My Item","description":"a fancier item description"}}},"data-testid":"add-button","aria-label":"Add Item"}"
+                  data-testid="add-button"
+                  disabled={false}
+                  onClick={[Function]}
+                  type="button"
+                  uiSchema={
+                    {
+                      "items": {
+                        "ui:options": {
+                          "description": "a fancier item description",
+                          "title": "My Item",
+                        },
+                      },
+                      "ui:copyable": true,
+                      "ui:options": {
+                        "description": "a fancier description",
+                        "title": "My Field",
+                      },
+                    }
+                  }
+                >
+                  <div
+                    aria-hidden="true"
+                    data-testid="mock-Icon.Add"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+     
+     
+     
+  </div>
+  <div
+    className="usa-button  margin-top-4"
+    data-mock-props="{"type":"submit","disabled":false,"className":"usa-button  margin-top-4","data-testid":"submit-button"}"
+    data-testid="submit-button"
+    disabled={false}
+    type="submit"
+  >
+    Submit
+  </div>
+</form>
+`;
+
+exports[`with title and description from both checkboxes 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+    data-mock-props="{"error":false,"className":"form-group field field-array"}"
+    data-testid="mock-FormGroup"
+    error={false}
+  >
+    <div>
+      <label
+        error={false}
+        htmlFor="root"
+      >
+        My Field
+      </label>
+      <div
+        aria-describedby="root__error root__description root__help root__examples"
+        autoFocus={false}
+        data-mock-props="{"id":"root","name":"root","value":[],"disabled":false,"autoFocus":false,"required":false,"multiple":false,"aria-describedby":"root__error root__description root__help root__examples"}"
+        data-testid="mock-Select"
+        disabled={false}
+        id="root"
+        multiple={false}
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        required={false}
+        value={[]}
+      >
+        <option
+          value=""
+        />
+        <option
+          disabled={false}
+          value="a"
+        >
+          a
+        </option>
+        <option
+          disabled={false}
+          value="b"
+        >
+          b
+        </option>
+        <option
+          disabled={false}
+          value="c"
+        >
+          c
+        </option>
+      </div>
+    </div>
+     
+     
+     
+  </div>
+  <div
+    className="usa-button  margin-top-4"
+    data-mock-props="{"type":"submit","disabled":false,"className":"usa-button  margin-top-4","data-testid":"submit-button"}"
+    data-testid="submit-button"
+    disabled={false}
+    type="submit"
+  >
+    Submit
+  </div>
+</form>
+`;
+
+exports[`with title and description from both fixed array 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+    data-mock-props="{"error":false,"className":"form-group field field-array"}"
+    data-testid="mock-FormGroup"
+    error={false}
+  >
+    <div
+      className="field field-array field-array-fixed-items rjsf-uswds-array-field-container border border-base-lighter padding-2 margin-left-1"
+    >
+      <div
+        data-mock-props="{}"
+        data-testid="mock-Fieldset"
+      >
+        <legend
+          id="root"
+        >
+          My Field
+        </legend>
+        <div
+          className="usa-prose"
+        >
+           
+          <span>
+            a fancier description
+          </span>
+        </div>
+        <div
+          className="rjsf-uswds-array-item-list"
+        >
+          <div
+            className="array-item"
+            container={true}
+            data-mock-props="{"container":true,"gap":2,"className":"array-item"}"
+            data-testid="mock-Grid"
+            gap={2}
+          >
+            <div
+              className="rjsf-uswds-array-item-content"
+              col="auto"
+              data-mock-props="{"col":"auto","className":"rjsf-uswds-array-item-content"}"
+              data-testid="mock-Grid"
+            >
+              <div
+                className="form-group field field-string"
+                data-mock-props="{"error":false,"className":"form-group field field-string"}"
+                data-testid="mock-FormGroup"
+                error={false}
+              >
+                <div
+                  data-mock-props="{"error":false}"
+                  data-testid="mock-FormGroup"
+                  error={false}
+                >
+                  <div
+                    data-mock-props="{"htmlFor":"root_0","error":false}"
+                    data-testid="mock-Label"
+                    error={false}
+                    htmlFor="root_0"
+                  >
+                    My Item
+                    <span
+                      className="usa-label--required"
+                    >
+                      *
+                    </span>
+                  </div>
+                  <div
+                    aria-describedby="root_0__error root_0__description root_0__help"
+                    className=""
+                    data-mock-props="{"id":"root_0","name":"root_0","className":"","type":"text","value":"","aria-describedby":"root_0__error root_0__description root_0__help"}"
+                    data-testid="mock-TextInput"
+                    id="root_0"
+                    name="root_0"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    type="text"
+                    value=""
+                  />
+                </div>
+                 
+                 
+                 
+              </div>
+            </div>
+          </div>
+          <div
+            className="array-item"
+            container={true}
+            data-mock-props="{"container":true,"gap":2,"className":"array-item"}"
+            data-testid="mock-Grid"
+            gap={2}
+          >
+            <div
+              className="rjsf-uswds-array-item-content"
+              col="auto"
+              data-mock-props="{"col":"auto","className":"rjsf-uswds-array-item-content"}"
+              data-testid="mock-Grid"
+            >
+              <div
+                className="form-group field field-number"
+                data-mock-props="{"error":false,"className":"form-group field field-number"}"
+                data-testid="mock-FormGroup"
+                error={false}
+              >
+                <div
+                  data-mock-props="{"error":false}"
+                  data-testid="mock-FormGroup"
+                  error={false}
+                >
+                  <div
+                    data-mock-props="{"htmlFor":"root_1","error":false}"
+                    data-testid="mock-Label"
+                    error={false}
+                    htmlFor="root_1"
+                  >
+                    My Item
+                    <span
+                      className="usa-label--required"
+                    >
+                      *
+                    </span>
+                  </div>
+                  <div
+                    aria-describedby="root_1__error root_1__description root_1__help"
+                    className=""
+                    data-mock-props="{"id":"root_1","name":"root_1","className":"","type":"number","step":"any","value":"","aria-describedby":"root_1__error root_1__description root_1__help"}"
+                    data-testid="mock-TextInput"
+                    id="root_1"
+                    name="root_1"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    step="any"
+                    type="number"
+                    value=""
+                  />
+                </div>
+                 
+                 
+                 
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+     
+     
+     
+  </div>
+  <div
+    className="usa-button  margin-top-4"
+    data-mock-props="{"type":"submit","disabled":false,"className":"usa-button  margin-top-4","data-testid":"submit-button"}"
+    data-testid="submit-button"
+    disabled={false}
+    type="submit"
+  >
+    Submit
+  </div>
+</form>
+`;
+
+exports[`with title and description from uiSchema array 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+    data-mock-props="{"error":false,"className":"form-group field field-array"}"
+    data-testid="mock-FormGroup"
+    error={false}
+  >
+    <div
+      className="field field-array field-array-of-string rjsf-uswds-array-field-container border border-base-lighter padding-2 margin-left-1"
+    >
+      <div
+        data-mock-props="{}"
+        data-testid="mock-Fieldset"
+      >
+        <legend
+          id="root"
+        >
+          My Field
+        </legend>
+        <div
+          className="usa-prose"
+        >
+           
+          <span>
+            a fancier description
+          </span>
+        </div>
+        <div
+          className="rjsf-uswds-array-item-list"
+        >
+          <div
+            className="margin-top-1"
+            containerSize="fluid"
+            data-mock-props="{"containerSize":"fluid","className":"margin-top-1"}"
+            data-testid="mock-GridContainer"
+          >
+            <div
+              data-mock-props="{"row":true}"
+              data-testid="mock-Grid"
+              row={true}
+            >
+              <div
+                className="array-item-add text-right"
+                col={12}
+                data-mock-props="{"col":12,"className":"array-item-add text-right"}"
+                data-testid="mock-Grid"
+              >
+                <div
+                  aria-label="Add Item"
+                  className="usa-button usa-button--outline usa-button usa-button--outline"
+                  data-mock-props="{"type":"button","className":"usa-button usa-button--outline usa-button usa-button--outline","disabled":false,"uiSchema":{"ui:options":{"title":"My Field","description":"a fancier description"},"items":{"ui:options":{"title":"My Item","description":"a fancier item description"}}},"data-testid":"add-button","aria-label":"Add Item"}"
+                  data-testid="add-button"
+                  disabled={false}
+                  onClick={[Function]}
+                  type="button"
+                  uiSchema={
+                    {
+                      "items": {
+                        "ui:options": {
+                          "description": "a fancier item description",
+                          "title": "My Item",
+                        },
+                      },
+                      "ui:options": {
+                        "description": "a fancier description",
+                        "title": "My Field",
+                      },
+                    }
+                  }
+                >
+                  <div
+                    aria-hidden="true"
+                    data-testid="mock-Icon.Add"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+     
+     
+     
+  </div>
+  <div
+    className="usa-button  margin-top-4"
+    data-mock-props="{"type":"submit","disabled":false,"className":"usa-button  margin-top-4","data-testid":"submit-button"}"
+    data-testid="submit-button"
+    disabled={false}
+    type="submit"
+  >
+    Submit
+  </div>
+</form>
+`;
+
+exports[`with title and description from uiSchema array icons 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+    data-mock-props="{"error":false,"className":"form-group field field-array"}"
+    data-testid="mock-FormGroup"
+    error={false}
+  >
+    <div
+      className="field field-array field-array-of-string rjsf-uswds-array-field-container border border-base-lighter padding-2 margin-left-1"
+    >
+      <div
+        data-mock-props="{}"
+        data-testid="mock-Fieldset"
+      >
+        <legend
+          id="root"
+        >
+          My Field
+        </legend>
+        <div
+          className="usa-prose"
+        >
+           
+          <span>
+            a fancier description
+          </span>
+        </div>
+        <div
+          className="rjsf-uswds-array-item-list"
+        >
+          <div
+            className="array-item"
+            container={true}
+            data-mock-props="{"container":true,"gap":2,"className":"array-item"}"
+            data-testid="mock-Grid"
+            gap={2}
+          >
+            <div
+              className="rjsf-uswds-array-item-content"
+              col="auto"
+              data-mock-props="{"col":"auto","className":"rjsf-uswds-array-item-content"}"
+              data-testid="mock-Grid"
+            >
+              <div
+                className="form-group field field-string"
+                data-mock-props="{"error":false,"className":"form-group field field-string"}"
+                data-testid="mock-FormGroup"
+                error={false}
+              >
+                <div
+                  data-mock-props="{"error":false}"
+                  data-testid="mock-FormGroup"
+                  error={false}
+                >
+                  <div
+                    data-mock-props="{"htmlFor":"root_0","error":false}"
+                    data-testid="mock-Label"
+                    error={false}
+                    htmlFor="root_0"
+                  >
+                    My Item
+                    <span
+                      className="usa-label--required"
+                    >
+                      *
+                    </span>
+                  </div>
+                  <div
+                    aria-describedby="root_0__error root_0__description root_0__help"
+                    className=""
+                    data-mock-props="{"id":"root_0","name":"root_0","className":"","type":"text","value":"a","aria-describedby":"root_0__error root_0__description root_0__help"}"
+                    data-testid="mock-TextInput"
+                    id="root_0"
+                    name="root_0"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    type="text"
+                    value="a"
+                  />
+                </div>
+                 
+                 
+                 
+              </div>
+            </div>
+            <div
+              className="rjsf-uswds-array-item-toolbox"
+              col="auto"
+              data-mock-props="{"col":"auto","className":"rjsf-uswds-array-item-toolbox"}"
+              data-testid="mock-Grid"
+            />
+          </div>
+          <div
+            className="array-item"
+            container={true}
+            data-mock-props="{"container":true,"gap":2,"className":"array-item"}"
+            data-testid="mock-Grid"
+            gap={2}
+          >
+            <div
+              className="rjsf-uswds-array-item-content"
+              col="auto"
+              data-mock-props="{"col":"auto","className":"rjsf-uswds-array-item-content"}"
+              data-testid="mock-Grid"
+            >
+              <div
+                className="form-group field field-string"
+                data-mock-props="{"error":false,"className":"form-group field field-string"}"
+                data-testid="mock-FormGroup"
+                error={false}
+              >
+                <div
+                  data-mock-props="{"error":false}"
+                  data-testid="mock-FormGroup"
+                  error={false}
+                >
+                  <div
+                    data-mock-props="{"htmlFor":"root_1","error":false}"
+                    data-testid="mock-Label"
+                    error={false}
+                    htmlFor="root_1"
+                  >
+                    My Item
+                    <span
+                      className="usa-label--required"
+                    >
+                      *
+                    </span>
+                  </div>
+                  <div
+                    aria-describedby="root_1__error root_1__description root_1__help"
+                    className=""
+                    data-mock-props="{"id":"root_1","name":"root_1","className":"","type":"text","value":"b","aria-describedby":"root_1__error root_1__description root_1__help"}"
+                    data-testid="mock-TextInput"
+                    id="root_1"
+                    name="root_1"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    type="text"
+                    value="b"
+                  />
+                </div>
+                 
+                 
+                 
+              </div>
+            </div>
+            <div
+              className="rjsf-uswds-array-item-toolbox"
+              col="auto"
+              data-mock-props="{"col":"auto","className":"rjsf-uswds-array-item-toolbox"}"
+              data-testid="mock-Grid"
+            />
+          </div>
+          <div
+            className="margin-top-1"
+            containerSize="fluid"
+            data-mock-props="{"containerSize":"fluid","className":"margin-top-1"}"
+            data-testid="mock-GridContainer"
+          >
+            <div
+              data-mock-props="{"row":true}"
+              data-testid="mock-Grid"
+              row={true}
+            >
+              <div
+                className="array-item-add text-right"
+                col={12}
+                data-mock-props="{"col":12,"className":"array-item-add text-right"}"
+                data-testid="mock-Grid"
+              >
+                <div
+                  aria-label="Add Item"
+                  className="usa-button usa-button--outline usa-button usa-button--outline"
+                  data-mock-props="{"type":"button","className":"usa-button usa-button--outline usa-button usa-button--outline","disabled":false,"uiSchema":{"ui:copyable":true,"ui:options":{"title":"My Field","description":"a fancier description"},"items":{"ui:options":{"title":"My Item","description":"a fancier item description"}}},"data-testid":"add-button","aria-label":"Add Item"}"
+                  data-testid="add-button"
+                  disabled={false}
+                  onClick={[Function]}
+                  type="button"
+                  uiSchema={
+                    {
+                      "items": {
+                        "ui:options": {
+                          "description": "a fancier item description",
+                          "title": "My Item",
+                        },
+                      },
+                      "ui:copyable": true,
+                      "ui:options": {
+                        "description": "a fancier description",
+                        "title": "My Field",
+                      },
+                    }
+                  }
+                >
+                  <div
+                    aria-hidden="true"
+                    data-testid="mock-Icon.Add"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+     
+     
+     
+  </div>
+  <div
+    className="usa-button  margin-top-4"
+    data-mock-props="{"type":"submit","disabled":false,"className":"usa-button  margin-top-4","data-testid":"submit-button"}"
+    data-testid="submit-button"
+    disabled={false}
+    type="submit"
+  >
+    Submit
+  </div>
+</form>
+`;
+
+exports[`with title and description from uiSchema checkboxes 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+    data-mock-props="{"error":false,"className":"form-group field field-array"}"
+    data-testid="mock-FormGroup"
+    error={false}
+  >
+    <div>
+      <label
+        error={false}
+        htmlFor="root"
+      >
+        My Field
+      </label>
+      <div
+        aria-describedby="root__error root__description root__help"
+        autoFocus={false}
+        data-mock-props="{"id":"root","name":"root","value":[],"disabled":false,"autoFocus":false,"required":false,"multiple":false,"aria-describedby":"root__error root__description root__help"}"
+        data-testid="mock-Select"
+        disabled={false}
+        id="root"
+        multiple={false}
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        required={false}
+        value={[]}
+      >
+        <option
+          value=""
+        />
+        <option
+          disabled={false}
+          value="a"
+        >
+          a
+        </option>
+        <option
+          disabled={false}
+          value="b"
+        >
+          b
+        </option>
+        <option
+          disabled={false}
+          value="c"
+        >
+          c
+        </option>
+      </div>
+    </div>
+     
+     
+     
+  </div>
+  <div
+    className="usa-button  margin-top-4"
+    data-mock-props="{"type":"submit","disabled":false,"className":"usa-button  margin-top-4","data-testid":"submit-button"}"
+    data-testid="submit-button"
+    disabled={false}
+    type="submit"
+  >
+    Submit
+  </div>
+</form>
+`;
+
+exports[`with title and description from uiSchema fixed array 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+    data-mock-props="{"error":false,"className":"form-group field field-array"}"
+    data-testid="mock-FormGroup"
+    error={false}
+  >
+    <div
+      className="field field-array field-array-fixed-items rjsf-uswds-array-field-container border border-base-lighter padding-2 margin-left-1"
+    >
+      <div
+        data-mock-props="{}"
+        data-testid="mock-Fieldset"
+      >
+        <legend
+          id="root"
+        >
+          My Field
+        </legend>
+        <div
+          className="usa-prose"
+        >
+           
+          <span>
+            a fancier description
+          </span>
+        </div>
+        <div
+          className="rjsf-uswds-array-item-list"
+        >
+          <div
+            className="array-item"
+            container={true}
+            data-mock-props="{"container":true,"gap":2,"className":"array-item"}"
+            data-testid="mock-Grid"
+            gap={2}
+          >
+            <div
+              className="rjsf-uswds-array-item-content"
+              col="auto"
+              data-mock-props="{"col":"auto","className":"rjsf-uswds-array-item-content"}"
+              data-testid="mock-Grid"
+            >
+              <div
+                className="form-group field field-string"
+                data-mock-props="{"error":false,"className":"form-group field field-string"}"
+                data-testid="mock-FormGroup"
+                error={false}
+              >
+                <div
+                  data-mock-props="{"error":false}"
+                  data-testid="mock-FormGroup"
+                  error={false}
+                >
+                  <div
+                    data-mock-props="{"htmlFor":"root_0","error":false}"
+                    data-testid="mock-Label"
+                    error={false}
+                    htmlFor="root_0"
+                  >
+                    My Item
+                    <span
+                      className="usa-label--required"
+                    >
+                      *
+                    </span>
+                  </div>
+                  <div
+                    aria-describedby="root_0__error root_0__description root_0__help"
+                    className=""
+                    data-mock-props="{"id":"root_0","name":"root_0","className":"","type":"text","value":"","aria-describedby":"root_0__error root_0__description root_0__help"}"
+                    data-testid="mock-TextInput"
+                    id="root_0"
+                    name="root_0"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    type="text"
+                    value=""
+                  />
+                </div>
+                 
+                 
+                 
+              </div>
+            </div>
+          </div>
+          <div
+            className="array-item"
+            container={true}
+            data-mock-props="{"container":true,"gap":2,"className":"array-item"}"
+            data-testid="mock-Grid"
+            gap={2}
+          >
+            <div
+              className="rjsf-uswds-array-item-content"
+              col="auto"
+              data-mock-props="{"col":"auto","className":"rjsf-uswds-array-item-content"}"
+              data-testid="mock-Grid"
+            >
+              <div
+                className="form-group field field-number"
+                data-mock-props="{"error":false,"className":"form-group field field-number"}"
+                data-testid="mock-FormGroup"
+                error={false}
+              >
+                <div
+                  data-mock-props="{"error":false}"
+                  data-testid="mock-FormGroup"
+                  error={false}
+                >
+                  <div
+                    data-mock-props="{"htmlFor":"root_1","error":false}"
+                    data-testid="mock-Label"
+                    error={false}
+                    htmlFor="root_1"
+                  >
+                    My Item
+                    <span
+                      className="usa-label--required"
+                    >
+                      *
+                    </span>
+                  </div>
+                  <div
+                    aria-describedby="root_1__error root_1__description root_1__help"
+                    className=""
+                    data-mock-props="{"id":"root_1","name":"root_1","className":"","type":"number","step":"any","value":"","aria-describedby":"root_1__error root_1__description root_1__help"}"
+                    data-testid="mock-TextInput"
+                    id="root_1"
+                    name="root_1"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    step="any"
+                    type="number"
+                    value=""
+                  />
+                </div>
+                 
+                 
+                 
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+     
+     
+     
+  </div>
+  <div
+    className="usa-button  margin-top-4"
+    data-mock-props="{"type":"submit","disabled":false,"className":"usa-button  margin-top-4","data-testid":"submit-button"}"
+    data-testid="submit-button"
+    disabled={false}
+    type="submit"
+  >
+    Submit
+  </div>
+</form>
+`;
+
+exports[`with title and description with global label off array 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+    data-mock-props="{"error":false,"className":"form-group field field-array"}"
+    data-testid="mock-FormGroup"
+    error={false}
+  >
+    <div
+      className="field field-array field-array-of-string rjsf-uswds-array-field-container border border-base-lighter padding-2 margin-left-1"
+    >
+      <div
+        data-mock-props="{}"
+        data-testid="mock-Fieldset"
+      >
+        <legend
+          id="root"
+        >
+          Test field
+        </legend>
+        <div
+          className="usa-prose"
+        >
+           
+          <span>
+            a test description
+          </span>
+        </div>
+        <div
+          className="rjsf-uswds-array-item-list"
+        >
+          <div
+            className="margin-top-1"
+            containerSize="fluid"
+            data-mock-props="{"containerSize":"fluid","className":"margin-top-1"}"
+            data-testid="mock-GridContainer"
+          >
+            <div
+              data-mock-props="{"row":true}"
+              data-testid="mock-Grid"
+              row={true}
+            >
+              <div
+                className="array-item-add text-right"
+                col={12}
+                data-mock-props="{"col":12,"className":"array-item-add text-right"}"
+                data-testid="mock-Grid"
+              >
+                <div
+                  aria-label="Add Item"
+                  className="usa-button usa-button--outline usa-button usa-button--outline"
+                  data-mock-props="{"type":"button","className":"usa-button usa-button--outline usa-button usa-button--outline","disabled":false,"uiSchema":{"ui:globalOptions":{"label":false}},"data-testid":"add-button","aria-label":"Add Item"}"
+                  data-testid="add-button"
+                  disabled={false}
+                  onClick={[Function]}
+                  type="button"
+                  uiSchema={
+                    {
+                      "ui:globalOptions": {
+                        "label": false,
+                      },
+                    }
+                  }
+                >
+                  <div
+                    aria-hidden="true"
+                    data-testid="mock-Icon.Add"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+     
+     
+     
+  </div>
+  <div
+    className="usa-button  margin-top-4"
+    data-mock-props="{"type":"submit","disabled":false,"className":"usa-button  margin-top-4","data-testid":"submit-button"}"
+    data-testid="submit-button"
+    disabled={false}
+    type="submit"
+  >
+    Submit
+  </div>
+</form>
+`;
+
+exports[`with title and description with global label off array icons 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+    data-mock-props="{"error":false,"className":"form-group field field-array"}"
+    data-testid="mock-FormGroup"
+    error={false}
+  >
+    <div
+      className="field field-array field-array-of-string rjsf-uswds-array-field-container border border-base-lighter padding-2 margin-left-1"
+    >
+      <div
+        data-mock-props="{}"
+        data-testid="mock-Fieldset"
+      >
+        <legend
+          id="root"
+        >
+          Test field
+        </legend>
+        <div
+          className="usa-prose"
+        >
+           
+          <span>
+            a test description
+          </span>
+        </div>
+        <div
+          className="rjsf-uswds-array-item-list"
+        >
+          <div
+            className="array-item"
+            container={true}
+            data-mock-props="{"container":true,"gap":2,"className":"array-item"}"
+            data-testid="mock-Grid"
+            gap={2}
+          >
+            <div
+              className="rjsf-uswds-array-item-content"
+              col="auto"
+              data-mock-props="{"col":"auto","className":"rjsf-uswds-array-item-content"}"
+              data-testid="mock-Grid"
+            >
+              <div
+                className="form-group field field-string"
+                data-mock-props="{"error":false,"className":"form-group field field-string"}"
+                data-testid="mock-FormGroup"
+                error={false}
+              >
+                <div
+                  data-mock-props="{"error":false}"
+                  data-testid="mock-FormGroup"
+                  error={false}
+                >
+                  <div
+                    aria-describedby="root_0__error root_0__description root_0__help"
+                    className=""
+                    data-mock-props="{"id":"root_0","name":"root_0","className":"","type":"text","value":"a","aria-describedby":"root_0__error root_0__description root_0__help"}"
+                    data-testid="mock-TextInput"
+                    id="root_0"
+                    name="root_0"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    type="text"
+                    value="a"
+                  />
+                </div>
+                 
+                 
+                 
+              </div>
+            </div>
+            <div
+              className="rjsf-uswds-array-item-toolbox"
+              col="auto"
+              data-mock-props="{"col":"auto","className":"rjsf-uswds-array-item-toolbox"}"
+              data-testid="mock-Grid"
+            />
+          </div>
+          <div
+            className="array-item"
+            container={true}
+            data-mock-props="{"container":true,"gap":2,"className":"array-item"}"
+            data-testid="mock-Grid"
+            gap={2}
+          >
+            <div
+              className="rjsf-uswds-array-item-content"
+              col="auto"
+              data-mock-props="{"col":"auto","className":"rjsf-uswds-array-item-content"}"
+              data-testid="mock-Grid"
+            >
+              <div
+                className="form-group field field-string"
+                data-mock-props="{"error":false,"className":"form-group field field-string"}"
+                data-testid="mock-FormGroup"
+                error={false}
+              >
+                <div
+                  data-mock-props="{"error":false}"
+                  data-testid="mock-FormGroup"
+                  error={false}
+                >
+                  <div
+                    aria-describedby="root_1__error root_1__description root_1__help"
+                    className=""
+                    data-mock-props="{"id":"root_1","name":"root_1","className":"","type":"text","value":"b","aria-describedby":"root_1__error root_1__description root_1__help"}"
+                    data-testid="mock-TextInput"
+                    id="root_1"
+                    name="root_1"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    type="text"
+                    value="b"
+                  />
+                </div>
+                 
+                 
+                 
+              </div>
+            </div>
+            <div
+              className="rjsf-uswds-array-item-toolbox"
+              col="auto"
+              data-mock-props="{"col":"auto","className":"rjsf-uswds-array-item-toolbox"}"
+              data-testid="mock-Grid"
+            />
+          </div>
+          <div
+            className="margin-top-1"
+            containerSize="fluid"
+            data-mock-props="{"containerSize":"fluid","className":"margin-top-1"}"
+            data-testid="mock-GridContainer"
+          >
+            <div
+              data-mock-props="{"row":true}"
+              data-testid="mock-Grid"
+              row={true}
+            >
+              <div
+                className="array-item-add text-right"
+                col={12}
+                data-mock-props="{"col":12,"className":"array-item-add text-right"}"
+                data-testid="mock-Grid"
+              >
+                <div
+                  aria-label="Add Item"
+                  className="usa-button usa-button--outline usa-button usa-button--outline"
+                  data-mock-props="{"type":"button","className":"usa-button usa-button--outline usa-button usa-button--outline","disabled":false,"uiSchema":{"ui:globalOptions":{"label":false},"ui:options":{"copyable":true}},"data-testid":"add-button","aria-label":"Add Item"}"
+                  data-testid="add-button"
+                  disabled={false}
+                  onClick={[Function]}
+                  type="button"
+                  uiSchema={
+                    {
+                      "ui:globalOptions": {
+                        "label": false,
+                      },
+                      "ui:options": {
+                        "copyable": true,
+                      },
+                    }
+                  }
+                >
+                  <div
+                    aria-hidden="true"
+                    data-testid="mock-Icon.Add"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+     
+     
+     
+  </div>
+  <div
+    className="usa-button  margin-top-4"
+    data-mock-props="{"type":"submit","disabled":false,"className":"usa-button  margin-top-4","data-testid":"submit-button"}"
+    data-testid="submit-button"
+    disabled={false}
+    type="submit"
+  >
+    Submit
+  </div>
+</form>
+`;
+
+exports[`with title and description with global label off checkboxes 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+    data-mock-props="{"error":false,"className":"form-group field field-array"}"
+    data-testid="mock-FormGroup"
+    error={false}
+  >
+    <div>
+      <label
+        error={false}
+        htmlFor="root"
+      >
+        Test field
+      </label>
+      <div
+        aria-describedby="root__error root__description root__help root__examples"
+        autoFocus={false}
+        data-mock-props="{"id":"root","name":"root","value":[],"disabled":false,"autoFocus":false,"required":false,"multiple":false,"aria-describedby":"root__error root__description root__help root__examples"}"
+        data-testid="mock-Select"
+        disabled={false}
+        id="root"
+        multiple={false}
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        required={false}
+        value={[]}
+      >
+        <option
+          value=""
+        />
+        <option
+          disabled={false}
+          value="a"
+        >
+          a
+        </option>
+        <option
+          disabled={false}
+          value="b"
+        >
+          b
+        </option>
+        <option
+          disabled={false}
+          value="c"
+        >
+          c
+        </option>
+      </div>
+    </div>
+     
+     
+     
+  </div>
+  <div
+    className="usa-button  margin-top-4"
+    data-mock-props="{"type":"submit","disabled":false,"className":"usa-button  margin-top-4","data-testid":"submit-button"}"
+    data-testid="submit-button"
+    disabled={false}
+    type="submit"
+  >
+    Submit
+  </div>
+</form>
+`;
+
+exports[`with title and description with global label off fixed array 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group field field-array"
+    data-mock-props="{"error":false,"className":"form-group field field-array"}"
+    data-testid="mock-FormGroup"
+    error={false}
+  >
+    <div
+      className="field field-array field-array-fixed-items rjsf-uswds-array-field-container border border-base-lighter padding-2 margin-left-1"
+    >
+      <div
+        data-mock-props="{}"
+        data-testid="mock-Fieldset"
+      >
+        <legend
+          id="root"
+        >
+          Test field
+        </legend>
+        <div
+          className="usa-prose"
+        >
+           
+          <span>
+            a test description
+          </span>
+        </div>
+        <div
+          className="rjsf-uswds-array-item-list"
+        >
+          <div
+            className="array-item"
+            container={true}
+            data-mock-props="{"container":true,"gap":2,"className":"array-item"}"
+            data-testid="mock-Grid"
+            gap={2}
+          >
+            <div
+              className="rjsf-uswds-array-item-content"
+              col="auto"
+              data-mock-props="{"col":"auto","className":"rjsf-uswds-array-item-content"}"
+              data-testid="mock-Grid"
+            >
+              <div
+                className="form-group field field-string"
+                data-mock-props="{"error":false,"className":"form-group field field-string"}"
+                data-testid="mock-FormGroup"
+                error={false}
+              >
+                <div
+                  data-mock-props="{"error":false}"
+                  data-testid="mock-FormGroup"
+                  error={false}
+                >
+                  <div
+                    aria-describedby="root_0__error root_0__description root_0__help"
+                    className=""
+                    data-mock-props="{"id":"root_0","name":"root_0","className":"","type":"text","value":"","aria-describedby":"root_0__error root_0__description root_0__help"}"
+                    data-testid="mock-TextInput"
+                    id="root_0"
+                    name="root_0"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    type="text"
+                    value=""
+                  />
+                </div>
+                 
+                 
+                 
+              </div>
+            </div>
+          </div>
+          <div
+            className="array-item"
+            container={true}
+            data-mock-props="{"container":true,"gap":2,"className":"array-item"}"
+            data-testid="mock-Grid"
+            gap={2}
+          >
+            <div
+              className="rjsf-uswds-array-item-content"
+              col="auto"
+              data-mock-props="{"col":"auto","className":"rjsf-uswds-array-item-content"}"
+              data-testid="mock-Grid"
+            >
+              <div
+                className="form-group field field-number"
+                data-mock-props="{"error":false,"className":"form-group field field-number"}"
+                data-testid="mock-FormGroup"
+                error={false}
+              >
+                <div
+                  data-mock-props="{"error":false}"
+                  data-testid="mock-FormGroup"
+                  error={false}
+                >
+                  <div
+                    aria-describedby="root_1__error root_1__description root_1__help"
+                    className=""
+                    data-mock-props="{"id":"root_1","name":"root_1","className":"","type":"number","step":"any","value":"","aria-describedby":"root_1__error root_1__description root_1__help"}"
+                    data-testid="mock-TextInput"
+                    id="root_1"
+                    name="root_1"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    step="any"
+                    type="number"
+                    value=""
+                  />
+                </div>
+                 
+                 
+                 
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+     
+     
+     
+  </div>
+  <div
+    className="usa-button  margin-top-4"
+    data-mock-props="{"type":"submit","disabled":false,"className":"usa-button  margin-top-4","data-testid":"submit-button"}"
+    data-testid="submit-button"
+    disabled={false}
+    type="submit"
+  >
+    Submit
+  </div>
+</form>
+`;

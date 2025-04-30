@@ -1,9 +1,21 @@
 {
-    "snapshotSerializers": ["@emotion/jest/serializer"],
-    "testEnvironment": "jsdom",
-    "testEnvironmentOptions": {
-      "browsers": ["chrome", "firefox", "safari"]
-    },
-    "transformIgnorePatterns": ["/node_modules/(?!nanoid)"]
+  "rootDir": ".",
+  "testEnvironment": "jsdom",
+  "moduleNameMapper": {
+    "^@rjsf/core/(.*)$": "<rootDir>/../core/src/$1",
+    "^@rjsf/core$": "<rootDir>/../core/src",
+    "^@rjsf/utils/(.*)$": "<rootDir>/../utils/src/$1",
+    "^@rjsf/utils$": "<rootDir>/../utils/src",
+    "^@rjsf/validator-ajv8/(.*)$": "<rootDir>/../validator-ajv8/src/$1",
+    "^@rjsf/validator-ajv8$": "<rootDir>/../validator-ajv8/src"
+  },
+  "transformIgnorePatterns": [
+    "/node_modules/(?!nanoid)"
+  ],
+  "transform": {
+    "^.+\\.(js|jsx|ts|tsx)$": "babel-jest"
+  },
+  "setupFilesAfterEnv": [
+    "<rootDir>/src/setupTests.ts"
+  ]
 }
-  
