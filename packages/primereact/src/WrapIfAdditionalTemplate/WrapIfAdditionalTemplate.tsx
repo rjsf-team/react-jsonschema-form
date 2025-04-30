@@ -67,6 +67,7 @@ export default function WrapIfAdditionalTemplate<
       <div>
         <RemoveButton
           id={buttonId<T>(id, 'remove')}
+          className='rjsf-object-property-remove'
           disabled={disabled || readonly}
           onClick={onDropPropertyClick(label)}
           registry={registry}

@@ -75,6 +75,7 @@ export default function ObjectFieldTemplate<
         <div style={{ marginTop: '1rem', textAlign: 'right' }}>
           <AddButton
             id={buttonId<T>(idSchema, 'add')}
+            className='rjsf-object-property-expand'
             icon='pi pi-plus'
             onClick={onAddClick(schema)}
             disabled={disabled || readonly}
