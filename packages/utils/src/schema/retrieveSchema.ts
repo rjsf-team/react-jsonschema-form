@@ -35,6 +35,7 @@ import {
 } from '../types';
 import getFirstMatchingOption from './getFirstMatchingOption';
 import deepEquals from '../deepEquals';
+import isEmpty from 'lodash/isEmpty';
 
 /** Retrieves an expanded schema that has had all of its conditions, additional properties, references and dependencies
  * resolved and merged into the `schema` given a `validator`, `rootSchema` and `rawFormData` that is used to do the
@@ -185,6 +186,27 @@ export function getAllPermutationsOfXxxOf<S extends StrictRJSFSchema = RJSFSchem
   );
 
   return allPermutations;
+}
+
+/** Returns the subset of 'patternProperties' specifications that match the given 'key'
+ *
+ * @param schema - The schema whose 'patternProperties' are to be filtered
+ * @param key - The key to match against the 'patternProperties' specifications
+ * @returns - The subset of 'patternProperties' specifications that match the given 'key'
+ */
+export function getMatchingPatternProperties<S extends StrictRJSFSchema = RJSFSchema>(
+  schema: S,
+  key: string,
+): S['patternProperties'] {
+  return Object.keys(schema.patternProperties!)
+    .filter((pattern) => RegExp(pattern).test(key))
+    .reduce(
+      (obj, pattern) => {
+        obj[pattern] = schema.patternProperties![pattern];
+        return obj;
+      },
+      {} as S['patternProperties'],
+    );
 }
 
 /** Resolves references and dependencies within a schema and its 'allOf' children. Passes the `expandAllBranches` flag
@@ -397,16 +419,11 @@ export function stubExistingAdditionalProperties<
       return;
     }
     if (PATTERN_PROPERTIES_KEY in schema) {
-      const patternProperties = Object.keys(schema.patternProperties!)
-        .filter((pattern) => RegExp(pattern).test(key))
-        .reduce((obj, pattern) => {
-          obj[pattern] = schema.patternProperties![pattern];
-          return obj;
-        }, {} as NonNullable<S['patternProperties']>);
-      if (Object.keys(patternProperties).length > 0) {
+      const matchingProperties = getMatchingPatternProperties(schema, key);
+      if (!isEmpty(matchingProperties)) {
         schema.properties[key] = retrieveSchema<T, S, F>(
           validator,
-          { allOf: Object.values(patternProperties) } as S,
+          { allOf: Object.values(matchingProperties) } as S,
           rootSchema,
           formData as T,
           experimental_customMergeAllOf,
@@ -424,7 +441,7 @@ export function stubExistingAdditionalProperties<
             { $ref: get(schema.additionalProperties, [REF_KEY]) } as S,
             rootSchema,
             formData as T,
-            experimental_customMergeAllOf
+            experimental_customMergeAllOf,
           );
         } else if ('type' in schema.additionalProperties!) {
           additionalProperties = { ...schema.additionalProperties };
@@ -545,19 +562,14 @@ export function retrieveSchemaInternal<
     if (PROPERTIES_KEY in resolvedSchema && PATTERN_PROPERTIES_KEY in resolvedSchema) {
       resolvedSchema = Object.keys(resolvedSchema.properties!).reduce(
         (schema, key) => {
-          const patternProperties = Object.keys(schema.patternProperties!)
-            .filter((pattern) => RegExp(pattern).test(key))
-            .reduce((obj, pattern) => {
-              obj[pattern] = schema.patternProperties![pattern];
-              return obj;
-            }, {} as NonNullable<S['patternProperties']>);
-          if (Object.keys(patternProperties).length > 0) {
+          const matchingProperties = getMatchingPatternProperties(schema, key);
+          if (!isEmpty(matchingProperties)) {
             schema.properties[key] = retrieveSchema<T, S, F>(
               validator,
-              { allOf: [schema.properties[key], ...Object.values(patternProperties)] } as S,
+              { allOf: [schema.properties[key], ...Object.values(matchingProperties)] } as S,
               rootSchema,
               rawFormData as T,
-              experimental_customMergeAllOf
+              experimental_customMergeAllOf,
             );
           }
           return schema;
@@ -565,7 +577,7 @@ export function retrieveSchemaInternal<
         {
           ...resolvedSchema,
           properties: { ...resolvedSchema.properties },
-        }
+        },
       );
     }
     const hasAdditionalProperties =

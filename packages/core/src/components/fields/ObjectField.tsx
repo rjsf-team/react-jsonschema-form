@@ -195,13 +195,14 @@ class ObjectField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
    * @param schema - The schema element to which the new property is being added
    */
   handleAddClick = (schema: S) => () => {
-    if (!(schema.patternProperties || schema.additionalProperties)) {
+    if (!(schema.additionalProperties || schema.patternProperties)) {
       return;
     }
     const { formData, onChange, registry } = this.props;
     const newFormData = { ...formData } as T;
     const newKey = this.getAvailableKey('newKey', newFormData);
     if (schema.patternProperties) {
+      // Cast this to make the `set` work properly
       set(newFormData as GenericObjectType, newKey, null);
     } else {
       let type: RJSFSchema['type'] = undefined;

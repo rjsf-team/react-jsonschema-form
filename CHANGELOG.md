@@ -16,16 +16,6 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
-# 6.0.0
-
-## @rjsf/core
-
-- Add support for `patternProperties` [#1944](https://github.com/rjsf-team/react-jsonschema-form/issues/1944)
-
-## @rjsf/utils
-
-- Add support for `patternProperties` [#1944](https://github.com/rjsf-team/react-jsonschema-form/issues/1944)
-
 # 5.24.9
 
 ## @rjsf/antd
