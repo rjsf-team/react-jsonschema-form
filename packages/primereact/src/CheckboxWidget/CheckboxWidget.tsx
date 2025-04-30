@@ -65,10 +65,7 @@ export default function CheckboxWidget<
           registry={registry}
         />
       )}
-      <div
-        className='field-checkbox'
-        style={{ display: 'flex', flexDirection: 'row', gap: '0.5rem', alignItems: 'center' }}
-      >
+      <div style={{ display: 'flex', flexDirection: 'row', gap: '0.5rem', alignItems: 'center' }}>
         <Checkbox
           inputId={id}
           name={id}

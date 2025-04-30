@@ -82,11 +82,7 @@ export default function CheckboxesWidget<
           const checked = enumOptionsIsSelected<S>(option.value, checkboxesValues);
           const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.indexOf(option.value) !== -1;
           return (
-            <div
-              key={index}
-              className='field-checkbox'
-              style={{ display: 'flex', flexDirection: 'row', gap: '0.5rem', alignItems: 'center' }}
-            >
+            <div key={index} style={{ display: 'flex', flexDirection: 'row', gap: '0.5rem', alignItems: 'center' }}>
               <Checkbox
                 inputId={optionId(id, index)}
                 name={id}
