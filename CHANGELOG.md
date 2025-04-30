@@ -15,6 +15,11 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+# 5.24.10
+
+## Dev / docs / playground
+
+- Updated all `package.json` files in the `packages` directories to remove the `exports` blocks, fixing [#4537](https://github.com/rjsf-team/react-jsonschema-form/issues/4537)
 
 # 5.24.9
 
