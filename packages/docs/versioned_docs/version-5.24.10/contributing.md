@@ -66,7 +66,7 @@ The source-code of these snapshot tests reside in the `core` package in the `tes
 In order to support the various themes, the code for the tests are actually functions that take two parameters:
 
 - `Form`: ComponentType&lt;FormProps> - The component from the theme implementation
-- `[customOptions]`: { [key: string]: TestRendererOptions } - an optional map of `react-test-renderer` `TestRendererOptions` implementations that some themes need to be able properly run
+- `[customOptions]`: \{ [key: string]: TestRendererOptions } - an optional map of `react-test-renderer` `TestRendererOptions` implementations that some themes need to be able properly run
 
 There are functions in the `testSnap` directory: `arrayTests`, `formTests` and `objectTests`, each with its own definition of `customOptions`
 

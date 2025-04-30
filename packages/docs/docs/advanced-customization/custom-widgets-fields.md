@@ -7,7 +7,9 @@ The API allows to specify your own custom _widget_ and _field_ components:
 
 ## Customizing the default fields and widgets
 
-You can override any default field and widget, including the internal widgets like the `CheckboxWidget` that `BooleanField` renders for boolean values. You can override any field and widget just by providing the customized fields/widgets in the `fields` and `widgets` props:
+You can override any default field and widget, including the internal widgets like the `CheckboxWidget` that `BooleanField`
+renders for boolean values. You can override any field and widget just by providing the customized fields/widgets in the
+`fields` and `widgets` props:
 
 ```tsx
 import { RJSFSchema, UiSchema, WidgetProps, RegistryWidgetsType } from '@rjsf/utils';
@@ -202,7 +204,7 @@ The following props are passed to custom widget components:
 - `onBlur`: The input blur event handler; call it with the widget id and value;
 - `onFocus`: The input focus event handler; call it with the widget id and value;
 - `options`: A map of options passed as a prop to the component (see [Custom widget options](#custom-widget-options)).
-- `options.enumOptions`: For enum fields, this property contains the list of options for the enum as an array of { label, value } objects. If the enum is defined using the oneOf/anyOf syntax, the entire schema object for each option is appended onto the { schema, label, value } object.
+- `options.enumOptions`: For enum fields, this property contains the list of options for the enum as an array of \{ label, value } objects. If the enum is defined using the oneOf/anyOf syntax, the entire schema object for each option is appended onto the \{ schema, label, value } object.
 - `formContext`: The `formContext` object that you passed to `Form`.
 - `rawErrors`: An array of strings listing all generated error messages from encountered errors for this widget.
 - `registry`: A [registry](#the-registry-object) object (read next).
