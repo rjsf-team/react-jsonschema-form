@@ -1,34 +1,24 @@
 import React from "react";
-import { WidgetProps, schemaRequiresTrueValue } from "@rjsf/utils";
-import { Textarea } from "@trussworks/react-uswds";
-
-// Assuming BaseInputTemplate handles label, help, errors etc.
-import BaseInputTemplate from "../Templates/BaseInputTemplate";
-
-// Define the props for the TextareaWidget, potentially extending WidgetProps
-interface TextareaWidgetProps extends WidgetProps {
-  // Add any specific props if needed
-}
+import { WidgetProps, ariaDescribedByIds, labelValue } from "@rjsf/utils";
+import { Textarea, FormGroup, Label } from "@trussworks/react-uswds";
 
 const TextareaWidget = ({
   id,
-  placeholder = "", // Use default parameter for placeholder
   value,
   required,
   disabled,
-  autofocus = false, // Use default parameter for autofocus
   readonly,
   onBlur,
   onFocus,
   onChange,
-  options = {}, // Use default parameter for options
+  options = {}, // Default options to {}
   schema,
   label,
   hideLabel,
-  rawErrors = [], // Use default parameter for rawErrors
-  formContext,
-  registry,
-}: TextareaWidgetProps) => {
+  rawErrors = [], // Default rawErrors to []
+  placeholder,
+  autofocus,
+}: WidgetProps) => {
   const _onChange = ({
     target: { value: eventValue },
   }: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -43,48 +33,39 @@ const TextareaWidget = ({
   }: React.FocusEvent<HTMLTextAreaElement>) =>
     onFocus(id, eventValue === "" ? options.emptyValue : eventValue);
 
-  const rows = options.rows || 5; // Get rows from options or default to 5
+  const inputProps = {
+    placeholder: placeholder,
+    autoFocus: autofocus,
+  };
+  const rows = typeof options.rows === 'number' ? options.rows : 5;
+  const hasErrors = rawErrors.length > 0;
+  const help = schema.description || options.help;
 
   return (
-    <BaseInputTemplate
-      id={id}
-      label={label}
-      hideLabel={hideLabel}
-      required={required}
-      schema={schema}
-      help={options.help} // Pass help from options if available
-      rawErrors={rawErrors}
-      registry={registry}
-      formContext={formContext}
-      disabled={disabled}
-      readonly={readonly}
-    >
+    <FormGroup error={hasErrors}>
+      {labelValue(
+        <Label htmlFor={id} error={hasErrors}>
+          {label || schema.title}
+          {required && <span className="usa-label--required">*</span>}
+        </Label>,
+        hideLabel
+      )}
+      {help && <span id={`${id}__help`} className="usa-hint">{help}</span>}
       <Textarea
         id={id}
         name={id}
-        className="usa-textarea" // USWDS class
         value={value ? value : ""}
-        placeholder={placeholder}
-        required={schemaRequiresTrueValue(schema)} // Use utility for required
-        disabled={disabled}
-        readOnly={readonly}
-        autoFocus={autofocus}
-        rows={rows} // Use calculated rows
+        disabled={disabled || readonly}
+        rows={rows}
         onBlur={_onBlur}
         onFocus={_onFocus}
         onChange={_onChange}
-        aria-describedby={options.help ? `${id}__help` : undefined} // Add aria-describedby if help exists
+        aria-describedby={ariaDescribedByIds<any>(id, !!help)}
+        required={required}
+        {...inputProps}
       />
-    </BaseInputTemplate>
+    </FormGroup>
   );
 };
-
-// Remove the static defaultProps definition
-/*
-TextareaWidget.defaultProps = {
-  autofocus: false,
-  options: {},
-};
-*/
 
 export default TextareaWidget;

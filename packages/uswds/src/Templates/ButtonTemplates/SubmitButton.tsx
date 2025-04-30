@@ -1,38 +1,34 @@
-import React from 'react';
 import { Button } from '@trussworks/react-uswds';
-import { 
-  SubmitButtonProps, 
-  FormContextType, 
-  RJSFSchema, 
-  StrictRJSFSchema, 
-  getSubmitButtonOptions 
+import {
+  SubmitButtonProps,
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  TranslatableString,
+  getSubmitButtonOptions,
 } from '@rjsf/utils';
 
+/** The `SubmitButton` renders a button that submits the form.
+ *
+ * @param props - The `SubmitButtonProps` for the component
+ */
 export default function SubmitButton<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
->({ submitText, props = {}, uiSchema }: SubmitButtonProps<T, S, F>) {
-  const { norender, submitButtonProps = {}, submitButtonOptions } = getSubmitButtonOptions(uiSchema);
+  F extends FormContextType = any,
+>({ uiSchema, registry }: SubmitButtonProps<T, S, F>) {
+  const { submitText, norender, props: submitButtonProps = {} } = getSubmitButtonOptions<T, S, F>(uiSchema);
   if (norender) {
     return null;
   }
-  
-  // Fix the className concatenation by ensuring both are defined
-  const buttonClassName = [
-    'usa-button',
-    submitButtonProps.className || '',
-    props.className || ''
-  ].filter(Boolean).join(' ');
-
   return (
     <Button
       type="submit"
       {...submitButtonProps}
-      {...props}
-      className={buttonClassName}
+      className={`usa-button ${submitButtonProps.className || ''} margin-top-4`.trim()}
+      data-testid="submit-button"
     >
-      {submitText || submitButtonOptions?.submitText || 'Submit'}
+      {submitText || translateString(TranslatableString.SubmitButton)}
     </Button>
   );
 }

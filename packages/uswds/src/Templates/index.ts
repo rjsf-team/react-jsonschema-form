@@ -6,6 +6,9 @@ import {
   TemplatesType,
   ArrayFieldDescriptionProps,
   ArrayFieldTitleProps,
+  UnsupportedFieldProps,
+  DescriptionFieldProps,
+  TitleFieldProps,
 } from '@rjsf/utils';
 
 import ArrayFieldDescriptionTemplate from './ArrayFieldDescriptionTemplate';
@@ -14,47 +17,39 @@ import ArrayFieldTemplate from './ArrayFieldTemplate';
 import ArrayFieldTitleTemplate from './ArrayFieldTitleTemplate';
 import BaseInputTemplate from './BaseInputTemplate';
 import ButtonTemplates from './ButtonTemplates';
-import DescriptionFieldTemplate from './DescriptionFieldTemplate';
+import DescriptionFieldTemplate from '../FieldDescriptionTemplate/FieldDescriptionTemplate'; // Corrected path
 import ErrorListTemplate from './ErrorListTemplate';
 import FieldTemplate from './FieldTemplate';
 import ObjectFieldTemplate from './ObjectFieldTemplate';
 import TitleFieldTemplate from './TitleFieldTemplate';
 import UnsupportedFieldTemplate from './UnsupportedFieldTemplate';
 import WrapIfAdditionalTemplate from './WrapIfAdditionalTemplate';
+import SubmitButton from './ButtonTemplates/SubmitButton';
+import AddButton from './ButtonTemplates/AddButton';
+import CopyButton from './ButtonTemplates/CopyButton';
+import MoveDownButton from './ButtonTemplates/MoveDownButton';
+import MoveUpButton from './ButtonTemplates/MoveUpButton';
+import RemoveButton from './ButtonTemplates/RemoveButton';
+import HelpTemplate from './HelpTemplate'; // Import the new HelpTemplate
 
-// Wrapper functions to adapt props - Revert to React.createElement
-function ArrayFieldDescriptionWrapper<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
->(props: ArrayFieldDescriptionProps<T, S, F>) {
-  const { description, idRegistry, registry } = props;
-  const id = `${idRegistry?.root || 'array'}__description`; // Construct a suitable ID
-  
-  // Revert to React.createElement
-  return React.createElement(ArrayFieldDescriptionTemplate, { 
-    id, 
-    description, 
-    registry 
-  });
+function DescriptionField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+  props: DescriptionFieldProps<T, S, F>
+) {
+  const { id, description } = props;
+  // Use React.createElement instead of JSX syntax
+  return React.createElement(DescriptionFieldTemplate, { id, description, ...props });
 }
 
-function ArrayFieldTitleWrapper<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
->(props: ArrayFieldTitleProps<T, S, F>) {
-  const { title, idRegistry, required, registry } = props;
-  const id = `${idRegistry?.root || 'array'}__title`; // Construct a suitable ID
-  
-  // Revert to React.createElement
-  return React.createElement(ArrayFieldTitleTemplate, { 
-    id, 
-    title, 
-    required, 
-    registry 
-  });
+function TitleField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+  props: TitleFieldProps<T, S, F>
+) {
+  const { id, title, required } = props;
+  // Use React.createElement instead of JSX syntax
+  return React.createElement(TitleFieldTemplate, { id, title, required, ...props });
 }
+
+// Make UnsupportedField match the expected signature
+const FixedUnsupportedFieldTemplate: ComponentType<UnsupportedFieldProps> = UnsupportedFieldTemplate;
 
 export function generateTemplates<
   T = any,
@@ -62,21 +57,26 @@ export function generateTemplates<
   F extends FormContextType = any,
 >(): TemplatesType<T, S, F> {
   return {
-    // Use the wrapper components and cast them correctly
-    ArrayFieldDescriptionTemplate: ArrayFieldDescriptionWrapper as ComponentType<
-      ArrayFieldDescriptionProps<T, S, F>
-    >,
+    ArrayFieldDescriptionTemplate,
     ArrayFieldItemTemplate,
     ArrayFieldTemplate,
-    ArrayFieldTitleTemplate: ArrayFieldTitleWrapper as ComponentType<ArrayFieldTitleProps<T, S, F>>,
+    ArrayFieldTitleTemplate,
     BaseInputTemplate,
-    ButtonTemplates: ButtonTemplates as unknown as TemplatesType<T, S, F>['ButtonTemplates'],
-    DescriptionFieldTemplate,
+    ButtonTemplates: {
+      AddButton,
+      CopyButton,
+      MoveDownButton,
+      MoveUpButton,
+      RemoveButton,
+      SubmitButton,
+    },
+    DescriptionFieldTemplate: DescriptionField,
     ErrorListTemplate,
     FieldTemplate,
+    HelpTemplate, // Add HelpTemplate to exports
     ObjectFieldTemplate,
-    TitleFieldTemplate,
-    UnsupportedFieldTemplate,
+    TitleFieldTemplate: TitleField,
+    UnsupportedFieldTemplate: FixedUnsupportedFieldTemplate,
     WrapIfAdditionalTemplate,
   };
 }

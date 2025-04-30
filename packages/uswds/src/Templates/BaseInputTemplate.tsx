@@ -9,7 +9,7 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
 } from '@rjsf/utils';
-import { Label, TextInput } from '@trussworks/react-uswds';
+import { FormGroup, Label, TextInput, TextInputProps } from '@trussworks/react-uswds';
 
 /** The `BaseInputTemplate` is the template to use to render the basic `<input>` component for the `core` theme.
  * It is used as the template for rendering many of the <input> based widgets that differ by `type` and options only.
@@ -24,10 +24,7 @@ export default function BaseInputTemplate<
 >(props: BaseInputTemplateProps<T, S, F>) {
   const {
     id,
-    placeholder,
     required,
-    readonly,
-    disabled,
     label,
     hideLabel,
     value,
@@ -35,19 +32,14 @@ export default function BaseInputTemplate<
     onChangeOverride,
     onBlur,
     onFocus,
-    autofocus = false,
     options,
     schema,
     type,
     rawErrors = [],
-    // Unused variables commented out
-    // formContext,
-    // registry,
-    // hideError,
-    // uiSchema,
   } = props;
+
+  // Use getInputProps to handle common input props
   const inputProps = getInputProps<T, S, F>(schema, type, options);
-  // const inputProps = { ...props, ...(options.props || {}) }; // Safely spread options.props
 
   const _onChange = ({ target: { value: eventValue } }: ChangeEvent<HTMLInputElement>) => {
     onChange(eventValue === '' ? options.emptyValue : eventValue);
@@ -56,37 +48,34 @@ export default function BaseInputTemplate<
     onBlur(id, eventValue);
   const _onFocus = ({ target: { value: eventValue } }: FocusEvent<HTMLInputElement>) =>
     onFocus(id, eventValue);
-  const InputElement = type === 'number' || type === 'integer' ? TextInput : TextInput;
+  const inputType = (inputProps.type || type) as TextInputProps['type'];
 
   const hasError = rawErrors.length > 0;
 
   return (
-    <>
+    <FormGroup error={hasError}>
       {labelValue(
-        <Label htmlFor={id}>
+        <Label htmlFor={id} error={hasError}>
           {label || schema.title}
           {required && <span className="usa-label--required">*</span>}
         </Label>,
         hideLabel,
       )}
-      <InputElement
+      {/* If description/help text is needed, it should go here */}
+      <TextInput
         id={id}
         name={id}
-        placeholder={placeholder}
-        autoFocus={autofocus}
-        required={required}
-        disabled={disabled}
-        readOnly={readonly}
         className={hasError ? 'usa-input--error' : ''}
         list={schema.examples ? examplesId<T>(id) : undefined}
         {...inputProps}
+        type={inputType}
         value={value || value === 0 ? value : ''}
         onChange={onChangeOverride || _onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
         aria-describedby={ariaDescribedByIds<T>(id, !!schema.examples)}
-        type={type}
       />
+      {/* Datalist remains outside FormGroup or adjust as needed */}
       {Array.isArray(schema.examples) && (
         <datalist id={examplesId<T>(id)}>
           {(schema.examples as string[])
@@ -96,6 +85,6 @@ export default function BaseInputTemplate<
             })}
         </datalist>
       )}
-    </>
+    </FormGroup>
   );
 }

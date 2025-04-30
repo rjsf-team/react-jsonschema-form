@@ -1,27 +1,28 @@
-import React from 'react';
-import { Button } from '@trussworks/react-uswds';
-import { 
-  CopyButtonProps, 
-  FormContextType, 
-  RJSFSchema, 
-  StrictRJSFSchema, 
-  TranslatableString 
-} from '@rjsf/utils';
+import { Button, Icon } from '@trussworks/react-uswds'; // Import Icon
+import { IconButtonProps, FormContextType, RJSFSchema, StrictRJSFSchema, TranslatableString } from '@rjsf/utils';
 
+/** The `CopyButton` renders a button that copies the data for an array item.
+ *
+ * @param props - The `IconButtonProps` for the component
+ */
 export default function CopyButton<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
->({ className, onClick, disabled, registry }: CopyButtonProps<T, S, F>) {
-  const { translateString } = registry;
+  F extends FormContextType = any,
+>(props: IconButtonProps<T, S, F>) { // Use IconButtonProps
+  const { icon, iconType, registry, ...otherProps } = props;
+  const translatedLabel = registry.translateString(TranslatableString.CopyButton);
   return (
-    <Button 
-      className={className}
-      onClick={onClick}
-      disabled={disabled}
+    <Button
       type="button"
+      {...otherProps}
+      data-testid="copy-button"
+      aria-label={translatedLabel}
+      className={`usa-button usa-button--unstyled ${otherProps.className || ''}`.trim()}
     >
-      {translateString(TranslatableString.CopyButton)}
+      {/* Use Icon.ContentCopy */}
+      <Icon.ContentCopy aria-hidden="true" />
+      {/* <span className="usa-sr-only">{translatedLabel}</span> */}
     </Button>
   );
 }

@@ -84,7 +84,7 @@ export default function BaseInputTemplate<
         onChange={onChangeOverride || _onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
-        aria-describedby={ariaDescribedByIds<T>(id, !!schema.description, !!schema.examples)}
+        aria-describedby={ariaDescribedByIds<T>(id, !!schema.examples)} // Pass only id and hasExamples
         type={type}
       />
       {Array.isArray(schema.examples) && (

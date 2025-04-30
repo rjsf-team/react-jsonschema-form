@@ -1,4 +1,3 @@
-import React from 'react';
 import { ArrayFieldTitleProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 
 /** The `ArrayFieldTitleTemplate` component renders the title for an array field

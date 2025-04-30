@@ -6,8 +6,10 @@ import {
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
+  isObject,
 } from '@rjsf/utils';
-import { Fieldset, Grid } from '@trussworks/react-uswds';
+import React from 'react';
+import { Fieldset, Grid, GridContainer } from '@trussworks/react-uswds';
 
 /** The `ArrayFieldTemplate` component is the template used to render all items in an array.
  *
@@ -53,8 +55,19 @@ export default function ArrayFieldTemplate<
   const fieldDescription = uiOptions.description ?? schema.description;
   const hideTitle = !fieldTitle;
 
+  // Determine if the array is likely rendered as checkboxes
+  const isCheckboxes =
+    uiOptions['ui:widget'] === 'checkboxes' ||
+    (isObject(schema.items) && Array.isArray((schema.items as RJSFSchema).enum) && schema.uniqueItems);
+
+  // Define class names for styling - conditionally apply border/indentation
+  const outerContainerClass = !isCheckboxes
+    ? "rjsf-uswds-array-field-container border border-base-lighter padding-2 margin-left-1"
+    : "rjsf-uswds-array-field-container";
+  const itemContainerClass = "rjsf-uswds-array-item-list";
+
   return (
-    <div className={className}>
+    <div className={`${className} ${outerContainerClass}`}>
       <Fieldset>
         {!hideTitle && (
           <ArrayFieldTitleTemplate
@@ -77,25 +90,28 @@ export default function ArrayFieldTemplate<
             registry={registry}
           />
         )}
-        <div key={`array-item-list-${idSchema.$id}`} className="rjsf-uswds-array-item-list">
+        <div key={`array-item-list-${idSchema.$id}`} className={itemContainerClass}>
           {items &&
             items.map(({ key, ...itemProps }: ArrayFieldTemplateItemType<T, S, F>) => (
               <ArrayFieldItemTemplate key={key} {...itemProps} />
             ))}
+
+          {canAdd && (
+            <GridContainer containerSize="fluid" className="margin-top-1">
+              <Grid row>
+                <Grid col={12} className="array-item-add text-right">
+                  <AddButton
+                    className="usa-button usa-button--outline"
+                    onClick={onAddClick}
+                    disabled={disabled || readonly}
+                    uiSchema={uiSchema}
+                    registry={registry}
+                  />
+                </Grid>
+              </Grid>
+            </GridContainer>
+          )}
         </div>
-        {canAdd && (
-          <div className="row rjsf-uswds-array-add-button">
-            <Grid col="auto">
-              <AddButton
-                className="array-item-add"
-                onClick={onAddClick}
-                disabled={disabled || readonly}
-                uiSchema={uiSchema}
-                registry={registry}
-              />
-            </Grid>
-          </div>
-        )}
       </Fieldset>
     </div>
   );

@@ -1,15 +1,9 @@
-import {
-  FieldTemplateProps,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  getTemplate,
-  getUiOptions,
-} from '@rjsf/utils';
-import { FormGroup, Label } from '@trussworks/react-uswds';
+import { FieldTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema, getTemplate, getUiOptions } from '@rjsf/utils';
+import React from 'react';
+import { FormGroup } from '@trussworks/react-uswds';
 
 /** The `FieldTemplate` component is the template used by `SchemaField` to render any field. It renders the field
- * content, (label, description, children, errors and help) inside of a `WrapIfAdditional` component.
+ * content, (label, description, children, errors and help) inside of a `FormGroup` component.
  *
  * @param props - The `FieldTemplateProps` for this component
  */
@@ -20,58 +14,38 @@ export default function FieldTemplate<
 >(props: FieldTemplateProps<T, S, F>) {
   const {
     id,
-    children,
+    children, // The actual field/widget component (e.g., CheckboxWidget)
     classNames,
     style,
-    displayLabel,
-    errors,
-    help,
     hidden,
-    label,
-    required,
-    schema,
-    uiSchema,
-    registry,
+    errors, // Rendered ErrorList component
+    help, // Rendered HelpTemplate component (Alert)
+    uiSchema, // Used for WrapIfAdditionalTemplate options
+    registry, // Used for WrapIfAdditionalTemplate retrieval
+    rawErrors = [], // Need rawErrors to determine error state for FormGroup
   } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const WrapIfAdditionalTemplate = getTemplate<'WrapIfAdditionalTemplate', T, S, F>(
     'WrapIfAdditionalTemplate',
     registry,
-    uiOptions,
-  );
-  const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
-    'DescriptionFieldTemplate',
-    registry,
-    uiOptions,
+    uiOptions
   );
 
   if (hidden) {
     return <div style={{ display: 'none' }}>{children}</div>;
   }
 
-  const hasErrors = errors && errors.props.errors && errors.props.errors.length > 0;
+  const hasErrors = rawErrors.length > 0;
 
+  // FieldTemplate provides the wrapper structure.
+  // WrapIfAdditionalTemplate handles layout for additional props if necessary.
+  // The FormGroup handles standard field structure and error state.
   return (
     <WrapIfAdditionalTemplate {...props}>
       <FormGroup error={hasErrors} className={classNames} style={style}>
-        {displayLabel && (
-          <Label htmlFor={id}>
-            {label}
-            {required && <span className="required">*</span>}
-          </Label>
-        )}
-        {displayLabel && uiOptions.description !== false && (
-          <DescriptionFieldTemplate
-            id={`${id}__description`}
-            description={uiOptions.description || schema.description || ''}
-            registry={registry}
-            schema={schema}
-            uiSchema={uiSchema}
-          />
-        )}
-        {children}
-        {errors}
-        {help}
+        {children} {/* Render the CheckboxWidget */}
+        {errors} {/* Render ErrorList below the widget */}
+        {help} {/* Render HelpTemplate (Alert) below the widget */}
       </FormGroup>
     </WrapIfAdditionalTemplate>
   );

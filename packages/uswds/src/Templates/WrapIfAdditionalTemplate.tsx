@@ -1,15 +1,16 @@
 import { FocusEvent } from 'react';
-import { FormGroup, Grid, GridContainer, Label } from '@trussworks/react-uswds';
+import { Grid, Label, Button, TextInput } from '@trussworks/react-uswds';
 import {
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
   WrapIfAdditionalTemplateProps,
-  TranslatableString
+  ADDITIONAL_PROPERTY_FLAG,
+  UIOptionsType,
+  getTemplate,
+  getUiOptions,
+  TranslatableString,
 } from '@rjsf/utils';
-
-// Define the constant for additional property flag since it's not exported from utils
-const ADDITIONAL_PROPERTY_FLAG = '__additional_property';
 
 /** The `WrapIfAdditional` component is used by the `FieldTemplate` to wrap automatically added additional properties.
  *
@@ -24,71 +25,58 @@ export default function WrapIfAdditionalTemplate<
     id,
     classNames,
     style,
-    disabled,
     label,
-    onDropPropertyClick,
-    onKeyChange,
+    required,
     readonly,
+    disabled,
     schema,
-    children,
     uiSchema,
+    onKeyChange,
+    onDropPropertyClick,
+    children,
     registry,
-    errors,
+    formContext,
+    ...rest
   } = props;
-  const { templates, translateString } = registry;
-  const { RemoveButton } = templates.ButtonTemplates!;
-  const keyLabel = translateString(TranslatableString.KeyLabel, [label]);
-  const additional = Object.prototype.hasOwnProperty.call(
-    schema,
-    ADDITIONAL_PROPERTY_FLAG
-  );
+  const { RemoveButton } = getTemplate<'ButtonTemplates', T, S, F>('ButtonTemplates', registry, getUiOptions(uiSchema));
+  const keyLabel = registry.translateString(TranslatableString.KeyLabel, [label]);
+  const additional = schema[ADDITIONAL_PROPERTY_FLAG];
 
   if (!additional) {
-    return (
-      <div className={classNames} style={style}>
-        {children}
-      </div>
-    );
+    return <>{children}</>;
   }
 
   const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) => onKeyChange(target.value);
-  const keyId = `${id}-key`;
-  const hasErrors = errors && errors.props.errors && errors.props.errors.length > 0;
 
   return (
-    <div className={classNames} style={style}>
-      <GridContainer containerSize="desktop">
-        <Grid row>
-          <Grid className="form-additional" col={true}>
-            <FormGroup error={hasErrors}>
-              <Label htmlFor={keyId}>{keyLabel}</Label>
-              <input
-                className="form-control"
-                type="text"
-                id={keyId}
-                onBlur={!readonly ? handleBlur : undefined}
-                defaultValue={label}
-              />
-            </FormGroup>
-          </Grid>
-          <Grid className="form-additional" col={true} id={`instance-${id}`}>
-            {children}
-          </Grid>
-          <Grid col="auto" className="rjsf-uswds-additional-toolbox">
-            <RemoveButton
-              className="array-item-remove"
-              disabled={disabled || readonly}
-              onClick={onDropPropertyClick(label)}
-              uiSchema={uiSchema}
-              registry={registry}
-            >
-              <span className="usa-sr-only">
-                {translateString(TranslatableString.RemoveButton)}
-              </span>
-            </RemoveButton>
-          </Grid>
-        </Grid>
-      </GridContainer>
-    </div>
+    <Grid row gap="md" className="form-additional">
+      <Grid col={5}>
+        <Label htmlFor={`${id}-key`}>{keyLabel}</Label>
+        <TextInput
+          id={`${id}-key`}
+          name={`${id}-key`}
+          defaultValue={label}
+          required={required}
+          disabled={disabled || readonly}
+          onBlur={!readonly ? handleBlur : undefined}
+          type="text"
+        />
+      </Grid>
+      <Grid col={5}>
+        {children}
+      </Grid>
+      <Grid col={2}>
+        {RemoveButton && (
+          <RemoveButton
+            disabled={disabled || readonly}
+            onClick={onDropPropertyClick(label)}
+            uiSchema={uiSchema}
+            registry={registry}
+            className="array-item-remove usa-button--unstyled"
+            style={{ marginTop: '1.5rem' }}
+          />
+        )}
+      </Grid>
+    </Grid>
   );
 }

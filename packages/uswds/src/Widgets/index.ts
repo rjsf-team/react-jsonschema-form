@@ -1,16 +1,7 @@
-import TextareaWidget from './TextareaWidget';
+import widgets, { generateWidgets } from './Widgets'; // Assuming Widgets.tsx is in the same directory
 
-export default function generateWidgets<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
->() {
-  const widgets = {
-    TextareaWidget,
-  };
+// Re-export the named function
+export { generateWidgets };
 
-  // alias lowercase key for ui:widget
-  ;(widgets as any).textarea = TextareaWidget;
-
-  return widgets as RegistryWidgetsType<T, S, F>;
-}
+// Re-export the default object
+export default widgets;

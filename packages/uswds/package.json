@@ -5,8 +5,36 @@
   "main": "dist/index.js",
   "module": "dist/index.js",
   "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/index.d.ts",
+      "require": "./dist/index.js",
+      "import": "./lib/index.js"
+    },
+    "./lib": {
+      "types": "./lib/index.d.ts",
+      "require": "./dist/index.js",
+      "import": "./lib/index.js"
+    },
+    "./lib/*.js": {
+      "types": "./lib/*.d.ts",
+      "require": "./dist/*.js",
+      "import": "./lib/*.js"
+    },
+    "./dist": {
+      "types": "./lib/index.d.ts",
+      "require": "./dist/index.js",
+      "import": "./lib/index.js"
+    },
+    "./dist/*.js": {
+      "types": "./lib/*.d.ts",
+      "require": "./dist/*.js",
+      "import": "./lib/*.js"
+    }
+  },
   "scripts": {
-    "build": "tsc",
+    "clean": "rimraf dist tsconfig.tsbuildinfo",
+    "build": "tsc -b tsconfig.json && tsc-alias -p tsconfig.json",
     "cs-check": "prettier -l \"{src,test}/**/*.ts?(x)\"",
     "cs-format": "prettier \"{src,test}/**/*.ts?(x)\" --write",
     "lint": "eslint src test",
@@ -16,20 +44,22 @@
     "test:update": "jest --u",
     "test:clean": "jest --clearCache"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@rjsf/utils": "^6",
+    "@trussworks/react-uswds": "^5.0.0 || ^6.0.0",
+    "build": "^0.1.4"
+  },
   "devDependencies": {
     "@babel/core": "^7.22.8",
     "@babel/preset-env": "^7.22.7",
     "@babel/preset-react": "^7.22.5",
     "@babel/preset-typescript": "^7.22.5",
     "@rjsf/snapshot-tests": "^6.0.0-alpha.0",
-    "@rjsf/utils": "^6.0.0-alpha.0",
     "@rjsf/validator-ajv8": "^6.0.0-alpha.0",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.4.2",
     "@testing-library/react": "^14.2.1",
     "@testing-library/user-event": "^14.5.2",
-    "@trussworks/react-uswds": "^6.1.0",
     "@types/jest": "^29.5.3",
     "@types/react": "^18.2.14",
     "@types/react-dom": "^18.2.6",
@@ -40,14 +70,17 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-test-renderer": "^18.2.0",
-    "typescript": "^5.1.6"
+    "rimraf": "^5.0.5",
+    "tsc-alias": "^1.8.10",
+    "typescript": "^5.1.6",
+    "uswds": "^2.14.0"
   },
   "peerDependencies": {
     "@rjsf/core": "^6",
     "@rjsf/utils": "^6",
     "@trussworks/react-uswds": "^5.0.0 || ^6.0.0",
-    "react": "^16.14.0 || ^17.0.0 || ^18.0.0",
-    "react-dom": "^16.14.0 || ^17.0.0 || ^18.0.0"
+    "react": "^17.0.0 || ^18.0.0",
+    "react-dom": "^17.0.0 || ^18.0.0"
   },
   "publishConfig": {
     "access": "public"

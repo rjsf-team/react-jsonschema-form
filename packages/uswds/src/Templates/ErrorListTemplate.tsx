@@ -1,11 +1,5 @@
-import {
-  ErrorListProps,
-  FormContextType,
-  RJSFSchema,
-  StrictRJSFSchema,
-  TranslatableString,
-} from '@rjsf/utils';
 import { Alert } from '@trussworks/react-uswds';
+import { ErrorListProps, FormContextType, RJSFSchema, StrictRJSFSchema, TranslatableString } from '@rjsf/utils';
 
 /** The `ErrorList` component is the template that renders the all the errors associated with the fields in the `Form`
  *
@@ -18,10 +12,18 @@ export default function ErrorListTemplate<
 >({ errors, registry }: ErrorListProps<T, S, F>) {
   const { translateString } = registry;
   return (
-    <Alert type="error" heading={translateString(TranslatableString.Errors)} headingLevel="h4" slim>
-      {errors.map((error, i: number) => {
-        return <li key={i}>{error.stack}</li>;
-      })}
-    </Alert>
+    <div className="panel panel-danger errors">
+      <Alert type="error" heading={translateString(TranslatableString.ErrorsLabel)} headingLevel="h4" slim>
+        <ul className="error-detail bs-callout bs-callout-danger">
+          {errors.map((error, index) => {
+            return (
+              <li key={index} className="text-danger">
+                {error.stack}
+              </li>
+            );
+          })}
+        </ul>
+      </Alert>
+    </div>
   );
 }

@@ -3,7 +3,7 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
   TemplatesType,
-  RegistryWidgetsType
+  RegistryWidgetsType,
 } from '@rjsf/utils';
 import templates from './Templates';
 
@@ -21,8 +21,9 @@ export function generateTheme<
   widgets: RegistryWidgetsType<T, S, F>;
 } {
   return {
-    templates: templates as TemplatesType<T, S, F>,
-    widgets: {} as RegistryWidgetsType<T, S, F>,  // no generateWidgets() call
+    // Cast to unknown first to bypass complex type comparison
+    templates: templates as unknown as TemplatesType<T, S, F>,
+    widgets: {} as RegistryWidgetsType<T, S, F>,
   };
 }
 

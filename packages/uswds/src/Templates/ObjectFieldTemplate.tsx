@@ -1,19 +1,23 @@
-import { Fieldset } from '@trussworks/react-uswds';
+import React from 'react'; // Import React
 import {
-  FormContextType,
   ObjectFieldTemplateProps,
+  FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
   getTemplate,
   getUiOptions,
+  orderProperties, // Import orderProperties
 } from '@rjsf/utils';
-import { Grid } from '@trussworks/react-uswds';
+// No Grid components typically needed here unless forcing a specific layout
 
 /** The `ObjectFieldTemplate` is the template to use to render all the properties of an object field as identified by
- * the `SchemaField`. The properties are rendered using the `PropertyTemplate` template inside of a `Fieldset`.
+ * the `SchemaField`. The properties are rendered using the `PropertyTemplate` template.
  *
  * @param props - The `ObjectFieldTemplateProps` for this component
  */
+// No changes needed in this template to handle if-then-else logic.
+// This template renders the properties provided by @rjsf/core,
+// which handles the resolution of conditional schemas.
 export default function ObjectFieldTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
@@ -22,8 +26,10 @@ export default function ObjectFieldTemplate<
   const {
     description,
     disabled,
+    formContext,
+    formData,
     idSchema,
-    onAddClick,
+    onAddClick, // Used for additionalProperties
     properties,
     readonly,
     required,
@@ -32,23 +38,22 @@ export default function ObjectFieldTemplate<
     title,
     uiSchema,
   } = props;
-
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const TitleFieldTemplate = getTemplate<'TitleFieldTemplate', T, S, F>(
-    'TitleFieldTemplate',
-    registry,
-    uiOptions,
-  );
+  const TitleFieldTemplate = getTemplate<'TitleFieldTemplate', T, S, F>('TitleFieldTemplate', registry, uiOptions);
   const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
     'DescriptionFieldTemplate',
     registry,
-    uiOptions,
+    uiOptions
   );
-  const { AddButton } = registry.templates.ButtonTemplates;
+  // ButtonTemplates may be needed if using additionalProperties with add button
+  // const { AddButton } = getTemplate<'ButtonTemplates', T, S, F>('ButtonTemplates', registry, uiOptions);
+
+  // Use the original orderProperties utility with the potentially unfiltered ui:order
+  const orderedProperties = orderProperties(properties, uiSchema?.['ui:order']);
 
   return (
-    <Fieldset className="rjsf-uswds-object-fieldset">
-      {title && (
+    <>
+      {(uiOptions.title || title) && ( // Render title if not empty
         <TitleFieldTemplate
           id={`${idSchema.$id}-title`}
           title={title}
@@ -58,7 +63,7 @@ export default function ObjectFieldTemplate<
           registry={registry}
         />
       )}
-      {description && (
+      {(uiOptions.description || description) && ( // Render description if not empty
         <DescriptionFieldTemplate
           id={`${idSchema.$id}-description`}
           description={description}
@@ -67,30 +72,12 @@ export default function ObjectFieldTemplate<
           registry={registry}
         />
       )}
-      <Grid container className="rjsf-uswds-object-properties">
-        {properties.map((element, index) => (
-          <Grid
-            key={index}
-            col={12}
-            className={`rjsf-uswds-object-property ${element.hidden ? 'hidden' : ''}`}
-          >
-            {element.content}
-          </Grid>
-        ))}
-        {onAddClick && schema.additionalProperties && (
-          <Grid col={12} className="rjsf-uswds-object-add-button">
-            <Grid col="auto">
-              <AddButton
-                className="object-property-expand"
-                onClick={() => onAddClick(schema)}
-                disabled={disabled || readonly}
-                uiSchema={uiSchema}
-                registry={registry}
-              />
-            </Grid>
-          </Grid>
-        )}
-      </Grid>
-    </Fieldset>
+      {/* Render properties sequentially. FieldTemplate handles layout of individual fields. */}
+      <div className="rjsf-object-properties">
+        {orderedProperties.map((prop) => prop.content)}
+      </div>
+      {/* Logic for additionalProperties button if needed */}
+      {/* {schema.additionalProperties && ( ... AddButton ... )} */}
+    </>
   );
 }
