@@ -64,7 +64,7 @@
     "@rjsf/core": "^6.x",
     "@rjsf/utils": "^6.x",
     "react": ">=18",
-    "react-bootstrap": "^2.0.0"
+    "react-bootstrap": "^2.x"
   },
   "engineStrict": false,
   "engines": {
@@ -76,7 +76,7 @@
     "@rjsf/utils": "^6.0.0-alpha.0",
     "@rjsf/validator-ajv8": "^6.0.0-alpha.0",
     "eslint": "^8.56.0",
-    "react-bootstrap": "2.10.9"
+    "react-bootstrap": "^2.10.9"
   },
   "publishConfig": {
     "access": "public"

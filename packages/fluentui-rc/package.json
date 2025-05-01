@@ -69,9 +69,9 @@
     "react": ">=18"
   },
   "dependencies": {
-    "@fluentui/react-components": "9.63.0",
-    "@fluentui/react-icons": "2.0.298",
-    "@fluentui/react-migration-v0-v9": "9.3.10"
+    "@fluentui/react-components": "^9.63.0",
+    "@fluentui/react-icons": "^2.0.298",
+    "@fluentui/react-migration-v0-v9": "^9.3.10"
   },
   "devDependencies": {
     "@rjsf/core": "^6.0.0-alpha.0",

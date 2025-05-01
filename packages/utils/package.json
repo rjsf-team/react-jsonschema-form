@@ -69,13 +69,12 @@
     "jsonpointer": "^5.0.1",
     "lodash": "^4.17.21",
     "lodash-es": "^4.17.21",
-    "nanoid": "5.1.5",
+    "nanoid": "^5.1.5",
     "react-is": "^18.2.0"
   },
   "devDependencies": {
     "@types/json-schema": "^7.0.15",
     "@types/json-schema-merge-allof": "^0.6.5",
-    "@types/lodash": "4.17.16",
     "@types/react-is": "^18.2.4",
     "deep-freeze-es6": "^1.4.1",
     "eslint": "^8.56.0"

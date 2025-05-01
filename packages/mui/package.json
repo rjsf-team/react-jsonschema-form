@@ -79,8 +79,7 @@
     "@rjsf/snapshot-tests": "^6.0.0-alpha.0",
     "@rjsf/utils": "^6.0.0-alpha.0",
     "@rjsf/validator-ajv8": "^6.0.0-alpha.0",
-    "eslint": "^8.56.0",
-    "jest-watch-typeahead": "^2.2.2"
+    "eslint": "^8.56.0"
   },
   "publishConfig": {
     "access": "public"

@@ -83,21 +83,20 @@
   "devDependencies": {
     "@chakra-ui/cli": "^3.16.1",
     "@chakra-ui/react": "^3.16.1",
-    "@emotion/eslint-plugin": "11.12.0",
-    "@emotion/jest": "11.13.0",
+    "@emotion/eslint-plugin": "^11.12.0",
+    "@emotion/jest": "^11.13.0",
     "@emotion/react": "^11.14.0",
-    "@emotion/styled": "11.14.0",
+    "@emotion/styled": "^11.14.0",
     "@rjsf/core": "^6.0.0-alpha.0",
     "@rjsf/snapshot-tests": "^6.0.0-alpha.0",
     "@rjsf/utils": "^6.0.0-alpha.0",
     "@rjsf/validator-ajv8": "^6.0.0-alpha.0",
     "chakra-react-select": "6.1.0",
     "eslint": "^8.56.0",
-    "jest-watch-typeahead": "^2.2.2",
     "lucide-react": "^0.488.0"
   },
   "dependencies": {
     "react-icons": "^5.4.0",
-    "react-select": "5.10.1"
+    "react-select": "^5.10.1"
   }
 }
