@@ -7,7 +7,7 @@ import { RJSFSchema, StrictRJSFSchema } from './types';
  * - schema.enum: Returns `string`
  * - schema.properties: Returns `object`
  * - schema.additionalProperties: Returns `object`
- * - schema.patternproperties: Returns `object`
+ * - schema.patternProperties: Returns `object`
  * - type is an array with a length of 2 and one type is 'null': Returns the other type
  *
  * @param schema - The schema for which to get the type
