@@ -402,7 +402,7 @@ export interface Registry<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
    */
   templates: TemplatesType<T, S, F>;
   /** The set of all widgets used by the `Form`. Includes widgets from `core`, theme-specific widgets and any custom
-   * registered widgetsR
+   * registered widgets
    */
   widgets: RegistryWidgetsType<T, S, F>;
   /** The `formContext` object that was passed to `Form` */
