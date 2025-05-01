@@ -4,7 +4,7 @@
  * @param thing - The thing to check to see whether it is an object
  * @returns - True if it is a non-null, non-array, non-File object
  */
-export default function isObject(thing: any) {
+export default function isObject(thing: any): thing is object {
   if (typeof thing !== 'object' || thing === null) {
     return false;
   }

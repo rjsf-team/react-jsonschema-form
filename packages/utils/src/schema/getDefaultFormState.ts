@@ -445,7 +445,7 @@ export function getObjectDefaults<T = any, S extends StrictRJSFSchema = RJSFSche
         // should always return the computedDefault since it's coming from the const.
         const hasParentConst = isObject(parentConst) && (parentConst as JSONSchema7Object)[key] !== undefined;
         const hasConst =
-          ((typeof propertySchema === 'object' && CONST_KEY in propertySchema) || hasParentConst) &&
+          ((isObject(propertySchema) && CONST_KEY in propertySchema) || hasParentConst) &&
           experimental_defaultFormStateBehavior?.constAsDefaults !== 'never' &&
           !constIsAjvDataReference(propertySchema);
         // Compute the defaults for this node, with the parent defaults we might
