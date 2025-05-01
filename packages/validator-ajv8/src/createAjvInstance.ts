@@ -36,7 +36,7 @@ export default function createAjvInstance(
   customFormats?: CustomValidatorOptionsType['customFormats'],
   ajvOptionsOverrides: CustomValidatorOptionsType['ajvOptionsOverrides'] = {},
   ajvFormatOptions?: FormatsPluginOptions | false,
-  AjvClass: typeof Ajv = Ajv
+  AjvClass: typeof Ajv = Ajv,
 ) {
   const ajv = new AjvClass({ ...AJV_CONFIG, ...ajvOptionsOverrides });
   if (ajvFormatOptions) {

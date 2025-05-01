@@ -1,38 +1,57 @@
 {
   "extends": "nx/presets/npm.json",
-  "tasksRunnerOptions": {
-    "default": {
-      "runner": "@nrwl/nx-cloud",
-      "options": {
-        "cacheableOperations": [
-          "build",
-          "cs-check",
-          "cs-format",
-          "lint",
-          "test",
-          "test:update",
-          "test:watch",
-          "precommit",
-          "publish-to-npm",
-          "test-coverage",
-          "build:lib",
-          "prepublishOnly",
-          "build:dist",
-          "publish-to-gh-pages"
-        ]
-      }
-    }
-  },
   "targetDefaults": {
     "build": {
-      "dependsOn": [{
-        "//": "use only dependencies to avoid cycle @rjsf/core:build --> @rjsf/snapshot-tests:build --> @rjsf/core:build",
-        "projects": "dependencies",
-        "target": "^build"
-      }]
+      "dependsOn": [
+        {
+          "//": "use only dependencies to avoid cycle @rjsf/core:build --> @rjsf/snapshot-tests:build --> @rjsf/core:build",
+          "projects": "dependencies",
+          "target": "^build"
+        }
+      ],
+      "cache": true
+    },
+    "cs-check": {
+      "cache": true
+    },
+    "cs-format": {
+      "cache": true
+    },
+    "lint": {
+      "cache": true
+    },
+    "test": {
+      "cache": true
+    },
+    "test:update": {
+      "cache": true
+    },
+    "test:watch": {
+      "cache": true
+    },
+    "precommit": {
+      "cache": true
+    },
+    "publish-to-npm": {
+      "cache": true
+    },
+    "test-coverage": {
+      "cache": true
+    },
+    "build:lib": {
+      "cache": true
+    },
+    "prepublishOnly": {
+      "cache": true
+    },
+    "build:dist": {
+      "cache": true
+    },
+    "publish-to-gh-pages": {
+      "cache": true
     }
   },
-  "affected": {
-    "defaultBase": "main"
-  }
+  "useInferencePlugins": false,
+  "defaultBase": "main",
+  "useLegacyCache": true
 }

@@ -1,5 +1,5 @@
 import { FocusEvent } from 'react';
-import { FormControl, FormLabel, Slider, SliderFilledTrack, SliderThumb, SliderTrack } from '@chakra-ui/react';
+import { SliderValueChangeDetails } from '@chakra-ui/react';
 import {
   ariaDescribedByIds,
   FormContextType,
@@ -9,7 +9,9 @@ import {
   StrictRJSFSchema,
   WidgetProps,
 } from '@rjsf/utils';
-import { getChakra } from '../utils';
+
+import { Field } from '../components/ui/field';
+import { Slider } from '../components/ui/slider';
 
 export default function RangeWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
   value,
@@ -19,38 +21,29 @@ export default function RangeWidget<T = any, S extends StrictRJSFSchema = RJSFSc
   onFocus,
   options,
   schema,
-  uiSchema,
   onChange,
   label,
   hideLabel,
   id,
 }: WidgetProps<T, S, F>) {
-  const chakraProps = getChakra({ uiSchema });
-
-  const sliderWidgetProps = { value, label, id, ...rangeSpec<S>(schema) };
-
-  const _onChange = (value: undefined | number) => onChange(value === undefined ? options.emptyValue : value);
+  const _onChange = ({ value }: SliderValueChangeDetails) =>
+    onChange(value === undefined ? options.emptyValue : value[0]);
   const _onBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target && target.value);
   const _onFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target && target.value);
 
   return (
-    <FormControl mb={1} {...chakraProps}>
-      {labelValue(<FormLabel htmlFor={id}>{label}</FormLabel>, hideLabel || !label)}
+    <Field mb={1} label={labelValue(label, hideLabel || !label)}>
       <Slider
-        {...sliderWidgetProps}
+        {...rangeSpec<S>(schema)}
         id={id}
         name={id}
-        isDisabled={disabled || readonly}
-        onChange={_onChange}
+        disabled={disabled || readonly}
+        value={[value]}
+        onValueChange={_onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
         aria-describedby={ariaDescribedByIds<T>(id)}
-      >
-        <SliderTrack>
-          <SliderFilledTrack />
-        </SliderTrack>
-        <SliderThumb />
-      </Slider>
-    </FormControl>
+      />
+    </Field>
   );
 }

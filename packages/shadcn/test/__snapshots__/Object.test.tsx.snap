@@ -1,0 +1,2596 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`object fields additionalProperties 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div
+      className="flex flex-col gap-2"
+    >
+      <div
+        className="flex flex-col gap-2"
+      >
+        <div
+          className=" flex"
+        >
+          <div
+            className="w-full"
+          >
+             
+            <div
+              className="flex flex-row items-center gap-2 relative w-full rjsf-field rjsf-field-string"
+            >
+              <div
+                className="flex flex-col w-full gap-2 line-clamp-1"
+              >
+                <div
+                  className="flex-grow"
+                >
+                  <label
+                    className="pt-2 text-sm font-medium text-muted-foreground mb-4 line-clamp-1"
+                    htmlFor="root_foo-key"
+                  >
+                    foo Key
+                  </label>
+                  <div
+                    className="pl-0.5"
+                  >
+                    <input
+                      className="flex h-9 rounded-md border-input bg-transparent px-3 py-1 text-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 mt-1 w-full border shadow-sm"
+                      defaultValue="foo"
+                      disabled={false}
+                      id="root_foo-key"
+                      name="root_foo-key"
+                      onBlur={[Function]}
+                      required={false}
+                      type="text"
+                    />
+                  </div>
+                </div>
+                <div
+                  className="flex-grow pr-0.5"
+                >
+                  <div
+                    className="flex flex-col gap-2"
+                  >
+                    <label
+                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                      htmlFor="root_foo"
+                    >
+                      foo
+                    </label>
+                    <div
+                      className="p-0.5"
+                    >
+                      <input
+                        aria-describedby="root_foo__error root_foo__description root_foo__help"
+                        autoFocus={false}
+                        className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                        disabled={false}
+                        id="root_foo"
+                        name="root_foo"
+                        onBlur={[Function]}
+                        onChange={[Function]}
+                        onFocus={[Function]}
+                        placeholder=""
+                        readOnly={false}
+                        required={false}
+                        type="text"
+                        value="foo"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <button
+                className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-9 w-9 border-destructive"
+                disabled={false}
+                id="root_foo__remove"
+                onClick={[Function]}
+                title="Remove"
+                type="button"
+              >
+                <svg
+                  aria-hidden="true"
+                  className="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
+                  fill="none"
+                  height={24}
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  viewBox="0 0 24 24"
+                  width={24}
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M3 6h18"
+                  />
+                  <path
+                    d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"
+                  />
+                  <path
+                    d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"
+                  />
+                  <line
+                    x1="10"
+                    x2="10"
+                    y1="11"
+                    y2="17"
+                  />
+                  <line
+                    x1="14"
+                    x2="14"
+                    y1="11"
+                    y2="17"
+                  />
+                </svg>
+              </button>
+            </div>
+            <div
+              className="shrink-0 bg-border h-[1px] w-full mt-2"
+              data-orientation="horizontal"
+              dir="horizontal"
+              role="none"
+            />
+          </div>
+        </div>
+        <div
+          className="p-0 m-0"
+        >
+          <button
+            className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2 w-fit gap-2"
+            disabled={false}
+            id="root__add"
+            onClick={[Function]}
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              className="lucide lucide-circle-plus"
+              fill="none"
+              height={16}
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              viewBox="0 0 24 24"
+              width={16}
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <circle
+                cx="12"
+                cy="12"
+                r="10"
+              />
+              <path
+                d="M8 12h8"
+              />
+              <path
+                d="M12 8v8"
+              />
+            </svg>
+             
+            Add Item
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2 my-2"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`object fields object 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div
+      className="flex flex-col gap-2"
+    >
+      <div
+        className="flex flex-col gap-2"
+      >
+        <div
+          className=" flex"
+        >
+          <div
+            className="w-full"
+          >
+             
+            <div
+              className="rjsf-field rjsf-field-string"
+            >
+              <div
+                className="flex flex-col gap-2"
+              >
+                <label
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  htmlFor="root_a"
+                >
+                  A
+                </label>
+                <div
+                  className="p-0.5"
+                >
+                  <input
+                    aria-describedby="root_a__error root_a__description root_a__help"
+                    autoFocus={false}
+                    className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                    disabled={false}
+                    id="root_a"
+                    name="root_a"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    readOnly={false}
+                    required={false}
+                    type="text"
+                    value=""
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          className=" flex"
+        >
+          <div
+            className="w-full"
+          >
+             
+            <div
+              className="rjsf-field rjsf-field-number"
+            >
+              <div
+                className="flex flex-col gap-2"
+              >
+                <label
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  htmlFor="root_b"
+                >
+                  B
+                </label>
+                <div
+                  className="p-0.5"
+                >
+                  <input
+                    aria-describedby="root_b__error root_b__description root_b__help"
+                    autoFocus={false}
+                    className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                    disabled={false}
+                    id="root_b"
+                    name="root_b"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    readOnly={false}
+                    required={false}
+                    step="any"
+                    type="number"
+                    value=""
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2 my-2"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`object fields show add button and fields if additionalProperties is true and not an object 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div
+      className="flex flex-col gap-2"
+    >
+      <div
+        className="flex flex-col gap-2"
+      >
+        <div
+          className=" flex"
+        >
+          <div
+            className="w-full"
+          >
+             
+            <div
+              className="flex flex-row items-center gap-2 relative w-full rjsf-field rjsf-field-string"
+            >
+              <div
+                className="flex flex-col w-full gap-2 line-clamp-1"
+              >
+                <div
+                  className="flex-grow"
+                >
+                  <label
+                    className="pt-2 text-sm font-medium text-muted-foreground mb-4 line-clamp-1"
+                    htmlFor="root_additionalProperty-key"
+                  >
+                    additionalProperty Key
+                  </label>
+                  <div
+                    className="pl-0.5"
+                  >
+                    <input
+                      className="flex h-9 rounded-md border-input bg-transparent px-3 py-1 text-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 mt-1 w-full border shadow-sm"
+                      defaultValue="additionalProperty"
+                      disabled={false}
+                      id="root_additionalProperty-key"
+                      name="root_additionalProperty-key"
+                      onBlur={[Function]}
+                      required={false}
+                      type="text"
+                    />
+                  </div>
+                </div>
+                <div
+                  className="flex-grow pr-0.5"
+                >
+                  <div
+                    className="flex flex-col gap-2"
+                  >
+                    <label
+                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                      htmlFor="root_additionalProperty"
+                    >
+                      additionalProperty
+                    </label>
+                    <div
+                      className="p-0.5"
+                    >
+                      <input
+                        aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
+                        autoFocus={false}
+                        className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                        disabled={false}
+                        id="root_additionalProperty"
+                        name="root_additionalProperty"
+                        onBlur={[Function]}
+                        onChange={[Function]}
+                        onFocus={[Function]}
+                        placeholder=""
+                        readOnly={false}
+                        required={false}
+                        type="text"
+                        value="should appear"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <button
+                className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-9 w-9 border-destructive"
+                disabled={false}
+                id="root_additionalProperty__remove"
+                onClick={[Function]}
+                title="Remove"
+                type="button"
+              >
+                <svg
+                  aria-hidden="true"
+                  className="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
+                  fill="none"
+                  height={24}
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  viewBox="0 0 24 24"
+                  width={24}
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M3 6h18"
+                  />
+                  <path
+                    d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"
+                  />
+                  <path
+                    d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"
+                  />
+                  <line
+                    x1="10"
+                    x2="10"
+                    y1="11"
+                    y2="17"
+                  />
+                  <line
+                    x1="14"
+                    x2="14"
+                    y1="11"
+                    y2="17"
+                  />
+                </svg>
+              </button>
+            </div>
+            <div
+              className="shrink-0 bg-border h-[1px] w-full mt-2"
+              data-orientation="horizontal"
+              dir="horizontal"
+              role="none"
+            />
+          </div>
+        </div>
+        <div
+          className="p-0 m-0"
+        >
+          <button
+            className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2 w-fit gap-2"
+            disabled={false}
+            id="root__add"
+            onClick={[Function]}
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              className="lucide lucide-circle-plus"
+              fill="none"
+              height={16}
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              viewBox="0 0 24 24"
+              width={16}
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <circle
+                cx="12"
+                cy="12"
+                r="10"
+              />
+              <path
+                d="M8 12h8"
+              />
+              <path
+                d="M12 8v8"
+              />
+            </svg>
+             
+            Add Item
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2 my-2"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`object fields with title and description additionalProperties 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div
+      className="flex flex-col gap-2"
+    >
+      <div
+        className="my-1 flex flex-col gap-0.5"
+        id="root__title"
+      >
+        <h5>
+          Test field
+        </h5>
+        <div
+          className="shrink-0 bg-border h-[1px] w-full my-1"
+          data-orientation="horizontal"
+          dir="horizontal"
+          role="none"
+          style={
+            {
+              "height": "1px",
+            }
+          }
+        />
+      </div>
+      <div>
+        <div
+          className="text-sm text-muted-foreground"
+          id="root__description"
+        >
+          a test description
+        </div>
+      </div>
+      <div
+        className="flex flex-col gap-2"
+      >
+        <div
+          className=" flex"
+        >
+          <div
+            className="w-full"
+          >
+             
+            <div
+              className="flex flex-row items-center gap-2 relative w-full rjsf-field rjsf-field-string"
+            >
+              <div
+                className="flex flex-col w-full gap-2 line-clamp-1"
+              >
+                <div
+                  className="flex-grow"
+                >
+                  <label
+                    className="pt-2 text-sm font-medium text-muted-foreground mb-4 line-clamp-1"
+                    htmlFor="root_foo-key"
+                  >
+                    foo Key
+                  </label>
+                  <div
+                    className="pl-0.5"
+                  >
+                    <input
+                      className="flex h-9 rounded-md border-input bg-transparent px-3 py-1 text-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 mt-1 w-full border shadow-sm"
+                      defaultValue="foo"
+                      disabled={false}
+                      id="root_foo-key"
+                      name="root_foo-key"
+                      onBlur={[Function]}
+                      required={false}
+                      type="text"
+                    />
+                  </div>
+                </div>
+                <div
+                  className="flex-grow pr-0.5"
+                >
+                  <div
+                    className="flex flex-col gap-2"
+                  >
+                    <label
+                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                      htmlFor="root_foo"
+                    >
+                      foo
+                    </label>
+                    <div
+                      className="p-0.5"
+                    >
+                      <input
+                        aria-describedby="root_foo__error root_foo__description root_foo__help"
+                        autoFocus={false}
+                        className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                        disabled={false}
+                        id="root_foo"
+                        name="root_foo"
+                        onBlur={[Function]}
+                        onChange={[Function]}
+                        onFocus={[Function]}
+                        placeholder=""
+                        readOnly={false}
+                        required={false}
+                        type="text"
+                        value="foo"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <button
+                className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-9 w-9 border-destructive"
+                disabled={false}
+                id="root_foo__remove"
+                onClick={[Function]}
+                title="Remove"
+                type="button"
+              >
+                <svg
+                  aria-hidden="true"
+                  className="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
+                  fill="none"
+                  height={24}
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  viewBox="0 0 24 24"
+                  width={24}
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M3 6h18"
+                  />
+                  <path
+                    d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"
+                  />
+                  <path
+                    d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"
+                  />
+                  <line
+                    x1="10"
+                    x2="10"
+                    y1="11"
+                    y2="17"
+                  />
+                  <line
+                    x1="14"
+                    x2="14"
+                    y1="11"
+                    y2="17"
+                  />
+                </svg>
+              </button>
+            </div>
+            <div
+              className="shrink-0 bg-border h-[1px] w-full mt-2"
+              data-orientation="horizontal"
+              dir="horizontal"
+              role="none"
+            />
+          </div>
+        </div>
+        <div
+          className="p-0 m-0"
+        >
+          <button
+            className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2 w-fit gap-2"
+            disabled={false}
+            id="root__add"
+            onClick={[Function]}
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              className="lucide lucide-circle-plus"
+              fill="none"
+              height={16}
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              viewBox="0 0 24 24"
+              width={16}
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <circle
+                cx="12"
+                cy="12"
+                r="10"
+              />
+              <path
+                d="M8 12h8"
+              />
+              <path
+                d="M12 8v8"
+              />
+            </svg>
+             
+            Add Item
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2 my-2"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`object fields with title and description from both additionalProperties 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div
+      className="flex flex-col gap-2"
+    >
+      <div
+        className="my-1 flex flex-col gap-0.5"
+        id="root__title"
+      >
+        <h5>
+          My Field
+        </h5>
+        <div
+          className="shrink-0 bg-border h-[1px] w-full my-1"
+          data-orientation="horizontal"
+          dir="horizontal"
+          role="none"
+          style={
+            {
+              "height": "1px",
+            }
+          }
+        />
+      </div>
+      <div>
+        <div
+          className="text-sm text-muted-foreground"
+          id="root__description"
+        >
+          a fancier description
+        </div>
+      </div>
+      <div
+        className="flex flex-col gap-2"
+      >
+        <div
+          className=" flex"
+        >
+          <div
+            className="w-full"
+          >
+             
+            <div
+              className="flex flex-row items-center gap-2 relative w-full rjsf-field rjsf-field-string"
+            >
+              <div
+                className="flex flex-col w-full gap-2 line-clamp-1"
+              >
+                <div
+                  className="flex-grow"
+                >
+                  <label
+                    className="pt-2 text-sm font-medium text-muted-foreground mb-4 line-clamp-1"
+                    htmlFor="root_foo-key"
+                  >
+                    foo Key
+                  </label>
+                  <div
+                    className="pl-0.5"
+                  >
+                    <input
+                      className="flex h-9 rounded-md border-input bg-transparent px-3 py-1 text-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 mt-1 w-full border shadow-sm"
+                      defaultValue="foo"
+                      disabled={false}
+                      id="root_foo-key"
+                      name="root_foo-key"
+                      onBlur={[Function]}
+                      required={false}
+                      type="text"
+                    />
+                  </div>
+                </div>
+                <div
+                  className="flex-grow pr-0.5"
+                >
+                  <div
+                    className="flex flex-col gap-2"
+                  >
+                    <label
+                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                      htmlFor="root_foo"
+                    >
+                      foo
+                    </label>
+                    <div
+                      className="p-0.5"
+                    >
+                      <input
+                        aria-describedby="root_foo__error root_foo__description root_foo__help"
+                        autoFocus={false}
+                        className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                        disabled={false}
+                        id="root_foo"
+                        name="root_foo"
+                        onBlur={[Function]}
+                        onChange={[Function]}
+                        onFocus={[Function]}
+                        placeholder=""
+                        readOnly={false}
+                        required={false}
+                        type="text"
+                        value="foo"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <button
+                className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-9 w-9 border-destructive"
+                disabled={false}
+                id="root_foo__remove"
+                onClick={[Function]}
+                title="Remove"
+                type="button"
+              >
+                <svg
+                  aria-hidden="true"
+                  className="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
+                  fill="none"
+                  height={24}
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  viewBox="0 0 24 24"
+                  width={24}
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M3 6h18"
+                  />
+                  <path
+                    d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"
+                  />
+                  <path
+                    d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"
+                  />
+                  <line
+                    x1="10"
+                    x2="10"
+                    y1="11"
+                    y2="17"
+                  />
+                  <line
+                    x1="14"
+                    x2="14"
+                    y1="11"
+                    y2="17"
+                  />
+                </svg>
+              </button>
+            </div>
+            <div
+              className="shrink-0 bg-border h-[1px] w-full mt-2"
+              data-orientation="horizontal"
+              dir="horizontal"
+              role="none"
+            />
+          </div>
+        </div>
+        <div
+          className="p-0 m-0"
+        >
+          <button
+            className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2 w-fit gap-2"
+            disabled={false}
+            id="root__add"
+            onClick={[Function]}
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              className="lucide lucide-circle-plus"
+              fill="none"
+              height={16}
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              viewBox="0 0 24 24"
+              width={16}
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <circle
+                cx="12"
+                cy="12"
+                r="10"
+              />
+              <path
+                d="M8 12h8"
+              />
+              <path
+                d="M12 8v8"
+              />
+            </svg>
+             
+            Add Item
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2 my-2"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`object fields with title and description from both object 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div
+      className="flex flex-col gap-2"
+    >
+      <div
+        className="my-1 flex flex-col gap-0.5"
+        id="root__title"
+      >
+        <h5>
+          My Field
+        </h5>
+        <div
+          className="shrink-0 bg-border h-[1px] w-full my-1"
+          data-orientation="horizontal"
+          dir="horizontal"
+          role="none"
+          style={
+            {
+              "height": "1px",
+            }
+          }
+        />
+      </div>
+      <div>
+        <div
+          className="text-sm text-muted-foreground"
+          id="root__description"
+        >
+          a fancier description
+        </div>
+      </div>
+      <div
+        className="flex flex-col gap-2"
+      >
+        <div
+          className=" flex"
+        >
+          <div
+            className="w-full"
+          >
+             
+            <div
+              className="rjsf-field rjsf-field-string"
+            >
+              <div
+                className="flex flex-col gap-2"
+              >
+                <label
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  htmlFor="root_a"
+                >
+                  My Item A
+                </label>
+                <div
+                  className="p-0.5"
+                >
+                  <input
+                    aria-describedby="root_a__error root_a__description root_a__help"
+                    autoFocus={false}
+                    className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                    disabled={false}
+                    id="root_a"
+                    name="root_a"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    readOnly={false}
+                    required={false}
+                    type="text"
+                    value=""
+                  />
+                </div>
+                <span
+                  className="text-xs font-medium text-muted-foreground"
+                >
+                  <div>
+                    <div
+                      className="text-sm text-muted-foreground"
+                      id="root_a__description"
+                    >
+                      a fancier item A description
+                    </div>
+                  </div>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          className=" flex"
+        >
+          <div
+            className="w-full"
+          >
+             
+            <div
+              className="rjsf-field rjsf-field-number"
+            >
+              <div
+                className="flex flex-col gap-2"
+              >
+                <label
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  htmlFor="root_b"
+                >
+                  My Item B
+                </label>
+                <div
+                  className="p-0.5"
+                >
+                  <input
+                    aria-describedby="root_b__error root_b__description root_b__help"
+                    autoFocus={false}
+                    className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                    disabled={false}
+                    id="root_b"
+                    name="root_b"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    readOnly={false}
+                    required={false}
+                    step="any"
+                    type="number"
+                    value=""
+                  />
+                </div>
+                <span
+                  className="text-xs font-medium text-muted-foreground"
+                >
+                  <div>
+                    <div
+                      className="text-sm text-muted-foreground"
+                      id="root_b__description"
+                    >
+                      a fancier item B description
+                    </div>
+                  </div>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2 my-2"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`object fields with title and description from uiSchema additionalProperties 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div
+      className="flex flex-col gap-2"
+    >
+      <div
+        className="my-1 flex flex-col gap-0.5"
+        id="root__title"
+      >
+        <h5>
+          My Field
+        </h5>
+        <div
+          className="shrink-0 bg-border h-[1px] w-full my-1"
+          data-orientation="horizontal"
+          dir="horizontal"
+          role="none"
+          style={
+            {
+              "height": "1px",
+            }
+          }
+        />
+      </div>
+      <div>
+        <div
+          className="text-sm text-muted-foreground"
+          id="root__description"
+        >
+          a fancier description
+        </div>
+      </div>
+      <div
+        className="flex flex-col gap-2"
+      >
+        <div
+          className=" flex"
+        >
+          <div
+            className="w-full"
+          >
+             
+            <div
+              className="flex flex-row items-center gap-2 relative w-full rjsf-field rjsf-field-string"
+            >
+              <div
+                className="flex flex-col w-full gap-2 line-clamp-1"
+              >
+                <div
+                  className="flex-grow"
+                >
+                  <label
+                    className="pt-2 text-sm font-medium text-muted-foreground mb-4 line-clamp-1"
+                    htmlFor="root_foo-key"
+                  >
+                    foo Key
+                  </label>
+                  <div
+                    className="pl-0.5"
+                  >
+                    <input
+                      className="flex h-9 rounded-md border-input bg-transparent px-3 py-1 text-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 mt-1 w-full border shadow-sm"
+                      defaultValue="foo"
+                      disabled={false}
+                      id="root_foo-key"
+                      name="root_foo-key"
+                      onBlur={[Function]}
+                      required={false}
+                      type="text"
+                    />
+                  </div>
+                </div>
+                <div
+                  className="flex-grow pr-0.5"
+                >
+                  <div
+                    className="flex flex-col gap-2"
+                  >
+                    <label
+                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                      htmlFor="root_foo"
+                    >
+                      foo
+                    </label>
+                    <div
+                      className="p-0.5"
+                    >
+                      <input
+                        aria-describedby="root_foo__error root_foo__description root_foo__help"
+                        autoFocus={false}
+                        className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                        disabled={false}
+                        id="root_foo"
+                        name="root_foo"
+                        onBlur={[Function]}
+                        onChange={[Function]}
+                        onFocus={[Function]}
+                        placeholder=""
+                        readOnly={false}
+                        required={false}
+                        type="text"
+                        value="foo"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <button
+                className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-9 w-9 border-destructive"
+                disabled={false}
+                id="root_foo__remove"
+                onClick={[Function]}
+                title="Remove"
+                type="button"
+              >
+                <svg
+                  aria-hidden="true"
+                  className="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
+                  fill="none"
+                  height={24}
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  viewBox="0 0 24 24"
+                  width={24}
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M3 6h18"
+                  />
+                  <path
+                    d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"
+                  />
+                  <path
+                    d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"
+                  />
+                  <line
+                    x1="10"
+                    x2="10"
+                    y1="11"
+                    y2="17"
+                  />
+                  <line
+                    x1="14"
+                    x2="14"
+                    y1="11"
+                    y2="17"
+                  />
+                </svg>
+              </button>
+            </div>
+            <div
+              className="shrink-0 bg-border h-[1px] w-full mt-2"
+              data-orientation="horizontal"
+              dir="horizontal"
+              role="none"
+            />
+          </div>
+        </div>
+        <div
+          className="p-0 m-0"
+        >
+          <button
+            className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2 w-fit gap-2"
+            disabled={false}
+            id="root__add"
+            onClick={[Function]}
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              className="lucide lucide-circle-plus"
+              fill="none"
+              height={16}
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              viewBox="0 0 24 24"
+              width={16}
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <circle
+                cx="12"
+                cy="12"
+                r="10"
+              />
+              <path
+                d="M8 12h8"
+              />
+              <path
+                d="M12 8v8"
+              />
+            </svg>
+             
+            Add Item
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2 my-2"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`object fields with title and description from uiSchema object 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div
+      className="flex flex-col gap-2"
+    >
+      <div
+        className="my-1 flex flex-col gap-0.5"
+        id="root__title"
+      >
+        <h5>
+          My Field
+        </h5>
+        <div
+          className="shrink-0 bg-border h-[1px] w-full my-1"
+          data-orientation="horizontal"
+          dir="horizontal"
+          role="none"
+          style={
+            {
+              "height": "1px",
+            }
+          }
+        />
+      </div>
+      <div>
+        <div
+          className="text-sm text-muted-foreground"
+          id="root__description"
+        >
+          a fancier description
+        </div>
+      </div>
+      <div
+        className="flex flex-col gap-2"
+      >
+        <div
+          className=" flex"
+        >
+          <div
+            className="w-full"
+          >
+             
+            <div
+              className="rjsf-field rjsf-field-string"
+            >
+              <div
+                className="flex flex-col gap-2"
+              >
+                <label
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  htmlFor="root_a"
+                >
+                  My Item A
+                </label>
+                <div
+                  className="p-0.5"
+                >
+                  <input
+                    aria-describedby="root_a__error root_a__description root_a__help"
+                    autoFocus={false}
+                    className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                    disabled={false}
+                    id="root_a"
+                    name="root_a"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    readOnly={false}
+                    required={false}
+                    type="text"
+                    value=""
+                  />
+                </div>
+                <span
+                  className="text-xs font-medium text-muted-foreground"
+                >
+                  <div>
+                    <div
+                      className="text-sm text-muted-foreground"
+                      id="root_a__description"
+                    >
+                      a fancier item A description
+                    </div>
+                  </div>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          className=" flex"
+        >
+          <div
+            className="w-full"
+          >
+             
+            <div
+              className="rjsf-field rjsf-field-number"
+            >
+              <div
+                className="flex flex-col gap-2"
+              >
+                <label
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  htmlFor="root_b"
+                >
+                  My Item B
+                </label>
+                <div
+                  className="p-0.5"
+                >
+                  <input
+                    aria-describedby="root_b__error root_b__description root_b__help"
+                    autoFocus={false}
+                    className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                    disabled={false}
+                    id="root_b"
+                    name="root_b"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    readOnly={false}
+                    required={false}
+                    step="any"
+                    type="number"
+                    value=""
+                  />
+                </div>
+                <span
+                  className="text-xs font-medium text-muted-foreground"
+                >
+                  <div>
+                    <div
+                      className="text-sm text-muted-foreground"
+                      id="root_b__description"
+                    >
+                      a fancier item B description
+                    </div>
+                  </div>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2 my-2"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`object fields with title and description from uiSchema show add button and fields if additionalProperties is true and not an object 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div
+      className="flex flex-col gap-2"
+    >
+      <div
+        className="my-1 flex flex-col gap-0.5"
+        id="root__title"
+      >
+        <h5>
+          My Field
+        </h5>
+        <div
+          className="shrink-0 bg-border h-[1px] w-full my-1"
+          data-orientation="horizontal"
+          dir="horizontal"
+          role="none"
+          style={
+            {
+              "height": "1px",
+            }
+          }
+        />
+      </div>
+      <div>
+        <div
+          className="text-sm text-muted-foreground"
+          id="root__description"
+        >
+          a fancier description
+        </div>
+      </div>
+      <div
+        className="flex flex-col gap-2"
+      >
+        <div
+          className=" flex"
+        >
+          <div
+            className="w-full"
+          >
+             
+            <div
+              className="flex flex-row items-center gap-2 relative w-full rjsf-field rjsf-field-string"
+            >
+              <div
+                className="flex flex-col w-full gap-2 line-clamp-1"
+              >
+                <div
+                  className="flex-grow"
+                >
+                  <label
+                    className="pt-2 text-sm font-medium text-muted-foreground mb-4 line-clamp-1"
+                    htmlFor="root_additionalProperty-key"
+                  >
+                    additionalProperty Key
+                  </label>
+                  <div
+                    className="pl-0.5"
+                  >
+                    <input
+                      className="flex h-9 rounded-md border-input bg-transparent px-3 py-1 text-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 mt-1 w-full border shadow-sm"
+                      defaultValue="additionalProperty"
+                      disabled={false}
+                      id="root_additionalProperty-key"
+                      name="root_additionalProperty-key"
+                      onBlur={[Function]}
+                      required={false}
+                      type="text"
+                    />
+                  </div>
+                </div>
+                <div
+                  className="flex-grow pr-0.5"
+                >
+                  <div
+                    className="flex flex-col gap-2"
+                  >
+                    <label
+                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                      htmlFor="root_additionalProperty"
+                    >
+                      additionalProperty
+                    </label>
+                    <div
+                      className="p-0.5"
+                    >
+                      <input
+                        aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
+                        autoFocus={false}
+                        className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                        disabled={false}
+                        id="root_additionalProperty"
+                        name="root_additionalProperty"
+                        onBlur={[Function]}
+                        onChange={[Function]}
+                        onFocus={[Function]}
+                        placeholder=""
+                        readOnly={false}
+                        required={false}
+                        type="text"
+                        value="should appear"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <button
+                className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-9 w-9 border-destructive"
+                disabled={false}
+                id="root_additionalProperty__remove"
+                onClick={[Function]}
+                title="Remove"
+                type="button"
+              >
+                <svg
+                  aria-hidden="true"
+                  className="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
+                  fill="none"
+                  height={24}
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  viewBox="0 0 24 24"
+                  width={24}
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M3 6h18"
+                  />
+                  <path
+                    d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"
+                  />
+                  <path
+                    d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"
+                  />
+                  <line
+                    x1="10"
+                    x2="10"
+                    y1="11"
+                    y2="17"
+                  />
+                  <line
+                    x1="14"
+                    x2="14"
+                    y1="11"
+                    y2="17"
+                  />
+                </svg>
+              </button>
+            </div>
+            <div
+              className="shrink-0 bg-border h-[1px] w-full mt-2"
+              data-orientation="horizontal"
+              dir="horizontal"
+              role="none"
+            />
+          </div>
+        </div>
+        <div
+          className="p-0 m-0"
+        >
+          <button
+            className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2 w-fit gap-2"
+            disabled={false}
+            id="root__add"
+            onClick={[Function]}
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              className="lucide lucide-circle-plus"
+              fill="none"
+              height={16}
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              viewBox="0 0 24 24"
+              width={16}
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <circle
+                cx="12"
+                cy="12"
+                r="10"
+              />
+              <path
+                d="M8 12h8"
+              />
+              <path
+                d="M12 8v8"
+              />
+            </svg>
+             
+            Add Item
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2 my-2"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`object fields with title and description object 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div
+      className="flex flex-col gap-2"
+    >
+      <div
+        className="my-1 flex flex-col gap-0.5"
+        id="root__title"
+      >
+        <h5>
+          Test field
+        </h5>
+        <div
+          className="shrink-0 bg-border h-[1px] w-full my-1"
+          data-orientation="horizontal"
+          dir="horizontal"
+          role="none"
+          style={
+            {
+              "height": "1px",
+            }
+          }
+        />
+      </div>
+      <div>
+        <div
+          className="text-sm text-muted-foreground"
+          id="root__description"
+        >
+          a test description
+        </div>
+      </div>
+      <div
+        className="flex flex-col gap-2"
+      >
+        <div
+          className=" flex"
+        >
+          <div
+            className="w-full"
+          >
+             
+            <div
+              className="rjsf-field rjsf-field-string"
+            >
+              <div
+                className="flex flex-col gap-2"
+              >
+                <label
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  htmlFor="root_a"
+                >
+                  A
+                </label>
+                <div
+                  className="p-0.5"
+                >
+                  <input
+                    aria-describedby="root_a__error root_a__description root_a__help"
+                    autoFocus={false}
+                    className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                    disabled={false}
+                    id="root_a"
+                    name="root_a"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    readOnly={false}
+                    required={false}
+                    type="text"
+                    value=""
+                  />
+                </div>
+                <span
+                  className="text-xs font-medium text-muted-foreground"
+                >
+                  <div>
+                    <div
+                      className="text-sm text-muted-foreground"
+                      id="root_a__description"
+                    >
+                      A description
+                    </div>
+                  </div>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          className=" flex"
+        >
+          <div
+            className="w-full"
+          >
+             
+            <div
+              className="rjsf-field rjsf-field-number"
+            >
+              <div
+                className="flex flex-col gap-2"
+              >
+                <label
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  htmlFor="root_b"
+                >
+                  B
+                </label>
+                <div
+                  className="p-0.5"
+                >
+                  <input
+                    aria-describedby="root_b__error root_b__description root_b__help"
+                    autoFocus={false}
+                    className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                    disabled={false}
+                    id="root_b"
+                    name="root_b"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    readOnly={false}
+                    required={false}
+                    step="any"
+                    type="number"
+                    value=""
+                  />
+                </div>
+                <span
+                  className="text-xs font-medium text-muted-foreground"
+                >
+                  <div>
+                    <div
+                      className="text-sm text-muted-foreground"
+                      id="root_b__description"
+                    >
+                      B description
+                    </div>
+                  </div>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2 my-2"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`object fields with title and description show add button and fields if additionalProperties is true and not an object 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div
+      className="flex flex-col gap-2"
+    >
+      <div
+        className="my-1 flex flex-col gap-0.5"
+        id="root__title"
+      >
+        <h5>
+          Test field
+        </h5>
+        <div
+          className="shrink-0 bg-border h-[1px] w-full my-1"
+          data-orientation="horizontal"
+          dir="horizontal"
+          role="none"
+          style={
+            {
+              "height": "1px",
+            }
+          }
+        />
+      </div>
+      <div>
+        <div
+          className="text-sm text-muted-foreground"
+          id="root__description"
+        >
+          a test description
+        </div>
+      </div>
+      <div
+        className="flex flex-col gap-2"
+      >
+        <div
+          className=" flex"
+        >
+          <div
+            className="w-full"
+          >
+             
+            <div
+              className="flex flex-row items-center gap-2 relative w-full rjsf-field rjsf-field-string"
+            >
+              <div
+                className="flex flex-col w-full gap-2 line-clamp-1"
+              >
+                <div
+                  className="flex-grow"
+                >
+                  <label
+                    className="pt-2 text-sm font-medium text-muted-foreground mb-4 line-clamp-1"
+                    htmlFor="root_additionalProperty-key"
+                  >
+                    additionalProperty Key
+                  </label>
+                  <div
+                    className="pl-0.5"
+                  >
+                    <input
+                      className="flex h-9 rounded-md border-input bg-transparent px-3 py-1 text-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 mt-1 w-full border shadow-sm"
+                      defaultValue="additionalProperty"
+                      disabled={false}
+                      id="root_additionalProperty-key"
+                      name="root_additionalProperty-key"
+                      onBlur={[Function]}
+                      required={false}
+                      type="text"
+                    />
+                  </div>
+                </div>
+                <div
+                  className="flex-grow pr-0.5"
+                >
+                  <div
+                    className="flex flex-col gap-2"
+                  >
+                    <label
+                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                      htmlFor="root_additionalProperty"
+                    >
+                      additionalProperty
+                    </label>
+                    <div
+                      className="p-0.5"
+                    >
+                      <input
+                        aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
+                        autoFocus={false}
+                        className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                        disabled={false}
+                        id="root_additionalProperty"
+                        name="root_additionalProperty"
+                        onBlur={[Function]}
+                        onChange={[Function]}
+                        onFocus={[Function]}
+                        placeholder=""
+                        readOnly={false}
+                        required={false}
+                        type="text"
+                        value="should appear"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <button
+                className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-9 w-9 border-destructive"
+                disabled={false}
+                id="root_additionalProperty__remove"
+                onClick={[Function]}
+                title="Remove"
+                type="button"
+              >
+                <svg
+                  aria-hidden="true"
+                  className="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
+                  fill="none"
+                  height={24}
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  viewBox="0 0 24 24"
+                  width={24}
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M3 6h18"
+                  />
+                  <path
+                    d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"
+                  />
+                  <path
+                    d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"
+                  />
+                  <line
+                    x1="10"
+                    x2="10"
+                    y1="11"
+                    y2="17"
+                  />
+                  <line
+                    x1="14"
+                    x2="14"
+                    y1="11"
+                    y2="17"
+                  />
+                </svg>
+              </button>
+            </div>
+            <div
+              className="shrink-0 bg-border h-[1px] w-full mt-2"
+              data-orientation="horizontal"
+              dir="horizontal"
+              role="none"
+            />
+          </div>
+        </div>
+        <div
+          className="p-0 m-0"
+        >
+          <button
+            className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2 w-fit gap-2"
+            disabled={false}
+            id="root__add"
+            onClick={[Function]}
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              className="lucide lucide-circle-plus"
+              fill="none"
+              height={16}
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              viewBox="0 0 24 24"
+              width={16}
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <circle
+                cx="12"
+                cy="12"
+                r="10"
+              />
+              <path
+                d="M8 12h8"
+              />
+              <path
+                d="M12 8v8"
+              />
+            </svg>
+             
+            Add Item
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2 my-2"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`object fields with title and description with global label off additionalProperties 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div
+      className="flex flex-col gap-2"
+    >
+      <div
+        className="flex flex-col gap-2"
+      >
+        <div
+          className=" flex"
+        >
+          <div
+            className="w-full"
+          >
+             
+            <div
+              className="flex flex-row items-center gap-2 relative w-full rjsf-field rjsf-field-string"
+            >
+              <div
+                className="flex flex-col w-full gap-2 line-clamp-1"
+              >
+                <div
+                  className="flex-grow"
+                >
+                  <label
+                    className="pt-2 text-sm font-medium text-muted-foreground mb-4 line-clamp-1"
+                    htmlFor="root_foo-key"
+                  >
+                    foo Key
+                  </label>
+                  <div
+                    className="pl-0.5"
+                  >
+                    <input
+                      className="flex h-9 rounded-md border-input bg-transparent px-3 py-1 text-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 mt-1 w-full border shadow-sm"
+                      defaultValue="foo"
+                      disabled={false}
+                      id="root_foo-key"
+                      name="root_foo-key"
+                      onBlur={[Function]}
+                      required={false}
+                      type="text"
+                    />
+                  </div>
+                </div>
+                <div
+                  className="flex-grow pr-0.5"
+                >
+                  <div
+                    className="flex flex-col gap-2"
+                  >
+                    <div
+                      className="p-0.5"
+                    >
+                      <input
+                        aria-describedby="root_foo__error root_foo__description root_foo__help"
+                        autoFocus={false}
+                        className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                        disabled={false}
+                        id="root_foo"
+                        name="root_foo"
+                        onBlur={[Function]}
+                        onChange={[Function]}
+                        onFocus={[Function]}
+                        placeholder=""
+                        readOnly={false}
+                        required={false}
+                        type="text"
+                        value="foo"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <button
+                className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-9 w-9 border-destructive"
+                disabled={false}
+                id="root_foo__remove"
+                onClick={[Function]}
+                title="Remove"
+                type="button"
+              >
+                <svg
+                  aria-hidden="true"
+                  className="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
+                  fill="none"
+                  height={24}
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  viewBox="0 0 24 24"
+                  width={24}
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M3 6h18"
+                  />
+                  <path
+                    d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"
+                  />
+                  <path
+                    d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"
+                  />
+                  <line
+                    x1="10"
+                    x2="10"
+                    y1="11"
+                    y2="17"
+                  />
+                  <line
+                    x1="14"
+                    x2="14"
+                    y1="11"
+                    y2="17"
+                  />
+                </svg>
+              </button>
+            </div>
+            <div
+              className="shrink-0 bg-border h-[1px] w-full mt-2"
+              data-orientation="horizontal"
+              dir="horizontal"
+              role="none"
+            />
+          </div>
+        </div>
+        <div
+          className="p-0 m-0"
+        >
+          <button
+            className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2 w-fit gap-2"
+            disabled={false}
+            id="root__add"
+            onClick={[Function]}
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              className="lucide lucide-circle-plus"
+              fill="none"
+              height={16}
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              viewBox="0 0 24 24"
+              width={16}
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <circle
+                cx="12"
+                cy="12"
+                r="10"
+              />
+              <path
+                d="M8 12h8"
+              />
+              <path
+                d="M12 8v8"
+              />
+            </svg>
+             
+            Add Item
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2 my-2"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`object fields with title and description with global label off object 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div
+      className="flex flex-col gap-2"
+    >
+      <div
+        className="flex flex-col gap-2"
+      >
+        <div
+          className=" flex"
+        >
+          <div
+            className="w-full"
+          >
+             
+            <div
+              className="rjsf-field rjsf-field-string"
+            >
+              <div
+                className="flex flex-col gap-2"
+              >
+                <div
+                  className="p-0.5"
+                >
+                  <input
+                    aria-describedby="root_a__error root_a__description root_a__help"
+                    autoFocus={false}
+                    className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                    disabled={false}
+                    id="root_a"
+                    name="root_a"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    readOnly={false}
+                    required={false}
+                    type="text"
+                    value=""
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          className=" flex"
+        >
+          <div
+            className="w-full"
+          >
+             
+            <div
+              className="rjsf-field rjsf-field-number"
+            >
+              <div
+                className="flex flex-col gap-2"
+              >
+                <div
+                  className="p-0.5"
+                >
+                  <input
+                    aria-describedby="root_b__error root_b__description root_b__help"
+                    autoFocus={false}
+                    className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                    disabled={false}
+                    id="root_b"
+                    name="root_b"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    readOnly={false}
+                    required={false}
+                    step="any"
+                    type="number"
+                    value=""
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2 my-2"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`object fields with title and description with global label off show add button and fields if additionalProperties is true and not an object 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div
+      className="flex flex-col gap-2"
+    >
+      <div
+        className="flex flex-col gap-2"
+      >
+        <div
+          className=" flex"
+        >
+          <div
+            className="w-full"
+          >
+             
+            <div
+              className="flex flex-row items-center gap-2 relative w-full rjsf-field rjsf-field-string"
+            >
+              <div
+                className="flex flex-col w-full gap-2 line-clamp-1"
+              >
+                <div
+                  className="flex-grow"
+                >
+                  <label
+                    className="pt-2 text-sm font-medium text-muted-foreground mb-4 line-clamp-1"
+                    htmlFor="root_additionalProperty-key"
+                  >
+                    additionalProperty Key
+                  </label>
+                  <div
+                    className="pl-0.5"
+                  >
+                    <input
+                      className="flex h-9 rounded-md border-input bg-transparent px-3 py-1 text-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 mt-1 w-full border shadow-sm"
+                      defaultValue="additionalProperty"
+                      disabled={false}
+                      id="root_additionalProperty-key"
+                      name="root_additionalProperty-key"
+                      onBlur={[Function]}
+                      required={false}
+                      type="text"
+                    />
+                  </div>
+                </div>
+                <div
+                  className="flex-grow pr-0.5"
+                >
+                  <div
+                    className="flex flex-col gap-2"
+                  >
+                    <div
+                      className="p-0.5"
+                    >
+                      <input
+                        aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
+                        autoFocus={false}
+                        className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                        disabled={false}
+                        id="root_additionalProperty"
+                        name="root_additionalProperty"
+                        onBlur={[Function]}
+                        onChange={[Function]}
+                        onFocus={[Function]}
+                        placeholder=""
+                        readOnly={false}
+                        required={false}
+                        type="text"
+                        value="should appear"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <button
+                className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-9 w-9 border-destructive"
+                disabled={false}
+                id="root_additionalProperty__remove"
+                onClick={[Function]}
+                title="Remove"
+                type="button"
+              >
+                <svg
+                  aria-hidden="true"
+                  className="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
+                  fill="none"
+                  height={24}
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  viewBox="0 0 24 24"
+                  width={24}
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M3 6h18"
+                  />
+                  <path
+                    d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"
+                  />
+                  <path
+                    d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"
+                  />
+                  <line
+                    x1="10"
+                    x2="10"
+                    y1="11"
+                    y2="17"
+                  />
+                  <line
+                    x1="14"
+                    x2="14"
+                    y1="11"
+                    y2="17"
+                  />
+                </svg>
+              </button>
+            </div>
+            <div
+              className="shrink-0 bg-border h-[1px] w-full mt-2"
+              data-orientation="horizontal"
+              dir="horizontal"
+              role="none"
+            />
+          </div>
+        </div>
+        <div
+          className="p-0 m-0"
+        >
+          <button
+            className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border border-input bg-background shadow-sm hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2 w-fit gap-2"
+            disabled={false}
+            id="root__add"
+            onClick={[Function]}
+            type="button"
+          >
+            <svg
+              aria-hidden="true"
+              className="lucide lucide-circle-plus"
+              fill="none"
+              height={16}
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              viewBox="0 0 24 24"
+              width={16}
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <circle
+                cx="12"
+                cy="12"
+                r="10"
+              />
+              <path
+                d="M8 12h8"
+              />
+              <path
+                d="M12 8v8"
+              />
+            </svg>
+             
+            Add Item
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2 my-2"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;

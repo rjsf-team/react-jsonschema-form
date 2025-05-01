@@ -3,23 +3,24 @@ import {
   getUiOptions,
   isFixedItems,
   ArrayFieldTemplateProps,
-  ArrayFieldTemplateItemType,
+  ArrayFieldItemTemplateType,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
   UI_OPTIONS_KEY,
+  buttonId,
 } from '@rjsf/utils';
 
 import { cleanClassNames, getSemanticProps } from '../util';
 
 /** The `ArrayFieldTemplate` component is the template used to render all items in an array.
  *
- * @param props - The `ArrayFieldTemplateItemType` props for the component
+ * @param props - The `ArrayFieldItemTemplateType` props for the component
  */
 export default function ArrayFieldTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(props: ArrayFieldTemplateProps<T, S, F>) {
   const {
     uiSchema,
@@ -49,17 +50,17 @@ export default function ArrayFieldTemplate<
   const ArrayFieldDescriptionTemplate = getTemplate<'ArrayFieldDescriptionTemplate', T, S, F>(
     'ArrayFieldDescriptionTemplate',
     registry,
-    uiOptions
+    uiOptions,
   );
   const ArrayFieldItemTemplate = getTemplate<'ArrayFieldItemTemplate', T, S, F>(
     'ArrayFieldItemTemplate',
     registry,
-    uiOptions
+    uiOptions,
   );
   const ArrayFieldTitleTemplate = getTemplate<'ArrayFieldTitleTemplate', T, S, F>(
     'ArrayFieldTitleTemplate',
     registry,
-    uiOptions
+    uiOptions,
   );
   // Button templates are not overridden in the uiSchema
   const {
@@ -85,7 +86,7 @@ export default function ArrayFieldTemplate<
       <div key={`array-item-list-${idSchema.$id}`}>
         <div className='row array-item-list'>
           {items &&
-            items.map(({ key, uiSchema: itemUiSchema = {}, ...props }: ArrayFieldTemplateItemType<T, S, F>) => {
+            items.map(({ key, uiSchema: itemUiSchema = {}, ...props }: ArrayFieldItemTemplateType<T, S, F>) => {
               // Merge in the semantic props from the ArrayFieldTemplate into each of the items
               const mergedUiSchema = {
                 ...itemUiSchema,
@@ -105,7 +106,14 @@ export default function ArrayFieldTemplate<
               textAlign: 'right',
             }}
           >
-            <AddButton onClick={onAddClick} disabled={disabled || readonly} uiSchema={uiSchema} registry={registry} />
+            <AddButton
+              id={buttonId<T>(idSchema, 'add')}
+              className='rjsf-array-item-add'
+              onClick={onAddClick}
+              disabled={disabled || readonly}
+              uiSchema={uiSchema}
+              registry={registry}
+            />
           </div>
         )}
       </div>

@@ -66,7 +66,7 @@ The source-code of these snapshot tests reside in the `core` package in the `tes
 In order to support the various themes, the code for the tests are actually functions that take two parameters:
 
 - `Form`: ComponentType&lt;FormProps> - The component from the theme implementation
-- `[customOptions]`: { [key: string]: TestRendererOptions } - an optional map of `react-test-renderer` `TestRendererOptions` implementations that some themes need to be able properly run
+- `[customOptions]`: \{ [key: string]: TestRendererOptions } - an optional map of `react-test-renderer` `TestRendererOptions` implementations that some themes need to be able properly run
 
 There are functions in the `testSnap` directory: `arrayTests`, `formTests` and `objectTests`, each with its own definition of `customOptions`
 
@@ -125,7 +125,7 @@ The full report can be seen by opening `./coverage/lcov-report/index.html`.
 
 #### Utils and validator-ajvX code coverage
 
-100% code coverage is required by the `@rjsf/utils` and `@rjsf/validator-ajv6` and `@rjsf/validator-ajv8` tests.
+100% code coverage is required by the `@rjsf/utils` and `@rjsf/validator-ajv8` tests.
 If you make changes to those libraries, you will have to maintain that coverage, otherwise the tests will fail.
 
 > NOTE: All three of these directories share the same tests for verifying `validator` based APIs. See the documentation in the `getTestValidator()` functions for more information.
@@ -136,14 +136,14 @@ To release, go to the main branch (NOT a fork) and then create a new branch with
 For instance if you are about to create the new `5.100.10` branch, then you would run the following commands:
 
 ```bash
-git checkout -b rc5.100.10
+git checkout -b rc6.100.10
 git push
-npx lerna version
+npx nx release version --git-tag
 npm run post-versioning
 ```
 
 Make sure you use [semver](https://semver.org/) for version numbering when selecting the version.
-The `npx lerna version` command will create a new version tag and push it to GitHub.
+The `npx nx release version --git-tag` command will create a new version tag and push it to GitHub.
 
 The `npm run post-versioning` script will update the peer dependencies in all of the `packages/*/package.json` files if necessary.
 It will then clean up the `node_modules` directories and rerun `npm install` to update the `package-lock.json` files.

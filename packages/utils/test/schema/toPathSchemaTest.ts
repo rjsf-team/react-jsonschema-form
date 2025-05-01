@@ -887,7 +887,7 @@ export default function toPathSchemaTest(testValidator: TestValidatorType) {
         },
       });
       expect(consoleWarnSpy).toHaveBeenCalledWith(
-        'Unable to generate path schema for ".arr.1". No schema defined for it'
+        'Unable to generate path schema for ".arr.1". No schema defined for it',
       );
     });
   });

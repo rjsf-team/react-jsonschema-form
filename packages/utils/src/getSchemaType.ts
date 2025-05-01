@@ -7,13 +7,14 @@ import { RJSFSchema, StrictRJSFSchema } from './types';
  * - schema.enum: Returns `string`
  * - schema.properties: Returns `object`
  * - schema.additionalProperties: Returns `object`
+ * - schema.patternProperties: Returns `object`
  * - type is an array with a length of 2 and one type is 'null': Returns the other type
  *
  * @param schema - The schema for which to get the type
  * @returns - The type of the schema
  */
 export default function getSchemaType<S extends StrictRJSFSchema = RJSFSchema>(
-  schema: S
+  schema: S,
 ): string | string[] | undefined {
   let { type } = schema;
 
@@ -25,7 +26,7 @@ export default function getSchemaType<S extends StrictRJSFSchema = RJSFSchema>(
     return 'string';
   }
 
-  if (!type && (schema.properties || schema.additionalProperties)) {
+  if (!type && (schema.properties || schema.additionalProperties || schema.patternProperties)) {
     return 'object';
   }
 

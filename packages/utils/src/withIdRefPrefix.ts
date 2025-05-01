@@ -39,7 +39,7 @@ function withIdRefPrefixArray<S extends StrictRJSFSchema = RJSFSchema>(node: S[]
  * @returns - A copy of the `schemaNode` with updated `$ref`s
  */
 export default function withIdRefPrefix<S extends StrictRJSFSchema = RJSFSchema>(
-  schemaNode: S | S[] | S[keyof S]
+  schemaNode: S | S[] | S[keyof S],
 ): S | S[] | S[keyof S] {
   if (Array.isArray(schemaNode)) {
     return withIdRefPrefixArray<S>([...schemaNode]);

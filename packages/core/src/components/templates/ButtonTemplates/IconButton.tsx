@@ -1,7 +1,7 @@
 import { FormContextType, IconButtonProps, RJSFSchema, StrictRJSFSchema, TranslatableString } from '@rjsf/utils';
 
 export default function IconButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: IconButtonProps<T, S, F>
+  props: IconButtonProps<T, S, F>,
 ) {
   const { iconType = 'default', icon, className, uiSchema, registry, ...otherProps } = props;
   return (
@@ -12,66 +12,39 @@ export default function IconButton<T = any, S extends StrictRJSFSchema = RJSFSch
 }
 
 export function CopyButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: IconButtonProps<T, S, F>
+  props: IconButtonProps<T, S, F>,
 ) {
   const {
     registry: { translateString },
   } = props;
-  return (
-    <IconButton
-      title={translateString(TranslatableString.CopyButton)}
-      className='array-item-copy'
-      {...props}
-      icon='copy'
-    />
-  );
+  return <IconButton title={translateString(TranslatableString.CopyButton)} {...props} icon='copy' />;
 }
 
 export function MoveDownButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: IconButtonProps<T, S, F>
+  props: IconButtonProps<T, S, F>,
 ) {
   const {
     registry: { translateString },
   } = props;
-  return (
-    <IconButton
-      title={translateString(TranslatableString.MoveDownButton)}
-      className='array-item-move-down'
-      {...props}
-      icon='arrow-down'
-    />
-  );
+  return <IconButton title={translateString(TranslatableString.MoveDownButton)} {...props} icon='arrow-down' />;
 }
 
 export function MoveUpButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: IconButtonProps<T, S, F>
+  props: IconButtonProps<T, S, F>,
 ) {
   const {
     registry: { translateString },
   } = props;
-  return (
-    <IconButton
-      title={translateString(TranslatableString.MoveUpButton)}
-      className='array-item-move-up'
-      {...props}
-      icon='arrow-up'
-    />
-  );
+  return <IconButton title={translateString(TranslatableString.MoveUpButton)} {...props} icon='arrow-up' />;
 }
 
 export function RemoveButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: IconButtonProps<T, S, F>
+  props: IconButtonProps<T, S, F>,
 ) {
   const {
     registry: { translateString },
   } = props;
   return (
-    <IconButton
-      title={translateString(TranslatableString.RemoveButton)}
-      className='array-item-remove'
-      {...props}
-      iconType='danger'
-      icon='remove'
-    />
+    <IconButton title={translateString(TranslatableString.RemoveButton)} {...props} iconType='danger' icon='remove' />
   );
 }

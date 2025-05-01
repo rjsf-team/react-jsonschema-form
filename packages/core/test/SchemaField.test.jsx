@@ -130,7 +130,7 @@ describe('SchemaField', () => {
         fields,
       });
 
-      expect(node.querySelectorAll('#custom > .field input[type=text]')).to.have.length.of(1);
+      expect(node.querySelectorAll('#custom > .rjsf-field input[type=text]')).to.have.length.of(1);
     });
   });
 

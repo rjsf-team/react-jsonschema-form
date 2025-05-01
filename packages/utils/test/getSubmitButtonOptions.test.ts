@@ -10,7 +10,7 @@ describe('getSubmitButtonOptions', () => {
     expect(
       getSubmitButtonOptions({
         'ui:options': { submitButtonOptions: { norender: true } },
-      })
+      }),
     ).toEqual({
       ...DEFAULT_OPTIONS,
       norender: true,
@@ -21,7 +21,7 @@ describe('getSubmitButtonOptions', () => {
     expect(
       getSubmitButtonOptions({
         'ui:options': { submitButtonOptions: { props: { hidden: true } } },
-      })
+      }),
     ).toEqual({
       ...DEFAULT_OPTIONS,
       props: {
@@ -34,7 +34,7 @@ describe('getSubmitButtonOptions', () => {
     expect(
       getSubmitButtonOptions({
         'ui:options': { submitButtonOptions: { props: { disabled: true } } },
-      })
+      }),
     ).toEqual({
       ...DEFAULT_OPTIONS,
       props: {
@@ -47,7 +47,7 @@ describe('getSubmitButtonOptions', () => {
     expect(
       getSubmitButtonOptions({
         'ui:options': { submitButtonOptions: { submitText: 'Confirm' } },
-      })
+      }),
     ).toEqual({
       ...DEFAULT_OPTIONS,
       submitText: 'Confirm',

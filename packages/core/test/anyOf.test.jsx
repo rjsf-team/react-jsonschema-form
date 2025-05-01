@@ -161,7 +161,7 @@ describe('anyOf', () => {
       {
         formData: { foo: 'defaultbar' },
       },
-      'root__anyof_select'
+      'root__anyof_select',
     );
   });
 
@@ -237,7 +237,7 @@ describe('anyOf', () => {
       {
         formData: { foo: 'defaultbar' },
       },
-      'root__anyof_select'
+      'root__anyof_select',
     );
   });
 
@@ -277,7 +277,7 @@ describe('anyOf', () => {
       {
         formData: { foo: 'defaultbar' },
       },
-      'root__anyof_select'
+      'root__anyof_select',
     );
   });
 
@@ -379,7 +379,7 @@ describe('anyOf', () => {
       {
         formData: { foo: 'Lorem ipsum dolor sit amet' },
       },
-      'root_foo'
+      'root_foo',
     );
   });
 
@@ -420,7 +420,7 @@ describe('anyOf', () => {
           buzz: 'Lorem ipsum dolor sit amet',
         },
       },
-      'root_buzz'
+      'root_buzz',
     );
 
     act(() => {
@@ -437,7 +437,7 @@ describe('anyOf', () => {
           foo: 'Consectetur adipiscing elit',
         },
       },
-      'root_foo'
+      'root_foo',
     );
 
     const $select = node.querySelector('select');
@@ -488,7 +488,7 @@ describe('anyOf', () => {
       {
         formData: { userId: 12345 },
       },
-      'root_userId'
+      'root_userId',
     );
 
     const $select = node.querySelector('select');
@@ -504,7 +504,7 @@ describe('anyOf', () => {
       {
         formData: { userId: undefined },
       },
-      'root_userId'
+      'root_userId',
     );
 
     act(() => {
@@ -518,7 +518,7 @@ describe('anyOf', () => {
       {
         formData: { userId: 'Lorem ipsum dolor sit amet' },
       },
-      'root_userId'
+      'root_userId',
     );
   });
 
@@ -1103,10 +1103,10 @@ describe('anyOf', () => {
         schema,
       });
 
-      expect(node.querySelector('.array-item-add button')).not.eql(null);
+      expect(node.querySelector('.rjsf-array-item-add button')).not.eql(null);
 
       act(() => {
-        fireEvent.click(node.querySelector('.array-item-add button'));
+        fireEvent.click(node.querySelector('.rjsf-array-item-add button'));
       });
 
       expect(node.querySelectorAll('select')).to.have.length.of(1);
@@ -1159,7 +1159,7 @@ describe('anyOf', () => {
       expect(selects[0].value).eql('0');
       expect(selects[1].value).eql('1');
 
-      const moveUpBtns = node.querySelectorAll('.array-item-move-up');
+      const moveUpBtns = node.querySelectorAll('.rjsf-array-item-move-up');
 
       act(() => {
         fireEvent.click(moveUpBtns[1]);
@@ -1206,12 +1206,12 @@ describe('anyOf', () => {
         },
       });
 
-      const moveDownBtns = node.querySelectorAll('.array-item-move-down');
+      const moveDownBtns = node.querySelectorAll('.rjsf-array-item-move-down');
       act(() => {
         fireEvent.click(moveDownBtns[0]);
       });
 
-      const strInputs = node.querySelectorAll('fieldset .field-string input[type=text]');
+      const strInputs = node.querySelectorAll('fieldset .rjsf-field-string input[type=text]');
 
       act(() => {
         fireEvent.change(strInputs[1], { target: { value: 'bar' } });
@@ -1250,10 +1250,10 @@ describe('anyOf', () => {
         schema,
       });
 
-      expect(node.querySelector('.array-item-add button')).not.eql(null);
+      expect(node.querySelector('.rjsf-array-item-add button')).not.eql(null);
 
       act(() => {
-        fireEvent.click(node.querySelector('.array-item-add button'));
+        fireEvent.click(node.querySelector('.rjsf-array-item-add button'));
       });
 
       const $select = node.querySelector('select');
@@ -1630,7 +1630,7 @@ describe('anyOf', () => {
         fireEvent.submit(node);
       });
 
-      let inputs = node.querySelectorAll('.form-group.field-error input[type=number]');
+      let inputs = node.querySelectorAll('.form-group.rjsf-field-error input[type=number]');
       expect(inputs[0].id).eql('root_userId');
 
       const $select = node.querySelector('select');
@@ -1650,7 +1650,7 @@ describe('anyOf', () => {
         fireEvent.submit(node);
       });
 
-      inputs = node.querySelectorAll('.form-group.field-error input[type=text]');
+      inputs = node.querySelectorAll('.form-group.rjsf-field-error input[type=text]');
       expect(inputs[0].id).eql('root_userId');
     });
 
@@ -1673,7 +1673,7 @@ describe('anyOf', () => {
         fireEvent.submit(node);
       });
 
-      let inputs = node.querySelectorAll('.form-group.field-error input[type=number]');
+      let inputs = node.querySelectorAll('.form-group.rjsf-field-error input[type=number]');
       expect(inputs).to.have.length.of(0);
 
       const $select = node.querySelector('select');
@@ -1693,7 +1693,7 @@ describe('anyOf', () => {
         fireEvent.submit(node);
       });
 
-      inputs = node.querySelectorAll('.form-group.field-error input[type=text]');
+      inputs = node.querySelectorAll('.form-group.rjsf-field-error input[type=text]');
       expect(inputs).to.have.length.of(0);
     });
   });

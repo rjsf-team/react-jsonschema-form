@@ -1,28 +1,24 @@
-import { ChakraProps, shouldForwardProp } from '@chakra-ui/react';
+import { Field as ChakraField, defaultSystem } from '@chakra-ui/react';
 import { UiSchema } from '@rjsf/utils';
+import shouldForwardProp from '@emotion/is-prop-valid';
+
+const { isValidProperty } = defaultSystem;
 
 export interface ChakraUiSchema extends Omit<UiSchema, 'ui:options'> {
   'ui:options'?: ChakraUiOptions;
 }
 
-type ChakraUiOptions = UiSchema['ui:options'] & { chakra?: ChakraProps };
+type ChakraUiOptions = UiSchema['ui:options'] & { chakra?: ChakraField.RootProps };
 
-interface GetChakraProps {
-  uiSchema?: ChakraUiSchema;
-}
-
-export function getChakra({ uiSchema = {} }: GetChakraProps): ChakraProps {
+export function getChakra(uiSchema: ChakraUiSchema = {}): ChakraField.RootProps {
   const chakraProps = (uiSchema['ui:options'] && uiSchema['ui:options'].chakra) || {};
 
   Object.keys(chakraProps).forEach((key) => {
     /**
      * Leveraging `shouldForwardProp` to remove props
-     *
-     * This is a utility function that's used in `@chakra-ui/react`'s factory function.
-     * Normally, it prevents ChakraProps from being passed to the DOM.
-     * In this case we just want to delete the unknown props. So we flip the boolean.
+     * https://chakra-ui.com/docs/styling/chakra-factory#forwarding-props
      */
-    if (shouldForwardProp(key)) {
+    if (!isValidProperty(key) || shouldForwardProp(key)) {
       delete (chakraProps as any)[key];
     }
   });

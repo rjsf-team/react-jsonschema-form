@@ -79,3 +79,13 @@ export function ariaDescribedByIds<T = any>(id: IdSchema<T> | string, includeExa
 export function optionId(id: string, optionIndex: number) {
   return `${id}-${optionIndex}`;
 }
+
+/** Return a consistent `id` for the `btn` button element
+ *
+ * @param id - Either simple string id or an IdSchema from which to extract it
+ * @param btn - The button type for which to generate the id
+ * @returns - The consistent id for the button from the given `id` and `btn` type
+ */
+export function buttonId<T = any>(id: IdSchema<T> | string, btn: 'add' | 'copy' | 'moveDown' | 'moveUp' | 'remove') {
+  return idGenerator<T>(id, btn);
+}

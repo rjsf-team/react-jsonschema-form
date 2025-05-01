@@ -1,0 +1,9 @@
+{
+  "snapshotSerializers": ["@emotion/jest/serializer"],
+  "testEnvironment": "jsdom",
+  "testEnvironmentOptions": {
+    "browsers": ["chrome", "firefox", "safari"]
+  },
+  "setupFilesAfterEnv": ["./test/setup-jest-env.js"],
+  "transformIgnorePatterns": ["/node_modules/(?!nanoid)"]
+}

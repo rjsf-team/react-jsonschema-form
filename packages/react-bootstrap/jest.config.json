@@ -1,0 +1,3 @@
+{
+  "transformIgnorePatterns": ["/node_modules/(?!nanoid)"]
+}

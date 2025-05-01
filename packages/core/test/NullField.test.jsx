@@ -21,7 +21,7 @@ describe('NullField', () => {
         },
       });
 
-      expect(node.querySelectorAll('.field')).to.have.length.of(1);
+      expect(node.querySelectorAll('.rjsf-field')).to.have.length.of(1);
     });
 
     it('should render a null field with a label', () => {
@@ -32,7 +32,7 @@ describe('NullField', () => {
         },
       });
 
-      expect(node.querySelector('.field label').textContent).eql('foo');
+      expect(node.querySelector('.rjsf-field label').textContent).eql('foo');
     });
 
     it('should assign a default value', () => {

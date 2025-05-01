@@ -6,7 +6,7 @@ import base64 from '../utils/base64';
 
 import CopyLink from './CopyLink';
 import ThemeSelector, { ThemesType } from './ThemeSelector';
-import Selector from './Selector';
+import SampleSelector, { SampleSelectorProps } from './SampleSelector';
 import ValidatorSelector from './ValidatorSelector';
 import SubthemeSelector from './SubthemeSelector';
 import RawValidatorTest from './RawValidatorTest';
@@ -236,13 +236,14 @@ type HeaderProps = {
   themes: { [themeName: string]: ThemesType };
   theme: string;
   subtheme: string | null;
+  sampleName: string;
   validators: {
     [validatorName: string]: ValidatorType<any, RJSFSchema, any>;
   };
   validator: string;
   liveSettings: LiveSettings;
   playGroundFormRef: React.MutableRefObject<any>;
-  load: (data: any) => void;
+  onSampleSelected: SampleSelectorProps['onSelected'];
   onThemeSelected: (theme: string, themeObj: ThemesType) => void;
   setSubtheme: React.Dispatch<React.SetStateAction<string | null>>;
   setStylesheet: React.Dispatch<React.SetStateAction<string | null>>;
@@ -263,34 +264,35 @@ export default function Header({
   validator,
   liveSettings,
   playGroundFormRef,
-  load,
   onThemeSelected,
   setSubtheme,
   setStylesheet,
   setValidator,
   setLiveSettings,
   setShareURL,
+  sampleName,
+  onSampleSelected,
 }: HeaderProps) {
   const onSubthemeSelected = useCallback(
     (subtheme: any, { stylesheet }: { stylesheet: any }) => {
       setSubtheme(subtheme);
       setStylesheet(stylesheet);
     },
-    [setSubtheme, setStylesheet]
+    [setSubtheme, setStylesheet],
   );
 
   const onValidatorSelected = useCallback(
     (validator: string) => {
       setValidator(validator);
     },
-    [setValidator]
+    [setValidator],
   );
 
   const handleSetLiveSettings = useCallback(
     ({ formData }: IChangeEvent) => {
       setLiveSettings((previousLiveSettings) => ({ ...previousLiveSettings, ...formData }));
     },
-    [setLiveSettings]
+    [setLiveSettings],
   );
 
   const onShare = useCallback(() => {
@@ -307,7 +309,8 @@ export default function Header({
           theme,
           liveSettings,
           validator,
-        })
+          sampleName,
+        }),
       );
 
       setShareURL(`${origin}${pathname}#${hash}`);
@@ -322,7 +325,7 @@ export default function Header({
       <h1>react-jsonschema-form</h1>
       <div className='row'>
         <div className='col-sm-4'>
-          <Selector onSelected={load} />
+          <SampleSelector onSelected={onSampleSelected} selectedSample={sampleName} />
         </div>
         <div className='col-sm-2'>
           <Form

@@ -1,9 +1,9 @@
 import deepEquals from './deepEquals';
 import {
-  ErrorSchema,
   Experimental_CustomMergeAllOf,
   Experimental_DefaultFormStateBehavior,
   FormContextType,
+  FoundFieldType,
   GlobalUISchemaOptions,
   IdSchema,
   PathSchema,
@@ -11,19 +11,19 @@ import {
   SchemaUtilsType,
   StrictRJSFSchema,
   UiSchema,
-  ValidationData,
   ValidatorType,
 } from './types';
 import {
+  findFieldInSchema,
+  findSelectedOptionInXxxOf,
   getDefaultFormState,
   getDisplayLabel,
   getClosestMatchingOption,
   getFirstMatchingOption,
-  getMatchingOption,
+  getFromSchema,
   isFilesArray,
   isMultiSelect,
   isSelect,
-  mergeValidationData,
   retrieveSchema,
   sanitizeDataForNewSchema,
   toIdSchema,
@@ -55,7 +55,7 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
     validator: ValidatorType<T, S, F>,
     rootSchema: S,
     experimental_defaultFormStateBehavior: Experimental_DefaultFormStateBehavior,
-    experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>
+    experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
   ) {
     this.rootSchema = rootSchema;
     this.validator = validator;
@@ -85,7 +85,7 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
     validator: ValidatorType<T, S, F>,
     rootSchema: S,
     experimental_defaultFormStateBehavior = {},
-    experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>
+    experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
   ): boolean {
     if (!validator || !rootSchema) {
       return false;
@@ -95,6 +95,49 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
       !deepEquals(this.rootSchema, rootSchema) ||
       !deepEquals(this.experimental_defaultFormStateBehavior, experimental_defaultFormStateBehavior) ||
       this.experimental_customMergeAllOf !== experimental_customMergeAllOf
+    );
+  }
+
+  /** Finds the field specified by the `path` within the root or recursed `schema`. If there is no field for the specified
+   * `path`, then the default `{ field: undefined, isRequired: undefined }` is returned. It determines whether a leaf
+   * field is in the `required` list for its parent and if so, it is marked as required on return.
+   *
+   * @param schema - The current node within the JSON schema
+   * @param path - The remaining keys in the path to the desired field
+   * @param [formData] - The form data that is used to determine which oneOf option
+   * @returns - An object that contains the field and its required state. If no field can be found then
+   *            `{ field: undefined, isRequired: undefined }` is returned.
+   */
+  findFieldInSchema(schema: S, path: string | string[], formData?: T): FoundFieldType<S> {
+    return findFieldInSchema(
+      this.validator,
+      this.rootSchema,
+      schema,
+      path,
+      formData,
+      this.experimental_customMergeAllOf,
+    );
+  }
+
+  /** Finds the oneOf option inside the `schema['any/oneOf']` list which has the `properties[selectorField].default` that
+   * matches the `formData[selectorField]` value. For the purposes of this function, `selectorField` is either
+   * `schema.discriminator.propertyName` or `fallbackField`.
+   *
+   * @param schema - The schema element in which to search for the selected oneOf option
+   * @param fallbackField - The field to use as a backup selector field if the schema does not have a required field
+   * @param xxx - Either `oneOf` or `anyOf`, defines which value is being sought
+   * @param [formData={}] - The form data that is used to determine which oneOf option
+   * @returns - The anyOf/oneOf option that matches the selector field in the schema or undefined if nothing is selected
+   */
+  findSelectedOptionInXxxOf(schema: S, fallbackField: string, xxx: 'anyOf' | `oneOf`, formData: T): S | undefined {
+    return findSelectedOptionInXxxOf(
+      this.validator,
+      this.rootSchema,
+      schema,
+      fallbackField,
+      xxx,
+      formData,
+      this.experimental_customMergeAllOf,
     );
   }
 
@@ -111,7 +154,7 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
   getDefaultFormState(
     schema: S,
     formData?: T,
-    includeUndefinedValues: boolean | 'excludeObjectChildren' = false
+    includeUndefinedValues: boolean | 'excludeObjectChildren' = false,
   ): T | T[] | undefined {
     return getDefaultFormState<T, S, F>(
       this.validator,
@@ -120,7 +163,7 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
       this.rootSchema,
       includeUndefinedValues,
       this.experimental_defaultFormStateBehavior,
-      this.experimental_customMergeAllOf
+      this.experimental_customMergeAllOf,
     );
   }
 
@@ -139,7 +182,7 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
       uiSchema,
       this.rootSchema,
       globalOptions,
-      this.experimental_customMergeAllOf
+      this.experimental_customMergeAllOf,
     );
   }
 
@@ -160,7 +203,7 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
     formData: T | undefined,
     options: S[],
     selectedOption?: number,
-    discriminatorField?: string
+    discriminatorField?: string,
   ): number {
     return getClosestMatchingOption<T, S, F>(
       this.validator,
@@ -169,7 +212,7 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
       options,
       selectedOption,
       discriminatorField,
-      this.experimental_customMergeAllOf
+      this.experimental_customMergeAllOf,
     );
   }
 
@@ -186,18 +229,26 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
     return getFirstMatchingOption<T, S, F>(this.validator, formData, options, this.rootSchema, discriminatorField);
   }
 
-  /** Given the `formData` and list of `options`, attempts to find the index of the option that best matches the data.
-   * Deprecated, use `getFirstMatchingOption()` instead.
+  /** Helper that acts like lodash's `get` but additionally retrieves `$ref`s as needed to get the path for schemas
+   * containing potentially nested `$ref`s.
    *
-   * @param formData - The current formData, if any, onto which to provide any missing defaults
-   * @param options - The list of options to find a matching options from
-   * @param [discriminatorField] - The optional name of the field within the options object whose value is used to
-   *          determine which option is selected
-   * @returns - The index of the matched option or 0 if none is available
-   * @deprecated
+   * @param schema - The current node within the JSON schema recursion
+   * @param path - The remaining keys in the path to the desired property
+   * @param defaultValue - The value to return if a value is not found for the `pathList` path
+   * @returns - The internal schema from the `schema` for the given `path` or the `defaultValue` if not found
    */
-  getMatchingOption(formData: T | undefined, options: S[], discriminatorField?: string) {
-    return getMatchingOption<T, S, F>(this.validator, formData, options, this.rootSchema, discriminatorField);
+  getFromSchema(schema: S, path: string | string[], defaultValue: T): T;
+  getFromSchema(schema: S, path: string | string[], defaultValue: S): S;
+  getFromSchema(schema: S, path: string | string[], defaultValue: T | S): T | S {
+    return getFromSchema<T, S, F>(
+      this.validator,
+      this.rootSchema,
+      schema,
+      path,
+      // @ts-expect-error TS2769: No overload matches this call
+      defaultValue,
+      this.experimental_customMergeAllOf,
+    );
   }
 
   /** Checks to see if the `schema` and `uiSchema` combination represents an array of files
@@ -228,21 +279,6 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
     return isSelect<T, S, F>(this.validator, schema, this.rootSchema, this.experimental_customMergeAllOf);
   }
 
-  /** Merges the errors in `additionalErrorSchema` into the existing `validationData` by combining the hierarchies in
-   * the two `ErrorSchema`s and then appending the error list from the `additionalErrorSchema` obtained by calling
-   * `getValidator().toErrorList()` onto the `errors` in the `validationData`. If no `additionalErrorSchema` is passed,
-   * then `validationData` is returned.
-   *
-   * @param validationData - The current `ValidationData` into which to merge the additional errors
-   * @param [additionalErrorSchema] - The additional set of errors
-   * @returns - The `validationData` with the additional errors from `additionalErrorSchema` merged into it, if provided.
-   * @deprecated - Use the `validationDataMerge()` function exported from `@rjsf/utils` instead. This function will be
-   *        removed in the next major release.
-   */
-  mergeValidationData(validationData: ValidationData<T>, additionalErrorSchema?: ErrorSchema<T>): ValidationData<T> {
-    return mergeValidationData<T, S, F>(this.validator, validationData, additionalErrorSchema);
-  }
-
   /** Retrieves an expanded schema that has had all of its conditions, additional properties, references and
    * dependencies resolved and merged into the `schema` given a `rawFormData` that is used to do the potentially
    * recursive resolution.
@@ -257,7 +293,7 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
       schema,
       this.rootSchema,
       rawFormData,
-      this.experimental_customMergeAllOf
+      this.experimental_customMergeAllOf,
     );
   }
 
@@ -279,7 +315,7 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
       newSchema,
       oldSchema,
       data,
-      this.experimental_customMergeAllOf
+      this.experimental_customMergeAllOf,
     );
   }
 
@@ -301,7 +337,7 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
       formData,
       idPrefix,
       idSeparator,
-      this.experimental_customMergeAllOf
+      this.experimental_customMergeAllOf,
     );
   }
 
@@ -319,7 +355,7 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
       name,
       this.rootSchema,
       formData,
-      this.experimental_customMergeAllOf
+      this.experimental_customMergeAllOf,
     );
   }
 }
@@ -336,17 +372,17 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
 export default function createSchemaUtils<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(
   validator: ValidatorType<T, S, F>,
   rootSchema: S,
   experimental_defaultFormStateBehavior = {},
-  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>
+  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
 ): SchemaUtilsType<T, S, F> {
   return new SchemaUtils<T, S, F>(
     validator,
     rootSchema,
     experimental_defaultFormStateBehavior,
-    experimental_customMergeAllOf
+    experimental_customMergeAllOf,
   );
 }

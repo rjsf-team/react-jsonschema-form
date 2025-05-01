@@ -1,0 +1,15 @@
+{
+  "testEnvironment": "jsdom",
+  "modulePathIgnorePatterns": ["<rootDir>/dist/", "<rootDir>/lib/"],
+  "transform": {
+    "^.+\\.(t|j)sx?$": "babel-jest"
+  },
+  "coveragePathIgnorePatterns": ["/node_modules/", "/test/"],
+  "transformIgnorePatterns": [
+    "/node_modules/(?!(@rjsf|@epicfaace|nanoid|@fortawesome|@coreui|yup|react-day-picker|dayjs)/)"
+  ],
+  "moduleNameMapper": {
+    "\\.(css|less|scss|sass)$": "<rootDir>/test/fileMock.js"
+  },
+  "setupFilesAfterEnv": ["<rootDir>/test/setup.js"]
+}

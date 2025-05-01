@@ -47,9 +47,9 @@
 
 ## About The Project
 
-[![@rjsf/material-ui Screen Shot][product-screenshot]](https://rjsf-team.github.io/@rjsf/mui)
+[![@rjsf/mui Screen Shot][product-screenshot]](https://rjsf-team.github.io/@rjsf/mui)
 
-Exports `material-ui` version 4 and 5 themes, fields and widgets for `react-jsonschema-form`.
+Exports `MUI` version 5 theme, fields, and widgets for `react-jsonschema-form`.
 
 ### Built With
 
@@ -71,10 +71,10 @@ NOTE: Material UI 5 requires React 17, so you will need to upgrade
 - `@emotion/styled`
 - `@rjsf/core >= 5.0.0`
 - `@rjsf/utils >= 5.0.0`
-- `@rjsf/validator-ajv6 >= 5.0.0`
+- `@rjsf/validator-ajv8 >= 5.0.0`
 
 ```bash
-yarn add @mui/material @mui/icons-material @emotion/react @emotion/styled @rjsf/core @rjsf/utils @rjsf/validator-ajv6
+yarn add @mui/material @mui/icons-material @emotion/react @emotion/styled @rjsf/core @rjsf/utils @rjsf/validator-ajv8
 ```
 
 ### Installation

@@ -15,11 +15,11 @@
     "replacers": {
       "lodash": {
         "enabled": true,
-        "file": "lodashReplacer.js"
+        "file": "lodashReplacer.cjs"
       },
       "ajv": {
         "enabled": true,
-        "file": "ajvReplacer.js"
+        "file": "ajvReplacer.cjs"
       }
     }
   }

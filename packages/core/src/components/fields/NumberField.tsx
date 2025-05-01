@@ -31,7 +31,7 @@ const trailingCharMatcher = /[0.]0*$/;
  *    value is passed to the input instead of the formData value
  */
 function NumberField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: FieldProps<T, S, F>
+  props: FieldProps<T, S, F>,
 ) {
   const { registry, onChange, formData, value: initialValue } = props;
   const [lastValue, setLastValue] = useState(initialValue);
@@ -64,7 +64,7 @@ function NumberField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
 
       onChange(processed as unknown as T, errorSchema, id);
     },
-    [onChange]
+    [onChange],
   );
 
   if (typeof lastValue === 'string' && typeof value === 'number') {

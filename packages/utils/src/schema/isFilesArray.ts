@@ -23,7 +23,7 @@ export default function isFilesArray<T = any, S extends StrictRJSFSchema = RJSFS
   schema: S,
   uiSchema: UiSchema<T, S, F> = {},
   rootSchema?: S,
-  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>
+  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
 ) {
   if (uiSchema[UI_WIDGET_KEY] === 'files') {
     return true;
@@ -34,7 +34,7 @@ export default function isFilesArray<T = any, S extends StrictRJSFSchema = RJSFS
       schema.items as S,
       rootSchema,
       undefined,
-      experimental_customMergeAllOf
+      experimental_customMergeAllOf,
     );
     return itemsSchema.type === 'string' && itemsSchema.format === 'data-url';
   }

@@ -1,0 +1,2372 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`object fields additionalProperties 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div>
+      <div
+        className="p-0 container-fluid"
+      >
+        <div
+          className="row"
+          style={
+            {
+              "marginBottom": "10px",
+            }
+          }
+        >
+          <div
+            className="col-12"
+          >
+             
+            <div
+              className="rjsf-field rjsf-field-string row"
+            >
+              <div
+                className="col-5"
+              >
+                <div>
+                  <label
+                    className="form-label"
+                    htmlFor="root_foo-key"
+                  >
+                    foo Key
+                  </label>
+                  <input
+                    className="form-control"
+                    defaultValue="foo"
+                    disabled={false}
+                    id="root_foo-key"
+                    name="root_foo-key"
+                    onBlur={[Function]}
+                    required={false}
+                    type="text"
+                  />
+                </div>
+              </div>
+              <div
+                className="col-5"
+              >
+                <div>
+                  <label
+                    className="form-label"
+                    htmlFor="root_foo"
+                  >
+                    foo
+                  </label>
+                  <input
+                    aria-describedby="root_foo__error root_foo__description root_foo__help"
+                    autoFocus={false}
+                    className="form-control"
+                    disabled={false}
+                    id="root_foo"
+                    name="root_foo"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    readOnly={false}
+                    required={false}
+                    type="text"
+                    value="foo"
+                  />
+                </div>
+              </div>
+              <div
+                className="py-4 d-grid gap-2 col-2"
+              >
+                <button
+                  className="btn btn-danger btn-sm"
+                  disabled={false}
+                  id="root_foo__remove"
+                  onClick={[Function]}
+                  title="Remove"
+                  type="button"
+                >
+                  <svg
+                    fill="currentColor"
+                    height="1em"
+                    stroke="currentColor"
+                    strokeWidth="0"
+                    style={
+                      {
+                        "color": undefined,
+                      }
+                    }
+                    viewBox="0 0 512 512"
+                    width="1em"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M368.5 240h-225c-8.8 0-16 7.2-16 16 0 4.4 1.8 8.4 4.7 11.3 2.9 2.9 6.9 4.7 11.3 4.7h225c8.8 0 16-7.2 16-16s-7.2-16-16-16z"
+                    />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          className="row"
+        >
+          <div
+            className="py-4 col-3 offset-9"
+          >
+            <button
+              className="ml-1 rjsf-object-property-expand btn btn-primary"
+              disabled={false}
+              id="root__add"
+              onClick={[Function]}
+              style={
+                {
+                  "width": "100%",
+                }
+              }
+              title="Add Item"
+              type="button"
+            >
+              <svg
+                fill="currentColor"
+                height="1em"
+                stroke="currentColor"
+                strokeWidth="0"
+                style={
+                  {
+                    "color": undefined,
+                  }
+                }
+                viewBox="0 0 16 16"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  clipRule="evenodd"
+                  d="M8 3.5a.5.5 0 01.5.5v4a.5.5 0 01-.5.5H4a.5.5 0 010-1h3.5V4a.5.5 0 01.5-.5z"
+                  fillRule="evenodd"
+                />
+                <path
+                  clipRule="evenodd"
+                  d="M7.5 8a.5.5 0 01.5-.5h4a.5.5 0 010 1H8.5V12a.5.5 0 01-1 0V8z"
+                  fillRule="evenodd"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`object fields object 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div>
+      <div
+        className="p-0 container-fluid"
+      >
+        <div
+          className="row"
+          style={
+            {
+              "marginBottom": "10px",
+            }
+          }
+        >
+          <div
+            className="col-12"
+          >
+             
+            <div
+              className="rjsf-field rjsf-field-string"
+            >
+              <div>
+                <label
+                  className="form-label"
+                  htmlFor="root_a"
+                >
+                  A
+                </label>
+                <input
+                  aria-describedby="root_a__error root_a__description root_a__help"
+                  autoFocus={false}
+                  className="form-control"
+                  disabled={false}
+                  id="root_a"
+                  name="root_a"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                  placeholder=""
+                  readOnly={false}
+                  required={false}
+                  type="text"
+                  value=""
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          className="row"
+          style={
+            {
+              "marginBottom": "10px",
+            }
+          }
+        >
+          <div
+            className="col-12"
+          >
+             
+            <div
+              className="rjsf-field rjsf-field-number"
+            >
+              <div>
+                <label
+                  className="form-label"
+                  htmlFor="root_b"
+                >
+                  B
+                </label>
+                <input
+                  aria-describedby="root_b__error root_b__description root_b__help"
+                  autoFocus={false}
+                  className="form-control"
+                  disabled={false}
+                  id="root_b"
+                  name="root_b"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                  placeholder=""
+                  readOnly={false}
+                  required={false}
+                  step="any"
+                  type="number"
+                  value=""
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`object fields show add button and fields if additionalProperties is true and not an object 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div>
+      <div
+        className="p-0 container-fluid"
+      >
+        <div
+          className="row"
+          style={
+            {
+              "marginBottom": "10px",
+            }
+          }
+        >
+          <div
+            className="col-12"
+          >
+             
+            <div
+              className="rjsf-field rjsf-field-string row"
+            >
+              <div
+                className="col-5"
+              >
+                <div>
+                  <label
+                    className="form-label"
+                    htmlFor="root_additionalProperty-key"
+                  >
+                    additionalProperty Key
+                  </label>
+                  <input
+                    className="form-control"
+                    defaultValue="additionalProperty"
+                    disabled={false}
+                    id="root_additionalProperty-key"
+                    name="root_additionalProperty-key"
+                    onBlur={[Function]}
+                    required={false}
+                    type="text"
+                  />
+                </div>
+              </div>
+              <div
+                className="col-5"
+              >
+                <div>
+                  <label
+                    className="form-label"
+                    htmlFor="root_additionalProperty"
+                  >
+                    additionalProperty
+                  </label>
+                  <input
+                    aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
+                    autoFocus={false}
+                    className="form-control"
+                    disabled={false}
+                    id="root_additionalProperty"
+                    name="root_additionalProperty"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    readOnly={false}
+                    required={false}
+                    type="text"
+                    value="should appear"
+                  />
+                </div>
+              </div>
+              <div
+                className="py-4 d-grid gap-2 col-2"
+              >
+                <button
+                  className="btn btn-danger btn-sm"
+                  disabled={false}
+                  id="root_additionalProperty__remove"
+                  onClick={[Function]}
+                  title="Remove"
+                  type="button"
+                >
+                  <svg
+                    fill="currentColor"
+                    height="1em"
+                    stroke="currentColor"
+                    strokeWidth="0"
+                    style={
+                      {
+                        "color": undefined,
+                      }
+                    }
+                    viewBox="0 0 512 512"
+                    width="1em"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M368.5 240h-225c-8.8 0-16 7.2-16 16 0 4.4 1.8 8.4 4.7 11.3 2.9 2.9 6.9 4.7 11.3 4.7h225c8.8 0 16-7.2 16-16s-7.2-16-16-16z"
+                    />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          className="row"
+        >
+          <div
+            className="py-4 col-3 offset-9"
+          >
+            <button
+              className="ml-1 rjsf-object-property-expand btn btn-primary"
+              disabled={false}
+              id="root__add"
+              onClick={[Function]}
+              style={
+                {
+                  "width": "100%",
+                }
+              }
+              title="Add Item"
+              type="button"
+            >
+              <svg
+                fill="currentColor"
+                height="1em"
+                stroke="currentColor"
+                strokeWidth="0"
+                style={
+                  {
+                    "color": undefined,
+                  }
+                }
+                viewBox="0 0 16 16"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  clipRule="evenodd"
+                  d="M8 3.5a.5.5 0 01.5.5v4a.5.5 0 01-.5.5H4a.5.5 0 010-1h3.5V4a.5.5 0 01.5-.5z"
+                  fillRule="evenodd"
+                />
+                <path
+                  clipRule="evenodd"
+                  d="M7.5 8a.5.5 0 01.5-.5h4a.5.5 0 010 1H8.5V12a.5.5 0 01-1 0V8z"
+                  fillRule="evenodd"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`object fields with title and description additionalProperties 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div>
+      <div
+        className="my-1"
+        id="root__title"
+      >
+        <h5>
+          Test field
+        </h5>
+        <hr
+          className="border-0 bg-secondary"
+          style={
+            {
+              "height": "1px",
+            }
+          }
+        />
+      </div>
+      <div>
+        <div
+          className="mb-3"
+          id="root__description"
+        >
+          a test description
+        </div>
+      </div>
+      <div
+        className="p-0 container-fluid"
+      >
+        <div
+          className="row"
+          style={
+            {
+              "marginBottom": "10px",
+            }
+          }
+        >
+          <div
+            className="col-12"
+          >
+             
+            <div
+              className="rjsf-field rjsf-field-string row"
+            >
+              <div
+                className="col-5"
+              >
+                <div>
+                  <label
+                    className="form-label"
+                    htmlFor="root_foo-key"
+                  >
+                    foo Key
+                  </label>
+                  <input
+                    className="form-control"
+                    defaultValue="foo"
+                    disabled={false}
+                    id="root_foo-key"
+                    name="root_foo-key"
+                    onBlur={[Function]}
+                    required={false}
+                    type="text"
+                  />
+                </div>
+              </div>
+              <div
+                className="col-5"
+              >
+                <div>
+                  <label
+                    className="form-label"
+                    htmlFor="root_foo"
+                  >
+                    foo
+                  </label>
+                  <input
+                    aria-describedby="root_foo__error root_foo__description root_foo__help"
+                    autoFocus={false}
+                    className="form-control"
+                    disabled={false}
+                    id="root_foo"
+                    name="root_foo"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    readOnly={false}
+                    required={false}
+                    type="text"
+                    value="foo"
+                  />
+                </div>
+              </div>
+              <div
+                className="py-4 d-grid gap-2 col-2"
+              >
+                <button
+                  className="btn btn-danger btn-sm"
+                  disabled={false}
+                  id="root_foo__remove"
+                  onClick={[Function]}
+                  title="Remove"
+                  type="button"
+                >
+                  <svg
+                    fill="currentColor"
+                    height="1em"
+                    stroke="currentColor"
+                    strokeWidth="0"
+                    style={
+                      {
+                        "color": undefined,
+                      }
+                    }
+                    viewBox="0 0 512 512"
+                    width="1em"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M368.5 240h-225c-8.8 0-16 7.2-16 16 0 4.4 1.8 8.4 4.7 11.3 2.9 2.9 6.9 4.7 11.3 4.7h225c8.8 0 16-7.2 16-16s-7.2-16-16-16z"
+                    />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          className="row"
+        >
+          <div
+            className="py-4 col-3 offset-9"
+          >
+            <button
+              className="ml-1 rjsf-object-property-expand btn btn-primary"
+              disabled={false}
+              id="root__add"
+              onClick={[Function]}
+              style={
+                {
+                  "width": "100%",
+                }
+              }
+              title="Add Item"
+              type="button"
+            >
+              <svg
+                fill="currentColor"
+                height="1em"
+                stroke="currentColor"
+                strokeWidth="0"
+                style={
+                  {
+                    "color": undefined,
+                  }
+                }
+                viewBox="0 0 16 16"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  clipRule="evenodd"
+                  d="M8 3.5a.5.5 0 01.5.5v4a.5.5 0 01-.5.5H4a.5.5 0 010-1h3.5V4a.5.5 0 01.5-.5z"
+                  fillRule="evenodd"
+                />
+                <path
+                  clipRule="evenodd"
+                  d="M7.5 8a.5.5 0 01.5-.5h4a.5.5 0 010 1H8.5V12a.5.5 0 01-1 0V8z"
+                  fillRule="evenodd"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`object fields with title and description from both additionalProperties 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div>
+      <div
+        className="my-1"
+        id="root__title"
+      >
+        <h5>
+          My Field
+        </h5>
+        <hr
+          className="border-0 bg-secondary"
+          style={
+            {
+              "height": "1px",
+            }
+          }
+        />
+      </div>
+      <div>
+        <div
+          className="mb-3"
+          id="root__description"
+        >
+          a fancier description
+        </div>
+      </div>
+      <div
+        className="p-0 container-fluid"
+      >
+        <div
+          className="row"
+          style={
+            {
+              "marginBottom": "10px",
+            }
+          }
+        >
+          <div
+            className="col-12"
+          >
+             
+            <div
+              className="rjsf-field rjsf-field-string row"
+            >
+              <div
+                className="col-5"
+              >
+                <div>
+                  <label
+                    className="form-label"
+                    htmlFor="root_foo-key"
+                  >
+                    foo Key
+                  </label>
+                  <input
+                    className="form-control"
+                    defaultValue="foo"
+                    disabled={false}
+                    id="root_foo-key"
+                    name="root_foo-key"
+                    onBlur={[Function]}
+                    required={false}
+                    type="text"
+                  />
+                </div>
+              </div>
+              <div
+                className="col-5"
+              >
+                <div>
+                  <label
+                    className="form-label"
+                    htmlFor="root_foo"
+                  >
+                    foo
+                  </label>
+                  <input
+                    aria-describedby="root_foo__error root_foo__description root_foo__help"
+                    autoFocus={false}
+                    className="form-control"
+                    disabled={false}
+                    id="root_foo"
+                    name="root_foo"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    readOnly={false}
+                    required={false}
+                    type="text"
+                    value="foo"
+                  />
+                </div>
+              </div>
+              <div
+                className="py-4 d-grid gap-2 col-2"
+              >
+                <button
+                  className="btn btn-danger btn-sm"
+                  disabled={false}
+                  id="root_foo__remove"
+                  onClick={[Function]}
+                  title="Remove"
+                  type="button"
+                >
+                  <svg
+                    fill="currentColor"
+                    height="1em"
+                    stroke="currentColor"
+                    strokeWidth="0"
+                    style={
+                      {
+                        "color": undefined,
+                      }
+                    }
+                    viewBox="0 0 512 512"
+                    width="1em"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M368.5 240h-225c-8.8 0-16 7.2-16 16 0 4.4 1.8 8.4 4.7 11.3 2.9 2.9 6.9 4.7 11.3 4.7h225c8.8 0 16-7.2 16-16s-7.2-16-16-16z"
+                    />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          className="row"
+        >
+          <div
+            className="py-4 col-3 offset-9"
+          >
+            <button
+              className="ml-1 rjsf-object-property-expand btn btn-primary"
+              disabled={false}
+              id="root__add"
+              onClick={[Function]}
+              style={
+                {
+                  "width": "100%",
+                }
+              }
+              title="Add Item"
+              type="button"
+            >
+              <svg
+                fill="currentColor"
+                height="1em"
+                stroke="currentColor"
+                strokeWidth="0"
+                style={
+                  {
+                    "color": undefined,
+                  }
+                }
+                viewBox="0 0 16 16"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  clipRule="evenodd"
+                  d="M8 3.5a.5.5 0 01.5.5v4a.5.5 0 01-.5.5H4a.5.5 0 010-1h3.5V4a.5.5 0 01.5-.5z"
+                  fillRule="evenodd"
+                />
+                <path
+                  clipRule="evenodd"
+                  d="M7.5 8a.5.5 0 01.5-.5h4a.5.5 0 010 1H8.5V12a.5.5 0 01-1 0V8z"
+                  fillRule="evenodd"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`object fields with title and description from both object 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div>
+      <div
+        className="my-1"
+        id="root__title"
+      >
+        <h5>
+          My Field
+        </h5>
+        <hr
+          className="border-0 bg-secondary"
+          style={
+            {
+              "height": "1px",
+            }
+          }
+        />
+      </div>
+      <div>
+        <div
+          className="mb-3"
+          id="root__description"
+        >
+          a fancier description
+        </div>
+      </div>
+      <div
+        className="p-0 container-fluid"
+      >
+        <div
+          className="row"
+          style={
+            {
+              "marginBottom": "10px",
+            }
+          }
+        >
+          <div
+            className="col-12"
+          >
+             
+            <div
+              className="rjsf-field rjsf-field-string"
+            >
+              <div>
+                <label
+                  className="form-label"
+                  htmlFor="root_a"
+                >
+                  My Item A
+                </label>
+                <input
+                  aria-describedby="root_a__error root_a__description root_a__help"
+                  autoFocus={false}
+                  className="form-control"
+                  disabled={false}
+                  id="root_a"
+                  name="root_a"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                  placeholder=""
+                  readOnly={false}
+                  required={false}
+                  type="text"
+                  value=""
+                />
+                <small
+                  className="text-muted form-text"
+                >
+                  <div>
+                    <div
+                      className="mb-3"
+                      id="root_a__description"
+                    >
+                      a fancier item A description
+                    </div>
+                  </div>
+                </small>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          className="row"
+          style={
+            {
+              "marginBottom": "10px",
+            }
+          }
+        >
+          <div
+            className="col-12"
+          >
+             
+            <div
+              className="rjsf-field rjsf-field-number"
+            >
+              <div>
+                <label
+                  className="form-label"
+                  htmlFor="root_b"
+                >
+                  My Item B
+                </label>
+                <input
+                  aria-describedby="root_b__error root_b__description root_b__help"
+                  autoFocus={false}
+                  className="form-control"
+                  disabled={false}
+                  id="root_b"
+                  name="root_b"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                  placeholder=""
+                  readOnly={false}
+                  required={false}
+                  step="any"
+                  type="number"
+                  value=""
+                />
+                <small
+                  className="text-muted form-text"
+                >
+                  <div>
+                    <div
+                      className="mb-3"
+                      id="root_b__description"
+                    >
+                      a fancier item B description
+                    </div>
+                  </div>
+                </small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`object fields with title and description from uiSchema additionalProperties 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div>
+      <div
+        className="my-1"
+        id="root__title"
+      >
+        <h5>
+          My Field
+        </h5>
+        <hr
+          className="border-0 bg-secondary"
+          style={
+            {
+              "height": "1px",
+            }
+          }
+        />
+      </div>
+      <div>
+        <div
+          className="mb-3"
+          id="root__description"
+        >
+          a fancier description
+        </div>
+      </div>
+      <div
+        className="p-0 container-fluid"
+      >
+        <div
+          className="row"
+          style={
+            {
+              "marginBottom": "10px",
+            }
+          }
+        >
+          <div
+            className="col-12"
+          >
+             
+            <div
+              className="rjsf-field rjsf-field-string row"
+            >
+              <div
+                className="col-5"
+              >
+                <div>
+                  <label
+                    className="form-label"
+                    htmlFor="root_foo-key"
+                  >
+                    foo Key
+                  </label>
+                  <input
+                    className="form-control"
+                    defaultValue="foo"
+                    disabled={false}
+                    id="root_foo-key"
+                    name="root_foo-key"
+                    onBlur={[Function]}
+                    required={false}
+                    type="text"
+                  />
+                </div>
+              </div>
+              <div
+                className="col-5"
+              >
+                <div>
+                  <label
+                    className="form-label"
+                    htmlFor="root_foo"
+                  >
+                    foo
+                  </label>
+                  <input
+                    aria-describedby="root_foo__error root_foo__description root_foo__help"
+                    autoFocus={false}
+                    className="form-control"
+                    disabled={false}
+                    id="root_foo"
+                    name="root_foo"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    readOnly={false}
+                    required={false}
+                    type="text"
+                    value="foo"
+                  />
+                </div>
+              </div>
+              <div
+                className="py-4 d-grid gap-2 col-2"
+              >
+                <button
+                  className="btn btn-danger btn-sm"
+                  disabled={false}
+                  id="root_foo__remove"
+                  onClick={[Function]}
+                  title="Remove"
+                  type="button"
+                >
+                  <svg
+                    fill="currentColor"
+                    height="1em"
+                    stroke="currentColor"
+                    strokeWidth="0"
+                    style={
+                      {
+                        "color": undefined,
+                      }
+                    }
+                    viewBox="0 0 512 512"
+                    width="1em"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M368.5 240h-225c-8.8 0-16 7.2-16 16 0 4.4 1.8 8.4 4.7 11.3 2.9 2.9 6.9 4.7 11.3 4.7h225c8.8 0 16-7.2 16-16s-7.2-16-16-16z"
+                    />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          className="row"
+        >
+          <div
+            className="py-4 col-3 offset-9"
+          >
+            <button
+              className="ml-1 rjsf-object-property-expand btn btn-primary"
+              disabled={false}
+              id="root__add"
+              onClick={[Function]}
+              style={
+                {
+                  "width": "100%",
+                }
+              }
+              title="Add Item"
+              type="button"
+            >
+              <svg
+                fill="currentColor"
+                height="1em"
+                stroke="currentColor"
+                strokeWidth="0"
+                style={
+                  {
+                    "color": undefined,
+                  }
+                }
+                viewBox="0 0 16 16"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  clipRule="evenodd"
+                  d="M8 3.5a.5.5 0 01.5.5v4a.5.5 0 01-.5.5H4a.5.5 0 010-1h3.5V4a.5.5 0 01.5-.5z"
+                  fillRule="evenodd"
+                />
+                <path
+                  clipRule="evenodd"
+                  d="M7.5 8a.5.5 0 01.5-.5h4a.5.5 0 010 1H8.5V12a.5.5 0 01-1 0V8z"
+                  fillRule="evenodd"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`object fields with title and description from uiSchema object 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div>
+      <div
+        className="my-1"
+        id="root__title"
+      >
+        <h5>
+          My Field
+        </h5>
+        <hr
+          className="border-0 bg-secondary"
+          style={
+            {
+              "height": "1px",
+            }
+          }
+        />
+      </div>
+      <div>
+        <div
+          className="mb-3"
+          id="root__description"
+        >
+          a fancier description
+        </div>
+      </div>
+      <div
+        className="p-0 container-fluid"
+      >
+        <div
+          className="row"
+          style={
+            {
+              "marginBottom": "10px",
+            }
+          }
+        >
+          <div
+            className="col-12"
+          >
+             
+            <div
+              className="rjsf-field rjsf-field-string"
+            >
+              <div>
+                <label
+                  className="form-label"
+                  htmlFor="root_a"
+                >
+                  My Item A
+                </label>
+                <input
+                  aria-describedby="root_a__error root_a__description root_a__help"
+                  autoFocus={false}
+                  className="form-control"
+                  disabled={false}
+                  id="root_a"
+                  name="root_a"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                  placeholder=""
+                  readOnly={false}
+                  required={false}
+                  type="text"
+                  value=""
+                />
+                <small
+                  className="text-muted form-text"
+                >
+                  <div>
+                    <div
+                      className="mb-3"
+                      id="root_a__description"
+                    >
+                      a fancier item A description
+                    </div>
+                  </div>
+                </small>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          className="row"
+          style={
+            {
+              "marginBottom": "10px",
+            }
+          }
+        >
+          <div
+            className="col-12"
+          >
+             
+            <div
+              className="rjsf-field rjsf-field-number"
+            >
+              <div>
+                <label
+                  className="form-label"
+                  htmlFor="root_b"
+                >
+                  My Item B
+                </label>
+                <input
+                  aria-describedby="root_b__error root_b__description root_b__help"
+                  autoFocus={false}
+                  className="form-control"
+                  disabled={false}
+                  id="root_b"
+                  name="root_b"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                  placeholder=""
+                  readOnly={false}
+                  required={false}
+                  step="any"
+                  type="number"
+                  value=""
+                />
+                <small
+                  className="text-muted form-text"
+                >
+                  <div>
+                    <div
+                      className="mb-3"
+                      id="root_b__description"
+                    >
+                      a fancier item B description
+                    </div>
+                  </div>
+                </small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`object fields with title and description from uiSchema show add button and fields if additionalProperties is true and not an object 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div>
+      <div
+        className="my-1"
+        id="root__title"
+      >
+        <h5>
+          My Field
+        </h5>
+        <hr
+          className="border-0 bg-secondary"
+          style={
+            {
+              "height": "1px",
+            }
+          }
+        />
+      </div>
+      <div>
+        <div
+          className="mb-3"
+          id="root__description"
+        >
+          a fancier description
+        </div>
+      </div>
+      <div
+        className="p-0 container-fluid"
+      >
+        <div
+          className="row"
+          style={
+            {
+              "marginBottom": "10px",
+            }
+          }
+        >
+          <div
+            className="col-12"
+          >
+             
+            <div
+              className="rjsf-field rjsf-field-string row"
+            >
+              <div
+                className="col-5"
+              >
+                <div>
+                  <label
+                    className="form-label"
+                    htmlFor="root_additionalProperty-key"
+                  >
+                    additionalProperty Key
+                  </label>
+                  <input
+                    className="form-control"
+                    defaultValue="additionalProperty"
+                    disabled={false}
+                    id="root_additionalProperty-key"
+                    name="root_additionalProperty-key"
+                    onBlur={[Function]}
+                    required={false}
+                    type="text"
+                  />
+                </div>
+              </div>
+              <div
+                className="col-5"
+              >
+                <div>
+                  <label
+                    className="form-label"
+                    htmlFor="root_additionalProperty"
+                  >
+                    additionalProperty
+                  </label>
+                  <input
+                    aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
+                    autoFocus={false}
+                    className="form-control"
+                    disabled={false}
+                    id="root_additionalProperty"
+                    name="root_additionalProperty"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    readOnly={false}
+                    required={false}
+                    type="text"
+                    value="should appear"
+                  />
+                </div>
+              </div>
+              <div
+                className="py-4 d-grid gap-2 col-2"
+              >
+                <button
+                  className="btn btn-danger btn-sm"
+                  disabled={false}
+                  id="root_additionalProperty__remove"
+                  onClick={[Function]}
+                  title="Remove"
+                  type="button"
+                >
+                  <svg
+                    fill="currentColor"
+                    height="1em"
+                    stroke="currentColor"
+                    strokeWidth="0"
+                    style={
+                      {
+                        "color": undefined,
+                      }
+                    }
+                    viewBox="0 0 512 512"
+                    width="1em"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M368.5 240h-225c-8.8 0-16 7.2-16 16 0 4.4 1.8 8.4 4.7 11.3 2.9 2.9 6.9 4.7 11.3 4.7h225c8.8 0 16-7.2 16-16s-7.2-16-16-16z"
+                    />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          className="row"
+        >
+          <div
+            className="py-4 col-3 offset-9"
+          >
+            <button
+              className="ml-1 rjsf-object-property-expand btn btn-primary"
+              disabled={false}
+              id="root__add"
+              onClick={[Function]}
+              style={
+                {
+                  "width": "100%",
+                }
+              }
+              title="Add Item"
+              type="button"
+            >
+              <svg
+                fill="currentColor"
+                height="1em"
+                stroke="currentColor"
+                strokeWidth="0"
+                style={
+                  {
+                    "color": undefined,
+                  }
+                }
+                viewBox="0 0 16 16"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  clipRule="evenodd"
+                  d="M8 3.5a.5.5 0 01.5.5v4a.5.5 0 01-.5.5H4a.5.5 0 010-1h3.5V4a.5.5 0 01.5-.5z"
+                  fillRule="evenodd"
+                />
+                <path
+                  clipRule="evenodd"
+                  d="M7.5 8a.5.5 0 01.5-.5h4a.5.5 0 010 1H8.5V12a.5.5 0 01-1 0V8z"
+                  fillRule="evenodd"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`object fields with title and description object 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div>
+      <div
+        className="my-1"
+        id="root__title"
+      >
+        <h5>
+          Test field
+        </h5>
+        <hr
+          className="border-0 bg-secondary"
+          style={
+            {
+              "height": "1px",
+            }
+          }
+        />
+      </div>
+      <div>
+        <div
+          className="mb-3"
+          id="root__description"
+        >
+          a test description
+        </div>
+      </div>
+      <div
+        className="p-0 container-fluid"
+      >
+        <div
+          className="row"
+          style={
+            {
+              "marginBottom": "10px",
+            }
+          }
+        >
+          <div
+            className="col-12"
+          >
+             
+            <div
+              className="rjsf-field rjsf-field-string"
+            >
+              <div>
+                <label
+                  className="form-label"
+                  htmlFor="root_a"
+                >
+                  A
+                </label>
+                <input
+                  aria-describedby="root_a__error root_a__description root_a__help"
+                  autoFocus={false}
+                  className="form-control"
+                  disabled={false}
+                  id="root_a"
+                  name="root_a"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                  placeholder=""
+                  readOnly={false}
+                  required={false}
+                  type="text"
+                  value=""
+                />
+                <small
+                  className="text-muted form-text"
+                >
+                  <div>
+                    <div
+                      className="mb-3"
+                      id="root_a__description"
+                    >
+                      A description
+                    </div>
+                  </div>
+                </small>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          className="row"
+          style={
+            {
+              "marginBottom": "10px",
+            }
+          }
+        >
+          <div
+            className="col-12"
+          >
+             
+            <div
+              className="rjsf-field rjsf-field-number"
+            >
+              <div>
+                <label
+                  className="form-label"
+                  htmlFor="root_b"
+                >
+                  B
+                </label>
+                <input
+                  aria-describedby="root_b__error root_b__description root_b__help"
+                  autoFocus={false}
+                  className="form-control"
+                  disabled={false}
+                  id="root_b"
+                  name="root_b"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                  placeholder=""
+                  readOnly={false}
+                  required={false}
+                  step="any"
+                  type="number"
+                  value=""
+                />
+                <small
+                  className="text-muted form-text"
+                >
+                  <div>
+                    <div
+                      className="mb-3"
+                      id="root_b__description"
+                    >
+                      B description
+                    </div>
+                  </div>
+                </small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`object fields with title and description show add button and fields if additionalProperties is true and not an object 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div>
+      <div
+        className="my-1"
+        id="root__title"
+      >
+        <h5>
+          Test field
+        </h5>
+        <hr
+          className="border-0 bg-secondary"
+          style={
+            {
+              "height": "1px",
+            }
+          }
+        />
+      </div>
+      <div>
+        <div
+          className="mb-3"
+          id="root__description"
+        >
+          a test description
+        </div>
+      </div>
+      <div
+        className="p-0 container-fluid"
+      >
+        <div
+          className="row"
+          style={
+            {
+              "marginBottom": "10px",
+            }
+          }
+        >
+          <div
+            className="col-12"
+          >
+             
+            <div
+              className="rjsf-field rjsf-field-string row"
+            >
+              <div
+                className="col-5"
+              >
+                <div>
+                  <label
+                    className="form-label"
+                    htmlFor="root_additionalProperty-key"
+                  >
+                    additionalProperty Key
+                  </label>
+                  <input
+                    className="form-control"
+                    defaultValue="additionalProperty"
+                    disabled={false}
+                    id="root_additionalProperty-key"
+                    name="root_additionalProperty-key"
+                    onBlur={[Function]}
+                    required={false}
+                    type="text"
+                  />
+                </div>
+              </div>
+              <div
+                className="col-5"
+              >
+                <div>
+                  <label
+                    className="form-label"
+                    htmlFor="root_additionalProperty"
+                  >
+                    additionalProperty
+                  </label>
+                  <input
+                    aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
+                    autoFocus={false}
+                    className="form-control"
+                    disabled={false}
+                    id="root_additionalProperty"
+                    name="root_additionalProperty"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    readOnly={false}
+                    required={false}
+                    type="text"
+                    value="should appear"
+                  />
+                </div>
+              </div>
+              <div
+                className="py-4 d-grid gap-2 col-2"
+              >
+                <button
+                  className="btn btn-danger btn-sm"
+                  disabled={false}
+                  id="root_additionalProperty__remove"
+                  onClick={[Function]}
+                  title="Remove"
+                  type="button"
+                >
+                  <svg
+                    fill="currentColor"
+                    height="1em"
+                    stroke="currentColor"
+                    strokeWidth="0"
+                    style={
+                      {
+                        "color": undefined,
+                      }
+                    }
+                    viewBox="0 0 512 512"
+                    width="1em"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M368.5 240h-225c-8.8 0-16 7.2-16 16 0 4.4 1.8 8.4 4.7 11.3 2.9 2.9 6.9 4.7 11.3 4.7h225c8.8 0 16-7.2 16-16s-7.2-16-16-16z"
+                    />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          className="row"
+        >
+          <div
+            className="py-4 col-3 offset-9"
+          >
+            <button
+              className="ml-1 rjsf-object-property-expand btn btn-primary"
+              disabled={false}
+              id="root__add"
+              onClick={[Function]}
+              style={
+                {
+                  "width": "100%",
+                }
+              }
+              title="Add Item"
+              type="button"
+            >
+              <svg
+                fill="currentColor"
+                height="1em"
+                stroke="currentColor"
+                strokeWidth="0"
+                style={
+                  {
+                    "color": undefined,
+                  }
+                }
+                viewBox="0 0 16 16"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  clipRule="evenodd"
+                  d="M8 3.5a.5.5 0 01.5.5v4a.5.5 0 01-.5.5H4a.5.5 0 010-1h3.5V4a.5.5 0 01.5-.5z"
+                  fillRule="evenodd"
+                />
+                <path
+                  clipRule="evenodd"
+                  d="M7.5 8a.5.5 0 01.5-.5h4a.5.5 0 010 1H8.5V12a.5.5 0 01-1 0V8z"
+                  fillRule="evenodd"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`object fields with title and description with global label off additionalProperties 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div>
+      <div
+        className="p-0 container-fluid"
+      >
+        <div
+          className="row"
+          style={
+            {
+              "marginBottom": "10px",
+            }
+          }
+        >
+          <div
+            className="col-12"
+          >
+             
+            <div
+              className="rjsf-field rjsf-field-string row"
+            >
+              <div
+                className="col-5"
+              >
+                <div>
+                  <label
+                    className="form-label"
+                    htmlFor="root_foo-key"
+                  >
+                    foo Key
+                  </label>
+                  <input
+                    className="form-control"
+                    defaultValue="foo"
+                    disabled={false}
+                    id="root_foo-key"
+                    name="root_foo-key"
+                    onBlur={[Function]}
+                    required={false}
+                    type="text"
+                  />
+                </div>
+              </div>
+              <div
+                className="col-5"
+              >
+                <div>
+                  <input
+                    aria-describedby="root_foo__error root_foo__description root_foo__help"
+                    autoFocus={false}
+                    className="form-control"
+                    disabled={false}
+                    id="root_foo"
+                    name="root_foo"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    readOnly={false}
+                    required={false}
+                    type="text"
+                    value="foo"
+                  />
+                </div>
+              </div>
+              <div
+                className="py-4 d-grid gap-2 col-2"
+              >
+                <button
+                  className="btn btn-danger btn-sm"
+                  disabled={false}
+                  id="root_foo__remove"
+                  onClick={[Function]}
+                  title="Remove"
+                  type="button"
+                >
+                  <svg
+                    fill="currentColor"
+                    height="1em"
+                    stroke="currentColor"
+                    strokeWidth="0"
+                    style={
+                      {
+                        "color": undefined,
+                      }
+                    }
+                    viewBox="0 0 512 512"
+                    width="1em"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M368.5 240h-225c-8.8 0-16 7.2-16 16 0 4.4 1.8 8.4 4.7 11.3 2.9 2.9 6.9 4.7 11.3 4.7h225c8.8 0 16-7.2 16-16s-7.2-16-16-16z"
+                    />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          className="row"
+        >
+          <div
+            className="py-4 col-3 offset-9"
+          >
+            <button
+              className="ml-1 rjsf-object-property-expand btn btn-primary"
+              disabled={false}
+              id="root__add"
+              onClick={[Function]}
+              style={
+                {
+                  "width": "100%",
+                }
+              }
+              title="Add Item"
+              type="button"
+            >
+              <svg
+                fill="currentColor"
+                height="1em"
+                stroke="currentColor"
+                strokeWidth="0"
+                style={
+                  {
+                    "color": undefined,
+                  }
+                }
+                viewBox="0 0 16 16"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  clipRule="evenodd"
+                  d="M8 3.5a.5.5 0 01.5.5v4a.5.5 0 01-.5.5H4a.5.5 0 010-1h3.5V4a.5.5 0 01.5-.5z"
+                  fillRule="evenodd"
+                />
+                <path
+                  clipRule="evenodd"
+                  d="M7.5 8a.5.5 0 01.5-.5h4a.5.5 0 010 1H8.5V12a.5.5 0 01-1 0V8z"
+                  fillRule="evenodd"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`object fields with title and description with global label off object 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div>
+      <div
+        className="p-0 container-fluid"
+      >
+        <div
+          className="row"
+          style={
+            {
+              "marginBottom": "10px",
+            }
+          }
+        >
+          <div
+            className="col-12"
+          >
+             
+            <div
+              className="rjsf-field rjsf-field-string"
+            >
+              <div>
+                <input
+                  aria-describedby="root_a__error root_a__description root_a__help"
+                  autoFocus={false}
+                  className="form-control"
+                  disabled={false}
+                  id="root_a"
+                  name="root_a"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                  placeholder=""
+                  readOnly={false}
+                  required={false}
+                  type="text"
+                  value=""
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          className="row"
+          style={
+            {
+              "marginBottom": "10px",
+            }
+          }
+        >
+          <div
+            className="col-12"
+          >
+             
+            <div
+              className="rjsf-field rjsf-field-number"
+            >
+              <div>
+                <input
+                  aria-describedby="root_b__error root_b__description root_b__help"
+                  autoFocus={false}
+                  className="form-control"
+                  disabled={false}
+                  id="root_b"
+                  name="root_b"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                  placeholder=""
+                  readOnly={false}
+                  required={false}
+                  step="any"
+                  type="number"
+                  value=""
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`object fields with title and description with global label off show add button and fields if additionalProperties is true and not an object 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div>
+      <div
+        className="p-0 container-fluid"
+      >
+        <div
+          className="row"
+          style={
+            {
+              "marginBottom": "10px",
+            }
+          }
+        >
+          <div
+            className="col-12"
+          >
+             
+            <div
+              className="rjsf-field rjsf-field-string row"
+            >
+              <div
+                className="col-5"
+              >
+                <div>
+                  <label
+                    className="form-label"
+                    htmlFor="root_additionalProperty-key"
+                  >
+                    additionalProperty Key
+                  </label>
+                  <input
+                    className="form-control"
+                    defaultValue="additionalProperty"
+                    disabled={false}
+                    id="root_additionalProperty-key"
+                    name="root_additionalProperty-key"
+                    onBlur={[Function]}
+                    required={false}
+                    type="text"
+                  />
+                </div>
+              </div>
+              <div
+                className="col-5"
+              >
+                <div>
+                  <input
+                    aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
+                    autoFocus={false}
+                    className="form-control"
+                    disabled={false}
+                    id="root_additionalProperty"
+                    name="root_additionalProperty"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    readOnly={false}
+                    required={false}
+                    type="text"
+                    value="should appear"
+                  />
+                </div>
+              </div>
+              <div
+                className="py-4 d-grid gap-2 col-2"
+              >
+                <button
+                  className="btn btn-danger btn-sm"
+                  disabled={false}
+                  id="root_additionalProperty__remove"
+                  onClick={[Function]}
+                  title="Remove"
+                  type="button"
+                >
+                  <svg
+                    fill="currentColor"
+                    height="1em"
+                    stroke="currentColor"
+                    strokeWidth="0"
+                    style={
+                      {
+                        "color": undefined,
+                      }
+                    }
+                    viewBox="0 0 512 512"
+                    width="1em"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M368.5 240h-225c-8.8 0-16 7.2-16 16 0 4.4 1.8 8.4 4.7 11.3 2.9 2.9 6.9 4.7 11.3 4.7h225c8.8 0 16-7.2 16-16s-7.2-16-16-16z"
+                    />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          className="row"
+        >
+          <div
+            className="py-4 col-3 offset-9"
+          >
+            <button
+              className="ml-1 rjsf-object-property-expand btn btn-primary"
+              disabled={false}
+              id="root__add"
+              onClick={[Function]}
+              style={
+                {
+                  "width": "100%",
+                }
+              }
+              title="Add Item"
+              type="button"
+            >
+              <svg
+                fill="currentColor"
+                height="1em"
+                stroke="currentColor"
+                strokeWidth="0"
+                style={
+                  {
+                    "color": undefined,
+                  }
+                }
+                viewBox="0 0 16 16"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  clipRule="evenodd"
+                  d="M8 3.5a.5.5 0 01.5.5v4a.5.5 0 01-.5.5H4a.5.5 0 010-1h3.5V4a.5.5 0 01.5-.5z"
+                  fillRule="evenodd"
+                />
+                <path
+                  clipRule="evenodd"
+                  d="M7.5 8a.5.5 0 01.5-.5h4a.5.5 0 010 1H8.5V12a.5.5 0 01-1 0V8z"
+                  fillRule="evenodd"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;

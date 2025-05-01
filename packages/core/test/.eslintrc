@@ -11,6 +11,7 @@
       {
         "varsIgnorePattern": "^d$"
       }
-    ]
+    ],
+    "@typescript-eslint/no-unused-expressions": "off"
   }
 }

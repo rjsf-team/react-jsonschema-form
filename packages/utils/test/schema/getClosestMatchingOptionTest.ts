@@ -32,14 +32,14 @@ export default function getClosestMatchingOptionTest(testValidator: TestValidato
       expect(
         calculateIndexScore(testValidator, OPTIONAL_ONE_OF_SCHEMA, {
           properties: 'foo',
-        } as unknown as RJSFSchema)
+        } as unknown as RJSFSchema),
       ).toEqual(0);
     });
     it('returns 0 when properties type is boolean', () => {
       expect(
         calculateIndexScore(testValidator, OPTIONAL_ONE_OF_SCHEMA, {
           properties: { foo: true },
-        })
+        }),
       ).toEqual(0);
     });
     it('returns 0 when formData is empty object', () => {
@@ -60,8 +60,8 @@ export default function getClosestMatchingOptionTest(testValidator: TestValidato
           testValidator,
           oneOfSchema,
           { properties: { foo: { type: 'string', const: 'constValue' } } },
-          { foo: 'constValue' }
-        )
+          { foo: 'constValue' },
+        ),
       ).toEqual(2);
     });
     it('returns 0 for a schema that has a const that does not match the formData value', () => {
@@ -70,8 +70,8 @@ export default function getClosestMatchingOptionTest(testValidator: TestValidato
           testValidator,
           oneOfSchema,
           { properties: { foo: { type: 'string', const: 'constValue' } } },
-          { foo: 'aValue' }
-        )
+          { foo: 'aValue' },
+        ),
       ).toEqual(0);
     });
   });
@@ -95,7 +95,7 @@ export default function getClosestMatchingOptionTest(testValidator: TestValidato
       // First 3 are mocked false, with the fourth being true for the real second option
       testValidator.setReturnValues({ isValid: [false, false, false, true] });
       expect(getClosestMatchingOption(testValidator, oneOfSchema, ONE_OF_SCHEMA_DATA, ONE_OF_SCHEMA_OPTIONS)).toEqual(
-        1
+        1,
       );
     });
     it('returns the first matching option (i.e. second index) when data is ambiguous', () => {
@@ -104,7 +104,7 @@ export default function getClosestMatchingOptionTest(testValidator: TestValidato
       });
       const formData = { flag: false };
       expect(
-        getClosestMatchingOption(testValidator, OPTIONAL_ONE_OF_SCHEMA, formData, OPTIONAL_ONE_OF_SCHEMA_ONEOF)
+        getClosestMatchingOption(testValidator, OPTIONAL_ONE_OF_SCHEMA, formData, OPTIONAL_ONE_OF_SCHEMA_ONEOF),
       ).toEqual(1);
     });
     it('returns the third index when data is clear', () => {
@@ -116,8 +116,8 @@ export default function getClosestMatchingOptionTest(testValidator: TestValidato
           testValidator,
           OPTIONAL_ONE_OF_SCHEMA,
           OPTIONAL_ONE_OF_DATA,
-          OPTIONAL_ONE_OF_SCHEMA_ONEOF
-        )
+          OPTIONAL_ONE_OF_SCHEMA_ONEOF,
+        ),
       ).toEqual(2);
     });
     it('returns the second option when data matches for oneOf', () => {

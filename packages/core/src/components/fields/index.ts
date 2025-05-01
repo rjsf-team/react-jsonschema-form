@@ -2,6 +2,9 @@ import { Field, FormContextType, RegistryFieldsType, RJSFSchema, StrictRJSFSchem
 
 import ArrayField from './ArrayField';
 import BooleanField from './BooleanField';
+import LayoutGridField from './LayoutGridField';
+import LayoutHeaderField from './LayoutHeaderField';
+import LayoutMultiSchemaField from './LayoutMultiSchemaField';
 import MultiSchemaField from './MultiSchemaField';
 import NumberField from './NumberField';
 import ObjectField from './ObjectField';
@@ -12,13 +15,16 @@ import NullField from './NullField';
 function fields<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(): RegistryFieldsType<T, S, F> {
   return {
     AnyOfField: MultiSchemaField,
     ArrayField: ArrayField as unknown as Field<T, S, F>,
     // ArrayField falls back to SchemaField if ArraySchemaField is not defined, which it isn't by default
     BooleanField,
+    LayoutGridField,
+    LayoutHeaderField,
+    LayoutMultiSchemaField,
     NumberField,
     ObjectField,
     OneOfField: MultiSchemaField,

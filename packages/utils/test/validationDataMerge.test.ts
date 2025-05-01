@@ -1,6 +1,6 @@
 import { ERRORS_KEY, ErrorSchema, validationDataMerge, ValidationData } from '../src';
 
-describe('mergeValidationDataTest()', () => {
+describe('validationDataMerge()', () => {
   it('Returns validationData when no additionalErrorSchema is passed', () => {
     const validationData: ValidationData<any> = {
       errorSchema: {},

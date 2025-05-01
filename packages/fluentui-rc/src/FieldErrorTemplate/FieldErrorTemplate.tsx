@@ -18,7 +18,7 @@ const useStyles = makeStyles({
 export default function FieldErrorTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(props: FieldErrorProps<T, S, F>) {
   const { errors = [], idSchema } = props;
   const classes = useStyles();

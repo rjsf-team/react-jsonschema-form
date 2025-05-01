@@ -8,6 +8,7 @@ import {
   StrictRJSFSchema,
   TranslatableString,
   WrapIfAdditionalTemplateProps,
+  buttonId,
 } from '@rjsf/utils';
 
 const VERTICAL_LABEL_COL = { span: 24 };
@@ -25,7 +26,7 @@ const INPUT_STYLE = {
 export default function WrapIfAdditionalTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(props: WrapIfAdditionalTemplateProps<T, S, F>) {
   const {
     children,
@@ -108,7 +109,8 @@ export default function WrapIfAdditionalTemplate<
         </Col>
         <Col flex='192px'>
           <RemoveButton
-            className='array-item-remove'
+            id={buttonId<T>(id, 'remove')}
+            className='rjsf-object-property-remove'
             disabled={disabled || readonly}
             onClick={onDropPropertyClick(label)}
             uiSchema={buttonUiOptions}

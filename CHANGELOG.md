@@ -15,6 +15,149 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+# 6.0.0-beta.1
+
+## @rjsf/antd
+
+- BREAKING CHANGE: Refactored `ArrayFieldItemTemplate` to use the new `ArrayFieldItemButtonsTemplate`
+- Updated the `ArrayFieldTemplate`, `ObjectFieldTemplate`, and `WrapIfAdditionalTemplate` to a unique id using the `buttonId()` function and adding consistent marker classes
+- Implemented the `GridTemplate` component, adding it to the `templates` for the theme
+- BREAKING CHANGE: Removed support for version 4 of `antd`
+- Updated `ArrayFieldItemTemplate` to replace `Button.Group` with `Space.Compact` since `Button.Group` is deprecated in `antd` version 5
+- Upgraded to `@ant-design/icon@5`
+- BREAKING CHANGE: Removed the addition of `Bootstrap 3` classes from the `SchemaField` and added `rjsf-` prefix to marker classes, thereby changing theme `FieldTemplate` className prop output and associated snapshots
+
+## @rjsf/chakra-ui
+
+- BREAKING CHANGE: upgrade from v2 to v3
+- BREAKING CHANGE: remove deprecated `@chakra-ui/icon` in favor of `lucide-react`
+- BREAKING CHANGE: Refactored `ArrayFieldItemTemplate` to use the new `ArrayFieldItemButtonsTemplate`
+- Updated the `ArrayFieldTemplate`, `ObjectFieldTemplate`, and `WrapIfAdditionalTemplate` to a unique id using the `buttonId()` function and adding consistent marker classes
+- Implemented the `GridTemplate` component, adding it to the `templates` for the theme
+- BREAKING CHANGE: Removed the addition of `Bootstrap 3` classes from the `SchemaField` and added `rjsf-` prefix to marker classes, thereby changing theme `FieldTemplate` className prop output and associated snapshots
+
+## @rjsf/core
+
+- BREAKING CHANGE: Updated `ArrayField` to provide the `buttonsProps` to the `ArrayFieldItemTemplateType`
+- Added `ArrayFieldItemButtonsTemplate` component as a refactor of all the common buttons code from all the `ArrayFieldItemTemplate` implementations, adding a unique id using the `buttonId()` function
+- Refactored `ArrayFieldItemTemplate` to use the new `ArrayFieldItemButtonsTemplate`
+- Updated the `ArrayFieldTemplate`, `ObjectFieldTemplate`, and `WrapIfAdditionalTemplate` to a unique id using the `buttonId()` function and adding consistent marker classes
+- Implemented the `GridTemplate` component, adding it to the `templates` for the theme
+- Implemented the new `LayoutGridField`, `LayoutMultiSchemaField` and `LayoutHeaderField` fields, adding them to the `fields` list
+- BREAKING CHANGE: Removed support for the deprecated `schema.enumNames` and `uiSchema.classNames` as well as the deprecated `acceptcharset` prop on `Form`
+- BREAKING CHANGE: Moved the addition of `Bootstrap 3` classes from the `SchemaField` to the `WrapIfAdditionalTemplate`, thereby affecting all the other themes, fixing [#2280](https://github.com/rjsf-team/react-jsonschema-form/issues/2280)
+- BREAKING CHANGE: Added `rjsf-` prefix onto the following marker classes used in the fields and templates:
+  - `field`, `field-<schema.type>`, `field-error`, `field-hidden`, `field-array`, `field-array-of-<schema.type>`, `field-array-fixed-items`, `array-item`, `config-error`, `array-item-add`, `array-item-copy`, `array-item-move-down`, `array-item-move-up`, `array-item-remove`, `object-property-expand`
+- Added support for `patternProperties` [#1944](https://github.com/rjsf-team/react-jsonschema-form/issues/1944)
+
+## @rjsf/daisyui
+
+- Added new theme!
+
+## @rjsf/fluent-ui
+
+- BREAKING CHANGE: Deleted this theme in favor of `fluentui-rc`
+
+## @rjsf/fluentui-rc
+
+- BREAKING CHANGE: Refactored `ArrayFieldItemTemplate` to use the new `ArrayFieldItemButtonsTemplate`
+- Updated the `ArrayFieldTemplate`, `ObjectFieldTemplate`, and `WrapIfAdditionalTemplate` to a unique id using the `buttonId()` function and adding consistent marker classes
+- Implemented the `GridTemplate` component, adding it to the `templates` for the theme
+- BREAKING CHANGE: Removed the addition of `Bootstrap 3` classes from the `SchemaField` and added `rjsf-` prefix to marker classes, thereby changing theme `FieldTemplate` className prop output and associated snapshots
+
+## @rjsf/material-ui
+
+- BREAKING CHANGE: Deleted this theme in favor of `mui`
+
+## @rjsf/mui
+
+- BREAKING CHANGE: Refactored `ArrayFieldItemTemplate` to use the new `ArrayFieldItemButtonsTemplate`
+- Updated the `ArrayFieldTemplate`, `ObjectFieldTemplate`, and `WrapIfAdditionalTemplate` to a unique id using the `buttonId()` function and adding consistent marker classes
+- Updated the theme to use `Grid2` instead of the deprecated `Grid`
+- Implemented the `GridTemplate` component, adding it to the `templates` for the theme
+- BREAKING CHANGE: Removed the addition of `Bootstrap 3` classes from the `SchemaField` and added `rjsf-` prefix to marker classes, thereby changing theme `FieldTemplate` className prop output and associated snapshots
+
+## @rjsf/semantic-ui
+
+- BREAKING CHANGE: Refactored `ArrayFieldItemTemplate` to use the new `ArrayFieldItemButtonsTemplate`
+- Updated the `ArrayFieldTemplate`, `ObjectFieldTemplate`, and `WrapIfAdditionalTemplate` to a unique id using the `buttonId()` function and adding consistent marker classes
+- Implemented the `GridTemplate` component, adding it to the `templates` for the theme
+- BREAKING CHANGE: Removed the addition of `Bootstrap 3` classes from the `SchemaField` and added `rjsf-` prefix to marker classes, thereby changing theme `FieldTemplate` className prop output and associated snapshots
+- BREAKING CHANGE: Removed support for the v1 version of `semantic-ui-react`
+
+## @rjsf/shadcn
+
+- Added new theme!
+
+## @rjsf/utils
+
+- BREAKING CHANGE: Refactored the `ArrayFieldItemTemplateType` to extract out all the button related props to `ArrayFieldItemButtonsTemplateType`, adding `buttonsProps: ArrayFieldItemButtonsTemplateType` as a new prop
+  - Also created a deprecated alias type `ArrayFieldTemplateItemType` that points to `ArrayFieldItemTemplateType` for backwards compatibility
+- Added new `GridTemplateProps` type
+- BREAKING CHANGE: Added two the following new, required props to `TemplatesType`:
+  - `ArrayFieldItemButtonsTemplate: ComponentType<ArrayFieldItemButtonsTemplateType<T, S, F>>;`
+  - `GridTemplate: ComponentType<GridTemplateProps>`
+- BREAKING CHANGE: Updated the `SchemaUtilsType` to add new validator-based functions to the interface
+- Added the following new non-validator utility functions:
+  - `buttonId<T>(id: IdSchema<T> | string, btn: 'add' | 'copy' | 'moveDown' | 'moveUp' | 'remove')`: used to generate consistent ids for RJSF buttons
+  - `getTestIds(): TestIdShape`: Returns an object of test IDs that can only be used in test mode, helpful for writing unit tests for React components
+  - `hashObject(object: unknown): string`: Stringifies an `object` and returns the hash of the resulting string
+  - `hashString(string: string): string`: Hashes a string into hex format
+  - `lookupFromFormContext<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(regOrFc: Registry<T, S, F> | Registry<T, S, F>['formContext'], toLookup: string, fallback?: unknown)`: Given a React JSON Schema Form registry or formContext object, return the value associated with `toLookup`
+- Added the following new validator-based utility functions:
+  - `findFieldInSchema<T = undefined, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(validator: ValidatorType<T, S, F>, rootSchema: S, path: string | string[], schema: S, formData?: T, experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>): FoundFieldType<S>`: Finds the field specified by the `path` within the root or recursed `schema`
+  - `findSelectedOptionInXxxOf<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(validator: ValidatorType<T, S, F>, rootSchema: S, schema: S, fallbackField: string,xxx: 'anyOf' | 'oneOf', formData?: T, experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>): S | undefined`: Finds the option that matches the selector field in the `schema` or undefined if nothing is selected
+  - `getFromSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(validator: ValidatorType<T, S, F>, rootSchema: S, schema: S, path: string | string[], defaultValue: T | S, experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>): T | S`: Helper that acts like lodash's `get` but additionally retrieves `$ref`s as needed to get the path for schemas
+- BREAKING CHANGE: Removed support for the deprecated `schema.enumNames` from `getOptionsList()` while switching the order of its generic types
+- BREAKING CHANGE: Removed the deprecated `getMatchingOption()` and `mergeValidationData()` from the library export and the `SchemaUtilsType` interface
+- BREAKING CHANGE: Removed the deprecated `toErrorList()` function from the `ValidatorType` interface
+- BREAKING CHANGE: Removed the deprecated `RJSF_ADDITONAL_PROPERTIES_FLAG` constant
+- Updated the `WrapIfAdditionalTemplateProps` to include `hideError` and `rawErrors` in support of moving `Bootstrap 3` marker classes out of `SchemaField`
+- Added support for `patternProperties` [#1944](https://github.com/rjsf-team/react-jsonschema-form/issues/1944)
+
+## @rjsf/validator-ajv6
+
+- BREAKING CHANGE: This deprecated validator has been removed
+
+## @rjsf/validator-ajv8
+
+- BREAKING CHANGE: Removed the implementation of the deprecated `toErrorList()` function from the validator implementations
+
+## Dev / docs / playground
+
+- Updated the playground to Chakra UI v3
+- Updated the playground to remove `fluent-ui` theme
+- Updated the `custom-templates.md` documentation for the changes to the `ArrayFieldTemplateItem` and add the two new templates
+- Updated the `utility-functions.md` documentation to add the `buttonId()` function
+- Added the `v6.x upgrade guide.md` documentation
+- Updated the `playground` to add a `Layout Grid` example and made the selected example now be part of the shared export
+- Replaced Lerna with Nx, updated all lerna commands to use the Nx CLI
+- BREAKING CHANGE: Updated all `peerDependencies` to change minimal `React` support to `>=18`
+- Added documentation and playground example for `patternProperties`
+
+# 6.0.0-alpha.0
+
+## @rjsf/bootstrap-4
+
+- BREAKING CHANGE: Package has been replaced with `@rjsf/react-bootstrap`. `react-boostrap` v1 / Bootstrap 4 are no longer supported in RJSF v6.
+
+## @rjsf/material-ui
+
+- BREAKING CHANGE: Removed `@rjsf/material-ui` package. Material UI v4 (`@material-ui/core`) has been deprecated since September 2021. To use Material UI v5 (`@mui/core`) with RJSF, please use the `@rjsf/mui` theme instead.
+
+## @rjsf/react-bootstrap
+
+- Added new package to replace `@rjsf/bootstrap-4`
+- `react-bootstrap` peer dependency bumped to `^2.0.0`, corresponding to Bootstrap 5
+- CheckboxesWidget: Remove deprecated prop `custom`
+- IconButton: Remove deprecated `block` prop
+- RangeWidget: Use `FormRange` component
+- SelectWidget: Use new FormSelect component, remove `bsPrefix` prop to achieve correct styling
+
+## Dev / docs / playground
+
+- Updated the playground to remove `material-ui-4` theme and replace the `bootstrap-4` theme with `react-bootstrap`
+
 # 5.24.10
 
 ## Dev / docs / playground

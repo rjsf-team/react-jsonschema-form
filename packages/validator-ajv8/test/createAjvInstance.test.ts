@@ -76,7 +76,7 @@ describe('createAjvInstance()', () => {
         CUSTOM_OPTIONS.additionalMetaSchemas,
         CUSTOM_OPTIONS.customFormats,
         CUSTOM_OPTIONS.ajvOptionsOverrides,
-        CUSTOM_OPTIONS.ajvFormatOptions
+        CUSTOM_OPTIONS.ajvFormatOptions,
       );
     });
     afterAll(() => {

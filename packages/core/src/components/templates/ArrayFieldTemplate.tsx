@@ -2,20 +2,21 @@ import {
   getTemplate,
   getUiOptions,
   ArrayFieldTemplateProps,
-  ArrayFieldTemplateItemType,
+  ArrayFieldItemTemplateType,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
+  buttonId,
 } from '@rjsf/utils';
 
 /** The `ArrayFieldTemplate` component is the template used to render all items in an array.
  *
- * @param props - The `ArrayFieldTemplateItemType` props for the component
+ * @param props - The `ArrayFieldItemTemplateType` props for the component
  */
 export default function ArrayFieldTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(props: ArrayFieldTemplateProps<T, S, F>) {
   const {
     canAdd,
@@ -35,17 +36,17 @@ export default function ArrayFieldTemplate<
   const ArrayFieldDescriptionTemplate = getTemplate<'ArrayFieldDescriptionTemplate', T, S, F>(
     'ArrayFieldDescriptionTemplate',
     registry,
-    uiOptions
+    uiOptions,
   );
   const ArrayFieldItemTemplate = getTemplate<'ArrayFieldItemTemplate', T, S, F>(
     'ArrayFieldItemTemplate',
     registry,
-    uiOptions
+    uiOptions,
   );
   const ArrayFieldTitleTemplate = getTemplate<'ArrayFieldTitleTemplate', T, S, F>(
     'ArrayFieldTitleTemplate',
     registry,
-    uiOptions
+    uiOptions,
   );
   // Button templates are not overridden in the uiSchema
   const {
@@ -70,13 +71,14 @@ export default function ArrayFieldTemplate<
       />
       <div className='row array-item-list'>
         {items &&
-          items.map(({ key, ...itemProps }: ArrayFieldTemplateItemType<T, S, F>) => (
+          items.map(({ key, ...itemProps }: ArrayFieldItemTemplateType<T, S, F>) => (
             <ArrayFieldItemTemplate key={key} {...itemProps} />
           ))}
       </div>
       {canAdd && (
         <AddButton
-          className='array-item-add'
+          id={buttonId<T>(idSchema, 'add')}
+          className='rjsf-array-item-add'
           onClick={onAddClick}
           disabled={disabled || readonly}
           uiSchema={uiSchema}
