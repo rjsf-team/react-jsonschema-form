@@ -10,7 +10,7 @@ describe('util js functions', () => {
         getSemanticProps({
           uiSchema,
           defaultSchemaProps: { wrapItem: false, horizontalButtons: true },
-        })
+        }),
       ).toEqual({
         wrapItem: false,
         horizontalButtons: true,
@@ -30,7 +30,7 @@ describe('util js functions', () => {
         getSemanticProps({
           uiSchema,
           defaultSchemaProps: { wrapItem: false, horizontalButtons: true },
-        })
+        }),
       ).toEqual({
         wrapItem: true,
         horizontalButtons: true,
@@ -49,7 +49,7 @@ describe('util js functions', () => {
         getSemanticProps({
           uiSchema,
           defaultSchemaProps: { wrapItem: false, horizontalButtons: true },
-        })
+        }),
       ).toEqual({
         wrapItem: false,
         horizontalButtons: true,
@@ -77,7 +77,7 @@ describe('util js functions', () => {
           uiSchema,
           formContext,
           defaultSchemaProps: { wrapItem: false, horizontalButtons: true },
-        })
+        }),
       ).toEqual({
         wrapItem: true,
         inverted: true,

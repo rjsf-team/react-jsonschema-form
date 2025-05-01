@@ -74,7 +74,7 @@ function ArrayFieldTemplate(props: ArrayFieldTemplateProps) {
 
 render(
   <Form schema={schema} validator={validator} templates={{ ArrayFieldTemplate }} />,
-  document.getElementById('app')
+  document.getElementById('app'),
 );
 ```
 
@@ -161,7 +161,7 @@ function ArrayFieldDescriptionTemplate(props: ArrayFieldDescriptionProps) {
 
 render(
   <Form schema={schema} validator={validator} templates={{ ArrayFieldDescriptionTemplate }} />,
-  document.getElementById('app')
+  document.getElementById('app'),
 );
 ```
 
@@ -208,7 +208,7 @@ function ArrayFieldItemTemplate(props: ArrayFieldItemTemplateType) {
 
 render(
   <Form schema={schema} validator={validator} templates={{ ArrayFieldItemTemplate }} />,
-  document.getElementById('app')
+  document.getElementById('app'),
 );
 ```
 
@@ -267,7 +267,7 @@ function ArrayFieldItemButtonsTemplate(props: ArrayFieldTemplateItemButtonsType)
 
 render(
   <Form schema={schema} validator={validator} templates={{ ArrayFieldItemButtonsTemplate }} />,
-  document.getElementById('app')
+  document.getElementById('app'),
 );
 ```
 
@@ -318,7 +318,7 @@ function ArrayFieldTitleTemplate(props: ArrayFieldTitleProps) {
 
 render(
   <Form schema={schema} validator={validator} templates={{ ArrayFieldTitleTemplate }} />,
-  document.getElementById('app')
+  document.getElementById('app'),
 );
 ```
 
@@ -419,7 +419,7 @@ function BaseInputTemplate(props: BaseInputTemplateProps) {
 
 render(
   <Form schema={schema} validator={validator} templates={{ BaseInputTemplate }} />,
-  document.getElementById('app')
+  document.getElementById('app'),
 );
 ```
 
@@ -465,7 +465,7 @@ The following props are passed to the `BaseInputTemplate`:
 - `onBlur`: The input blur event handler; call it with the widget id and value;
 - `onFocus`: The input focus event handler; call it with the widget id and value;
 - `options`: A map of options passed as a prop to the component (see [Custom widget options](./custom-widgets-fields.md#custom-widget-options)).
-- `options.enumOptions`: For enum fields, this property contains the list of options for the enum as an array of { label, value } objects. If the enum is defined using the oneOf/anyOf syntax, the entire schema object for each option is appended onto the { schema, label, value } object.
+- `options.enumOptions`: For enum fields, this property contains the list of options for the enum as an array of \{ label, value } objects. If the enum is defined using the oneOf/anyOf syntax, the entire schema object for each option is appended onto the \{ schema, label, value } object.
 - `formContext`: The `formContext` object that you passed to `Form`.
 - `rawErrors`: An array of strings listing all generated error messages from encountered errors for this widget.
 - `registry`: The `registry` object
@@ -497,7 +497,7 @@ function DescriptionFieldTemplate(props: DescriptionFieldProps) {
 
 render(
   <Form schema={schema} validator={validator} templates={{ DescriptionFieldTemplate }} />,
-  document.getElementById('app')
+  document.getElementById('app'),
 );
 ```
 
@@ -545,7 +545,7 @@ function ErrorListTemplate(props: ErrorListProps) {
 
 render(
   <Form schema={schema} validator={validator} templates={{ ErrorListTemplate }} />,
-  document.getElementById('app')
+  document.getElementById('app'),
 );
 ```
 
@@ -592,7 +592,7 @@ function FieldErrorTemplate(props: FieldErrorProps) {
 
 render(
   <Form schema={schema} validator={validator} templates={{ FieldErrorTemplate }} />,
-  document.getElementById('app')
+  document.getElementById('app'),
 );
 ```
 
@@ -628,7 +628,7 @@ function FieldHelpTemplate(props: FieldHelpProps) {
 
 render(
   <Form schema={schema} validator={validator} templates={{ FieldHelpTemplate }} />,
-  document.getElementById('app')
+  document.getElementById('app'),
 );
 ```
 
@@ -672,7 +672,7 @@ function CustomFieldTemplate(props: FieldTemplateProps) {
 
 render(
   <Form schema={schema} validator={validator} templates={{ FieldTemplate: CustomFieldTemplate }} />,
-  document.getElementById('app')
+  document.getElementById('app'),
 );
 ```
 
@@ -785,7 +785,7 @@ function ObjectFieldTemplate(props: ObjectFieldTemplateProps) {
 
 render(
   <Form schema={schema} validator={validator} templates={{ ObjectFieldTemplate }} />,
-  document.getElementById('app')
+  document.getElementById('app'),
 );
 ```
 
@@ -856,7 +856,7 @@ function TitleFieldTemplate(props: TitleFieldProps) {
 
 render(
   <Form schema={schema} validator={validator} templates={{ TitleFieldTemplate }} />,
-  document.getElementById('app')
+  document.getElementById('app'),
 );
 ```
 
@@ -895,7 +895,7 @@ function UnsupportedFieldTemplate(props: UnsupportedFieldProps) {
 
 render(
   <Form schema={schema} validator={validator} templates={{ UnsupportedFieldTemplate }} />,
-  document.getElementById('app')
+  document.getElementById('app'),
 );
 ```
 
@@ -952,7 +952,7 @@ function WrapIfAdditionalTemplate(props: WrapIfAdditionalTemplateProps) {
 
 render(
   <Form schema={schema} validator={validator} templates={{ WrapIfAdditionalTemplate }} />,
-  document.getElementById('app')
+  document.getElementById('app'),
 );
 ```
 
@@ -1011,7 +1011,7 @@ function AddButton(props: IconButtonProps) {
 
 render(
   <Form schema={schema} validator={validator} templates={{ ButtonTemplates: { AddButton } }} />,
-  document.getElementById('app')
+  document.getElementById('app'),
 );
 ```
 
@@ -1041,7 +1041,7 @@ function MoveDownButton(props: IconButtonProps) {
 
 render(
   <Form schema={schema} validator={validator} templates={{ ButtonTemplates: { MoveDownButton } }} />,
-  document.getElementById('app')
+  document.getElementById('app'),
 );
 ```
 
@@ -1071,7 +1071,7 @@ function MoveUpButton(props: IconButtonProps) {
 
 render(
   <Form schema={schema} validator={validator} templates={{ ButtonTemplates: { MoveUpButton } }} />,
-  document.getElementById('app')
+  document.getElementById('app'),
 );
 ```
 
@@ -1101,7 +1101,7 @@ function RemoveButton(props: IconButtonProps) {
 
 render(
   <Form schema={schema} validator={validator} templates={{ ButtonTemplates: { RemoveButton } }} />,
-  document.getElementById('app')
+  document.getElementById('app'),
 );
 ```
 
@@ -1137,7 +1137,7 @@ function SubmitButton(props: SubmitButtonProps) {
 
 render(
   <Form schema={schema} validator={validator} templates={{ ButtonTemplates: { SubmitButton } }} />,
-  document.getElementById('app')
+  document.getElementById('app'),
 );
 ```
 

@@ -53,16 +53,6 @@ export default function DemoFrame(props: DemoFrameProps) {
 
   const instanceRef = useRef<any>();
 
-  const handleRef = useCallback(
-    (ref: any) => {
-      instanceRef.current = {
-        contentDocument: ref ? ref.node.contentDocument : null,
-        contentWindow: ref ? ref.node.contentWindow : null,
-      };
-    },
-    [instanceRef],
-  );
-
   const onContentDidMount = useCallback(() => {
     setReady(true);
     setEmotionCache(
@@ -74,7 +64,7 @@ export default function DemoFrame(props: DemoFrameProps) {
     );
     setContainer(instanceRef.current.contentDocument.body);
     setWindow(() => instanceRef.current.contentWindow);
-  }, []);
+  }, [instanceRef]);
 
   let body: ReactNode = children;
   if (theme === 'mui') {
@@ -107,7 +97,7 @@ export default function DemoFrame(props: DemoFrameProps) {
   }
 
   return (
-    <Frame ref={handleRef} contentDidMount={onContentDidMount} head={head} {...frameProps}>
+    <Frame ref={instanceRef} contentDidMount={onContentDidMount} head={head} {...frameProps}>
       <div id='demo-frame-jss' />
       {body}
     </Frame>

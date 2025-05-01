@@ -96,7 +96,8 @@ exports[`object fields additionalProperties 1`] = `
                 type="button"
               >
                 <svg
-                  className="lucide lucide-trash2 h-4 w-4 stroke-destructive"
+                  aria-hidden="true"
+                  className="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
                   fill="none"
                   height={24}
                   stroke="currentColor"
@@ -150,6 +151,7 @@ exports[`object fields additionalProperties 1`] = `
             type="button"
           >
             <svg
+              aria-hidden="true"
               className="lucide lucide-circle-plus"
               fill="none"
               height={16}
@@ -405,7 +407,8 @@ exports[`object fields show add button and fields if additionalProperties is tru
                 type="button"
               >
                 <svg
-                  className="lucide lucide-trash2 h-4 w-4 stroke-destructive"
+                  aria-hidden="true"
+                  className="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
                   fill="none"
                   height={24}
                   stroke="currentColor"
@@ -459,6 +462,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
             type="button"
           >
             <svg
+              aria-hidden="true"
               className="lucide lucide-circle-plus"
               fill="none"
               height={16}
@@ -624,7 +628,8 @@ exports[`object fields with title and description additionalProperties 1`] = `
                 type="button"
               >
                 <svg
-                  className="lucide lucide-trash2 h-4 w-4 stroke-destructive"
+                  aria-hidden="true"
+                  className="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
                   fill="none"
                   height={24}
                   stroke="currentColor"
@@ -678,6 +683,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
             type="button"
           >
             <svg
+              aria-hidden="true"
               className="lucide lucide-circle-plus"
               fill="none"
               height={16}
@@ -843,7 +849,8 @@ exports[`object fields with title and description from both additionalProperties
                 type="button"
               >
                 <svg
-                  className="lucide lucide-trash2 h-4 w-4 stroke-destructive"
+                  aria-hidden="true"
+                  className="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
                   fill="none"
                   height={24}
                   stroke="currentColor"
@@ -897,6 +904,7 @@ exports[`object fields with title and description from both additionalProperties
             type="button"
           >
             <svg
+              aria-hidden="true"
               className="lucide lucide-circle-plus"
               fill="none"
               height={16}
@@ -1230,7 +1238,8 @@ exports[`object fields with title and description from uiSchema additionalProper
                 type="button"
               >
                 <svg
-                  className="lucide lucide-trash2 h-4 w-4 stroke-destructive"
+                  aria-hidden="true"
+                  className="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
                   fill="none"
                   height={24}
                   stroke="currentColor"
@@ -1284,6 +1293,7 @@ exports[`object fields with title and description from uiSchema additionalProper
             type="button"
           >
             <svg
+              aria-hidden="true"
               className="lucide lucide-circle-plus"
               fill="none"
               height={16}
@@ -1617,7 +1627,8 @@ exports[`object fields with title and description from uiSchema show add button 
                 type="button"
               >
                 <svg
-                  className="lucide lucide-trash2 h-4 w-4 stroke-destructive"
+                  aria-hidden="true"
+                  className="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
                   fill="none"
                   height={24}
                   stroke="currentColor"
@@ -1671,6 +1682,7 @@ exports[`object fields with title and description from uiSchema show add button 
             type="button"
           >
             <svg
+              aria-hidden="true"
               className="lucide lucide-circle-plus"
               fill="none"
               height={16}
@@ -2004,7 +2016,8 @@ exports[`object fields with title and description show add button and fields if 
                 type="button"
               >
                 <svg
-                  className="lucide lucide-trash2 h-4 w-4 stroke-destructive"
+                  aria-hidden="true"
+                  className="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
                   fill="none"
                   height={24}
                   stroke="currentColor"
@@ -2058,6 +2071,7 @@ exports[`object fields with title and description show add button and fields if 
             type="button"
           >
             <svg
+              aria-hidden="true"
               className="lucide lucide-circle-plus"
               fill="none"
               height={16}
@@ -2190,7 +2204,8 @@ exports[`object fields with title and description with global label off addition
                 type="button"
               >
                 <svg
-                  className="lucide lucide-trash2 h-4 w-4 stroke-destructive"
+                  aria-hidden="true"
+                  className="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
                   fill="none"
                   height={24}
                   stroke="currentColor"
@@ -2244,6 +2259,7 @@ exports[`object fields with title and description with global label off addition
             type="button"
           >
             <svg
+              aria-hidden="true"
               className="lucide lucide-circle-plus"
               fill="none"
               height={16}
@@ -2481,7 +2497,8 @@ exports[`object fields with title and description with global label off show add
                 type="button"
               >
                 <svg
-                  className="lucide lucide-trash2 h-4 w-4 stroke-destructive"
+                  aria-hidden="true"
+                  className="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
                   fill="none"
                   height={24}
                   stroke="currentColor"
@@ -2535,6 +2552,7 @@ exports[`object fields with title and description with global label off show add
             type="button"
           >
             <svg
+              aria-hidden="true"
               className="lucide lucide-circle-plus"
               fill="none"
               height={16}

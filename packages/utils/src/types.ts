@@ -936,6 +936,10 @@ type UIOptionsBaseType<T = any, S extends StrictRJSFSchema = RJSFSchema, F exten
   Omit<TemplatesType<T, S, F>, 'ButtonTemplates'>
 > &
   GlobalUISchemaOptions & {
+    /** Allows RJSF to override the default field implementation by specifying either the name of a field that is used
+     * to look up an implementation from the `fields` list or an actual one-off `Field` component implementation itself
+     */
+    field?: Field<T, S, F> | string;
     /** Any classnames that the user wants to be applied to a field in the ui */
     classNames?: string;
     /** Any custom style that the user wants to apply to a field in the ui, applied on the same element as classNames */
@@ -1013,10 +1017,6 @@ export type UiSchema<
     'ui:globalOptions'?: GlobalUISchemaOptions;
     /** Allows the form to generate a unique prefix for the `Form`'s root prefix  */
     'ui:rootFieldId'?: string;
-    /** Allows RJSF to override the default field implementation by specifying either the name of a field that is used
-     * to look up an implementation from the `fields` list or an actual one-off `Field` component implementation itself
-     */
-    'ui:field'?: Field<T, S, F> | string;
     /** By default, any field that is rendered for an `anyOf`/`oneOf` schema will be wrapped inside the `AnyOfField` or
      * `OneOfField` component. This default behavior may be undesirable if your custom field already handles behavior
      * related to choosing one or more subschemas contained in the `anyOf`/`oneOf` schema.

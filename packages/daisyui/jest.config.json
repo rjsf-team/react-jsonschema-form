@@ -9,7 +9,6 @@
     "/node_modules/(?!(@rjsf|@epicfaace|nanoid|@fortawesome|@coreui|yup|react-day-picker|dayjs)/)"
   ],
   "moduleNameMapper": {
-    "^nanoid(/(.*)|$)": "<rootDir>/../../node_modules/nanoid/index.cjs",
     "\\.(css|less|scss|sass)$": "<rootDir>/test/fileMock.js"
   },
   "setupFilesAfterEnv": ["<rootDir>/test/setup.js"]

@@ -753,6 +753,7 @@ exports[`single fields help and error display 1`] = `
     role="alert"
   >
     <svg
+      aria-hidden="true"
       className="lucide lucide-circle-alert h-4 w-4"
       fill="none"
       height={24}
@@ -1396,6 +1397,7 @@ exports[`single fields select field 1`] = `
               className="flex-1 line-clamp-1 text-muted-foreground"
             />
             <svg
+              aria-hidden="true"
               className="lucide lucide-chevron-down h-4 w-4 opacity-50"
               fill="none"
               height={24}
@@ -1902,6 +1904,7 @@ exports[`single fields select field multiple choice formData 1`] = `
                   type="button"
                 >
                   <svg
+                    aria-hidden="true"
                     className="lucide lucide-x h-3 w-3 text-muted-foreground hover:text-foreground"
                     fill="none"
                     height={24}
@@ -1935,6 +1938,7 @@ exports[`single fields select field multiple choice formData 1`] = `
                   type="button"
                 >
                   <svg
+                    aria-hidden="true"
                     className="lucide lucide-x h-3 w-3 text-muted-foreground hover:text-foreground"
                     fill="none"
                     height={24}
@@ -2140,6 +2144,7 @@ exports[`single fields select field single choice enumDisabled 1`] = `
               className="flex-1 line-clamp-1 text-muted-foreground"
             />
             <svg
+              aria-hidden="true"
               className="lucide lucide-chevron-down h-4 w-4 opacity-50"
               fill="none"
               height={24}
@@ -2523,6 +2528,7 @@ exports[`single fields select field single choice formData 1`] = `
               bar
             </span>
             <svg
+              aria-hidden="true"
               className="lucide lucide-chevron-down h-4 w-4 opacity-50"
               fill="none"
               height={24}

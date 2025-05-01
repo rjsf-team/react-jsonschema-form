@@ -67,5 +67,8 @@
     "react": {
       "version": "detect"
     }
+  },
+  "globals": {
+    "jest": true
   }
 }

@@ -1,4 +1,4 @@
-import { useCallback, Component } from 'react';
+import { useCallback, Component, ComponentType } from 'react';
 import {
   ADDITIONAL_PROPERTY_FLAG,
   deepEquals,
@@ -50,14 +50,14 @@ function getFieldComponent<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   uiOptions: UIOptionsType<T, S, F>,
   idSchema: IdSchema<T>,
   registry: Registry<T, S, F>,
-) {
+): ComponentType<FieldProps<T, S, F>> {
   const field = uiOptions.field;
   const { fields, translateString } = registry;
   if (typeof field === 'function') {
     return field;
   }
   if (typeof field === 'string' && field in fields) {
-    return fields[field];
+    return fields[field] as ComponentType<FieldProps<T, S, F>>;
   }
 
   const schemaType = getSchemaType(schema);
@@ -180,7 +180,7 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
       readonly={readonly}
       hideError={hideError}
       autofocus={autofocus}
-      errorSchema={fieldErrorSchema}
+      errorSchema={fieldErrorSchema as ErrorSchema}
       formContext={formContext}
       rawErrors={__errors}
     />

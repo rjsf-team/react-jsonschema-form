@@ -691,6 +691,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                   className="flex-1 line-clamp-1 text-muted-foreground"
                                 />
                                 <svg
+                                  aria-hidden="true"
                                   className="lucide lucide-chevron-down h-4 w-4 opacity-50"
                                   fill="none"
                                   height={24}
@@ -1132,6 +1133,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                         className="flex-1 line-clamp-1 text-muted-foreground"
                       />
                       <svg
+                        aria-hidden="true"
                         className="lucide lucide-chevron-down h-4 w-4 opacity-50"
                         fill="none"
                         height={24}
@@ -1863,6 +1865,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                   className="flex-1 line-clamp-1 text-muted-foreground"
                                 />
                                 <svg
+                                  aria-hidden="true"
                                   className="lucide lucide-chevron-down h-4 w-4 opacity-50"
                                   fill="none"
                                   height={24}
@@ -2343,6 +2346,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                         className="flex-1 line-clamp-1 text-muted-foreground"
                       />
                       <svg
+                        aria-hidden="true"
                         className="lucide lucide-chevron-down h-4 w-4 opacity-50"
                         fill="none"
                         height={24}
@@ -3074,6 +3078,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                   className="flex-1 line-clamp-1 text-muted-foreground"
                                 />
                                 <svg
+                                  aria-hidden="true"
                                   className="lucide lucide-chevron-down h-4 w-4 opacity-50"
                                   fill="none"
                                   height={24}
@@ -4086,6 +4091,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                   className="flex-1 line-clamp-1 text-muted-foreground"
                                 />
                                 <svg
+                                  aria-hidden="true"
                                   className="lucide lucide-chevron-down h-4 w-4 opacity-50"
                                   fill="none"
                                   height={24}
@@ -4527,6 +4533,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                         className="flex-1 line-clamp-1 text-muted-foreground"
                       />
                       <svg
+                        aria-hidden="true"
                         className="lucide lucide-chevron-down h-4 w-4 opacity-50"
                         fill="none"
                         height={24}
@@ -5221,6 +5228,7 @@ exports[`Three even column grid renders person and address in three columns, no 
                       className="flex-1 line-clamp-1 text-muted-foreground"
                     />
                     <svg
+                      aria-hidden="true"
                       className="lucide lucide-chevron-down h-4 w-4 opacity-50"
                       fill="none"
                       height={24}
@@ -5918,6 +5926,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
                       className="flex-1 line-clamp-1 text-muted-foreground"
                     />
                     <svg
+                      aria-hidden="true"
                       className="lucide lucide-chevron-down h-4 w-4 opacity-50"
                       fill="none"
                       height={24}
