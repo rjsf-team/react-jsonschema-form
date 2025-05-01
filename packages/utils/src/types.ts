@@ -255,7 +255,7 @@ export type RJSFBaseProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
 export type ErrorListProps<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 > = RJSFBaseProps<T, S, F> & {
   /** The errorSchema constructed by `Form` */
   errorSchema: ErrorSchema<T>;
@@ -269,7 +269,7 @@ export type ErrorListProps<
 export type FieldErrorProps<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 > = RJSFBaseProps<T, S, F> & {
   /** The errorSchema constructed by `Form` */
   errorSchema?: ErrorSchema<T>;
@@ -283,7 +283,7 @@ export type FieldErrorProps<
 export type FieldHelpProps<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 > = RJSFBaseProps<T, S, F> & {
   /** The help information to be rendered */
   help?: string | ReactElement;
@@ -476,7 +476,7 @@ export type Field<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
 export type FieldTemplateProps<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 > = RJSFBaseProps<T, S, F> & {
   /** The id of the field in the hierarchy. You can use it to render a label targeting the wrapped widget */
   id: string;
@@ -534,7 +534,7 @@ export type FieldTemplateProps<
 export type UnsupportedFieldProps<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 > = RJSFBaseProps<T, S, F> & {
   /** The tree of unique ids for every child field */
   idSchema?: IdSchema<T>;
@@ -546,7 +546,7 @@ export type UnsupportedFieldProps<
 export type TitleFieldProps<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 > = RJSFBaseProps<T, S, F> & {
   /** The id of the field title in the hierarchy */
   id: string;
@@ -560,7 +560,7 @@ export type TitleFieldProps<
 export type DescriptionFieldProps<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 > = RJSFBaseProps<T, S, F> & {
   /** The id of the field description in the hierarchy */
   id: string;
@@ -596,12 +596,8 @@ export type ArrayFieldDescriptionProps<
 export type ArrayFieldItemButtonsTemplateType<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
-> = RJSFBaseProps<T, S, F> & {
-  /** The html for the item's content */
-  children: ReactElement;
   F extends FormContextType = any,
-> = {
+> = RJSFBaseProps<T, S, F> & {
   /** The idSchema of the item for which buttons are being rendered */
   idSchema: IdSchema<T>;
   /** The className string */
@@ -634,12 +630,6 @@ export type ArrayFieldItemButtonsTemplateType<
   onReorderClick: (index: number, newIndex: number) => (event?: any) => void;
   /** A boolean value stating if the array item is read-only */
   readonly?: boolean;
-  /** The schema object for this array item */
-  schema: S;
-  /** The uiSchema object for this array item */
-  uiSchema?: UiSchema<T, S, F>;
-  /** The `registry` object */
-  registry: Registry<T, S, F>;
 };
 
 /** The properties of each element in the ArrayFieldTemplateProps.items array */
@@ -647,7 +637,7 @@ export type ArrayFieldItemTemplateType<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
-> = {
+> = RJSFBaseProps<T, S, F> & {
   /** The html for the item's content */
   children: ReactNode;
   /** The props to pass to the `ArrayFieldItemButtonTemplate` */
@@ -681,7 +671,7 @@ export type ArrayFieldTemplateItemType<
 export type ArrayFieldTemplateProps<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 > = RJSFBaseProps<T, S, F> & {
   /** A boolean value stating whether new elements can be added to the array */
   canAdd?: boolean;
@@ -731,7 +721,7 @@ export type ObjectFieldTemplatePropertyType = {
 export type ObjectFieldTemplateProps<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 > = RJSFBaseProps<T, S, F> & {
   /** A string value containing the title for the object */
   title: string;
@@ -763,31 +753,32 @@ export type ObjectFieldTemplateProps<
 export type WrapIfAdditionalTemplateProps<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 > = RJSFBaseProps<T, S, F> & {
   /** The field or widget component instance for this field row */
   children: ReactNode;
 } & Pick<
-  FieldTemplateProps<T, S, F>,
-  | 'id'
-  | 'classNames'
-  | 'hideError'
-  | 'rawErrors'
-  | 'style'
-  | 'label'
-  | 'required'
-  | 'readonly'
-  | 'disabled'
-  | 'schema'
-  | 'uiSchema'
-  | 'onKeyChange'
-  | 'onDropPropertyClick'
-  | 'registry'
->;
+    FieldTemplateProps<T, S, F>,
+    | 'id'
+    | 'classNames'
+    | 'hideError'
+    | 'rawErrors'
+    | 'style'
+    | 'label'
+    | 'required'
+    | 'readonly'
+    | 'disabled'
+    | 'schema'
+    | 'uiSchema'
+    | 'onKeyChange'
+    | 'onDropPropertyClick'
+    | 'registry'
+  >;
 
 /** The properties that are passed to a Widget implementation */
 export interface WidgetProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>
   extends GenericObjectType,
+    RJSFBaseProps<T, S, F>,
     Pick<HTMLAttributes<HTMLElement>, Exclude<keyof HTMLAttributes<HTMLElement>, 'onBlur' | 'onFocus'>> {
   /** The generated id for this widget, used to provide unique `name`s and `id`s for the HTML field elements rendered by
    * widgets
@@ -797,10 +788,6 @@ export interface WidgetProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F
    * of custom widgets.
    */
   name: string;
-  /** The JSONSchema subschema object for this widget */
-  schema: S;
-  /** The uiSchema for this widget */
-  uiSchema?: UiSchema<T, S, F>;
   /** The current value for this widget */
   value: any;
   /** The required status of this widget */
@@ -840,8 +827,6 @@ export interface WidgetProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F
   multiple?: boolean;
   /** An array of strings listing all generated error messages from encountered errors for this widget */
   rawErrors?: string[];
-  /** The `registry` object */
-  registry: Registry<T, S, F>;
 }
 
 /** The definition of a React-based Widget component */
@@ -853,9 +838,8 @@ export type Widget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends F
 export interface BaseInputTemplateProps<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
-> extends WidgetProps<T, S, F>,
-    RJSFBaseProps<T, S, F> {
+  F extends FormContextType = any,
+> extends WidgetProps<T, S, F> {
   /** A `BaseInputTemplate` implements a default `onChange` handler that it passes to the HTML input component to handle
    * the `ChangeEvent`. Sometimes a widget may need to handle the `ChangeEvent` using custom logic. If that is the case,
    * that widget should provide its own handler via this prop.
@@ -875,7 +859,7 @@ export type SubmitButtonProps<T = any, S extends StrictRJSFSchema = RJSFSchema, 
 export type IconButtonProps<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 > = ButtonHTMLAttributes<HTMLButtonElement> &
   Omit<RJSFBaseProps<T, S, F>, 'schema'> & {
     /** An alternative specification for the type of the icon button */
