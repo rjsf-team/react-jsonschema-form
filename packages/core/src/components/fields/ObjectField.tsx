@@ -195,36 +195,40 @@ class ObjectField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
    * @param schema - The schema element to which the new property is being added
    */
   handleAddClick = (schema: S) => () => {
-    if (!schema.additionalProperties) {
+    if (!(schema.additionalProperties || schema.patternProperties)) {
       return;
     }
     const { formData, onChange, registry } = this.props;
     const newFormData = { ...formData } as T;
-
-    let type: RJSFSchema['type'] = undefined;
-    let constValue: RJSFSchema['const'] = undefined;
-    let defaultValue: RJSFSchema['default'] = undefined;
-    if (isObject(schema.additionalProperties)) {
-      type = schema.additionalProperties.type;
-      constValue = schema.additionalProperties.const;
-      defaultValue = schema.additionalProperties.default;
-      let apSchema = schema.additionalProperties;
-      if (REF_KEY in apSchema) {
-        const { schemaUtils } = registry;
-        apSchema = schemaUtils.retrieveSchema({ $ref: apSchema[REF_KEY] } as S, formData);
-        type = apSchema.type;
-        constValue = apSchema.const;
-        defaultValue = apSchema.default;
-      }
-      if (!type && (ANY_OF_KEY in apSchema || ONE_OF_KEY in apSchema)) {
-        type = 'object';
-      }
-    }
-
     const newKey = this.getAvailableKey('newKey', newFormData);
-    const newValue = constValue ?? defaultValue ?? this.getDefaultValue(type);
-    // Cast this to make the `set` work properly
-    set(newFormData as GenericObjectType, newKey, newValue);
+    if (schema.patternProperties) {
+      // Cast this to make the `set` work properly
+      set(newFormData as GenericObjectType, newKey, null);
+    } else {
+      let type: RJSFSchema['type'] = undefined;
+      let constValue: RJSFSchema['const'] = undefined;
+      let defaultValue: RJSFSchema['default'] = undefined;
+      if (isObject(schema.additionalProperties)) {
+        type = schema.additionalProperties.type;
+        constValue = schema.additionalProperties.const;
+        defaultValue = schema.additionalProperties.default;
+        let apSchema = schema.additionalProperties;
+        if (REF_KEY in apSchema) {
+          const { schemaUtils } = registry;
+          apSchema = schemaUtils.retrieveSchema({ $ref: apSchema[REF_KEY] } as S, formData);
+          type = apSchema.type;
+          constValue = apSchema.const;
+          defaultValue = apSchema.default;
+        }
+        if (!type && (ANY_OF_KEY in apSchema || ONE_OF_KEY in apSchema)) {
+          type = 'object';
+        }
+      }
+
+      const newValue = constValue ?? defaultValue ?? this.getDefaultValue(type);
+      // Cast this to make the `set` work properly
+      set(newFormData as GenericObjectType, newKey, newValue);
+    }
 
     onChange(newFormData);
   };

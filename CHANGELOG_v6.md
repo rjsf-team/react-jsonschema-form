@@ -48,6 +48,7 @@ should change the heading of the (upcoming) version to include a major version b
 - BREAKING CHANGE: Moved the addition of `Bootstrap 3` classes from the `SchemaField` to the `WrapIfAdditionalTemplate`, thereby affecting all the other themes, fixing [#2280](https://github.com/rjsf-team/react-jsonschema-form/issues/2280)
 - BREAKING CHANGE: Added `rjsf-` prefix onto the following marker classes used in the fields and templates:
   - `field`, `field-<schema.type>`, `field-error`, `field-hidden`, `field-array`, `field-array-of-<schema.type>`, `field-array-fixed-items`, `array-item`, `config-error`, `array-item-add`, `array-item-copy`, `array-item-move-down`, `array-item-move-up`, `array-item-remove`, `object-property-expand`
+- Added support for `patternProperties` [#1944](https://github.com/rjsf-team/react-jsonschema-form/issues/1944)
 
 ## @rjsf/daisyui
 
@@ -111,6 +112,7 @@ should change the heading of the (upcoming) version to include a major version b
 - BREAKING CHANGE: Removed the deprecated `toErrorList()` function from the `ValidatorType` interface
 - BREAKING CHANGE: Removed the deprecated `RJSF_ADDITONAL_PROPERTIES_FLAG` constant
 - Updated the `WrapIfAdditionalTemplateProps` to include `hideError` and `rawErrors` in support of moving `Bootstrap 3` marker classes out of `SchemaField`
+- Added support for `patternProperties` [#1944](https://github.com/rjsf-team/react-jsonschema-form/issues/1944)
 
 ## @rjsf/validator-ajv6
 
@@ -130,6 +132,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Updated the `playground` to add a `Layout Grid` example and made the selected example now be part of the shared export
 - Replaced Lerna with Nx, updated all lerna commands to use the Nx CLI
 - BREAKING CHANGE: Updated all `peerDependencies` to change minimal `React` support to `>=18`
+- Added documentation and playground example for `patternProperties`
 
 # 6.0.0-alpha.0
 

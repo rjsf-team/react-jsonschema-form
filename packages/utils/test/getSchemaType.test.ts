@@ -66,6 +66,10 @@ const cases: { schema: object; expected: string | undefined }[] = [
     expected: 'object',
   },
   {
+    schema: { patternProperties: { '^foo': {} } },
+    expected: 'object',
+  },
+  {
     schema: { enum: ['foo'] },
     expected: 'string',
   },

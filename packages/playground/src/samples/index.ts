@@ -34,6 +34,7 @@ import customField from './customField';
 import layoutGrid from './layoutGrid';
 import { Sample } from './Sample';
 import deepFreeze from 'deep-freeze-es6';
+import patternProperties from './patternProperties';
 
 export type { Sample };
 
@@ -61,6 +62,7 @@ const _samples: Record<string, Sample> = {
   'Property dependencies': propertyDependencies,
   'Schema dependencies': schemaDependencies,
   'Additional Properties': additionalProperties,
+  'Pattern Properties': patternProperties,
   'Any Of': anyOf,
   'Any Of with Custom Field': customFieldAnyOf,
   'One Of': oneOf,

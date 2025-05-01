@@ -19,6 +19,7 @@ export const ITEMS_KEY = 'items';
 export const JUNK_OPTION_ID = '_$junk_option_schema_id$_';
 export const NAME_KEY = '$name';
 export const ONE_OF_KEY = 'oneOf';
+export const PATTERN_PROPERTIES_KEY = 'patternProperties';
 export const PROPERTIES_KEY = 'properties';
 export const READONLY_KEY = 'readonly';
 export const REQUIRED_KEY = 'required';

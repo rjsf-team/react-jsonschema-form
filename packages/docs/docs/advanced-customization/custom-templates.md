@@ -14,7 +14,7 @@ In version 5, all existing `templates` were consolidated into a new `TemplatesTy
 They can also be overloaded globally on the `Form` via the `templates` prop as well as globally or per-field through the `uiSchema`.
 Further, many new templates were added or repurposed from existing `widgets` and `fields` in an effort to simplify the effort needed by theme authors to build new and/or maintain current themes.
 These new templates can also be overridden by individual users to customize the specific needs of their application.
-A special category of templates, `ButtonTemplates`, were also added to support the easy replacement of the `Submit` button on the form, the `Add` and `Remove` buttons associated with `additionalProperties` on objects and elements of arrays, as well as the `Move up` and `Move down` buttons used for reordering arrays.
+A special category of templates, `ButtonTemplates`, were also added to support the easy replacement of the `Submit` button on the form, the `Add` and `Remove` buttons associated with `additionalProperties` and `patternProperties` on objects and elements of arrays, as well as the `Move up` and `Move down` buttons used for reordering arrays.
 This category, unlike the others, can only be overridden globally via the `templates` prop on `Form`.
 
 Below is the table that lists all the `templates`, their props interface, their `uiSchema` name and from where they originated in the previous version of RJSF:
@@ -461,7 +461,7 @@ The following props are passed to the `BaseInputTemplate`:
 - `multiple`: A boolean value stating if the widget can accept multiple values;
 - `onChange`: The value change event handler; call it with the new value every time it changes;
 - `onChangeOverride`: A `BaseInputTemplate` implements a default `onChange` handler that it passes to the HTML input component to handle the `ChangeEvent`. Sometimes a widget may need to handle the `ChangeEvent` using custom logic. If that is the case, that widget should provide its own handler via this prop;
-- `onKeyChange`: The key change event handler (only called for fields with `additionalProperties`); pass the new value every time it changes;
+- `onKeyChange`: The key change event handler (only called for fields with `additionalProperties` and `patternProperties`); pass the new value every time it changes;
 - `onBlur`: The input blur event handler; call it with the widget id and value;
 - `onFocus`: The input focus event handler; call it with the widget id and value;
 - `options`: A map of options passed as a prop to the component (see [Custom widget options](./custom-widgets-fields.md#custom-widget-options)).
@@ -807,7 +807,7 @@ The following props are passed to each `ObjectFieldTemplate` as defined by the `
 - `description`: A string value containing the description for the object.
 - `disabled`: A boolean value stating if the object is disabled.
 - `properties`: An array of object representing the properties in the object. Each of the properties represent a child with properties described below.
-- `onAddClick: (schema: RJSFSchema) => () => void`: Returns a function that adds a new property to the object (to be used with additionalProperties)
+- `onAddClick: (schema: RJSFSchema) => () => void`: Returns a function that adds a new property to the object (to be used with additionalProperties and patternProperties)
 - `readonly`: A boolean value stating if the object is read-only.
 - `required`: A boolean value stating if the object is required.
 - `hideError`: A boolean value stating if the field is hiding its errors.
@@ -908,8 +908,8 @@ The following props are passed to each `UnsupportedFieldTemplate`:
 
 ## WrapIfAdditionalTemplate
 
-The `WrapIfAdditionalTemplate` is used by the `FieldTemplate` to conditionally render additional controls if `additionalProperties` is present in the schema.
-You may customize `WrapIfAdditionalTemplate` if you wish to change the layout or behavior of user-controlled `additionalProperties`.
+The `WrapIfAdditionalTemplate` is used by the `FieldTemplate` to conditionally render additional controls if `additionalProperties` or `patternProperties` are present in the schema.
+You may customize `WrapIfAdditionalTemplate` if you wish to change the layout or behavior of user-controlled `additionalProperties` and `patternProperties`.
 
 ```tsx
 import { RJSFSchema, WrapIfAdditionalTemplateProps } from '@rjsf/utils';
@@ -987,7 +987,7 @@ Each button template (except for the `SubmitButton`) accepts, as props, the stan
 
 ### AddButton
 
-The `AddButton` is used to render an add action on a `Form` for both a new `additionalProperties` element for an object or a new element in an array.
+The `AddButton` is used to render an add action on a `Form` for both a new `additionalProperties` or `patternProperties` element for an object or a new element in an array.
 You can customize the `AddButton` to render something other than the icon button that is provided by a theme as follows:
 
 ```tsx
@@ -1077,7 +1077,7 @@ render(
 
 ### RemoveButton
 
-The `RemoveButton` is used to render a remove action on a `Form` for both a existing `additionalProperties` element for an object or an existing element in an array.
+The `RemoveButton` is used to render a remove action on a `Form` for both a existing `additionalProperties` or `patternProperties` element for an object or an existing element in an array.
 You can customize the `RemoveButton` to render something other than the icon button that is provided by a theme as follows:
 
 ```tsx
