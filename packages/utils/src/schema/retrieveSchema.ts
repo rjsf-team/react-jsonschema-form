@@ -197,15 +197,16 @@ export function getAllPermutationsOfXxxOf<S extends StrictRJSFSchema = RJSFSchem
 export function getMatchingPatternProperties<S extends StrictRJSFSchema = RJSFSchema>(
   schema: S,
   key: string,
-): S['patternProperties'] {
+): Required<S['patternProperties']> {
   return Object.keys(schema.patternProperties!)
-    .filter((pattern) => RegExp(pattern).test(key))
+    .filter((pattern: string) => RegExp(pattern).test(key))
     .reduce(
       (obj, pattern) => {
-        obj[pattern] = schema.patternProperties![pattern];
+        // Pass the pattern using the `[]` index notation so that any `.` in the pattern are not used as a dotted path
+        set(obj, [pattern], schema.patternProperties![pattern]);
         return obj;
       },
-      {} as S['patternProperties'],
+      {} as Required<S['patternProperties']>,
     );
 }
 

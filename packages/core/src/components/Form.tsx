@@ -672,8 +672,8 @@ export default class Form<
 
     // Removing undefined, null and empty errors.
     const filterNilOrEmptyErrors = (errors: any, previousCustomValidateErrors: any = {}): ErrorSchema<T> => {
-      _forEach(errors, (errorAtKey, errorKey: keyof typeof errors) => {
-        const prevCustomValidateErrorAtKey = previousCustomValidateErrors[errorKey];
+      _forEach(errors, (errorAtKey: ErrorSchema<T>['__errors'] | undefined, errorKey: keyof typeof errors) => {
+        const prevCustomValidateErrorAtKey: ErrorSchema<T> | undefined = previousCustomValidateErrors[errorKey];
         if (_isNil(errorAtKey) || (Array.isArray(errorAtKey) && errorAtKey.length === 0)) {
           delete errors[errorKey];
         } else if (
