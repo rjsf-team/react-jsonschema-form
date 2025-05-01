@@ -7,13 +7,13 @@ exports[`array fields array 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div
       className="grouped equal width fields"
     >
       <div
-        className="field field-array field-array-of-string sortable-form-fields"
+        className="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields"
       >
         <div>
           <div
@@ -29,7 +29,8 @@ exports[`array fields array 1`] = `
             }
           >
             <button
-              className="ui tiny icon button"
+              className="ui tiny icon button rjsf-array-item-add"
+              id="root__add"
               onClick={[Function]}
               title="Add Item"
             >
@@ -61,20 +62,20 @@ exports[`array fields array icons 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div
       className="grouped equal width fields"
     >
       <div
-        className="field field-array field-array-of-string sortable-form-fields"
+        className="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields"
       >
         <div>
           <div
             className="row array-item-list"
           >
             <div
-              className="array-item"
+              className="rjsf-array-item"
             >
               <div
                 className="ui grid"
@@ -90,7 +91,7 @@ exports[`array fields array icons 1`] = `
                   className="middle aligned sixteen wide column"
                 >
                   <div
-                    className="form-group field field-string"
+                    className="rjsf-field rjsf-field-string"
                   >
                     <div
                       className="grouped equal width fields"
@@ -127,8 +128,9 @@ exports[`array fields array icons 1`] = `
                     className="ui mini buttons"
                   >
                     <button
-                      className="ui icon disabled button array-item-move-up"
+                      className="ui icon disabled button rjsf-array-item-move-up"
                       disabled={true}
+                      id="root_0__moveUp"
                       onClick={[Function]}
                       tabIndex={-1}
                       title="Move up"
@@ -140,7 +142,8 @@ exports[`array fields array icons 1`] = `
                       />
                     </button>
                     <button
-                      className="ui icon button array-item-move-down"
+                      className="ui icon button rjsf-array-item-move-down"
+                      id="root_0__moveDown"
                       onClick={[Function]}
                       title="Move down"
                     >
@@ -151,7 +154,8 @@ exports[`array fields array icons 1`] = `
                       />
                     </button>
                     <button
-                      className="ui icon button array-item-copy"
+                      className="ui icon button rjsf-array-item-copy"
+                      id="root_0__copy"
                       onClick={[Function]}
                       title="Copy"
                     >
@@ -162,7 +166,8 @@ exports[`array fields array icons 1`] = `
                       />
                     </button>
                     <button
-                      className="ui icon button array-item-remove"
+                      className="ui icon button rjsf-array-item-remove"
+                      id="root_0__remove"
                       onClick={[Function]}
                       title="Remove"
                     >
@@ -177,7 +182,7 @@ exports[`array fields array icons 1`] = `
               </div>
             </div>
             <div
-              className="array-item"
+              className="rjsf-array-item"
             >
               <div
                 className="ui grid"
@@ -193,7 +198,7 @@ exports[`array fields array icons 1`] = `
                   className="middle aligned sixteen wide column"
                 >
                   <div
-                    className="form-group field field-string"
+                    className="rjsf-field rjsf-field-string"
                   >
                     <div
                       className="grouped equal width fields"
@@ -230,7 +235,8 @@ exports[`array fields array icons 1`] = `
                     className="ui mini buttons"
                   >
                     <button
-                      className="ui icon button array-item-move-up"
+                      className="ui icon button rjsf-array-item-move-up"
+                      id="root_1__moveUp"
                       onClick={[Function]}
                       title="Move up"
                     >
@@ -241,8 +247,9 @@ exports[`array fields array icons 1`] = `
                       />
                     </button>
                     <button
-                      className="ui icon disabled button array-item-move-down"
+                      className="ui icon disabled button rjsf-array-item-move-down"
                       disabled={true}
+                      id="root_1__moveDown"
                       onClick={[Function]}
                       tabIndex={-1}
                       title="Move down"
@@ -254,7 +261,8 @@ exports[`array fields array icons 1`] = `
                       />
                     </button>
                     <button
-                      className="ui icon button array-item-copy"
+                      className="ui icon button rjsf-array-item-copy"
+                      id="root_1__copy"
                       onClick={[Function]}
                       title="Copy"
                     >
@@ -265,7 +273,8 @@ exports[`array fields array icons 1`] = `
                       />
                     </button>
                     <button
-                      className="ui icon button array-item-remove"
+                      className="ui icon button rjsf-array-item-remove"
+                      id="root_1__remove"
                       onClick={[Function]}
                       title="Remove"
                     >
@@ -290,7 +299,8 @@ exports[`array fields array icons 1`] = `
             }
           >
             <button
-              className="ui tiny icon button"
+              className="ui tiny icon button rjsf-array-item-add"
+              id="root__add"
               onClick={[Function]}
               title="Add Item"
             >
@@ -322,7 +332,7 @@ exports[`array fields checkboxes 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div
       className="grouped equal width fields"
@@ -438,13 +448,13 @@ exports[`array fields empty errors array 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="grouped equal width fields"
     >
       <div
-        className="form-group field field-string"
+        className="rjsf-field rjsf-field-string"
       >
         <div
           className="grouped equal width fields"
@@ -497,20 +507,20 @@ exports[`array fields fixed array 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div
       className="grouped equal width fields"
     >
       <div
-        className="field field-array field-array-fixed-items"
+        className="rjsf-field rjsf-field-array rjsf-field-array-fixed-items"
       >
         <div>
           <div
             className="row array-item-list"
           >
             <div
-              className="array-item"
+              className="rjsf-array-item"
             >
               <div
                 className="ui grid"
@@ -526,7 +536,7 @@ exports[`array fields fixed array 1`] = `
                   className="middle aligned sixteen wide column"
                 >
                   <div
-                    className="form-group field field-string"
+                    className="rjsf-field rjsf-field-string"
                   >
                     <div
                       className="grouped equal width fields"
@@ -559,7 +569,7 @@ exports[`array fields fixed array 1`] = `
               </div>
             </div>
             <div
-              className="array-item"
+              className="rjsf-array-item"
             >
               <div
                 className="ui grid"
@@ -575,7 +585,7 @@ exports[`array fields fixed array 1`] = `
                   className="middle aligned sixteen wide column"
                 >
                   <div
-                    className="form-group field field-number"
+                    className="rjsf-field rjsf-field-number"
                   >
                     <div
                       className="grouped equal width fields"
@@ -648,13 +658,13 @@ exports[`array fields has errors 1`] = `
     </ul>
   </div>
   <div
-    className="form-group field field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="grouped equal width fields"
     >
       <div
-        className="form-group field field-string field-error has-error has-danger"
+        className="rjsf-field rjsf-field-string rjsf-field-error"
       >
         <div
           className="grouped equal width fields"
@@ -726,13 +736,13 @@ exports[`array fields no errors 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       className="grouped equal width fields"
     >
       <div
-        className="form-group field field-string"
+        className="rjsf-field rjsf-field-string"
       >
         <div
           className="grouped equal width fields"
@@ -785,13 +795,13 @@ exports[`with title and description array 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div
       className="grouped equal width fields"
     >
       <div
-        className="field field-array field-array-of-string sortable-form-fields"
+        className="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields"
       >
         <h5
           className="ui dividing header"
@@ -819,7 +829,8 @@ exports[`with title and description array 1`] = `
             }
           >
             <button
-              className="ui tiny icon button"
+              className="ui tiny icon button rjsf-array-item-add"
+              id="root__add"
               onClick={[Function]}
               title="Add Item"
             >
@@ -851,13 +862,13 @@ exports[`with title and description array icons 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div
       className="grouped equal width fields"
     >
       <div
-        className="field field-array field-array-of-string sortable-form-fields"
+        className="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields"
       >
         <h5
           className="ui dividing header"
@@ -876,7 +887,7 @@ exports[`with title and description array icons 1`] = `
             className="row array-item-list"
           >
             <div
-              className="array-item"
+              className="rjsf-array-item"
             >
               <div
                 className="ui grid"
@@ -892,7 +903,7 @@ exports[`with title and description array icons 1`] = `
                   className="middle aligned sixteen wide column"
                 >
                   <div
-                    className="form-group field field-string"
+                    className="rjsf-field rjsf-field-string"
                   >
                     <div
                       className="grouped equal width fields"
@@ -940,8 +951,9 @@ exports[`with title and description array icons 1`] = `
                     className="ui mini buttons"
                   >
                     <button
-                      className="ui icon disabled button array-item-move-up"
+                      className="ui icon disabled button rjsf-array-item-move-up"
                       disabled={true}
+                      id="root_0__moveUp"
                       onClick={[Function]}
                       tabIndex={-1}
                       title="Move up"
@@ -953,7 +965,8 @@ exports[`with title and description array icons 1`] = `
                       />
                     </button>
                     <button
-                      className="ui icon button array-item-move-down"
+                      className="ui icon button rjsf-array-item-move-down"
+                      id="root_0__moveDown"
                       onClick={[Function]}
                       title="Move down"
                     >
@@ -964,7 +977,8 @@ exports[`with title and description array icons 1`] = `
                       />
                     </button>
                     <button
-                      className="ui icon button array-item-copy"
+                      className="ui icon button rjsf-array-item-copy"
+                      id="root_0__copy"
                       onClick={[Function]}
                       title="Copy"
                     >
@@ -975,7 +989,8 @@ exports[`with title and description array icons 1`] = `
                       />
                     </button>
                     <button
-                      className="ui icon button array-item-remove"
+                      className="ui icon button rjsf-array-item-remove"
+                      id="root_0__remove"
                       onClick={[Function]}
                       title="Remove"
                     >
@@ -990,7 +1005,7 @@ exports[`with title and description array icons 1`] = `
               </div>
             </div>
             <div
-              className="array-item"
+              className="rjsf-array-item"
             >
               <div
                 className="ui grid"
@@ -1006,7 +1021,7 @@ exports[`with title and description array icons 1`] = `
                   className="middle aligned sixteen wide column"
                 >
                   <div
-                    className="form-group field field-string"
+                    className="rjsf-field rjsf-field-string"
                   >
                     <div
                       className="grouped equal width fields"
@@ -1054,7 +1069,8 @@ exports[`with title and description array icons 1`] = `
                     className="ui mini buttons"
                   >
                     <button
-                      className="ui icon button array-item-move-up"
+                      className="ui icon button rjsf-array-item-move-up"
+                      id="root_1__moveUp"
                       onClick={[Function]}
                       title="Move up"
                     >
@@ -1065,8 +1081,9 @@ exports[`with title and description array icons 1`] = `
                       />
                     </button>
                     <button
-                      className="ui icon disabled button array-item-move-down"
+                      className="ui icon disabled button rjsf-array-item-move-down"
                       disabled={true}
+                      id="root_1__moveDown"
                       onClick={[Function]}
                       tabIndex={-1}
                       title="Move down"
@@ -1078,7 +1095,8 @@ exports[`with title and description array icons 1`] = `
                       />
                     </button>
                     <button
-                      className="ui icon button array-item-copy"
+                      className="ui icon button rjsf-array-item-copy"
+                      id="root_1__copy"
                       onClick={[Function]}
                       title="Copy"
                     >
@@ -1089,7 +1107,8 @@ exports[`with title and description array icons 1`] = `
                       />
                     </button>
                     <button
-                      className="ui icon button array-item-remove"
+                      className="ui icon button rjsf-array-item-remove"
+                      id="root_1__remove"
                       onClick={[Function]}
                       title="Remove"
                     >
@@ -1114,7 +1133,8 @@ exports[`with title and description array icons 1`] = `
             }
           >
             <button
-              className="ui tiny icon button"
+              className="ui tiny icon button rjsf-array-item-add"
+              id="root__add"
               onClick={[Function]}
               title="Add Item"
             >
@@ -1146,7 +1166,7 @@ exports[`with title and description checkboxes 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div
       className="grouped equal width fields"
@@ -1273,13 +1293,13 @@ exports[`with title and description fixed array 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div
       className="grouped equal width fields"
     >
       <div
-        className="field field-array field-array-fixed-items"
+        className="rjsf-field rjsf-field-array rjsf-field-array-fixed-items"
       >
         <h5
           className="ui dividing header"
@@ -1298,7 +1318,7 @@ exports[`with title and description fixed array 1`] = `
             className="row array-item-list"
           >
             <div
-              className="array-item"
+              className="rjsf-array-item"
             >
               <div
                 className="ui grid"
@@ -1314,7 +1334,7 @@ exports[`with title and description fixed array 1`] = `
                   className="middle aligned sixteen wide column"
                 >
                   <div
-                    className="form-group field field-string"
+                    className="rjsf-field rjsf-field-string"
                   >
                     <div
                       className="grouped equal width fields"
@@ -1358,7 +1378,7 @@ exports[`with title and description fixed array 1`] = `
               </div>
             </div>
             <div
-              className="array-item"
+              className="rjsf-array-item"
             >
               <div
                 className="ui grid"
@@ -1374,7 +1394,7 @@ exports[`with title and description fixed array 1`] = `
                   className="middle aligned sixteen wide column"
                 >
                   <div
-                    className="form-group field field-number"
+                    className="rjsf-field rjsf-field-number"
                   >
                     <div
                       className="grouped equal width fields"
@@ -1440,13 +1460,13 @@ exports[`with title and description from both array 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div
       className="grouped equal width fields"
     >
       <div
-        className="field field-array field-array-of-string sortable-form-fields"
+        className="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields"
       >
         <h5
           className="ui dividing header"
@@ -1474,7 +1494,8 @@ exports[`with title and description from both array 1`] = `
             }
           >
             <button
-              className="ui tiny icon button"
+              className="ui tiny icon button rjsf-array-item-add"
+              id="root__add"
               onClick={[Function]}
               title="Add Item"
             >
@@ -1506,13 +1527,13 @@ exports[`with title and description from both array icons 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div
       className="grouped equal width fields"
     >
       <div
-        className="field field-array field-array-of-string sortable-form-fields"
+        className="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields"
       >
         <h5
           className="ui dividing header"
@@ -1531,7 +1552,7 @@ exports[`with title and description from both array icons 1`] = `
             className="row array-item-list"
           >
             <div
-              className="array-item"
+              className="rjsf-array-item"
             >
               <div
                 className="ui grid"
@@ -1547,7 +1568,7 @@ exports[`with title and description from both array icons 1`] = `
                   className="middle aligned sixteen wide column"
                 >
                   <div
-                    className="form-group field field-string"
+                    className="rjsf-field rjsf-field-string"
                   >
                     <div
                       className="grouped equal width fields"
@@ -1595,8 +1616,9 @@ exports[`with title and description from both array icons 1`] = `
                     className="ui mini buttons"
                   >
                     <button
-                      className="ui icon disabled button array-item-move-up"
+                      className="ui icon disabled button rjsf-array-item-move-up"
                       disabled={true}
+                      id="root_0__moveUp"
                       onClick={[Function]}
                       tabIndex={-1}
                       title="Move up"
@@ -1608,7 +1630,8 @@ exports[`with title and description from both array icons 1`] = `
                       />
                     </button>
                     <button
-                      className="ui icon button array-item-move-down"
+                      className="ui icon button rjsf-array-item-move-down"
+                      id="root_0__moveDown"
                       onClick={[Function]}
                       title="Move down"
                     >
@@ -1619,7 +1642,8 @@ exports[`with title and description from both array icons 1`] = `
                       />
                     </button>
                     <button
-                      className="ui icon button array-item-copy"
+                      className="ui icon button rjsf-array-item-copy"
+                      id="root_0__copy"
                       onClick={[Function]}
                       title="Copy"
                     >
@@ -1630,7 +1654,8 @@ exports[`with title and description from both array icons 1`] = `
                       />
                     </button>
                     <button
-                      className="ui icon button array-item-remove"
+                      className="ui icon button rjsf-array-item-remove"
+                      id="root_0__remove"
                       onClick={[Function]}
                       title="Remove"
                     >
@@ -1645,7 +1670,7 @@ exports[`with title and description from both array icons 1`] = `
               </div>
             </div>
             <div
-              className="array-item"
+              className="rjsf-array-item"
             >
               <div
                 className="ui grid"
@@ -1661,7 +1686,7 @@ exports[`with title and description from both array icons 1`] = `
                   className="middle aligned sixteen wide column"
                 >
                   <div
-                    className="form-group field field-string"
+                    className="rjsf-field rjsf-field-string"
                   >
                     <div
                       className="grouped equal width fields"
@@ -1709,7 +1734,8 @@ exports[`with title and description from both array icons 1`] = `
                     className="ui mini buttons"
                   >
                     <button
-                      className="ui icon button array-item-move-up"
+                      className="ui icon button rjsf-array-item-move-up"
+                      id="root_1__moveUp"
                       onClick={[Function]}
                       title="Move up"
                     >
@@ -1720,8 +1746,9 @@ exports[`with title and description from both array icons 1`] = `
                       />
                     </button>
                     <button
-                      className="ui icon disabled button array-item-move-down"
+                      className="ui icon disabled button rjsf-array-item-move-down"
                       disabled={true}
+                      id="root_1__moveDown"
                       onClick={[Function]}
                       tabIndex={-1}
                       title="Move down"
@@ -1733,7 +1760,8 @@ exports[`with title and description from both array icons 1`] = `
                       />
                     </button>
                     <button
-                      className="ui icon button array-item-copy"
+                      className="ui icon button rjsf-array-item-copy"
+                      id="root_1__copy"
                       onClick={[Function]}
                       title="Copy"
                     >
@@ -1744,7 +1772,8 @@ exports[`with title and description from both array icons 1`] = `
                       />
                     </button>
                     <button
-                      className="ui icon button array-item-remove"
+                      className="ui icon button rjsf-array-item-remove"
+                      id="root_1__remove"
                       onClick={[Function]}
                       title="Remove"
                     >
@@ -1769,7 +1798,8 @@ exports[`with title and description from both array icons 1`] = `
             }
           >
             <button
-              className="ui tiny icon button"
+              className="ui tiny icon button rjsf-array-item-add"
+              id="root__add"
               onClick={[Function]}
               title="Add Item"
             >
@@ -1801,7 +1831,7 @@ exports[`with title and description from both checkboxes 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div
       className="grouped equal width fields"
@@ -1928,13 +1958,13 @@ exports[`with title and description from both fixed array 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div
       className="grouped equal width fields"
     >
       <div
-        className="field field-array field-array-fixed-items"
+        className="rjsf-field rjsf-field-array rjsf-field-array-fixed-items"
       >
         <h5
           className="ui dividing header"
@@ -1953,7 +1983,7 @@ exports[`with title and description from both fixed array 1`] = `
             className="row array-item-list"
           >
             <div
-              className="array-item"
+              className="rjsf-array-item"
             >
               <div
                 className="ui grid"
@@ -1969,7 +1999,7 @@ exports[`with title and description from both fixed array 1`] = `
                   className="middle aligned sixteen wide column"
                 >
                   <div
-                    className="form-group field field-string"
+                    className="rjsf-field rjsf-field-string"
                   >
                     <div
                       className="grouped equal width fields"
@@ -2013,7 +2043,7 @@ exports[`with title and description from both fixed array 1`] = `
               </div>
             </div>
             <div
-              className="array-item"
+              className="rjsf-array-item"
             >
               <div
                 className="ui grid"
@@ -2029,7 +2059,7 @@ exports[`with title and description from both fixed array 1`] = `
                   className="middle aligned sixteen wide column"
                 >
                   <div
-                    className="form-group field field-number"
+                    className="rjsf-field rjsf-field-number"
                   >
                     <div
                       className="grouped equal width fields"
@@ -2095,13 +2125,13 @@ exports[`with title and description from uiSchema array 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div
       className="grouped equal width fields"
     >
       <div
-        className="field field-array field-array-of-string sortable-form-fields"
+        className="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields"
       >
         <h5
           className="ui dividing header"
@@ -2129,7 +2159,8 @@ exports[`with title and description from uiSchema array 1`] = `
             }
           >
             <button
-              className="ui tiny icon button"
+              className="ui tiny icon button rjsf-array-item-add"
+              id="root__add"
               onClick={[Function]}
               title="Add Item"
             >
@@ -2161,13 +2192,13 @@ exports[`with title and description from uiSchema array icons 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div
       className="grouped equal width fields"
     >
       <div
-        className="field field-array field-array-of-string sortable-form-fields"
+        className="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields"
       >
         <h5
           className="ui dividing header"
@@ -2186,7 +2217,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
             className="row array-item-list"
           >
             <div
-              className="array-item"
+              className="rjsf-array-item"
             >
               <div
                 className="ui grid"
@@ -2202,7 +2233,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                   className="middle aligned sixteen wide column"
                 >
                   <div
-                    className="form-group field field-string"
+                    className="rjsf-field rjsf-field-string"
                   >
                     <div
                       className="grouped equal width fields"
@@ -2250,8 +2281,9 @@ exports[`with title and description from uiSchema array icons 1`] = `
                     className="ui mini buttons"
                   >
                     <button
-                      className="ui icon disabled button array-item-move-up"
+                      className="ui icon disabled button rjsf-array-item-move-up"
                       disabled={true}
+                      id="root_0__moveUp"
                       onClick={[Function]}
                       tabIndex={-1}
                       title="Move up"
@@ -2263,7 +2295,8 @@ exports[`with title and description from uiSchema array icons 1`] = `
                       />
                     </button>
                     <button
-                      className="ui icon button array-item-move-down"
+                      className="ui icon button rjsf-array-item-move-down"
+                      id="root_0__moveDown"
                       onClick={[Function]}
                       title="Move down"
                     >
@@ -2274,7 +2307,8 @@ exports[`with title and description from uiSchema array icons 1`] = `
                       />
                     </button>
                     <button
-                      className="ui icon button array-item-copy"
+                      className="ui icon button rjsf-array-item-copy"
+                      id="root_0__copy"
                       onClick={[Function]}
                       title="Copy"
                     >
@@ -2285,7 +2319,8 @@ exports[`with title and description from uiSchema array icons 1`] = `
                       />
                     </button>
                     <button
-                      className="ui icon button array-item-remove"
+                      className="ui icon button rjsf-array-item-remove"
+                      id="root_0__remove"
                       onClick={[Function]}
                       title="Remove"
                     >
@@ -2300,7 +2335,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
               </div>
             </div>
             <div
-              className="array-item"
+              className="rjsf-array-item"
             >
               <div
                 className="ui grid"
@@ -2316,7 +2351,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                   className="middle aligned sixteen wide column"
                 >
                   <div
-                    className="form-group field field-string"
+                    className="rjsf-field rjsf-field-string"
                   >
                     <div
                       className="grouped equal width fields"
@@ -2364,7 +2399,8 @@ exports[`with title and description from uiSchema array icons 1`] = `
                     className="ui mini buttons"
                   >
                     <button
-                      className="ui icon button array-item-move-up"
+                      className="ui icon button rjsf-array-item-move-up"
+                      id="root_1__moveUp"
                       onClick={[Function]}
                       title="Move up"
                     >
@@ -2375,8 +2411,9 @@ exports[`with title and description from uiSchema array icons 1`] = `
                       />
                     </button>
                     <button
-                      className="ui icon disabled button array-item-move-down"
+                      className="ui icon disabled button rjsf-array-item-move-down"
                       disabled={true}
+                      id="root_1__moveDown"
                       onClick={[Function]}
                       tabIndex={-1}
                       title="Move down"
@@ -2388,7 +2425,8 @@ exports[`with title and description from uiSchema array icons 1`] = `
                       />
                     </button>
                     <button
-                      className="ui icon button array-item-copy"
+                      className="ui icon button rjsf-array-item-copy"
+                      id="root_1__copy"
                       onClick={[Function]}
                       title="Copy"
                     >
@@ -2399,7 +2437,8 @@ exports[`with title and description from uiSchema array icons 1`] = `
                       />
                     </button>
                     <button
-                      className="ui icon button array-item-remove"
+                      className="ui icon button rjsf-array-item-remove"
+                      id="root_1__remove"
                       onClick={[Function]}
                       title="Remove"
                     >
@@ -2424,7 +2463,8 @@ exports[`with title and description from uiSchema array icons 1`] = `
             }
           >
             <button
-              className="ui tiny icon button"
+              className="ui tiny icon button rjsf-array-item-add"
+              id="root__add"
               onClick={[Function]}
               title="Add Item"
             >
@@ -2456,7 +2496,7 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div
       className="grouped equal width fields"
@@ -2583,13 +2623,13 @@ exports[`with title and description from uiSchema fixed array 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div
       className="grouped equal width fields"
     >
       <div
-        className="field field-array field-array-fixed-items"
+        className="rjsf-field rjsf-field-array rjsf-field-array-fixed-items"
       >
         <h5
           className="ui dividing header"
@@ -2608,7 +2648,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
             className="row array-item-list"
           >
             <div
-              className="array-item"
+              className="rjsf-array-item"
             >
               <div
                 className="ui grid"
@@ -2624,7 +2664,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                   className="middle aligned sixteen wide column"
                 >
                   <div
-                    className="form-group field field-string"
+                    className="rjsf-field rjsf-field-string"
                   >
                     <div
                       className="grouped equal width fields"
@@ -2668,7 +2708,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
               </div>
             </div>
             <div
-              className="array-item"
+              className="rjsf-array-item"
             >
               <div
                 className="ui grid"
@@ -2684,7 +2724,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                   className="middle aligned sixteen wide column"
                 >
                   <div
-                    className="form-group field field-number"
+                    className="rjsf-field rjsf-field-number"
                   >
                     <div
                       className="grouped equal width fields"
@@ -2750,13 +2790,13 @@ exports[`with title and description with global label off array 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div
       className="grouped equal width fields"
     >
       <div
-        className="field field-array field-array-of-string sortable-form-fields"
+        className="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields"
       >
         <div>
           <div
@@ -2772,7 +2812,8 @@ exports[`with title and description with global label off array 1`] = `
             }
           >
             <button
-              className="ui tiny icon button"
+              className="ui tiny icon button rjsf-array-item-add"
+              id="root__add"
               onClick={[Function]}
               title="Add Item"
             >
@@ -2804,20 +2845,20 @@ exports[`with title and description with global label off array icons 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div
       className="grouped equal width fields"
     >
       <div
-        className="field field-array field-array-of-string sortable-form-fields"
+        className="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields"
       >
         <div>
           <div
             className="row array-item-list"
           >
             <div
-              className="array-item"
+              className="rjsf-array-item"
             >
               <div
                 className="ui grid"
@@ -2833,7 +2874,7 @@ exports[`with title and description with global label off array icons 1`] = `
                   className="middle aligned sixteen wide column"
                 >
                   <div
-                    className="form-group field field-string"
+                    className="rjsf-field rjsf-field-string"
                   >
                     <div
                       className="grouped equal width fields"
@@ -2870,8 +2911,9 @@ exports[`with title and description with global label off array icons 1`] = `
                     className="ui mini buttons"
                   >
                     <button
-                      className="ui icon disabled button array-item-move-up"
+                      className="ui icon disabled button rjsf-array-item-move-up"
                       disabled={true}
+                      id="root_0__moveUp"
                       onClick={[Function]}
                       tabIndex={-1}
                       title="Move up"
@@ -2883,7 +2925,8 @@ exports[`with title and description with global label off array icons 1`] = `
                       />
                     </button>
                     <button
-                      className="ui icon button array-item-move-down"
+                      className="ui icon button rjsf-array-item-move-down"
+                      id="root_0__moveDown"
                       onClick={[Function]}
                       title="Move down"
                     >
@@ -2894,7 +2937,8 @@ exports[`with title and description with global label off array icons 1`] = `
                       />
                     </button>
                     <button
-                      className="ui icon button array-item-copy"
+                      className="ui icon button rjsf-array-item-copy"
+                      id="root_0__copy"
                       onClick={[Function]}
                       title="Copy"
                     >
@@ -2905,7 +2949,8 @@ exports[`with title and description with global label off array icons 1`] = `
                       />
                     </button>
                     <button
-                      className="ui icon button array-item-remove"
+                      className="ui icon button rjsf-array-item-remove"
+                      id="root_0__remove"
                       onClick={[Function]}
                       title="Remove"
                     >
@@ -2920,7 +2965,7 @@ exports[`with title and description with global label off array icons 1`] = `
               </div>
             </div>
             <div
-              className="array-item"
+              className="rjsf-array-item"
             >
               <div
                 className="ui grid"
@@ -2936,7 +2981,7 @@ exports[`with title and description with global label off array icons 1`] = `
                   className="middle aligned sixteen wide column"
                 >
                   <div
-                    className="form-group field field-string"
+                    className="rjsf-field rjsf-field-string"
                   >
                     <div
                       className="grouped equal width fields"
@@ -2973,7 +3018,8 @@ exports[`with title and description with global label off array icons 1`] = `
                     className="ui mini buttons"
                   >
                     <button
-                      className="ui icon button array-item-move-up"
+                      className="ui icon button rjsf-array-item-move-up"
+                      id="root_1__moveUp"
                       onClick={[Function]}
                       title="Move up"
                     >
@@ -2984,8 +3030,9 @@ exports[`with title and description with global label off array icons 1`] = `
                       />
                     </button>
                     <button
-                      className="ui icon disabled button array-item-move-down"
+                      className="ui icon disabled button rjsf-array-item-move-down"
                       disabled={true}
+                      id="root_1__moveDown"
                       onClick={[Function]}
                       tabIndex={-1}
                       title="Move down"
@@ -2997,7 +3044,8 @@ exports[`with title and description with global label off array icons 1`] = `
                       />
                     </button>
                     <button
-                      className="ui icon button array-item-copy"
+                      className="ui icon button rjsf-array-item-copy"
+                      id="root_1__copy"
                       onClick={[Function]}
                       title="Copy"
                     >
@@ -3008,7 +3056,8 @@ exports[`with title and description with global label off array icons 1`] = `
                       />
                     </button>
                     <button
-                      className="ui icon button array-item-remove"
+                      className="ui icon button rjsf-array-item-remove"
+                      id="root_1__remove"
                       onClick={[Function]}
                       title="Remove"
                     >
@@ -3033,7 +3082,8 @@ exports[`with title and description with global label off array icons 1`] = `
             }
           >
             <button
-              className="ui tiny icon button"
+              className="ui tiny icon button rjsf-array-item-add"
+              id="root__add"
               onClick={[Function]}
               title="Add Item"
             >
@@ -3065,7 +3115,7 @@ exports[`with title and description with global label off checkboxes 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div
       className="grouped equal width fields"
@@ -3192,20 +3242,20 @@ exports[`with title and description with global label off fixed array 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div
       className="grouped equal width fields"
     >
       <div
-        className="field field-array field-array-fixed-items"
+        className="rjsf-field rjsf-field-array rjsf-field-array-fixed-items"
       >
         <div>
           <div
             className="row array-item-list"
           >
             <div
-              className="array-item"
+              className="rjsf-array-item"
             >
               <div
                 className="ui grid"
@@ -3221,7 +3271,7 @@ exports[`with title and description with global label off fixed array 1`] = `
                   className="middle aligned sixteen wide column"
                 >
                   <div
-                    className="form-group field field-string"
+                    className="rjsf-field rjsf-field-string"
                   >
                     <div
                       className="grouped equal width fields"
@@ -3254,7 +3304,7 @@ exports[`with title and description with global label off fixed array 1`] = `
               </div>
             </div>
             <div
-              className="array-item"
+              className="rjsf-array-item"
             >
               <div
                 className="ui grid"
@@ -3270,7 +3320,7 @@ exports[`with title and description with global label off fixed array 1`] = `
                   className="middle aligned sixteen wide column"
                 >
                   <div
-                    className="form-group field field-number"
+                    className="rjsf-field rjsf-field-number"
                   >
                     <div
                       className="grouped equal width fields"

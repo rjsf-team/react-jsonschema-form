@@ -1,7 +1,7 @@
-import { forwardRef, memo } from 'react';
+import { forwardRef, memo, ForwardedRef } from 'react';
 import TestRenderer from 'react-test-renderer';
 
-import { IdSchema, Registry, RJSFSchema, WidgetProps, getWidget } from '../src';
+import { IdSchema, Registry, RJSFSchema, WidgetProps, getWidget, Widget } from '../src';
 
 const subschema: RJSFSchema = {
   type: 'boolean',
@@ -27,7 +27,10 @@ const schema: RJSFSchema = {
   },
 };
 
-const TestRefWidget = forwardRef(function TestRefWidget(props: WidgetProps, ref: React.ForwardedRef<any>) {
+const TestRefWidget: Widget = forwardRef<HTMLSpanElement, Partial<WidgetProps>>(function TestRefWidget(
+  props: Partial<WidgetProps>,
+  ref: ForwardedRef<HTMLSpanElement>,
+) {
   const { options } = props;
   return (
     <span {...options} ref={ref}>

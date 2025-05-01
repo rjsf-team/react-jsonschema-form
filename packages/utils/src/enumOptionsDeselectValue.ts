@@ -17,7 +17,7 @@ import deepEquals from './deepEquals';
 export default function enumOptionsDeselectValue<S extends StrictRJSFSchema = RJSFSchema>(
   valueIndex: string | number,
   selected?: EnumOptionsType<S>['value'] | EnumOptionsType<S>['value'][],
-  allEnumOptions: EnumOptionsType<S>[] = []
+  allEnumOptions: EnumOptionsType<S>[] = [],
 ): EnumOptionsType<S>['value'] | EnumOptionsType<S>['value'][] | undefined {
   const value = enumOptionsValueForIndex<S>(valueIndex, allEnumOptions);
   if (Array.isArray(selected)) {

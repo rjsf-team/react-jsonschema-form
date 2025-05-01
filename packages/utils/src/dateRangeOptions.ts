@@ -12,7 +12,7 @@ import { EnumOptionsType, RJSFSchema, StrictRJSFSchema } from './types';
  */
 export default function dateRangeOptions<S extends StrictRJSFSchema = RJSFSchema>(
   start: number,
-  stop: number
+  stop: number,
 ): EnumOptionsType<S>[] {
   if (start <= 0 && stop <= 0) {
     start = new Date().getFullYear() + start;

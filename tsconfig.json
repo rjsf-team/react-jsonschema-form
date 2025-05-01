@@ -5,10 +5,13 @@
       "path": "./packages/antd"
     },
     {
-      "path": "./packages/bootstrap-4"
+      "path": "./packages/react-bootstrap"
     },
     {
       "path": "./packages/chakra-ui"
+    },
+    {
+      "path": "./packages/daisyui"
     },
     {
       "path": "./packages/core"
@@ -17,13 +20,7 @@
       "path": "./packages/snapshot-tests"
     },
     {
-      "path": "./packages/fluent-ui"
-    },
-    {
       "path": "./packages/fluentui-rc"
-    },
-    {
-      "path": "./packages/material-ui"
     },
     {
       "path": "./packages/mui"
@@ -35,10 +32,10 @@
       "path": "./packages/semantic-ui"
     },
     {
-      "path": "./packages/utils"
+      "path": "./packages/shadcn"
     },
     {
-      "path": "./packages/validator-ajv6"
+      "path": "./packages/utils"
     },
     {
       "path": "./packages/validator-ajv8"

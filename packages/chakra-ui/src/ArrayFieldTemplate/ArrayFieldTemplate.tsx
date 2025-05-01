@@ -2,17 +2,18 @@ import { Box, Grid, GridItem } from '@chakra-ui/react';
 import {
   getTemplate,
   getUiOptions,
-  ArrayFieldTemplateItemType,
+  ArrayFieldItemTemplateType,
   ArrayFieldTemplateProps,
   StrictRJSFSchema,
   RJSFSchema,
   FormContextType,
+  buttonId,
 } from '@rjsf/utils';
 
 export default function ArrayFieldTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(props: ArrayFieldTemplateProps<T, S, F>) {
   const { canAdd, disabled, idSchema, uiSchema, items, onAddClick, readonly, registry, required, schema, title } =
     props;
@@ -20,17 +21,17 @@ export default function ArrayFieldTemplate<
   const ArrayFieldDescriptionTemplate = getTemplate<'ArrayFieldDescriptionTemplate', T, S, F>(
     'ArrayFieldDescriptionTemplate',
     registry,
-    uiOptions
+    uiOptions,
   );
   const ArrayFieldItemTemplate = getTemplate<'ArrayFieldItemTemplate', T, S, F>(
     'ArrayFieldItemTemplate',
     registry,
-    uiOptions
+    uiOptions,
   );
   const ArrayFieldTitleTemplate = getTemplate<'ArrayFieldTitleTemplate', T, S, F>(
     'ArrayFieldTitleTemplate',
     registry,
-    uiOptions
+    uiOptions,
   );
   // Button templates are not overridden in the uiSchema
   const {
@@ -56,7 +57,7 @@ export default function ArrayFieldTemplate<
       <Grid key={`array-item-list-${idSchema.$id}`}>
         <GridItem>
           {items.length > 0 &&
-            items.map(({ key, ...itemProps }: ArrayFieldTemplateItemType<T, S, F>) => (
+            items.map(({ key, ...itemProps }: ArrayFieldItemTemplateType<T, S, F>) => (
               <ArrayFieldItemTemplate key={key} {...itemProps} />
             ))}
         </GridItem>
@@ -64,7 +65,8 @@ export default function ArrayFieldTemplate<
           <GridItem justifySelf={'flex-end'}>
             <Box mt={2}>
               <AddButton
-                className='array-item-add'
+                id={buttonId<T>(idSchema, 'add')}
+                className='rjsf-array-item-add'
                 onClick={onAddClick}
                 disabled={disabled || readonly}
                 uiSchema={uiSchema}

@@ -18,7 +18,10 @@ import {
   ValidatorType,
 } from '@rjsf/utils';
 
-export type RawValidationErrorsType<Result = any> = { errors?: Result[]; validationError?: Error };
+export type RawValidationErrorsType<Result = any> = {
+  errors?: Result[];
+  validationError?: Error;
+};
 
 /** Transforming the error output from ajv to format used by @rjsf/utils.
  * At some point, components should be updated to support ajv.
@@ -29,7 +32,7 @@ export type RawValidationErrorsType<Result = any> = { errors?: Result[]; validat
 export function transformRJSFValidationErrors<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(errors: ErrorObject[] = [], uiSchema?: UiSchema<T, S, F>): RJSFValidationError[] {
   return errors.map((e: ErrorObject) => {
     const { instancePath, keyword, params, schemaPath, parentSchema, ...rest } = e;
@@ -114,7 +117,7 @@ export function transformRJSFValidationErrors<
 export default function processRawValidationErrors<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(
   validator: ValidatorType<T, S, F>,
   rawErrors: RawValidationErrorsType<ErrorObject>,
@@ -122,7 +125,7 @@ export default function processRawValidationErrors<
   schema: S,
   customValidate?: CustomValidator<T, S, F>,
   transformErrors?: ErrorTransformer<T, S, F>,
-  uiSchema?: UiSchema<T, S, F>
+  uiSchema?: UiSchema<T, S, F>,
 ) {
   const { validationError: invalidSchemaError } = rawErrors;
   let errors = transformRJSFValidationErrors<T, S, F>(rawErrors.errors, uiSchema);

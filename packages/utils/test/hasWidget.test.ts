@@ -13,7 +13,7 @@ jest.mock('../src/getWidget', () =>
     .mockImplementationOnce(() => {
       throw new TypeError();
     })
-    .mockImplementation(() => true)
+    .mockImplementation(() => true),
 );
 
 const schema: RJSFSchema = {

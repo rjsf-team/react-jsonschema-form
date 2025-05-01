@@ -85,9 +85,12 @@ function AltDateWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F exten
 }: WidgetProps<T, S, F>) {
   const { translateString } = registry;
   const [lastValue, setLastValue] = useState(value);
-  const [state, setState] = useReducer((state: DateObject, action: Partial<DateObject>) => {
-    return { ...state, ...action };
-  }, parseDateString(value, time));
+  const [state, setState] = useReducer(
+    (state: DateObject, action: Partial<DateObject>) => {
+      return { ...state, ...action };
+    },
+    parseDateString(value, time),
+  );
 
   useEffect(() => {
     const stateValue = toDateString(state, time);
@@ -114,7 +117,7 @@ function AltDateWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F exten
       const nextState = parseDateString(new Date().toJSON(), time);
       onChange(toDateString(nextState, time));
     },
-    [disabled, readonly, time]
+    [disabled, readonly, time],
   );
 
   const handleClear = useCallback(
@@ -125,7 +128,7 @@ function AltDateWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F exten
       }
       onChange(undefined);
     },
-    [disabled, readonly, onChange]
+    [disabled, readonly, onChange],
   );
 
   return (
@@ -134,7 +137,7 @@ function AltDateWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F exten
         state,
         time,
         options.yearsRange as [number, number] | undefined,
-        options.format as DateElementFormat | undefined
+        options.format as DateElementFormat | undefined,
       ).map((elemProps, i) => (
         <li className='list-inline-item' key={i}>
           <DateElement

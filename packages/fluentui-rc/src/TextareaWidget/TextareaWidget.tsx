@@ -24,7 +24,7 @@ const useStyles = makeStyles({
 export default function TextareaWidget<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(props: WidgetProps<T, S, F>) {
   const {
     id,
@@ -60,7 +60,7 @@ export default function TextareaWidget<
         <Label htmlFor={id} required={required} disabled={disabled} className={classes.label}>
           {label}
         </Label>,
-        hideLabel
+        hideLabel,
       )}
       <Textarea
         id={id}

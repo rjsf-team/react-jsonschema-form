@@ -1,0 +1,61 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CheckboxesWidget inline 1`] = `
+<div>
+  <div
+    className="bg-transparent border-0 form-check form-check-inline"
+  >
+    <input
+      aria-describedby="_id__error _id__description _id__help"
+      autoFocus={true}
+      checked={false}
+      className="form-check-input"
+      disabled={true}
+      id="_id-0"
+      name="_id"
+      onBlur={[Function]}
+      onChange={[Function]}
+      onFocus={[Function]}
+      required={true}
+      type="checkbox"
+    />
+    <label
+      className="form-check-label"
+      htmlFor="_id-0"
+      title=""
+    >
+      A
+    </label>
+  </div>
+</div>
+`;
+
+exports[`CheckboxesWidget simple 1`] = `
+<div>
+  <div
+    className="bg-transparent border-0 form-check"
+  >
+    <input
+      aria-describedby="_id__error _id__description _id__help"
+      autoFocus={true}
+      checked={false}
+      className="form-check-input"
+      disabled={true}
+      id="_id-0"
+      name="_id"
+      onBlur={[Function]}
+      onChange={[Function]}
+      onFocus={[Function]}
+      required={true}
+      type="checkbox"
+    />
+    <label
+      className="form-check-label"
+      htmlFor="_id-0"
+      title=""
+    >
+      A
+    </label>
+  </div>
+</div>
+`;

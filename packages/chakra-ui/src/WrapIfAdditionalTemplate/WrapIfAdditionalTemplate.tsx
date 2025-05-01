@@ -1,18 +1,21 @@
 import { FocusEvent } from 'react';
 import {
   ADDITIONAL_PROPERTY_FLAG,
+  buttonId,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
   TranslatableString,
   WrapIfAdditionalTemplateProps,
 } from '@rjsf/utils';
-import { FormControl, FormLabel, Grid, GridItem, Input } from '@chakra-ui/react';
+import { Grid, GridItem, Input } from '@chakra-ui/react';
+
+import { Field } from '../components/ui/field';
 
 export default function WrapIfAdditionalTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(props: WrapIfAdditionalTemplateProps<T, S, F>) {
   const {
     children,
@@ -47,10 +50,7 @@ export default function WrapIfAdditionalTemplate<
   return (
     <Grid key={`${id}-key`} className={classNames} style={style} alignItems='center' gap={2}>
       <GridItem>
-        <FormControl isRequired={required}>
-          <FormLabel htmlFor={`${id}-key`} id={`${id}-key-label`}>
-            {keyLabel}
-          </FormLabel>
+        <Field required={required} label={keyLabel}>
           <Input
             defaultValue={label}
             disabled={disabled || readonly}
@@ -60,11 +60,13 @@ export default function WrapIfAdditionalTemplate<
             type='text'
             mb={1}
           />
-        </FormControl>
+        </Field>
       </GridItem>
       <GridItem>{children}</GridItem>
       <GridItem>
         <RemoveButton
+          id={buttonId<T>(id, 'remove')}
+          className='rjsf-object-property-remove'
           disabled={disabled || readonly}
           onClick={onDropPropertyClick(label)}
           uiSchema={uiSchema}

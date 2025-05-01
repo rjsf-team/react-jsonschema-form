@@ -9,6 +9,8 @@ export enum TranslatableString {
   ArrayItemTitle = 'Item',
   /** Missing items reason, used by ArrayField */
   MissingItems = 'Missing items definition',
+  /** Empty array message, used by ArrayField */
+  EmptyArray = 'No items yet. Use the button below to add some.',
   /** Yes label, used by BooleanField */
   YesLabel = 'Yes',
   /** No label, used by BooleanField */

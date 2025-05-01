@@ -263,7 +263,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       const result = retrieveSchema(
         testValidator,
         get(RECURSIVE_REF_ALLOF, [PROPERTIES_KEY, 'value', 'items']),
-        RECURSIVE_REF_ALLOF
+        RECURSIVE_REF_ALLOF,
       );
       expect(result).toEqual({
         ...(RECURSIVE_REF_ALLOF.definitions!['@enum'] as RJSFSchema),
@@ -651,7 +651,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
                 },
               });
               expect(consoleWarnSpy).toHaveBeenCalledWith(
-                "ignoring oneOf in dependencies because there isn't exactly one subschema that is valid"
+                "ignoring oneOf in dependencies because there isn't exactly one subschema that is valid",
               );
             });
 
@@ -843,7 +843,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         expect(retrieveSchema(testValidator, schema, rootSchema, formData)).toEqual({});
         expect(consoleWarnSpy).toBeCalledWith(
           expect.stringMatching(/could not merge subschemas in allOf/),
-          expect.any(Error)
+          expect.any(Error),
         );
       });
       it('should return allOf and top level schemas when expand all', () => {
@@ -1280,6 +1280,43 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         expect(withExactlyOneSubschema(testValidator, schema, schema, 'bar', oneOf, false, [])).toEqual([schema]);
       });
     });
+    describe('withPatternProperties()', () => {
+      it('merges all subschemas that match the patternProperties regex', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            foo: { type: 'number' },
+            baz: { type: 'boolean' },
+          },
+          patternProperties: {
+            '^foo': {
+              minimum: 10,
+            },
+            '^foo.*': {
+              maximum: 20,
+            },
+            '^bar': {
+              multipleOf: 2,
+            },
+          },
+        };
+        const rootSchema: RJSFSchema = { definitions: {} };
+        const formData = {};
+        expect(retrieveSchema(testValidator, schema, rootSchema, formData)).toEqual({
+          ...schema,
+          properties: {
+            foo: {
+              type: 'number',
+              minimum: 10,
+              maximum: 20,
+            },
+            baz: {
+              type: 'boolean',
+            },
+          },
+        });
+      });
+    });
     describe('stubExistingAdditionalProperties()', () => {
       it('deals with undefined formData', () => {
         const schema: RJSFSchema = { type: 'string' };
@@ -1391,6 +1428,143 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
           properties: {
             bar: {
               type: 'string',
+              [ADDITIONAL_PROPERTY_FLAG]: true,
+            },
+          },
+        });
+      });
+      it('has property keys that does not match patternProperties, no additionalProperties', () => {
+        const schema: RJSFSchema = {
+          patternProperties: {
+            '^foo': {
+              type: 'string',
+            },
+            '^bar': {
+              type: 'number',
+            },
+          },
+        };
+        const formData = { baz: 1 };
+        expect(stubExistingAdditionalProperties(testValidator, schema, undefined, formData)).toEqual({
+          ...schema,
+          properties: {
+            baz: {
+              type: 'null',
+              [ADDITIONAL_PROPERTY_FLAG]: true,
+            },
+          },
+        });
+      });
+      it('has property keys that match patternProperties', () => {
+        const schema: RJSFSchema = {
+          patternProperties: {
+            '^foo': {
+              type: 'string',
+            },
+            '^bar': {
+              type: 'number',
+              minimum: 10,
+            },
+          },
+        };
+        const formData = { bar: 1 };
+        expect(stubExistingAdditionalProperties(testValidator, schema, undefined, formData)).toEqual({
+          ...schema,
+          properties: {
+            bar: {
+              type: 'number',
+              minimum: 10,
+              [ADDITIONAL_PROPERTY_FLAG]: true,
+            },
+          },
+        });
+      });
+      it('has property keys that match multiple patternProperties', () => {
+        const schema: RJSFSchema = {
+          patternProperties: {
+            '^foo': {
+              type: 'string',
+            },
+            '^bar': {
+              type: 'number',
+              minimum: 10,
+            },
+            '^ba.*': {
+              type: 'number',
+              maximum: 20,
+            },
+          },
+        };
+        const formData = { bar: 1 };
+        expect(stubExistingAdditionalProperties(testValidator, schema, undefined, formData)).toEqual({
+          ...schema,
+          properties: {
+            bar: {
+              type: 'number',
+              minimum: 10,
+              maximum: 20,
+              [ADDITIONAL_PROPERTY_FLAG]: true,
+            },
+          },
+        });
+      });
+      it('has property keys that match patternProperties, additionalProperties is boolean', () => {
+        const schema: RJSFSchema = {
+          patternProperties: {
+            '^foo': {
+              type: 'string',
+            },
+            '^bar': {
+              type: 'number',
+              minimum: 10,
+            },
+          },
+          additionalProperties: true,
+        };
+        const formData = { bar: 1, baz: true };
+        expect(stubExistingAdditionalProperties(testValidator, schema, undefined, formData)).toEqual({
+          ...schema,
+          properties: {
+            bar: {
+              type: 'number',
+              minimum: 10,
+              [ADDITIONAL_PROPERTY_FLAG]: true,
+            },
+            baz: {
+              type: 'boolean',
+              [ADDITIONAL_PROPERTY_FLAG]: true,
+            },
+          },
+        });
+      });
+      it('has property keys that match patternProperties, additionalProperties is object', () => {
+        const schema: RJSFSchema = {
+          patternProperties: {
+            '^foo': {
+              type: 'string',
+            },
+            '^bar': {
+              type: 'number',
+              minimum: 10,
+            },
+          },
+          additionalProperties: {
+            type: 'number',
+            maximum: 20,
+          },
+        };
+        const formData = { bar: 1, baz: 2 };
+        expect(stubExistingAdditionalProperties(testValidator, schema, undefined, formData)).toEqual({
+          ...schema,
+          properties: {
+            bar: {
+              type: 'number',
+              minimum: 10,
+              [ADDITIONAL_PROPERTY_FLAG]: true,
+            },
+            baz: {
+              type: 'number',
+              maximum: 20,
               [ADDITIONAL_PROPERTY_FLAG]: true,
             },
           },
@@ -1563,7 +1737,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
     describe('resolveCondition()', () => {
       it('returns both conditions with expandAll', () => {
         expect(
-          resolveCondition(testValidator, SCHEMA_WITH_SINGLE_CONDITION, SCHEMA_WITH_SINGLE_CONDITION, true, [])
+          resolveCondition(testValidator, SCHEMA_WITH_SINGLE_CONDITION, SCHEMA_WITH_SINGLE_CONDITION, true, []),
         ).toEqual([
           {
             type: 'object',

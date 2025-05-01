@@ -2,6 +2,7 @@ import {
   IdSchema,
   ID_KEY,
   ariaDescribedByIds,
+  buttonId,
   descriptionId,
   errorId,
   examplesId,
@@ -53,15 +54,30 @@ describe('idGenerators', () => {
   });
   it('ariaDescribedBy ids are generated for simple id with examples', () => {
     expect(ariaDescribedByIds(SIMPLE_ID, true)).toEqual(
-      `${SIMPLE_ID}__error ${SIMPLE_ID}__description ${SIMPLE_ID}__help ${SIMPLE_ID}__examples`
+      `${SIMPLE_ID}__error ${SIMPLE_ID}__description ${SIMPLE_ID}__help ${SIMPLE_ID}__examples`,
     );
   });
   it('ariaDescribedBy ids are generated for IdSchema with examples', () => {
     expect(ariaDescribedByIds(ID_SCHEMA, true)).toEqual(
-      `${SCHEMA_ID}__error ${SCHEMA_ID}__description ${SCHEMA_ID}__help ${SCHEMA_ID}__examples`
+      `${SCHEMA_ID}__error ${SCHEMA_ID}__description ${SCHEMA_ID}__help ${SCHEMA_ID}__examples`,
     );
   });
   it('optionId generates the proper id for an option', () => {
     expect(optionId(SIMPLE_ID, 1)).toEqual(`${SIMPLE_ID}-${1}`);
+  });
+  it('button ids of an add button are generated for simple id', () => {
+    expect(buttonId(SIMPLE_ID, 'add')).toEqual(`${SIMPLE_ID}__add`);
+  });
+  it('button ids of an copy button are generated for simple id', () => {
+    expect(buttonId(SIMPLE_ID, 'copy')).toEqual(`${SIMPLE_ID}__copy`);
+  });
+  it('button ids of an move down button are generated for IdSchema ', () => {
+    expect(buttonId(ID_SCHEMA, 'moveDown')).toEqual(`${SCHEMA_ID}__moveDown`);
+  });
+  it('button ids of an move up button are generated for IdSchema ', () => {
+    expect(buttonId(ID_SCHEMA, 'moveUp')).toEqual(`${SCHEMA_ID}__moveUp`);
+  });
+  it('button ids of an remove button are generated for simple id', () => {
+    expect(buttonId(SIMPLE_ID, 'remove')).toEqual(`${SIMPLE_ID}__remove`);
   });
 });

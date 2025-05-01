@@ -31,7 +31,7 @@ export default function mergeDefaultsWithFormData<T = any>(
   formData?: T,
   mergeExtraArrayDefaults = false,
   defaultSupercedesUndefined = false,
-  overrideFormDataWithDefaults = false
+  overrideFormDataWithDefaults = false,
 ): T | undefined {
   if (Array.isArray(formData)) {
     const defaultsArray = Array.isArray(defaults) ? defaults : [];
@@ -48,7 +48,7 @@ export default function mergeDefaultsWithFormData<T = any>(
           formData[idx],
           mergeExtraArrayDefaults,
           defaultSupercedesUndefined,
-          overrideFormDataWithDefaults
+          overrideFormDataWithDefaults,
         );
       }
       return value;
@@ -74,7 +74,7 @@ export default function mergeDefaultsWithFormData<T = any>(
         defaultSupercedesUndefined,
         // overrideFormDataWithDefaults can be true only when the key value exists in defaults
         // Or if the key value doesn't exist in formData
-        overrideFormDataWithDefaults && (keyExistsInDefaults || !keyExistsInFormData)
+        overrideFormDataWithDefaults && (keyExistsInDefaults || !keyExistsInFormData),
       );
       return acc;
     }, acc);

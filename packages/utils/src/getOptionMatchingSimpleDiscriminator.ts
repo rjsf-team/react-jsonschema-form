@@ -15,7 +15,7 @@ import { RJSFSchema, StrictRJSFSchema } from './types';
 export default function getOptionMatchingSimpleDiscriminator<T = any, S extends StrictRJSFSchema = RJSFSchema>(
   formData: T | undefined,
   options: S[],
-  discriminatorField?: string
+  discriminatorField?: string,
 ): number | undefined {
   if (formData && discriminatorField) {
     const value = get(formData, discriminatorField);
@@ -26,7 +26,7 @@ export default function getOptionMatchingSimpleDiscriminator<T = any, S extends 
 
     for (let i = 0; i < options.length; i++) {
       const option = options[i];
-      const discriminator = get(option, [PROPERTIES_KEY, discriminatorField], {});
+      const discriminator: S = get(option, [PROPERTIES_KEY, discriminatorField], {}) as S;
 
       if (discriminator.type === 'object' || discriminator.type === 'array') {
         continue;

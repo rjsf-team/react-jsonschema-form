@@ -1,0 +1,22 @@
+{
+    "extends": "../tsconfig.json",
+    "compilerOptions": {
+        "rootDir": "..",
+        "outDir": "../dist",
+        "noImplicitAny": false,
+        "types": [
+            "jest",
+            "node"
+        ],
+        "esModuleInterop": true,
+        "jsx": "react-jsx",
+        "resolveJsonModule": true,
+        "skipLibCheck": true
+    },
+    "include": [
+        "./**/*.ts",
+        "./**/*.tsx",
+        "../src/**/*.ts",
+        "../src/**/*.tsx"
+    ]
+}

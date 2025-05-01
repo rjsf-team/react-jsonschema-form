@@ -10,7 +10,7 @@ import TextareaWidget from '../TextareaWidget/TextareaWidget';
 export function generateWidgets<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(): RegistryWidgetsType<T, S, F> {
   return {
     CheckboxWidget,

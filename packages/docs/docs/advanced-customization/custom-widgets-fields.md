@@ -7,7 +7,9 @@ The API allows to specify your own custom _widget_ and _field_ components:
 
 ## Customizing the default fields and widgets
 
-You can override any default field and widget, including the internal widgets like the `CheckboxWidget` that `BooleanField` renders for boolean values. You can override any field and widget just by providing the customized fields/widgets in the `fields` and `widgets` props:
+You can override any default field and widget, including the internal widgets like the `CheckboxWidget` that `BooleanField`
+renders for boolean values. You can override any field and widget just by providing the customized fields/widgets in the
+`fields` and `widgets` props:
 
 ```tsx
 import { RJSFSchema, UiSchema, WidgetProps, RegistryWidgetsType } from '@rjsf/utils';
@@ -36,7 +38,7 @@ const widgets: RegistryWidgetsType = {
 
 render(
   <Form schema={schema} uiSchema={uiSchema} validator={validator} widgets={widgets} />,
-  document.getElementById('app')
+  document.getElementById('app'),
 );
 ```
 
@@ -62,6 +64,9 @@ The default fields you can override are:
 - `DescriptionField`
 - `OneOfField`
 - `AnyOfField`
+- `LayoutGridField`
+- `LayoutMultiSchemaField`
+- `LayoutHeaderField`
 - `NullField`
 - `NumberField`
 - `ObjectField`
@@ -94,7 +99,15 @@ The default widgets you can override are:
 
 ## Raising errors from within a custom widget or field
 
-You can raise a custom error by overriding the `onChange` method to raise field/widget errors:
+You can raise custom 'live validation' errors by overriding the `onChange` method to provide feedback while users are actively changing the form data.
+Note that these errors are temporary and are not recognized during the form validation process.
+
+:::warning
+
+This method of raising errors _only_ runs during `onChange`, i.e. when the user is changing data. This will not catch errors `onSubmit`, i.e when submitting the form.
+If you wish to add generic validation logic for your component, you should use the [`customValidate` Form prop](../api-reference/form-props.md#customvalidate).
+
+:::
 
 ```tsx
 import { ErrorSchema, RJSFSchema, UiSchema, WidgetProps, RegistryWidgetsType } from '@rjsf/utils';
@@ -130,7 +143,7 @@ const widgets: RegistryWidgetsType = {
 
 render(
   <Form schema={schema} uiSchema={uiSchema} validator={validator} widgets={widgets} />,
-  document.getElementById('app')
+  document.getElementById('app'),
 );
 ```
 
@@ -191,7 +204,7 @@ The following props are passed to custom widget components:
 - `onBlur`: The input blur event handler; call it with the widget id and value;
 - `onFocus`: The input focus event handler; call it with the widget id and value;
 - `options`: A map of options passed as a prop to the component (see [Custom widget options](#custom-widget-options)).
-- `options.enumOptions`: For enum fields, this property contains the list of options for the enum as an array of { label, value } objects. If the enum is defined using the oneOf/anyOf syntax, the entire schema object for each option is appended onto the { schema, label, value } object.
+- `options.enumOptions`: For enum fields, this property contains the list of options for the enum as an array of \{ label, value } objects. If the enum is defined using the oneOf/anyOf syntax, the entire schema object for each option is appended onto the \{ schema, label, value } object.
 - `formContext`: The `formContext` object that you passed to `Form`.
 - `rawErrors`: An array of strings listing all generated error messages from encountered errors for this widget.
 - `registry`: A [registry](#the-registry-object) object (read next).
@@ -230,7 +243,7 @@ const uiSchema: UiSchema = {
 
 render(
   <Form schema={schema} uiSchema={uiSchema} validator={validator} widgets={widgets} />,
-  document.getElementById('app')
+  document.getElementById('app'),
 );
 ```
 
@@ -272,8 +285,6 @@ render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, docum
 ```
 
 > Note: This also applies to [registered custom components](#custom-component-registration).
-
-> Note: Since v0.41.0, the `ui:widget` object API, where a widget and options were specified with `"ui:widget": {component, options}` shape, is deprecated. It will be removed in a future release.
 
 ### Customizing widgets' text input
 
@@ -339,7 +350,7 @@ class GeoPosition extends React.Component<FieldProps> {
         {
           [name]: parseFloat(event.target.value),
         },
-        () => this.props.onChange(this.state)
+        () => this.props.onChange(this.state),
       );
     };
   }
@@ -366,7 +377,7 @@ const fields: RegistryFieldsType = { geo: GeoPosition };
 // as props
 render(
   <Form schema={schema} uiSchema={uiSchema} validator={validator} fields={fields} />,
-  document.getElementById('app')
+  document.getElementById('app'),
 );
 ```
 
@@ -532,7 +543,7 @@ function MyObjectField(props: FieldProps) {
       }
       onChange(data, error, id);
     },
-    [onChange]
+    [onChange],
   );
   return <ObjectField {...props} onChange={onChangeHandler} />;
 }

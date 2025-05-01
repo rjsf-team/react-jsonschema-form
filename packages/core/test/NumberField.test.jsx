@@ -102,7 +102,7 @@ describe('NumberField', () => {
           uiSchema,
         });
 
-        expect(node.querySelector('.field label').textContent).eql('foo');
+        expect(node.querySelector('.rjsf-field label').textContent).eql('foo');
       });
 
       it('should render a string field with a description', () => {
@@ -139,7 +139,7 @@ describe('NumberField', () => {
           uiSchema,
         });
 
-        expect(node.querySelector('.field input').value).eql('2');
+        expect(node.querySelector('.rjsf-field input').value).eql('2');
       });
 
       it('should handle a change event', () => {
@@ -161,7 +161,7 @@ describe('NumberField', () => {
           {
             formData: 2,
           },
-          'root'
+          'root',
         );
       });
 
@@ -210,7 +210,7 @@ describe('NumberField', () => {
           formData: 2,
         });
 
-        expect(node.querySelector('.field input').value).eql('2');
+        expect(node.querySelector('.rjsf-field input').value).eql('2');
       });
 
       describe('when inputting a number that ends with a dot and/or zero it should normalize it, without changing the input value', () => {
@@ -280,7 +280,7 @@ describe('NumberField', () => {
                 {
                   formData: test.output,
                 },
-                'root'
+                'root',
               );
               // "2." is not really a valid number in a input field of type number
               // so we need to use getAttribute("value") instead since .value outputs the empty string
@@ -311,7 +311,7 @@ describe('NumberField', () => {
           {
             formData: 0,
           },
-          'root'
+          'root',
         );
         expect($input.value).eql('.00');
       });
@@ -402,7 +402,7 @@ describe('NumberField', () => {
         // "2." is not really a valid number in a input field of type number
         // so we need to use getAttribute("value") instead since .value outputs the empty string
         setTimeout(() => {
-          expect(node.querySelector('.field input').getAttribute('value')).eql('2.');
+          expect(node.querySelector('.rjsf-field input').getAttribute('value')).eql('2.');
         });
 
         act(() => {
@@ -410,21 +410,21 @@ describe('NumberField', () => {
             target: { value: '2.0' },
           });
         });
-        expect(node.querySelector('.field input').value).eql('2.0');
+        expect(node.querySelector('.rjsf-field input').value).eql('2.0');
 
         act(() => {
           fireEvent.change(node.querySelector('input'), {
             target: { value: '2.00' },
           });
         });
-        expect(node.querySelector('.field input').value).eql('2.00');
+        expect(node.querySelector('.rjsf-field input').value).eql('2.00');
 
         act(() => {
           fireEvent.change(node.querySelector('input'), {
             target: { value: '2.000' },
           });
         });
-        expect(node.querySelector('.field input').value).eql('2.000');
+        expect(node.querySelector('.rjsf-field input').value).eql('2.000');
       });
 
       it('should allow a zero to be input', () => {
@@ -440,7 +440,7 @@ describe('NumberField', () => {
             target: { value: '0' },
           });
         });
-        expect(node.querySelector('.field input').value).eql('0');
+        expect(node.querySelector('.rjsf-field input').value).eql('0');
       });
 
       it('should render customized StringField', () => {
@@ -470,7 +470,7 @@ describe('NumberField', () => {
         },
       });
 
-      expect(node.querySelectorAll('.field select')).to.have.length.of(1);
+      expect(node.querySelectorAll('.rjsf-field select')).to.have.length.of(1);
     });
 
     it('should infer the value from an enum on change', () => {
@@ -482,12 +482,12 @@ describe('NumberField', () => {
         onChange: spy,
       });
 
-      expect(node.querySelectorAll('.field select')).to.have.length.of(1);
-      const $select = node.querySelector('.field select');
+      expect(node.querySelectorAll('.rjsf-field select')).to.have.length.of(1);
+      const $select = node.querySelector('.rjsf-field select');
       expect($select.value).eql('');
 
       act(() => {
-        fireEvent.change(node.querySelector('.field select'), {
+        fireEvent.change(node.querySelector('.rjsf-field select'), {
           target: { value: 0 }, // use index
         });
       });
@@ -505,7 +505,7 @@ describe('NumberField', () => {
         },
       });
 
-      expect(node.querySelector('.field label').textContent).eql('foo');
+      expect(node.querySelector('.rjsf-field label').textContent).eql('foo');
     });
 
     it('should assign a default value', () => {

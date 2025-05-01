@@ -170,8 +170,8 @@ describe('mergeDefaultsWithFormData()', () => {
           },
           undefined,
           undefined,
-          true
-        )
+          true,
+        ),
       ).toEqual({
         arrayWithDefaults: [null],
         objectWidthDefaults: {
@@ -203,7 +203,7 @@ describe('mergeDefaultsWithFormData()', () => {
 
     it('should override non-existing values of the first object with the values from the second', () => {
       expect(
-        mergeDefaultsWithFormData({ a: { b: undefined } }, { a: { b: { c: 1 } } }, undefined, undefined, true)
+        mergeDefaultsWithFormData({ a: { b: undefined } }, { a: { b: { c: 1 } } }, undefined, undefined, true),
       ).toEqual({
         a: { b: { c: 1 } },
       });

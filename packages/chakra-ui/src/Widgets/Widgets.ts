@@ -5,6 +5,7 @@ import CheckboxesWidget from '../CheckboxesWidget/CheckboxesWidget';
 import RadioWidget from '../RadioWidget/RadioWidget';
 import RangeWidget from '../RangeWidget/RangeWidget';
 import SelectWidget from '../SelectWidget/SelectWidget';
+import NativeSelectWidget from '../SelectNativeWidget/NativeSelectWidget';
 import TextareaWidget from '../TextareaWidget/TextareaWidget';
 import UpDownWidget from '../UpDownWidget/UpDownWidget';
 import { FormContextType, RegistryWidgetsType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
@@ -12,7 +13,7 @@ import { FormContextType, RegistryWidgetsType, RJSFSchema, StrictRJSFSchema } fr
 export function generateWidgets<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(): RegistryWidgetsType<T, S, F> {
   return {
     AltDateTimeWidget,
@@ -22,6 +23,7 @@ export function generateWidgets<
     RadioWidget,
     RangeWidget,
     SelectWidget,
+    NativeSelectWidget,
     TextareaWidget,
     UpDownWidget,
   };

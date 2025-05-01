@@ -7,7 +7,7 @@ import { generateWidgets } from '../Widgets';
 export function generateTheme<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(): ThemeProps<T, S, F> {
   return {
     templates: generateTemplates<T, S, F>(),

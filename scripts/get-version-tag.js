@@ -10,5 +10,5 @@ const packageObject = JSON.parse(packageJson);
 
 const { version } = packageObject;
 
-// Write the version, prefixed by the `v` used by lerna to the standard out so it can be used externally
+// Write the version, prefixed by the `v` used by nx to the standard out so it can be used externally
 process.stdout.write(`v${version}`);

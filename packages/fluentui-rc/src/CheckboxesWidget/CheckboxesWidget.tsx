@@ -23,7 +23,7 @@ import { Flex } from '@fluentui/react-migration-v0-v9';
 export default function CheckboxesWidget<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >({
   label,
   hideLabel,
@@ -62,7 +62,7 @@ export default function CheckboxesWidget<
         <Label required={required} htmlFor={id}>
           {label || undefined}
         </Label>,
-        hideLabel
+        hideLabel,
       )}
       <Flex column={!inline}>
         {Array.isArray(enumOptions) &&

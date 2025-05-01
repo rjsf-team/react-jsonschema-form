@@ -32,7 +32,7 @@ export function splitKeyElementFromObject(key: string, object: GenericObjectType
 export function findSchemaDefinitionRecursive<S extends StrictRJSFSchema = RJSFSchema>(
   $ref?: string,
   rootSchema: S = {} as S,
-  recurseList: string[] = []
+  recurseList: string[] = [],
 ): S {
   const ref = $ref || '';
   let decodedRef;
@@ -79,7 +79,7 @@ export function findSchemaDefinitionRecursive<S extends StrictRJSFSchema = RJSFS
  */
 export default function findSchemaDefinition<S extends StrictRJSFSchema = RJSFSchema>(
   $ref?: string,
-  rootSchema: S = {} as S
+  rootSchema: S = {} as S,
 ): S {
   const recurseList: string[] = [];
   return findSchemaDefinitionRecursive($ref, rootSchema, recurseList);

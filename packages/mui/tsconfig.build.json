@@ -15,7 +15,7 @@
     "replacers": {
       "lodash": {
         "enabled": true,
-        "file": "muiReplacer.js"
+        "file": "muiReplacer.cjs"
       }
     }
   }

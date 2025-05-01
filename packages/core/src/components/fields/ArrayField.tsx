@@ -97,7 +97,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
    */
   static getDerivedStateFromProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
     nextProps: Readonly<FieldProps<T[], S, F>>,
-    prevState: Readonly<ArrayFieldState<T>>
+    prevState: Readonly<ArrayFieldState<T>>,
   ) {
     // Don't call getDerivedStateFromProps if keyed formdata was just updated.
     if (prevState.updatedKeyedFormData) {
@@ -130,7 +130,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
     return get(
       schema,
       [ITEMS_KEY, 'title'],
-      get(schema, [ITEMS_KEY, 'description'], translateString(TranslatableString.ArrayItemTitle))
+      get(schema, [ITEMS_KEY, 'description'], translateString(TranslatableString.ArrayItemTitle)),
     );
   }
 
@@ -229,7 +229,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
         keyedFormData: newKeyedFormData,
         updatedKeyedFormData: true,
       },
-      () => onChange(keyedToPlainFormData(newKeyedFormData), newErrorSchema as ErrorSchema<T[]>)
+      () => onChange(keyedToPlainFormData(newKeyedFormData), newErrorSchema as ErrorSchema<T[]>),
     );
   }
 
@@ -298,7 +298,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
           keyedFormData: newKeyedFormData,
           updatedKeyedFormData: true,
         },
-        () => onChange(keyedToPlainFormData(newKeyedFormData), newErrorSchema as ErrorSchema<T[]>)
+        () => onChange(keyedToPlainFormData(newKeyedFormData), newErrorSchema as ErrorSchema<T[]>),
       );
     };
   };
@@ -335,7 +335,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
           keyedFormData: newKeyedFormData,
           updatedKeyedFormData: true,
         },
-        () => onChange(keyedToPlainFormData(newKeyedFormData), newErrorSchema as ErrorSchema<T[]>)
+        () => onChange(keyedToPlainFormData(newKeyedFormData), newErrorSchema as ErrorSchema<T[]>),
       );
     };
   };
@@ -385,7 +385,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
         {
           keyedFormData: newKeyedFormData,
         },
-        () => onChange(keyedToPlainFormData(newKeyedFormData), newErrorSchema as ErrorSchema<T[]>)
+        () => onChange(keyedToPlainFormData(newKeyedFormData), newErrorSchema as ErrorSchema<T[]>),
       );
     };
   };
@@ -412,7 +412,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
             ...errorSchema,
             [index]: newErrorSchema,
           },
-        id
+        id,
       );
     };
   };
@@ -433,7 +433,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
       const UnsupportedFieldTemplate = getTemplate<'UnsupportedFieldTemplate', T[], S, F>(
         'UnsupportedFieldTemplate',
         registry,
-        uiOptions
+        uiOptions,
       );
 
       return (
@@ -520,7 +520,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
           totalItems: keyedFormData.length,
         });
       }),
-      className: `field field-array field-array-of-${itemsSchema.type}`,
+      className: `rjsf-field rjsf-field-array rjsf-field-array-of-${itemsSchema.type}`,
       disabled,
       idSchema,
       uiSchema,
@@ -612,7 +612,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
     } = this.props;
     const { widgets, schemaUtils, formContext, globalUiOptions } = registry;
     const itemsSchema = schemaUtils.retrieveSchema(schema.items as S, items);
-    const enumOptions = optionsList<S, T[], F>(itemsSchema, uiSchema);
+    const enumOptions = optionsList<T[], S, F>(itemsSchema, uiSchema);
     const { widget = 'select', title: uiTitle, ...options } = getUiOptions<T[], S, F>(uiSchema, globalUiOptions);
     const Widget = getWidget<T[], S, F>(schema, widget, widgets);
     const label = uiTitle ?? schema.title ?? name;
@@ -720,7 +720,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
     const { schemaUtils, formContext } = registry;
     const _schemaItems: S[] = isObject(schema.items) ? (schema.items as S[]) : ([] as S[]);
     const itemSchemas = _schemaItems.map((item: S, index: number) =>
-      schemaUtils.retrieveSchema(item, formData[index] as unknown as T[])
+      schemaUtils.retrieveSchema(item, formData[index] as unknown as T[]),
     );
     const additionalSchema = isObject(schema.additionalItems)
       ? schemaUtils.retrieveSchema(schema.additionalItems as S, formData)
@@ -736,7 +736,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
     const canAdd = this.canAddItem(items) && !!additionalSchema;
     const arrayProps: ArrayFieldTemplateProps<T[], S, F> = {
       canAdd,
-      className: 'field field-array field-array-fixed-items',
+      className: 'rjsf-field rjsf-field-array rjsf-field-array-fixed-items',
       disabled,
       idSchema,
       formData,
@@ -754,8 +754,8 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
         const itemUiSchema = additional
           ? uiSchema.additionalItems || {}
           : Array.isArray(uiSchema.items)
-          ? uiSchema.items[index]
-          : uiSchema.items || {};
+            ? uiSchema.items[index]
+            : uiSchema.items || {};
         const itemErrorSchema = errorSchema ? (errorSchema[index] as ErrorSchema<T[]>) : undefined;
 
         return this.renderArrayFieldItem({
@@ -882,21 +882,31 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
           rawErrors={rawErrors}
         />
       ),
-      className: 'array-item',
+      buttonsProps: {
+        idSchema: itemIdSchema,
+        disabled: disabled,
+        readonly: readonly,
+        canAdd,
+        hasCopy: has.copy,
+        hasMoveUp: has.moveUp,
+        hasMoveDown: has.moveDown,
+        hasRemove: has.remove,
+        index: index,
+        totalItems: totalItems,
+        onAddIndexClick: this.onAddIndexClick,
+        onCopyIndexClick: this.onCopyIndexClick,
+        onDropIndexClick: this.onDropIndexClick,
+        onReorderClick: this.onReorderClick,
+        registry: registry,
+        schema: itemSchema,
+        uiSchema: itemUiSchema,
+      },
+      className: 'rjsf-array-item',
       disabled,
-      canAdd,
-      hasCopy: has.copy,
       hasToolbar: has.toolbar,
-      hasMoveUp: has.moveUp,
-      hasMoveDown: has.moveDown,
-      hasRemove: has.remove,
       index,
       totalItems,
       key,
-      onAddIndexClick: this.onAddIndexClick,
-      onCopyIndexClick: this.onCopyIndexClick,
-      onDropIndexClick: this.onDropIndexClick,
-      onReorderClick: this.onReorderClick,
       readonly,
       registry,
       schema: itemSchema,
