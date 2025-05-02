@@ -29,6 +29,22 @@ If that is the situation for you, you can instead use `npm run build-serial` to 
 Also, if you are only working on one package, you can `npm run build` and `npm run test` from within the subdirectory.
 Finally, you can simply `npm start` inside of the `playground` directory to test changes if you have already built all of your packages, without needing to watch all of the packages via the root directory `npm start`.
 
+### Troubleshooting build failures
+
+Sometimes your local builds fail and you can't figure out why. This is most likely to happen after rebase to `main` due
+to `package.json` changes upstream. There are two commands you can use to (hopefully) get your environment back to a
+working state. Try running the following two commands:
+
+```bash
+npm run refresh-node-modules
+npm run clean-build
+```
+
+The first command will delete all of the `node_modules` directories in the environment and then rerun `npm install`.
+The second command cleans up the typescript build cache files before retrying the build.
+
+Worst case scenario when neither of those commands work, try running `npm run nuke-build-env` and then rerun the two commands.
+
 ## Cloud builds
 
 When building in environments with limited memory, such as Netlify, it's recommended to use `npm run build-serial` that builds the packages serially.
@@ -123,7 +139,7 @@ Code coverage reports are currently available only for the `@rjsf/core` theme pa
 They are generated using [nyc](https://github.com/istanbuljs/nyc) each time the `npm test-coverage` script is run.
 The full report can be seen by opening `./coverage/lcov-report/index.html`.
 
-#### Utils and validator-ajvX code coverage
+#### Utils and validator-ajv8 code coverage
 
 100% code coverage is required by the `@rjsf/utils` and `@rjsf/validator-ajv8` tests.
 If you make changes to those libraries, you will have to maintain that coverage, otherwise the tests will fail.
@@ -133,23 +149,20 @@ If you make changes to those libraries, you will have to maintain that coverage,
 ## Releasing
 
 To release, go to the main branch (NOT a fork) and then create a new branch with the version number (with an `rc` prefix instead of `v`).
-For instance if you are about to create the new `5.100.10` branch, then you would run the following commands:
+For instance if you are about to create the new `6.100.10` branch, then you would run the following commands:
 
 ```bash
 git checkout -b rc6.100.10
-git push
 npx nx release version --git-tag
-npm run post-versioning
+git commit -m "Releasing 6.100.10"
+git push
+npm run update-version-tags
 ```
 
 Make sure you use [semver](https://semver.org/) for version numbering when selecting the version.
-The `npx nx release version --git-tag` command will create a new version tag and push it to GitHub.
-
-The `npm run post-versioning` script will update the peer dependencies in all of the `packages/*/package.json` files if necessary.
-It will then clean up the `node_modules` directories and rerun `npm install` to update the `package-lock.json` files.
-Finally, it creates and pushes a new commit with those `package.json` and `package-lock.json` files up to GitHub.
-
-> NOTE: this command will take a while, be patient
+The `npx nx release version --git-tag` command will update the `package*.josn` files and create a new version tag.
+Committing and pushing the branch will allow you to create the PR on GitHub.
+The `npm run update-version-tags` will push the tags up to GitHub.
 
 Then, make a PR to main. Merge the PR into main -- make sure you use "merge commit", not squash and merge, so that
 the original commit where the tag was based on is still present in the main branch.
@@ -163,6 +176,21 @@ This will trigger a GitHub Actions pipeline that will build and publish all pack
 The package is published through an automation token belonging to the
 [rjsf-bot](https://www.npmjs.com/~rjsf-bot) user on npm. This token
 is stored as the `NPM_TOKEN` secret on GitHub Actions.
+
+### Updating the peer dependencies for new features in a minor release
+
+If a set of changes added new features or APIs that require updating downstream peer dependencies, then run the following
+command:
+
+```bash
+npm run post-versioning
+```
+
+The `npm run post-versioning` script will update the peer dependencies in all of the `packages/*/package.json` files if necessary.
+It will then clean up the `node_modules` directories and rerun `npm install` to update the `package-lock.json` files.
+Finally, it creates and pushes a new commit with those `package.json` and `package-lock.json` files up to GitHub.
+
+> NOTE: this command will take a while, be patient
 
 ### Releasing docs
 
