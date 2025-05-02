@@ -1,0 +1,1884 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`object fields additionalProperties 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    data-mock-props="{"error":false}"
+    data-testid="mock-FormGroup"
+    error={false}
+  >
+    <div
+      className="usa-hint"
+    />
+    <div
+      className="usa-form-group"
+      data-mock-props="{"className":"usa-form-group"}"
+      data-testid="mock-GridContainer"
+    >
+      <div
+        data-mock-props="{"row":true,"gap":2}"
+        data-testid="mock-Grid"
+        gap={2}
+        row={true}
+      >
+        <div
+          col={12}
+          data-mock-props="{"col":12}"
+          data-testid="mock-Grid"
+        >
+          <div
+            data-mock-props="{"error":false}"
+            data-testid="mock-FormGroup"
+            error={false}
+          >
+            <div
+              data-mock-props="{"htmlFor":"root_foo","error":false}"
+              data-testid="mock-Label"
+              error={false}
+              htmlFor="root_foo"
+            >
+              foo
+            </div>
+            <div
+              className="usa-hint"
+            />
+            <div
+              data-mock-props="{"error":false}"
+              data-testid="mock-FormGroup"
+              error={false}
+            >
+              <div
+                data-mock-props="{"htmlFor":"root_foo","error":false}"
+                data-testid="mock-Label"
+                error={false}
+                htmlFor="root_foo"
+              >
+                foo
+              </div>
+              <div
+                aria-describedby="root_foo__error root_foo__description root_foo__help"
+                className=""
+                data-mock-props="{"id":"root_foo","name":"root_foo","className":"","type":"text","value":"foo","aria-describedby":"root_foo__error root_foo__description root_foo__help"}"
+                data-testid="mock-TextInput"
+                id="root_foo"
+                name="root_foo"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                type="text"
+                value="foo"
+              />
+            </div>
+            <div
+              className="usa-hint"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      className="usa-hint"
+    />
+  </div>
+  <div>
+    <button
+      className="btn btn-info "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`object fields object 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    data-mock-props="{"error":false}"
+    data-testid="mock-FormGroup"
+    error={false}
+  >
+    <div
+      className="usa-hint"
+    />
+    <div
+      className="usa-form-group"
+      data-mock-props="{"className":"usa-form-group"}"
+      data-testid="mock-GridContainer"
+    >
+      <div
+        data-mock-props="{"row":true,"gap":2}"
+        data-testid="mock-Grid"
+        gap={2}
+        row={true}
+      >
+        <div
+          col={12}
+          data-mock-props="{"col":12}"
+          data-testid="mock-Grid"
+        >
+          <div
+            data-mock-props="{"error":false}"
+            data-testid="mock-FormGroup"
+            error={false}
+          >
+            <div
+              data-mock-props="{"htmlFor":"root_a","error":false}"
+              data-testid="mock-Label"
+              error={false}
+              htmlFor="root_a"
+            >
+              A
+            </div>
+            <div
+              className="usa-hint"
+            />
+            <div
+              data-mock-props="{"error":false}"
+              data-testid="mock-FormGroup"
+              error={false}
+            >
+              <div
+                data-mock-props="{"htmlFor":"root_a","error":false}"
+                data-testid="mock-Label"
+                error={false}
+                htmlFor="root_a"
+              >
+                A
+              </div>
+              <div
+                aria-describedby="root_a__error root_a__description root_a__help"
+                className=""
+                data-mock-props="{"id":"root_a","name":"root_a","className":"","type":"text","value":"","aria-describedby":"root_a__error root_a__description root_a__help"}"
+                data-testid="mock-TextInput"
+                id="root_a"
+                name="root_a"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                type="text"
+                value=""
+              />
+            </div>
+            <div
+              className="usa-hint"
+            />
+          </div>
+        </div>
+        <div
+          col={12}
+          data-mock-props="{"col":12}"
+          data-testid="mock-Grid"
+        >
+          <div
+            data-mock-props="{"error":false}"
+            data-testid="mock-FormGroup"
+            error={false}
+          >
+            <div
+              data-mock-props="{"htmlFor":"root_b","error":false}"
+              data-testid="mock-Label"
+              error={false}
+              htmlFor="root_b"
+            >
+              B
+            </div>
+            <div
+              className="usa-hint"
+            />
+            <div
+              data-mock-props="{"error":false}"
+              data-testid="mock-FormGroup"
+              error={false}
+            >
+              <div
+                data-mock-props="{"htmlFor":"root_b","error":false}"
+                data-testid="mock-Label"
+                error={false}
+                htmlFor="root_b"
+              >
+                B
+              </div>
+              <div
+                aria-describedby="root_b__error root_b__description root_b__help"
+                className=""
+                data-mock-props="{"id":"root_b","name":"root_b","className":"","type":"number","step":"any","value":"","aria-describedby":"root_b__error root_b__description root_b__help"}"
+                data-testid="mock-TextInput"
+                id="root_b"
+                name="root_b"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                step="any"
+                type="number"
+                value=""
+              />
+            </div>
+            <div
+              className="usa-hint"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      className="usa-hint"
+    />
+  </div>
+  <div>
+    <button
+      className="btn btn-info "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`object fields show add button and fields if additionalProperties is true and not an object 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    data-mock-props="{"error":false}"
+    data-testid="mock-FormGroup"
+    error={false}
+  >
+    <div
+      className="usa-hint"
+    />
+    <div
+      className="usa-form-group"
+      data-mock-props="{"className":"usa-form-group"}"
+      data-testid="mock-GridContainer"
+    >
+      <div
+        data-mock-props="{"row":true,"gap":2}"
+        data-testid="mock-Grid"
+        gap={2}
+        row={true}
+      >
+        <div
+          col={12}
+          data-mock-props="{"col":12}"
+          data-testid="mock-Grid"
+        >
+          <div
+            data-mock-props="{"error":false}"
+            data-testid="mock-FormGroup"
+            error={false}
+          >
+            <div
+              data-mock-props="{"htmlFor":"root_additionalProperty","error":false}"
+              data-testid="mock-Label"
+              error={false}
+              htmlFor="root_additionalProperty"
+            >
+              additionalProperty
+            </div>
+            <div
+              className="usa-hint"
+            />
+            <div
+              data-mock-props="{"error":false}"
+              data-testid="mock-FormGroup"
+              error={false}
+            >
+              <div
+                data-mock-props="{"htmlFor":"root_additionalProperty","error":false}"
+                data-testid="mock-Label"
+                error={false}
+                htmlFor="root_additionalProperty"
+              >
+                additionalProperty
+              </div>
+              <div
+                aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
+                className=""
+                data-mock-props="{"id":"root_additionalProperty","name":"root_additionalProperty","className":"","type":"text","value":"should appear","aria-describedby":"root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"}"
+                data-testid="mock-TextInput"
+                id="root_additionalProperty"
+                name="root_additionalProperty"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                type="text"
+                value="should appear"
+              />
+            </div>
+            <div
+              className="usa-hint"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      className="usa-hint"
+    />
+  </div>
+  <div>
+    <button
+      className="btn btn-info "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`object fields with title and description additionalProperties 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    data-mock-props="{"error":false}"
+    data-testid="mock-FormGroup"
+    error={false}
+  >
+    <div
+      data-mock-props="{"htmlFor":"root","error":false}"
+      data-testid="mock-Label"
+      error={false}
+      htmlFor="root"
+    >
+      Test field
+    </div>
+    <div
+      className="usa-hint"
+    >
+      <p
+        className="field-description"
+        id="root__description"
+      >
+        a test description
+      </p>
+    </div>
+    <div
+      className="usa-form-group"
+      data-mock-props="{"className":"usa-form-group"}"
+      data-testid="mock-GridContainer"
+    >
+      <h3
+        className="usa-label"
+      >
+        Test field
+      </h3>
+      <div
+        className="usa-hint"
+      >
+        a test description
+      </div>
+      <div
+        data-mock-props="{"row":true,"gap":2}"
+        data-testid="mock-Grid"
+        gap={2}
+        row={true}
+      >
+        <div
+          col={12}
+          data-mock-props="{"col":12}"
+          data-testid="mock-Grid"
+        >
+          <div
+            data-mock-props="{"error":false}"
+            data-testid="mock-FormGroup"
+            error={false}
+          >
+            <div
+              data-mock-props="{"htmlFor":"root_foo","error":false}"
+              data-testid="mock-Label"
+              error={false}
+              htmlFor="root_foo"
+            >
+              foo
+            </div>
+            <div
+              className="usa-hint"
+            />
+            <div
+              data-mock-props="{"error":false}"
+              data-testid="mock-FormGroup"
+              error={false}
+            >
+              <div
+                data-mock-props="{"htmlFor":"root_foo","error":false}"
+                data-testid="mock-Label"
+                error={false}
+                htmlFor="root_foo"
+              >
+                foo
+              </div>
+              <div
+                aria-describedby="root_foo__error root_foo__description root_foo__help"
+                className=""
+                data-mock-props="{"id":"root_foo","name":"root_foo","className":"","type":"text","value":"foo","aria-describedby":"root_foo__error root_foo__description root_foo__help"}"
+                data-testid="mock-TextInput"
+                id="root_foo"
+                name="root_foo"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                type="text"
+                value="foo"
+              />
+            </div>
+            <div
+              className="usa-hint"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      className="usa-hint"
+    />
+  </div>
+  <div>
+    <button
+      className="btn btn-info "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`object fields with title and description from both additionalProperties 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    data-mock-props="{"error":false}"
+    data-testid="mock-FormGroup"
+    error={false}
+  >
+    <div
+      data-mock-props="{"htmlFor":"root","error":false}"
+      data-testid="mock-Label"
+      error={false}
+      htmlFor="root"
+    >
+      My Field
+    </div>
+    <div
+      className="usa-hint"
+    >
+      <p
+        className="field-description"
+        id="root__description"
+      >
+        a fancier description
+      </p>
+    </div>
+    <div
+      className="usa-form-group"
+      data-mock-props="{"className":"usa-form-group"}"
+      data-testid="mock-GridContainer"
+    >
+      <h3
+        className="usa-label"
+      >
+        My Field
+      </h3>
+      <div
+        className="usa-hint"
+      >
+        a fancier description
+      </div>
+      <div
+        data-mock-props="{"row":true,"gap":2}"
+        data-testid="mock-Grid"
+        gap={2}
+        row={true}
+      >
+        <div
+          col={12}
+          data-mock-props="{"col":12}"
+          data-testid="mock-Grid"
+        >
+          <div
+            data-mock-props="{"error":false}"
+            data-testid="mock-FormGroup"
+            error={false}
+          >
+            <div
+              data-mock-props="{"htmlFor":"root_foo","error":false}"
+              data-testid="mock-Label"
+              error={false}
+              htmlFor="root_foo"
+            >
+              foo
+            </div>
+            <div
+              className="usa-hint"
+            />
+            <div
+              data-mock-props="{"error":false}"
+              data-testid="mock-FormGroup"
+              error={false}
+            >
+              <div
+                data-mock-props="{"htmlFor":"root_foo","error":false}"
+                data-testid="mock-Label"
+                error={false}
+                htmlFor="root_foo"
+              >
+                foo
+              </div>
+              <div
+                aria-describedby="root_foo__error root_foo__description root_foo__help"
+                className=""
+                data-mock-props="{"id":"root_foo","name":"root_foo","className":"","type":"text","value":"foo","aria-describedby":"root_foo__error root_foo__description root_foo__help"}"
+                data-testid="mock-TextInput"
+                id="root_foo"
+                name="root_foo"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                type="text"
+                value="foo"
+              />
+            </div>
+            <div
+              className="usa-hint"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      className="usa-hint"
+    />
+  </div>
+  <div>
+    <button
+      className="btn btn-info "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`object fields with title and description from both object 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    data-mock-props="{"error":false}"
+    data-testid="mock-FormGroup"
+    error={false}
+  >
+    <div
+      data-mock-props="{"htmlFor":"root","error":false}"
+      data-testid="mock-Label"
+      error={false}
+      htmlFor="root"
+    >
+      My Field
+    </div>
+    <div
+      className="usa-hint"
+    >
+      <p
+        className="field-description"
+        id="root__description"
+      >
+        a fancier description
+      </p>
+    </div>
+    <div
+      className="usa-form-group"
+      data-mock-props="{"className":"usa-form-group"}"
+      data-testid="mock-GridContainer"
+    >
+      <h3
+        className="usa-label"
+      >
+        My Field
+      </h3>
+      <div
+        className="usa-hint"
+      >
+        a fancier description
+      </div>
+      <div
+        data-mock-props="{"row":true,"gap":2}"
+        data-testid="mock-Grid"
+        gap={2}
+        row={true}
+      >
+        <div
+          col={12}
+          data-mock-props="{"col":12}"
+          data-testid="mock-Grid"
+        >
+          <div
+            data-mock-props="{"error":false}"
+            data-testid="mock-FormGroup"
+            error={false}
+          >
+            <div
+              data-mock-props="{"htmlFor":"root_a","error":false}"
+              data-testid="mock-Label"
+              error={false}
+              htmlFor="root_a"
+            >
+              My Item A
+            </div>
+            <div
+              className="usa-hint"
+            >
+              <p
+                className="field-description"
+                id="root_a__description"
+              >
+                a fancier item A description
+              </p>
+            </div>
+            <div
+              data-mock-props="{"error":false}"
+              data-testid="mock-FormGroup"
+              error={false}
+            >
+              <div
+                data-mock-props="{"htmlFor":"root_a","error":false}"
+                data-testid="mock-Label"
+                error={false}
+                htmlFor="root_a"
+              >
+                My Item A
+              </div>
+              <div
+                aria-describedby="root_a__error root_a__description root_a__help"
+                className=""
+                data-mock-props="{"id":"root_a","name":"root_a","className":"","type":"text","value":"","aria-describedby":"root_a__error root_a__description root_a__help"}"
+                data-testid="mock-TextInput"
+                id="root_a"
+                name="root_a"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                type="text"
+                value=""
+              />
+            </div>
+            <div
+              className="usa-hint"
+            />
+          </div>
+        </div>
+        <div
+          col={12}
+          data-mock-props="{"col":12}"
+          data-testid="mock-Grid"
+        >
+          <div
+            data-mock-props="{"error":false}"
+            data-testid="mock-FormGroup"
+            error={false}
+          >
+            <div
+              data-mock-props="{"htmlFor":"root_b","error":false}"
+              data-testid="mock-Label"
+              error={false}
+              htmlFor="root_b"
+            >
+              My Item B
+            </div>
+            <div
+              className="usa-hint"
+            >
+              <p
+                className="field-description"
+                id="root_b__description"
+              >
+                a fancier item B description
+              </p>
+            </div>
+            <div
+              data-mock-props="{"error":false}"
+              data-testid="mock-FormGroup"
+              error={false}
+            >
+              <div
+                data-mock-props="{"htmlFor":"root_b","error":false}"
+                data-testid="mock-Label"
+                error={false}
+                htmlFor="root_b"
+              >
+                My Item B
+              </div>
+              <div
+                aria-describedby="root_b__error root_b__description root_b__help"
+                className=""
+                data-mock-props="{"id":"root_b","name":"root_b","className":"","type":"number","step":"any","value":"","aria-describedby":"root_b__error root_b__description root_b__help"}"
+                data-testid="mock-TextInput"
+                id="root_b"
+                name="root_b"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                step="any"
+                type="number"
+                value=""
+              />
+            </div>
+            <div
+              className="usa-hint"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      className="usa-hint"
+    />
+  </div>
+  <div>
+    <button
+      className="btn btn-info "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`object fields with title and description from uiSchema additionalProperties 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    data-mock-props="{"error":false}"
+    data-testid="mock-FormGroup"
+    error={false}
+  >
+    <div
+      data-mock-props="{"htmlFor":"root","error":false}"
+      data-testid="mock-Label"
+      error={false}
+      htmlFor="root"
+    >
+      My Field
+    </div>
+    <div
+      className="usa-hint"
+    >
+      <p
+        className="field-description"
+        id="root__description"
+      >
+        a fancier description
+      </p>
+    </div>
+    <div
+      className="usa-form-group"
+      data-mock-props="{"className":"usa-form-group"}"
+      data-testid="mock-GridContainer"
+    >
+      <h3
+        className="usa-label"
+      >
+        My Field
+      </h3>
+      <div
+        className="usa-hint"
+      >
+        a fancier description
+      </div>
+      <div
+        data-mock-props="{"row":true,"gap":2}"
+        data-testid="mock-Grid"
+        gap={2}
+        row={true}
+      >
+        <div
+          col={12}
+          data-mock-props="{"col":12}"
+          data-testid="mock-Grid"
+        >
+          <div
+            data-mock-props="{"error":false}"
+            data-testid="mock-FormGroup"
+            error={false}
+          >
+            <div
+              data-mock-props="{"htmlFor":"root_foo","error":false}"
+              data-testid="mock-Label"
+              error={false}
+              htmlFor="root_foo"
+            >
+              foo
+            </div>
+            <div
+              className="usa-hint"
+            />
+            <div
+              data-mock-props="{"error":false}"
+              data-testid="mock-FormGroup"
+              error={false}
+            >
+              <div
+                data-mock-props="{"htmlFor":"root_foo","error":false}"
+                data-testid="mock-Label"
+                error={false}
+                htmlFor="root_foo"
+              >
+                foo
+              </div>
+              <div
+                aria-describedby="root_foo__error root_foo__description root_foo__help"
+                className=""
+                data-mock-props="{"id":"root_foo","name":"root_foo","className":"","type":"text","value":"foo","aria-describedby":"root_foo__error root_foo__description root_foo__help"}"
+                data-testid="mock-TextInput"
+                id="root_foo"
+                name="root_foo"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                type="text"
+                value="foo"
+              />
+            </div>
+            <div
+              className="usa-hint"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      className="usa-hint"
+    />
+  </div>
+  <div>
+    <button
+      className="btn btn-info "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`object fields with title and description from uiSchema object 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    data-mock-props="{"error":false}"
+    data-testid="mock-FormGroup"
+    error={false}
+  >
+    <div
+      data-mock-props="{"htmlFor":"root","error":false}"
+      data-testid="mock-Label"
+      error={false}
+      htmlFor="root"
+    >
+      My Field
+    </div>
+    <div
+      className="usa-hint"
+    >
+      <p
+        className="field-description"
+        id="root__description"
+      >
+        a fancier description
+      </p>
+    </div>
+    <div
+      className="usa-form-group"
+      data-mock-props="{"className":"usa-form-group"}"
+      data-testid="mock-GridContainer"
+    >
+      <h3
+        className="usa-label"
+      >
+        My Field
+      </h3>
+      <div
+        className="usa-hint"
+      >
+        a fancier description
+      </div>
+      <div
+        data-mock-props="{"row":true,"gap":2}"
+        data-testid="mock-Grid"
+        gap={2}
+        row={true}
+      >
+        <div
+          col={12}
+          data-mock-props="{"col":12}"
+          data-testid="mock-Grid"
+        >
+          <div
+            data-mock-props="{"error":false}"
+            data-testid="mock-FormGroup"
+            error={false}
+          >
+            <div
+              data-mock-props="{"htmlFor":"root_a","error":false}"
+              data-testid="mock-Label"
+              error={false}
+              htmlFor="root_a"
+            >
+              My Item A
+            </div>
+            <div
+              className="usa-hint"
+            >
+              <p
+                className="field-description"
+                id="root_a__description"
+              >
+                a fancier item A description
+              </p>
+            </div>
+            <div
+              data-mock-props="{"error":false}"
+              data-testid="mock-FormGroup"
+              error={false}
+            >
+              <div
+                data-mock-props="{"htmlFor":"root_a","error":false}"
+                data-testid="mock-Label"
+                error={false}
+                htmlFor="root_a"
+              >
+                My Item A
+              </div>
+              <div
+                aria-describedby="root_a__error root_a__description root_a__help"
+                className=""
+                data-mock-props="{"id":"root_a","name":"root_a","className":"","type":"text","value":"","aria-describedby":"root_a__error root_a__description root_a__help"}"
+                data-testid="mock-TextInput"
+                id="root_a"
+                name="root_a"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                type="text"
+                value=""
+              />
+            </div>
+            <div
+              className="usa-hint"
+            />
+          </div>
+        </div>
+        <div
+          col={12}
+          data-mock-props="{"col":12}"
+          data-testid="mock-Grid"
+        >
+          <div
+            data-mock-props="{"error":false}"
+            data-testid="mock-FormGroup"
+            error={false}
+          >
+            <div
+              data-mock-props="{"htmlFor":"root_b","error":false}"
+              data-testid="mock-Label"
+              error={false}
+              htmlFor="root_b"
+            >
+              My Item B
+            </div>
+            <div
+              className="usa-hint"
+            >
+              <p
+                className="field-description"
+                id="root_b__description"
+              >
+                a fancier item B description
+              </p>
+            </div>
+            <div
+              data-mock-props="{"error":false}"
+              data-testid="mock-FormGroup"
+              error={false}
+            >
+              <div
+                data-mock-props="{"htmlFor":"root_b","error":false}"
+                data-testid="mock-Label"
+                error={false}
+                htmlFor="root_b"
+              >
+                My Item B
+              </div>
+              <div
+                aria-describedby="root_b__error root_b__description root_b__help"
+                className=""
+                data-mock-props="{"id":"root_b","name":"root_b","className":"","type":"number","step":"any","value":"","aria-describedby":"root_b__error root_b__description root_b__help"}"
+                data-testid="mock-TextInput"
+                id="root_b"
+                name="root_b"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                step="any"
+                type="number"
+                value=""
+              />
+            </div>
+            <div
+              className="usa-hint"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      className="usa-hint"
+    />
+  </div>
+  <div>
+    <button
+      className="btn btn-info "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`object fields with title and description from uiSchema show add button and fields if additionalProperties is true and not an object 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    data-mock-props="{"error":false}"
+    data-testid="mock-FormGroup"
+    error={false}
+  >
+    <div
+      data-mock-props="{"htmlFor":"root","error":false}"
+      data-testid="mock-Label"
+      error={false}
+      htmlFor="root"
+    >
+      My Field
+    </div>
+    <div
+      className="usa-hint"
+    >
+      <p
+        className="field-description"
+        id="root__description"
+      >
+        a fancier description
+      </p>
+    </div>
+    <div
+      className="usa-form-group"
+      data-mock-props="{"className":"usa-form-group"}"
+      data-testid="mock-GridContainer"
+    >
+      <h3
+        className="usa-label"
+      >
+        My Field
+      </h3>
+      <div
+        className="usa-hint"
+      >
+        a fancier description
+      </div>
+      <div
+        data-mock-props="{"row":true,"gap":2}"
+        data-testid="mock-Grid"
+        gap={2}
+        row={true}
+      >
+        <div
+          col={12}
+          data-mock-props="{"col":12}"
+          data-testid="mock-Grid"
+        >
+          <div
+            data-mock-props="{"error":false}"
+            data-testid="mock-FormGroup"
+            error={false}
+          >
+            <div
+              data-mock-props="{"htmlFor":"root_additionalProperty","error":false}"
+              data-testid="mock-Label"
+              error={false}
+              htmlFor="root_additionalProperty"
+            >
+              additionalProperty
+            </div>
+            <div
+              className="usa-hint"
+            />
+            <div
+              data-mock-props="{"error":false}"
+              data-testid="mock-FormGroup"
+              error={false}
+            >
+              <div
+                data-mock-props="{"htmlFor":"root_additionalProperty","error":false}"
+                data-testid="mock-Label"
+                error={false}
+                htmlFor="root_additionalProperty"
+              >
+                additionalProperty
+              </div>
+              <div
+                aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
+                className=""
+                data-mock-props="{"id":"root_additionalProperty","name":"root_additionalProperty","className":"","type":"text","value":"should appear","aria-describedby":"root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"}"
+                data-testid="mock-TextInput"
+                id="root_additionalProperty"
+                name="root_additionalProperty"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                type="text"
+                value="should appear"
+              />
+            </div>
+            <div
+              className="usa-hint"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      className="usa-hint"
+    />
+  </div>
+  <div>
+    <button
+      className="btn btn-info "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`object fields with title and description object 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    data-mock-props="{"error":false}"
+    data-testid="mock-FormGroup"
+    error={false}
+  >
+    <div
+      data-mock-props="{"htmlFor":"root","error":false}"
+      data-testid="mock-Label"
+      error={false}
+      htmlFor="root"
+    >
+      Test field
+    </div>
+    <div
+      className="usa-hint"
+    >
+      <p
+        className="field-description"
+        id="root__description"
+      >
+        a test description
+      </p>
+    </div>
+    <div
+      className="usa-form-group"
+      data-mock-props="{"className":"usa-form-group"}"
+      data-testid="mock-GridContainer"
+    >
+      <h3
+        className="usa-label"
+      >
+        Test field
+      </h3>
+      <div
+        className="usa-hint"
+      >
+        a test description
+      </div>
+      <div
+        data-mock-props="{"row":true,"gap":2}"
+        data-testid="mock-Grid"
+        gap={2}
+        row={true}
+      >
+        <div
+          col={12}
+          data-mock-props="{"col":12}"
+          data-testid="mock-Grid"
+        >
+          <div
+            data-mock-props="{"error":false}"
+            data-testid="mock-FormGroup"
+            error={false}
+          >
+            <div
+              data-mock-props="{"htmlFor":"root_a","error":false}"
+              data-testid="mock-Label"
+              error={false}
+              htmlFor="root_a"
+            >
+              A
+            </div>
+            <div
+              className="usa-hint"
+            >
+              <p
+                className="field-description"
+                id="root_a__description"
+              >
+                A description
+              </p>
+            </div>
+            <div
+              data-mock-props="{"error":false}"
+              data-testid="mock-FormGroup"
+              error={false}
+            >
+              <div
+                data-mock-props="{"htmlFor":"root_a","error":false}"
+                data-testid="mock-Label"
+                error={false}
+                htmlFor="root_a"
+              >
+                A
+              </div>
+              <div
+                aria-describedby="root_a__error root_a__description root_a__help"
+                className=""
+                data-mock-props="{"id":"root_a","name":"root_a","className":"","type":"text","value":"","aria-describedby":"root_a__error root_a__description root_a__help"}"
+                data-testid="mock-TextInput"
+                id="root_a"
+                name="root_a"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                type="text"
+                value=""
+              />
+            </div>
+            <div
+              className="usa-hint"
+            />
+          </div>
+        </div>
+        <div
+          col={12}
+          data-mock-props="{"col":12}"
+          data-testid="mock-Grid"
+        >
+          <div
+            data-mock-props="{"error":false}"
+            data-testid="mock-FormGroup"
+            error={false}
+          >
+            <div
+              data-mock-props="{"htmlFor":"root_b","error":false}"
+              data-testid="mock-Label"
+              error={false}
+              htmlFor="root_b"
+            >
+              B
+            </div>
+            <div
+              className="usa-hint"
+            >
+              <p
+                className="field-description"
+                id="root_b__description"
+              >
+                B description
+              </p>
+            </div>
+            <div
+              data-mock-props="{"error":false}"
+              data-testid="mock-FormGroup"
+              error={false}
+            >
+              <div
+                data-mock-props="{"htmlFor":"root_b","error":false}"
+                data-testid="mock-Label"
+                error={false}
+                htmlFor="root_b"
+              >
+                B
+              </div>
+              <div
+                aria-describedby="root_b__error root_b__description root_b__help"
+                className=""
+                data-mock-props="{"id":"root_b","name":"root_b","className":"","type":"number","step":"any","value":"","aria-describedby":"root_b__error root_b__description root_b__help"}"
+                data-testid="mock-TextInput"
+                id="root_b"
+                name="root_b"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                step="any"
+                type="number"
+                value=""
+              />
+            </div>
+            <div
+              className="usa-hint"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      className="usa-hint"
+    />
+  </div>
+  <div>
+    <button
+      className="btn btn-info "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`object fields with title and description show add button and fields if additionalProperties is true and not an object 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    data-mock-props="{"error":false}"
+    data-testid="mock-FormGroup"
+    error={false}
+  >
+    <div
+      data-mock-props="{"htmlFor":"root","error":false}"
+      data-testid="mock-Label"
+      error={false}
+      htmlFor="root"
+    >
+      Test field
+    </div>
+    <div
+      className="usa-hint"
+    >
+      <p
+        className="field-description"
+        id="root__description"
+      >
+        a test description
+      </p>
+    </div>
+    <div
+      className="usa-form-group"
+      data-mock-props="{"className":"usa-form-group"}"
+      data-testid="mock-GridContainer"
+    >
+      <h3
+        className="usa-label"
+      >
+        Test field
+      </h3>
+      <div
+        className="usa-hint"
+      >
+        a test description
+      </div>
+      <div
+        data-mock-props="{"row":true,"gap":2}"
+        data-testid="mock-Grid"
+        gap={2}
+        row={true}
+      >
+        <div
+          col={12}
+          data-mock-props="{"col":12}"
+          data-testid="mock-Grid"
+        >
+          <div
+            data-mock-props="{"error":false}"
+            data-testid="mock-FormGroup"
+            error={false}
+          >
+            <div
+              data-mock-props="{"htmlFor":"root_additionalProperty","error":false}"
+              data-testid="mock-Label"
+              error={false}
+              htmlFor="root_additionalProperty"
+            >
+              additionalProperty
+            </div>
+            <div
+              className="usa-hint"
+            />
+            <div
+              data-mock-props="{"error":false}"
+              data-testid="mock-FormGroup"
+              error={false}
+            >
+              <div
+                data-mock-props="{"htmlFor":"root_additionalProperty","error":false}"
+                data-testid="mock-Label"
+                error={false}
+                htmlFor="root_additionalProperty"
+              >
+                additionalProperty
+              </div>
+              <div
+                aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
+                className=""
+                data-mock-props="{"id":"root_additionalProperty","name":"root_additionalProperty","className":"","type":"text","value":"should appear","aria-describedby":"root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"}"
+                data-testid="mock-TextInput"
+                id="root_additionalProperty"
+                name="root_additionalProperty"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                type="text"
+                value="should appear"
+              />
+            </div>
+            <div
+              className="usa-hint"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      className="usa-hint"
+    />
+  </div>
+  <div>
+    <button
+      className="btn btn-info "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`object fields with title and description with global label off additionalProperties 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    data-mock-props="{"error":false}"
+    data-testid="mock-FormGroup"
+    error={false}
+  >
+    <div
+      data-mock-props="{"htmlFor":"root","error":false}"
+      data-testid="mock-Label"
+      error={false}
+      htmlFor="root"
+    >
+      Test field
+    </div>
+    <div
+      className="usa-hint"
+    >
+      <p
+        className="field-description"
+        id="root__description"
+      >
+        a test description
+      </p>
+    </div>
+    <div
+      className="usa-form-group"
+      data-mock-props="{"className":"usa-form-group"}"
+      data-testid="mock-GridContainer"
+    >
+      <div
+        data-mock-props="{"row":true,"gap":2}"
+        data-testid="mock-Grid"
+        gap={2}
+        row={true}
+      >
+        <div
+          col={12}
+          data-mock-props="{"col":12}"
+          data-testid="mock-Grid"
+        >
+          <div
+            data-mock-props="{"error":false}"
+            data-testid="mock-FormGroup"
+            error={false}
+          >
+            <div
+              data-mock-props="{"htmlFor":"root_foo","error":false}"
+              data-testid="mock-Label"
+              error={false}
+              htmlFor="root_foo"
+            >
+              foo
+            </div>
+            <div
+              className="usa-hint"
+            />
+            <div
+              data-mock-props="{"error":false}"
+              data-testid="mock-FormGroup"
+              error={false}
+            >
+              <div
+                aria-describedby="root_foo__error root_foo__description root_foo__help"
+                className=""
+                data-mock-props="{"id":"root_foo","name":"root_foo","className":"","type":"text","value":"foo","aria-describedby":"root_foo__error root_foo__description root_foo__help"}"
+                data-testid="mock-TextInput"
+                id="root_foo"
+                name="root_foo"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                type="text"
+                value="foo"
+              />
+            </div>
+            <div
+              className="usa-hint"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      className="usa-hint"
+    />
+  </div>
+  <div>
+    <button
+      className="btn btn-info "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`object fields with title and description with global label off object 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    data-mock-props="{"error":false}"
+    data-testid="mock-FormGroup"
+    error={false}
+  >
+    <div
+      data-mock-props="{"htmlFor":"root","error":false}"
+      data-testid="mock-Label"
+      error={false}
+      htmlFor="root"
+    >
+      Test field
+    </div>
+    <div
+      className="usa-hint"
+    >
+      <p
+        className="field-description"
+        id="root__description"
+      >
+        a test description
+      </p>
+    </div>
+    <div
+      className="usa-form-group"
+      data-mock-props="{"className":"usa-form-group"}"
+      data-testid="mock-GridContainer"
+    >
+      <div
+        data-mock-props="{"row":true,"gap":2}"
+        data-testid="mock-Grid"
+        gap={2}
+        row={true}
+      >
+        <div
+          col={12}
+          data-mock-props="{"col":12}"
+          data-testid="mock-Grid"
+        >
+          <div
+            data-mock-props="{"error":false}"
+            data-testid="mock-FormGroup"
+            error={false}
+          >
+            <div
+              data-mock-props="{"htmlFor":"root_a","error":false}"
+              data-testid="mock-Label"
+              error={false}
+              htmlFor="root_a"
+            >
+              A
+            </div>
+            <div
+              className="usa-hint"
+            >
+              <p
+                className="field-description"
+                id="root_a__description"
+              >
+                A description
+              </p>
+            </div>
+            <div
+              data-mock-props="{"error":false}"
+              data-testid="mock-FormGroup"
+              error={false}
+            >
+              <div
+                aria-describedby="root_a__error root_a__description root_a__help"
+                className=""
+                data-mock-props="{"id":"root_a","name":"root_a","className":"","type":"text","value":"","aria-describedby":"root_a__error root_a__description root_a__help"}"
+                data-testid="mock-TextInput"
+                id="root_a"
+                name="root_a"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                type="text"
+                value=""
+              />
+            </div>
+            <div
+              className="usa-hint"
+            />
+          </div>
+        </div>
+        <div
+          col={12}
+          data-mock-props="{"col":12}"
+          data-testid="mock-Grid"
+        >
+          <div
+            data-mock-props="{"error":false}"
+            data-testid="mock-FormGroup"
+            error={false}
+          >
+            <div
+              data-mock-props="{"htmlFor":"root_b","error":false}"
+              data-testid="mock-Label"
+              error={false}
+              htmlFor="root_b"
+            >
+              B
+            </div>
+            <div
+              className="usa-hint"
+            >
+              <p
+                className="field-description"
+                id="root_b__description"
+              >
+                B description
+              </p>
+            </div>
+            <div
+              data-mock-props="{"error":false}"
+              data-testid="mock-FormGroup"
+              error={false}
+            >
+              <div
+                aria-describedby="root_b__error root_b__description root_b__help"
+                className=""
+                data-mock-props="{"id":"root_b","name":"root_b","className":"","type":"number","step":"any","value":"","aria-describedby":"root_b__error root_b__description root_b__help"}"
+                data-testid="mock-TextInput"
+                id="root_b"
+                name="root_b"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                step="any"
+                type="number"
+                value=""
+              />
+            </div>
+            <div
+              className="usa-hint"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      className="usa-hint"
+    />
+  </div>
+  <div>
+    <button
+      className="btn btn-info "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`object fields with title and description with global label off show add button and fields if additionalProperties is true and not an object 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    data-mock-props="{"error":false}"
+    data-testid="mock-FormGroup"
+    error={false}
+  >
+    <div
+      data-mock-props="{"htmlFor":"root","error":false}"
+      data-testid="mock-Label"
+      error={false}
+      htmlFor="root"
+    >
+      Test field
+    </div>
+    <div
+      className="usa-hint"
+    >
+      <p
+        className="field-description"
+        id="root__description"
+      >
+        a test description
+      </p>
+    </div>
+    <div
+      className="usa-form-group"
+      data-mock-props="{"className":"usa-form-group"}"
+      data-testid="mock-GridContainer"
+    >
+      <div
+        data-mock-props="{"row":true,"gap":2}"
+        data-testid="mock-Grid"
+        gap={2}
+        row={true}
+      >
+        <div
+          col={12}
+          data-mock-props="{"col":12}"
+          data-testid="mock-Grid"
+        >
+          <div
+            data-mock-props="{"error":false}"
+            data-testid="mock-FormGroup"
+            error={false}
+          >
+            <div
+              data-mock-props="{"htmlFor":"root_additionalProperty","error":false}"
+              data-testid="mock-Label"
+              error={false}
+              htmlFor="root_additionalProperty"
+            >
+              additionalProperty
+            </div>
+            <div
+              className="usa-hint"
+            />
+            <div
+              data-mock-props="{"error":false}"
+              data-testid="mock-FormGroup"
+              error={false}
+            >
+              <div
+                aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
+                className=""
+                data-mock-props="{"id":"root_additionalProperty","name":"root_additionalProperty","className":"","type":"text","value":"should appear","aria-describedby":"root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"}"
+                data-testid="mock-TextInput"
+                id="root_additionalProperty"
+                name="root_additionalProperty"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                type="text"
+                value="should appear"
+              />
+            </div>
+            <div
+              className="usa-hint"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      className="usa-hint"
+    />
+  </div>
+  <div>
+    <button
+      className="btn btn-info "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;

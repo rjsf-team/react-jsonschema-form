@@ -1,30 +1,14 @@
 {
-  "extends": "../../tsconfig.base.json",
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "outDir": "dist",
-    "rootDir": "src",
-    "baseUrl": ".",
-    "declaration": true,
-    "sourceMap": true,
     "jsx": "react-jsx",
+    "outDir": "lib",
+    "rootDir": "src",
     "skipLibCheck": true,
-    "noImplicitAny": false,
-    "strict": false,
     "esModuleInterop": true,
-    "resolveJsonModule": true,
-    "allowSyntheticDefaultImports": true,
-    "paths": {
-      "@rjsf/utils": ["../utils/src"],
-      "@rjsf/utils/*": ["../utils/src/*"],
-      "@rjsf/validator-ajv8": ["../validator-ajv8/src"],
-      "@rjsf/validator-ajv8/*": ["../validator-ajv8/src/*"]
-    },
-    "composite": true
+    "strict": true,
+    "types": ["node", "jest"]
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist", "**/*.spec.ts", "**/*.test.ts", "**/*.spec.tsx", "**/*.test.tsx"],
-  "references": [
-    { "path": "../utils" },
-    { "path": "../validator-ajv8" }
-  ]
+  "include": ["src"],
+  "exclude": ["node_modules", "lib", "**/*.spec.ts", "**/*.test.ts"]
 }

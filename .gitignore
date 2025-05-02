@@ -40,6 +40,9 @@ coverage
 node_modules/
 
 # Optional npm cache directory
+.nx/cache/
+
+# Optional npm cache directory
 .npm
 
 # Optional eslint cache
