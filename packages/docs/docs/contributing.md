@@ -29,6 +29,23 @@ If that is the situation for you, you can instead use `npm run build-serial` to 
 Also, if you are only working on one package, you can `npm run build` and `npm run test` from within the subdirectory.
 Finally, you can simply `npm start` inside of the `playground` directory to test changes if you have already built all of your packages, without needing to watch all of the packages via the root directory `npm start`.
 
+### Troubleshooting build failures
+
+Sometimes your local builds fail and you can't figure out why. This is most likely to happen after rebase to `main` due
+to `package.json` changes upstream. There are two commands you can use to (hopefully) get your environment back to a
+working state. Try running the following two commands:
+
+```bash
+npm run refresh-node-modules
+npm run clean-build
+```
+
+The first command will delete all of the `node_modules` directories in the environment and then rerun `npm install`.
+The second command cleans up the typescript build cache files before retrying the build.
+
+Worst case scenario when neither of those commands work, try deleting the `package-lock.json` and the entire `.nx` cache
+directory and rerun the commands again.
+
 ## Cloud builds
 
 When building in environments with limited memory, such as Netlify, it's recommended to use `npm run build-serial` that builds the packages serially.
@@ -123,7 +140,7 @@ Code coverage reports are currently available only for the `@rjsf/core` theme pa
 They are generated using [nyc](https://github.com/istanbuljs/nyc) each time the `npm test-coverage` script is run.
 The full report can be seen by opening `./coverage/lcov-report/index.html`.
 
-#### Utils and validator-ajvX code coverage
+#### Utils and validator-ajv8 code coverage
 
 100% code coverage is required by the `@rjsf/utils` and `@rjsf/validator-ajv8` tests.
 If you make changes to those libraries, you will have to maintain that coverage, otherwise the tests will fail.
@@ -133,7 +150,7 @@ If you make changes to those libraries, you will have to maintain that coverage,
 ## Releasing
 
 To release, go to the main branch (NOT a fork) and then create a new branch with the version number (with an `rc` prefix instead of `v`).
-For instance if you are about to create the new `5.100.10` branch, then you would run the following commands:
+For instance if you are about to create the new `6.100.10` branch, then you would run the following commands:
 
 ```bash
 git checkout -b rc6.100.10
