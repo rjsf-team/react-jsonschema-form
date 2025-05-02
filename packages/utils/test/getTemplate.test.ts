@@ -101,8 +101,8 @@ describe('getTemplate', () => {
           Object.keys(uiOptions).reduce((uiOptions, key) => {
             (uiOptions as Record<string, any>)[key] = key;
             return uiOptions;
-          }, {})
-        )
+          }, {}),
+        ),
       ).toBe(FakeTemplate);
     });
   });
