@@ -78,13 +78,24 @@ render(
 );
 ```
 
-You also can provide your own field template to a uiSchema by specifying a `ui:ArrayFieldTemplate` property.
+You also can provide your own field template to a uiSchema by specifying a `ui:ArrayFieldTemplate` property with your Component :
+
+```tsx
+import { UiSchema } from '@rjsf/utils';
+import ArrayFieldTemplate from './ArrayFieldTemplate';
+
+const uiSchema: UiSchema = {
+  'ui:ArrayFieldTemplate': ArrayFieldTemplate,
+};
+```
+
+or a string value from the `Registry` :
 
 ```tsx
 import { UiSchema } from '@rjsf/utils';
 
 const uiSchema: UiSchema = {
-  'ui:ArrayFieldTemplate': ArrayFieldTemplate,
+  'ui:ArrayFieldTemplate': 'CustomArrayFieldTemplate',
 };
 ```
 
@@ -165,13 +176,24 @@ render(
 );
 ```
 
-You also can provide your own template to a uiSchema by specifying a `ui:ArrayFieldDescriptionTemplate` property.
+You also can provide your own field template to a uiSchema by specifying a `ui:ArrayFieldDescriptionTemplate` property with your Component :
+
+```tsx
+import { UiSchema } from '@rjsf/utils';
+import ArrayFieldDescriptionTemplate from './ArrayFieldDescriptionTemplate';
+
+const uiSchema: UiSchema = {
+  'ui:ArrayFieldDescriptionTemplate': ArrayFieldDescriptionTemplate,
+};
+```
+
+or a string value from the `Registry` :
 
 ```tsx
 import { UiSchema } from '@rjsf/utils';
 
 const uiSchema: UiSchema = {
-  'ui:ArrayFieldDescriptionTemplate': ArrayFieldDescriptionTemplate,
+  'ui:ArrayFieldDescriptionTemplate': 'CustomArrayFieldDescriptionTemplate',
 };
 ```
 
@@ -322,13 +344,24 @@ render(
 );
 ```
 
-You also can provide your own template to a uiSchema by specifying a `ui:ArrayFieldDescriptionTemplate` property.
+You also can provide your own template to a uiSchema by specifying a `ui:ArrayFieldDescriptionTemplate` property with your Component :
+
+```tsx
+import { UiSchema } from '@rjsf/utils';
+import ArrayFieldDescriptionTemplate from './ArrayFieldDescriptionTemplate';
+
+const uiSchema: UiSchema = {
+  'ui:ArrayFieldDescriptionTemplate': ArrayFieldDescriptionTemplate,
+};
+```
+
+or a string value from the `Registry` :
 
 ```tsx
 import { UiSchema } from '@rjsf/utils';
 
 const uiSchema: UiSchema = {
-  'ui:ArrayFieldTitleTemplate': ArrayFieldTitleTemplate,
+  'ui:ArrayFieldDescriptionTemplate': 'CustomArrayFieldDescriptionTemplate',
 };
 ```
 
@@ -676,13 +709,24 @@ render(
 );
 ```
 
-You also can provide your own field template to a uiSchema by specifying a `ui:FieldTemplate` property.
+You also can provide your own field template to a uiSchema by specifying a `ui:FieldTemplate` property with your Component :
+
+```tsx
+import { UiSchema } from '@rjsf/utils';
+import CustomFieldTemplate from './CustomFieldTemplate';
+
+const uiSchema: UiSchema = {
+  'ui:FieldTemplate': CustomFieldTemplate,
+};
+```
+
+or a string value from the `Registry` :
 
 ```tsx
 import { UiSchema } from '@rjsf/utils';
 
 const uiSchema: UiSchema = {
-  'ui:FieldTemplate': CustomFieldTemplate,
+  'ui:FieldTemplate': 'CustomFieldTemplate',
 };
 ```
 
@@ -789,13 +833,24 @@ render(
 );
 ```
 
-You also can provide your own field template to a uiSchema by specifying a `ui:ObjectFieldTemplate` property.
+You also can provide your own field template to a uiSchema by specifying a `ui:ObjectFieldTemplate` property with your Component :
+
+```tsx
+import { UiSchema } from '@rjsf/utils';
+import ObjectFieldTemplate from './ObjectFieldTemplate';
+
+const uiSchema: UiSchema = {
+  'ui:ObjectFieldTemplate': ObjectFieldTemplate,
+};
+```
+
+or a string value from the `Registry` :
 
 ```tsx
 import { UiSchema } from '@rjsf/utils';
 
 const uiSchema: UiSchema = {
-  'ui:ObjectFieldTemplate': ObjectFieldTemplate,
+  'ui:ObjectFieldTemplate': 'ObjectFieldTemplate',
 };
 ```
 
@@ -1145,3 +1200,20 @@ The following prop is passed to a `SubmitButton`:
 
 - `uiSchema`: The uiSchema object for this field, used to extract the `UISchemaSubmitButtonOptions`.
 - `registry`: The `registry` object.
+
+## Custom Templates
+
+You can now add custom components to the registry and reference them in your `uiSchema` using string keys.
+
+### Adding Custom Templates to the Registry
+
+```tsx
+import CustomArrayFieldTemplate from './CustomArrayFieldTemplate';
+import { UiSchema } from '@rjsf/utils';
+
+// Add the custom template to the registry
+const registry = { templates: { CustomArrayFieldTemplate } };
+
+// Use the custom template in the uiSchema
+const uiSchema: UiSchema = { 'ui:ArrayFieldTemplate': 'CustomArrayFieldTemplate' };
+```

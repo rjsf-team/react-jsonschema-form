@@ -114,6 +114,9 @@ should change the heading of the (upcoming) version to include a major version b
 - BREAKING CHANGE: Removed the deprecated `RJSF_ADDITONAL_PROPERTIES_FLAG` constant
 - Updated the `WrapIfAdditionalTemplateProps` to include `hideError` and `rawErrors` in support of moving `Bootstrap 3` marker classes out of `SchemaField`
 - Added support for `patternProperties` [#1944](https://github.com/rjsf-team/react-jsonschema-form/issues/1944)
+- Updated `getTemplate()` to allow per-field customization using string key from `Registry`, fixing [#3695](https://github.com/rjsf-team/react-jsonschema-form/issues/3695).
+- Updated `TemplatesType` to allow for a string key to be used to reference a custom template in the `Registry`, fixing [#3695](https://github.com/rjsf-team/react-jsonschema-form/issues/3695)
+- Updated tests to cover the new `getTemplate()` functionality
 
 ## @rjsf/validator-ajv6
 
@@ -134,6 +137,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Replaced Lerna with Nx, updated all lerna commands to use the Nx CLI
 - BREAKING CHANGE: Updated all `peerDependencies` to change minimal `React` support to `>=18`
 - Added documentation and playground example for `patternProperties`
+- Updated `advanced-customization/custom-templates` with the new feature.
 
 # 6.0.0-alpha.0
 

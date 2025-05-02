@@ -8,6 +8,7 @@ import {
   UIOptionsType,
 } from '../src';
 import getTestValidator from './testUtils/getTestValidator';
+import cloneDeep from 'lodash/cloneDeep';
 
 const FakeTemplate = () => null;
 
@@ -89,5 +90,34 @@ describe('getTemplate', () => {
       const name = key as keyof TemplatesType;
       expect(getTemplate<typeof name>(name, registry, uiOptions)).toBe(CustomTemplate);
     });
+  });
+  it('returns the template from registry using uiOptions key when available', () => {
+    KEYS.forEach((key) => {
+      const name = key as keyof TemplatesType;
+      expect(
+        getTemplate<typeof name>(
+          name,
+          registry,
+          Object.keys(uiOptions).reduce((uiOptions, key) => {
+            (uiOptions as Record<string, any>)[key] = key;
+            return uiOptions;
+          }, {}),
+        ),
+      ).toBe(FakeTemplate);
+    });
+  });
+  it('returns the custom template name from the registry', () => {
+    const customTemplateKey = 'CustomTemplate';
+    const newRegistry = cloneDeep(registry);
+
+    newRegistry.templates[customTemplateKey] = FakeTemplate;
+
+    expect(getTemplate(customTemplateKey, newRegistry)).toBe(FakeTemplate);
+  });
+
+  it('returns undefined when the custom template is not in the registry', () => {
+    const customTemplateKey = 'CustomTemplate';
+
+    expect(getTemplate(customTemplateKey, registry)).toBeUndefined();
   });
 });
