@@ -2,30 +2,26 @@ import { FormContextType, RJSFSchema, StrictRJSFSchema, TemplatesType } from '@r
 
 import Fields from './Fields/index';
 import ArrayField from './ArrayField';
-import Description from './Description';
-import ErrorList from './ErrorList';
 import Field from './Field';
 import ObjectField from './ObjectField';
 import Select from './Select';
 import TextArea from './TextArea';
 import Title from './Title';
+import Description from './Description';
+import SubmitButton from './SubmitButton';
+import TitleField from './TitleField';
 
-export function generateTemplates<
+export default function generateTemplates<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any
 >(): Partial<TemplatesType<T, S, F>> {
   return {
-    ...Fields,
-    ArrayFieldTemplate: ArrayField,
-    DescriptionField: Description,
-    ErrorList,
     FieldTemplate: Field,
+    ArrayFieldTemplate: ArrayField,
     ObjectFieldTemplate: ObjectField,
-    SelectWidget: Select,
-    TextAreaWidget: TextArea,
-    TitleField: Title,
+    ButtonTemplates: {
+      SubmitButton,
+    },
   };
 }
-
-export default generateTemplates();

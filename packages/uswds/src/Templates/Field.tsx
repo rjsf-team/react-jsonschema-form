@@ -1,15 +1,16 @@
-import { FieldTemplateProps } from '@rjsf/utils';
+import { FieldTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { FormGroup, Label } from '@trussworks/react-uswds';
 
-export default function Field(props: FieldTemplateProps) {
+export default function Field<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+  props: FieldTemplateProps<T, S, F>
+) {
   const { id, label, help, required, description, errors, children, hidden } = props;
 
   if (hidden) {
     return children;
   }
 
-  // Check both for errors array and extraErrors from parent
-  const hasErrors = errors?.length > 0 || props.rawErrors?.length > 0;
+  const hasErrors = Array.isArray(errors) && errors.length > 0;
 
   return (
     <FormGroup error={hasErrors}>

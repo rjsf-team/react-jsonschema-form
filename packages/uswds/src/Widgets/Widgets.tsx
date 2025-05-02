@@ -19,23 +19,8 @@ import {
   Radio,
   Select,
   Textarea,
+  TextInput,
 } from '@trussworks/react-uswds';
-import BaseInputTemplate from '../Templates/BaseInputTemplate';
-
-// BaseInputTemplate usage
-function BaseInputWidget<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
->(props: WidgetProps<T, S, F>) {
-  const { registry } = props;
-  const BaseInputTemplate = getTemplate<'BaseInputTemplate', T, S, F>(
-    'BaseInputTemplate',
-    registry,
-    getUiOptions(props.uiSchema),
-  );
-  return <BaseInputTemplate {...props} registry={registry} />;
-}
 
 // CheckboxWidget (Boolean) - Simplified
 function CheckboxWidget<
@@ -225,57 +210,30 @@ const COMBOBOX_THRESHOLD = 15;
 const RADIO_THRESHOLD = 4; // Threshold for using Radio buttons
 
 // ComboBoxWidget
-function ComboBoxWidget<
+export function ComboBoxWidget<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
->({
-  id,
-  name,
-  options,
-  registry,
-  value,
-  emptyValue,
-  readonly,
-  disabled,
-  onChange,
-  onBlur,
-  onFocus,
-  placeholder,
-  schema,
-}: WidgetProps<T, S, F>) {
-  const { translateString } = registry;
-  const { enumOptions, enumDisabled } = options;
-  const inputRef = useRef<HTMLInputElement>(null);
+>(props: WidgetProps<T, S, F>) {
+  const { id, value, onChange, onBlur, onFocus, options, readonly } = props;
 
-  const _onChangeComboBox = useCallback(
-    (val?: string) => {
-      onChange(enumOptionsValueForIndex<S>(val, enumOptions, emptyValue));
-    },
-    [onChange, emptyValue, enumOptions],
-  );
+  const _onChangeComboBox = (val?: string) => {
+    onChange(val ?? '');
+  };
 
-  const _onBlur = ({ target: { value: blurValue } }: FocusEvent<HTMLInputElement>) =>
-    onBlur(id, enumOptionsValueForIndex<S>(blurValue, enumOptions, emptyValue));
-  const _onFocus = ({ target: { value: focusValue } }: FocusEvent<HTMLInputElement>) =>
-    onFocus(id, enumOptionsValueForIndex<S>(focusValue, enumOptions, emptyValue));
-
-  const selectedValue = typeof value === 'undefined' ? emptyValue : value;
-  const selectedOption = enumOptions.find((opt) => opt.value === selectedValue);
+  const comboBoxOptions = (options.enumOptions || []).map((option) => ({
+    value: String(option.value),
+    label: String(option.label),
+  }));
 
   return (
     <ComboBox
-      {...ariaDescribedByIds<T>(id, !!schema.examples)}
       id={id}
-      name={name}
-      defaultValue={selectedOption?.value as string | undefined}
-      onChange={!readonly ? _onChangeComboBox : undefined}
-      onBlur={!readonly ? _onBlur : undefined}
-      onFocus={!readonly ? _onFocus : undefined}
-      disabled={disabled || readonly}
-      options={enumOptions as any}
-      inputRef={inputRef}
-      placeholder={placeholder || translateString(TranslatableString.SelectLabel)}
+      name={id}
+      defaultValue={value}
+      onChange={readonly ? () => {} : _onChangeComboBox}
+      disabled={readonly}
+      options={comboBoxOptions}
     />
   );
 }
@@ -324,7 +282,7 @@ function SelectWidget<
       onFocus={!readonly ? _onFocusSelect : undefined}
     >
       {!multiple && schema.default === undefined && (
-        <option value="">{placeholder || translateString(TranslatableString.SelectLabel)}</option>
+        <option value="">{placeholder || translateString(TranslatableString.NewStringDefault)}</option>
       )}
       {(enumOptions || []).map(({ value: optionValue, label: optionLabel }, i) => {
         const disabled = Array.isArray(enumDisabled) && enumDisabled.includes(optionValue);
@@ -450,20 +408,20 @@ function HiddenWidget<
 
 // Define the object containing all widgets
 const widgets = {
-  PasswordWidget: BaseInputWidget,
+  PasswordWidget: CheckboxWidget,
   RadioWidget,
   UpDownWidget,
   SelectWidget,
-  TextWidget: BaseInputWidget,
-  DateWidget: BaseInputWidget,
-  DateTimeWidget: BaseInputWidget,
-  AltDateWidget: BaseInputWidget,
-  AltDateTimeWidget: BaseInputWidget,
-  EmailWidget: BaseInputWidget,
-  URLWidget: BaseInputWidget,
+  TextWidget: CheckboxWidget,
+  DateWidget: CheckboxWidget,
+  DateTimeWidget: CheckboxWidget,
+  AltDateWidget: CheckboxWidget,
+  AltDateTimeWidget: CheckboxWidget,
+  EmailWidget: CheckboxWidget,
+  URLWidget: CheckboxWidget,
   TextareaWidget,
   HiddenWidget,
-  ColorWidget: BaseInputWidget,
+  ColorWidget: CheckboxWidget,
   FileWidget,
   CheckboxWidget,
   CheckboxesWidget,
