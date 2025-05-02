@@ -275,6 +275,140 @@ exports[`single fields checkbox field with label 1`] = `
 </form>
 `;
 
+exports[`single fields checkbox field with label and description 1`] = `
+<form
+  className="ui form rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-boolean"
+  >
+    <div
+      className="grouped equal width fields"
+    >
+      <p
+        className="sui-description"
+        id="root__description"
+      >
+        test description
+      </p>
+      <div
+        className="field"
+      >
+        <div
+          className="ui checkbox"
+          inverted="false"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onMouseDown={[Function]}
+          onMouseUp={[Function]}
+        >
+          <input
+            aria-describedby="root__error root__description root__help"
+            autoFocus={false}
+            checked={false}
+            className="hidden"
+            disabled={false}
+            id="root"
+            name="root"
+            readOnly={true}
+            required={false}
+            tabIndex={0}
+            type="checkbox"
+          />
+          <label
+            htmlFor="root"
+          >
+            test
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    className="ui primary button"
+    onClick={[Function]}
+    type="submit"
+  >
+    Submit
+  </button>
+</form>
+`;
+
+exports[`single fields checkbox field with label and rich text description 1`] = `
+<form
+  className="ui form rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-boolean"
+  >
+    <div
+      className="grouped equal width fields"
+    >
+      <p
+        className="sui-description"
+        id="root__description"
+      >
+        <span>
+          <strong>
+            test
+          </strong>
+           
+          <strong>
+            description
+          </strong>
+        </span>
+      </p>
+      <div
+        className="field"
+      >
+        <div
+          className="ui checkbox"
+          inverted="false"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onMouseDown={[Function]}
+          onMouseUp={[Function]}
+        >
+          <input
+            aria-describedby="root__error root__description root__help"
+            autoFocus={false}
+            checked={false}
+            className="hidden"
+            disabled={false}
+            id="root"
+            name="root"
+            readOnly={true}
+            required={false}
+            tabIndex={0}
+            type="checkbox"
+          />
+          <label
+            htmlFor="root"
+          >
+            test
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    className="ui primary button"
+    onClick={[Function]}
+    type="submit"
+  >
+    Submit
+  </button>
+</form>
+`;
+
 exports[`single fields checkboxes field 1`] = `
 <form
   className="ui form rjsf"
@@ -554,6 +688,144 @@ exports[`single fields field with description in uiSchema 1`] = `
             id="root_my-field__description"
           >
             some other description
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    className="ui primary button"
+    onClick={[Function]}
+    type="submit"
+  >
+    Submit
+  </button>
+</form>
+`;
+
+exports[`single fields field with markdown description 1`] = `
+<form
+  className="ui form rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div
+      className="grouped equal width fields"
+    >
+      <div
+        className="rjsf-field rjsf-field-string"
+      >
+        <div
+          className="grouped equal width fields"
+        >
+          <div
+            className="field"
+          >
+            <label
+              htmlFor="root_my-field"
+            >
+              my-field
+            </label>
+            <div
+              className="ui fluid input"
+            >
+              <input
+                aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
+                autoFocus={false}
+                disabled={false}
+                id="root_my-field"
+                name="root_my-field"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                placeholder=""
+                required={false}
+                type="text"
+                value=""
+              />
+            </div>
+          </div>
+          <p
+            className="sui-description"
+            id="root_my-field__description"
+          >
+            <span>
+              some 
+              <strong>
+                Rich
+              </strong>
+               description
+            </span>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    className="ui primary button"
+    onClick={[Function]}
+    type="submit"
+  >
+    Submit
+  </button>
+</form>
+`;
+
+exports[`single fields field with markdown description in uiSchema 1`] = `
+<form
+  className="ui form rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div
+      className="grouped equal width fields"
+    >
+      <div
+        className="rjsf-field rjsf-field-string"
+      >
+        <div
+          className="grouped equal width fields"
+        >
+          <div
+            className="field"
+          >
+            <label
+              htmlFor="root_my-field"
+            >
+              my-field
+            </label>
+            <div
+              className="ui fluid input"
+            >
+              <input
+                aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
+                autoFocus={false}
+                disabled={false}
+                id="root_my-field"
+                name="root_my-field"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                placeholder=""
+                required={false}
+                type="text"
+                value=""
+              />
+            </div>
+          </div>
+          <p
+            className="sui-description"
+            id="root_my-field__description"
+          >
+            <span>
+              some other description
+            </span>
           </p>
         </div>
       </div>

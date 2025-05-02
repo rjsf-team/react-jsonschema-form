@@ -6,22 +6,8 @@ import { FormProps } from '@rjsf/core';
 
 jest.mock('@rjsf/utils', () => ({
   ...jest.requireActual('@rjsf/utils'),
-  getTestIds: jest.fn(() => {
-    const ids = new Map();
-    // For test repeatability purposes and snapshots, we render the snapshot data-testid using a simple counter
-    let counter = 0;
-    return new Proxy(
-      {},
-      {
-        get(_obj, prop) {
-          if (!ids.has(prop)) {
-            ids.set(prop, `${counter++}`);
-          }
-          return ids.get(prop);
-        },
-      },
-    );
-  }),
+  // Disable the getTestIds within the snapshot tests by returning an empty object
+  getTestIds: jest.fn(() => ({})),
 }));
 
 export type GridRenderCustomOptions = {

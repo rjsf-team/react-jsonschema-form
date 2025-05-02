@@ -14,7 +14,6 @@ import localize_es from 'ajv-i18n/localize/es';
 import Layout from './layout';
 import Playground, { PlaygroundProps } from './components';
 
-// @ts-expect-error todo: error TS2345: Argument of type 'Localize' is not assignable to parameter of type 'Localizer'.
 const esV8Validator = customizeValidator({}, localize_es);
 const AJV8_2019 = customizeValidator({ AjvClass: Ajv2019 });
 const AJV8_2020 = customizeValidator({ AjvClass: Ajv2020 });
@@ -91,6 +90,14 @@ const themes: PlaygroundProps['themes'] = {
       },
     },
   },
+  antd: {
+    stylesheet: '//cdnjs.cloudflare.com/ajax/libs/antd/5.23.3/reset.min.css',
+    theme: AntdTheme,
+  },
+  'chakra-ui': {
+    stylesheet: '',
+    theme: ChakraUITheme,
+  },
   'daisy-ui': {
     stylesheet: 'https://cdn.jsdelivr.net/npm/daisyui@5.0.0-beta.7/daisyui.min.css',
     theme: DaisyUITheme,
@@ -131,14 +138,6 @@ const themes: PlaygroundProps['themes'] = {
       abyss: { dataTheme: 'abyss' },
       silk: { dataTheme: 'silk' },
     },
-  },
-  antd: {
-    stylesheet: '//cdnjs.cloudflare.com/ajax/libs/antd/5.23.3/reset.min.css',
-    theme: AntdTheme,
-  },
-  'chakra-ui': {
-    stylesheet: '',
-    theme: ChakraUITheme,
   },
   'fluentui-rc': {
     stylesheet: '',

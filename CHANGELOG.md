@@ -15,6 +15,57 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+# 6.0.0-beta.2
+
+## @rjsf/antd
+
+- Updated `DescriptionField` to render the `description` using the `RichDescription` field
+
+## @rjsf/chakra-ui
+
+- Updated `DescriptionField` to render the `description` using the `RichDescription` field
+
+## @rjsf/core
+
+- Added new `RichDescription` component, refactored from `SchemaField` to support Rich Text descriptions in Markdown format
+- Updated `DescriptionField` to render the `description` using the `RichDescription` field
+
+## @rjsf/daisyui
+
+- Updated `DescriptionField` to render the `description` using the `RichDescription` field
+- Updated `FieldTemplate` to render the `description` for checkboxes 
+
+## @rjsf/fluentui-rc
+
+- Updated `DescriptionField` to render the `description` using the `RichDescription` field
+
+## @rjsf/mui
+
+- Updated `DescriptionField` to render the `description` using the `RichDescription` field
+
+## @rjsf/react-bootstrap
+
+- Updated `DescriptionField` to render the `description` using the `RichDescription` field
+- Updated `CheckboxField` to remove the `checkbox` class that breaks the UI
+
+## @rjsf/semantic-ui
+
+- Updated `DescriptionField` to render the `description` using the `RichDescription` field
+
+## @rjsf/shadcn
+
+- Updated `DescriptionField` to render the `description` using the `RichDescription` field
+
+## @rjsf/utils
+
+- Updated the `description` field in field props to be a `string | ReactElement` and added `enableMarkdownInDescription` to the `GlobalUISchemaOptions` interface
+
+## Dev / docs / playground
+
+- Updated the `snapshot-tests` to disable `getTestId()` for snapshots and updated the `formTests.tsx` to add tests for rich text descriptions for generic fields and the `CheckboxWidget`
+- Updated the `uiSchema.md` to document new `enableMarkdownInDescription` prop
+- Updated the `playground` to move `daisyui` theme choice after `chakra-ui`
+
 # 6.0.0-beta.1
 
 ## @rjsf/antd

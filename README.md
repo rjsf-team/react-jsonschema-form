@@ -27,14 +27,20 @@
 
 ## Supported Themes
 
-- [Ant Design](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/antd)
-- [Bootstrap 3](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/core)
-- [React-Bootstrap (Bootstrap 5)](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/react-bootstrap)
-- [Chakra UI](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/chakra-ui)
-- [Daisy UI](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/daisyui)
-- [Fluent UI 9](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/fluentui-rc)
-- [Material UI 5](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/mui)
-- [Semantic UI](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/semantic-ui)
+- [Ant Design v5](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/antd)
+- [Bootstrap v3](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/core)
+- [Chakra UI v3](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/chakra-ui)
+- [Daisy UI v5](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/daisyui)
+- [Fluent UI v9](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/fluentui-rc)
+- [Material UI v5 & v6](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/mui)
+- [React-Bootstrap (Bootstrap v5)](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/react-bootstrap)
+- [Semantic UI v2](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/semantic-ui)
+- [Shad CN](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/shadcn)
+
+## API Libraries
+
+- [@rjsf/utils](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/utils)
+- [@rjsf/validator-ajv8](https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/validator-ajv8)
 
 ## Documentation
 

@@ -38,9 +38,11 @@ export default function FieldTemplate<
     required,
     rawErrors,
     rawHelp,
+    description,
     rawDescription,
     hidden,
     onChange,
+    registry,
     ...divProps
   } = props;
 
@@ -59,6 +61,7 @@ export default function FieldTemplate<
       )}
       {isCheckbox ? (
         <div className='form-control'>
+          {description}
           <label className='label cursor-pointer justify-start'>
             <div className='mr-2'>{children}</div>
             <span className='label-text'>

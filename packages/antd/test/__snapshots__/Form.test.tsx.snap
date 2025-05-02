@@ -339,6 +339,206 @@ exports[`single fields checkbox field with label 1`] = `
 </form>
 `;
 
+exports[`single fields checkbox field with label and description 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-boolean"
+  >
+    <div
+      className="ant-form-item css-dev-only-do-not-override-1m63z2v"
+    >
+      <div
+        className="ant-row ant-form-item-row css-dev-only-do-not-override-1m63z2v"
+        style={
+          {
+            "rowGap": undefined,
+          }
+        }
+      >
+        <div
+          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1m63z2v"
+          style={{}}
+        >
+          <div
+            className="ant-form-item-control-input"
+          >
+            <div
+              className="ant-form-item-control-input-content"
+            >
+              <label
+                className="ant-checkbox-wrapper ant-checkbox-wrapper-in-form-item css-dev-only-do-not-override-1m63z2v"
+                onClick={[Function]}
+                style={{}}
+              >
+                <span
+                  className="ant-checkbox ant-wave-target css-dev-only-do-not-override-1m63z2v"
+                >
+                  <input
+                    aria-describedby="root__error root__description root__help"
+                    autoFocus={false}
+                    checked={false}
+                    className="ant-checkbox-input"
+                    disabled={false}
+                    id="root"
+                    name="root"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onClick={[Function]}
+                    onFocus={[Function]}
+                    type="checkbox"
+                  />
+                  <span
+                    className="ant-checkbox-inner"
+                  />
+                </span>
+                <span
+                  className="ant-checkbox-label"
+                >
+                  test
+                </span>
+              </label>
+            </div>
+          </div>
+          <div
+            className="ant-form-item-additional"
+            style={{}}
+          >
+            <div
+              className="ant-form-item-extra"
+            >
+              <span
+                id="root__description"
+              >
+                test description
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    className="ant-btn css-dev-only-do-not-override-1m63z2v ant-btn-submit"
+    disabled={false}
+    onClick={[Function]}
+    style={{}}
+    type="submit"
+  >
+    <span>
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields checkbox field with label and rich text description 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-boolean"
+  >
+    <div
+      className="ant-form-item css-dev-only-do-not-override-1m63z2v"
+    >
+      <div
+        className="ant-row ant-form-item-row css-dev-only-do-not-override-1m63z2v"
+        style={
+          {
+            "rowGap": undefined,
+          }
+        }
+      >
+        <div
+          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1m63z2v"
+          style={{}}
+        >
+          <div
+            className="ant-form-item-control-input"
+          >
+            <div
+              className="ant-form-item-control-input-content"
+            >
+              <label
+                className="ant-checkbox-wrapper ant-checkbox-wrapper-in-form-item css-dev-only-do-not-override-1m63z2v"
+                onClick={[Function]}
+                style={{}}
+              >
+                <span
+                  className="ant-checkbox ant-wave-target css-dev-only-do-not-override-1m63z2v"
+                >
+                  <input
+                    aria-describedby="root__error root__description root__help"
+                    autoFocus={false}
+                    checked={false}
+                    className="ant-checkbox-input"
+                    disabled={false}
+                    id="root"
+                    name="root"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onClick={[Function]}
+                    onFocus={[Function]}
+                    type="checkbox"
+                  />
+                  <span
+                    className="ant-checkbox-inner"
+                  />
+                </span>
+                <span
+                  className="ant-checkbox-label"
+                >
+                  test
+                </span>
+              </label>
+            </div>
+          </div>
+          <div
+            className="ant-form-item-additional"
+            style={{}}
+          >
+            <div
+              className="ant-form-item-extra"
+            >
+              <span
+                id="root__description"
+              >
+                <span>
+                  <strong>
+                    test
+                  </strong>
+                   
+                  <strong>
+                    description
+                  </strong>
+                </span>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    className="ant-btn css-dev-only-do-not-override-1m63z2v ant-btn-submit"
+    disabled={false}
+    onClick={[Function]}
+    style={{}}
+    type="submit"
+  >
+    <span>
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
 exports[`single fields checkboxes field 1`] = `
 <form
   className="rjsf"
@@ -834,6 +1034,336 @@ exports[`single fields field with description in uiSchema 1`] = `
                                   id="root_my-field__description"
                                 >
                                   some other description
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </fieldset>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    className="ant-btn css-dev-only-do-not-override-1m63z2v ant-btn-submit"
+    disabled={false}
+    onClick={[Function]}
+    style={{}}
+    type="submit"
+  >
+    <span>
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields field with markdown description 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div
+      className="ant-form-item css-dev-only-do-not-override-1m63z2v"
+    >
+      <div
+        className="ant-row ant-form-item-row css-dev-only-do-not-override-1m63z2v"
+        style={
+          {
+            "rowGap": undefined,
+          }
+        }
+      >
+        <div
+          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1m63z2v"
+          style={{}}
+        >
+          <div
+            className="ant-form-item-control-input"
+          >
+            <div
+              className="ant-form-item-control-input-content"
+            >
+              <fieldset
+                id="root"
+              >
+                <div
+                  className="ant-row css-dev-only-do-not-override-1m63z2v"
+                  style={
+                    {
+                      "marginLeft": -12,
+                      "marginRight": -12,
+                      "rowGap": undefined,
+                    }
+                  }
+                >
+                  <div
+                    className="ant-col ant-col-24 css-dev-only-do-not-override-1m63z2v"
+                    style={
+                      {
+                        "paddingLeft": 12,
+                        "paddingRight": 12,
+                      }
+                    }
+                  >
+                    <div
+                      className="rjsf-field rjsf-field-string"
+                    >
+                      <div
+                        className="ant-form-item css-dev-only-do-not-override-1m63z2v"
+                      >
+                        <div
+                          className="ant-row ant-form-item-row css-dev-only-do-not-override-1m63z2v"
+                          style={
+                            {
+                              "rowGap": undefined,
+                            }
+                          }
+                        >
+                          <div
+                            className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-1m63z2v"
+                            style={{}}
+                          >
+                            <label
+                              className=""
+                              htmlFor="root_my-field"
+                              title="my-field"
+                            >
+                              my-field
+                            </label>
+                          </div>
+                          <div
+                            className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1m63z2v"
+                            style={{}}
+                          >
+                            <div
+                              className="ant-form-item-control-input"
+                            >
+                              <div
+                                className="ant-form-item-control-input-content"
+                              >
+                                <span
+                                  className="ant-input-affix-wrapper css-dev-only-do-not-override-1m63z2v ant-input-outlined"
+                                  onClick={[Function]}
+                                  style={
+                                    {
+                                      "width": "100%",
+                                    }
+                                  }
+                                >
+                                  <input
+                                    aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
+                                    className="ant-input css-dev-only-do-not-override-1m63z2v"
+                                    disabled={false}
+                                    id="root_my-field"
+                                    name="root_my-field"
+                                    onBlur={[Function]}
+                                    onChange={[Function]}
+                                    onCompositionEnd={[Function]}
+                                    onCompositionStart={[Function]}
+                                    onFocus={[Function]}
+                                    onKeyDown={[Function]}
+                                    onKeyUp={[Function]}
+                                    placeholder=""
+                                    type="text"
+                                    value=""
+                                  />
+                                  <span
+                                    className="ant-input-suffix"
+                                  />
+                                </span>
+                              </div>
+                            </div>
+                            <div
+                              className="ant-form-item-additional"
+                              style={{}}
+                            >
+                              <div
+                                className="ant-form-item-extra"
+                              >
+                                <span
+                                  id="root_my-field__description"
+                                >
+                                  <span>
+                                    some 
+                                    <strong>
+                                      Rich
+                                    </strong>
+                                     description
+                                  </span>
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </fieldset>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    className="ant-btn css-dev-only-do-not-override-1m63z2v ant-btn-submit"
+    disabled={false}
+    onClick={[Function]}
+    style={{}}
+    type="submit"
+  >
+    <span>
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields field with markdown description in uiSchema 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div
+      className="ant-form-item css-dev-only-do-not-override-1m63z2v"
+    >
+      <div
+        className="ant-row ant-form-item-row css-dev-only-do-not-override-1m63z2v"
+        style={
+          {
+            "rowGap": undefined,
+          }
+        }
+      >
+        <div
+          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1m63z2v"
+          style={{}}
+        >
+          <div
+            className="ant-form-item-control-input"
+          >
+            <div
+              className="ant-form-item-control-input-content"
+            >
+              <fieldset
+                id="root"
+              >
+                <div
+                  className="ant-row css-dev-only-do-not-override-1m63z2v"
+                  style={
+                    {
+                      "marginLeft": -12,
+                      "marginRight": -12,
+                      "rowGap": undefined,
+                    }
+                  }
+                >
+                  <div
+                    className="ant-col ant-col-24 css-dev-only-do-not-override-1m63z2v"
+                    style={
+                      {
+                        "paddingLeft": 12,
+                        "paddingRight": 12,
+                      }
+                    }
+                  >
+                    <div
+                      className="rjsf-field rjsf-field-string"
+                    >
+                      <div
+                        className="ant-form-item css-dev-only-do-not-override-1m63z2v"
+                      >
+                        <div
+                          className="ant-row ant-form-item-row css-dev-only-do-not-override-1m63z2v"
+                          style={
+                            {
+                              "rowGap": undefined,
+                            }
+                          }
+                        >
+                          <div
+                            className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-1m63z2v"
+                            style={{}}
+                          >
+                            <label
+                              className=""
+                              htmlFor="root_my-field"
+                              title="my-field"
+                            >
+                              my-field
+                            </label>
+                          </div>
+                          <div
+                            className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1m63z2v"
+                            style={{}}
+                          >
+                            <div
+                              className="ant-form-item-control-input"
+                            >
+                              <div
+                                className="ant-form-item-control-input-content"
+                              >
+                                <span
+                                  className="ant-input-affix-wrapper css-dev-only-do-not-override-1m63z2v ant-input-outlined"
+                                  onClick={[Function]}
+                                  style={
+                                    {
+                                      "width": "100%",
+                                    }
+                                  }
+                                >
+                                  <input
+                                    aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
+                                    className="ant-input css-dev-only-do-not-override-1m63z2v"
+                                    disabled={false}
+                                    id="root_my-field"
+                                    name="root_my-field"
+                                    onBlur={[Function]}
+                                    onChange={[Function]}
+                                    onCompositionEnd={[Function]}
+                                    onCompositionStart={[Function]}
+                                    onFocus={[Function]}
+                                    onKeyDown={[Function]}
+                                    onKeyUp={[Function]}
+                                    placeholder=""
+                                    type="text"
+                                    value=""
+                                  />
+                                  <span
+                                    className="ant-input-suffix"
+                                  />
+                                </span>
+                              </div>
+                            </div>
+                            <div
+                              className="ant-form-item-additional"
+                              style={{}}
+                            >
+                              <div
+                                className="ant-form-item-extra"
+                              >
+                                <span
+                                  id="root_my-field__description"
+                                >
+                                  <span>
+                                    some other description
+                                  </span>
                                 </span>
                               </div>
                             </div>
