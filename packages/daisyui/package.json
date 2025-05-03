@@ -87,6 +87,9 @@
     "type": "git",
     "url": "git+https://github.com/rjsf-team/react-jsonschema-form.git"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "author": "Jason Vertrees <jason.vertrees@gmail.com>",
   "license": "Apache-2.0"
 }
