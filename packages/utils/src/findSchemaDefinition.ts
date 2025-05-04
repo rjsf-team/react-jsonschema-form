@@ -5,7 +5,7 @@ import { ID_KEY, JSON_SCHEMA_DRAFT_2020_12, REF_KEY, SCHEMA_KEY } from './consta
 import { GenericObjectType, RJSFSchema, StrictRJSFSchema } from './types';
 import isObject from 'lodash/isObject';
 import isEmpty from 'lodash/isEmpty';
-import { equal, resolve } from 'fast-uri';
+import UriResolver from 'fast-uri';
 
 /** Looks for the `$id` pointed by `ref` in the schema definitions embedded in
  * a JSON Schema bundle
@@ -20,7 +20,7 @@ function findEmbeddedSchemaRecursive<S extends StrictRJSFSchema = RJSFSchema>(sc
       continue;
     }
     if (ID_KEY in subSchema) {
-      if (equal(subSchema[ID_KEY] as string, ref)) {
+      if (UriResolver.equal(subSchema[ID_KEY] as string, ref)) {
         return subSchema as S;
       }
     } else {
@@ -79,7 +79,7 @@ export function findSchemaDefinitionRecursive<S extends StrictRJSFSchema = RJSFS
       }
     }
   } else if (rootSchema[SCHEMA_KEY] === JSON_SCHEMA_DRAFT_2020_12) {
-    const resolvedRef = baseURI ? resolve(baseURI, ref) : ref;
+    const resolvedRef = baseURI ? UriResolver.resolve(baseURI, ref) : ref;
     const [refId, ...refAnchor] = resolvedRef.replace(/#\/?$/, '').split('#');
     current = findEmbeddedSchemaRecursive<S>(rootSchema, refId.replace(/\/$/, ''));
     if (current !== undefined) {
