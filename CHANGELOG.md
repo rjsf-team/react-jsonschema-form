@@ -66,7 +66,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Updated the `snapshot-tests` to disable `getTestId()` for snapshots and updated the `formTests.tsx` to add tests for rich text descriptions for generic fields and the `CheckboxWidget`
 - Updated the `uiSchema.md` to document new `enableMarkdownInDescription` prop
-- Updated the `playground` to move `daisyui` theme choice after `chakra-ui`
+- Updated the `playground` to move `daisyui` theme choice after `chakra-ui` and to stop freezing the samples to avoid an `AJV` validation issue
 
 # 6.0.0-beta.1
 

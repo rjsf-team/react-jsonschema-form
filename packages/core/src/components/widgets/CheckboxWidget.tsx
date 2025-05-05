@@ -60,7 +60,7 @@ function CheckboxWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F exte
 
   return (
     <div className={`checkbox ${disabled || readonly ? 'disabled' : ''}`}>
-      {!hideLabel && !!description && (
+      {!hideLabel && description && (
         <DescriptionFieldTemplate
           id={descriptionId<T>(id)}
           description={description}

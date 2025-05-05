@@ -83,7 +83,7 @@ export default function CheckboxWidget<
 
   return (
     <div className='form-control'>
-      {!hideLabel && !!description && (
+      {!hideLabel && description && (
         <DescriptionFieldTemplate
           id={descriptionId<T>(id)}
           description={description}

@@ -52,7 +52,7 @@ export default function CheckboxWidget<
 
   return (
     <Field mb={1} required={required}>
-      {!hideLabel && !!description && (
+      {!hideLabel && description && (
         <DescriptionFieldTemplate
           id={descriptionId<T>(id)}
           description={description}

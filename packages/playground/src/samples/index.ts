@@ -33,7 +33,6 @@ import ifThenElse from './ifThenElse';
 import customField from './customField';
 import layoutGrid from './layoutGrid';
 import { Sample } from './Sample';
-import deepFreeze from 'deep-freeze-es6';
 import patternProperties from './patternProperties';
 
 export type { Sample };
@@ -77,4 +76,4 @@ const _samples: Record<string, Sample> = {
   'Layout Grid': layoutGrid,
 };
 
-export const samples = deepFreeze(_samples);
+export const samples = _samples;
