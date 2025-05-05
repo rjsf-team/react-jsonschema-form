@@ -1429,6 +1429,70 @@ describeRepeated('Form common', (createFormComponent) => {
 
       expect(node.querySelector(secondInputID).value).to.equal('changed!');
     });
+    it('Should modify anyOf definition references when the defaults are set.', () => {
+      const schema = {
+        definitions: {
+          option1: {
+            properties: {
+              first: {
+                type: 'string',
+              },
+            },
+          },
+          option2: {
+            properties: {
+              second: {
+                type: 'string',
+              },
+            },
+          },
+        },
+        properties: {
+          any_of_field: {
+            anyOf: [
+              {
+                $ref: '#/definitions/option1',
+              },
+              {
+                $ref: '#/definitions/option2',
+              },
+            ],
+            default: {
+              second: 'second!',
+            },
+          },
+        },
+        type: 'object',
+      };
+
+      const { node, onChange } = createFormComponent({
+        schema,
+      });
+
+      const secondInputID = '#root_any_of_field_second';
+      expect(node.querySelector(secondInputID).value).to.equal('second!');
+
+      act(() => {
+        fireEvent.change(node.querySelector(secondInputID), {
+          target: { value: 'changed!' },
+        });
+      });
+
+      sinon.assert.calledWithMatch(
+        onChange.lastCall,
+        {
+          formData: {
+            any_of_field: {
+              second: 'changed!',
+            },
+          },
+          schema,
+        },
+        'root_any_of_field_second',
+      );
+
+      expect(node.querySelector(secondInputID).value).to.equal('changed!');
+    });
   });
 
   describe('Blur handler', () => {

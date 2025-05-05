@@ -223,7 +223,7 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
     // For object defaults, only override parent defaults that are defined in
     // schema.default.
     defaults = mergeObjects(defaults!, schema.default as GenericObjectType) as T;
-  } else if (DEFAULT_KEY in schema && !schema[ANY_OF_KEY] && !schema[ONE_OF_KEY]) {
+  } else if (DEFAULT_KEY in schema && !schema[ANY_OF_KEY] && !schema[ONE_OF_KEY] && !schema[REF_KEY]) {
     // If the schema has a default value, then we should use it as the default.
     // And if the schema does not have anyOf or oneOf, this is done because we need to merge the defaults with the formData.
     defaults = schema.default as unknown as T;
@@ -233,6 +233,12 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
     if (!_recurseList.includes(refName!)) {
       updatedRecurseList = _recurseList.concat(refName!);
       schemaToCompute = findSchemaDefinition<S>(refName, rootSchema);
+    }
+
+    // If the referenced schema exists and parentDefaults is not set
+    // Then set the defaults from the current schema for the referenced schema
+    if (schemaToCompute && !defaults) {
+      defaults = schema.default as T | undefined;
     }
   } else if (DEPENDENCIES_KEY in schema) {
     // Get the default if set from properties to ensure the dependencies conditions are resolved based on it

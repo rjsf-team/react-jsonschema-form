@@ -15,6 +15,13 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+# 5.24.11
+
+## @rjsf/utils
+
+- Fixed issue with schema references in combinators(allOf, anyOf, oneOf) could not be modified when defaults were set, fixing [#4555](https://github.com/rjsf-team/react-jsonschema-form/issues/4555)
+
+
 # 6.0.0-beta.1
 
 ## @rjsf/antd
