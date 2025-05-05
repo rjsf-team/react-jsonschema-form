@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { WidgetProps, StrictRJSFSchema, RJSFSchema, FormContextType } from '@rjsf/utils';
+import { WidgetProps, StrictRJSFSchema, RJSFSchema, FormContextType, getTemplate, descriptionId } from '@rjsf/utils';
 
 /** The `CheckboxWidget` component renders a single checkbox input with DaisyUI styling.
  *
@@ -17,7 +17,28 @@ export default function CheckboxWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
 >(props: WidgetProps<T, S, F>) {
-  const { id, value, required, disabled, readonly, onChange, onFocus, onBlur } = props;
+  const {
+    id,
+    value,
+    required,
+    disabled,
+    hideLabel,
+    label,
+    readonly,
+    registry,
+    options,
+    schema,
+    uiSchema,
+    onChange,
+    onFocus,
+    onBlur,
+  } = props;
+  const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
+    'DescriptionFieldTemplate',
+    registry,
+    options,
+  );
+  const description = options.description || schema.description;
 
   /** Handle focus events
    */
@@ -46,8 +67,7 @@ export default function CheckboxWidget<
     [onChange],
   );
 
-  // Don't display the label here since the FieldTemplate already handles it
-  return (
+  const input = (
     <input
       type='checkbox'
       id={id}
@@ -59,5 +79,30 @@ export default function CheckboxWidget<
       onBlur={handleBlur}
       className='checkbox'
     />
+  );
+
+  return (
+    <div className='form-control'>
+      {!hideLabel && !!description && (
+        <DescriptionFieldTemplate
+          id={descriptionId<T>(id)}
+          description={description}
+          schema={schema}
+          uiSchema={uiSchema}
+          registry={registry}
+        />
+      )}
+      {hideLabel || !label ? (
+        input
+      ) : (
+        <label className='label cursor-pointer justify-start'>
+          <div className='mr-2'>{input}</div>
+          <span className='label-text'>
+            {label}
+            {required && <span className='text-error ml-1'>*</span>}
+          </span>
+        </label>
+      )}
+    </div>
   );
 }

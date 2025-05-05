@@ -33,7 +33,8 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/daisyui
 
 - Updated `DescriptionField` to render the `description` using the `RichDescription` field
-- Updated `FieldTemplate` to render the `description` for checkboxes 
+- Updated `FieldTemplate` to move the checkbox implementation into the `CheckboxWidget` adding the `description` for checkboxes
+- Updated `package.json` to make the package publishable
 
 ## @rjsf/fluentui-rc
 
