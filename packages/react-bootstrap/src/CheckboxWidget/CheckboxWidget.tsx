@@ -49,11 +49,8 @@ export default function CheckboxWidget<
 
   const description = options.description || schema.description;
   return (
-    <Form.Group
-      className={`checkbox ${disabled || readonly ? 'disabled' : ''}`}
-      aria-describedby={ariaDescribedByIds<T>(id)}
-    >
-      {!hideLabel && !!description && (
+    <Form.Group className={disabled || readonly ? 'disabled' : ''} aria-describedby={ariaDescribedByIds<T>(id)}>
+      {!hideLabel && description && (
         <DescriptionFieldTemplate
           id={descriptionId<T>(id)}
           description={description}

@@ -1241,15 +1241,12 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
     >
       <div
         className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 emotion-1"
-        data-testid="0"
       >
         <div
           className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 MuiGrid2-spacing-xs-2 emotion-2"
-          data-testid="0"
         >
           <div
             className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 emotion-3"
-            data-testid="1"
           >
             <div
               className="rjsf-field rjsf-field-object"
@@ -1277,11 +1274,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
         </div>
         <div
           className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 emotion-1"
-          data-testid="0"
         >
           <div
             className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-4 emotion-9"
-            data-testid="1"
           >
             <div
               className="rjsf-field rjsf-field-string"
@@ -1349,7 +1344,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
           </div>
           <div
             className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-4 emotion-9"
-            data-testid="1"
           >
             <div
               className="rjsf-field rjsf-field-string"
@@ -1408,7 +1402,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
           </div>
           <div
             className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-4 emotion-9"
-            data-testid="1"
           >
             <div
               className="rjsf-field rjsf-field-string"
@@ -1477,11 +1470,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
         </div>
         <div
           className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 emotion-1"
-          data-testid="0"
         >
           <div
             className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-4 emotion-9"
-            data-testid="1"
           >
             <div
               className="rjsf-field rjsf-field-string"
@@ -1549,7 +1540,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
           </div>
           <div
             className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-8 emotion-45"
-            data-testid="1"
           >
             <div
               className="rjsf-field rjsf-field-array"
@@ -1852,11 +1842,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
         </div>
         <div
           className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 emotion-1"
-          data-testid="0"
         >
           <div
             className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-5 emotion-78"
-            data-testid="1"
           >
             <div
               className="rjsf-field rjsf-field-object"
@@ -1866,11 +1854,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
               >
                 <div
                   className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 emotion-1"
-                  data-testid="0"
                 >
                   <div
                     className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 emotion-3"
-                    data-testid="1"
                   >
                     <div
                       className="rjsf-field rjsf-field-string"
@@ -1938,7 +1924,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                   </div>
                   <div
                     className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 emotion-3"
-                    data-testid="1"
                   >
                     <div
                       className="rjsf-field rjsf-field-string"
@@ -1997,7 +1982,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                   </div>
                   <div
                     className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 emotion-3"
-                    data-testid="1"
                   >
                     <div
                       className="rjsf-field rjsf-field-string"
@@ -2065,11 +2049,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                   </div>
                   <div
                     className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 emotion-1"
-                    data-testid="0"
                   >
                     <div
                       className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-6 emotion-108"
-                      data-testid="1"
                     >
                       <div
                         className="rjsf-field rjsf-field-string"
@@ -2167,7 +2149,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                     </div>
                     <div
                       className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-6 emotion-108"
-                      data-testid="1"
                     >
                       <div
                         className="rjsf-field rjsf-field-string"
@@ -2240,15 +2221,12 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
           </div>
           <div
             className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-7 emotion-128"
-            data-testid="1"
           >
             <div
               className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 emotion-129"
-              data-testid="0"
             >
               <div
                 className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 emotion-3"
-                data-testid="1"
               >
                 <div>
                   <div
@@ -2460,7 +2438,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
               </div>
               <div
                 className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 emotion-3"
-                data-testid="1"
               >
                 <div
                   className="rjsf-field rjsf-field-string"
@@ -2528,7 +2505,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
               </div>
               <div
                 className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 emotion-3"
-                data-testid="1"
               >
                 <div
                   className="rjsf-field rjsf-field-string"
@@ -2587,7 +2563,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
               </div>
               <div
                 className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-8 emotion-45"
-                data-testid="1"
               >
                 <div
                   className="rjsf-field rjsf-field-string"
@@ -2655,7 +2630,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
               </div>
               <div
                 className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-4 emotion-9"
-                data-testid="1"
               >
                 <div
                   className="rjsf-field rjsf-field-string"
@@ -4025,15 +3999,12 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
     >
       <div
         className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 emotion-1"
-        data-testid="0"
       >
         <div
           className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 MuiGrid2-spacing-xs-2 emotion-2"
-          data-testid="0"
         >
           <div
             className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 emotion-3"
-            data-testid="1"
           >
             <div
               className="rjsf-field rjsf-field-object"
@@ -4061,11 +4032,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
         </div>
         <div
           className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 emotion-1"
-          data-testid="0"
         >
           <div
             className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-4 emotion-9"
-            data-testid="1"
           >
             <div
               className="rjsf-field rjsf-field-string"
@@ -4133,7 +4102,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
           </div>
           <div
             className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-4 emotion-9"
-            data-testid="1"
           >
             <div
               className="rjsf-field rjsf-field-string"
@@ -4192,7 +4160,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
           </div>
           <div
             className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-4 emotion-9"
-            data-testid="1"
           >
             <div
               className="rjsf-field rjsf-field-string"
@@ -4261,11 +4228,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
         </div>
         <div
           className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 emotion-1"
-          data-testid="0"
         >
           <div
             className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-4 emotion-9"
-            data-testid="1"
           >
             <div
               className="rjsf-field rjsf-field-string"
@@ -4333,7 +4298,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
           </div>
           <div
             className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-8 emotion-45"
-            data-testid="1"
           >
             <div
               className="rjsf-field rjsf-field-array"
@@ -4636,11 +4600,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
         </div>
         <div
           className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 emotion-1"
-          data-testid="0"
         >
           <div
             className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-5 emotion-78"
-            data-testid="1"
           >
             <div
               className="rjsf-field rjsf-field-object"
@@ -4650,11 +4612,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
               >
                 <div
                   className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 emotion-1"
-                  data-testid="0"
                 >
                   <div
                     className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 emotion-3"
-                    data-testid="1"
                   >
                     <div
                       className="rjsf-field rjsf-field-string"
@@ -4722,7 +4682,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                   </div>
                   <div
                     className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 emotion-3"
-                    data-testid="1"
                   >
                     <div
                       className="rjsf-field rjsf-field-string"
@@ -4781,7 +4740,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                   </div>
                   <div
                     className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 emotion-3"
-                    data-testid="1"
                   >
                     <div
                       className="rjsf-field rjsf-field-string"
@@ -4849,11 +4807,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                   </div>
                   <div
                     className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 emotion-1"
-                    data-testid="0"
                   >
                     <div
                       className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-6 emotion-108"
-                      data-testid="1"
                     >
                       <div
                         className="rjsf-field rjsf-field-string"
@@ -4951,7 +4907,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                     </div>
                     <div
                       className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-6 emotion-108"
-                      data-testid="1"
                     >
                       <div
                         className="rjsf-field rjsf-field-string"
@@ -5024,15 +4979,12 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
           </div>
           <div
             className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-7 emotion-128"
-            data-testid="1"
           >
             <div
               className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 emotion-129"
-              data-testid="0"
             >
               <div
                 className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 emotion-3"
-                data-testid="1"
               >
                 <div>
                   <div
@@ -5244,7 +5196,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
               </div>
               <div
                 className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 emotion-3"
-                data-testid="1"
               >
                 <div
                   className="rjsf-field rjsf-field-string"
@@ -5303,7 +5254,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
               </div>
               <div
                 className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 emotion-3"
-                data-testid="1"
               >
                 <div
                   className="rjsf-field rjsf-field-string"
@@ -5371,7 +5321,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
               </div>
               <div
                 className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 emotion-3"
-                data-testid="1"
               >
                 <div
                   className="rjsf-field rjsf-field-string"
@@ -5430,7 +5379,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
               </div>
               <div
                 className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-8 emotion-45"
-                data-testid="1"
               >
                 <div
                   className="rjsf-field rjsf-field-string"
@@ -5498,7 +5446,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
               </div>
               <div
                 className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-4 emotion-9"
-                data-testid="1"
               >
                 <div
                   className="rjsf-field rjsf-field-string"
@@ -7022,15 +6969,12 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-160:focus::-ms-input
     >
       <div
         className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 emotion-1"
-        data-testid="0"
       >
         <div
           className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 MuiGrid2-spacing-xs-2 emotion-2"
-          data-testid="0"
         >
           <div
             className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 emotion-3"
-            data-testid="1"
           >
             <div
               className="rjsf-field rjsf-field-object"
@@ -7058,11 +7002,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-160:focus::-ms-input
         </div>
         <div
           className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 emotion-1"
-          data-testid="0"
         >
           <div
             className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-4 emotion-9"
-            data-testid="1"
           >
             <div
               className="rjsf-field rjsf-field-string"
@@ -7130,7 +7072,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-160:focus::-ms-input
           </div>
           <div
             className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-4 emotion-9"
-            data-testid="1"
           >
             <div
               className="rjsf-field rjsf-field-string"
@@ -7189,7 +7130,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-160:focus::-ms-input
           </div>
           <div
             className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-4 emotion-9"
-            data-testid="1"
           >
             <div
               className="rjsf-field rjsf-field-string"
@@ -7258,11 +7198,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-160:focus::-ms-input
         </div>
         <div
           className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 emotion-1"
-          data-testid="0"
         >
           <div
             className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-4 emotion-9"
-            data-testid="1"
           >
             <div
               className="rjsf-field rjsf-field-string"
@@ -7330,7 +7268,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-160:focus::-ms-input
           </div>
           <div
             className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-8 emotion-45"
-            data-testid="1"
           >
             <div
               className="rjsf-field rjsf-field-array"
@@ -7633,11 +7570,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-160:focus::-ms-input
         </div>
         <div
           className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 emotion-1"
-          data-testid="0"
         >
           <div
             className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-5 emotion-78"
-            data-testid="1"
           >
             <div
               className="rjsf-field rjsf-field-object"
@@ -7647,11 +7582,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-160:focus::-ms-input
               >
                 <div
                   className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 emotion-1"
-                  data-testid="0"
                 >
                   <div
                     className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 emotion-3"
-                    data-testid="1"
                   >
                     <div
                       className="rjsf-field rjsf-field-string"
@@ -7719,7 +7652,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-160:focus::-ms-input
                   </div>
                   <div
                     className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 emotion-3"
-                    data-testid="1"
                   >
                     <div
                       className="rjsf-field rjsf-field-string"
@@ -7778,7 +7710,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-160:focus::-ms-input
                   </div>
                   <div
                     className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 emotion-3"
-                    data-testid="1"
                   >
                     <div
                       className="rjsf-field rjsf-field-string"
@@ -7846,11 +7777,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-160:focus::-ms-input
                   </div>
                   <div
                     className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 emotion-1"
-                    data-testid="0"
                   >
                     <div
                       className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-6 emotion-108"
-                      data-testid="1"
                     >
                       <div
                         className="rjsf-field rjsf-field-string"
@@ -7948,7 +7877,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-160:focus::-ms-input
                     </div>
                     <div
                       className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-6 emotion-108"
-                      data-testid="1"
                     >
                       <div
                         className="rjsf-field rjsf-field-string"
@@ -8021,15 +7949,12 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-160:focus::-ms-input
           </div>
           <div
             className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-7 emotion-128"
-            data-testid="1"
           >
             <div
               className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 emotion-129"
-              data-testid="0"
             >
               <div
                 className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 emotion-3"
-                data-testid="1"
               >
                 <div>
                   <div
@@ -8241,7 +8166,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-160:focus::-ms-input
               </div>
               <div
                 className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 emotion-3"
-                data-testid="1"
               >
                 <div
                   className="rjsf-field rjsf-field-string"
@@ -9600,15 +9524,12 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
     >
       <div
         className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 emotion-1"
-        data-testid="0"
       >
         <div
           className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 MuiGrid2-spacing-xs-2 emotion-2"
-          data-testid="0"
         >
           <div
             className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 emotion-3"
-            data-testid="1"
           >
             <div
               className="rjsf-field rjsf-field-object"
@@ -9636,11 +9557,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
         </div>
         <div
           className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 emotion-1"
-          data-testid="0"
         >
           <div
             className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-4 emotion-9"
-            data-testid="1"
           >
             <div
               className="rjsf-field rjsf-field-string"
@@ -9708,7 +9627,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
           </div>
           <div
             className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-4 emotion-9"
-            data-testid="1"
           >
             <div
               className="rjsf-field rjsf-field-string"
@@ -9767,7 +9685,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
           </div>
           <div
             className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-4 emotion-9"
-            data-testid="1"
           >
             <div
               className="rjsf-field rjsf-field-string"
@@ -9836,11 +9753,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
         </div>
         <div
           className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 emotion-1"
-          data-testid="0"
         >
           <div
             className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-4 emotion-9"
-            data-testid="1"
           >
             <div
               className="rjsf-field rjsf-field-string"
@@ -9908,7 +9823,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
           </div>
           <div
             className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-8 emotion-45"
-            data-testid="1"
           >
             <div
               className="rjsf-field rjsf-field-array"
@@ -10211,11 +10125,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
         </div>
         <div
           className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 emotion-1"
-          data-testid="0"
         >
           <div
             className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-5 emotion-78"
-            data-testid="1"
           >
             <div
               className="rjsf-field rjsf-field-object"
@@ -10225,11 +10137,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
               >
                 <div
                   className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 emotion-1"
-                  data-testid="0"
                 >
                   <div
                     className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 emotion-3"
-                    data-testid="1"
                   >
                     <div
                       className="rjsf-field rjsf-field-string"
@@ -10297,7 +10207,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                   </div>
                   <div
                     className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 emotion-3"
-                    data-testid="1"
                   >
                     <div
                       className="rjsf-field rjsf-field-string"
@@ -10356,7 +10265,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                   </div>
                   <div
                     className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 emotion-3"
-                    data-testid="1"
                   >
                     <div
                       className="rjsf-field rjsf-field-string"
@@ -10424,11 +10332,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                   </div>
                   <div
                     className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 emotion-1"
-                    data-testid="0"
                   >
                     <div
                       className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-6 emotion-108"
-                      data-testid="1"
                     >
                       <div
                         className="rjsf-field rjsf-field-string"
@@ -10526,7 +10432,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
                     </div>
                     <div
                       className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-6 emotion-108"
-                      data-testid="1"
                     >
                       <div
                         className="rjsf-field rjsf-field-string"
@@ -10599,15 +10504,12 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
           </div>
           <div
             className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-7 emotion-128"
-            data-testid="1"
           >
             <div
               className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 emotion-129"
-              data-testid="0"
             >
               <div
                 className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 emotion-3"
-                data-testid="1"
               >
                 <div>
                   <div
@@ -10819,7 +10721,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
               </div>
               <div
                 className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 emotion-3"
-                data-testid="1"
               >
                 <div
                   className="rjsf-field rjsf-field-string"
@@ -10887,7 +10788,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
               </div>
               <div
                 className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 emotion-3"
-                data-testid="1"
               >
                 <div
                   className="rjsf-field rjsf-field-string"
@@ -10946,7 +10846,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
               </div>
               <div
                 className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-8 emotion-45"
-                data-testid="1"
               >
                 <div
                   className="rjsf-field rjsf-field-string"
@@ -11014,7 +10913,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-114:focus::-ms-input
               </div>
               <div
                 className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-4 emotion-9"
-                data-testid="1"
               >
                 <div
                   className="rjsf-field rjsf-field-string"
@@ -12111,11 +12009,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
     >
       <div
         className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 emotion-1"
-        data-testid="0"
       >
         <div
           className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 emotion-2"
-          data-testid="1"
         >
           <div
             className="rjsf-field rjsf-field-object"
@@ -12142,7 +12038,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
         </div>
         <div
           className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-4 emotion-7"
-          data-testid="1"
         >
           <div
             className="rjsf-field rjsf-field-string"
@@ -12210,7 +12105,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
         </div>
         <div
           className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-4 emotion-7"
-          data-testid="1"
         >
           <div
             className="rjsf-field rjsf-field-string"
@@ -12269,7 +12163,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
         </div>
         <div
           className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-4 emotion-7"
-          data-testid="1"
         >
           <div
             className="rjsf-field rjsf-field-string"
@@ -12337,7 +12230,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
         </div>
         <div
           className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-4 emotion-7"
-          data-testid="1"
         >
           <div
             className="rjsf-field rjsf-field-string"
@@ -12405,7 +12297,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
         </div>
         <div
           className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-8 emotion-42"
-          data-testid="1"
         >
           <div
             className="rjsf-field rjsf-field-array"
@@ -12707,7 +12598,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
         </div>
         <div
           className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-6 emotion-74"
-          data-testid="1"
         >
           <div
             className="rjsf-field rjsf-field-string"
@@ -12775,7 +12665,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
         </div>
         <div
           className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-6 emotion-74"
-          data-testid="1"
         >
           <div
             className="rjsf-field rjsf-field-string"
@@ -12834,7 +12723,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
         </div>
         <div
           className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-4 emotion-7"
-          data-testid="1"
         >
           <div
             className="rjsf-field rjsf-field-string"
@@ -12902,7 +12790,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
         </div>
         <div
           className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-4 emotion-7"
-          data-testid="1"
         >
           <div
             className="rjsf-field rjsf-field-string"
@@ -13000,7 +12887,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
         </div>
         <div
           className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-4 emotion-7"
-          data-testid="1"
         />
       </div>
     </div>
@@ -13974,11 +13860,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
     >
       <div
         className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 emotion-1"
-        data-testid="0"
       >
         <div
           className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 emotion-2"
-          data-testid="1"
         >
           <div
             className="rjsf-field rjsf-field-object"
@@ -14005,7 +13889,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
         </div>
         <div
           className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-6 emotion-7"
-          data-testid="1"
         >
           <div
             className="rjsf-field rjsf-field-string"
@@ -14073,7 +13956,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
         </div>
         <div
           className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-6 emotion-7"
-          data-testid="1"
         >
           <div
             className="rjsf-field rjsf-field-string"
@@ -14132,7 +14014,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
         </div>
         <div
           className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-6 emotion-7"
-          data-testid="1"
         >
           <div
             className="rjsf-field rjsf-field-string"
@@ -14200,7 +14081,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
         </div>
         <div
           className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-6 emotion-7"
-          data-testid="1"
         >
           <div
             className="rjsf-field rjsf-field-string"
@@ -14268,7 +14148,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
         </div>
         <div
           className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 emotion-2"
-          data-testid="1"
         >
           <div
             className="rjsf-field rjsf-field-array"
@@ -14570,7 +14449,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
         </div>
         <div
           className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-6 emotion-7"
-          data-testid="1"
         >
           <div
             className="rjsf-field rjsf-field-string"
@@ -14638,7 +14516,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
         </div>
         <div
           className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-6 emotion-7"
-          data-testid="1"
         >
           <div
             className="rjsf-field rjsf-field-string"
@@ -14697,7 +14574,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
         </div>
         <div
           className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-6 emotion-7"
-          data-testid="1"
         >
           <div
             className="rjsf-field rjsf-field-string"
@@ -14765,7 +14641,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
         </div>
         <div
           className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-6 emotion-7"
-          data-testid="1"
         >
           <div
             className="rjsf-field rjsf-field-string"
@@ -14863,7 +14738,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-106:focus::-ms-input
         </div>
         <div
           className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 emotion-2"
-          data-testid="1"
         />
       </div>
     </div>

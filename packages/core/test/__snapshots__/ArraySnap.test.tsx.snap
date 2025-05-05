@@ -635,12 +635,12 @@ exports[`with title and description array 1`] = `
       >
         Test field
       </legend>
-      <p
+      <div
         className="field-description"
         id="root__description"
       >
         a test description
-      </p>
+      </div>
       <div
         className="row array-item-list"
       />
@@ -695,12 +695,12 @@ exports[`with title and description array icons 1`] = `
       >
         Test field
       </legend>
-      <p
+      <div
         className="field-description"
         id="root__description"
       >
         a test description
-      </p>
+      </div>
       <div
         className="row array-item-list"
       >
@@ -724,12 +724,12 @@ exports[`with title and description array icons 1`] = `
                   *
                 </span>
               </label>
-              <p
+              <div
                 className="field-description"
                 id="root_0__description"
               >
                 a test item description
-              </p>
+              </div>
               <input
                 aria-describedby="root_0__error root_0__description root_0__help"
                 autoFocus={false}
@@ -832,12 +832,12 @@ exports[`with title and description array icons 1`] = `
                   *
                 </span>
               </label>
-              <p
+              <div
                 className="field-description"
                 id="root_1__description"
               >
                 a test item description
-              </p>
+              </div>
               <input
                 aria-describedby="root_1__error root_1__description root_1__help"
                 autoFocus={false}
@@ -969,12 +969,12 @@ exports[`with title and description checkboxes 1`] = `
     >
       Test field
     </label>
-    <p
+    <div
       className="field-description"
       id="root__description"
     >
       a test description
-    </p>
+    </div>
     <select
       aria-describedby="root__error root__description root__help"
       autoFocus={false}
@@ -1037,12 +1037,12 @@ exports[`with title and description fixed array 1`] = `
       >
         Test field
       </legend>
-      <p
+      <div
         className="field-description"
         id="root__description"
       >
         a test description
-      </p>
+      </div>
       <div
         className="row array-item-list"
       >
@@ -1066,12 +1066,12 @@ exports[`with title and description fixed array 1`] = `
                   *
                 </span>
               </label>
-              <p
+              <div
                 className="field-description"
                 id="root_0__description"
               >
                 a test item description
-              </p>
+              </div>
               <input
                 aria-describedby="root_0__error root_0__description root_0__help"
                 autoFocus={false}
@@ -1112,12 +1112,12 @@ exports[`with title and description fixed array 1`] = `
                   *
                 </span>
               </label>
-              <p
+              <div
                 className="field-description"
                 id="root_1__description"
               >
                 a test item description
-              </p>
+              </div>
               <input
                 aria-describedby="root_1__error root_1__description root_1__help"
                 autoFocus={false}
@@ -1172,12 +1172,12 @@ exports[`with title and description from both array 1`] = `
       >
         My Field
       </legend>
-      <p
+      <div
         className="field-description"
         id="root__description"
       >
         a fancier description
-      </p>
+      </div>
       <div
         className="row array-item-list"
       />
@@ -1232,12 +1232,12 @@ exports[`with title and description from both array icons 1`] = `
       >
         My Field
       </legend>
-      <p
+      <div
         className="field-description"
         id="root__description"
       >
         a fancier description
-      </p>
+      </div>
       <div
         className="row array-item-list"
       >
@@ -1261,12 +1261,12 @@ exports[`with title and description from both array icons 1`] = `
                   *
                 </span>
               </label>
-              <p
+              <div
                 className="field-description"
                 id="root_0__description"
               >
                 a fancier item description
-              </p>
+              </div>
               <input
                 aria-describedby="root_0__error root_0__description root_0__help"
                 autoFocus={false}
@@ -1369,12 +1369,12 @@ exports[`with title and description from both array icons 1`] = `
                   *
                 </span>
               </label>
-              <p
+              <div
                 className="field-description"
                 id="root_1__description"
               >
                 a fancier item description
-              </p>
+              </div>
               <input
                 aria-describedby="root_1__error root_1__description root_1__help"
                 autoFocus={false}
@@ -1506,12 +1506,12 @@ exports[`with title and description from both checkboxes 1`] = `
     >
       My Field
     </label>
-    <p
+    <div
       className="field-description"
       id="root__description"
     >
       a fancier description
-    </p>
+    </div>
     <select
       aria-describedby="root__error root__description root__help"
       autoFocus={false}
@@ -1574,12 +1574,12 @@ exports[`with title and description from both fixed array 1`] = `
       >
         My Field
       </legend>
-      <p
+      <div
         className="field-description"
         id="root__description"
       >
         a fancier description
-      </p>
+      </div>
       <div
         className="row array-item-list"
       >
@@ -1603,12 +1603,12 @@ exports[`with title and description from both fixed array 1`] = `
                   *
                 </span>
               </label>
-              <p
+              <div
                 className="field-description"
                 id="root_0__description"
               >
                 a fancier item description
-              </p>
+              </div>
               <input
                 aria-describedby="root_0__error root_0__description root_0__help"
                 autoFocus={false}
@@ -1649,12 +1649,12 @@ exports[`with title and description from both fixed array 1`] = `
                   *
                 </span>
               </label>
-              <p
+              <div
                 className="field-description"
                 id="root_1__description"
               >
                 a fancier item description
-              </p>
+              </div>
               <input
                 aria-describedby="root_1__error root_1__description root_1__help"
                 autoFocus={false}
@@ -1709,12 +1709,12 @@ exports[`with title and description from uiSchema array 1`] = `
       >
         My Field
       </legend>
-      <p
+      <div
         className="field-description"
         id="root__description"
       >
         a fancier description
-      </p>
+      </div>
       <div
         className="row array-item-list"
       />
@@ -1769,12 +1769,12 @@ exports[`with title and description from uiSchema array icons 1`] = `
       >
         My Field
       </legend>
-      <p
+      <div
         className="field-description"
         id="root__description"
       >
         a fancier description
-      </p>
+      </div>
       <div
         className="row array-item-list"
       >
@@ -1798,12 +1798,12 @@ exports[`with title and description from uiSchema array icons 1`] = `
                   *
                 </span>
               </label>
-              <p
+              <div
                 className="field-description"
                 id="root_0__description"
               >
                 a fancier item description
-              </p>
+              </div>
               <input
                 aria-describedby="root_0__error root_0__description root_0__help"
                 autoFocus={false}
@@ -1906,12 +1906,12 @@ exports[`with title and description from uiSchema array icons 1`] = `
                   *
                 </span>
               </label>
-              <p
+              <div
                 className="field-description"
                 id="root_1__description"
               >
                 a fancier item description
-              </p>
+              </div>
               <input
                 aria-describedby="root_1__error root_1__description root_1__help"
                 autoFocus={false}
@@ -2043,12 +2043,12 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
     >
       My Field
     </label>
-    <p
+    <div
       className="field-description"
       id="root__description"
     >
       a fancier description
-    </p>
+    </div>
     <select
       aria-describedby="root__error root__description root__help"
       autoFocus={false}
@@ -2111,12 +2111,12 @@ exports[`with title and description from uiSchema fixed array 1`] = `
       >
         My Field
       </legend>
-      <p
+      <div
         className="field-description"
         id="root__description"
       >
         a fancier description
-      </p>
+      </div>
       <div
         className="row array-item-list"
       >
@@ -2140,12 +2140,12 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                   *
                 </span>
               </label>
-              <p
+              <div
                 className="field-description"
                 id="root_0__description"
               >
                 a fancier item description
-              </p>
+              </div>
               <input
                 aria-describedby="root_0__error root_0__description root_0__help"
                 autoFocus={false}
@@ -2186,12 +2186,12 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                   *
                 </span>
               </label>
-              <p
+              <div
                 className="field-description"
                 id="root_1__description"
               >
                 a fancier item description
-              </p>
+              </div>
               <input
                 aria-describedby="root_1__error root_1__description root_1__help"
                 autoFocus={false}
@@ -2524,12 +2524,12 @@ exports[`with title and description with global label off checkboxes 1`] = `
     >
       Test field
     </label>
-    <p
+    <div
       className="field-description"
       id="root__description"
     >
       a test description
-    </p>
+    </div>
     <select
       aria-describedby="root__error root__description root__help"
       autoFocus={false}

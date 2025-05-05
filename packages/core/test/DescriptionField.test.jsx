@@ -29,6 +29,7 @@ describe('DescriptionField', () => {
   it('should return a div for a custom component', () => {
     const props = {
       description: <em>description</em>,
+      registry: {},
     };
     const { node } = createComponent(DescriptionFieldWrapper, props);
 
@@ -38,16 +39,18 @@ describe('DescriptionField', () => {
   it('should return a p for a description text', () => {
     const props = {
       description: 'description',
+      registry: {},
     };
     const { node } = createComponent(DescriptionFieldWrapper, props);
 
-    expect(node.tagName).to.equal('P');
+    expect(node.tagName).to.equal('DIV');
   });
 
   it('should have the expected id', () => {
     const props = {
       description: 'Field description',
       id: 'sample_id',
+      registry: {},
     };
     const { node } = createComponent(DescriptionFieldWrapper, props);
 

@@ -1,31 +1,30 @@
-import { render } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 
 import { __createDaisyUIFrameProvider } from '../src/DaisyUIFrameProvider';
 
+let localStorageMock: { [key: string]: string } = {};
+const mockSetItem = jest.fn((key, value) => {
+  localStorageMock[key] = value;
+});
+const mockGetItem = jest.fn((key) => localStorageMock[key] || null);
+const mockRemove = jest.fn();
+const mockDocument = {
+  head: {
+    appendChild: jest.fn(),
+  },
+  createElement: jest.fn((tagName) => {
+    return {
+      tagName,
+      textContent: '',
+      rel: '',
+      href: '',
+      src: '',
+      remove: mockRemove,
+    };
+  }),
+};
+
 describe('DaisyUIFrameProvider', () => {
-  // Mock localStorage
-  let localStorageMock: { [key: string]: string } = {};
-  const mockSetItem = jest.fn((key, value) => {
-    localStorageMock[key] = value;
-  });
-  const mockGetItem = jest.fn((key) => localStorageMock[key] || null);
-
-  // Mock document
-  const mockDocument = {
-    head: {
-      appendChild: jest.fn(),
-    },
-    createElement: jest.fn((tagName) => {
-      return {
-        tagName,
-        textContent: '',
-        rel: '',
-        href: '',
-        src: '',
-      };
-    }),
-  };
-
   beforeEach(() => {
     jest.clearAllMocks();
     localStorageMock = {};
@@ -45,12 +44,17 @@ describe('DaisyUIFrameProvider', () => {
       children: <div>Test Content</div>,
     });
 
-    const { container } = render(<DaisyUIFrame />);
+    const { container, unmount } = render(<DaisyUIFrame />);
 
     expect(container.querySelector('.daisy-ui-theme')).not.toBeNull();
     expect(container.querySelector('[data-theme="cupcake"]')).not.toBeNull();
     expect(container.textContent).toContain('Test Content');
     expect(mockGetItem).toHaveBeenCalledWith('daisyui-theme');
+    expect(mockRemove).not.toHaveBeenCalled();
+    unmount();
+    waitFor(() => {
+      expect(mockRemove).toHaveBeenCalledTimes(4);
+    });
   });
 
   test('uses provided theme when specified', () => {

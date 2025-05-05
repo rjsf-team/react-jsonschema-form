@@ -16,35 +16,33 @@
  * backwards compatibility guarantees!)
  */
 
-import React from 'react';
+import { useEffect, ReactNode } from 'react';
 
 interface DaisyUIFrameProviderProps {
-  children: React.ReactNode;
+  children: ReactNode;
   subtheme?: { dataTheme?: string } | null;
 }
 
-/**
- * Creates a DaisyUI frame provider component that can be used within an iframe
- * to properly render DaisyUI styles without affecting the parent document.
+/** This component has a useEffect with a cleanup function to remove the tailwind stylesheets loads upon unmount so
+ * that the styles are removed when the theme in the playground is switched to something else
  *
  * @param props - The component props
- * @returns A component that sets up DaisyUI within an iframe context
  */
-export const __createDaisyUIFrameProvider = (props: DaisyUIFrameProviderProps) => {
-  return function DaisyUIFrame({ document }: { document?: Document }) {
-    // Get theme from localStorage or use default
-    const theme = (() => {
-      try {
-        if (props.subtheme?.dataTheme) {
-          localStorage.setItem('daisyui-theme', props.subtheme.dataTheme);
-          return props.subtheme.dataTheme;
-        }
-        return localStorage.getItem('daisyui-theme') || 'cupcake';
-      } catch {
-        return 'cupcake';
+function DaisyUIFrameComponent(props: DaisyUIFrameProviderProps & { document?: Document }) {
+  const { children, subtheme = {}, document } = props;
+  const theme = (() => {
+    try {
+      if (subtheme?.dataTheme) {
+        localStorage.setItem('daisyui-theme', subtheme.dataTheme);
+        return subtheme.dataTheme;
       }
-    })();
+      return localStorage.getItem('daisyui-theme') || 'cupcake';
+    } catch {
+      return 'cupcake';
+    }
+  })();
 
+  useEffect(() => {
     if (document) {
       // Configure Tailwind first to ensure config is available before script loads
       const configScript = document.createElement('script');
@@ -77,12 +75,33 @@ export const __createDaisyUIFrameProvider = (props: DaisyUIFrameProviderProps) =
       daisyLinkAllThemes.rel = 'stylesheet';
       daisyLinkAllThemes.href = 'https://cdn.jsdelivr.net/npm/daisyui@5.0.20/themes.css';
       document.head.appendChild(daisyLinkAllThemes);
+      return () => {
+        configScript.remove();
+        tailwindScript.remove();
+        daisyLink.remove();
+        daisyLinkAllThemes.remove();
+      };
     }
+    return undefined;
+  }, [document]);
 
-    return (
-      <div data-theme={theme} className='daisy-ui-theme'>
-        {props.children}
-      </div>
-    );
+  return (
+    <div data-theme={theme} className='daisy-ui-theme'>
+      {children}
+    </div>
+  );
+}
+
+/**
+ * Creates a DaisyUI frame provider component that can be used within an iframe
+ * to properly render DaisyUI styles without affecting the parent document.
+ *
+ * @param props - The component props
+ * @returns A component that sets up DaisyUI within an iframe context
+ */
+export const __createDaisyUIFrameProvider = (props: DaisyUIFrameProviderProps) => {
+  return function DaisyUIFrame({ document }: { document?: Document }) {
+    // Get theme from localStorage or use default
+    return <DaisyUIFrameComponent document={document} {...props} />;
   };
 };

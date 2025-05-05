@@ -716,6 +716,780 @@ exports[`single fields checkbox field with label 1`] = `
 </form>
 `;
 
+exports[`single fields checkbox field with label and description 1`] = `
+@layer recipes {
+  .emotion-0 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    width: var(--chakra-sizes-full);
+  }
+
+  .emotion-0>:not(style, [hidden])~:not(style, [hidden]) {
+    --space-y-reverse: 0;
+    margin-top: calc(var(--chakra-spacing-4) * calc(1 - var(--space-y-reverse)));
+    margin-bottom: calc(var(--chakra-spacing-4) * var(--space-y-reverse));
+  }
+}
+
+@layer recipes {
+  .emotion-1 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    width: var(--chakra-sizes-full);
+    gap: var(--chakra-spacing-4);
+  }
+}
+
+.emotion-2 {
+  margin-bottom: var(--chakra-spacing-1);
+}
+
+@layer recipes {
+  .emotion-2 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    width: 100%;
+    position: relative;
+    gap: var(--chakra-spacing-1\\.5);
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-align-items: flex-start;
+    -webkit-box-align: flex-start;
+    -ms-flex-align: flex-start;
+    align-items: flex-start;
+  }
+}
+
+.emotion-3 {
+  font-size: var(--chakra-font-sizes-md);
+}
+
+@layer recipes {
+  .emotion-4 {
+    display: -webkit-inline-box;
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    gap: var(--chakra-spacing-2\\.5);
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    vertical-align: top;
+    position: relative;
+  }
+}
+
+@layer recipes {
+  .emotion-5 {
+    display: -webkit-inline-box;
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    color: var(--chakra-colors-white);
+    border-width: 1px;
+    border-color: var(--chakra-colors-border);
+    border-radius: var(--chakra-radii-l1);
+    --focus-ring-color: var(--chakra-colors-color-palette-focus-ring);
+    width: var(--chakra-sizes-5);
+    height: var(--chakra-sizes-5);
+    padding: var(--chakra-spacing-0\\.5);
+  }
+
+  .emotion-5:is(:focus-visible, [data-focus-visible]) {
+    outline-width: var(--focus-ring-width, 2px);
+    outline-offset: var(--focus-ring-offset, 2px);
+    outline-style: var(--focus-ring-style, solid);
+    outline-color: var(--focus-ring-color);
+  }
+
+  .emotion-5 :where(svg) {
+    width: var(--chakra-sizes-full);
+    height: var(--chakra-sizes-full);
+  }
+
+  .emotion-5:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+    --chakra-colors-color-palette-50: var(--chakra-colors-red-50);
+    --chakra-colors-color-palette-100: var(--chakra-colors-red-100);
+    --chakra-colors-color-palette-200: var(--chakra-colors-red-200);
+    --chakra-colors-color-palette-300: var(--chakra-colors-red-300);
+    --chakra-colors-color-palette-400: var(--chakra-colors-red-400);
+    --chakra-colors-color-palette-500: var(--chakra-colors-red-500);
+    --chakra-colors-color-palette-600: var(--chakra-colors-red-600);
+    --chakra-colors-color-palette-700: var(--chakra-colors-red-700);
+    --chakra-colors-color-palette-800: var(--chakra-colors-red-800);
+    --chakra-colors-color-palette-900: var(--chakra-colors-red-900);
+    --chakra-colors-color-palette-950: var(--chakra-colors-red-950);
+    --chakra-colors-color-palette-contrast: var(--chakra-colors-red-contrast);
+    --chakra-colors-color-palette-fg: var(--chakra-colors-red-fg);
+    --chakra-colors-color-palette-subtle: var(--chakra-colors-red-subtle);
+    --chakra-colors-color-palette-muted: var(--chakra-colors-red-muted);
+    --chakra-colors-color-palette-emphasized: var(--chakra-colors-red-emphasized);
+    --chakra-colors-color-palette-solid: var(--chakra-colors-red-solid);
+    --chakra-colors-color-palette-focus-ring: var(--chakra-colors-red-focus-ring);
+    border-color: var(--chakra-colors-border-error);
+  }
+
+  .emotion-5:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+  }
+
+  .emotion-5:is([data-state=checked], [data-state=indeterminate]) {
+    background: var(--chakra-colors-color-palette-solid);
+    --bg-currentcolor: var(--chakra-colors-color-palette-solid);
+    color: var(--chakra-colors-color-palette-contrast);
+    border-color: var(--chakra-colors-color-palette-solid);
+  }
+}
+
+.emotion-6 {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 3px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+@layer recipes {
+  .emotion-7 {
+    font-weight: var(--chakra-font-weights-medium);
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    font-size: var(--chakra-font-sizes-sm);
+    line-height: 1.25rem;
+  }
+
+  .emotion-7:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+  }
+}
+
+.emotion-9 {
+  margin-top: var(--chakra-spacing-3);
+}
+
+@layer recipes {
+  .emotion-10 {
+    display: -webkit-inline-box;
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    position: relative;
+    border-radius: var(--chakra-radii-l2);
+    white-space: nowrap;
+    vertical-align: middle;
+    border-width: 1px;
+    border-color: var(--chakra-colors-transparent);
+    cursor: var(--chakra-cursor-button);
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    outline: 0;
+    line-height: 1.25rem;
+    isolation: isolate;
+    font-weight: var(--chakra-font-weights-medium);
+    transition-property: background-color,border-color,color,fill,stroke,opacity,box-shadow,translate,transform;
+    transition-duration: var(--chakra-durations-moderate);
+    --focus-ring-color: var(--chakra-colors-color-palette-focus-ring);
+    height: var(--chakra-sizes-10);
+    min-width: var(--chakra-sizes-10);
+    font-size: var(--chakra-font-sizes-sm);
+    padding-inline: var(--chakra-spacing-4);
+    gap: var(--chakra-spacing-2);
+    background: var(--chakra-colors-color-palette-solid);
+    --bg-currentcolor: var(--chakra-colors-color-palette-solid);
+    color: var(--chakra-colors-color-palette-contrast);
+  }
+
+  .emotion-10:is(:focus-visible, [data-focus-visible]) {
+    outline-width: var(--focus-ring-width, 2px);
+    outline-offset: var(--focus-ring-offset, 2px);
+    outline-style: var(--focus-ring-style, solid);
+    outline-color: var(--focus-ring-color);
+  }
+
+  .emotion-10:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-10 :where(svg) {
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    width: var(--chakra-sizes-5);
+    height: var(--chakra-sizes-5);
+  }
+
+  .emotion-10:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+    --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+    background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+  }
+
+  @media (hover: hover) {
+    .emotion-10:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+      --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+      background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+      --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    }
+  }
+}
+
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-boolean"
+  >
+    <fieldset
+      className="fieldset__root emotion-0"
+      data-part="root"
+      data-scope="fieldset"
+      disabled={false}
+    >
+      <div
+        className="fieldset__content emotion-1"
+      >
+        <div
+          className="chakra-field__root emotion-2"
+          data-part="root"
+          data-scope="field"
+          id="field:::r2a:"
+          role="group"
+        >
+          <sup
+            className="emotion-3"
+            id="root__description"
+          >
+            test description
+          </sup>
+          <label
+            aria-describedby="root__error root__description root__help"
+            className="chakra-checkbox__root emotion-4"
+            data-part="root"
+            data-scope="checkbox"
+            data-state="unchecked"
+            dir="ltr"
+            htmlFor=":r2a:"
+            id="checkbox:root"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onPointerLeave={[Function]}
+            onPointerMove={[Function]}
+          >
+            <input
+              aria-invalid={false}
+              aria-labelledby="field:::r2a:::label"
+              defaultChecked={false}
+              disabled={false}
+              id=":r2a:"
+              name="root"
+              onBlur={[Function]}
+              onClick={[Function]}
+              onFocus={[Function]}
+              required={false}
+              style={
+                {
+                  "border": "0",
+                  "clip": "rect(0 0 0 0)",
+                  "height": "1px",
+                  "margin": "-1px",
+                  "overflow": "hidden",
+                  "padding": "0",
+                  "position": "absolute",
+                  "whiteSpace": "nowrap",
+                  "width": "1px",
+                  "wordWrap": "normal",
+                }
+              }
+              type="checkbox"
+              value="on"
+            />
+            <div
+              aria-hidden={true}
+              className="chakra-checkbox__control emotion-5"
+              data-part="control"
+              data-scope="checkbox"
+              data-state="unchecked"
+              dir="ltr"
+              id="checkbox:root:control"
+            >
+              <svg
+                className="emotion-6"
+                data-state="unchecked"
+                viewBox="0 0 24 24"
+              />
+            </div>
+            <span
+              className="chakra-checkbox__label emotion-7"
+              data-part="label"
+              data-scope="checkbox"
+              data-state="unchecked"
+              dir="ltr"
+              id="field:::r2a:::label"
+            >
+              <p
+                className="emotion-8"
+              >
+                test
+              </p>
+            </span>
+          </label>
+        </div>
+      </div>
+    </fieldset>
+  </div>
+  <div
+    className="emotion-9"
+  >
+    <button
+      className="chakra-button emotion-10"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields checkbox field with label and rich text description 1`] = `
+@layer recipes {
+  .emotion-0 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    width: var(--chakra-sizes-full);
+  }
+
+  .emotion-0>:not(style, [hidden])~:not(style, [hidden]) {
+    --space-y-reverse: 0;
+    margin-top: calc(var(--chakra-spacing-4) * calc(1 - var(--space-y-reverse)));
+    margin-bottom: calc(var(--chakra-spacing-4) * var(--space-y-reverse));
+  }
+}
+
+@layer recipes {
+  .emotion-1 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    width: var(--chakra-sizes-full);
+    gap: var(--chakra-spacing-4);
+  }
+}
+
+.emotion-2 {
+  margin-bottom: var(--chakra-spacing-1);
+}
+
+@layer recipes {
+  .emotion-2 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    width: 100%;
+    position: relative;
+    gap: var(--chakra-spacing-1\\.5);
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-align-items: flex-start;
+    -webkit-box-align: flex-start;
+    -ms-flex-align: flex-start;
+    align-items: flex-start;
+  }
+}
+
+.emotion-3 {
+  font-size: var(--chakra-font-sizes-md);
+}
+
+@layer recipes {
+  .emotion-4 {
+    display: -webkit-inline-box;
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    gap: var(--chakra-spacing-2\\.5);
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    vertical-align: top;
+    position: relative;
+  }
+}
+
+@layer recipes {
+  .emotion-5 {
+    display: -webkit-inline-box;
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    color: var(--chakra-colors-white);
+    border-width: 1px;
+    border-color: var(--chakra-colors-border);
+    border-radius: var(--chakra-radii-l1);
+    --focus-ring-color: var(--chakra-colors-color-palette-focus-ring);
+    width: var(--chakra-sizes-5);
+    height: var(--chakra-sizes-5);
+    padding: var(--chakra-spacing-0\\.5);
+  }
+
+  .emotion-5:is(:focus-visible, [data-focus-visible]) {
+    outline-width: var(--focus-ring-width, 2px);
+    outline-offset: var(--focus-ring-offset, 2px);
+    outline-style: var(--focus-ring-style, solid);
+    outline-color: var(--focus-ring-color);
+  }
+
+  .emotion-5 :where(svg) {
+    width: var(--chakra-sizes-full);
+    height: var(--chakra-sizes-full);
+  }
+
+  .emotion-5:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+    --chakra-colors-color-palette-50: var(--chakra-colors-red-50);
+    --chakra-colors-color-palette-100: var(--chakra-colors-red-100);
+    --chakra-colors-color-palette-200: var(--chakra-colors-red-200);
+    --chakra-colors-color-palette-300: var(--chakra-colors-red-300);
+    --chakra-colors-color-palette-400: var(--chakra-colors-red-400);
+    --chakra-colors-color-palette-500: var(--chakra-colors-red-500);
+    --chakra-colors-color-palette-600: var(--chakra-colors-red-600);
+    --chakra-colors-color-palette-700: var(--chakra-colors-red-700);
+    --chakra-colors-color-palette-800: var(--chakra-colors-red-800);
+    --chakra-colors-color-palette-900: var(--chakra-colors-red-900);
+    --chakra-colors-color-palette-950: var(--chakra-colors-red-950);
+    --chakra-colors-color-palette-contrast: var(--chakra-colors-red-contrast);
+    --chakra-colors-color-palette-fg: var(--chakra-colors-red-fg);
+    --chakra-colors-color-palette-subtle: var(--chakra-colors-red-subtle);
+    --chakra-colors-color-palette-muted: var(--chakra-colors-red-muted);
+    --chakra-colors-color-palette-emphasized: var(--chakra-colors-red-emphasized);
+    --chakra-colors-color-palette-solid: var(--chakra-colors-red-solid);
+    --chakra-colors-color-palette-focus-ring: var(--chakra-colors-red-focus-ring);
+    border-color: var(--chakra-colors-border-error);
+  }
+
+  .emotion-5:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+  }
+
+  .emotion-5:is([data-state=checked], [data-state=indeterminate]) {
+    background: var(--chakra-colors-color-palette-solid);
+    --bg-currentcolor: var(--chakra-colors-color-palette-solid);
+    color: var(--chakra-colors-color-palette-contrast);
+    border-color: var(--chakra-colors-color-palette-solid);
+  }
+}
+
+.emotion-6 {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 3px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+@layer recipes {
+  .emotion-7 {
+    font-weight: var(--chakra-font-weights-medium);
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    font-size: var(--chakra-font-sizes-sm);
+    line-height: 1.25rem;
+  }
+
+  .emotion-7:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+  }
+}
+
+.emotion-9 {
+  margin-top: var(--chakra-spacing-3);
+}
+
+@layer recipes {
+  .emotion-10 {
+    display: -webkit-inline-box;
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    position: relative;
+    border-radius: var(--chakra-radii-l2);
+    white-space: nowrap;
+    vertical-align: middle;
+    border-width: 1px;
+    border-color: var(--chakra-colors-transparent);
+    cursor: var(--chakra-cursor-button);
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    outline: 0;
+    line-height: 1.25rem;
+    isolation: isolate;
+    font-weight: var(--chakra-font-weights-medium);
+    transition-property: background-color,border-color,color,fill,stroke,opacity,box-shadow,translate,transform;
+    transition-duration: var(--chakra-durations-moderate);
+    --focus-ring-color: var(--chakra-colors-color-palette-focus-ring);
+    height: var(--chakra-sizes-10);
+    min-width: var(--chakra-sizes-10);
+    font-size: var(--chakra-font-sizes-sm);
+    padding-inline: var(--chakra-spacing-4);
+    gap: var(--chakra-spacing-2);
+    background: var(--chakra-colors-color-palette-solid);
+    --bg-currentcolor: var(--chakra-colors-color-palette-solid);
+    color: var(--chakra-colors-color-palette-contrast);
+  }
+
+  .emotion-10:is(:focus-visible, [data-focus-visible]) {
+    outline-width: var(--focus-ring-width, 2px);
+    outline-offset: var(--focus-ring-offset, 2px);
+    outline-style: var(--focus-ring-style, solid);
+    outline-color: var(--focus-ring-color);
+  }
+
+  .emotion-10:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-10 :where(svg) {
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    width: var(--chakra-sizes-5);
+    height: var(--chakra-sizes-5);
+  }
+
+  .emotion-10:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+    --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+    background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+  }
+
+  @media (hover: hover) {
+    .emotion-10:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+      --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+      background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+      --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    }
+  }
+}
+
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-boolean"
+  >
+    <fieldset
+      className="fieldset__root emotion-0"
+      data-part="root"
+      data-scope="fieldset"
+      disabled={false}
+    >
+      <div
+        className="fieldset__content emotion-1"
+      >
+        <div
+          className="chakra-field__root emotion-2"
+          data-part="root"
+          data-scope="field"
+          id="field:::r2d:"
+          role="group"
+        >
+          <sup
+            className="emotion-3"
+            id="root__description"
+          >
+            <span>
+              <strong>
+                test
+              </strong>
+               
+              <strong>
+                description
+              </strong>
+            </span>
+          </sup>
+          <label
+            aria-describedby="root__error root__description root__help"
+            className="chakra-checkbox__root emotion-4"
+            data-part="root"
+            data-scope="checkbox"
+            data-state="unchecked"
+            dir="ltr"
+            htmlFor=":r2d:"
+            id="checkbox:root"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onPointerLeave={[Function]}
+            onPointerMove={[Function]}
+          >
+            <input
+              aria-invalid={false}
+              aria-labelledby="field:::r2d:::label"
+              defaultChecked={false}
+              disabled={false}
+              id=":r2d:"
+              name="root"
+              onBlur={[Function]}
+              onClick={[Function]}
+              onFocus={[Function]}
+              required={false}
+              style={
+                {
+                  "border": "0",
+                  "clip": "rect(0 0 0 0)",
+                  "height": "1px",
+                  "margin": "-1px",
+                  "overflow": "hidden",
+                  "padding": "0",
+                  "position": "absolute",
+                  "whiteSpace": "nowrap",
+                  "width": "1px",
+                  "wordWrap": "normal",
+                }
+              }
+              type="checkbox"
+              value="on"
+            />
+            <div
+              aria-hidden={true}
+              className="chakra-checkbox__control emotion-5"
+              data-part="control"
+              data-scope="checkbox"
+              data-state="unchecked"
+              dir="ltr"
+              id="checkbox:root:control"
+            >
+              <svg
+                className="emotion-6"
+                data-state="unchecked"
+                viewBox="0 0 24 24"
+              />
+            </div>
+            <span
+              className="chakra-checkbox__label emotion-7"
+              data-part="label"
+              data-scope="checkbox"
+              data-state="unchecked"
+              dir="ltr"
+              id="field:::r2d:::label"
+            >
+              <p
+                className="emotion-8"
+              >
+                test
+              </p>
+            </span>
+          </label>
+        </div>
+      </div>
+    </fieldset>
+  </div>
+  <div
+    className="emotion-9"
+  >
+    <button
+      className="chakra-button emotion-10"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
 exports[`single fields checkboxes field 1`] = `
 @layer recipes {
   .emotion-0 {
@@ -1627,15 +2401,15 @@ exports[`single fields field with description 1`] = `
                     className="chakra-field__root emotion-8"
                     data-part="root"
                     data-scope="field"
-                    id="field:::r2o:"
+                    id="field:::r2u:"
                     role="group"
                   >
                     <label
                       className="chakra-field__label emotion-9"
                       data-part="label"
                       data-scope="field"
-                      htmlFor=":r2o:"
-                      id="field:::r2o:::label"
+                      htmlFor=":r2u:"
+                      id="field:::r2u:::label"
                     >
                       my-field
                     </label>
@@ -1974,15 +2748,717 @@ exports[`single fields field with description in uiSchema 1`] = `
                     className="chakra-field__root emotion-8"
                     data-part="root"
                     data-scope="field"
-                    id="field:::r2r:"
+                    id="field:::r31:"
                     role="group"
                   >
                     <label
                       className="chakra-field__label emotion-9"
                       data-part="label"
                       data-scope="field"
-                      htmlFor=":r2r:"
-                      id="field:::r2r:::label"
+                      htmlFor=":r31:"
+                      id="field:::r31:::label"
+                    >
+                      my-field
+                    </label>
+                    <input
+                      aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
+                      autoFocus={false}
+                      className="chakra-input emotion-10"
+                      data-part="input"
+                      data-scope="field"
+                      disabled={false}
+                      id="root_my-field"
+                      name="root_my-field"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      onFocus={[Function]}
+                      placeholder=""
+                      readOnly={false}
+                      required={false}
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                </div>
+              </fieldset>
+            </div>
+          </div>
+        </div>
+      </div>
+    </fieldset>
+  </div>
+  <div
+    className="emotion-11"
+  >
+    <button
+      className="chakra-button emotion-12"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields field with markdown description 1`] = `
+@layer recipes {
+  .emotion-0 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    width: var(--chakra-sizes-full);
+  }
+
+  .emotion-0>:not(style, [hidden])~:not(style, [hidden]) {
+    --space-y-reverse: 0;
+    margin-top: calc(var(--chakra-spacing-4) * calc(1 - var(--space-y-reverse)));
+    margin-bottom: calc(var(--chakra-spacing-4) * var(--space-y-reverse));
+  }
+}
+
+@layer recipes {
+  .emotion-1 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    width: var(--chakra-sizes-full);
+    gap: var(--chakra-spacing-4);
+  }
+}
+
+.emotion-2 {
+  display: grid;
+  gap: var(--chakra-spacing-6);
+  margin-bottom: var(--chakra-spacing-4);
+}
+
+.emotion-5 {
+  margin-top: var(--chakra-spacing-2);
+}
+
+@layer recipes {
+  .emotion-5 {
+    color: var(--chakra-colors-fg);
+    font-weight: var(--chakra-font-weights-medium);
+    font-size: var(--chakra-font-sizes-sm);
+    line-height: 1.25rem;
+  }
+
+  .emotion-5:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+  }
+}
+
+.emotion-6 {
+  font-size: var(--chakra-font-sizes-md);
+}
+
+.emotion-8 {
+  margin-bottom: var(--chakra-spacing-1);
+}
+
+@layer recipes {
+  .emotion-8 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    width: 100%;
+    position: relative;
+    gap: var(--chakra-spacing-1\\.5);
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-align-items: flex-start;
+    -webkit-box-align: flex-start;
+    -ms-flex-align: flex-start;
+    align-items: flex-start;
+  }
+}
+
+@layer recipes {
+  .emotion-9 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    text-align: start;
+    font-size: var(--chakra-font-sizes-sm);
+    line-height: 1.25rem;
+    font-weight: var(--chakra-font-weights-medium);
+    gap: var(--chakra-spacing-1);
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+
+  .emotion-9:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+  }
+}
+
+@layer recipes {
+  .emotion-10 {
+    width: 100%;
+    min-width: var(--input-height);
+    outline: 0;
+    position: relative;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    text-align: start;
+    border-radius: var(--chakra-radii-l2);
+    height: var(--input-height);
+    --focus-color: var(--chakra-colors-color-palette-focus-ring);
+    --error-color: var(--chakra-colors-border-error);
+    font-size: var(--chakra-font-sizes-sm);
+    line-height: 1.25rem;
+    padding-inline: var(--chakra-spacing-3);
+    --input-height: var(--chakra-sizes-10);
+    background: var(--chakra-colors-transparent);
+    --bg-currentcolor: var(--chakra-colors-transparent);
+    border-width: 1px;
+    border-color: var(--chakra-colors-border);
+    --focus-ring-color: var(--focus-color);
+  }
+
+  .emotion-10:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-10:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+    --focus-ring-color: var(--error-color);
+    border-color: var(--error-color);
+  }
+
+  .emotion-10:is(:focus-visible, [data-focus-visible]) {
+    outline-offset: 0px;
+    outline-width: var(--focus-ring-width, 1px);
+    outline-color: var(--focus-ring-color);
+    outline-style: var(--focus-ring-style, solid);
+    border-color: var(--focus-ring-color);
+  }
+}
+
+.emotion-11 {
+  margin-top: var(--chakra-spacing-3);
+}
+
+@layer recipes {
+  .emotion-12 {
+    display: -webkit-inline-box;
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    position: relative;
+    border-radius: var(--chakra-radii-l2);
+    white-space: nowrap;
+    vertical-align: middle;
+    border-width: 1px;
+    border-color: var(--chakra-colors-transparent);
+    cursor: var(--chakra-cursor-button);
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    outline: 0;
+    line-height: 1.25rem;
+    isolation: isolate;
+    font-weight: var(--chakra-font-weights-medium);
+    transition-property: background-color,border-color,color,fill,stroke,opacity,box-shadow,translate,transform;
+    transition-duration: var(--chakra-durations-moderate);
+    --focus-ring-color: var(--chakra-colors-color-palette-focus-ring);
+    height: var(--chakra-sizes-10);
+    min-width: var(--chakra-sizes-10);
+    font-size: var(--chakra-font-sizes-sm);
+    padding-inline: var(--chakra-spacing-4);
+    gap: var(--chakra-spacing-2);
+    background: var(--chakra-colors-color-palette-solid);
+    --bg-currentcolor: var(--chakra-colors-color-palette-solid);
+    color: var(--chakra-colors-color-palette-contrast);
+  }
+
+  .emotion-12:is(:focus-visible, [data-focus-visible]) {
+    outline-width: var(--focus-ring-width, 2px);
+    outline-offset: var(--focus-ring-offset, 2px);
+    outline-style: var(--focus-ring-style, solid);
+    outline-color: var(--focus-ring-color);
+  }
+
+  .emotion-12:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-12 :where(svg) {
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    width: var(--chakra-sizes-5);
+    height: var(--chakra-sizes-5);
+  }
+
+  .emotion-12:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+    --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+    background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+  }
+
+  @media (hover: hover) {
+    .emotion-12:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+      --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+      background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+      --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    }
+  }
+}
+
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <fieldset
+      className="fieldset__root emotion-0"
+      data-part="root"
+      data-scope="fieldset"
+      disabled={false}
+    >
+      <div
+        className="fieldset__content emotion-1"
+      >
+        <div
+          className="emotion-2"
+        >
+          <div
+            className="emotion-3"
+          >
+            <div
+              className="rjsf-field rjsf-field-string"
+            >
+              <fieldset
+                className="fieldset__root emotion-0"
+                data-part="root"
+                data-scope="fieldset"
+                disabled={false}
+              >
+                <legend
+                  className="fieldset__legend emotion-5"
+                  data-part="legend"
+                  data-scope="fieldset"
+                >
+                  <sup
+                    className="emotion-6"
+                    id="root_my-field__description"
+                  >
+                    <span>
+                      some 
+                      <strong>
+                        Rich
+                      </strong>
+                       description
+                    </span>
+                  </sup>
+                </legend>
+                <div
+                  className="fieldset__content emotion-1"
+                >
+                  <div
+                    className="chakra-field__root emotion-8"
+                    data-part="root"
+                    data-scope="field"
+                    id="field:::r34:"
+                    role="group"
+                  >
+                    <label
+                      className="chakra-field__label emotion-9"
+                      data-part="label"
+                      data-scope="field"
+                      htmlFor=":r34:"
+                      id="field:::r34:::label"
+                    >
+                      my-field
+                    </label>
+                    <input
+                      aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
+                      autoFocus={false}
+                      className="chakra-input emotion-10"
+                      data-part="input"
+                      data-scope="field"
+                      disabled={false}
+                      id="root_my-field"
+                      name="root_my-field"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      onFocus={[Function]}
+                      placeholder=""
+                      readOnly={false}
+                      required={false}
+                      type="text"
+                      value=""
+                    />
+                  </div>
+                </div>
+              </fieldset>
+            </div>
+          </div>
+        </div>
+      </div>
+    </fieldset>
+  </div>
+  <div
+    className="emotion-11"
+  >
+    <button
+      className="chakra-button emotion-12"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields field with markdown description in uiSchema 1`] = `
+@layer recipes {
+  .emotion-0 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    width: var(--chakra-sizes-full);
+  }
+
+  .emotion-0>:not(style, [hidden])~:not(style, [hidden]) {
+    --space-y-reverse: 0;
+    margin-top: calc(var(--chakra-spacing-4) * calc(1 - var(--space-y-reverse)));
+    margin-bottom: calc(var(--chakra-spacing-4) * var(--space-y-reverse));
+  }
+}
+
+@layer recipes {
+  .emotion-1 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    width: var(--chakra-sizes-full);
+    gap: var(--chakra-spacing-4);
+  }
+}
+
+.emotion-2 {
+  display: grid;
+  gap: var(--chakra-spacing-6);
+  margin-bottom: var(--chakra-spacing-4);
+}
+
+.emotion-5 {
+  margin-top: var(--chakra-spacing-2);
+}
+
+@layer recipes {
+  .emotion-5 {
+    color: var(--chakra-colors-fg);
+    font-weight: var(--chakra-font-weights-medium);
+    font-size: var(--chakra-font-sizes-sm);
+    line-height: 1.25rem;
+  }
+
+  .emotion-5:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+  }
+}
+
+.emotion-6 {
+  font-size: var(--chakra-font-sizes-md);
+}
+
+.emotion-8 {
+  margin-bottom: var(--chakra-spacing-1);
+}
+
+@layer recipes {
+  .emotion-8 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    width: 100%;
+    position: relative;
+    gap: var(--chakra-spacing-1\\.5);
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -webkit-align-items: flex-start;
+    -webkit-box-align: flex-start;
+    -ms-flex-align: flex-start;
+    align-items: flex-start;
+  }
+}
+
+@layer recipes {
+  .emotion-9 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    text-align: start;
+    font-size: var(--chakra-font-sizes-sm);
+    line-height: 1.25rem;
+    font-weight: var(--chakra-font-weights-medium);
+    gap: var(--chakra-spacing-1);
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+
+  .emotion-9:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+  }
+}
+
+@layer recipes {
+  .emotion-10 {
+    width: 100%;
+    min-width: var(--input-height);
+    outline: 0;
+    position: relative;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    text-align: start;
+    border-radius: var(--chakra-radii-l2);
+    height: var(--input-height);
+    --focus-color: var(--chakra-colors-color-palette-focus-ring);
+    --error-color: var(--chakra-colors-border-error);
+    font-size: var(--chakra-font-sizes-sm);
+    line-height: 1.25rem;
+    padding-inline: var(--chakra-spacing-3);
+    --input-height: var(--chakra-sizes-10);
+    background: var(--chakra-colors-transparent);
+    --bg-currentcolor: var(--chakra-colors-transparent);
+    border-width: 1px;
+    border-color: var(--chakra-colors-border);
+    --focus-ring-color: var(--focus-color);
+  }
+
+  .emotion-10:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-10:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+    --focus-ring-color: var(--error-color);
+    border-color: var(--error-color);
+  }
+
+  .emotion-10:is(:focus-visible, [data-focus-visible]) {
+    outline-offset: 0px;
+    outline-width: var(--focus-ring-width, 1px);
+    outline-color: var(--focus-ring-color);
+    outline-style: var(--focus-ring-style, solid);
+    border-color: var(--focus-ring-color);
+  }
+}
+
+.emotion-11 {
+  margin-top: var(--chakra-spacing-3);
+}
+
+@layer recipes {
+  .emotion-12 {
+    display: -webkit-inline-box;
+    display: -webkit-inline-flex;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    position: relative;
+    border-radius: var(--chakra-radii-l2);
+    white-space: nowrap;
+    vertical-align: middle;
+    border-width: 1px;
+    border-color: var(--chakra-colors-transparent);
+    cursor: var(--chakra-cursor-button);
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    outline: 0;
+    line-height: 1.25rem;
+    isolation: isolate;
+    font-weight: var(--chakra-font-weights-medium);
+    transition-property: background-color,border-color,color,fill,stroke,opacity,box-shadow,translate,transform;
+    transition-duration: var(--chakra-durations-moderate);
+    --focus-ring-color: var(--chakra-colors-color-palette-focus-ring);
+    height: var(--chakra-sizes-10);
+    min-width: var(--chakra-sizes-10);
+    font-size: var(--chakra-font-sizes-sm);
+    padding-inline: var(--chakra-spacing-4);
+    gap: var(--chakra-spacing-2);
+    background: var(--chakra-colors-color-palette-solid);
+    --bg-currentcolor: var(--chakra-colors-color-palette-solid);
+    color: var(--chakra-colors-color-palette-contrast);
+  }
+
+  .emotion-12:is(:focus-visible, [data-focus-visible]) {
+    outline-width: var(--focus-ring-width, 2px);
+    outline-offset: var(--focus-ring-offset, 2px);
+    outline-style: var(--focus-ring-style, solid);
+    outline-color: var(--focus-ring-color);
+  }
+
+  .emotion-12:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .emotion-12 :where(svg) {
+    -webkit-flex-shrink: 0;
+    -ms-flex-negative: 0;
+    flex-shrink: 0;
+    width: var(--chakra-sizes-5);
+    height: var(--chakra-sizes-5);
+  }
+
+  .emotion-12:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+    --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+    background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+  }
+
+  @media (hover: hover) {
+    .emotion-12:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+      --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
+      background: var(--mix-background, var(--chakra-colors-color-palette-solid));
+      --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
+    }
+  }
+}
+
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <fieldset
+      className="fieldset__root emotion-0"
+      data-part="root"
+      data-scope="fieldset"
+      disabled={false}
+    >
+      <div
+        className="fieldset__content emotion-1"
+      >
+        <div
+          className="emotion-2"
+        >
+          <div
+            className="emotion-3"
+          >
+            <div
+              className="rjsf-field rjsf-field-string"
+            >
+              <fieldset
+                className="fieldset__root emotion-0"
+                data-part="root"
+                data-scope="fieldset"
+                disabled={false}
+              >
+                <legend
+                  className="fieldset__legend emotion-5"
+                  data-part="legend"
+                  data-scope="fieldset"
+                >
+                  <sup
+                    className="emotion-6"
+                    id="root_my-field__description"
+                  >
+                    <span>
+                      some other description
+                    </span>
+                  </sup>
+                </legend>
+                <div
+                  className="fieldset__content emotion-1"
+                >
+                  <div
+                    className="chakra-field__root emotion-8"
+                    data-part="root"
+                    data-scope="field"
+                    id="field:::r37:"
+                    role="group"
+                  >
+                    <label
+                      className="chakra-field__label emotion-9"
+                      data-part="label"
+                      data-scope="field"
+                      htmlFor=":r37:"
+                      id="field:::r37:::label"
                     >
                       my-field
                     </label>
@@ -3490,7 +4966,7 @@ exports[`single fields help and error display 1`] = `
           data-invalid=""
           data-part="root"
           data-scope="field"
-          id="field:::r36:"
+          id="field:::r3i:"
           role="group"
         >
           <input
@@ -3520,7 +4996,7 @@ exports[`single fields help and error display 1`] = `
         className="fieldset__errorText emotion-14"
         data-part="error-text"
         data-scope="fieldset"
-        id="fieldset:::r35:::error-text"
+        id="fieldset:::r3h:::error-text"
       >
         <ul
           className="chakra-list__root emotion-6"
@@ -3945,7 +5421,7 @@ exports[`single fields hidden label 1`] = `
           className="chakra-field__root emotion-2"
           data-part="root"
           data-scope="field"
-          id="field:::r30:"
+          id="field:::r3c:"
           role="group"
         >
           <input
@@ -5167,19 +6643,19 @@ exports[`single fields radio field 1`] = `
           className="chakra-field__root emotion-2"
           data-part="root"
           data-scope="field"
-          id="field:::r2g:"
+          id="field:::r2m:"
           role="group"
         >
           <div
             aria-describedby="root__error root__description root__help"
-            aria-labelledby="radio-group::r2h::label"
+            aria-labelledby="radio-group::r2n::label"
             aria-orientation="vertical"
             className="chakra-radio-group__root emotion-3"
             data-orientation="vertical"
             data-part="root"
             data-scope="radio-group"
             dir="ltr"
-            id="radio-group::r2h:"
+            id="radio-group::r2n:"
             onBlur={[Function]}
             onChange={[Function]}
             onFocus={[Function]}
@@ -5201,7 +6677,7 @@ exports[`single fields radio field 1`] = `
                 data-ssr=""
                 data-state="unchecked"
                 dir="ltr"
-                htmlFor="radio-group::r2h::radio:input:0"
+                htmlFor="radio-group::r2n::radio:input:0"
                 id="root-0"
                 onClick={[Function]}
                 onPointerDown={[Function]}
@@ -5210,10 +6686,10 @@ exports[`single fields radio field 1`] = `
                 onPointerUp={[Function]}
               >
                 <input
-                  data-ownedby="radio-group::r2h:"
+                  data-ownedby="radio-group::r2n:"
                   defaultChecked={false}
                   disabled={false}
-                  id="radio-group::r2h::radio:input:0"
+                  id="radio-group::r2n::radio:input:0"
                   name="root"
                   onBlur={[Function]}
                   onClick={[Function]}
@@ -5246,7 +6722,7 @@ exports[`single fields radio field 1`] = `
                   data-ssr=""
                   data-state="unchecked"
                   dir="ltr"
-                  id="radio-group::r2h::radio:control:0"
+                  id="radio-group::r2n::radio:control:0"
                 />
                 <span
                   className="chakra-radio-group__itemText emotion-3"
@@ -5256,7 +6732,7 @@ exports[`single fields radio field 1`] = `
                   data-ssr=""
                   data-state="unchecked"
                   dir="ltr"
-                  id="radio-group::r2h::radio:label:0"
+                  id="radio-group::r2n::radio:label:0"
                 >
                   Yes
                 </span>
@@ -5269,7 +6745,7 @@ exports[`single fields radio field 1`] = `
                 data-ssr=""
                 data-state="unchecked"
                 dir="ltr"
-                htmlFor="radio-group::r2h::radio:input:1"
+                htmlFor="radio-group::r2n::radio:input:1"
                 id="root-1"
                 onClick={[Function]}
                 onPointerDown={[Function]}
@@ -5278,10 +6754,10 @@ exports[`single fields radio field 1`] = `
                 onPointerUp={[Function]}
               >
                 <input
-                  data-ownedby="radio-group::r2h:"
+                  data-ownedby="radio-group::r2n:"
                   defaultChecked={false}
                   disabled={false}
-                  id="radio-group::r2h::radio:input:1"
+                  id="radio-group::r2n::radio:input:1"
                   name="root"
                   onBlur={[Function]}
                   onClick={[Function]}
@@ -5314,7 +6790,7 @@ exports[`single fields radio field 1`] = `
                   data-ssr=""
                   data-state="unchecked"
                   dir="ltr"
-                  id="radio-group::r2h::radio:control:1"
+                  id="radio-group::r2n::radio:control:1"
                 />
                 <span
                   className="chakra-radio-group__itemText emotion-3"
@@ -5324,7 +6800,7 @@ exports[`single fields radio field 1`] = `
                   data-ssr=""
                   data-state="unchecked"
                   dir="ltr"
-                  id="radio-group::r2h::radio:label:1"
+                  id="radio-group::r2n::radio:label:1"
                 >
                   No
                 </span>
@@ -5560,7 +7036,7 @@ exports[`single fields schema examples 1`] = `
           className="chakra-field__root emotion-2"
           data-part="root"
           data-scope="field"
-          id="field:::r34:"
+          id="field:::r3g:"
           role="group"
         >
           <input
@@ -13161,7 +14637,7 @@ exports[`single fields slider field 1`] = `
           className="chakra-field__root emotion-2"
           data-part="root"
           data-scope="field"
-          id="field:::r2j:"
+          id="field:::r2p:"
           role="group"
         >
           <div
@@ -15094,15 +16570,15 @@ exports[`single fields title field 1`] = `
                     className="chakra-field__root emotion-9"
                     data-part="root"
                     data-scope="field"
-                    id="field:::r2u:"
+                    id="field:::r3a:"
                     role="group"
                   >
                     <label
                       className="chakra-field__label emotion-10"
                       data-part="label"
                       data-scope="field"
-                      htmlFor=":r2u:"
-                      id="field:::r2u:::label"
+                      htmlFor=":r3a:"
+                      id="field:::r3a:::label"
                     >
                       Titre 2
                     </label>
@@ -16009,7 +17485,7 @@ exports[`single fields using custom tagName 1`] = `
           className="chakra-field__root emotion-2"
           data-part="root"
           data-scope="field"
-          id="field:::r32:"
+          id="field:::r3e:"
           role="group"
         >
           <input

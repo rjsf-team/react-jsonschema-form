@@ -29,10 +29,7 @@ export const __createChakraFrameProvider =
     return (
       <div style={{ margin: 2 }}>
         <CacheProvider value={memoizedCreateCacheWithContainer(document.head)}>
-          <ChakraProvider value={defaultSystem}>
-            {/* <CSSReset /> TODO: figrue out styling issues */}
-            {props.children}
-          </ChakraProvider>
+          <ChakraProvider value={defaultSystem}>{props.children}</ChakraProvider>
         </CacheProvider>
       </div>
     );

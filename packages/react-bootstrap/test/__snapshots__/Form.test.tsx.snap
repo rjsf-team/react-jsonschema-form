@@ -12,7 +12,7 @@ exports[`single fields checkbox field 1`] = `
     <div>
       <div
         aria-describedby="root__error root__description root__help"
-        className="checkbox "
+        className=""
       >
         <div
           className=""
@@ -58,8 +58,138 @@ exports[`single fields checkbox field with label 1`] = `
     <div>
       <div
         aria-describedby="root__error root__description root__help"
-        className="checkbox "
+        className=""
       >
+        <div
+          className="form-check"
+        >
+          <input
+            autoFocus={false}
+            checked={false}
+            className="form-check-input"
+            disabled={false}
+            id="root"
+            name="root"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            required={false}
+            type="checkbox"
+          />
+          <label
+            className="form-check-label"
+            htmlFor="root"
+            title=""
+          >
+            test
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields checkbox field with label and description 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-boolean"
+  >
+    <div>
+      <div
+        aria-describedby="root__error root__description root__help"
+        className=""
+      >
+        <div>
+          <div
+            className="mb-3"
+            id="root__description"
+          >
+            test description
+          </div>
+        </div>
+        <div
+          className="form-check"
+        >
+          <input
+            autoFocus={false}
+            checked={false}
+            className="form-check-input"
+            disabled={false}
+            id="root"
+            name="root"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            required={false}
+            type="checkbox"
+          />
+          <label
+            className="form-check-label"
+            htmlFor="root"
+            title=""
+          >
+            test
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields checkbox field with label and rich text description 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-boolean"
+  >
+    <div>
+      <div
+        aria-describedby="root__error root__description root__help"
+        className=""
+      >
+        <div>
+          <div
+            className="mb-3"
+            id="root__description"
+          >
+            <span>
+              <strong>
+                test
+              </strong>
+               
+              <strong>
+                description
+              </strong>
+            </span>
+          </div>
+        </div>
         <div
           className="form-check"
         >
@@ -373,6 +503,178 @@ exports[`single fields field with description in uiSchema 1`] = `
                       id="root_my-field__description"
                     >
                       some other description
+                    </div>
+                  </div>
+                </small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields field with markdown description 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div>
+      <div
+        className="p-0 container-fluid"
+      >
+        <div
+          className="row"
+          style={
+            {
+              "marginBottom": "10px",
+            }
+          }
+        >
+          <div
+            className="col-12"
+          >
+             
+            <div
+              className="rjsf-field rjsf-field-string"
+            >
+              <div>
+                <label
+                  className="form-label"
+                  htmlFor="root_my-field"
+                >
+                  my-field
+                </label>
+                <input
+                  aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
+                  autoFocus={false}
+                  className="form-control"
+                  disabled={false}
+                  id="root_my-field"
+                  name="root_my-field"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                  placeholder=""
+                  readOnly={false}
+                  required={false}
+                  type="text"
+                  value=""
+                />
+                <small
+                  className="text-muted form-text"
+                >
+                  <div>
+                    <div
+                      className="mb-3"
+                      id="root_my-field__description"
+                    >
+                      <span>
+                        some 
+                        <strong>
+                          Rich
+                        </strong>
+                         description
+                      </span>
+                    </div>
+                  </div>
+                </small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields field with markdown description in uiSchema 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div>
+      <div
+        className="p-0 container-fluid"
+      >
+        <div
+          className="row"
+          style={
+            {
+              "marginBottom": "10px",
+            }
+          }
+        >
+          <div
+            className="col-12"
+          >
+             
+            <div
+              className="rjsf-field rjsf-field-string"
+            >
+              <div>
+                <label
+                  className="form-label"
+                  htmlFor="root_my-field"
+                >
+                  my-field
+                </label>
+                <input
+                  aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
+                  autoFocus={false}
+                  className="form-control"
+                  disabled={false}
+                  id="root_my-field"
+                  name="root_my-field"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                  placeholder=""
+                  readOnly={false}
+                  required={false}
+                  type="text"
+                  value=""
+                />
+                <small
+                  className="text-muted form-text"
+                >
+                  <div>
+                    <div
+                      className="mb-3"
+                      id="root_my-field__description"
+                    >
+                      <span>
+                        some other description
+                      </span>
                     </div>
                   </div>
                 </small>

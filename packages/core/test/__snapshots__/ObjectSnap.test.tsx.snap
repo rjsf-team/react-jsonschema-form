@@ -342,12 +342,12 @@ exports[`object fields with title and description additionalProperties 1`] = `
       >
         Test field
       </legend>
-      <p
+      <div
         className="field-description"
         id="root__description"
       >
         a test description
-      </p>
+      </div>
       <div
         className="form-group rjsf-field rjsf-field-string"
       >
@@ -475,12 +475,12 @@ exports[`object fields with title and description from both additionalProperties
       >
         My Field
       </legend>
-      <p
+      <div
         className="field-description"
         id="root__description"
       >
         a fancier description
-      </p>
+      </div>
       <div
         className="form-group rjsf-field rjsf-field-string"
       >
@@ -608,12 +608,12 @@ exports[`object fields with title and description from both object 1`] = `
       >
         My Field
       </legend>
-      <p
+      <div
         className="field-description"
         id="root__description"
       >
         a fancier description
-      </p>
+      </div>
       <div
         className="form-group rjsf-field rjsf-field-string"
       >
@@ -623,12 +623,12 @@ exports[`object fields with title and description from both object 1`] = `
         >
           My Item A
         </label>
-        <p
+        <div
           className="field-description"
           id="root_a__description"
         >
           a fancier item A description
-        </p>
+        </div>
         <input
           aria-describedby="root_a__error root_a__description root_a__help"
           autoFocus={false}
@@ -656,12 +656,12 @@ exports[`object fields with title and description from both object 1`] = `
         >
           My Item B
         </label>
-        <p
+        <div
           className="field-description"
           id="root_b__description"
         >
           a fancier item B description
-        </p>
+        </div>
         <input
           aria-describedby="root_b__error root_b__description root_b__help"
           autoFocus={false}
@@ -712,12 +712,12 @@ exports[`object fields with title and description from uiSchema additionalProper
       >
         My Field
       </legend>
-      <p
+      <div
         className="field-description"
         id="root__description"
       >
         a fancier description
-      </p>
+      </div>
       <div
         className="form-group rjsf-field rjsf-field-string"
       >
@@ -845,12 +845,12 @@ exports[`object fields with title and description from uiSchema object 1`] = `
       >
         My Field
       </legend>
-      <p
+      <div
         className="field-description"
         id="root__description"
       >
         a fancier description
-      </p>
+      </div>
       <div
         className="form-group rjsf-field rjsf-field-string"
       >
@@ -860,12 +860,12 @@ exports[`object fields with title and description from uiSchema object 1`] = `
         >
           My Item A
         </label>
-        <p
+        <div
           className="field-description"
           id="root_a__description"
         >
           a fancier item A description
-        </p>
+        </div>
         <input
           aria-describedby="root_a__error root_a__description root_a__help"
           autoFocus={false}
@@ -893,12 +893,12 @@ exports[`object fields with title and description from uiSchema object 1`] = `
         >
           My Item B
         </label>
-        <p
+        <div
           className="field-description"
           id="root_b__description"
         >
           a fancier item B description
-        </p>
+        </div>
         <input
           aria-describedby="root_b__error root_b__description root_b__help"
           autoFocus={false}
@@ -949,12 +949,12 @@ exports[`object fields with title and description from uiSchema show add button 
       >
         My Field
       </legend>
-      <p
+      <div
         className="field-description"
         id="root__description"
       >
         a fancier description
-      </p>
+      </div>
       <div
         className="form-group rjsf-field rjsf-field-string"
       >
@@ -1082,12 +1082,12 @@ exports[`object fields with title and description object 1`] = `
       >
         Test field
       </legend>
-      <p
+      <div
         className="field-description"
         id="root__description"
       >
         a test description
-      </p>
+      </div>
       <div
         className="form-group rjsf-field rjsf-field-string"
       >
@@ -1097,12 +1097,12 @@ exports[`object fields with title and description object 1`] = `
         >
           A
         </label>
-        <p
+        <div
           className="field-description"
           id="root_a__description"
         >
           A description
-        </p>
+        </div>
         <input
           aria-describedby="root_a__error root_a__description root_a__help"
           autoFocus={false}
@@ -1130,12 +1130,12 @@ exports[`object fields with title and description object 1`] = `
         >
           B
         </label>
-        <p
+        <div
           className="field-description"
           id="root_b__description"
         >
           B description
-        </p>
+        </div>
         <input
           aria-describedby="root_b__error root_b__description root_b__help"
           autoFocus={false}
@@ -1186,12 +1186,12 @@ exports[`object fields with title and description show add button and fields if 
       >
         Test field
       </legend>
-      <p
+      <div
         className="field-description"
         id="root__description"
       >
         a test description
-      </p>
+      </div>
       <div
         className="form-group rjsf-field rjsf-field-string"
       >
