@@ -86,6 +86,114 @@ exports[`single fields checkbox field with label 1`] = `
 </form>
 `;
 
+exports[`single fields checkbox field with label and description 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group rjsf-field rjsf-field-boolean"
+  >
+    <div
+      className="checkbox "
+    >
+      <div
+        className="field-description"
+        id="root__description"
+      >
+        test description
+      </div>
+      <label>
+        <input
+          aria-describedby="root__error root__description root__help"
+          autoFocus={false}
+          checked={false}
+          disabled={false}
+          id="root"
+          name="root"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          required={false}
+          type="checkbox"
+        />
+        <span>
+          test
+        </span>
+      </label>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-info "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields checkbox field with label and rich text description 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group rjsf-field rjsf-field-boolean"
+  >
+    <div
+      className="checkbox "
+    >
+      <div
+        className="field-description"
+        id="root__description"
+      >
+        <span>
+          <strong>
+            test
+          </strong>
+           
+          <strong>
+            description
+          </strong>
+        </span>
+      </div>
+      <label>
+        <input
+          aria-describedby="root__error root__description root__help"
+          autoFocus={false}
+          checked={false}
+          disabled={false}
+          id="root"
+          name="root"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          required={false}
+          type="checkbox"
+        />
+        <span>
+          test
+        </span>
+      </label>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-info "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
 exports[`single fields checkboxes field 1`] = `
 <form
   className="rjsf"
@@ -236,12 +344,12 @@ exports[`single fields field with description 1`] = `
         >
           my-field
         </label>
-        <p
+        <div
           className="field-description"
           id="root_my-field__description"
         >
           some description
-        </p>
+        </div>
         <input
           aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
           autoFocus={false}
@@ -295,12 +403,138 @@ exports[`single fields field with description in uiSchema 1`] = `
         >
           my-field
         </label>
-        <p
+        <div
           className="field-description"
           id="root_my-field__description"
         >
           some other description
-        </p>
+        </div>
+        <input
+          aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
+          autoFocus={false}
+          className="form-control"
+          disabled={false}
+          id="root_my-field"
+          label="my-field"
+          name="root_my-field"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          placeholder=""
+          readOnly={false}
+          required={false}
+          type="text"
+          value=""
+        />
+      </div>
+    </fieldset>
+  </div>
+  <div>
+    <button
+      className="btn btn-info "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields field with markdown description 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group rjsf-field rjsf-field-object"
+  >
+    <fieldset
+      id="root"
+    >
+      <div
+        className="form-group rjsf-field rjsf-field-string"
+      >
+        <label
+          className="control-label"
+          htmlFor="root_my-field"
+        >
+          my-field
+        </label>
+        <div
+          className="field-description"
+          id="root_my-field__description"
+        >
+          <span>
+            some 
+            <strong>
+              Rich
+            </strong>
+             description
+          </span>
+        </div>
+        <input
+          aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
+          autoFocus={false}
+          className="form-control"
+          disabled={false}
+          id="root_my-field"
+          label="my-field"
+          name="root_my-field"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          placeholder=""
+          readOnly={false}
+          required={false}
+          type="text"
+          value=""
+        />
+      </div>
+    </fieldset>
+  </div>
+  <div>
+    <button
+      className="btn btn-info "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields field with markdown description in uiSchema 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group rjsf-field rjsf-field-object"
+  >
+    <fieldset
+      id="root"
+    >
+      <div
+        className="form-group rjsf-field rjsf-field-string"
+      >
+        <label
+          className="control-label"
+          htmlFor="root_my-field"
+        >
+          my-field
+        </label>
+        <div
+          className="field-description"
+          id="root_my-field__description"
+        >
+          <span>
+            some other description
+          </span>
+        </div>
         <input
           aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
           autoFocus={false}

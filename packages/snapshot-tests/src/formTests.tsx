@@ -1,8 +1,14 @@
 import { ComponentType } from 'react';
 import renderer, { TestRendererOptions } from 'react-test-renderer';
 import { FormProps } from '@rjsf/core';
-import { RJSFSchema, ErrorSchema } from '@rjsf/utils';
+import { RJSFSchema, ErrorSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
+
+jest.mock('@rjsf/utils', () => ({
+  ...jest.requireActual('@rjsf/utils'),
+  // Disable the getTestIds within the snapshot tests by returning an empty object
+  getTestIds: jest.fn(() => ({})),
+}));
 
 export const SELECT_CUSTOMIZE = 'selectMulti';
 export const SLIDER_CUSTOMIZE = 'slider';
@@ -323,6 +329,25 @@ export function formTests(Form: ComponentType<FormProps>, customOptions: FormRen
       const tree = renderer.create(<Form schema={schema} validator={validator} />).toJSON();
       expect(tree).toMatchSnapshot();
     });
+    test('checkbox field with label and description', () => {
+      const schema: RJSFSchema = {
+        type: 'boolean',
+        title: 'test',
+        description: 'test description',
+      };
+      const tree = renderer.create(<Form schema={schema} validator={validator} />).toJSON();
+      expect(tree).toMatchSnapshot();
+    });
+    test('checkbox field with label and rich text description', () => {
+      const schema: RJSFSchema = {
+        type: 'boolean',
+        title: 'test',
+        description: '**test** __description__',
+      };
+      const uiSchema: UiSchema = { 'ui:enableMarkdownInDescription': true };
+      const tree = renderer.create(<Form schema={schema} uiSchema={uiSchema} validator={validator} />).toJSON();
+      expect(tree).toMatchSnapshot();
+    });
     test('checkboxes field', () => {
       const schema: RJSFSchema = {
         type: 'array',
@@ -409,6 +434,41 @@ export function formTests(Form: ComponentType<FormProps>, customOptions: FormRen
       const uiSchema = {
         'my-field': {
           'ui:description': 'some other description',
+        },
+      };
+      const tree = renderer.create(<Form schema={schema} validator={validator} uiSchema={uiSchema} />).toJSON();
+      expect(tree).toMatchSnapshot();
+    });
+    test('field with markdown description', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          'my-field': {
+            type: 'string',
+            description: 'some **Rich** description',
+          },
+        },
+      };
+      const uiSchema = {
+        'my-field': { 'ui:enableMarkdownInDescription': true },
+      };
+      const tree = renderer.create(<Form schema={schema} uiSchema={uiSchema} validator={validator} />).toJSON();
+      expect(tree).toMatchSnapshot();
+    });
+    test('field with markdown description in uiSchema', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          'my-field': {
+            type: 'string',
+            description: 'some **Rich** description',
+          },
+        },
+      };
+      const uiSchema = {
+        'my-field': {
+          'ui:description': 'some other description',
+          'ui:enableMarkdownInDescription': true,
         },
       };
       const tree = renderer.create(<Form schema={schema} validator={validator} uiSchema={uiSchema} />).toJSON();

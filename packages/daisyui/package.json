@@ -54,7 +54,8 @@
     "precommit": "lint-staged",
     "test": "jest",
     "test:update": "jest --u",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "test:debug": "node --inspect-brk ../../node_modules/.bin/jest"
   },
   "lint-staged": {
     "{src,test}/**/*.ts?(x)": [
@@ -86,6 +87,9 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/rjsf-team/react-jsonschema-form.git"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "author": "Jason Vertrees <jason.vertrees@gmail.com>",
   "license": "Apache-2.0"

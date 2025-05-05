@@ -207,6 +207,41 @@ The `ui:disabled` uiSchema directive will disable all child widgets from a given
 
 > Note: If you're wondering about the difference between a `disabled` field and a `readonly` one: Marking a field as read-only will render it greyed out, but its text value will be selectable. Disabling it will prevent its value to be selected at all.
 
+### enableMarkdownInDescription
+
+The `ui:enableMarkdownInDescription` uiSchema directive enables the support of Markdown syntax within the description of
+a field.
+
+```tsx
+import { Form } from '@rjsf/core';
+import { RJSFSchema, UiSchema } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
+
+const schema: RJSFSchema = { type: 'string', description: '**bolded** text in the description' };
+const uiSchema: UiSchema = {
+  'ui:enableMarkdownInDescription': true,
+};
+render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
+```
+
+It can also be enabled globally by setting the `enableMarkdownInDescription` option to `true` in the `ui:globalOptions`
+uiSchema directive.
+
+```tsx
+import { Form } from '@rjsf/core';
+import { RJSFSchema, UiSchema } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
+
+const schema: RJSFSchema = { type: 'string', description: '**bolded** text in the description' };
+const uiSchema: UiSchema = {
+  'ui:globalOptions': {
+    enableMarkdownInDescription: true,
+  },
+};
+
+render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
+```
+
 ### emptyValue
 
 The `ui:emptyValue` uiSchema directive provides the default value to use when an input for a field is empty

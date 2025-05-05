@@ -908,15 +908,12 @@ exports[`Complex grid renders person and address and employment in a complex gri
       >
         <div
           className="emotion-2"
-          data-testid="0"
         >
           <div
             className="emotion-3"
-            data-testid="0"
           >
             <div
               className="emotion-4"
-              data-testid="1"
             >
               <div
                 className="rjsf-field rjsf-field-object"
@@ -952,11 +949,9 @@ exports[`Complex grid renders person and address and employment in a complex gri
           </div>
           <div
             className="emotion-10"
-            data-testid="0"
           >
             <div
               className="emotion-4"
-              data-testid="1"
             >
               <div
                 className="rjsf-field rjsf-field-string"
@@ -1018,7 +1013,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
             </div>
             <div
               className="emotion-4"
-              data-testid="1"
             >
               <div
                 className="rjsf-field rjsf-field-string"
@@ -1073,7 +1067,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
             </div>
             <div
               className="emotion-4"
-              data-testid="1"
             >
               <div
                 className="rjsf-field rjsf-field-string"
@@ -1136,11 +1129,9 @@ exports[`Complex grid renders person and address and employment in a complex gri
           </div>
           <div
             className="emotion-10"
-            data-testid="0"
           >
             <div
               className="emotion-4"
-              data-testid="1"
             >
               <div
                 className="rjsf-field rjsf-field-string"
@@ -1202,7 +1193,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
             </div>
             <div
               className="emotion-39"
-              data-testid="1"
             >
               <div
                 className="rjsf-field rjsf-field-array"
@@ -1606,11 +1596,9 @@ exports[`Complex grid renders person and address and employment in a complex gri
           </div>
           <div
             className="emotion-72"
-            data-testid="0"
           >
             <div
               className="emotion-4"
-              data-testid="1"
             >
               <div
                 className="rjsf-field rjsf-field-object"
@@ -1626,11 +1614,9 @@ exports[`Complex grid renders person and address and employment in a complex gri
                   >
                     <div
                       className="emotion-72"
-                      data-testid="0"
                     >
                       <div
                         className="emotion-39"
-                        data-testid="1"
                       >
                         <div
                           className="rjsf-field rjsf-field-string"
@@ -1692,7 +1678,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       </div>
                       <div
                         className="emotion-39"
-                        data-testid="1"
                       >
                         <div
                           className="rjsf-field rjsf-field-string"
@@ -1747,7 +1732,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       </div>
                       <div
                         className="emotion-39"
-                        data-testid="1"
                       >
                         <div
                           className="rjsf-field rjsf-field-string"
@@ -1809,7 +1793,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       </div>
                       <div
                         className="emotion-4"
-                        data-testid="1"
                         size={6}
                       >
                         <div
@@ -4182,7 +4165,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       </div>
                       <div
                         className="emotion-4"
-                        data-testid="1"
                         size={6}
                       >
                         <div
@@ -4250,15 +4232,12 @@ exports[`Complex grid renders person and address and employment in a complex gri
             </div>
             <div
               className="emotion-4"
-              data-testid="1"
             >
               <div
                 className="emotion-10"
-                data-testid="0"
               >
                 <div
                   className="emotion-290"
-                  data-testid="1"
                   style={
                     {
                       "margin": "0 0 16px",
@@ -4532,7 +4511,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                 </div>
                 <div
                   className="emotion-290"
-                  data-testid="1"
                 >
                   <div
                     className="rjsf-field rjsf-field-string"
@@ -4594,7 +4572,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                 </div>
                 <div
                   className="emotion-290"
-                  data-testid="1"
                 >
                   <div
                     className="rjsf-field rjsf-field-string"
@@ -4649,7 +4626,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                 </div>
                 <div
                   className="emotion-39"
-                  data-testid="1"
                 >
                   <div
                     className="rjsf-field rjsf-field-string"
@@ -4711,7 +4687,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                 </div>
                 <div
                   className="emotion-4"
-                  data-testid="1"
                 >
                   <div
                     className="rjsf-field rjsf-field-string"
@@ -8010,15 +7985,12 @@ exports[`Complex grid renders person and address and employment in a complex gri
       >
         <div
           className="emotion-2"
-          data-testid="0"
         >
           <div
             className="emotion-3"
-            data-testid="0"
           >
             <div
               className="emotion-4"
-              data-testid="1"
             >
               <div
                 className="rjsf-field rjsf-field-object"
@@ -8054,11 +8026,9 @@ exports[`Complex grid renders person and address and employment in a complex gri
           </div>
           <div
             className="emotion-10"
-            data-testid="0"
           >
             <div
               className="emotion-4"
-              data-testid="1"
             >
               <div
                 className="rjsf-field rjsf-field-string"
@@ -8120,7 +8090,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
             </div>
             <div
               className="emotion-4"
-              data-testid="1"
             >
               <div
                 className="rjsf-field rjsf-field-string"
@@ -8175,7 +8144,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
             </div>
             <div
               className="emotion-4"
-              data-testid="1"
             >
               <div
                 className="rjsf-field rjsf-field-string"
@@ -8238,11 +8206,9 @@ exports[`Complex grid renders person and address and employment in a complex gri
           </div>
           <div
             className="emotion-10"
-            data-testid="0"
           >
             <div
               className="emotion-4"
-              data-testid="1"
             >
               <div
                 className="rjsf-field rjsf-field-string"
@@ -8304,7 +8270,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
             </div>
             <div
               className="emotion-39"
-              data-testid="1"
             >
               <div
                 className="rjsf-field rjsf-field-array"
@@ -8708,11 +8673,9 @@ exports[`Complex grid renders person and address and employment in a complex gri
           </div>
           <div
             className="emotion-72"
-            data-testid="0"
           >
             <div
               className="emotion-4"
-              data-testid="1"
             >
               <div
                 className="rjsf-field rjsf-field-object"
@@ -8728,11 +8691,9 @@ exports[`Complex grid renders person and address and employment in a complex gri
                   >
                     <div
                       className="emotion-72"
-                      data-testid="0"
                     >
                       <div
                         className="emotion-39"
-                        data-testid="1"
                       >
                         <div
                           className="rjsf-field rjsf-field-string"
@@ -8794,7 +8755,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       </div>
                       <div
                         className="emotion-39"
-                        data-testid="1"
                       >
                         <div
                           className="rjsf-field rjsf-field-string"
@@ -8849,7 +8809,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       </div>
                       <div
                         className="emotion-39"
-                        data-testid="1"
                       >
                         <div
                           className="rjsf-field rjsf-field-string"
@@ -8911,7 +8870,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       </div>
                       <div
                         className="emotion-4"
-                        data-testid="1"
                         size={6}
                       >
                         <div
@@ -11284,7 +11242,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       </div>
                       <div
                         className="emotion-4"
-                        data-testid="1"
                         size={6}
                       >
                         <div
@@ -11352,15 +11309,12 @@ exports[`Complex grid renders person and address and employment in a complex gri
             </div>
             <div
               className="emotion-4"
-              data-testid="1"
             >
               <div
                 className="emotion-10"
-                data-testid="0"
               >
                 <div
                   className="emotion-290"
-                  data-testid="1"
                   style={
                     {
                       "margin": "0 0 16px",
@@ -11634,7 +11588,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                 </div>
                 <div
                   className="emotion-290"
-                  data-testid="1"
                 >
                   <div
                     className="rjsf-field rjsf-field-string"
@@ -11689,7 +11642,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                 </div>
                 <div
                   className="emotion-290"
-                  data-testid="1"
                 >
                   <div
                     className="rjsf-field rjsf-field-string"
@@ -11751,7 +11703,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                 </div>
                 <div
                   className="emotion-290"
-                  data-testid="1"
                 >
                   <div
                     className="rjsf-field rjsf-field-string"
@@ -11806,7 +11757,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                 </div>
                 <div
                   className="emotion-39"
-                  data-testid="1"
                 >
                   <div
                     className="rjsf-field rjsf-field-string"
@@ -11868,7 +11818,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                 </div>
                 <div
                   className="emotion-4"
-                  data-testid="1"
                 >
                   <div
                     className="rjsf-field rjsf-field-string"
@@ -15212,15 +15161,12 @@ exports[`Complex grid renders person and address and employment in a complex gri
       >
         <div
           className="emotion-2"
-          data-testid="0"
         >
           <div
             className="emotion-3"
-            data-testid="0"
           >
             <div
               className="emotion-4"
-              data-testid="1"
             >
               <div
                 className="rjsf-field rjsf-field-object"
@@ -15256,11 +15202,9 @@ exports[`Complex grid renders person and address and employment in a complex gri
           </div>
           <div
             className="emotion-10"
-            data-testid="0"
           >
             <div
               className="emotion-4"
-              data-testid="1"
             >
               <div
                 className="rjsf-field rjsf-field-string"
@@ -15322,7 +15266,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
             </div>
             <div
               className="emotion-4"
-              data-testid="1"
             >
               <div
                 className="rjsf-field rjsf-field-string"
@@ -15377,7 +15320,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
             </div>
             <div
               className="emotion-4"
-              data-testid="1"
             >
               <div
                 className="rjsf-field rjsf-field-string"
@@ -15440,11 +15382,9 @@ exports[`Complex grid renders person and address and employment in a complex gri
           </div>
           <div
             className="emotion-10"
-            data-testid="0"
           >
             <div
               className="emotion-4"
-              data-testid="1"
             >
               <div
                 className="rjsf-field rjsf-field-string"
@@ -15506,7 +15446,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
             </div>
             <div
               className="emotion-39"
-              data-testid="1"
             >
               <div
                 className="rjsf-field rjsf-field-array"
@@ -15910,11 +15849,9 @@ exports[`Complex grid renders person and address and employment in a complex gri
           </div>
           <div
             className="emotion-72"
-            data-testid="0"
           >
             <div
               className="emotion-4"
-              data-testid="1"
             >
               <div
                 className="rjsf-field rjsf-field-object"
@@ -15930,11 +15867,9 @@ exports[`Complex grid renders person and address and employment in a complex gri
                   >
                     <div
                       className="emotion-72"
-                      data-testid="0"
                     >
                       <div
                         className="emotion-39"
-                        data-testid="1"
                       >
                         <div
                           className="rjsf-field rjsf-field-string"
@@ -15996,7 +15931,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       </div>
                       <div
                         className="emotion-39"
-                        data-testid="1"
                       >
                         <div
                           className="rjsf-field rjsf-field-string"
@@ -16051,7 +15985,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       </div>
                       <div
                         className="emotion-39"
-                        data-testid="1"
                       >
                         <div
                           className="rjsf-field rjsf-field-string"
@@ -16113,7 +16046,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       </div>
                       <div
                         className="emotion-4"
-                        data-testid="1"
                         size={6}
                       >
                         <div
@@ -18486,7 +18418,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       </div>
                       <div
                         className="emotion-4"
-                        data-testid="1"
                         size={6}
                       >
                         <div
@@ -18554,15 +18485,12 @@ exports[`Complex grid renders person and address and employment in a complex gri
             </div>
             <div
               className="emotion-4"
-              data-testid="1"
             >
               <div
                 className="emotion-10"
-                data-testid="0"
               >
                 <div
                   className="emotion-290"
-                  data-testid="1"
                   style={
                     {
                       "margin": "0 0 16px",
@@ -18836,7 +18764,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                 </div>
                 <div
                   className="emotion-290"
-                  data-testid="1"
                 >
                   <div
                     className="rjsf-field rjsf-field-string"
@@ -19830,15 +19757,12 @@ exports[`Complex grid renders person and address and employment in a complex gri
       >
         <div
           className="emotion-2"
-          data-testid="0"
         >
           <div
             className="emotion-3"
-            data-testid="0"
           >
             <div
               className="emotion-4"
-              data-testid="1"
             >
               <div
                 className="rjsf-field rjsf-field-object"
@@ -19874,11 +19798,9 @@ exports[`Complex grid renders person and address and employment in a complex gri
           </div>
           <div
             className="emotion-10"
-            data-testid="0"
           >
             <div
               className="emotion-4"
-              data-testid="1"
             >
               <div
                 className="rjsf-field rjsf-field-string"
@@ -19940,7 +19862,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
             </div>
             <div
               className="emotion-4"
-              data-testid="1"
             >
               <div
                 className="rjsf-field rjsf-field-string"
@@ -19995,7 +19916,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
             </div>
             <div
               className="emotion-4"
-              data-testid="1"
             >
               <div
                 className="rjsf-field rjsf-field-string"
@@ -20058,11 +19978,9 @@ exports[`Complex grid renders person and address and employment in a complex gri
           </div>
           <div
             className="emotion-10"
-            data-testid="0"
           >
             <div
               className="emotion-4"
-              data-testid="1"
             >
               <div
                 className="rjsf-field rjsf-field-string"
@@ -20124,7 +20042,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
             </div>
             <div
               className="emotion-39"
-              data-testid="1"
             >
               <div
                 className="rjsf-field rjsf-field-array"
@@ -20528,11 +20445,9 @@ exports[`Complex grid renders person and address and employment in a complex gri
           </div>
           <div
             className="emotion-72"
-            data-testid="0"
           >
             <div
               className="emotion-4"
-              data-testid="1"
             >
               <div
                 className="rjsf-field rjsf-field-object"
@@ -20548,11 +20463,9 @@ exports[`Complex grid renders person and address and employment in a complex gri
                   >
                     <div
                       className="emotion-72"
-                      data-testid="0"
                     >
                       <div
                         className="emotion-39"
-                        data-testid="1"
                       >
                         <div
                           className="rjsf-field rjsf-field-string"
@@ -20614,7 +20527,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       </div>
                       <div
                         className="emotion-39"
-                        data-testid="1"
                       >
                         <div
                           className="rjsf-field rjsf-field-string"
@@ -20669,7 +20581,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       </div>
                       <div
                         className="emotion-39"
-                        data-testid="1"
                       >
                         <div
                           className="rjsf-field rjsf-field-string"
@@ -20731,7 +20642,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       </div>
                       <div
                         className="emotion-4"
-                        data-testid="1"
                         size={6}
                       >
                         <div
@@ -23104,7 +23014,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       </div>
                       <div
                         className="emotion-4"
-                        data-testid="1"
                         size={6}
                       >
                         <div
@@ -23172,15 +23081,12 @@ exports[`Complex grid renders person and address and employment in a complex gri
             </div>
             <div
               className="emotion-4"
-              data-testid="1"
             >
               <div
                 className="emotion-10"
-                data-testid="0"
               >
                 <div
                   className="emotion-290"
-                  data-testid="1"
                   style={
                     {
                       "margin": "0 0 16px",
@@ -23454,7 +23360,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                 </div>
                 <div
                   className="emotion-290"
-                  data-testid="1"
                 >
                   <div
                     className="rjsf-field rjsf-field-string"
@@ -23516,7 +23421,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                 </div>
                 <div
                   className="emotion-290"
-                  data-testid="1"
                 >
                   <div
                     className="rjsf-field rjsf-field-string"
@@ -23571,7 +23475,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                 </div>
                 <div
                   className="emotion-39"
-                  data-testid="1"
                 >
                   <div
                     className="rjsf-field rjsf-field-string"
@@ -23633,7 +23536,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                 </div>
                 <div
                   className="emotion-4"
-                  data-testid="1"
                 >
                   <div
                     className="rjsf-field rjsf-field-string"
@@ -26796,11 +26698,9 @@ exports[`Three even column grid renders person and address in three columns, no 
       >
         <div
           className="emotion-2"
-          data-testid="0"
         >
           <div
             className="emotion-3"
-            data-testid="1"
           >
             <div
               className="rjsf-field rjsf-field-object"
@@ -26835,7 +26735,6 @@ exports[`Three even column grid renders person and address in three columns, no 
           </div>
           <div
             className="emotion-3"
-            data-testid="1"
           >
             <div
               className="rjsf-field rjsf-field-string"
@@ -26897,7 +26796,6 @@ exports[`Three even column grid renders person and address in three columns, no 
           </div>
           <div
             className="emotion-3"
-            data-testid="1"
           >
             <div
               className="rjsf-field rjsf-field-string"
@@ -26952,7 +26850,6 @@ exports[`Three even column grid renders person and address in three columns, no 
           </div>
           <div
             className="emotion-3"
-            data-testid="1"
           >
             <div
               className="rjsf-field rjsf-field-string"
@@ -27014,7 +26911,6 @@ exports[`Three even column grid renders person and address in three columns, no 
           </div>
           <div
             className="emotion-3"
-            data-testid="1"
           >
             <div
               className="rjsf-field rjsf-field-string"
@@ -27076,7 +26972,6 @@ exports[`Three even column grid renders person and address in three columns, no 
           </div>
           <div
             className="emotion-3"
-            data-testid="1"
           >
             <div
               className="rjsf-field rjsf-field-array"
@@ -27479,7 +27374,6 @@ exports[`Three even column grid renders person and address in three columns, no 
           </div>
           <div
             className="emotion-3"
-            data-testid="1"
           >
             <div
               className="rjsf-field rjsf-field-string"
@@ -27541,7 +27435,6 @@ exports[`Three even column grid renders person and address in three columns, no 
           </div>
           <div
             className="emotion-3"
-            data-testid="1"
           >
             <div
               className="rjsf-field rjsf-field-string"
@@ -27596,7 +27489,6 @@ exports[`Three even column grid renders person and address in three columns, no 
           </div>
           <div
             className="emotion-3"
-            data-testid="1"
           >
             <div
               className="rjsf-field rjsf-field-string"
@@ -27658,7 +27550,6 @@ exports[`Three even column grid renders person and address in three columns, no 
           </div>
           <div
             className="emotion-3"
-            data-testid="1"
           >
             <div
               className="rjsf-field rjsf-field-string"
@@ -30030,7 +29921,6 @@ exports[`Three even column grid renders person and address in three columns, no 
           </div>
           <div
             className="emotion-3"
-            data-testid="1"
           />
         </div>
       </div>
@@ -30822,11 +30712,9 @@ exports[`Two even column grid renders person and address in two columns, no empl
       >
         <div
           className="emotion-2"
-          data-testid="0"
         >
           <div
             className="emotion-3"
-            data-testid="1"
           >
             <div
               className="rjsf-field rjsf-field-object"
@@ -30861,7 +30749,6 @@ exports[`Two even column grid renders person and address in two columns, no empl
           </div>
           <div
             className="emotion-3"
-            data-testid="1"
           >
             <div
               className="rjsf-field rjsf-field-string"
@@ -30923,7 +30810,6 @@ exports[`Two even column grid renders person and address in two columns, no empl
           </div>
           <div
             className="emotion-3"
-            data-testid="1"
           >
             <div
               className="rjsf-field rjsf-field-string"
@@ -30978,7 +30864,6 @@ exports[`Two even column grid renders person and address in two columns, no empl
           </div>
           <div
             className="emotion-3"
-            data-testid="1"
           >
             <div
               className="rjsf-field rjsf-field-string"
@@ -31040,7 +30925,6 @@ exports[`Two even column grid renders person and address in two columns, no empl
           </div>
           <div
             className="emotion-3"
-            data-testid="1"
           >
             <div
               className="rjsf-field rjsf-field-string"
@@ -31102,7 +30986,6 @@ exports[`Two even column grid renders person and address in two columns, no empl
           </div>
           <div
             className="emotion-3"
-            data-testid="1"
           >
             <div
               className="rjsf-field rjsf-field-array"
@@ -31505,7 +31388,6 @@ exports[`Two even column grid renders person and address in two columns, no empl
           </div>
           <div
             className="emotion-3"
-            data-testid="1"
           >
             <div
               className="rjsf-field rjsf-field-string"
@@ -31567,7 +31449,6 @@ exports[`Two even column grid renders person and address in two columns, no empl
           </div>
           <div
             className="emotion-3"
-            data-testid="1"
           >
             <div
               className="rjsf-field rjsf-field-string"
@@ -31622,7 +31503,6 @@ exports[`Two even column grid renders person and address in two columns, no empl
           </div>
           <div
             className="emotion-3"
-            data-testid="1"
           >
             <div
               className="rjsf-field rjsf-field-string"
@@ -31684,7 +31564,6 @@ exports[`Two even column grid renders person and address in two columns, no empl
           </div>
           <div
             className="emotion-3"
-            data-testid="1"
           >
             <div
               className="rjsf-field rjsf-field-string"
@@ -34056,7 +33935,6 @@ exports[`Two even column grid renders person and address in two columns, no empl
           </div>
           <div
             className="emotion-3"
-            data-testid="1"
           />
         </div>
       </div>

@@ -245,7 +245,7 @@ export type FormValidation<T = any> = FieldValidation & {
 export type RJSFBaseProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any> = {
   /** The schema object for the field being described */
   schema: S;
-  /** The uiSchema object for this description field */
+  /** The uiSchema object for this base component */
   uiSchema?: UiSchema<T, S, F>;
   /** The `registry` object */
   registry: Registry<T, S, F>;
@@ -387,6 +387,9 @@ export type GlobalUISchemaOptions = {
    * This option allows you to change the separator between the original key name and the integer. Default is "-"
    */
   duplicateKeySuffixSeparator?: string;
+  /** Enables the displaying of description text that contains markdown
+   */
+  enableMarkdownInDescription?: boolean;
 };
 
 /** The object containing the registered core, theme and custom fields and widgets as well as the root schema, form
@@ -422,11 +425,8 @@ export interface Registry<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
 /** The properties that are passed to a Field implementation */
 export interface FieldProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>
   extends GenericObjectType,
+    RJSFBaseProps<T, S, F>,
     Pick<HTMLAttributes<HTMLElement>, Exclude<keyof HTMLAttributes<HTMLElement>, 'onBlur' | 'onFocus' | 'onChange'>> {
-  /** The JSON subschema object for this field */
-  schema: S;
-  /** The uiSchema for this field */
-  uiSchema?: UiSchema<T, S, F>;
   /** The tree of unique ids for every child field */
   idSchema: IdSchema<T>;
   /** The data for this field */
@@ -463,8 +463,6 @@ export interface FieldProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F 
   idSeparator?: string;
   /** An array of strings listing all generated error messages from encountered errors for this field */
   rawErrors?: string[];
-  /** The `registry` object */
-  registry: Registry<T, S, F>;
 }
 
 /** The definition of a React-based Field component */
@@ -726,7 +724,7 @@ export type ObjectFieldTemplateProps<
   /** A string value containing the title for the object */
   title: string;
   /** A string value containing the description for the object */
-  description?: string;
+  description?: string | ReactElement;
   /** A boolean value stating if the object is disabled */
   disabled?: boolean;
   /** An array of objects representing the properties in the object */

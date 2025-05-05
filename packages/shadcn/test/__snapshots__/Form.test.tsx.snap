@@ -152,6 +152,184 @@ exports[`single fields checkbox field with label 1`] = `
 </form>
 `;
 
+exports[`single fields checkbox field with label and description 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-boolean"
+  >
+    <div
+      className="flex flex-col gap-2"
+    >
+      <div
+        aria-describedby="root__error root__description root__help"
+        className="relative "
+      >
+        <div>
+          <div
+            className="text-sm text-muted-foreground"
+            id="root__description"
+          >
+            test description
+          </div>
+        </div>
+        <div
+          className="flex items-center gap-2 my-2"
+        >
+          <button
+            aria-checked={false}
+            aria-required={false}
+            autoFocus={false}
+            className="peer h-4 w-4 shrink-0 rounded-sm border border-primary shadow focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground"
+            data-state="unchecked"
+            disabled={false}
+            id="root"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            role="checkbox"
+            type="button"
+            value="on"
+          />
+          <input
+            aria-hidden={true}
+            defaultChecked={false}
+            disabled={false}
+            name="root"
+            required={false}
+            style={
+              {
+                "margin": 0,
+                "opacity": 0,
+                "pointerEvents": "none",
+                "position": "absolute",
+                "transform": "translateX(-100%)",
+              }
+            }
+            tabIndex={-1}
+            type="checkbox"
+            value="on"
+          />
+          <label
+            className="text-sm font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 leading-tight"
+            htmlFor="root"
+            onMouseDown={[Function]}
+          >
+            test
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2 my-2"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields checkbox field with label and rich text description 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-boolean"
+  >
+    <div
+      className="flex flex-col gap-2"
+    >
+      <div
+        aria-describedby="root__error root__description root__help"
+        className="relative "
+      >
+        <div>
+          <div
+            className="text-sm text-muted-foreground"
+            id="root__description"
+          >
+            <span>
+              <strong>
+                test
+              </strong>
+               
+              <strong>
+                description
+              </strong>
+            </span>
+          </div>
+        </div>
+        <div
+          className="flex items-center gap-2 my-2"
+        >
+          <button
+            aria-checked={false}
+            aria-required={false}
+            autoFocus={false}
+            className="peer h-4 w-4 shrink-0 rounded-sm border border-primary shadow focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground"
+            data-state="unchecked"
+            disabled={false}
+            id="root"
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onKeyDown={[Function]}
+            role="checkbox"
+            type="button"
+            value="on"
+          />
+          <input
+            aria-hidden={true}
+            defaultChecked={false}
+            disabled={false}
+            name="root"
+            required={false}
+            style={
+              {
+                "margin": 0,
+                "opacity": 0,
+                "pointerEvents": "none",
+                "position": "absolute",
+                "transform": "translateX(-100%)",
+              }
+            }
+            tabIndex={-1}
+            type="checkbox"
+            value="on"
+          />
+          <label
+            className="text-sm font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 leading-tight"
+            htmlFor="root"
+            onMouseDown={[Function]}
+          >
+            test
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2 my-2"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
 exports[`single fields checkboxes field 1`] = `
 <form
   className="rjsf"
@@ -524,6 +702,184 @@ exports[`single fields field with description in uiSchema 1`] = `
                       id="root_my-field__description"
                     >
                       some other description
+                    </div>
+                  </div>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2 my-2"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields field with markdown description 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div
+      className="flex flex-col gap-2"
+    >
+      <div
+        className="flex flex-col gap-2"
+      >
+        <div
+          className=" flex"
+        >
+          <div
+            className="w-full"
+          >
+             
+            <div
+              className="rjsf-field rjsf-field-string"
+            >
+              <div
+                className="flex flex-col gap-2"
+              >
+                <label
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  htmlFor="root_my-field"
+                >
+                  my-field
+                </label>
+                <div
+                  className="p-0.5"
+                >
+                  <input
+                    aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
+                    autoFocus={false}
+                    className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                    disabled={false}
+                    id="root_my-field"
+                    name="root_my-field"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    readOnly={false}
+                    required={false}
+                    type="text"
+                    value=""
+                  />
+                </div>
+                <span
+                  className="text-xs font-medium text-muted-foreground"
+                >
+                  <div>
+                    <div
+                      className="text-sm text-muted-foreground"
+                      id="root_my-field__description"
+                    >
+                      <span>
+                        some 
+                        <strong>
+                          Rich
+                        </strong>
+                         description
+                      </span>
+                    </div>
+                  </div>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2 my-2"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields field with markdown description in uiSchema 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div
+      className="flex flex-col gap-2"
+    >
+      <div
+        className="flex flex-col gap-2"
+      >
+        <div
+          className=" flex"
+        >
+          <div
+            className="w-full"
+          >
+             
+            <div
+              className="rjsf-field rjsf-field-string"
+            >
+              <div
+                className="flex flex-col gap-2"
+              >
+                <label
+                  className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                  htmlFor="root_my-field"
+                >
+                  my-field
+                </label>
+                <div
+                  className="p-0.5"
+                >
+                  <input
+                    aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
+                    autoFocus={false}
+                    className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                    disabled={false}
+                    id="root_my-field"
+                    name="root_my-field"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    readOnly={false}
+                    required={false}
+                    type="text"
+                    value=""
+                  />
+                </div>
+                <span
+                  className="text-xs font-medium text-muted-foreground"
+                >
+                  <div>
+                    <div
+                      className="text-sm text-muted-foreground"
+                      id="root_my-field__description"
+                    >
+                      <span>
+                        some other description
+                      </span>
                     </div>
                   </div>
                 </span>
