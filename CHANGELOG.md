@@ -35,6 +35,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Updated `DescriptionField` to render the `description` using the `RichDescription` field
 - Updated `FieldTemplate` to move the checkbox implementation into the `CheckboxWidget` adding the `description` for checkboxes
 - Updated `package.json` to make the package publishable
+- Updated `DaisyUIFrameProvider` to extract the bulk of the code into `DaisyUIFrameComponent` to add a `useEffect()` with a cleanup to remove the tailwind styles
 
 ## @rjsf/fluentui-rc
 
