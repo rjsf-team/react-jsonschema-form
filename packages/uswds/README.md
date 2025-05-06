@@ -7,11 +7,27 @@
 
 USWDS theme, fields and widgets for [`react-jsonschema-form`](https://github.com/rjsf-team/react-jsonschema-form/).
 
+## Features
+
+*   Templates for all standard RJSF fields (Object, Array, String, Number, Boolean, etc.) styled according to USWDS.
+*   Widgets leveraging USWDS form controls (`usa-input`, `usa-textarea`, `usa-checkbox`, `usa-radio`, `usa-select`, `usa-combo-box`, `usa-date-picker`, `usa-file-input`, `usa-range`, etc.).
+*   Support for specific input types (`email`, `url`, `color`, `date`, `datetime-local`, `hidden`).
+*   Array and Object field templates using USWDS `fieldset`, `legend`, and grid layout (`grid-row`, `grid-col`).
+*   Action buttons (Add, Remove, Move Up, Move Down) using USWDS button styles (`usa-button`, `usa-button--outline`, `usa-button--unstyled`) and icons.
+*   Error display using USWDS error states (`usa-form-group--error`, `usa-label--error`, `usa-error-message`).
+*   Required field indication using `usa-label--required`.
+*   `CheckboxesWidget` implementation.
+
 ## Installation
 
 ```bash
-npm install @rjsf/core @rjsf/uswds @uswds/uswds react react-dom
+npm install @rjsf/core @rjsf/uswds @trussworks/react-uswds
 ```
+or
+```bash
+yarn add @rjsf/core @rjsf/uswds @trussworks/react-uswds
+```
+
 ## Usage
 
 ## Prerequisites: USWDS CSS
@@ -100,3 +116,11 @@ Currently, this theme primarily focuses on applying standard USWDS classes and s
 ## Contributing
 
 See the [main RJSF contributing guide](https://rjsf-team.github.io/react-jsonschema-form/docs/contributing/).
+
+## TODO
+
+*   [ ] Fully implement `AltDateWidget` and `AltDateTimeWidget` using select dropdowns.
+*   [ ] Add comprehensive tests for all widgets and templates.
+*   [ ] Refine styling for edge cases and ensure perfect USWDS alignment.
+*   [ ] Improve accessibility (ARIA attributes, focus management).
+*   [ ] Add support for USWDS Date Range Picker if applicable.

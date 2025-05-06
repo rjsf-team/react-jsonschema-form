@@ -1,5 +1,11 @@
 import { Button, Icon } from '@trussworks/react-uswds'; // Import Icon
-import { IconButtonProps, FormContextType, RJSFSchema, StrictRJSFSchema, TranslatableString } from '@rjsf/utils';
+import {
+  IconButtonProps,
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  TranslatableString,
+} from '@rjsf/utils';
 
 /** The `MoveDownButton` renders a button that moves the item down in an array.
  *

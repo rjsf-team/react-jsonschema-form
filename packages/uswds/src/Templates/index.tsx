@@ -1,27 +1,41 @@
 import { FormContextType, RJSFSchema, StrictRJSFSchema, TemplatesType } from '@rjsf/utils';
 
-import Fields from './Fields/index';
-import ArrayField from './ArrayField';
-import Field from './Field';
-import ObjectField from './ObjectField';
-import Select from './Select';
-import TextArea from './TextArea';
-import Title from './Title';
-import Description from './Description';
-import SubmitButton from './SubmitButton';
-import TitleField from './TitleField';
+// Import all template components using the new filenames
+import ArrayFieldItemTemplate from './ArrayFieldItemTemplate'; // Renamed
+import ArrayFieldTemplate from './ArrayFieldTemplate';
+import BaseInputTemplate from './BaseInputTemplate';
+import DescriptionFieldTemplate from './DescriptionFieldTemplate'; // Renamed
+import ErrorListTemplate from './ErrorListTemplate'; // Renamed
+import FieldTemplate from './FieldTemplate'; // Renamed
+import ObjectFieldTemplate from './ObjectFieldTemplate'; // Renamed
+import TitleFieldTemplate from './TitleFieldTemplate'; // Renamed
+import UnsupportedFieldTemplate from './UnsupportedFieldTemplate'; // Added
+import AddButton from './Button/AddButton';
+import IconButton from './Button/IconButton';
+import SubmitButton from './Button/SubmitButton';
 
 export default function generateTemplates<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(): Partial<TemplatesType<T, S, F>> {
   return {
-    FieldTemplate: Field,
-    ArrayFieldTemplate: ArrayField,
-    ObjectFieldTemplate: ObjectField,
+    ArrayFieldItemTemplate,
+    ArrayFieldTemplate,
+    BaseInputTemplate,
+    DescriptionFieldTemplate,
+    ErrorListTemplate,
+    FieldTemplate,
+    ObjectFieldTemplate,
+    TitleFieldTemplate,
+    UnsupportedFieldTemplate, // Added registration
     ButtonTemplates: {
-      SubmitButton,
+      AddButton: AddButton,
+      CopyButton: (props) => <IconButton {...props} icon="content_copy" />, // Added CopyButton
+      MoveDownButton: (props) => <IconButton {...props} icon="arrow_downward" />,
+      MoveUpButton: (props) => <IconButton {...props} icon="arrow_upward" />,
+      RemoveButton: (props) => <IconButton {...props} icon="close" />,
+      SubmitButton: SubmitButton,
     },
   };
 }

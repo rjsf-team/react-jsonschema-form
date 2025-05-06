@@ -1,9 +1,11 @@
 import { FieldTemplateProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { FormGroup, Label } from '@trussworks/react-uswds';
 
-export default function Field<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: FieldTemplateProps<T, S, F>
-) {
+export default function Field<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any,
+>(props: FieldTemplateProps<T, S, F>) {
   const { id, label, help, required, description, errors, children, hidden } = props;
 
   if (hidden) {

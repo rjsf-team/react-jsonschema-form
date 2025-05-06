@@ -7,6 +7,13 @@
       "singleQuote": true,
       "trailingComma": "all",
       "arrowParens": "always"
-    }]
+    }],
+    "@typescript-eslint/no-unused-vars": "off",
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-empty-function": "warn",
+    "@typescript-eslint/no-var-requires": "warn"
+  },
+  "env": {
+    "jest": true
   }
 }

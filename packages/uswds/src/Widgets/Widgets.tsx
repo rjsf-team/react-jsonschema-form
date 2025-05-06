@@ -84,14 +84,16 @@ function CheckboxesWidget<
 }: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, inline, emptyValue } = options;
 
-  const _onChange = (index: number) => ({ target: { checked } }: ChangeEvent<HTMLInputElement>) => {
-    const all = (enumOptions || []).map((option) => option.value);
-    if (checked) {
-      onChange(Array.isArray(value) ? value.concat(all[index]) : [all[index]]);
-    } else {
-      onChange((value as any[]).filter((v) => v !== all[index]));
-    }
-  };
+  const _onChange =
+    (index: number) =>
+    ({ target: { checked } }: ChangeEvent<HTMLInputElement>) => {
+      const all = (enumOptions || []).map((option) => option.value);
+      if (checked) {
+        onChange(Array.isArray(value) ? value.concat(all[index]) : [all[index]]);
+      } else {
+        onChange((value as any[]).filter((v) => v !== all[index]));
+      }
+    };
 
   const _onBlur = ({ target: { value: eventValue } }: FocusEvent<HTMLInputElement>) =>
     onBlur(id, enumOptionsValueForIndex<S>(eventValue, enumOptions, emptyValue));
@@ -231,7 +233,9 @@ export function ComboBoxWidget<
       id={id}
       name={id}
       defaultValue={value}
-      onChange={readonly ? () => {} : _onChangeComboBox}
+      onChange={() => {
+        /* intentionally empty - change handling managed elsewhere */
+      }}
       disabled={readonly}
       options={comboBoxOptions}
     />
@@ -282,7 +286,9 @@ function SelectWidget<
       onFocus={!readonly ? _onFocusSelect : undefined}
     >
       {!multiple && schema.default === undefined && (
-        <option value="">{placeholder || translateString(TranslatableString.NewStringDefault)}</option>
+        <option value="">
+          {placeholder || translateString(TranslatableString.NewStringDefault)}
+        </option>
       )}
       {(enumOptions || []).map(({ value: optionValue, label: optionLabel }, i) => {
         const disabled = Array.isArray(enumDisabled) && enumDisabled.includes(optionValue);

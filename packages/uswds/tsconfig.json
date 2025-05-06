@@ -1,14 +1,29 @@
 {
-  "extends": "../../tsconfig.json",
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "jsx": "react-jsx",
     "outDir": "lib",
-    "rootDir": "src",
+    "rootDir": "./",
     "skipLibCheck": true,
     "esModuleInterop": true,
     "strict": true,
-    "types": ["node", "jest"]
+    "types": ["node", "jest"],
+    "declaration": true,
+    "declarationMap": true,
+    "baseUrl": ".",
+    "paths": {
+      "@rjsf/core": ["../core/src"],
+      "@rjsf/utils": ["../utils/src"],
+      "@rjsf/validator-ajv8": ["../validator-ajv8/src"]
+    },
+    "noUnusedLocals": false,
+    "noUnusedParameters": false
   },
-  "include": ["src"],
-  "exclude": ["node_modules", "lib", "**/*.spec.ts", "**/*.test.ts"]
+  "include": ["src", "test"],
+  "exclude": ["node_modules", "lib", "**/*.spec.ts", "**/*.test.ts"],
+  "references": [
+    { "path": "../core" },
+    { "path": "../utils" },
+    { "path": "../validator-ajv8" }
+  ]
 }

@@ -147,3 +147,7 @@ lodashReplacer.js
 muiReplacer.js
 ajvReplacer.js
 
+# jest
+build_tmp/
+__mocks__/
+

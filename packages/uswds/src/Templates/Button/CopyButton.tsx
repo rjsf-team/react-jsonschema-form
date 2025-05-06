@@ -1,5 +1,11 @@
 import { Button, Icon } from '@trussworks/react-uswds'; // Import Icon
-import { IconButtonProps, FormContextType, RJSFSchema, StrictRJSFSchema, TranslatableString } from '@rjsf/utils';
+import {
+  IconButtonProps,
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  TranslatableString,
+} from '@rjsf/utils';
 
 /** The `CopyButton` renders a button that copies the data for an array item.
  *
@@ -9,7 +15,8 @@ export default function CopyButton<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
->(props: IconButtonProps<T, S, F>) { // Use IconButtonProps
+>(props: IconButtonProps<T, S, F>) {
+  // Use IconButtonProps
   const { icon, iconType, registry, ...otherProps } = props;
   const translatedLabel = registry.translateString(TranslatableString.CopyButton);
   return (

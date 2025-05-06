@@ -2,15 +2,19 @@
   "name": "@rjsf/uswds",
   "version": "6.0.0",
   "description": "USWDS theme, fields and widgets for react-jsonschema-form",
-  "main": "./dist/index.js",
-  "module": "./lib/index.js",
-  "types": "./lib/index.d.ts",
+  "main": "dist/index.js",
+  "module": "dist/uswds.esm.js",
+  "types": "lib/index.d.ts",
+  "type": "module",
+  "unpkg": "dist/uswds.umd.js",
+  "jsdelivr": "dist/uswds.umd.js",
   "exports": {
     ".": {
       "types": "./lib/index.d.ts",
-      "import": "./lib/index.js",
+      "import": "./dist/uswds.esm.js",
       "require": "./dist/index.js"
-    }
+    },
+    "./package.json": "./package.json"
   },
   "files": [
     "dist",
@@ -18,20 +22,29 @@
     "src"
   ],
   "scripts": {
-    "clean": "rimraf dist lib",
-    "build": "tsc -b tsconfig.json && tsc -p tsconfig.esm.json",
+    "clean": "rimraf dist lib build_tmp",
+    "build:ts": "tsc -b tsconfig.build.json && tsc-alias -p tsconfig.build.json",
+    "build:cjs": "esbuild ./src/index.ts --bundle --outfile=dist/index.js --sourcemap --packages=external --format=cjs",
+    "build:esm": "esbuild ./src/index.ts --bundle --outfile=dist/uswds.esm.js --sourcemap --packages=external --format=esm",
+    "build:umd": "rollup dist/uswds.esm.js --format=umd --file=dist/uswds.umd.js --name=@rjsf/uswds",
+    "build": "npm run clean && npm run build:ts && npm run build:cjs && npm run build:esm && npm run build:umd",
     "cs-check": "prettier -l \"{src,test}/**/*.ts?(x)\"",
     "cs-format": "prettier \"{src,test}/**/*.ts?(x)\" --write",
     "lint": "eslint src test",
     "lint:fix": "eslint src test --fix",
-    "prettier:fix": "prettier \"{src,test}/**/*.ts?(x)\" --write",
+    "precommit": "lint-staged",
     "test": "jest",
-    "test:update": "jest --u",
-    "test:clean": "jest --clearCache"
+    "test:clean": "jest --clearCache",
+    "test:update": "jest -u",
+    "test:watch": "jest --watch",
+    "test:skip-snapshots": "jest --testPathIgnorePatterns=\"test/formTests.tsx\" --testPathIgnorePatterns=\"test/ArrayField.test.tsx\" --testPathIgnorePatterns=\"test/BooleanField.test.tsx\" --testPathIgnorePatterns=\"test/Form.test.tsx\" --testPathIgnorePatterns=\"test/FormTemplate.test.tsx\" --testPathIgnorePatterns=\"test/ObjectField.test.tsx\" --testPathIgnorePatterns=\"test/StringField.test.tsx\" --testPathIgnorePatterns=\"test/NumberField.test.tsx\"",
+    "test:widgets": "jest --testMatch=\"**/test/widgets/*.test.ts?(x)\"",
+    "test:templates": "jest --testMatch=\"**/test/templates/*.test.ts?(x)\"",
+    "test:skip-form": "jest --testPathIgnorePatterns=\"/node_modules/|/dist/|/lib/|test/Form.test.tsx\"",
+    "build:test": "npm run build && npm run test:skip-form"
   },
   "dependencies": {
-    "@rjsf/utils": "^5.24.8",
-    "@trussworks/react-uswds": "^5.0.0 || ^6.0.0"
+    "@rjsf/utils": "^5.24.8"
   },
   "devDependencies": {
     "@babel/core": "^7.22.8",
@@ -51,6 +64,9 @@
     "@types/react-dom": "^18.2.6",
     "@trussworks/react-uswds": "^5.0.0 || ^6.0.0",
     "eslint": "^8.44.0",
+    "esbuild": "^0.19.10",
+    "esbuild-node-externals": "^1.13.1",
+    "glob": "^10.3.10",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.6.1",
     "prettier": "^3.0.0",
@@ -60,11 +76,15 @@
     "rimraf": "^5.0.5",
     "tsc-alias": "^1.8.10",
     "typescript": "^5.1.6",
-    "uswds": "^2.14.0"
+    "uswds": "^2.14.0",
+    "babel-jest": "^29.7.0",
+    "identity-obj-proxy": "^3.0.0",
+    "rollup": "^2.0.0"
   },
   "peerDependencies": {
     "@rjsf/core": "^5.24.8",
     "@rjsf/utils": "^5.24.8",
+    "@trussworks/react-uswds": "^5.0.0 || ^6.0.0",
     "react": "^17.0.0 || ^18.0.0",
     "react-dom": "^17.0.0 || ^18.0.0"
   },

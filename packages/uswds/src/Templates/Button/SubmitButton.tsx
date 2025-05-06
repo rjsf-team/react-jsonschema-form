@@ -5,23 +5,33 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
   SubmitButtonProps,
-  TranslatableString,
   getSubmitButtonOptions,
 } from '@rjsf/utils';
 
-/** The `SubmitButton` renders a button that submits the form when clicked
- */
-export default function SubmitButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  { uiSchema, registry }: SubmitButtonProps<T, S, F>
-) {
-  const { submitText, norender, props: submitButtonProps = {} } = getSubmitButtonOptions<T, S, F>(uiSchema);
-  const { translateString } = registry;
+export default function SubmitButton<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any,
+>({ uiSchema, registry }: SubmitButtonProps<T, S, F>) {
+  // Get button options from the uiSchema
+  const {
+    submitText,
+    norender,
+    props: submitButtonProps = {},
+  } = getSubmitButtonOptions<T, S, F>(uiSchema);
+
   if (norender) {
     return null;
   }
+
   return (
-    <Button type="submit" {...submitButtonProps} className={`usa-button ${submitButtonProps.className || ''}`}>
-      {submitText || translateString(TranslatableString.SubmitButtonLabel)}
+    <Button
+      type="submit"
+      {...submitButtonProps}
+      className={`usa-button ${submitButtonProps.className || ''}`}
+    >
+      {/* Use submitText directly without translation - this aligns with other themes */}
+      {submitText || 'Submit'}
     </Button>
   );
 }

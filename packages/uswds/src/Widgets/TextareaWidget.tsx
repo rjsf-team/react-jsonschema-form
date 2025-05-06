@@ -1,8 +1,19 @@
-import React from "react";
-import { WidgetProps, ariaDescribedByIds, labelValue } from "@rjsf/utils";
-import { Textarea, FormGroup, Label } from "@trussworks/react-uswds";
+import { ChangeEvent, FocusEvent } from 'react';
+import {
+  WidgetProps,
+  ariaDescribedByIds,
+  labelValue,
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+} from '@rjsf/utils';
+import { Textarea, FormGroup, Label } from '@trussworks/react-uswds';
 
-const TextareaWidget = ({
+export default function TextareaWidget<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any,
+>({
   id,
   value,
   required,
@@ -11,27 +22,26 @@ const TextareaWidget = ({
   onBlur,
   onFocus,
   onChange,
-  options = {}, // Default options to {}
+  options = {},
   schema,
   label,
   hideLabel,
-  rawErrors = [], // Default rawErrors to []
+  rawErrors = [],
   placeholder,
   autofocus,
-}: WidgetProps) => {
-  const _onChange = ({
-    target: { value: eventValue },
-  }: React.ChangeEvent<HTMLTextAreaElement>) => {
-    onChange(eventValue === "" ? options.emptyValue : eventValue);
-  };
-  const _onBlur = ({
-    target: { value: eventValue },
-  }: React.FocusEvent<HTMLTextAreaElement>) =>
-    onBlur(id, eventValue === "" ? options.emptyValue : eventValue);
-  const _onFocus = ({
-    target: { value: eventValue },
-  }: React.FocusEvent<HTMLTextAreaElement>) =>
-    onFocus(id, eventValue === "" ? options.emptyValue : eventValue);
+}: WidgetProps<T, S, F>) {
+  function _onChange(event: ChangeEvent<HTMLTextAreaElement>) {
+    const eventValue = event.target.value;
+    onChange(eventValue === '' ? options.emptyValue : eventValue);
+  }
+  function _onBlur(event: FocusEvent<HTMLTextAreaElement>) {
+    const eventValue = event.target.value;
+    onBlur(id, eventValue === '' ? options.emptyValue : eventValue);
+  }
+  function _onFocus(event: FocusEvent<HTMLTextAreaElement>) {
+    const eventValue = event.target.value;
+    onFocus(id, eventValue === '' ? options.emptyValue : eventValue);
+  }
 
   const inputProps = {
     placeholder: placeholder,
@@ -48,13 +58,17 @@ const TextareaWidget = ({
           {label || schema.title}
           {required && <span className="usa-label--required">*</span>}
         </Label>,
-        hideLabel
+        hideLabel,
       )}
-      {help && <span id={`${id}__help`} className="usa-hint">{help}</span>}
+      {help && (
+        <span id={`${id}__help`} className="usa-hint">
+          {help}
+        </span>
+      )}
       <Textarea
         id={id}
         name={id}
-        value={value ? value : ""}
+        value={value ? value : ''}
         disabled={disabled || readonly}
         rows={rows}
         onBlur={_onBlur}
@@ -66,6 +80,4 @@ const TextareaWidget = ({
       />
     </FormGroup>
   );
-};
-
-export default TextareaWidget;
+}
