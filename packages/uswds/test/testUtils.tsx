@@ -1,4 +1,3 @@
-import React from 'react';
 import { render } from '@testing-library/react';
 // Import FormProps (named) and the default export Form component (aliased) from @rjsf/core
 import CoreFormComponent, { FormProps } from '@rjsf/core';

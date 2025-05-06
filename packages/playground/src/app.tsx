@@ -127,7 +127,7 @@ const themes: PlaygroundProps['themes'] = {
     theme: SuiTheme,
   },
   uswds: {
-    stylesheet: '//cdn.jsdelivr.net/npm/uswds@3.5.0/dist/css/uswds.min.css',
+    stylesheet: '//cdn.jsdelivr.net/npm/uswds/dist/css/uswds.min.css',
     theme: UswdsTheme,
   },
 };

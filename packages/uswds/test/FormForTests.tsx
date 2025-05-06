@@ -1,4 +1,3 @@
-import React from 'react';
 import { withTheme } from '@rjsf/core';
 import Theme from '../src/Theme';
 

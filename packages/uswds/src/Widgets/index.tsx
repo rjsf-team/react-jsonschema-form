@@ -3,7 +3,6 @@ import { FormContextType, RJSFSchema, StrictRJSFSchema, Widget } from '@rjsf/uti
 
 // Import widgets using names matching their filenames/exports
 import CheckboxWidget from './CheckboxWidget';
-import ComboBoxWidget from './ComboBoxWidget';
 import RadioWidget from './RadioWidget';
 import RangeWidget from './RangeWidget';
 import SelectWidget from './SelectWidget';
@@ -40,7 +39,6 @@ export function generateWidgets<
   return {
     // Standard RJSF key : Imported USWDS Component
     CheckboxWidget: CheckboxWidget,
-    ComboBoxWidget: ComboBoxWidget,
     RadioWidget: RadioWidget,
     RangeWidget: RangeWidget,
     SelectWidget: SelectWidget,
