@@ -1,4 +1,4 @@
-import { Button, Icon } from '@trussworks/react-uswds'; // Import Icon
+import { Button, Icon } from '@trussworks/react-uswds';
 import {
   IconButtonProps,
   FormContextType,
@@ -16,8 +16,7 @@ export default function CopyButton<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
 >(props: IconButtonProps<T, S, F>) {
-  // Use IconButtonProps
-  const { icon, iconType, registry, ...otherProps } = props;
+  const { icon, iconType, registry, className, ...otherProps } = props;
   const translatedLabel = registry.translateString(TranslatableString.CopyButton);
   return (
     <Button
@@ -25,11 +24,10 @@ export default function CopyButton<
       {...otherProps}
       data-testid="copy-button"
       aria-label={translatedLabel}
-      className={`usa-button usa-button--unstyled ${otherProps.className || ''}`.trim()}
+      className={`usa-button usa-button--outline margin-right-1 ${className || ''}`.trim()}
     >
-      {/* Use Icon.ContentCopy */}
-      <Icon.ContentCopy aria-hidden="true" />
-      {/* <span className="usa-sr-only">{translatedLabel}</span> */}
+      <Icon.ContentCopy className="margin-right-1" aria-hidden="true" />
+      {translatedLabel}
     </Button>
   );
 }
