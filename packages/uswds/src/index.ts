@@ -42,18 +42,9 @@ export function generateTheme<
  */
 const Theme = generateTheme();
 
-export { Theme };
-
-/** The `Form` component is a wrapper around `@rjsf/core`'s Form component that automatically applies the theme.
- * It is exported for convenience but is not the default export.
- *
- * ```jsx
- * import { Form } from '@rjsf/uswds';
- *
- * <Form validator={validator} />
- * ```
+/** Create a Form component with the USWDS theme.
  */
-export const Form = withTheme(Theme);
+const Form = withTheme(Theme);
 
-// Default export is the theme object
-export default Theme;
+export { Theme, Form };
+export default Form;

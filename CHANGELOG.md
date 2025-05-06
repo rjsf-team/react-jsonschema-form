@@ -16,6 +16,22 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 6.0.0
+
+## @rjsf/uswds
+
+- Added new USWDS theme, mapping [trussworks/react-uswds](https://github.com/trussworks/react-uswds) types to `@rjsf/core` and `@rjsf/utils` types.
+- new theme package, `@rjsf/uswds`, implements the [U.S. Web Design System (USWDS) v3](designsystem.digital.gov) for `react-jsonschema-form`.
+
+Key features include:
+*   Templates for all standard RJSF fields (`Object`, `Array`, `String`, `Number`, `Boolean`, etc.) styled according to USWDS.
+*   Widgets leveraging USWDS form controls (`usa-input`, `usa-textarea`, `usa-checkbox`, `usa-radio`, `usa-select`, etc.).
+*   Array and Object field templates using USWDS `fieldset`, `legend`, and grid layout (`grid-row`, `grid-col`).
+*   Action buttons (`Add`, `Remove`, `Move Up`, `Move Down`) using USWDS button styles (`usa-button`, `usa-button--outline`, `usa-button--unstyled`) and icons loaded from the official USWDS CDN.
+*   Error display using USWDS error states (`usa-form-group--error`, `usa-label--error`, `usa-error-message`).
+*   Required field indication using `usa-label--required`.
+*   Refactored button implementation for better maintainability. 
+
 # 5.24.9
 
 ## @rjsf/antd

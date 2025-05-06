@@ -6,6 +6,12 @@ import {
 } from '@rjsf/utils';
 import { Grid, GridContainer } from '@trussworks/react-uswds';
 
+/** The `ObjectFieldTemplate` is the template to use to render all the inner properties of an object along with the
+ * title and description if available. Since this will wrap rendered content, and was really more of a concept of
+ * RJSF than a React template, the name of the component is `ObjectField` instead of `ObjectFieldTemplate`.
+ *
+ * @param props - The `ObjectFieldTemplateProps` for this component
+ */
 export default function ObjectField<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,

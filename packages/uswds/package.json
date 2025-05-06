@@ -43,6 +43,16 @@
     "test:skip-form": "jest --testPathIgnorePatterns=\"/node_modules/|/dist/|/lib/|test/Form.test.tsx\"",
     "build:test": "npm run build && npm run test:skip-form"
   },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "prettier --write",
+      "eslint --fix"
+    ],
+    "*.{js,jsx}": [
+      "prettier --write",
+      "eslint --fix"
+    ]
+  },
   "dependencies": {
     "@rjsf/utils": "^5.24.8"
   },

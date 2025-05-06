@@ -21,7 +21,10 @@ import ColorWidget from './ColorWidget';
 import FileWidget from './FileWidget';
 import HiddenWidget from './HiddenWidget';
 import PasswordWidget from './PasswordWidget'; // Import the new PasswordWidget
+import TextWidget from './TextWidget';
 
+/** The `Widgets` object for the `@rjsf/uswds` theme.
+ */
 export type WidgetsType<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,

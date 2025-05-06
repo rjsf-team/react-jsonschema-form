@@ -6,6 +6,7 @@ import {
   RegistryWidgetsType,
 } from '@rjsf/utils';
 import templates from './Templates';
+import Widgets from './Widgets';
 
 /** Create a theme object using the Form, Templates and Widgets defined in the theme
  *
@@ -26,5 +27,12 @@ export function generateTheme<
     widgets: {} as RegistryWidgetsType<T, S, F>,
   };
 }
+
+/** The `Theme` object for the `@rjsf/uswds` theme.
+ */
+const Theme: ThemeProps = {
+  templates: templates,
+  widgets: Widgets,
+};
 
 export default generateTheme();

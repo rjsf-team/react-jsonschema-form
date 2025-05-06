@@ -8,6 +8,7 @@ import {
 } from '@rjsf/utils';
 import { Button } from '@trussworks/react-uswds';
 
+/** The `AddButton` renders a button that represents the `Add` action on a form */
 export default function AddButton<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
