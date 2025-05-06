@@ -59,6 +59,9 @@ const bundledSchema: RJSFSchema = {
         string: {
           type: 'string',
         },
+        circularRef: {
+          $ref: '/bundled.schema.json/#/$defs/circularRef',
+        },
         undefinedRef: {
           $ref: '#/$defs/undefined',
         },
@@ -83,6 +86,9 @@ const bundledSchema: RJSFSchema = {
     },
     bundledRelativeRefWithAnchor: {
       $ref: '/bundled.ref.json/#/properties/string',
+    },
+    circularRef: {
+      $ref: '/bundled.ref.json/#/$defs/circularRef',
     },
     indirectRef: {
       $ref: '#/$defs/bundledAbsoluteRef',
@@ -193,6 +199,11 @@ describe('findSchemaDefinition()', () => {
       findSchemaDefinition('#/properties/undefined', bundledSchema, 'https://example.com/undefined.ref.json'),
     ).toThrowError('Could not find a definition for #/properties/undefined');
   });
+  it('throws error when ref is a deep circular reference in a bundled JSON Schema', () => {
+    expect(() => findSchemaDefinition('#/$defs/circularRef', bundledSchema)).toThrowError(
+      'Definition for #/$defs/circularRef contains a circular reference through /bundled.ref.json/#/$defs/circularRef -> /bundled.schema.json/#/$defs/circularRef -> #/$defs/circularRef',
+    );
+  });
 });
 
 describe('findSchemaDefinitionRecursive()', () => {
@@ -298,5 +309,10 @@ describe('findSchemaDefinitionRecursive()', () => {
     expect(() =>
       findSchemaDefinition('#/properties/undefined', bundledSchema, 'https://example.com/undefined.ref.json'),
     ).toThrowError('Could not find a definition for #/properties/undefined');
+  });
+  it('throws error when ref is a deep circular reference in a bundled JSON Schema', () => {
+    expect(() => findSchemaDefinitionRecursive('#/$defs/circularRef', bundledSchema, [])).toThrowError(
+      'Definition for #/$defs/circularRef contains a circular reference through /bundled.ref.json/#/$defs/circularRef -> /bundled.schema.json/#/$defs/circularRef -> #/$defs/circularRef',
+    );
   });
 });

@@ -15,15 +15,11 @@ import UriResolver from 'fast-uri';
  * @returns - The schema matching the reference, or `undefined` if no match is found
  */
 function findEmbeddedSchemaRecursive<S extends StrictRJSFSchema = RJSFSchema>(schema: S, ref: string): S | undefined {
+  if (ID_KEY in schema && UriResolver.equal(schema[ID_KEY] as string, ref)) {
+    return schema;
+  }
   for (const subSchema of Object.values(schema)) {
-    if (!isObject(subSchema)) {
-      continue;
-    }
-    if (ID_KEY in subSchema) {
-      if (UriResolver.equal(subSchema[ID_KEY] as string, ref)) {
-        return subSchema as S;
-      }
-    } else {
+    if (isObject(subSchema)) {
       const result = findEmbeddedSchemaRecursive<S>(subSchema as S, ref);
       if (result !== undefined) {
         return result as S;
