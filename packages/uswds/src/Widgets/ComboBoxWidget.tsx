@@ -1,4 +1,3 @@
-import { ChangeEvent, FocusEvent } from 'react';
 import {
   FormContextType,
   RJSFSchema,
@@ -12,17 +11,7 @@ export default function ComboBoxWidget<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
->({
-  id,
-  options,
-  value,
-  disabled,
-  readonly,
-  onChange,
-  onBlur,
-  onFocus,
-  placeholder,
-}: WidgetProps<T, S, F>) {
+>({ id, options, value, disabled, readonly, onChange }: WidgetProps<T, S, F>) {
   const { enumOptions = [], enumDisabled } = options;
 
   function _onChange(inputValue?: string) {
@@ -41,9 +30,6 @@ export default function ComboBoxWidget<
       name={id}
       disabled={disabled || readonly}
       onChange={!readonly ? _onChange : () => {}}
-      // The underlying ComboBox component does not support onBlur or onFocus directly in the way RJSF expects.
-      // If blur/focus handling is needed, it might require a custom implementation or wrapper.
-      // onFocus={onFocus} // This prop is not supported by UswdsComboBox
       options={comboBoxOptions}
       defaultValue={String(value ?? '')}
     />

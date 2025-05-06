@@ -1,11 +1,6 @@
-import { FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 import { RangeInput as UswdsRange } from '@trussworks/react-uswds';
 
-export default function RangeInput<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
->(props: any) {
+export default function RangeInput(props: any) {
   const { id, value, min, max, step, disabled, readonly, onChange } = props;
   return (
     <UswdsRange

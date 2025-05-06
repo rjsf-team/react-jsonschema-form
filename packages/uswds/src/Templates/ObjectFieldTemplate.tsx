@@ -16,16 +16,7 @@ export default function ObjectField<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
->({
-  description,
-  title,
-  properties,
-  required,
-  uiSchema,
-  idSchema,
-  schema,
-  formData,
-}: ObjectFieldTemplateProps<T, S, F>) {
+>({ description, title, properties }: ObjectFieldTemplateProps<T, S, F>) {
   return (
     <GridContainer className="usa-form-group">
       {title && <h3 className="usa-label">{title}</h3>}

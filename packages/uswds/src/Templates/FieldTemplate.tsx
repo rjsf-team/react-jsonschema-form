@@ -6,7 +6,6 @@ import {
   getTemplate,
 } from '@rjsf/utils';
 import { FormGroup, Label } from '@trussworks/react-uswds';
-import React from 'react';
 
 export default function FieldTemplate<
   T = any,

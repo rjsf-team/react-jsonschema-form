@@ -8,7 +8,7 @@ import {
   getTemplate,
   Registry,
   TranslatableString,
-  UIOptionsType,
+  // UIOptionsType, // Remove or comment out the unused declaration
 } from '@rjsf/utils';
 import Markdown from 'markdown-to-jsx'; // Import Markdown for FilesInfo
 import { Button } from '@trussworks/react-uswds'; // Import Button for remove
@@ -67,12 +67,10 @@ function FilesInfo<
   filesInfo,
   registry,
   onRemove,
-  options,
 }: {
   filesInfo: FileInfoType[];
   registry: Registry<T, S, F>;
   onRemove: (index: number) => void;
-  options: UIOptionsType<T, S, F>;
 }) {
   if (filesInfo.length === 0) {
     return null;
@@ -139,12 +137,21 @@ export default function FileWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
 >(props: WidgetProps<T, S, F>) {
-  const { disabled, readonly, required, multiple, onChange, value, options, registry } = props;
+  const {
+    disabled,
+    readonly,
+    required,
+    multiple,
+    onChange,
+    value,
+    registry,
+    options: fileOptions,
+  } = props;
   // Get BaseInputTemplate from registry
   const BaseInputTemplate = getTemplate<'BaseInputTemplate', T, S, F>(
     'BaseInputTemplate',
     registry,
-    options,
+    fileOptions,
   );
 
   const handleChange = useCallback(
@@ -196,15 +203,14 @@ export default function FileWidget<
         required={!hasValue && required} // Turn off HTML required validation only if a value exists
         onChangeOverride={handleChange} // Use onChangeOverride for BaseInputTemplate
         value="" // Input value is always empty for file inputs
-        accept={options.accept ? String(options.accept) : undefined}
+        accept={fileOptions.accept ? String(fileOptions.accept) : undefined}
         multiple={multiple} // Pass multiple to BaseInputTemplate if needed by underlying input
       />
       <FilesInfo<T, S, F>
         filesInfo={filesInfo}
         onRemove={rmFile}
         registry={registry}
-        options={options}
-        // preview={options.filePreview} // Enable preview if desired
+        // preview={fileOptions.filePreview} // Enable preview if desired
       />
     </div>
   );

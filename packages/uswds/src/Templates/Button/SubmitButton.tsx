@@ -1,4 +1,3 @@
-import React from 'react';
 import { Button } from '@trussworks/react-uswds';
 import {
   FormContextType,
@@ -12,13 +11,9 @@ export default function SubmitButton<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
->({ uiSchema, registry }: SubmitButtonProps<T, S, F>) {
+>({ uiSchema }: SubmitButtonProps<T, S, F>) {
   // Get button options from the uiSchema
-  const {
-    submitText,
-    norender,
-    props: submitButtonProps = {},
-  } = getSubmitButtonOptions<T, S, F>(uiSchema);
+  const { submitText, norender, props: submitButtonProps = {} } = getSubmitButtonOptions(uiSchema);
 
   if (norender) {
     return null;

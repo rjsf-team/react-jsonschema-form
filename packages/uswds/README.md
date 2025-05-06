@@ -119,8 +119,5 @@ See the [main RJSF contributing guide](https://rjsf-team.github.io/react-jsonsch
 
 ## TODO
 
-*   [ ] Fully implement `AltDateWidget` and `AltDateTimeWidget` using select dropdowns.
-*   [ ] Add comprehensive tests for all widgets and templates.
 *   [ ] Refine styling for edge cases and ensure perfect USWDS alignment.
 *   [ ] Improve accessibility (ARIA attributes, focus management).
-*   [ ] Add support for USWDS Date Range Picker if applicable.

@@ -1,28 +1,19 @@
 {
-  "extends": "./tsconfig.json", // Inherits from the main tsconfig
+  "extends": "../../tsconfig.build.json",
   "compilerOptions": {
-    "module": "esnext", // Output ESNext modules for esbuild to process
-    "outDir": "build_tmp", // Temporary directory for compiled JS files
-    "declaration": true, // Generate .d.ts files
-    "declarationDir": "lib", // Output .d.ts files to the 'lib' directory (alongside final ESM .js)
-    "emitDeclarationOnly": false, // We want JS output as well
-    // Ensure other relevant options from tsconfig.json are suitable or overridden if necessary
-    // For example, 'target' should be modern enough for esbuild to handle further transpilation if needed.
-    // 'sourceMap' is usually true.
-    "sourceMap": true
+    "outDir": "./lib",
+    "rootDir": "./src",
+    "baseUrl": "./src"
   },
-  "include": ["src/**/*"], // Only include the src directory for the build
+  "include": ["src/**/*"],
   "exclude": [
     "node_modules",
-    "dist",
     "lib",
-    "build_tmp",
-    "test",
-    "**/*.test.ts",
-    "**/*.test.tsx",
-    "**/*.spec.ts",
-    "**/*.spec.tsx",
-    "src/setupTests.ts",
-    "test/**/*"
+    "test"
+  ],
+  "references": [
+    {
+      "path": "./src"
+    }
   ]
 }

@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FocusEvent, useCallback, useRef } from 'react';
+import React, { ChangeEvent, FocusEvent } from 'react';
 import {
   WidgetProps,
   FormContextType,
@@ -11,16 +11,7 @@ import {
   getUiOptions,
   Widget,
 } from '@rjsf/utils';
-import {
-  Checkbox,
-  ComboBox,
-  FileInput,
-  Label,
-  Radio,
-  Select,
-  Textarea,
-  TextInput,
-} from '@trussworks/react-uswds';
+import { Checkbox, ComboBox, FileInput, Radio, Select, Textarea } from '@trussworks/react-uswds';
 
 // CheckboxWidget (Boolean) - Simplified
 function CheckboxWidget<
@@ -207,36 +198,26 @@ function RadioWidget<
   );
 }
 
-// Define thresholds
-const COMBOBOX_THRESHOLD = 15;
-const RADIO_THRESHOLD = 4; // Threshold for using Radio buttons
-
 // ComboBoxWidget
 export function ComboBoxWidget<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
 >(props: WidgetProps<T, S, F>) {
-  const { id, value, onChange, onBlur, onFocus, options, readonly } = props;
-
-  const _onChangeComboBox = (val?: string) => {
-    onChange(val ?? '');
-  };
-
-  const comboBoxOptions = (options.enumOptions || []).map((option) => ({
+  const comboBoxOptions = (props.options.enumOptions || []).map((option) => ({
     value: String(option.value),
     label: String(option.label),
   }));
 
   return (
     <ComboBox
-      id={id}
-      name={id}
-      defaultValue={value}
+      id={props.id}
+      name={props.id}
+      defaultValue={props.value}
       onChange={() => {
         /* intentionally empty - change handling managed elsewhere */
       }}
-      disabled={readonly}
+      disabled={props.readonly}
       options={comboBoxOptions}
     />
   );

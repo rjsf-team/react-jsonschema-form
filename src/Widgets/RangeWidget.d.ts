@@ -1,0 +1,2 @@
+export default function RangeInput<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(props: RangeWidgetProps<T, S, F>): import("react/jsx-runtime").JSX.Element;
+//# sourceMappingURL=RangeWidget.d.ts.map

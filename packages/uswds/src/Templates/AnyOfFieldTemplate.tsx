@@ -6,22 +6,33 @@ interface Option {
   value: string;
 }
 
-interface AnyOfFieldProps<T = any, S = RJSFSchema, F = any> {
+interface AnyOfFieldProps<
+  T extends string | number | readonly string[] = string,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any,
+> {
   options: Option[];
   id: string;
-  value?: string;
-  onChange: (value: string) => void;
+  value?: T;
+  onChange: (value: T) => void;
+  schema: S;
+  uiSchema: F;
 }
 
 export default function AnyOfField<
-  T = any,
+  T extends string | number | readonly string[] = string,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
 >(props: AnyOfFieldProps<T, S, F>) {
   const { id, options = [], value, onChange } = props;
 
   return (
-    <Select id={id} name={id} value={value} onChange={(e) => onChange(e.target.value)}>
+    <Select
+      id={id}
+      name={id}
+      value={value as string}
+      onChange={(e) => onChange(e.target.value as T)}
+    >
       {options.map((option: Option, index: number) => (
         <option key={index} value={option.value}>
           {option.label}

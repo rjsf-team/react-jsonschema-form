@@ -1,6 +1,5 @@
 import { FormContextType, RJSFSchema, RegistryWidgetsType } from '@rjsf/utils';
 import { ThemeProps } from '@rjsf/core';
-import React from 'react';
 import generateTemplates from '../Templates';
 import { generateWidgets } from '../Widgets';
 

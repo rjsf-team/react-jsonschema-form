@@ -1,5 +1,4 @@
 import { FormContextType, RJSFSchema, StrictRJSFSchema, getTemplate } from '@rjsf/utils';
-import { Grid } from '@trussworks/react-uswds';
 
 export default function ArrayField<
   T = any,

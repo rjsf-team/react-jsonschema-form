@@ -1,23 +1,12 @@
-import { ChangeEvent, FocusEvent } from 'react'; // Added import
+import { ChangeEvent, FocusEvent } from 'react';
 import { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjsf/utils';
-import { Label } from '@trussworks/react-uswds'; // Import Label if needed for accessibility
 
 // USWDS doesn't have a specific DateTime picker, use styled native input
 export default function DateTimeWidget<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
->({
-  id,
-  value,
-  disabled,
-  readonly,
-  onChange,
-  onBlur,
-  onFocus,
-  required,
-  label,
-}: WidgetProps<T, S, F>) {
+>({ id, value, disabled, readonly, onChange, onBlur, onFocus, required }: WidgetProps<T, S, F>) {
   function _onChange(event: ChangeEvent<HTMLInputElement>) {
     onChange(event.target.value || undefined);
   }
@@ -44,8 +33,6 @@ export default function DateTimeWidget<
 
   return (
     <>
-      {/* Optional: Add Label for better accessibility if not handled by FieldTemplate */}
-      {/* <Label htmlFor={id}>{label || schema.title}</Label> */}
       <input
         type="datetime-local"
         id={id}

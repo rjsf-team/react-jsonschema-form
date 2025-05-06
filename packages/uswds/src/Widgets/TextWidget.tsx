@@ -16,7 +16,6 @@ export default function Text<
   onChange,
   onBlur,
   onFocus,
-  options,
   type,
 }: WidgetProps<T, S, F>) {
   const _onChange = ({ target: { value: v } }: ChangeEvent<HTMLInputElement>) => onChange(v);

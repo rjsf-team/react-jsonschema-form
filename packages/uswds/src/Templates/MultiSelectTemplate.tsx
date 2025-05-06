@@ -5,7 +5,6 @@ import { Select as UswdsSelect } from '@trussworks/react-uswds';
 // Assuming this is intended to be a Widget, using WidgetProps
 export default function MultiSelectTemplate(props: WidgetProps) {
   const {
-    schema,
     id,
     options,
     value,
@@ -19,7 +18,7 @@ export default function MultiSelectTemplate(props: WidgetProps) {
     // placeholder, // Placeholder typically not used for multi-select
     // rawErrors = [],
   } = props;
-  const { enumOptions, enumDisabled, emptyValue } = options;
+  const { enumOptions, enumDisabled } = options;
 
   const _onChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const { target } = event;

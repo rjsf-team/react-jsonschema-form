@@ -1,5 +1,4 @@
 import { FormContextType, RJSFSchema, StrictRJSFSchema, getTemplate } from '@rjsf/utils';
-import { FormGroup } from '@trussworks/react-uswds';
 
 export default function BooleanField<
   T = any,

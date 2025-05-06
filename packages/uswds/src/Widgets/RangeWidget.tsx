@@ -1,6 +1,5 @@
-import React, { ChangeEvent, FocusEvent } from 'react'; // Import React
+import { ChangeEvent, FocusEvent } from 'react';
 import { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps, rangeSpec } from '@rjsf/utils';
-// Correctly import RangeInput from the library
 import { RangeInput } from '@trussworks/react-uswds';
 
 export default function RangeWidget<
