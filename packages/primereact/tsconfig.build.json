@@ -1,0 +1,16 @@
+{
+  "extends": "../../tsconfig.build.json",
+  "compilerOptions": {
+    "outDir": "./lib"
+  },
+  "files": [],
+  "references": [
+    {
+      "path": "./src"
+    }
+  ],
+  "tsc-alias": {
+    "resolveFullPaths": true,
+    "verbose": true,
+  }
+}
