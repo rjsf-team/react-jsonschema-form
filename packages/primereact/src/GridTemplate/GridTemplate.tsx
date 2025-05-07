@@ -36,19 +36,31 @@ function getInitialWidth(): number {
   return typeof window !== 'undefined' ? window.innerWidth : breakpoints.xs;
 }
 
+/** Renders a `GridTemplate`, which is expecting the column size for each viewport breakpoint (xs, sm, md, lg, xl)
+ *  coming in via the extra props provided by the caller.
+ *  Uses a 12 column grid by default. This can be overridden by passing `layoutGrid` in `uiSchema`.
+ *
+ * @param props - The GridTemplateProps, including the extra props containing the grid sizing details
+ */
 export default function GridTemplate(props: GridTemplateProps) {
   return props.column ? GridTemplateColumn(props) : GridTemplateRow(props);
 }
 
 function GridTemplateRow(props: GridTemplateProps) {
-  const { children, column, uiSchema, ...rest } = props;
+  const { children, column, uiSchema, style, ...rest } = props;
   const layoutGrid = uiSchema?.['ui:layoutGrid'] ?? {};
   const totalColumns = layoutGrid.columns ?? 12;
   const gap = layoutGrid.gap ?? '16px';
 
   return (
     <div
-      style={{ display: 'grid', gridTemplateColumns: `repeat(${totalColumns}, 1fr)`, alignItems: 'start', gap }}
+      style={{
+        display: 'grid',
+        gridTemplateColumns: `repeat(${totalColumns}, 1fr)`,
+        alignItems: 'start',
+        gap,
+        ...(style ?? {}),
+      }}
       {...rest}
     >
       {children}
@@ -57,7 +69,7 @@ function GridTemplateRow(props: GridTemplateProps) {
 }
 
 function GridTemplateColumn(props: GridTemplateProps) {
-  const { children, column, uiSchema, xs, sm, md, lg, xl, ...rest } = props;
+  const { children, column, uiSchema, xs, sm, md, lg, xl, style, ...rest } = props;
 
   const [breakpoint, setBreakpoint] = useState<Breakpoint>(() => getBreakpoint(getInitialWidth()));
 
@@ -74,7 +86,7 @@ function GridTemplateColumn(props: GridTemplateProps) {
   const span = getResponsiveSpan(props as ResponsiveSpan, breakpoint);
 
   return (
-    <div style={{ gridColumn: `span ${span} / span ${span}` }} {...rest}>
+    <div style={{ gridColumn: `span ${span} / span ${span}`, ...(style ?? {}) }} {...rest}>
       {children}
     </div>
   );

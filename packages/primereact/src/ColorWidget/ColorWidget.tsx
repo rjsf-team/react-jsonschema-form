@@ -9,6 +9,10 @@ import {
 } from '@rjsf/utils';
 import { ColorPicker } from 'primereact/colorpicker';
 
+/** The `ColorWidget` component renders a color picker.
+ *
+ * @param props - The `WidgetProps` for this component
+ */
 export default function ColorWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: WidgetProps<T, S, F>,
 ) {
