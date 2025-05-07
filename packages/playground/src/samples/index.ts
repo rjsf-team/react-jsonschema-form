@@ -34,6 +34,7 @@ import customField from './customField';
 import layoutGrid from './layoutGrid';
 import { Sample } from './Sample';
 import patternProperties from './patternProperties';
+import bundledSchema from './bundledSchema';
 
 export type { Sample };
 
@@ -74,6 +75,7 @@ const _samples: Record<string, Sample> = {
   Defaults: defaults,
   'Custom Field': customField,
   'Layout Grid': layoutGrid,
+  'Bundled Schema': bundledSchema,
 };
 
 export const samples = _samples;

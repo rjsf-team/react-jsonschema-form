@@ -25,6 +25,7 @@ export const READONLY_KEY = 'readonly';
 export const REQUIRED_KEY = 'required';
 export const SUBMIT_BTN_OPTIONS_KEY = 'submitButtonOptions';
 export const REF_KEY = '$ref';
+export const SCHEMA_KEY = '$schema';
 /** The path of the discriminator value returned by the schema endpoint.
  * The discriminator is the value in a `oneOf` that determines which option is selected.
  */
@@ -42,3 +43,7 @@ export const UI_FIELD_KEY = 'ui:field';
 export const UI_WIDGET_KEY = 'ui:widget';
 export const UI_OPTIONS_KEY = 'ui:options';
 export const UI_GLOBAL_OPTIONS_KEY = 'ui:globalOptions';
+
+/** The JSON Schema version strings
+ */
+export const JSON_SCHEMA_DRAFT_2020_12 = 'https://json-schema.org/draft/2020-12/schema';

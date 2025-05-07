@@ -13,6 +13,7 @@ import {
   ALL_OF_KEY,
   ANY_OF_KEY,
   DEPENDENCIES_KEY,
+  ID_KEY,
   IF_KEY,
   ITEMS_KEY,
   ONE_OF_KEY,
@@ -333,12 +334,14 @@ export function resolveReference<T = any, S extends StrictRJSFSchema = RJSFSchem
  * @param schema - The schema for which resolving all references is desired
  * @param rootSchema - The root schema that will be forwarded to all the APIs
  * @param recurseList - List of $refs already resolved to prevent recursion
+ * @param baseURI - The base URI to be used for resolving relative references
  * @returns - given schema will all references resolved or the original schema if no internal `$refs` were resolved
  */
 export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
   schema: S,
   rootSchema: S,
   recurseList: string[],
+  baseURI?: string,
 ): S {
   if (!isObject(schema)) {
     return schema;
@@ -353,8 +356,11 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
     }
     recurseList.push($ref!);
     // Retrieve the referenced schema definition.
-    const refSchema = findSchemaDefinition<S>($ref, rootSchema);
+    const refSchema = findSchemaDefinition<S>($ref, rootSchema, baseURI);
     resolvedSchema = { ...refSchema, ...localSchema };
+    if (ID_KEY in resolvedSchema) {
+      baseURI = resolvedSchema[ID_KEY];
+    }
   }
 
   if (PROPERTIES_KEY in resolvedSchema) {
@@ -363,7 +369,7 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
       resolvedSchema[PROPERTIES_KEY]!,
       (result, value, key: string) => {
         const childList: string[] = [...recurseList];
-        result[key] = resolveAllReferences(value as S, rootSchema, childList);
+        result[key] = resolveAllReferences(value as S, rootSchema, childList, baseURI);
         childrenLists.push(childList);
       },
       {} as RJSFSchema,
@@ -379,7 +385,7 @@ export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
   ) {
     resolvedSchema = {
       ...resolvedSchema,
-      items: resolveAllReferences(resolvedSchema.items as S, rootSchema, recurseList),
+      items: resolveAllReferences(resolvedSchema.items as S, rootSchema, recurseList, baseURI),
     };
   }
 
@@ -550,6 +556,9 @@ export function retrieveSchemaInternal<
           ? experimental_customMergeAllOf(resolvedSchema)
           : (mergeAllOf(resolvedSchema, {
               deep: false,
+              resolvers: {
+                $defs: mergeAllOf.options.resolvers.definitions,
+              },
             } as Options) as S);
         if (withContainsSchemas.length) {
           resolvedSchema.allOf = withContainsSchemas;
