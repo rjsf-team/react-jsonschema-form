@@ -9,6 +9,11 @@ import {
 } from '@rjsf/utils';
 import { AutoComplete, AutoCompleteCompleteEvent } from 'primereact/autocomplete';
 
+/** The `AutoCompleteWidget` is a widget for rendering a field with options.
+ *  This is used instead of the base input template if the schema has examples.
+ *
+ * @param props - The `WidgetProps` for this component
+ */
 export default function AutoCompleteWidget<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,

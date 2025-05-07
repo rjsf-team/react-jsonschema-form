@@ -7,6 +7,10 @@ import {
   StrictRJSFSchema,
 } from '@rjsf/utils';
 
+/** The `ArrayFieldItemTemplate` component is the template used to render an items of an array.
+ *
+ * @param props - The `ArrayFieldItemTemplateType` props for the component
+ */
 export default function ArrayFieldItemTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,

@@ -8,6 +8,10 @@ import {
 } from '@rjsf/utils';
 import { InputNumber, InputNumberChangeEvent } from 'primereact/inputnumber';
 
+/** The `UpDownWidget` renders an input component for a number.
+ *
+ * @param props - The `WidgetProps` for this component
+ */
 export default function UpDownWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: WidgetProps<T, S, F>,
 ) {
