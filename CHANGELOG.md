@@ -16,6 +16,12 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 6.0.0-beta.4
+
+## Dev / docs / playground
+
+- Updated the peer dependencies for all packages from `6` to `6.0.0-beta` to avoid `npm install` dependency resolution issues
+
 # 6.0.0-beta.3
 
 ## Dev / docs / playground
