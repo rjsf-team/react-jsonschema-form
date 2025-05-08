@@ -1,6 +1,6 @@
 {
   "name": "@rjsf/validator-ajv8",
-  "version": "6.0.0-beta.4",
+  "version": "6.0.0-beta.5",
   "main": "dist/index.js",
   "module": "lib/index.js",
   "typings": "lib/index.d.ts",
@@ -83,10 +83,10 @@
     "lodash-es": "^4.17.21"
   },
   "peerDependencies": {
-    "@rjsf/utils": "6.0.0-beta"
+    "@rjsf/utils": "^6.0.0-beta"
   },
   "devDependencies": {
-    "@rjsf/utils": "^6.0.0-beta.4",
+    "@rjsf/utils": "^6.0.0-beta.5",
     "@types/json-schema": "^7.0.15",
     "ajv-i18n": "^4.2.0",
     "eslint": "^8.56.0"
