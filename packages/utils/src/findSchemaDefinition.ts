@@ -1,8 +1,33 @@
 import jsonpointer from 'jsonpointer';
 import omit from 'lodash/omit';
 
-import { REF_KEY } from './constants';
+import { ID_KEY, JSON_SCHEMA_DRAFT_2020_12, REF_KEY, SCHEMA_KEY } from './constants';
 import { GenericObjectType, RJSFSchema, StrictRJSFSchema } from './types';
+import isObject from 'lodash/isObject';
+import isEmpty from 'lodash/isEmpty';
+import UriResolver from 'fast-uri';
+
+/** Looks for the `$id` pointed by `ref` in the schema definitions embedded in
+ * a JSON Schema bundle
+ *
+ * @param schema - The schema wherein `ref` should be searched
+ * @param ref - The `$id` of the reference to search for
+ * @returns - The schema matching the reference, or `undefined` if no match is found
+ */
+function findEmbeddedSchemaRecursive<S extends StrictRJSFSchema = RJSFSchema>(schema: S, ref: string): S | undefined {
+  if (ID_KEY in schema && UriResolver.equal(schema[ID_KEY] as string, ref)) {
+    return schema;
+  }
+  for (const subSchema of Object.values(schema)) {
+    if (isObject(subSchema)) {
+      const result = findEmbeddedSchemaRecursive<S>(subSchema as S, ref);
+      if (result !== undefined) {
+        return result as S;
+      }
+    }
+  }
+  return undefined;
+}
 
 /** Splits out the value at the `key` in `object` from the `object`, returning an array that contains in the first
  * location, the `object` minus the `key: value` and in the second location the `value`.
@@ -26,6 +51,7 @@ export function splitKeyElementFromObject(key: string, object: GenericObjectType
  * @param $ref - The ref string for which the schema definition is desired
  * @param [rootSchema={}] - The root schema in which to search for the definition
  * @param recurseList - List of $refs already resolved to prevent recursion
+ * @param baseURI - The base URI to be used for resolving relative references
  * @returns - The sub-schema within the `rootSchema` which matches the `$ref` if it exists
  * @throws - Error indicating that no schema for that reference could be resolved
  */
@@ -33,16 +59,32 @@ export function findSchemaDefinitionRecursive<S extends StrictRJSFSchema = RJSFS
   $ref?: string,
   rootSchema: S = {} as S,
   recurseList: string[] = [],
+  baseURI: string | undefined = ID_KEY in rootSchema ? rootSchema[ID_KEY] : undefined,
 ): S {
   const ref = $ref || '';
-  let decodedRef;
+  let current: S | undefined = undefined;
   if (ref.startsWith('#')) {
     // Decode URI fragment representation.
-    decodedRef = decodeURIComponent(ref.substring(1));
-  } else {
-    throw new Error(`Could not find a definition for ${$ref}.`);
+    const decodedRef = decodeURIComponent(ref.substring(1));
+    if (baseURI === undefined || (ID_KEY in rootSchema && rootSchema[ID_KEY] === baseURI)) {
+      current = jsonpointer.get(rootSchema, decodedRef);
+    } else if (rootSchema[SCHEMA_KEY] === JSON_SCHEMA_DRAFT_2020_12) {
+      current = findEmbeddedSchemaRecursive<S>(rootSchema, baseURI.replace(/\/$/, ''));
+      if (current !== undefined) {
+        current = jsonpointer.get(current, decodedRef);
+      }
+    }
+  } else if (rootSchema[SCHEMA_KEY] === JSON_SCHEMA_DRAFT_2020_12) {
+    const resolvedRef = baseURI ? UriResolver.resolve(baseURI, ref) : ref;
+    const [refId, ...refAnchor] = resolvedRef.replace(/#\/?$/, '').split('#');
+    current = findEmbeddedSchemaRecursive<S>(rootSchema, refId.replace(/\/$/, ''));
+    if (current !== undefined) {
+      baseURI = current[ID_KEY];
+      if (!isEmpty(refAnchor)) {
+        current = jsonpointer.get(current, decodeURIComponent(refAnchor.join('#')));
+      }
+    }
   }
-  const current: S = jsonpointer.get(rootSchema, decodedRef);
   if (current === undefined) {
     throw new Error(`Could not find a definition for ${$ref}.`);
   }
@@ -58,7 +100,7 @@ export function findSchemaDefinitionRecursive<S extends StrictRJSFSchema = RJSFS
       throw new Error(`Definition for ${firstRef} contains a circular reference through ${circularPath}`);
     }
     const [remaining, theRef] = splitKeyElementFromObject(REF_KEY, current);
-    const subSchema = findSchemaDefinitionRecursive<S>(theRef, rootSchema, [...recurseList, ref]);
+    const subSchema = findSchemaDefinitionRecursive<S>(theRef, rootSchema, [...recurseList, ref], baseURI);
     if (Object.keys(remaining).length > 0) {
       return { ...remaining, ...subSchema };
     }
@@ -74,13 +116,15 @@ export function findSchemaDefinitionRecursive<S extends StrictRJSFSchema = RJSFS
  *
  * @param $ref - The ref string for which the schema definition is desired
  * @param [rootSchema={}] - The root schema in which to search for the definition
+ * @param [baseURI=rootSchema['$id']] - The base URI to be used for resolving relative references
  * @returns - The sub-schema within the `rootSchema` which matches the `$ref` if it exists
  * @throws - Error indicating that no schema for that reference could be resolved
  */
 export default function findSchemaDefinition<S extends StrictRJSFSchema = RJSFSchema>(
   $ref?: string,
   rootSchema: S = {} as S,
+  baseURI: string | undefined = ID_KEY in rootSchema ? rootSchema[ID_KEY] : undefined,
 ): S {
   const recurseList: string[] = [];
-  return findSchemaDefinitionRecursive($ref, rootSchema, recurseList);
+  return findSchemaDefinitionRecursive($ref, rootSchema, recurseList, baseURI);
 }

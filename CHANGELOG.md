@@ -62,6 +62,7 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/utils
 
 - Updated the `description` field in field props to be a `string | ReactElement` and added `enableMarkdownInDescription` to the `GlobalUISchemaOptions` interface
+- Support for bundled JSON Schemas [#4505](https://github.com/rjsf-team/react-jsonschema-form/issues/4505)
 - Fixed issue with schema references in combinators(allOf, anyOf, oneOf) could not be modified when defaults were set, fixing [#4555](https://github.com/rjsf-team/react-jsonschema-form/issues/4555)
 
 ## Dev / docs / playground
@@ -69,6 +70,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Updated the `snapshot-tests` to disable `getTestId()` for snapshots and updated the `formTests.tsx` to add tests for rich text descriptions for generic fields and the `CheckboxWidget`
 - Updated the `uiSchema.md` to document new `enableMarkdownInDescription` prop
 - Updated the `playground` to move `daisyui` theme choice after `chakra-ui` and to stop freezing the samples to avoid an `AJV` validation issue
+- Added a playground example for bundled JSON Schemas
 
 # 6.0.0-beta.1
 
