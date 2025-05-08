@@ -7,7 +7,7 @@ const uiSchema: UiSchema = {
   'ui:placeholder': 'Select subtheme',
 };
 
-interface SubthemeType {
+export interface SubthemeType {
   stylesheet?: string;
   dataTheme?: string;
 }
