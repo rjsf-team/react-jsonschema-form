@@ -61,8 +61,8 @@
     ]
   },
   "peerDependencies": {
-    "@rjsf/core": "^6.x",
-    "@rjsf/utils": "^6.x",
+    "@rjsf/core": "^6.0.0-beta.x",
+    "@rjsf/utils": "^6.0.0-beta.x",
     "react": ">=18",
     "react-bootstrap": "^2.x"
   },
