@@ -1,6 +1,6 @@
 {
   "name": "@rjsf/react-bootstrap",
-  "version": "6.0.0-beta.4",
+  "version": "6.0.0-beta.5",
   "main": "dist/index.js",
   "module": "lib/index.js",
   "typings": "lib/index.d.ts",
@@ -61,8 +61,8 @@
     ]
   },
   "peerDependencies": {
-    "@rjsf/core": "6.0.0-beta",
-    "@rjsf/utils": "6.0.0-beta",
+    "@rjsf/core": "^6.0.0-beta",
+    "@rjsf/utils": "^6.0.0-beta",
     "react": ">=18",
     "react-bootstrap": "^2.x"
   },
@@ -71,10 +71,10 @@
     "node": ">=20"
   },
   "devDependencies": {
-    "@rjsf/core": "^6.0.0-beta.4",
-    "@rjsf/snapshot-tests": "^6.0.0-beta.4",
-    "@rjsf/utils": "^6.0.0-beta.4",
-    "@rjsf/validator-ajv8": "^6.0.0-beta.4",
+    "@rjsf/core": "^6.0.0-beta.5",
+    "@rjsf/snapshot-tests": "^6.0.0-beta.5",
+    "@rjsf/utils": "^6.0.0-beta.5",
+    "@rjsf/validator-ajv8": "^6.0.0-beta.5",
     "eslint": "^8.56.0",
     "react-bootstrap": "^2.10.9"
   },
