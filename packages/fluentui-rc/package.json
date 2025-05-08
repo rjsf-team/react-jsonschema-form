@@ -65,7 +65,7 @@
     "node": ">=20"
   },
   "peerDependencies": {
-    "@rjsf/core":"^6.0.0-beta.1",
+    "@rjsf/core":"^6.0.0-beta.x",
     "@rjsf/utils": "^6.0.0-beta.x",
     "react": ">=18"
   },
