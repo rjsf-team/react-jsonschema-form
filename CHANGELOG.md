@@ -15,6 +15,7 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+
 # 6.0.0-beta.2
 
 ## @rjsf/antd
@@ -62,6 +63,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Updated the `description` field in field props to be a `string | ReactElement` and added `enableMarkdownInDescription` to the `GlobalUISchemaOptions` interface
 - Support for bundled JSON Schemas [#4505](https://github.com/rjsf-team/react-jsonschema-form/issues/4505)
+- Fixed issue with schema references in combinators(allOf, anyOf, oneOf) could not be modified when defaults were set, fixing [#4555](https://github.com/rjsf-team/react-jsonschema-form/issues/4555)
 
 ## Dev / docs / playground
 
