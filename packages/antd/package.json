@@ -1,6 +1,6 @@
 {
   "name": "@rjsf/antd",
-  "version": "6.0.0-beta.1",
+  "version": "6.0.0-beta.2",
   "description": "Ant Design theme, fields and widgets for react-jsonschema-form",
   "main": "dist/index.js",
   "module": "lib/index.js",
@@ -77,10 +77,10 @@
   },
   "devDependencies": {
     "@ant-design/icons": "^6.0.0",
-    "@rjsf/core": "^6.0.0-beta.1",
-    "@rjsf/snapshot-tests": "^6.0.0-beta.1",
-    "@rjsf/utils": "^6.0.0-beta.1",
-    "@rjsf/validator-ajv8": "^6.0.0-beta.1",
+    "@rjsf/core": "^6.0.0-beta.2",
+    "@rjsf/snapshot-tests": "^6.0.0-beta.2",
+    "@rjsf/utils": "^6.0.0-beta.2",
+    "@rjsf/validator-ajv8": "^6.0.0-beta.2",
     "@rollup/plugin-replace": "^6.0.2",
     "antd": "^5.24.9",
     "atob": "^2.1.2",
