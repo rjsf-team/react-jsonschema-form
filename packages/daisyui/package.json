@@ -71,9 +71,8 @@
     "tailwindcss": "^4.1.4"
   },
   "peerDependencies": {
-    "@rjsf/core": "^6.x",
-    "@rjsf/utils": "^6.x",
-    "@rjsf/validator-ajv8": "^6.x",
+    "@rjsf/core": "^6.0.0-beta.x",
+    "@rjsf/utils": "^6.0.0-beta.x",
     "react": ">=18"
   },
   "devDependencies": {

@@ -83,7 +83,7 @@
     "lodash-es": "^4.17.21"
   },
   "peerDependencies": {
-    "@rjsf/utils": "^6.x"
+    "@rjsf/utils": "^6.0.0-beta.x"
   },
   "devDependencies": {
     "@rjsf/utils": "^6.0.0-beta.1",
