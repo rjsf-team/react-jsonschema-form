@@ -16,6 +16,12 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 6.0.0-beta.7
+
+## @rjsf/core
+
+- Fixed crash in `LayoutGridField` when the 'name' field is missing in the grid schema for a component
+
 # 6.0.0-beta.6
 
 ## @rjsf/util
