@@ -1296,9 +1296,10 @@ describe('LayoutGridField', () => {
         UIComponent: TestRenderer,
       });
     });
-    test('gridSchema contains name, other props and a render', () => {
+    test('gridSchema contains other props and a render, no name', () => {
       const gridSchema = { fullWidth: true, render: TestRenderer };
       expect(LayoutGridField.computeUIComponentPropsFromGridSchema(registry, gridSchema)).toEqual({
+        name: '',
         uiProps: {
           fullWidth: true,
         },
