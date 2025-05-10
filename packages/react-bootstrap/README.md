@@ -54,10 +54,12 @@ Exports `react-bootstrap` theme, fields and widgets for `react-jsonschema-form`.
 ### Prerequisites
 
 - `react-bootstrap >= 2.0.0`
-- `@rjsf/core >= 2.2.0`
+- `@rjsf/core >= 6`
+- `@rjsf/utils >= 6`
+- `@rjsf/validator-ajv8 >= 6`
 
 ```bash
-yarn add react-bootstrap @rjsf/core
+yarn add react-bootstrap @rjsf/core @rjsf/utils @rjsf/validator-ajv8
 ```
 
 ### Installation

@@ -14,7 +14,7 @@
   <h3 align="center">@rjsf/mui</h3>
 
   <p align="center">
-  Material UI 5 theme, fields and widgets for <a href="https://github.com/rjsf-team/react-jsonschema-form/"><code>react-jsonschema-form</code></a>.
+  Material UI theme, fields and widgets for <a href="https://github.com/rjsf-team/react-jsonschema-form/"><code>react-jsonschema-form</code></a>.
     <br />
     <a href="https://rjsf-team.github.io/react-jsonschema-form/docs/"><strong>Explore the docs »</strong></a>
     <br />
@@ -38,7 +38,7 @@
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
 - [Usage](#usage)
-  - [Material UI version 5](#material-ui-version-5)
+  - [Material UI version 7](#material-ui-version-7)
 - [Roadmap](#roadmap)
 - [Contributing](#contributing)
 - [Contact](#contact)
@@ -54,7 +54,7 @@ Exports `MUI` version 5 theme, fields, and widgets for `react-jsonschema-form`.
 ### Built With
 
 - [react-jsonschema-form](https://github.com/rjsf-team/react-jsonschema-form/)
-- [Material UI 5](https://mui.com/)
+- [Material UI 7](https://mui.com/)
 - [TypeScript](https://www.typescriptlang.org/)
 
 <!-- GETTING STARTED -->
@@ -63,15 +63,15 @@ Exports `MUI` version 5 theme, fields, and widgets for `react-jsonschema-form`.
 
 ### Prerequisites
 
-NOTE: Material UI 5 requires React 17, so you will need to upgrade
+NOTE: Material UI 7 requires React 18, so you will need to upgrade
 
-- `@mui/material`
-- `@mui/icons-material`
-- `@emotion/react`
-- `@emotion/styled`
-- `@rjsf/core >= 5.0.0`
-- `@rjsf/utils >= 5.0.0`
-- `@rjsf/validator-ajv8 >= 5.0.0`
+- `@mui/material >= 7`
+- `@mui/icons-material >= 7`
+- `@emotion/react >= 11`
+- `@emotion/styled >= 11`
+- `@rjsf/core >= 6`
+- `@rjsf/utils >= 6`
+- `@rjsf/validator-ajv8 >= 6`
 
 ```bash
 yarn add @mui/material @mui/icons-material @emotion/react @emotion/styled @rjsf/core @rjsf/utils @rjsf/validator-ajv8
@@ -87,7 +87,7 @@ yarn add @rjsf/mui
 
 ## Usage
 
-### Material UI version 5
+### Material UI version 7
 
 ```js
 import Form from '@rjsf/mui';
