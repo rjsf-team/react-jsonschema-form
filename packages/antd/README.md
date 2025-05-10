@@ -58,13 +58,15 @@ Ant Design theme, fields and widgets for `react-jsonschema-form`.
 
 ### Prerequisites
 
-- `antd >= 4.0.0`
-- `@ant-design/icons >= 4.0.0`
+- `antd >= 5`
+- `@ant-design/icons >= 5`
 - `dayjs >= 1.8.0`
-- `@rjsf/core >= 2.0.0`
+- `@rjsf/core >= 6`
+- `@rjsf/utils >= 6`
+- `@rjsf/validator-ajv8 >= 6`
 
 ```sh
-npm install antd @ant-design/icons dayjs @rjsf/core
+npm install antd @ant-design/icons dayjs @rjsf/core @rjsf/utils @rjsf/validator-ajv8
 ```
 
 ### Installation

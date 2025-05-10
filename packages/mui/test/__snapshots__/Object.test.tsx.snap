@@ -802,7 +802,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
     >
       <div
-        className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 emotion-1"
+        className="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 emotion-1"
         style={
           {
             "marginTop": "10px",
@@ -810,7 +810,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
         }
       >
         <div
-          className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 emotion-2"
+          className="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-2"
           style={
             {
               "marginBottom": "10px",
@@ -818,16 +818,16 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
           }
         >
           <div
-            className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 rjsf-field rjsf-field-string emotion-3"
+            className="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 rjsf-field rjsf-field-string emotion-3"
           >
             <div
-              className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-4"
+              className="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-auto emotion-4"
             >
               <div
                 className="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-5"
               >
                 <label
-                  className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-6"
+                  className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined emotion-6"
                   data-shrink={true}
                   htmlFor="root_foo-key"
                   id="root_foo-key-label"
@@ -869,7 +869,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
               </div>
             </div>
             <div
-              className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-4"
+              className="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-auto emotion-4"
             >
               <div
                 className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -879,7 +879,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
                   className="MuiFormControl-root MuiTextField-root emotion-13"
                 >
                   <label
-                    className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-6"
+                    className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined emotion-6"
                     data-shrink={true}
                     htmlFor="root_foo"
                     id="root_foo-label"
@@ -923,7 +923,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
               </div>
             </div>
             <div
-              className="MuiGrid2-root MuiGrid2-direction-xs-row emotion-19"
+              className="MuiGrid-root MuiGrid-direction-xs-row emotion-19"
             >
               <button
                 className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeSmall rjsf-object-property-remove emotion-20"
@@ -970,10 +970,10 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
           </div>
         </div>
         <div
-          className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row emotion-22"
+          className="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row emotion-22"
         >
           <div
-            className="MuiGrid2-root MuiGrid2-direction-xs-row emotion-19"
+            className="MuiGrid-root MuiGrid-direction-xs-row emotion-19"
           >
             <button
               className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorPrimary MuiIconButton-sizeMedium rjsf-object-property-expand emotion-24"
@@ -1487,7 +1487,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
     >
       <div
-        className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 emotion-1"
+        className="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 emotion-1"
         style={
           {
             "marginTop": "10px",
@@ -1495,7 +1495,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
         }
       >
         <div
-          className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 emotion-2"
+          className="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-2"
           style={
             {
               "marginBottom": "10px",
@@ -1513,7 +1513,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
                 className="MuiFormControl-root MuiTextField-root emotion-4"
               >
                 <label
-                  className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-5"
+                  className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined emotion-5"
                   data-shrink={false}
                   htmlFor="root_a"
                   id="root_a-label"
@@ -1558,7 +1558,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
           </div>
         </div>
         <div
-          className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 emotion-2"
+          className="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-2"
           style={
             {
               "marginBottom": "10px",
@@ -1576,7 +1576,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-7:focus::-ms-input-p
                 className="MuiFormControl-root MuiTextField-root emotion-4"
               >
                 <label
-                  className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-5"
+                  className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined emotion-5"
                   data-shrink={false}
                   htmlFor="root_b"
                   id="root_b-label"
@@ -2434,7 +2434,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
     >
       <div
-        className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 emotion-1"
+        className="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 emotion-1"
         style={
           {
             "marginTop": "10px",
@@ -2442,7 +2442,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
         }
       >
         <div
-          className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 emotion-2"
+          className="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-2"
           style={
             {
               "marginBottom": "10px",
@@ -2450,16 +2450,16 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
           }
         >
           <div
-            className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 rjsf-field rjsf-field-string emotion-3"
+            className="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 rjsf-field rjsf-field-string emotion-3"
           >
             <div
-              className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-4"
+              className="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-auto emotion-4"
             >
               <div
                 className="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-5"
               >
                 <label
-                  className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-6"
+                  className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined emotion-6"
                   data-shrink={false}
                   htmlFor="root_additionalProperty-key"
                   id="root_additionalProperty-key-label"
@@ -2501,7 +2501,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
               </div>
             </div>
             <div
-              className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-4"
+              className="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-auto emotion-4"
             >
               <div
                 className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -2511,7 +2511,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
                   className="MuiFormControl-root MuiTextField-root emotion-13"
                 >
                   <label
-                    className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-6"
+                    className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined emotion-6"
                     data-shrink={false}
                     htmlFor="root_additionalProperty"
                     id="root_additionalProperty-label"
@@ -2555,7 +2555,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
               </div>
             </div>
             <div
-              className="MuiGrid2-root MuiGrid2-direction-xs-row emotion-19"
+              className="MuiGrid-root MuiGrid-direction-xs-row emotion-19"
             >
               <button
                 className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeSmall rjsf-object-property-remove emotion-20"
@@ -2602,10 +2602,10 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
           </div>
         </div>
         <div
-          className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row emotion-22"
+          className="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row emotion-22"
         >
           <div
-            className="MuiGrid2-root MuiGrid2-direction-xs-row emotion-19"
+            className="MuiGrid-root MuiGrid-direction-xs-row emotion-19"
           >
             <button
               className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorPrimary MuiIconButton-sizeMedium rjsf-object-property-expand emotion-24"
@@ -3533,7 +3533,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
         a test description
       </h6>
       <div
-        className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 emotion-5"
+        className="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 emotion-5"
         style={
           {
             "marginTop": "10px",
@@ -3541,7 +3541,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
         }
       >
         <div
-          className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 emotion-6"
+          className="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-6"
           style={
             {
               "marginBottom": "10px",
@@ -3549,16 +3549,16 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
           }
         >
           <div
-            className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 rjsf-field rjsf-field-string emotion-7"
+            className="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 rjsf-field rjsf-field-string emotion-7"
           >
             <div
-              className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-8"
+              className="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-auto emotion-8"
             >
               <div
                 className="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-9"
               >
                 <label
-                  className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-10"
+                  className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined emotion-10"
                   data-shrink={true}
                   htmlFor="root_foo-key"
                   id="root_foo-key-label"
@@ -3600,7 +3600,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
               </div>
             </div>
             <div
-              className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-8"
+              className="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-auto emotion-8"
             >
               <div
                 className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -3610,7 +3610,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
                   className="MuiFormControl-root MuiTextField-root emotion-17"
                 >
                   <label
-                    className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-10"
+                    className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined emotion-10"
                     data-shrink={true}
                     htmlFor="root_foo"
                     id="root_foo-label"
@@ -3654,7 +3654,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
               </div>
             </div>
             <div
-              className="MuiGrid2-root MuiGrid2-direction-xs-row emotion-23"
+              className="MuiGrid-root MuiGrid-direction-xs-row emotion-23"
             >
               <button
                 className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeSmall rjsf-object-property-remove emotion-24"
@@ -3701,10 +3701,10 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
           </div>
         </div>
         <div
-          className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row emotion-26"
+          className="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row emotion-26"
         >
           <div
-            className="MuiGrid2-root MuiGrid2-direction-xs-row emotion-23"
+            className="MuiGrid-root MuiGrid-direction-xs-row emotion-23"
           >
             <button
               className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorPrimary MuiIconButton-sizeMedium rjsf-object-property-expand emotion-28"
@@ -4632,7 +4632,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
         a fancier description
       </h6>
       <div
-        className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 emotion-5"
+        className="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 emotion-5"
         style={
           {
             "marginTop": "10px",
@@ -4640,7 +4640,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
         }
       >
         <div
-          className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 emotion-6"
+          className="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-6"
           style={
             {
               "marginBottom": "10px",
@@ -4648,16 +4648,16 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
           }
         >
           <div
-            className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 rjsf-field rjsf-field-string emotion-7"
+            className="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 rjsf-field rjsf-field-string emotion-7"
           >
             <div
-              className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-8"
+              className="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-auto emotion-8"
             >
               <div
                 className="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-9"
               >
                 <label
-                  className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-10"
+                  className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined emotion-10"
                   data-shrink={true}
                   htmlFor="root_foo-key"
                   id="root_foo-key-label"
@@ -4699,7 +4699,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
               </div>
             </div>
             <div
-              className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-8"
+              className="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-auto emotion-8"
             >
               <div
                 className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -4709,7 +4709,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
                   className="MuiFormControl-root MuiTextField-root emotion-17"
                 >
                   <label
-                    className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-10"
+                    className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined emotion-10"
                     data-shrink={true}
                     htmlFor="root_foo"
                     id="root_foo-label"
@@ -4753,7 +4753,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
               </div>
             </div>
             <div
-              className="MuiGrid2-root MuiGrid2-direction-xs-row emotion-23"
+              className="MuiGrid-root MuiGrid-direction-xs-row emotion-23"
             >
               <button
                 className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeSmall rjsf-object-property-remove emotion-24"
@@ -4800,10 +4800,10 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
           </div>
         </div>
         <div
-          className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row emotion-26"
+          className="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row emotion-26"
         >
           <div
-            className="MuiGrid2-root MuiGrid2-direction-xs-row emotion-23"
+            className="MuiGrid-root MuiGrid-direction-xs-row emotion-23"
           >
             <button
               className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorPrimary MuiIconButton-sizeMedium rjsf-object-property-expand emotion-28"
@@ -5386,7 +5386,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
         a fancier description
       </h6>
       <div
-        className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 emotion-5"
+        className="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 emotion-5"
         style={
           {
             "marginTop": "10px",
@@ -5394,7 +5394,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
         }
       >
         <div
-          className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 emotion-6"
+          className="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-6"
           style={
             {
               "marginBottom": "10px",
@@ -5412,7 +5412,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                 className="MuiFormControl-root MuiTextField-root emotion-8"
               >
                 <label
-                  className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-9"
+                  className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined emotion-9"
                   data-shrink={false}
                   htmlFor="root_a"
                   id="root_a-label"
@@ -5473,7 +5473,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
           </div>
         </div>
         <div
-          className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 emotion-6"
+          className="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-6"
           style={
             {
               "marginBottom": "10px",
@@ -5491,7 +5491,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                 className="MuiFormControl-root MuiTextField-root emotion-8"
               >
                 <label
-                  className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-9"
+                  className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined emotion-9"
                   data-shrink={false}
                   htmlFor="root_b"
                   id="root_b-label"
@@ -6443,7 +6443,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
         a fancier description
       </h6>
       <div
-        className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 emotion-5"
+        className="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 emotion-5"
         style={
           {
             "marginTop": "10px",
@@ -6451,7 +6451,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
         }
       >
         <div
-          className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 emotion-6"
+          className="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-6"
           style={
             {
               "marginBottom": "10px",
@@ -6459,16 +6459,16 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
           }
         >
           <div
-            className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 rjsf-field rjsf-field-string emotion-7"
+            className="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 rjsf-field rjsf-field-string emotion-7"
           >
             <div
-              className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-8"
+              className="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-auto emotion-8"
             >
               <div
                 className="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-9"
               >
                 <label
-                  className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-10"
+                  className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined emotion-10"
                   data-shrink={true}
                   htmlFor="root_foo-key"
                   id="root_foo-key-label"
@@ -6510,7 +6510,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
               </div>
             </div>
             <div
-              className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-8"
+              className="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-auto emotion-8"
             >
               <div
                 className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -6520,7 +6520,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
                   className="MuiFormControl-root MuiTextField-root emotion-17"
                 >
                   <label
-                    className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-10"
+                    className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined emotion-10"
                     data-shrink={true}
                     htmlFor="root_foo"
                     id="root_foo-label"
@@ -6564,7 +6564,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
               </div>
             </div>
             <div
-              className="MuiGrid2-root MuiGrid2-direction-xs-row emotion-23"
+              className="MuiGrid-root MuiGrid-direction-xs-row emotion-23"
             >
               <button
                 className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeSmall rjsf-object-property-remove emotion-24"
@@ -6611,10 +6611,10 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
           </div>
         </div>
         <div
-          className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row emotion-26"
+          className="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row emotion-26"
         >
           <div
-            className="MuiGrid2-root MuiGrid2-direction-xs-row emotion-23"
+            className="MuiGrid-root MuiGrid-direction-xs-row emotion-23"
           >
             <button
               className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorPrimary MuiIconButton-sizeMedium rjsf-object-property-expand emotion-28"
@@ -7197,7 +7197,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
         a fancier description
       </h6>
       <div
-        className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 emotion-5"
+        className="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 emotion-5"
         style={
           {
             "marginTop": "10px",
@@ -7205,7 +7205,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
         }
       >
         <div
-          className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 emotion-6"
+          className="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-6"
           style={
             {
               "marginBottom": "10px",
@@ -7223,7 +7223,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                 className="MuiFormControl-root MuiTextField-root emotion-8"
               >
                 <label
-                  className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-9"
+                  className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined emotion-9"
                   data-shrink={false}
                   htmlFor="root_a"
                   id="root_a-label"
@@ -7284,7 +7284,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
           </div>
         </div>
         <div
-          className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 emotion-6"
+          className="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-6"
           style={
             {
               "marginBottom": "10px",
@@ -7302,7 +7302,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                 className="MuiFormControl-root MuiTextField-root emotion-8"
               >
                 <label
-                  className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-9"
+                  className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined emotion-9"
                   data-shrink={false}
                   htmlFor="root_b"
                   id="root_b-label"
@@ -8235,7 +8235,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
         a fancier description
       </h6>
       <div
-        className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 emotion-5"
+        className="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 emotion-5"
         style={
           {
             "marginTop": "10px",
@@ -8243,7 +8243,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
         }
       >
         <div
-          className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 emotion-6"
+          className="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-6"
           style={
             {
               "marginBottom": "10px",
@@ -8251,16 +8251,16 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
           }
         >
           <div
-            className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 rjsf-field rjsf-field-string emotion-7"
+            className="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 rjsf-field rjsf-field-string emotion-7"
           >
             <div
-              className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-8"
+              className="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-auto emotion-8"
             >
               <div
                 className="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-9"
               >
                 <label
-                  className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-10"
+                  className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined emotion-10"
                   data-shrink={false}
                   htmlFor="root_additionalProperty-key"
                   id="root_additionalProperty-key-label"
@@ -8302,7 +8302,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
               </div>
             </div>
             <div
-              className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-8"
+              className="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-auto emotion-8"
             >
               <div
                 className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -8312,7 +8312,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
                   className="MuiFormControl-root MuiTextField-root emotion-17"
                 >
                   <label
-                    className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-10"
+                    className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined emotion-10"
                     data-shrink={false}
                     htmlFor="root_additionalProperty"
                     id="root_additionalProperty-label"
@@ -8356,7 +8356,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
               </div>
             </div>
             <div
-              className="MuiGrid2-root MuiGrid2-direction-xs-row emotion-23"
+              className="MuiGrid-root MuiGrid-direction-xs-row emotion-23"
             >
               <button
                 className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeSmall rjsf-object-property-remove emotion-24"
@@ -8403,10 +8403,10 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
           </div>
         </div>
         <div
-          className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row emotion-26"
+          className="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row emotion-26"
         >
           <div
-            className="MuiGrid2-root MuiGrid2-direction-xs-row emotion-23"
+            className="MuiGrid-root MuiGrid-direction-xs-row emotion-23"
           >
             <button
               className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorPrimary MuiIconButton-sizeMedium rjsf-object-property-expand emotion-28"
@@ -8989,7 +8989,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
         a test description
       </h6>
       <div
-        className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 emotion-5"
+        className="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 emotion-5"
         style={
           {
             "marginTop": "10px",
@@ -8997,7 +8997,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
         }
       >
         <div
-          className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 emotion-6"
+          className="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-6"
           style={
             {
               "marginBottom": "10px",
@@ -9015,7 +9015,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                 className="MuiFormControl-root MuiTextField-root emotion-8"
               >
                 <label
-                  className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-9"
+                  className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined emotion-9"
                   data-shrink={false}
                   htmlFor="root_a"
                   id="root_a-label"
@@ -9076,7 +9076,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
           </div>
         </div>
         <div
-          className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 emotion-6"
+          className="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-6"
           style={
             {
               "marginBottom": "10px",
@@ -9094,7 +9094,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
                 className="MuiFormControl-root MuiTextField-root emotion-8"
               >
                 <label
-                  className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-9"
+                  className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined emotion-9"
                   data-shrink={false}
                   htmlFor="root_b"
                   id="root_b-label"
@@ -10027,7 +10027,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
         a test description
       </h6>
       <div
-        className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 emotion-5"
+        className="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 emotion-5"
         style={
           {
             "marginTop": "10px",
@@ -10035,7 +10035,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
         }
       >
         <div
-          className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 emotion-6"
+          className="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-6"
           style={
             {
               "marginBottom": "10px",
@@ -10043,16 +10043,16 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
           }
         >
           <div
-            className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 rjsf-field rjsf-field-string emotion-7"
+            className="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 rjsf-field rjsf-field-string emotion-7"
           >
             <div
-              className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-8"
+              className="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-auto emotion-8"
             >
               <div
                 className="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-9"
               >
                 <label
-                  className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-10"
+                  className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined emotion-10"
                   data-shrink={false}
                   htmlFor="root_additionalProperty-key"
                   id="root_additionalProperty-key-label"
@@ -10094,7 +10094,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
               </div>
             </div>
             <div
-              className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-8"
+              className="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-auto emotion-8"
             >
               <div
                 className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -10104,7 +10104,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
                   className="MuiFormControl-root MuiTextField-root emotion-17"
                 >
                   <label
-                    className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-10"
+                    className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined emotion-10"
                     data-shrink={false}
                     htmlFor="root_additionalProperty"
                     id="root_additionalProperty-label"
@@ -10148,7 +10148,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
               </div>
             </div>
             <div
-              className="MuiGrid2-root MuiGrid2-direction-xs-row emotion-23"
+              className="MuiGrid-root MuiGrid-direction-xs-row emotion-23"
             >
               <button
                 className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeSmall rjsf-object-property-remove emotion-24"
@@ -10195,10 +10195,10 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-12:focus::-ms-input-
           </div>
         </div>
         <div
-          className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row emotion-26"
+          className="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row emotion-26"
         >
           <div
-            className="MuiGrid2-root MuiGrid2-direction-xs-row emotion-23"
+            className="MuiGrid-root MuiGrid-direction-xs-row emotion-23"
           >
             <button
               className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorPrimary MuiIconButton-sizeMedium rjsf-object-property-expand emotion-28"
@@ -11058,7 +11058,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
     >
       <div
-        className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 emotion-1"
+        className="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 emotion-1"
         style={
           {
             "marginTop": "10px",
@@ -11066,7 +11066,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
         }
       >
         <div
-          className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 emotion-2"
+          className="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-2"
           style={
             {
               "marginBottom": "10px",
@@ -11074,16 +11074,16 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
           }
         >
           <div
-            className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 rjsf-field rjsf-field-string emotion-3"
+            className="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 rjsf-field rjsf-field-string emotion-3"
           >
             <div
-              className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-4"
+              className="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-auto emotion-4"
             >
               <div
                 className="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-5"
               >
                 <label
-                  className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-6"
+                  className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined emotion-6"
                   data-shrink={false}
                   htmlFor="root_foo-key"
                   id="root_foo-key-label"
@@ -11125,7 +11125,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
               </div>
             </div>
             <div
-              className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-4"
+              className="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-auto emotion-4"
             >
               <div
                 className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -11174,7 +11174,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
               </div>
             </div>
             <div
-              className="MuiGrid2-root MuiGrid2-direction-xs-row emotion-18"
+              className="MuiGrid-root MuiGrid-direction-xs-row emotion-18"
             >
               <button
                 className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeSmall rjsf-object-property-remove emotion-19"
@@ -11221,10 +11221,10 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
           </div>
         </div>
         <div
-          className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row emotion-21"
+          className="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row emotion-21"
         >
           <div
-            className="MuiGrid2-root MuiGrid2-direction-xs-row emotion-18"
+            className="MuiGrid-root MuiGrid-direction-xs-row emotion-18"
           >
             <button
               className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorPrimary MuiIconButton-sizeMedium rjsf-object-property-expand emotion-23"
@@ -11680,7 +11680,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-6:focus::-ms-input-p
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
     >
       <div
-        className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 emotion-1"
+        className="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 emotion-1"
         style={
           {
             "marginTop": "10px",
@@ -11688,7 +11688,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-6:focus::-ms-input-p
         }
       >
         <div
-          className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 emotion-2"
+          className="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-2"
           style={
             {
               "marginBottom": "10px",
@@ -11746,7 +11746,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-6:focus::-ms-input-p
           </div>
         </div>
         <div
-          className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 emotion-2"
+          className="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-2"
           style={
             {
               "marginBottom": "10px",
@@ -12627,7 +12627,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
       className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
     >
       <div
-        className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 emotion-1"
+        className="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 emotion-1"
         style={
           {
             "marginTop": "10px",
@@ -12635,7 +12635,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
         }
       >
         <div
-          className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-12 emotion-2"
+          className="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-12 emotion-2"
           style={
             {
               "marginBottom": "10px",
@@ -12643,16 +12643,16 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
           }
         >
           <div
-            className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row MuiGrid2-spacing-xs-2 rjsf-field rjsf-field-string emotion-3"
+            className="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row MuiGrid-spacing-xs-2 rjsf-field rjsf-field-string emotion-3"
           >
             <div
-              className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-4"
+              className="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-auto emotion-4"
             >
               <div
                 className="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root emotion-5"
               >
                 <label
-                  className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-6"
+                  className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined emotion-6"
                   data-shrink={false}
                   htmlFor="root_additionalProperty-key"
                   id="root_additionalProperty-key-label"
@@ -12694,7 +12694,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
               </div>
             </div>
             <div
-              className="MuiGrid2-root MuiGrid2-direction-xs-row MuiGrid2-grid-xs-auto emotion-4"
+              className="MuiGrid-root MuiGrid-direction-xs-row MuiGrid-grid-xs-auto emotion-4"
             >
               <div
                 className="MuiFormControl-root MuiFormControl-fullWidth emotion-0"
@@ -12743,7 +12743,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
               </div>
             </div>
             <div
-              className="MuiGrid2-root MuiGrid2-direction-xs-row emotion-18"
+              className="MuiGrid-root MuiGrid-direction-xs-row emotion-18"
             >
               <button
                 className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeSmall rjsf-object-property-remove emotion-19"
@@ -12790,10 +12790,10 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-8:focus::-ms-input-p
           </div>
         </div>
         <div
-          className="MuiGrid2-root MuiGrid2-container MuiGrid2-direction-xs-row emotion-21"
+          className="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-row emotion-21"
         >
           <div
-            className="MuiGrid2-root MuiGrid2-direction-xs-row emotion-18"
+            className="MuiGrid-root MuiGrid-direction-xs-row emotion-18"
           >
             <button
               className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorPrimary MuiIconButton-sizeMedium rjsf-object-property-expand emotion-23"

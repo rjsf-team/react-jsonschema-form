@@ -31,10 +31,21 @@ This package integrates [DaisyUI](https://daisyui.com/), [Tailwind CSS](https://
 - Support for custom themes via DaisyUI's theme system
 - Accessible form components following WAI-ARIA practices
 
-## Installation
+## Getting Started
+
+### Prerequisites
+
+- `daisyui >= 5`
+- `@fluentui/react-icons >= 2`
+- `@fluentui/react-migration-v0-v9 >= 9`
+- `@rjsf/core >= 6`
+- `@rjsf/utils >= 6`
+- `@rjsf/validator-ajv8 >= 6`
+
+### Installation
 
 ```bash
-npm install @rjsf/daisyui @rjsf/core @rjsf/utils tailwindcss daisyui
+npm install @rjsf/daisyui @rjsf/core @rjsf/utils @rjsf/validator-ajv8 tailwindcss daisyui
 ```
 
 ## Usage
