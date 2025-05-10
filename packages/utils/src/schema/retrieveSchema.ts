@@ -334,7 +334,7 @@ export function resolveReference<T = any, S extends StrictRJSFSchema = RJSFSchem
  * @param schema - The schema for which resolving all references is desired
  * @param rootSchema - The root schema that will be forwarded to all the APIs
  * @param recurseList - List of $refs already resolved to prevent recursion
- * @param baseURI - The base URI to be used for resolving relative references
+ * @param [baseURI] - The base URI to be used for resolving relative references
  * @returns - given schema will all references resolved or the original schema if no internal `$refs` were resolved
  */
 export function resolveAllReferences<S extends StrictRJSFSchema = RJSFSchema>(
@@ -432,7 +432,7 @@ export function stubExistingAdditionalProperties<
           validator,
           { allOf: Object.values(matchingProperties) } as S,
           rootSchema,
-          formData as T,
+          get(formData, [key]) as T,
           experimental_customMergeAllOf,
         );
         set(schema.properties, [key, ADDITIONAL_PROPERTY_FLAG], true);
@@ -578,7 +578,7 @@ export function retrieveSchemaInternal<
               validator,
               { allOf: [schema.properties[key], ...Object.values(matchingProperties)] } as S,
               rootSchema,
-              rawFormData as T,
+              get(rawFormData, [key]) as T,
               experimental_customMergeAllOf,
             );
           }

@@ -1338,6 +1338,95 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       });
     });
     describe('withPatternProperties()', () => {
+      it('validates schemas with conditions inside patternProperties', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            foo: {
+              type: 'object',
+            },
+          },
+          patternProperties: {
+            '^[a-z]+$': {
+              type: 'object',
+              properties: {
+                isString: { type: 'boolean' },
+              },
+              allOf: [
+                {
+                  if: {
+                    properties: { isString: { const: true } },
+                  },
+                  then: {
+                    properties: {
+                      value: {
+                        type: 'string',
+                      },
+                    },
+                  },
+                },
+                {
+                  if: {
+                    properties: { isString: { const: false } },
+                  },
+                  then: {
+                    properties: {
+                      value: {
+                        type: 'number',
+                      },
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        };
+        const rootSchema: RJSFSchema = { definitions: {} };
+        testValidator.setReturnValues({
+          isValid: [true, false, true, false],
+        });
+        expect(
+          retrieveSchema(testValidator, schema, rootSchema, {
+            foo: { isString: true },
+            bar: { isString: true },
+          }),
+        ).toEqual({
+          ...schema,
+          properties: {
+            foo: {
+              type: 'object',
+              properties: { isString: { type: 'boolean' }, value: { type: 'string' } },
+            },
+            bar: {
+              [ADDITIONAL_PROPERTY_FLAG]: true,
+              type: 'object',
+              properties: { isString: { type: 'boolean' }, value: { type: 'string' } },
+            },
+          },
+        });
+        testValidator.setReturnValues({
+          isValid: [false, true, false, true],
+        });
+        expect(
+          retrieveSchema(testValidator, schema, rootSchema, {
+            foo: { isString: false },
+            bar: { isString: false },
+          }),
+        ).toEqual({
+          ...schema,
+          properties: {
+            foo: {
+              type: 'object',
+              properties: { isString: { type: 'boolean' }, value: { type: 'number' } },
+            },
+            bar: {
+              [ADDITIONAL_PROPERTY_FLAG]: true,
+              type: 'object',
+              properties: { isString: { type: 'boolean' }, value: { type: 'number' } },
+            },
+          },
+        });
+      });
       it('merges all subschemas that match the patternProperties regex', () => {
         const schema: RJSFSchema = {
           type: 'object',
