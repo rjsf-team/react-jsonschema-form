@@ -6,6 +6,7 @@ import { GenericObjectType, RJSFSchema, StrictRJSFSchema } from './types';
 import isObject from 'lodash/isObject';
 import isEmpty from 'lodash/isEmpty';
 import UriResolver from 'fast-uri';
+import get from 'lodash/get';
 
 /** Looks for the `$id` pointed by `ref` in the schema definitions embedded in
  * a JSON Schema bundle
@@ -51,7 +52,7 @@ export function splitKeyElementFromObject(key: string, object: GenericObjectType
  * @param $ref - The ref string for which the schema definition is desired
  * @param [rootSchema={}] - The root schema in which to search for the definition
  * @param recurseList - List of $refs already resolved to prevent recursion
- * @param baseURI - The base URI to be used for resolving relative references
+ * @param [baseURI=rootSchema['$id']] - The base URI to be used for resolving relative references
  * @returns - The sub-schema within the `rootSchema` which matches the `$ref` if it exists
  * @throws - Error indicating that no schema for that reference could be resolved
  */
@@ -59,7 +60,7 @@ export function findSchemaDefinitionRecursive<S extends StrictRJSFSchema = RJSFS
   $ref?: string,
   rootSchema: S = {} as S,
   recurseList: string[] = [],
-  baseURI: string | undefined = ID_KEY in rootSchema ? rootSchema[ID_KEY] : undefined,
+  baseURI: string | undefined = get(rootSchema, [ID_KEY]),
 ): S {
   const ref = $ref || '';
   let current: S | undefined = undefined;
@@ -123,7 +124,7 @@ export function findSchemaDefinitionRecursive<S extends StrictRJSFSchema = RJSFS
 export default function findSchemaDefinition<S extends StrictRJSFSchema = RJSFSchema>(
   $ref?: string,
   rootSchema: S = {} as S,
-  baseURI: string | undefined = ID_KEY in rootSchema ? rootSchema[ID_KEY] : undefined,
+  baseURI: string | undefined = get(rootSchema, [ID_KEY]),
 ): S {
   const recurseList: string[] = [];
   return findSchemaDefinitionRecursive($ref, rootSchema, recurseList, baseURI);
