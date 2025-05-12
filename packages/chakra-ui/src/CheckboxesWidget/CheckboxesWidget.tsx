@@ -13,6 +13,7 @@ import {
 import { FocusEvent } from 'react';
 
 import { Checkbox } from '../components/ui/checkbox';
+import { getChakra } from '../utils';
 
 export default function CheckboxesWidget<
   T = any,
@@ -32,6 +33,7 @@ export default function CheckboxesWidget<
     label,
     hideLabel,
     rawErrors = [],
+    uiSchema,
   } = props;
   const { enumOptions, enumDisabled, emptyValue } = options;
 
@@ -43,8 +45,10 @@ export default function CheckboxesWidget<
   const row = options ? options.inline : false;
   const selectedIndexes = enumOptionsIndexForValue<S>(value, enumOptions, true) as string[];
 
+  const chakraProps = getChakra({ uiSchema });
+
   return (
-    <FieldsetRoot mb={1} disabled={disabled || readonly} invalid={rawErrors && rawErrors.length > 0}>
+    <FieldsetRoot mb={1} disabled={disabled || readonly} invalid={rawErrors && rawErrors.length > 0} {...chakraProps}>
       <CheckboxGroup
         onValueChange={(option) => onChange(enumOptionsValueForIndex<S>(option, enumOptions, emptyValue))}
         value={selectedIndexes}
