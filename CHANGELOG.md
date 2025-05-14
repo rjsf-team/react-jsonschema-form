@@ -27,6 +27,10 @@ should change the heading of the (upcoming) version to include a major version b
 - Added `getChakra` to package exports
 - Restored the `ui:options` customization
 
+## Dev / docs / playground
+
+- Updated precompiled schemas documentation in `validation.md` based on v6 changes, addressingg [#4618](https://github.com/rjsf-team/react-jsonschema-form/issues/4618)
+
 # 6.0.0-beta.7
 
 ## @rjsf/core
