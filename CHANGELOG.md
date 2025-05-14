@@ -22,6 +22,11 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Fixed form data propagation with `patternProperties` [#4617](https://github.com/rjsf-team/react-jsonschema-form/pull/4617)
 
+## @rjsf/chakra-ui
+
+- Added `getChakra` to package exports
+- Restored the `ui:options` customization
+
 # 6.0.0-beta.7
 
 ## @rjsf/core

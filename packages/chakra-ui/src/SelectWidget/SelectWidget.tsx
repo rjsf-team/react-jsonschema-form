@@ -16,6 +16,7 @@ import { createListCollection, SelectValueChangeDetails, Select as ChakraSelect 
 
 import { Field } from '../components/ui/field';
 import { SelectRoot, SelectTrigger, SelectValueText } from '../components/ui/select';
+import { getChakra } from '../utils';
 
 export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: WidgetProps<T, S, F>,
@@ -37,6 +38,7 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
     onFocus,
     rawErrors = [],
     schema,
+    uiSchema,
   } = props;
   const { enumOptions, enumDisabled, emptyValue } = options;
 
@@ -114,6 +116,7 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
   });
 
   const containerRef = useRef(null);
+  const chakraProps = getChakra({ uiSchema });
 
   return (
     <Field
@@ -125,6 +128,7 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
       invalid={rawErrors && rawErrors.length > 0}
       label={labelValue(label, hideLabel || !label)}
       position='relative'
+      {...chakraProps}
     >
       <SelectRoot
         collection={selectOptions}

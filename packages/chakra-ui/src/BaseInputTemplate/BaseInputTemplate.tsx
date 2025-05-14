@@ -12,6 +12,7 @@ import {
 } from '@rjsf/utils';
 
 import { Field } from '../components/ui/field';
+import { getChakra } from '../utils';
 
 export default function BaseInputTemplate<
   T = any,
@@ -36,6 +37,7 @@ export default function BaseInputTemplate<
     autofocus,
     placeholder,
     disabled,
+    uiSchema,
   } = props;
   const inputProps = getInputProps<T, S, F>(schema, type, options);
 
@@ -43,6 +45,8 @@ export default function BaseInputTemplate<
     onChange(value === '' ? options.emptyValue : value);
   const _onBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target && target.value);
   const _onFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target && target.value);
+
+  const chakraProps = getChakra({ uiSchema });
 
   return (
     <Field
@@ -52,6 +56,7 @@ export default function BaseInputTemplate<
       readOnly={readonly}
       invalid={rawErrors && rawErrors.length > 0}
       label={labelValue(label, hideLabel || !label)}
+      {...chakraProps}
     >
       <Input
         id={id}

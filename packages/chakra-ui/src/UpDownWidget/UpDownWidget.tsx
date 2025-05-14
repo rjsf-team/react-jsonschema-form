@@ -12,6 +12,7 @@ import { NumberInputValueChangeDetails } from '@chakra-ui/react';
 
 import { Field } from '../components/ui/field';
 import { NumberInputRoot } from '../components/ui/number-input';
+import { getChakra } from '../utils';
 
 export default function UpDownWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: WidgetProps<T, S, F>,
@@ -22,6 +23,8 @@ export default function UpDownWidget<T = any, S extends StrictRJSFSchema = RJSFS
   const _onBlur = ({ target }: FocusEvent<HTMLInputElement | any>) => onBlur(id, target && target.value);
   const _onFocus = ({ target }: FocusEvent<HTMLInputElement | any>) => onFocus(id, target && target.value);
 
+  const chakraProps = getChakra({ uiSchema: props.uiSchema });
+
   return (
     <Field
       mb={1}
@@ -30,6 +33,7 @@ export default function UpDownWidget<T = any, S extends StrictRJSFSchema = RJSFS
       readOnly={readonly}
       invalid={rawErrors && rawErrors.length > 0}
       label={labelValue(label, hideLabel || !label)}
+      {...chakraProps}
     >
       <NumberInputRoot
         value={value}

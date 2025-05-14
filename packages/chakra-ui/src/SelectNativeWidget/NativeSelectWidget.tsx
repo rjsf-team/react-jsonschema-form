@@ -14,6 +14,7 @@ import { OptionsOrGroups } from 'chakra-react-select';
 import { createListCollection, NativeSelect as ChakraSelect } from '@chakra-ui/react';
 
 import { Field } from '../components/ui/field';
+import { getChakra } from '../utils';
 
 /**
  * NativeSelectWidget is a React component that renders a native select input.
@@ -47,6 +48,7 @@ export default function NativeSelectWidget<
     onFocus,
     rawErrors = [],
     schema,
+    uiSchema,
   } = props;
   const { enumOptions, enumDisabled, emptyValue } = options;
 
@@ -102,6 +104,8 @@ export default function NativeSelectWidget<
     items: displayEnumOptions.filter((item) => item.value),
   });
 
+  const chakraProps = getChakra({ uiSchema });
+
   return (
     <Field
       mb={1}
@@ -110,6 +114,7 @@ export default function NativeSelectWidget<
       readOnly={readonly}
       invalid={rawErrors && rawErrors.length > 0}
       label={labelValue(label, hideLabel || !label)}
+      {...chakraProps}
     >
       <ChakraSelect.Root>
         <ChakraSelect.Field
