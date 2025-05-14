@@ -48,7 +48,12 @@ export default function CheckboxesWidget<
   const chakraProps = getChakra({ uiSchema });
 
   return (
-    <FieldsetRoot mb={1} disabled={disabled || readonly} invalid={rawErrors && rawErrors.length > 0} {...chakraProps}>
+    <FieldsetRoot
+      mb={1}
+      disabled={disabled || readonly}
+      invalid={rawErrors && rawErrors.length > 0}
+      {...(chakraProps as any)}
+    >
       <CheckboxGroup
         onValueChange={(option) => onChange(enumOptionsValueForIndex<S>(option, enumOptions, emptyValue))}
         value={selectedIndexes}
