@@ -1,0 +1,4144 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`single fields checkbox field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-boolean"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <div
+        style={
+          {
+            "alignItems": "center",
+            "display": "flex",
+            "flexDirection": "row",
+            "gap": "0.5rem",
+          }
+        }
+      >
+        <div
+          aria-describedby="root__error root__description root__help"
+          className="p-checkbox p-component"
+          data-p-disabled={false}
+          data-p-highlight={false}
+          data-pc-name="checkbox"
+          data-pc-section="root"
+          id={null}
+          onBlur={[Function]}
+          onContextMenu={null}
+          onFocus={[Function]}
+          onMouseDown={null}
+          style={{}}
+        >
+          <input
+            aria-describedby="root__error root__description root__help"
+            aria-invalid={false}
+            checked={false}
+            className="p-checkbox-input"
+            data-pc-section="input"
+            disabled={false}
+            id="root"
+            name="root"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            readOnly={false}
+            required={false}
+            tabIndex={null}
+            type="checkbox"
+          />
+          <div
+            className="p-checkbox-box"
+            data-p-disabled={false}
+            data-p-highlight={false}
+            data-pc-section="box"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields checkbox field with label 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-boolean"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <div
+        style={
+          {
+            "alignItems": "center",
+            "display": "flex",
+            "flexDirection": "row",
+            "gap": "0.5rem",
+          }
+        }
+      >
+        <div
+          aria-describedby="root__error root__description root__help"
+          className="p-checkbox p-component"
+          data-p-disabled={false}
+          data-p-highlight={false}
+          data-pc-name="checkbox"
+          data-pc-section="root"
+          id={null}
+          onBlur={[Function]}
+          onContextMenu={null}
+          onFocus={[Function]}
+          onMouseDown={null}
+          style={{}}
+        >
+          <input
+            aria-describedby="root__error root__description root__help"
+            aria-invalid={false}
+            checked={false}
+            className="p-checkbox-input"
+            data-pc-section="input"
+            disabled={false}
+            id="root"
+            name="root"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            readOnly={false}
+            required={false}
+            tabIndex={null}
+            type="checkbox"
+          />
+          <div
+            className="p-checkbox-box"
+            data-p-disabled={false}
+            data-p-highlight={false}
+            data-pc-section="box"
+          />
+        </div>
+        <label
+          htmlFor="root"
+        >
+          test
+           
+        </label>
+      </div>
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields checkbox field with label and description 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-boolean"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <span
+        id="root__description"
+      >
+        test description
+      </span>
+      <div
+        style={
+          {
+            "alignItems": "center",
+            "display": "flex",
+            "flexDirection": "row",
+            "gap": "0.5rem",
+          }
+        }
+      >
+        <div
+          aria-describedby="root__error root__description root__help"
+          className="p-checkbox p-component"
+          data-p-disabled={false}
+          data-p-highlight={false}
+          data-pc-name="checkbox"
+          data-pc-section="root"
+          id={null}
+          onBlur={[Function]}
+          onContextMenu={null}
+          onFocus={[Function]}
+          onMouseDown={null}
+          style={{}}
+        >
+          <input
+            aria-describedby="root__error root__description root__help"
+            aria-invalid={false}
+            checked={false}
+            className="p-checkbox-input"
+            data-pc-section="input"
+            disabled={false}
+            id="root"
+            name="root"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            readOnly={false}
+            required={false}
+            tabIndex={null}
+            type="checkbox"
+          />
+          <div
+            className="p-checkbox-box"
+            data-p-disabled={false}
+            data-p-highlight={false}
+            data-pc-section="box"
+          />
+        </div>
+        <label
+          htmlFor="root"
+        >
+          test
+           
+        </label>
+      </div>
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields checkbox field with label and rich text description 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-boolean"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <span
+        id="root__description"
+      >
+        <span>
+          <strong>
+            test
+          </strong>
+           
+          <strong>
+            description
+          </strong>
+        </span>
+      </span>
+      <div
+        style={
+          {
+            "alignItems": "center",
+            "display": "flex",
+            "flexDirection": "row",
+            "gap": "0.5rem",
+          }
+        }
+      >
+        <div
+          aria-describedby="root__error root__description root__help"
+          className="p-checkbox p-component"
+          data-p-disabled={false}
+          data-p-highlight={false}
+          data-pc-name="checkbox"
+          data-pc-section="root"
+          id={null}
+          onBlur={[Function]}
+          onContextMenu={null}
+          onFocus={[Function]}
+          onMouseDown={null}
+          style={{}}
+        >
+          <input
+            aria-describedby="root__error root__description root__help"
+            aria-invalid={false}
+            checked={false}
+            className="p-checkbox-input"
+            data-pc-section="input"
+            disabled={false}
+            id="root"
+            name="root"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            readOnly={false}
+            required={false}
+            tabIndex={null}
+            type="checkbox"
+          />
+          <div
+            className="p-checkbox-box"
+            data-p-disabled={false}
+            data-p-highlight={false}
+            data-pc-section="box"
+          />
+        </div>
+        <label
+          htmlFor="root"
+        >
+          test
+           
+        </label>
+      </div>
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields checkboxes field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-array"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <label
+        htmlFor="root"
+      >
+        An enum list rendered as checkboxes
+         
+      </label>
+      <div
+        id="root"
+        style={
+          {
+            "display": "flex",
+            "flexDirection": "column",
+            "gap": "1rem",
+            "marginBottom": "0.5rem",
+            "marginTop": "0.5rem",
+          }
+        }
+      >
+        <div
+          style={
+            {
+              "alignItems": "center",
+              "display": "flex",
+              "flexDirection": "row",
+              "gap": "0.5rem",
+            }
+          }
+        >
+          <div
+            aria-describedby="root__error root__description root__help"
+            className="p-checkbox p-component"
+            data-p-disabled={false}
+            data-p-highlight={false}
+            data-pc-name="checkbox"
+            data-pc-section="root"
+            id={null}
+            onBlur={[Function]}
+            onContextMenu={null}
+            onFocus={[Function]}
+            onMouseDown={null}
+            style={{}}
+          >
+            <input
+              aria-describedby="root__error root__description root__help"
+              aria-invalid={false}
+              checked={false}
+              className="p-checkbox-input"
+              data-pc-section="input"
+              disabled={false}
+              id="root-0"
+              name="root"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              readOnly={false}
+              required={false}
+              tabIndex={null}
+              type="checkbox"
+            />
+            <div
+              className="p-checkbox-box"
+              data-p-disabled={false}
+              data-p-highlight={false}
+              data-pc-section="box"
+            />
+          </div>
+          <label
+            htmlFor="root-0"
+          >
+            foo
+             
+          </label>
+        </div>
+        <div
+          style={
+            {
+              "alignItems": "center",
+              "display": "flex",
+              "flexDirection": "row",
+              "gap": "0.5rem",
+            }
+          }
+        >
+          <div
+            aria-describedby="root__error root__description root__help"
+            className="p-checkbox p-component"
+            data-p-disabled={false}
+            data-p-highlight={false}
+            data-pc-name="checkbox"
+            data-pc-section="root"
+            id={null}
+            onBlur={[Function]}
+            onContextMenu={null}
+            onFocus={[Function]}
+            onMouseDown={null}
+            style={{}}
+          >
+            <input
+              aria-describedby="root__error root__description root__help"
+              aria-invalid={false}
+              checked={false}
+              className="p-checkbox-input"
+              data-pc-section="input"
+              disabled={false}
+              id="root-1"
+              name="root"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              readOnly={false}
+              required={false}
+              tabIndex={null}
+              type="checkbox"
+            />
+            <div
+              className="p-checkbox-box"
+              data-p-disabled={false}
+              data-p-highlight={false}
+              data-pc-section="box"
+            />
+          </div>
+          <label
+            htmlFor="root-1"
+          >
+            bar
+             
+          </label>
+        </div>
+        <div
+          style={
+            {
+              "alignItems": "center",
+              "display": "flex",
+              "flexDirection": "row",
+              "gap": "0.5rem",
+            }
+          }
+        >
+          <div
+            aria-describedby="root__error root__description root__help"
+            className="p-checkbox p-component"
+            data-p-disabled={false}
+            data-p-highlight={false}
+            data-pc-name="checkbox"
+            data-pc-section="root"
+            id={null}
+            onBlur={[Function]}
+            onContextMenu={null}
+            onFocus={[Function]}
+            onMouseDown={null}
+            style={{}}
+          >
+            <input
+              aria-describedby="root__error root__description root__help"
+              aria-invalid={false}
+              checked={false}
+              className="p-checkbox-input"
+              data-pc-section="input"
+              disabled={false}
+              id="root-2"
+              name="root"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              readOnly={false}
+              required={false}
+              tabIndex={null}
+              type="checkbox"
+            />
+            <div
+              className="p-checkbox-box"
+              data-p-disabled={false}
+              data-p-highlight={false}
+              data-pc-section="box"
+            />
+          </div>
+          <label
+            htmlFor="root-2"
+          >
+            fuzz
+             
+          </label>
+        </div>
+        <div
+          style={
+            {
+              "alignItems": "center",
+              "display": "flex",
+              "flexDirection": "row",
+              "gap": "0.5rem",
+            }
+          }
+        >
+          <div
+            aria-describedby="root__error root__description root__help"
+            className="p-checkbox p-component"
+            data-p-disabled={false}
+            data-p-highlight={false}
+            data-pc-name="checkbox"
+            data-pc-section="root"
+            id={null}
+            onBlur={[Function]}
+            onContextMenu={null}
+            onFocus={[Function]}
+            onMouseDown={null}
+            style={{}}
+          >
+            <input
+              aria-describedby="root__error root__description root__help"
+              aria-invalid={false}
+              checked={false}
+              className="p-checkbox-input"
+              data-pc-section="input"
+              disabled={false}
+              id="root-3"
+              name="root"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              readOnly={false}
+              required={false}
+              tabIndex={null}
+              type="checkbox"
+            />
+            <div
+              className="p-checkbox-box"
+              data-p-disabled={false}
+              data-p-highlight={false}
+              data-pc-section="box"
+            />
+          </div>
+          <label
+            htmlFor="root-3"
+          >
+            qux
+             
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields field with description 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <div
+        className="rjsf-field rjsf-field-string"
+      >
+        <div
+          style={
+            {
+              "display": "flex",
+              "flexDirection": "column",
+              "gap": "0.5rem",
+              "marginBottom": "1rem",
+            }
+          }
+        >
+          <label
+            htmlFor="root_my-field"
+          >
+            my-field
+             
+          </label>
+          <input
+            aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
+            autoFocus={false}
+            className="p-inputtext p-component"
+            data-pc-name="inputtext"
+            data-pc-section="root"
+            disabled={false}
+            id="root_my-field"
+            name="root_my-field"
+            onBeforeInput={[Function]}
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            onInput={[Function]}
+            onKeyDown={[Function]}
+            onPaste={[Function]}
+            placeholder=""
+            required={false}
+            type="text"
+            value=""
+          />
+          <small>
+            <span
+              id="root_my-field__description"
+            >
+              some description
+            </span>
+          </small>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields field with description in uiSchema 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <div
+        className="rjsf-field rjsf-field-string"
+      >
+        <div
+          style={
+            {
+              "display": "flex",
+              "flexDirection": "column",
+              "gap": "0.5rem",
+              "marginBottom": "1rem",
+            }
+          }
+        >
+          <label
+            htmlFor="root_my-field"
+          >
+            my-field
+             
+          </label>
+          <input
+            aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
+            autoFocus={false}
+            className="p-inputtext p-component"
+            data-pc-name="inputtext"
+            data-pc-section="root"
+            disabled={false}
+            id="root_my-field"
+            name="root_my-field"
+            onBeforeInput={[Function]}
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            onInput={[Function]}
+            onKeyDown={[Function]}
+            onPaste={[Function]}
+            placeholder=""
+            required={false}
+            type="text"
+            value=""
+          />
+          <small>
+            <span
+              id="root_my-field__description"
+            >
+              some other description
+            </span>
+          </small>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields field with markdown description 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <div
+        className="rjsf-field rjsf-field-string"
+      >
+        <div
+          style={
+            {
+              "display": "flex",
+              "flexDirection": "column",
+              "gap": "0.5rem",
+              "marginBottom": "1rem",
+            }
+          }
+        >
+          <label
+            htmlFor="root_my-field"
+          >
+            my-field
+             
+          </label>
+          <input
+            aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
+            autoFocus={false}
+            className="p-inputtext p-component"
+            data-pc-name="inputtext"
+            data-pc-section="root"
+            disabled={false}
+            id="root_my-field"
+            name="root_my-field"
+            onBeforeInput={[Function]}
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            onInput={[Function]}
+            onKeyDown={[Function]}
+            onPaste={[Function]}
+            placeholder=""
+            required={false}
+            type="text"
+            value=""
+          />
+          <small>
+            <span
+              id="root_my-field__description"
+            >
+              <span>
+                some 
+                <strong>
+                  Rich
+                </strong>
+                 description
+              </span>
+            </span>
+          </small>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields field with markdown description in uiSchema 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <div
+        className="rjsf-field rjsf-field-string"
+      >
+        <div
+          style={
+            {
+              "display": "flex",
+              "flexDirection": "column",
+              "gap": "0.5rem",
+              "marginBottom": "1rem",
+            }
+          }
+        >
+          <label
+            htmlFor="root_my-field"
+          >
+            my-field
+             
+          </label>
+          <input
+            aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
+            autoFocus={false}
+            className="p-inputtext p-component"
+            data-pc-name="inputtext"
+            data-pc-section="root"
+            disabled={false}
+            id="root_my-field"
+            name="root_my-field"
+            onBeforeInput={[Function]}
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            onInput={[Function]}
+            onKeyDown={[Function]}
+            onPaste={[Function]}
+            placeholder=""
+            required={false}
+            type="text"
+            value=""
+          />
+          <small>
+            <span
+              id="root_my-field__description"
+            >
+              <span>
+                some other description
+              </span>
+            </span>
+          </small>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields format color 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-string"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <div
+        aria-describedby="root__error root__description root__help"
+        className="p-colorpicker p-component p-colorpicker-overlay"
+        data-pc-name="colorpicker"
+        data-pc-section="root"
+        id="root"
+        name="root"
+        onBlur={[Function]}
+        onFocus={[Function]}
+        placeholder=""
+        style={{}}
+        type="text"
+      >
+        <input
+          aria-describedby="root__error root__description root__help"
+          className="p-colorpicker-preview p-inputtext"
+          data-pc-section="input"
+          disabled={false}
+          id={null}
+          name="root"
+          onBlur={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          placeholder=""
+          readOnly={true}
+          style={{}}
+          tabIndex={null}
+          type="text"
+        />
+      </div>
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields format date 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-string"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <input
+        aria-describedby="root__error root__description root__help"
+        autoFocus={false}
+        className="p-inputtext p-component"
+        data-pc-name="inputtext"
+        data-pc-section="root"
+        disabled={false}
+        id="root"
+        name="root"
+        onBeforeInput={[Function]}
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        onInput={[Function]}
+        onKeyDown={[Function]}
+        onPaste={[Function]}
+        placeholder=""
+        type="date"
+        value=""
+      />
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields format datetime 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-string"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <input
+        aria-describedby="root__error root__description root__help"
+        autoFocus={false}
+        className="p-inputtext p-component"
+        data-pc-name="inputtext"
+        data-pc-section="root"
+        disabled={false}
+        id="root"
+        name="root"
+        onBeforeInput={[Function]}
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        onInput={[Function]}
+        onKeyDown={[Function]}
+        onPaste={[Function]}
+        placeholder=""
+        type="datetime-local"
+        value=""
+      />
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields format time 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-string"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <input
+        aria-describedby="root__error root__description root__help"
+        autoFocus={false}
+        className="p-inputtext p-component"
+        data-pc-name="inputtext"
+        data-pc-section="root"
+        disabled={false}
+        id="root"
+        name="root"
+        onBeforeInput={[Function]}
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        onInput={[Function]}
+        onKeyDown={[Function]}
+        onPaste={[Function]}
+        placeholder=""
+        type="time"
+        value=""
+      />
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields help and error display 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    aria-atomic="true"
+    aria-live="polite"
+    className="p-message p-inline-message p-component p-inline-message-error"
+    data-pc-name="message"
+    data-pc-section="root"
+    id={null}
+    role="alert"
+    style={
+      {
+        "borderColor": "#ff5757",
+        "borderStyle": "solid",
+        "borderWidth": "0 0 0 6px",
+        "justifyContent": "start",
+        "marginBottom": "1rem",
+        "width": "100%",
+      }
+    }
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+        }
+      }
+    >
+      <div
+        style={
+          {
+            "alignItems": "center",
+            "display": "flex",
+            "flexDirection": "row",
+            "gap": "0.5rem",
+          }
+        }
+      >
+        <svg
+          className="p-icon"
+          fill="none"
+          height="14"
+          style={
+            {
+              "height": "1.5rem",
+              "width": "1.5rem",
+            }
+          }
+          viewBox="0 0 14 14"
+          width="14"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            clipRule="evenodd"
+            d="M7 14C5.61553 14 4.26215 13.5895 3.11101 12.8203C1.95987 12.0511 1.06266 10.9579 0.532846 9.67879C0.00303296 8.3997 -0.13559 6.99224 0.134506 5.63437C0.404603 4.2765 1.07129 3.02922 2.05026 2.05026C3.02922 1.07129 4.2765 0.404603 5.63437 0.134506C6.99224 -0.13559 8.3997 0.00303296 9.67879 0.532846C10.9579 1.06266 12.0511 1.95987 12.8203 3.11101C13.5895 4.26215 14 5.61553 14 7C14 8.85652 13.2625 10.637 11.9497 11.9497C10.637 13.2625 8.85652 14 7 14ZM7 1.16667C5.84628 1.16667 4.71846 1.50879 3.75918 2.14976C2.79989 2.79074 2.05222 3.70178 1.61071 4.76768C1.16919 5.83358 1.05367 7.00647 1.27876 8.13803C1.50384 9.26958 2.05941 10.309 2.87521 11.1248C3.69102 11.9406 4.73042 12.4962 5.86198 12.7212C6.99353 12.9463 8.16642 12.8308 9.23232 12.3893C10.2982 11.9478 11.2093 11.2001 11.8502 10.2408C12.4912 9.28154 12.8333 8.15373 12.8333 7C12.8333 5.45291 12.2188 3.96918 11.1248 2.87521C10.0308 1.78125 8.5471 1.16667 7 1.16667ZM4.66662 9.91668C4.58998 9.91704 4.51404 9.90209 4.44325 9.87271C4.37246 9.84333 4.30826 9.8001 4.2544 9.74557C4.14516 9.6362 4.0838 9.48793 4.0838 9.33335C4.0838 9.17876 4.14516 9.0305 4.2544 8.92113L6.17553 7L4.25443 5.07891C4.15139 4.96832 4.09529 4.82207 4.09796 4.67094C4.10063 4.51982 4.16185 4.37563 4.26872 4.26876C4.3756 4.16188 4.51979 4.10066 4.67091 4.09799C4.82204 4.09532 4.96829 4.15142 5.07887 4.25446L6.99997 6.17556L8.92106 4.25446C9.03164 4.15142 9.1779 4.09532 9.32903 4.09799C9.48015 4.10066 9.62434 4.16188 9.73121 4.26876C9.83809 4.37563 9.89931 4.51982 9.90198 4.67094C9.90464 4.82207 9.84855 4.96832 9.74551 5.07891L7.82441 7L9.74554 8.92113C9.85478 9.0305 9.91614 9.17876 9.91614 9.33335C9.91614 9.48793 9.85478 9.6362 9.74554 9.74557C9.69168 9.8001 9.62748 9.84333 9.55669 9.87271C9.4859 9.90209 9.40996 9.91704 9.33332 9.91668C9.25668 9.91704 9.18073 9.90209 9.10995 9.87271C9.03916 9.84333 8.97495 9.8001 8.9211 9.74557L6.99997 7.82444L5.07884 9.74557C5.02499 9.8001 4.96078 9.84333 4.88999 9.87271C4.81921 9.90209 4.74326 9.91704 4.66662 9.91668Z"
+            fill="currentColor"
+            fillRule="evenodd"
+          />
+        </svg>
+        <div
+          className="p-message-summary"
+        >
+          Errors
+        </div>
+      </div>
+      <ul
+        className="p-message-list"
+      >
+        <li>
+          . an error
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div
+    className="rjsf-field rjsf-field-string rjsf-field-error"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <input
+        aria-describedby="root__error root__description root__help"
+        autoFocus={false}
+        className="p-inputtext p-component p-invalid"
+        data-pc-name="inputtext"
+        data-pc-section="root"
+        disabled={false}
+        id="root"
+        name="root"
+        onBeforeInput={[Function]}
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        onInput={[Function]}
+        onKeyDown={[Function]}
+        onPaste={[Function]}
+        placeholder=""
+        type="text"
+        value=""
+      />
+      <div
+        aria-atomic="true"
+        aria-live="polite"
+        className="p-inline-message p-component p-inline-message-error"
+        data-pc-name="message"
+        data-pc-section="root"
+        id="root__error"
+        role="alert"
+        style={
+          {
+            "justifyContent": "left",
+          }
+        }
+      >
+        <svg
+          className="p-icon p-inline-message-icon"
+          data-pc-section="icon"
+          fill="none"
+          height="14"
+          viewBox="0 0 14 14"
+          width="14"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            clipRule="evenodd"
+            d="M7 14C5.61553 14 4.26215 13.5895 3.11101 12.8203C1.95987 12.0511 1.06266 10.9579 0.532846 9.67879C0.00303296 8.3997 -0.13559 6.99224 0.134506 5.63437C0.404603 4.2765 1.07129 3.02922 2.05026 2.05026C3.02922 1.07129 4.2765 0.404603 5.63437 0.134506C6.99224 -0.13559 8.3997 0.00303296 9.67879 0.532846C10.9579 1.06266 12.0511 1.95987 12.8203 3.11101C13.5895 4.26215 14 5.61553 14 7C14 8.85652 13.2625 10.637 11.9497 11.9497C10.637 13.2625 8.85652 14 7 14ZM7 1.16667C5.84628 1.16667 4.71846 1.50879 3.75918 2.14976C2.79989 2.79074 2.05222 3.70178 1.61071 4.76768C1.16919 5.83358 1.05367 7.00647 1.27876 8.13803C1.50384 9.26958 2.05941 10.309 2.87521 11.1248C3.69102 11.9406 4.73042 12.4962 5.86198 12.7212C6.99353 12.9463 8.16642 12.8308 9.23232 12.3893C10.2982 11.9478 11.2093 11.2001 11.8502 10.2408C12.4912 9.28154 12.8333 8.15373 12.8333 7C12.8333 5.45291 12.2188 3.96918 11.1248 2.87521C10.0308 1.78125 8.5471 1.16667 7 1.16667ZM4.66662 9.91668C4.58998 9.91704 4.51404 9.90209 4.44325 9.87271C4.37246 9.84333 4.30826 9.8001 4.2544 9.74557C4.14516 9.6362 4.0838 9.48793 4.0838 9.33335C4.0838 9.17876 4.14516 9.0305 4.2544 8.92113L6.17553 7L4.25443 5.07891C4.15139 4.96832 4.09529 4.82207 4.09796 4.67094C4.10063 4.51982 4.16185 4.37563 4.26872 4.26876C4.3756 4.16188 4.51979 4.10066 4.67091 4.09799C4.82204 4.09532 4.96829 4.15142 5.07887 4.25446L6.99997 6.17556L8.92106 4.25446C9.03164 4.15142 9.1779 4.09532 9.32903 4.09799C9.48015 4.10066 9.62434 4.16188 9.73121 4.26876C9.83809 4.37563 9.89931 4.51982 9.90198 4.67094C9.90464 4.82207 9.84855 4.96832 9.74551 5.07891L7.82441 7L9.74554 8.92113C9.85478 9.0305 9.91614 9.17876 9.91614 9.33335C9.91614 9.48793 9.85478 9.6362 9.74554 9.74557C9.69168 9.8001 9.62748 9.84333 9.55669 9.87271C9.4859 9.90209 9.40996 9.91704 9.33332 9.91668C9.25668 9.91704 9.18073 9.90209 9.10995 9.87271C9.03916 9.84333 8.97495 9.8001 8.9211 9.74557L6.99997 7.82444L5.07884 9.74557C5.02499 9.8001 4.96078 9.84333 4.88999 9.87271C4.81921 9.90209 4.74326 9.91704 4.66662 9.91668Z"
+            fill="currentColor"
+            fillRule="evenodd"
+          />
+        </svg>
+        <span
+          className="p-inline-message-text"
+          data-pc-section="text"
+          style={
+            {
+              "fontSize": "smaller",
+            }
+          }
+        >
+          <div>
+            an error
+          </div>
+        </span>
+      </div>
+      <small
+        id="root__help"
+      >
+        help me!
+      </small>
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields hidden field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <div
+        style={
+          {
+            "display": "none",
+          }
+        }
+      >
+        <input
+          id="root_my-field"
+          name="root_my-field"
+          type="hidden"
+          value=""
+        />
+      </div>
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields hidden label 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-string"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <input
+        aria-describedby="root__error root__description root__help"
+        autoFocus={false}
+        className="p-inputtext p-component"
+        data-pc-name="inputtext"
+        data-pc-section="root"
+        disabled={false}
+        id="root"
+        name="root"
+        onBeforeInput={[Function]}
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        onInput={[Function]}
+        onKeyDown={[Function]}
+        onPaste={[Function]}
+        placeholder=""
+        type="text"
+        value=""
+      />
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields null field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-null"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    />
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields number field 0 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-number"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <input
+        aria-describedby="root__error root__description root__help"
+        autoFocus={false}
+        className="p-inputtext p-component p-filled"
+        data-pc-name="inputtext"
+        data-pc-section="root"
+        disabled={false}
+        id="root"
+        name="root"
+        onBeforeInput={[Function]}
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        onInput={[Function]}
+        onKeyDown={[Function]}
+        onPaste={[Function]}
+        placeholder=""
+        step="any"
+        type="number"
+        value={0}
+      />
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields number field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-number"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <input
+        aria-describedby="root__error root__description root__help"
+        autoFocus={false}
+        className="p-inputtext p-component"
+        data-pc-name="inputtext"
+        data-pc-section="root"
+        disabled={false}
+        id="root"
+        name="root"
+        onBeforeInput={[Function]}
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        onInput={[Function]}
+        onKeyDown={[Function]}
+        onPaste={[Function]}
+        placeholder=""
+        step="any"
+        type="number"
+        value=""
+      />
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields password field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-string"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <div
+        className="p-password p-component p-inputwrapper"
+        data-pc-name="password"
+        data-pc-section="root"
+        id="root"
+        style={
+          {
+            "display": "flex",
+            "flexDirection": "column",
+          }
+        }
+      >
+        <input
+          aria-describedby="root__error root__description root__help"
+          autoFocus={false}
+          className="p-password-input p-inputtext p-component"
+          data-pc-name="inputtext"
+          data-pc-section="root"
+          disabled={false}
+          id={null}
+          name="root"
+          onBeforeInput={[Function]}
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          onInput={[Function]}
+          onKeyDown={[Function]}
+          onKeyUp={[Function]}
+          onPaste={[Function]}
+          placeholder=""
+          style={{}}
+          tabIndex="0"
+          type="password"
+          value=""
+        />
+      </div>
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields radio field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-boolean"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <div
+        style={
+          {
+            "display": "flex",
+            "flexDirection": "row",
+            "gap": "1rem",
+          }
+        }
+      >
+        <div
+          style={
+            {
+              "alignItems": "center",
+              "display": "flex",
+            }
+          }
+        >
+          <div
+            aria-describedby="root__error root__description root__help"
+            className="p-radiobutton p-component"
+            data-p-checked={false}
+            data-pc-name="radiobutton"
+            data-pc-section="root"
+            id={null}
+            onBlur={[Function]}
+            onFocus={[Function]}
+            style={{}}
+          >
+            <input
+              aria-describedby="root__error root__description root__help"
+              className="p-radiobutton-input"
+              data-pc-section="input"
+              defaultChecked={false}
+              disabled={false}
+              id="root-0"
+              name="root"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              required={false}
+              tabIndex={null}
+              type="radio"
+            />
+            <div
+              className="p-radiobutton-box"
+              data-pc-section="box"
+            >
+              <div
+                className="p-radiobutton-icon"
+                data-pc-section="icon"
+              />
+            </div>
+          </div>
+          <label
+            htmlFor="root-0"
+            style={
+              {
+                "marginLeft": "8px",
+              }
+            }
+          >
+            Yes
+          </label>
+        </div>
+        <div
+          style={
+            {
+              "alignItems": "center",
+              "display": "flex",
+            }
+          }
+        >
+          <div
+            aria-describedby="root__error root__description root__help"
+            className="p-radiobutton p-component"
+            data-p-checked={false}
+            data-pc-name="radiobutton"
+            data-pc-section="root"
+            id={null}
+            onBlur={[Function]}
+            onFocus={[Function]}
+            style={{}}
+          >
+            <input
+              aria-describedby="root__error root__description root__help"
+              className="p-radiobutton-input"
+              data-pc-section="input"
+              defaultChecked={false}
+              disabled={false}
+              id="root-1"
+              name="root"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              required={false}
+              tabIndex={null}
+              type="radio"
+            />
+            <div
+              className="p-radiobutton-box"
+              data-pc-section="box"
+            >
+              <div
+                className="p-radiobutton-icon"
+                data-pc-section="icon"
+              />
+            </div>
+          </div>
+          <label
+            htmlFor="root-1"
+            style={
+              {
+                "marginLeft": "8px",
+              }
+            }
+          >
+            No
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields schema examples 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-string"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <span
+        className="p-autocomplete p-component p-inputwrapper p-autocomplete-dd p-dropdown"
+        data-pc-name="autocomplete"
+        data-pc-section="root"
+        id="root"
+        style={{}}
+      >
+        <input
+          aria-autocomplete="list"
+          aria-controls={null}
+          aria-describedby="root__error root__description root__help root__examples"
+          aria-expanded={false}
+          aria-haspopup="listbox"
+          autoComplete="off"
+          className="p-autocomplete-input p-autocomplete-dd-input p-inputtext p-component"
+          data-pc-name="inputtext"
+          data-pc-section="root"
+          defaultValue=""
+          disabled={false}
+          id={null}
+          maxLength={null}
+          name="root"
+          onBeforeInput={[Function]}
+          onBlur={[Function]}
+          onChange={[Function]}
+          onClick={null}
+          onContextMenu={null}
+          onDoubleClick={null}
+          onFocus={[Function]}
+          onInput={[Function]}
+          onKeyDown={[Function]}
+          onKeyPress={null}
+          onKeyUp={null}
+          onMouseDown={null}
+          onPaste={[Function]}
+          placeholder=""
+          readOnly={false}
+          role="combobox"
+          size={null}
+          style={
+            {
+              "border": "none",
+            }
+          }
+          tabIndex={null}
+          type="text"
+        />
+        <button
+          aria-label="Choose"
+          className="p-autocomplete-dropdown p-button p-component p-button-icon-only p-button-text p-button-secondary"
+          data-pc-name="button"
+          data-pc-section="root"
+          disabled={false}
+          onClick={[Function]}
+          type="button"
+        >
+          <svg
+            className="p-icon"
+            fill="none"
+            height="14"
+            viewBox="0 0 14 14"
+            width="14"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M7.01744 10.398C6.91269 10.3985 6.8089 10.378 6.71215 10.3379C6.61541 10.2977 6.52766 10.2386 6.45405 10.1641L1.13907 4.84913C1.03306 4.69404 0.985221 4.5065 1.00399 4.31958C1.02276 4.13266 1.10693 3.95838 1.24166 3.82747C1.37639 3.69655 1.55301 3.61742 1.74039 3.60402C1.92777 3.59062 2.11386 3.64382 2.26584 3.75424L7.01744 8.47394L11.769 3.75424C11.9189 3.65709 12.097 3.61306 12.2748 3.62921C12.4527 3.64535 12.6199 3.72073 12.7498 3.84328C12.8797 3.96582 12.9647 4.12842 12.9912 4.30502C13.0177 4.48162 12.9841 4.662 12.8958 4.81724L7.58083 10.1322C7.50996 10.2125 7.42344 10.2775 7.32656 10.3232C7.22968 10.3689 7.12449 10.3944 7.01744 10.398Z"
+              fill="currentColor"
+            />
+          </svg>
+          <span
+            className="p-button-label p-c"
+            dangerouslySetInnerHTML={
+              {
+                "__html": "&nbsp;",
+              }
+            }
+            data-pc-section="label"
+          />
+        </button>
+      </span>
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields select field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-string"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <select
+        aria-describedby="root__error root__description root__help"
+        autoFocus={false}
+        disabled={false}
+        id="root"
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        options={
+          [
+            {
+              "disabled": false,
+              "label": "foo",
+              "value": "0",
+            },
+            {
+              "disabled": false,
+              "label": "bar",
+              "value": "1",
+            },
+          ]
+        }
+        placeholder=""
+        value=""
+      />
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields select field multiple choice 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-array"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <select
+        aria-describedby="root__error root__description root__help"
+        autoFocus={false}
+        disabled={false}
+        display="comma"
+        id="root"
+        multiple={true}
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        options={
+          [
+            {
+              "disabled": false,
+              "label": "foo",
+              "value": "0",
+            },
+            {
+              "disabled": false,
+              "label": "bar",
+              "value": "1",
+            },
+            {
+              "disabled": false,
+              "label": "fuzz",
+              "value": "2",
+            },
+            {
+              "disabled": false,
+              "label": "qux",
+              "value": "3",
+            },
+          ]
+        }
+        pt={
+          {
+            "root": {
+              "style": {
+                "position": "relative",
+              },
+            },
+          }
+        }
+        value={[]}
+      />
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields select field multiple choice enumDisabled 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-array"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <select
+        aria-describedby="root__error root__description root__help"
+        autoFocus={false}
+        disabled={false}
+        display="comma"
+        id="root"
+        multiple={true}
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        options={
+          [
+            {
+              "disabled": false,
+              "label": "foo",
+              "value": "0",
+            },
+            {
+              "disabled": true,
+              "label": "bar",
+              "value": "1",
+            },
+            {
+              "disabled": false,
+              "label": "fuzz",
+              "value": "2",
+            },
+            {
+              "disabled": false,
+              "label": "qux",
+              "value": "3",
+            },
+          ]
+        }
+        pt={
+          {
+            "root": {
+              "style": {
+                "position": "relative",
+              },
+            },
+          }
+        }
+        value={[]}
+      />
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields select field multiple choice enumDisabled using checkboxes 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-array"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <div
+        id="root"
+        style={
+          {
+            "display": "flex",
+            "flexDirection": "column",
+            "gap": "1rem",
+            "marginBottom": "0.5rem",
+            "marginTop": "0.5rem",
+          }
+        }
+      >
+        <div
+          style={
+            {
+              "alignItems": "center",
+              "display": "flex",
+              "flexDirection": "row",
+              "gap": "0.5rem",
+            }
+          }
+        >
+          <div
+            aria-describedby="root__error root__description root__help"
+            className="p-checkbox p-component"
+            data-p-disabled={false}
+            data-p-highlight={false}
+            data-pc-name="checkbox"
+            data-pc-section="root"
+            id={null}
+            onBlur={[Function]}
+            onContextMenu={null}
+            onFocus={[Function]}
+            onMouseDown={null}
+            style={{}}
+          >
+            <input
+              aria-describedby="root__error root__description root__help"
+              aria-invalid={false}
+              checked={false}
+              className="p-checkbox-input"
+              data-pc-section="input"
+              disabled={false}
+              id="root-0"
+              name="root"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              readOnly={false}
+              required={false}
+              tabIndex={null}
+              type="checkbox"
+            />
+            <div
+              className="p-checkbox-box"
+              data-p-disabled={false}
+              data-p-highlight={false}
+              data-pc-section="box"
+            />
+          </div>
+          <label
+            htmlFor="root-0"
+          >
+            foo
+             
+          </label>
+        </div>
+        <div
+          style={
+            {
+              "alignItems": "center",
+              "display": "flex",
+              "flexDirection": "row",
+              "gap": "0.5rem",
+            }
+          }
+        >
+          <div
+            aria-describedby="root__error root__description root__help"
+            className="p-checkbox p-component p-disabled"
+            data-p-disabled={true}
+            data-p-highlight={false}
+            data-pc-name="checkbox"
+            data-pc-section="root"
+            id={null}
+            onBlur={[Function]}
+            onContextMenu={null}
+            onFocus={[Function]}
+            onMouseDown={null}
+            style={{}}
+          >
+            <input
+              aria-describedby="root__error root__description root__help"
+              aria-invalid={false}
+              checked={false}
+              className="p-checkbox-input"
+              data-pc-section="input"
+              disabled={true}
+              id="root-1"
+              name="root"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              readOnly={false}
+              required={false}
+              tabIndex={null}
+              type="checkbox"
+            />
+            <div
+              className="p-checkbox-box"
+              data-p-disabled={true}
+              data-p-highlight={false}
+              data-pc-section="box"
+            />
+          </div>
+          <label
+            htmlFor="root-1"
+          >
+            bar
+             
+          </label>
+        </div>
+        <div
+          style={
+            {
+              "alignItems": "center",
+              "display": "flex",
+              "flexDirection": "row",
+              "gap": "0.5rem",
+            }
+          }
+        >
+          <div
+            aria-describedby="root__error root__description root__help"
+            className="p-checkbox p-component"
+            data-p-disabled={false}
+            data-p-highlight={false}
+            data-pc-name="checkbox"
+            data-pc-section="root"
+            id={null}
+            onBlur={[Function]}
+            onContextMenu={null}
+            onFocus={[Function]}
+            onMouseDown={null}
+            style={{}}
+          >
+            <input
+              aria-describedby="root__error root__description root__help"
+              aria-invalid={false}
+              checked={false}
+              className="p-checkbox-input"
+              data-pc-section="input"
+              disabled={false}
+              id="root-2"
+              name="root"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              readOnly={false}
+              required={false}
+              tabIndex={null}
+              type="checkbox"
+            />
+            <div
+              className="p-checkbox-box"
+              data-p-disabled={false}
+              data-p-highlight={false}
+              data-pc-section="box"
+            />
+          </div>
+          <label
+            htmlFor="root-2"
+          >
+            fuzz
+             
+          </label>
+        </div>
+        <div
+          style={
+            {
+              "alignItems": "center",
+              "display": "flex",
+              "flexDirection": "row",
+              "gap": "0.5rem",
+            }
+          }
+        >
+          <div
+            aria-describedby="root__error root__description root__help"
+            className="p-checkbox p-component"
+            data-p-disabled={false}
+            data-p-highlight={false}
+            data-pc-name="checkbox"
+            data-pc-section="root"
+            id={null}
+            onBlur={[Function]}
+            onContextMenu={null}
+            onFocus={[Function]}
+            onMouseDown={null}
+            style={{}}
+          >
+            <input
+              aria-describedby="root__error root__description root__help"
+              aria-invalid={false}
+              checked={false}
+              className="p-checkbox-input"
+              data-pc-section="input"
+              disabled={false}
+              id="root-3"
+              name="root"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              readOnly={false}
+              required={false}
+              tabIndex={null}
+              type="checkbox"
+            />
+            <div
+              className="p-checkbox-box"
+              data-p-disabled={false}
+              data-p-highlight={false}
+              data-pc-section="box"
+            />
+          </div>
+          <label
+            htmlFor="root-3"
+          >
+            qux
+             
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields select field multiple choice formData 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-array"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <select
+        aria-describedby="root__error root__description root__help"
+        autoFocus={false}
+        disabled={false}
+        display="comma"
+        id="root"
+        multiple={true}
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        options={
+          [
+            {
+              "disabled": false,
+              "label": "foo",
+              "value": "0",
+            },
+            {
+              "disabled": false,
+              "label": "bar",
+              "value": "1",
+            },
+            {
+              "disabled": false,
+              "label": "fuzz",
+              "value": "2",
+            },
+            {
+              "disabled": false,
+              "label": "qux",
+              "value": "3",
+            },
+          ]
+        }
+        pt={
+          {
+            "root": {
+              "style": {
+                "position": "relative",
+              },
+            },
+          }
+        }
+        value={
+          [
+            "0",
+            "1",
+          ]
+        }
+      />
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields select field multiple choice with labels 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-array"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <select
+        aria-describedby="root__error root__description root__help"
+        autoFocus={false}
+        disabled={false}
+        display="comma"
+        id="root"
+        multiple={true}
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        options={
+          [
+            {
+              "disabled": false,
+              "label": "Blue",
+              "value": "0",
+            },
+            {
+              "disabled": false,
+              "label": "Red",
+              "value": "1",
+            },
+            {
+              "disabled": false,
+              "label": "Green",
+              "value": "2",
+            },
+          ]
+        }
+        pt={
+          {
+            "root": {
+              "style": {
+                "position": "relative",
+              },
+            },
+          }
+        }
+        value={[]}
+      />
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields select field single choice enumDisabled 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-string"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <select
+        aria-describedby="root__error root__description root__help"
+        autoFocus={false}
+        disabled={false}
+        id="root"
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        options={
+          [
+            {
+              "disabled": false,
+              "label": "foo",
+              "value": "0",
+            },
+            {
+              "disabled": true,
+              "label": "bar",
+              "value": "1",
+            },
+          ]
+        }
+        placeholder=""
+        value=""
+      />
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields select field single choice enumDisabled using radio widget 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-string"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <div
+        style={
+          {
+            "display": "flex",
+            "flexDirection": "row",
+            "gap": "1rem",
+          }
+        }
+      >
+        <div
+          style={
+            {
+              "alignItems": "center",
+              "display": "flex",
+            }
+          }
+        >
+          <div
+            aria-describedby="root__error root__description root__help"
+            className="p-radiobutton p-component"
+            data-p-checked={false}
+            data-pc-name="radiobutton"
+            data-pc-section="root"
+            id={null}
+            onBlur={[Function]}
+            onFocus={[Function]}
+            style={{}}
+          >
+            <input
+              aria-describedby="root__error root__description root__help"
+              className="p-radiobutton-input"
+              data-pc-section="input"
+              defaultChecked={false}
+              disabled={false}
+              id="root-0"
+              name="root"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              required={false}
+              tabIndex={null}
+              type="radio"
+            />
+            <div
+              className="p-radiobutton-box"
+              data-pc-section="box"
+            >
+              <div
+                className="p-radiobutton-icon"
+                data-pc-section="icon"
+              />
+            </div>
+          </div>
+          <label
+            htmlFor="root-0"
+            style={
+              {
+                "marginLeft": "8px",
+              }
+            }
+          >
+            foo
+          </label>
+        </div>
+        <div
+          style={
+            {
+              "alignItems": "center",
+              "display": "flex",
+            }
+          }
+        >
+          <div
+            aria-describedby="root__error root__description root__help"
+            className="p-radiobutton p-component p-disabled"
+            data-p-checked={false}
+            data-pc-name="radiobutton"
+            data-pc-section="root"
+            id={null}
+            onBlur={[Function]}
+            onFocus={[Function]}
+            style={{}}
+          >
+            <input
+              aria-describedby="root__error root__description root__help"
+              className="p-radiobutton-input"
+              data-pc-section="input"
+              defaultChecked={false}
+              disabled={true}
+              id="root-1"
+              name="root"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              required={false}
+              tabIndex={null}
+              type="radio"
+            />
+            <div
+              className="p-radiobutton-box"
+              data-pc-section="box"
+            >
+              <div
+                className="p-radiobutton-icon"
+                data-pc-section="icon"
+              />
+            </div>
+          </div>
+          <label
+            htmlFor="root-1"
+            style={
+              {
+                "marginLeft": "8px",
+              }
+            }
+          >
+            bar
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields select field single choice form disabled using radio widget 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-string"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <div
+        style={
+          {
+            "display": "flex",
+            "flexDirection": "row",
+            "gap": "1rem",
+          }
+        }
+      >
+        <div
+          style={
+            {
+              "alignItems": "center",
+              "display": "flex",
+            }
+          }
+        >
+          <div
+            aria-describedby="root__error root__description root__help"
+            className="p-radiobutton p-component p-disabled"
+            data-p-checked={false}
+            data-pc-name="radiobutton"
+            data-pc-section="root"
+            id={null}
+            onBlur={[Function]}
+            onFocus={[Function]}
+            style={{}}
+          >
+            <input
+              aria-describedby="root__error root__description root__help"
+              className="p-radiobutton-input"
+              data-pc-section="input"
+              defaultChecked={false}
+              disabled={true}
+              id="root-0"
+              name="root"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              required={false}
+              tabIndex={null}
+              type="radio"
+            />
+            <div
+              className="p-radiobutton-box"
+              data-pc-section="box"
+            >
+              <div
+                className="p-radiobutton-icon"
+                data-pc-section="icon"
+              />
+            </div>
+          </div>
+          <label
+            htmlFor="root-0"
+            style={
+              {
+                "marginLeft": "8px",
+              }
+            }
+          >
+            foo
+          </label>
+        </div>
+        <div
+          style={
+            {
+              "alignItems": "center",
+              "display": "flex",
+            }
+          }
+        >
+          <div
+            aria-describedby="root__error root__description root__help"
+            className="p-radiobutton p-component p-disabled"
+            data-p-checked={false}
+            data-pc-name="radiobutton"
+            data-pc-section="root"
+            id={null}
+            onBlur={[Function]}
+            onFocus={[Function]}
+            style={{}}
+          >
+            <input
+              aria-describedby="root__error root__description root__help"
+              className="p-radiobutton-input"
+              data-pc-section="input"
+              defaultChecked={false}
+              disabled={true}
+              id="root-1"
+              name="root"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              required={false}
+              tabIndex={null}
+              type="radio"
+            />
+            <div
+              className="p-radiobutton-box"
+              data-pc-section="box"
+            >
+              <div
+                className="p-radiobutton-icon"
+                data-pc-section="icon"
+              />
+            </div>
+          </div>
+          <label
+            htmlFor="root-1"
+            style={
+              {
+                "marginLeft": "8px",
+              }
+            }
+          >
+            bar
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component p-disabled"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={true}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields select field single choice formData 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-string"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <select
+        aria-describedby="root__error root__description root__help"
+        autoFocus={false}
+        disabled={false}
+        id="root"
+        name="root"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        options={
+          [
+            {
+              "disabled": false,
+              "label": "foo",
+              "value": "0",
+            },
+            {
+              "disabled": false,
+              "label": "bar",
+              "value": "1",
+            },
+          ]
+        }
+        placeholder=""
+        value="1"
+      />
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields select field single choice uiSchema disabled using radio widget 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-string"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <div
+        style={
+          {
+            "display": "flex",
+            "flexDirection": "row",
+            "gap": "1rem",
+          }
+        }
+      >
+        <div
+          style={
+            {
+              "alignItems": "center",
+              "display": "flex",
+            }
+          }
+        >
+          <div
+            aria-describedby="root__error root__description root__help"
+            className="p-radiobutton p-component p-disabled"
+            data-p-checked={false}
+            data-pc-name="radiobutton"
+            data-pc-section="root"
+            id={null}
+            onBlur={[Function]}
+            onFocus={[Function]}
+            style={{}}
+          >
+            <input
+              aria-describedby="root__error root__description root__help"
+              className="p-radiobutton-input"
+              data-pc-section="input"
+              defaultChecked={false}
+              disabled={true}
+              id="root-0"
+              name="root"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              required={false}
+              tabIndex={null}
+              type="radio"
+            />
+            <div
+              className="p-radiobutton-box"
+              data-pc-section="box"
+            >
+              <div
+                className="p-radiobutton-icon"
+                data-pc-section="icon"
+              />
+            </div>
+          </div>
+          <label
+            htmlFor="root-0"
+            style={
+              {
+                "marginLeft": "8px",
+              }
+            }
+          >
+            foo
+          </label>
+        </div>
+        <div
+          style={
+            {
+              "alignItems": "center",
+              "display": "flex",
+            }
+          }
+        >
+          <div
+            aria-describedby="root__error root__description root__help"
+            className="p-radiobutton p-component p-disabled"
+            data-p-checked={false}
+            data-pc-name="radiobutton"
+            data-pc-section="root"
+            id={null}
+            onBlur={[Function]}
+            onFocus={[Function]}
+            style={{}}
+          >
+            <input
+              aria-describedby="root__error root__description root__help"
+              className="p-radiobutton-input"
+              data-pc-section="input"
+              defaultChecked={false}
+              disabled={true}
+              id="root-1"
+              name="root"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              required={false}
+              tabIndex={null}
+              type="radio"
+            />
+            <div
+              className="p-radiobutton-box"
+              data-pc-section="box"
+            >
+              <div
+                className="p-radiobutton-icon"
+                data-pc-section="icon"
+              />
+            </div>
+          </div>
+          <label
+            htmlFor="root-1"
+            style={
+              {
+                "marginLeft": "8px",
+              }
+            }
+          >
+            bar
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields slider field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-integer"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <input
+        aria-describedby="root__error root__description root__help"
+        disabled={false}
+        id="root"
+        max={100}
+        min={42}
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        onMouseDown={[Function]}
+        type="range"
+        value={75}
+      />
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields string field format data-url 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-string"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <div>
+        <input
+          aria-describedby="root__error root__description root__help"
+          autoFocus={false}
+          className="p-inputtext p-component"
+          data-pc-name="inputtext"
+          data-pc-section="root"
+          disabled={false}
+          id="root"
+          name="root"
+          onBeforeInput={[Function]}
+          onBlur={[Function]}
+          onChange={[Function]}
+          onFocus={[Function]}
+          onInput={[Function]}
+          onKeyDown={[Function]}
+          onPaste={[Function]}
+          placeholder=""
+          type="file"
+          value=""
+        />
+      </div>
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields string field format email 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-string"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <input
+        aria-describedby="root__error root__description root__help"
+        autoFocus={false}
+        className="p-inputtext p-component"
+        data-pc-name="inputtext"
+        data-pc-section="root"
+        disabled={false}
+        id="root"
+        name="root"
+        onBeforeInput={[Function]}
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        onInput={[Function]}
+        onKeyDown={[Function]}
+        onPaste={[Function]}
+        placeholder=""
+        type="email"
+        value=""
+      />
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields string field format uri 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-string"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <input
+        aria-describedby="root__error root__description root__help"
+        autoFocus={false}
+        className="p-inputtext p-component"
+        data-pc-name="inputtext"
+        data-pc-section="root"
+        disabled={false}
+        id="root"
+        name="root"
+        onBeforeInput={[Function]}
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        onInput={[Function]}
+        onKeyDown={[Function]}
+        onPaste={[Function]}
+        placeholder=""
+        type="url"
+        value=""
+      />
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields string field regular 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-string"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <input
+        aria-describedby="root__error root__description root__help"
+        autoFocus={false}
+        className="p-inputtext p-component"
+        data-pc-name="inputtext"
+        data-pc-section="root"
+        disabled={false}
+        id="root"
+        name="root"
+        onBeforeInput={[Function]}
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        onInput={[Function]}
+        onKeyDown={[Function]}
+        onPaste={[Function]}
+        placeholder=""
+        type="text"
+        value=""
+      />
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields string field with placeholder 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-string"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <input
+        aria-describedby="root__error root__description root__help"
+        autoFocus={false}
+        className="p-inputtext p-component"
+        data-pc-name="inputtext"
+        data-pc-section="root"
+        disabled={false}
+        id="root"
+        name="root"
+        onBeforeInput={[Function]}
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        onInput={[Function]}
+        onKeyDown={[Function]}
+        onPaste={[Function]}
+        placeholder="placeholder"
+        type="text"
+        value=""
+      />
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields textarea field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-string"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <textarea
+        autoFocus={false}
+        className="p-inputtextarea p-inputtext p-component"
+        data-pc-name="inputtextarea"
+        data-pc-section="root"
+        disabled={false}
+        id="root"
+        onBeforeInput={[Function]}
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        onInput={[Function]}
+        onKeyDown={[Function]}
+        onKeyUp={[Function]}
+        onPaste={[Function]}
+        rows={5}
+        value=""
+      />
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields title field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <div
+        id="root__title"
+      >
+        <h5
+          style={
+            {
+              "fontSize": "1.5rem",
+              "margin": 0,
+            }
+          }
+        >
+          Titre 1
+           
+        </h5>
+        <div
+          aria-orientation="horizontal"
+          className="p-divider p-component p-divider-horizontal p-divider-solid p-divider-left"
+          data-pc-name="divider"
+          data-pc-section="root"
+          role="separator"
+          style={
+            {
+              "alignItems": null,
+              "justifyContent": "center",
+              "marginTop": "0.5rem",
+            }
+          }
+        >
+          <div
+            className="p-divider-content"
+            data-pc-section="content"
+          />
+        </div>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-string"
+      >
+        <div
+          style={
+            {
+              "display": "flex",
+              "flexDirection": "column",
+              "gap": "0.5rem",
+              "marginBottom": "1rem",
+            }
+          }
+        >
+          <label
+            htmlFor="root_title"
+          >
+            Titre 2
+             
+          </label>
+          <input
+            aria-describedby="root_title__error root_title__description root_title__help"
+            autoFocus={false}
+            className="p-inputtext p-component"
+            data-pc-name="inputtext"
+            data-pc-section="root"
+            disabled={false}
+            id="root_title"
+            name="root_title"
+            onBeforeInput={[Function]}
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            onInput={[Function]}
+            onKeyDown={[Function]}
+            onPaste={[Function]}
+            placeholder=""
+            required={false}
+            type="text"
+            value=""
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields unsupported field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-undefined"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <div
+        className="unsupported-field"
+      >
+        <p>
+          <span>
+            Unsupported field schema for field 
+            <code>
+              root
+            </code>
+            : 
+            <em>
+              Unknown field type undefined
+            </em>
+            .
+          </span>
+        </p>
+        <pre>
+          {}
+        </pre>
+      </div>
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields up/down field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-number"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <span
+        className="p-inputnumber p-component p-inputwrapper p-inputnumber-buttons-stacked"
+        data-pc-name="inputnumber"
+        data-pc-section="root"
+        id="root"
+        style={{}}
+      >
+        <input
+          aria-describedby="root__error root__description root__help"
+          aria-valuemax={null}
+          aria-valuemin={null}
+          aria-valuenow={null}
+          autoFocus={false}
+          className="p-inputnumber-input p-inputtext p-component"
+          data-pc-name="inputtext"
+          data-pc-section="root"
+          defaultValue=""
+          disabled={false}
+          id={null}
+          inputMode="numeric"
+          max={null}
+          maxLength={null}
+          min={null}
+          name="root"
+          onBeforeInput={[Function]}
+          onBlur={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onInput={[Function]}
+          onKeyDown={[Function]}
+          onKeyPress={[Function]}
+          onPaste={[Function]}
+          onPointerDown={[Function]}
+          pattern={null}
+          placeholder=""
+          readOnly={false}
+          role="spinbutton"
+          size={null}
+          style={{}}
+          tabIndex={null}
+          type="text"
+        />
+        <span
+          className="p-inputnumber-button-group"
+          data-pc-section="buttongroup"
+        >
+          <button
+            aria-hidden={true}
+            className="p-inputnumber-button p-inputnumber-button-up p-button p-button-icon-only p-component"
+            data-pc-section="incrementbutton"
+            disabled={false}
+            onKeyDown={[Function]}
+            onKeyUp={[Function]}
+            onPointerDown={[Function]}
+            onPointerLeave={[Function]}
+            onPointerUp={[Function]}
+            tabIndex={-1}
+            type="button"
+          >
+            <svg
+              className="p-icon p-button-icon"
+              data-pc-section="incrementicon"
+              fill="none"
+              height="14"
+              viewBox="0 0 14 14"
+              width="14"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M10.4134 9.49931C10.3148 9.49977 10.2172 9.48055 10.1262 9.44278C10.0352 9.405 9.95263 9.34942 9.88338 9.27931L6.88338 6.27931L3.88338 9.27931C3.73811 9.34946 3.57409 9.3709 3.41567 9.34044C3.25724 9.30999 3.11286 9.22926 3.00395 9.11025C2.89504 8.99124 2.82741 8.84028 2.8111 8.67978C2.79478 8.51928 2.83065 8.35781 2.91338 8.21931L6.41338 4.71931C6.55401 4.57886 6.74463 4.49997 6.94338 4.49997C7.14213 4.49997 7.33276 4.57886 7.47338 4.71931L10.9734 8.21931C11.1138 8.35994 11.1927 8.55056 11.1927 8.74931C11.1927 8.94806 11.1138 9.13868 10.9734 9.27931C10.9007 9.35315 10.8132 9.41089 10.7168 9.44879C10.6203 9.48669 10.5169 9.5039 10.4134 9.49931Z"
+                fill="currentColor"
+              />
+            </svg>
+          </button>
+          <button
+            aria-hidden={true}
+            className="p-inputnumber-button p-inputnumber-button-down p-button p-button-icon-only p-component"
+            data-pc-section="decrementbutton"
+            disabled={false}
+            onKeyDown={[Function]}
+            onKeyUp={[Function]}
+            onPointerDown={[Function]}
+            onPointerLeave={[Function]}
+            onPointerUp={[Function]}
+            tabIndex={-1}
+            type="button"
+          >
+            <svg
+              className="p-icon p-button-icon"
+              data-pc-section="decrementicon"
+              fill="none"
+              height="14"
+              viewBox="0 0 14 14"
+              width="14"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M3.58659 4.5007C3.68513 4.50023 3.78277 4.51945 3.87379 4.55723C3.9648 4.59501 4.04735 4.65058 4.11659 4.7207L7.11659 7.7207L10.1166 4.7207C10.2619 4.65055 10.4259 4.62911 10.5843 4.65956C10.7427 4.69002 10.8871 4.77074 10.996 4.88976C11.1049 5.00877 11.1726 5.15973 11.1889 5.32022C11.2052 5.48072 11.1693 5.6422 11.0866 5.7807L7.58659 9.2807C7.44597 9.42115 7.25534 9.50004 7.05659 9.50004C6.85784 9.50004 6.66722 9.42115 6.52659 9.2807L3.02659 5.7807C2.88614 5.64007 2.80725 5.44945 2.80725 5.2507C2.80725 5.05195 2.88614 4.86132 3.02659 4.7207C3.09932 4.64685 3.18675 4.58911 3.28322 4.55121C3.37969 4.51331 3.48305 4.4961 3.58659 4.5007Z"
+                fill="currentColor"
+              />
+            </svg>
+          </button>
+        </span>
+      </span>
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields using custom tagName 1`] = `
+<div
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-string"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <input
+        aria-describedby="root__error root__description root__help"
+        autoFocus={false}
+        className="p-inputtext p-component"
+        data-pc-name="inputtext"
+        data-pc-section="root"
+        disabled={false}
+        id="root"
+        name="root"
+        onBeforeInput={[Function]}
+        onBlur={[Function]}
+        onChange={[Function]}
+        onFocus={[Function]}
+        onInput={[Function]}
+        onKeyDown={[Function]}
+        onPaste={[Function]}
+        placeholder=""
+        type="text"
+        value=""
+      />
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</div>
+`;
