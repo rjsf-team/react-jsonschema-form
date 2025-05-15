@@ -19,7 +19,7 @@ import { MultiSelect } from 'primereact/multiselect';
 export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: WidgetProps<T, S, F>,
 ) {
-  const multiple = typeof props.multiple === 'undefined' ? false : props.multiple;
+  const { multiple = false } = props;
 
   return multiple ? <MultiSelectWidget {...props} /> : <SingleSelectWidget {...props} />;
 }
@@ -95,7 +95,7 @@ function MultiSelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   placeholder,
   readonly,
   value,
-  multiple,
+  multiple = false,
   autofocus,
   onChange,
   onBlur,
@@ -103,8 +103,6 @@ function MultiSelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
 }: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, emptyValue: optEmptyVal } = options;
   const primeProps = (options.prime || {}) as object;
-
-  multiple = typeof multiple === 'undefined' ? false : multiple;
 
   const emptyValue = multiple ? [] : '';
   const isEmpty = typeof value === 'undefined' || (multiple && value.length < 1) || (!multiple && value === emptyValue);
