@@ -9,6 +9,10 @@ import {
 } from '@rjsf/utils';
 import { Password } from 'primereact/password';
 
+/** The `PasswordWidget` renders a `Password` component
+ *
+ * @param props - The `WidgetProps` for this component
+ */
 export default function PasswordWidget<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
