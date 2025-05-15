@@ -1,9 +1,9 @@
-import { MouseEvent, useEffect, useState } from 'react';
+import { Box, Button, FieldsetRoot } from '@chakra-ui/react';
 import {
   ariaDescribedByIds,
-  dateRangeOptions,
   DateElementFormat,
   DateObject,
+  dateRangeOptions,
   FormContextType,
   getDateElementProps,
   parseDateString,
@@ -13,7 +13,8 @@ import {
   TranslatableString,
   WidgetProps,
 } from '@rjsf/utils';
-import { Box, Button } from '@chakra-ui/react';
+import { MouseEvent, useEffect, useState } from 'react';
+import { getChakra } from '../utils';
 
 function DateElement<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: WidgetProps<T, S, F>,
@@ -85,8 +86,10 @@ function AltDateWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F exten
     onChange(undefined);
   };
 
+  const chakraProps = getChakra({ uiSchema: props.uiSchema });
+
   return (
-    <Box>
+    <FieldsetRoot {...(chakraProps as any)}>
       <Box display='flex' flexWrap='wrap' alignItems='center'>
         {getDateElementProps(
           state,
@@ -127,7 +130,7 @@ function AltDateWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F exten
           </Button>
         )}
       </Box>
-    </Box>
+    </FieldsetRoot>
   );
 }
 

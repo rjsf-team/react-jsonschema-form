@@ -1,12 +1,20 @@
+import { ChangeEvent, PropsWithChildren, useCallback, useState } from 'react';
 import { FieldProps } from '@rjsf/utils';
-import { FC, useState } from 'react';
 
 const COLORS = ['red', 'green', 'blue'];
 
-const SpecialInput: FC<FieldProps<string>> = ({ onChange, formData }) => {
+export default function SpecialInput({ onChange, formData }: PropsWithChildren<FieldProps>) {
   const [text, setText] = useState<string>(formData || '');
 
   const inputBgColor = COLORS[text.length % COLORS.length];
+
+  const handleOnChange = useCallback(
+    ({ target: { value } }: ChangeEvent<HTMLInputElement>) => {
+      onChange(value);
+      setText(value);
+    },
+    [onChange, setText],
+  );
 
   return (
     <div className='SpecialInput'>
@@ -23,15 +31,10 @@ const SpecialInput: FC<FieldProps<string>> = ({ onChange, formData }) => {
             className='form-control'
             style={{ background: inputBgColor, color: 'white', fontSize: 14 }}
             value={text}
-            onChange={({ target: { value } }) => {
-              onChange(value);
-              setText(value);
-            }}
+            onChange={handleOnChange}
           />
         </div>
       </div>
     </div>
   );
-};
-
-export default SpecialInput;
+}

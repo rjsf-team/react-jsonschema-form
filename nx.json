@@ -53,5 +53,8 @@
   },
   "useInferencePlugins": false,
   "defaultBase": "main",
-  "useLegacyCache": true
+  "useLegacyCache": true,
+  "release": {
+    "projects": ["*"]
+  }
 }

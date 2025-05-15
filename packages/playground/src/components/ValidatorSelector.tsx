@@ -1,10 +1,11 @@
+import { useCallback } from 'react';
 import Form, { IChangeEvent } from '@rjsf/core';
-import { GenericObjectType, RJSFSchema, UiSchema } from '@rjsf/utils';
+import { RJSFSchema, UiSchema, ValidatorType } from '@rjsf/utils';
 import localValidator from '@rjsf/validator-ajv8';
 
 interface ValidatorSelectorProps {
   validator: string;
-  validators: GenericObjectType;
+  validators: { [validatorName: string]: ValidatorType };
   select: (validator: string) => void;
 }
 
@@ -19,6 +20,15 @@ export default function ValidatorSelector({ validator, validators, select }: Val
     'ui:placeholder': 'Select validator',
   };
 
+  const onChange = useCallback(
+    ({ formData }: IChangeEvent) => {
+      if (formData) {
+        select(formData);
+      }
+    },
+    [select],
+  );
+
   return (
     <Form
       className='form_rjsf_validatorSelector'
@@ -27,7 +37,7 @@ export default function ValidatorSelector({ validator, validators, select }: Val
       uiSchema={uiSchema}
       formData={validator}
       validator={localValidator}
-      onChange={({ formData }: IChangeEvent) => formData && select(formData)}
+      onChange={onChange}
     >
       <div />
     </Form>

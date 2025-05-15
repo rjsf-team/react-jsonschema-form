@@ -22,7 +22,7 @@ export const NOT_FOUND_SCHEMA = { title: '!@#$_UNKNOWN_$#@!' };
  *
  * @param validator - An implementation of the `ValidatorType` interface that will be forwarded to all the APIs
  * @param rootSchema - The root schema that will be forwarded to all the APIs
- // * @param schema - The node within the JSON schema in which to search
+ * @param schema - The node within the JSON schema in which to search
  * @param path - The keys in the path to the desired field
  * @param [formData={}] - The form data that is used to determine which anyOf/oneOf option to descend
  * @param [experimental_customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas

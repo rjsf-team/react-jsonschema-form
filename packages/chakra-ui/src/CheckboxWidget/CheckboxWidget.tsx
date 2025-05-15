@@ -14,6 +14,7 @@ import {
 
 import { Field } from '../components/ui/field';
 import { Checkbox } from '../components/ui/checkbox';
+import { getChakra } from '../utils';
 
 export default function CheckboxWidget<
   T = any,
@@ -50,8 +51,10 @@ export default function CheckboxWidget<
   const _onBlur = ({ target }: FocusEvent<HTMLInputElement | any>) => onBlur(id, target && target.value);
   const _onFocus = ({ target }: FocusEvent<HTMLInputElement | any>) => onFocus(id, target && target.value);
 
+  const chakraProps = getChakra({ uiSchema });
+
   return (
-    <Field mb={1} required={required}>
+    <Field mb={1} required={required} {...chakraProps}>
       {!hideLabel && description && (
         <DescriptionFieldTemplate
           id={descriptionId<T>(id)}

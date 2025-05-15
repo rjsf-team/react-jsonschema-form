@@ -32,13 +32,15 @@ The `@rjsf/validator-ajv8` package exports the `compileSchemaValidators()` funct
 It is expected that this function will be used in a manner similar to the following:
 
 ```cjs
-const compileSchemaValidators = require('@rjsf/validator-ajv8/dist/compileSchemaValidators').default;
+const compileSchemaValidators = require('@rjsf/validator-ajv8/compileSchemaValidators').default;
 const yourSchema = require('path_to/yourSchema'); // If your schema is a js file
 
 compileSchemaValidators(yourSchema, 'path_to/yourCompiledSchema.js');
 ```
 
-If you are currently using the `customizeValidator()` function to provide `additionalMetaSchemas`, `customFormats`, `ajvOptionsOverrides` and/or `ajvFormatOptions` then you can pass those in as the optional third parameter to the `compileSchemaValidators()` function in a manner similar to:
+If you are currently using the `customizeValidator()` function to provide `additionalMetaSchemas`, `customFormats`,
+`ajvOptionsOverrides` and/or `ajvFormatOptions` then you can pass those in as the optional third parameter to the
+`compileSchemaValidators()` function in a manner similar to:
 
 ```cjs
 const { compileSchemaValidators } = require('@rjsf/validator-ajv8');
@@ -76,15 +78,24 @@ The `@rjsf/validator-ajv8` package exports the `createPrecompiledValidator()` fu
 Here is an example of how to use your precompiled validator with your `Form`:
 
 ```tsx
+import { useMemo } from 'react';
 import { createPrecompiledValidator, ValidatorFunctions } from '@rjsf/validator-ajv8';
-import Form from '@rjsf/core'; // Or whatever theme you use
+import Form, { FormProps } from '@rjsf/core'; // Or whatever theme you use
 
 import yourSchema from 'path_to/yourSchema'; // This needs to be the same file that was precompiled
-import * as precompiledValidator from 'path_to/yourCompiledSchema';
+import * as precompiledValidatorFns from 'path_to/yourCompiledSchema';
 
-const validator = createPrecompiledValidator(precompiledValidator as ValidatorFunctions);
+function MyForm(props: Omit<FormProps, 'validator' | 'schema'>) {
+  // Memoize the validator to avoid rerenders
+  const validator = useMemo(
+    () => createPrecompiledValidator(precompiledValidatorFns, yourSchema),
+    [validatorFns, yourSchema],
+  );
 
-render(<Form schema={yourSchema} validator={validator} />, document.getElementById('app'));
+  return <Form schema={yourSchema} validator={validator} />;
+}
+
+render(<MyForm />, document.getElementById('app'));
 ```
 
 ### Dynamically pre-compiling validators
@@ -92,7 +103,7 @@ render(<Form schema={yourSchema} validator={validator} />, document.getElementBy
 For more advanced cases when schema needs to be precompiled on request - `compileSchemaValidatorsCode` can be used.
 
 ```ts
-import { compileSchemaValidatorsCode } from '@rjsf/validator-ajv8/dist/compileSchemaValidators';
+import { compileSchemaValidatorsCode } from '@rjsf/validator-ajv8/compileSchemaValidators';
 
 const code = compileSchemaValidatorsCode(schema, options);
 ```
@@ -140,7 +151,7 @@ const regexp = new RegExp(
   Object.keys(validatorsBundleReplacements)
     .map((key) => key.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'))
     .join('|'),
-  'g'
+  'g',
 );
 
 function wrapAjvBundle(code: string) {
@@ -148,7 +159,7 @@ function wrapAjvBundle(code: string) {
     .map(([name]) => name)
     .join(', ')}){\nvar exports = {};\n${code.replace(
     regexp,
-    (req) => validatorsBundleReplacements[req][0]
+    (req) => validatorsBundleReplacements[req][0],
   )};\nreturn exports;\n}`;
 }
 
@@ -206,7 +217,7 @@ React.useEffect(() => {
   evaluateValidator(
     schemaId, // some schema id to avoid evaluating it multiple times
     code, // result of compileSchemaValidatorsCode returned from the server
-    nonce // nonce script tag attribute to allow this ib content security policy for the page
+    nonce, // nonce script tag attribute to allow this ib content security policy for the page
   ).then(setPrecompiledValidator);
 }, [entityType.id]);
 
@@ -353,7 +364,7 @@ const schema: RJSFSchema = {
 
 render(
   <Form schema={schema} validator={validator} transformErrors={transformErrors} />,
-  document.getElementById('app')
+  document.getElementById('app'),
 );
 ```
 

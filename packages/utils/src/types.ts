@@ -468,7 +468,10 @@ export interface FieldProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F 
 /** The definition of a React-based Field component */
 export type Field<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any> = ComponentType<
   FieldProps<T, S, F>
->;
+> & {
+  /** The optional TEST_IDS block that some fields contain, exported for testing purposes */
+  TEST_IDS?: TestIdShape;
+};
 
 /** The properties that are passed to a FieldTemplate implementation */
 export type FieldTemplateProps<

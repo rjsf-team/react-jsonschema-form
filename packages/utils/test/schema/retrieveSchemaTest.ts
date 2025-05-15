@@ -1,6 +1,6 @@
 import get from 'lodash/get';
 
-import { retrieveSchema, RJSFSchema, createSchemaUtils, ADDITIONAL_PROPERTY_FLAG, PROPERTIES_KEY } from '../../src';
+import { ADDITIONAL_PROPERTY_FLAG, createSchemaUtils, PROPERTIES_KEY, retrieveSchema, RJSFSchema } from '../../src';
 import {
   getAllPermutationsOfXxxOf,
   resolveAnyOrOneOfSchemas,
@@ -14,13 +14,13 @@ import {
   PROPERTY_DEPENDENCIES,
   RECURSIVE_REF,
   RECURSIVE_REF_ALLOF,
-  SCHEMA_DEPENDENCIES,
-  SCHEMA_AND_REQUIRED_DEPENDENCIES,
   SCHEMA_AND_ONEOF_REF_DEPENDENCIES,
-  SCHEMA_WITH_ONEOF_NESTED_DEPENDENCIES,
-  SCHEMA_WITH_SINGLE_CONDITION,
+  SCHEMA_AND_REQUIRED_DEPENDENCIES,
+  SCHEMA_DEPENDENCIES,
   SCHEMA_WITH_MULTIPLE_CONDITIONS,
   SCHEMA_WITH_NESTED_CONDITIONS,
+  SCHEMA_WITH_ONEOF_NESTED_DEPENDENCIES,
+  SCHEMA_WITH_SINGLE_CONDITION,
   SUPER_SCHEMA,
 } from '../testUtils/testData';
 import { TestValidatorType } from './types';
@@ -331,6 +331,34 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         items: {
           ...entity,
         },
+      });
+    });
+    it('should `resolve` a bundled draft 2020-12 JSON Schema', () => {
+      const definitions: RJSFSchema = {
+        'https://jsonschema.dev/schemas/mixins/integer': {
+          $schema: 'https://json-schema.org/draft/2020-12/schema',
+          $id: 'https://jsonschema.dev/schemas/mixins/integer',
+          type: 'integer',
+        },
+        'https://jsonschema.dev/schemas/mixins/non-negative-integer': {
+          $schema: 'https://json-schema.org/draft/2020-12/schema',
+          $id: 'https://jsonschema.dev/schemas/mixins/non-negative-integer',
+          $ref: 'integer',
+          minimum: 0,
+        },
+      };
+      const schema: RJSFSchema = {
+        $id: 'https://jsonschema.dev/schemas/examples/non-negative-integer-bundle',
+        $schema: 'https://json-schema.org/draft/2020-12/schema',
+        $defs: definitions,
+        $ref: 'https://jsonschema.dev/schemas/mixins/non-negative-integer',
+      };
+      expect(retrieveSchema(testValidator, schema, schema)).toEqual({
+        $id: 'https://jsonschema.dev/schemas/examples/non-negative-integer-bundle',
+        $schema: 'https://json-schema.org/draft/2020-12/schema',
+        $defs: definitions,
+        minimum: 0,
+        type: 'integer',
       });
     });
     describe('property dependencies', () => {
@@ -928,6 +956,35 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         });
         expect(customMergeAllOf).toHaveBeenCalledWith(schema);
       });
+      it('should `resolve` a draft 2020-12 schema with `$defs` property in an `allOf` block', () => {
+        const schema: RJSFSchema = {
+          $schema: 'http://json-schema.org/draft/2020-12/schema#',
+          allOf: [
+            {
+              type: 'object',
+              $defs: {
+                string: {
+                  type: 'string',
+                },
+              },
+            },
+            {
+              type: 'object',
+              $defs: {
+                number: {
+                  type: 'number',
+                },
+              },
+            },
+          ],
+        };
+
+        expect(retrieveSchema(testValidator, schema, {}, {})).toEqual({
+          $schema: 'http://json-schema.org/draft/2020-12/schema#',
+          type: 'object',
+          $defs: { string: { type: 'string' }, number: { type: 'number' } },
+        });
+      });
     });
     describe('Conditional schemas (If, Then, Else)', () => {
       it('should resolve if, then', () => {
@@ -1281,6 +1338,95 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
       });
     });
     describe('withPatternProperties()', () => {
+      it('validates schemas with conditions inside patternProperties', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            foo: {
+              type: 'object',
+            },
+          },
+          patternProperties: {
+            '^[a-z]+$': {
+              type: 'object',
+              properties: {
+                isString: { type: 'boolean' },
+              },
+              allOf: [
+                {
+                  if: {
+                    properties: { isString: { const: true } },
+                  },
+                  then: {
+                    properties: {
+                      value: {
+                        type: 'string',
+                      },
+                    },
+                  },
+                },
+                {
+                  if: {
+                    properties: { isString: { const: false } },
+                  },
+                  then: {
+                    properties: {
+                      value: {
+                        type: 'number',
+                      },
+                    },
+                  },
+                },
+              ],
+            },
+          },
+        };
+        const rootSchema: RJSFSchema = { definitions: {} };
+        testValidator.setReturnValues({
+          isValid: [true, false, true, false],
+        });
+        expect(
+          retrieveSchema(testValidator, schema, rootSchema, {
+            foo: { isString: true },
+            bar: { isString: true },
+          }),
+        ).toEqual({
+          ...schema,
+          properties: {
+            foo: {
+              type: 'object',
+              properties: { isString: { type: 'boolean' }, value: { type: 'string' } },
+            },
+            bar: {
+              [ADDITIONAL_PROPERTY_FLAG]: true,
+              type: 'object',
+              properties: { isString: { type: 'boolean' }, value: { type: 'string' } },
+            },
+          },
+        });
+        testValidator.setReturnValues({
+          isValid: [false, true, false, true],
+        });
+        expect(
+          retrieveSchema(testValidator, schema, rootSchema, {
+            foo: { isString: false },
+            bar: { isString: false },
+          }),
+        ).toEqual({
+          ...schema,
+          properties: {
+            foo: {
+              type: 'object',
+              properties: { isString: { type: 'boolean' }, value: { type: 'number' } },
+            },
+            bar: {
+              [ADDITIONAL_PROPERTY_FLAG]: true,
+              type: 'object',
+              properties: { isString: { type: 'boolean' }, value: { type: 'number' } },
+            },
+          },
+        });
+      });
       it('merges all subschemas that match the patternProperties regex', () => {
         const schema: RJSFSchema = {
           type: 'object',

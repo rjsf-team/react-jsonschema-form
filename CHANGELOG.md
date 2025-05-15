@@ -15,6 +15,52 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+
+# 6.0.0-beta.8
+
+## @rjsf/util
+
+- Fixed form data propagation with `patternProperties` [#4617](https://github.com/rjsf-team/react-jsonschema-form/pull/4617)
+
+## @rjsf/chakra-ui
+
+- Added `getChakra` to package exports
+- Restored the `ui:options` customization
+
+## Dev / docs / playground
+
+- Updated precompiled schemas documentation in `validation.md` based on v6 changes, addressingg [#4618](https://github.com/rjsf-team/react-jsonschema-form/issues/4618)
+
+# 6.0.0-beta.7
+
+## @rjsf/core
+
+- Fixed crash in `LayoutGridField` when the 'name' field is missing in the grid schema for a component
+
+# 6.0.0-beta.6
+
+## @rjsf/util
+
+- Updated the `Field` type to add the optional `TEST_IDS?: TestIdShape` prop to it to support exposing the `TEST_IDS` static prop on `LayoutGridField`, `LayoutHeaderField` and `LayoutMultiSchemaField` for external users
+
+# 6.0.0-beta.5
+
+## Dev / docs / playground
+
+- Updated the peer dependencies for all packages from `6.0.0-beta` to `^6.0.0-beta` to avoid `npm install` dependency resolution issues
+
+# 6.0.0-beta.4
+
+## Dev / docs / playground
+
+- Updated the peer dependencies for all packages from `6` to `6.0.0-beta` to avoid `npm install` dependency resolution issues
+
+# 6.0.0-beta.3
+
+## Dev / docs / playground
+
+- Updated the peer dependencies for all packages from `^6.0.0-beta.x` to `6` to avoid `npm install` dependency resolution issues
+
 # 6.0.0-beta.2
 
 ## @rjsf/antd
@@ -61,12 +107,16 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/utils
 
 - Updated the `description` field in field props to be a `string | ReactElement` and added `enableMarkdownInDescription` to the `GlobalUISchemaOptions` interface
+- Support for bundled JSON Schemas [#4505](https://github.com/rjsf-team/react-jsonschema-form/issues/4505)
+- Fixed issue with schema references in combinators(allOf, anyOf, oneOf) could not be modified when defaults were set, fixing [#4555](https://github.com/rjsf-team/react-jsonschema-form/issues/4555)
 
 ## Dev / docs / playground
 
 - Updated the `snapshot-tests` to disable `getTestId()` for snapshots and updated the `formTests.tsx` to add tests for rich text descriptions for generic fields and the `CheckboxWidget`
 - Updated the `uiSchema.md` to document new `enableMarkdownInDescription` prop
 - Updated the `playground` to move `daisyui` theme choice after `chakra-ui` and to stop freezing the samples to avoid an `AJV` validation issue
+  - Also removed `validator` from the `examples.ts` to fix [#4605](https://github.com/rjsf-team/react-jsonschema-form/issues/4605)
+- Added a playground example for bundled JSON Schemas
 
 # 6.0.0-beta.1
 

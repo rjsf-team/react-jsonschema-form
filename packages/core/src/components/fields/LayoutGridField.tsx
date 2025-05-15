@@ -640,7 +640,7 @@ export default class LayoutGridField<
     if (isString(gridSchema) || isUndefined(gridSchema)) {
       name = gridSchema ?? '';
     } else {
-      const { name: innerName, render, ...innerProps } = gridSchema;
+      const { name: innerName = '', render, ...innerProps } = gridSchema;
       name = innerName;
       uiProps = innerProps;
       if (!isEmpty(uiProps)) {

@@ -63,7 +63,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
   );
 
   const load = useCallback(
-    (data: Sample & { theme: string; liveSettings: LiveSettings; sampleName?: string }) => {
+    (data: Sample & { theme: string; liveSettings: LiveSettings; sampleName?: string; validator?: string }) => {
       const {
         schema,
         // uiSchema is missing on some examples. Provide a default to
@@ -76,7 +76,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
         theme: dataTheme = theme,
         extraErrors,
         liveSettings,
-        validator,
+        validator: theValidator,
         sampleName,
         ...rest
       } = data;
@@ -110,8 +110,8 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
       setExtraErrors(extraErrors);
       setShowForm(true);
       setLiveSettings(liveSettings);
-      if ('validator' in data && validator !== undefined) {
-        setValidator(validator);
+      if ('validator' in data && theValidator !== undefined) {
+        setValidator(theValidator);
       }
       setOtherFormProps({ fields, templates, ...rest });
     },

@@ -10,6 +10,7 @@ import {
 } from '@rjsf/utils';
 
 import { Field } from '../components/ui/field';
+import { getChakra } from '../utils';
 
 export default function TextareaWidget<
   T = any,
@@ -30,11 +31,14 @@ export default function TextareaWidget<
   options,
   required,
   rawErrors,
+  uiSchema,
 }: WidgetProps<T, S, F>) {
   const _onChange = ({ target: { value } }: ChangeEvent<HTMLTextAreaElement>) =>
     onChange(value === '' ? options.emptyValue : value);
   const _onBlur = ({ target }: FocusEvent<HTMLTextAreaElement>) => onBlur(id, target && target.value);
   const _onFocus = ({ target }: FocusEvent<HTMLTextAreaElement>) => onFocus(id, target && target.value);
+
+  const chakraProps = getChakra({ uiSchema });
 
   return (
     <Field
@@ -44,6 +48,7 @@ export default function TextareaWidget<
       readOnly={readonly}
       invalid={rawErrors && rawErrors.length > 0}
       label={labelValue(label, hideLabel || !label)}
+      {...chakraProps}
     >
       <Textarea
         id={id}
