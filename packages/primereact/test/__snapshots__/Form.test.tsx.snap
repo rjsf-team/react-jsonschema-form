@@ -7,7 +7,7 @@ exports[`single fields checkbox field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-boolean"
+    className="rjsf-field rjsf-field-boolean"
   >
     <div
       style={
@@ -20,7 +20,6 @@ exports[`single fields checkbox field 1`] = `
       }
     >
       <div
-        className="field-checkbox"
         style={
           {
             "alignItems": "center",
@@ -96,7 +95,7 @@ exports[`single fields checkbox field with label 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-boolean"
+    className="rjsf-field rjsf-field-boolean"
   >
     <div
       style={
@@ -109,7 +108,212 @@ exports[`single fields checkbox field with label 1`] = `
       }
     >
       <div
-        className="field-checkbox"
+        style={
+          {
+            "alignItems": "center",
+            "display": "flex",
+            "flexDirection": "row",
+            "gap": "0.5rem",
+          }
+        }
+      >
+        <div
+          aria-describedby="root__error root__description root__help"
+          className="p-checkbox p-component"
+          data-p-disabled={false}
+          data-p-highlight={false}
+          data-pc-name="checkbox"
+          data-pc-section="root"
+          id={null}
+          onBlur={[Function]}
+          onContextMenu={null}
+          onFocus={[Function]}
+          onMouseDown={null}
+          style={{}}
+        >
+          <input
+            aria-describedby="root__error root__description root__help"
+            aria-invalid={false}
+            checked={false}
+            className="p-checkbox-input"
+            data-pc-section="input"
+            disabled={false}
+            id="root"
+            name="root"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            readOnly={false}
+            required={false}
+            tabIndex={null}
+            type="checkbox"
+          />
+          <div
+            className="p-checkbox-box"
+            data-p-disabled={false}
+            data-p-highlight={false}
+            data-pc-section="box"
+          />
+        </div>
+        <label
+          htmlFor="root"
+        >
+          test
+           
+        </label>
+      </div>
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields checkbox field with label and description 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-boolean"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <span
+        id="root__description"
+      >
+        test description
+      </span>
+      <div
+        style={
+          {
+            "alignItems": "center",
+            "display": "flex",
+            "flexDirection": "row",
+            "gap": "0.5rem",
+          }
+        }
+      >
+        <div
+          aria-describedby="root__error root__description root__help"
+          className="p-checkbox p-component"
+          data-p-disabled={false}
+          data-p-highlight={false}
+          data-pc-name="checkbox"
+          data-pc-section="root"
+          id={null}
+          onBlur={[Function]}
+          onContextMenu={null}
+          onFocus={[Function]}
+          onMouseDown={null}
+          style={{}}
+        >
+          <input
+            aria-describedby="root__error root__description root__help"
+            aria-invalid={false}
+            checked={false}
+            className="p-checkbox-input"
+            data-pc-section="input"
+            disabled={false}
+            id="root"
+            name="root"
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            readOnly={false}
+            required={false}
+            tabIndex={null}
+            type="checkbox"
+          />
+          <div
+            className="p-checkbox-box"
+            data-p-disabled={false}
+            data-p-highlight={false}
+            data-pc-section="box"
+          />
+        </div>
+        <label
+          htmlFor="root"
+        >
+          test
+           
+        </label>
+      </div>
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields checkbox field with label and rich text description 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-boolean"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <span
+        id="root__description"
+      >
+        <span>
+          <strong>
+            test
+          </strong>
+           
+          <strong>
+            description
+          </strong>
+        </span>
+      </span>
+      <div
         style={
           {
             "alignItems": "center",
@@ -191,7 +395,7 @@ exports[`single fields checkboxes field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div
       style={
@@ -222,7 +426,6 @@ exports[`single fields checkboxes field 1`] = `
         }
       >
         <div
-          className="field-checkbox"
           style={
             {
               "alignItems": "center",
@@ -278,7 +481,6 @@ exports[`single fields checkboxes field 1`] = `
           </label>
         </div>
         <div
-          className="field-checkbox"
           style={
             {
               "alignItems": "center",
@@ -334,7 +536,6 @@ exports[`single fields checkboxes field 1`] = `
           </label>
         </div>
         <div
-          className="field-checkbox"
           style={
             {
               "alignItems": "center",
@@ -390,7 +591,6 @@ exports[`single fields checkboxes field 1`] = `
           </label>
         </div>
         <div
-          className="field-checkbox"
           style={
             {
               "alignItems": "center",
@@ -473,7 +673,7 @@ exports[`single fields field with description 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       style={
@@ -486,7 +686,7 @@ exports[`single fields field with description 1`] = `
       }
     >
       <div
-        className="form-group field field-string"
+        className="rjsf-field rjsf-field-string"
       >
         <div
           style={
@@ -561,7 +761,7 @@ exports[`single fields field with description in uiSchema 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       style={
@@ -574,7 +774,7 @@ exports[`single fields field with description in uiSchema 1`] = `
       }
     >
       <div
-        className="form-group field field-string"
+        className="rjsf-field rjsf-field-string"
       >
         <div
           style={
@@ -642,6 +842,190 @@ exports[`single fields field with description in uiSchema 1`] = `
 </form>
 `;
 
+exports[`single fields field with markdown description 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <div
+        className="rjsf-field rjsf-field-string"
+      >
+        <div
+          style={
+            {
+              "display": "flex",
+              "flexDirection": "column",
+              "gap": "0.5rem",
+              "marginBottom": "1rem",
+            }
+          }
+        >
+          <label
+            htmlFor="root_my-field"
+          >
+            my-field
+             
+          </label>
+          <input
+            aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
+            autoFocus={false}
+            className="p-inputtext p-component"
+            data-pc-name="inputtext"
+            data-pc-section="root"
+            disabled={false}
+            id="root_my-field"
+            name="root_my-field"
+            onBeforeInput={[Function]}
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            onInput={[Function]}
+            onKeyDown={[Function]}
+            onPaste={[Function]}
+            placeholder=""
+            required={false}
+            type="text"
+            value=""
+          />
+          <small>
+            <span
+              id="root_my-field__description"
+            >
+              <span>
+                some 
+                <strong>
+                  Rich
+                </strong>
+                 description
+              </span>
+            </span>
+          </small>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields field with markdown description in uiSchema 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <div
+        className="rjsf-field rjsf-field-string"
+      >
+        <div
+          style={
+            {
+              "display": "flex",
+              "flexDirection": "column",
+              "gap": "0.5rem",
+              "marginBottom": "1rem",
+            }
+          }
+        >
+          <label
+            htmlFor="root_my-field"
+          >
+            my-field
+             
+          </label>
+          <input
+            aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
+            autoFocus={false}
+            className="p-inputtext p-component"
+            data-pc-name="inputtext"
+            data-pc-section="root"
+            disabled={false}
+            id="root_my-field"
+            name="root_my-field"
+            onBeforeInput={[Function]}
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            onInput={[Function]}
+            onKeyDown={[Function]}
+            onPaste={[Function]}
+            placeholder=""
+            required={false}
+            type="text"
+            value=""
+          />
+          <small>
+            <span
+              id="root_my-field__description"
+            >
+              <span>
+                some other description
+              </span>
+            </span>
+          </small>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
 exports[`single fields format color 1`] = `
 <form
   className="rjsf"
@@ -649,7 +1033,7 @@ exports[`single fields format color 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="rjsf-field rjsf-field-string"
   >
     <div
       style={
@@ -719,7 +1103,7 @@ exports[`single fields format date 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="rjsf-field rjsf-field-string"
   >
     <div
       style={
@@ -778,7 +1162,7 @@ exports[`single fields format datetime 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="rjsf-field rjsf-field-string"
   >
     <div
       style={
@@ -837,7 +1221,7 @@ exports[`single fields format time 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="rjsf-field rjsf-field-string"
   >
     <div
       style={
@@ -969,7 +1353,7 @@ exports[`single fields help and error display 1`] = `
     </div>
   </div>
   <div
-    className="form-group field field-string field-error has-error has-danger"
+    className="rjsf-field rjsf-field-string rjsf-field-error"
   >
     <div
       style={
@@ -1077,7 +1461,7 @@ exports[`single fields hidden field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       style={
@@ -1130,7 +1514,7 @@ exports[`single fields hidden label 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="rjsf-field rjsf-field-string"
   >
     <div
       style={
@@ -1189,7 +1573,7 @@ exports[`single fields null field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-null"
+    className="rjsf-field rjsf-field-null"
   >
     <div
       style={
@@ -1227,7 +1611,7 @@ exports[`single fields number field 0 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-number"
+    className="rjsf-field rjsf-field-number"
   >
     <div
       style={
@@ -1287,7 +1671,7 @@ exports[`single fields number field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-number"
+    className="rjsf-field rjsf-field-number"
   >
     <div
       style={
@@ -1347,7 +1731,7 @@ exports[`single fields password field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="rjsf-field rjsf-field-string"
   >
     <div
       style={
@@ -1422,7 +1806,7 @@ exports[`single fields radio field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-boolean"
+    className="rjsf-field rjsf-field-boolean"
   >
     <div
       style={
@@ -1581,7 +1965,7 @@ exports[`single fields schema examples 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="rjsf-field rjsf-field-string"
   >
     <div
       style={
@@ -1700,7 +2084,7 @@ exports[`single fields select field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="rjsf-field rjsf-field-string"
   >
     <div
       style={
@@ -1765,7 +2149,7 @@ exports[`single fields select field multiple choice 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div
       style={
@@ -1850,7 +2234,7 @@ exports[`single fields select field multiple choice enumDisabled 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div
       style={
@@ -1935,7 +2319,7 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div
       style={
@@ -1960,7 +2344,6 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
         }
       >
         <div
-          className="field-checkbox"
           style={
             {
               "alignItems": "center",
@@ -2016,7 +2399,6 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
           </label>
         </div>
         <div
-          className="field-checkbox"
           style={
             {
               "alignItems": "center",
@@ -2072,7 +2454,6 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
           </label>
         </div>
         <div
-          className="field-checkbox"
           style={
             {
               "alignItems": "center",
@@ -2128,7 +2509,6 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
           </label>
         </div>
         <div
-          className="field-checkbox"
           style={
             {
               "alignItems": "center",
@@ -2211,7 +2591,7 @@ exports[`single fields select field multiple choice formData 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div
       style={
@@ -2301,7 +2681,7 @@ exports[`single fields select field multiple choice with labels 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div
       style={
@@ -2381,7 +2761,7 @@ exports[`single fields select field single choice enumDisabled 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="rjsf-field rjsf-field-string"
   >
     <div
       style={
@@ -2446,7 +2826,7 @@ exports[`single fields select field single choice enumDisabled using radio widge
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="rjsf-field rjsf-field-string"
   >
     <div
       style={
@@ -2605,7 +2985,7 @@ exports[`single fields select field single choice form disabled using radio widg
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="rjsf-field rjsf-field-string"
   >
     <div
       style={
@@ -2764,7 +3144,7 @@ exports[`single fields select field single choice formData 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="rjsf-field rjsf-field-string"
   >
     <div
       style={
@@ -2829,7 +3209,7 @@ exports[`single fields select field single choice uiSchema disabled using radio 
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="rjsf-field rjsf-field-string"
   >
     <div
       style={
@@ -2988,7 +3368,7 @@ exports[`single fields slider field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-integer"
+    className="rjsf-field rjsf-field-integer"
   >
     <div
       style={
@@ -3040,7 +3420,7 @@ exports[`single fields string field format data-url 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="rjsf-field rjsf-field-string"
   >
     <div
       style={
@@ -3101,7 +3481,7 @@ exports[`single fields string field format email 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="rjsf-field rjsf-field-string"
   >
     <div
       style={
@@ -3160,7 +3540,7 @@ exports[`single fields string field format uri 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="rjsf-field rjsf-field-string"
   >
     <div
       style={
@@ -3219,7 +3599,7 @@ exports[`single fields string field regular 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="rjsf-field rjsf-field-string"
   >
     <div
       style={
@@ -3278,7 +3658,7 @@ exports[`single fields string field with placeholder 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="rjsf-field rjsf-field-string"
   >
     <div
       style={
@@ -3337,7 +3717,7 @@ exports[`single fields textarea field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="rjsf-field rjsf-field-string"
   >
     <div
       style={
@@ -3394,7 +3774,7 @@ exports[`single fields title field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       style={
@@ -3441,7 +3821,7 @@ exports[`single fields title field 1`] = `
         </div>
       </div>
       <div
-        className="form-group field field-string"
+        className="rjsf-field rjsf-field-string"
       >
         <div
           style={
@@ -3509,7 +3889,7 @@ exports[`single fields unsupported field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-undefined"
+    className="rjsf-field rjsf-field-undefined"
   >
     <div
       style={
@@ -3568,7 +3948,7 @@ exports[`single fields up/down field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-number"
+    className="rjsf-field rjsf-field-number"
   >
     <div
       style={
@@ -3711,7 +4091,7 @@ exports[`single fields using custom tagName 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="rjsf-field rjsf-field-string"
   >
     <div
       style={
