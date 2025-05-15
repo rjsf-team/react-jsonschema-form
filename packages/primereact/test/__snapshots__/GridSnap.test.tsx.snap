@@ -7,7 +7,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       style={
@@ -20,7 +20,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
       }
     >
       <div
-        data-testid="0"
         style={
           {
             "alignItems": "start",
@@ -31,7 +30,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
         }
       >
         <div
-          data-testid="1"
           style={
             {
               "gridColumn": "span 12 / span 12",
@@ -39,7 +37,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
           }
         >
           <div
-            className="form-group field field-object"
+            className="rjsf-field rjsf-field-object"
           >
             <div
               style={
@@ -89,7 +87,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
           </div>
         </div>
         <div
-          data-testid="1"
           style={
             {
               "gridColumn": "span 4 / span 4",
@@ -97,7 +94,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
           }
         >
           <div
-            className="form-group field field-string"
+            className="rjsf-field rjsf-field-string"
           >
             <div
               style={
@@ -141,7 +138,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
           </div>
         </div>
         <div
-          data-testid="1"
           style={
             {
               "gridColumn": "span 4 / span 4",
@@ -149,7 +145,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
           }
         >
           <div
-            className="form-group field field-string"
+            className="rjsf-field rjsf-field-string"
           >
             <div
               style={
@@ -192,7 +188,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
           </div>
         </div>
         <div
-          data-testid="1"
           style={
             {
               "gridColumn": "span 4 / span 4",
@@ -200,7 +195,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
           }
         >
           <div
-            className="form-group field field-string"
+            className="rjsf-field rjsf-field-string"
           >
             <div
               style={
@@ -244,7 +239,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
           </div>
         </div>
         <div
-          data-testid="1"
           style={
             {
               "gridColumn": "span 4 / span 4",
@@ -252,7 +246,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
           }
         >
           <div
-            className="form-group field field-string"
+            className="rjsf-field rjsf-field-string"
           >
             <div
               style={
@@ -296,7 +290,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
           </div>
         </div>
         <div
-          data-testid="1"
           style={
             {
               "gridColumn": "span 8 / span 8",
@@ -304,7 +297,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
           }
         >
           <div
-            className="form-group field field-array"
+            className="rjsf-field rjsf-field-array"
           >
             <div
               style={
@@ -341,7 +334,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                   (Check all that apply)
                 </span>
                 <div
-                  className="field-checkbox"
                   style={
                     {
                       "alignItems": "center",
@@ -397,7 +389,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                   </label>
                 </div>
                 <div
-                  className="field-checkbox"
                   style={
                     {
                       "alignItems": "center",
@@ -453,7 +444,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                   </label>
                 </div>
                 <div
-                  className="field-checkbox"
                   style={
                     {
                       "alignItems": "center",
@@ -509,7 +499,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                   </label>
                 </div>
                 <div
-                  className="field-checkbox"
                   style={
                     {
                       "alignItems": "center",
@@ -565,7 +554,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                   </label>
                 </div>
                 <div
-                  className="field-checkbox"
                   style={
                     {
                       "alignItems": "center",
@@ -632,7 +620,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
           </div>
         </div>
         <div
-          data-testid="1"
           style={
             {
               "gridColumn": "span 6 / span 6",
@@ -640,7 +627,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
           }
         >
           <div
-            data-testid="0"
             style={
               {
                 "alignItems": "start",
@@ -651,7 +637,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
             }
           >
             <div
-              data-testid="1"
               style={
                 {
                   "gridColumn": "span 12 / span 12",
@@ -659,7 +644,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               }
             >
               <div
-                className="form-group field field-string"
+                className="rjsf-field rjsf-field-string"
               >
                 <div
                   style={
@@ -703,7 +688,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
               </div>
             </div>
             <div
-              data-testid="1"
               style={
                 {
                   "gridColumn": "span 12 / span 12",
@@ -711,7 +695,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               }
             >
               <div
-                className="form-group field field-string"
+                className="rjsf-field rjsf-field-string"
               >
                 <div
                   style={
@@ -754,7 +738,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
               </div>
             </div>
             <div
-              data-testid="1"
               style={
                 {
                   "gridColumn": "span 12 / span 12",
@@ -762,7 +745,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               }
             >
               <div
-                className="form-group field field-string"
+                className="rjsf-field rjsf-field-string"
               >
                 <div
                   style={
@@ -806,7 +789,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
               </div>
             </div>
             <div
-              data-testid="1"
               style={
                 {
                   "gridColumn": "span 6 / span 6",
@@ -814,7 +796,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               }
             >
               <div
-                className="form-group field field-string"
+                className="rjsf-field rjsf-field-string"
               >
                 <div
                   style={
@@ -1133,7 +1115,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
               </div>
             </div>
             <div
-              data-testid="1"
               style={
                 {
                   "gridColumn": "span 6 / span 6",
@@ -1141,7 +1122,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               }
             >
               <div
-                className="form-group field field-string"
+                className="rjsf-field rjsf-field-string"
               >
                 <div
                   style={
@@ -1187,7 +1168,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
           </div>
         </div>
         <div
-          data-testid="1"
           style={
             {
               "gridColumn": "span 6 / span 6",
@@ -1195,7 +1175,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
           }
         >
           <div
-            data-testid="0"
             style={
               {
                 "alignItems": "start",
@@ -1206,188 +1185,205 @@ exports[`Complex grid renders person and address and employment in a complex gri
             }
           >
             <div
-              data-testid="1"
               style={
                 {
                   "gridColumn": "span 12 / span 12",
                 }
               }
             >
-              <div
-                style={
-                  {
-                    "display": "flex",
-                    "flexDirection": "row",
-                    "gap": "1rem",
-                  }
-                }
-              >
+              <div>
                 <div
                   style={
                     {
-                      "alignItems": "center",
                       "display": "flex",
+                      "flexDirection": "column",
+                      "gap": "0.5rem",
+                      "marginBottom": "1rem",
                     }
                   }
                 >
-                  <div
-                    aria-describedby="root_employment__error root_employment__description root_employment__help"
-                    className="p-radiobutton p-component p-highlight"
-                    data-p-checked={true}
-                    data-pc-name="radiobutton"
-                    data-pc-section="root"
-                    id={null}
-                    onBlur={[Function]}
-                    onFocus={[Function]}
-                    style={{}}
-                  >
-                    <input
-                      aria-describedby="root_employment__error root_employment__description root_employment__help"
-                      className="p-radiobutton-input"
-                      data-pc-section="input"
-                      defaultChecked={true}
-                      id="root_employment-0"
-                      name="root_employment"
-                      onBlur={[Function]}
-                      onChange={[Function]}
-                      onFocus={[Function]}
-                      required={false}
-                      tabIndex={null}
-                      type="radio"
-                    />
-                    <div
-                      className="p-radiobutton-box"
-                      data-pc-section="box"
-                    >
-                      <div
-                        className="p-radiobutton-icon"
-                        data-pc-section="icon"
-                      />
-                    </div>
-                  </div>
                   <label
-                    htmlFor="root_employment-0"
+                    htmlFor="root_employment"
+                  >
+                    Employment
+                     
+                  </label>
+                  <div
                     style={
                       {
-                        "marginLeft": "8px",
+                        "display": "flex",
+                        "flexDirection": "row",
+                        "gap": "1rem",
                       }
                     }
                   >
-                    Company
-                  </label>
-                </div>
-                <div
-                  style={
-                    {
-                      "alignItems": "center",
-                      "display": "flex",
-                    }
-                  }
-                >
-                  <div
-                    aria-describedby="root_employment__error root_employment__description root_employment__help"
-                    className="p-radiobutton p-component"
-                    data-p-checked={false}
-                    data-pc-name="radiobutton"
-                    data-pc-section="root"
-                    id={null}
-                    onBlur={[Function]}
-                    onFocus={[Function]}
-                    style={{}}
-                  >
-                    <input
-                      aria-describedby="root_employment__error root_employment__description root_employment__help"
-                      className="p-radiobutton-input"
-                      data-pc-section="input"
-                      defaultChecked={false}
-                      id="root_employment-1"
-                      name="root_employment"
-                      onBlur={[Function]}
-                      onChange={[Function]}
-                      onFocus={[Function]}
-                      required={false}
-                      tabIndex={null}
-                      type="radio"
-                    />
                     <div
-                      className="p-radiobutton-box"
-                      data-pc-section="box"
+                      style={
+                        {
+                          "alignItems": "center",
+                          "display": "flex",
+                        }
+                      }
                     >
                       <div
-                        className="p-radiobutton-icon"
-                        data-pc-section="icon"
-                      />
+                        aria-describedby="root_employment__error root_employment__description root_employment__help"
+                        className="p-radiobutton p-component p-highlight"
+                        data-p-checked={true}
+                        data-pc-name="radiobutton"
+                        data-pc-section="root"
+                        id={null}
+                        onBlur={[Function]}
+                        onFocus={[Function]}
+                        style={{}}
+                      >
+                        <input
+                          aria-describedby="root_employment__error root_employment__description root_employment__help"
+                          className="p-radiobutton-input"
+                          data-pc-section="input"
+                          defaultChecked={true}
+                          id="root_employment-0"
+                          name="root_employment"
+                          onBlur={[Function]}
+                          onChange={[Function]}
+                          onFocus={[Function]}
+                          required={false}
+                          tabIndex={null}
+                          type="radio"
+                        />
+                        <div
+                          className="p-radiobutton-box"
+                          data-pc-section="box"
+                        >
+                          <div
+                            className="p-radiobutton-icon"
+                            data-pc-section="icon"
+                          />
+                        </div>
+                      </div>
+                      <label
+                        htmlFor="root_employment-0"
+                        style={
+                          {
+                            "marginLeft": "8px",
+                          }
+                        }
+                      >
+                        Company
+                      </label>
                     </div>
-                  </div>
-                  <label
-                    htmlFor="root_employment-1"
-                    style={
-                      {
-                        "marginLeft": "8px",
-                      }
-                    }
-                  >
-                    Education
-                  </label>
-                </div>
-                <div
-                  style={
-                    {
-                      "alignItems": "center",
-                      "display": "flex",
-                    }
-                  }
-                >
-                  <div
-                    aria-describedby="root_employment__error root_employment__description root_employment__help"
-                    className="p-radiobutton p-component"
-                    data-p-checked={false}
-                    data-pc-name="radiobutton"
-                    data-pc-section="root"
-                    id={null}
-                    onBlur={[Function]}
-                    onFocus={[Function]}
-                    style={{}}
-                  >
-                    <input
-                      aria-describedby="root_employment__error root_employment__description root_employment__help"
-                      className="p-radiobutton-input"
-                      data-pc-section="input"
-                      defaultChecked={false}
-                      id="root_employment-2"
-                      name="root_employment"
-                      onBlur={[Function]}
-                      onChange={[Function]}
-                      onFocus={[Function]}
-                      required={false}
-                      tabIndex={null}
-                      type="radio"
-                    />
                     <div
-                      className="p-radiobutton-box"
-                      data-pc-section="box"
+                      style={
+                        {
+                          "alignItems": "center",
+                          "display": "flex",
+                        }
+                      }
                     >
                       <div
-                        className="p-radiobutton-icon"
-                        data-pc-section="icon"
-                      />
+                        aria-describedby="root_employment__error root_employment__description root_employment__help"
+                        className="p-radiobutton p-component"
+                        data-p-checked={false}
+                        data-pc-name="radiobutton"
+                        data-pc-section="root"
+                        id={null}
+                        onBlur={[Function]}
+                        onFocus={[Function]}
+                        style={{}}
+                      >
+                        <input
+                          aria-describedby="root_employment__error root_employment__description root_employment__help"
+                          className="p-radiobutton-input"
+                          data-pc-section="input"
+                          defaultChecked={false}
+                          id="root_employment-1"
+                          name="root_employment"
+                          onBlur={[Function]}
+                          onChange={[Function]}
+                          onFocus={[Function]}
+                          required={false}
+                          tabIndex={null}
+                          type="radio"
+                        />
+                        <div
+                          className="p-radiobutton-box"
+                          data-pc-section="box"
+                        >
+                          <div
+                            className="p-radiobutton-icon"
+                            data-pc-section="icon"
+                          />
+                        </div>
+                      </div>
+                      <label
+                        htmlFor="root_employment-1"
+                        style={
+                          {
+                            "marginLeft": "8px",
+                          }
+                        }
+                      >
+                        Education
+                      </label>
+                    </div>
+                    <div
+                      style={
+                        {
+                          "alignItems": "center",
+                          "display": "flex",
+                        }
+                      }
+                    >
+                      <div
+                        aria-describedby="root_employment__error root_employment__description root_employment__help"
+                        className="p-radiobutton p-component"
+                        data-p-checked={false}
+                        data-pc-name="radiobutton"
+                        data-pc-section="root"
+                        id={null}
+                        onBlur={[Function]}
+                        onFocus={[Function]}
+                        style={{}}
+                      >
+                        <input
+                          aria-describedby="root_employment__error root_employment__description root_employment__help"
+                          className="p-radiobutton-input"
+                          data-pc-section="input"
+                          defaultChecked={false}
+                          id="root_employment-2"
+                          name="root_employment"
+                          onBlur={[Function]}
+                          onChange={[Function]}
+                          onFocus={[Function]}
+                          required={false}
+                          tabIndex={null}
+                          type="radio"
+                        />
+                        <div
+                          className="p-radiobutton-box"
+                          data-pc-section="box"
+                        >
+                          <div
+                            className="p-radiobutton-icon"
+                            data-pc-section="icon"
+                          />
+                        </div>
+                      </div>
+                      <label
+                        htmlFor="root_employment-2"
+                        style={
+                          {
+                            "marginLeft": "8px",
+                          }
+                        }
+                      >
+                        Other
+                      </label>
                     </div>
                   </div>
-                  <label
-                    htmlFor="root_employment-2"
-                    style={
-                      {
-                        "marginLeft": "8px",
-                      }
-                    }
-                  >
-                    Other
-                  </label>
                 </div>
               </div>
             </div>
             <div
-              data-testid="1"
               style={
                 {
                   "gridColumn": "span 12 / span 12",
@@ -1395,7 +1391,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               }
             >
               <div
-                className="form-group field field-string"
+                className="rjsf-field rjsf-field-string"
               >
                 <div
                   style={
@@ -1439,7 +1435,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
               </div>
             </div>
             <div
-              data-testid="1"
               style={
                 {
                   "gridColumn": "span 12 / span 12",
@@ -1447,7 +1442,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               }
             >
               <div
-                className="form-group field field-string"
+                className="rjsf-field rjsf-field-string"
               >
                 <div
                   style={
@@ -1490,7 +1485,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
               </div>
             </div>
             <div
-              data-testid="1"
               style={
                 {
                   "gridColumn": "span 12 / span 12",
@@ -1498,7 +1492,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               }
             >
               <div
-                className="form-group field field-string"
+                className="rjsf-field rjsf-field-string"
               >
                 <div
                   style={
@@ -1542,7 +1536,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
               </div>
             </div>
             <div
-              data-testid="1"
               style={
                 {
                   "gridColumn": "span 12 / span 12",
@@ -1550,7 +1543,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               }
             >
               <div
-                className="form-group field field-string"
+                className="rjsf-field rjsf-field-string"
               >
                 <div
                   style={
@@ -1898,7 +1891,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       style={
@@ -1911,7 +1904,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
       }
     >
       <div
-        data-testid="0"
         style={
           {
             "alignItems": "start",
@@ -1922,7 +1914,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
         }
       >
         <div
-          data-testid="1"
           style={
             {
               "gridColumn": "span 12 / span 12",
@@ -1930,7 +1921,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
           }
         >
           <div
-            className="form-group field field-object"
+            className="rjsf-field rjsf-field-object"
           >
             <div
               style={
@@ -1980,7 +1971,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
           </div>
         </div>
         <div
-          data-testid="1"
           style={
             {
               "gridColumn": "span 4 / span 4",
@@ -1988,7 +1978,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
           }
         >
           <div
-            className="form-group field field-string"
+            className="rjsf-field rjsf-field-string"
           >
             <div
               style={
@@ -2032,7 +2022,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
           </div>
         </div>
         <div
-          data-testid="1"
           style={
             {
               "gridColumn": "span 4 / span 4",
@@ -2040,7 +2029,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
           }
         >
           <div
-            className="form-group field field-string"
+            className="rjsf-field rjsf-field-string"
           >
             <div
               style={
@@ -2083,7 +2072,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
           </div>
         </div>
         <div
-          data-testid="1"
           style={
             {
               "gridColumn": "span 4 / span 4",
@@ -2091,7 +2079,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
           }
         >
           <div
-            className="form-group field field-string"
+            className="rjsf-field rjsf-field-string"
           >
             <div
               style={
@@ -2135,7 +2123,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
           </div>
         </div>
         <div
-          data-testid="1"
           style={
             {
               "gridColumn": "span 4 / span 4",
@@ -2143,7 +2130,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
           }
         >
           <div
-            className="form-group field field-string"
+            className="rjsf-field rjsf-field-string"
           >
             <div
               style={
@@ -2187,7 +2174,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
           </div>
         </div>
         <div
-          data-testid="1"
           style={
             {
               "gridColumn": "span 8 / span 8",
@@ -2195,7 +2181,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
           }
         >
           <div
-            className="form-group field field-array"
+            className="rjsf-field rjsf-field-array"
           >
             <div
               style={
@@ -2232,7 +2218,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                   (Check all that apply)
                 </span>
                 <div
-                  className="field-checkbox"
                   style={
                     {
                       "alignItems": "center",
@@ -2288,7 +2273,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                   </label>
                 </div>
                 <div
-                  className="field-checkbox"
                   style={
                     {
                       "alignItems": "center",
@@ -2344,7 +2328,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                   </label>
                 </div>
                 <div
-                  className="field-checkbox"
                   style={
                     {
                       "alignItems": "center",
@@ -2400,7 +2383,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                   </label>
                 </div>
                 <div
-                  className="field-checkbox"
                   style={
                     {
                       "alignItems": "center",
@@ -2456,7 +2438,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                   </label>
                 </div>
                 <div
-                  className="field-checkbox"
                   style={
                     {
                       "alignItems": "center",
@@ -2523,7 +2504,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
           </div>
         </div>
         <div
-          data-testid="1"
           style={
             {
               "gridColumn": "span 6 / span 6",
@@ -2531,7 +2511,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
           }
         >
           <div
-            data-testid="0"
             style={
               {
                 "alignItems": "start",
@@ -2542,7 +2521,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
             }
           >
             <div
-              data-testid="1"
               style={
                 {
                   "gridColumn": "span 12 / span 12",
@@ -2550,7 +2528,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               }
             >
               <div
-                className="form-group field field-string"
+                className="rjsf-field rjsf-field-string"
               >
                 <div
                   style={
@@ -2594,7 +2572,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
               </div>
             </div>
             <div
-              data-testid="1"
               style={
                 {
                   "gridColumn": "span 12 / span 12",
@@ -2602,7 +2579,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               }
             >
               <div
-                className="form-group field field-string"
+                className="rjsf-field rjsf-field-string"
               >
                 <div
                   style={
@@ -2645,7 +2622,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
               </div>
             </div>
             <div
-              data-testid="1"
               style={
                 {
                   "gridColumn": "span 12 / span 12",
@@ -2653,7 +2629,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               }
             >
               <div
-                className="form-group field field-string"
+                className="rjsf-field rjsf-field-string"
               >
                 <div
                   style={
@@ -2697,7 +2673,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
               </div>
             </div>
             <div
-              data-testid="1"
               style={
                 {
                   "gridColumn": "span 6 / span 6",
@@ -2705,7 +2680,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               }
             >
               <div
-                className="form-group field field-string"
+                className="rjsf-field rjsf-field-string"
               >
                 <div
                   style={
@@ -3024,7 +2999,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
               </div>
             </div>
             <div
-              data-testid="1"
               style={
                 {
                   "gridColumn": "span 6 / span 6",
@@ -3032,7 +3006,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               }
             >
               <div
-                className="form-group field field-string"
+                className="rjsf-field rjsf-field-string"
               >
                 <div
                   style={
@@ -3078,7 +3052,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
           </div>
         </div>
         <div
-          data-testid="1"
           style={
             {
               "gridColumn": "span 6 / span 6",
@@ -3086,7 +3059,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
           }
         >
           <div
-            data-testid="0"
             style={
               {
                 "alignItems": "start",
@@ -3097,188 +3069,205 @@ exports[`Complex grid renders person and address and employment in a complex gri
             }
           >
             <div
-              data-testid="1"
               style={
                 {
                   "gridColumn": "span 12 / span 12",
                 }
               }
             >
-              <div
-                style={
-                  {
-                    "display": "flex",
-                    "flexDirection": "row",
-                    "gap": "1rem",
-                  }
-                }
-              >
+              <div>
                 <div
                   style={
                     {
-                      "alignItems": "center",
                       "display": "flex",
+                      "flexDirection": "column",
+                      "gap": "0.5rem",
+                      "marginBottom": "1rem",
                     }
                   }
                 >
-                  <div
-                    aria-describedby="root_employment__error root_employment__description root_employment__help"
-                    className="p-radiobutton p-component"
-                    data-p-checked={false}
-                    data-pc-name="radiobutton"
-                    data-pc-section="root"
-                    id={null}
-                    onBlur={[Function]}
-                    onFocus={[Function]}
-                    style={{}}
-                  >
-                    <input
-                      aria-describedby="root_employment__error root_employment__description root_employment__help"
-                      className="p-radiobutton-input"
-                      data-pc-section="input"
-                      defaultChecked={false}
-                      id="root_employment-0"
-                      name="root_employment"
-                      onBlur={[Function]}
-                      onChange={[Function]}
-                      onFocus={[Function]}
-                      required={false}
-                      tabIndex={null}
-                      type="radio"
-                    />
-                    <div
-                      className="p-radiobutton-box"
-                      data-pc-section="box"
-                    >
-                      <div
-                        className="p-radiobutton-icon"
-                        data-pc-section="icon"
-                      />
-                    </div>
-                  </div>
                   <label
-                    htmlFor="root_employment-0"
+                    htmlFor="root_employment"
+                  >
+                    Employment
+                     
+                  </label>
+                  <div
                     style={
                       {
-                        "marginLeft": "8px",
+                        "display": "flex",
+                        "flexDirection": "row",
+                        "gap": "1rem",
                       }
                     }
                   >
-                    Company
-                  </label>
-                </div>
-                <div
-                  style={
-                    {
-                      "alignItems": "center",
-                      "display": "flex",
-                    }
-                  }
-                >
-                  <div
-                    aria-describedby="root_employment__error root_employment__description root_employment__help"
-                    className="p-radiobutton p-component p-highlight"
-                    data-p-checked={true}
-                    data-pc-name="radiobutton"
-                    data-pc-section="root"
-                    id={null}
-                    onBlur={[Function]}
-                    onFocus={[Function]}
-                    style={{}}
-                  >
-                    <input
-                      aria-describedby="root_employment__error root_employment__description root_employment__help"
-                      className="p-radiobutton-input"
-                      data-pc-section="input"
-                      defaultChecked={true}
-                      id="root_employment-1"
-                      name="root_employment"
-                      onBlur={[Function]}
-                      onChange={[Function]}
-                      onFocus={[Function]}
-                      required={false}
-                      tabIndex={null}
-                      type="radio"
-                    />
                     <div
-                      className="p-radiobutton-box"
-                      data-pc-section="box"
+                      style={
+                        {
+                          "alignItems": "center",
+                          "display": "flex",
+                        }
+                      }
                     >
                       <div
-                        className="p-radiobutton-icon"
-                        data-pc-section="icon"
-                      />
+                        aria-describedby="root_employment__error root_employment__description root_employment__help"
+                        className="p-radiobutton p-component"
+                        data-p-checked={false}
+                        data-pc-name="radiobutton"
+                        data-pc-section="root"
+                        id={null}
+                        onBlur={[Function]}
+                        onFocus={[Function]}
+                        style={{}}
+                      >
+                        <input
+                          aria-describedby="root_employment__error root_employment__description root_employment__help"
+                          className="p-radiobutton-input"
+                          data-pc-section="input"
+                          defaultChecked={false}
+                          id="root_employment-0"
+                          name="root_employment"
+                          onBlur={[Function]}
+                          onChange={[Function]}
+                          onFocus={[Function]}
+                          required={false}
+                          tabIndex={null}
+                          type="radio"
+                        />
+                        <div
+                          className="p-radiobutton-box"
+                          data-pc-section="box"
+                        >
+                          <div
+                            className="p-radiobutton-icon"
+                            data-pc-section="icon"
+                          />
+                        </div>
+                      </div>
+                      <label
+                        htmlFor="root_employment-0"
+                        style={
+                          {
+                            "marginLeft": "8px",
+                          }
+                        }
+                      >
+                        Company
+                      </label>
                     </div>
-                  </div>
-                  <label
-                    htmlFor="root_employment-1"
-                    style={
-                      {
-                        "marginLeft": "8px",
-                      }
-                    }
-                  >
-                    Education
-                  </label>
-                </div>
-                <div
-                  style={
-                    {
-                      "alignItems": "center",
-                      "display": "flex",
-                    }
-                  }
-                >
-                  <div
-                    aria-describedby="root_employment__error root_employment__description root_employment__help"
-                    className="p-radiobutton p-component"
-                    data-p-checked={false}
-                    data-pc-name="radiobutton"
-                    data-pc-section="root"
-                    id={null}
-                    onBlur={[Function]}
-                    onFocus={[Function]}
-                    style={{}}
-                  >
-                    <input
-                      aria-describedby="root_employment__error root_employment__description root_employment__help"
-                      className="p-radiobutton-input"
-                      data-pc-section="input"
-                      defaultChecked={false}
-                      id="root_employment-2"
-                      name="root_employment"
-                      onBlur={[Function]}
-                      onChange={[Function]}
-                      onFocus={[Function]}
-                      required={false}
-                      tabIndex={null}
-                      type="radio"
-                    />
                     <div
-                      className="p-radiobutton-box"
-                      data-pc-section="box"
+                      style={
+                        {
+                          "alignItems": "center",
+                          "display": "flex",
+                        }
+                      }
                     >
                       <div
-                        className="p-radiobutton-icon"
-                        data-pc-section="icon"
-                      />
+                        aria-describedby="root_employment__error root_employment__description root_employment__help"
+                        className="p-radiobutton p-component p-highlight"
+                        data-p-checked={true}
+                        data-pc-name="radiobutton"
+                        data-pc-section="root"
+                        id={null}
+                        onBlur={[Function]}
+                        onFocus={[Function]}
+                        style={{}}
+                      >
+                        <input
+                          aria-describedby="root_employment__error root_employment__description root_employment__help"
+                          className="p-radiobutton-input"
+                          data-pc-section="input"
+                          defaultChecked={true}
+                          id="root_employment-1"
+                          name="root_employment"
+                          onBlur={[Function]}
+                          onChange={[Function]}
+                          onFocus={[Function]}
+                          required={false}
+                          tabIndex={null}
+                          type="radio"
+                        />
+                        <div
+                          className="p-radiobutton-box"
+                          data-pc-section="box"
+                        >
+                          <div
+                            className="p-radiobutton-icon"
+                            data-pc-section="icon"
+                          />
+                        </div>
+                      </div>
+                      <label
+                        htmlFor="root_employment-1"
+                        style={
+                          {
+                            "marginLeft": "8px",
+                          }
+                        }
+                      >
+                        Education
+                      </label>
+                    </div>
+                    <div
+                      style={
+                        {
+                          "alignItems": "center",
+                          "display": "flex",
+                        }
+                      }
+                    >
+                      <div
+                        aria-describedby="root_employment__error root_employment__description root_employment__help"
+                        className="p-radiobutton p-component"
+                        data-p-checked={false}
+                        data-pc-name="radiobutton"
+                        data-pc-section="root"
+                        id={null}
+                        onBlur={[Function]}
+                        onFocus={[Function]}
+                        style={{}}
+                      >
+                        <input
+                          aria-describedby="root_employment__error root_employment__description root_employment__help"
+                          className="p-radiobutton-input"
+                          data-pc-section="input"
+                          defaultChecked={false}
+                          id="root_employment-2"
+                          name="root_employment"
+                          onBlur={[Function]}
+                          onChange={[Function]}
+                          onFocus={[Function]}
+                          required={false}
+                          tabIndex={null}
+                          type="radio"
+                        />
+                        <div
+                          className="p-radiobutton-box"
+                          data-pc-section="box"
+                        >
+                          <div
+                            className="p-radiobutton-icon"
+                            data-pc-section="icon"
+                          />
+                        </div>
+                      </div>
+                      <label
+                        htmlFor="root_employment-2"
+                        style={
+                          {
+                            "marginLeft": "8px",
+                          }
+                        }
+                      >
+                        Other
+                      </label>
                     </div>
                   </div>
-                  <label
-                    htmlFor="root_employment-2"
-                    style={
-                      {
-                        "marginLeft": "8px",
-                      }
-                    }
-                  >
-                    Other
-                  </label>
                 </div>
               </div>
             </div>
             <div
-              data-testid="1"
               style={
                 {
                   "gridColumn": "span 12 / span 12",
@@ -3286,7 +3275,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               }
             >
               <div
-                className="form-group field field-string"
+                className="rjsf-field rjsf-field-string"
               >
                 <div
                   style={
@@ -3329,7 +3318,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
               </div>
             </div>
             <div
-              data-testid="1"
               style={
                 {
                   "gridColumn": "span 12 / span 12",
@@ -3337,7 +3325,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               }
             >
               <div
-                className="form-group field field-string"
+                className="rjsf-field rjsf-field-string"
               >
                 <div
                   style={
@@ -3381,7 +3369,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
               </div>
             </div>
             <div
-              data-testid="1"
               style={
                 {
                   "gridColumn": "span 12 / span 12",
@@ -3389,7 +3376,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               }
             >
               <div
-                className="form-group field field-string"
+                className="rjsf-field rjsf-field-string"
               >
                 <div
                   style={
@@ -3432,7 +3419,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
               </div>
             </div>
             <div
-              data-testid="1"
               style={
                 {
                   "gridColumn": "span 12 / span 12",
@@ -3440,7 +3426,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               }
             >
               <div
-                className="form-group field field-string"
+                className="rjsf-field rjsf-field-string"
               >
                 <div
                   style={
@@ -3484,7 +3470,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
               </div>
             </div>
             <div
-              data-testid="1"
               style={
                 {
                   "gridColumn": "span 12 / span 12",
@@ -3492,7 +3477,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               }
             >
               <div
-                className="form-group field field-string"
+                className="rjsf-field rjsf-field-string"
               >
                 <div
                   style={
@@ -3840,7 +3825,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       style={
@@ -3853,7 +3838,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
       }
     >
       <div
-        data-testid="0"
         style={
           {
             "alignItems": "start",
@@ -3864,7 +3848,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
         }
       >
         <div
-          data-testid="1"
           style={
             {
               "gridColumn": "span 12 / span 12",
@@ -3872,7 +3855,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
           }
         >
           <div
-            className="form-group field field-object"
+            className="rjsf-field rjsf-field-object"
           >
             <div
               style={
@@ -3922,7 +3905,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
           </div>
         </div>
         <div
-          data-testid="1"
           style={
             {
               "gridColumn": "span 4 / span 4",
@@ -3930,7 +3912,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
           }
         >
           <div
-            className="form-group field field-string"
+            className="rjsf-field rjsf-field-string"
           >
             <div
               style={
@@ -3974,7 +3956,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
           </div>
         </div>
         <div
-          data-testid="1"
           style={
             {
               "gridColumn": "span 4 / span 4",
@@ -3982,7 +3963,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
           }
         >
           <div
-            className="form-group field field-string"
+            className="rjsf-field rjsf-field-string"
           >
             <div
               style={
@@ -4025,7 +4006,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
           </div>
         </div>
         <div
-          data-testid="1"
           style={
             {
               "gridColumn": "span 4 / span 4",
@@ -4033,7 +4013,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
           }
         >
           <div
-            className="form-group field field-string"
+            className="rjsf-field rjsf-field-string"
           >
             <div
               style={
@@ -4077,7 +4057,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
           </div>
         </div>
         <div
-          data-testid="1"
           style={
             {
               "gridColumn": "span 4 / span 4",
@@ -4085,7 +4064,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
           }
         >
           <div
-            className="form-group field field-string"
+            className="rjsf-field rjsf-field-string"
           >
             <div
               style={
@@ -4129,7 +4108,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
           </div>
         </div>
         <div
-          data-testid="1"
           style={
             {
               "gridColumn": "span 8 / span 8",
@@ -4137,7 +4115,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
           }
         >
           <div
-            className="form-group field field-array"
+            className="rjsf-field rjsf-field-array"
           >
             <div
               style={
@@ -4174,7 +4152,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                   (Check all that apply)
                 </span>
                 <div
-                  className="field-checkbox"
                   style={
                     {
                       "alignItems": "center",
@@ -4230,7 +4207,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                   </label>
                 </div>
                 <div
-                  className="field-checkbox"
                   style={
                     {
                       "alignItems": "center",
@@ -4286,7 +4262,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                   </label>
                 </div>
                 <div
-                  className="field-checkbox"
                   style={
                     {
                       "alignItems": "center",
@@ -4342,7 +4317,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                   </label>
                 </div>
                 <div
-                  className="field-checkbox"
                   style={
                     {
                       "alignItems": "center",
@@ -4398,7 +4372,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                   </label>
                 </div>
                 <div
-                  className="field-checkbox"
                   style={
                     {
                       "alignItems": "center",
@@ -4465,7 +4438,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
           </div>
         </div>
         <div
-          data-testid="1"
           style={
             {
               "gridColumn": "span 6 / span 6",
@@ -4473,7 +4445,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
           }
         >
           <div
-            data-testid="0"
             style={
               {
                 "alignItems": "start",
@@ -4484,7 +4455,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
             }
           >
             <div
-              data-testid="1"
               style={
                 {
                   "gridColumn": "span 12 / span 12",
@@ -4492,7 +4462,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               }
             >
               <div
-                className="form-group field field-string"
+                className="rjsf-field rjsf-field-string"
               >
                 <div
                   style={
@@ -4536,7 +4506,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
               </div>
             </div>
             <div
-              data-testid="1"
               style={
                 {
                   "gridColumn": "span 12 / span 12",
@@ -4544,7 +4513,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               }
             >
               <div
-                className="form-group field field-string"
+                className="rjsf-field rjsf-field-string"
               >
                 <div
                   style={
@@ -4587,7 +4556,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
               </div>
             </div>
             <div
-              data-testid="1"
               style={
                 {
                   "gridColumn": "span 12 / span 12",
@@ -4595,7 +4563,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               }
             >
               <div
-                className="form-group field field-string"
+                className="rjsf-field rjsf-field-string"
               >
                 <div
                   style={
@@ -4639,7 +4607,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
               </div>
             </div>
             <div
-              data-testid="1"
               style={
                 {
                   "gridColumn": "span 6 / span 6",
@@ -4647,7 +4614,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               }
             >
               <div
-                className="form-group field field-string"
+                className="rjsf-field rjsf-field-string"
               >
                 <div
                   style={
@@ -4966,7 +4933,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
               </div>
             </div>
             <div
-              data-testid="1"
               style={
                 {
                   "gridColumn": "span 6 / span 6",
@@ -4974,7 +4940,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               }
             >
               <div
-                className="form-group field field-string"
+                className="rjsf-field rjsf-field-string"
               >
                 <div
                   style={
@@ -5020,7 +4986,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
           </div>
         </div>
         <div
-          data-testid="1"
           style={
             {
               "gridColumn": "span 6 / span 6",
@@ -5028,7 +4993,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
           }
         >
           <div
-            data-testid="0"
             style={
               {
                 "alignItems": "start",
@@ -5039,188 +5003,205 @@ exports[`Complex grid renders person and address and employment in a complex gri
             }
           >
             <div
-              data-testid="1"
               style={
                 {
                   "gridColumn": "span 12 / span 12",
                 }
               }
             >
-              <div
-                style={
-                  {
-                    "display": "flex",
-                    "flexDirection": "row",
-                    "gap": "1rem",
-                  }
-                }
-              >
+              <div>
                 <div
                   style={
                     {
-                      "alignItems": "center",
                       "display": "flex",
+                      "flexDirection": "column",
+                      "gap": "0.5rem",
+                      "marginBottom": "1rem",
                     }
                   }
                 >
-                  <div
-                    aria-describedby="root_employment__error root_employment__description root_employment__help"
-                    className="p-radiobutton p-component"
-                    data-p-checked={false}
-                    data-pc-name="radiobutton"
-                    data-pc-section="root"
-                    id={null}
-                    onBlur={[Function]}
-                    onFocus={[Function]}
-                    style={{}}
-                  >
-                    <input
-                      aria-describedby="root_employment__error root_employment__description root_employment__help"
-                      className="p-radiobutton-input"
-                      data-pc-section="input"
-                      defaultChecked={false}
-                      id="root_employment-0"
-                      name="root_employment"
-                      onBlur={[Function]}
-                      onChange={[Function]}
-                      onFocus={[Function]}
-                      required={false}
-                      tabIndex={null}
-                      type="radio"
-                    />
-                    <div
-                      className="p-radiobutton-box"
-                      data-pc-section="box"
-                    >
-                      <div
-                        className="p-radiobutton-icon"
-                        data-pc-section="icon"
-                      />
-                    </div>
-                  </div>
                   <label
-                    htmlFor="root_employment-0"
+                    htmlFor="root_employment"
+                  >
+                    Employment
+                     
+                  </label>
+                  <div
                     style={
                       {
-                        "marginLeft": "8px",
+                        "display": "flex",
+                        "flexDirection": "row",
+                        "gap": "1rem",
                       }
                     }
                   >
-                    Company
-                  </label>
-                </div>
-                <div
-                  style={
-                    {
-                      "alignItems": "center",
-                      "display": "flex",
-                    }
-                  }
-                >
-                  <div
-                    aria-describedby="root_employment__error root_employment__description root_employment__help"
-                    className="p-radiobutton p-component"
-                    data-p-checked={false}
-                    data-pc-name="radiobutton"
-                    data-pc-section="root"
-                    id={null}
-                    onBlur={[Function]}
-                    onFocus={[Function]}
-                    style={{}}
-                  >
-                    <input
-                      aria-describedby="root_employment__error root_employment__description root_employment__help"
-                      className="p-radiobutton-input"
-                      data-pc-section="input"
-                      defaultChecked={false}
-                      id="root_employment-1"
-                      name="root_employment"
-                      onBlur={[Function]}
-                      onChange={[Function]}
-                      onFocus={[Function]}
-                      required={false}
-                      tabIndex={null}
-                      type="radio"
-                    />
                     <div
-                      className="p-radiobutton-box"
-                      data-pc-section="box"
+                      style={
+                        {
+                          "alignItems": "center",
+                          "display": "flex",
+                        }
+                      }
                     >
                       <div
-                        className="p-radiobutton-icon"
-                        data-pc-section="icon"
-                      />
+                        aria-describedby="root_employment__error root_employment__description root_employment__help"
+                        className="p-radiobutton p-component"
+                        data-p-checked={false}
+                        data-pc-name="radiobutton"
+                        data-pc-section="root"
+                        id={null}
+                        onBlur={[Function]}
+                        onFocus={[Function]}
+                        style={{}}
+                      >
+                        <input
+                          aria-describedby="root_employment__error root_employment__description root_employment__help"
+                          className="p-radiobutton-input"
+                          data-pc-section="input"
+                          defaultChecked={false}
+                          id="root_employment-0"
+                          name="root_employment"
+                          onBlur={[Function]}
+                          onChange={[Function]}
+                          onFocus={[Function]}
+                          required={false}
+                          tabIndex={null}
+                          type="radio"
+                        />
+                        <div
+                          className="p-radiobutton-box"
+                          data-pc-section="box"
+                        >
+                          <div
+                            className="p-radiobutton-icon"
+                            data-pc-section="icon"
+                          />
+                        </div>
+                      </div>
+                      <label
+                        htmlFor="root_employment-0"
+                        style={
+                          {
+                            "marginLeft": "8px",
+                          }
+                        }
+                      >
+                        Company
+                      </label>
                     </div>
-                  </div>
-                  <label
-                    htmlFor="root_employment-1"
-                    style={
-                      {
-                        "marginLeft": "8px",
-                      }
-                    }
-                  >
-                    Education
-                  </label>
-                </div>
-                <div
-                  style={
-                    {
-                      "alignItems": "center",
-                      "display": "flex",
-                    }
-                  }
-                >
-                  <div
-                    aria-describedby="root_employment__error root_employment__description root_employment__help"
-                    className="p-radiobutton p-component p-highlight"
-                    data-p-checked={true}
-                    data-pc-name="radiobutton"
-                    data-pc-section="root"
-                    id={null}
-                    onBlur={[Function]}
-                    onFocus={[Function]}
-                    style={{}}
-                  >
-                    <input
-                      aria-describedby="root_employment__error root_employment__description root_employment__help"
-                      className="p-radiobutton-input"
-                      data-pc-section="input"
-                      defaultChecked={true}
-                      id="root_employment-2"
-                      name="root_employment"
-                      onBlur={[Function]}
-                      onChange={[Function]}
-                      onFocus={[Function]}
-                      required={false}
-                      tabIndex={null}
-                      type="radio"
-                    />
                     <div
-                      className="p-radiobutton-box"
-                      data-pc-section="box"
+                      style={
+                        {
+                          "alignItems": "center",
+                          "display": "flex",
+                        }
+                      }
                     >
                       <div
-                        className="p-radiobutton-icon"
-                        data-pc-section="icon"
-                      />
+                        aria-describedby="root_employment__error root_employment__description root_employment__help"
+                        className="p-radiobutton p-component"
+                        data-p-checked={false}
+                        data-pc-name="radiobutton"
+                        data-pc-section="root"
+                        id={null}
+                        onBlur={[Function]}
+                        onFocus={[Function]}
+                        style={{}}
+                      >
+                        <input
+                          aria-describedby="root_employment__error root_employment__description root_employment__help"
+                          className="p-radiobutton-input"
+                          data-pc-section="input"
+                          defaultChecked={false}
+                          id="root_employment-1"
+                          name="root_employment"
+                          onBlur={[Function]}
+                          onChange={[Function]}
+                          onFocus={[Function]}
+                          required={false}
+                          tabIndex={null}
+                          type="radio"
+                        />
+                        <div
+                          className="p-radiobutton-box"
+                          data-pc-section="box"
+                        >
+                          <div
+                            className="p-radiobutton-icon"
+                            data-pc-section="icon"
+                          />
+                        </div>
+                      </div>
+                      <label
+                        htmlFor="root_employment-1"
+                        style={
+                          {
+                            "marginLeft": "8px",
+                          }
+                        }
+                      >
+                        Education
+                      </label>
+                    </div>
+                    <div
+                      style={
+                        {
+                          "alignItems": "center",
+                          "display": "flex",
+                        }
+                      }
+                    >
+                      <div
+                        aria-describedby="root_employment__error root_employment__description root_employment__help"
+                        className="p-radiobutton p-component p-highlight"
+                        data-p-checked={true}
+                        data-pc-name="radiobutton"
+                        data-pc-section="root"
+                        id={null}
+                        onBlur={[Function]}
+                        onFocus={[Function]}
+                        style={{}}
+                      >
+                        <input
+                          aria-describedby="root_employment__error root_employment__description root_employment__help"
+                          className="p-radiobutton-input"
+                          data-pc-section="input"
+                          defaultChecked={true}
+                          id="root_employment-2"
+                          name="root_employment"
+                          onBlur={[Function]}
+                          onChange={[Function]}
+                          onFocus={[Function]}
+                          required={false}
+                          tabIndex={null}
+                          type="radio"
+                        />
+                        <div
+                          className="p-radiobutton-box"
+                          data-pc-section="box"
+                        >
+                          <div
+                            className="p-radiobutton-icon"
+                            data-pc-section="icon"
+                          />
+                        </div>
+                      </div>
+                      <label
+                        htmlFor="root_employment-2"
+                        style={
+                          {
+                            "marginLeft": "8px",
+                          }
+                        }
+                      >
+                        Other
+                      </label>
                     </div>
                   </div>
-                  <label
-                    htmlFor="root_employment-2"
-                    style={
-                      {
-                        "marginLeft": "8px",
-                      }
-                    }
-                  >
-                    Other
-                  </label>
                 </div>
               </div>
             </div>
             <div
-              data-testid="1"
               style={
                 {
                   "gridColumn": "span 12 / span 12",
@@ -5228,7 +5209,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               }
             >
               <div
-                className="form-group field field-string"
+                className="rjsf-field rjsf-field-string"
               >
                 <div
                   style={
@@ -5299,7 +5280,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       style={
@@ -5312,7 +5293,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
       }
     >
       <div
-        data-testid="0"
         style={
           {
             "alignItems": "start",
@@ -5323,7 +5303,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
         }
       >
         <div
-          data-testid="1"
           style={
             {
               "gridColumn": "span 12 / span 12",
@@ -5331,7 +5310,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
           }
         >
           <div
-            className="form-group field field-object"
+            className="rjsf-field rjsf-field-object"
           >
             <div
               style={
@@ -5381,7 +5360,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
           </div>
         </div>
         <div
-          data-testid="1"
           style={
             {
               "gridColumn": "span 4 / span 4",
@@ -5389,7 +5367,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
           }
         >
           <div
-            className="form-group field field-string"
+            className="rjsf-field rjsf-field-string"
           >
             <div
               style={
@@ -5433,7 +5411,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
           </div>
         </div>
         <div
-          data-testid="1"
           style={
             {
               "gridColumn": "span 4 / span 4",
@@ -5441,7 +5418,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
           }
         >
           <div
-            className="form-group field field-string"
+            className="rjsf-field rjsf-field-string"
           >
             <div
               style={
@@ -5484,7 +5461,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
           </div>
         </div>
         <div
-          data-testid="1"
           style={
             {
               "gridColumn": "span 4 / span 4",
@@ -5492,7 +5468,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
           }
         >
           <div
-            className="form-group field field-string"
+            className="rjsf-field rjsf-field-string"
           >
             <div
               style={
@@ -5536,7 +5512,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
           </div>
         </div>
         <div
-          data-testid="1"
           style={
             {
               "gridColumn": "span 4 / span 4",
@@ -5544,7 +5519,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
           }
         >
           <div
-            className="form-group field field-string"
+            className="rjsf-field rjsf-field-string"
           >
             <div
               style={
@@ -5588,7 +5563,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
           </div>
         </div>
         <div
-          data-testid="1"
           style={
             {
               "gridColumn": "span 8 / span 8",
@@ -5596,7 +5570,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
           }
         >
           <div
-            className="form-group field field-array"
+            className="rjsf-field rjsf-field-array"
           >
             <div
               style={
@@ -5633,7 +5607,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                   (Check all that apply)
                 </span>
                 <div
-                  className="field-checkbox"
                   style={
                     {
                       "alignItems": "center",
@@ -5689,7 +5662,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                   </label>
                 </div>
                 <div
-                  className="field-checkbox"
                   style={
                     {
                       "alignItems": "center",
@@ -5745,7 +5717,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                   </label>
                 </div>
                 <div
-                  className="field-checkbox"
                   style={
                     {
                       "alignItems": "center",
@@ -5801,7 +5772,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                   </label>
                 </div>
                 <div
-                  className="field-checkbox"
                   style={
                     {
                       "alignItems": "center",
@@ -5857,7 +5827,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
                   </label>
                 </div>
                 <div
-                  className="field-checkbox"
                   style={
                     {
                       "alignItems": "center",
@@ -5924,7 +5893,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
           </div>
         </div>
         <div
-          data-testid="1"
           style={
             {
               "gridColumn": "span 6 / span 6",
@@ -5932,7 +5900,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
           }
         >
           <div
-            data-testid="0"
             style={
               {
                 "alignItems": "start",
@@ -5943,7 +5910,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
             }
           >
             <div
-              data-testid="1"
               style={
                 {
                   "gridColumn": "span 12 / span 12",
@@ -5951,7 +5917,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               }
             >
               <div
-                className="form-group field field-string"
+                className="rjsf-field rjsf-field-string"
               >
                 <div
                   style={
@@ -5995,7 +5961,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
               </div>
             </div>
             <div
-              data-testid="1"
               style={
                 {
                   "gridColumn": "span 12 / span 12",
@@ -6003,7 +5968,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               }
             >
               <div
-                className="form-group field field-string"
+                className="rjsf-field rjsf-field-string"
               >
                 <div
                   style={
@@ -6046,7 +6011,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
               </div>
             </div>
             <div
-              data-testid="1"
               style={
                 {
                   "gridColumn": "span 12 / span 12",
@@ -6054,7 +6018,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               }
             >
               <div
-                className="form-group field field-string"
+                className="rjsf-field rjsf-field-string"
               >
                 <div
                   style={
@@ -6098,7 +6062,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
               </div>
             </div>
             <div
-              data-testid="1"
               style={
                 {
                   "gridColumn": "span 6 / span 6",
@@ -6106,7 +6069,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               }
             >
               <div
-                className="form-group field field-string"
+                className="rjsf-field rjsf-field-string"
               >
                 <div
                   style={
@@ -6425,7 +6388,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
               </div>
             </div>
             <div
-              data-testid="1"
               style={
                 {
                   "gridColumn": "span 6 / span 6",
@@ -6433,7 +6395,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               }
             >
               <div
-                className="form-group field field-string"
+                className="rjsf-field rjsf-field-string"
               >
                 <div
                   style={
@@ -6479,7 +6441,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
           </div>
         </div>
         <div
-          data-testid="1"
           style={
             {
               "gridColumn": "span 6 / span 6",
@@ -6487,7 +6448,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
           }
         >
           <div
-            data-testid="0"
             style={
               {
                 "alignItems": "start",
@@ -6498,188 +6458,205 @@ exports[`Complex grid renders person and address and employment in a complex gri
             }
           >
             <div
-              data-testid="1"
               style={
                 {
                   "gridColumn": "span 12 / span 12",
                 }
               }
             >
-              <div
-                style={
-                  {
-                    "display": "flex",
-                    "flexDirection": "row",
-                    "gap": "1rem",
-                  }
-                }
-              >
+              <div>
                 <div
                   style={
                     {
-                      "alignItems": "center",
                       "display": "flex",
+                      "flexDirection": "column",
+                      "gap": "0.5rem",
+                      "marginBottom": "1rem",
                     }
                   }
                 >
-                  <div
-                    aria-describedby="root_employment__error root_employment__description root_employment__help"
-                    className="p-radiobutton p-component p-highlight"
-                    data-p-checked={true}
-                    data-pc-name="radiobutton"
-                    data-pc-section="root"
-                    id={null}
-                    onBlur={[Function]}
-                    onFocus={[Function]}
-                    style={{}}
-                  >
-                    <input
-                      aria-describedby="root_employment__error root_employment__description root_employment__help"
-                      className="p-radiobutton-input"
-                      data-pc-section="input"
-                      defaultChecked={true}
-                      id="root_employment-0"
-                      name="root_employment"
-                      onBlur={[Function]}
-                      onChange={[Function]}
-                      onFocus={[Function]}
-                      required={false}
-                      tabIndex={null}
-                      type="radio"
-                    />
-                    <div
-                      className="p-radiobutton-box"
-                      data-pc-section="box"
-                    >
-                      <div
-                        className="p-radiobutton-icon"
-                        data-pc-section="icon"
-                      />
-                    </div>
-                  </div>
                   <label
-                    htmlFor="root_employment-0"
+                    htmlFor="root_employment"
+                  >
+                    Employment
+                     
+                  </label>
+                  <div
                     style={
                       {
-                        "marginLeft": "8px",
+                        "display": "flex",
+                        "flexDirection": "row",
+                        "gap": "1rem",
                       }
                     }
                   >
-                    Company
-                  </label>
-                </div>
-                <div
-                  style={
-                    {
-                      "alignItems": "center",
-                      "display": "flex",
-                    }
-                  }
-                >
-                  <div
-                    aria-describedby="root_employment__error root_employment__description root_employment__help"
-                    className="p-radiobutton p-component"
-                    data-p-checked={false}
-                    data-pc-name="radiobutton"
-                    data-pc-section="root"
-                    id={null}
-                    onBlur={[Function]}
-                    onFocus={[Function]}
-                    style={{}}
-                  >
-                    <input
-                      aria-describedby="root_employment__error root_employment__description root_employment__help"
-                      className="p-radiobutton-input"
-                      data-pc-section="input"
-                      defaultChecked={false}
-                      id="root_employment-1"
-                      name="root_employment"
-                      onBlur={[Function]}
-                      onChange={[Function]}
-                      onFocus={[Function]}
-                      required={false}
-                      tabIndex={null}
-                      type="radio"
-                    />
                     <div
-                      className="p-radiobutton-box"
-                      data-pc-section="box"
+                      style={
+                        {
+                          "alignItems": "center",
+                          "display": "flex",
+                        }
+                      }
                     >
                       <div
-                        className="p-radiobutton-icon"
-                        data-pc-section="icon"
-                      />
+                        aria-describedby="root_employment__error root_employment__description root_employment__help"
+                        className="p-radiobutton p-component p-highlight"
+                        data-p-checked={true}
+                        data-pc-name="radiobutton"
+                        data-pc-section="root"
+                        id={null}
+                        onBlur={[Function]}
+                        onFocus={[Function]}
+                        style={{}}
+                      >
+                        <input
+                          aria-describedby="root_employment__error root_employment__description root_employment__help"
+                          className="p-radiobutton-input"
+                          data-pc-section="input"
+                          defaultChecked={true}
+                          id="root_employment-0"
+                          name="root_employment"
+                          onBlur={[Function]}
+                          onChange={[Function]}
+                          onFocus={[Function]}
+                          required={false}
+                          tabIndex={null}
+                          type="radio"
+                        />
+                        <div
+                          className="p-radiobutton-box"
+                          data-pc-section="box"
+                        >
+                          <div
+                            className="p-radiobutton-icon"
+                            data-pc-section="icon"
+                          />
+                        </div>
+                      </div>
+                      <label
+                        htmlFor="root_employment-0"
+                        style={
+                          {
+                            "marginLeft": "8px",
+                          }
+                        }
+                      >
+                        Company
+                      </label>
                     </div>
-                  </div>
-                  <label
-                    htmlFor="root_employment-1"
-                    style={
-                      {
-                        "marginLeft": "8px",
-                      }
-                    }
-                  >
-                    Education
-                  </label>
-                </div>
-                <div
-                  style={
-                    {
-                      "alignItems": "center",
-                      "display": "flex",
-                    }
-                  }
-                >
-                  <div
-                    aria-describedby="root_employment__error root_employment__description root_employment__help"
-                    className="p-radiobutton p-component"
-                    data-p-checked={false}
-                    data-pc-name="radiobutton"
-                    data-pc-section="root"
-                    id={null}
-                    onBlur={[Function]}
-                    onFocus={[Function]}
-                    style={{}}
-                  >
-                    <input
-                      aria-describedby="root_employment__error root_employment__description root_employment__help"
-                      className="p-radiobutton-input"
-                      data-pc-section="input"
-                      defaultChecked={false}
-                      id="root_employment-2"
-                      name="root_employment"
-                      onBlur={[Function]}
-                      onChange={[Function]}
-                      onFocus={[Function]}
-                      required={false}
-                      tabIndex={null}
-                      type="radio"
-                    />
                     <div
-                      className="p-radiobutton-box"
-                      data-pc-section="box"
+                      style={
+                        {
+                          "alignItems": "center",
+                          "display": "flex",
+                        }
+                      }
                     >
                       <div
-                        className="p-radiobutton-icon"
-                        data-pc-section="icon"
-                      />
+                        aria-describedby="root_employment__error root_employment__description root_employment__help"
+                        className="p-radiobutton p-component"
+                        data-p-checked={false}
+                        data-pc-name="radiobutton"
+                        data-pc-section="root"
+                        id={null}
+                        onBlur={[Function]}
+                        onFocus={[Function]}
+                        style={{}}
+                      >
+                        <input
+                          aria-describedby="root_employment__error root_employment__description root_employment__help"
+                          className="p-radiobutton-input"
+                          data-pc-section="input"
+                          defaultChecked={false}
+                          id="root_employment-1"
+                          name="root_employment"
+                          onBlur={[Function]}
+                          onChange={[Function]}
+                          onFocus={[Function]}
+                          required={false}
+                          tabIndex={null}
+                          type="radio"
+                        />
+                        <div
+                          className="p-radiobutton-box"
+                          data-pc-section="box"
+                        >
+                          <div
+                            className="p-radiobutton-icon"
+                            data-pc-section="icon"
+                          />
+                        </div>
+                      </div>
+                      <label
+                        htmlFor="root_employment-1"
+                        style={
+                          {
+                            "marginLeft": "8px",
+                          }
+                        }
+                      >
+                        Education
+                      </label>
+                    </div>
+                    <div
+                      style={
+                        {
+                          "alignItems": "center",
+                          "display": "flex",
+                        }
+                      }
+                    >
+                      <div
+                        aria-describedby="root_employment__error root_employment__description root_employment__help"
+                        className="p-radiobutton p-component"
+                        data-p-checked={false}
+                        data-pc-name="radiobutton"
+                        data-pc-section="root"
+                        id={null}
+                        onBlur={[Function]}
+                        onFocus={[Function]}
+                        style={{}}
+                      >
+                        <input
+                          aria-describedby="root_employment__error root_employment__description root_employment__help"
+                          className="p-radiobutton-input"
+                          data-pc-section="input"
+                          defaultChecked={false}
+                          id="root_employment-2"
+                          name="root_employment"
+                          onBlur={[Function]}
+                          onChange={[Function]}
+                          onFocus={[Function]}
+                          required={false}
+                          tabIndex={null}
+                          type="radio"
+                        />
+                        <div
+                          className="p-radiobutton-box"
+                          data-pc-section="box"
+                        >
+                          <div
+                            className="p-radiobutton-icon"
+                            data-pc-section="icon"
+                          />
+                        </div>
+                      </div>
+                      <label
+                        htmlFor="root_employment-2"
+                        style={
+                          {
+                            "marginLeft": "8px",
+                          }
+                        }
+                      >
+                        Other
+                      </label>
                     </div>
                   </div>
-                  <label
-                    htmlFor="root_employment-2"
-                    style={
-                      {
-                        "marginLeft": "8px",
-                      }
-                    }
-                  >
-                    Other
-                  </label>
                 </div>
               </div>
             </div>
             <div
-              data-testid="1"
               style={
                 {
                   "gridColumn": "span 12 / span 12",
@@ -6687,7 +6664,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               }
             >
               <div
-                className="form-group field field-string"
+                className="rjsf-field rjsf-field-string"
               >
                 <div
                   style={
@@ -6731,7 +6708,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
               </div>
             </div>
             <div
-              data-testid="1"
               style={
                 {
                   "gridColumn": "span 12 / span 12",
@@ -6739,7 +6715,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               }
             >
               <div
-                className="form-group field field-string"
+                className="rjsf-field rjsf-field-string"
               >
                 <div
                   style={
@@ -6782,7 +6758,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
               </div>
             </div>
             <div
-              data-testid="1"
               style={
                 {
                   "gridColumn": "span 12 / span 12",
@@ -6790,7 +6765,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               }
             >
               <div
-                className="form-group field field-string"
+                className="rjsf-field rjsf-field-string"
               >
                 <div
                   style={
@@ -6834,7 +6809,6 @@ exports[`Complex grid renders person and address and employment in a complex gri
               </div>
             </div>
             <div
-              data-testid="1"
               style={
                 {
                   "gridColumn": "span 12 / span 12",
@@ -6842,7 +6816,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
               }
             >
               <div
-                className="form-group field field-string"
+                className="rjsf-field rjsf-field-string"
               >
                 <div
                   style={
@@ -7190,7 +7164,7 @@ exports[`Three even column grid renders person and address in three columns, no 
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       style={
@@ -7203,7 +7177,6 @@ exports[`Three even column grid renders person and address in three columns, no 
       }
     >
       <div
-        data-testid="0"
         style={
           {
             "alignItems": "start",
@@ -7214,7 +7187,6 @@ exports[`Three even column grid renders person and address in three columns, no 
         }
       >
         <div
-          data-testid="1"
           style={
             {
               "gridColumn": "span 12 / span 12",
@@ -7222,7 +7194,7 @@ exports[`Three even column grid renders person and address in three columns, no 
           }
         >
           <div
-            className="form-group field field-object"
+            className="rjsf-field rjsf-field-object"
           >
             <div
               style={
@@ -7272,7 +7244,6 @@ exports[`Three even column grid renders person and address in three columns, no 
           </div>
         </div>
         <div
-          data-testid="1"
           style={
             {
               "gridColumn": "span 4 / span 4",
@@ -7280,7 +7251,7 @@ exports[`Three even column grid renders person and address in three columns, no 
           }
         >
           <div
-            className="form-group field field-string"
+            className="rjsf-field rjsf-field-string"
           >
             <div
               style={
@@ -7324,7 +7295,6 @@ exports[`Three even column grid renders person and address in three columns, no 
           </div>
         </div>
         <div
-          data-testid="1"
           style={
             {
               "gridColumn": "span 4 / span 4",
@@ -7332,7 +7302,7 @@ exports[`Three even column grid renders person and address in three columns, no 
           }
         >
           <div
-            className="form-group field field-string"
+            className="rjsf-field rjsf-field-string"
           >
             <div
               style={
@@ -7375,7 +7345,6 @@ exports[`Three even column grid renders person and address in three columns, no 
           </div>
         </div>
         <div
-          data-testid="1"
           style={
             {
               "gridColumn": "span 4 / span 4",
@@ -7383,7 +7352,7 @@ exports[`Three even column grid renders person and address in three columns, no 
           }
         >
           <div
-            className="form-group field field-string"
+            className="rjsf-field rjsf-field-string"
           >
             <div
               style={
@@ -7427,7 +7396,6 @@ exports[`Three even column grid renders person and address in three columns, no 
           </div>
         </div>
         <div
-          data-testid="1"
           style={
             {
               "gridColumn": "span 4 / span 4",
@@ -7435,7 +7403,7 @@ exports[`Three even column grid renders person and address in three columns, no 
           }
         >
           <div
-            className="form-group field field-string"
+            className="rjsf-field rjsf-field-string"
           >
             <div
               style={
@@ -7479,7 +7447,6 @@ exports[`Three even column grid renders person and address in three columns, no 
           </div>
         </div>
         <div
-          data-testid="1"
           style={
             {
               "gridColumn": "span 8 / span 8",
@@ -7487,7 +7454,7 @@ exports[`Three even column grid renders person and address in three columns, no 
           }
         >
           <div
-            className="form-group field field-array"
+            className="rjsf-field rjsf-field-array"
           >
             <div
               style={
@@ -7524,7 +7491,6 @@ exports[`Three even column grid renders person and address in three columns, no 
                   (Check all that apply)
                 </span>
                 <div
-                  className="field-checkbox"
                   style={
                     {
                       "alignItems": "center",
@@ -7580,7 +7546,6 @@ exports[`Three even column grid renders person and address in three columns, no 
                   </label>
                 </div>
                 <div
-                  className="field-checkbox"
                   style={
                     {
                       "alignItems": "center",
@@ -7636,7 +7601,6 @@ exports[`Three even column grid renders person and address in three columns, no 
                   </label>
                 </div>
                 <div
-                  className="field-checkbox"
                   style={
                     {
                       "alignItems": "center",
@@ -7692,7 +7656,6 @@ exports[`Three even column grid renders person and address in three columns, no 
                   </label>
                 </div>
                 <div
-                  className="field-checkbox"
                   style={
                     {
                       "alignItems": "center",
@@ -7748,7 +7711,6 @@ exports[`Three even column grid renders person and address in three columns, no 
                   </label>
                 </div>
                 <div
-                  className="field-checkbox"
                   style={
                     {
                       "alignItems": "center",
@@ -7815,7 +7777,6 @@ exports[`Three even column grid renders person and address in three columns, no 
           </div>
         </div>
         <div
-          data-testid="1"
           style={
             {
               "gridColumn": "span 6 / span 6",
@@ -7823,7 +7784,7 @@ exports[`Three even column grid renders person and address in three columns, no 
           }
         >
           <div
-            className="form-group field field-string"
+            className="rjsf-field rjsf-field-string"
           >
             <div
               style={
@@ -7867,7 +7828,6 @@ exports[`Three even column grid renders person and address in three columns, no 
           </div>
         </div>
         <div
-          data-testid="1"
           style={
             {
               "gridColumn": "span 6 / span 6",
@@ -7875,7 +7835,7 @@ exports[`Three even column grid renders person and address in three columns, no 
           }
         >
           <div
-            className="form-group field field-string"
+            className="rjsf-field rjsf-field-string"
           >
             <div
               style={
@@ -7918,7 +7878,6 @@ exports[`Three even column grid renders person and address in three columns, no 
           </div>
         </div>
         <div
-          data-testid="1"
           style={
             {
               "gridColumn": "span 4 / span 4",
@@ -7926,7 +7885,7 @@ exports[`Three even column grid renders person and address in three columns, no 
           }
         >
           <div
-            className="form-group field field-string"
+            className="rjsf-field rjsf-field-string"
           >
             <div
               style={
@@ -7970,7 +7929,6 @@ exports[`Three even column grid renders person and address in three columns, no 
           </div>
         </div>
         <div
-          data-testid="1"
           style={
             {
               "gridColumn": "span 4 / span 4",
@@ -7978,7 +7936,7 @@ exports[`Three even column grid renders person and address in three columns, no 
           }
         >
           <div
-            className="form-group field field-string"
+            className="rjsf-field rjsf-field-string"
           >
             <div
               style={
@@ -8297,7 +8255,6 @@ exports[`Three even column grid renders person and address in three columns, no 
           </div>
         </div>
         <div
-          data-testid="1"
           style={
             {
               "gridColumn": "span 4 / span 4",
@@ -8332,7 +8289,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
       style={
@@ -8345,7 +8302,6 @@ exports[`Two even column grid renders person and address in two columns, no empl
       }
     >
       <div
-        data-testid="0"
         style={
           {
             "alignItems": "start",
@@ -8356,7 +8312,6 @@ exports[`Two even column grid renders person and address in two columns, no empl
         }
       >
         <div
-          data-testid="1"
           style={
             {
               "gridColumn": "span 12 / span 12",
@@ -8364,7 +8319,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
           }
         >
           <div
-            className="form-group field field-object"
+            className="rjsf-field rjsf-field-object"
           >
             <div
               style={
@@ -8414,7 +8369,6 @@ exports[`Two even column grid renders person and address in two columns, no empl
           </div>
         </div>
         <div
-          data-testid="1"
           style={
             {
               "gridColumn": "span 6 / span 6",
@@ -8422,7 +8376,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
           }
         >
           <div
-            className="form-group field field-string"
+            className="rjsf-field rjsf-field-string"
           >
             <div
               style={
@@ -8466,7 +8420,6 @@ exports[`Two even column grid renders person and address in two columns, no empl
           </div>
         </div>
         <div
-          data-testid="1"
           style={
             {
               "gridColumn": "span 6 / span 6",
@@ -8474,7 +8427,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
           }
         >
           <div
-            className="form-group field field-string"
+            className="rjsf-field rjsf-field-string"
           >
             <div
               style={
@@ -8517,7 +8470,6 @@ exports[`Two even column grid renders person and address in two columns, no empl
           </div>
         </div>
         <div
-          data-testid="1"
           style={
             {
               "gridColumn": "span 6 / span 6",
@@ -8525,7 +8477,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
           }
         >
           <div
-            className="form-group field field-string"
+            className="rjsf-field rjsf-field-string"
           >
             <div
               style={
@@ -8569,7 +8521,6 @@ exports[`Two even column grid renders person and address in two columns, no empl
           </div>
         </div>
         <div
-          data-testid="1"
           style={
             {
               "gridColumn": "span 6 / span 6",
@@ -8577,7 +8528,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
           }
         >
           <div
-            className="form-group field field-string"
+            className="rjsf-field rjsf-field-string"
           >
             <div
               style={
@@ -8621,7 +8572,6 @@ exports[`Two even column grid renders person and address in two columns, no empl
           </div>
         </div>
         <div
-          data-testid="1"
           style={
             {
               "gridColumn": "span 12 / span 12",
@@ -8629,7 +8579,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
           }
         >
           <div
-            className="form-group field field-array"
+            className="rjsf-field rjsf-field-array"
           >
             <div
               style={
@@ -8666,7 +8616,6 @@ exports[`Two even column grid renders person and address in two columns, no empl
                   (Check all that apply)
                 </span>
                 <div
-                  className="field-checkbox"
                   style={
                     {
                       "alignItems": "center",
@@ -8722,7 +8671,6 @@ exports[`Two even column grid renders person and address in two columns, no empl
                   </label>
                 </div>
                 <div
-                  className="field-checkbox"
                   style={
                     {
                       "alignItems": "center",
@@ -8778,7 +8726,6 @@ exports[`Two even column grid renders person and address in two columns, no empl
                   </label>
                 </div>
                 <div
-                  className="field-checkbox"
                   style={
                     {
                       "alignItems": "center",
@@ -8834,7 +8781,6 @@ exports[`Two even column grid renders person and address in two columns, no empl
                   </label>
                 </div>
                 <div
-                  className="field-checkbox"
                   style={
                     {
                       "alignItems": "center",
@@ -8890,7 +8836,6 @@ exports[`Two even column grid renders person and address in two columns, no empl
                   </label>
                 </div>
                 <div
-                  className="field-checkbox"
                   style={
                     {
                       "alignItems": "center",
@@ -8957,7 +8902,6 @@ exports[`Two even column grid renders person and address in two columns, no empl
           </div>
         </div>
         <div
-          data-testid="1"
           style={
             {
               "gridColumn": "span 6 / span 6",
@@ -8965,7 +8909,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
           }
         >
           <div
-            className="form-group field field-string"
+            className="rjsf-field rjsf-field-string"
           >
             <div
               style={
@@ -9009,7 +8953,6 @@ exports[`Two even column grid renders person and address in two columns, no empl
           </div>
         </div>
         <div
-          data-testid="1"
           style={
             {
               "gridColumn": "span 6 / span 6",
@@ -9017,7 +8960,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
           }
         >
           <div
-            className="form-group field field-string"
+            className="rjsf-field rjsf-field-string"
           >
             <div
               style={
@@ -9060,7 +9003,6 @@ exports[`Two even column grid renders person and address in two columns, no empl
           </div>
         </div>
         <div
-          data-testid="1"
           style={
             {
               "gridColumn": "span 6 / span 6",
@@ -9068,7 +9010,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
           }
         >
           <div
-            className="form-group field field-string"
+            className="rjsf-field rjsf-field-string"
           >
             <div
               style={
@@ -9112,7 +9054,6 @@ exports[`Two even column grid renders person and address in two columns, no empl
           </div>
         </div>
         <div
-          data-testid="1"
           style={
             {
               "gridColumn": "span 6 / span 6",
@@ -9120,7 +9061,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
           }
         >
           <div
-            className="form-group field field-string"
+            className="rjsf-field rjsf-field-string"
           >
             <div
               style={
@@ -9439,7 +9380,6 @@ exports[`Two even column grid renders person and address in two columns, no empl
           </div>
         </div>
         <div
-          data-testid="1"
           style={
             {
               "gridColumn": "span 12 / span 12",
