@@ -42,6 +42,7 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/util
 
 - Updated the `Field` type to add the optional `TEST_IDS?: TestIdShape` prop to it to support exposing the `TEST_IDS` static prop on `LayoutGridField`, `LayoutHeaderField` and `LayoutMultiSchemaField` for external users
+- Fixed issue where oneOf schema references could not be modified when defaults were set, fixing [#4580](https://github.com/rjsf-team/react-jsonschema-form/issues/4580).
 
 # 6.0.0-beta.5
 
