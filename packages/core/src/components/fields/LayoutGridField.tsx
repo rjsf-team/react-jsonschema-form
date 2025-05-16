@@ -22,6 +22,7 @@ import {
   SchemaUtilsType,
   StrictRJSFSchema,
   UI_OPTIONS_KEY,
+  UI_GLOBAL_OPTIONS_KEY,
   UiSchema,
 } from '@rjsf/utils';
 import cloneDeep from 'lodash/cloneDeep';
@@ -100,10 +101,6 @@ export const LAYOUT_GRID_UI_OPTION = 'layoutGrid';
 /** The constant representing the main layout grid schema option name in the `uiSchema`
  */
 export const LAYOUT_GRID_OPTION = `ui:${LAYOUT_GRID_UI_OPTION}`;
-
-/** The constant representing the global UI Options object potentially contained within the `uiSchema`
- */
-export const UI_GLOBAL_OPTIONS = 'ui:global_options';
 
 /** Type used to return options list and whether it has a discriminator */
 type OneOfOptionsInfoType<S extends StrictRJSFSchema = RJSFSchema> = { options: S[]; hasDiscriminator: boolean };
@@ -386,7 +383,7 @@ export default class LayoutGridField<
     schemaReadonly?: boolean,
     forceReadonly?: boolean,
   ) {
-    const globalUiOptions = get(uiSchema, [UI_GLOBAL_OPTIONS], {});
+    const globalUiOptions = get(uiSchema, [UI_GLOBAL_OPTIONS_KEY], {});
     const localUiSchema = get(uiSchema, field);
     const localUiOptions = { ...get(localUiSchema, [UI_OPTIONS_KEY], {}), ...uiProps, ...globalUiOptions };
     const fieldUiSchema = { ...localUiSchema };
@@ -395,7 +392,7 @@ export default class LayoutGridField<
     }
     if (!isEmpty(globalUiOptions)) {
       // pass the global uiOptions down to the field uiSchema so that they can be applied to all nested fields
-      set(fieldUiSchema, [UI_GLOBAL_OPTIONS], globalUiOptions);
+      set(fieldUiSchema, [UI_GLOBAL_OPTIONS_KEY], globalUiOptions);
     }
     let { readonly: uiReadonly } = getUiOptions<T, S, F>(fieldUiSchema);
     if (forceReadonly === true || (isUndefined(uiReadonly) && schemaReadonly === true)) {

@@ -370,9 +370,10 @@ export type TemplatesType<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
 };
 
 /** The set of UiSchema options that can be set globally and used as fallbacks at an individual template, field or
- * widget level when no field-level value of the option is provided.
+ * widget level when no field-level value of the option is provided. Extends GenericObjectType to support allowing users
+ * to provide any value they need for their customizations.
  */
-export type GlobalUISchemaOptions = {
+export type GlobalUISchemaOptions = GenericObjectType & {
   /** Flag, if set to `false`, new items cannot be added to array fields, unless overridden (defaults to true) */
   addable?: boolean;
   /** Flag, if set to `true`, array items can be copied (defaults to false) */
