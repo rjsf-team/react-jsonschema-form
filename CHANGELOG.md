@@ -23,10 +23,15 @@ should change the heading of the (upcoming) version to include a major version b
 - Added `getChakra` to package exports
 - Restored the `ui:options` customization
 
+## @rjsf/core
+
+- Updated `LayoutGridField` to use the pre-existing `UI_GLOBAL_OPTIONS_KEY` instead of its own incorrect one.
+
 ## @rjsf/util
 
 - Fixed form data propagation with `patternProperties` [#4617](https://github.com/rjsf-team/react-jsonschema-form/pull/4617)
 - Fixed issue where oneOf schema references could not be modified when defaults were set, fixing [#4580](https://github.com/rjsf-team/react-jsonschema-form/issues/4580).
+- Updated the `GlobalUISchemaOptions` types to extend `GenericObjectType` to support user-defined values for their extensions
 
 ## Dev / docs / playground
 
