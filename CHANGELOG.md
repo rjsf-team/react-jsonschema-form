@@ -25,7 +25,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/core
 
-- Updated `LayoutGridField` to use the pre-existing `UI_GLOBAL_OPTIONS_KEY` instead of its own, incorrect one.
+- Updated `LayoutGridField` to use the pre-existing `UI_GLOBAL_OPTIONS_KEY` instead of its own incorrect one.
 
 ## @rjsf/util
 
