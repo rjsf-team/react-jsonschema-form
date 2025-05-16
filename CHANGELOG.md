@@ -18,14 +18,15 @@ should change the heading of the (upcoming) version to include a major version b
 
 # 6.0.0-beta.8
 
-## @rjsf/util
-
-- Fixed form data propagation with `patternProperties` [#4617](https://github.com/rjsf-team/react-jsonschema-form/pull/4617)
-
 ## @rjsf/chakra-ui
 
 - Added `getChakra` to package exports
 - Restored the `ui:options` customization
+
+## @rjsf/util
+
+- Fixed form data propagation with `patternProperties` [#4617](https://github.com/rjsf-team/react-jsonschema-form/pull/4617)
+- Fixed issue where oneOf schema references could not be modified when defaults were set, fixing [#4580](https://github.com/rjsf-team/react-jsonschema-form/issues/4580).
 
 ## Dev / docs / playground
 
