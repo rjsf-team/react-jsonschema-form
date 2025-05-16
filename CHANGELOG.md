@@ -19,6 +19,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/utils
 
+- (Backported change from 6.0.0-beta.8) Fixed issue where oneOf schema references could not be modified when defaults were set, fixing [#4580](https://github.com/rjsf-team/react-jsonschema-form/issues/4580).
 - (Backported change from 6.0.0-beta.11) Fixed issue where oneOf radio button could not be modified when defaults were set, fixing [#4634](https://github.com/rjsf-team/react-jsonschema-form/issues/4634)
 
 # 5.24.10

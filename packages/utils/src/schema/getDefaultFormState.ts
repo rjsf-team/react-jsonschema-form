@@ -204,7 +204,7 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
     required,
     shouldMergeDefaultsIntoFormData = false,
   } = computeDefaultsProps;
-  const formData: T = (isObject(rawFormData) ? rawFormData : {}) as T;
+  let formData: T = (isObject(rawFormData) ? rawFormData : {}) as T;
   const schema: S = isObject(rawSchema) ? rawSchema : ({} as S);
   // Compute the defaults recursively: give highest priority to deepest nodes.
   let defaults: T | T[] | undefined = parentDefaults;
@@ -212,7 +212,6 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
   let schemaToCompute: S | null = null;
   let experimental_dfsb_to_compute = experimental_defaultFormStateBehavior;
   let updatedRecurseList = _recurseList;
-
   if (
     schema[CONST_KEY] !== undefined &&
     experimental_defaultFormStateBehavior?.constAsDefaults !== 'never' &&
@@ -233,6 +232,19 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
     if (!_recurseList.includes(refName!)) {
       updatedRecurseList = _recurseList.concat(refName!);
       schemaToCompute = findSchemaDefinition<S>(refName, rootSchema);
+    }
+
+    // If the referenced schema exists and parentDefaults is not set
+    // Then set the defaults from the current schema for the referenced schema
+    if (schemaToCompute && !defaults) {
+      defaults = schema.default as T | undefined;
+    }
+
+    // If shouldMergeDefaultsIntoFormData is true
+    // And the schemaToCompute is set and the rawFormData is not an object
+    // Then set the formData to the rawFormData
+    if (shouldMergeDefaultsIntoFormData && schemaToCompute && !isObject(rawFormData)) {
+      formData = rawFormData as T;
     }
   } else if (DEPENDENCIES_KEY in schema) {
     // Get the default if set from properties to ensure the dependencies conditions are resolved based on it
