@@ -85,7 +85,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## Dev / docs / playground
 
-- Updated precompiled schemas documentation in `validation.md` based on v6 changes, addressingg [#4618](https://github.com/rjsf-team/react-jsonschema-form/issues/4618)
+- Updated precompiled schemas documentation in `validation.md` based on v6 changes, addressing [#4618](https://github.com/rjsf-team/react-jsonschema-form/issues/4618)
 
 # 6.0.0-beta.7
 
