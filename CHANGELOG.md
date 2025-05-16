@@ -16,12 +16,19 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 6.0.0-beta.9
+
+## @rjsf/chakra-ui
+
+- Updated `SelectWidget` to only pick the first element in a list when single selection is active, fixing [#4623](https://github.com/rjsf-team/react-jsonschema-form/issues/4623)
+
 # 6.0.0-beta.8
 
 ## @rjsf/chakra-ui
 
 - Added `getChakra` to package exports
 - Restored the `ui:options` customization
+- Updated `SelectWidget` to only pick the first element in a list when single selection is active, fixing [#4623](https://github.com/rjsf-team/react-jsonschema-form/issues/4623)
 
 ## @rjsf/core
 
