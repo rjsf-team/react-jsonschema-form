@@ -76,14 +76,13 @@ export default function BaseInputTemplate<
         autoFocus={autofocus}
         required={required}
         disabled={disabled || readonly}
-        inputProps={htmlInputProps}
+        slotProps={{ htmlInput: htmlInputProps, inputLabel: DisplayInputLabelProps }}
         {...rest}
         value={value || value === 0 ? value : ''}
         error={rawErrors.length > 0}
         onChange={onChangeOverride || _onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
-        InputLabelProps={DisplayInputLabelProps}
         {...(textFieldProps as TextFieldProps)}
         aria-describedby={ariaDescribedByIds<T>(id, !!schema.examples)}
       />
