@@ -20,7 +20,7 @@ import isNil from 'lodash/isNil';
  * @param [formData] - The form data into which the defaults will be merged
  * @param [mergeExtraArrayDefaults=false] - If true, any additional default array entries are appended onto the formData
  * @param [defaultSupercedesUndefined=false] - If true, an explicit undefined value will be overwritten by the default value
- * @param [overrideFormDataWithDefaults=false] - If true, the default value will overwrite the form data value. If the value
+ * @param [overrideFormDataWithDefaultsStrategy='noop'] - If not 'noop', the default value will overwrite the form data value. Values can be either replaced or merged, if the value
  *        doesn't exist in the default, we take it from formData and in the case where the value is set to undefined in formData.
  *       This is useful when we have already merged formData with defaults and want to add an additional field from formData
  *       that does not exist in defaults.
@@ -31,14 +31,14 @@ export default function mergeDefaultsWithFormData<T = any>(
   formData?: T,
   mergeExtraArrayDefaults = false,
   defaultSupercedesUndefined = false,
-  overrideFormDataWithDefaults = false,
+  overrideFormDataWithDefaultsStrategy: 'noop' | 'replace' | 'merge' = 'noop',
 ): T | undefined {
   if (Array.isArray(formData)) {
     const defaultsArray = Array.isArray(defaults) ? defaults : [];
 
-    // If overrideFormDataWithDefaults is true, we want to override the formData with the defaults
-    const overrideArray = overrideFormDataWithDefaults ? defaultsArray : formData;
-    const overrideOppositeArray = overrideFormDataWithDefaults ? formData : defaultsArray;
+    // If overrideFormDataWithDefaultsStrategy is not noop, we want to override the formData with the defaults
+    const overrideArray = overrideFormDataWithDefaultsStrategy !== 'noop' ? defaultsArray : formData;
+    const overrideOppositeArray = overrideFormDataWithDefaultsStrategy !== 'noop' ? formData : defaultsArray;
 
     const mapped = overrideArray.map((value, idx) => {
       // We want to explicitly make sure that the value is NOT undefined since null, 0 and empty space are valid values
@@ -48,33 +48,43 @@ export default function mergeDefaultsWithFormData<T = any>(
           formData[idx],
           mergeExtraArrayDefaults,
           defaultSupercedesUndefined,
-          overrideFormDataWithDefaults,
+          overrideFormDataWithDefaultsStrategy,
         );
       }
       return value;
     });
 
     // Merge any extra defaults when mergeExtraArrayDefaults is true
-    // Or when overrideFormDataWithDefaults is true and the default array is shorter than the formData array
-    if ((mergeExtraArrayDefaults || overrideFormDataWithDefaults) && mapped.length < overrideOppositeArray.length) {
+    // Or when overrideFormDataWithDefaults is not noop and the default array is shorter than the formData array
+    if (
+      (mergeExtraArrayDefaults || overrideFormDataWithDefaultsStrategy === 'merge') &&
+      mapped.length < overrideOppositeArray.length
+    ) {
       mapped.push(...overrideOppositeArray.slice(mapped.length));
     }
     return mapped as unknown as T;
   }
   if (isObject(formData)) {
+    const iterationSource = overrideFormDataWithDefaultsStrategy === 'replace' ? (defaults ?? {}) : formData;
     const acc: { [key in keyof T]: any } = Object.assign({}, defaults); // Prevent mutation of source object.
-    return Object.keys(formData as GenericObjectType).reduce((acc, key) => {
+    return Object.keys(iterationSource as GenericObjectType).reduce((acc, key) => {
       const keyValue = get(formData, key);
       const keyExistsInDefaults = isObject(defaults) && key in (defaults as GenericObjectType);
       const keyExistsInFormData = key in (formData as GenericObjectType);
+      // overrideFormDataWithDefaultsStrategy can be 'merge' only when the key value exists in defaults
+      // Or if the key value doesn't exist in formData
+      const keyOverrideDefaultStrategy =
+        overrideFormDataWithDefaultsStrategy === 'replace'
+          ? 'replace'
+          : keyExistsInDefaults || !keyExistsInFormData
+            ? overrideFormDataWithDefaultsStrategy
+            : 'noop';
       acc[key as keyof T] = mergeDefaultsWithFormData<T>(
         defaults ? get(defaults, key) : {},
         keyValue,
         mergeExtraArrayDefaults,
         defaultSupercedesUndefined,
-        // overrideFormDataWithDefaults can be true only when the key value exists in defaults
-        // Or if the key value doesn't exist in formData
-        overrideFormDataWithDefaults && (keyExistsInDefaults || !keyExistsInFormData),
+        keyOverrideDefaultStrategy,
       );
       return acc;
     }, acc);
@@ -89,10 +99,10 @@ export default function mergeDefaultsWithFormData<T = any>(
   if (
     (defaultSupercedesUndefined &&
       ((!isNil(defaults) && isNil(formData)) || (typeof formData === 'number' && isNaN(formData)))) ||
-    (overrideFormDataWithDefaults && !isNil(formData))
+    (overrideFormDataWithDefaultsStrategy === 'merge' && !isNil(formData))
   ) {
     return defaults;
   }
 
-  return formData;
+  return overrideFormDataWithDefaultsStrategy === 'replace' ? defaults : formData;
 }

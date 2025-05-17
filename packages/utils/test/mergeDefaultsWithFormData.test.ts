@@ -141,13 +141,13 @@ describe('mergeDefaultsWithFormData()', () => {
     expect(mergeDefaultsWithFormData(obj1, obj2)?.a).toBeInstanceOf(File);
   });
 
-  describe('test with overrideFormDataWithDefaults set to true', () => {
+  describe('test with overrideFormDataWithDefaults set to `merge`', () => {
     it('should return data in formData when no defaults', () => {
-      expect(mergeDefaultsWithFormData(undefined, [2], undefined, undefined, true)).toEqual([2]);
+      expect(mergeDefaultsWithFormData(undefined, [2], undefined, undefined, 'merge')).toEqual([2]);
     });
 
     it('should return formData when formData is undefined', () => {
-      expect(mergeDefaultsWithFormData({}, undefined, undefined, undefined, true)).toEqual(undefined);
+      expect(mergeDefaultsWithFormData({}, undefined, undefined, undefined, 'merge')).toEqual(undefined);
     });
 
     it('should deeply merge and return formData when formData is undefined and defaultSupercedesUndefined false', () => {
@@ -170,7 +170,7 @@ describe('mergeDefaultsWithFormData()', () => {
           },
           undefined,
           undefined,
-          true,
+          'merge',
         ),
       ).toEqual({
         arrayWithDefaults: [null],
@@ -183,42 +183,42 @@ describe('mergeDefaultsWithFormData()', () => {
     });
 
     it('should return default when formData is undefined and defaultSupercedesUndefined true', () => {
-      expect(mergeDefaultsWithFormData({}, undefined, undefined, true, true)).toEqual({});
+      expect(mergeDefaultsWithFormData({}, undefined, undefined, true, 'merge')).toEqual({});
     });
 
     it('should return default when formData is null and defaultSupercedesUndefined true', () => {
-      expect(mergeDefaultsWithFormData({}, null, undefined, true, true)).toEqual({});
+      expect(mergeDefaultsWithFormData({}, null, undefined, true, 'merge')).toEqual({});
     });
 
     it('should merge two one-level deep objects', () => {
-      expect(mergeDefaultsWithFormData({ a: 1 }, { b: 2 }, undefined, undefined, true)).toEqual({
+      expect(mergeDefaultsWithFormData({ a: 1 }, { b: 2 }, undefined, undefined, 'merge')).toEqual({
         a: 1,
         b: 2,
       });
     });
 
     it('should override the first object with the values from the second', () => {
-      expect(mergeDefaultsWithFormData({ a: 1 }, { a: 2 }, undefined, undefined, true)).toEqual({ a: 1 });
+      expect(mergeDefaultsWithFormData({ a: 1 }, { a: 2 }, undefined, undefined, 'merge')).toEqual({ a: 1 });
     });
 
     it('should override non-existing values of the first object with the values from the second', () => {
       expect(
-        mergeDefaultsWithFormData({ a: { b: undefined } }, { a: { b: { c: 1 } } }, undefined, undefined, true),
+        mergeDefaultsWithFormData({ a: { b: undefined } }, { a: { b: { c: 1 } } }, undefined, undefined, 'merge'),
       ).toEqual({
         a: { b: { c: 1 } },
       });
     });
 
     it('should merge arrays using entries from second', () => {
-      expect(mergeDefaultsWithFormData([1, 2, 3], [4, 5], undefined, undefined, true)).toEqual([1, 2, 3]);
+      expect(mergeDefaultsWithFormData([1, 2, 3], [4, 5], undefined, undefined, 'merge')).toEqual([1, 2, 3]);
     });
 
     it('should merge arrays using entries from second and extra from the first', () => {
-      expect(mergeDefaultsWithFormData([1, 2], [4, 5, 6], undefined, undefined, true)).toEqual([1, 2, 6]);
+      expect(mergeDefaultsWithFormData([1, 2], [4, 5, 6], undefined, undefined, 'merge')).toEqual([1, 2, 6]);
     });
 
     it('should deeply merge arrays with overlapping entries', () => {
-      expect(mergeDefaultsWithFormData([{ a: 1 }], [{ b: 2 }, { c: 3 }], undefined, undefined, true)).toEqual([
+      expect(mergeDefaultsWithFormData([{ a: 1 }], [{ b: 2 }, { c: 3 }], undefined, undefined, 'merge')).toEqual([
         { a: 1, b: 2 },
         { c: 3 },
       ]);
@@ -256,7 +256,7 @@ describe('mergeDefaultsWithFormData()', () => {
         },
         c: 2,
       };
-      expect(mergeDefaultsWithFormData<any>(obj1, obj2, undefined, undefined, true)).toEqual(expected);
+      expect(mergeDefaultsWithFormData<any>(obj1, obj2, undefined, undefined, 'merge')).toEqual(expected);
     });
 
     it('should recursively merge deeply nested objects, including extra array data', () => {
@@ -293,7 +293,7 @@ describe('mergeDefaultsWithFormData()', () => {
         c: 2,
         d: 4,
       };
-      expect(mergeDefaultsWithFormData<any>(obj1, obj2, undefined, undefined, true)).toEqual(expected);
+      expect(mergeDefaultsWithFormData<any>(obj1, obj2, undefined, undefined, 'merge')).toEqual(expected);
     });
 
     it('should recursively merge File objects', () => {
@@ -305,6 +305,96 @@ describe('mergeDefaultsWithFormData()', () => {
         a: file,
       };
       expect(mergeDefaultsWithFormData(obj1, obj2)?.a).toBeInstanceOf(File);
+    });
+  });
+
+  describe('test with overrideFormDataWithDefaults set to `replace`', () => {
+    it('should return empty array even when no defaults', () => {
+      expect(mergeDefaultsWithFormData(undefined, [2], undefined, undefined, 'replace')).toEqual([]);
+    });
+
+    it('should return default when formData is undefined', () => {
+      expect(mergeDefaultsWithFormData({}, undefined, undefined, undefined, 'replace')).toEqual({});
+    });
+
+    it('should return default when formData is undefined and defaultSupercedesUndefined true', () => {
+      expect(mergeDefaultsWithFormData({}, undefined, undefined, true, 'replace')).toEqual({});
+    });
+
+    it('should return default when formData is null and defaultSupercedesUndefined true', () => {
+      expect(mergeDefaultsWithFormData({}, null, undefined, true, 'replace')).toEqual({});
+    });
+
+    it('should not merge two one-level deep objects', () => {
+      expect(mergeDefaultsWithFormData({ a: 1 }, { b: 2 }, undefined, undefined, 'replace')).toEqual({
+        a: 1,
+      });
+    });
+
+    it('should not override the first object with the values from the second', () => {
+      expect(mergeDefaultsWithFormData({ a: 1 }, { a: 2 }, undefined, undefined, 'replace')).toEqual({ a: 1 });
+    });
+
+    it('should not return undefined from defaults', () => {
+      expect(
+        mergeDefaultsWithFormData({ a: { b: undefined } }, { a: { b: { c: 1 } } }, undefined, undefined, 'replace'),
+      ).toEqual({
+        a: { b: {} },
+      });
+    });
+
+    it('should not merge arrays using entries from second', () => {
+      expect(mergeDefaultsWithFormData([1, 2, 3], [4, 5], undefined, undefined, 'replace')).toEqual([1, 2, 3]);
+    });
+
+    it('should not deeply merge arrays with overlapping entries', () => {
+      expect(mergeDefaultsWithFormData([{ a: 1 }], [{ b: 2 }, { c: 3 }], undefined, undefined, 'replace')).toEqual([
+        { a: 1 },
+      ]);
+    });
+
+    it('should replace objects', () => {
+      const obj1 = {
+        a: 1,
+        b: {
+          c: 3,
+          d: [1, 2, 3],
+          e: { f: { g: 1 } },
+          h: [{ i: 1 }, { i: 2 }],
+        },
+        c: 2,
+      };
+      const obj2 = {
+        a: 1,
+        b: {
+          d: [3],
+          e: { f: { h: 2 } },
+          g: 1,
+          h: [{ i: 3 }, { i: 4 }, { i: 5 }],
+        },
+        c: 3,
+        d: 4,
+      };
+      expect(mergeDefaultsWithFormData<any>(obj1, obj2, undefined, undefined, 'replace')).toEqual({
+        a: 1,
+        b: {
+          c: 3,
+          d: [1, 2, 3],
+          e: { f: { g: 1 } },
+          h: [{ i: 1 }, { i: 2 }],
+        },
+        c: 2,
+      });
+    });
+
+    it('should replace arrays', () => {
+      expect(mergeDefaultsWithFormData([1, 2], [4, 5, 6], undefined, undefined, 'replace')).toEqual([1, 2]);
+    });
+
+    it('should replace objects', () => {
+      expect(mergeDefaultsWithFormData({ a: { b: 1 } }, { a: { b: 2 } }, undefined, undefined, 'replace')).toEqual({
+        a: { b: 1 },
+      });
     });
   });
 });
