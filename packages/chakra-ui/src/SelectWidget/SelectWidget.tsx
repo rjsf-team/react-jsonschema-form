@@ -43,19 +43,12 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
   const { enumOptions, enumDisabled, emptyValue } = options;
 
   const _onMultiChange = ({ value }: SelectValueChangeDetails) => {
-    return onChange(
-      enumOptionsValueForIndex<S>(
-        value.map((item) => {
-          return item;
-        }),
-        enumOptions,
-        emptyValue,
-      ),
-    );
+    return onChange(enumOptionsValueForIndex<S>(value, enumOptions, emptyValue));
   };
 
-  const _onChange = ({ value }: SelectValueChangeDetails) => {
-    return onChange(enumOptionsValueForIndex<S>(value, enumOptions, emptyValue));
+  const _onSingleChange = ({ value }: SelectValueChangeDetails) => {
+    const selected = enumOptionsValueForIndex<S>(value, enumOptions, emptyValue);
+    return onChange(Array.isArray(selected) && selected.length === 1 ? selected[0] : selected);
   };
 
   const _onBlur = ({ target }: FocusEvent<HTMLInputElement>) =>
@@ -137,7 +130,7 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
         multiple={isMultiple}
         closeOnSelect={!isMultiple}
         onBlur={_onBlur}
-        onValueChange={isMultiple ? _onMultiChange : _onChange}
+        onValueChange={isMultiple ? _onMultiChange : _onSingleChange}
         onFocus={_onFocus}
         autoFocus={autofocus}
         value={formValue}
