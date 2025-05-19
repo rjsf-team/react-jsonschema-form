@@ -204,7 +204,7 @@ const liveSettingsSelectSchema: RJSFSchema = {
             {
               type: 'string',
               title: 'Always use default for field value',
-              enum: ['useDefault'],
+              enum: ['useDefaultAlways'],
             },
           ],
         },

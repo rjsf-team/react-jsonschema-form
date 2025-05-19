@@ -1341,9 +1341,9 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           });
         });
 
-        describe('mergeDefaultsIntoFormData set to "useDefault"', () => {
+        describe('mergeDefaultsIntoFormData set to "useDefaultAlways"', () => {
           const experimental_defaultFormStateBehavior: Experimental_DefaultFormStateBehavior = {
-            mergeDefaultsIntoFormData: 'useDefault',
+            mergeDefaultsIntoFormData: 'useDefaultAlways',
           };
 
           test('getDefaultFormState', () => {

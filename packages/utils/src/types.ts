@@ -98,9 +98,9 @@ export type Experimental_DefaultFormStateBehavior = {
    *        even if that value is explicitly set to `undefined`
    * - `useDefaultIfFormDataUndefined`: - If the value of a field within the `formData` is `undefined`, then use the
    *        default value instead
-   * - `useDefault`: - Always use the default value
+   * - `useDefaultAlways`: - Always use the default value
    */
-  mergeDefaultsIntoFormData?: 'useFormDataIfPresent' | 'useDefaultIfFormDataUndefined' | 'useDefault';
+  mergeDefaultsIntoFormData?: 'useFormDataIfPresent' | 'useDefaultIfFormDataUndefined' | 'useDefaultAlways';
   /** Optional enumerated flag controlling how const values are merged into the form data as defaults when dealing with
    * undefined values, defaulting to `always`. The defaulting behavior for this flag will always be controlled by the
    * `emptyObjectField` flag value. For instance, if `populateRequiredDefaults` is set and the const value is not
@@ -1265,4 +1265,15 @@ export interface SchemaUtilsType<T = any, S extends StrictRJSFSchema = RJSFSchem
    * @returns - The `PathSchema` object for the `schema`
    */
   toPathSchema(schema: S, name?: string, formData?: T): PathSchema<T>;
+}
+
+/** Strategy for merging defaults with existing form data */
+export enum OverrideFormDataStrategy {
+  /** No merge or override applied */
+  noop,
+  /** If the value doesn't exist in the default, we take it from formData and in the case where the value is set to undefined in formData.
+   * This is useful when we have already merged formData with defaults and want to add an additional field from formData  that does not exist in defaults */
+  merge,
+  /** Replace form data with defined default */
+  replace,
 }

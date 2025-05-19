@@ -16,6 +16,8 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 6.0.0-beta.9
+
 ## @rjsf/util
 
 - Allow form value overrides with defaults [#4625](https://github.com/rjsf-team/react-jsonschema-form/pull/4625

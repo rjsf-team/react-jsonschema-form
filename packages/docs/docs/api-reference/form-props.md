@@ -269,7 +269,7 @@ NOTE: If there is a default for a field and the `formData` is unspecified, the d
 | ------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
 | `useFormDataIfPresent`          | Legacy behavior - Do not merge defaults if there is a value for a field in `formData` even if that value is explicitly set to `undefined` |
 | `useDefaultIfFormDataUndefined` | If the value of a field within the `formData` is `undefined`, then use the default value instead                                          |
-| `useDefault`                    | Always use the default value instead of form data                                                                                         |
+| `useDefaultAlways`              | Always use the default value instead of form data                                                                                         |
 
 |
 
