@@ -1493,6 +1493,60 @@ describeRepeated('Form common', (createFormComponent) => {
 
       expect(node.querySelector(secondInputID).value).to.equal('changed!');
     });
+    it('Should modify oneOf object with references when the defaults are set.', () => {
+      const schema = {
+        type: 'object',
+        $defs: {
+          protocol: {
+            type: 'string',
+            enum: ['fast', 'balanced', 'stringent'],
+            default: 'fast',
+          },
+        },
+        oneOf: [
+          {
+            properties: {
+              protocol: {
+                $ref: '#/$defs/protocol',
+              },
+            },
+          },
+          {
+            properties: {
+              something: {
+                type: 'number',
+              },
+            },
+          },
+        ],
+      };
+
+      const { node, onChange } = createFormComponent({
+        schema,
+      });
+
+      const protocolInputID = '#root_protocol';
+      expect(node.querySelector(protocolInputID).value).to.equal('0');
+
+      act(() => {
+        fireEvent.change(node.querySelector(protocolInputID), {
+          target: { value: '1' },
+        });
+      });
+
+      sinon.assert.calledWithMatch(
+        onChange.lastCall,
+        {
+          formData: {
+            protocol: 'balanced',
+          },
+          schema,
+        },
+        'root_protocol',
+      );
+
+      expect(node.querySelector(protocolInputID).value).to.equal('1');
+    });
   });
 
   describe('Blur handler', () => {

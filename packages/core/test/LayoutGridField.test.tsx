@@ -17,6 +17,7 @@ import {
   sortedJSONStringify,
   toIdSchema,
   UI_OPTIONS_KEY,
+  UI_GLOBAL_OPTIONS_KEY,
   UiSchema,
 } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
@@ -29,7 +30,6 @@ import LayoutGridField, {
   LAYOUT_GRID_OPTION,
   LayoutGridFieldProps,
   Operators,
-  UI_GLOBAL_OPTIONS,
 } from '../src/components/fields/LayoutGridField';
 import { SAMPLE_SCHEMA, sampleUISchema, SIMPLE_ONEOF, SIMPLE_ONEOF_OPTIONS } from './testData/layoutData';
 import getTestRegistry from './testData/getTestRegistry';
@@ -590,7 +590,7 @@ function FakeSchemaField({ 'data-testid': testId, ...props }: Readonly<FieldProp
   const { idSchema, formData, onChange, onBlur, onFocus, uiSchema } = props;
   const { [ID_KEY]: id } = idSchema;
   // Special test case that will pass an error schema into on change to allow coverage
-  const error = has(uiSchema, UI_GLOBAL_OPTIONS) ? EXTRA_ERROR : undefined;
+  const error = has(uiSchema, UI_GLOBAL_OPTIONS_KEY) ? EXTRA_ERROR : undefined;
   const onTextChange = ({ target: { value: val } }: ChangeEvent<HTMLInputElement>) => {
     onChange(val, error, id);
   };
@@ -693,7 +693,7 @@ function getExpectedPropsForField(
   const idSchema = get(props.idSchema, field)!;
   const formData = get(props.formData, field);
   // Also extract any global props
-  const global = get(props.uiSchema, [UI_GLOBAL_OPTIONS]);
+  const global = get(props.uiSchema, [UI_GLOBAL_OPTIONS_KEY]);
   const fieldUISchema = get(props.uiSchema, field);
   const { readonly: uiReadonly } = getUiOptions(fieldUISchema);
   // The expected props are the FORWARDED_PROPS, the field name, sub-schema, sub-uiSchema and sub-idSchema
@@ -709,7 +709,7 @@ function getExpectedPropsForField(
     uiSchema: {
       ...uiSchema,
       [UI_OPTIONS_KEY]: { ...global, ...otherUiProps }, // spread the global and other ui keys into the ui:options
-      ...(global ? { [UI_GLOBAL_OPTIONS]: global } : {}), // ensure the globals are maintained
+      ...(global ? { [UI_GLOBAL_OPTIONS_KEY]: global } : {}), // ensure the globals are maintained
     },
     idSchema,
     errorSchema,
@@ -1208,12 +1208,12 @@ describe('LayoutGridField', () => {
     test('field with uiProps and uiSchema with global options for the field', () => {
       const uiProps = { fullWidth: true };
       const globalOptions = { label: false };
-      const uiSchema = { foo: { 'ui:widget': 'bar' }, [UI_GLOBAL_OPTIONS]: globalOptions };
+      const uiSchema = { foo: { 'ui:widget': 'bar' }, [UI_GLOBAL_OPTIONS_KEY]: globalOptions };
       expect(LayoutGridField.computeFieldUiSchema('foo', uiProps, uiSchema)).toEqual({
         fieldUiSchema: {
           ...uiSchema.foo,
           [UI_OPTIONS_KEY]: { ...uiProps, ...globalOptions },
-          [UI_GLOBAL_OPTIONS]: globalOptions,
+          [UI_GLOBAL_OPTIONS_KEY]: globalOptions,
         },
         uiReadonly: undefined,
       });
@@ -1386,7 +1386,7 @@ describe('LayoutGridField', () => {
     const otherUIProps = { inline: true };
     const props = getProps({
       schema: GRID_FORM_SCHEMA,
-      uiSchema: { ...gridFormUISchema, [UI_GLOBAL_OPTIONS]: globalUiOptions },
+      uiSchema: { ...gridFormUISchema, [UI_GLOBAL_OPTIONS_KEY]: globalUiOptions },
       formData: {},
       errorSchema: { employment: {} },
       // IdSchema is weirdly recursive and it's easier to just ignore the error
@@ -1513,7 +1513,7 @@ describe('LayoutGridField', () => {
     const gridProps = { operator: Operators.NONE, field: fieldName, value: null };
     const props = getProps({
       schema: SAMPLE_SCHEMA,
-      uiSchema: { ...sampleUISchema, [UI_GLOBAL_OPTIONS]: { always: 'there' } },
+      uiSchema: { ...sampleUISchema, [UI_GLOBAL_OPTIONS_KEY]: { always: 'there' } },
       formData: { [fieldName]: 'foo' },
       layoutGridSchema: { [GridType.CONDITION]: { ...gridProps, children: GRID_CHILDREN } },
       registry: sampleSchemaRegistry,
