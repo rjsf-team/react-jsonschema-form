@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="generator" content="Docusaurus v3.7.0">
 <title data-rh="true">6.x Upgrade Guide | react-jsonschema-form</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:url" content="https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v6.x upgrade guide"><meta data-rh="true" property="og:locale" content="en"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docusaurus_version" content="current"><meta data-rh="true" name="docusaurus_tag" content="docs-default-current"><meta data-rh="true" name="docsearch:version" content="current"><meta data-rh="true" name="docsearch:docusaurus_tag" content="docs-default-current"><meta data-rh="true" property="og:title" content="6.x Upgrade Guide | react-jsonschema-form"><meta data-rh="true" name="description" content="New packages"><meta data-rh="true" property="og:description" content="New packages"><link data-rh="true" rel="icon" href="/react-jsonschema-form/docs/img/favicon.ico"><link data-rh="true" rel="canonical" href="https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v6.x upgrade guide"><link data-rh="true" rel="alternate" href="https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v6.x upgrade guide" hreflang="en"><link data-rh="true" rel="alternate" href="https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v6.x upgrade guide" hreflang="x-default"><link data-rh="true" rel="preconnect" href="https://LRQC6J0BO6-dsn.algolia.net" crossorigin="anonymous"><link rel="search" type="application/opensearchdescription+xml" title="react-jsonschema-form" href="/react-jsonschema-form/docs/opensearch.xml"><link rel="stylesheet" href="/react-jsonschema-form/docs/assets/css/styles.a16d739e.css">
-<script src="/react-jsonschema-form/docs/assets/js/runtime~main.58156637.js" defer="defer"></script>
+<script src="/react-jsonschema-form/docs/assets/js/runtime~main.726fd681.js" defer="defer"></script>
 <script src="/react-jsonschema-form/docs/assets/js/main.b15a0d4a.js" defer="defer"></script>
 </head>
 <body class="navigation-with-keyboard">
@@ -25,8 +25,6 @@
 <p>The older <code>fluent-ui</code> theme has been removed in favor of the <code>fluentui-rc</code> theme</p>
 <h4 class="anchor anchorWithStickyNavbar_fF9Z" id="material-ui">material-ui<a href="#material-ui" class="hash-link" aria-label="Direct link to material-ui" title="Direct link to material-ui">​</a></h4>
 <p>The older <code>material-ui</code> theme has been removed in favor of the <code>mui</code> theme</p>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="mui-version-5">@mui version 5<a href="#mui-version-5" class="hash-link" aria-label="Direct link to @mui version 5" title="Direct link to @mui version 5">​</a></h4>
-<p>The <code>mui</code> theme no longer supports <code>@mui</code> version 5 due to the adoption of breaking changes in version 6</p>
 <h3 class="anchor anchorWithStickyNavbar_fF9Z" id="validator-ajv6">validator-ajv6<a href="#validator-ajv6" class="hash-link" aria-label="Direct link to validator-ajv6" title="Direct link to validator-ajv6">​</a></h3>
 <p>This deprecated validator has been removed. Use the <code>validator-ajv8</code>.</p>
 <h3 class="anchor anchorWithStickyNavbar_fF9Z" id="theme-version-support-changes">Theme version support changes<a href="#theme-version-support-changes" class="hash-link" aria-label="Direct link to Theme version support changes" title="Direct link to Theme version support changes">​</a></h3>
@@ -35,8 +33,13 @@
 <h4 class="anchor anchorWithStickyNavbar_fF9Z" id="rjsfchakra-ui">@rjsf/chakra-ui<a href="#rjsfchakra-ui" class="hash-link" aria-label="Direct link to @rjsf/chakra-ui" title="Direct link to @rjsf/chakra-ui">​</a></h4>
 <p>Version 6 is dropping official support for <code>@chakra-ui</code> version 2. You must upgrade to version 3. We are also requiring
 <code>chakra-react-select</code> version &gt;=6 as a result.</p>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="rjsfsemantic-ui">@rjsf/semantic-ui<a href="#rjsfsemantic-ui" class="hash-link" aria-label="Direct link to @rjsf/semantic-ui" title="Direct link to @rjsf/semantic-ui">​</a></h4>
-<p>Version 6 is dropping official support for <code>semantic-ui-react</code> version 1. You must upgrade to version 2.</p>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="mui-version-5-and-6">@mui version 5 and 6<a href="#mui-version-5-and-6" class="hash-link" aria-label="Direct link to @mui version 5 and 6" title="Direct link to @mui version 5 and 6">​</a></h4>
+<p>Version 6 is dropping official support for <code>@mui/material</code> and <code>@mui/icons-material</code> versions 5 and 6 due to the adoption
+of breaking changes in version 7. You must upgrade to version 7.</p>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="rjsfsemantic-ui-deprecated">@rjsf/semantic-ui DEPRECATED<a href="#rjsfsemantic-ui-deprecated" class="hash-link" aria-label="Direct link to @rjsf/semantic-ui DEPRECATED" title="Direct link to @rjsf/semantic-ui DEPRECATED">​</a></h4>
+<p>Version 6 is dropping official support for <code>semantic-ui-react</code> version 1. You must upgrade to version 2. Also, this theme
+is deprecated and will be removed in a future release unless <code>sematic-ui-react</code> version 3 is released with React 19
+support. Although that seems unlikely as no changes have been made to version 3 since December 2023.</p>
 <h3 class="anchor anchorWithStickyNavbar_fF9Z" id="node-support">Node support<a href="#node-support" class="hash-link" aria-label="Direct link to Node support" title="Direct link to Node support">​</a></h3>
 <p>Version 6 is dropping official support for Node 14, 16, and 18 as they are no longer <a href="https://nodejs.org/en/about/releases/" target="_blank" rel="noopener noreferrer">maintained versions</a>.
 Please use Node 22 when making any changes to <code>package.json</code> and <code>package-lock.json</code> files.
