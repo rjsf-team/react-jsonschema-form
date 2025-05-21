@@ -5,16 +5,17 @@ meaning that you must load the Bootstrap stylesheet on the page to view the form
 
 ## Supported themes
 
-| Theme Name            | Status    | Package Name / Link     |
-| --------------------- | --------- | ----------------------- |
-| antd                  | Published | `@rjsf/antd`            |
-| Bootstrap 3 (default) | Published | `@rjsf/core`            |
-| react-bootstrap       | Published | `@rjsf/react-bootstrap` |
-| Chakra UI             | Published | `@rjsf/chakra-ui`       |
-| fluentui-rc           | Published | `@rjsf/fluentui-rc`     |
-| material-ui           | Published | `@rjsf/mui`             |
-| Semantic UI           | Published | `@rjsf/semantic-ui`     |
-| shadcn                | Published | `@rjsf/shadcn`          |
+| Theme Name            | Status        | Package Name / Link     |
+| --------------------- | ------------- | ----------------------- |
+| antd                  | Published     | `@rjsf/antd`            |
+| Bootstrap 3 (default) | Published     | `@rjsf/core`            |
+| react-bootstrap       | Published     | `@rjsf/react-bootstrap` |
+| Chakra UI             | Published     | `@rjsf/chakra-ui`       |
+| fluentui-rc           | Published     | `@rjsf/fluentui-rc`     |
+| mantine               | Not Published | `@rjsf/mantine`         |
+| material-ui           | Published     | `@rjsf/mui`             |
+| Semantic UI           | Published     | `@rjsf/semantic-ui`     |
+| shadcn                | Published     | `@rjsf/shadcn`          |
 
 ## Using themes
 

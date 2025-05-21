@@ -7,6 +7,7 @@ import { __createChakraFrameProvider } from '@rjsf/chakra-ui';
 import { StyleProvider as AntdStyleProvider } from '@ant-design/cssinjs';
 import { __createFluentUIRCFrameProvider } from '@rjsf/fluentui-rc';
 import { __createDaisyUIFrameProvider } from '@rjsf/daisyui';
+import { MantineProvider } from '@mantine/core';
 
 /*
 Adapted from https://github.com/mui-org/material-ui/blob/master/docs/src/modules/components/DemoSandboxed.js
@@ -60,7 +61,7 @@ export default function DemoFrame(props: DemoFrameProps) {
         key: 'css',
         prepend: true,
         container: instanceRef.current.contentWindow['demo-frame-jss'],
-      }),
+      })
     );
     setContainer(instanceRef.current.contentDocument.body);
     setWindow(() => instanceRef.current.contentWindow);
@@ -92,6 +93,16 @@ export default function DemoFrame(props: DemoFrameProps) {
           ...props,
           subtheme: { dataTheme: subtheme },
         })}
+      </FrameContextConsumer>
+    ) : null;
+  } else if (theme === 'mantine') {
+    body = ready ? (
+      <FrameContextConsumer>
+        {({ document }) => (
+          <MantineProvider getRootElement={() => document?.body} cssVariablesSelector='body'>
+            {children}
+          </MantineProvider>
+        )}
       </FrameContextConsumer>
     ) : null;
   }
