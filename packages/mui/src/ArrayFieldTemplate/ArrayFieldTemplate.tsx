@@ -1,5 +1,5 @@
 import Box from '@mui/material/Box';
-import Grid2 from '@mui/material/Grid2';
+import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import {
   getTemplate,
@@ -66,8 +66,8 @@ export default function ArrayFieldTemplate<
             <ArrayFieldItemTemplate key={key} {...itemProps} />
           ))}
         {canAdd && (
-          <Grid2 container justifyContent='flex-end'>
-            <Grid2>
+          <Grid container justifyContent='flex-end'>
+            <Grid>
               <Box mt={2}>
                 <AddButton
                   id={buttonId<T>(idSchema, 'add')}
@@ -78,8 +78,8 @@ export default function ArrayFieldTemplate<
                   registry={registry}
                 />
               </Box>
-            </Grid2>
-          </Grid2>
+            </Grid>
+          </Grid>
         )}
       </Box>
     </Paper>

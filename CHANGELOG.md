@@ -18,9 +18,52 @@ should change the heading of the (upcoming) version to include a major version b
 
 # 6.0.0-beta.9
 
+## @rjsf/antd
+
+- Updated the `README.md` file for dependencies and snapshots due to updating to latest `antd`
+
 ## @rjsf/chakra-ui
 
 - Updated `SelectWidget` to only pick the first element in a list when single selection is active, fixing [#4623](https://github.com/rjsf-team/react-jsonschema-form/issues/4623)
+- Updated the `README.md` file for dependencies
+
+## @rjsf/daisyui
+
+- Updated the `README.md` file for dependencies
+- Updated `package.json` to move `@fluentui` packages to peer and dev dependencies
+
+## @rjsf/fluentui-rc
+
+- Updated the `README.md` file for dependencies
+- Updated `package.json` to move `daisyui` to peer and dev dependencies
+
+## @rjsf/mui
+
+- Updated the `README.md` file for dependencies
+- BREAKING CHANGE: Upgraded MUI to version 7, dropping support for earlier versions due to conversion of `Grid`s to v7 version (a MUI breaking change)
+
+## @rjsf/react-bootstrap
+
+- Updated the `README.md` file for dependencies
+
+## @rjsf/semantic-ui
+
+- Updated the `README.md` file for dependencies
+- Deprecated the theme due to it appearing to be a dead project
+
+## @rjsf/shadcn
+
+- Updated the `README.md` file for dependencies
+
+## @rjsf/util
+
+- Fixed form data propagation with `patternProperties` [#4617](https://github.com/rjsf-team/react-jsonschema-form/pull/4617)
+- Updated the `GlobalUISchemaOptions` types to extend `GenericObjectType` to support user-defined values for their extensions
+
+## Dev / docs / playground
+
+- Updated `playground` to use MUI version 7
+- Updated `v6 upgrade guide.md` to note the breaking change for MUI 7 and deprecation of `semantic-ui`
 
 # 6.0.0-beta.8
 
@@ -42,7 +85,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## Dev / docs / playground
 
-- Updated precompiled schemas documentation in `validation.md` based on v6 changes, addressingg [#4618](https://github.com/rjsf-team/react-jsonschema-form/issues/4618)
+- Updated precompiled schemas documentation in `validation.md` based on v6 changes, addressing [#4618](https://github.com/rjsf-team/react-jsonschema-form/issues/4618)
 
 # 6.0.0-beta.7
 
