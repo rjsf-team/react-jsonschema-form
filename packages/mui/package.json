@@ -1,6 +1,6 @@
 {
   "name": "@rjsf/mui",
-  "version": "6.0.0-beta.8",
+  "version": "6.0.0-beta.10",
   "main": "./dist/index.js",
   "module": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -39,8 +39,7 @@
     "src"
   ],
   "scripts": {
-    "compileReplacer": "tsc -p tsconfig.replacer.json && move-file muiReplacer.js muiReplacer.cjs",
-    "build:ts": "npm run compileReplacer && rimraf ./lib && tsc -b tsconfig.build.json && tsc-alias -p tsconfig.build.json",
+    "build:ts": "rimraf ./lib && tsc -b tsconfig.build.json && tsc-alias -p tsconfig.build.json",
     "build:cjs": "esbuild ./src/index.ts --bundle --outfile=dist/index.js --sourcemap --packages=external --format=cjs",
     "build:esm": "esbuild ./src/index.ts --bundle --outfile=dist/mui.esm.js --sourcemap --packages=external --format=esm",
     "build:umd": "rollup dist/mui.esm.js --format=umd --file=dist/mui.umd.js --name=@rjsf/mui",
@@ -75,10 +74,10 @@
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^7.1.0",
     "@mui/material": "^7.1.0",
-    "@rjsf/core": "^6.0.0-beta.7",
-    "@rjsf/snapshot-tests": "^6.0.0-beta.8",
-    "@rjsf/utils": "^6.0.0-beta.8",
-    "@rjsf/validator-ajv8": "^6.0.0-beta.8",
+    "@rjsf/core": "^6.0.0-beta.10",
+    "@rjsf/snapshot-tests": "^6.0.0-beta.10",
+    "@rjsf/utils": "^6.0.0-beta.10",
+    "@rjsf/validator-ajv8": "^6.0.0-beta.10",
     "eslint": "^8.56.0"
   },
   "publishConfig": {
