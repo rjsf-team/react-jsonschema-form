@@ -59,6 +59,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Fixed form data propagation with `patternProperties` [#4617](https://github.com/rjsf-team/react-jsonschema-form/pull/4617)
 - Updated the `GlobalUISchemaOptions` types to extend `GenericObjectType` to support user-defined values for their extensions
+- Fix default value for object properties such as enums that are rendered in select, radio inputs, etc.
 
 ## Dev / docs / playground
 
