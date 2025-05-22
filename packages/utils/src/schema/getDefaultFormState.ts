@@ -728,6 +728,13 @@ export default function getDefaultFormState<
     shouldMergeDefaultsIntoFormData: true,
   });
 
+  if (schema.type !== 'object' && isObject(schema.default)) {
+    return {
+      ...defaults,
+      ...formData,
+    } as T;
+  }
+
   // If the formData is an object or an array, add additional properties from formData and override formData with
   // defaults since the defaults are already merged with formData.
   if (isObject(formData) || Array.isArray(formData)) {
