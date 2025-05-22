@@ -93,6 +93,20 @@ Follow shadCN installation guide [here](https://ui.shadcn.com/docs/installation)
 
 The color of the RJSF will automatically apply with your shadCN config.
 
+#### Tailwind v3
+Add the following line to your tailwind.config.ts
+```typescript
+  content: [
+    "./src/**/*.{html,js}",
+    "node_modules/@rjsf/shadcn/src/**/*.{js,ts,jsx,tsx,mdx}" // Add this line
+  ],
+```
+#### Tailwind v4
+Add the following line to your equivalent global.css
+```css
+@source "../node_modules/@rjsf/shadcn";
+```
+
 ### Not using Tailwind
 
 #### Use the theme on demo site
