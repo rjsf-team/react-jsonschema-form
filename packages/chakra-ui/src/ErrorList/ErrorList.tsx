@@ -1,6 +1,5 @@
 import { ErrorListProps, FormContextType, RJSFSchema, StrictRJSFSchema, TranslatableString } from '@rjsf/utils';
-import { ListIndicator, ListItem, ListRoot } from '@chakra-ui/react';
-import { TriangleAlert } from 'lucide-react';
+import { ListItem, ListRoot } from '@chakra-ui/react';
 
 import { Alert } from '../components/ui/alert';
 
@@ -10,21 +9,10 @@ export default function ErrorList<T = any, S extends StrictRJSFSchema = RJSFSche
 }: ErrorListProps<T, S, F>) {
   const { translateString } = registry;
   return (
-    <Alert
-      flexDirection='column'
-      alignItems='flex-start'
-      gap={3}
-      status='error'
-      title={translateString(TranslatableString.ErrorsLabel)}
-    >
-      <ListRoot>
+    <Alert status='error' title={translateString(TranslatableString.ErrorsLabel)} mb={3}>
+      <ListRoot listStylePosition='inside'>
         {errors.map((error, i) => (
-          <ListItem key={i}>
-            <ListIndicator asChild color='red.500'>
-              <TriangleAlert />
-            </ListIndicator>
-            {error.stack}
-          </ListItem>
+          <ListItem key={i}>{error.stack}</ListItem>
         ))}
       </ListRoot>
     </Alert>
