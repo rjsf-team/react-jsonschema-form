@@ -65,7 +65,7 @@ export default function FieldTemplate<
         {displayLabel && rawDescription ? <Fieldset.Legend mt={2}>{description}</Fieldset.Legend> : null}
         {help}
         <Fieldset.Content>{children}</Fieldset.Content>
-        {errors && <Fieldset.ErrorText>{errors}</Fieldset.ErrorText>}
+        {errors}
       </Fieldset.Root>
     </WrapIfAdditionalTemplate>
   );
