@@ -16,6 +16,12 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 6.0.0-beta.11
+
+## @rjsf/utils
+
+- Fixed issue where oneOf radio button could not be modified when defaults were set, fixing [#4634](https://github.com/rjsf-team/react-jsonschema-form/issues/4634)
+
 # 6.0.0-beta.10
 
 ## @rjsf/mui
@@ -61,7 +67,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Updated the `README.md` file for dependencies
 
-## @rjsf/util
+## @rjsf/utils
 
 - Fixed form data propagation with `patternProperties` [#4617](https://github.com/rjsf-team/react-jsonschema-form/pull/4617)
 - Updated the `GlobalUISchemaOptions` types to extend `GenericObjectType` to support user-defined values for their extensions
@@ -84,7 +90,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Updated `LayoutGridField` to use the pre-existing `UI_GLOBAL_OPTIONS_KEY` instead of its own incorrect one.
 
-## @rjsf/util
+## @rjsf/utils
 
 - Fixed form data propagation with `patternProperties` [#4617](https://github.com/rjsf-team/react-jsonschema-form/pull/4617)
 - Fixed issue where oneOf schema references could not be modified when defaults were set, fixing [#4580](https://github.com/rjsf-team/react-jsonschema-form/issues/4580).
@@ -102,7 +108,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 # 6.0.0-beta.6
 
-## @rjsf/util
+## @rjsf/utils
 
 - Updated the `Field` type to add the optional `TEST_IDS?: TestIdShape` prop to it to support exposing the `TEST_IDS` static prop on `LayoutGridField`, `LayoutHeaderField` and `LayoutMultiSchemaField` for external users
 
