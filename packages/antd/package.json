@@ -62,7 +62,7 @@
     "node": ">=20"
   },
   "peerDependencies": {
-    "@ant-design/icons": "^5.0.0",
+    "@ant-design/icons": "^6.0.0",
     "@rjsf/core": "^6.0.0-beta",
     "@rjsf/utils": "^6.0.0-beta",
     "antd": "^5.8.5",
