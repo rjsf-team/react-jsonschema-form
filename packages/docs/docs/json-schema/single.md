@@ -107,21 +107,7 @@ const schema: RJSFSchema = {
 render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
 ```
 
-In your JSON Schema, you may also specify `enumNames`, a non-standard field which RJSF can use to label an enumeration. **This behavior is deprecated and will be removed in a future major release of RJSF. Use the "ui:enumNames" property in the uiSchema instead.**
-
-```tsx
-import { RJSFSchema } from '@rjsf/utils';
-import validator from '@rjsf/validator-ajv8';
-
-const schema: RJSFSchema = {
-  type: 'number',
-  enum: [1, 2, 3],
-  enumNames: ['one', 'two', 'three'],
-};
-render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
-```
-
-Same example using the `uiSchema`'s `ui:enumNames` instead.
+If you use `enum` in your JSON Schema, you may instead specify `ui:enumNames` in your `uiSchema`, which RJSF can use to label an enumeration.
 
 ```tsx
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
