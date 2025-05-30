@@ -214,7 +214,7 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
   let updatedRecurseList = _recurseList;
 
   if (
-    schema[CONST_KEY] &&
+    schema[CONST_KEY] !== undefined &&
     experimental_defaultFormStateBehavior?.constAsDefaults !== 'never' &&
     !constIsAjvDataReference(schema)
   ) {
