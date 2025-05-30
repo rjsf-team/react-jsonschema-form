@@ -1547,6 +1547,83 @@ describeRepeated('Form common', (createFormComponent) => {
 
       expect(node.querySelector(protocolInputID).value).to.equal('1');
     });
+    it('Should modify oneOf radio button when the defaults are set.', () => {
+      const schema = {
+        type: 'object',
+        properties: {
+          a: {
+            type: ['boolean', 'null'],
+            default: null,
+            oneOf: [
+              {
+                const: false,
+                title: 'No',
+              },
+              {
+                const: null,
+                title: 'N/A',
+              },
+            ],
+          },
+        },
+        allOf: [
+          {
+            if: {
+              required: ['a'],
+              properties: {
+                a: {
+                  const: false,
+                },
+              },
+            },
+            then: {
+              required: ['b'],
+              properties: {
+                b: {
+                  type: 'string',
+                },
+              },
+            },
+          },
+        ],
+      };
+
+      const uiSchema = {
+        a: {
+          'ui:widget': 'radio',
+          'ui:label': false,
+        },
+      };
+
+      const { node, onChange } = createFormComponent({
+        schema,
+        uiSchema,
+      });
+
+      const notApplicableInputID = '#root_a-1';
+      const NoInputID = '#root_a-0';
+      expect(node.querySelector(notApplicableInputID).checked).to.equal(true);
+
+      act(() => {
+        fireEvent.click(node.querySelector(NoInputID));
+      });
+
+      sinon.assert.calledWithMatch(
+        onChange.lastCall,
+        {
+          formData: {
+            a: false,
+          },
+          schema,
+          uiSchema,
+        },
+        'root_a',
+      );
+
+      expect(node.querySelector(NoInputID).checked).to.equal(true);
+      expect(node.querySelector(notApplicableInputID).checked).to.equal(false);
+      expect(node.querySelector('#root_b')).to.exist;
+    });
   });
 
   describe('Blur handler', () => {
