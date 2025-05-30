@@ -1340,6 +1340,65 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             });
           });
         });
+
+        describe('mergeDefaultsIntoFormData set to "useDefaultAlways"', () => {
+          const experimental_defaultFormStateBehavior: Experimental_DefaultFormStateBehavior = {
+            mergeDefaultsIntoFormData: 'useDefaultAlways',
+          };
+
+          test('getDefaultFormState', () => {
+            expect(
+              getDefaultFormState(
+                testValidator,
+                schema,
+                rawFormData,
+                schema,
+                undefined,
+                experimental_defaultFormStateBehavior,
+              ),
+            ).toEqual({
+              animal: 'Fish',
+              food: 'worms',
+              water: null,
+            });
+          });
+
+          test('computeDefaults', () => {
+            expect(
+              computeDefaults(testValidator, schema, {
+                rootSchema: schema,
+                rawFormData,
+                experimental_defaultFormStateBehavior,
+                shouldMergeDefaultsIntoFormData,
+              }),
+            ).toEqual({
+              food: 'worms',
+              water: 'sea',
+            });
+          });
+
+          test('getDefaultBasedOnSchemaType', () => {
+            expect(
+              getDefaultBasedOnSchemaType(testValidator, schema, {
+                rootSchema: schema,
+                rawFormData,
+                shouldMergeDefaultsIntoFormData,
+                experimental_defaultFormStateBehavior,
+              }),
+            ).toEqual({});
+          });
+
+          test('getObjectDefaults', () => {
+            expect(
+              getObjectDefaults(testValidator, schema, {
+                rootSchema: schema,
+                rawFormData,
+                shouldMergeDefaultsIntoFormData,
+                experimental_defaultFormStateBehavior,
+              }),
+            ).toEqual({});
+          });
+        });
       });
 
       describe('oneOf with const values', () => {
