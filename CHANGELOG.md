@@ -18,9 +18,14 @@ should change the heading of the (upcoming) version to include a major version b
 
 # 6.0.0-beta.11
 
+## @rjsf/antd
+
+- Set peerDependency for `@ant-design/icons` to `^6.0.0`, fixing [#4643](https://github.com/rjsf-team/react-jsonschema-form/issues/4643)
+
 ## @rjsf/utils
 
 - Fixed issue where oneOf radio button could not be modified when defaults were set, fixing [#4634](https://github.com/rjsf-team/react-jsonschema-form/issues/4634)
+- Fix default value for object properties such as enums that are rendered in select, radio inputs, etc.
 
 # 6.0.0-beta.10
 
