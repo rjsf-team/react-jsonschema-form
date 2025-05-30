@@ -107,7 +107,7 @@ const schema: RJSFSchema = {
 render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
 ```
 
-In your `uiSchema`, you may also specify `ui:enumNames`, which RJSF can use to label an enumeration.
+If you use `enum` in your JSON Schema, you may instead specify `ui:enumNames` in your `uiSchema`, which RJSF can use to label an enumeration.
 
 ```tsx
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
