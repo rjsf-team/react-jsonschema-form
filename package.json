@@ -96,6 +96,7 @@
     "packages/mui",
     "packages/playground",
     "packages/react-bootstrap",
+    "packages/primereact",
     "packages/semantic-ui",
     "packages/utils",
     "packages/validator-ajv8",
