@@ -53,7 +53,9 @@ PrimeReact theme, fields, and widgets for `react-jsonschema-form`.
 
 - `primereact >= 8.0.0`
 - `primeicons >= 6.0.0`
-- `@rjsf/core >= 2.0.0`
+- `@rjsf/core >= 6`
+- `@rjsf/utils >= 6`
+- `@rjsf/validator-ajv8 >= 6`
 
 ```sh
 npm install primereact primeicons @rjsf/core
@@ -74,8 +76,8 @@ import Form from '@rjsf/primereact';
 or
 
 ```javascript
-import {withTheme} from '@rjsf/core';
-import {Theme as PrimeReactTheme} from '@rjsf/primereact';
+import { withTheme } from '@rjsf/core';
+import { Theme as PrimeReactTheme } from '@rjsf/primereact';
 
 // Customize the theme with your own fields and widgets
 
