@@ -15,8 +15,8 @@ export default function DescriptionField<
     return null;
   }
   return (
-      <span id={id}>
-        <RichDescription description={description} registry={registry} uiSchema={uiSchema} />
-      </span>
-    );
+    <span id={id}>
+      <RichDescription description={description} registry={registry} uiSchema={uiSchema} />
+    </span>
+  );
 }
