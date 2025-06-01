@@ -65,7 +65,7 @@ export default function ArrayFieldTemplate<
         required={required}
         registry={registry}
       />
-      <Fieldset {...rest} className={`${className} ${isFixedItems<S>(schema) ? '' : 'sortable-form-fields'}`}>
+      <Fieldset {...rest} className={`${className}${isFixedItems<S>(schema) ? '' : ' sortable-form-fields'}`}>
         <ArrayFieldDescriptionTemplate
           idSchema={idSchema}
           description={uiOptions.description || schema.description}
