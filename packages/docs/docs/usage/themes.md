@@ -8,14 +8,14 @@ meaning that you must load the Bootstrap stylesheet on the page to view the form
 | Theme Name            | Status    | Package Name / Link     |
 | --------------------- | --------- | ----------------------- |
 | antd                  | Published | `@rjsf/antd`            |
-| Bootstrap 3 (default) | Published | `@rjsf/core`            |
-| react-bootstrap       | Published | `@rjsf/react-bootstrap` |
 | Chakra UI             | Published | `@rjsf/chakra-ui`       |
+| Bootstrap 3 (default) | Published | `@rjsf/core`            |
 | fluentui-rc           | Published | `@rjsf/fluentui-rc`     |
 | material-ui           | Published | `@rjsf/mui`             |
+| PrimeReact            | -         | `@rjsf/primereact`      |
+| react-bootstrap       | Published | `@rjsf/react-bootstrap` |
 | Semantic UI           | Published | `@rjsf/semantic-ui`     |
 | shadcn                | Published | `@rjsf/shadcn`          |
-| PrimeReact            | -         | `@rjsf/primereact`      |
 
 ## Using themes
 
