@@ -95,6 +95,7 @@
     "packages/fluentui-rc",
     "packages/mui",
     "packages/playground",
+    "packages/primereact",
     "packages/react-bootstrap",
     "packages/semantic-ui",
     "packages/utils",
