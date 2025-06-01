@@ -54,10 +54,10 @@
       "path": "../mui"
     },
     {
-      "path": "../react-bootstrap"
+      "path": "../primereact"
     },
     {
-      "path": "../primereact"
+      "path": "../react-bootstrap"
     },
     {
       "path": "../semantic-ui"
