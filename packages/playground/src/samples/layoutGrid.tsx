@@ -1985,6 +1985,7 @@ const layoutGrid: Sample = {
                           children: [
                             {
                               'ui:columns': {
+                                style: { marginBottom: '18px' },
                                 children: ['employment'],
                               },
                             },
@@ -2000,13 +2001,9 @@ const layoutGrid: Sample = {
                                     },
                                   },
                                   {
-                                    'ui:col': {
-                                      children: ['employment.location.city'],
-                                    },
-                                  },
-                                  {
-                                    'ui:col': {
-                                      children: ['employment.location.state'],
+                                    'ui:columns': {
+                                      sm: 6,
+                                      children: ['employment.location.city', 'employment.location.state'],
                                     },
                                   },
                                 ],
