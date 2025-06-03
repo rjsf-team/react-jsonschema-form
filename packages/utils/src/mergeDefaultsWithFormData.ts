@@ -77,11 +77,13 @@ export default function mergeDefaultsWithFormData<T = any>(
       const keyDefaultIsObject = keyExistsInDefaults && isObject(get(defaults, key));
       const keyHasFormDataObject = keyExistsInFormData && isObject(keyValue);
 
-      if (keyDefaultIsObject && keyHasFormDataObject && !defaultValueIsNestedObject) {
-        acc[key as keyof T] = {
-          ...get(defaults, key),
-          ...keyValue,
-        };
+      if (
+        keyDefaultIsObject &&
+        keyHasFormDataObject &&
+        !defaultValueIsNestedObject &&
+        overrideFormDataWithDefaultsStrategy !== OverrideFormDataStrategy.replace
+      ) {
+        acc[key as keyof T] = { ...keyDefault, ...keyValue };
         return acc;
       }
 
@@ -95,7 +97,7 @@ export default function mergeDefaultsWithFormData<T = any>(
             : OverrideFormDataStrategy.noop;
 
       acc[key as keyof T] = mergeDefaultsWithFormData<T>(
-        get(defaults, key) ?? {},
+        keyDefault,
         keyValue,
         mergeExtraArrayDefaults,
         defaultSupercedesUndefined,

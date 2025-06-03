@@ -335,6 +335,28 @@ describe('mergeDefaultsWithFormData()', () => {
     });
   });
 
+  describe('test with overrideFormDataWithDefaults set to `noop`', () => {
+    it('should return form data when no defaults', () => {
+      expect(mergeDefaultsWithFormData(undefined, [2], undefined, undefined, OverrideFormDataStrategy.noop)).toEqual([
+        2,
+      ]);
+    });
+
+    it('should return default when formData is undefined and defaultSupercedesUndefined true', () => {
+      expect(mergeDefaultsWithFormData({}, undefined, undefined, true, OverrideFormDataStrategy.noop)).toEqual({});
+    });
+
+    it('should return default when formData is null and defaultSupercedesUndefined true', () => {
+      expect(mergeDefaultsWithFormData({}, null, undefined, true, OverrideFormDataStrategy.noop)).toEqual({});
+    });
+
+    it('should use values from second object', () => {
+      expect(
+        mergeDefaultsWithFormData({ a: 1 }, { a: 2 }, undefined, undefined, OverrideFormDataStrategy.noop),
+      ).toEqual({ a: 2 });
+    });
+  });
+
   describe('test with overrideFormDataWithDefaults set to `replace`', () => {
     it('should return empty array even when no defaults', () => {
       expect(mergeDefaultsWithFormData(undefined, [2], undefined, undefined, OverrideFormDataStrategy.replace)).toEqual(
@@ -354,6 +376,12 @@ describe('mergeDefaultsWithFormData()', () => {
 
     it('should return default when formData is null and defaultSupercedesUndefined true', () => {
       expect(mergeDefaultsWithFormData({}, null, undefined, true, OverrideFormDataStrategy.replace)).toEqual({});
+    });
+
+    it('should return empty object when formData is defined and default is not', () => {
+      expect(
+        mergeDefaultsWithFormData(undefined, { a: 1 }, undefined, undefined, OverrideFormDataStrategy.replace),
+      ).toEqual({});
     });
 
     it('should not merge two one-level deep objects', () => {
@@ -402,18 +430,18 @@ describe('mergeDefaultsWithFormData()', () => {
       ).toEqual([{ a: 1 }]);
     });
 
-    it('should replace objects', () => {
-      const obj1 = {
+    it('should replace deep objects', () => {
+      const defaultObj = {
         a: 1,
         b: {
           c: 3,
-          d: [1, 2, 3],
+          d: [0, 1, 2],
           e: { f: { g: 1 } },
           h: [{ i: 1 }, { i: 2 }],
         },
         c: 2,
       };
-      const obj2 = {
+      const formObj = {
         a: 1,
         b: {
           d: [3],
@@ -425,12 +453,12 @@ describe('mergeDefaultsWithFormData()', () => {
         d: 4,
       };
       expect(
-        mergeDefaultsWithFormData<any>(obj1, obj2, undefined, undefined, OverrideFormDataStrategy.replace),
+        mergeDefaultsWithFormData<any>(defaultObj, formObj, undefined, undefined, OverrideFormDataStrategy.replace),
       ).toEqual({
         a: 1,
         b: {
           c: 3,
-          d: [1, 2, 3],
+          d: [0, 1, 2],
           e: { f: { g: 1 } },
           h: [{ i: 1 }, { i: 2 }],
         },
@@ -444,7 +472,7 @@ describe('mergeDefaultsWithFormData()', () => {
       ).toEqual([1, 2]);
     });
 
-    it('should replace objects', () => {
+    it('should replace simple object', () => {
       expect(
         mergeDefaultsWithFormData(
           { a: { b: 1 } },

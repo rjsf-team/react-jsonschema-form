@@ -5052,11 +5052,12 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         }),
       ).toEqual({ stringArray: [undefined], numberArray: [] });
     });
-    describe('defaults with oneOf and useDefaultAlways as', () => {
+    describe('defaults with oneOf and useDefaultAlways', () => {
       const schema: RJSFSchema = {
         type: 'object',
         properties: {
           country: {
+            type: 'string',
             enum: ['UK', 'France', 'Spain'],
           },
           rating: {
@@ -5074,7 +5075,10 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
                   city: {
                     type: 'array',
                     uniqueItems: true,
-                    enum: ['London', 'Birmingham', 'Liverpool'],
+                    items: {
+                      type: 'string',
+                      enum: ['London', 'Birmingham', 'Liverpool'],
+                    },
                     default: ['London'],
                   },
                 },
@@ -5087,7 +5091,10 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
                   city: {
                     type: 'array',
                     uniqueItems: true,
-                    enum: ['Paris', 'Marseille', 'Lyon'],
+                    items: {
+                      type: 'string',
+                      enum: ['Paris', 'Marseille', 'Lyon'],
+                    },
                     default: ['Paris'],
                   },
                 },
@@ -5100,7 +5107,10 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
                   city: {
                     type: 'array',
                     uniqueItems: true,
-                    enum: ['Madrid', 'Barcelona', 'Valencia'],
+                    items: {
+                      type: 'string',
+                      enum: ['Madrid', 'Barcelona', 'Valencia'],
+                    },
                     default: ['Madrid'],
                   },
                 },
@@ -5116,6 +5126,13 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         }
       });
       it('should populate empty defaults for oneOf + dependencies', () => {
+        testValidator.setReturnValues({
+          isValid: [
+            true, // First oneOf... first === first
+            false, // Second oneOf... second !== first
+            false,
+          ],
+        });
         expect(
           getDefaultFormState(testValidator, schema, { country: 'UK', rating: '6.0' }, undefined, undefined, {
             mergeDefaultsIntoFormData: 'useDefaultAlways',
@@ -5127,6 +5144,13 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         });
       });
       it('should replace defaults for oneOf + dependencies', () => {
+        testValidator.setReturnValues({
+          isValid: [
+            false, // First oneOf... first === first
+            true, // Second oneOf... second !== first
+            false,
+          ],
+        });
         expect(
           getDefaultFormState(
             testValidator,

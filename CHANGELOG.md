@@ -15,6 +15,11 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+# 6.0.0-beta.12
+
+## @rjsf/utils
+
+- Allow form value overrides with defaults [#4625](https://github.com/rjsf-team/react-jsonschema-form/pull/4625
 
 # 6.0.0-beta.11
 
@@ -80,7 +85,6 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Fixed form data propagation with `patternProperties` [#4617](https://github.com/rjsf-team/react-jsonschema-form/pull/4617)
 - Updated the `GlobalUISchemaOptions` types to extend `GenericObjectType` to support user-defined values for their extensions
-- Allow form value overrides with defaults [#4625](https://github.com/rjsf-team/react-jsonschema-form/pull/4625
 
 ## Dev / docs / playground
 
