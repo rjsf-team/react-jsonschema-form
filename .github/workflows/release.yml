@@ -26,6 +26,18 @@ jobs:
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
       - run: git update-index --assume-unchanged .npmrc
-      - run: npx nx release publish
+      - name: Determine npm tag based on release version
+        id: get_npm_tag
+        run: |
+          TAG_NAME="${{ github.ref_name }}"
+          NPM_TAG_VALUE="latest" # Default tag
+
+          if [[ "$TAG_NAME" == *alpha* || "$TAG_NAME" == *beta* || "$TAG_NAME" == *pre* ]]; then
+            NPM_TAG_VALUE="next"
+          fi
+          
+          echo "NPM_TAG=${NPM_TAG_VALUE}" >> $GITHUB_ENV
+          echo "Determined NPM_TAG: ${NPM_TAG_VALUE}"
+      - run: npx nx release publish --tag=$NPM_TAG
       - if: always()
         run: rm .npmrc
