@@ -54,6 +54,9 @@
       "path": "../mui"
     },
     {
+      "path": "../primereact"
+    },
+    {
       "path": "../react-bootstrap"
     },
     {

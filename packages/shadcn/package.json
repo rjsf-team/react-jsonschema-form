@@ -1,6 +1,6 @@
 {
   "name": "@rjsf/shadcn",
-  "version": "6.0.0-beta.8",
+  "version": "6.0.0-beta.10",
   "main": "dist/index.js",
   "module": "lib/index.js",
   "typings": "lib/index.d.ts",
@@ -71,16 +71,16 @@
     "node": ">=20"
   },
   "devDependencies": {
-    "@rjsf/core": "^6.0.0-beta.8",
-    "@rjsf/snapshot-tests": "^6.0.0-beta.8",
-    "@rjsf/utils": "^6.0.0-beta.8",
-    "@rjsf/validator-ajv8": "^6.0.0-beta.8",
+    "@rjsf/core": "^6.0.0-beta.10",
+    "@rjsf/snapshot-tests": "^6.0.0-beta.10",
+    "@rjsf/utils": "^6.0.0-beta.10",
+    "@rjsf/validator-ajv8": "^6.0.0-beta.10",
     "eslint": "^8.56.0",
     "jsdom": "^20.0.3",
     "tailwindcss": "^3.0.0"
   },
   "dependencies": {
-    "@radix-ui/react-checkbox": "^1.2.3",
+    "@radix-ui/react-checkbox": "^1.3.2",
     "@radix-ui/react-dialog": "^1.1.11",
     "@radix-ui/react-icons": "^1.3.0",
     "@radix-ui/react-label": "^2.1.4",

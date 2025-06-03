@@ -20,6 +20,7 @@ export default defineConfig({
       '@rjsf/core': path.resolve(__dirname, '../core/src'),
       '@rjsf/fluentui-rc': path.resolve(__dirname, '../fluentui-rc/src'),
       '@rjsf/mui': path.resolve(__dirname, '../mui/src'),
+      '@rjsf/primereact': path.resolve(__dirname, '../primereact/src'),
       '@rjsf/react-bootstrap': path.resolve(__dirname, '../react-bootstrap/src'),
       '@rjsf/semantic-ui': path.resolve(__dirname, '../semantic-ui/src'),
       '@rjsf/shadcn': path.resolve(__dirname, '../shadcn/src'),

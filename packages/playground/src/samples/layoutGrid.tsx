@@ -1923,6 +1923,164 @@ const layoutGrid: Sample = {
             },
           },
         };
+      case 'primereact':
+        return {
+          'ui:field': 'LayoutGridField',
+          'ui:layoutGrid': {
+            'ui:row': {
+              children: [
+                {
+                  'ui:col': {
+                    children: ['person'],
+                  },
+                },
+                {
+                  'ui:columns': {
+                    xs: 4,
+                    children: ['person.name.first', 'person.name.middle', 'person.name.last'],
+                  },
+                },
+                {
+                  'ui:col': {
+                    sm: 4,
+                    children: ['person.birth_date'],
+                  },
+                },
+                {
+                  'ui:col': {
+                    sm: 8,
+                    children: ['person.race'],
+                  },
+                },
+                {
+                  'ui:col': {
+                    sm: 6,
+                    children: [
+                      {
+                        'ui:row': {
+                          children: [
+                            {
+                              'ui:columns': {
+                                children: ['person.address.line_1', 'person.address.line_2', 'person.address.city'],
+                              },
+                            },
+                            {
+                              'ui:columns': {
+                                sm: 6,
+                                children: ['person.address.state', 'person.address.postal_code'],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+                {
+                  'ui:col': {
+                    sm: 6,
+                    children: [
+                      {
+                        'ui:row': {
+                          children: [
+                            {
+                              'ui:columns': {
+                                style: { marginBottom: '18px' },
+                                children: ['employment'],
+                              },
+                            },
+                            {
+                              'ui:condition': {
+                                field: 'employment.job_type',
+                                value: 'company',
+                                operator: 'all',
+                                children: [
+                                  {
+                                    'ui:columns': {
+                                      children: ['employment.business', 'employment.title'],
+                                    },
+                                  },
+                                  {
+                                    'ui:columns': {
+                                      sm: 6,
+                                      children: ['employment.location.city', 'employment.location.state'],
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              'ui:condition': {
+                                field: 'employment.job_type',
+                                value: 'education',
+                                operator: 'all',
+                                children: [
+                                  {
+                                    'ui:columns': {
+                                      children: ['employment.district', 'employment.school', 'employment.title'],
+                                    },
+                                  },
+                                  {
+                                    'ui:col': {
+                                      children: ['employment.location.city'],
+                                    },
+                                  },
+                                  {
+                                    'ui:col': {
+                                      children: ['employment.location.state'],
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                            {
+                              'ui:condition': {
+                                field: 'employment.job_type',
+                                value: 'other',
+                                operator: 'all',
+                                children: [
+                                  {
+                                    'ui:columns': {
+                                      children: [
+                                        {
+                                          name: 'employment.description',
+                                          rows: 6,
+                                        },
+                                      ],
+                                    },
+                                  },
+                                ],
+                              },
+                            },
+                          ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+          person: {
+            'ui:field': 'LayoutHeaderField',
+            race: {
+              'ui:options': {
+                widget: 'checkboxes',
+              },
+            },
+            address: {
+              'ui:field': 'LayoutGridField',
+            },
+          },
+          employment: {
+            'ui:options': {
+              inline: true,
+            },
+            description: {
+              'ui:widget': 'textarea',
+            },
+          },
+        };
       default:
         return {
           'ui:field': 'LayoutGridField',

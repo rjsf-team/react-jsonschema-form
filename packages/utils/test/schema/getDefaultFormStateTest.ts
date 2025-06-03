@@ -1401,6 +1401,28 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         });
       });
 
+      describe('an object with a valid formData and enum property with default value', () => {
+        test('getDefaultFormState', () => {
+          const schema: RJSFSchema = {
+            type: 'object',
+            properties: {
+              test: {
+                type: 'string',
+                enum: [
+                  { label: 'a', value: 'a' },
+                  { label: 'b', value: 'b' },
+                ],
+                default: { label: 'a', value: 'a' },
+              },
+            },
+          };
+
+          expect(getDefaultFormState(testValidator, schema, { test: { label: 'b', value: 'b' } })).toEqual({
+            test: { label: 'b', value: 'b' },
+          });
+        });
+      });
+
       describe('oneOf with const values', () => {
         const schema: RJSFSchema = {
           type: 'object',
@@ -2028,6 +2050,22 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         };
 
         expect(ensureFormDataMatchingSchema(testValidator, schema, schema, 'a')).toEqual('a');
+      });
+
+      it('Test schema with valid formData with an enum and its default value', () => {
+        schema = {
+          type: 'string',
+          enum: [
+            { label: 'a', value: 'a' },
+            { label: 'b', value: 'b' },
+          ],
+          default: { label: 'a', value: 'a' },
+        };
+
+        expect(getDefaultFormState(testValidator, schema, { label: 'b', value: 'b' })).toEqual({
+          label: 'b',
+          value: 'b',
+        });
       });
     });
     describe('AJV $data reference in const property in schema should not be treated as default/const value', () => {
@@ -5013,6 +5051,99 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           },
         }),
       ).toEqual({ stringArray: [undefined], numberArray: [] });
+    });
+    describe('defaults with oneOf and useDefaultAlways as', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          country: {
+            enum: ['UK', 'France', 'Spain'],
+          },
+          rating: {
+            type: 'string',
+          },
+        },
+        dependencies: {
+          country: {
+            oneOf: [
+              {
+                properties: {
+                  country: {
+                    enum: ['UK'],
+                  },
+                  city: {
+                    type: 'array',
+                    uniqueItems: true,
+                    enum: ['London', 'Birmingham', 'Liverpool'],
+                    default: ['London'],
+                  },
+                },
+              },
+              {
+                properties: {
+                  country: {
+                    enum: ['France'],
+                  },
+                  city: {
+                    type: 'array',
+                    uniqueItems: true,
+                    enum: ['Paris', 'Marseille', 'Lyon'],
+                    default: ['Paris'],
+                  },
+                },
+              },
+              {
+                properties: {
+                  country: {
+                    enum: ['Spain'],
+                  },
+                  city: {
+                    type: 'array',
+                    uniqueItems: true,
+                    enum: ['Madrid', 'Barcelona', 'Valencia'],
+                    default: ['Madrid'],
+                  },
+                },
+              },
+            ],
+          },
+        },
+      };
+      afterEach(() => {
+        // Reset the testValidator
+        if (typeof testValidator.reset === 'function') {
+          testValidator?.reset();
+        }
+      });
+      it('should populate empty defaults for oneOf + dependencies', () => {
+        expect(
+          getDefaultFormState(testValidator, schema, { country: 'UK', rating: '6.0' }, undefined, undefined, {
+            mergeDefaultsIntoFormData: 'useDefaultAlways',
+          }),
+        ).toEqual({
+          country: 'UK',
+          rating: '6.0',
+          city: ['London'],
+        });
+      });
+      it('should replace defaults for oneOf + dependencies', () => {
+        expect(
+          getDefaultFormState(
+            testValidator,
+            schema,
+            { country: 'France', city: ['London'], rating: '6.0' },
+            undefined,
+            undefined,
+            {
+              mergeDefaultsIntoFormData: 'useDefaultAlways',
+            },
+          ),
+        ).toEqual({
+          country: 'France',
+          rating: '6.0',
+          city: ['Paris'],
+        });
+      });
     });
   });
 }
