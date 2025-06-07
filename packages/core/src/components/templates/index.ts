@@ -13,6 +13,7 @@ import FieldTemplate from './FieldTemplate';
 import FieldErrorTemplate from './FieldErrorTemplate';
 import FieldHelpTemplate from './FieldHelpTemplate';
 import GridTemplate from './GridTemplate';
+import MultiSchemaFieldTemplate from './MultiSchemaFieldTemplate';
 import ObjectFieldTemplate from './ObjectFieldTemplate';
 import TitleField from './TitleField';
 import UnsupportedField from './UnsupportedField';
@@ -37,6 +38,7 @@ function templates<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends F
     FieldErrorTemplate,
     FieldHelpTemplate,
     GridTemplate,
+    MultiSchemaFieldTemplate,
     ObjectFieldTemplate,
     TitleFieldTemplate: TitleField,
     UnsupportedFieldTemplate: UnsupportedField,

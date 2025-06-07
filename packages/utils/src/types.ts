@@ -341,6 +341,8 @@ export type TemplatesType<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
   FieldTemplate: ComponentType<FieldTemplateProps<T, S, F>>;
   /** The template to use to render a Grid element */
   GridTemplate: ComponentType<GridTemplateProps>;
+  /** The template to use while rendering a multi-schema field (i.e. anyOf, oneOf) */
+  MultiSchemaFieldTemplate: ComponentType<MultiSchemaFieldTemplateProps<T, S, F>>;
   /** The template to use while rendering an object */
   ObjectFieldTemplate: ComponentType<ObjectFieldTemplateProps<T, S, F>>;
   /** The template to use for rendering the title of a field */
@@ -776,6 +778,18 @@ export type WrapIfAdditionalTemplateProps<
     | 'onDropPropertyClick'
     | 'registry'
   >;
+
+/** The properties that are passed to a MultiSchemaFieldTemplate implementation */
+export interface MultiSchemaFieldTemplateProps<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any,
+> extends RJSFBaseProps<T, S, F> {
+  /** The rendered widget used to select a schema option */
+  selector: ReactNode;
+  /** The rendered SchemaField for the selected schema option */
+  optionSchemaField: ReactNode;
+}
 
 /** The properties that are passed to a Widget implementation */
 export interface WidgetProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>

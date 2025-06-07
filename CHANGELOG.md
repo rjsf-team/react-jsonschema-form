@@ -21,15 +21,54 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/antd
 
 - Set peerDependency for `@ant-design/icons` to `^6.0.0`, fixing [#4643](https://github.com/rjsf-team/react-jsonschema-form/issues/4643)
+- Added `MultiSchemaFieldTemplate`
+
+## @rjsf/chakra-ui
+
+- Added `MultiSchemaFieldTemplate`
+
+## @rjsf/core
+
+- Refactored `MultiSchemaField` to use the `MultiSchemaFieldTemplate` provided by the registry.
+- Added `MultiSchemaFieldTemplate` component to maintain the same functionality as the previous `MultiSchemaField` implementation.
+
+## @rjsf/daisyui
+
+- Added `MultiSchemaFieldTemplate`
+
+## @rjsf/fluentui-rc
+
+- Added `MultiSchemaFieldTemplate`
+
+## @rjsf/mui
+
+- Added `MultiSchemaFieldTemplate`
 
 ## @rjsf/primereact
 
 - New theme!
 
+## @rjsf/react-bootstrap
+
+- Added `MultiSchemaFieldTemplate`
+
+## @rjsf/semantic-ui
+
+- Added `MultiSchemaFieldTemplate`
+
+## @rjsf/shadcn
+
+- Added `MultiSchemaFieldTemplate`
+
 ## @rjsf/utils
 
 - Fixed issue where oneOf radio button could not be modified when defaults were set, fixing [#4634](https://github.com/rjsf-team/react-jsonschema-form/issues/4634)
 - Fix default value for object properties such as enums that are rendered in select, radio inputs, etc.
+- Add support for `MultiSchemaFieldTemplate`, with new `MultiSchemaFieldTemplateProps`, to the `TemplatesType` interface
+
+## Dev / docs / playground
+
+- Added documentation for the new `MultiSchemaFieldTemplate`
 
 # 6.0.0-beta.10
 

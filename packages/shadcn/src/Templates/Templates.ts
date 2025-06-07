@@ -10,6 +10,7 @@ import FieldHelpTemplate from '../FieldHelpTemplate';
 import FieldTemplate from '../FieldTemplate';
 import GridTemplate from '../GridTemplate';
 import { CopyButton, MoveDownButton, MoveUpButton, RemoveButton } from '../IconButton';
+import MultiSchemaFieldTemplate from '../MultiSchemaFieldTemplate';
 import ObjectFieldTemplate from '../ObjectFieldTemplate';
 import SubmitButton from '../SubmitButton';
 import TitleField from '../TitleField';
@@ -38,6 +39,7 @@ export function generateTemplates<
     FieldHelpTemplate,
     FieldTemplate,
     GridTemplate,
+    MultiSchemaFieldTemplate,
     ObjectFieldTemplate,
     TitleFieldTemplate: TitleField,
     WrapIfAdditionalTemplate,

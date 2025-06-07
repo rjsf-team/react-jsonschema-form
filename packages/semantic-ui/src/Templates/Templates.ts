@@ -11,6 +11,7 @@ import FieldErrorTemplate from '../FieldErrorTemplate';
 import FieldHelpTemplate from '../FieldHelpTemplate';
 import FieldTemplate from '../FieldTemplate';
 import GridTemplate from '../GridTemplate';
+import MultiSchemaFieldTemplate from '../MultiSchemaFieldTemplate';
 import ObjectFieldTemplate from '../ObjectFieldTemplate';
 import SubmitButton from '../SubmitButton';
 import TitleField from '../TitleField';
@@ -39,6 +40,7 @@ export function generateTemplates<
     FieldHelpTemplate,
     FieldTemplate,
     GridTemplate,
+    MultiSchemaFieldTemplate,
     ObjectFieldTemplate,
     TitleFieldTemplate: TitleField,
     WrapIfAdditionalTemplate,
