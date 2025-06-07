@@ -11,6 +11,7 @@ import FieldErrorTemplate from './FieldErrorTemplate';
 import FieldHelpTemplate from './FieldHelpTemplate';
 import FieldTemplate from './FieldTemplate';
 import GridTemplate from './GridTemplate/GridTemplate';
+import MultiSchemaFieldTemplate from './MultiSchemaFieldTemplate';
 import ObjectFieldTemplate from './ObjectFieldTemplate';
 import TitleFieldTemplate from './TitleField/TitleField';
 import WrapIfAdditionalTemplate from './WrapIfAdditionalTemplate';
@@ -53,6 +54,7 @@ export function generateTemplates<
     FieldHelpTemplate,
     FieldTemplate,
     GridTemplate,
+    MultiSchemaFieldTemplate,
     ObjectFieldTemplate,
     TitleFieldTemplate,
     WrapIfAdditionalTemplate,
