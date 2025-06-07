@@ -33,6 +33,7 @@ Below is the table that lists all the `templates`, their props interface, their 
 | [FieldHelpTemplate\*](#fieldhelptemplate)                         | FieldHelpProps                    | ui:FieldHelpTemplate             | Formerly internal `Help` component accessible only to `SchemaField`                                                                                                  |
 | [FieldTemplate](#fieldtemplate)                                   | FieldTemplateProps                | ui:FieldTemplate                 | Formerly `Form.FieldTemplate` or `Registry.FieldTemplate`                                                                                                            |
 | [GridTemplate](#gridtemplate)                                     | GridTemplateProps                 | ui:GridTemplate                  | Theme dependent implementations of a Grid element for either rows or columns                                                                                         |
+| [MultiSchemaFieldTemplate](#multischemafieldtemplate)             | MultiSchemaFieldTemplateProps     | ui:MultiSchemaFieldTemplate      | Formerly part of `@rjsf/core `MultiSchemaField`, refactored as a template                                                                                            |
 | [ObjectFieldTemplate](#objectfieldtemplate)                       | ObjectFieldTemplateProps          | ui:ObjectFieldTemplate           | Formerly `Form.ObjectFieldTemplate` or `Registry.ObjectFieldTemplate`                                                                                                |
 | [TitleFieldTemplate\*](#titlefieldtemplate)                       | TitleFieldProps                   | ui:TitleFieldTemplate            | Formerly a `field` in `@rjsf.core` moved to `templates` with the `Template` suffix. Previously implemented in each theme.                                            |
 | [UnsupportedFieldTemplate\*](#unsupportedfieldtemplate)           | UnsupportedFieldProps             | ui:UnsupportedFieldTemplate      | Formerly a `field` in `@rjsf.core` moved to `templates` with the `Template` suffix.                                                                                  |
@@ -794,6 +795,60 @@ The following props are passed to the `GridTemplate`:
 
 - `children`: The contents of the grid template
 - `column`: Optional flag indicating whether the grid element represents a column, necessary for themes which have components for Rows vs Column
+
+## MultiSchemaFieldTemplate
+
+Each theme implements a `MultiSchemaFieldTemplate` used to render the layout of a MultiSchemaField, i.e. a field described by a `oneOf` or `anyOf` schema.
+The template typically renders a Widget used to select the schema to use, as well as a field for the selected schema.
+
+```tsx
+import { MultiSchemaFieldTemplateProps, RJSFSchema } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
+
+const schema: RJSFSchema = {
+  type: 'object',
+  properties: {
+    myField: {
+      oneOf: [
+        {
+          type: 'string',
+          title: 'String Field',
+          description: 'A field that accepts a string',
+        },
+        {
+          type: 'number',
+          title: 'Number Field',
+          description: 'A field that accepts a number',
+        },
+      ],
+    },
+  },
+};
+
+function MultiSchemaFieldTemplate(props: MultiSchemaFieldTemplateProps) {
+  const { selector, optionSchemaField } = props;
+  return (
+    <div className='my-multi-schema-field-class'>
+      {selector}
+      <hr />
+      {optionSchemaField}
+    </div>
+  );
+}
+
+render(
+  <Form schema={schema} validator={validator} templates={{ MultiSchemaFieldTemplate }} />,
+  document.getElementById('app'),
+);
+```
+
+The following props are passed to the `MultiSchemaFieldTemplate`:
+
+- `selector`: The rendered Widget used to select a multischema option.
+- `optionSchemaField`: The rendered SchemaField representing the selected option.
+- `schema`: The schema object for the field.
+- `uiSchema`: The uiSchema object for the field.
+- `registry`: The `registry` object.
 
 ## ObjectFieldTemplate
 
