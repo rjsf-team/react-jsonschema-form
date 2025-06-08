@@ -94,6 +94,7 @@ exports[`single fields checkbox field 1`] = `
     border-width: 1px;
     border-color: var(--chakra-colors-border);
     border-radius: var(--chakra-radii-l1);
+    cursor: var(--chakra-cursor-checkbox);
     --focus-ring-color: var(--chakra-colors-color-palette-focus-ring);
     width: var(--chakra-sizes-5);
     height: var(--chakra-sizes-5);
@@ -136,6 +137,7 @@ exports[`single fields checkbox field 1`] = `
 
   .emotion-4:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-4:is([data-state=checked], [data-state=indeterminate]) {
@@ -437,6 +439,7 @@ exports[`single fields checkbox field with label 1`] = `
     border-width: 1px;
     border-color: var(--chakra-colors-border);
     border-radius: var(--chakra-radii-l1);
+    cursor: var(--chakra-cursor-checkbox);
     --focus-ring-color: var(--chakra-colors-color-palette-focus-ring);
     width: var(--chakra-sizes-5);
     height: var(--chakra-sizes-5);
@@ -479,6 +482,7 @@ exports[`single fields checkbox field with label 1`] = `
 
   .emotion-4:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-4:is([data-state=checked], [data-state=indeterminate]) {
@@ -814,6 +818,7 @@ exports[`single fields checkbox field with label and description 1`] = `
     border-width: 1px;
     border-color: var(--chakra-colors-border);
     border-radius: var(--chakra-radii-l1);
+    cursor: var(--chakra-cursor-checkbox);
     --focus-ring-color: var(--chakra-colors-color-palette-focus-ring);
     width: var(--chakra-sizes-5);
     height: var(--chakra-sizes-5);
@@ -856,6 +861,7 @@ exports[`single fields checkbox field with label and description 1`] = `
 
   .emotion-5:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-5:is([data-state=checked], [data-state=indeterminate]) {
@@ -1197,6 +1203,7 @@ exports[`single fields checkbox field with label and rich text description 1`] =
     border-width: 1px;
     border-color: var(--chakra-colors-border);
     border-radius: var(--chakra-radii-l1);
+    cursor: var(--chakra-cursor-checkbox);
     --focus-ring-color: var(--chakra-colors-color-palette-focus-ring);
     width: var(--chakra-sizes-5);
     height: var(--chakra-sizes-5);
@@ -1239,6 +1246,7 @@ exports[`single fields checkbox field with label and rich text description 1`] =
 
   .emotion-5:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-5:is([data-state=checked], [data-state=indeterminate]) {
@@ -1608,6 +1616,7 @@ exports[`single fields checkboxes field 1`] = `
     border-width: 1px;
     border-color: var(--chakra-colors-border);
     border-radius: var(--chakra-radii-l1);
+    cursor: var(--chakra-cursor-checkbox);
     --focus-ring-color: var(--chakra-colors-color-palette-focus-ring);
     width: var(--chakra-sizes-5);
     height: var(--chakra-sizes-5);
@@ -1650,6 +1659,7 @@ exports[`single fields checkboxes field 1`] = `
 
   .emotion-6:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-6:is([data-state=checked], [data-state=indeterminate]) {
@@ -4505,14 +4515,7 @@ exports[`single fields format time 1`] = `
 
 exports[`single fields help and error display 1`] = `
 .emotion-0 {
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-align-items: flex-start;
-  -webkit-box-align: flex-start;
-  -ms-flex-align: flex-start;
-  align-items: flex-start;
-  gap: var(--chakra-spacing-3);
+  margin-bottom: var(--chakra-spacing-3);
 }
 
 @layer recipes {
@@ -4620,6 +4623,10 @@ exports[`single fields help and error display 1`] = `
   }
 }
 
+.emotion-6 {
+  list-style-position: inside;
+}
+
 @layer recipes {
   .emotion-6 {
     display: -webkit-box;
@@ -4652,25 +4659,8 @@ exports[`single fields help and error display 1`] = `
   }
 }
 
-.emotion-8 {
-  color: var(--chakra-colors-red-500);
-}
-
 @layer recipes {
   .emotion-8 {
-    -webkit-margin-end: var(--chakra-spacing-2);
-    margin-inline-end: var(--chakra-spacing-2);
-    min-height: 1lh;
-    -webkit-flex-shrink: 0;
-    -ms-flex-negative: 0;
-    flex-shrink: 0;
-    display: inline-block;
-    vertical-align: middle;
-  }
-}
-
-@layer recipes {
-  .emotion-9 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -4681,7 +4671,7 @@ exports[`single fields help and error display 1`] = `
     width: var(--chakra-sizes-full);
   }
 
-  .emotion-9>:not(style, [hidden])~:not(style, [hidden]) {
+  .emotion-8>:not(style, [hidden])~:not(style, [hidden]) {
     --space-y-reverse: 0;
     margin-top: calc(var(--chakra-spacing-4) * calc(1 - var(--space-y-reverse)));
     margin-bottom: calc(var(--chakra-spacing-4) * var(--space-y-reverse));
@@ -4689,7 +4679,7 @@ exports[`single fields help and error display 1`] = `
 }
 
 @layer recipes {
-  .emotion-11 {
+  .emotion-10 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -4702,12 +4692,12 @@ exports[`single fields help and error display 1`] = `
   }
 }
 
-.emotion-12 {
+.emotion-11 {
   margin-bottom: var(--chakra-spacing-1);
 }
 
 @layer recipes {
-  .emotion-12 {
+  .emotion-11 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -4726,7 +4716,7 @@ exports[`single fields help and error display 1`] = `
 }
 
 @layer recipes {
-  .emotion-13 {
+  .emotion-12 {
     width: 100%;
     min-width: var(--input-height);
     outline: 0;
@@ -4751,17 +4741,17 @@ exports[`single fields help and error display 1`] = `
     --focus-ring-color: var(--focus-color);
   }
 
-  .emotion-13:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-12:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: not-allowed;
   }
 
-  .emotion-13:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+  .emotion-12:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
     --focus-ring-color: var(--error-color);
     border-color: var(--error-color);
   }
 
-  .emotion-13:is(:focus-visible, [data-focus-visible]) {
+  .emotion-12:is(:focus-visible, [data-focus-visible]) {
     outline-offset: 0px;
     outline-width: var(--focus-ring-width, 1px);
     outline-color: var(--focus-ring-color);
@@ -4770,8 +4760,12 @@ exports[`single fields help and error display 1`] = `
   }
 }
 
+.emotion-13 {
+  margin-top: 0;
+}
+
 @layer recipes {
-  .emotion-14 {
+  .emotion-13 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -4788,12 +4782,12 @@ exports[`single fields help and error display 1`] = `
   }
 }
 
-.emotion-18 {
+.emotion-14 {
   margin-top: var(--chakra-spacing-3);
 }
 
 @layer recipes {
-  .emotion-19 {
+  .emotion-15 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -4841,19 +4835,19 @@ exports[`single fields help and error display 1`] = `
     color: var(--chakra-colors-color-palette-contrast);
   }
 
-  .emotion-19:is(:focus-visible, [data-focus-visible]) {
+  .emotion-15:is(:focus-visible, [data-focus-visible]) {
     outline-width: var(--focus-ring-width, 2px);
     outline-offset: var(--focus-ring-offset, 2px);
     outline-style: var(--focus-ring-style, solid);
     outline-color: var(--focus-ring-color);
   }
 
-  .emotion-19:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-15:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: not-allowed;
   }
 
-  .emotion-19 :where(svg) {
+  .emotion-15 :where(svg) {
     -webkit-flex-shrink: 0;
     -ms-flex-negative: 0;
     flex-shrink: 0;
@@ -4861,14 +4855,14 @@ exports[`single fields help and error display 1`] = `
     height: var(--chakra-sizes-5);
   }
 
-  .emotion-19:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+  .emotion-15:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
     --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
     background: var(--mix-background, var(--chakra-colors-color-palette-solid));
     --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
   }
 
   @media (hover: hover) {
-    .emotion-19:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+    .emotion-15:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
       --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
       background: var(--mix-background, var(--chakra-colors-color-palette-solid));
       --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
@@ -4914,28 +4908,6 @@ exports[`single fields help and error display 1`] = `
           <li
             className="chakra-list__item emotion-7"
           >
-            <svg
-              className="lucide lucide-triangle-alert chakra-list__indicator emotion-8"
-              fill="none"
-              height={24}
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              viewBox="0 0 24 24"
-              width={24}
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"
-              />
-              <path
-                d="M12 9v4"
-              />
-              <path
-                d="M12 17h.01"
-              />
-            </svg>
             . an error
           </li>
         </ul>
@@ -4946,23 +4918,23 @@ exports[`single fields help and error display 1`] = `
     className="rjsf-field rjsf-field-string rjsf-field-error"
   >
     <fieldset
-      className="fieldset__root emotion-9"
+      className="fieldset__root emotion-8"
       data-invalid="true"
       data-part="root"
       data-scope="fieldset"
       disabled={false}
     >
       <p
-        className="emotion-10"
+        className="emotion-9"
         id="root__help"
       >
         help me!
       </p>
       <div
-        className="fieldset__content emotion-11"
+        className="fieldset__content emotion-10"
       >
         <div
-          className="chakra-field__root emotion-12"
+          className="chakra-field__root emotion-11"
           data-invalid=""
           data-part="root"
           data-scope="field"
@@ -4973,7 +4945,7 @@ exports[`single fields help and error display 1`] = `
             aria-describedby="root__error root__description root__help"
             aria-invalid="true"
             autoFocus={false}
-            className="chakra-input emotion-13"
+            className="chakra-input emotion-12"
             data-invalid=""
             data-part="input"
             data-scope="field"
@@ -4993,34 +4965,20 @@ exports[`single fields help and error display 1`] = `
       </div>
       <span
         aria-live="polite"
-        className="fieldset__errorText emotion-14"
+        className="fieldset__errorText emotion-13"
         data-part="error-text"
         data-scope="fieldset"
-        id="fieldset:::r3h:::error-text"
+        id="root__error"
       >
-        <ul
-          className="chakra-list__root emotion-6"
-          role="list"
-        >
-          <li
-            className="chakra-list__item emotion-7"
-          >
-            <p
-              className="emotion-10"
-              id="root__error"
-            >
-              an error
-            </p>
-          </li>
-        </ul>
+        an error
       </span>
     </fieldset>
   </div>
   <div
-    className="emotion-18"
+    className="emotion-14"
   >
     <button
-      className="chakra-button emotion-19"
+      className="chakra-button emotion-15"
       disabled={false}
       type="submit"
     >
@@ -7258,7 +7216,7 @@ exports[`single fields select field 1`] = `
     align-items: center;
     gap: var(--chakra-spacing-1);
     position: absolute;
-    right: 0;
+    inset-inline-end: 0;
     top: 0;
     bottom: 0;
     padding-inline: var(--select-trigger-padding-x);
@@ -7965,7 +7923,7 @@ exports[`single fields select field multiple choice 1`] = `
     align-items: center;
     gap: var(--chakra-spacing-1);
     position: absolute;
-    right: 0;
+    inset-inline-end: 0;
     top: 0;
     bottom: 0;
     padding-inline: var(--select-trigger-padding-x);
@@ -8752,7 +8710,7 @@ exports[`single fields select field multiple choice enumDisabled 1`] = `
     align-items: center;
     gap: var(--chakra-spacing-1);
     position: absolute;
-    right: 0;
+    inset-inline-end: 0;
     top: 0;
     bottom: 0;
     padding-inline: var(--select-trigger-padding-x);
@@ -9496,6 +9454,7 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
     border-width: 1px;
     border-color: var(--chakra-colors-border);
     border-radius: var(--chakra-radii-l1);
+    cursor: var(--chakra-cursor-checkbox);
     --focus-ring-color: var(--chakra-colors-color-palette-focus-ring);
     width: var(--chakra-sizes-5);
     height: var(--chakra-sizes-5);
@@ -9538,6 +9497,7 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
 
   .emotion-6:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-6:is([data-state=checked], [data-state=indeterminate]) {
@@ -10161,7 +10121,7 @@ exports[`single fields select field multiple choice formData 1`] = `
     align-items: center;
     gap: var(--chakra-spacing-1);
     position: absolute;
-    right: 0;
+    inset-inline-end: 0;
     top: 0;
     bottom: 0;
     padding-inline: var(--select-trigger-padding-x);
@@ -10951,7 +10911,7 @@ exports[`single fields select field multiple choice with labels 1`] = `
     align-items: center;
     gap: var(--chakra-spacing-1);
     position: absolute;
-    right: 0;
+    inset-inline-end: 0;
     top: 0;
     bottom: 0;
     padding-inline: var(--select-trigger-padding-x);
@@ -11699,7 +11659,7 @@ exports[`single fields select field single choice enumDisabled 1`] = `
     align-items: center;
     gap: var(--chakra-spacing-1);
     position: absolute;
-    right: 0;
+    inset-inline-end: 0;
     top: 0;
     bottom: 0;
     padding-inline: var(--select-trigger-padding-x);
@@ -13335,7 +13295,7 @@ exports[`single fields select field single choice formData 1`] = `
     align-items: center;
     gap: var(--chakra-spacing-1);
     position: absolute;
-    right: 0;
+    inset-inline-end: 0;
     top: 0;
     bottom: 0;
     padding-inline: var(--select-trigger-padding-x);
