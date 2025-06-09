@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="generator" content="Docusaurus v3.7.0">
 <title data-rh="true">6.x Upgrade Guide | react-jsonschema-form</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:url" content="https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v6.x upgrade guide"><meta data-rh="true" property="og:locale" content="en"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docusaurus_version" content="current"><meta data-rh="true" name="docusaurus_tag" content="docs-default-current"><meta data-rh="true" name="docsearch:version" content="current"><meta data-rh="true" name="docsearch:docusaurus_tag" content="docs-default-current"><meta data-rh="true" property="og:title" content="6.x Upgrade Guide | react-jsonschema-form"><meta data-rh="true" name="description" content="New packages"><meta data-rh="true" property="og:description" content="New packages"><link data-rh="true" rel="icon" href="/react-jsonschema-form/docs/img/favicon.ico"><link data-rh="true" rel="canonical" href="https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v6.x upgrade guide"><link data-rh="true" rel="alternate" href="https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v6.x upgrade guide" hreflang="en"><link data-rh="true" rel="alternate" href="https://rjsf-team.github.io/react-jsonschema-form/docs/migration-guides/v6.x upgrade guide" hreflang="x-default"><link data-rh="true" rel="preconnect" href="https://LRQC6J0BO6-dsn.algolia.net" crossorigin="anonymous"><link rel="search" type="application/opensearchdescription+xml" title="react-jsonschema-form" href="/react-jsonschema-form/docs/opensearch.xml"><link rel="stylesheet" href="/react-jsonschema-form/docs/assets/css/styles.a16d739e.css">
-<script src="/react-jsonschema-form/docs/assets/js/runtime~main.36bf6346.js" defer="defer"></script>
+<script src="/react-jsonschema-form/docs/assets/js/runtime~main.dddba1ef.js" defer="defer"></script>
 <script src="/react-jsonschema-form/docs/assets/js/main.37412538.js" defer="defer"></script>
 </head>
 <body class="navigation-with-keyboard">
@@ -70,6 +70,9 @@ See <a href="/react-jsonschema-form/docs/advanced-customization/custom-templates
 <p>If you have implemented your own <code>ArrayFieldItemTemplate</code> or <code>ArrayField</code> then you will have to account for these changes.</p>
 <h4 class="anchor anchorWithStickyNavbar_fF9Z" id="gridtemplate">GridTemplate<a href="#gridtemplate" class="hash-link" aria-label="Direct link to GridTemplate" title="Direct link to GridTemplate">​</a></h4>
 <p>A new, theme-dependent template <code>GridTemplate</code> was added to support the new layout feature and must be provided if you are building your own <code>registry.templates</code> rather than overloading them via the <code>templates</code> props.</p>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="multischemafieldtemplate">MultiSchemaFieldTemplate<a href="#multischemafieldtemplate" class="hash-link" aria-label="Direct link to MultiSchemaFieldTemplate" title="Direct link to MultiSchemaFieldTemplate">​</a></h4>
+<p>This new template was created to extract styling applied to the <code>MultiSchemaField</code> component in the <code>@rjsf/core</code> package.</p>
+<p>If you have styled your form using the following classNames and you do NOT use the <code>@rjsf/core</code> theme, you may need to adjust your styles, as they may have been removed from your theme: <code>panel</code>, <code>panel-default</code>, <code>panel-body</code>, <code>form-group</code>.</p>
 <h4 class="anchor anchorWithStickyNavbar_fF9Z" id="schemautilstype">SchemaUtilsType<a href="#schemautilstype" class="hash-link" aria-label="Direct link to SchemaUtilsType" title="Direct link to SchemaUtilsType">​</a></h4>
 <p>Five new functions were added to this type, so if you have your own implementation of this type, you will need to add them to yours.
 The following new functions match the 5 new validator-based utility API functions mentioned below:</p>
@@ -122,7 +125,11 @@ replacement, <code>ui:enumNames</code> instead. I.e.:</p>
 <p>In fixing <a href="https://github.com/rjsf-team/react-jsonschema-form/issues/2280" target="_blank" rel="noopener noreferrer">#2280</a>, the following <code>Bootstrap 3</code> classes
 (<code>form-group</code>, <code>has-error</code> and <code>has-danger</code> error classes) were removed from the <code>classNames</code> prop passed down to the
 <code>FieldTemplate</code>. They were instead moved into the <code>core</code> theme&#x27;s <code>WrapIfAdditionalTemplate</code> to ensure that theme was
-unchanged. As a result, the themes (other than <code>core</code>) will no longer render those classes.</p>
+unchanged.</p>
+<p>Additionally, the Bootstrap 3 classes <code>panel</code>, <code>panel-default</code>, <code>panel-body</code>, and <code>form-group</code> were removed from the
+<code>MultiSchemaField</code> component in the <code>@rjsf/core</code> package, and moved into the <code>core</code> theme&#x27;s <code>MultiSchemaFieldTemplate</code>
+to ensure that the theme was unchanged.</p>
+<p>As a result, the themes (other than <code>core</code>) will no longer render these classes.</p>
 <p>If you use a non-<code>core</code> theme and were relying on them for in your application&#x27;s styling or behavior (via css overrides
 perhaps), then you can still use the non-<code>Bootstrap 3</code> RJSF marker class (see below) or your specific theme&#x27;s error classes.</p>
 <h4 class="anchor anchorWithStickyNavbar_fF9Z" id="prefixed-rjsf-template-and-field-marker-classes">prefixed RJSF template and field marker classes<a href="#prefixed-rjsf-template-and-field-marker-classes" class="hash-link" aria-label="Direct link to prefixed RJSF template and field marker classes" title="Direct link to prefixed RJSF template and field marker classes">​</a></h4>
@@ -139,6 +146,7 @@ and new marker classes. If you were relying on any of these classes, simply do a
 <li><code>ArrayFieldItemTemplateType</code>: The properties of each element in the ArrayFieldTemplateProps.items array. NOTE: <code>ArrayFieldTemplateItemType</code> is an alias to this type</li>
 <li><code>FoundFieldType</code>: The interface for the return value of the <code>findFieldInSchema</code> function</li>
 <li><code>GridTemplateProps</code>: The properties that are passed to a <code>GridTemplate</code></li>
+<li><code>MultiSchemaFieldTemplateProps</code>: The properties that are passed to a <code>MultiSchemaFieldTemplate</code></li>
 <li><code>TestIdShape</code>: The interface for the test ID proxy objects that are returned by the <code>getTestId</code> utility function</li>
 </ul>
 <h3 class="anchor anchorWithStickyNavbar_fF9Z" id="new-non-validator-utility-functions">New non-validator utility functions<a href="#new-non-validator-utility-functions" class="hash-link" aria-label="Direct link to New non-validator utility functions" title="Direct link to New non-validator utility functions">​</a></h3>
