@@ -1188,7 +1188,7 @@ exports[`array fields checkboxes 1`] = `
     align-items: center;
     gap: var(--chakra-spacing-1);
     position: absolute;
-    right: 0;
+    inset-inline-end: 0;
     top: 0;
     bottom: 0;
     padding-inline: var(--select-trigger-padding-x);
@@ -2450,14 +2450,7 @@ exports[`array fields fixed array 1`] = `
 
 exports[`array fields has errors 1`] = `
 .emotion-0 {
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-align-items: flex-start;
-  -webkit-box-align: flex-start;
-  -ms-flex-align: flex-start;
-  align-items: flex-start;
-  gap: var(--chakra-spacing-3);
+  margin-bottom: var(--chakra-spacing-3);
 }
 
 @layer recipes {
@@ -2565,6 +2558,10 @@ exports[`array fields has errors 1`] = `
   }
 }
 
+.emotion-6 {
+  list-style-position: inside;
+}
+
 @layer recipes {
   .emotion-6 {
     display: -webkit-box;
@@ -2597,20 +2594,22 @@ exports[`array fields has errors 1`] = `
   }
 }
 
-.emotion-8 {
-  color: var(--chakra-colors-red-500);
-}
-
 @layer recipes {
   .emotion-8 {
-    -webkit-margin-end: var(--chakra-spacing-2);
-    margin-inline-end: var(--chakra-spacing-2);
-    min-height: 1lh;
-    -webkit-flex-shrink: 0;
-    -ms-flex-negative: 0;
-    flex-shrink: 0;
-    display: inline-block;
-    vertical-align: middle;
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    width: var(--chakra-sizes-full);
+  }
+
+  .emotion-8>:not(style, [hidden])~:not(style, [hidden]) {
+    --space-y-reverse: 0;
+    margin-top: calc(var(--chakra-spacing-4) * calc(1 - var(--space-y-reverse)));
+    margin-bottom: calc(var(--chakra-spacing-4) * var(--space-y-reverse));
   }
 }
 
@@ -2624,41 +2623,22 @@ exports[`array fields has errors 1`] = `
     -ms-flex-direction: column;
     flex-direction: column;
     width: var(--chakra-sizes-full);
-  }
-
-  .emotion-9>:not(style, [hidden])~:not(style, [hidden]) {
-    --space-y-reverse: 0;
-    margin-top: calc(var(--chakra-spacing-4) * calc(1 - var(--space-y-reverse)));
-    margin-bottom: calc(var(--chakra-spacing-4) * var(--space-y-reverse));
-  }
-}
-
-@layer recipes {
-  .emotion-10 {
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-flex-direction: column;
-    -ms-flex-direction: column;
-    flex-direction: column;
-    width: var(--chakra-sizes-full);
     gap: var(--chakra-spacing-4);
   }
 }
 
-.emotion-11 {
+.emotion-10 {
   display: grid;
   gap: var(--chakra-spacing-6);
   margin-bottom: var(--chakra-spacing-4);
 }
 
-.emotion-15 {
+.emotion-14 {
   margin-bottom: var(--chakra-spacing-1);
 }
 
 @layer recipes {
-  .emotion-15 {
+  .emotion-14 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -2677,7 +2657,7 @@ exports[`array fields has errors 1`] = `
 }
 
 @layer recipes {
-  .emotion-16 {
+  .emotion-15 {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -2697,13 +2677,13 @@ exports[`array fields has errors 1`] = `
     user-select: none;
   }
 
-  .emotion-16:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-15:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
   }
 }
 
 @layer recipes {
-  .emotion-17 {
+  .emotion-16 {
     width: 100%;
     min-width: var(--input-height);
     outline: 0;
@@ -2728,17 +2708,17 @@ exports[`array fields has errors 1`] = `
     --focus-ring-color: var(--focus-color);
   }
 
-  .emotion-17:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-16:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: not-allowed;
   }
 
-  .emotion-17:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
+  .emotion-16:is([data-invalid], [aria-invalid=true], [data-state=invalid]) {
     --focus-ring-color: var(--error-color);
     border-color: var(--error-color);
   }
 
-  .emotion-17:is(:focus-visible, [data-focus-visible]) {
+  .emotion-16:is(:focus-visible, [data-focus-visible]) {
     outline-offset: 0px;
     outline-width: var(--focus-ring-width, 1px);
     outline-color: var(--focus-ring-color);
@@ -2747,8 +2727,12 @@ exports[`array fields has errors 1`] = `
   }
 }
 
+.emotion-17 {
+  margin-top: 0;
+}
+
 @layer recipes {
-  .emotion-18 {
+  .emotion-17 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -2765,12 +2749,12 @@ exports[`array fields has errors 1`] = `
   }
 }
 
-.emotion-22 {
+.emotion-18 {
   margin-top: var(--chakra-spacing-3);
 }
 
 @layer recipes {
-  .emotion-23 {
+  .emotion-19 {
     display: -webkit-inline-box;
     display: -webkit-inline-flex;
     display: -ms-inline-flexbox;
@@ -2818,19 +2802,19 @@ exports[`array fields has errors 1`] = `
     color: var(--chakra-colors-color-palette-contrast);
   }
 
-  .emotion-23:is(:focus-visible, [data-focus-visible]) {
+  .emotion-19:is(:focus-visible, [data-focus-visible]) {
     outline-width: var(--focus-ring-width, 2px);
     outline-offset: var(--focus-ring-offset, 2px);
     outline-style: var(--focus-ring-style, solid);
     outline-color: var(--focus-ring-color);
   }
 
-  .emotion-23:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
+  .emotion-19:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
     cursor: not-allowed;
   }
 
-  .emotion-23 :where(svg) {
+  .emotion-19 :where(svg) {
     -webkit-flex-shrink: 0;
     -ms-flex-negative: 0;
     flex-shrink: 0;
@@ -2838,14 +2822,14 @@ exports[`array fields has errors 1`] = `
     height: var(--chakra-sizes-5);
   }
 
-  .emotion-23:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
+  .emotion-19:is([aria-expanded=true], [data-expanded], [data-state=expanded]) {
     --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
     background: var(--mix-background, var(--chakra-colors-color-palette-solid));
     --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
   }
 
   @media (hover: hover) {
-    .emotion-23:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
+    .emotion-19:is(:hover, [data-hover]):not(:disabled, [data-disabled]) {
       --mix-background: color-mix(in srgb, var(--chakra-colors-color-palette-solid) 90%, transparent);
       background: var(--mix-background, var(--chakra-colors-color-palette-solid));
       --bg-currentcolor: var(--mix-background, var(--chakra-colors-color-palette-solid));
@@ -2891,28 +2875,6 @@ exports[`array fields has errors 1`] = `
           <li
             className="chakra-list__item emotion-7"
           >
-            <svg
-              className="lucide lucide-triangle-alert chakra-list__indicator emotion-8"
-              fill="none"
-              height={24}
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              viewBox="0 0 24 24"
-              width={24}
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"
-              />
-              <path
-                d="M12 9v4"
-              />
-              <path
-                d="M12 17h.01"
-              />
-            </svg>
             .name Bad input
           </li>
         </ul>
@@ -2923,35 +2885,35 @@ exports[`array fields has errors 1`] = `
     className="rjsf-field rjsf-field-object"
   >
     <fieldset
-      className="fieldset__root emotion-9"
+      className="fieldset__root emotion-8"
       data-part="root"
       data-scope="fieldset"
       disabled={false}
     >
       <div
-        className="fieldset__content emotion-10"
+        className="fieldset__content emotion-9"
       >
         <div
-          className="emotion-11"
+          className="emotion-10"
         >
           <div
-            className="emotion-12"
+            className="emotion-11"
           >
             <div
               className="rjsf-field rjsf-field-string rjsf-field-error"
             >
               <fieldset
-                className="fieldset__root emotion-9"
+                className="fieldset__root emotion-8"
                 data-invalid="true"
                 data-part="root"
                 data-scope="fieldset"
                 disabled={false}
               >
                 <div
-                  className="fieldset__content emotion-10"
+                  className="fieldset__content emotion-9"
                 >
                   <div
-                    className="chakra-field__root emotion-15"
+                    className="chakra-field__root emotion-14"
                     data-invalid=""
                     data-part="root"
                     data-scope="field"
@@ -2959,7 +2921,7 @@ exports[`array fields has errors 1`] = `
                     role="group"
                   >
                     <label
-                      className="chakra-field__label emotion-16"
+                      className="chakra-field__label emotion-15"
                       data-invalid=""
                       data-part="label"
                       data-scope="field"
@@ -2972,7 +2934,7 @@ exports[`array fields has errors 1`] = `
                       aria-describedby="root_name__error root_name__description root_name__help"
                       aria-invalid="true"
                       autoFocus={false}
-                      className="chakra-input emotion-17"
+                      className="chakra-input emotion-16"
                       data-invalid=""
                       data-part="input"
                       data-scope="field"
@@ -2992,26 +2954,12 @@ exports[`array fields has errors 1`] = `
                 </div>
                 <span
                   aria-live="polite"
-                  className="fieldset__errorText emotion-18"
+                  className="fieldset__errorText emotion-17"
                   data-part="error-text"
                   data-scope="fieldset"
-                  id="fieldset:::rf:::error-text"
+                  id="root_name__error"
                 >
-                  <ul
-                    className="chakra-list__root emotion-6"
-                    role="list"
-                  >
-                    <li
-                      className="chakra-list__item emotion-7"
-                    >
-                      <p
-                        className="emotion-12"
-                        id="root_name__error"
-                      >
-                        Bad input
-                      </p>
-                    </li>
-                  </ul>
+                  Bad input
                 </span>
               </fieldset>
             </div>
@@ -3021,10 +2969,10 @@ exports[`array fields has errors 1`] = `
     </fieldset>
   </div>
   <div
-    className="emotion-22"
+    className="emotion-18"
   >
     <button
-      className="chakra-button emotion-23"
+      className="chakra-button emotion-19"
       disabled={false}
       type="submit"
     >
@@ -4785,7 +4733,7 @@ exports[`with title and description checkboxes 1`] = `
     align-items: center;
     gap: var(--chakra-spacing-1);
     position: absolute;
-    right: 0;
+    inset-inline-end: 0;
     top: 0;
     bottom: 0;
     padding-inline: var(--select-trigger-padding-x);
@@ -7342,7 +7290,7 @@ exports[`with title and description from both checkboxes 1`] = `
     align-items: center;
     gap: var(--chakra-spacing-1);
     position: absolute;
-    right: 0;
+    inset-inline-end: 0;
     top: 0;
     bottom: 0;
     padding-inline: var(--select-trigger-padding-x);
@@ -9899,7 +9847,7 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
     align-items: center;
     gap: var(--chakra-spacing-1);
     position: absolute;
-    right: 0;
+    inset-inline-end: 0;
     top: 0;
     bottom: 0;
     padding-inline: var(--select-trigger-padding-x);
@@ -12254,7 +12202,7 @@ exports[`with title and description with global label off checkboxes 1`] = `
     align-items: center;
     gap: var(--chakra-spacing-1);
     position: absolute;
-    right: 0;
+    inset-inline-end: 0;
     top: 0;
     bottom: 0;
     padding-inline: var(--select-trigger-padding-x);

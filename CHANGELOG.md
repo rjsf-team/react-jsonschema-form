@@ -26,6 +26,8 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/chakra-ui
 
 - Added `MultiSchemaFieldTemplate`
+- Improve visual styling of error validation boxes
+- Update `chakra-ui/react` package to `^3.19.1`
 
 ## @rjsf/core
 
