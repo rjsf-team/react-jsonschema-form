@@ -1,3 +1,4 @@
+import { Box, Card } from '@chakra-ui/react';
 import { FormContextType, MultiSchemaFieldTemplateProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 
 export default function MultiSchemaFieldTemplate<
@@ -8,9 +9,11 @@ export default function MultiSchemaFieldTemplate<
   const { optionSchemaField, selector } = props;
 
   return (
-    <div>
-      <div>{selector}</div>
-      {optionSchemaField}
-    </div>
+    <Card.Root mb={2}>
+      <Card.Body pb={2}>
+        <Box mb={4}>{selector}</Box>
+        {optionSchemaField}
+      </Card.Body>
+    </Card.Root>
   );
 }

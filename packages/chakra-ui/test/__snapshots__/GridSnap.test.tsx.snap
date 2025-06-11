@@ -285,6 +285,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
     border-width: 1px;
     border-color: var(--chakra-colors-border);
     border-radius: var(--chakra-radii-l1);
+    cursor: var(--chakra-cursor-checkbox);
     --focus-ring-color: var(--chakra-colors-color-palette-focus-ring);
     width: var(--chakra-sizes-5);
     height: var(--chakra-sizes-5);
@@ -327,6 +328,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
 
   .emotion-48:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-48:is([data-state=checked], [data-state=indeterminate]) {
@@ -496,7 +498,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
     align-items: center;
     gap: var(--chakra-spacing-1);
     position: absolute;
-    right: 0;
+    inset-inline-end: 0;
     top: 0;
     bottom: 0;
     padding-inline: var(--select-trigger-padding-x);
@@ -7362,6 +7364,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
     border-width: 1px;
     border-color: var(--chakra-colors-border);
     border-radius: var(--chakra-radii-l1);
+    cursor: var(--chakra-cursor-checkbox);
     --focus-ring-color: var(--chakra-colors-color-palette-focus-ring);
     width: var(--chakra-sizes-5);
     height: var(--chakra-sizes-5);
@@ -7404,6 +7407,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
 
   .emotion-48:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-48:is([data-state=checked], [data-state=indeterminate]) {
@@ -7573,7 +7577,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
     align-items: center;
     gap: var(--chakra-spacing-1);
     position: absolute;
-    right: 0;
+    inset-inline-end: 0;
     top: 0;
     bottom: 0;
     padding-inline: var(--select-trigger-padding-x);
@@ -14493,6 +14497,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
     border-width: 1px;
     border-color: var(--chakra-colors-border);
     border-radius: var(--chakra-radii-l1);
+    cursor: var(--chakra-cursor-checkbox);
     --focus-ring-color: var(--chakra-colors-color-palette-focus-ring);
     width: var(--chakra-sizes-5);
     height: var(--chakra-sizes-5);
@@ -14535,6 +14540,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
 
   .emotion-48:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-48:is([data-state=checked], [data-state=indeterminate]) {
@@ -14704,7 +14710,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
     align-items: center;
     gap: var(--chakra-spacing-1);
     position: absolute;
-    right: 0;
+    inset-inline-end: 0;
     top: 0;
     bottom: 0;
     padding-inline: var(--select-trigger-padding-x);
@@ -19134,6 +19140,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
     border-width: 1px;
     border-color: var(--chakra-colors-border);
     border-radius: var(--chakra-radii-l1);
+    cursor: var(--chakra-cursor-checkbox);
     --focus-ring-color: var(--chakra-colors-color-palette-focus-ring);
     width: var(--chakra-sizes-5);
     height: var(--chakra-sizes-5);
@@ -19176,6 +19183,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
 
   .emotion-48:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-48:is([data-state=checked], [data-state=indeterminate]) {
@@ -19345,7 +19353,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
     align-items: center;
     gap: var(--chakra-spacing-1);
     position: absolute;
-    right: 0;
+    inset-inline-end: 0;
     top: 0;
     bottom: 0;
     padding-inline: var(--select-trigger-padding-x);
@@ -26195,6 +26203,7 @@ exports[`Three even column grid renders person and address in three columns, no 
     border-width: 1px;
     border-color: var(--chakra-colors-border);
     border-radius: var(--chakra-radii-l1);
+    cursor: var(--chakra-cursor-checkbox);
     --focus-ring-color: var(--chakra-colors-color-palette-focus-ring);
     width: var(--chakra-sizes-5);
     height: var(--chakra-sizes-5);
@@ -26237,6 +26246,7 @@ exports[`Three even column grid renders person and address in three columns, no 
 
   .emotion-45:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-45:is([data-state=checked], [data-state=indeterminate]) {
@@ -26400,7 +26410,7 @@ exports[`Three even column grid renders person and address in three columns, no 
     align-items: center;
     gap: var(--chakra-spacing-1);
     position: absolute;
-    right: 0;
+    inset-inline-end: 0;
     top: 0;
     bottom: 0;
     padding-inline: var(--select-trigger-padding-x);
@@ -30209,6 +30219,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
     border-width: 1px;
     border-color: var(--chakra-colors-border);
     border-radius: var(--chakra-radii-l1);
+    cursor: var(--chakra-cursor-checkbox);
     --focus-ring-color: var(--chakra-colors-color-palette-focus-ring);
     width: var(--chakra-sizes-5);
     height: var(--chakra-sizes-5);
@@ -30251,6 +30262,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
 
   .emotion-45:is(:disabled, [disabled], [data-disabled], [aria-disabled=true]) {
     opacity: 0.5;
+    cursor: var(--chakra-cursor-disabled);
   }
 
   .emotion-45:is([data-state=checked], [data-state=indeterminate]) {
@@ -30414,7 +30426,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
     align-items: center;
     gap: var(--chakra-spacing-1);
     position: absolute;
-    right: 0;
+    inset-inline-end: 0;
     top: 0;
     bottom: 0;
     padding-inline: var(--select-trigger-padding-x);
