@@ -1,6 +1,6 @@
 {
   "name": "@rjsf/shadcn",
-  "version": "6.0.0-beta.10",
+  "version": "6.0.0-beta.11",
   "main": "dist/index.js",
   "module": "lib/index.js",
   "typings": "lib/index.d.ts",
@@ -71,10 +71,10 @@
     "node": ">=20"
   },
   "devDependencies": {
-    "@rjsf/core": "^6.0.0-beta.10",
-    "@rjsf/snapshot-tests": "^6.0.0-beta.10",
-    "@rjsf/utils": "^6.0.0-beta.10",
-    "@rjsf/validator-ajv8": "^6.0.0-beta.10",
+    "@rjsf/core": "^6.0.0-beta.11",
+    "@rjsf/snapshot-tests": "^6.0.0-beta.11",
+    "@rjsf/utils": "^6.0.0-beta.11",
+    "@rjsf/validator-ajv8": "^6.0.0-beta.11",
     "eslint": "^8.56.0",
     "jsdom": "^20.0.3",
     "tailwindcss": "^3.0.0"
