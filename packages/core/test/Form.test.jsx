@@ -1547,7 +1547,7 @@ describeRepeated('Form common', (createFormComponent) => {
 
       expect(node.querySelector(protocolInputID).value).to.equal('1');
     });
-    it('Should modify oneOf radio button when the defaults are set.', () => {
+    describe('Should modify oneOf radio button when the defaults are set.', () => {
       const schema = {
         type: 'object',
         properties: {
@@ -1594,35 +1594,68 @@ describeRepeated('Form common', (createFormComponent) => {
           'ui:label': false,
         },
       };
-
-      const { node, onChange } = createFormComponent({
-        schema,
-        uiSchema,
-      });
-
       const notApplicableInputID = '#root_a-1';
       const NoInputID = '#root_a-0';
-      expect(node.querySelector(notApplicableInputID).checked).to.equal(true);
 
-      act(() => {
-        fireEvent.click(node.querySelector(NoInputID));
-      });
-
-      sinon.assert.calledWithMatch(
-        onChange.lastCall,
-        {
-          formData: {
-            a: false,
-          },
+      it('Test with default constAsDefaults', () => {
+        const { node, onChange } = createFormComponent({
           schema,
           uiSchema,
-        },
-        'root_a',
-      );
+        });
 
-      expect(node.querySelector(NoInputID).checked).to.equal(true);
-      expect(node.querySelector(notApplicableInputID).checked).to.equal(false);
-      expect(node.querySelector('#root_b')).to.exist;
+        expect(node.querySelector(notApplicableInputID).checked).to.equal(true);
+
+        act(() => {
+          fireEvent.click(node.querySelector(NoInputID));
+        });
+
+        sinon.assert.calledWithMatch(
+          onChange.lastCall,
+          {
+            formData: {
+              a: false,
+            },
+            schema,
+            uiSchema,
+          },
+          'root_a',
+        );
+
+        expect(node.querySelector(NoInputID).checked).to.equal(true);
+        expect(node.querySelector(notApplicableInputID).checked).to.equal(false);
+        expect(node.querySelector('#root_b')).to.exist;
+      });
+      it('Test with constAsDefaults set to "never"', () => {
+        const { node, onChange } = createFormComponent({
+          schema,
+          uiSchema,
+          experimental_defaultFormStateBehavior: {
+            constAsDefaults: 'never',
+          },
+        });
+
+        expect(node.querySelector(notApplicableInputID).checked).to.equal(true);
+
+        act(() => {
+          fireEvent.click(node.querySelector(NoInputID));
+        });
+
+        sinon.assert.calledWithMatch(
+          onChange.lastCall,
+          {
+            formData: {
+              a: false,
+            },
+            schema,
+            uiSchema,
+          },
+          'root_a',
+        );
+
+        expect(node.querySelector(NoInputID).checked).to.equal(true);
+        expect(node.querySelector(notApplicableInputID).checked).to.equal(false);
+        expect(node.querySelector('#root_b')).to.exist;
+      });
     });
   });
 
