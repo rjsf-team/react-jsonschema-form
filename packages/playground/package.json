@@ -50,7 +50,7 @@
     "@rjsf/utils": "^6.0.0-beta.11",
     "@rjsf/validator-ajv8": "^6.0.0-beta.11",
     "ajv": "^8.12.0",
-    "ajv-formats": "^2.1.1",
+    "ajv-formats": "^3.0.1",
     "ajv-i18n": "^4.2.0",
     "antd": "^5.24.6",
     "atob": "^2.1.2",
