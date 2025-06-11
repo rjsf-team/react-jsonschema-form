@@ -73,7 +73,7 @@
     "classnames": "^2.5.1",
     "lodash": "^4.17.21",
     "lodash-es": "^4.17.21",
-    "rc-picker": "2.7.6"
+    "rc-picker": "4.11.3"
   },
   "devDependencies": {
     "@ant-design/icons": "^6.0.0",
