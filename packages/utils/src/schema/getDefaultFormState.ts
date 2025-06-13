@@ -334,7 +334,7 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
       experimental_defaultFormStateBehavior: experimental_dfsb_to_compute,
       experimental_customMergeAllOf,
       parentDefaults: defaults as T | undefined,
-      rawFormData: formData as T,
+      rawFormData: (rawFormData ?? formData) as T,
       required,
       shouldMergeDefaultsIntoFormData,
     });
