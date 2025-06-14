@@ -1003,6 +1003,13 @@ export type UIOptionsType<
   [key: string]: boolean | number | string | object | any[] | null | undefined;
 };
 
+/**
+ * A utility type that extracts the element type from an array type.
+ * If the type is not an array, it returns the type itself as a safe fallback.
+ * Handles both standard arrays and readonly arrays.
+ */
+export type ArrayElement<A> = A extends readonly (infer E)[] ? E : A;
+
 /** Type describing the well-known properties of the `UiSchema` while also supporting all user defined properties,
  * starting with `ui:`.
  */
@@ -1032,7 +1039,9 @@ export type UiSchema<
      * or a function that returns a dynamic uiSchema based on the item's data and index.
      * When using a function, it receives the item data, index, and optionally the form context as parameters.
      */
-    items?: UiSchema<T, S, F> | ((itemData: T, index: number, formContext?: F) => UiSchema<T, S, F>);
+    items?:
+      | UiSchema<ArrayElement<T>, S, F>
+      | ((itemData: ArrayElement<T>, index: number, formContext?: F) => UiSchema<ArrayElement<T>, S, F>);
   };
 
 /** A `CustomValidator` function takes in a `formData`, `errors` and `uiSchema` objects and returns the given `errors`

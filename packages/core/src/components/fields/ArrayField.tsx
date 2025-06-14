@@ -506,16 +506,18 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
         if (typeof uiSchema.items === 'function') {
           try {
             // Call the function with item data, index, and form context
-            // Note: The function is typed to receive individual item data (T), not the array (T[])
-            itemUiSchema = (uiSchema.items as any)(item, index, formContext);
+            // TypeScript now correctly infers the types thanks to the ArrayElement type in UiSchema
+            const result = uiSchema.items(item, index, formContext);
+            // Ensure we have a valid object, defaulting to empty object if falsy
+            itemUiSchema = (result || {}) as UiSchema<T[], S, F>;
           } catch (e) {
             console.error(`Error executing dynamic uiSchema.items function for index ${index}:`, e);
             // Fall back to empty object to allow the field to still render
-            itemUiSchema = {};
+            itemUiSchema = {} as UiSchema<T[], S, F>;
           }
         } else {
           // Static object case
-          itemUiSchema = uiSchema.items || {};
+          itemUiSchema = (uiSchema.items || {}) as UiSchema<T[], S, F>;
         }
 
         return this.renderArrayFieldItem({
@@ -769,11 +771,31 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
             : itemSchemas[index]) || {};
         const itemIdPrefix = idSchema.$id + idSeparator + index;
         const itemIdSchema = schemaUtils.toIdSchema(itemSchema, itemIdPrefix, itemCast, idPrefix, idSeparator);
-        const itemUiSchema = additional
-          ? uiSchema.additionalItems || {}
-          : Array.isArray(uiSchema.items)
-            ? uiSchema.items[index]
-            : uiSchema.items || {};
+        // Compute the item UI schema - handle both static and dynamic cases
+        let itemUiSchema: UiSchema<T[], S, F>;
+        if (additional) {
+          // For additional items, use additionalItems uiSchema
+          itemUiSchema = (uiSchema.additionalItems || {}) as UiSchema<T[], S, F>;
+        } else {
+          // For fixed items, uiSchema.items can be an array, a function, or a single object
+          if (Array.isArray(uiSchema.items)) {
+            itemUiSchema = (uiSchema.items[index] || {}) as UiSchema<T[], S, F>;
+          } else if (typeof uiSchema.items === 'function') {
+            try {
+              // Call the function with item data, index, and form context
+              const result = uiSchema.items(item, index, formContext);
+              // Ensure we have a valid object, defaulting to empty object if falsy
+              itemUiSchema = (result || {}) as UiSchema<T[], S, F>;
+            } catch (e) {
+              console.error(`Error executing dynamic uiSchema.items function for fixed array index ${index}:`, e);
+              // Fall back to empty object to allow the field to still render
+              itemUiSchema = {} as UiSchema<T[], S, F>;
+            }
+          } else {
+            // Static object case
+            itemUiSchema = (uiSchema.items || {}) as UiSchema<T[], S, F>;
+          }
+        }
         const itemErrorSchema = errorSchema ? (errorSchema[index] as ErrorSchema<T[]>) : undefined;
 
         return this.renderArrayFieldItem({
