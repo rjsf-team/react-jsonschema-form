@@ -734,15 +734,15 @@ exports[`array fields fixed array 1`] = `
             undefined,
           ]
         }
-        id="pr_id_3"
+        id={null}
         onClick={null}
         style={{}}
       >
         <div
-          aria-labelledby="pr_id_3_header"
+          aria-labelledby="null_header"
           className="p-toggleable-content"
           data-pc-section="toggleablecontent"
-          id="pr_id_3_content"
+          id="null_content"
           role="region"
         >
           <div
@@ -1851,15 +1851,15 @@ exports[`with title and description fixed array 1`] = `
             undefined,
           ]
         }
-        id={null}
+        id="pr_id_2"
         onClick={null}
         style={{}}
       >
         <div
-          aria-labelledby="null_header"
+          aria-labelledby="pr_id_2_header"
           className="p-toggleable-content"
           data-pc-section="toggleablecontent"
-          id="null_content"
+          id="pr_id_2_content"
           role="region"
         >
           <div
@@ -2722,15 +2722,15 @@ exports[`with title and description from both fixed array 1`] = `
             undefined,
           ]
         }
-        id={null}
+        id="pr_id_4"
         onClick={null}
         style={{}}
       >
         <div
-          aria-labelledby="null_header"
+          aria-labelledby="pr_id_4_header"
           className="p-toggleable-content"
           data-pc-section="toggleablecontent"
-          id="null_content"
+          id="pr_id_4_content"
           role="region"
         >
           <div

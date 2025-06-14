@@ -2349,7 +2349,7 @@ exports[`array fields fixed array 1`] = `
                           className="chakra-field__root emotion-9"
                           data-part="root"
                           data-scope="field"
-                          id="field:::r3:"
+                          id="field:::r2:"
                           role="group"
                         >
                           <input
@@ -2399,7 +2399,7 @@ exports[`array fields fixed array 1`] = `
                           className="chakra-field__root emotion-9"
                           data-part="root"
                           data-scope="field"
-                          id="field:::r5:"
+                          id="field:::r4:"
                           role="group"
                         >
                           <input
@@ -5712,15 +5712,15 @@ exports[`with title and description fixed array 1`] = `
                           className="chakra-field__root emotion-15"
                           data-part="root"
                           data-scope="field"
-                          id="field:::rq:"
+                          id="field:::r7:"
                           role="group"
                         >
                           <label
                             className="chakra-field__label emotion-16"
                             data-part="label"
                             data-scope="field"
-                            htmlFor=":rq:"
-                            id="field:::rq:::label"
+                            htmlFor=":r7:"
+                            id="field:::r7:::label"
                           >
                             Test item
                             <span
@@ -5789,15 +5789,15 @@ exports[`with title and description fixed array 1`] = `
                           className="chakra-field__root emotion-15"
                           data-part="root"
                           data-scope="field"
-                          id="field:::rs:"
+                          id="field:::r9:"
                           role="group"
                         >
                           <label
                             className="chakra-field__label emotion-16"
                             data-part="label"
                             data-scope="field"
-                            htmlFor=":rs:"
-                            id="field:::rs:::label"
+                            htmlFor=":r9:"
+                            id="field:::r9:::label"
                           >
                             Test item
                             <span
@@ -8269,15 +8269,15 @@ exports[`with title and description from both fixed array 1`] = `
                           className="chakra-field__root emotion-15"
                           data-part="root"
                           data-scope="field"
-                          id="field:::r1m:"
+                          id="field:::rh:"
                           role="group"
                         >
                           <label
                             className="chakra-field__label emotion-16"
                             data-part="label"
                             data-scope="field"
-                            htmlFor=":r1m:"
-                            id="field:::r1m:::label"
+                            htmlFor=":rh:"
+                            id="field:::rh:::label"
                           >
                             My Item
                             <span
@@ -8346,15 +8346,15 @@ exports[`with title and description from both fixed array 1`] = `
                           className="chakra-field__root emotion-15"
                           data-part="root"
                           data-scope="field"
-                          id="field:::r1o:"
+                          id="field:::rj:"
                           role="group"
                         >
                           <label
                             className="chakra-field__label emotion-16"
                             data-part="label"
                             data-scope="field"
-                            htmlFor=":r1o:"
-                            id="field:::r1o:::label"
+                            htmlFor=":rj:"
+                            id="field:::rj:::label"
                           >
                             My Item
                             <span
@@ -10826,15 +10826,15 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                           className="chakra-field__root emotion-15"
                           data-part="root"
                           data-scope="field"
-                          id="field:::r18:"
+                          id="field:::rc:"
                           role="group"
                         >
                           <label
                             className="chakra-field__label emotion-16"
                             data-part="label"
                             data-scope="field"
-                            htmlFor=":r18:"
-                            id="field:::r18:::label"
+                            htmlFor=":rc:"
+                            id="field:::rc:::label"
                           >
                             My Item
                             <span
@@ -10903,15 +10903,15 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                           className="chakra-field__root emotion-15"
                           data-part="root"
                           data-scope="field"
-                          id="field:::r1a:"
+                          id="field:::re:"
                           role="group"
                         >
                           <label
                             className="chakra-field__label emotion-16"
                             data-part="label"
                             data-scope="field"
-                            htmlFor=":r1a:"
-                            id="field:::r1a:::label"
+                            htmlFor=":re:"
+                            id="field:::re:::label"
                           >
                             My Item
                             <span
@@ -13070,7 +13070,7 @@ exports[`with title and description with global label off fixed array 1`] = `
                           className="chakra-field__root emotion-9"
                           data-part="root"
                           data-scope="field"
-                          id="field:::r24:"
+                          id="field:::rm:"
                           role="group"
                         >
                           <input
@@ -13120,7 +13120,7 @@ exports[`with title and description with global label off fixed array 1`] = `
                           className="chakra-field__root emotion-9"
                           data-part="root"
                           data-scope="field"
-                          id="field:::r26:"
+                          id="field:::ro:"
                           role="group"
                         >
                           <input
