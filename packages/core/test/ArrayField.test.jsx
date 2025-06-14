@@ -3551,7 +3551,8 @@ describe('ArrayField', () => {
       const { node } = createFormComponent({ schema, uiSchema, formData });
 
       // Should log error for second item
-      expect(consoleErrorStub.calledWith('Error executing dynamic uiSchema.items function for index 1:')).to.be.true;
+      expect(consoleErrorStub.calledWith('Error executing dynamic uiSchema.items function for item at index 1:')).to.be
+        .true;
 
       // All items should still render (with fallback for errored item)
       const arrayItems = node.querySelectorAll('.rjsf-array-item');
@@ -3560,6 +3561,44 @@ describe('ArrayField', () => {
       // First and third items should have textareas
       expect(arrayItems[0].querySelector('textarea')).to.exist;
       expect(arrayItems[2].querySelector('textarea')).to.exist;
+
+      // Second item should fall back to default text input
+      expect(arrayItems[1].querySelector('input[type="text"]')).to.exist;
+      expect(arrayItems[1].querySelector('textarea')).to.not.exist;
+
+      consoleErrorStub.restore();
+    });
+
+    it('should handle errors in dynamic uiSchema function gracefully for fixed arrays', () => {
+      const schema = {
+        type: 'array',
+        items: [{ type: 'string' }, { type: 'string' }],
+      };
+
+      const consoleErrorStub = sinon.stub(console, 'error');
+
+      const uiSchema = {
+        items: (itemData, index) => {
+          if (index === 1) {
+            throw new Error('Test error in fixed array');
+          }
+          return { 'ui:widget': 'textarea' };
+        },
+      };
+
+      const formData = ['First', 'Second'];
+      const { node } = createFormComponent({ schema, uiSchema, formData });
+
+      // Should log error for second item
+      expect(consoleErrorStub.calledWith('Error executing dynamic uiSchema.items function for item at index 1:')).to.be
+        .true;
+
+      // All items should still render
+      const arrayItems = node.querySelectorAll('.rjsf-array-item');
+      expect(arrayItems).to.have.length(2);
+
+      // First item should have textarea
+      expect(arrayItems[0].querySelector('textarea')).to.exist;
 
       // Second item should fall back to default text input
       expect(arrayItems[1].querySelector('input[type="text"]')).to.exist;

@@ -511,7 +511,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
             // Ensure we have a valid object, defaulting to empty object if falsy
             itemUiSchema = (result || {}) as UiSchema<T[], S, F>;
           } catch (e) {
-            console.error(`Error executing dynamic uiSchema.items function for index ${index}:`, e);
+            console.error(`Error executing dynamic uiSchema.items function for item at index ${index}:`, e);
             // Fall back to empty object to allow the field to still render
             itemUiSchema = {} as UiSchema<T[], S, F>;
           }
@@ -787,7 +787,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
               // Ensure we have a valid object, defaulting to empty object if falsy
               itemUiSchema = (result || {}) as UiSchema<T[], S, F>;
             } catch (e) {
-              console.error(`Error executing dynamic uiSchema.items function for fixed array index ${index}:`, e);
+              console.error(`Error executing dynamic uiSchema.items function for item at index ${index}:`, e);
               // Fall back to empty object to allow the field to still render
               itemUiSchema = {} as UiSchema<T[], S, F>;
             }
