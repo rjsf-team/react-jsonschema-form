@@ -500,6 +500,24 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
         const itemErrorSchema = errorSchema ? (errorSchema[index] as ErrorSchema<T[]>) : undefined;
         const itemIdPrefix = idSchema.$id + idSeparator + index;
         const itemIdSchema = schemaUtils.toIdSchema(itemSchema, itemIdPrefix, itemCast, idPrefix, idSeparator);
+
+        // Compute the item UI schema - either use the static object or call the function
+        let itemUiSchema: UiSchema<T[], S, F>;
+        if (typeof uiSchema.items === 'function') {
+          try {
+            // Call the function with item data, index, and form context
+            // Note: The function is typed to receive individual item data (T), not the array (T[])
+            itemUiSchema = (uiSchema.items as any)(item, index, formContext);
+          } catch (e) {
+            console.error(`Error executing dynamic uiSchema.items function for index ${index}:`, e);
+            // Fall back to empty object to allow the field to still render
+            itemUiSchema = {};
+          }
+        } else {
+          // Static object case
+          itemUiSchema = uiSchema.items || {};
+        }
+
         return this.renderArrayFieldItem({
           key,
           index,
@@ -512,7 +530,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
           itemIdSchema,
           itemErrorSchema,
           itemData: itemCast,
-          itemUiSchema: uiSchema.items,
+          itemUiSchema,
           autofocus: autofocus && index === 0,
           onBlur,
           onFocus,
