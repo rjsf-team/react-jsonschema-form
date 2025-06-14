@@ -32,6 +32,13 @@ should change the heading of the (upcoming) version to include a major version b
 
 # 6.0.0-beta.11
 
+## rjsf/utils
+
+- Always make all references absolute in nested bundled schemas
+
+
+# 6.0.0-beta.11
+
 ## @rjsf/antd
 
 - Set peerDependency for `@ant-design/icons` to `^6.0.0`, fixing [#4643](https://github.com/rjsf-team/react-jsonschema-form/issues/4643)
