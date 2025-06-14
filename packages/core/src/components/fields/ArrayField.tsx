@@ -502,7 +502,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
         const itemIdSchema = schemaUtils.toIdSchema(itemSchema, itemIdPrefix, itemCast, idPrefix, idSeparator);
 
         // Compute the item UI schema - either use the static object or call the function
-        let itemUiSchema: UiSchema<T[], S, F>;
+        let itemUiSchema: UiSchema<T[], S, F> | undefined;
         if (typeof uiSchema.items === 'function') {
           try {
             // Call the function with item data, index, and form context
@@ -516,8 +516,8 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
             itemUiSchema = {} as UiSchema<T[], S, F>;
           }
         } else {
-          // Static object case
-          itemUiSchema = (uiSchema.items || {}) as UiSchema<T[], S, F>;
+          // Static object case - preserve undefined to maintain backward compatibility
+          itemUiSchema = uiSchema.items as UiSchema<T[], S, F> | undefined;
         }
 
         return this.renderArrayFieldItem({
@@ -772,7 +772,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
         const itemIdPrefix = idSchema.$id + idSeparator + index;
         const itemIdSchema = schemaUtils.toIdSchema(itemSchema, itemIdPrefix, itemCast, idPrefix, idSeparator);
         // Compute the item UI schema - handle both static and dynamic cases
-        let itemUiSchema: UiSchema<T[], S, F>;
+        let itemUiSchema: UiSchema<T[], S, F> | undefined;
         if (additional) {
           // For additional items, use additionalItems uiSchema
           itemUiSchema = (uiSchema.additionalItems || {}) as UiSchema<T[], S, F>;
@@ -851,7 +851,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
     canMoveDown: boolean;
     itemSchema: S;
     itemData: T[];
-    itemUiSchema: UiSchema<T[], S, F>;
+    itemUiSchema: UiSchema<T[], S, F> | undefined;
     itemIdSchema: IdSchema<T[]>;
     itemErrorSchema?: ErrorSchema<T[]>;
     autofocus?: boolean;
