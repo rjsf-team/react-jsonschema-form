@@ -15,6 +15,12 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+# 5.24.12
+
+## @rjsf/utils
+
+- (Backported change from 6.0.0-beta.11) Fixed issue where oneOf radio button could not be modified when constAsDefaults is set to 'never', fixing [#4634](https://github.com/rjsf-team/react-jsonschema-form/issues/4634).
+
 # 5.24.11
 
 ## @rjsf/utils
