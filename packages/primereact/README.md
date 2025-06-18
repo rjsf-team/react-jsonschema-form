@@ -7,7 +7,7 @@
 <br />
 <p align="center">
   <a href="https://github.com/rjsf-team/react-jsonschema-form">
-    <img src="logo.png" alt="Logo" width="120" height="120">
+    <img src="https://raw.githubusercontent.com/rjsf-team/react-jsonschema-form/main/packages/primereact/logo.png" alt="Logo" width="120" height="120">
   </a>
 
 <h3 align="center">@rjsf/primereact</h3>
