@@ -500,6 +500,26 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
         const itemErrorSchema = errorSchema ? (errorSchema[index] as ErrorSchema<T[]>) : undefined;
         const itemIdPrefix = idSchema.$id + idSeparator + index;
         const itemIdSchema = schemaUtils.toIdSchema(itemSchema, itemIdPrefix, itemCast, idPrefix, idSeparator);
+
+        // Compute the item UI schema - either use the static object or call the function
+        let itemUiSchema: UiSchema<T[], S, F> | undefined;
+        if (typeof uiSchema.items === 'function') {
+          try {
+            // Call the function with item data, index, and form context
+            // TypeScript now correctly infers the types thanks to the ArrayElement type in UiSchema
+            const result = uiSchema.items(item, index, formContext);
+            // Only use the result if it's truthy
+            itemUiSchema = result as UiSchema<T[], S, F>;
+          } catch (e) {
+            console.error(`Error executing dynamic uiSchema.items function for item at index ${index}:`, e);
+            // Fall back to undefined to allow the field to still render
+            itemUiSchema = undefined;
+          }
+        } else {
+          // Static object case - preserve undefined to maintain backward compatibility
+          itemUiSchema = uiSchema.items as UiSchema<T[], S, F> | undefined;
+        }
+
         return this.renderArrayFieldItem({
           key,
           index,
@@ -512,7 +532,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
           itemIdSchema,
           itemErrorSchema,
           itemData: itemCast,
-          itemUiSchema: uiSchema.items,
+          itemUiSchema,
           autofocus: autofocus && index === 0,
           onBlur,
           onFocus,
@@ -751,11 +771,31 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
             : itemSchemas[index]) || {};
         const itemIdPrefix = idSchema.$id + idSeparator + index;
         const itemIdSchema = schemaUtils.toIdSchema(itemSchema, itemIdPrefix, itemCast, idPrefix, idSeparator);
-        const itemUiSchema = additional
-          ? uiSchema.additionalItems || {}
-          : Array.isArray(uiSchema.items)
-            ? uiSchema.items[index]
-            : uiSchema.items || {};
+        // Compute the item UI schema - handle both static and dynamic cases
+        let itemUiSchema: UiSchema<T[], S, F> | undefined;
+        if (additional) {
+          // For additional items, use additionalItems uiSchema
+          itemUiSchema = uiSchema.additionalItems as UiSchema<T[], S, F>;
+        } else {
+          // For fixed items, uiSchema.items can be an array, a function, or a single object
+          if (Array.isArray(uiSchema.items)) {
+            itemUiSchema = uiSchema.items[index] as UiSchema<T[], S, F>;
+          } else if (typeof uiSchema.items === 'function') {
+            try {
+              // Call the function with item data, index, and form context
+              const result = uiSchema.items(item, index, formContext);
+              // Only use the result if it's truthy
+              itemUiSchema = result as UiSchema<T[], S, F>;
+            } catch (e) {
+              console.error(`Error executing dynamic uiSchema.items function for item at index ${index}:`, e);
+              // Fall back to undefined to allow the field to still render
+              itemUiSchema = undefined;
+            }
+          } else {
+            // Static object case
+            itemUiSchema = uiSchema.items as UiSchema<T[], S, F>;
+          }
+        }
         const itemErrorSchema = errorSchema ? (errorSchema[index] as ErrorSchema<T[]>) : undefined;
 
         return this.renderArrayFieldItem({
@@ -811,7 +851,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
     canMoveDown: boolean;
     itemSchema: S;
     itemData: T[];
-    itemUiSchema: UiSchema<T[], S, F>;
+    itemUiSchema: UiSchema<T[], S, F> | undefined;
     itemIdSchema: IdSchema<T[]>;
     itemErrorSchema?: ErrorSchema<T[]>;
     autofocus?: boolean;

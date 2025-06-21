@@ -37,15 +37,15 @@ exports[`array fields array 1`] = `
         data-pc-section="root"
         formContext={{}}
         formData={[]}
-        id={null}
+        id="root"
         onClick={null}
         style={{}}
       >
         <div
-          aria-labelledby="null_header"
+          aria-labelledby="root_header"
           className="p-toggleable-content"
           data-pc-section="toggleablecontent"
-          id="null_content"
+          id="root_content"
           role="region"
         >
           <div
@@ -150,15 +150,15 @@ exports[`array fields array icons 1`] = `
             "b",
           ]
         }
-        id="pr_id_14"
+        id="root"
         onClick={null}
         style={{}}
       >
         <div
-          aria-labelledby="pr_id_14_header"
+          aria-labelledby="root_header"
           className="p-toggleable-content"
           data-pc-section="toggleablecontent"
-          id="pr_id_14_content"
+          id="root_content"
           role="region"
         >
           <div
@@ -734,15 +734,15 @@ exports[`array fields fixed array 1`] = `
             undefined,
           ]
         }
-        id="pr_id_3"
+        id="root"
         onClick={null}
         style={{}}
       >
         <div
-          aria-labelledby="pr_id_3_header"
+          aria-labelledby="root_header"
           className="p-toggleable-content"
           data-pc-section="toggleablecontent"
-          id="pr_id_3_content"
+          id="root_content"
           role="region"
         >
           <div
@@ -1182,15 +1182,15 @@ exports[`with title and description array 1`] = `
         data-pc-section="root"
         formContext={{}}
         formData={[]}
-        id="pr_id_27"
+        id="root"
         onClick={null}
         style={{}}
       >
         <div
-          aria-labelledby="pr_id_27_header"
+          aria-labelledby="root_header"
           className="p-toggleable-content"
           data-pc-section="toggleablecontent"
-          id="pr_id_27_content"
+          id="root_content"
           role="region"
         >
           <div
@@ -1301,15 +1301,15 @@ exports[`with title and description array icons 1`] = `
             "b",
           ]
         }
-        id={null}
+        id="root"
         onClick={null}
         style={{}}
       >
         <div
-          aria-labelledby="null_header"
+          aria-labelledby="root_header"
           className="p-toggleable-content"
           data-pc-section="toggleablecontent"
-          id="null_content"
+          id="root_content"
           role="region"
         >
           <div
@@ -1851,15 +1851,15 @@ exports[`with title and description fixed array 1`] = `
             undefined,
           ]
         }
-        id={null}
+        id="root"
         onClick={null}
         style={{}}
       >
         <div
-          aria-labelledby="null_header"
+          aria-labelledby="root_header"
           className="p-toggleable-content"
           data-pc-section="toggleablecontent"
-          id="null_content"
+          id="root_content"
           role="region"
         >
           <div
@@ -2053,15 +2053,15 @@ exports[`with title and description from both array 1`] = `
         data-pc-section="root"
         formContext={{}}
         formData={[]}
-        id="pr_id_64"
+        id="root"
         onClick={null}
         style={{}}
       >
         <div
-          aria-labelledby="pr_id_64_header"
+          aria-labelledby="root_header"
           className="p-toggleable-content"
           data-pc-section="toggleablecontent"
-          id="pr_id_64_content"
+          id="root_content"
           role="region"
         >
           <div
@@ -2172,15 +2172,15 @@ exports[`with title and description from both array icons 1`] = `
             "b",
           ]
         }
-        id={null}
+        id="root"
         onClick={null}
         style={{}}
       >
         <div
-          aria-labelledby="null_header"
+          aria-labelledby="root_header"
           className="p-toggleable-content"
           data-pc-section="toggleablecontent"
-          id="null_content"
+          id="root_content"
           role="region"
         >
           <div
@@ -2722,15 +2722,15 @@ exports[`with title and description from both fixed array 1`] = `
             undefined,
           ]
         }
-        id={null}
+        id="root"
         onClick={null}
         style={{}}
       >
         <div
-          aria-labelledby="null_header"
+          aria-labelledby="root_header"
           className="p-toggleable-content"
           data-pc-section="toggleablecontent"
-          id="null_content"
+          id="root_content"
           role="region"
         >
           <div
@@ -2924,15 +2924,15 @@ exports[`with title and description from uiSchema array 1`] = `
         data-pc-section="root"
         formContext={{}}
         formData={[]}
-        id="pr_id_41"
+        id="root"
         onClick={null}
         style={{}}
       >
         <div
-          aria-labelledby="pr_id_41_header"
+          aria-labelledby="root_header"
           className="p-toggleable-content"
           data-pc-section="toggleablecontent"
-          id="pr_id_41_content"
+          id="root_content"
           role="region"
         >
           <div
@@ -3043,15 +3043,15 @@ exports[`with title and description from uiSchema array icons 1`] = `
             "b",
           ]
         }
-        id={null}
+        id="root"
         onClick={null}
         style={{}}
       >
         <div
-          aria-labelledby="null_header"
+          aria-labelledby="root_header"
           className="p-toggleable-content"
           data-pc-section="toggleablecontent"
-          id="null_content"
+          id="root_content"
           role="region"
         >
           <div
@@ -3593,15 +3593,15 @@ exports[`with title and description from uiSchema fixed array 1`] = `
             undefined,
           ]
         }
-        id={null}
+        id="root"
         onClick={null}
         style={{}}
       >
         <div
-          aria-labelledby="null_header"
+          aria-labelledby="root_header"
           className="p-toggleable-content"
           data-pc-section="toggleablecontent"
-          id="null_content"
+          id="root_content"
           role="region"
         >
           <div
@@ -3795,15 +3795,15 @@ exports[`with title and description with global label off array 1`] = `
         data-pc-section="root"
         formContext={{}}
         formData={[]}
-        id="pr_id_87"
+        id="root"
         onClick={null}
         style={{}}
       >
         <div
-          aria-labelledby="pr_id_87_header"
+          aria-labelledby="root_header"
           className="p-toggleable-content"
           data-pc-section="toggleablecontent"
-          id="pr_id_87_content"
+          id="root_content"
           role="region"
         >
           <div
@@ -3909,15 +3909,15 @@ exports[`with title and description with global label off array icons 1`] = `
             "b",
           ]
         }
-        id={null}
+        id="root"
         onClick={null}
         style={{}}
       >
         <div
-          aria-labelledby="null_header"
+          aria-labelledby="root_header"
           className="p-toggleable-content"
           data-pc-section="toggleablecontent"
-          id="null_content"
+          id="root_content"
           role="region"
         >
           <div
@@ -4426,15 +4426,15 @@ exports[`with title and description with global label off fixed array 1`] = `
             undefined,
           ]
         }
-        id={null}
+        id="root"
         onClick={null}
         style={{}}
       >
         <div
-          aria-labelledby="null_header"
+          aria-labelledby="root_header"
           className="p-toggleable-content"
           data-pc-section="toggleablecontent"
-          id="null_content"
+          id="root_content"
           role="region"
         >
           <div
