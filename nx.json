@@ -56,6 +56,5 @@
   "useLegacyCache": true,
   "release": {
     "projects": ["*"]
-  },
-  "nxCloudId": "68701a51402972053593b070"
+  }
 }
