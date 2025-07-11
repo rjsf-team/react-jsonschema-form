@@ -22,7 +22,7 @@ import cloneDeep from 'lodash/cloneDeep';
 import get from 'lodash/get';
 import isObject from 'lodash/isObject';
 import set from 'lodash/set';
-import { nanoid } from 'nanoid';
+import uniqueId from 'lodash/uniqueId';
 
 /** Type used to represent the keyed form data used in the state */
 type KeyedFormDataType<T> = { key: string; item: T };
@@ -37,7 +37,7 @@ type ArrayFieldState<T> = {
 
 /** Used to generate a unique ID for an element in a row */
 function generateRowId() {
-  return nanoid();
+  return uniqueId('rjsf-array-item-');
 }
 
 /** Converts the `formData` into `KeyedFormDataType` data, using the `generateRowId()` function to create the key
@@ -423,6 +423,39 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
     onChange(value, undefined, idSchema && idSchema.$id);
   };
 
+  /** Helper method to compute item UI schema for both normal and fixed arrays
+   * Handles both static object and dynamic function cases
+   *
+   * @param uiSchema - The parent UI schema containing items definition
+   * @param item - The item data
+   * @param index - The index of the item
+   * @param formContext - The form context
+   * @returns The computed UI schema for the item
+   */
+  private computeItemUiSchema(
+    uiSchema: UiSchema<T[], S, F>,
+    item: T,
+    index: number,
+    formContext: F,
+  ): UiSchema<T[], S, F> | undefined {
+    if (typeof uiSchema.items === 'function') {
+      try {
+        // Call the function with item data, index, and form context
+        // TypeScript now correctly infers the types thanks to the ArrayElement type in UiSchema
+        const result = uiSchema.items(item, index, formContext);
+        // Only use the result if it's truthy
+        return result as UiSchema<T[], S, F>;
+      } catch (e) {
+        console.error(`Error executing dynamic uiSchema.items function for item at index ${index}:`, e);
+        // Fall back to undefined to allow the field to still render
+        return undefined;
+      }
+    } else {
+      // Static object case - preserve undefined to maintain backward compatibility
+      return uiSchema.items as UiSchema<T[], S, F> | undefined;
+    }
+  }
+
   /** Renders the `ArrayField` depending on the specific needs of the schema and uischema elements
    */
   render() {
@@ -500,6 +533,10 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
         const itemErrorSchema = errorSchema ? (errorSchema[index] as ErrorSchema<T[]>) : undefined;
         const itemIdPrefix = idSchema.$id + idSeparator + index;
         const itemIdSchema = schemaUtils.toIdSchema(itemSchema, itemIdPrefix, itemCast, idPrefix, idSeparator);
+
+        // Compute the item UI schema using the helper method
+        const itemUiSchema = this.computeItemUiSchema(uiSchema, item, index, formContext);
+
         return this.renderArrayFieldItem({
           key,
           index,
@@ -512,7 +549,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
           itemIdSchema,
           itemErrorSchema,
           itemData: itemCast,
-          itemUiSchema: uiSchema.items,
+          itemUiSchema,
           autofocus: autofocus && index === 0,
           onBlur,
           onFocus,
@@ -751,11 +788,20 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
             : itemSchemas[index]) || {};
         const itemIdPrefix = idSchema.$id + idSeparator + index;
         const itemIdSchema = schemaUtils.toIdSchema(itemSchema, itemIdPrefix, itemCast, idPrefix, idSeparator);
-        const itemUiSchema = additional
-          ? uiSchema.additionalItems || {}
-          : Array.isArray(uiSchema.items)
-            ? uiSchema.items[index]
-            : uiSchema.items || {};
+        // Compute the item UI schema - handle both static and dynamic cases
+        let itemUiSchema: UiSchema<T[], S, F> | undefined;
+        if (additional) {
+          // For additional items, use additionalItems uiSchema
+          itemUiSchema = uiSchema.additionalItems as UiSchema<T[], S, F>;
+        } else {
+          // For fixed items, uiSchema.items can be an array, a function, or a single object
+          if (Array.isArray(uiSchema.items)) {
+            itemUiSchema = uiSchema.items[index] as UiSchema<T[], S, F>;
+          } else {
+            // Use the helper method for function or static object cases
+            itemUiSchema = this.computeItemUiSchema(uiSchema, item, index, formContext);
+          }
+        }
         const itemErrorSchema = errorSchema ? (errorSchema[index] as ErrorSchema<T[]>) : undefined;
 
         return this.renderArrayFieldItem({
@@ -811,7 +857,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
     canMoveDown: boolean;
     itemSchema: S;
     itemData: T[];
-    itemUiSchema: UiSchema<T[], S, F>;
+    itemUiSchema: UiSchema<T[], S, F> | undefined;
     itemIdSchema: IdSchema<T[]>;
     itemErrorSchema?: ErrorSchema<T[]>;
     autofocus?: boolean;
