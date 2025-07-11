@@ -11,6 +11,12 @@
   ],
   "tsc-alias": {
     "resolveFullPaths": true,
-    "verbose": true
+    "verbose": true,
+    "replacers": {
+      "lodash": {
+        "enabled": true,
+        "file": "lodashReplacer.cjs"
+      }
+    }
   }
 }
