@@ -430,7 +430,7 @@ export function stubExistingAdditionalProperties<
       if (!isEmpty(matchingProperties)) {
         schema.properties[key] = retrieveSchema<T, S, F>(
           validator,
-          { allOf: Object.values(matchingProperties) } as S,
+          { [ALL_OF_KEY]: Object.values(matchingProperties) } as S,
           rootSchema,
           get(formData, [key]) as T,
           experimental_customMergeAllOf,
@@ -445,7 +445,7 @@ export function stubExistingAdditionalProperties<
         if (REF_KEY in schema.additionalProperties!) {
           additionalProperties = retrieveSchema<T, S, F>(
             validator,
-            { $ref: get(schema.additionalProperties, [REF_KEY]) } as S,
+            { [REF_KEY]: get(schema.additionalProperties, [REF_KEY]) } as S,
             rootSchema,
             formData as T,
             experimental_customMergeAllOf,
