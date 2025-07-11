@@ -423,6 +423,39 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
     onChange(value, undefined, idSchema && idSchema.$id);
   };
 
+  /** Helper method to compute item UI schema for both normal and fixed arrays
+   * Handles both static object and dynamic function cases
+   *
+   * @param uiSchema - The parent UI schema containing items definition
+   * @param item - The item data
+   * @param index - The index of the item
+   * @param formContext - The form context
+   * @returns The computed UI schema for the item
+   */
+  private computeItemUiSchema(
+    uiSchema: UiSchema<T[], S, F>,
+    item: T,
+    index: number,
+    formContext: F,
+  ): UiSchema<T[], S, F> | undefined {
+    if (typeof uiSchema.items === 'function') {
+      try {
+        // Call the function with item data, index, and form context
+        // TypeScript now correctly infers the types thanks to the ArrayElement type in UiSchema
+        const result = uiSchema.items(item, index, formContext);
+        // Only use the result if it's truthy
+        return result as UiSchema<T[], S, F>;
+      } catch (e) {
+        console.error(`Error executing dynamic uiSchema.items function for item at index ${index}:`, e);
+        // Fall back to undefined to allow the field to still render
+        return undefined;
+      }
+    } else {
+      // Static object case - preserve undefined to maintain backward compatibility
+      return uiSchema.items as UiSchema<T[], S, F> | undefined;
+    }
+  }
+
   /** Renders the `ArrayField` depending on the specific needs of the schema and uischema elements
    */
   render() {
@@ -501,24 +534,8 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
         const itemIdPrefix = idSchema.$id + idSeparator + index;
         const itemIdSchema = schemaUtils.toIdSchema(itemSchema, itemIdPrefix, itemCast, idPrefix, idSeparator);
 
-        // Compute the item UI schema - either use the static object or call the function
-        let itemUiSchema: UiSchema<T[], S, F> | undefined;
-        if (typeof uiSchema.items === 'function') {
-          try {
-            // Call the function with item data, index, and form context
-            // TypeScript now correctly infers the types thanks to the ArrayElement type in UiSchema
-            const result = uiSchema.items(item, index, formContext);
-            // Only use the result if it's truthy
-            itemUiSchema = result as UiSchema<T[], S, F>;
-          } catch (e) {
-            console.error(`Error executing dynamic uiSchema.items function for item at index ${index}:`, e);
-            // Fall back to undefined to allow the field to still render
-            itemUiSchema = undefined;
-          }
-        } else {
-          // Static object case - preserve undefined to maintain backward compatibility
-          itemUiSchema = uiSchema.items as UiSchema<T[], S, F> | undefined;
-        }
+        // Compute the item UI schema using the helper method
+        const itemUiSchema = this.computeItemUiSchema(uiSchema, item, index, formContext);
 
         return this.renderArrayFieldItem({
           key,
@@ -780,20 +797,9 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
           // For fixed items, uiSchema.items can be an array, a function, or a single object
           if (Array.isArray(uiSchema.items)) {
             itemUiSchema = uiSchema.items[index] as UiSchema<T[], S, F>;
-          } else if (typeof uiSchema.items === 'function') {
-            try {
-              // Call the function with item data, index, and form context
-              const result = uiSchema.items(item, index, formContext);
-              // Only use the result if it's truthy
-              itemUiSchema = result as UiSchema<T[], S, F>;
-            } catch (e) {
-              console.error(`Error executing dynamic uiSchema.items function for item at index ${index}:`, e);
-              // Fall back to undefined to allow the field to still render
-              itemUiSchema = undefined;
-            }
           } else {
-            // Static object case
-            itemUiSchema = uiSchema.items as UiSchema<T[], S, F>;
+            // Use the helper method for function or static object cases
+            itemUiSchema = this.computeItemUiSchema(uiSchema, item, index, formContext);
           }
         }
         const itemErrorSchema = errorSchema ? (errorSchema[index] as ErrorSchema<T[]>) : undefined;
@@ -903,7 +909,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
           title={title}
           index={index}
           schema={itemSchema}
-          uiSchema={itemUiSchema || {}}
+          uiSchema={itemUiSchema}
           formData={itemData}
           formContext={formContext}
           errorSchema={itemErrorSchema}
@@ -939,7 +945,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
         onReorderClick: this.onReorderClick,
         registry: registry,
         schema: itemSchema,
-        uiSchema: itemUiSchema || {},
+        uiSchema: itemUiSchema,
       },
       className: 'rjsf-array-item',
       disabled,

@@ -52,10 +52,10 @@ export default function getDisplayLabel<
   if (schemaType === 'object') {
     displayLabel = false;
   }
-  if (schemaType === 'boolean' && !uiSchema[UI_WIDGET_KEY]) {
+  if (schemaType === 'boolean' && uiSchema && !uiSchema[UI_WIDGET_KEY]) {
     displayLabel = false;
   }
-  if (uiSchema[UI_FIELD_KEY]) {
+  if (uiSchema && uiSchema[UI_FIELD_KEY]) {
     displayLabel = false;
   }
   return displayLabel;
