@@ -16,6 +16,12 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 6.0.0-beta.12
+
+## @rjsf/shadcn
+
+- Updated the building of `shadcn` to use the `lodashReplacer` with `tsc-alias` fixing [#4678](https://github.com/rjsf-team/react-jsonschema-form/issues/4678)
+
 # 6.0.0-beta.11
 
 ## @rjsf/antd
