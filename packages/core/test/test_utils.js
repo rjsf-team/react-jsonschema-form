@@ -33,7 +33,7 @@ export function createSandbox() {
 }
 
 export function setProps(comp, newProps) {
-  render(createElement(Form, newProps), {
+  render(createElement(Form, { validator, ...newProps }), {
     container: comp.ref.current.formElement.current.parentNode,
   });
 }

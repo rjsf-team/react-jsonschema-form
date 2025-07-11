@@ -63,6 +63,14 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
     this.experimental_customMergeAllOf = experimental_customMergeAllOf;
   }
 
+  /** Returns the `rootSchema` in the `SchemaUtilsType`
+   *
+   * @returns - The `rootSchema`
+   */
+  getRootSchema() {
+    return this.rootSchema;
+  }
+
   /** Returns the `ValidatorType` in the `SchemaUtilsType`
    *
    * @returns - The `ValidatorType`
