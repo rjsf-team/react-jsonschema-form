@@ -75,6 +75,13 @@ should change the heading of the (upcoming) version to include a major version b
 - Fixed boolean fields incorrectly set to `{}` when switching oneOf/anyOf options with `mergeDefaultsIntoFormData` set to `useDefaultIfFormDataUndefined`, fixing [#4709](https://github.com/rjsf-team/react-jsonschema-form/issues/4709) ([#4710](https://github.com/rjsf-team/react-jsonschema-form/pull/4710))
 - Always make all references absolute in nested bundled schemas
 
+# 6.0.0-beta.13
+
+## @rjsf/mantine
+
+- Added new theme!
+
+
 # 6.0.0-beta.12
 
 ## @rjsf/core

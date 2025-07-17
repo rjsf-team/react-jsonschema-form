@@ -1,3 +1,4 @@
+import { Box } from '@mantine/core';
 import {
   FieldTemplateProps,
   FormContextType,
@@ -6,7 +7,6 @@ import {
   getTemplate,
   getUiOptions,
 } from '@rjsf/utils';
-import { Box, Text } from '@mantine/core';
 
 /** The `FieldTemplate` component is the template used by `SchemaField` to render any field. It renders the field
  * content, (label, description, children, errors and help) inside a `WrapIfAdditional` component.
@@ -59,11 +59,7 @@ export default function FieldTemplate<
       {...otherProps}
     >
       {children}
-      {displayLabel && rawDescription && (
-        <Text size='sm' mt={5}>
-          {description}
-        </Text>
-      )}
+      {displayLabel && rawDescription && description}
       {errors}
       {help}
     </WrapIfAdditionalTemplate>
