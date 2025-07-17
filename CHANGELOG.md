@@ -38,6 +38,13 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Always make all references absolute in nested bundled schemas
 
+# 6.0.0-beta.13
+
+## @rjsf/mantine
+
+- Added new theme!
+
+
 # 6.0.0-beta.12
 
 ## @rjsf/core
