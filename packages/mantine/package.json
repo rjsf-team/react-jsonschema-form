@@ -8,29 +8,29 @@
   "description": "Mantine theme, fields and widgets for react-jsonschema-form",
   "exports": {
     ".": {
+      "types": "./lib/index.d.ts",
       "require": "./dist/index.js",
-      "import": "./lib/index.js",
-      "types": "./lib/index.d.ts"
+      "import": "./lib/index.js"
     },
     "./lib": {
+      "types": "./lib/index.d.ts",
       "require": "./dist/index.js",
-      "import": "./lib/index.js",
-      "types": "./lib/index.d.ts"
+      "import": "./lib/index.js"
     },
     "./lib/*.js": {
+      "types": "./lib/*.d.ts",
       "require": "./dist/*.js",
-      "import": "./lib/*.js",
-      "types": "./lib/*.d.ts"
+      "import": "./lib/*.js"
     },
     "./dist": {
+      "types": "./lib/index.d.ts",
       "require": "./dist/index.js",
-      "import": "./lib/index.js",
-      "types": "./lib/index.d.ts"
+      "import": "./lib/index.js"
     },
     "./dist/*.js": {
+      "types": "./lib/*.d.ts",
       "require": "./dist/*.js",
-      "import": "./lib/*.js",
-      "types": "./lib/*.d.ts"
+      "import": "./lib/*.js"
     }
   },
   "files": [
@@ -61,8 +61,8 @@
     ]
   },
   "peerDependencies": {
-    "@rjsf/core": "^6.x",
-    "@rjsf/utils": "^6.x",
+    "@rjsf/core": "^6.0.0-beta",
+    "@rjsf/utils": "^6.0.0-beta",
     "react": "^16.14.0 || >=17",
     "@mantine/core": ">=7",
     "@mantine/hooks": ">=7",
@@ -74,17 +74,22 @@
     "@rjsf/utils": "^6.0.0-beta.1",
     "@rjsf/validator-ajv8": "^6.0.0-beta.1",
     "eslint": "^8.56.0",
-    "react-bootstrap": "^2.10.9",
     "@mantine/core": ">=7",
     "@mantine/hooks": ">=7",
-    "@mantine/dates": ">=7"
+    "@mantine/dates": ">=7",
+    "@restart/hooks": "^0.6.2",
+    "@restart/ui": "^1.9.4",
+    "ajv": "^8.17.1",
+    "ajv-keywords": "^5.1.0",
+    "uncontrollable": "^9.0.0"
   },
   "publishConfig": {
     "access": "public"
   },
   "author": "Farhad Zare <zfarhad.dev@gmail.com>",
   "contributors": [
-    "Heath Chiavettone <heath.chiavettone@freenome.com"
+    "Heath Chiavettone <heath.chiavettone@freenome.com",
+    "Algirdas Jokubauskas <sdkster@gmail.com"
   ],
   "keywords": [
     "Mantine",
