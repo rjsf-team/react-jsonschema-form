@@ -78,7 +78,7 @@ export default function ArrayFieldTemplate<
         />
       )}
 
-      <Box className='row array-item-list'>
+      <Box className='row rjsf-array-item-list'>
         {items &&
           items.map(({ key, ...itemProps }: ArrayFieldItemTemplateType<T, S, F>) => (
             <ArrayFieldItemTemplate key={key} {...itemProps} />
@@ -89,7 +89,7 @@ export default function ArrayFieldTemplate<
         <Group justify='flex-end'>
           <AddButton
             id={buttonId<T>(idSchema, 'add')}
-            className='array-item-add'
+            className='rjsf-array-item-add'
             disabled={disabled || readonly}
             onClick={onAddClick}
             uiSchema={uiSchema}

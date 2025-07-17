@@ -26,7 +26,7 @@ export default function ArrayFieldItemTemplate<
   );
 
   return (
-    <Box key={`array-item-${index}`} className={className || 'array-item'} mb='xs'>
+    <Box key={`array-item-${index}`} className={className || 'rjsf-array-item'} mb='xs'>
       <Flex gap='xs' align='end' justify='center'>
         <Box w='100%'>{children}</Box>
         {hasToolbar && (
