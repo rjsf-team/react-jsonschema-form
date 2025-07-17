@@ -19,7 +19,7 @@ exports[`array fields array 1`] = `
               {
                 "children": null,
                 "props": {
-                  "className": "row array-item-list",
+                  "className": "row rjsf-array-item-list",
                   "data-size": undefined,
                   "data-variant": undefined,
                   "size": undefined,
@@ -95,9 +95,10 @@ exports[`array fields array 1`] = `
                       },
                     ],
                     "props": {
-                      "className": "array-item-add m_8d3f4000 m_87cf2631",
-                      "data-size": undefined,
+                      "className": "rjsf-array-item-add m_8d3f4000 m_87cf2631",
+                      "data-size": "md",
                       "data-variant": "subtle",
+                      "id": "root__add",
                       "onClick": [Function],
                       "size": undefined,
                       "style": {
@@ -105,6 +106,7 @@ exports[`array fields array 1`] = `
                         "--ai-bg": "transparent",
                         "--ai-color": "var(--mantine-color-blue-light-color)",
                         "--ai-hover": "var(--mantine-color-blue-light-hover)",
+                        "--ai-size": "var(--ai-size-md)",
                       },
                       "title": "Copy",
                       "type": "button",
@@ -130,7 +132,7 @@ exports[`array fields array 1`] = `
               },
             ],
             "props": {
-              "className": "m_84c9523a field field-array field-array-of-string m_e9408a47",
+              "className": "m_84c9523a rjsf-field rjsf-field-array rjsf-field-array-of-string m_e9408a47",
               "data-size": undefined,
               "data-variant": "default",
               "id": "root",
@@ -142,7 +144,7 @@ exports[`array fields array 1`] = `
           },
         ],
         "props": {
-          "className": "form-group field field-array",
+          "className": "rjsf-field rjsf-field-array",
           "style": undefined,
         },
         "type": "div",
@@ -291,7 +293,7 @@ exports[`array fields array icons 1`] = `
                                   },
                                 ],
                                 "props": {
-                                  "className": "form-group field field-string",
+                                  "className": "rjsf-field rjsf-field-string",
                                   "style": undefined,
                                 },
                                 "type": "div",
@@ -369,11 +371,12 @@ exports[`array fields array icons 1`] = `
                                   },
                                 ],
                                 "props": {
-                                  "className": "array-item-move-up m_8d3f4000 m_87cf2631",
+                                  "className": "rjsf-array-item-move-up m_8d3f4000 m_87cf2631",
                                   "data-disabled": true,
                                   "data-size": "sm",
                                   "data-variant": "subtle",
                                   "disabled": true,
+                                  "id": "root_0__moveUp",
                                   "onClick": [Function],
                                   "size": undefined,
                                   "style": {
@@ -446,9 +449,10 @@ exports[`array fields array icons 1`] = `
                                   },
                                 ],
                                 "props": {
-                                  "className": "array-item-move-down m_8d3f4000 m_87cf2631",
+                                  "className": "rjsf-array-item-move-down m_8d3f4000 m_87cf2631",
                                   "data-size": "sm",
                                   "data-variant": "subtle",
+                                  "id": "root_0__moveDown",
                                   "onClick": [Function],
                                   "size": undefined,
                                   "style": {
@@ -529,9 +533,10 @@ exports[`array fields array icons 1`] = `
                                   },
                                 ],
                                 "props": {
-                                  "className": "array-item-copy m_8d3f4000 m_87cf2631",
+                                  "className": "rjsf-array-item-copy m_8d3f4000 m_87cf2631",
                                   "data-size": "sm",
                                   "data-variant": "subtle",
+                                  "id": "root_0__copy",
                                   "onClick": [Function],
                                   "size": undefined,
                                   "style": {
@@ -612,9 +617,10 @@ exports[`array fields array icons 1`] = `
                                   },
                                 ],
                                 "props": {
-                                  "className": "array-item-remove m_8d3f4000 m_87cf2631",
+                                  "className": "rjsf-array-item-remove m_8d3f4000 m_87cf2631",
                                   "data-size": "sm",
                                   "data-variant": "subtle",
+                                  "id": "root_0__remove",
                                   "onClick": [Function],
                                   "size": undefined,
                                   "style": {
@@ -641,6 +647,7 @@ exports[`array fields array icons 1`] = `
                                 "--group-gap": "calc(0.125rem * var(--mantine-scale))",
                                 "--group-justify": "flex-start",
                                 "--group-wrap": "nowrap",
+                                "marginBottom": "calc(0.4375rem * var(--mantine-scale))",
                               },
                             },
                             "type": "div",
@@ -663,7 +670,7 @@ exports[`array fields array icons 1`] = `
                       },
                     ],
                     "props": {
-                      "className": "array-item",
+                      "className": "rjsf-array-item",
                       "data-size": undefined,
                       "data-variant": undefined,
                       "size": undefined,
@@ -735,7 +742,7 @@ exports[`array fields array icons 1`] = `
                                   },
                                 ],
                                 "props": {
-                                  "className": "form-group field field-string",
+                                  "className": "rjsf-field rjsf-field-string",
                                   "style": undefined,
                                 },
                                 "type": "div",
@@ -813,9 +820,10 @@ exports[`array fields array icons 1`] = `
                                   },
                                 ],
                                 "props": {
-                                  "className": "array-item-move-up m_8d3f4000 m_87cf2631",
+                                  "className": "rjsf-array-item-move-up m_8d3f4000 m_87cf2631",
                                   "data-size": "sm",
                                   "data-variant": "subtle",
+                                  "id": "root_1__moveUp",
                                   "onClick": [Function],
                                   "size": undefined,
                                   "style": {
@@ -888,11 +896,12 @@ exports[`array fields array icons 1`] = `
                                   },
                                 ],
                                 "props": {
-                                  "className": "array-item-move-down m_8d3f4000 m_87cf2631",
+                                  "className": "rjsf-array-item-move-down m_8d3f4000 m_87cf2631",
                                   "data-disabled": true,
                                   "data-size": "sm",
                                   "data-variant": "subtle",
                                   "disabled": true,
+                                  "id": "root_1__moveDown",
                                   "onClick": [Function],
                                   "size": undefined,
                                   "style": {
@@ -973,9 +982,10 @@ exports[`array fields array icons 1`] = `
                                   },
                                 ],
                                 "props": {
-                                  "className": "array-item-copy m_8d3f4000 m_87cf2631",
+                                  "className": "rjsf-array-item-copy m_8d3f4000 m_87cf2631",
                                   "data-size": "sm",
                                   "data-variant": "subtle",
+                                  "id": "root_1__copy",
                                   "onClick": [Function],
                                   "size": undefined,
                                   "style": {
@@ -1056,9 +1066,10 @@ exports[`array fields array icons 1`] = `
                                   },
                                 ],
                                 "props": {
-                                  "className": "array-item-remove m_8d3f4000 m_87cf2631",
+                                  "className": "rjsf-array-item-remove m_8d3f4000 m_87cf2631",
                                   "data-size": "sm",
                                   "data-variant": "subtle",
+                                  "id": "root_1__remove",
                                   "onClick": [Function],
                                   "size": undefined,
                                   "style": {
@@ -1085,6 +1096,7 @@ exports[`array fields array icons 1`] = `
                                 "--group-gap": "calc(0.125rem * var(--mantine-scale))",
                                 "--group-justify": "flex-start",
                                 "--group-wrap": "nowrap",
+                                "marginBottom": "calc(0.4375rem * var(--mantine-scale))",
                               },
                             },
                             "type": "div",
@@ -1107,7 +1119,7 @@ exports[`array fields array icons 1`] = `
                       },
                     ],
                     "props": {
-                      "className": "array-item",
+                      "className": "rjsf-array-item",
                       "data-size": undefined,
                       "data-variant": undefined,
                       "size": undefined,
@@ -1120,7 +1132,7 @@ exports[`array fields array icons 1`] = `
                   },
                 ],
                 "props": {
-                  "className": "row array-item-list",
+                  "className": "row rjsf-array-item-list",
                   "data-size": undefined,
                   "data-variant": undefined,
                   "size": undefined,
@@ -1196,9 +1208,10 @@ exports[`array fields array icons 1`] = `
                       },
                     ],
                     "props": {
-                      "className": "array-item-add m_8d3f4000 m_87cf2631",
-                      "data-size": undefined,
+                      "className": "rjsf-array-item-add m_8d3f4000 m_87cf2631",
+                      "data-size": "md",
                       "data-variant": "subtle",
+                      "id": "root__add",
                       "onClick": [Function],
                       "size": undefined,
                       "style": {
@@ -1206,6 +1219,7 @@ exports[`array fields array icons 1`] = `
                         "--ai-bg": "transparent",
                         "--ai-color": "var(--mantine-color-blue-light-color)",
                         "--ai-hover": "var(--mantine-color-blue-light-hover)",
+                        "--ai-size": "var(--ai-size-md)",
                       },
                       "title": "Copy",
                       "type": "button",
@@ -1231,7 +1245,7 @@ exports[`array fields array icons 1`] = `
               },
             ],
             "props": {
-              "className": "m_84c9523a field field-array field-array-of-string m_e9408a47",
+              "className": "m_84c9523a rjsf-field rjsf-field-array rjsf-field-array-of-string m_e9408a47",
               "data-size": undefined,
               "data-variant": "default",
               "id": "root",
@@ -1243,7 +1257,7 @@ exports[`array fields array icons 1`] = `
           },
         ],
         "props": {
-          "className": "form-group field field-array",
+          "className": "rjsf-field rjsf-field-array",
           "style": undefined,
         },
         "type": "div",
@@ -1348,20 +1362,6 @@ exports[`array fields checkboxes 1`] = `
                               "data-type": "visible",
                               "data-variant": undefined,
                               "disabled": false,
-                              "enumOptions": [
-                                {
-                                  "label": "a",
-                                  "value": "a",
-                                },
-                                {
-                                  "label": "b",
-                                  "value": "b",
-                                },
-                                {
-                                  "label": "c",
-                                  "value": "c",
-                                },
-                              ],
                               "id": "root",
                               "onBlur": [Function],
                               "onChange": [Function],
@@ -1571,7 +1571,6 @@ exports[`array fields checkboxes 1`] = `
                                     ],
                                     "props": {
                                       "style": {
-                                        "display": "table",
                                         "minWidth": "100%",
                                       },
                                     },
@@ -1581,10 +1580,12 @@ exports[`array fields checkboxes 1`] = `
                                 ],
                                 "props": {
                                   "className": "m_c0783ff9",
+                                  "data-horizontal-hidden": undefined,
                                   "data-offset-scrollbars": "y",
                                   "data-scrollbars": "xy",
                                   "data-size": undefined,
                                   "data-variant": undefined,
+                                  "data-vertical-hidden": undefined,
                                   "onScroll": [Function],
                                   "size": undefined,
                                   "style": {
@@ -1739,7 +1740,7 @@ exports[`array fields checkboxes 1`] = `
           },
         ],
         "props": {
-          "className": "form-group field field-array",
+          "className": "rjsf-field rjsf-field-array",
           "style": undefined,
         },
         "type": "div",
@@ -1912,7 +1913,7 @@ exports[`array fields empty errors array 1`] = `
                           },
                         ],
                         "props": {
-                          "className": "form-group field field-string",
+                          "className": "rjsf-field rjsf-field-string",
                           "style": undefined,
                         },
                         "type": "div",
@@ -1935,7 +1936,9 @@ exports[`array fields empty errors array 1`] = `
                   "data-size": undefined,
                   "data-variant": undefined,
                   "size": undefined,
-                  "style": {},
+                  "style": {
+                    "marginBottom": "var(--mantine-spacing-sm)",
+                  },
                 },
                 "type": "div",
                 Symbol(cleaned): true,
@@ -1954,7 +1957,7 @@ exports[`array fields empty errors array 1`] = `
           },
         ],
         "props": {
-          "className": "form-group field field-object",
+          "className": "rjsf-field rjsf-field-object",
           "style": undefined,
         },
         "type": "div",
@@ -2102,7 +2105,7 @@ exports[`array fields fixed array 1`] = `
                                   },
                                 ],
                                 "props": {
-                                  "className": "form-group field field-string",
+                                  "className": "rjsf-field rjsf-field-string",
                                   "style": undefined,
                                 },
                                 "type": "div",
@@ -2138,7 +2141,7 @@ exports[`array fields fixed array 1`] = `
                       },
                     ],
                     "props": {
-                      "className": "array-item",
+                      "className": "rjsf-array-item",
                       "data-size": undefined,
                       "data-variant": undefined,
                       "size": undefined,
@@ -2336,7 +2339,7 @@ exports[`array fields fixed array 1`] = `
                                   },
                                 ],
                                 "props": {
-                                  "className": "form-group field field-number",
+                                  "className": "rjsf-field rjsf-field-number",
                                   "style": undefined,
                                 },
                                 "type": "div",
@@ -2372,7 +2375,7 @@ exports[`array fields fixed array 1`] = `
                       },
                     ],
                     "props": {
-                      "className": "array-item",
+                      "className": "rjsf-array-item",
                       "data-size": undefined,
                       "data-variant": undefined,
                       "size": undefined,
@@ -2385,7 +2388,7 @@ exports[`array fields fixed array 1`] = `
                   },
                 ],
                 "props": {
-                  "className": "row array-item-list",
+                  "className": "row rjsf-array-item-list",
                   "data-size": undefined,
                   "data-variant": undefined,
                   "size": undefined,
@@ -2396,7 +2399,7 @@ exports[`array fields fixed array 1`] = `
               },
             ],
             "props": {
-              "className": "m_84c9523a field field-array field-array-fixed-items m_e9408a47",
+              "className": "m_84c9523a rjsf-field rjsf-field-array rjsf-field-array-fixed-items m_e9408a47",
               "data-size": undefined,
               "data-variant": "default",
               "id": "root",
@@ -2408,7 +2411,7 @@ exports[`array fields fixed array 1`] = `
           },
         ],
         "props": {
-          "className": "form-group field field-array",
+          "className": "rjsf-field rjsf-field-array",
           "style": undefined,
         },
         "type": "div",
@@ -2869,7 +2872,7 @@ exports[`array fields has errors 1`] = `
                           },
                         ],
                         "props": {
-                          "className": "form-group field field-string field-error has-error has-danger",
+                          "className": "rjsf-field rjsf-field-string rjsf-field-error",
                           "style": undefined,
                         },
                         "type": "div",
@@ -2892,7 +2895,9 @@ exports[`array fields has errors 1`] = `
                   "data-size": undefined,
                   "data-variant": undefined,
                   "size": undefined,
-                  "style": {},
+                  "style": {
+                    "marginBottom": "var(--mantine-spacing-sm)",
+                  },
                 },
                 "type": "div",
                 Symbol(cleaned): true,
@@ -2911,7 +2916,7 @@ exports[`array fields has errors 1`] = `
           },
         ],
         "props": {
-          "className": "form-group field field-object",
+          "className": "rjsf-field rjsf-field-object",
           "style": undefined,
         },
         "type": "div",
@@ -3084,7 +3089,7 @@ exports[`array fields no errors 1`] = `
                           },
                         ],
                         "props": {
-                          "className": "form-group field field-string",
+                          "className": "rjsf-field rjsf-field-string",
                           "style": undefined,
                         },
                         "type": "div",
@@ -3107,7 +3112,9 @@ exports[`array fields no errors 1`] = `
                   "data-size": undefined,
                   "data-variant": undefined,
                   "size": undefined,
-                  "style": {},
+                  "style": {
+                    "marginBottom": "var(--mantine-spacing-sm)",
+                  },
                 },
                 "type": "div",
                 Symbol(cleaned): true,
@@ -3126,7 +3133,7 @@ exports[`array fields no errors 1`] = `
           },
         ],
         "props": {
-          "className": "form-group field field-object",
+          "className": "rjsf-field rjsf-field-object",
           "style": undefined,
         },
         "type": "div",
@@ -3248,8 +3255,15 @@ exports[`with title and description array 1`] = `
                   "a test description",
                 ],
                 "props": {
-                  "className": "field-description",
+                  "className": "m_b6d8b162",
+                  "data-size": undefined,
+                  "data-variant": undefined,
                   "id": "root__description",
+                  "size": undefined,
+                  "style": {
+                    "marginBottom": "var(--mantine-spacing-sm)",
+                    "marginTop": "calc(0.1875rem * var(--mantine-scale))",
+                  },
                 },
                 "type": "p",
                 Symbol(cleaned): true,
@@ -3257,7 +3271,7 @@ exports[`with title and description array 1`] = `
               {
                 "children": null,
                 "props": {
-                  "className": "row array-item-list",
+                  "className": "row rjsf-array-item-list",
                   "data-size": undefined,
                   "data-variant": undefined,
                   "size": undefined,
@@ -3333,9 +3347,10 @@ exports[`with title and description array 1`] = `
                       },
                     ],
                     "props": {
-                      "className": "array-item-add m_8d3f4000 m_87cf2631",
-                      "data-size": undefined,
+                      "className": "rjsf-array-item-add m_8d3f4000 m_87cf2631",
+                      "data-size": "md",
                       "data-variant": "subtle",
+                      "id": "root__add",
                       "onClick": [Function],
                       "size": undefined,
                       "style": {
@@ -3343,6 +3358,7 @@ exports[`with title and description array 1`] = `
                         "--ai-bg": "transparent",
                         "--ai-color": "var(--mantine-color-blue-light-color)",
                         "--ai-hover": "var(--mantine-color-blue-light-hover)",
+                        "--ai-size": "var(--ai-size-md)",
                       },
                       "title": "Copy",
                       "type": "button",
@@ -3368,7 +3384,7 @@ exports[`with title and description array 1`] = `
               },
             ],
             "props": {
-              "className": "m_84c9523a field field-array field-array-of-string m_e9408a47",
+              "className": "m_84c9523a rjsf-field rjsf-field-array rjsf-field-array-of-string m_e9408a47",
               "data-size": undefined,
               "data-variant": "default",
               "id": "root",
@@ -3380,7 +3396,7 @@ exports[`with title and description array 1`] = `
           },
         ],
         "props": {
-          "className": "form-group field field-array",
+          "className": "rjsf-field rjsf-field-array",
           "style": undefined,
         },
         "type": "div",
@@ -3502,8 +3518,15 @@ exports[`with title and description array icons 1`] = `
                   "a test description",
                 ],
                 "props": {
-                  "className": "field-description",
+                  "className": "m_b6d8b162",
+                  "data-size": undefined,
+                  "data-variant": undefined,
                   "id": "root__description",
+                  "size": undefined,
+                  "style": {
+                    "marginBottom": "var(--mantine-spacing-sm)",
+                    "marginTop": "calc(0.1875rem * var(--mantine-scale))",
+                  },
                 },
                 "type": "p",
                 Symbol(cleaned): true,
@@ -3599,9 +3622,27 @@ exports[`with title and description array icons 1`] = `
                                     "type": "div",
                                     Symbol(cleaned): true,
                                   },
+                                  {
+                                    "children": [
+                                      "a test item description",
+                                    ],
+                                    "props": {
+                                      "className": "m_b6d8b162",
+                                      "data-size": undefined,
+                                      "data-variant": undefined,
+                                      "id": "root_0__description",
+                                      "size": undefined,
+                                      "style": {
+                                        "marginBottom": "var(--mantine-spacing-sm)",
+                                        "marginTop": "calc(0.1875rem * var(--mantine-scale))",
+                                      },
+                                    },
+                                    "type": "p",
+                                    Symbol(cleaned): true,
+                                  },
                                 ],
                                 "props": {
-                                  "className": "form-group field field-string",
+                                  "className": "rjsf-field rjsf-field-string",
                                   "style": undefined,
                                 },
                                 "type": "div",
@@ -3679,11 +3720,12 @@ exports[`with title and description array icons 1`] = `
                                   },
                                 ],
                                 "props": {
-                                  "className": "array-item-move-up m_8d3f4000 m_87cf2631",
+                                  "className": "rjsf-array-item-move-up m_8d3f4000 m_87cf2631",
                                   "data-disabled": true,
                                   "data-size": "sm",
                                   "data-variant": "subtle",
                                   "disabled": true,
+                                  "id": "root_0__moveUp",
                                   "onClick": [Function],
                                   "size": undefined,
                                   "style": {
@@ -3756,9 +3798,10 @@ exports[`with title and description array icons 1`] = `
                                   },
                                 ],
                                 "props": {
-                                  "className": "array-item-move-down m_8d3f4000 m_87cf2631",
+                                  "className": "rjsf-array-item-move-down m_8d3f4000 m_87cf2631",
                                   "data-size": "sm",
                                   "data-variant": "subtle",
+                                  "id": "root_0__moveDown",
                                   "onClick": [Function],
                                   "size": undefined,
                                   "style": {
@@ -3839,9 +3882,10 @@ exports[`with title and description array icons 1`] = `
                                   },
                                 ],
                                 "props": {
-                                  "className": "array-item-copy m_8d3f4000 m_87cf2631",
+                                  "className": "rjsf-array-item-copy m_8d3f4000 m_87cf2631",
                                   "data-size": "sm",
                                   "data-variant": "subtle",
+                                  "id": "root_0__copy",
                                   "onClick": [Function],
                                   "size": undefined,
                                   "style": {
@@ -3922,9 +3966,10 @@ exports[`with title and description array icons 1`] = `
                                   },
                                 ],
                                 "props": {
-                                  "className": "array-item-remove m_8d3f4000 m_87cf2631",
+                                  "className": "rjsf-array-item-remove m_8d3f4000 m_87cf2631",
                                   "data-size": "sm",
                                   "data-variant": "subtle",
+                                  "id": "root_0__remove",
                                   "onClick": [Function],
                                   "size": undefined,
                                   "style": {
@@ -3951,6 +3996,7 @@ exports[`with title and description array icons 1`] = `
                                 "--group-gap": "calc(0.125rem * var(--mantine-scale))",
                                 "--group-justify": "flex-start",
                                 "--group-wrap": "nowrap",
+                                "marginBottom": "calc(0.4375rem * var(--mantine-scale))",
                               },
                             },
                             "type": "div",
@@ -3958,7 +4004,7 @@ exports[`with title and description array icons 1`] = `
                           },
                         ],
                         "props": {
-                          "className": "m_8bffd616 __m__-r68",
+                          "className": "m_8bffd616 __m__-r6e",
                           "data-size": undefined,
                           "data-variant": undefined,
                           "size": undefined,
@@ -3973,7 +4019,7 @@ exports[`with title and description array icons 1`] = `
                       },
                     ],
                     "props": {
-                      "className": "array-item",
+                      "className": "rjsf-array-item",
                       "data-size": undefined,
                       "data-variant": undefined,
                       "size": undefined,
@@ -4073,9 +4119,27 @@ exports[`with title and description array icons 1`] = `
                                     "type": "div",
                                     Symbol(cleaned): true,
                                   },
+                                  {
+                                    "children": [
+                                      "a test item description",
+                                    ],
+                                    "props": {
+                                      "className": "m_b6d8b162",
+                                      "data-size": undefined,
+                                      "data-variant": undefined,
+                                      "id": "root_1__description",
+                                      "size": undefined,
+                                      "style": {
+                                        "marginBottom": "var(--mantine-spacing-sm)",
+                                        "marginTop": "calc(0.1875rem * var(--mantine-scale))",
+                                      },
+                                    },
+                                    "type": "p",
+                                    Symbol(cleaned): true,
+                                  },
                                 ],
                                 "props": {
-                                  "className": "form-group field field-string",
+                                  "className": "rjsf-field rjsf-field-string",
                                   "style": undefined,
                                 },
                                 "type": "div",
@@ -4153,9 +4217,10 @@ exports[`with title and description array icons 1`] = `
                                   },
                                 ],
                                 "props": {
-                                  "className": "array-item-move-up m_8d3f4000 m_87cf2631",
+                                  "className": "rjsf-array-item-move-up m_8d3f4000 m_87cf2631",
                                   "data-size": "sm",
                                   "data-variant": "subtle",
+                                  "id": "root_1__moveUp",
                                   "onClick": [Function],
                                   "size": undefined,
                                   "style": {
@@ -4228,11 +4293,12 @@ exports[`with title and description array icons 1`] = `
                                   },
                                 ],
                                 "props": {
-                                  "className": "array-item-move-down m_8d3f4000 m_87cf2631",
+                                  "className": "rjsf-array-item-move-down m_8d3f4000 m_87cf2631",
                                   "data-disabled": true,
                                   "data-size": "sm",
                                   "data-variant": "subtle",
                                   "disabled": true,
+                                  "id": "root_1__moveDown",
                                   "onClick": [Function],
                                   "size": undefined,
                                   "style": {
@@ -4313,9 +4379,10 @@ exports[`with title and description array icons 1`] = `
                                   },
                                 ],
                                 "props": {
-                                  "className": "array-item-copy m_8d3f4000 m_87cf2631",
+                                  "className": "rjsf-array-item-copy m_8d3f4000 m_87cf2631",
                                   "data-size": "sm",
                                   "data-variant": "subtle",
+                                  "id": "root_1__copy",
                                   "onClick": [Function],
                                   "size": undefined,
                                   "style": {
@@ -4396,9 +4463,10 @@ exports[`with title and description array icons 1`] = `
                                   },
                                 ],
                                 "props": {
-                                  "className": "array-item-remove m_8d3f4000 m_87cf2631",
+                                  "className": "rjsf-array-item-remove m_8d3f4000 m_87cf2631",
                                   "data-size": "sm",
                                   "data-variant": "subtle",
+                                  "id": "root_1__remove",
                                   "onClick": [Function],
                                   "size": undefined,
                                   "style": {
@@ -4425,6 +4493,7 @@ exports[`with title and description array icons 1`] = `
                                 "--group-gap": "calc(0.125rem * var(--mantine-scale))",
                                 "--group-justify": "flex-start",
                                 "--group-wrap": "nowrap",
+                                "marginBottom": "calc(0.4375rem * var(--mantine-scale))",
                               },
                             },
                             "type": "div",
@@ -4432,7 +4501,7 @@ exports[`with title and description array icons 1`] = `
                           },
                         ],
                         "props": {
-                          "className": "m_8bffd616 __m__-r6q",
+                          "className": "m_8bffd616 __m__-r71",
                           "data-size": undefined,
                           "data-variant": undefined,
                           "size": undefined,
@@ -4447,7 +4516,7 @@ exports[`with title and description array icons 1`] = `
                       },
                     ],
                     "props": {
-                      "className": "array-item",
+                      "className": "rjsf-array-item",
                       "data-size": undefined,
                       "data-variant": undefined,
                       "size": undefined,
@@ -4460,7 +4529,7 @@ exports[`with title and description array icons 1`] = `
                   },
                 ],
                 "props": {
-                  "className": "row array-item-list",
+                  "className": "row rjsf-array-item-list",
                   "data-size": undefined,
                   "data-variant": undefined,
                   "size": undefined,
@@ -4536,9 +4605,10 @@ exports[`with title and description array icons 1`] = `
                       },
                     ],
                     "props": {
-                      "className": "array-item-add m_8d3f4000 m_87cf2631",
-                      "data-size": undefined,
+                      "className": "rjsf-array-item-add m_8d3f4000 m_87cf2631",
+                      "data-size": "md",
                       "data-variant": "subtle",
+                      "id": "root__add",
                       "onClick": [Function],
                       "size": undefined,
                       "style": {
@@ -4546,6 +4616,7 @@ exports[`with title and description array icons 1`] = `
                         "--ai-bg": "transparent",
                         "--ai-color": "var(--mantine-color-blue-light-color)",
                         "--ai-hover": "var(--mantine-color-blue-light-hover)",
+                        "--ai-size": "var(--ai-size-md)",
                       },
                       "title": "Copy",
                       "type": "button",
@@ -4571,7 +4642,7 @@ exports[`with title and description array icons 1`] = `
               },
             ],
             "props": {
-              "className": "m_84c9523a field field-array field-array-of-string m_e9408a47",
+              "className": "m_84c9523a rjsf-field rjsf-field-array rjsf-field-array-of-string m_e9408a47",
               "data-size": undefined,
               "data-variant": "default",
               "id": "root",
@@ -4583,7 +4654,7 @@ exports[`with title and description array icons 1`] = `
           },
         ],
         "props": {
-          "className": "form-group field field-array",
+          "className": "rjsf-field rjsf-field-array",
           "style": undefined,
         },
         "type": "div",
@@ -4705,20 +4776,6 @@ exports[`with title and description checkboxes 1`] = `
                               "data-type": "visible",
                               "data-variant": undefined,
                               "disabled": false,
-                              "enumOptions": [
-                                {
-                                  "label": "a",
-                                  "value": "a",
-                                },
-                                {
-                                  "label": "b",
-                                  "value": "b",
-                                },
-                                {
-                                  "label": "c",
-                                  "value": "c",
-                                },
-                              ],
                               "id": "root",
                               "onBlur": [Function],
                               "onChange": [Function],
@@ -4855,7 +4912,7 @@ exports[`with title and description checkboxes 1`] = `
                                           "data-combobox-option": true,
                                           "data-size": undefined,
                                           "data-variant": undefined,
-                                          "id": ":r5s:",
+                                          "id": ":r60:",
                                           "onClick": [Function],
                                           "onMouseDown": [Function],
                                           "onMouseOver": [Function],
@@ -4884,7 +4941,7 @@ exports[`with title and description checkboxes 1`] = `
                                           "data-combobox-option": true,
                                           "data-size": undefined,
                                           "data-variant": undefined,
-                                          "id": ":r5u:",
+                                          "id": ":r62:",
                                           "onClick": [Function],
                                           "onMouseDown": [Function],
                                           "onMouseOver": [Function],
@@ -4913,7 +4970,7 @@ exports[`with title and description checkboxes 1`] = `
                                           "data-combobox-option": true,
                                           "data-size": undefined,
                                           "data-variant": undefined,
-                                          "id": ":r60:",
+                                          "id": ":r64:",
                                           "onClick": [Function],
                                           "onMouseDown": [Function],
                                           "onMouseOver": [Function],
@@ -4928,7 +4985,6 @@ exports[`with title and description checkboxes 1`] = `
                                     ],
                                     "props": {
                                       "style": {
-                                        "display": "table",
                                         "minWidth": "100%",
                                       },
                                     },
@@ -4938,10 +4994,12 @@ exports[`with title and description checkboxes 1`] = `
                                 ],
                                 "props": {
                                   "className": "m_c0783ff9",
+                                  "data-horizontal-hidden": undefined,
                                   "data-offset-scrollbars": "y",
                                   "data-scrollbars": "xy",
                                   "data-size": undefined,
                                   "data-variant": undefined,
+                                  "data-vertical-hidden": undefined,
                                   "onScroll": [Function],
                                   "size": undefined,
                                   "style": {
@@ -5094,9 +5152,27 @@ exports[`with title and description checkboxes 1`] = `
             "type": "input",
             Symbol(cleaned): true,
           },
+          {
+            "children": [
+              "a test description",
+            ],
+            "props": {
+              "className": "m_b6d8b162",
+              "data-size": undefined,
+              "data-variant": undefined,
+              "id": "root__description",
+              "size": undefined,
+              "style": {
+                "marginBottom": "var(--mantine-spacing-sm)",
+                "marginTop": "calc(0.1875rem * var(--mantine-scale))",
+              },
+            },
+            "type": "p",
+            Symbol(cleaned): true,
+          },
         ],
         "props": {
-          "className": "form-group field field-array",
+          "className": "rjsf-field rjsf-field-array",
           "style": undefined,
         },
         "type": "div",
@@ -5218,8 +5294,15 @@ exports[`with title and description fixed array 1`] = `
                   "a test description",
                 ],
                 "props": {
-                  "className": "field-description",
+                  "className": "m_b6d8b162",
+                  "data-size": undefined,
+                  "data-variant": undefined,
                   "id": "root__description",
+                  "size": undefined,
+                  "style": {
+                    "marginBottom": "var(--mantine-spacing-sm)",
+                    "marginTop": "calc(0.1875rem * var(--mantine-scale))",
+                  },
                 },
                 "type": "p",
                 Symbol(cleaned): true,
@@ -5314,9 +5397,27 @@ exports[`with title and description fixed array 1`] = `
                                     "type": "div",
                                     Symbol(cleaned): true,
                                   },
+                                  {
+                                    "children": [
+                                      "a test item description",
+                                    ],
+                                    "props": {
+                                      "className": "m_b6d8b162",
+                                      "data-size": undefined,
+                                      "data-variant": undefined,
+                                      "id": "root_0__description",
+                                      "size": undefined,
+                                      "style": {
+                                        "marginBottom": "var(--mantine-spacing-sm)",
+                                        "marginTop": "calc(0.1875rem * var(--mantine-scale))",
+                                      },
+                                    },
+                                    "type": "p",
+                                    Symbol(cleaned): true,
+                                  },
                                 ],
                                 "props": {
-                                  "className": "form-group field field-string",
+                                  "className": "rjsf-field rjsf-field-string",
                                   "style": undefined,
                                 },
                                 "type": "div",
@@ -5337,7 +5438,7 @@ exports[`with title and description fixed array 1`] = `
                           },
                         ],
                         "props": {
-                          "className": "m_8bffd616 __m__-r4l",
+                          "className": "m_8bffd616 __m__-r4n",
                           "data-size": undefined,
                           "data-variant": undefined,
                           "size": undefined,
@@ -5352,7 +5453,7 @@ exports[`with title and description fixed array 1`] = `
                       },
                     ],
                     "props": {
-                      "className": "array-item",
+                      "className": "rjsf-array-item",
                       "data-size": undefined,
                       "data-variant": undefined,
                       "size": undefined,
@@ -5578,9 +5679,27 @@ exports[`with title and description fixed array 1`] = `
                                     "type": "div",
                                     Symbol(cleaned): true,
                                   },
+                                  {
+                                    "children": [
+                                      "a test item description",
+                                    ],
+                                    "props": {
+                                      "className": "m_b6d8b162",
+                                      "data-size": undefined,
+                                      "data-variant": undefined,
+                                      "id": "root_1__description",
+                                      "size": undefined,
+                                      "style": {
+                                        "marginBottom": "var(--mantine-spacing-sm)",
+                                        "marginTop": "calc(0.1875rem * var(--mantine-scale))",
+                                      },
+                                    },
+                                    "type": "p",
+                                    Symbol(cleaned): true,
+                                  },
                                 ],
                                 "props": {
-                                  "className": "form-group field field-number",
+                                  "className": "rjsf-field rjsf-field-number",
                                   "style": undefined,
                                 },
                                 "type": "div",
@@ -5601,7 +5720,7 @@ exports[`with title and description fixed array 1`] = `
                           },
                         ],
                         "props": {
-                          "className": "m_8bffd616 __m__-r4u",
+                          "className": "m_8bffd616 __m__-r51",
                           "data-size": undefined,
                           "data-variant": undefined,
                           "size": undefined,
@@ -5616,7 +5735,7 @@ exports[`with title and description fixed array 1`] = `
                       },
                     ],
                     "props": {
-                      "className": "array-item",
+                      "className": "rjsf-array-item",
                       "data-size": undefined,
                       "data-variant": undefined,
                       "size": undefined,
@@ -5629,7 +5748,7 @@ exports[`with title and description fixed array 1`] = `
                   },
                 ],
                 "props": {
-                  "className": "row array-item-list",
+                  "className": "row rjsf-array-item-list",
                   "data-size": undefined,
                   "data-variant": undefined,
                   "size": undefined,
@@ -5640,7 +5759,7 @@ exports[`with title and description fixed array 1`] = `
               },
             ],
             "props": {
-              "className": "m_84c9523a field field-array field-array-fixed-items m_e9408a47",
+              "className": "m_84c9523a rjsf-field rjsf-field-array rjsf-field-array-fixed-items m_e9408a47",
               "data-size": undefined,
               "data-variant": "default",
               "id": "root",
@@ -5652,7 +5771,7 @@ exports[`with title and description fixed array 1`] = `
           },
         ],
         "props": {
-          "className": "form-group field field-array",
+          "className": "rjsf-field rjsf-field-array",
           "style": undefined,
         },
         "type": "div",
@@ -5774,8 +5893,15 @@ exports[`with title and description from both array 1`] = `
                   "a fancier description",
                 ],
                 "props": {
-                  "className": "field-description",
+                  "className": "m_b6d8b162",
+                  "data-size": undefined,
+                  "data-variant": undefined,
                   "id": "root__description",
+                  "size": undefined,
+                  "style": {
+                    "marginBottom": "var(--mantine-spacing-sm)",
+                    "marginTop": "calc(0.1875rem * var(--mantine-scale))",
+                  },
                 },
                 "type": "p",
                 Symbol(cleaned): true,
@@ -5783,7 +5909,7 @@ exports[`with title and description from both array 1`] = `
               {
                 "children": null,
                 "props": {
-                  "className": "row array-item-list",
+                  "className": "row rjsf-array-item-list",
                   "data-size": undefined,
                   "data-variant": undefined,
                   "size": undefined,
@@ -5859,9 +5985,10 @@ exports[`with title and description from both array 1`] = `
                       },
                     ],
                     "props": {
-                      "className": "array-item-add m_8d3f4000 m_87cf2631",
-                      "data-size": undefined,
+                      "className": "rjsf-array-item-add m_8d3f4000 m_87cf2631",
+                      "data-size": "md",
                       "data-variant": "subtle",
+                      "id": "root__add",
                       "onClick": [Function],
                       "size": undefined,
                       "style": {
@@ -5869,6 +5996,7 @@ exports[`with title and description from both array 1`] = `
                         "--ai-bg": "transparent",
                         "--ai-color": "var(--mantine-color-blue-light-color)",
                         "--ai-hover": "var(--mantine-color-blue-light-hover)",
+                        "--ai-size": "var(--ai-size-md)",
                       },
                       "title": "Copy",
                       "type": "button",
@@ -5894,7 +6022,7 @@ exports[`with title and description from both array 1`] = `
               },
             ],
             "props": {
-              "className": "m_84c9523a field field-array field-array-of-string m_e9408a47",
+              "className": "m_84c9523a rjsf-field rjsf-field-array rjsf-field-array-of-string m_e9408a47",
               "data-size": undefined,
               "data-variant": "default",
               "id": "root",
@@ -5906,7 +6034,7 @@ exports[`with title and description from both array 1`] = `
           },
         ],
         "props": {
-          "className": "form-group field field-array",
+          "className": "rjsf-field rjsf-field-array",
           "style": undefined,
         },
         "type": "div",
@@ -6028,8 +6156,15 @@ exports[`with title and description from both array icons 1`] = `
                   "a fancier description",
                 ],
                 "props": {
-                  "className": "field-description",
+                  "className": "m_b6d8b162",
+                  "data-size": undefined,
+                  "data-variant": undefined,
                   "id": "root__description",
+                  "size": undefined,
+                  "style": {
+                    "marginBottom": "var(--mantine-spacing-sm)",
+                    "marginTop": "calc(0.1875rem * var(--mantine-scale))",
+                  },
                 },
                 "type": "p",
                 Symbol(cleaned): true,
@@ -6078,10 +6213,25 @@ exports[`with title and description from both array icons 1`] = `
                                       },
                                       {
                                         "children": [
+                                          "a fancier item description",
+                                        ],
+                                        "props": {
+                                          "className": "m_fe47ce59",
+                                          "data-size": undefined,
+                                          "data-variant": undefined,
+                                          "id": "root_0-description",
+                                          "size": undefined,
+                                          "style": {},
+                                        },
+                                        "type": "p",
+                                        Symbol(cleaned): true,
+                                      },
+                                      {
+                                        "children": [
                                           {
                                             "children": null,
                                             "props": {
-                                              "aria-describedby": undefined,
+                                              "aria-describedby": "root_0-description",
                                               "aria-invalid": false,
                                               "autoFocus": false,
                                               "className": "m_8fb7ebe7",
@@ -6109,7 +6259,9 @@ exports[`with title and description from both array icons 1`] = `
                                           "data-size": undefined,
                                           "data-variant": "default",
                                           "size": undefined,
-                                          "style": {},
+                                          "style": {
+                                            "--input-margin-top": "calc(var(--mantine-spacing-xs) / 2)",
+                                          },
                                         },
                                         "type": "div",
                                         Symbol(cleaned): true,
@@ -6125,9 +6277,27 @@ exports[`with title and description from both array icons 1`] = `
                                     "type": "div",
                                     Symbol(cleaned): true,
                                   },
+                                  {
+                                    "children": [
+                                      "a fancier item description",
+                                    ],
+                                    "props": {
+                                      "className": "m_b6d8b162",
+                                      "data-size": undefined,
+                                      "data-variant": undefined,
+                                      "id": "root_0__description",
+                                      "size": undefined,
+                                      "style": {
+                                        "marginBottom": "var(--mantine-spacing-sm)",
+                                        "marginTop": "calc(0.1875rem * var(--mantine-scale))",
+                                      },
+                                    },
+                                    "type": "p",
+                                    Symbol(cleaned): true,
+                                  },
                                 ],
                                 "props": {
-                                  "className": "form-group field field-string",
+                                  "className": "rjsf-field rjsf-field-string",
                                   "style": undefined,
                                 },
                                 "type": "div",
@@ -6205,11 +6375,12 @@ exports[`with title and description from both array icons 1`] = `
                                   },
                                 ],
                                 "props": {
-                                  "className": "array-item-move-up m_8d3f4000 m_87cf2631",
+                                  "className": "rjsf-array-item-move-up m_8d3f4000 m_87cf2631",
                                   "data-disabled": true,
                                   "data-size": "sm",
                                   "data-variant": "subtle",
                                   "disabled": true,
+                                  "id": "root_0__moveUp",
                                   "onClick": [Function],
                                   "size": undefined,
                                   "style": {
@@ -6282,9 +6453,10 @@ exports[`with title and description from both array icons 1`] = `
                                   },
                                 ],
                                 "props": {
-                                  "className": "array-item-move-down m_8d3f4000 m_87cf2631",
+                                  "className": "rjsf-array-item-move-down m_8d3f4000 m_87cf2631",
                                   "data-size": "sm",
                                   "data-variant": "subtle",
+                                  "id": "root_0__moveDown",
                                   "onClick": [Function],
                                   "size": undefined,
                                   "style": {
@@ -6365,9 +6537,10 @@ exports[`with title and description from both array icons 1`] = `
                                   },
                                 ],
                                 "props": {
-                                  "className": "array-item-copy m_8d3f4000 m_87cf2631",
+                                  "className": "rjsf-array-item-copy m_8d3f4000 m_87cf2631",
                                   "data-size": "sm",
                                   "data-variant": "subtle",
+                                  "id": "root_0__copy",
                                   "onClick": [Function],
                                   "size": undefined,
                                   "style": {
@@ -6448,9 +6621,10 @@ exports[`with title and description from both array icons 1`] = `
                                   },
                                 ],
                                 "props": {
-                                  "className": "array-item-remove m_8d3f4000 m_87cf2631",
+                                  "className": "rjsf-array-item-remove m_8d3f4000 m_87cf2631",
                                   "data-size": "sm",
                                   "data-variant": "subtle",
+                                  "id": "root_0__remove",
                                   "onClick": [Function],
                                   "size": undefined,
                                   "style": {
@@ -6477,6 +6651,7 @@ exports[`with title and description from both array icons 1`] = `
                                 "--group-gap": "calc(0.125rem * var(--mantine-scale))",
                                 "--group-justify": "flex-start",
                                 "--group-wrap": "nowrap",
+                                "marginBottom": "calc(0.4375rem * var(--mantine-scale))",
                               },
                             },
                             "type": "div",
@@ -6484,7 +6659,7 @@ exports[`with title and description from both array icons 1`] = `
                           },
                         ],
                         "props": {
-                          "className": "m_8bffd616 __m__-rco",
+                          "className": "m_8bffd616 __m__-rdk",
                           "data-size": undefined,
                           "data-variant": undefined,
                           "size": undefined,
@@ -6499,7 +6674,7 @@ exports[`with title and description from both array icons 1`] = `
                       },
                     ],
                     "props": {
-                      "className": "array-item",
+                      "className": "rjsf-array-item",
                       "data-size": undefined,
                       "data-variant": undefined,
                       "size": undefined,
@@ -6552,10 +6727,25 @@ exports[`with title and description from both array icons 1`] = `
                                       },
                                       {
                                         "children": [
+                                          "a fancier item description",
+                                        ],
+                                        "props": {
+                                          "className": "m_fe47ce59",
+                                          "data-size": undefined,
+                                          "data-variant": undefined,
+                                          "id": "root_1-description",
+                                          "size": undefined,
+                                          "style": {},
+                                        },
+                                        "type": "p",
+                                        Symbol(cleaned): true,
+                                      },
+                                      {
+                                        "children": [
                                           {
                                             "children": null,
                                             "props": {
-                                              "aria-describedby": undefined,
+                                              "aria-describedby": "root_1-description",
                                               "aria-invalid": false,
                                               "autoFocus": false,
                                               "className": "m_8fb7ebe7",
@@ -6583,7 +6773,9 @@ exports[`with title and description from both array icons 1`] = `
                                           "data-size": undefined,
                                           "data-variant": "default",
                                           "size": undefined,
-                                          "style": {},
+                                          "style": {
+                                            "--input-margin-top": "calc(var(--mantine-spacing-xs) / 2)",
+                                          },
                                         },
                                         "type": "div",
                                         Symbol(cleaned): true,
@@ -6599,9 +6791,27 @@ exports[`with title and description from both array icons 1`] = `
                                     "type": "div",
                                     Symbol(cleaned): true,
                                   },
+                                  {
+                                    "children": [
+                                      "a fancier item description",
+                                    ],
+                                    "props": {
+                                      "className": "m_b6d8b162",
+                                      "data-size": undefined,
+                                      "data-variant": undefined,
+                                      "id": "root_1__description",
+                                      "size": undefined,
+                                      "style": {
+                                        "marginBottom": "var(--mantine-spacing-sm)",
+                                        "marginTop": "calc(0.1875rem * var(--mantine-scale))",
+                                      },
+                                    },
+                                    "type": "p",
+                                    Symbol(cleaned): true,
+                                  },
                                 ],
                                 "props": {
-                                  "className": "form-group field field-string",
+                                  "className": "rjsf-field rjsf-field-string",
                                   "style": undefined,
                                 },
                                 "type": "div",
@@ -6679,9 +6889,10 @@ exports[`with title and description from both array icons 1`] = `
                                   },
                                 ],
                                 "props": {
-                                  "className": "array-item-move-up m_8d3f4000 m_87cf2631",
+                                  "className": "rjsf-array-item-move-up m_8d3f4000 m_87cf2631",
                                   "data-size": "sm",
                                   "data-variant": "subtle",
+                                  "id": "root_1__moveUp",
                                   "onClick": [Function],
                                   "size": undefined,
                                   "style": {
@@ -6754,11 +6965,12 @@ exports[`with title and description from both array icons 1`] = `
                                   },
                                 ],
                                 "props": {
-                                  "className": "array-item-move-down m_8d3f4000 m_87cf2631",
+                                  "className": "rjsf-array-item-move-down m_8d3f4000 m_87cf2631",
                                   "data-disabled": true,
                                   "data-size": "sm",
                                   "data-variant": "subtle",
                                   "disabled": true,
+                                  "id": "root_1__moveDown",
                                   "onClick": [Function],
                                   "size": undefined,
                                   "style": {
@@ -6839,9 +7051,10 @@ exports[`with title and description from both array icons 1`] = `
                                   },
                                 ],
                                 "props": {
-                                  "className": "array-item-copy m_8d3f4000 m_87cf2631",
+                                  "className": "rjsf-array-item-copy m_8d3f4000 m_87cf2631",
                                   "data-size": "sm",
                                   "data-variant": "subtle",
+                                  "id": "root_1__copy",
                                   "onClick": [Function],
                                   "size": undefined,
                                   "style": {
@@ -6922,9 +7135,10 @@ exports[`with title and description from both array icons 1`] = `
                                   },
                                 ],
                                 "props": {
-                                  "className": "array-item-remove m_8d3f4000 m_87cf2631",
+                                  "className": "rjsf-array-item-remove m_8d3f4000 m_87cf2631",
                                   "data-size": "sm",
                                   "data-variant": "subtle",
+                                  "id": "root_1__remove",
                                   "onClick": [Function],
                                   "size": undefined,
                                   "style": {
@@ -6951,6 +7165,7 @@ exports[`with title and description from both array icons 1`] = `
                                 "--group-gap": "calc(0.125rem * var(--mantine-scale))",
                                 "--group-justify": "flex-start",
                                 "--group-wrap": "nowrap",
+                                "marginBottom": "calc(0.4375rem * var(--mantine-scale))",
                               },
                             },
                             "type": "div",
@@ -6958,7 +7173,7 @@ exports[`with title and description from both array icons 1`] = `
                           },
                         ],
                         "props": {
-                          "className": "m_8bffd616 __m__-rda",
+                          "className": "m_8bffd616 __m__-re8",
                           "data-size": undefined,
                           "data-variant": undefined,
                           "size": undefined,
@@ -6973,7 +7188,7 @@ exports[`with title and description from both array icons 1`] = `
                       },
                     ],
                     "props": {
-                      "className": "array-item",
+                      "className": "rjsf-array-item",
                       "data-size": undefined,
                       "data-variant": undefined,
                       "size": undefined,
@@ -6986,7 +7201,7 @@ exports[`with title and description from both array icons 1`] = `
                   },
                 ],
                 "props": {
-                  "className": "row array-item-list",
+                  "className": "row rjsf-array-item-list",
                   "data-size": undefined,
                   "data-variant": undefined,
                   "size": undefined,
@@ -7062,9 +7277,10 @@ exports[`with title and description from both array icons 1`] = `
                       },
                     ],
                     "props": {
-                      "className": "array-item-add m_8d3f4000 m_87cf2631",
-                      "data-size": undefined,
+                      "className": "rjsf-array-item-add m_8d3f4000 m_87cf2631",
+                      "data-size": "md",
                       "data-variant": "subtle",
+                      "id": "root__add",
                       "onClick": [Function],
                       "size": undefined,
                       "style": {
@@ -7072,6 +7288,7 @@ exports[`with title and description from both array icons 1`] = `
                         "--ai-bg": "transparent",
                         "--ai-color": "var(--mantine-color-blue-light-color)",
                         "--ai-hover": "var(--mantine-color-blue-light-hover)",
+                        "--ai-size": "var(--ai-size-md)",
                       },
                       "title": "Copy",
                       "type": "button",
@@ -7097,7 +7314,7 @@ exports[`with title and description from both array icons 1`] = `
               },
             ],
             "props": {
-              "className": "m_84c9523a field field-array field-array-of-string m_e9408a47",
+              "className": "m_84c9523a rjsf-field rjsf-field-array rjsf-field-array-of-string m_e9408a47",
               "data-size": undefined,
               "data-variant": "default",
               "id": "root",
@@ -7109,7 +7326,7 @@ exports[`with title and description from both array icons 1`] = `
           },
         ],
         "props": {
-          "className": "form-group field field-array",
+          "className": "rjsf-field rjsf-field-array",
           "style": undefined,
         },
         "type": "div",
@@ -7246,20 +7463,6 @@ exports[`with title and description from both checkboxes 1`] = `
                               "data-type": "visible",
                               "data-variant": undefined,
                               "disabled": false,
-                              "enumOptions": [
-                                {
-                                  "label": "a",
-                                  "value": "a",
-                                },
-                                {
-                                  "label": "b",
-                                  "value": "b",
-                                },
-                                {
-                                  "label": "c",
-                                  "value": "c",
-                                },
-                              ],
                               "id": "root",
                               "onBlur": [Function],
                               "onChange": [Function],
@@ -7397,7 +7600,7 @@ exports[`with title and description from both checkboxes 1`] = `
                                           "data-combobox-option": true,
                                           "data-size": undefined,
                                           "data-variant": undefined,
-                                          "id": ":rcc:",
+                                          "id": ":rd6:",
                                           "onClick": [Function],
                                           "onMouseDown": [Function],
                                           "onMouseOver": [Function],
@@ -7426,7 +7629,7 @@ exports[`with title and description from both checkboxes 1`] = `
                                           "data-combobox-option": true,
                                           "data-size": undefined,
                                           "data-variant": undefined,
-                                          "id": ":rce:",
+                                          "id": ":rd8:",
                                           "onClick": [Function],
                                           "onMouseDown": [Function],
                                           "onMouseOver": [Function],
@@ -7455,7 +7658,7 @@ exports[`with title and description from both checkboxes 1`] = `
                                           "data-combobox-option": true,
                                           "data-size": undefined,
                                           "data-variant": undefined,
-                                          "id": ":rcg:",
+                                          "id": ":rda:",
                                           "onClick": [Function],
                                           "onMouseDown": [Function],
                                           "onMouseOver": [Function],
@@ -7470,7 +7673,6 @@ exports[`with title and description from both checkboxes 1`] = `
                                     ],
                                     "props": {
                                       "style": {
-                                        "display": "table",
                                         "minWidth": "100%",
                                       },
                                     },
@@ -7480,10 +7682,12 @@ exports[`with title and description from both checkboxes 1`] = `
                                 ],
                                 "props": {
                                   "className": "m_c0783ff9",
+                                  "data-horizontal-hidden": undefined,
                                   "data-offset-scrollbars": "y",
                                   "data-scrollbars": "xy",
                                   "data-size": undefined,
                                   "data-variant": undefined,
+                                  "data-vertical-hidden": undefined,
                                   "onScroll": [Function],
                                   "size": undefined,
                                   "style": {
@@ -7636,9 +7840,27 @@ exports[`with title and description from both checkboxes 1`] = `
             "type": "input",
             Symbol(cleaned): true,
           },
+          {
+            "children": [
+              "a fancier description",
+            ],
+            "props": {
+              "className": "m_b6d8b162",
+              "data-size": undefined,
+              "data-variant": undefined,
+              "id": "root__description",
+              "size": undefined,
+              "style": {
+                "marginBottom": "var(--mantine-spacing-sm)",
+                "marginTop": "calc(0.1875rem * var(--mantine-scale))",
+              },
+            },
+            "type": "p",
+            Symbol(cleaned): true,
+          },
         ],
         "props": {
-          "className": "form-group field field-array",
+          "className": "rjsf-field rjsf-field-array",
           "style": undefined,
         },
         "type": "div",
@@ -7760,8 +7982,15 @@ exports[`with title and description from both fixed array 1`] = `
                   "a fancier description",
                 ],
                 "props": {
-                  "className": "field-description",
+                  "className": "m_b6d8b162",
+                  "data-size": undefined,
+                  "data-variant": undefined,
                   "id": "root__description",
+                  "size": undefined,
+                  "style": {
+                    "marginBottom": "var(--mantine-spacing-sm)",
+                    "marginTop": "calc(0.1875rem * var(--mantine-scale))",
+                  },
                 },
                 "type": "p",
                 Symbol(cleaned): true,
@@ -7810,10 +8039,25 @@ exports[`with title and description from both fixed array 1`] = `
                                       },
                                       {
                                         "children": [
+                                          "a fancier item description",
+                                        ],
+                                        "props": {
+                                          "className": "m_fe47ce59",
+                                          "data-size": undefined,
+                                          "data-variant": undefined,
+                                          "id": "root_0-description",
+                                          "size": undefined,
+                                          "style": {},
+                                        },
+                                        "type": "p",
+                                        Symbol(cleaned): true,
+                                      },
+                                      {
+                                        "children": [
                                           {
                                             "children": null,
                                             "props": {
-                                              "aria-describedby": undefined,
+                                              "aria-describedby": "root_0-description",
                                               "aria-invalid": false,
                                               "autoFocus": false,
                                               "className": "m_8fb7ebe7",
@@ -7840,7 +8084,9 @@ exports[`with title and description from both fixed array 1`] = `
                                           "data-size": undefined,
                                           "data-variant": "default",
                                           "size": undefined,
-                                          "style": {},
+                                          "style": {
+                                            "--input-margin-top": "calc(var(--mantine-spacing-xs) / 2)",
+                                          },
                                         },
                                         "type": "div",
                                         Symbol(cleaned): true,
@@ -7856,9 +8102,27 @@ exports[`with title and description from both fixed array 1`] = `
                                     "type": "div",
                                     Symbol(cleaned): true,
                                   },
+                                  {
+                                    "children": [
+                                      "a fancier item description",
+                                    ],
+                                    "props": {
+                                      "className": "m_b6d8b162",
+                                      "data-size": undefined,
+                                      "data-variant": undefined,
+                                      "id": "root_0__description",
+                                      "size": undefined,
+                                      "style": {
+                                        "marginBottom": "var(--mantine-spacing-sm)",
+                                        "marginTop": "calc(0.1875rem * var(--mantine-scale))",
+                                      },
+                                    },
+                                    "type": "p",
+                                    Symbol(cleaned): true,
+                                  },
                                 ],
                                 "props": {
-                                  "className": "form-group field field-string",
+                                  "className": "rjsf-field rjsf-field-string",
                                   "style": undefined,
                                 },
                                 "type": "div",
@@ -7879,7 +8143,7 @@ exports[`with title and description from both fixed array 1`] = `
                           },
                         ],
                         "props": {
-                          "className": "m_8bffd616 __m__-rb4",
+                          "className": "m_8bffd616 __m__-rbq",
                           "data-size": undefined,
                           "data-variant": undefined,
                           "size": undefined,
@@ -7894,7 +8158,7 @@ exports[`with title and description from both fixed array 1`] = `
                       },
                     ],
                     "props": {
-                      "className": "array-item",
+                      "className": "rjsf-array-item",
                       "data-size": undefined,
                       "data-variant": undefined,
                       "size": undefined,
@@ -7947,10 +8211,25 @@ exports[`with title and description from both fixed array 1`] = `
                                       },
                                       {
                                         "children": [
+                                          "a fancier item description",
+                                        ],
+                                        "props": {
+                                          "className": "m_fe47ce59",
+                                          "data-size": undefined,
+                                          "data-variant": undefined,
+                                          "id": "root_1-description",
+                                          "size": undefined,
+                                          "style": {},
+                                        },
+                                        "type": "p",
+                                        Symbol(cleaned): true,
+                                      },
+                                      {
+                                        "children": [
                                           {
                                             "children": null,
                                             "props": {
-                                              "aria-describedby": undefined,
+                                              "aria-describedby": "root_1-description",
                                               "aria-invalid": false,
                                               "autoFocus": false,
                                               "className": "m_8fb7ebe7",
@@ -8103,6 +8382,7 @@ exports[`with title and description from both fixed array 1`] = `
                                           "data-with-right-section": true,
                                           "size": undefined,
                                           "style": {
+                                            "--input-margin-top": "calc(var(--mantine-spacing-xs) / 2)",
                                             "--input-right-section-width": "var(--ni-right-section-width-sm)",
                                           },
                                         },
@@ -8120,9 +8400,27 @@ exports[`with title and description from both fixed array 1`] = `
                                     "type": "div",
                                     Symbol(cleaned): true,
                                   },
+                                  {
+                                    "children": [
+                                      "a fancier item description",
+                                    ],
+                                    "props": {
+                                      "className": "m_b6d8b162",
+                                      "data-size": undefined,
+                                      "data-variant": undefined,
+                                      "id": "root_1__description",
+                                      "size": undefined,
+                                      "style": {
+                                        "marginBottom": "var(--mantine-spacing-sm)",
+                                        "marginTop": "calc(0.1875rem * var(--mantine-scale))",
+                                      },
+                                    },
+                                    "type": "p",
+                                    Symbol(cleaned): true,
+                                  },
                                 ],
                                 "props": {
-                                  "className": "form-group field field-number",
+                                  "className": "rjsf-field rjsf-field-number",
                                   "style": undefined,
                                 },
                                 "type": "div",
@@ -8143,7 +8441,7 @@ exports[`with title and description from both fixed array 1`] = `
                           },
                         ],
                         "props": {
-                          "className": "m_8bffd616 __m__-rbd",
+                          "className": "m_8bffd616 __m__-rc5",
                           "data-size": undefined,
                           "data-variant": undefined,
                           "size": undefined,
@@ -8158,7 +8456,7 @@ exports[`with title and description from both fixed array 1`] = `
                       },
                     ],
                     "props": {
-                      "className": "array-item",
+                      "className": "rjsf-array-item",
                       "data-size": undefined,
                       "data-variant": undefined,
                       "size": undefined,
@@ -8171,7 +8469,7 @@ exports[`with title and description from both fixed array 1`] = `
                   },
                 ],
                 "props": {
-                  "className": "row array-item-list",
+                  "className": "row rjsf-array-item-list",
                   "data-size": undefined,
                   "data-variant": undefined,
                   "size": undefined,
@@ -8182,7 +8480,7 @@ exports[`with title and description from both fixed array 1`] = `
               },
             ],
             "props": {
-              "className": "m_84c9523a field field-array field-array-fixed-items m_e9408a47",
+              "className": "m_84c9523a rjsf-field rjsf-field-array rjsf-field-array-fixed-items m_e9408a47",
               "data-size": undefined,
               "data-variant": "default",
               "id": "root",
@@ -8194,7 +8492,7 @@ exports[`with title and description from both fixed array 1`] = `
           },
         ],
         "props": {
-          "className": "form-group field field-array",
+          "className": "rjsf-field rjsf-field-array",
           "style": undefined,
         },
         "type": "div",
@@ -8316,8 +8614,15 @@ exports[`with title and description from uiSchema array 1`] = `
                   "a fancier description",
                 ],
                 "props": {
-                  "className": "field-description",
+                  "className": "m_b6d8b162",
+                  "data-size": undefined,
+                  "data-variant": undefined,
                   "id": "root__description",
+                  "size": undefined,
+                  "style": {
+                    "marginBottom": "var(--mantine-spacing-sm)",
+                    "marginTop": "calc(0.1875rem * var(--mantine-scale))",
+                  },
                 },
                 "type": "p",
                 Symbol(cleaned): true,
@@ -8325,7 +8630,7 @@ exports[`with title and description from uiSchema array 1`] = `
               {
                 "children": null,
                 "props": {
-                  "className": "row array-item-list",
+                  "className": "row rjsf-array-item-list",
                   "data-size": undefined,
                   "data-variant": undefined,
                   "size": undefined,
@@ -8401,9 +8706,10 @@ exports[`with title and description from uiSchema array 1`] = `
                       },
                     ],
                     "props": {
-                      "className": "array-item-add m_8d3f4000 m_87cf2631",
-                      "data-size": undefined,
+                      "className": "rjsf-array-item-add m_8d3f4000 m_87cf2631",
+                      "data-size": "md",
                       "data-variant": "subtle",
+                      "id": "root__add",
                       "onClick": [Function],
                       "size": undefined,
                       "style": {
@@ -8411,6 +8717,7 @@ exports[`with title and description from uiSchema array 1`] = `
                         "--ai-bg": "transparent",
                         "--ai-color": "var(--mantine-color-blue-light-color)",
                         "--ai-hover": "var(--mantine-color-blue-light-hover)",
+                        "--ai-size": "var(--ai-size-md)",
                       },
                       "title": "Copy",
                       "type": "button",
@@ -8436,7 +8743,7 @@ exports[`with title and description from uiSchema array 1`] = `
               },
             ],
             "props": {
-              "className": "m_84c9523a field field-array field-array-of-string m_e9408a47",
+              "className": "m_84c9523a rjsf-field rjsf-field-array rjsf-field-array-of-string m_e9408a47",
               "data-size": undefined,
               "data-variant": "default",
               "id": "root",
@@ -8448,7 +8755,7 @@ exports[`with title and description from uiSchema array 1`] = `
           },
         ],
         "props": {
-          "className": "form-group field field-array",
+          "className": "rjsf-field rjsf-field-array",
           "style": undefined,
         },
         "type": "div",
@@ -8570,8 +8877,15 @@ exports[`with title and description from uiSchema array icons 1`] = `
                   "a fancier description",
                 ],
                 "props": {
-                  "className": "field-description",
+                  "className": "m_b6d8b162",
+                  "data-size": undefined,
+                  "data-variant": undefined,
                   "id": "root__description",
+                  "size": undefined,
+                  "style": {
+                    "marginBottom": "var(--mantine-spacing-sm)",
+                    "marginTop": "calc(0.1875rem * var(--mantine-scale))",
+                  },
                 },
                 "type": "p",
                 Symbol(cleaned): true,
@@ -8620,10 +8934,25 @@ exports[`with title and description from uiSchema array icons 1`] = `
                                       },
                                       {
                                         "children": [
+                                          "a fancier item description",
+                                        ],
+                                        "props": {
+                                          "className": "m_fe47ce59",
+                                          "data-size": undefined,
+                                          "data-variant": undefined,
+                                          "id": "root_0-description",
+                                          "size": undefined,
+                                          "style": {},
+                                        },
+                                        "type": "p",
+                                        Symbol(cleaned): true,
+                                      },
+                                      {
+                                        "children": [
                                           {
                                             "children": null,
                                             "props": {
-                                              "aria-describedby": undefined,
+                                              "aria-describedby": "root_0-description",
                                               "aria-invalid": false,
                                               "autoFocus": false,
                                               "className": "m_8fb7ebe7",
@@ -8651,7 +8980,9 @@ exports[`with title and description from uiSchema array icons 1`] = `
                                           "data-size": undefined,
                                           "data-variant": "default",
                                           "size": undefined,
-                                          "style": {},
+                                          "style": {
+                                            "--input-margin-top": "calc(var(--mantine-spacing-xs) / 2)",
+                                          },
                                         },
                                         "type": "div",
                                         Symbol(cleaned): true,
@@ -8667,9 +8998,27 @@ exports[`with title and description from uiSchema array icons 1`] = `
                                     "type": "div",
                                     Symbol(cleaned): true,
                                   },
+                                  {
+                                    "children": [
+                                      "a fancier item description",
+                                    ],
+                                    "props": {
+                                      "className": "m_b6d8b162",
+                                      "data-size": undefined,
+                                      "data-variant": undefined,
+                                      "id": "root_0__description",
+                                      "size": undefined,
+                                      "style": {
+                                        "marginBottom": "var(--mantine-spacing-sm)",
+                                        "marginTop": "calc(0.1875rem * var(--mantine-scale))",
+                                      },
+                                    },
+                                    "type": "p",
+                                    Symbol(cleaned): true,
+                                  },
                                 ],
                                 "props": {
-                                  "className": "form-group field field-string",
+                                  "className": "rjsf-field rjsf-field-string",
                                   "style": undefined,
                                 },
                                 "type": "div",
@@ -8747,11 +9096,12 @@ exports[`with title and description from uiSchema array icons 1`] = `
                                   },
                                 ],
                                 "props": {
-                                  "className": "array-item-move-up m_8d3f4000 m_87cf2631",
+                                  "className": "rjsf-array-item-move-up m_8d3f4000 m_87cf2631",
                                   "data-disabled": true,
                                   "data-size": "sm",
                                   "data-variant": "subtle",
                                   "disabled": true,
+                                  "id": "root_0__moveUp",
                                   "onClick": [Function],
                                   "size": undefined,
                                   "style": {
@@ -8824,9 +9174,10 @@ exports[`with title and description from uiSchema array icons 1`] = `
                                   },
                                 ],
                                 "props": {
-                                  "className": "array-item-move-down m_8d3f4000 m_87cf2631",
+                                  "className": "rjsf-array-item-move-down m_8d3f4000 m_87cf2631",
                                   "data-size": "sm",
                                   "data-variant": "subtle",
+                                  "id": "root_0__moveDown",
                                   "onClick": [Function],
                                   "size": undefined,
                                   "style": {
@@ -8907,9 +9258,10 @@ exports[`with title and description from uiSchema array icons 1`] = `
                                   },
                                 ],
                                 "props": {
-                                  "className": "array-item-copy m_8d3f4000 m_87cf2631",
+                                  "className": "rjsf-array-item-copy m_8d3f4000 m_87cf2631",
                                   "data-size": "sm",
                                   "data-variant": "subtle",
+                                  "id": "root_0__copy",
                                   "onClick": [Function],
                                   "size": undefined,
                                   "style": {
@@ -8990,9 +9342,10 @@ exports[`with title and description from uiSchema array icons 1`] = `
                                   },
                                 ],
                                 "props": {
-                                  "className": "array-item-remove m_8d3f4000 m_87cf2631",
+                                  "className": "rjsf-array-item-remove m_8d3f4000 m_87cf2631",
                                   "data-size": "sm",
                                   "data-variant": "subtle",
+                                  "id": "root_0__remove",
                                   "onClick": [Function],
                                   "size": undefined,
                                   "style": {
@@ -9019,6 +9372,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                                 "--group-gap": "calc(0.125rem * var(--mantine-scale))",
                                 "--group-justify": "flex-start",
                                 "--group-wrap": "nowrap",
+                                "marginBottom": "calc(0.4375rem * var(--mantine-scale))",
                               },
                             },
                             "type": "div",
@@ -9026,7 +9380,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                           },
                         ],
                         "props": {
-                          "className": "m_8bffd616 __m__-r9g",
+                          "className": "m_8bffd616 __m__-ra0",
                           "data-size": undefined,
                           "data-variant": undefined,
                           "size": undefined,
@@ -9041,7 +9395,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                       },
                     ],
                     "props": {
-                      "className": "array-item",
+                      "className": "rjsf-array-item",
                       "data-size": undefined,
                       "data-variant": undefined,
                       "size": undefined,
@@ -9094,10 +9448,25 @@ exports[`with title and description from uiSchema array icons 1`] = `
                                       },
                                       {
                                         "children": [
+                                          "a fancier item description",
+                                        ],
+                                        "props": {
+                                          "className": "m_fe47ce59",
+                                          "data-size": undefined,
+                                          "data-variant": undefined,
+                                          "id": "root_1-description",
+                                          "size": undefined,
+                                          "style": {},
+                                        },
+                                        "type": "p",
+                                        Symbol(cleaned): true,
+                                      },
+                                      {
+                                        "children": [
                                           {
                                             "children": null,
                                             "props": {
-                                              "aria-describedby": undefined,
+                                              "aria-describedby": "root_1-description",
                                               "aria-invalid": false,
                                               "autoFocus": false,
                                               "className": "m_8fb7ebe7",
@@ -9125,7 +9494,9 @@ exports[`with title and description from uiSchema array icons 1`] = `
                                           "data-size": undefined,
                                           "data-variant": "default",
                                           "size": undefined,
-                                          "style": {},
+                                          "style": {
+                                            "--input-margin-top": "calc(var(--mantine-spacing-xs) / 2)",
+                                          },
                                         },
                                         "type": "div",
                                         Symbol(cleaned): true,
@@ -9141,9 +9512,27 @@ exports[`with title and description from uiSchema array icons 1`] = `
                                     "type": "div",
                                     Symbol(cleaned): true,
                                   },
+                                  {
+                                    "children": [
+                                      "a fancier item description",
+                                    ],
+                                    "props": {
+                                      "className": "m_b6d8b162",
+                                      "data-size": undefined,
+                                      "data-variant": undefined,
+                                      "id": "root_1__description",
+                                      "size": undefined,
+                                      "style": {
+                                        "marginBottom": "var(--mantine-spacing-sm)",
+                                        "marginTop": "calc(0.1875rem * var(--mantine-scale))",
+                                      },
+                                    },
+                                    "type": "p",
+                                    Symbol(cleaned): true,
+                                  },
                                 ],
                                 "props": {
-                                  "className": "form-group field field-string",
+                                  "className": "rjsf-field rjsf-field-string",
                                   "style": undefined,
                                 },
                                 "type": "div",
@@ -9221,9 +9610,10 @@ exports[`with title and description from uiSchema array icons 1`] = `
                                   },
                                 ],
                                 "props": {
-                                  "className": "array-item-move-up m_8d3f4000 m_87cf2631",
+                                  "className": "rjsf-array-item-move-up m_8d3f4000 m_87cf2631",
                                   "data-size": "sm",
                                   "data-variant": "subtle",
+                                  "id": "root_1__moveUp",
                                   "onClick": [Function],
                                   "size": undefined,
                                   "style": {
@@ -9296,11 +9686,12 @@ exports[`with title and description from uiSchema array icons 1`] = `
                                   },
                                 ],
                                 "props": {
-                                  "className": "array-item-move-down m_8d3f4000 m_87cf2631",
+                                  "className": "rjsf-array-item-move-down m_8d3f4000 m_87cf2631",
                                   "data-disabled": true,
                                   "data-size": "sm",
                                   "data-variant": "subtle",
                                   "disabled": true,
+                                  "id": "root_1__moveDown",
                                   "onClick": [Function],
                                   "size": undefined,
                                   "style": {
@@ -9381,9 +9772,10 @@ exports[`with title and description from uiSchema array icons 1`] = `
                                   },
                                 ],
                                 "props": {
-                                  "className": "array-item-copy m_8d3f4000 m_87cf2631",
+                                  "className": "rjsf-array-item-copy m_8d3f4000 m_87cf2631",
                                   "data-size": "sm",
                                   "data-variant": "subtle",
+                                  "id": "root_1__copy",
                                   "onClick": [Function],
                                   "size": undefined,
                                   "style": {
@@ -9464,9 +9856,10 @@ exports[`with title and description from uiSchema array icons 1`] = `
                                   },
                                 ],
                                 "props": {
-                                  "className": "array-item-remove m_8d3f4000 m_87cf2631",
+                                  "className": "rjsf-array-item-remove m_8d3f4000 m_87cf2631",
                                   "data-size": "sm",
                                   "data-variant": "subtle",
+                                  "id": "root_1__remove",
                                   "onClick": [Function],
                                   "size": undefined,
                                   "style": {
@@ -9493,6 +9886,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                                 "--group-gap": "calc(0.125rem * var(--mantine-scale))",
                                 "--group-justify": "flex-start",
                                 "--group-wrap": "nowrap",
+                                "marginBottom": "calc(0.4375rem * var(--mantine-scale))",
                               },
                             },
                             "type": "div",
@@ -9500,7 +9894,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                           },
                         ],
                         "props": {
-                          "className": "m_8bffd616 __m__-ra2",
+                          "className": "m_8bffd616 __m__-rak",
                           "data-size": undefined,
                           "data-variant": undefined,
                           "size": undefined,
@@ -9515,7 +9909,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                       },
                     ],
                     "props": {
-                      "className": "array-item",
+                      "className": "rjsf-array-item",
                       "data-size": undefined,
                       "data-variant": undefined,
                       "size": undefined,
@@ -9528,7 +9922,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                   },
                 ],
                 "props": {
-                  "className": "row array-item-list",
+                  "className": "row rjsf-array-item-list",
                   "data-size": undefined,
                   "data-variant": undefined,
                   "size": undefined,
@@ -9604,9 +9998,10 @@ exports[`with title and description from uiSchema array icons 1`] = `
                       },
                     ],
                     "props": {
-                      "className": "array-item-add m_8d3f4000 m_87cf2631",
-                      "data-size": undefined,
+                      "className": "rjsf-array-item-add m_8d3f4000 m_87cf2631",
+                      "data-size": "md",
                       "data-variant": "subtle",
+                      "id": "root__add",
                       "onClick": [Function],
                       "size": undefined,
                       "style": {
@@ -9614,6 +10009,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                         "--ai-bg": "transparent",
                         "--ai-color": "var(--mantine-color-blue-light-color)",
                         "--ai-hover": "var(--mantine-color-blue-light-hover)",
+                        "--ai-size": "var(--ai-size-md)",
                       },
                       "title": "Copy",
                       "type": "button",
@@ -9639,7 +10035,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
               },
             ],
             "props": {
-              "className": "m_84c9523a field field-array field-array-of-string m_e9408a47",
+              "className": "m_84c9523a rjsf-field rjsf-field-array rjsf-field-array-of-string m_e9408a47",
               "data-size": undefined,
               "data-variant": "default",
               "id": "root",
@@ -9651,7 +10047,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
           },
         ],
         "props": {
-          "className": "form-group field field-array",
+          "className": "rjsf-field rjsf-field-array",
           "style": undefined,
         },
         "type": "div",
@@ -9788,20 +10184,6 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
                               "data-type": "visible",
                               "data-variant": undefined,
                               "disabled": false,
-                              "enumOptions": [
-                                {
-                                  "label": "a",
-                                  "value": "a",
-                                },
-                                {
-                                  "label": "b",
-                                  "value": "b",
-                                },
-                                {
-                                  "label": "c",
-                                  "value": "c",
-                                },
-                              ],
                               "id": "root",
                               "onBlur": [Function],
                               "onChange": [Function],
@@ -9939,7 +10321,7 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
                                           "data-combobox-option": true,
                                           "data-size": undefined,
                                           "data-variant": undefined,
-                                          "id": ":r94:",
+                                          "id": ":r9i:",
                                           "onClick": [Function],
                                           "onMouseDown": [Function],
                                           "onMouseOver": [Function],
@@ -9968,7 +10350,7 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
                                           "data-combobox-option": true,
                                           "data-size": undefined,
                                           "data-variant": undefined,
-                                          "id": ":r96:",
+                                          "id": ":r9k:",
                                           "onClick": [Function],
                                           "onMouseDown": [Function],
                                           "onMouseOver": [Function],
@@ -9997,7 +10379,7 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
                                           "data-combobox-option": true,
                                           "data-size": undefined,
                                           "data-variant": undefined,
-                                          "id": ":r98:",
+                                          "id": ":r9m:",
                                           "onClick": [Function],
                                           "onMouseDown": [Function],
                                           "onMouseOver": [Function],
@@ -10012,7 +10394,6 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
                                     ],
                                     "props": {
                                       "style": {
-                                        "display": "table",
                                         "minWidth": "100%",
                                       },
                                     },
@@ -10022,10 +10403,12 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
                                 ],
                                 "props": {
                                   "className": "m_c0783ff9",
+                                  "data-horizontal-hidden": undefined,
                                   "data-offset-scrollbars": "y",
                                   "data-scrollbars": "xy",
                                   "data-size": undefined,
                                   "data-variant": undefined,
+                                  "data-vertical-hidden": undefined,
                                   "onScroll": [Function],
                                   "size": undefined,
                                   "style": {
@@ -10178,9 +10561,27 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
             "type": "input",
             Symbol(cleaned): true,
           },
+          {
+            "children": [
+              "a fancier description",
+            ],
+            "props": {
+              "className": "m_b6d8b162",
+              "data-size": undefined,
+              "data-variant": undefined,
+              "id": "root__description",
+              "size": undefined,
+              "style": {
+                "marginBottom": "var(--mantine-spacing-sm)",
+                "marginTop": "calc(0.1875rem * var(--mantine-scale))",
+              },
+            },
+            "type": "p",
+            Symbol(cleaned): true,
+          },
         ],
         "props": {
-          "className": "form-group field field-array",
+          "className": "rjsf-field rjsf-field-array",
           "style": undefined,
         },
         "type": "div",
@@ -10302,8 +10703,15 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                   "a fancier description",
                 ],
                 "props": {
-                  "className": "field-description",
+                  "className": "m_b6d8b162",
+                  "data-size": undefined,
+                  "data-variant": undefined,
                   "id": "root__description",
+                  "size": undefined,
+                  "style": {
+                    "marginBottom": "var(--mantine-spacing-sm)",
+                    "marginTop": "calc(0.1875rem * var(--mantine-scale))",
+                  },
                 },
                 "type": "p",
                 Symbol(cleaned): true,
@@ -10352,10 +10760,25 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                                       },
                                       {
                                         "children": [
+                                          "a fancier item description",
+                                        ],
+                                        "props": {
+                                          "className": "m_fe47ce59",
+                                          "data-size": undefined,
+                                          "data-variant": undefined,
+                                          "id": "root_0-description",
+                                          "size": undefined,
+                                          "style": {},
+                                        },
+                                        "type": "p",
+                                        Symbol(cleaned): true,
+                                      },
+                                      {
+                                        "children": [
                                           {
                                             "children": null,
                                             "props": {
-                                              "aria-describedby": undefined,
+                                              "aria-describedby": "root_0-description",
                                               "aria-invalid": false,
                                               "autoFocus": false,
                                               "className": "m_8fb7ebe7",
@@ -10382,7 +10805,9 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                                           "data-size": undefined,
                                           "data-variant": "default",
                                           "size": undefined,
-                                          "style": {},
+                                          "style": {
+                                            "--input-margin-top": "calc(var(--mantine-spacing-xs) / 2)",
+                                          },
                                         },
                                         "type": "div",
                                         Symbol(cleaned): true,
@@ -10398,9 +10823,27 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                                     "type": "div",
                                     Symbol(cleaned): true,
                                   },
+                                  {
+                                    "children": [
+                                      "a fancier item description",
+                                    ],
+                                    "props": {
+                                      "className": "m_b6d8b162",
+                                      "data-size": undefined,
+                                      "data-variant": undefined,
+                                      "id": "root_0__description",
+                                      "size": undefined,
+                                      "style": {
+                                        "marginBottom": "var(--mantine-spacing-sm)",
+                                        "marginTop": "calc(0.1875rem * var(--mantine-scale))",
+                                      },
+                                    },
+                                    "type": "p",
+                                    Symbol(cleaned): true,
+                                  },
                                 ],
                                 "props": {
-                                  "className": "form-group field field-string",
+                                  "className": "rjsf-field rjsf-field-string",
                                   "style": undefined,
                                 },
                                 "type": "div",
@@ -10421,7 +10864,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                           },
                         ],
                         "props": {
-                          "className": "m_8bffd616 __m__-r7s",
+                          "className": "m_8bffd616 __m__-r86",
                           "data-size": undefined,
                           "data-variant": undefined,
                           "size": undefined,
@@ -10436,7 +10879,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                       },
                     ],
                     "props": {
-                      "className": "array-item",
+                      "className": "rjsf-array-item",
                       "data-size": undefined,
                       "data-variant": undefined,
                       "size": undefined,
@@ -10489,10 +10932,25 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                                       },
                                       {
                                         "children": [
+                                          "a fancier item description",
+                                        ],
+                                        "props": {
+                                          "className": "m_fe47ce59",
+                                          "data-size": undefined,
+                                          "data-variant": undefined,
+                                          "id": "root_1-description",
+                                          "size": undefined,
+                                          "style": {},
+                                        },
+                                        "type": "p",
+                                        Symbol(cleaned): true,
+                                      },
+                                      {
+                                        "children": [
                                           {
                                             "children": null,
                                             "props": {
-                                              "aria-describedby": undefined,
+                                              "aria-describedby": "root_1-description",
                                               "aria-invalid": false,
                                               "autoFocus": false,
                                               "className": "m_8fb7ebe7",
@@ -10645,6 +11103,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                                           "data-with-right-section": true,
                                           "size": undefined,
                                           "style": {
+                                            "--input-margin-top": "calc(var(--mantine-spacing-xs) / 2)",
                                             "--input-right-section-width": "var(--ni-right-section-width-sm)",
                                           },
                                         },
@@ -10662,9 +11121,27 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                                     "type": "div",
                                     Symbol(cleaned): true,
                                   },
+                                  {
+                                    "children": [
+                                      "a fancier item description",
+                                    ],
+                                    "props": {
+                                      "className": "m_b6d8b162",
+                                      "data-size": undefined,
+                                      "data-variant": undefined,
+                                      "id": "root_1__description",
+                                      "size": undefined,
+                                      "style": {
+                                        "marginBottom": "var(--mantine-spacing-sm)",
+                                        "marginTop": "calc(0.1875rem * var(--mantine-scale))",
+                                      },
+                                    },
+                                    "type": "p",
+                                    Symbol(cleaned): true,
+                                  },
                                 ],
                                 "props": {
-                                  "className": "form-group field field-number",
+                                  "className": "rjsf-field rjsf-field-number",
                                   "style": undefined,
                                 },
                                 "type": "div",
@@ -10685,7 +11162,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                           },
                         ],
                         "props": {
-                          "className": "m_8bffd616 __m__-r85",
+                          "className": "m_8bffd616 __m__-r8h",
                           "data-size": undefined,
                           "data-variant": undefined,
                           "size": undefined,
@@ -10700,7 +11177,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                       },
                     ],
                     "props": {
-                      "className": "array-item",
+                      "className": "rjsf-array-item",
                       "data-size": undefined,
                       "data-variant": undefined,
                       "size": undefined,
@@ -10713,7 +11190,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                   },
                 ],
                 "props": {
-                  "className": "row array-item-list",
+                  "className": "row rjsf-array-item-list",
                   "data-size": undefined,
                   "data-variant": undefined,
                   "size": undefined,
@@ -10724,7 +11201,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
               },
             ],
             "props": {
-              "className": "m_84c9523a field field-array field-array-fixed-items m_e9408a47",
+              "className": "m_84c9523a rjsf-field rjsf-field-array rjsf-field-array-fixed-items m_e9408a47",
               "data-size": undefined,
               "data-variant": "default",
               "id": "root",
@@ -10736,7 +11213,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
           },
         ],
         "props": {
-          "className": "form-group field field-array",
+          "className": "rjsf-field rjsf-field-array",
           "style": undefined,
         },
         "type": "div",
@@ -10834,7 +11311,7 @@ exports[`with title and description with global label off array 1`] = `
               {
                 "children": null,
                 "props": {
-                  "className": "row array-item-list",
+                  "className": "row rjsf-array-item-list",
                   "data-size": undefined,
                   "data-variant": undefined,
                   "size": undefined,
@@ -10910,9 +11387,10 @@ exports[`with title and description with global label off array 1`] = `
                       },
                     ],
                     "props": {
-                      "className": "array-item-add m_8d3f4000 m_87cf2631",
-                      "data-size": undefined,
+                      "className": "rjsf-array-item-add m_8d3f4000 m_87cf2631",
+                      "data-size": "md",
                       "data-variant": "subtle",
+                      "id": "root__add",
                       "onClick": [Function],
                       "size": undefined,
                       "style": {
@@ -10920,6 +11398,7 @@ exports[`with title and description with global label off array 1`] = `
                         "--ai-bg": "transparent",
                         "--ai-color": "var(--mantine-color-blue-light-color)",
                         "--ai-hover": "var(--mantine-color-blue-light-hover)",
+                        "--ai-size": "var(--ai-size-md)",
                       },
                       "title": "Copy",
                       "type": "button",
@@ -10945,7 +11424,7 @@ exports[`with title and description with global label off array 1`] = `
               },
             ],
             "props": {
-              "className": "m_84c9523a field field-array field-array-of-string m_e9408a47",
+              "className": "m_84c9523a rjsf-field rjsf-field-array rjsf-field-array-of-string m_e9408a47",
               "data-size": undefined,
               "data-variant": "default",
               "id": "root",
@@ -10957,7 +11436,7 @@ exports[`with title and description with global label off array 1`] = `
           },
         ],
         "props": {
-          "className": "form-group field field-array",
+          "className": "rjsf-field rjsf-field-array",
           "style": undefined,
         },
         "type": "div",
@@ -11115,7 +11594,7 @@ exports[`with title and description with global label off array icons 1`] = `
                                   },
                                 ],
                                 "props": {
-                                  "className": "form-group field field-string",
+                                  "className": "rjsf-field rjsf-field-string",
                                   "style": undefined,
                                 },
                                 "type": "div",
@@ -11193,11 +11672,12 @@ exports[`with title and description with global label off array icons 1`] = `
                                   },
                                 ],
                                 "props": {
-                                  "className": "array-item-move-up m_8d3f4000 m_87cf2631",
+                                  "className": "rjsf-array-item-move-up m_8d3f4000 m_87cf2631",
                                   "data-disabled": true,
                                   "data-size": "sm",
                                   "data-variant": "subtle",
                                   "disabled": true,
+                                  "id": "root_0__moveUp",
                                   "onClick": [Function],
                                   "size": undefined,
                                   "style": {
@@ -11270,9 +11750,10 @@ exports[`with title and description with global label off array icons 1`] = `
                                   },
                                 ],
                                 "props": {
-                                  "className": "array-item-move-down m_8d3f4000 m_87cf2631",
+                                  "className": "rjsf-array-item-move-down m_8d3f4000 m_87cf2631",
                                   "data-size": "sm",
                                   "data-variant": "subtle",
+                                  "id": "root_0__moveDown",
                                   "onClick": [Function],
                                   "size": undefined,
                                   "style": {
@@ -11353,9 +11834,10 @@ exports[`with title and description with global label off array icons 1`] = `
                                   },
                                 ],
                                 "props": {
-                                  "className": "array-item-copy m_8d3f4000 m_87cf2631",
+                                  "className": "rjsf-array-item-copy m_8d3f4000 m_87cf2631",
                                   "data-size": "sm",
                                   "data-variant": "subtle",
+                                  "id": "root_0__copy",
                                   "onClick": [Function],
                                   "size": undefined,
                                   "style": {
@@ -11436,9 +11918,10 @@ exports[`with title and description with global label off array icons 1`] = `
                                   },
                                 ],
                                 "props": {
-                                  "className": "array-item-remove m_8d3f4000 m_87cf2631",
+                                  "className": "rjsf-array-item-remove m_8d3f4000 m_87cf2631",
                                   "data-size": "sm",
                                   "data-variant": "subtle",
+                                  "id": "root_0__remove",
                                   "onClick": [Function],
                                   "size": undefined,
                                   "style": {
@@ -11465,6 +11948,7 @@ exports[`with title and description with global label off array icons 1`] = `
                                 "--group-gap": "calc(0.125rem * var(--mantine-scale))",
                                 "--group-justify": "flex-start",
                                 "--group-wrap": "nowrap",
+                                "marginBottom": "calc(0.4375rem * var(--mantine-scale))",
                               },
                             },
                             "type": "div",
@@ -11472,7 +11956,7 @@ exports[`with title and description with global label off array icons 1`] = `
                           },
                         ],
                         "props": {
-                          "className": "m_8bffd616 __m__-rfp",
+                          "className": "m_8bffd616 __m__-rgq",
                           "data-size": undefined,
                           "data-variant": undefined,
                           "size": undefined,
@@ -11487,7 +11971,7 @@ exports[`with title and description with global label off array icons 1`] = `
                       },
                     ],
                     "props": {
-                      "className": "array-item",
+                      "className": "rjsf-array-item",
                       "data-size": undefined,
                       "data-variant": undefined,
                       "size": undefined,
@@ -11559,7 +12043,7 @@ exports[`with title and description with global label off array icons 1`] = `
                                   },
                                 ],
                                 "props": {
-                                  "className": "form-group field field-string",
+                                  "className": "rjsf-field rjsf-field-string",
                                   "style": undefined,
                                 },
                                 "type": "div",
@@ -11637,9 +12121,10 @@ exports[`with title and description with global label off array icons 1`] = `
                                   },
                                 ],
                                 "props": {
-                                  "className": "array-item-move-up m_8d3f4000 m_87cf2631",
+                                  "className": "rjsf-array-item-move-up m_8d3f4000 m_87cf2631",
                                   "data-size": "sm",
                                   "data-variant": "subtle",
+                                  "id": "root_1__moveUp",
                                   "onClick": [Function],
                                   "size": undefined,
                                   "style": {
@@ -11712,11 +12197,12 @@ exports[`with title and description with global label off array icons 1`] = `
                                   },
                                 ],
                                 "props": {
-                                  "className": "array-item-move-down m_8d3f4000 m_87cf2631",
+                                  "className": "rjsf-array-item-move-down m_8d3f4000 m_87cf2631",
                                   "data-disabled": true,
                                   "data-size": "sm",
                                   "data-variant": "subtle",
                                   "disabled": true,
+                                  "id": "root_1__moveDown",
                                   "onClick": [Function],
                                   "size": undefined,
                                   "style": {
@@ -11797,9 +12283,10 @@ exports[`with title and description with global label off array icons 1`] = `
                                   },
                                 ],
                                 "props": {
-                                  "className": "array-item-copy m_8d3f4000 m_87cf2631",
+                                  "className": "rjsf-array-item-copy m_8d3f4000 m_87cf2631",
                                   "data-size": "sm",
                                   "data-variant": "subtle",
+                                  "id": "root_1__copy",
                                   "onClick": [Function],
                                   "size": undefined,
                                   "style": {
@@ -11880,9 +12367,10 @@ exports[`with title and description with global label off array icons 1`] = `
                                   },
                                 ],
                                 "props": {
-                                  "className": "array-item-remove m_8d3f4000 m_87cf2631",
+                                  "className": "rjsf-array-item-remove m_8d3f4000 m_87cf2631",
                                   "data-size": "sm",
                                   "data-variant": "subtle",
+                                  "id": "root_1__remove",
                                   "onClick": [Function],
                                   "size": undefined,
                                   "style": {
@@ -11909,6 +12397,7 @@ exports[`with title and description with global label off array icons 1`] = `
                                 "--group-gap": "calc(0.125rem * var(--mantine-scale))",
                                 "--group-justify": "flex-start",
                                 "--group-wrap": "nowrap",
+                                "marginBottom": "calc(0.4375rem * var(--mantine-scale))",
                               },
                             },
                             "type": "div",
@@ -11916,7 +12405,7 @@ exports[`with title and description with global label off array icons 1`] = `
                           },
                         ],
                         "props": {
-                          "className": "m_8bffd616 __m__-rga",
+                          "className": "m_8bffd616 __m__-rhb",
                           "data-size": undefined,
                           "data-variant": undefined,
                           "size": undefined,
@@ -11931,7 +12420,7 @@ exports[`with title and description with global label off array icons 1`] = `
                       },
                     ],
                     "props": {
-                      "className": "array-item",
+                      "className": "rjsf-array-item",
                       "data-size": undefined,
                       "data-variant": undefined,
                       "size": undefined,
@@ -11944,7 +12433,7 @@ exports[`with title and description with global label off array icons 1`] = `
                   },
                 ],
                 "props": {
-                  "className": "row array-item-list",
+                  "className": "row rjsf-array-item-list",
                   "data-size": undefined,
                   "data-variant": undefined,
                   "size": undefined,
@@ -12020,9 +12509,10 @@ exports[`with title and description with global label off array icons 1`] = `
                       },
                     ],
                     "props": {
-                      "className": "array-item-add m_8d3f4000 m_87cf2631",
-                      "data-size": undefined,
+                      "className": "rjsf-array-item-add m_8d3f4000 m_87cf2631",
+                      "data-size": "md",
                       "data-variant": "subtle",
+                      "id": "root__add",
                       "onClick": [Function],
                       "size": undefined,
                       "style": {
@@ -12030,6 +12520,7 @@ exports[`with title and description with global label off array icons 1`] = `
                         "--ai-bg": "transparent",
                         "--ai-color": "var(--mantine-color-blue-light-color)",
                         "--ai-hover": "var(--mantine-color-blue-light-hover)",
+                        "--ai-size": "var(--ai-size-md)",
                       },
                       "title": "Copy",
                       "type": "button",
@@ -12055,7 +12546,7 @@ exports[`with title and description with global label off array icons 1`] = `
               },
             ],
             "props": {
-              "className": "m_84c9523a field field-array field-array-of-string m_e9408a47",
+              "className": "m_84c9523a rjsf-field rjsf-field-array rjsf-field-array-of-string m_e9408a47",
               "data-size": undefined,
               "data-variant": "default",
               "id": "root",
@@ -12067,7 +12558,7 @@ exports[`with title and description with global label off array icons 1`] = `
           },
         ],
         "props": {
-          "className": "form-group field field-array",
+          "className": "rjsf-field rjsf-field-array",
           "style": undefined,
         },
         "type": "div",
@@ -12172,20 +12663,6 @@ exports[`with title and description with global label off checkboxes 1`] = `
                               "data-type": "visible",
                               "data-variant": undefined,
                               "disabled": false,
-                              "enumOptions": [
-                                {
-                                  "label": "a",
-                                  "value": "a",
-                                },
-                                {
-                                  "label": "b",
-                                  "value": "b",
-                                },
-                                {
-                                  "label": "c",
-                                  "value": "c",
-                                },
-                              ],
                               "globalOptions": {
                                 "label": false,
                               },
@@ -12325,7 +12802,7 @@ exports[`with title and description with global label off checkboxes 1`] = `
                                           "data-combobox-option": true,
                                           "data-size": undefined,
                                           "data-variant": undefined,
-                                          "id": ":rfe:",
+                                          "id": ":rge:",
                                           "onClick": [Function],
                                           "onMouseDown": [Function],
                                           "onMouseOver": [Function],
@@ -12354,7 +12831,7 @@ exports[`with title and description with global label off checkboxes 1`] = `
                                           "data-combobox-option": true,
                                           "data-size": undefined,
                                           "data-variant": undefined,
-                                          "id": ":rfg:",
+                                          "id": ":rgg:",
                                           "onClick": [Function],
                                           "onMouseDown": [Function],
                                           "onMouseOver": [Function],
@@ -12383,7 +12860,7 @@ exports[`with title and description with global label off checkboxes 1`] = `
                                           "data-combobox-option": true,
                                           "data-size": undefined,
                                           "data-variant": undefined,
-                                          "id": ":rfi:",
+                                          "id": ":rgi:",
                                           "onClick": [Function],
                                           "onMouseDown": [Function],
                                           "onMouseOver": [Function],
@@ -12398,7 +12875,6 @@ exports[`with title and description with global label off checkboxes 1`] = `
                                     ],
                                     "props": {
                                       "style": {
-                                        "display": "table",
                                         "minWidth": "100%",
                                       },
                                     },
@@ -12408,10 +12884,12 @@ exports[`with title and description with global label off checkboxes 1`] = `
                                 ],
                                 "props": {
                                   "className": "m_c0783ff9",
+                                  "data-horizontal-hidden": undefined,
                                   "data-offset-scrollbars": "y",
                                   "data-scrollbars": "xy",
                                   "data-size": undefined,
                                   "data-variant": undefined,
+                                  "data-vertical-hidden": undefined,
                                   "onScroll": [Function],
                                   "size": undefined,
                                   "style": {
@@ -12564,9 +13042,27 @@ exports[`with title and description with global label off checkboxes 1`] = `
             "type": "input",
             Symbol(cleaned): true,
           },
+          {
+            "children": [
+              "a test description",
+            ],
+            "props": {
+              "className": "m_b6d8b162",
+              "data-size": undefined,
+              "data-variant": undefined,
+              "id": "root__description",
+              "size": undefined,
+              "style": {
+                "marginBottom": "var(--mantine-spacing-sm)",
+                "marginTop": "calc(0.1875rem * var(--mantine-scale))",
+              },
+            },
+            "type": "p",
+            Symbol(cleaned): true,
+          },
         ],
         "props": {
-          "className": "form-group field field-array",
+          "className": "rjsf-field rjsf-field-array",
           "style": undefined,
         },
         "type": "div",
@@ -12723,7 +13219,7 @@ exports[`with title and description with global label off fixed array 1`] = `
                                   },
                                 ],
                                 "props": {
-                                  "className": "form-group field field-string",
+                                  "className": "rjsf-field rjsf-field-string",
                                   "style": undefined,
                                 },
                                 "type": "div",
@@ -12744,7 +13240,7 @@ exports[`with title and description with global label off fixed array 1`] = `
                           },
                         ],
                         "props": {
-                          "className": "m_8bffd616 __m__-rea",
+                          "className": "m_8bffd616 __m__-rfa",
                           "data-size": undefined,
                           "data-variant": undefined,
                           "size": undefined,
@@ -12759,7 +13255,7 @@ exports[`with title and description with global label off fixed array 1`] = `
                       },
                     ],
                     "props": {
-                      "className": "array-item",
+                      "className": "rjsf-array-item",
                       "data-size": undefined,
                       "data-variant": undefined,
                       "size": undefined,
@@ -12957,7 +13453,7 @@ exports[`with title and description with global label off fixed array 1`] = `
                                   },
                                 ],
                                 "props": {
-                                  "className": "form-group field field-number",
+                                  "className": "rjsf-field rjsf-field-number",
                                   "style": undefined,
                                 },
                                 "type": "div",
@@ -12978,7 +13474,7 @@ exports[`with title and description with global label off fixed array 1`] = `
                           },
                         ],
                         "props": {
-                          "className": "m_8bffd616 __m__-rei",
+                          "className": "m_8bffd616 __m__-rfi",
                           "data-size": undefined,
                           "data-variant": undefined,
                           "size": undefined,
@@ -12993,7 +13489,7 @@ exports[`with title and description with global label off fixed array 1`] = `
                       },
                     ],
                     "props": {
-                      "className": "array-item",
+                      "className": "rjsf-array-item",
                       "data-size": undefined,
                       "data-variant": undefined,
                       "size": undefined,
@@ -13006,7 +13502,7 @@ exports[`with title and description with global label off fixed array 1`] = `
                   },
                 ],
                 "props": {
-                  "className": "row array-item-list",
+                  "className": "row rjsf-array-item-list",
                   "data-size": undefined,
                   "data-variant": undefined,
                   "size": undefined,
@@ -13017,7 +13513,7 @@ exports[`with title and description with global label off fixed array 1`] = `
               },
             ],
             "props": {
-              "className": "m_84c9523a field field-array field-array-fixed-items m_e9408a47",
+              "className": "m_84c9523a rjsf-field rjsf-field-array rjsf-field-array-fixed-items m_e9408a47",
               "data-size": undefined,
               "data-variant": "default",
               "id": "root",
@@ -13029,7 +13525,7 @@ exports[`with title and description with global label off fixed array 1`] = `
           },
         ],
         "props": {
-          "className": "form-group field field-array",
+          "className": "rjsf-field rjsf-field-array",
           "style": undefined,
         },
         "type": "div",

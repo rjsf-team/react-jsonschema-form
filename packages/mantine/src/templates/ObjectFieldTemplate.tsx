@@ -1,17 +1,17 @@
+import { Box, Container, Group, MantineSpacing, SimpleGrid } from '@mantine/core';
 import {
   buttonId,
-  FormContextType,
-  ObjectFieldTemplateProps,
-  ObjectFieldTemplatePropertyType,
-  RJSFSchema,
-  StrictRJSFSchema,
   canExpand,
   descriptionId,
+  FormContextType,
   getTemplate,
   getUiOptions,
+  ObjectFieldTemplatePropertyType,
+  ObjectFieldTemplateProps,
+  RJSFSchema,
+  StrictRJSFSchema,
   titleId,
 } from '@rjsf/utils';
-import { Container, Box, SimpleGrid, MantineSpacing } from '@mantine/core';
 
 /** The `ObjectFieldTemplate` is the template to use to render all the inner properties of an object along with the
  * title and description if available. If the object is expandable, then an `AddButton` is also rendered after all
@@ -54,7 +54,7 @@ export default function ObjectFieldTemplate<
   const gridVerticalSpacing = uiOptions?.gridVerticalSpacing;
 
   return (
-    <Container id={idSchema.$id}>
+    <Container id={idSchema.$id} p={0}>
       {title && (
         <TitleFieldTemplate
           id={titleId<T>(idSchema)}
@@ -88,7 +88,7 @@ export default function ObjectFieldTemplate<
       </SimpleGrid>
 
       {canExpand(schema, uiSchema, formData) && (
-        <Box mt='xs'>
+        <Group mt='xs' justify='flex-end'>
           <AddButton
             id={buttonId<T>(idSchema, 'add')}
             disabled={disabled || readonly}
@@ -97,7 +97,7 @@ export default function ObjectFieldTemplate<
             uiSchema={uiSchema}
             registry={registry}
           />
-        </Box>
+        </Group>
       )}
     </Container>
   );

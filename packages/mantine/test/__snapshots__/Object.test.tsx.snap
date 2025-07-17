@@ -329,9 +329,10 @@ exports[`object fields additionalProperties 1`] = `
                                   },
                                 ],
                                 "props": {
-                                  "className": "array-item-remove m_8d3f4000 m_87cf2631",
+                                  "className": "rjsf-array-item-remove m_8d3f4000 m_87cf2631",
                                   "data-size": "sm",
                                   "data-variant": "subtle",
+                                  "id": "root_foo__remove",
                                   "onClick": [Function],
                                   "size": undefined,
                                   "style": {
@@ -364,7 +365,7 @@ exports[`object fields additionalProperties 1`] = `
                           },
                         ],
                         "props": {
-                          "className": "form-group field field-string",
+                          "className": "rjsf-field rjsf-field-string",
                           "style": undefined,
                         },
                         "type": "div",
@@ -387,7 +388,9 @@ exports[`object fields additionalProperties 1`] = `
                   "data-size": undefined,
                   "data-variant": undefined,
                   "size": undefined,
-                  "style": {},
+                  "style": {
+                    "marginBottom": "var(--mantine-spacing-sm)",
+                  },
                 },
                 "type": "div",
                 Symbol(cleaned): true,
@@ -459,9 +462,10 @@ exports[`object fields additionalProperties 1`] = `
                       },
                     ],
                     "props": {
-                      "className": "m_8d3f4000 m_87cf2631",
-                      "data-size": undefined,
+                      "className": "object-property-expand m_8d3f4000 m_87cf2631",
+                      "data-size": "sm",
                       "data-variant": "subtle",
+                      "id": "root__add",
                       "onClick": [Function],
                       "size": undefined,
                       "style": {
@@ -469,6 +473,7 @@ exports[`object fields additionalProperties 1`] = `
                         "--ai-bg": "transparent",
                         "--ai-color": "var(--mantine-color-blue-light-color)",
                         "--ai-hover": "var(--mantine-color-blue-light-hover)",
+                        "--ai-size": "var(--ai-size-sm)",
                       },
                       "title": "Copy",
                       "type": "button",
@@ -503,7 +508,7 @@ exports[`object fields additionalProperties 1`] = `
           },
         ],
         "props": {
-          "className": "form-group field field-object",
+          "className": "rjsf-field rjsf-field-object",
           "style": undefined,
         },
         "type": "div",
@@ -676,7 +681,7 @@ exports[`object fields object 1`] = `
                           },
                         ],
                         "props": {
-                          "className": "form-group field field-string",
+                          "className": "rjsf-field rjsf-field-string",
                           "style": undefined,
                         },
                         "type": "div",
@@ -893,7 +898,7 @@ exports[`object fields object 1`] = `
                           },
                         ],
                         "props": {
-                          "className": "form-group field field-number",
+                          "className": "rjsf-field rjsf-field-number",
                           "style": undefined,
                         },
                         "type": "div",
@@ -916,7 +921,9 @@ exports[`object fields object 1`] = `
                   "data-size": undefined,
                   "data-variant": undefined,
                   "size": undefined,
-                  "style": {},
+                  "style": {
+                    "marginBottom": "var(--mantine-spacing-sm)",
+                  },
                 },
                 "type": "div",
                 Symbol(cleaned): true,
@@ -935,7 +942,7 @@ exports[`object fields object 1`] = `
           },
         ],
         "props": {
-          "className": "form-group field field-object",
+          "className": "rjsf-field rjsf-field-object",
           "style": undefined,
         },
         "type": "div",
@@ -1334,9 +1341,10 @@ exports[`object fields show add button and fields if additionalProperties is tru
                                   },
                                 ],
                                 "props": {
-                                  "className": "array-item-remove m_8d3f4000 m_87cf2631",
+                                  "className": "rjsf-array-item-remove m_8d3f4000 m_87cf2631",
                                   "data-size": "sm",
                                   "data-variant": "subtle",
+                                  "id": "root_additionalProperty__remove",
                                   "onClick": [Function],
                                   "size": undefined,
                                   "style": {
@@ -1369,7 +1377,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
                           },
                         ],
                         "props": {
-                          "className": "form-group field field-string",
+                          "className": "rjsf-field rjsf-field-string",
                           "style": undefined,
                         },
                         "type": "div",
@@ -1392,7 +1400,9 @@ exports[`object fields show add button and fields if additionalProperties is tru
                   "data-size": undefined,
                   "data-variant": undefined,
                   "size": undefined,
-                  "style": {},
+                  "style": {
+                    "marginBottom": "var(--mantine-spacing-sm)",
+                  },
                 },
                 "type": "div",
                 Symbol(cleaned): true,
@@ -1464,9 +1474,10 @@ exports[`object fields show add button and fields if additionalProperties is tru
                       },
                     ],
                     "props": {
-                      "className": "m_8d3f4000 m_87cf2631",
-                      "data-size": undefined,
+                      "className": "object-property-expand m_8d3f4000 m_87cf2631",
+                      "data-size": "sm",
                       "data-variant": "subtle",
+                      "id": "root__add",
                       "onClick": [Function],
                       "size": undefined,
                       "style": {
@@ -1474,6 +1485,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
                         "--ai-bg": "transparent",
                         "--ai-color": "var(--mantine-color-blue-light-color)",
                         "--ai-hover": "var(--mantine-color-blue-light-hover)",
+                        "--ai-size": "var(--ai-size-sm)",
                       },
                       "title": "Copy",
                       "type": "button",
@@ -1508,7 +1520,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
           },
         ],
         "props": {
-          "className": "form-group field field-object",
+          "className": "rjsf-field rjsf-field-object",
           "style": undefined,
         },
         "type": "div",
@@ -1620,8 +1632,15 @@ exports[`object fields with title and description additionalProperties 1`] = `
                   "a test description",
                 ],
                 "props": {
-                  "className": "field-description",
+                  "className": "m_b6d8b162",
+                  "data-size": undefined,
+                  "data-variant": undefined,
                   "id": "root__description",
+                  "size": undefined,
+                  "style": {
+                    "marginBottom": "var(--mantine-spacing-sm)",
+                    "marginTop": "calc(0.1875rem * var(--mantine-scale))",
+                  },
                 },
                 "type": "p",
                 Symbol(cleaned): true,
@@ -1630,7 +1649,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
                 "children": null,
                 "props": {
                   "dangerouslySetInnerHTML": {
-                    "__html": ".__m__-r33{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
+                    "__html": ".__m__-r37{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
                   },
                   "data-mantine-styles": "inline",
                   "nonce": undefined,
@@ -1650,7 +1669,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
                                 "children": null,
                                 "props": {
                                   "dangerouslySetInnerHTML": {
-                                    "__html": ".__m__-r38{--grid-gutter:var(--mantine-spacing-md);}",
+                                    "__html": ".__m__-r3c{--grid-gutter:var(--mantine-spacing-md);}",
                                   },
                                   "data-mantine-styles": "inline",
                                   "nonce": undefined,
@@ -1666,7 +1685,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
                                         "children": null,
                                         "props": {
                                           "dangerouslySetInnerHTML": {
-                                            "__html": ".__m__-r3a{--col-flex-grow:auto;--col-flex-basis:50%;--col-max-width:50%;}",
+                                            "__html": ".__m__-r3e{--col-flex-grow:auto;--col-flex-basis:50%;--col-max-width:50%;}",
                                           },
                                           "data-mantine-styles": "inline",
                                           "nonce": undefined,
@@ -1750,7 +1769,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
                                           },
                                         ],
                                         "props": {
-                                          "className": "m_96bdd299 form-additional __m__-r3a",
+                                          "className": "m_96bdd299 form-additional __m__-r3e",
                                           "data-size": undefined,
                                           "data-variant": undefined,
                                           "size": undefined,
@@ -1763,7 +1782,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
                                         "children": null,
                                         "props": {
                                           "dangerouslySetInnerHTML": {
-                                            "__html": ".__m__-r3h{--col-flex-grow:auto;--col-flex-basis:50%;--col-max-width:50%;}",
+                                            "__html": ".__m__-r3l{--col-flex-grow:auto;--col-flex-basis:50%;--col-max-width:50%;}",
                                           },
                                           "data-mantine-styles": "inline",
                                           "nonce": undefined,
@@ -1843,7 +1862,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
                                           },
                                         ],
                                         "props": {
-                                          "className": "m_96bdd299 form-additional __m__-r3h",
+                                          "className": "m_96bdd299 form-additional __m__-r3l",
                                           "data-size": undefined,
                                           "data-variant": undefined,
                                           "size": undefined,
@@ -1862,7 +1881,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
                                   },
                                 ],
                                 "props": {
-                                  "className": "m_410352e9 __m__-r38",
+                                  "className": "m_410352e9 __m__-r3c",
                                   "data-size": undefined,
                                   "data-variant": undefined,
                                   "size": undefined,
@@ -1939,9 +1958,10 @@ exports[`object fields with title and description additionalProperties 1`] = `
                                   },
                                 ],
                                 "props": {
-                                  "className": "array-item-remove m_8d3f4000 m_87cf2631",
+                                  "className": "rjsf-array-item-remove m_8d3f4000 m_87cf2631",
                                   "data-size": "sm",
                                   "data-variant": "subtle",
+                                  "id": "root_foo__remove",
                                   "onClick": [Function],
                                   "size": undefined,
                                   "style": {
@@ -1959,7 +1979,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
                               },
                             ],
                             "props": {
-                              "className": "m_8bffd616 __m__-r36",
+                              "className": "m_8bffd616 __m__-r3a",
                               "data-size": undefined,
                               "data-variant": undefined,
                               "size": undefined,
@@ -1974,7 +1994,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
                           },
                         ],
                         "props": {
-                          "className": "form-group field field-string",
+                          "className": "rjsf-field rjsf-field-string",
                           "style": undefined,
                         },
                         "type": "div",
@@ -1993,11 +2013,13 @@ exports[`object fields with title and description additionalProperties 1`] = `
                   },
                 ],
                 "props": {
-                  "className": "m_2415a157 __m__-r33",
+                  "className": "m_2415a157 __m__-r37",
                   "data-size": undefined,
                   "data-variant": undefined,
                   "size": undefined,
-                  "style": {},
+                  "style": {
+                    "marginBottom": "var(--mantine-spacing-sm)",
+                  },
                 },
                 "type": "div",
                 Symbol(cleaned): true,
@@ -2069,9 +2091,10 @@ exports[`object fields with title and description additionalProperties 1`] = `
                       },
                     ],
                     "props": {
-                      "className": "m_8d3f4000 m_87cf2631",
-                      "data-size": undefined,
+                      "className": "object-property-expand m_8d3f4000 m_87cf2631",
+                      "data-size": "sm",
                       "data-variant": "subtle",
+                      "id": "root__add",
                       "onClick": [Function],
                       "size": undefined,
                       "style": {
@@ -2079,6 +2102,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
                         "--ai-bg": "transparent",
                         "--ai-color": "var(--mantine-color-blue-light-color)",
                         "--ai-hover": "var(--mantine-color-blue-light-hover)",
+                        "--ai-size": "var(--ai-size-sm)",
                       },
                       "title": "Copy",
                       "type": "button",
@@ -2113,7 +2137,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
           },
         ],
         "props": {
-          "className": "form-group field field-object",
+          "className": "rjsf-field rjsf-field-object",
           "style": undefined,
         },
         "type": "div",
@@ -2225,8 +2249,15 @@ exports[`object fields with title and description from both additionalProperties
                   "a fancier description",
                 ],
                 "props": {
-                  "className": "field-description",
+                  "className": "m_b6d8b162",
+                  "data-size": undefined,
+                  "data-variant": undefined,
                   "id": "root__description",
+                  "size": undefined,
+                  "style": {
+                    "marginBottom": "var(--mantine-spacing-sm)",
+                    "marginTop": "calc(0.1875rem * var(--mantine-scale))",
+                  },
                 },
                 "type": "p",
                 Symbol(cleaned): true,
@@ -2235,7 +2266,7 @@ exports[`object fields with title and description from both additionalProperties
                 "children": null,
                 "props": {
                   "dangerouslySetInnerHTML": {
-                    "__html": ".__m__-r83{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
+                    "__html": ".__m__-r8l{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
                   },
                   "data-mantine-styles": "inline",
                   "nonce": undefined,
@@ -2255,7 +2286,7 @@ exports[`object fields with title and description from both additionalProperties
                                 "children": null,
                                 "props": {
                                   "dangerouslySetInnerHTML": {
-                                    "__html": ".__m__-r88{--grid-gutter:var(--mantine-spacing-md);}",
+                                    "__html": ".__m__-r8q{--grid-gutter:var(--mantine-spacing-md);}",
                                   },
                                   "data-mantine-styles": "inline",
                                   "nonce": undefined,
@@ -2271,7 +2302,7 @@ exports[`object fields with title and description from both additionalProperties
                                         "children": null,
                                         "props": {
                                           "dangerouslySetInnerHTML": {
-                                            "__html": ".__m__-r8a{--col-flex-grow:auto;--col-flex-basis:50%;--col-max-width:50%;}",
+                                            "__html": ".__m__-r8s{--col-flex-grow:auto;--col-flex-basis:50%;--col-max-width:50%;}",
                                           },
                                           "data-mantine-styles": "inline",
                                           "nonce": undefined,
@@ -2355,7 +2386,7 @@ exports[`object fields with title and description from both additionalProperties
                                           },
                                         ],
                                         "props": {
-                                          "className": "m_96bdd299 form-additional __m__-r8a",
+                                          "className": "m_96bdd299 form-additional __m__-r8s",
                                           "data-size": undefined,
                                           "data-variant": undefined,
                                           "size": undefined,
@@ -2368,7 +2399,7 @@ exports[`object fields with title and description from both additionalProperties
                                         "children": null,
                                         "props": {
                                           "dangerouslySetInnerHTML": {
-                                            "__html": ".__m__-r8h{--col-flex-grow:auto;--col-flex-basis:50%;--col-max-width:50%;}",
+                                            "__html": ".__m__-r93{--col-flex-grow:auto;--col-flex-basis:50%;--col-max-width:50%;}",
                                           },
                                           "data-mantine-styles": "inline",
                                           "nonce": undefined,
@@ -2448,7 +2479,7 @@ exports[`object fields with title and description from both additionalProperties
                                           },
                                         ],
                                         "props": {
-                                          "className": "m_96bdd299 form-additional __m__-r8h",
+                                          "className": "m_96bdd299 form-additional __m__-r93",
                                           "data-size": undefined,
                                           "data-variant": undefined,
                                           "size": undefined,
@@ -2467,7 +2498,7 @@ exports[`object fields with title and description from both additionalProperties
                                   },
                                 ],
                                 "props": {
-                                  "className": "m_410352e9 __m__-r88",
+                                  "className": "m_410352e9 __m__-r8q",
                                   "data-size": undefined,
                                   "data-variant": undefined,
                                   "size": undefined,
@@ -2544,9 +2575,10 @@ exports[`object fields with title and description from both additionalProperties
                                   },
                                 ],
                                 "props": {
-                                  "className": "array-item-remove m_8d3f4000 m_87cf2631",
+                                  "className": "rjsf-array-item-remove m_8d3f4000 m_87cf2631",
                                   "data-size": "sm",
                                   "data-variant": "subtle",
+                                  "id": "root_foo__remove",
                                   "onClick": [Function],
                                   "size": undefined,
                                   "style": {
@@ -2564,7 +2596,7 @@ exports[`object fields with title and description from both additionalProperties
                               },
                             ],
                             "props": {
-                              "className": "m_8bffd616 __m__-r86",
+                              "className": "m_8bffd616 __m__-r8o",
                               "data-size": undefined,
                               "data-variant": undefined,
                               "size": undefined,
@@ -2579,7 +2611,7 @@ exports[`object fields with title and description from both additionalProperties
                           },
                         ],
                         "props": {
-                          "className": "form-group field field-string",
+                          "className": "rjsf-field rjsf-field-string",
                           "style": undefined,
                         },
                         "type": "div",
@@ -2598,11 +2630,13 @@ exports[`object fields with title and description from both additionalProperties
                   },
                 ],
                 "props": {
-                  "className": "m_2415a157 __m__-r83",
+                  "className": "m_2415a157 __m__-r8l",
                   "data-size": undefined,
                   "data-variant": undefined,
                   "size": undefined,
-                  "style": {},
+                  "style": {
+                    "marginBottom": "var(--mantine-spacing-sm)",
+                  },
                 },
                 "type": "div",
                 Symbol(cleaned): true,
@@ -2674,9 +2708,10 @@ exports[`object fields with title and description from both additionalProperties
                       },
                     ],
                     "props": {
-                      "className": "m_8d3f4000 m_87cf2631",
-                      "data-size": undefined,
+                      "className": "object-property-expand m_8d3f4000 m_87cf2631",
+                      "data-size": "sm",
                       "data-variant": "subtle",
+                      "id": "root__add",
                       "onClick": [Function],
                       "size": undefined,
                       "style": {
@@ -2684,6 +2719,7 @@ exports[`object fields with title and description from both additionalProperties
                         "--ai-bg": "transparent",
                         "--ai-color": "var(--mantine-color-blue-light-color)",
                         "--ai-hover": "var(--mantine-color-blue-light-hover)",
+                        "--ai-size": "var(--ai-size-sm)",
                       },
                       "title": "Copy",
                       "type": "button",
@@ -2718,7 +2754,7 @@ exports[`object fields with title and description from both additionalProperties
           },
         ],
         "props": {
-          "className": "form-group field field-object",
+          "className": "rjsf-field rjsf-field-object",
           "style": undefined,
         },
         "type": "div",
@@ -2830,8 +2866,15 @@ exports[`object fields with title and description from both object 1`] = `
                   "a fancier description",
                 ],
                 "props": {
-                  "className": "field-description",
+                  "className": "m_b6d8b162",
+                  "data-size": undefined,
+                  "data-variant": undefined,
                   "id": "root__description",
+                  "size": undefined,
+                  "style": {
+                    "marginBottom": "var(--mantine-spacing-sm)",
+                    "marginTop": "calc(0.1875rem * var(--mantine-scale))",
+                  },
                 },
                 "type": "p",
                 Symbol(cleaned): true,
@@ -2840,7 +2883,7 @@ exports[`object fields with title and description from both object 1`] = `
                 "children": null,
                 "props": {
                   "dangerouslySetInnerHTML": {
-                    "__html": ".__m__-r7f{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
+                    "__html": ".__m__-r7s{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
                   },
                   "data-mantine-styles": "inline",
                   "nonce": undefined,
@@ -2875,10 +2918,25 @@ exports[`object fields with title and description from both object 1`] = `
                               },
                               {
                                 "children": [
+                                  "a fancier item A description",
+                                ],
+                                "props": {
+                                  "className": "m_fe47ce59",
+                                  "data-size": undefined,
+                                  "data-variant": undefined,
+                                  "id": "root_a-description",
+                                  "size": undefined,
+                                  "style": {},
+                                },
+                                "type": "p",
+                                Symbol(cleaned): true,
+                              },
+                              {
+                                "children": [
                                   {
                                     "children": null,
                                     "props": {
-                                      "aria-describedby": undefined,
+                                      "aria-describedby": "root_a-description",
                                       "aria-invalid": false,
                                       "autoFocus": false,
                                       "className": "m_8fb7ebe7",
@@ -2905,7 +2963,9 @@ exports[`object fields with title and description from both object 1`] = `
                                   "data-size": undefined,
                                   "data-variant": "default",
                                   "size": undefined,
-                                  "style": {},
+                                  "style": {
+                                    "--input-margin-top": "calc(var(--mantine-spacing-xs) / 2)",
+                                  },
                                 },
                                 "type": "div",
                                 Symbol(cleaned): true,
@@ -2921,9 +2981,27 @@ exports[`object fields with title and description from both object 1`] = `
                             "type": "div",
                             Symbol(cleaned): true,
                           },
+                          {
+                            "children": [
+                              "a fancier item A description",
+                            ],
+                            "props": {
+                              "className": "m_b6d8b162",
+                              "data-size": undefined,
+                              "data-variant": undefined,
+                              "id": "root_a__description",
+                              "size": undefined,
+                              "style": {
+                                "marginBottom": "var(--mantine-spacing-sm)",
+                                "marginTop": "calc(0.1875rem * var(--mantine-scale))",
+                              },
+                            },
+                            "type": "p",
+                            Symbol(cleaned): true,
+                          },
                         ],
                         "props": {
-                          "className": "form-group field field-string",
+                          "className": "rjsf-field rjsf-field-string",
                           "style": undefined,
                         },
                         "type": "div",
@@ -2965,10 +3043,25 @@ exports[`object fields with title and description from both object 1`] = `
                               },
                               {
                                 "children": [
+                                  "a fancier item B description",
+                                ],
+                                "props": {
+                                  "className": "m_fe47ce59",
+                                  "data-size": undefined,
+                                  "data-variant": undefined,
+                                  "id": "root_b-description",
+                                  "size": undefined,
+                                  "style": {},
+                                },
+                                "type": "p",
+                                Symbol(cleaned): true,
+                              },
+                              {
+                                "children": [
                                   {
                                     "children": null,
                                     "props": {
-                                      "aria-describedby": undefined,
+                                      "aria-describedby": "root_b-description",
                                       "aria-invalid": false,
                                       "autoFocus": false,
                                       "className": "m_8fb7ebe7",
@@ -3121,6 +3214,7 @@ exports[`object fields with title and description from both object 1`] = `
                                   "data-with-right-section": true,
                                   "size": undefined,
                                   "style": {
+                                    "--input-margin-top": "calc(var(--mantine-spacing-xs) / 2)",
                                     "--input-right-section-width": "var(--ni-right-section-width-sm)",
                                   },
                                 },
@@ -3138,9 +3232,27 @@ exports[`object fields with title and description from both object 1`] = `
                             "type": "div",
                             Symbol(cleaned): true,
                           },
+                          {
+                            "children": [
+                              "a fancier item B description",
+                            ],
+                            "props": {
+                              "className": "m_b6d8b162",
+                              "data-size": undefined,
+                              "data-variant": undefined,
+                              "id": "root_b__description",
+                              "size": undefined,
+                              "style": {
+                                "marginBottom": "var(--mantine-spacing-sm)",
+                                "marginTop": "calc(0.1875rem * var(--mantine-scale))",
+                              },
+                            },
+                            "type": "p",
+                            Symbol(cleaned): true,
+                          },
                         ],
                         "props": {
-                          "className": "form-group field field-number",
+                          "className": "rjsf-field rjsf-field-number",
                           "style": undefined,
                         },
                         "type": "div",
@@ -3159,11 +3271,13 @@ exports[`object fields with title and description from both object 1`] = `
                   },
                 ],
                 "props": {
-                  "className": "m_2415a157 __m__-r7f",
+                  "className": "m_2415a157 __m__-r7s",
                   "data-size": undefined,
                   "data-variant": undefined,
                   "size": undefined,
-                  "style": {},
+                  "style": {
+                    "marginBottom": "var(--mantine-spacing-sm)",
+                  },
                 },
                 "type": "div",
                 Symbol(cleaned): true,
@@ -3182,7 +3296,7 @@ exports[`object fields with title and description from both object 1`] = `
           },
         ],
         "props": {
-          "className": "form-group field field-object",
+          "className": "rjsf-field rjsf-field-object",
           "style": undefined,
         },
         "type": "div",
@@ -3294,8 +3408,15 @@ exports[`object fields with title and description from uiSchema additionalProper
                   "a fancier description",
                 ],
                 "props": {
-                  "className": "field-description",
+                  "className": "m_b6d8b162",
+                  "data-size": undefined,
+                  "data-variant": undefined,
                   "id": "root__description",
+                  "size": undefined,
+                  "style": {
+                    "marginBottom": "var(--mantine-spacing-sm)",
+                    "marginTop": "calc(0.1875rem * var(--mantine-scale))",
+                  },
                 },
                 "type": "p",
                 Symbol(cleaned): true,
@@ -3304,7 +3425,7 @@ exports[`object fields with title and description from uiSchema additionalProper
                 "children": null,
                 "props": {
                   "dangerouslySetInnerHTML": {
-                    "__html": ".__m__-r5j{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
+                    "__html": ".__m__-r5u{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
                   },
                   "data-mantine-styles": "inline",
                   "nonce": undefined,
@@ -3324,7 +3445,7 @@ exports[`object fields with title and description from uiSchema additionalProper
                                 "children": null,
                                 "props": {
                                   "dangerouslySetInnerHTML": {
-                                    "__html": ".__m__-r5o{--grid-gutter:var(--mantine-spacing-md);}",
+                                    "__html": ".__m__-r63{--grid-gutter:var(--mantine-spacing-md);}",
                                   },
                                   "data-mantine-styles": "inline",
                                   "nonce": undefined,
@@ -3340,7 +3461,7 @@ exports[`object fields with title and description from uiSchema additionalProper
                                         "children": null,
                                         "props": {
                                           "dangerouslySetInnerHTML": {
-                                            "__html": ".__m__-r5q{--col-flex-grow:auto;--col-flex-basis:50%;--col-max-width:50%;}",
+                                            "__html": ".__m__-r65{--col-flex-grow:auto;--col-flex-basis:50%;--col-max-width:50%;}",
                                           },
                                           "data-mantine-styles": "inline",
                                           "nonce": undefined,
@@ -3424,7 +3545,7 @@ exports[`object fields with title and description from uiSchema additionalProper
                                           },
                                         ],
                                         "props": {
-                                          "className": "m_96bdd299 form-additional __m__-r5q",
+                                          "className": "m_96bdd299 form-additional __m__-r65",
                                           "data-size": undefined,
                                           "data-variant": undefined,
                                           "size": undefined,
@@ -3437,7 +3558,7 @@ exports[`object fields with title and description from uiSchema additionalProper
                                         "children": null,
                                         "props": {
                                           "dangerouslySetInnerHTML": {
-                                            "__html": ".__m__-r61{--col-flex-grow:auto;--col-flex-basis:50%;--col-max-width:50%;}",
+                                            "__html": ".__m__-r6c{--col-flex-grow:auto;--col-flex-basis:50%;--col-max-width:50%;}",
                                           },
                                           "data-mantine-styles": "inline",
                                           "nonce": undefined,
@@ -3517,7 +3638,7 @@ exports[`object fields with title and description from uiSchema additionalProper
                                           },
                                         ],
                                         "props": {
-                                          "className": "m_96bdd299 form-additional __m__-r61",
+                                          "className": "m_96bdd299 form-additional __m__-r6c",
                                           "data-size": undefined,
                                           "data-variant": undefined,
                                           "size": undefined,
@@ -3536,7 +3657,7 @@ exports[`object fields with title and description from uiSchema additionalProper
                                   },
                                 ],
                                 "props": {
-                                  "className": "m_410352e9 __m__-r5o",
+                                  "className": "m_410352e9 __m__-r63",
                                   "data-size": undefined,
                                   "data-variant": undefined,
                                   "size": undefined,
@@ -3613,9 +3734,10 @@ exports[`object fields with title and description from uiSchema additionalProper
                                   },
                                 ],
                                 "props": {
-                                  "className": "array-item-remove m_8d3f4000 m_87cf2631",
+                                  "className": "rjsf-array-item-remove m_8d3f4000 m_87cf2631",
                                   "data-size": "sm",
                                   "data-variant": "subtle",
+                                  "id": "root_foo__remove",
                                   "onClick": [Function],
                                   "size": undefined,
                                   "style": {
@@ -3633,7 +3755,7 @@ exports[`object fields with title and description from uiSchema additionalProper
                               },
                             ],
                             "props": {
-                              "className": "m_8bffd616 __m__-r5m",
+                              "className": "m_8bffd616 __m__-r61",
                               "data-size": undefined,
                               "data-variant": undefined,
                               "size": undefined,
@@ -3648,7 +3770,7 @@ exports[`object fields with title and description from uiSchema additionalProper
                           },
                         ],
                         "props": {
-                          "className": "form-group field field-string",
+                          "className": "rjsf-field rjsf-field-string",
                           "style": undefined,
                         },
                         "type": "div",
@@ -3667,11 +3789,13 @@ exports[`object fields with title and description from uiSchema additionalProper
                   },
                 ],
                 "props": {
-                  "className": "m_2415a157 __m__-r5j",
+                  "className": "m_2415a157 __m__-r5u",
                   "data-size": undefined,
                   "data-variant": undefined,
                   "size": undefined,
-                  "style": {},
+                  "style": {
+                    "marginBottom": "var(--mantine-spacing-sm)",
+                  },
                 },
                 "type": "div",
                 Symbol(cleaned): true,
@@ -3743,9 +3867,10 @@ exports[`object fields with title and description from uiSchema additionalProper
                       },
                     ],
                     "props": {
-                      "className": "m_8d3f4000 m_87cf2631",
-                      "data-size": undefined,
+                      "className": "object-property-expand m_8d3f4000 m_87cf2631",
+                      "data-size": "sm",
                       "data-variant": "subtle",
+                      "id": "root__add",
                       "onClick": [Function],
                       "size": undefined,
                       "style": {
@@ -3753,6 +3878,7 @@ exports[`object fields with title and description from uiSchema additionalProper
                         "--ai-bg": "transparent",
                         "--ai-color": "var(--mantine-color-blue-light-color)",
                         "--ai-hover": "var(--mantine-color-blue-light-hover)",
+                        "--ai-size": "var(--ai-size-sm)",
                       },
                       "title": "Copy",
                       "type": "button",
@@ -3787,7 +3913,7 @@ exports[`object fields with title and description from uiSchema additionalProper
           },
         ],
         "props": {
-          "className": "form-group field field-object",
+          "className": "rjsf-field rjsf-field-object",
           "style": undefined,
         },
         "type": "div",
@@ -3899,8 +4025,15 @@ exports[`object fields with title and description from uiSchema object 1`] = `
                   "a fancier description",
                 ],
                 "props": {
-                  "className": "field-description",
+                  "className": "m_b6d8b162",
+                  "data-size": undefined,
+                  "data-variant": undefined,
                   "id": "root__description",
+                  "size": undefined,
+                  "style": {
+                    "marginBottom": "var(--mantine-spacing-sm)",
+                    "marginTop": "calc(0.1875rem * var(--mantine-scale))",
+                  },
                 },
                 "type": "p",
                 Symbol(cleaned): true,
@@ -3909,7 +4042,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
                 "children": null,
                 "props": {
                   "dangerouslySetInnerHTML": {
-                    "__html": ".__m__-r4v{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
+                    "__html": ".__m__-r55{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
                   },
                   "data-mantine-styles": "inline",
                   "nonce": undefined,
@@ -3944,10 +4077,25 @@ exports[`object fields with title and description from uiSchema object 1`] = `
                               },
                               {
                                 "children": [
+                                  "a fancier item A description",
+                                ],
+                                "props": {
+                                  "className": "m_fe47ce59",
+                                  "data-size": undefined,
+                                  "data-variant": undefined,
+                                  "id": "root_a-description",
+                                  "size": undefined,
+                                  "style": {},
+                                },
+                                "type": "p",
+                                Symbol(cleaned): true,
+                              },
+                              {
+                                "children": [
                                   {
                                     "children": null,
                                     "props": {
-                                      "aria-describedby": undefined,
+                                      "aria-describedby": "root_a-description",
                                       "aria-invalid": false,
                                       "autoFocus": false,
                                       "className": "m_8fb7ebe7",
@@ -3974,7 +4122,9 @@ exports[`object fields with title and description from uiSchema object 1`] = `
                                   "data-size": undefined,
                                   "data-variant": "default",
                                   "size": undefined,
-                                  "style": {},
+                                  "style": {
+                                    "--input-margin-top": "calc(var(--mantine-spacing-xs) / 2)",
+                                  },
                                 },
                                 "type": "div",
                                 Symbol(cleaned): true,
@@ -3990,9 +4140,27 @@ exports[`object fields with title and description from uiSchema object 1`] = `
                             "type": "div",
                             Symbol(cleaned): true,
                           },
+                          {
+                            "children": [
+                              "a fancier item A description",
+                            ],
+                            "props": {
+                              "className": "m_b6d8b162",
+                              "data-size": undefined,
+                              "data-variant": undefined,
+                              "id": "root_a__description",
+                              "size": undefined,
+                              "style": {
+                                "marginBottom": "var(--mantine-spacing-sm)",
+                                "marginTop": "calc(0.1875rem * var(--mantine-scale))",
+                              },
+                            },
+                            "type": "p",
+                            Symbol(cleaned): true,
+                          },
                         ],
                         "props": {
-                          "className": "form-group field field-string",
+                          "className": "rjsf-field rjsf-field-string",
                           "style": undefined,
                         },
                         "type": "div",
@@ -4034,10 +4202,25 @@ exports[`object fields with title and description from uiSchema object 1`] = `
                               },
                               {
                                 "children": [
+                                  "a fancier item B description",
+                                ],
+                                "props": {
+                                  "className": "m_fe47ce59",
+                                  "data-size": undefined,
+                                  "data-variant": undefined,
+                                  "id": "root_b-description",
+                                  "size": undefined,
+                                  "style": {},
+                                },
+                                "type": "p",
+                                Symbol(cleaned): true,
+                              },
+                              {
+                                "children": [
                                   {
                                     "children": null,
                                     "props": {
-                                      "aria-describedby": undefined,
+                                      "aria-describedby": "root_b-description",
                                       "aria-invalid": false,
                                       "autoFocus": false,
                                       "className": "m_8fb7ebe7",
@@ -4190,6 +4373,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
                                   "data-with-right-section": true,
                                   "size": undefined,
                                   "style": {
+                                    "--input-margin-top": "calc(var(--mantine-spacing-xs) / 2)",
                                     "--input-right-section-width": "var(--ni-right-section-width-sm)",
                                   },
                                 },
@@ -4207,9 +4391,27 @@ exports[`object fields with title and description from uiSchema object 1`] = `
                             "type": "div",
                             Symbol(cleaned): true,
                           },
+                          {
+                            "children": [
+                              "a fancier item B description",
+                            ],
+                            "props": {
+                              "className": "m_b6d8b162",
+                              "data-size": undefined,
+                              "data-variant": undefined,
+                              "id": "root_b__description",
+                              "size": undefined,
+                              "style": {
+                                "marginBottom": "var(--mantine-spacing-sm)",
+                                "marginTop": "calc(0.1875rem * var(--mantine-scale))",
+                              },
+                            },
+                            "type": "p",
+                            Symbol(cleaned): true,
+                          },
                         ],
                         "props": {
-                          "className": "form-group field field-number",
+                          "className": "rjsf-field rjsf-field-number",
                           "style": undefined,
                         },
                         "type": "div",
@@ -4228,11 +4430,13 @@ exports[`object fields with title and description from uiSchema object 1`] = `
                   },
                 ],
                 "props": {
-                  "className": "m_2415a157 __m__-r4v",
+                  "className": "m_2415a157 __m__-r55",
                   "data-size": undefined,
                   "data-variant": undefined,
                   "size": undefined,
-                  "style": {},
+                  "style": {
+                    "marginBottom": "var(--mantine-spacing-sm)",
+                  },
                 },
                 "type": "div",
                 Symbol(cleaned): true,
@@ -4251,7 +4455,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
           },
         ],
         "props": {
-          "className": "form-group field field-object",
+          "className": "rjsf-field rjsf-field-object",
           "style": undefined,
         },
         "type": "div",
@@ -4363,8 +4567,15 @@ exports[`object fields with title and description from uiSchema show add button 
                   "a fancier description",
                 ],
                 "props": {
-                  "className": "field-description",
+                  "className": "m_b6d8b162",
+                  "data-size": undefined,
+                  "data-variant": undefined,
                   "id": "root__description",
+                  "size": undefined,
+                  "style": {
+                    "marginBottom": "var(--mantine-spacing-sm)",
+                    "marginTop": "calc(0.1875rem * var(--mantine-scale))",
+                  },
                 },
                 "type": "p",
                 Symbol(cleaned): true,
@@ -4373,7 +4584,7 @@ exports[`object fields with title and description from uiSchema show add button 
                 "children": null,
                 "props": {
                   "dangerouslySetInnerHTML": {
-                    "__html": ".__m__-r6h{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
+                    "__html": ".__m__-r6t{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
                   },
                   "data-mantine-styles": "inline",
                   "nonce": undefined,
@@ -4393,7 +4604,7 @@ exports[`object fields with title and description from uiSchema show add button 
                                 "children": null,
                                 "props": {
                                   "dangerouslySetInnerHTML": {
-                                    "__html": ".__m__-r6m{--grid-gutter:var(--mantine-spacing-md);}",
+                                    "__html": ".__m__-r72{--grid-gutter:var(--mantine-spacing-md);}",
                                   },
                                   "data-mantine-styles": "inline",
                                   "nonce": undefined,
@@ -4409,7 +4620,7 @@ exports[`object fields with title and description from uiSchema show add button 
                                         "children": null,
                                         "props": {
                                           "dangerouslySetInnerHTML": {
-                                            "__html": ".__m__-r6o{--col-flex-grow:auto;--col-flex-basis:50%;--col-max-width:50%;}",
+                                            "__html": ".__m__-r74{--col-flex-grow:auto;--col-flex-basis:50%;--col-max-width:50%;}",
                                           },
                                           "data-mantine-styles": "inline",
                                           "nonce": undefined,
@@ -4493,7 +4704,7 @@ exports[`object fields with title and description from uiSchema show add button 
                                           },
                                         ],
                                         "props": {
-                                          "className": "m_96bdd299 form-additional __m__-r6o",
+                                          "className": "m_96bdd299 form-additional __m__-r74",
                                           "data-size": undefined,
                                           "data-variant": undefined,
                                           "size": undefined,
@@ -4506,7 +4717,7 @@ exports[`object fields with title and description from uiSchema show add button 
                                         "children": null,
                                         "props": {
                                           "dangerouslySetInnerHTML": {
-                                            "__html": ".__m__-r6v{--col-flex-grow:auto;--col-flex-basis:50%;--col-max-width:50%;}",
+                                            "__html": ".__m__-r7b{--col-flex-grow:auto;--col-flex-basis:50%;--col-max-width:50%;}",
                                           },
                                           "data-mantine-styles": "inline",
                                           "nonce": undefined,
@@ -4586,7 +4797,7 @@ exports[`object fields with title and description from uiSchema show add button 
                                           },
                                         ],
                                         "props": {
-                                          "className": "m_96bdd299 form-additional __m__-r6v",
+                                          "className": "m_96bdd299 form-additional __m__-r7b",
                                           "data-size": undefined,
                                           "data-variant": undefined,
                                           "size": undefined,
@@ -4605,7 +4816,7 @@ exports[`object fields with title and description from uiSchema show add button 
                                   },
                                 ],
                                 "props": {
-                                  "className": "m_410352e9 __m__-r6m",
+                                  "className": "m_410352e9 __m__-r72",
                                   "data-size": undefined,
                                   "data-variant": undefined,
                                   "size": undefined,
@@ -4682,9 +4893,10 @@ exports[`object fields with title and description from uiSchema show add button 
                                   },
                                 ],
                                 "props": {
-                                  "className": "array-item-remove m_8d3f4000 m_87cf2631",
+                                  "className": "rjsf-array-item-remove m_8d3f4000 m_87cf2631",
                                   "data-size": "sm",
                                   "data-variant": "subtle",
+                                  "id": "root_additionalProperty__remove",
                                   "onClick": [Function],
                                   "size": undefined,
                                   "style": {
@@ -4702,7 +4914,7 @@ exports[`object fields with title and description from uiSchema show add button 
                               },
                             ],
                             "props": {
-                              "className": "m_8bffd616 __m__-r6k",
+                              "className": "m_8bffd616 __m__-r70",
                               "data-size": undefined,
                               "data-variant": undefined,
                               "size": undefined,
@@ -4717,7 +4929,7 @@ exports[`object fields with title and description from uiSchema show add button 
                           },
                         ],
                         "props": {
-                          "className": "form-group field field-string",
+                          "className": "rjsf-field rjsf-field-string",
                           "style": undefined,
                         },
                         "type": "div",
@@ -4736,11 +4948,13 @@ exports[`object fields with title and description from uiSchema show add button 
                   },
                 ],
                 "props": {
-                  "className": "m_2415a157 __m__-r6h",
+                  "className": "m_2415a157 __m__-r6t",
                   "data-size": undefined,
                   "data-variant": undefined,
                   "size": undefined,
-                  "style": {},
+                  "style": {
+                    "marginBottom": "var(--mantine-spacing-sm)",
+                  },
                 },
                 "type": "div",
                 Symbol(cleaned): true,
@@ -4812,9 +5026,10 @@ exports[`object fields with title and description from uiSchema show add button 
                       },
                     ],
                     "props": {
-                      "className": "m_8d3f4000 m_87cf2631",
-                      "data-size": undefined,
+                      "className": "object-property-expand m_8d3f4000 m_87cf2631",
+                      "data-size": "sm",
                       "data-variant": "subtle",
+                      "id": "root__add",
                       "onClick": [Function],
                       "size": undefined,
                       "style": {
@@ -4822,6 +5037,7 @@ exports[`object fields with title and description from uiSchema show add button 
                         "--ai-bg": "transparent",
                         "--ai-color": "var(--mantine-color-blue-light-color)",
                         "--ai-hover": "var(--mantine-color-blue-light-hover)",
+                        "--ai-size": "var(--ai-size-sm)",
                       },
                       "title": "Copy",
                       "type": "button",
@@ -4856,7 +5072,7 @@ exports[`object fields with title and description from uiSchema show add button 
           },
         ],
         "props": {
-          "className": "form-group field field-object",
+          "className": "rjsf-field rjsf-field-object",
           "style": undefined,
         },
         "type": "div",
@@ -4968,8 +5184,15 @@ exports[`object fields with title and description object 1`] = `
                   "a test description",
                 ],
                 "props": {
-                  "className": "field-description",
+                  "className": "m_b6d8b162",
+                  "data-size": undefined,
+                  "data-variant": undefined,
                   "id": "root__description",
+                  "size": undefined,
+                  "style": {
+                    "marginBottom": "var(--mantine-spacing-sm)",
+                    "marginTop": "calc(0.1875rem * var(--mantine-scale))",
+                  },
                 },
                 "type": "p",
                 Symbol(cleaned): true,
@@ -4978,7 +5201,7 @@ exports[`object fields with title and description object 1`] = `
                 "children": null,
                 "props": {
                   "dangerouslySetInnerHTML": {
-                    "__html": ".__m__-r2f{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
+                    "__html": ".__m__-r2g{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
                   },
                   "data-mantine-styles": "inline",
                   "nonce": undefined,
@@ -5059,9 +5282,27 @@ exports[`object fields with title and description object 1`] = `
                             "type": "div",
                             Symbol(cleaned): true,
                           },
+                          {
+                            "children": [
+                              "A description",
+                            ],
+                            "props": {
+                              "className": "m_b6d8b162",
+                              "data-size": undefined,
+                              "data-variant": undefined,
+                              "id": "root_a__description",
+                              "size": undefined,
+                              "style": {
+                                "marginBottom": "var(--mantine-spacing-sm)",
+                                "marginTop": "calc(0.1875rem * var(--mantine-scale))",
+                              },
+                            },
+                            "type": "p",
+                            Symbol(cleaned): true,
+                          },
                         ],
                         "props": {
-                          "className": "form-group field field-string",
+                          "className": "rjsf-field rjsf-field-string",
                           "style": undefined,
                         },
                         "type": "div",
@@ -5276,9 +5517,27 @@ exports[`object fields with title and description object 1`] = `
                             "type": "div",
                             Symbol(cleaned): true,
                           },
+                          {
+                            "children": [
+                              "B description",
+                            ],
+                            "props": {
+                              "className": "m_b6d8b162",
+                              "data-size": undefined,
+                              "data-variant": undefined,
+                              "id": "root_b__description",
+                              "size": undefined,
+                              "style": {
+                                "marginBottom": "var(--mantine-spacing-sm)",
+                                "marginTop": "calc(0.1875rem * var(--mantine-scale))",
+                              },
+                            },
+                            "type": "p",
+                            Symbol(cleaned): true,
+                          },
                         ],
                         "props": {
-                          "className": "form-group field field-number",
+                          "className": "rjsf-field rjsf-field-number",
                           "style": undefined,
                         },
                         "type": "div",
@@ -5297,11 +5556,13 @@ exports[`object fields with title and description object 1`] = `
                   },
                 ],
                 "props": {
-                  "className": "m_2415a157 __m__-r2f",
+                  "className": "m_2415a157 __m__-r2g",
                   "data-size": undefined,
                   "data-variant": undefined,
                   "size": undefined,
-                  "style": {},
+                  "style": {
+                    "marginBottom": "var(--mantine-spacing-sm)",
+                  },
                 },
                 "type": "div",
                 Symbol(cleaned): true,
@@ -5320,7 +5581,7 @@ exports[`object fields with title and description object 1`] = `
           },
         ],
         "props": {
-          "className": "form-group field field-object",
+          "className": "rjsf-field rjsf-field-object",
           "style": undefined,
         },
         "type": "div",
@@ -5432,8 +5693,15 @@ exports[`object fields with title and description show add button and fields if 
                   "a test description",
                 ],
                 "props": {
-                  "className": "field-description",
+                  "className": "m_b6d8b162",
+                  "data-size": undefined,
+                  "data-variant": undefined,
                   "id": "root__description",
+                  "size": undefined,
+                  "style": {
+                    "marginBottom": "var(--mantine-spacing-sm)",
+                    "marginTop": "calc(0.1875rem * var(--mantine-scale))",
+                  },
                 },
                 "type": "p",
                 Symbol(cleaned): true,
@@ -5442,7 +5710,7 @@ exports[`object fields with title and description show add button and fields if 
                 "children": null,
                 "props": {
                   "dangerouslySetInnerHTML": {
-                    "__html": ".__m__-r41{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
+                    "__html": ".__m__-r46{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
                   },
                   "data-mantine-styles": "inline",
                   "nonce": undefined,
@@ -5462,7 +5730,7 @@ exports[`object fields with title and description show add button and fields if 
                                 "children": null,
                                 "props": {
                                   "dangerouslySetInnerHTML": {
-                                    "__html": ".__m__-r46{--grid-gutter:var(--mantine-spacing-md);}",
+                                    "__html": ".__m__-r4b{--grid-gutter:var(--mantine-spacing-md);}",
                                   },
                                   "data-mantine-styles": "inline",
                                   "nonce": undefined,
@@ -5478,7 +5746,7 @@ exports[`object fields with title and description show add button and fields if 
                                         "children": null,
                                         "props": {
                                           "dangerouslySetInnerHTML": {
-                                            "__html": ".__m__-r48{--col-flex-grow:auto;--col-flex-basis:50%;--col-max-width:50%;}",
+                                            "__html": ".__m__-r4d{--col-flex-grow:auto;--col-flex-basis:50%;--col-max-width:50%;}",
                                           },
                                           "data-mantine-styles": "inline",
                                           "nonce": undefined,
@@ -5562,7 +5830,7 @@ exports[`object fields with title and description show add button and fields if 
                                           },
                                         ],
                                         "props": {
-                                          "className": "m_96bdd299 form-additional __m__-r48",
+                                          "className": "m_96bdd299 form-additional __m__-r4d",
                                           "data-size": undefined,
                                           "data-variant": undefined,
                                           "size": undefined,
@@ -5575,7 +5843,7 @@ exports[`object fields with title and description show add button and fields if 
                                         "children": null,
                                         "props": {
                                           "dangerouslySetInnerHTML": {
-                                            "__html": ".__m__-r4f{--col-flex-grow:auto;--col-flex-basis:50%;--col-max-width:50%;}",
+                                            "__html": ".__m__-r4k{--col-flex-grow:auto;--col-flex-basis:50%;--col-max-width:50%;}",
                                           },
                                           "data-mantine-styles": "inline",
                                           "nonce": undefined,
@@ -5655,7 +5923,7 @@ exports[`object fields with title and description show add button and fields if 
                                           },
                                         ],
                                         "props": {
-                                          "className": "m_96bdd299 form-additional __m__-r4f",
+                                          "className": "m_96bdd299 form-additional __m__-r4k",
                                           "data-size": undefined,
                                           "data-variant": undefined,
                                           "size": undefined,
@@ -5674,7 +5942,7 @@ exports[`object fields with title and description show add button and fields if 
                                   },
                                 ],
                                 "props": {
-                                  "className": "m_410352e9 __m__-r46",
+                                  "className": "m_410352e9 __m__-r4b",
                                   "data-size": undefined,
                                   "data-variant": undefined,
                                   "size": undefined,
@@ -5751,9 +6019,10 @@ exports[`object fields with title and description show add button and fields if 
                                   },
                                 ],
                                 "props": {
-                                  "className": "array-item-remove m_8d3f4000 m_87cf2631",
+                                  "className": "rjsf-array-item-remove m_8d3f4000 m_87cf2631",
                                   "data-size": "sm",
                                   "data-variant": "subtle",
+                                  "id": "root_additionalProperty__remove",
                                   "onClick": [Function],
                                   "size": undefined,
                                   "style": {
@@ -5771,7 +6040,7 @@ exports[`object fields with title and description show add button and fields if 
                               },
                             ],
                             "props": {
-                              "className": "m_8bffd616 __m__-r44",
+                              "className": "m_8bffd616 __m__-r49",
                               "data-size": undefined,
                               "data-variant": undefined,
                               "size": undefined,
@@ -5786,7 +6055,7 @@ exports[`object fields with title and description show add button and fields if 
                           },
                         ],
                         "props": {
-                          "className": "form-group field field-string",
+                          "className": "rjsf-field rjsf-field-string",
                           "style": undefined,
                         },
                         "type": "div",
@@ -5805,11 +6074,13 @@ exports[`object fields with title and description show add button and fields if 
                   },
                 ],
                 "props": {
-                  "className": "m_2415a157 __m__-r41",
+                  "className": "m_2415a157 __m__-r46",
                   "data-size": undefined,
                   "data-variant": undefined,
                   "size": undefined,
-                  "style": {},
+                  "style": {
+                    "marginBottom": "var(--mantine-spacing-sm)",
+                  },
                 },
                 "type": "div",
                 Symbol(cleaned): true,
@@ -5881,9 +6152,10 @@ exports[`object fields with title and description show add button and fields if 
                       },
                     ],
                     "props": {
-                      "className": "m_8d3f4000 m_87cf2631",
-                      "data-size": undefined,
+                      "className": "object-property-expand m_8d3f4000 m_87cf2631",
+                      "data-size": "sm",
                       "data-variant": "subtle",
+                      "id": "root__add",
                       "onClick": [Function],
                       "size": undefined,
                       "style": {
@@ -5891,6 +6163,7 @@ exports[`object fields with title and description show add button and fields if 
                         "--ai-bg": "transparent",
                         "--ai-color": "var(--mantine-color-blue-light-color)",
                         "--ai-hover": "var(--mantine-color-blue-light-hover)",
+                        "--ai-size": "var(--ai-size-sm)",
                       },
                       "title": "Copy",
                       "type": "button",
@@ -5925,7 +6198,7 @@ exports[`object fields with title and description show add button and fields if 
           },
         ],
         "props": {
-          "className": "form-group field field-object",
+          "className": "rjsf-field rjsf-field-object",
           "style": undefined,
         },
         "type": "div",
@@ -6015,7 +6288,7 @@ exports[`object fields with title and description with global label off addition
                 "children": null,
                 "props": {
                   "dangerouslySetInnerHTML": {
-                    "__html": ".__m__-r9h{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
+                    "__html": ".__m__-ra3{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
                   },
                   "data-mantine-styles": "inline",
                   "nonce": undefined,
@@ -6035,7 +6308,7 @@ exports[`object fields with title and description with global label off addition
                                 "children": null,
                                 "props": {
                                   "dangerouslySetInnerHTML": {
-                                    "__html": ".__m__-r9m{--grid-gutter:var(--mantine-spacing-md);}",
+                                    "__html": ".__m__-ra8{--grid-gutter:var(--mantine-spacing-md);}",
                                   },
                                   "data-mantine-styles": "inline",
                                   "nonce": undefined,
@@ -6051,7 +6324,7 @@ exports[`object fields with title and description with global label off addition
                                         "children": null,
                                         "props": {
                                           "dangerouslySetInnerHTML": {
-                                            "__html": ".__m__-r9o{--col-flex-grow:auto;--col-flex-basis:50%;--col-max-width:50%;}",
+                                            "__html": ".__m__-raa{--col-flex-grow:auto;--col-flex-basis:50%;--col-max-width:50%;}",
                                           },
                                           "data-mantine-styles": "inline",
                                           "nonce": undefined,
@@ -6135,7 +6408,7 @@ exports[`object fields with title and description with global label off addition
                                           },
                                         ],
                                         "props": {
-                                          "className": "m_96bdd299 form-additional __m__-r9o",
+                                          "className": "m_96bdd299 form-additional __m__-raa",
                                           "data-size": undefined,
                                           "data-variant": undefined,
                                           "size": undefined,
@@ -6148,7 +6421,7 @@ exports[`object fields with title and description with global label off addition
                                         "children": null,
                                         "props": {
                                           "dangerouslySetInnerHTML": {
-                                            "__html": ".__m__-r9v{--col-flex-grow:auto;--col-flex-basis:50%;--col-max-width:50%;}",
+                                            "__html": ".__m__-rah{--col-flex-grow:auto;--col-flex-basis:50%;--col-max-width:50%;}",
                                           },
                                           "data-mantine-styles": "inline",
                                           "nonce": undefined,
@@ -6211,7 +6484,7 @@ exports[`object fields with title and description with global label off addition
                                           },
                                         ],
                                         "props": {
-                                          "className": "m_96bdd299 form-additional __m__-r9v",
+                                          "className": "m_96bdd299 form-additional __m__-rah",
                                           "data-size": undefined,
                                           "data-variant": undefined,
                                           "size": undefined,
@@ -6230,7 +6503,7 @@ exports[`object fields with title and description with global label off addition
                                   },
                                 ],
                                 "props": {
-                                  "className": "m_410352e9 __m__-r9m",
+                                  "className": "m_410352e9 __m__-ra8",
                                   "data-size": undefined,
                                   "data-variant": undefined,
                                   "size": undefined,
@@ -6307,9 +6580,10 @@ exports[`object fields with title and description with global label off addition
                                   },
                                 ],
                                 "props": {
-                                  "className": "array-item-remove m_8d3f4000 m_87cf2631",
+                                  "className": "rjsf-array-item-remove m_8d3f4000 m_87cf2631",
                                   "data-size": "sm",
                                   "data-variant": "subtle",
+                                  "id": "root_foo__remove",
                                   "onClick": [Function],
                                   "size": undefined,
                                   "style": {
@@ -6327,7 +6601,7 @@ exports[`object fields with title and description with global label off addition
                               },
                             ],
                             "props": {
-                              "className": "m_8bffd616 __m__-r9k",
+                              "className": "m_8bffd616 __m__-ra6",
                               "data-size": undefined,
                               "data-variant": undefined,
                               "size": undefined,
@@ -6342,7 +6616,7 @@ exports[`object fields with title and description with global label off addition
                           },
                         ],
                         "props": {
-                          "className": "form-group field field-string",
+                          "className": "rjsf-field rjsf-field-string",
                           "style": undefined,
                         },
                         "type": "div",
@@ -6361,11 +6635,13 @@ exports[`object fields with title and description with global label off addition
                   },
                 ],
                 "props": {
-                  "className": "m_2415a157 __m__-r9h",
+                  "className": "m_2415a157 __m__-ra3",
                   "data-size": undefined,
                   "data-variant": undefined,
                   "size": undefined,
-                  "style": {},
+                  "style": {
+                    "marginBottom": "var(--mantine-spacing-sm)",
+                  },
                 },
                 "type": "div",
                 Symbol(cleaned): true,
@@ -6437,9 +6713,10 @@ exports[`object fields with title and description with global label off addition
                       },
                     ],
                     "props": {
-                      "className": "m_8d3f4000 m_87cf2631",
-                      "data-size": undefined,
+                      "className": "object-property-expand m_8d3f4000 m_87cf2631",
+                      "data-size": "sm",
                       "data-variant": "subtle",
+                      "id": "root__add",
                       "onClick": [Function],
                       "size": undefined,
                       "style": {
@@ -6447,6 +6724,7 @@ exports[`object fields with title and description with global label off addition
                         "--ai-bg": "transparent",
                         "--ai-color": "var(--mantine-color-blue-light-color)",
                         "--ai-hover": "var(--mantine-color-blue-light-hover)",
+                        "--ai-size": "var(--ai-size-sm)",
                       },
                       "title": "Copy",
                       "type": "button",
@@ -6481,7 +6759,7 @@ exports[`object fields with title and description with global label off addition
           },
         ],
         "props": {
-          "className": "form-group field field-object",
+          "className": "rjsf-field rjsf-field-object",
           "style": undefined,
         },
         "type": "div",
@@ -6571,7 +6849,7 @@ exports[`object fields with title and description with global label off object 1
                 "children": null,
                 "props": {
                   "dangerouslySetInnerHTML": {
-                    "__html": ".__m__-r90{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
+                    "__html": ".__m__-r9i{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
                   },
                   "data-mantine-styles": "inline",
                   "nonce": undefined,
@@ -6637,7 +6915,7 @@ exports[`object fields with title and description with global label off object 1
                           },
                         ],
                         "props": {
-                          "className": "form-group field field-string",
+                          "className": "rjsf-field rjsf-field-string",
                           "style": undefined,
                         },
                         "type": "div",
@@ -6837,7 +7115,7 @@ exports[`object fields with title and description with global label off object 1
                           },
                         ],
                         "props": {
-                          "className": "form-group field field-number",
+                          "className": "rjsf-field rjsf-field-number",
                           "style": undefined,
                         },
                         "type": "div",
@@ -6856,11 +7134,13 @@ exports[`object fields with title and description with global label off object 1
                   },
                 ],
                 "props": {
-                  "className": "m_2415a157 __m__-r90",
+                  "className": "m_2415a157 __m__-r9i",
                   "data-size": undefined,
                   "data-variant": undefined,
                   "size": undefined,
-                  "style": {},
+                  "style": {
+                    "marginBottom": "var(--mantine-spacing-sm)",
+                  },
                 },
                 "type": "div",
                 Symbol(cleaned): true,
@@ -6879,7 +7159,7 @@ exports[`object fields with title and description with global label off object 1
           },
         ],
         "props": {
-          "className": "form-group field field-object",
+          "className": "rjsf-field rjsf-field-object",
           "style": undefined,
         },
         "type": "div",
@@ -6969,7 +7249,7 @@ exports[`object fields with title and description with global label off show add
                 "children": null,
                 "props": {
                   "dangerouslySetInnerHTML": {
-                    "__html": ".__m__-rad{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
+                    "__html": ".__m__-rav{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
                   },
                   "data-mantine-styles": "inline",
                   "nonce": undefined,
@@ -6989,7 +7269,7 @@ exports[`object fields with title and description with global label off show add
                                 "children": null,
                                 "props": {
                                   "dangerouslySetInnerHTML": {
-                                    "__html": ".__m__-rai{--grid-gutter:var(--mantine-spacing-md);}",
+                                    "__html": ".__m__-rb4{--grid-gutter:var(--mantine-spacing-md);}",
                                   },
                                   "data-mantine-styles": "inline",
                                   "nonce": undefined,
@@ -7005,7 +7285,7 @@ exports[`object fields with title and description with global label off show add
                                         "children": null,
                                         "props": {
                                           "dangerouslySetInnerHTML": {
-                                            "__html": ".__m__-rak{--col-flex-grow:auto;--col-flex-basis:50%;--col-max-width:50%;}",
+                                            "__html": ".__m__-rb6{--col-flex-grow:auto;--col-flex-basis:50%;--col-max-width:50%;}",
                                           },
                                           "data-mantine-styles": "inline",
                                           "nonce": undefined,
@@ -7089,7 +7369,7 @@ exports[`object fields with title and description with global label off show add
                                           },
                                         ],
                                         "props": {
-                                          "className": "m_96bdd299 form-additional __m__-rak",
+                                          "className": "m_96bdd299 form-additional __m__-rb6",
                                           "data-size": undefined,
                                           "data-variant": undefined,
                                           "size": undefined,
@@ -7102,7 +7382,7 @@ exports[`object fields with title and description with global label off show add
                                         "children": null,
                                         "props": {
                                           "dangerouslySetInnerHTML": {
-                                            "__html": ".__m__-rar{--col-flex-grow:auto;--col-flex-basis:50%;--col-max-width:50%;}",
+                                            "__html": ".__m__-rbd{--col-flex-grow:auto;--col-flex-basis:50%;--col-max-width:50%;}",
                                           },
                                           "data-mantine-styles": "inline",
                                           "nonce": undefined,
@@ -7165,7 +7445,7 @@ exports[`object fields with title and description with global label off show add
                                           },
                                         ],
                                         "props": {
-                                          "className": "m_96bdd299 form-additional __m__-rar",
+                                          "className": "m_96bdd299 form-additional __m__-rbd",
                                           "data-size": undefined,
                                           "data-variant": undefined,
                                           "size": undefined,
@@ -7184,7 +7464,7 @@ exports[`object fields with title and description with global label off show add
                                   },
                                 ],
                                 "props": {
-                                  "className": "m_410352e9 __m__-rai",
+                                  "className": "m_410352e9 __m__-rb4",
                                   "data-size": undefined,
                                   "data-variant": undefined,
                                   "size": undefined,
@@ -7261,9 +7541,10 @@ exports[`object fields with title and description with global label off show add
                                   },
                                 ],
                                 "props": {
-                                  "className": "array-item-remove m_8d3f4000 m_87cf2631",
+                                  "className": "rjsf-array-item-remove m_8d3f4000 m_87cf2631",
                                   "data-size": "sm",
                                   "data-variant": "subtle",
+                                  "id": "root_additionalProperty__remove",
                                   "onClick": [Function],
                                   "size": undefined,
                                   "style": {
@@ -7281,7 +7562,7 @@ exports[`object fields with title and description with global label off show add
                               },
                             ],
                             "props": {
-                              "className": "m_8bffd616 __m__-rag",
+                              "className": "m_8bffd616 __m__-rb2",
                               "data-size": undefined,
                               "data-variant": undefined,
                               "size": undefined,
@@ -7296,7 +7577,7 @@ exports[`object fields with title and description with global label off show add
                           },
                         ],
                         "props": {
-                          "className": "form-group field field-string",
+                          "className": "rjsf-field rjsf-field-string",
                           "style": undefined,
                         },
                         "type": "div",
@@ -7315,11 +7596,13 @@ exports[`object fields with title and description with global label off show add
                   },
                 ],
                 "props": {
-                  "className": "m_2415a157 __m__-rad",
+                  "className": "m_2415a157 __m__-rav",
                   "data-size": undefined,
                   "data-variant": undefined,
                   "size": undefined,
-                  "style": {},
+                  "style": {
+                    "marginBottom": "var(--mantine-spacing-sm)",
+                  },
                 },
                 "type": "div",
                 Symbol(cleaned): true,
@@ -7391,9 +7674,10 @@ exports[`object fields with title and description with global label off show add
                       },
                     ],
                     "props": {
-                      "className": "m_8d3f4000 m_87cf2631",
-                      "data-size": undefined,
+                      "className": "object-property-expand m_8d3f4000 m_87cf2631",
+                      "data-size": "sm",
                       "data-variant": "subtle",
+                      "id": "root__add",
                       "onClick": [Function],
                       "size": undefined,
                       "style": {
@@ -7401,6 +7685,7 @@ exports[`object fields with title and description with global label off show add
                         "--ai-bg": "transparent",
                         "--ai-color": "var(--mantine-color-blue-light-color)",
                         "--ai-hover": "var(--mantine-color-blue-light-hover)",
+                        "--ai-size": "var(--ai-size-sm)",
                       },
                       "title": "Copy",
                       "type": "button",
@@ -7435,7 +7720,7 @@ exports[`object fields with title and description with global label off show add
           },
         ],
         "props": {
-          "className": "form-group field field-object",
+          "className": "rjsf-field rjsf-field-object",
           "style": undefined,
         },
         "type": "div",

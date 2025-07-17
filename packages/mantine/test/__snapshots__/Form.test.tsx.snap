@@ -30,16 +30,6 @@ exports[`single fields checkbox field 1`] = `
                           "data-size": undefined,
                           "data-variant": undefined,
                           "disabled": false,
-                          "enumOptions": [
-                            {
-                              "label": "Yes",
-                              "value": true,
-                            },
-                            {
-                              "label": "No",
-                              "value": false,
-                            },
-                          ],
                           "id": "root",
                           "name": "",
                           "onBlur": [Function],
@@ -130,7 +120,7 @@ exports[`single fields checkbox field 1`] = `
           },
         ],
         "props": {
-          "className": "form-group field field-boolean",
+          "className": "rjsf-field rjsf-field-boolean",
           "style": undefined,
         },
         "type": "div",
@@ -230,16 +220,6 @@ exports[`single fields checkbox field with label 1`] = `
                           "data-size": undefined,
                           "data-variant": undefined,
                           "disabled": false,
-                          "enumOptions": [
-                            {
-                              "label": "Yes",
-                              "value": true,
-                            },
-                            {
-                              "label": "No",
-                              "value": false,
-                            },
-                          ],
                           "id": "root",
                           "name": "",
                           "onBlur": [Function],
@@ -347,7 +327,486 @@ exports[`single fields checkbox field with label 1`] = `
           },
         ],
         "props": {
-          "className": "form-group field field-boolean",
+          "className": "rjsf-field rjsf-field-boolean",
+          "style": undefined,
+        },
+        "type": "div",
+        Symbol(cleaned): true,
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  "Submit",
+                ],
+                "props": {
+                  "className": "m_811560b9",
+                  "data-size": undefined,
+                  "data-variant": undefined,
+                  "size": undefined,
+                  "style": {},
+                },
+                "type": "span",
+                Symbol(cleaned): true,
+              },
+            ],
+            "props": {
+              "className": "m_80f1301b",
+              "style": {},
+            },
+            "type": "span",
+            Symbol(cleaned): true,
+          },
+        ],
+        "props": {
+          "className": "m_77c9d27d m_87cf2631",
+          "data-size": undefined,
+          "data-variant": "filled",
+          "size": undefined,
+          "style": {
+            "--button-bd": "calc(0.0625rem * var(--mantine-scale)) solid transparent",
+            "--button-bg": "var(--mantine-color-blue-filled)",
+            "--button-color": "var(--mantine-color-white)",
+            "--button-hover": "var(--mantine-color-blue-filled-hover)",
+          },
+          "type": "submit",
+        },
+        "type": "button",
+        Symbol(cleaned): true,
+      },
+    ],
+    "props": {
+      "acceptCharset": undefined,
+      "action": undefined,
+      "as": undefined,
+      "autoComplete": undefined,
+      "className": "rjsf",
+      "encType": undefined,
+      "id": undefined,
+      "method": undefined,
+      "name": undefined,
+      "noValidate": false,
+      "onSubmit": [Function],
+      "target": undefined,
+    },
+    "type": "form",
+    Symbol(cleaned): true,
+  },
+]
+`;
+
+exports[`single fields checkbox field with label and description 1`] = `
+[
+  <style
+    dangerouslySetInnerHTML={
+      {
+        "__html": "@media (max-width: 35.99375em) {.mantine-visible-from-xs {display: none !important;}}@media (min-width: 36em) {.mantine-hidden-from-xs {display: none !important;}}@media (max-width: 47.99375em) {.mantine-visible-from-sm {display: none !important;}}@media (min-width: 48em) {.mantine-hidden-from-sm {display: none !important;}}@media (max-width: 61.99375em) {.mantine-visible-from-md {display: none !important;}}@media (min-width: 62em) {.mantine-hidden-from-md {display: none !important;}}@media (max-width: 74.99375em) {.mantine-visible-from-lg {display: none !important;}}@media (min-width: 75em) {.mantine-hidden-from-lg {display: none !important;}}@media (max-width: 87.99375em) {.mantine-visible-from-xl {display: none !important;}}@media (min-width: 88em) {.mantine-hidden-from-xl {display: none !important;}}",
+      }
+    }
+    data-mantine-styles="classes"
+  />,
+  {
+    "children": [
+      {
+        "children": [
+          {
+            "children": [
+              "test description",
+            ],
+            "props": {
+              "className": "m_b6d8b162",
+              "data-size": undefined,
+              "data-variant": undefined,
+              "id": "root__description",
+              "size": undefined,
+              "style": {
+                "marginBottom": "var(--mantine-spacing-sm)",
+                "marginTop": "calc(0.1875rem * var(--mantine-scale))",
+              },
+            },
+            "type": "p",
+            Symbol(cleaned): true,
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": null,
+                        "props": {
+                          "aria-describedby": "root__error root__description root__help",
+                          "autoFocus": false,
+                          "checked": false,
+                          "className": "m_26063560",
+                          "data-size": undefined,
+                          "data-variant": undefined,
+                          "disabled": false,
+                          "id": "root",
+                          "name": "",
+                          "onBlur": [Function],
+                          "onChange": [Function],
+                          "onFocus": [Function],
+                          "size": undefined,
+                          "style": {},
+                          "type": "checkbox",
+                        },
+                        "type": "input",
+                        Symbol(cleaned): true,
+                      },
+                      {
+                        "children": [
+                          {
+                            "children": null,
+                            "props": {
+                              "clipRule": "evenodd",
+                              "d": "M4 4.586L1.707 2.293A1 1 0 1 0 .293 3.707l3 3a.997.997 0 0 0 1.414 0l5-5A1 1 0 1 0 8.293.293L4 4.586z",
+                              "fill": "currentColor",
+                              "fillRule": "evenodd",
+                            },
+                            "type": "path",
+                            Symbol(cleaned): true,
+                          },
+                        ],
+                        "props": {
+                          "aria-hidden": true,
+                          "className": "m_bf295423",
+                          "fill": "none",
+                          "style": {},
+                          "viewBox": "0 0 10 7",
+                          "xmlns": "http://www.w3.org/2000/svg",
+                        },
+                        "type": "svg",
+                        Symbol(cleaned): true,
+                      },
+                    ],
+                    "props": {
+                      "className": "m_26062bec",
+                      "data-label-position": "right",
+                      "data-size": undefined,
+                      "data-variant": undefined,
+                      "size": undefined,
+                      "style": {},
+                    },
+                    "type": "div",
+                    Symbol(cleaned): true,
+                  },
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          "test",
+                        ],
+                        "props": {
+                          "className": "m_8ee546b8",
+                          "data-disabled": undefined,
+                          "data-size": undefined,
+                          "data-variant": undefined,
+                          "htmlFor": "root",
+                          "size": undefined,
+                          "style": {},
+                        },
+                        "type": "label",
+                        Symbol(cleaned): true,
+                      },
+                    ],
+                    "props": {
+                      "className": "m_d3ea56bb",
+                      "data-disabled": undefined,
+                      "style": {},
+                    },
+                    "type": "div",
+                    Symbol(cleaned): true,
+                  },
+                ],
+                "props": {
+                  "className": "m_5f6e695e",
+                  "data-size": undefined,
+                  "data-variant": undefined,
+                  "htmlFor": undefined,
+                  "size": undefined,
+                  "style": {},
+                },
+                "type": "div",
+                Symbol(cleaned): true,
+              },
+            ],
+            "props": {
+              "className": "m_bf2d988c m_5f75b09e",
+              "data-checked": undefined,
+              "data-label-position": "right",
+              "data-size": undefined,
+              "data-variant": undefined,
+              "size": undefined,
+              "style": {
+                "--checkbox-color": "var(--mantine-color-blue-filled)",
+                "--label-fz": undefined,
+                "--label-lh": undefined,
+              },
+            },
+            "type": "div",
+            Symbol(cleaned): true,
+          },
+        ],
+        "props": {
+          "className": "rjsf-field rjsf-field-boolean",
+          "style": undefined,
+        },
+        "type": "div",
+        Symbol(cleaned): true,
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  "Submit",
+                ],
+                "props": {
+                  "className": "m_811560b9",
+                  "data-size": undefined,
+                  "data-variant": undefined,
+                  "size": undefined,
+                  "style": {},
+                },
+                "type": "span",
+                Symbol(cleaned): true,
+              },
+            ],
+            "props": {
+              "className": "m_80f1301b",
+              "style": {},
+            },
+            "type": "span",
+            Symbol(cleaned): true,
+          },
+        ],
+        "props": {
+          "className": "m_77c9d27d m_87cf2631",
+          "data-size": undefined,
+          "data-variant": "filled",
+          "size": undefined,
+          "style": {
+            "--button-bd": "calc(0.0625rem * var(--mantine-scale)) solid transparent",
+            "--button-bg": "var(--mantine-color-blue-filled)",
+            "--button-color": "var(--mantine-color-white)",
+            "--button-hover": "var(--mantine-color-blue-filled-hover)",
+          },
+          "type": "submit",
+        },
+        "type": "button",
+        Symbol(cleaned): true,
+      },
+    ],
+    "props": {
+      "acceptCharset": undefined,
+      "action": undefined,
+      "as": undefined,
+      "autoComplete": undefined,
+      "className": "rjsf",
+      "encType": undefined,
+      "id": undefined,
+      "method": undefined,
+      "name": undefined,
+      "noValidate": false,
+      "onSubmit": [Function],
+      "target": undefined,
+    },
+    "type": "form",
+    Symbol(cleaned): true,
+  },
+]
+`;
+
+exports[`single fields checkbox field with label and rich text description 1`] = `
+[
+  <style
+    dangerouslySetInnerHTML={
+      {
+        "__html": "@media (max-width: 35.99375em) {.mantine-visible-from-xs {display: none !important;}}@media (min-width: 36em) {.mantine-hidden-from-xs {display: none !important;}}@media (max-width: 47.99375em) {.mantine-visible-from-sm {display: none !important;}}@media (min-width: 48em) {.mantine-hidden-from-sm {display: none !important;}}@media (max-width: 61.99375em) {.mantine-visible-from-md {display: none !important;}}@media (min-width: 62em) {.mantine-hidden-from-md {display: none !important;}}@media (max-width: 74.99375em) {.mantine-visible-from-lg {display: none !important;}}@media (min-width: 75em) {.mantine-hidden-from-lg {display: none !important;}}@media (max-width: 87.99375em) {.mantine-visible-from-xl {display: none !important;}}@media (min-width: 88em) {.mantine-hidden-from-xl {display: none !important;}}",
+      }
+    }
+    data-mantine-styles="classes"
+  />,
+  {
+    "children": [
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      "test",
+                    ],
+                    "props": {
+                      "className": undefined,
+                    },
+                    "type": "strong",
+                    Symbol(cleaned): true,
+                  },
+                  " ",
+                  {
+                    "children": [
+                      "description",
+                    ],
+                    "props": {
+                      "className": undefined,
+                    },
+                    "type": "strong",
+                    Symbol(cleaned): true,
+                  },
+                ],
+                "props": {
+                  "data-testid": undefined,
+                },
+                "type": "span",
+                Symbol(cleaned): true,
+              },
+            ],
+            "props": {
+              "className": "m_b6d8b162",
+              "data-size": undefined,
+              "data-variant": undefined,
+              "id": "root__description",
+              "size": undefined,
+              "style": {
+                "marginBottom": "var(--mantine-spacing-sm)",
+                "marginTop": "calc(0.1875rem * var(--mantine-scale))",
+              },
+            },
+            "type": "p",
+            Symbol(cleaned): true,
+          },
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": null,
+                        "props": {
+                          "aria-describedby": "root__error root__description root__help",
+                          "autoFocus": false,
+                          "checked": false,
+                          "className": "m_26063560",
+                          "data-size": undefined,
+                          "data-variant": undefined,
+                          "disabled": false,
+                          "id": "root",
+                          "name": "",
+                          "onBlur": [Function],
+                          "onChange": [Function],
+                          "onFocus": [Function],
+                          "size": undefined,
+                          "style": {},
+                          "type": "checkbox",
+                        },
+                        "type": "input",
+                        Symbol(cleaned): true,
+                      },
+                      {
+                        "children": [
+                          {
+                            "children": null,
+                            "props": {
+                              "clipRule": "evenodd",
+                              "d": "M4 4.586L1.707 2.293A1 1 0 1 0 .293 3.707l3 3a.997.997 0 0 0 1.414 0l5-5A1 1 0 1 0 8.293.293L4 4.586z",
+                              "fill": "currentColor",
+                              "fillRule": "evenodd",
+                            },
+                            "type": "path",
+                            Symbol(cleaned): true,
+                          },
+                        ],
+                        "props": {
+                          "aria-hidden": true,
+                          "className": "m_bf295423",
+                          "fill": "none",
+                          "style": {},
+                          "viewBox": "0 0 10 7",
+                          "xmlns": "http://www.w3.org/2000/svg",
+                        },
+                        "type": "svg",
+                        Symbol(cleaned): true,
+                      },
+                    ],
+                    "props": {
+                      "className": "m_26062bec",
+                      "data-label-position": "right",
+                      "data-size": undefined,
+                      "data-variant": undefined,
+                      "size": undefined,
+                      "style": {},
+                    },
+                    "type": "div",
+                    Symbol(cleaned): true,
+                  },
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          "test",
+                        ],
+                        "props": {
+                          "className": "m_8ee546b8",
+                          "data-disabled": undefined,
+                          "data-size": undefined,
+                          "data-variant": undefined,
+                          "htmlFor": "root",
+                          "size": undefined,
+                          "style": {},
+                        },
+                        "type": "label",
+                        Symbol(cleaned): true,
+                      },
+                    ],
+                    "props": {
+                      "className": "m_d3ea56bb",
+                      "data-disabled": undefined,
+                      "style": {},
+                    },
+                    "type": "div",
+                    Symbol(cleaned): true,
+                  },
+                ],
+                "props": {
+                  "className": "m_5f6e695e",
+                  "data-size": undefined,
+                  "data-variant": undefined,
+                  "htmlFor": undefined,
+                  "size": undefined,
+                  "style": {},
+                },
+                "type": "div",
+                Symbol(cleaned): true,
+              },
+            ],
+            "props": {
+              "className": "m_bf2d988c m_5f75b09e",
+              "data-checked": undefined,
+              "data-label-position": "right",
+              "data-size": undefined,
+              "data-variant": undefined,
+              "size": undefined,
+              "style": {
+                "--checkbox-color": "var(--mantine-color-blue-filled)",
+                "--label-fz": undefined,
+                "--label-lh": undefined,
+              },
+            },
+            "type": "div",
+            Symbol(cleaned): true,
+          },
+        ],
+        "props": {
+          "className": "rjsf-field rjsf-field-boolean",
           "style": undefined,
         },
         "type": "div",
@@ -940,7 +1399,7 @@ exports[`single fields checkboxes field 1`] = `
                       },
                     ],
                     "props": {
-                      "className": "m_8bffd616 __m__-rao",
+                      "className": "m_8bffd616 __m__-rcg",
                       "data-size": undefined,
                       "data-variant": undefined,
                       "size": undefined,
@@ -969,24 +1428,6 @@ exports[`single fields checkboxes field 1`] = `
               "className": "m_46b77525",
               "data-size": undefined,
               "data-variant": undefined,
-              "enumOptions": [
-                {
-                  "label": "foo",
-                  "value": "foo",
-                },
-                {
-                  "label": "bar",
-                  "value": "bar",
-                },
-                {
-                  "label": "fuzz",
-                  "value": "fuzz",
-                },
-                {
-                  "label": "qux",
-                  "value": "qux",
-                },
-              ],
               "size": undefined,
               "style": {},
             },
@@ -995,7 +1436,7 @@ exports[`single fields checkboxes field 1`] = `
           },
         ],
         "props": {
-          "className": "form-group field field-array",
+          "className": "rjsf-field rjsf-field-array",
           "style": undefined,
         },
         "type": "div",
@@ -1085,7 +1526,7 @@ exports[`single fields field with description 1`] = `
                 "children": null,
                 "props": {
                   "dangerouslySetInnerHTML": {
-                    "__html": ".__m__-rck{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
+                    "__html": ".__m__-rec{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
                   },
                   "data-mantine-styles": "inline",
                   "nonce": undefined,
@@ -1166,9 +1607,27 @@ exports[`single fields field with description 1`] = `
                             "type": "div",
                             Symbol(cleaned): true,
                           },
+                          {
+                            "children": [
+                              "some description",
+                            ],
+                            "props": {
+                              "className": "m_b6d8b162",
+                              "data-size": undefined,
+                              "data-variant": undefined,
+                              "id": "root_my-field__description",
+                              "size": undefined,
+                              "style": {
+                                "marginBottom": "var(--mantine-spacing-sm)",
+                                "marginTop": "calc(0.1875rem * var(--mantine-scale))",
+                              },
+                            },
+                            "type": "p",
+                            Symbol(cleaned): true,
+                          },
                         ],
                         "props": {
-                          "className": "form-group field field-string",
+                          "className": "rjsf-field rjsf-field-string",
                           "style": undefined,
                         },
                         "type": "div",
@@ -1187,11 +1646,13 @@ exports[`single fields field with description 1`] = `
                   },
                 ],
                 "props": {
-                  "className": "m_2415a157 __m__-rck",
+                  "className": "m_2415a157 __m__-rec",
                   "data-size": undefined,
                   "data-variant": undefined,
                   "size": undefined,
-                  "style": {},
+                  "style": {
+                    "marginBottom": "var(--mantine-spacing-sm)",
+                  },
                 },
                 "type": "div",
                 Symbol(cleaned): true,
@@ -1210,7 +1671,7 @@ exports[`single fields field with description 1`] = `
           },
         ],
         "props": {
-          "className": "form-group field field-object",
+          "className": "rjsf-field rjsf-field-object",
           "style": undefined,
         },
         "type": "div",
@@ -1300,7 +1761,259 @@ exports[`single fields field with description in uiSchema 1`] = `
                 "children": null,
                 "props": {
                   "dangerouslySetInnerHTML": {
-                    "__html": ".__m__-rcv{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
+                    "__html": ".__m__-reo{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
+                  },
+                  "data-mantine-styles": "inline",
+                  "nonce": undefined,
+                },
+                "type": "style",
+                Symbol(cleaned): true,
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "children": [
+                              {
+                                "children": [
+                                  "my-field",
+                                ],
+                                "props": {
+                                  "className": "m_8fdc1311",
+                                  "data-size": undefined,
+                                  "data-variant": undefined,
+                                  "htmlFor": "root_my-field",
+                                  "id": "root_my-field-label",
+                                  "onMouseDown": [Function],
+                                  "size": undefined,
+                                  "style": {},
+                                },
+                                "type": "label",
+                                Symbol(cleaned): true,
+                              },
+                              {
+                                "children": [
+                                  "some other description",
+                                ],
+                                "props": {
+                                  "className": "m_fe47ce59",
+                                  "data-size": undefined,
+                                  "data-variant": undefined,
+                                  "id": "root_my-field-description",
+                                  "size": undefined,
+                                  "style": {},
+                                },
+                                "type": "p",
+                                Symbol(cleaned): true,
+                              },
+                              {
+                                "children": [
+                                  {
+                                    "children": null,
+                                    "props": {
+                                      "aria-describedby": "root_my-field-description",
+                                      "aria-invalid": false,
+                                      "autoFocus": false,
+                                      "className": "m_8fb7ebe7",
+                                      "data-size": undefined,
+                                      "data-variant": "default",
+                                      "disabled": false,
+                                      "id": "root_my-field",
+                                      "name": "root_my-field",
+                                      "onBlur": [Function],
+                                      "onChange": [Function],
+                                      "onFocus": [Function],
+                                      "placeholder": "",
+                                      "required": false,
+                                      "size": undefined,
+                                      "style": {},
+                                      "type": "text",
+                                    },
+                                    "type": "input",
+                                    Symbol(cleaned): true,
+                                  },
+                                ],
+                                "props": {
+                                  "className": "m_6c018570",
+                                  "data-size": undefined,
+                                  "data-variant": "default",
+                                  "size": undefined,
+                                  "style": {
+                                    "--input-margin-top": "calc(var(--mantine-spacing-xs) / 2)",
+                                  },
+                                },
+                                "type": "div",
+                                Symbol(cleaned): true,
+                              },
+                            ],
+                            "props": {
+                              "className": "m_46b77525",
+                              "data-size": undefined,
+                              "data-variant": undefined,
+                              "size": undefined,
+                              "style": {},
+                            },
+                            "type": "div",
+                            Symbol(cleaned): true,
+                          },
+                          {
+                            "children": [
+                              "some other description",
+                            ],
+                            "props": {
+                              "className": "m_b6d8b162",
+                              "data-size": undefined,
+                              "data-variant": undefined,
+                              "id": "root_my-field__description",
+                              "size": undefined,
+                              "style": {
+                                "marginBottom": "var(--mantine-spacing-sm)",
+                                "marginTop": "calc(0.1875rem * var(--mantine-scale))",
+                              },
+                            },
+                            "type": "p",
+                            Symbol(cleaned): true,
+                          },
+                        ],
+                        "props": {
+                          "className": "rjsf-field rjsf-field-string",
+                          "style": undefined,
+                        },
+                        "type": "div",
+                        Symbol(cleaned): true,
+                      },
+                    ],
+                    "props": {
+                      "className": "",
+                      "data-size": undefined,
+                      "data-variant": undefined,
+                      "size": undefined,
+                      "style": {},
+                    },
+                    "type": "div",
+                    Symbol(cleaned): true,
+                  },
+                ],
+                "props": {
+                  "className": "m_2415a157 __m__-reo",
+                  "data-size": undefined,
+                  "data-variant": undefined,
+                  "size": undefined,
+                  "style": {
+                    "marginBottom": "var(--mantine-spacing-sm)",
+                  },
+                },
+                "type": "div",
+                Symbol(cleaned): true,
+              },
+            ],
+            "props": {
+              "className": "m_7485cace",
+              "data-size": undefined,
+              "data-variant": undefined,
+              "id": "root",
+              "size": undefined,
+              "style": {},
+            },
+            "type": "div",
+            Symbol(cleaned): true,
+          },
+        ],
+        "props": {
+          "className": "rjsf-field rjsf-field-object",
+          "style": undefined,
+        },
+        "type": "div",
+        Symbol(cleaned): true,
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  "Submit",
+                ],
+                "props": {
+                  "className": "m_811560b9",
+                  "data-size": undefined,
+                  "data-variant": undefined,
+                  "size": undefined,
+                  "style": {},
+                },
+                "type": "span",
+                Symbol(cleaned): true,
+              },
+            ],
+            "props": {
+              "className": "m_80f1301b",
+              "style": {},
+            },
+            "type": "span",
+            Symbol(cleaned): true,
+          },
+        ],
+        "props": {
+          "className": "m_77c9d27d m_87cf2631",
+          "data-size": undefined,
+          "data-variant": "filled",
+          "size": undefined,
+          "style": {
+            "--button-bd": "calc(0.0625rem * var(--mantine-scale)) solid transparent",
+            "--button-bg": "var(--mantine-color-blue-filled)",
+            "--button-color": "var(--mantine-color-white)",
+            "--button-hover": "var(--mantine-color-blue-filled-hover)",
+          },
+          "type": "submit",
+        },
+        "type": "button",
+        Symbol(cleaned): true,
+      },
+    ],
+    "props": {
+      "acceptCharset": undefined,
+      "action": undefined,
+      "as": undefined,
+      "autoComplete": undefined,
+      "className": "rjsf",
+      "encType": undefined,
+      "id": undefined,
+      "method": undefined,
+      "name": undefined,
+      "noValidate": false,
+      "onSubmit": [Function],
+      "target": undefined,
+    },
+    "type": "form",
+    Symbol(cleaned): true,
+  },
+]
+`;
+
+exports[`single fields field with markdown description 1`] = `
+[
+  <style
+    dangerouslySetInnerHTML={
+      {
+        "__html": "@media (max-width: 35.99375em) {.mantine-visible-from-xs {display: none !important;}}@media (min-width: 36em) {.mantine-hidden-from-xs {display: none !important;}}@media (max-width: 47.99375em) {.mantine-visible-from-sm {display: none !important;}}@media (min-width: 48em) {.mantine-hidden-from-sm {display: none !important;}}@media (max-width: 61.99375em) {.mantine-visible-from-md {display: none !important;}}@media (min-width: 62em) {.mantine-hidden-from-md {display: none !important;}}@media (max-width: 74.99375em) {.mantine-visible-from-lg {display: none !important;}}@media (min-width: 75em) {.mantine-hidden-from-lg {display: none !important;}}@media (max-width: 87.99375em) {.mantine-visible-from-xl {display: none !important;}}@media (min-width: 88em) {.mantine-hidden-from-xl {display: none !important;}}",
+      }
+    }
+    data-mantine-styles="classes"
+  />,
+  {
+    "children": [
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": null,
+                "props": {
+                  "dangerouslySetInnerHTML": {
+                    "__html": ".__m__-rf5{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
                   },
                   "data-mantine-styles": "inline",
                   "nonce": undefined,
@@ -1381,9 +2094,47 @@ exports[`single fields field with description in uiSchema 1`] = `
                             "type": "div",
                             Symbol(cleaned): true,
                           },
+                          {
+                            "children": [
+                              {
+                                "children": [
+                                  "some ",
+                                  {
+                                    "children": [
+                                      "Rich",
+                                    ],
+                                    "props": {
+                                      "className": undefined,
+                                    },
+                                    "type": "strong",
+                                    Symbol(cleaned): true,
+                                  },
+                                  " description",
+                                ],
+                                "props": {
+                                  "data-testid": undefined,
+                                },
+                                "type": "span",
+                                Symbol(cleaned): true,
+                              },
+                            ],
+                            "props": {
+                              "className": "m_b6d8b162",
+                              "data-size": undefined,
+                              "data-variant": undefined,
+                              "id": "root_my-field__description",
+                              "size": undefined,
+                              "style": {
+                                "marginBottom": "var(--mantine-spacing-sm)",
+                                "marginTop": "calc(0.1875rem * var(--mantine-scale))",
+                              },
+                            },
+                            "type": "p",
+                            Symbol(cleaned): true,
+                          },
                         ],
                         "props": {
-                          "className": "form-group field field-string",
+                          "className": "rjsf-field rjsf-field-string",
                           "style": undefined,
                         },
                         "type": "div",
@@ -1402,11 +2153,13 @@ exports[`single fields field with description in uiSchema 1`] = `
                   },
                 ],
                 "props": {
-                  "className": "m_2415a157 __m__-rcv",
+                  "className": "m_2415a157 __m__-rf5",
                   "data-size": undefined,
                   "data-variant": undefined,
                   "size": undefined,
-                  "style": {},
+                  "style": {
+                    "marginBottom": "var(--mantine-spacing-sm)",
+                  },
                 },
                 "type": "div",
                 Symbol(cleaned): true,
@@ -1425,7 +2178,269 @@ exports[`single fields field with description in uiSchema 1`] = `
           },
         ],
         "props": {
-          "className": "form-group field field-object",
+          "className": "rjsf-field rjsf-field-object",
+          "style": undefined,
+        },
+        "type": "div",
+        Symbol(cleaned): true,
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  "Submit",
+                ],
+                "props": {
+                  "className": "m_811560b9",
+                  "data-size": undefined,
+                  "data-variant": undefined,
+                  "size": undefined,
+                  "style": {},
+                },
+                "type": "span",
+                Symbol(cleaned): true,
+              },
+            ],
+            "props": {
+              "className": "m_80f1301b",
+              "style": {},
+            },
+            "type": "span",
+            Symbol(cleaned): true,
+          },
+        ],
+        "props": {
+          "className": "m_77c9d27d m_87cf2631",
+          "data-size": undefined,
+          "data-variant": "filled",
+          "size": undefined,
+          "style": {
+            "--button-bd": "calc(0.0625rem * var(--mantine-scale)) solid transparent",
+            "--button-bg": "var(--mantine-color-blue-filled)",
+            "--button-color": "var(--mantine-color-white)",
+            "--button-hover": "var(--mantine-color-blue-filled-hover)",
+          },
+          "type": "submit",
+        },
+        "type": "button",
+        Symbol(cleaned): true,
+      },
+    ],
+    "props": {
+      "acceptCharset": undefined,
+      "action": undefined,
+      "as": undefined,
+      "autoComplete": undefined,
+      "className": "rjsf",
+      "encType": undefined,
+      "id": undefined,
+      "method": undefined,
+      "name": undefined,
+      "noValidate": false,
+      "onSubmit": [Function],
+      "target": undefined,
+    },
+    "type": "form",
+    Symbol(cleaned): true,
+  },
+]
+`;
+
+exports[`single fields field with markdown description in uiSchema 1`] = `
+[
+  <style
+    dangerouslySetInnerHTML={
+      {
+        "__html": "@media (max-width: 35.99375em) {.mantine-visible-from-xs {display: none !important;}}@media (min-width: 36em) {.mantine-hidden-from-xs {display: none !important;}}@media (max-width: 47.99375em) {.mantine-visible-from-sm {display: none !important;}}@media (min-width: 48em) {.mantine-hidden-from-sm {display: none !important;}}@media (max-width: 61.99375em) {.mantine-visible-from-md {display: none !important;}}@media (min-width: 62em) {.mantine-hidden-from-md {display: none !important;}}@media (max-width: 74.99375em) {.mantine-visible-from-lg {display: none !important;}}@media (min-width: 75em) {.mantine-hidden-from-lg {display: none !important;}}@media (max-width: 87.99375em) {.mantine-visible-from-xl {display: none !important;}}@media (min-width: 88em) {.mantine-hidden-from-xl {display: none !important;}}",
+      }
+    }
+    data-mantine-styles="classes"
+  />,
+  {
+    "children": [
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": null,
+                "props": {
+                  "dangerouslySetInnerHTML": {
+                    "__html": ".__m__-rfh{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
+                  },
+                  "data-mantine-styles": "inline",
+                  "nonce": undefined,
+                },
+                "type": "style",
+                Symbol(cleaned): true,
+              },
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "children": [
+                              {
+                                "children": [
+                                  "my-field",
+                                ],
+                                "props": {
+                                  "className": "m_8fdc1311",
+                                  "data-size": undefined,
+                                  "data-variant": undefined,
+                                  "htmlFor": "root_my-field",
+                                  "id": "root_my-field-label",
+                                  "onMouseDown": [Function],
+                                  "size": undefined,
+                                  "style": {},
+                                },
+                                "type": "label",
+                                Symbol(cleaned): true,
+                              },
+                              {
+                                "children": [
+                                  "some other description",
+                                ],
+                                "props": {
+                                  "className": "m_fe47ce59",
+                                  "data-size": undefined,
+                                  "data-variant": undefined,
+                                  "id": "root_my-field-description",
+                                  "size": undefined,
+                                  "style": {},
+                                },
+                                "type": "p",
+                                Symbol(cleaned): true,
+                              },
+                              {
+                                "children": [
+                                  {
+                                    "children": null,
+                                    "props": {
+                                      "aria-describedby": "root_my-field-description",
+                                      "aria-invalid": false,
+                                      "autoFocus": false,
+                                      "className": "m_8fb7ebe7",
+                                      "data-size": undefined,
+                                      "data-variant": "default",
+                                      "disabled": false,
+                                      "id": "root_my-field",
+                                      "name": "root_my-field",
+                                      "onBlur": [Function],
+                                      "onChange": [Function],
+                                      "onFocus": [Function],
+                                      "placeholder": "",
+                                      "required": false,
+                                      "size": undefined,
+                                      "style": {},
+                                      "type": "text",
+                                    },
+                                    "type": "input",
+                                    Symbol(cleaned): true,
+                                  },
+                                ],
+                                "props": {
+                                  "className": "m_6c018570",
+                                  "data-size": undefined,
+                                  "data-variant": "default",
+                                  "size": undefined,
+                                  "style": {
+                                    "--input-margin-top": "calc(var(--mantine-spacing-xs) / 2)",
+                                  },
+                                },
+                                "type": "div",
+                                Symbol(cleaned): true,
+                              },
+                            ],
+                            "props": {
+                              "className": "m_46b77525",
+                              "data-size": undefined,
+                              "data-variant": undefined,
+                              "size": undefined,
+                              "style": {},
+                            },
+                            "type": "div",
+                            Symbol(cleaned): true,
+                          },
+                          {
+                            "children": [
+                              {
+                                "children": [
+                                  "some other description",
+                                ],
+                                "props": {
+                                  "className": undefined,
+                                  "data-testid": undefined,
+                                },
+                                "type": "span",
+                                Symbol(cleaned): true,
+                              },
+                            ],
+                            "props": {
+                              "className": "m_b6d8b162",
+                              "data-size": undefined,
+                              "data-variant": undefined,
+                              "id": "root_my-field__description",
+                              "size": undefined,
+                              "style": {
+                                "marginBottom": "var(--mantine-spacing-sm)",
+                                "marginTop": "calc(0.1875rem * var(--mantine-scale))",
+                              },
+                            },
+                            "type": "p",
+                            Symbol(cleaned): true,
+                          },
+                        ],
+                        "props": {
+                          "className": "rjsf-field rjsf-field-string",
+                          "style": undefined,
+                        },
+                        "type": "div",
+                        Symbol(cleaned): true,
+                      },
+                    ],
+                    "props": {
+                      "className": "",
+                      "data-size": undefined,
+                      "data-variant": undefined,
+                      "size": undefined,
+                      "style": {},
+                    },
+                    "type": "div",
+                    Symbol(cleaned): true,
+                  },
+                ],
+                "props": {
+                  "className": "m_2415a157 __m__-rfh",
+                  "data-size": undefined,
+                  "data-variant": undefined,
+                  "size": undefined,
+                  "style": {
+                    "marginBottom": "var(--mantine-spacing-sm)",
+                  },
+                },
+                "type": "div",
+                Symbol(cleaned): true,
+              },
+            ],
+            "props": {
+              "className": "m_7485cace",
+              "data-size": undefined,
+              "data-variant": undefined,
+              "id": "root",
+              "size": undefined,
+              "style": {},
+            },
+            "type": "div",
+            Symbol(cleaned): true,
+          },
+        ],
+        "props": {
+          "className": "rjsf-field rjsf-field-object",
           "style": undefined,
         },
         "type": "div",
@@ -1628,7 +2643,7 @@ exports[`single fields format color 1`] = `
           },
         ],
         "props": {
-          "className": "form-group field field-string",
+          "className": "rjsf-field rjsf-field-string",
           "style": undefined,
         },
         "type": "div",
@@ -1733,6 +2748,7 @@ exports[`single fields format date 1`] = `
                       "onChange": [Function],
                       "onClick": [Function],
                       "onFocus": [Function],
+                      "onKeyDown": [Function],
                       "required": undefined,
                       "size": undefined,
                       "style": {},
@@ -1776,7 +2792,7 @@ exports[`single fields format date 1`] = `
           },
         ],
         "props": {
-          "className": "form-group field field-string",
+          "className": "rjsf-field rjsf-field-string",
           "style": undefined,
         },
         "type": "div",
@@ -1881,6 +2897,7 @@ exports[`single fields format datetime 1`] = `
                       "onChange": [Function],
                       "onClick": [Function],
                       "onFocus": [Function],
+                      "onKeyDown": [Function],
                       "required": undefined,
                       "size": undefined,
                       "style": {},
@@ -1924,7 +2941,7 @@ exports[`single fields format datetime 1`] = `
           },
         ],
         "props": {
-          "className": "form-group field field-string",
+          "className": "rjsf-field rjsf-field-string",
           "style": undefined,
         },
         "type": "div",
@@ -2061,7 +3078,7 @@ exports[`single fields format time 1`] = `
           },
         ],
         "props": {
-          "className": "form-group field field-string",
+          "className": "rjsf-field rjsf-field-string",
           "style": undefined,
         },
         "type": "div",
@@ -2419,26 +3436,6 @@ exports[`single fields help and error display 1`] = `
           },
           {
             "children": [
-              "help me!",
-            ],
-            "props": {
-              "className": "m_b6d8b162",
-              "data-size": "sm",
-              "data-variant": undefined,
-              "id": "root__help",
-              "size": undefined,
-              "style": {
-                "--text-fz": "var(--mantine-font-size-sm)",
-                "--text-lh": "var(--mantine-line-height-sm)",
-                "color": "var(--mantine-color-dimmed)",
-                "marginBlock": "var(--mantine-spacing-xs)",
-              },
-            },
-            "type": "p",
-            Symbol(cleaned): true,
-          },
-          {
-            "children": [
               {
                 "children": [
                   {
@@ -2503,9 +3500,29 @@ exports[`single fields help and error display 1`] = `
             "type": "div",
             Symbol(cleaned): true,
           },
+          {
+            "children": [
+              "help me!",
+            ],
+            "props": {
+              "className": "m_b6d8b162",
+              "data-size": "sm",
+              "data-variant": undefined,
+              "id": "root__help",
+              "size": undefined,
+              "style": {
+                "--text-fz": "var(--mantine-font-size-sm)",
+                "--text-lh": "var(--mantine-line-height-sm)",
+                "color": "var(--mantine-color-dimmed)",
+                "marginBlock": "var(--mantine-spacing-xs)",
+              },
+            },
+            "type": "p",
+            Symbol(cleaned): true,
+          },
         ],
         "props": {
-          "className": "form-group field field-string field-error has-error has-danger",
+          "className": "rjsf-field rjsf-field-string rjsf-field-error",
           "style": undefined,
         },
         "type": "div",
@@ -2595,7 +3612,7 @@ exports[`single fields hidden field 1`] = `
                 "children": null,
                 "props": {
                   "dangerouslySetInnerHTML": {
-                    "__html": ".__m__-rcf{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
+                    "__html": ".__m__-re7{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
                   },
                   "data-mantine-styles": "inline",
                   "nonce": undefined,
@@ -2606,11 +3623,13 @@ exports[`single fields hidden field 1`] = `
               {
                 "children": null,
                 "props": {
-                  "className": "m_2415a157 __m__-rcf",
+                  "className": "m_2415a157 __m__-re7",
                   "data-size": undefined,
                   "data-variant": undefined,
                   "size": undefined,
-                  "style": {},
+                  "style": {
+                    "marginBottom": "var(--mantine-spacing-sm)",
+                  },
                 },
                 "type": "div",
                 Symbol(cleaned): true,
@@ -2629,7 +3648,7 @@ exports[`single fields hidden field 1`] = `
           },
         ],
         "props": {
-          "className": "form-group field field-object",
+          "className": "rjsf-field rjsf-field-object",
           "style": undefined,
         },
         "type": "div",
@@ -2765,7 +3784,7 @@ exports[`single fields hidden label 1`] = `
           },
         ],
         "props": {
-          "className": "form-group field field-string",
+          "className": "rjsf-field rjsf-field-string",
           "style": undefined,
         },
         "type": "div",
@@ -2850,7 +3869,7 @@ exports[`single fields null field 1`] = `
       {
         "children": null,
         "props": {
-          "className": "form-group field field-null",
+          "className": "rjsf-field rjsf-field-null",
           "style": undefined,
         },
         "type": "div",
@@ -3113,7 +4132,7 @@ exports[`single fields number field 0 1`] = `
           },
         ],
         "props": {
-          "className": "form-group field field-number",
+          "className": "rjsf-field rjsf-field-number",
           "style": undefined,
         },
         "type": "div",
@@ -3376,7 +4395,7 @@ exports[`single fields number field 1`] = `
           },
         ],
         "props": {
-          "className": "form-group field field-number",
+          "className": "rjsf-field rjsf-field-number",
           "style": undefined,
         },
         "type": "div",
@@ -3469,7 +4488,7 @@ exports[`single fields password field 1`] = `
                       {
                         "children": null,
                         "props": {
-                          "aria-describedby": "root__error root__description root__help",
+                          "aria-describedby": undefined,
                           "autoComplete": "off",
                           "autoFocus": false,
                           "className": "m_f2d85dd2",
@@ -3603,7 +4622,7 @@ exports[`single fields password field 1`] = `
           },
         ],
         "props": {
-          "className": "form-group field field-string",
+          "className": "rjsf-field rjsf-field-string",
           "style": undefined,
         },
         "type": "div",
@@ -3943,7 +4962,7 @@ exports[`single fields radio field 1`] = `
                       },
                     ],
                     "props": {
-                      "className": "m_8bffd616 __m__-rbn",
+                      "className": "m_8bffd616 __m__-rdf",
                       "data-size": undefined,
                       "data-variant": undefined,
                       "size": undefined,
@@ -3972,16 +4991,6 @@ exports[`single fields radio field 1`] = `
               "className": "m_46b77525",
               "data-size": undefined,
               "data-variant": undefined,
-              "enumOptions": [
-                {
-                  "label": "Yes",
-                  "value": true,
-                },
-                {
-                  "label": "No",
-                  "value": false,
-                },
-              ],
               "size": undefined,
               "style": {},
             },
@@ -3990,7 +4999,7 @@ exports[`single fields radio field 1`] = `
           },
         ],
         "props": {
-          "className": "form-group field field-boolean",
+          "className": "rjsf-field rjsf-field-boolean",
           "style": undefined,
         },
         "type": "div",
@@ -4176,7 +5185,7 @@ exports[`single fields schema examples 1`] = `
           },
         ],
         "props": {
-          "className": "form-group field field-string",
+          "className": "rjsf-field rjsf-field-string",
           "style": undefined,
         },
         "type": "div",
@@ -4276,16 +5285,6 @@ exports[`single fields select field 1`] = `
                       "data-size": undefined,
                       "data-variant": "default",
                       "disabled": false,
-                      "enumOptions": [
-                        {
-                          "label": "foo",
-                          "value": "foo",
-                        },
-                        {
-                          "label": "bar",
-                          "value": "bar",
-                        },
-                      ],
                       "id": "root",
                       "onBlur": [Function],
                       "onChange": [Function],
@@ -4441,7 +5440,6 @@ exports[`single fields select field 1`] = `
                                     ],
                                     "props": {
                                       "style": {
-                                        "display": "table",
                                         "minWidth": "100%",
                                       },
                                     },
@@ -4451,10 +5449,12 @@ exports[`single fields select field 1`] = `
                                 ],
                                 "props": {
                                   "className": "m_c0783ff9",
+                                  "data-horizontal-hidden": undefined,
                                   "data-offset-scrollbars": "y",
                                   "data-scrollbars": "xy",
                                   "data-size": undefined,
                                   "data-variant": undefined,
+                                  "data-vertical-hidden": undefined,
                                   "onScroll": [Function],
                                   "size": undefined,
                                   "style": {
@@ -4609,7 +5609,7 @@ exports[`single fields select field 1`] = `
           },
         ],
         "props": {
-          "className": "form-group field field-string",
+          "className": "rjsf-field rjsf-field-string",
           "style": undefined,
         },
         "type": "div",
@@ -4714,24 +5714,6 @@ exports[`single fields select field multiple choice 1`] = `
                               "data-type": "visible",
                               "data-variant": undefined,
                               "disabled": false,
-                              "enumOptions": [
-                                {
-                                  "label": "foo",
-                                  "value": "foo",
-                                },
-                                {
-                                  "label": "bar",
-                                  "value": "bar",
-                                },
-                                {
-                                  "label": "fuzz",
-                                  "value": "fuzz",
-                                },
-                                {
-                                  "label": "qux",
-                                  "value": "qux",
-                                },
-                              ],
                               "id": "root",
                               "onBlur": [Function],
                               "onChange": [Function],
@@ -4970,7 +5952,6 @@ exports[`single fields select field multiple choice 1`] = `
                                     ],
                                     "props": {
                                       "style": {
-                                        "display": "table",
                                         "minWidth": "100%",
                                       },
                                     },
@@ -4980,10 +5961,12 @@ exports[`single fields select field multiple choice 1`] = `
                                 ],
                                 "props": {
                                   "className": "m_c0783ff9",
+                                  "data-horizontal-hidden": undefined,
                                   "data-offset-scrollbars": "y",
                                   "data-scrollbars": "xy",
                                   "data-size": undefined,
                                   "data-variant": undefined,
+                                  "data-vertical-hidden": undefined,
                                   "onScroll": [Function],
                                   "size": undefined,
                                   "style": {
@@ -5138,7 +6121,7 @@ exports[`single fields select field multiple choice 1`] = `
           },
         ],
         "props": {
-          "className": "form-group field field-array",
+          "className": "rjsf-field rjsf-field-array",
           "style": undefined,
         },
         "type": "div",
@@ -5243,27 +6226,6 @@ exports[`single fields select field multiple choice enumDisabled 1`] = `
                               "data-type": "visible",
                               "data-variant": undefined,
                               "disabled": false,
-                              "enumDisabled": [
-                                "bar",
-                              ],
-                              "enumOptions": [
-                                {
-                                  "label": "foo",
-                                  "value": "foo",
-                                },
-                                {
-                                  "label": "bar",
-                                  "value": "bar",
-                                },
-                                {
-                                  "label": "fuzz",
-                                  "value": "fuzz",
-                                },
-                                {
-                                  "label": "qux",
-                                  "value": "qux",
-                                },
-                              ],
                               "id": "root",
                               "onBlur": [Function],
                               "onChange": [Function],
@@ -5400,7 +6362,7 @@ exports[`single fields select field multiple choice enumDisabled 1`] = `
                                           "data-combobox-option": true,
                                           "data-size": undefined,
                                           "data-variant": undefined,
-                                          "id": ":r7a:",
+                                          "id": ":r8g:",
                                           "onClick": [Function],
                                           "onMouseDown": [Function],
                                           "onMouseOver": [Function],
@@ -5430,7 +6392,7 @@ exports[`single fields select field multiple choice enumDisabled 1`] = `
                                           "data-combobox-option": true,
                                           "data-size": undefined,
                                           "data-variant": undefined,
-                                          "id": ":r7c:",
+                                          "id": ":r8i:",
                                           "onClick": [Function],
                                           "onMouseDown": [Function],
                                           "onMouseOver": [Function],
@@ -5459,7 +6421,7 @@ exports[`single fields select field multiple choice enumDisabled 1`] = `
                                           "data-combobox-option": true,
                                           "data-size": undefined,
                                           "data-variant": undefined,
-                                          "id": ":r7e:",
+                                          "id": ":r8k:",
                                           "onClick": [Function],
                                           "onMouseDown": [Function],
                                           "onMouseOver": [Function],
@@ -5488,7 +6450,7 @@ exports[`single fields select field multiple choice enumDisabled 1`] = `
                                           "data-combobox-option": true,
                                           "data-size": undefined,
                                           "data-variant": undefined,
-                                          "id": ":r7g:",
+                                          "id": ":r8m:",
                                           "onClick": [Function],
                                           "onMouseDown": [Function],
                                           "onMouseOver": [Function],
@@ -5503,7 +6465,6 @@ exports[`single fields select field multiple choice enumDisabled 1`] = `
                                     ],
                                     "props": {
                                       "style": {
-                                        "display": "table",
                                         "minWidth": "100%",
                                       },
                                     },
@@ -5513,10 +6474,12 @@ exports[`single fields select field multiple choice enumDisabled 1`] = `
                                 ],
                                 "props": {
                                   "className": "m_c0783ff9",
+                                  "data-horizontal-hidden": undefined,
                                   "data-offset-scrollbars": "y",
                                   "data-scrollbars": "xy",
                                   "data-size": undefined,
                                   "data-variant": undefined,
+                                  "data-vertical-hidden": undefined,
                                   "onScroll": [Function],
                                   "size": undefined,
                                   "style": {
@@ -5671,7 +6634,7 @@ exports[`single fields select field multiple choice enumDisabled 1`] = `
           },
         ],
         "props": {
-          "className": "form-group field field-array",
+          "className": "rjsf-field rjsf-field-array",
           "style": undefined,
         },
         "type": "div",
@@ -6247,7 +7210,7 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
                       },
                     ],
                     "props": {
-                      "className": "m_8bffd616 __m__-r7m",
+                      "className": "m_8bffd616 __m__-r8s",
                       "data-size": undefined,
                       "data-variant": undefined,
                       "size": undefined,
@@ -6276,27 +7239,6 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
               "className": "m_46b77525",
               "data-size": undefined,
               "data-variant": undefined,
-              "enumDisabled": [
-                "bar",
-              ],
-              "enumOptions": [
-                {
-                  "label": "foo",
-                  "value": "foo",
-                },
-                {
-                  "label": "bar",
-                  "value": "bar",
-                },
-                {
-                  "label": "fuzz",
-                  "value": "fuzz",
-                },
-                {
-                  "label": "qux",
-                  "value": "qux",
-                },
-              ],
               "size": undefined,
               "style": {},
             },
@@ -6305,7 +7247,7 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
           },
         ],
         "props": {
-          "className": "form-group field field-array",
+          "className": "rjsf-field rjsf-field-array",
           "style": undefined,
         },
         "type": "div",
@@ -6548,24 +7490,6 @@ exports[`single fields select field multiple choice formData 1`] = `
                               "data-type": "visible",
                               "data-variant": undefined,
                               "disabled": false,
-                              "enumOptions": [
-                                {
-                                  "label": "foo",
-                                  "value": "foo",
-                                },
-                                {
-                                  "label": "bar",
-                                  "value": "bar",
-                                },
-                                {
-                                  "label": "fuzz",
-                                  "value": "fuzz",
-                                },
-                                {
-                                  "label": "qux",
-                                  "value": "qux",
-                                },
-                              ],
                               "id": "root",
                               "onBlur": [Function],
                               "onChange": [Function],
@@ -6729,7 +7653,7 @@ exports[`single fields select field multiple choice formData 1`] = `
                                           "data-combobox-option": true,
                                           "data-size": undefined,
                                           "data-variant": undefined,
-                                          "id": ":r9s:",
+                                          "id": ":rb2:",
                                           "onClick": [Function],
                                           "onMouseDown": [Function],
                                           "onMouseOver": [Function],
@@ -6785,7 +7709,7 @@ exports[`single fields select field multiple choice formData 1`] = `
                                           "data-combobox-option": true,
                                           "data-size": undefined,
                                           "data-variant": undefined,
-                                          "id": ":r9u:",
+                                          "id": ":rb4:",
                                           "onClick": [Function],
                                           "onMouseDown": [Function],
                                           "onMouseOver": [Function],
@@ -6814,7 +7738,7 @@ exports[`single fields select field multiple choice formData 1`] = `
                                           "data-combobox-option": true,
                                           "data-size": undefined,
                                           "data-variant": undefined,
-                                          "id": ":ra0:",
+                                          "id": ":rb6:",
                                           "onClick": [Function],
                                           "onMouseDown": [Function],
                                           "onMouseOver": [Function],
@@ -6843,7 +7767,7 @@ exports[`single fields select field multiple choice formData 1`] = `
                                           "data-combobox-option": true,
                                           "data-size": undefined,
                                           "data-variant": undefined,
-                                          "id": ":ra2:",
+                                          "id": ":rb8:",
                                           "onClick": [Function],
                                           "onMouseDown": [Function],
                                           "onMouseOver": [Function],
@@ -6858,7 +7782,6 @@ exports[`single fields select field multiple choice formData 1`] = `
                                     ],
                                     "props": {
                                       "style": {
-                                        "display": "table",
                                         "minWidth": "100%",
                                       },
                                     },
@@ -6868,10 +7791,12 @@ exports[`single fields select field multiple choice formData 1`] = `
                                 ],
                                 "props": {
                                   "className": "m_c0783ff9",
+                                  "data-horizontal-hidden": undefined,
                                   "data-offset-scrollbars": "y",
                                   "data-scrollbars": "xy",
                                   "data-size": undefined,
                                   "data-variant": undefined,
+                                  "data-vertical-hidden": undefined,
                                   "onScroll": [Function],
                                   "size": undefined,
                                   "style": {
@@ -7026,7 +7951,7 @@ exports[`single fields select field multiple choice formData 1`] = `
           },
         ],
         "props": {
-          "className": "form-group field field-array",
+          "className": "rjsf-field rjsf-field-array",
           "style": undefined,
         },
         "type": "div",
@@ -7131,38 +8056,6 @@ exports[`single fields select field multiple choice with labels 1`] = `
                               "data-type": "visible",
                               "data-variant": undefined,
                               "disabled": false,
-                              "enumOptions": [
-                                {
-                                  "label": "Blue",
-                                  "schema": {
-                                    "enum": [
-                                      1,
-                                    ],
-                                    "title": "Blue",
-                                  },
-                                  "value": 1,
-                                },
-                                {
-                                  "label": "Red",
-                                  "schema": {
-                                    "enum": [
-                                      2,
-                                    ],
-                                    "title": "Red",
-                                  },
-                                  "value": 2,
-                                },
-                                {
-                                  "label": "Green",
-                                  "schema": {
-                                    "enum": [
-                                      3,
-                                    ],
-                                    "title": "Green",
-                                  },
-                                  "value": 3,
-                                },
-                              ],
                               "id": "root",
                               "onBlur": [Function],
                               "onChange": [Function],
@@ -7372,7 +8265,6 @@ exports[`single fields select field multiple choice with labels 1`] = `
                                     ],
                                     "props": {
                                       "style": {
-                                        "display": "table",
                                         "minWidth": "100%",
                                       },
                                     },
@@ -7382,10 +8274,12 @@ exports[`single fields select field multiple choice with labels 1`] = `
                                 ],
                                 "props": {
                                   "className": "m_c0783ff9",
+                                  "data-horizontal-hidden": undefined,
                                   "data-offset-scrollbars": "y",
                                   "data-scrollbars": "xy",
                                   "data-size": undefined,
                                   "data-variant": undefined,
+                                  "data-vertical-hidden": undefined,
                                   "onScroll": [Function],
                                   "size": undefined,
                                   "style": {
@@ -7540,7 +8434,7 @@ exports[`single fields select field multiple choice with labels 1`] = `
           },
         ],
         "props": {
-          "className": "form-group field field-array",
+          "className": "rjsf-field rjsf-field-array",
           "style": undefined,
         },
         "type": "div",
@@ -7640,19 +8534,6 @@ exports[`single fields select field single choice enumDisabled 1`] = `
                       "data-size": undefined,
                       "data-variant": "default",
                       "disabled": false,
-                      "enumDisabled": [
-                        "bar",
-                      ],
-                      "enumOptions": [
-                        {
-                          "label": "foo",
-                          "value": "foo",
-                        },
-                        {
-                          "label": "bar",
-                          "value": "bar",
-                        },
-                      ],
                       "id": "root",
                       "onBlur": [Function],
                       "onChange": [Function],
@@ -7809,7 +8690,6 @@ exports[`single fields select field single choice enumDisabled 1`] = `
                                     ],
                                     "props": {
                                       "style": {
-                                        "display": "table",
                                         "minWidth": "100%",
                                       },
                                     },
@@ -7819,10 +8699,12 @@ exports[`single fields select field single choice enumDisabled 1`] = `
                                 ],
                                 "props": {
                                   "className": "m_c0783ff9",
+                                  "data-horizontal-hidden": undefined,
                                   "data-offset-scrollbars": "y",
                                   "data-scrollbars": "xy",
                                   "data-size": undefined,
                                   "data-variant": undefined,
+                                  "data-vertical-hidden": undefined,
                                   "onScroll": [Function],
                                   "size": undefined,
                                   "style": {
@@ -7977,7 +8859,7 @@ exports[`single fields select field single choice enumDisabled 1`] = `
           },
         ],
         "props": {
-          "className": "form-group field field-string",
+          "className": "rjsf-field rjsf-field-string",
           "style": undefined,
         },
         "type": "div",
@@ -8346,19 +9228,6 @@ exports[`single fields select field single choice enumDisabled using radio widge
               "className": "m_46b77525",
               "data-size": undefined,
               "data-variant": undefined,
-              "enumDisabled": [
-                "bar",
-              ],
-              "enumOptions": [
-                {
-                  "label": "foo",
-                  "value": "foo",
-                },
-                {
-                  "label": "bar",
-                  "value": "bar",
-                },
-              ],
               "size": undefined,
               "style": {},
             },
@@ -8367,7 +9236,7 @@ exports[`single fields select field single choice enumDisabled using radio widge
           },
         ],
         "props": {
-          "className": "form-group field field-string",
+          "className": "rjsf-field rjsf-field-string",
           "style": undefined,
         },
         "type": "div",
@@ -8437,6 +9306,385 @@ exports[`single fields select field single choice enumDisabled using radio widge
 ]
 `;
 
+exports[`single fields select field single choice form disabled using radio widget 1`] = `
+[
+  <style
+    dangerouslySetInnerHTML={
+      {
+        "__html": "@media (max-width: 35.99375em) {.mantine-visible-from-xs {display: none !important;}}@media (min-width: 36em) {.mantine-hidden-from-xs {display: none !important;}}@media (max-width: 47.99375em) {.mantine-visible-from-sm {display: none !important;}}@media (min-width: 48em) {.mantine-hidden-from-sm {display: none !important;}}@media (max-width: 61.99375em) {.mantine-visible-from-md {display: none !important;}}@media (min-width: 62em) {.mantine-hidden-from-md {display: none !important;}}@media (max-width: 74.99375em) {.mantine-visible-from-lg {display: none !important;}}@media (min-width: 75em) {.mantine-hidden-from-lg {display: none !important;}}@media (max-width: 87.99375em) {.mantine-visible-from-xl {display: none !important;}}@media (min-width: 88em) {.mantine-hidden-from-xl {display: none !important;}}",
+      }
+    }
+    data-mantine-styles="classes"
+  />,
+  {
+    "children": [
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "children": [
+                              {
+                                "children": [
+                                  {
+                                    "children": null,
+                                    "props": {
+                                      "autoFocus": false,
+                                      "checked": false,
+                                      "className": "m_8a3dbb89",
+                                      "data-size": undefined,
+                                      "data-variant": undefined,
+                                      "disabled": false,
+                                      "id": "root-0",
+                                      "name": "root",
+                                      "onBlur": [Function],
+                                      "onChange": [Function],
+                                      "onFocus": [Function],
+                                      "size": undefined,
+                                      "style": {},
+                                      "type": "radio",
+                                      "value": "0",
+                                    },
+                                    "type": "input",
+                                    Symbol(cleaned): true,
+                                  },
+                                  {
+                                    "children": [
+                                      {
+                                        "children": null,
+                                        "props": {
+                                          "cx": "2.5",
+                                          "cy": "2.5",
+                                          "fill": "currentColor",
+                                          "r": "2.5",
+                                        },
+                                        "type": "circle",
+                                        Symbol(cleaned): true,
+                                      },
+                                    ],
+                                    "props": {
+                                      "aria-hidden": true,
+                                      "className": "m_f3ed6b2b",
+                                      "fill": "none",
+                                      "style": {
+                                        "height": undefined,
+                                        "width": undefined,
+                                      },
+                                      "viewBox": "0 0 5 5",
+                                      "xmlns": "http://www.w3.org/2000/svg",
+                                    },
+                                    "type": "svg",
+                                    Symbol(cleaned): true,
+                                  },
+                                ],
+                                "props": {
+                                  "className": "m_89c4f5e4",
+                                  "data-label-position": "right",
+                                  "data-size": undefined,
+                                  "data-variant": undefined,
+                                  "size": undefined,
+                                  "style": {},
+                                },
+                                "type": "div",
+                                Symbol(cleaned): true,
+                              },
+                              {
+                                "children": [
+                                  {
+                                    "children": [
+                                      "foo",
+                                    ],
+                                    "props": {
+                                      "className": "m_8ee546b8",
+                                      "data-disabled": undefined,
+                                      "data-size": undefined,
+                                      "data-variant": undefined,
+                                      "htmlFor": "root-0",
+                                      "size": undefined,
+                                      "style": {},
+                                    },
+                                    "type": "label",
+                                    Symbol(cleaned): true,
+                                  },
+                                ],
+                                "props": {
+                                  "className": "m_d3ea56bb",
+                                  "data-disabled": undefined,
+                                  "style": {},
+                                },
+                                "type": "div",
+                                Symbol(cleaned): true,
+                              },
+                            ],
+                            "props": {
+                              "className": "m_5f6e695e",
+                              "data-size": undefined,
+                              "data-variant": undefined,
+                              "htmlFor": undefined,
+                              "size": undefined,
+                              "style": {},
+                            },
+                            "type": "div",
+                            Symbol(cleaned): true,
+                          },
+                        ],
+                        "props": {
+                          "className": "m_f3f1af94 m_5f75b09e",
+                          "data-checked": undefined,
+                          "data-label-position": "right",
+                          "data-size": undefined,
+                          "data-variant": undefined,
+                          "size": undefined,
+                          "style": {
+                            "--label-fz": undefined,
+                            "--label-lh": undefined,
+                            "--radio-color": "var(--mantine-color-blue-filled)",
+                          },
+                        },
+                        "type": "div",
+                        Symbol(cleaned): true,
+                      },
+                      {
+                        "children": [
+                          {
+                            "children": [
+                              {
+                                "children": [
+                                  {
+                                    "children": null,
+                                    "props": {
+                                      "autoFocus": false,
+                                      "checked": false,
+                                      "className": "m_8a3dbb89",
+                                      "data-size": undefined,
+                                      "data-variant": undefined,
+                                      "disabled": false,
+                                      "id": "root-1",
+                                      "name": "root",
+                                      "onBlur": [Function],
+                                      "onChange": [Function],
+                                      "onFocus": [Function],
+                                      "size": undefined,
+                                      "style": {},
+                                      "type": "radio",
+                                      "value": "1",
+                                    },
+                                    "type": "input",
+                                    Symbol(cleaned): true,
+                                  },
+                                  {
+                                    "children": [
+                                      {
+                                        "children": null,
+                                        "props": {
+                                          "cx": "2.5",
+                                          "cy": "2.5",
+                                          "fill": "currentColor",
+                                          "r": "2.5",
+                                        },
+                                        "type": "circle",
+                                        Symbol(cleaned): true,
+                                      },
+                                    ],
+                                    "props": {
+                                      "aria-hidden": true,
+                                      "className": "m_f3ed6b2b",
+                                      "fill": "none",
+                                      "style": {
+                                        "height": undefined,
+                                        "width": undefined,
+                                      },
+                                      "viewBox": "0 0 5 5",
+                                      "xmlns": "http://www.w3.org/2000/svg",
+                                    },
+                                    "type": "svg",
+                                    Symbol(cleaned): true,
+                                  },
+                                ],
+                                "props": {
+                                  "className": "m_89c4f5e4",
+                                  "data-label-position": "right",
+                                  "data-size": undefined,
+                                  "data-variant": undefined,
+                                  "size": undefined,
+                                  "style": {},
+                                },
+                                "type": "div",
+                                Symbol(cleaned): true,
+                              },
+                              {
+                                "children": [
+                                  {
+                                    "children": [
+                                      "bar",
+                                    ],
+                                    "props": {
+                                      "className": "m_8ee546b8",
+                                      "data-disabled": undefined,
+                                      "data-size": undefined,
+                                      "data-variant": undefined,
+                                      "htmlFor": "root-1",
+                                      "size": undefined,
+                                      "style": {},
+                                    },
+                                    "type": "label",
+                                    Symbol(cleaned): true,
+                                  },
+                                ],
+                                "props": {
+                                  "className": "m_d3ea56bb",
+                                  "data-disabled": undefined,
+                                  "style": {},
+                                },
+                                "type": "div",
+                                Symbol(cleaned): true,
+                              },
+                            ],
+                            "props": {
+                              "className": "m_5f6e695e",
+                              "data-size": undefined,
+                              "data-variant": undefined,
+                              "htmlFor": undefined,
+                              "size": undefined,
+                              "style": {},
+                            },
+                            "type": "div",
+                            Symbol(cleaned): true,
+                          },
+                        ],
+                        "props": {
+                          "className": "m_f3f1af94 m_5f75b09e",
+                          "data-checked": undefined,
+                          "data-label-position": "right",
+                          "data-size": undefined,
+                          "data-variant": undefined,
+                          "size": undefined,
+                          "style": {
+                            "--label-fz": undefined,
+                            "--label-lh": undefined,
+                            "--radio-color": "var(--mantine-color-blue-filled)",
+                          },
+                        },
+                        "type": "div",
+                        Symbol(cleaned): true,
+                      },
+                    ],
+                    "props": {
+                      "className": "m_8bffd616 __m__-r7f",
+                      "data-size": undefined,
+                      "data-variant": undefined,
+                      "size": undefined,
+                      "style": {
+                        "flexDirection": "column",
+                        "flexWrap": "wrap",
+                        "gap": "var(--mantine-spacing-xs)",
+                        "marginTop": "var(--mantine-spacing-xs)",
+                      },
+                    },
+                    "type": "div",
+                    Symbol(cleaned): true,
+                  },
+                ],
+                "props": {
+                  "aria-describedby": undefined,
+                  "aria-labelledby": "root-label",
+                  "role": "radiogroup",
+                },
+                "type": "div",
+                Symbol(cleaned): true,
+              },
+            ],
+            "props": {
+              "aria-describedby": "root__error root__description root__help",
+              "className": "m_46b77525",
+              "data-size": undefined,
+              "data-variant": undefined,
+              "size": undefined,
+              "style": {},
+            },
+            "type": "div",
+            Symbol(cleaned): true,
+          },
+        ],
+        "props": {
+          "className": "rjsf-field rjsf-field-string",
+          "style": undefined,
+        },
+        "type": "div",
+        Symbol(cleaned): true,
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  "Submit",
+                ],
+                "props": {
+                  "className": "m_811560b9",
+                  "data-size": undefined,
+                  "data-variant": undefined,
+                  "size": undefined,
+                  "style": {},
+                },
+                "type": "span",
+                Symbol(cleaned): true,
+              },
+            ],
+            "props": {
+              "className": "m_80f1301b",
+              "style": {},
+            },
+            "type": "span",
+            Symbol(cleaned): true,
+          },
+        ],
+        "props": {
+          "className": "m_77c9d27d m_87cf2631",
+          "data-disabled": true,
+          "data-size": undefined,
+          "data-variant": "filled",
+          "disabled": true,
+          "size": undefined,
+          "style": {
+            "--button-bd": "calc(0.0625rem * var(--mantine-scale)) solid transparent",
+            "--button-bg": "var(--mantine-color-blue-filled)",
+            "--button-color": "var(--mantine-color-white)",
+            "--button-hover": "var(--mantine-color-blue-filled-hover)",
+          },
+          "type": "submit",
+        },
+        "type": "button",
+        Symbol(cleaned): true,
+      },
+    ],
+    "props": {
+      "acceptCharset": undefined,
+      "action": undefined,
+      "as": undefined,
+      "autoComplete": undefined,
+      "className": "rjsf",
+      "encType": undefined,
+      "id": undefined,
+      "method": undefined,
+      "name": undefined,
+      "noValidate": false,
+      "onSubmit": [Function],
+      "target": undefined,
+    },
+    "type": "form",
+    Symbol(cleaned): true,
+  },
+]
+`;
+
 exports[`single fields select field single choice formData 1`] = `
 [
   <style
@@ -8467,16 +9715,6 @@ exports[`single fields select field single choice formData 1`] = `
                       "data-size": undefined,
                       "data-variant": "default",
                       "disabled": false,
-                      "enumOptions": [
-                        {
-                          "label": "foo",
-                          "value": "foo",
-                        },
-                        {
-                          "label": "bar",
-                          "value": "bar",
-                        },
-                      ],
                       "id": "root",
                       "onBlur": [Function],
                       "onChange": [Function],
@@ -8588,7 +9826,7 @@ exports[`single fields select field single choice formData 1`] = `
                                           "data-combobox-option": true,
                                           "data-size": undefined,
                                           "data-variant": undefined,
-                                          "id": ":r91:",
+                                          "id": ":ra7:",
                                           "onClick": [Function],
                                           "onMouseDown": [Function],
                                           "onMouseOver": [Function],
@@ -8644,7 +9882,7 @@ exports[`single fields select field single choice formData 1`] = `
                                           "data-combobox-option": true,
                                           "data-size": undefined,
                                           "data-variant": undefined,
-                                          "id": ":r93:",
+                                          "id": ":ra9:",
                                           "onClick": [Function],
                                           "onMouseDown": [Function],
                                           "onMouseOver": [Function],
@@ -8659,7 +9897,6 @@ exports[`single fields select field single choice formData 1`] = `
                                     ],
                                     "props": {
                                       "style": {
-                                        "display": "table",
                                         "minWidth": "100%",
                                       },
                                     },
@@ -8669,10 +9906,12 @@ exports[`single fields select field single choice formData 1`] = `
                                 ],
                                 "props": {
                                   "className": "m_c0783ff9",
+                                  "data-horizontal-hidden": undefined,
                                   "data-offset-scrollbars": "y",
                                   "data-scrollbars": "xy",
                                   "data-size": undefined,
                                   "data-variant": undefined,
+                                  "data-vertical-hidden": undefined,
                                   "onScroll": [Function],
                                   "size": undefined,
                                   "style": {
@@ -8827,7 +10066,384 @@ exports[`single fields select field single choice formData 1`] = `
           },
         ],
         "props": {
-          "className": "form-group field field-string",
+          "className": "rjsf-field rjsf-field-string",
+          "style": undefined,
+        },
+        "type": "div",
+        Symbol(cleaned): true,
+      },
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  "Submit",
+                ],
+                "props": {
+                  "className": "m_811560b9",
+                  "data-size": undefined,
+                  "data-variant": undefined,
+                  "size": undefined,
+                  "style": {},
+                },
+                "type": "span",
+                Symbol(cleaned): true,
+              },
+            ],
+            "props": {
+              "className": "m_80f1301b",
+              "style": {},
+            },
+            "type": "span",
+            Symbol(cleaned): true,
+          },
+        ],
+        "props": {
+          "className": "m_77c9d27d m_87cf2631",
+          "data-size": undefined,
+          "data-variant": "filled",
+          "size": undefined,
+          "style": {
+            "--button-bd": "calc(0.0625rem * var(--mantine-scale)) solid transparent",
+            "--button-bg": "var(--mantine-color-blue-filled)",
+            "--button-color": "var(--mantine-color-white)",
+            "--button-hover": "var(--mantine-color-blue-filled-hover)",
+          },
+          "type": "submit",
+        },
+        "type": "button",
+        Symbol(cleaned): true,
+      },
+    ],
+    "props": {
+      "acceptCharset": undefined,
+      "action": undefined,
+      "as": undefined,
+      "autoComplete": undefined,
+      "className": "rjsf",
+      "encType": undefined,
+      "id": undefined,
+      "method": undefined,
+      "name": undefined,
+      "noValidate": false,
+      "onSubmit": [Function],
+      "target": undefined,
+    },
+    "type": "form",
+    Symbol(cleaned): true,
+  },
+]
+`;
+
+exports[`single fields select field single choice uiSchema disabled using radio widget 1`] = `
+[
+  <style
+    dangerouslySetInnerHTML={
+      {
+        "__html": "@media (max-width: 35.99375em) {.mantine-visible-from-xs {display: none !important;}}@media (min-width: 36em) {.mantine-hidden-from-xs {display: none !important;}}@media (max-width: 47.99375em) {.mantine-visible-from-sm {display: none !important;}}@media (min-width: 48em) {.mantine-hidden-from-sm {display: none !important;}}@media (max-width: 61.99375em) {.mantine-visible-from-md {display: none !important;}}@media (min-width: 62em) {.mantine-hidden-from-md {display: none !important;}}@media (max-width: 74.99375em) {.mantine-visible-from-lg {display: none !important;}}@media (min-width: 75em) {.mantine-hidden-from-lg {display: none !important;}}@media (max-width: 87.99375em) {.mantine-visible-from-xl {display: none !important;}}@media (min-width: 88em) {.mantine-hidden-from-xl {display: none !important;}}",
+      }
+    }
+    data-mantine-styles="classes"
+  />,
+  {
+    "children": [
+      {
+        "children": [
+          {
+            "children": [
+              {
+                "children": [
+                  {
+                    "children": [
+                      {
+                        "children": [
+                          {
+                            "children": [
+                              {
+                                "children": [
+                                  {
+                                    "children": null,
+                                    "props": {
+                                      "autoFocus": false,
+                                      "checked": false,
+                                      "className": "m_8a3dbb89",
+                                      "data-size": undefined,
+                                      "data-variant": undefined,
+                                      "disabled": false,
+                                      "id": "root-0",
+                                      "name": "root",
+                                      "onBlur": [Function],
+                                      "onChange": [Function],
+                                      "onFocus": [Function],
+                                      "size": undefined,
+                                      "style": {},
+                                      "type": "radio",
+                                      "value": "0",
+                                    },
+                                    "type": "input",
+                                    Symbol(cleaned): true,
+                                  },
+                                  {
+                                    "children": [
+                                      {
+                                        "children": null,
+                                        "props": {
+                                          "cx": "2.5",
+                                          "cy": "2.5",
+                                          "fill": "currentColor",
+                                          "r": "2.5",
+                                        },
+                                        "type": "circle",
+                                        Symbol(cleaned): true,
+                                      },
+                                    ],
+                                    "props": {
+                                      "aria-hidden": true,
+                                      "className": "m_f3ed6b2b",
+                                      "fill": "none",
+                                      "style": {
+                                        "height": undefined,
+                                        "width": undefined,
+                                      },
+                                      "viewBox": "0 0 5 5",
+                                      "xmlns": "http://www.w3.org/2000/svg",
+                                    },
+                                    "type": "svg",
+                                    Symbol(cleaned): true,
+                                  },
+                                ],
+                                "props": {
+                                  "className": "m_89c4f5e4",
+                                  "data-label-position": "right",
+                                  "data-size": undefined,
+                                  "data-variant": undefined,
+                                  "size": undefined,
+                                  "style": {},
+                                },
+                                "type": "div",
+                                Symbol(cleaned): true,
+                              },
+                              {
+                                "children": [
+                                  {
+                                    "children": [
+                                      "foo",
+                                    ],
+                                    "props": {
+                                      "className": "m_8ee546b8",
+                                      "data-disabled": undefined,
+                                      "data-size": undefined,
+                                      "data-variant": undefined,
+                                      "htmlFor": "root-0",
+                                      "size": undefined,
+                                      "style": {},
+                                    },
+                                    "type": "label",
+                                    Symbol(cleaned): true,
+                                  },
+                                ],
+                                "props": {
+                                  "className": "m_d3ea56bb",
+                                  "data-disabled": undefined,
+                                  "style": {},
+                                },
+                                "type": "div",
+                                Symbol(cleaned): true,
+                              },
+                            ],
+                            "props": {
+                              "className": "m_5f6e695e",
+                              "data-size": undefined,
+                              "data-variant": undefined,
+                              "htmlFor": undefined,
+                              "size": undefined,
+                              "style": {},
+                            },
+                            "type": "div",
+                            Symbol(cleaned): true,
+                          },
+                        ],
+                        "props": {
+                          "className": "m_f3f1af94 m_5f75b09e",
+                          "data-checked": undefined,
+                          "data-label-position": "right",
+                          "data-size": undefined,
+                          "data-variant": undefined,
+                          "size": undefined,
+                          "style": {
+                            "--label-fz": undefined,
+                            "--label-lh": undefined,
+                            "--radio-color": "var(--mantine-color-blue-filled)",
+                          },
+                        },
+                        "type": "div",
+                        Symbol(cleaned): true,
+                      },
+                      {
+                        "children": [
+                          {
+                            "children": [
+                              {
+                                "children": [
+                                  {
+                                    "children": null,
+                                    "props": {
+                                      "autoFocus": false,
+                                      "checked": false,
+                                      "className": "m_8a3dbb89",
+                                      "data-size": undefined,
+                                      "data-variant": undefined,
+                                      "disabled": false,
+                                      "id": "root-1",
+                                      "name": "root",
+                                      "onBlur": [Function],
+                                      "onChange": [Function],
+                                      "onFocus": [Function],
+                                      "size": undefined,
+                                      "style": {},
+                                      "type": "radio",
+                                      "value": "1",
+                                    },
+                                    "type": "input",
+                                    Symbol(cleaned): true,
+                                  },
+                                  {
+                                    "children": [
+                                      {
+                                        "children": null,
+                                        "props": {
+                                          "cx": "2.5",
+                                          "cy": "2.5",
+                                          "fill": "currentColor",
+                                          "r": "2.5",
+                                        },
+                                        "type": "circle",
+                                        Symbol(cleaned): true,
+                                      },
+                                    ],
+                                    "props": {
+                                      "aria-hidden": true,
+                                      "className": "m_f3ed6b2b",
+                                      "fill": "none",
+                                      "style": {
+                                        "height": undefined,
+                                        "width": undefined,
+                                      },
+                                      "viewBox": "0 0 5 5",
+                                      "xmlns": "http://www.w3.org/2000/svg",
+                                    },
+                                    "type": "svg",
+                                    Symbol(cleaned): true,
+                                  },
+                                ],
+                                "props": {
+                                  "className": "m_89c4f5e4",
+                                  "data-label-position": "right",
+                                  "data-size": undefined,
+                                  "data-variant": undefined,
+                                  "size": undefined,
+                                  "style": {},
+                                },
+                                "type": "div",
+                                Symbol(cleaned): true,
+                              },
+                              {
+                                "children": [
+                                  {
+                                    "children": [
+                                      "bar",
+                                    ],
+                                    "props": {
+                                      "className": "m_8ee546b8",
+                                      "data-disabled": undefined,
+                                      "data-size": undefined,
+                                      "data-variant": undefined,
+                                      "htmlFor": "root-1",
+                                      "size": undefined,
+                                      "style": {},
+                                    },
+                                    "type": "label",
+                                    Symbol(cleaned): true,
+                                  },
+                                ],
+                                "props": {
+                                  "className": "m_d3ea56bb",
+                                  "data-disabled": undefined,
+                                  "style": {},
+                                },
+                                "type": "div",
+                                Symbol(cleaned): true,
+                              },
+                            ],
+                            "props": {
+                              "className": "m_5f6e695e",
+                              "data-size": undefined,
+                              "data-variant": undefined,
+                              "htmlFor": undefined,
+                              "size": undefined,
+                              "style": {},
+                            },
+                            "type": "div",
+                            Symbol(cleaned): true,
+                          },
+                        ],
+                        "props": {
+                          "className": "m_f3f1af94 m_5f75b09e",
+                          "data-checked": undefined,
+                          "data-label-position": "right",
+                          "data-size": undefined,
+                          "data-variant": undefined,
+                          "size": undefined,
+                          "style": {
+                            "--label-fz": undefined,
+                            "--label-lh": undefined,
+                            "--radio-color": "var(--mantine-color-blue-filled)",
+                          },
+                        },
+                        "type": "div",
+                        Symbol(cleaned): true,
+                      },
+                    ],
+                    "props": {
+                      "className": "m_8bffd616 __m__-r6s",
+                      "data-size": undefined,
+                      "data-variant": undefined,
+                      "size": undefined,
+                      "style": {
+                        "flexDirection": "column",
+                        "flexWrap": "wrap",
+                        "gap": "var(--mantine-spacing-xs)",
+                        "marginTop": "var(--mantine-spacing-xs)",
+                      },
+                    },
+                    "type": "div",
+                    Symbol(cleaned): true,
+                  },
+                ],
+                "props": {
+                  "aria-describedby": undefined,
+                  "aria-labelledby": "root-label",
+                  "role": "radiogroup",
+                },
+                "type": "div",
+                Symbol(cleaned): true,
+              },
+            ],
+            "props": {
+              "aria-describedby": "root__error root__description root__help",
+              "className": "m_46b77525",
+              "data-size": undefined,
+              "data-variant": undefined,
+              "size": undefined,
+              "style": {},
+            },
+            "type": "div",
+            Symbol(cleaned): true,
+          },
+        ],
+        "props": {
+          "className": "rjsf-field rjsf-field-string",
           "style": undefined,
         },
         "type": "div",
@@ -9022,7 +10638,7 @@ exports[`single fields slider field 1`] = `
           },
         ],
         "props": {
-          "className": "form-group field field-integer",
+          "className": "rjsf-field rjsf-field-integer",
           "style": undefined,
         },
         "type": "div",
@@ -9107,52 +10723,53 @@ exports[`single fields string field format data-url 1`] = `
       {
         "children": [
           {
+            "children": null,
+            "props": {
+              "accept": undefined,
+              "capture": undefined,
+              "form": undefined,
+              "multiple": false,
+              "name": "",
+              "onChange": [Function],
+              "style": {
+                "display": "none",
+              },
+              "type": "file",
+            },
+            "type": "input",
+            Symbol(cleaned): true,
+          },
+          {
             "children": [
               {
                 "children": [
                   {
-                    "children": [
-                      {
-                        "children": null,
-                        "props": {
-                          "aria-describedby": undefined,
-                          "aria-invalid": false,
-                          "autoFocus": false,
-                          "className": "m_8fb7ebe7",
-                          "data-size": undefined,
-                          "data-variant": "default",
-                          "disabled": false,
-                          "id": "root",
-                          "name": "root",
-                          "onBlur": [Function],
-                          "onChange": [Function],
-                          "onFocus": [Function],
-                          "placeholder": "",
-                          "required": undefined,
-                          "size": undefined,
-                          "style": {},
-                          "type": "file",
-                          "value": "",
-                        },
-                        "type": "input",
-                        Symbol(cleaned): true,
-                      },
-                    ],
+                    "children": null,
                     "props": {
-                      "className": "m_6c018570",
+                      "aria-describedby": undefined,
+                      "aria-invalid": false,
+                      "autoFocus": false,
+                      "className": "m_8fb7ebe7",
                       "data-size": undefined,
                       "data-variant": "default",
+                      "disabled": false,
+                      "id": "root",
+                      "onClick": [Function],
+                      "required": undefined,
                       "size": undefined,
                       "style": {},
+                      "type": "button",
                     },
-                    "type": "div",
+                    "type": "button",
                     Symbol(cleaned): true,
                   },
                 ],
                 "props": {
-                  "className": "m_46b77525",
+                  "className": "m_6c018570",
+                  "data-multiline": true,
+                  "data-pointer": true,
                   "data-size": undefined,
-                  "data-variant": undefined,
+                  "data-variant": "default",
                   "size": undefined,
                   "style": {},
                 },
@@ -9160,13 +10777,19 @@ exports[`single fields string field format data-url 1`] = `
                 Symbol(cleaned): true,
               },
             ],
-            "props": {},
+            "props": {
+              "className": "m_46b77525",
+              "data-size": undefined,
+              "data-variant": undefined,
+              "size": undefined,
+              "style": {},
+            },
             "type": "div",
             Symbol(cleaned): true,
           },
         ],
         "props": {
-          "className": "form-group field field-string",
+          "className": "rjsf-field rjsf-field-string",
           "style": undefined,
         },
         "type": "div",
@@ -9302,7 +10925,7 @@ exports[`single fields string field format email 1`] = `
           },
         ],
         "props": {
-          "className": "form-group field field-string",
+          "className": "rjsf-field rjsf-field-string",
           "style": undefined,
         },
         "type": "div",
@@ -9438,7 +11061,7 @@ exports[`single fields string field format uri 1`] = `
           },
         ],
         "props": {
-          "className": "form-group field field-string",
+          "className": "rjsf-field rjsf-field-string",
           "style": undefined,
         },
         "type": "div",
@@ -9574,7 +11197,7 @@ exports[`single fields string field regular 1`] = `
           },
         ],
         "props": {
-          "className": "form-group field field-string",
+          "className": "rjsf-field rjsf-field-string",
           "style": undefined,
         },
         "type": "div",
@@ -9710,7 +11333,7 @@ exports[`single fields string field with placeholder 1`] = `
           },
         ],
         "props": {
-          "className": "form-group field field-string",
+          "className": "rjsf-field rjsf-field-string",
           "style": undefined,
         },
         "type": "div",
@@ -9848,7 +11471,7 @@ exports[`single fields textarea field 1`] = `
           },
         ],
         "props": {
-          "className": "form-group field field-string",
+          "className": "rjsf-field rjsf-field-string",
           "style": undefined,
         },
         "type": "div",
@@ -9959,7 +11582,7 @@ exports[`single fields title field 1`] = `
                 "children": null,
                 "props": {
                   "dangerouslySetInnerHTML": {
-                    "__html": ".__m__-rdb{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
+                    "__html": ".__m__-rfv{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
                   },
                   "data-mantine-styles": "inline",
                   "nonce": undefined,
@@ -10042,7 +11665,7 @@ exports[`single fields title field 1`] = `
                           },
                         ],
                         "props": {
-                          "className": "form-group field field-string",
+                          "className": "rjsf-field rjsf-field-string",
                           "style": undefined,
                         },
                         "type": "div",
@@ -10061,11 +11684,13 @@ exports[`single fields title field 1`] = `
                   },
                 ],
                 "props": {
-                  "className": "m_2415a157 __m__-rdb",
+                  "className": "m_2415a157 __m__-rfv",
                   "data-size": undefined,
                   "data-variant": undefined,
                   "size": undefined,
-                  "style": {},
+                  "style": {
+                    "marginBottom": "var(--mantine-spacing-sm)",
+                  },
                 },
                 "type": "div",
                 Symbol(cleaned): true,
@@ -10084,7 +11709,7 @@ exports[`single fields title field 1`] = `
           },
         ],
         "props": {
-          "className": "form-group field field-object",
+          "className": "rjsf-field rjsf-field-object",
           "style": undefined,
         },
         "type": "div",
@@ -10224,7 +11849,7 @@ exports[`single fields unsupported field 1`] = `
           },
         ],
         "props": {
-          "className": "form-group field field-undefined",
+          "className": "rjsf-field rjsf-field-undefined",
           "style": undefined,
         },
         "type": "div",
@@ -10487,7 +12112,7 @@ exports[`single fields up/down field 1`] = `
           },
         ],
         "props": {
-          "className": "form-group field field-number",
+          "className": "rjsf-field rjsf-field-number",
           "style": undefined,
         },
         "type": "div",
@@ -10623,7 +12248,7 @@ exports[`single fields using custom tagName 1`] = `
           },
         ],
         "props": {
-          "className": "form-group field field-string",
+          "className": "rjsf-field rjsf-field-string",
           "style": undefined,
         },
         "type": "div",
