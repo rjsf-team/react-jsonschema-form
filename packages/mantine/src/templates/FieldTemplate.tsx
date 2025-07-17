@@ -59,7 +59,6 @@ export default function FieldTemplate<
       {...otherProps}
     >
       {children}
-      {displayLabel && rawDescription && description}
       {errors}
       {help}
     </WrapIfAdditionalTemplate>
