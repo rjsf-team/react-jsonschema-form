@@ -92,7 +92,7 @@ exports[`single fields checkbox field 1`] = `
     flex-shrink: 0;
     color: var(--chakra-colors-white);
     border-width: 1px;
-    border-color: var(--chakra-colors-border);
+    border-color: var(--chakra-colors-border-emphasized);
     border-radius: var(--chakra-radii-l1);
     cursor: var(--chakra-cursor-checkbox);
     --focus-ring-color: var(--chakra-colors-color-palette-focus-ring);
@@ -437,7 +437,7 @@ exports[`single fields checkbox field with label 1`] = `
     flex-shrink: 0;
     color: var(--chakra-colors-white);
     border-width: 1px;
-    border-color: var(--chakra-colors-border);
+    border-color: var(--chakra-colors-border-emphasized);
     border-radius: var(--chakra-radii-l1);
     cursor: var(--chakra-cursor-checkbox);
     --focus-ring-color: var(--chakra-colors-color-palette-focus-ring);
@@ -816,7 +816,7 @@ exports[`single fields checkbox field with label and description 1`] = `
     flex-shrink: 0;
     color: var(--chakra-colors-white);
     border-width: 1px;
-    border-color: var(--chakra-colors-border);
+    border-color: var(--chakra-colors-border-emphasized);
     border-radius: var(--chakra-radii-l1);
     cursor: var(--chakra-cursor-checkbox);
     --focus-ring-color: var(--chakra-colors-color-palette-focus-ring);
@@ -1201,7 +1201,7 @@ exports[`single fields checkbox field with label and rich text description 1`] =
     flex-shrink: 0;
     color: var(--chakra-colors-white);
     border-width: 1px;
-    border-color: var(--chakra-colors-border);
+    border-color: var(--chakra-colors-border-emphasized);
     border-radius: var(--chakra-radii-l1);
     cursor: var(--chakra-cursor-checkbox);
     --focus-ring-color: var(--chakra-colors-color-palette-focus-ring);
@@ -1614,7 +1614,7 @@ exports[`single fields checkboxes field 1`] = `
     flex-shrink: 0;
     color: var(--chakra-colors-white);
     border-width: 1px;
-    border-color: var(--chakra-colors-border);
+    border-color: var(--chakra-colors-border-emphasized);
     border-radius: var(--chakra-radii-l1);
     cursor: var(--chakra-cursor-checkbox);
     --focus-ring-color: var(--chakra-colors-color-palette-focus-ring);
@@ -4919,7 +4919,7 @@ exports[`single fields help and error display 1`] = `
   >
     <fieldset
       className="fieldset__root emotion-8"
-      data-invalid="true"
+      data-invalid=""
       data-part="root"
       data-scope="fieldset"
       disabled={false}
@@ -6435,7 +6435,7 @@ exports[`single fields radio field 1`] = `
     vertical-align: top;
     color: var(--chakra-colors-white);
     border-width: 1px;
-    border-color: var(--chakra-colors-border);
+    border-color: var(--chakra-colors-border-emphasized);
     border-radius: var(--chakra-radii-full);
     cursor: var(--chakra-cursor-radio);
     width: var(--chakra-sizes-5);
@@ -9452,7 +9452,7 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
     flex-shrink: 0;
     color: var(--chakra-colors-white);
     border-width: 1px;
-    border-color: var(--chakra-colors-border);
+    border-color: var(--chakra-colors-border-emphasized);
     border-radius: var(--chakra-radii-l1);
     cursor: var(--chakra-cursor-checkbox);
     --focus-ring-color: var(--chakra-colors-color-palette-focus-ring);
@@ -12315,7 +12315,7 @@ exports[`single fields select field single choice enumDisabled using radio widge
     vertical-align: top;
     color: var(--chakra-colors-white);
     border-width: 1px;
-    border-color: var(--chakra-colors-border);
+    border-color: var(--chakra-colors-border-emphasized);
     border-radius: var(--chakra-radii-full);
     cursor: var(--chakra-cursor-radio);
     width: var(--chakra-sizes-5);
@@ -12776,7 +12776,7 @@ exports[`single fields select field single choice form disabled using radio widg
     vertical-align: top;
     color: var(--chakra-colors-white);
     border-width: 1px;
-    border-color: var(--chakra-colors-border);
+    border-color: var(--chakra-colors-border-emphasized);
     border-radius: var(--chakra-radii-full);
     cursor: var(--chakra-cursor-radio);
     width: var(--chakra-sizes-5);
@@ -12931,7 +12931,7 @@ exports[`single fields select field single choice form disabled using radio widg
   >
     <fieldset
       className="fieldset__root emotion-0"
-      data-disabled="true"
+      data-disabled=""
       data-part="root"
       data-scope="fieldset"
       disabled={true}
@@ -13948,7 +13948,7 @@ exports[`single fields select field single choice uiSchema disabled using radio 
     vertical-align: top;
     color: var(--chakra-colors-white);
     border-width: 1px;
-    border-color: var(--chakra-colors-border);
+    border-color: var(--chakra-colors-border-emphasized);
     border-radius: var(--chakra-radii-full);
     cursor: var(--chakra-cursor-radio);
     width: var(--chakra-sizes-5);
@@ -14103,7 +14103,7 @@ exports[`single fields select field single choice uiSchema disabled using radio 
   >
     <fieldset
       className="fieldset__root emotion-0"
-      data-disabled="true"
+      data-disabled=""
       data-part="root"
       data-scope="fieldset"
       disabled={true}

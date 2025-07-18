@@ -2904,7 +2904,7 @@ exports[`array fields has errors 1`] = `
             >
               <fieldset
                 className="fieldset__root emotion-8"
-                data-invalid="true"
+                data-invalid=""
                 data-part="root"
                 data-scope="fieldset"
                 disabled={false}
