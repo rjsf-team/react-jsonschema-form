@@ -42,19 +42,25 @@ export default function CheckboxWidget<
 
   /** Handle focus events
    */
-  const handleFocus = useCallback(() => {
-    if (onFocus) {
-      onFocus(id, value);
-    }
-  }, [onFocus, id, value]);
+  const handleFocus = useCallback(
+    (event: FocusEvent<HTMLInputElement>) => {
+      if (onFocus) {
+        onFocus(id, event.target.checked);
+      }
+    },
+    [onFocus, id],
+  );
 
   /** Handle blur events
    */
-  const handleBlur = useCallback(() => {
-    if (onBlur) {
-      onBlur(id, value);
-    }
-  }, [onBlur, id, value]);
+  const handleBlur = useCallback(
+    (event: FocusEvent<HTMLInputElement>) => {
+      if (onBlur) {
+        onBlur(id, event.target.checked);
+      }
+    },
+    [onBlur, id],
+  );
 
   /** Handle change events
    *
