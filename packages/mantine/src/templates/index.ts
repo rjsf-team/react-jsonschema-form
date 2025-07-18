@@ -14,6 +14,7 @@ import GridTemplate from './GridTemplate';
 import ObjectFieldTemplate from './ObjectFieldTemplate';
 import TitleField from './TitleField';
 import WrapIfAdditionalTemplate from './WrapIfAdditionalTemplate';
+import MultiSchemaFieldTemplate from './MultiSchemaFieldTemplate';
 
 export function generateTemplates<
   T = any,
@@ -35,6 +36,7 @@ export function generateTemplates<
     ObjectFieldTemplate,
     TitleFieldTemplate: TitleField,
     WrapIfAdditionalTemplate,
+    MultiSchemaFieldTemplate,
   };
 }
 
