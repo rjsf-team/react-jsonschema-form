@@ -1607,24 +1607,6 @@ exports[`single fields field with description 1`] = `
                             "type": "div",
                             Symbol(cleaned): true,
                           },
-                          {
-                            "children": [
-                              "some description",
-                            ],
-                            "props": {
-                              "className": "m_b6d8b162",
-                              "data-size": undefined,
-                              "data-variant": undefined,
-                              "id": "root_my-field__description",
-                              "size": undefined,
-                              "style": {
-                                "marginBottom": "var(--mantine-spacing-sm)",
-                                "marginTop": "calc(0.1875rem * var(--mantine-scale))",
-                              },
-                            },
-                            "type": "p",
-                            Symbol(cleaned): true,
-                          },
                         ],
                         "props": {
                           "className": "rjsf-field rjsf-field-string",
@@ -1664,7 +1646,9 @@ exports[`single fields field with description 1`] = `
               "data-variant": undefined,
               "id": "root",
               "size": undefined,
-              "style": {},
+              "style": {
+                "padding": "0rem",
+              },
             },
             "type": "div",
             Symbol(cleaned): true,
@@ -1761,7 +1745,7 @@ exports[`single fields field with description in uiSchema 1`] = `
                 "children": null,
                 "props": {
                   "dangerouslySetInnerHTML": {
-                    "__html": ".__m__-reo{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
+                    "__html": ".__m__-ren{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
                   },
                   "data-mantine-styles": "inline",
                   "nonce": undefined,
@@ -1859,24 +1843,6 @@ exports[`single fields field with description in uiSchema 1`] = `
                             "type": "div",
                             Symbol(cleaned): true,
                           },
-                          {
-                            "children": [
-                              "some other description",
-                            ],
-                            "props": {
-                              "className": "m_b6d8b162",
-                              "data-size": undefined,
-                              "data-variant": undefined,
-                              "id": "root_my-field__description",
-                              "size": undefined,
-                              "style": {
-                                "marginBottom": "var(--mantine-spacing-sm)",
-                                "marginTop": "calc(0.1875rem * var(--mantine-scale))",
-                              },
-                            },
-                            "type": "p",
-                            Symbol(cleaned): true,
-                          },
                         ],
                         "props": {
                           "className": "rjsf-field rjsf-field-string",
@@ -1898,7 +1864,7 @@ exports[`single fields field with description in uiSchema 1`] = `
                   },
                 ],
                 "props": {
-                  "className": "m_2415a157 __m__-reo",
+                  "className": "m_2415a157 __m__-ren",
                   "data-size": undefined,
                   "data-variant": undefined,
                   "size": undefined,
@@ -1916,7 +1882,9 @@ exports[`single fields field with description in uiSchema 1`] = `
               "data-variant": undefined,
               "id": "root",
               "size": undefined,
-              "style": {},
+              "style": {
+                "padding": "0rem",
+              },
             },
             "type": "div",
             Symbol(cleaned): true,
@@ -2013,7 +1981,7 @@ exports[`single fields field with markdown description 1`] = `
                 "children": null,
                 "props": {
                   "dangerouslySetInnerHTML": {
-                    "__html": ".__m__-rf5{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
+                    "__html": ".__m__-rf3{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
                   },
                   "data-mantine-styles": "inline",
                   "nonce": undefined,
@@ -2094,44 +2062,6 @@ exports[`single fields field with markdown description 1`] = `
                             "type": "div",
                             Symbol(cleaned): true,
                           },
-                          {
-                            "children": [
-                              {
-                                "children": [
-                                  "some ",
-                                  {
-                                    "children": [
-                                      "Rich",
-                                    ],
-                                    "props": {
-                                      "className": undefined,
-                                    },
-                                    "type": "strong",
-                                    Symbol(cleaned): true,
-                                  },
-                                  " description",
-                                ],
-                                "props": {
-                                  "data-testid": undefined,
-                                },
-                                "type": "span",
-                                Symbol(cleaned): true,
-                              },
-                            ],
-                            "props": {
-                              "className": "m_b6d8b162",
-                              "data-size": undefined,
-                              "data-variant": undefined,
-                              "id": "root_my-field__description",
-                              "size": undefined,
-                              "style": {
-                                "marginBottom": "var(--mantine-spacing-sm)",
-                                "marginTop": "calc(0.1875rem * var(--mantine-scale))",
-                              },
-                            },
-                            "type": "p",
-                            Symbol(cleaned): true,
-                          },
                         ],
                         "props": {
                           "className": "rjsf-field rjsf-field-string",
@@ -2153,7 +2083,7 @@ exports[`single fields field with markdown description 1`] = `
                   },
                 ],
                 "props": {
-                  "className": "m_2415a157 __m__-rf5",
+                  "className": "m_2415a157 __m__-rf3",
                   "data-size": undefined,
                   "data-variant": undefined,
                   "size": undefined,
@@ -2171,7 +2101,9 @@ exports[`single fields field with markdown description 1`] = `
               "data-variant": undefined,
               "id": "root",
               "size": undefined,
-              "style": {},
+              "style": {
+                "padding": "0rem",
+              },
             },
             "type": "div",
             Symbol(cleaned): true,
@@ -2268,7 +2200,7 @@ exports[`single fields field with markdown description in uiSchema 1`] = `
                 "children": null,
                 "props": {
                   "dangerouslySetInnerHTML": {
-                    "__html": ".__m__-rfh{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
+                    "__html": ".__m__-rfe{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
                   },
                   "data-mantine-styles": "inline",
                   "nonce": undefined,
@@ -2366,34 +2298,6 @@ exports[`single fields field with markdown description in uiSchema 1`] = `
                             "type": "div",
                             Symbol(cleaned): true,
                           },
-                          {
-                            "children": [
-                              {
-                                "children": [
-                                  "some other description",
-                                ],
-                                "props": {
-                                  "className": undefined,
-                                  "data-testid": undefined,
-                                },
-                                "type": "span",
-                                Symbol(cleaned): true,
-                              },
-                            ],
-                            "props": {
-                              "className": "m_b6d8b162",
-                              "data-size": undefined,
-                              "data-variant": undefined,
-                              "id": "root_my-field__description",
-                              "size": undefined,
-                              "style": {
-                                "marginBottom": "var(--mantine-spacing-sm)",
-                                "marginTop": "calc(0.1875rem * var(--mantine-scale))",
-                              },
-                            },
-                            "type": "p",
-                            Symbol(cleaned): true,
-                          },
                         ],
                         "props": {
                           "className": "rjsf-field rjsf-field-string",
@@ -2415,7 +2319,7 @@ exports[`single fields field with markdown description in uiSchema 1`] = `
                   },
                 ],
                 "props": {
-                  "className": "m_2415a157 __m__-rfh",
+                  "className": "m_2415a157 __m__-rfe",
                   "data-size": undefined,
                   "data-variant": undefined,
                   "size": undefined,
@@ -2433,7 +2337,9 @@ exports[`single fields field with markdown description in uiSchema 1`] = `
               "data-variant": undefined,
               "id": "root",
               "size": undefined,
-              "style": {},
+              "style": {
+                "padding": "0rem",
+              },
             },
             "type": "div",
             Symbol(cleaned): true,
@@ -3641,7 +3547,9 @@ exports[`single fields hidden field 1`] = `
               "data-variant": undefined,
               "id": "root",
               "size": undefined,
-              "style": {},
+              "style": {
+                "padding": "0rem",
+              },
             },
             "type": "div",
             Symbol(cleaned): true,
@@ -11582,7 +11490,7 @@ exports[`single fields title field 1`] = `
                 "children": null,
                 "props": {
                   "dangerouslySetInnerHTML": {
-                    "__html": ".__m__-rfv{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
+                    "__html": ".__m__-rfr{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
                   },
                   "data-mantine-styles": "inline",
                   "nonce": undefined,
@@ -11684,7 +11592,7 @@ exports[`single fields title field 1`] = `
                   },
                 ],
                 "props": {
-                  "className": "m_2415a157 __m__-rfv",
+                  "className": "m_2415a157 __m__-rfr",
                   "data-size": undefined,
                   "data-variant": undefined,
                   "size": undefined,
@@ -11702,7 +11610,9 @@ exports[`single fields title field 1`] = `
               "data-variant": undefined,
               "id": "root",
               "size": undefined,
-              "style": {},
+              "style": {
+                "padding": "0rem",
+              },
             },
             "type": "div",
             Symbol(cleaned): true,
