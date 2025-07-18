@@ -661,7 +661,7 @@ Merges the `defaults` object of type `T` into the `formData` of type `T`
 When merging defaults and form data, we want to merge in this specific way:
 
 - objects are deeply merged
-- arrays are merged in such a way that:
+- arrays are either replaced (when `defaultSupercedes` is true) or merged in such a way that:
   - when the array is set in form data, only array entries set in form data are deeply merged; additional entries from the defaults are ignored unless `mergeExtraArrayDefaults` is true, in which case the extras are appended onto the end of the form data
   - when the array is not set in form data, the default is copied over
 - scalars are overwritten/set by form data
@@ -672,6 +672,7 @@ When merging defaults and form data, we want to merge in this specific way:
 - [formData]: T | undefined - The form data into which the defaults will be merged
 - [mergeExtraArrayDefaults=false]: boolean - If true, any additional default array entries are appended onto the formData
 - [defaultSupercedesUndefined=false]: boolean - If true, an explicit undefined value will be overwritten by the default value
+- [defaultSupercedes=false]: boolean - If true, a value will be overwritten by the default value
 
 #### Returns
 
