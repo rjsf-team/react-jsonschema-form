@@ -60,9 +60,17 @@ export default function DateTimeInput<
     [onChange, valueFormat],
   );
 
-  const handleBlur = () => onBlur && onBlur(id, value);
+  const handleBlur = useCallback(() => {
+    if (onBlur) {
+      onBlur(id, value);
+    }
+  }, [onBlur, id, value]);
 
-  const handleFocus = () => onFocus && onFocus(id, value);
+  const handleFocus = useCallback(() => {
+    if (onFocus) {
+      onFocus(id, value);
+    }
+  }, [onFocus, id, value]);
 
   return (
     <DateInput

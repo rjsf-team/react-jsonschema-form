@@ -1,4 +1,4 @@
-import { ChangeEvent, FocusEvent } from 'react';
+import { ChangeEvent, FocusEvent, useCallback } from 'react';
 import {
   ariaDescribedByIds,
   BaseInputTemplateProps,
@@ -48,16 +48,30 @@ export default function BaseInputTemplate<
   const inputProps = getInputProps<T, S, F>(schema, type, options, false);
   const themeProps = cleanupOptions(options);
 
-  const handleNumberChange = (value: number | string) => onChange(value);
+  const handleNumberChange = useCallback((value: number | string) => onChange(value), [onChange]);
 
-  const handleChange = onChangeOverride
-    ? onChangeOverride
-    : (e: ChangeEvent<HTMLInputElement>) =>
-        onChange(e.target.value === '' ? (options.emptyValue ?? '') : e.target.value);
+  const handleChange = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      const handler = onChangeOverride ? onChangeOverride : onChange;
+      const value = e.target.value === '' ? (options.emptyValue ?? '') : e.target.value;
+      handler(value);
+    },
+    [onChange, onChangeOverride, options],
+  );
 
-  const handleBlur = (e: FocusEvent<HTMLInputElement>) => onBlur(id, e.target && e.target.value);
+  const handleBlur = useCallback(
+    (e: FocusEvent<HTMLInputElement>) => {
+      onBlur(id, e.target && e.target.value);
+    },
+    [onBlur, id],
+  );
 
-  const handleFocus = (e: FocusEvent<HTMLInputElement>) => onFocus(id, e.target && e.target.value);
+  const handleFocus = useCallback(
+    (e: FocusEvent<HTMLInputElement>) => {
+      onFocus(id, e.target && e.target.value);
+    },
+    [onFocus, id],
+  );
 
   const input =
     inputProps.type === 'number' || inputProps.type === 'integer' ? (

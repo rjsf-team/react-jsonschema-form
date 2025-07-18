@@ -1,4 +1,4 @@
-import { FocusEvent } from 'react';
+import { FocusEvent, useCallback } from 'react';
 import {
   ADDITIONAL_PROPERTY_FLAG,
   UI_OPTIONS_KEY,
@@ -42,6 +42,11 @@ export default function WrapIfAdditionalTemplate<
   const keyLabel = translateString(TranslatableString.KeyLabel, [label]);
   const additional = ADDITIONAL_PROPERTY_FLAG in schema;
 
+  const handleBlur = useCallback(
+    ({ target }: FocusEvent<HTMLInputElement>) => onKeyChange(target && target.value),
+    [onKeyChange],
+  );
+
   if (!additional) {
     return (
       <div className={classNames} style={style}>
@@ -49,8 +54,6 @@ export default function WrapIfAdditionalTemplate<
       </div>
     );
   }
-
-  const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) => onKeyChange(target && target.value);
 
   // The `block` prop is not part of the `IconButtonProps` defined in the template, so put it into the uiSchema instead
   const uiOptions = uiSchema ? uiSchema[UI_OPTIONS_KEY] : {};

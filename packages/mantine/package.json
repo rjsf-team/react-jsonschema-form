@@ -63,7 +63,7 @@
   "peerDependencies": {
     "@rjsf/core": "^6.0.0-beta",
     "@rjsf/utils": "^6.0.0-beta",
-    "react": "^16.14.0 || >=17",
+    "react": ">=18",
     "@mantine/core": ">=7",
     "@mantine/hooks": ">=7",
     "@mantine/dates": ">=7"
