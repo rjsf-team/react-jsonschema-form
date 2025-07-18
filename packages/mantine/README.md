@@ -39,7 +39,7 @@
   - [Installation](#installation)
 - [Usage](#usage)
 - [Optional Mantine Theme properties](#optional-mantine-theme-properties)
-  - [Mantine Widget Optional Properties](#mantine-widget-optional-properties)
+    - [Mantine Widget Optional Properties](#mantine-widget-optional-properties)
 - [Roadmap](#roadmap)
 - [Contributing](#contributing)
 - [Contact](#contact)
@@ -67,7 +67,7 @@
 - `@mantine/hooks >= 7`
 - `@mantine/dates >= 7`
 - `dayjs >= 1.8.0`
-- `@rjsf/core >= 2.0.0`
+- `@rjsf/core >= 6.0.0`
 
 ```sh
 npm install @mantine/core @mantine/hooks @mantine/dates dayjs @rjsf/core
