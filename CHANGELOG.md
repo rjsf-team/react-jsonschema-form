@@ -16,6 +16,12 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
+# 6.0.0-beta.13
+
+## rjsf/utils
+
+- Always make all references absolute in nested bundled schemas
+
 # 6.0.0-beta.12
 
 ## @rjsf/core
@@ -29,13 +35,6 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/utils
 
 - Updated `SchemaUtils` and `createSchemaUtils()` to add a new `getRootSchema()` function
-
-# 6.0.0-beta.11
-
-## rjsf/utils
-
-- Always make all references absolute in nested bundled schemas
-
 
 # 6.0.0-beta.11
 

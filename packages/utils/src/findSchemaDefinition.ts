@@ -51,7 +51,7 @@ function findEmbeddedSchemaRecursive<S extends StrictRJSFSchema = RJSFSchema>(sc
  * @param schema - The schema to be processed
  * @param baseURI - The base URI to be used for resolving relative references
  */
-function makeAllReferencesAbsolute<S extends StrictRJSFSchema = RJSFSchema>(schema: S, baseURI: string): S {
+export function makeAllReferencesAbsolute<S extends StrictRJSFSchema = RJSFSchema>(schema: S, baseURI: string): S {
   const currentURI = get(schema, ID_KEY, baseURI);
   // Make all other references absolute
   if (REF_KEY in schema) {
@@ -114,9 +114,6 @@ export function findSchemaDefinitionRecursive<S extends StrictRJSFSchema = RJSFS
       current = findEmbeddedSchemaRecursive<S>(rootSchema, baseURI.replace(/\/$/, ''));
       if (current !== undefined) {
         current = jsonpointer.get(current, decodedRef);
-        if (current !== undefined) {
-          current = makeAllReferencesAbsolute(current, current[ID_KEY]!);
-        }
       }
     }
   } else if (rootSchema[SCHEMA_KEY] === JSON_SCHEMA_DRAFT_2020_12) {
@@ -127,9 +124,6 @@ export function findSchemaDefinitionRecursive<S extends StrictRJSFSchema = RJSFS
       baseURI = current[ID_KEY];
       if (!isEmpty(refAnchor)) {
         current = jsonpointer.get(current, decodeURIComponent(refAnchor.join('#')));
-      }
-      if (current !== undefined) {
-        current = makeAllReferencesAbsolute(current!, baseURI!);
       }
     }
   }

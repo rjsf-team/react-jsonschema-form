@@ -1,5 +1,5 @@
-import { findSchemaDefinition, RJSFSchema } from '../src';
-import { findSchemaDefinitionRecursive } from '../src/findSchemaDefinition';
+import { findSchemaDefinition, ID_KEY, RJSFSchema } from '../src';
+import { findSchemaDefinitionRecursive, makeAllReferencesAbsolute } from '../src/findSchemaDefinition';
 
 const schema: RJSFSchema = {
   type: 'object',
@@ -76,29 +76,6 @@ const internalSchema: RJSFSchema = {
       allOf: [
         {
           $ref: '#/$defs/string',
-        },
-        {
-          title: 'String',
-        },
-      ],
-    },
-  },
-};
-
-const absoluteInternalSchema: RJSFSchema = {
-  ...internalSchema,
-  $defs: {
-    ...internalSchema.$defs,
-    circularRef: { $ref: 'https://example.com/bundled.schema.json/#/$defs/circularRef' },
-    undefinedRef: { $ref: 'https://example.com/bundled.ref.json#/$defs/undefined' },
-  },
-  properties: {
-    ...internalSchema.properties,
-    string: { $ref: 'https://example.com/bundled.ref.json#/$defs/string' },
-    allOf: {
-      allOf: [
-        {
-          $ref: 'https://example.com/bundled.ref.json#/$defs/string',
         },
         {
           title: 'String',
@@ -209,11 +186,11 @@ describe('findSchemaDefinition()', () => {
     );
   });
   it('correctly resolves absolute bundled refs when JSON Schema Draft 2020-12', () => {
-    expect(findSchemaDefinition('#/$defs/bundledAbsoluteRef', bundledSchema)).toStrictEqual(absoluteInternalSchema);
+    expect(findSchemaDefinition('#/$defs/bundledAbsoluteRef', bundledSchema)).toStrictEqual(internalSchema);
   });
   it('correctly resolves absolute bundled refs with anchors within a JSON Schema Draft 2020-12', () => {
     expect(findSchemaDefinition('#/$defs/bundledAbsoluteRefWithAnchor', bundledSchema)).toBe(
-      absoluteInternalSchema.properties!.num,
+      internalSchema.properties!.num,
     );
   });
   it('correctly resolves absolute bundled refs in arrays within a JSON Schema Draft 2020-12', () => {
@@ -223,29 +200,27 @@ describe('findSchemaDefinition()', () => {
   });
   it('correctly resolves absolute bundled refs within a JSON Schema Draft 2020-12 without an `$id`', () => {
     const { $id: d, ...bundledSchemaWithoutId } = bundledSchema;
-    expect(findSchemaDefinition('#/$defs/bundledAbsoluteRef', bundledSchemaWithoutId)).toStrictEqual(
-      absoluteInternalSchema,
-    );
+    expect(findSchemaDefinition('#/$defs/bundledAbsoluteRef', bundledSchemaWithoutId)).toStrictEqual(internalSchema);
   });
   it('correctly resolves relative bundled refs within a JSON Schema Draft 2020-12', () => {
-    expect(findSchemaDefinition('#/$defs/bundledRelativeRef', bundledSchema)).toStrictEqual(absoluteInternalSchema);
+    expect(findSchemaDefinition('#/$defs/bundledRelativeRef', bundledSchema)).toStrictEqual(internalSchema);
   });
   it('correctly resolves relative bundled refs with anchors within a JSON Schema Draft 2020-12', () => {
     expect(findSchemaDefinition('#/$defs/bundledRelativeRefWithAnchor', bundledSchema)).toBe(
-      absoluteInternalSchema.$defs!.string,
+      internalSchema.$defs!.string,
     );
   });
   it('correctly resolves indirect bundled refs within a JSON Schema Draft 2020-12', () => {
-    expect(findSchemaDefinition('#/$defs/indirectRef', bundledSchema)).toStrictEqual(absoluteInternalSchema);
+    expect(findSchemaDefinition('#/$defs/indirectRef', bundledSchema)).toStrictEqual(internalSchema);
   });
   it('correctly resolves refs with explicit base URI in a bundled JSON Schema', () => {
     expect(
       findSchemaDefinition('bundled.ref.json', bundledSchema, 'https://example.com/undefined.ref.json'),
-    ).toStrictEqual(absoluteInternalSchema);
+    ).toStrictEqual(internalSchema);
   });
   it('correctly resolves local refs with explicit base URI in a bundled JSON Schema', () => {
     expect(findSchemaDefinition('#/properties/num', bundledSchema, 'https://example.com/bundled.ref.json')).toBe(
-      absoluteInternalSchema.properties!.num,
+      internalSchema.properties!.num,
     );
   });
   it('throws error when relative ref is undefined in a bundled JSON Schema', () => {
@@ -255,7 +230,7 @@ describe('findSchemaDefinition()', () => {
   });
   it('throws error when relative ref with anchor is undefined in a bundled JSON Schema', () => {
     expect(() => findSchemaDefinition('#/$defs/undefinedRefWithAnchor', bundledSchema)).toThrowError(
-      'Could not find a definition for https://example.com/bundled.ref.json#/$defs/undefined',
+      'Could not find a definition for #/$defs/undefined',
     );
   });
   it('throws error when local ref is undefined in a bundled JSON Schema with explicit base URI', () => {
@@ -270,7 +245,7 @@ describe('findSchemaDefinition()', () => {
   });
   it('throws error when ref is a deep circular reference in a bundled JSON Schema', () => {
     expect(() => findSchemaDefinition('#/$defs/circularRef', bundledSchema)).toThrowError(
-      'Definition for #/$defs/circularRef contains a circular reference through /bundled.ref.json/#/$defs/circularRef -> https://example.com/bundled.schema.json/#/$defs/circularRef',
+      'Definition for #/$defs/circularRef contains a circular reference through /bundled.ref.json/#/$defs/circularRef -> /bundled.schema.json/#/$defs/circularRef -> #/$defs/circularRef',
     );
   });
 });
@@ -319,13 +294,11 @@ describe('findSchemaDefinitionRecursive()', () => {
     ).toThrowError('Could not find a definition for #/properties/num');
   });
   it('correctly resolves absolute bundled refs within a JSON Schema Draft 2020-12', () => {
-    expect(findSchemaDefinitionRecursive('#/$defs/bundledAbsoluteRef', bundledSchema)).toStrictEqual(
-      absoluteInternalSchema,
-    );
+    expect(findSchemaDefinitionRecursive('#/$defs/bundledAbsoluteRef', bundledSchema)).toStrictEqual(internalSchema);
   });
   it('correctly resolves absolute bundled refs with anchors within a JSON Schema Draft 2020-12', () => {
     expect(findSchemaDefinitionRecursive('#/$defs/bundledAbsoluteRefWithAnchor', bundledSchema)).toBe(
-      absoluteInternalSchema.properties!.num,
+      internalSchema.properties!.num,
     );
   });
   it('correctly resolves absolute bundled refs in arrays within a JSON Schema Draft 2020-12', () => {
@@ -336,31 +309,29 @@ describe('findSchemaDefinitionRecursive()', () => {
   it('correctly resolves absolute bundled refs within a JSON Schema Draft 2020-12 without an `$id`', () => {
     const { $id: d, ...bundledSchemaWithoutId } = bundledSchema;
     expect(findSchemaDefinitionRecursive('#/$defs/bundledAbsoluteRef', bundledSchemaWithoutId)).toStrictEqual(
-      absoluteInternalSchema,
+      internalSchema,
     );
   });
   it('correctly resolves relative bundled refs within a JSON Schema Draft 2020-12', () => {
-    expect(findSchemaDefinitionRecursive('#/$defs/bundledRelativeRef', bundledSchema)).toStrictEqual(
-      absoluteInternalSchema,
-    );
+    expect(findSchemaDefinitionRecursive('#/$defs/bundledRelativeRef', bundledSchema)).toStrictEqual(internalSchema);
   });
   it('correctly resolves relative bundled refs with anchors within a JSON Schema Draft 2020-12', () => {
     expect(findSchemaDefinitionRecursive('#/$defs/bundledRelativeRefWithAnchor', bundledSchema)).toBe(
-      absoluteInternalSchema.$defs!.string,
+      internalSchema.$defs!.string,
     );
   });
   it('correctly resolves indirect bundled refs within a JSON Schema Draft 2020-12', () => {
-    expect(findSchemaDefinitionRecursive('#/$defs/indirectRef', bundledSchema)).toStrictEqual(absoluteInternalSchema);
+    expect(findSchemaDefinitionRecursive('#/$defs/indirectRef', bundledSchema)).toStrictEqual(internalSchema);
   });
   it('correctly resolves relative refs with explicit base URI in a bundled JSON Schema', () => {
     expect(
       findSchemaDefinitionRecursive('bundled.ref.json', bundledSchema, [], 'https://example.com/undefined.ref.json'),
-    ).toStrictEqual(absoluteInternalSchema);
+    ).toStrictEqual(internalSchema);
   });
   it('correctly resolves local refs with explicit base URI in a bundled JSON Schema', () => {
     expect(
       findSchemaDefinitionRecursive('#/properties/num', bundledSchema, [], 'https://example.com/bundled.ref.json'),
-    ).toBe(absoluteInternalSchema.properties!.num);
+    ).toBe(internalSchema.properties!.num);
   });
   it('throws error when relative ref is undefined in a bundled JSON Schema', () => {
     expect(() => findSchemaDefinitionRecursive('#/$defs/undefinedRef', bundledSchema)).toThrowError(
@@ -369,7 +340,7 @@ describe('findSchemaDefinitionRecursive()', () => {
   });
   it('throws error when relative ref with anchor is undefined in a bundled JSON Schema', () => {
     expect(() => findSchemaDefinitionRecursive('#/$defs/undefinedRefWithAnchor', bundledSchema)).toThrowError(
-      'Could not find a definition for https://example.com/bundled.ref.json#/$defs/undefined',
+      'Could not find a definition for #/$defs/undefined',
     );
   });
   it('throws error when local ref is undefined in a bundled JSON Schema with explicit base URI', () => {
@@ -389,7 +360,34 @@ describe('findSchemaDefinitionRecursive()', () => {
   });
   it('throws error when ref is a deep circular reference in a bundled JSON Schema', () => {
     expect(() => findSchemaDefinitionRecursive('#/$defs/circularRef', bundledSchema, [])).toThrowError(
-      'Definition for #/$defs/circularRef contains a circular reference through /bundled.ref.json/#/$defs/circularRef -> https://example.com/bundled.schema.json/#/$defs/circularRef',
+      'Definition for #/$defs/circularRef contains a circular reference through /bundled.ref.json/#/$defs/circularRef -> /bundled.schema.json/#/$defs/circularRef -> #/$defs/circularRef',
     );
+  });
+});
+
+describe('makeAllReferencesAbsolute()', () => {
+  it('correctly makes all references absolute in a JSON Schema', () => {
+    expect(makeAllReferencesAbsolute(internalSchema, internalSchema[ID_KEY]!)).toStrictEqual({
+      ...internalSchema,
+      $defs: {
+        ...internalSchema.$defs,
+        circularRef: { $ref: 'https://example.com/bundled.schema.json/#/$defs/circularRef' },
+        undefinedRef: { $ref: 'https://example.com/bundled.ref.json#/$defs/undefined' },
+      },
+      properties: {
+        ...internalSchema.properties,
+        string: { $ref: 'https://example.com/bundled.ref.json#/$defs/string' },
+        allOf: {
+          allOf: [
+            {
+              $ref: 'https://example.com/bundled.ref.json#/$defs/string',
+            },
+            {
+              title: 'String',
+            },
+          ],
+        },
+      },
+    });
   });
 });
