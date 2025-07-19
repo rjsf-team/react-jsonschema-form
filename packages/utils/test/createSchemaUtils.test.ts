@@ -1,7 +1,12 @@
 import {
   createSchemaUtils,
   Experimental_DefaultFormStateBehavior,
+  ID_KEY,
+  JSON_SCHEMA_DRAFT_2020_12,
+  PROPERTIES_KEY,
+  REF_KEY,
   RJSFSchema,
+  SCHEMA_KEY,
   SchemaUtilsType,
   ValidatorType,
 } from '../src';
@@ -21,6 +26,36 @@ describe('createSchemaUtils()', () => {
 
   it('getValidator()', () => {
     expect(schemaUtils.getValidator()).toBe(testValidator);
+  });
+
+  describe('2020-12 schema', () => {
+    const rootSchema2020: RJSFSchema = {
+      [SCHEMA_KEY]: JSON_SCHEMA_DRAFT_2020_12,
+      [ID_KEY]: 'https://example.com/2020-12.json',
+      type: 'object',
+      $defs: {
+        example: {
+          type: 'integer',
+        },
+      },
+      [PROPERTIES_KEY]: {
+        ref: {
+          [REF_KEY]: '#/$defs/example',
+        },
+      },
+    };
+    const schemaUtils2020: SchemaUtilsType = createSchemaUtils(testValidator, rootSchema2020, defaultFormStateBehavior);
+
+    it('getRootSchema()', () => {
+      expect(schemaUtils2020.getRootSchema()).toEqual({
+        ...rootSchema2020,
+        [PROPERTIES_KEY]: {
+          ref: {
+            [REF_KEY]: 'https://example.com/2020-12.json#/$defs/example',
+          },
+        },
+      });
+    });
   });
 
   describe('doesSchemaUtilsDiffer()', () => {
