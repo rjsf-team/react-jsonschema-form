@@ -990,7 +990,6 @@ const layoutGrid: Sample = {
                                   {
                                     'ui:col': {
                                       span: 12,
-                                      style: { margin: '38px 0 6px' },
                                       children: ['employment'],
                                     },
                                   },

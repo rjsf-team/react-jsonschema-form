@@ -1,5 +1,5 @@
+import { Container, Grid } from '@mantine/core';
 import { GridTemplateProps } from '@rjsf/utils';
-import { Grid, Container } from '@mantine/core';
 
 /** Renders a `GridTemplate` for mantine, which is expecting the column sizing information coming in via the
  * extra props provided by the caller, which are spread directly on the `Grid`/`Grid.Col`.
@@ -8,6 +8,7 @@ import { Grid, Container } from '@mantine/core';
  */
 export default function GridTemplate(props: GridTemplateProps) {
   const { children, column, fluid = true, ...rest } = props;
+
   if (column) {
     return <Grid.Col {...rest}>{children}</Grid.Col>;
   }
@@ -15,7 +16,7 @@ export default function GridTemplate(props: GridTemplateProps) {
   // Grid with fluid container
   if (fluid) {
     return (
-      <Container fluid={fluid} p='4' mx={0}>
+      <Container p='4' mx={0} w='100%'>
         <Grid {...rest}>{children}</Grid>
       </Container>
     );
