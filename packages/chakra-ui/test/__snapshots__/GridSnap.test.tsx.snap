@@ -283,7 +283,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
     flex-shrink: 0;
     color: var(--chakra-colors-white);
     border-width: 1px;
-    border-color: var(--chakra-colors-border);
+    border-color: var(--chakra-colors-border-emphasized);
     border-radius: var(--chakra-radii-l1);
     cursor: var(--chakra-cursor-checkbox);
     --focus-ring-color: var(--chakra-colors-color-palette-focus-ring);
@@ -746,7 +746,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
     vertical-align: top;
     color: var(--chakra-colors-white);
     border-width: 1px;
-    border-color: var(--chakra-colors-border);
+    border-color: var(--chakra-colors-border-emphasized);
     border-radius: var(--chakra-radii-full);
     cursor: var(--chakra-cursor-radio);
     width: var(--chakra-sizes-5);
@@ -7362,7 +7362,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
     flex-shrink: 0;
     color: var(--chakra-colors-white);
     border-width: 1px;
-    border-color: var(--chakra-colors-border);
+    border-color: var(--chakra-colors-border-emphasized);
     border-radius: var(--chakra-radii-l1);
     cursor: var(--chakra-cursor-checkbox);
     --focus-ring-color: var(--chakra-colors-color-palette-focus-ring);
@@ -7825,7 +7825,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
     vertical-align: top;
     color: var(--chakra-colors-white);
     border-width: 1px;
-    border-color: var(--chakra-colors-border);
+    border-color: var(--chakra-colors-border-emphasized);
     border-radius: var(--chakra-radii-full);
     cursor: var(--chakra-cursor-radio);
     width: var(--chakra-sizes-5);
@@ -14495,7 +14495,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
     flex-shrink: 0;
     color: var(--chakra-colors-white);
     border-width: 1px;
-    border-color: var(--chakra-colors-border);
+    border-color: var(--chakra-colors-border-emphasized);
     border-radius: var(--chakra-radii-l1);
     cursor: var(--chakra-cursor-checkbox);
     --focus-ring-color: var(--chakra-colors-color-palette-focus-ring);
@@ -14958,7 +14958,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
     vertical-align: top;
     color: var(--chakra-colors-white);
     border-width: 1px;
-    border-color: var(--chakra-colors-border);
+    border-color: var(--chakra-colors-border-emphasized);
     border-radius: var(--chakra-radii-full);
     cursor: var(--chakra-cursor-radio);
     width: var(--chakra-sizes-5);
@@ -19138,7 +19138,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
     flex-shrink: 0;
     color: var(--chakra-colors-white);
     border-width: 1px;
-    border-color: var(--chakra-colors-border);
+    border-color: var(--chakra-colors-border-emphasized);
     border-radius: var(--chakra-radii-l1);
     cursor: var(--chakra-cursor-checkbox);
     --focus-ring-color: var(--chakra-colors-color-palette-focus-ring);
@@ -19601,7 +19601,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
     vertical-align: top;
     color: var(--chakra-colors-white);
     border-width: 1px;
-    border-color: var(--chakra-colors-border);
+    border-color: var(--chakra-colors-border-emphasized);
     border-radius: var(--chakra-radii-full);
     cursor: var(--chakra-cursor-radio);
     width: var(--chakra-sizes-5);
@@ -26201,7 +26201,7 @@ exports[`Three even column grid renders person and address in three columns, no 
     flex-shrink: 0;
     color: var(--chakra-colors-white);
     border-width: 1px;
-    border-color: var(--chakra-colors-border);
+    border-color: var(--chakra-colors-border-emphasized);
     border-radius: var(--chakra-radii-l1);
     cursor: var(--chakra-cursor-checkbox);
     --focus-ring-color: var(--chakra-colors-color-palette-focus-ring);
@@ -30217,7 +30217,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
     flex-shrink: 0;
     color: var(--chakra-colors-white);
     border-width: 1px;
-    border-color: var(--chakra-colors-border);
+    border-color: var(--chakra-colors-border-emphasized);
     border-radius: var(--chakra-radii-l1);
     cursor: var(--chakra-cursor-checkbox);
     --focus-ring-color: var(--chakra-colors-color-palette-focus-ring);
