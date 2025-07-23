@@ -67,7 +67,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
                   id={optionId(id, index)}
                   disabled={itemDisabled}
                 />
-                <Label className='leading-tight'>{option.label}</Label>
+                <Label className='leading-tight' htmlFor={optionId(id, index)}>{option.label}</Label>
               </div>
             );
           })}
