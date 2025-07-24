@@ -16,10 +16,9 @@ const transformErrors: ErrorTransformer = (errors) => {
       });
     }
     if (error.name === 'required') {
-      debugger
       return Object.assign({}, error, {
-        message: `${error.title} is a required field`
-      })
+        message: `${error.title} is a required field`,
+      });
     }
     return error;
   });
@@ -31,13 +30,11 @@ const validation: Sample = {
     description:
       'This form defines custom validation rules checking that the two passwords match. There is also a custom validation message when submitting an age < 18, which can only be seen if HTML5 validation is turned off.',
     type: 'object',
-    required: [
-      'firstName'
-    ],
+    required: ['firstName'],
     properties: {
       firstName: {
         title: 'First Name',
-        type: 'string'
+        type: 'string',
       },
       pass1: {
         title: 'Password',
