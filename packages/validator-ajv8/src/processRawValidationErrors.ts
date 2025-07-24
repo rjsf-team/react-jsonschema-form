@@ -39,6 +39,7 @@ export function transformRJSFValidationErrors<
     let { message = '' } = rest;
     let property = instancePath.replace(/\//g, '.');
     let stack = `${property} ${message}`.trim();
+    let uiTitle = '';
     const rawPropertyNames: string[] = [
       ...(params.deps?.split(', ') || []),
       params.missingProperty,
@@ -61,10 +62,12 @@ export function transformRJSFValidationErrors<
         }
         if (uiSchemaTitle) {
           message = message.replace(`'${currentProperty}'`, `'${uiSchemaTitle}'`);
+          uiTitle = uiSchemaTitle;
         } else {
           const parentSchemaTitle = get(parentSchema, [PROPERTIES_KEY, currentProperty, 'title']);
           if (parentSchemaTitle) {
             message = message.replace(`'${currentProperty}'`, `'${parentSchemaTitle}'`);
+            uiTitle = parentSchemaTitle;
           }
         }
       });
@@ -75,11 +78,13 @@ export function transformRJSFValidationErrors<
 
       if (uiSchemaTitle) {
         stack = `'${uiSchemaTitle}' ${message}`.trim();
+        uiTitle = uiSchemaTitle;
       } else {
         const parentSchemaTitle = parentSchema?.title;
 
         if (parentSchemaTitle) {
           stack = `'${parentSchemaTitle}' ${message}`.trim();
+          uiTitle = parentSchemaTitle;
         }
       }
     }
@@ -97,6 +102,7 @@ export function transformRJSFValidationErrors<
       params, // specific to ajv
       stack,
       schemaPath,
+      title: uiTitle,
     };
   });
 }
