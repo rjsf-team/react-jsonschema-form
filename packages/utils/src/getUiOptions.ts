@@ -13,6 +13,10 @@ export default function getUiOptions<T = any, S extends StrictRJSFSchema = RJSFS
   uiSchema: UiSchema<T, S, F> = {},
   globalOptions: GlobalUISchemaOptions = {},
 ): UIOptionsType<T, S, F> {
+  // Handle null or undefined uiSchema
+  if (!uiSchema) {
+    return { ...globalOptions };
+  }
   return Object.keys(uiSchema)
     .filter((key) => key.indexOf('ui:') === 0)
     .reduce(
