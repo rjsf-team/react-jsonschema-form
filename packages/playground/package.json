@@ -57,7 +57,7 @@
     "chakra-react-select": "^6.1.0",
     "core-js": "^3.42.0",
     "dayjs": "^1.11.10",
-    "deep-freeze-es6": "^1.4.1",
+    "deep-freeze-es6": "^4.0.1",
     "jss": "^10.10.0",
     "lodash": "^4.17.21",
     "lucide-react": "^0.503.0",
