@@ -387,11 +387,11 @@ export default class Form<
   ): FormState<T, S, F> {
     const state: FormState<T, S, F> = this.state || {};
     const schema = 'schema' in props ? props.schema : this.props.schema;
+    const validator = 'validator' in props ? props.validator : this.props.validator;
     const uiSchema: UiSchema<T, S, F> = ('uiSchema' in props ? props.uiSchema! : this.props.uiSchema!) || {};
     const edit = typeof inputFormData !== 'undefined';
     const liveValidate = 'liveValidate' in props ? props.liveValidate : this.props.liveValidate;
     const mustValidate = edit && !props.noValidate && liveValidate;
-    const rootSchema = schema;
     const experimental_defaultFormStateBehavior =
       'experimental_defaultFormStateBehavior' in props
         ? props.experimental_defaultFormStateBehavior
@@ -404,22 +404,23 @@ export default class Form<
     if (
       !schemaUtils ||
       schemaUtils.doesSchemaUtilsDiffer(
-        props.validator,
-        rootSchema,
+        validator,
+        schema,
         experimental_defaultFormStateBehavior,
         experimental_customMergeAllOf,
       )
     ) {
       schemaUtils = createSchemaUtils<T, S, F>(
-        props.validator,
-        rootSchema,
+        validator,
+        schema,
         experimental_defaultFormStateBehavior,
         experimental_customMergeAllOf,
       );
     }
-    const formData: T = schemaUtils.getDefaultFormState(schema, inputFormData) as T;
+    const rootSchema = schemaUtils.getRootSchema();
+    const formData: T = schemaUtils.getDefaultFormState(rootSchema, inputFormData) as T;
     const _retrievedSchema = this.updateRetrievedSchema(
-      retrievedSchema ?? schemaUtils.retrieveSchema(schema, formData),
+      retrievedSchema ?? schemaUtils.retrieveSchema(rootSchema, formData),
     );
 
     const getCurrentErrors = (): ValidationData<T> => {
@@ -443,7 +444,7 @@ export default class Form<
     let schemaValidationErrors: RJSFValidationError[] = state.schemaValidationErrors;
     let schemaValidationErrorSchema: ErrorSchema<T> = state.schemaValidationErrorSchema;
     if (mustValidate) {
-      const schemaValidation = this.validate(formData, schema, schemaUtils, _retrievedSchema);
+      const schemaValidation = this.validate(formData, rootSchema, schemaUtils, _retrievedSchema);
       errors = schemaValidation.errors;
       // If retrievedSchema is undefined which means the schema or formData has changed, we do not merge state.
       // Else in the case where it hasn't changed, we merge 'state.errorSchema' with 'schemaValidation.errorSchema.' This done to display the raised field error.
@@ -492,7 +493,7 @@ export default class Form<
     );
     const nextState: FormState<T, S, F> = {
       schemaUtils,
-      schema,
+      schema: rootSchema,
       uiSchema,
       idSchema,
       formData,
@@ -541,7 +542,7 @@ export default class Form<
    */
   validate(
     formData: T | undefined,
-    schema = this.props.schema,
+    schema = this.state.schema,
     altSchemaUtils?: SchemaUtilsType<T, S, F>,
     retrievedSchema?: S,
   ): ValidationData<T> {
@@ -869,7 +870,7 @@ export default class Form<
   /** Returns the registry for the form */
   getRegistry(): Registry<T, S, F> {
     const { translateString: customTranslateString, uiSchema = {} } = this.props;
-    const { schemaUtils } = this.state;
+    const { schema, schemaUtils } = this.state;
     const { fields, templates, widgets, formContext, translateString } = getDefaultRegistry<T, S, F>();
     return {
       fields: { ...fields, ...this.props.fields },
@@ -882,7 +883,7 @@ export default class Form<
         },
       },
       widgets: { ...widgets, ...this.props.widgets },
-      rootSchema: this.props.schema,
+      rootSchema: schema,
       formContext: this.props.formContext || formContext,
       schemaUtils,
       translateString: customTranslateString || translateString,

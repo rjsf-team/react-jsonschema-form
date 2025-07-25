@@ -15,6 +15,10 @@ describe('createSchemaUtils()', () => {
   };
   const schemaUtils: SchemaUtilsType = createSchemaUtils(testValidator, rootSchema, defaultFormStateBehavior);
 
+  it('getRootSchema()', () => {
+    expect(schemaUtils.getRootSchema()).toEqual(rootSchema);
+  });
+
   it('getValidator()', () => {
     expect(schemaUtils.getValidator()).toBe(testValidator);
   });

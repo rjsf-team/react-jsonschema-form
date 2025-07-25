@@ -18,9 +18,17 @@ should change the heading of the (upcoming) version to include a major version b
 
 # 6.0.0-beta.12
 
+## @rjsf/core
+
+- Updated `Form` to store the `schemaUtils.getRootSchema()` into the `state.schema` and use that everywhere as the `schema`
+
 ## @rjsf/shadcn
 
 - Updated the building of `shadcn` to use the `lodashReplacer` with `tsc-alias` fixing [#4678](https://github.com/rjsf-team/react-jsonschema-form/issues/4678)
+
+## @rjsf/utils
+
+- Updated `SchemaUtils` and `createSchemaUtils()` to add a new `getRootSchema()` function
 
 # 6.0.0-beta.11
 

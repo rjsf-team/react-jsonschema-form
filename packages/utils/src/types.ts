@@ -1128,6 +1128,11 @@ export interface FoundFieldType<S extends StrictRJSFSchema = RJSFSchema> {
  * set of APIs to the `@rjsf/core` components and the various themes as well.
  */
 export interface SchemaUtilsType<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any> {
+  /** Returns the `rootSchema` in the `SchemaUtilsType`
+   *
+   * @returns - The rootSchema
+   */
+  getRootSchema(): S;
   /** Returns the `ValidatorType` in the `SchemaUtilsType`
    *
    * @returns - The `ValidatorType`
