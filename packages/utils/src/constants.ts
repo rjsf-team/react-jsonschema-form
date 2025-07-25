@@ -46,4 +46,5 @@ export const UI_GLOBAL_OPTIONS_KEY = 'ui:globalOptions';
 
 /** The JSON Schema version strings
  */
+export const JSON_SCHEMA_DRAFT_2019_09 = 'https://json-schema.org/draft/2019-09/schema';
 export const JSON_SCHEMA_DRAFT_2020_12 = 'https://json-schema.org/draft/2020-12/schema';
