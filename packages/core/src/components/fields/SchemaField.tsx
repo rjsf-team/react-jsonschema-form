@@ -343,6 +343,14 @@ class SchemaField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
   FieldProps<T, S, F>
 > {
   shouldComponentUpdate(nextProps: Readonly<FieldProps<T, S, F>>) {
+    const { experimental_componentUpdateStrategy = 'customDeep' } = this.props.registry;
+
+    if (experimental_componentUpdateStrategy === 'default') {
+      // Use React's default behavior: always update if state or props change (no shouldComponentUpdate optimization)
+      return true;
+    }
+
+    // Use custom deep equality checks
     return !deepEquals(this.props, nextProps);
   }
 

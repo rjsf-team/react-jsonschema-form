@@ -215,6 +215,17 @@ export interface FormProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
    * Use at your own risk as this prop is private and may change at any time without notice.
    */
   _internalFormWrapper?: ElementType;
+  /**
+   * Controls the component update strategy used by the Form's `shouldComponentUpdate` lifecycle method.
+   *
+   * - `'customDeep'`: Uses RJSF's custom deep equality checks via the `deepEquals` utility function,
+   *   which treats all functions as equivalent and provides optimized performance for form data comparisons.
+   * - `'default'`: Uses React's default component update behavior (shallow comparison).
+   *
+   * @default 'customDeep'
+   * @experimental This API may change in future versions
+   */
+  experimental_componentUpdateStrategy?: 'customDeep' | 'default';
   /** Support receiving a React ref to the Form
    */
   ref?: Ref<Form<T, S, F>>;
@@ -514,9 +525,16 @@ export default class Form<
    * @returns - True if the component should be updated, false otherwise
    */
   shouldComponentUpdate(nextProps: FormProps<T, S, F>, nextState: FormState<T, S, F>): boolean {
+    const { experimental_componentUpdateStrategy = 'customDeep' } = this.props;
+
+    if (experimental_componentUpdateStrategy === 'default') {
+      // Use React's default behavior: always update if state or props change (no shouldComponentUpdate optimization)
+      return true;
+    }
+
+    // Use custom deep equality checks via shouldRender
     return shouldRender(this, nextProps, nextState);
   }
-
   /** Gets the previously raised customValidate errors.
    *
    * @returns the previous customValidate errors
@@ -869,7 +887,11 @@ export default class Form<
 
   /** Returns the registry for the form */
   getRegistry(): Registry<T, S, F> {
-    const { translateString: customTranslateString, uiSchema = {} } = this.props;
+    const {
+      translateString: customTranslateString,
+      uiSchema = {},
+      experimental_componentUpdateStrategy = 'customDeep',
+    } = this.props;
     const { schema, schemaUtils } = this.state;
     const { fields, templates, widgets, formContext, translateString } = getDefaultRegistry<T, S, F>();
     return {
@@ -888,6 +910,7 @@ export default class Form<
       schemaUtils,
       translateString: customTranslateString || translateString,
       globalUiOptions: uiSchema[UI_GLOBAL_OPTIONS_KEY],
+      experimental_componentUpdateStrategy,
     };
   }
 
