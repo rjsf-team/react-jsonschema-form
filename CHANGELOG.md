@@ -21,6 +21,16 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Updated `lodash` import in `fancy-multi-select.tsx` to to be direct import, fixing [#4696](https://github.com/rjsf-team/react-jsonschema-form/issues/4696)
 
+# 6.0.0-beta.13
+
+## @rjsf/core
+
+- Added `experimental_componentUpdateStrategy` prop to `Form` component to control re-render optimization behavior. Supports `'customDeep'` (default, uses deep equality checks) and `'default'` (uses React's default behavior). The strategy is accessible from `SchemaField` components via the registry.
+
+## @rjsf/utils
+
+- Extended `Registry` interface to include optional `experimental_componentUpdateStrategy` property
+
 # 6.0.0-beta.12
 
 ## @rjsf/core
