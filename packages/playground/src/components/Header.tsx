@@ -201,6 +201,11 @@ const liveSettingsSelectSchema: RJSFSchema = {
               title: 'Use default for undefined field value',
               enum: ['useDefaultIfFormDataUndefined'],
             },
+            {
+              type: 'string',
+              title: 'Always use default for field value',
+              enum: ['useDefaultAlways'],
+            },
           ],
         },
       },

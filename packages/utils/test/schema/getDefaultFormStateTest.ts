@@ -1340,6 +1340,65 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             });
           });
         });
+
+        describe('mergeDefaultsIntoFormData set to "useDefaultAlways"', () => {
+          const experimental_defaultFormStateBehavior: Experimental_DefaultFormStateBehavior = {
+            mergeDefaultsIntoFormData: 'useDefaultAlways',
+          };
+
+          test('getDefaultFormState', () => {
+            expect(
+              getDefaultFormState(
+                testValidator,
+                schema,
+                rawFormData,
+                schema,
+                undefined,
+                experimental_defaultFormStateBehavior,
+              ),
+            ).toEqual({
+              animal: 'Fish',
+              food: 'worms',
+              water: null,
+            });
+          });
+
+          test('computeDefaults', () => {
+            expect(
+              computeDefaults(testValidator, schema, {
+                rootSchema: schema,
+                rawFormData,
+                experimental_defaultFormStateBehavior,
+                shouldMergeDefaultsIntoFormData,
+              }),
+            ).toEqual({
+              food: 'worms',
+              water: 'sea',
+            });
+          });
+
+          test('getDefaultBasedOnSchemaType', () => {
+            expect(
+              getDefaultBasedOnSchemaType(testValidator, schema, {
+                rootSchema: schema,
+                rawFormData,
+                shouldMergeDefaultsIntoFormData,
+                experimental_defaultFormStateBehavior,
+              }),
+            ).toEqual({});
+          });
+
+          test('getObjectDefaults', () => {
+            expect(
+              getObjectDefaults(testValidator, schema, {
+                rootSchema: schema,
+                rawFormData,
+                shouldMergeDefaultsIntoFormData,
+                experimental_defaultFormStateBehavior,
+              }),
+            ).toEqual({});
+          });
+        });
       });
 
       describe('an object with a valid formData and enum property with default value', () => {
@@ -4992,6 +5051,123 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           },
         }),
       ).toEqual({ stringArray: [undefined], numberArray: [] });
+    });
+    describe('defaults with oneOf and useDefaultAlways', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          country: {
+            type: 'string',
+            enum: ['UK', 'France', 'Spain'],
+          },
+          rating: {
+            type: 'string',
+          },
+        },
+        dependencies: {
+          country: {
+            oneOf: [
+              {
+                properties: {
+                  country: {
+                    enum: ['UK'],
+                  },
+                  city: {
+                    type: 'array',
+                    uniqueItems: true,
+                    items: {
+                      type: 'string',
+                      enum: ['London', 'Birmingham', 'Liverpool'],
+                    },
+                    default: ['London'],
+                  },
+                },
+              },
+              {
+                properties: {
+                  country: {
+                    enum: ['France'],
+                  },
+                  city: {
+                    type: 'array',
+                    uniqueItems: true,
+                    items: {
+                      type: 'string',
+                      enum: ['Paris', 'Marseille', 'Lyon'],
+                    },
+                    default: ['Paris'],
+                  },
+                },
+              },
+              {
+                properties: {
+                  country: {
+                    enum: ['Spain'],
+                  },
+                  city: {
+                    type: 'array',
+                    uniqueItems: true,
+                    items: {
+                      type: 'string',
+                      enum: ['Madrid', 'Barcelona', 'Valencia'],
+                    },
+                    default: ['Madrid'],
+                  },
+                },
+              },
+            ],
+          },
+        },
+      };
+      afterEach(() => {
+        // Reset the testValidator
+        if (typeof testValidator.reset === 'function') {
+          testValidator?.reset();
+        }
+      });
+      it('should populate empty defaults for oneOf + dependencies', () => {
+        testValidator.setReturnValues({
+          isValid: [
+            true, // First oneOf... first === first
+            false, // Second oneOf... second !== first
+            false,
+          ],
+        });
+        expect(
+          getDefaultFormState(testValidator, schema, { country: 'UK', rating: '6.0' }, undefined, undefined, {
+            mergeDefaultsIntoFormData: 'useDefaultAlways',
+          }),
+        ).toEqual({
+          country: 'UK',
+          rating: '6.0',
+          city: ['London'],
+        });
+      });
+      it('should replace defaults for oneOf + dependencies', () => {
+        testValidator.setReturnValues({
+          isValid: [
+            false, // First oneOf... first === first
+            true, // Second oneOf... second !== first
+            false,
+          ],
+        });
+        expect(
+          getDefaultFormState(
+            testValidator,
+            schema,
+            { country: 'France', city: ['London'], rating: '6.0' },
+            undefined,
+            undefined,
+            {
+              mergeDefaultsIntoFormData: 'useDefaultAlways',
+            },
+          ),
+        ).toEqual({
+          country: 'France',
+          rating: '6.0',
+          city: ['Paris'],
+        });
+      });
     });
   });
 }

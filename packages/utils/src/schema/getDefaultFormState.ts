@@ -26,6 +26,7 @@ import {
   Experimental_DefaultFormStateBehavior,
   FormContextType,
   GenericObjectType,
+  OverrideFormDataStrategy,
   RJSFSchema,
   StrictRJSFSchema,
   ValidatorType,
@@ -369,6 +370,9 @@ export function computeDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema
         matchingFormData as T,
         mergeExtraDefaults,
         true,
+        experimental_defaultFormStateBehavior?.mergeDefaultsIntoFormData === 'useDefaultAlways'
+          ? OverrideFormDataStrategy.replace
+          : OverrideFormDataStrategy.noop,
       ) as T;
     }
   }
@@ -745,7 +749,7 @@ export default function getDefaultFormState<
       formData,
       true, // set to true to add any additional default array entries.
       defaultSupercedesUndefined,
-      true, // set to true to override formData with defaults if they exist.
+      OverrideFormDataStrategy.merge, // set to 'merge' to override formData with defaults if they exist.
     );
     return result;
   }
