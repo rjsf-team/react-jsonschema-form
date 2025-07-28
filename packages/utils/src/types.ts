@@ -423,6 +423,8 @@ export interface Registry<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
   translateString: (stringKey: TranslatableString, params?: string[]) => string;
   /** The optional global UI Options that are available for all templates, fields and widgets to access */
   globalUiOptions?: GlobalUISchemaOptions;
+  /** The component update strategy used by the Form and its fields for performance optimization */
+  experimental_componentUpdateStrategy?: 'customDeep' | 'default';
 }
 
 /** The properties that are passed to a Field implementation */
