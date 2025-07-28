@@ -195,8 +195,19 @@ export interface FormProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
    * `emptyObjectFields`
    */
   experimental_defaultFormStateBehavior?: Experimental_DefaultFormStateBehavior;
+  /**
+   * Controls the component update strategy used by the Form's `shouldComponentUpdate` lifecycle method.
+   *
+   * - `'customDeep'`: Uses RJSF's custom deep equality checks via the `deepEquals` utility function,
+   *   which treats all functions as equivalent and provides optimized performance for form data comparisons.
+   * - `'default'`: Uses React's default component update behavior (shallow comparison).
+   *
+   * @default 'customDeep'
+   */
+  experimental_componentUpdateStrategy?: 'customDeep' | 'default';
   /** Optional function that allows for custom merging of `allOf` schemas
    */
+
   experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>;
   // Private
   /**
@@ -215,17 +226,6 @@ export interface FormProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
    * Use at your own risk as this prop is private and may change at any time without notice.
    */
   _internalFormWrapper?: ElementType;
-  /**
-   * Controls the component update strategy used by the Form's `shouldComponentUpdate` lifecycle method.
-   *
-   * - `'customDeep'`: Uses RJSF's custom deep equality checks via the `deepEquals` utility function,
-   *   which treats all functions as equivalent and provides optimized performance for form data comparisons.
-   * - `'default'`: Uses React's default component update behavior (shallow comparison).
-   *
-   * @default 'customDeep'
-   * @experimental This API may change in future versions
-   */
-  experimental_componentUpdateStrategy?: 'customDeep' | 'default';
   /** Support receiving a React ref to the Form
    */
   ref?: Ref<Form<T, S, F>>;
