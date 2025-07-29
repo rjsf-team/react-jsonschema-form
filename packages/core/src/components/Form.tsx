@@ -200,11 +200,12 @@ export interface FormProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
    *
    * - `'customDeep'`: Uses RJSF's custom deep equality checks via the `deepEquals` utility function,
    *   which treats all functions as equivalent and provides optimized performance for form data comparisons.
-   * - `'default'`: Uses React's default component update behavior (shallow comparison).
+   * - `'shallow'`: Uses shallow comparison of props and state (only compares direct properties). This matches React's PureComponent behavior.
+   * - `'always'`: Always rerenders when called. This matches React's Component behavior.
    *
    * @default 'customDeep'
    */
-  experimental_componentUpdateStrategy?: 'customDeep' | 'default';
+  experimental_componentUpdateStrategy?: 'customDeep' | 'shallow' | 'always';
   /** Optional function that allows for custom merging of `allOf` schemas
    */
 
@@ -526,14 +527,7 @@ export default class Form<
    */
   shouldComponentUpdate(nextProps: FormProps<T, S, F>, nextState: FormState<T, S, F>): boolean {
     const { experimental_componentUpdateStrategy = 'customDeep' } = this.props;
-
-    if (experimental_componentUpdateStrategy === 'default') {
-      // Use React's default behavior: always update if state or props change (no shouldComponentUpdate optimization)
-      return true;
-    }
-
-    // Use custom deep equality checks via shouldRender
-    return shouldRender(this, nextProps, nextState);
+    return shouldRender(this, nextProps, nextState, experimental_componentUpdateStrategy);
   }
   /** Gets the previously raised customValidate errors.
    *

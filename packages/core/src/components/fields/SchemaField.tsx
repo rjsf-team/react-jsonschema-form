@@ -1,7 +1,6 @@
 import { useCallback, Component, ComponentType } from 'react';
 import {
   ADDITIONAL_PROPERTY_FLAG,
-  deepEquals,
   descriptionId,
   ErrorSchema,
   FieldProps,
@@ -15,6 +14,7 @@ import {
   mergeObjects,
   Registry,
   RJSFSchema,
+  shouldRender,
   StrictRJSFSchema,
   TranslatableString,
   UI_OPTIONS_KEY,
@@ -345,13 +345,7 @@ class SchemaField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
   shouldComponentUpdate(nextProps: Readonly<FieldProps<T, S, F>>) {
     const { experimental_componentUpdateStrategy = 'customDeep' } = this.props.registry;
 
-    if (experimental_componentUpdateStrategy === 'default') {
-      // Use React's default behavior: always update if state or props change (no shouldComponentUpdate optimization)
-      return true;
-    }
-
-    // Use custom deep equality checks
-    return !deepEquals(this.props, nextProps);
+    return shouldRender(this, nextProps, this.state, experimental_componentUpdateStrategy);
   }
 
   render() {

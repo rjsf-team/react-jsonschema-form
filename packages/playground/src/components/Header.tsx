@@ -74,7 +74,7 @@ const liveSettingsBooleanSchema: RJSFSchema = {
       type: 'string',
       title: 'Component update strategy',
       default: 'customDeep',
-      enum: ['customDeep', 'default'],
+      enum: ['customDeep', 'shallow', 'always'],
     },
     showErrorList: {
       type: 'string',
