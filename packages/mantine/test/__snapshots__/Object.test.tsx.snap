@@ -502,6 +502,7 @@ exports[`object fields additionalProperties 1`] = `
             "props": {
               "className": "m_7485cace",
               "data-size": undefined,
+              "data-strategy": "block",
               "data-variant": undefined,
               "id": "root",
               "size": undefined,
@@ -938,6 +939,7 @@ exports[`object fields object 1`] = `
             "props": {
               "className": "m_7485cace",
               "data-size": undefined,
+              "data-strategy": "block",
               "data-variant": undefined,
               "id": "root",
               "size": undefined,
@@ -1522,6 +1524,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
             "props": {
               "className": "m_7485cace",
               "data-size": undefined,
+              "data-strategy": "block",
               "data-variant": undefined,
               "id": "root",
               "size": undefined,
@@ -2145,6 +2148,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
             "props": {
               "className": "m_7485cace",
               "data-size": undefined,
+              "data-strategy": "block",
               "data-variant": undefined,
               "id": "root",
               "size": undefined,
@@ -2768,6 +2772,7 @@ exports[`object fields with title and description from both additionalProperties
             "props": {
               "className": "m_7485cace",
               "data-size": undefined,
+              "data-strategy": "block",
               "data-variant": undefined,
               "id": "root",
               "size": undefined,
@@ -3276,6 +3281,7 @@ exports[`object fields with title and description from both object 1`] = `
             "props": {
               "className": "m_7485cace",
               "data-size": undefined,
+              "data-strategy": "block",
               "data-variant": undefined,
               "id": "root",
               "size": undefined,
@@ -3899,6 +3905,7 @@ exports[`object fields with title and description from uiSchema additionalProper
             "props": {
               "className": "m_7485cace",
               "data-size": undefined,
+              "data-strategy": "block",
               "data-variant": undefined,
               "id": "root",
               "size": undefined,
@@ -4407,6 +4414,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
             "props": {
               "className": "m_7485cace",
               "data-size": undefined,
+              "data-strategy": "block",
               "data-variant": undefined,
               "id": "root",
               "size": undefined,
@@ -5030,6 +5038,7 @@ exports[`object fields with title and description from uiSchema show add button 
             "props": {
               "className": "m_7485cace",
               "data-size": undefined,
+              "data-strategy": "block",
               "data-variant": undefined,
               "id": "root",
               "size": undefined,
@@ -5505,6 +5514,7 @@ exports[`object fields with title and description object 1`] = `
             "props": {
               "className": "m_7485cace",
               "data-size": undefined,
+              "data-strategy": "block",
               "data-variant": undefined,
               "id": "root",
               "size": undefined,
@@ -6128,6 +6138,7 @@ exports[`object fields with title and description show add button and fields if 
             "props": {
               "className": "m_7485cace",
               "data-size": undefined,
+              "data-strategy": "block",
               "data-variant": undefined,
               "id": "root",
               "size": undefined,
@@ -6695,6 +6706,7 @@ exports[`object fields with title and description with global label off addition
             "props": {
               "className": "m_7485cace",
               "data-size": undefined,
+              "data-strategy": "block",
               "data-variant": undefined,
               "id": "root",
               "size": undefined,
@@ -7097,6 +7109,7 @@ exports[`object fields with title and description with global label off object 1
             "props": {
               "className": "m_7485cace",
               "data-size": undefined,
+              "data-strategy": "block",
               "data-variant": undefined,
               "id": "root",
               "size": undefined,
@@ -7664,6 +7677,7 @@ exports[`object fields with title and description with global label off show add
             "props": {
               "className": "m_7485cace",
               "data-size": undefined,
+              "data-strategy": "block",
               "data-variant": undefined,
               "id": "root",
               "size": undefined,
