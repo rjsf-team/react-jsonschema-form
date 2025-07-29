@@ -1380,10 +1380,12 @@ exports[`array fields checkboxes 1`] = `
                         ],
                         "props": {
                           "className": "m_1dcfd90b",
-                          "data-size": undefined,
+                          "data-size": "sm",
                           "data-variant": undefined,
                           "size": undefined,
-                          "style": {},
+                          "style": {
+                            "--pg-gap": "var(--pg-gap-sm)",
+                          },
                         },
                         "type": "div",
                         Symbol(cleaned): true,
@@ -1391,6 +1393,7 @@ exports[`array fields checkboxes 1`] = `
                     ],
                     "props": {
                       "className": "m_8fb7ebe7",
+                      "data-no-overflow": true,
                       "data-size": undefined,
                       "data-variant": "default",
                       "onClick": [Function],
@@ -1445,7 +1448,7 @@ exports[`array fields checkboxes 1`] = `
                 "props": {
                   "className": "m_6c018570",
                   "data-multiline": true,
-                  "data-size": undefined,
+                  "data-size": "sm",
                   "data-variant": "default",
                   "data-with-right-section": true,
                   "size": undefined,
@@ -1459,7 +1462,7 @@ exports[`array fields checkboxes 1`] = `
             ],
             "props": {
               "className": "m_46b77525",
-              "data-size": undefined,
+              "data-size": "sm",
               "data-variant": undefined,
               "size": undefined,
               "style": {},
@@ -1570,9 +1573,8 @@ exports[`array fields checkboxes 1`] = `
                                       },
                                     ],
                                     "props": {
-                                      "style": {
-                                        "minWidth": "100%",
-                                      },
+                                      "className": "m_b1336c6",
+                                      "style": {},
                                     },
                                     "type": "div",
                                     Symbol(cleaned): true,
@@ -1699,7 +1701,10 @@ exports[`array fields checkboxes 1`] = `
                   "onMouseDown": [Function],
                   "role": "listbox",
                   "size": undefined,
-                  "style": {},
+                  "style": {
+                    "--combobox-option-fz": "var(--mantine-font-size-sm)",
+                    "--combobox-option-padding": "var(--combobox-option-padding-sm)",
+                  },
                 },
                 "type": "div",
                 Symbol(cleaned): true,
@@ -1716,6 +1721,8 @@ exports[`array fields checkboxes 1`] = `
               "role": "presentation",
               "size": undefined,
               "style": {
+                "--combobox-option-fz": "var(--mantine-font-size-sm)",
+                "--combobox-option-padding": "var(--combobox-option-padding-sm)",
                 "display": "none",
                 "left": 0,
                 "top": 0,
@@ -1947,6 +1954,7 @@ exports[`array fields empty errors array 1`] = `
             "props": {
               "className": "m_7485cace",
               "data-size": undefined,
+              "data-strategy": "block",
               "data-variant": undefined,
               "id": "root",
               "size": undefined,
@@ -2908,6 +2916,7 @@ exports[`array fields has errors 1`] = `
             "props": {
               "className": "m_7485cace",
               "data-size": undefined,
+              "data-strategy": "block",
               "data-variant": undefined,
               "id": "root",
               "size": undefined,
@@ -3127,6 +3136,7 @@ exports[`array fields no errors 1`] = `
             "props": {
               "className": "m_7485cace",
               "data-size": undefined,
+              "data-strategy": "block",
               "data-variant": undefined,
               "id": "root",
               "size": undefined,
@@ -4716,7 +4726,7 @@ exports[`with title and description checkboxes 1`] = `
                 ],
                 "props": {
                   "className": "m_8fdc1311",
-                  "data-size": undefined,
+                  "data-size": "sm",
                   "data-variant": undefined,
                   "htmlFor": "root",
                   "id": "root-label",
@@ -4764,10 +4774,12 @@ exports[`with title and description checkboxes 1`] = `
                         ],
                         "props": {
                           "className": "m_1dcfd90b",
-                          "data-size": undefined,
+                          "data-size": "sm",
                           "data-variant": undefined,
                           "size": undefined,
-                          "style": {},
+                          "style": {
+                            "--pg-gap": "var(--pg-gap-sm)",
+                          },
                         },
                         "type": "div",
                         Symbol(cleaned): true,
@@ -4775,6 +4787,7 @@ exports[`with title and description checkboxes 1`] = `
                     ],
                     "props": {
                       "className": "m_8fb7ebe7",
+                      "data-no-overflow": true,
                       "data-size": undefined,
                       "data-variant": "default",
                       "onClick": [Function],
@@ -4829,7 +4842,7 @@ exports[`with title and description checkboxes 1`] = `
                 "props": {
                   "className": "m_6c018570",
                   "data-multiline": true,
-                  "data-size": undefined,
+                  "data-size": "sm",
                   "data-variant": "default",
                   "data-with-right-section": true,
                   "size": undefined,
@@ -4843,7 +4856,7 @@ exports[`with title and description checkboxes 1`] = `
             ],
             "props": {
               "className": "m_46b77525",
-              "data-size": undefined,
+              "data-size": "sm",
               "data-variant": undefined,
               "size": undefined,
               "style": {},
@@ -4954,9 +4967,8 @@ exports[`with title and description checkboxes 1`] = `
                                       },
                                     ],
                                     "props": {
-                                      "style": {
-                                        "minWidth": "100%",
-                                      },
+                                      "className": "m_b1336c6",
+                                      "style": {},
                                     },
                                     "type": "div",
                                     Symbol(cleaned): true,
@@ -5083,7 +5095,10 @@ exports[`with title and description checkboxes 1`] = `
                   "onMouseDown": [Function],
                   "role": "listbox",
                   "size": undefined,
-                  "style": {},
+                  "style": {
+                    "--combobox-option-fz": "var(--mantine-font-size-sm)",
+                    "--combobox-option-padding": "var(--combobox-option-padding-sm)",
+                  },
                 },
                 "type": "div",
                 Symbol(cleaned): true,
@@ -5100,6 +5115,8 @@ exports[`with title and description checkboxes 1`] = `
               "role": "presentation",
               "size": undefined,
               "style": {
+                "--combobox-option-fz": "var(--mantine-font-size-sm)",
+                "--combobox-option-padding": "var(--combobox-option-padding-sm)",
                 "display": "none",
                 "left": 0,
                 "top": 0,
@@ -7298,7 +7315,7 @@ exports[`with title and description from both checkboxes 1`] = `
                 ],
                 "props": {
                   "className": "m_8fdc1311",
-                  "data-size": undefined,
+                  "data-size": "sm",
                   "data-variant": undefined,
                   "htmlFor": "root",
                   "id": "root-label",
@@ -7315,7 +7332,7 @@ exports[`with title and description from both checkboxes 1`] = `
                 ],
                 "props": {
                   "className": "m_fe47ce59",
-                  "data-size": undefined,
+                  "data-size": "sm",
                   "data-variant": undefined,
                   "id": "root-description",
                   "size": undefined,
@@ -7361,10 +7378,12 @@ exports[`with title and description from both checkboxes 1`] = `
                         ],
                         "props": {
                           "className": "m_1dcfd90b",
-                          "data-size": undefined,
+                          "data-size": "sm",
                           "data-variant": undefined,
                           "size": undefined,
-                          "style": {},
+                          "style": {
+                            "--pg-gap": "var(--pg-gap-sm)",
+                          },
                         },
                         "type": "div",
                         Symbol(cleaned): true,
@@ -7372,6 +7391,7 @@ exports[`with title and description from both checkboxes 1`] = `
                     ],
                     "props": {
                       "className": "m_8fb7ebe7",
+                      "data-no-overflow": true,
                       "data-size": undefined,
                       "data-variant": "default",
                       "onClick": [Function],
@@ -7426,7 +7446,7 @@ exports[`with title and description from both checkboxes 1`] = `
                 "props": {
                   "className": "m_6c018570",
                   "data-multiline": true,
-                  "data-size": undefined,
+                  "data-size": "sm",
                   "data-variant": "default",
                   "data-with-right-section": true,
                   "size": undefined,
@@ -7441,7 +7461,7 @@ exports[`with title and description from both checkboxes 1`] = `
             ],
             "props": {
               "className": "m_46b77525",
-              "data-size": undefined,
+              "data-size": "sm",
               "data-variant": undefined,
               "size": undefined,
               "style": {},
@@ -7552,9 +7572,8 @@ exports[`with title and description from both checkboxes 1`] = `
                                       },
                                     ],
                                     "props": {
-                                      "style": {
-                                        "minWidth": "100%",
-                                      },
+                                      "className": "m_b1336c6",
+                                      "style": {},
                                     },
                                     "type": "div",
                                     Symbol(cleaned): true,
@@ -7681,7 +7700,10 @@ exports[`with title and description from both checkboxes 1`] = `
                   "onMouseDown": [Function],
                   "role": "listbox",
                   "size": undefined,
-                  "style": {},
+                  "style": {
+                    "--combobox-option-fz": "var(--mantine-font-size-sm)",
+                    "--combobox-option-padding": "var(--combobox-option-padding-sm)",
+                  },
                 },
                 "type": "div",
                 Symbol(cleaned): true,
@@ -7698,6 +7720,8 @@ exports[`with title and description from both checkboxes 1`] = `
               "role": "presentation",
               "size": undefined,
               "style": {
+                "--combobox-option-fz": "var(--mantine-font-size-sm)",
+                "--combobox-option-padding": "var(--combobox-option-padding-sm)",
                 "display": "none",
                 "left": 0,
                 "top": 0,
@@ -9929,7 +9953,7 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
                 ],
                 "props": {
                   "className": "m_8fdc1311",
-                  "data-size": undefined,
+                  "data-size": "sm",
                   "data-variant": undefined,
                   "htmlFor": "root",
                   "id": "root-label",
@@ -9946,7 +9970,7 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
                 ],
                 "props": {
                   "className": "m_fe47ce59",
-                  "data-size": undefined,
+                  "data-size": "sm",
                   "data-variant": undefined,
                   "id": "root-description",
                   "size": undefined,
@@ -9992,10 +10016,12 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
                         ],
                         "props": {
                           "className": "m_1dcfd90b",
-                          "data-size": undefined,
+                          "data-size": "sm",
                           "data-variant": undefined,
                           "size": undefined,
-                          "style": {},
+                          "style": {
+                            "--pg-gap": "var(--pg-gap-sm)",
+                          },
                         },
                         "type": "div",
                         Symbol(cleaned): true,
@@ -10003,6 +10029,7 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
                     ],
                     "props": {
                       "className": "m_8fb7ebe7",
+                      "data-no-overflow": true,
                       "data-size": undefined,
                       "data-variant": "default",
                       "onClick": [Function],
@@ -10057,7 +10084,7 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
                 "props": {
                   "className": "m_6c018570",
                   "data-multiline": true,
-                  "data-size": undefined,
+                  "data-size": "sm",
                   "data-variant": "default",
                   "data-with-right-section": true,
                   "size": undefined,
@@ -10072,7 +10099,7 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
             ],
             "props": {
               "className": "m_46b77525",
-              "data-size": undefined,
+              "data-size": "sm",
               "data-variant": undefined,
               "size": undefined,
               "style": {},
@@ -10183,9 +10210,8 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
                                       },
                                     ],
                                     "props": {
-                                      "style": {
-                                        "minWidth": "100%",
-                                      },
+                                      "className": "m_b1336c6",
+                                      "style": {},
                                     },
                                     "type": "div",
                                     Symbol(cleaned): true,
@@ -10312,7 +10338,10 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
                   "onMouseDown": [Function],
                   "role": "listbox",
                   "size": undefined,
-                  "style": {},
+                  "style": {
+                    "--combobox-option-fz": "var(--mantine-font-size-sm)",
+                    "--combobox-option-padding": "var(--combobox-option-padding-sm)",
+                  },
                 },
                 "type": "div",
                 Symbol(cleaned): true,
@@ -10329,6 +10358,8 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
               "role": "presentation",
               "size": undefined,
               "style": {
+                "--combobox-option-fz": "var(--mantine-font-size-sm)",
+                "--combobox-option-padding": "var(--combobox-option-padding-sm)",
                 "display": "none",
                 "left": 0,
                 "top": 0,
@@ -12420,10 +12451,12 @@ exports[`with title and description with global label off checkboxes 1`] = `
                         ],
                         "props": {
                           "className": "m_1dcfd90b",
-                          "data-size": undefined,
+                          "data-size": "sm",
                           "data-variant": undefined,
                           "size": undefined,
-                          "style": {},
+                          "style": {
+                            "--pg-gap": "var(--pg-gap-sm)",
+                          },
                         },
                         "type": "div",
                         Symbol(cleaned): true,
@@ -12431,6 +12464,7 @@ exports[`with title and description with global label off checkboxes 1`] = `
                     ],
                     "props": {
                       "className": "m_8fb7ebe7",
+                      "data-no-overflow": true,
                       "data-size": undefined,
                       "data-variant": "default",
                       "onClick": [Function],
@@ -12485,7 +12519,7 @@ exports[`with title and description with global label off checkboxes 1`] = `
                 "props": {
                   "className": "m_6c018570",
                   "data-multiline": true,
-                  "data-size": undefined,
+                  "data-size": "sm",
                   "data-variant": "default",
                   "data-with-right-section": true,
                   "size": undefined,
@@ -12499,7 +12533,7 @@ exports[`with title and description with global label off checkboxes 1`] = `
             ],
             "props": {
               "className": "m_46b77525",
-              "data-size": undefined,
+              "data-size": "sm",
               "data-variant": undefined,
               "size": undefined,
               "style": {},
@@ -12610,9 +12644,8 @@ exports[`with title and description with global label off checkboxes 1`] = `
                                       },
                                     ],
                                     "props": {
-                                      "style": {
-                                        "minWidth": "100%",
-                                      },
+                                      "className": "m_b1336c6",
+                                      "style": {},
                                     },
                                     "type": "div",
                                     Symbol(cleaned): true,
@@ -12739,7 +12772,10 @@ exports[`with title and description with global label off checkboxes 1`] = `
                   "onMouseDown": [Function],
                   "role": "listbox",
                   "size": undefined,
-                  "style": {},
+                  "style": {
+                    "--combobox-option-fz": "var(--mantine-font-size-sm)",
+                    "--combobox-option-padding": "var(--combobox-option-padding-sm)",
+                  },
                 },
                 "type": "div",
                 Symbol(cleaned): true,
@@ -12756,6 +12792,8 @@ exports[`with title and description with global label off checkboxes 1`] = `
               "role": "presentation",
               "size": undefined,
               "style": {
+                "--combobox-option-fz": "var(--mantine-font-size-sm)",
+                "--combobox-option-padding": "var(--combobox-option-padding-sm)",
                 "display": "none",
                 "left": 0,
                 "top": 0,

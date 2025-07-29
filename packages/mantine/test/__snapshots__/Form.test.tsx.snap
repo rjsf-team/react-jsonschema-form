@@ -1643,6 +1643,7 @@ exports[`single fields field with description 1`] = `
             "props": {
               "className": "m_7485cace",
               "data-size": undefined,
+              "data-strategy": "block",
               "data-variant": undefined,
               "id": "root",
               "size": undefined,
@@ -1879,6 +1880,7 @@ exports[`single fields field with description in uiSchema 1`] = `
             "props": {
               "className": "m_7485cace",
               "data-size": undefined,
+              "data-strategy": "block",
               "data-variant": undefined,
               "id": "root",
               "size": undefined,
@@ -2098,6 +2100,7 @@ exports[`single fields field with markdown description 1`] = `
             "props": {
               "className": "m_7485cace",
               "data-size": undefined,
+              "data-strategy": "block",
               "data-variant": undefined,
               "id": "root",
               "size": undefined,
@@ -2334,6 +2337,7 @@ exports[`single fields field with markdown description in uiSchema 1`] = `
             "props": {
               "className": "m_7485cace",
               "data-size": undefined,
+              "data-strategy": "block",
               "data-variant": undefined,
               "id": "root",
               "size": undefined,
@@ -3544,6 +3548,7 @@ exports[`single fields hidden field 1`] = `
             "props": {
               "className": "m_7485cace",
               "data-size": undefined,
+              "data-strategy": "block",
               "data-variant": undefined,
               "id": "root",
               "size": undefined,
@@ -5347,9 +5352,8 @@ exports[`single fields select field 1`] = `
                                       },
                                     ],
                                     "props": {
-                                      "style": {
-                                        "minWidth": "100%",
-                                      },
+                                      "className": "m_b1336c6",
+                                      "style": {},
                                     },
                                     "type": "div",
                                     Symbol(cleaned): true,
@@ -5476,7 +5480,10 @@ exports[`single fields select field 1`] = `
                   "onMouseDown": [Function],
                   "role": "listbox",
                   "size": undefined,
-                  "style": {},
+                  "style": {
+                    "--combobox-option-fz": "var(--mantine-font-size-sm)",
+                    "--combobox-option-padding": "var(--combobox-option-padding-sm)",
+                  },
                 },
                 "type": "div",
                 Symbol(cleaned): true,
@@ -5493,6 +5500,8 @@ exports[`single fields select field 1`] = `
               "role": "presentation",
               "size": undefined,
               "style": {
+                "--combobox-option-fz": "var(--mantine-font-size-sm)",
+                "--combobox-option-padding": "var(--combobox-option-padding-sm)",
                 "display": "none",
                 "left": 0,
                 "top": 0,
@@ -5640,10 +5649,12 @@ exports[`single fields select field multiple choice 1`] = `
                         ],
                         "props": {
                           "className": "m_1dcfd90b",
-                          "data-size": undefined,
+                          "data-size": "sm",
                           "data-variant": undefined,
                           "size": undefined,
-                          "style": {},
+                          "style": {
+                            "--pg-gap": "var(--pg-gap-sm)",
+                          },
                         },
                         "type": "div",
                         Symbol(cleaned): true,
@@ -5651,6 +5662,7 @@ exports[`single fields select field multiple choice 1`] = `
                     ],
                     "props": {
                       "className": "m_8fb7ebe7",
+                      "data-no-overflow": true,
                       "data-size": undefined,
                       "data-variant": "default",
                       "onClick": [Function],
@@ -5705,7 +5717,7 @@ exports[`single fields select field multiple choice 1`] = `
                 "props": {
                   "className": "m_6c018570",
                   "data-multiline": true,
-                  "data-size": undefined,
+                  "data-size": "sm",
                   "data-variant": "default",
                   "data-with-right-section": true,
                   "size": undefined,
@@ -5719,7 +5731,7 @@ exports[`single fields select field multiple choice 1`] = `
             ],
             "props": {
               "className": "m_46b77525",
-              "data-size": undefined,
+              "data-size": "sm",
               "data-variant": undefined,
               "size": undefined,
               "style": {},
@@ -5859,9 +5871,8 @@ exports[`single fields select field multiple choice 1`] = `
                                       },
                                     ],
                                     "props": {
-                                      "style": {
-                                        "minWidth": "100%",
-                                      },
+                                      "className": "m_b1336c6",
+                                      "style": {},
                                     },
                                     "type": "div",
                                     Symbol(cleaned): true,
@@ -5988,7 +5999,10 @@ exports[`single fields select field multiple choice 1`] = `
                   "onMouseDown": [Function],
                   "role": "listbox",
                   "size": undefined,
-                  "style": {},
+                  "style": {
+                    "--combobox-option-fz": "var(--mantine-font-size-sm)",
+                    "--combobox-option-padding": "var(--combobox-option-padding-sm)",
+                  },
                 },
                 "type": "div",
                 Symbol(cleaned): true,
@@ -6005,6 +6019,8 @@ exports[`single fields select field multiple choice 1`] = `
               "role": "presentation",
               "size": undefined,
               "style": {
+                "--combobox-option-fz": "var(--mantine-font-size-sm)",
+                "--combobox-option-padding": "var(--combobox-option-padding-sm)",
                 "display": "none",
                 "left": 0,
                 "top": 0,
@@ -6152,10 +6168,12 @@ exports[`single fields select field multiple choice enumDisabled 1`] = `
                         ],
                         "props": {
                           "className": "m_1dcfd90b",
-                          "data-size": undefined,
+                          "data-size": "sm",
                           "data-variant": undefined,
                           "size": undefined,
-                          "style": {},
+                          "style": {
+                            "--pg-gap": "var(--pg-gap-sm)",
+                          },
                         },
                         "type": "div",
                         Symbol(cleaned): true,
@@ -6163,6 +6181,7 @@ exports[`single fields select field multiple choice enumDisabled 1`] = `
                     ],
                     "props": {
                       "className": "m_8fb7ebe7",
+                      "data-no-overflow": true,
                       "data-size": undefined,
                       "data-variant": "default",
                       "onClick": [Function],
@@ -6217,7 +6236,7 @@ exports[`single fields select field multiple choice enumDisabled 1`] = `
                 "props": {
                   "className": "m_6c018570",
                   "data-multiline": true,
-                  "data-size": undefined,
+                  "data-size": "sm",
                   "data-variant": "default",
                   "data-with-right-section": true,
                   "size": undefined,
@@ -6231,7 +6250,7 @@ exports[`single fields select field multiple choice enumDisabled 1`] = `
             ],
             "props": {
               "className": "m_46b77525",
-              "data-size": undefined,
+              "data-size": "sm",
               "data-variant": undefined,
               "size": undefined,
               "style": {},
@@ -6372,9 +6391,8 @@ exports[`single fields select field multiple choice enumDisabled 1`] = `
                                       },
                                     ],
                                     "props": {
-                                      "style": {
-                                        "minWidth": "100%",
-                                      },
+                                      "className": "m_b1336c6",
+                                      "style": {},
                                     },
                                     "type": "div",
                                     Symbol(cleaned): true,
@@ -6501,7 +6519,10 @@ exports[`single fields select field multiple choice enumDisabled 1`] = `
                   "onMouseDown": [Function],
                   "role": "listbox",
                   "size": undefined,
-                  "style": {},
+                  "style": {
+                    "--combobox-option-fz": "var(--mantine-font-size-sm)",
+                    "--combobox-option-padding": "var(--combobox-option-padding-sm)",
+                  },
                 },
                 "type": "div",
                 Symbol(cleaned): true,
@@ -6518,6 +6539,8 @@ exports[`single fields select field multiple choice enumDisabled 1`] = `
               "role": "presentation",
               "size": undefined,
               "style": {
+                "--combobox-option-fz": "var(--mantine-font-size-sm)",
+                "--combobox-option-padding": "var(--combobox-option-padding-sm)",
                 "display": "none",
                 "left": 0,
                 "top": 0,
@@ -7307,11 +7330,14 @@ exports[`single fields select field multiple choice formData 1`] = `
                             ],
                             "props": {
                               "className": "m_44da308b m_7cda1cd6",
-                              "data-size": undefined,
+                              "data-size": "sm",
                               "data-variant": "default",
                               "data-with-remove": true,
                               "size": undefined,
-                              "style": {},
+                              "style": {
+                                "--pill-fz": "var(--pill-fz-sm)",
+                                "--pill-height": "var(--pill-height-sm)",
+                              },
                             },
                             "type": "span",
                             Symbol(cleaned): true,
@@ -7376,11 +7402,14 @@ exports[`single fields select field multiple choice formData 1`] = `
                             ],
                             "props": {
                               "className": "m_44da308b m_7cda1cd6",
-                              "data-size": undefined,
+                              "data-size": "sm",
                               "data-variant": "default",
                               "data-with-remove": true,
                               "size": undefined,
-                              "style": {},
+                              "style": {
+                                "--pill-fz": "var(--pill-fz-sm)",
+                                "--pill-height": "var(--pill-height-sm)",
+                              },
                             },
                             "type": "span",
                             Symbol(cleaned): true,
@@ -7416,10 +7445,12 @@ exports[`single fields select field multiple choice formData 1`] = `
                         ],
                         "props": {
                           "className": "m_1dcfd90b",
-                          "data-size": undefined,
+                          "data-size": "sm",
                           "data-variant": undefined,
                           "size": undefined,
-                          "style": {},
+                          "style": {
+                            "--pg-gap": "var(--pg-gap-sm)",
+                          },
                         },
                         "type": "div",
                         Symbol(cleaned): true,
@@ -7427,6 +7458,7 @@ exports[`single fields select field multiple choice formData 1`] = `
                     ],
                     "props": {
                       "className": "m_8fb7ebe7",
+                      "data-no-overflow": true,
                       "data-size": undefined,
                       "data-variant": "default",
                       "onClick": [Function],
@@ -7481,7 +7513,7 @@ exports[`single fields select field multiple choice formData 1`] = `
                 "props": {
                   "className": "m_6c018570",
                   "data-multiline": true,
-                  "data-size": undefined,
+                  "data-size": "sm",
                   "data-variant": "default",
                   "data-with-right-section": true,
                   "size": undefined,
@@ -7495,7 +7527,7 @@ exports[`single fields select field multiple choice formData 1`] = `
             ],
             "props": {
               "className": "m_46b77525",
-              "data-size": undefined,
+              "data-size": "sm",
               "data-variant": undefined,
               "size": undefined,
               "style": {},
@@ -7689,9 +7721,8 @@ exports[`single fields select field multiple choice formData 1`] = `
                                       },
                                     ],
                                     "props": {
-                                      "style": {
-                                        "minWidth": "100%",
-                                      },
+                                      "className": "m_b1336c6",
+                                      "style": {},
                                     },
                                     "type": "div",
                                     Symbol(cleaned): true,
@@ -7818,7 +7849,10 @@ exports[`single fields select field multiple choice formData 1`] = `
                   "onMouseDown": [Function],
                   "role": "listbox",
                   "size": undefined,
-                  "style": {},
+                  "style": {
+                    "--combobox-option-fz": "var(--mantine-font-size-sm)",
+                    "--combobox-option-padding": "var(--combobox-option-padding-sm)",
+                  },
                 },
                 "type": "div",
                 Symbol(cleaned): true,
@@ -7835,6 +7869,8 @@ exports[`single fields select field multiple choice formData 1`] = `
               "role": "presentation",
               "size": undefined,
               "style": {
+                "--combobox-option-fz": "var(--mantine-font-size-sm)",
+                "--combobox-option-padding": "var(--combobox-option-padding-sm)",
                 "display": "none",
                 "left": 0,
                 "top": 0,
@@ -7982,10 +8018,12 @@ exports[`single fields select field multiple choice with labels 1`] = `
                         ],
                         "props": {
                           "className": "m_1dcfd90b",
-                          "data-size": undefined,
+                          "data-size": "sm",
                           "data-variant": undefined,
                           "size": undefined,
-                          "style": {},
+                          "style": {
+                            "--pg-gap": "var(--pg-gap-sm)",
+                          },
                         },
                         "type": "div",
                         Symbol(cleaned): true,
@@ -7993,6 +8031,7 @@ exports[`single fields select field multiple choice with labels 1`] = `
                     ],
                     "props": {
                       "className": "m_8fb7ebe7",
+                      "data-no-overflow": true,
                       "data-size": undefined,
                       "data-variant": "default",
                       "onClick": [Function],
@@ -8047,7 +8086,7 @@ exports[`single fields select field multiple choice with labels 1`] = `
                 "props": {
                   "className": "m_6c018570",
                   "data-multiline": true,
-                  "data-size": undefined,
+                  "data-size": "sm",
                   "data-variant": "default",
                   "data-with-right-section": true,
                   "size": undefined,
@@ -8061,7 +8100,7 @@ exports[`single fields select field multiple choice with labels 1`] = `
             ],
             "props": {
               "className": "m_46b77525",
-              "data-size": undefined,
+              "data-size": "sm",
               "data-variant": undefined,
               "size": undefined,
               "style": {},
@@ -8172,9 +8211,8 @@ exports[`single fields select field multiple choice with labels 1`] = `
                                       },
                                     ],
                                     "props": {
-                                      "style": {
-                                        "minWidth": "100%",
-                                      },
+                                      "className": "m_b1336c6",
+                                      "style": {},
                                     },
                                     "type": "div",
                                     Symbol(cleaned): true,
@@ -8301,7 +8339,10 @@ exports[`single fields select field multiple choice with labels 1`] = `
                   "onMouseDown": [Function],
                   "role": "listbox",
                   "size": undefined,
-                  "style": {},
+                  "style": {
+                    "--combobox-option-fz": "var(--mantine-font-size-sm)",
+                    "--combobox-option-padding": "var(--combobox-option-padding-sm)",
+                  },
                 },
                 "type": "div",
                 Symbol(cleaned): true,
@@ -8318,6 +8359,8 @@ exports[`single fields select field multiple choice with labels 1`] = `
               "role": "presentation",
               "size": undefined,
               "style": {
+                "--combobox-option-fz": "var(--mantine-font-size-sm)",
+                "--combobox-option-padding": "var(--combobox-option-padding-sm)",
                 "display": "none",
                 "left": 0,
                 "top": 0,
@@ -8597,9 +8640,8 @@ exports[`single fields select field single choice enumDisabled 1`] = `
                                       },
                                     ],
                                     "props": {
-                                      "style": {
-                                        "minWidth": "100%",
-                                      },
+                                      "className": "m_b1336c6",
+                                      "style": {},
                                     },
                                     "type": "div",
                                     Symbol(cleaned): true,
@@ -8726,7 +8768,10 @@ exports[`single fields select field single choice enumDisabled 1`] = `
                   "onMouseDown": [Function],
                   "role": "listbox",
                   "size": undefined,
-                  "style": {},
+                  "style": {
+                    "--combobox-option-fz": "var(--mantine-font-size-sm)",
+                    "--combobox-option-padding": "var(--combobox-option-padding-sm)",
+                  },
                 },
                 "type": "div",
                 Symbol(cleaned): true,
@@ -8743,6 +8788,8 @@ exports[`single fields select field single choice enumDisabled 1`] = `
               "role": "presentation",
               "size": undefined,
               "style": {
+                "--combobox-option-fz": "var(--mantine-font-size-sm)",
+                "--combobox-option-padding": "var(--combobox-option-padding-sm)",
                 "display": "none",
                 "left": 0,
                 "top": 0,
@@ -9804,9 +9851,8 @@ exports[`single fields select field single choice formData 1`] = `
                                       },
                                     ],
                                     "props": {
-                                      "style": {
-                                        "minWidth": "100%",
-                                      },
+                                      "className": "m_b1336c6",
+                                      "style": {},
                                     },
                                     "type": "div",
                                     Symbol(cleaned): true,
@@ -9933,7 +9979,10 @@ exports[`single fields select field single choice formData 1`] = `
                   "onMouseDown": [Function],
                   "role": "listbox",
                   "size": undefined,
-                  "style": {},
+                  "style": {
+                    "--combobox-option-fz": "var(--mantine-font-size-sm)",
+                    "--combobox-option-padding": "var(--combobox-option-padding-sm)",
+                  },
                 },
                 "type": "div",
                 Symbol(cleaned): true,
@@ -9950,6 +9999,8 @@ exports[`single fields select field single choice formData 1`] = `
               "role": "presentation",
               "size": undefined,
               "style": {
+                "--combobox-option-fz": "var(--mantine-font-size-sm)",
+                "--combobox-option-padding": "var(--combobox-option-padding-sm)",
                 "display": "none",
                 "left": 0,
                 "top": 0,
@@ -10450,7 +10501,7 @@ exports[`single fields slider field 1`] = `
                           "size": undefined,
                           "style": {
                             "--slider-bar-offset": "calc(0% - var(--slider-size))",
-                            "--slider-bar-width": "calc(56.896551724137936% + var(--slider-size))",
+                            "--slider-bar-width": "calc(56.896551724137936% + 2 * var(--slider-size))",
                           },
                         },
                         "type": "div",
@@ -10527,7 +10578,7 @@ exports[`single fields slider field 1`] = `
               "aria-describedby": "root__error root__description root__help",
               "autoFocus": false,
               "className": "m_dd36362e",
-              "data-size": undefined,
+              "data-size": "md",
               "data-variant": undefined,
               "id": "root",
               "onBlur": [Function],
@@ -10537,6 +10588,7 @@ exports[`single fields slider field 1`] = `
               "size": undefined,
               "style": {
                 "--slider-radius": "var(--mantine-radius-xl)",
+                "--slider-size": "var(--slider-size-md)",
                 "--slider-thumb-size": "calc(var(--slider-size) * 2)",
               },
               "tabIndex": -1,
@@ -11607,6 +11659,7 @@ exports[`single fields title field 1`] = `
             "props": {
               "className": "m_7485cace",
               "data-size": undefined,
+              "data-strategy": "block",
               "data-variant": undefined,
               "id": "root",
               "size": undefined,
