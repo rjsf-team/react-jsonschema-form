@@ -1,7 +1,6 @@
 import { useCallback, Component, ComponentType } from 'react';
 import {
   ADDITIONAL_PROPERTY_FLAG,
-  deepEquals,
   descriptionId,
   ErrorSchema,
   FieldProps,
@@ -15,6 +14,7 @@ import {
   mergeObjects,
   Registry,
   RJSFSchema,
+  shouldRender,
   StrictRJSFSchema,
   TranslatableString,
   UI_OPTIONS_KEY,
@@ -343,7 +343,9 @@ class SchemaField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
   FieldProps<T, S, F>
 > {
   shouldComponentUpdate(nextProps: Readonly<FieldProps<T, S, F>>) {
-    return !deepEquals(this.props, nextProps);
+    const { experimental_componentUpdateStrategy = 'customDeep' } = this.props.registry;
+
+    return shouldRender(this, nextProps, this.state, experimental_componentUpdateStrategy);
   }
 
   render() {

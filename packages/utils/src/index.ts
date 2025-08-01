@@ -6,6 +6,7 @@ import createSchemaUtils from './createSchemaUtils';
 import dataURItoBlob from './dataURItoBlob';
 import dateRangeOptions from './dateRangeOptions';
 import deepEquals from './deepEquals';
+import shallowEquals from './shallowEquals';
 import englishStringTranslator from './englishStringTranslator';
 import enumOptionsDeselectValue from './enumOptionsDeselectValue';
 import enumOptionsIndexForValue from './enumOptionsIndexForValue';
@@ -130,6 +131,7 @@ export {
   rangeSpec,
   replaceStringParameters,
   schemaRequiresTrueValue,
+  shallowEquals,
   shouldRender,
   sortedJSONStringify,
   titleId,
@@ -142,3 +144,5 @@ export {
   validationDataMerge,
   withIdRefPrefix,
 };
+
+export type { ComponentUpdateStrategy } from './shouldRender';

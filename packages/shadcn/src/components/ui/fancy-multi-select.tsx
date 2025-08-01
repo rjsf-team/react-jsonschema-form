@@ -1,7 +1,7 @@
 'use client';
 
 import { Command as CommandPrimitive } from 'cmdk';
-import { isEqual } from 'lodash';
+import isEqual from 'lodash/isEqual';
 import { X } from 'lucide-react';
 import {
   FocusEvent,
