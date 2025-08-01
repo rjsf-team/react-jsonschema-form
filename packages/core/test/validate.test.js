@@ -50,6 +50,7 @@ describe('Validation', () => {
               property: 'foo',
               schemaPath: '#/required',
               stack: "must have required property 'foo'",
+              title: '',
             },
           ]);
         });
@@ -102,6 +103,7 @@ describe('Validation', () => {
               property: '.foo',
               schemaPath: '#/properties/foo/minLength',
               stack: '.foo must NOT have fewer than 10 characters',
+              title: '',
             },
           ]);
         });
@@ -249,6 +251,7 @@ describe('Validation', () => {
             property: '.pass2',
             schemaPath: '#/properties/pass2/minLength',
             stack: '.pass2 must NOT have fewer than 3 characters',
+            title: '',
           },
           {
             property: '.pass2',
@@ -372,6 +375,7 @@ describe('Validation', () => {
               property: 'foo',
               schemaPath: '#/required',
               stack: "must have required property 'foo'",
+              title: '',
             },
           ]);
         });
@@ -467,6 +471,7 @@ describe('Validation', () => {
             property: '.datasetId',
             schemaPath: '#/properties/datasetId/pattern',
             stack: '.datasetId must match pattern "\\d+"',
+            title: '',
           },
         ]);
         onError.resetHistory();

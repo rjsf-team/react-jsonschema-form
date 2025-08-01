@@ -714,6 +714,7 @@ describe('ObjectField', () => {
           property: '',
           schemaPath: '#/additionalProperties',
           stack: 'must NOT have additional properties',
+          title: '',
         },
       ]);
     });

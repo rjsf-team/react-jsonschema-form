@@ -1074,6 +1074,7 @@ describe('ArrayField', () => {
               property: '.1',
               schemaPath: '#/items/type',
               stack: '.1 must be integer',
+              title: '',
             },
           ],
           formData: [1, null, 3],
@@ -1090,6 +1091,7 @@ describe('ArrayField', () => {
           property: '.1',
           schemaPath: '#/items/type',
           stack: '.1 must be integer',
+          title: '',
         },
       ]);
     });
@@ -1291,6 +1293,7 @@ describe('ArrayField', () => {
           property: '.multipleChoicesList',
           schemaPath: '#/properties/multipleChoicesList/minItems',
           stack: '.multipleChoicesList must NOT have fewer than 3 items',
+          title: '',
         },
       ]);
     });
