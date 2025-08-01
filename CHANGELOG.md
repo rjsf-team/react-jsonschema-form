@@ -15,6 +15,11 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+# 6.0.0-beta.13
+
+## @rjsf/shadcn
+
+- Updated `lodash` import in `fancy-multi-select.tsx` to to be direct import, fixing [#4696](https://github.com/rjsf-team/react-jsonschema-form/issues/4696)
 
 # 6.0.0-beta.13
 
