@@ -52,6 +52,7 @@ describe('SchemaField', () => {
         schemaUtils,
         translateString: englishStringTranslator,
         globalUiOptions: undefined,
+        experimental_componentUpdateStrategy: 'customDeep',
       });
     });
     it('should provide expected registry with globalUiOptions as prop', () => {
@@ -86,6 +87,7 @@ describe('SchemaField', () => {
         schemaUtils,
         translateString: englishStringTranslator,
         globalUiOptions: { copyable: true },
+        experimental_componentUpdateStrategy: 'customDeep',
       });
     });
   });
