@@ -63,9 +63,9 @@
 
 ### Prerequisites
 
-- `@mantine/core >= 7`
-- `@mantine/hooks >= 7`
-- `@mantine/dates >= 7`
+- `@mantine/core >= 8`
+- `@mantine/hooks >= 8`
+- `@mantine/dates >= 8`
 - `dayjs >= 1.8.0`
 - `@rjsf/core >= 6.0.0`
 
