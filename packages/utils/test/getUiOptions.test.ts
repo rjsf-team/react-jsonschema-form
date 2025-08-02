@@ -57,6 +57,12 @@ describe('getUiOptions()', () => {
   it('returns empty options with no uiSchema', () => {
     expect(getUiOptions()).toEqual({});
   });
+  it('returns globalOptions when uiSchema is undefined', () => {
+    expect(getUiOptions(undefined, globalOptions)).toEqual(globalOptions);
+  });
+  it('returns globalOptions when uiSchema is null', () => {
+    expect(getUiOptions(null as any, globalOptions)).toEqual(globalOptions);
+  });
   it('returns array object as options', () => {
     expect(getUiOptions(uiSchema.arrayObject, globalOptions)).toEqual(results.arrayObject);
     expect(consoleErrorSpy).not.toHaveBeenCalled();

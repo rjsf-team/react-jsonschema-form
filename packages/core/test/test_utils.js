@@ -16,8 +16,11 @@ export function createComponent(Component, props) {
   const comp = <Component onSubmit={onSubmit} onError={onError} onChange={onChange} {...props} />;
   const { container, rerender } = render(comp);
 
-  const rerenderFunction = (props) =>
-    rerender(<Component onSubmit={onSubmit} onError={onError} onChange={onChange} {...props} />);
+  const rerenderFunction = (newProps) => {
+    // For Form components, ensure validator is always passed
+    const propsWithValidator = Component === Form && !newProps.validator ? { validator, ...newProps } : newProps;
+    return rerender(<Component onSubmit={onSubmit} onError={onError} onChange={onChange} {...propsWithValidator} />);
+  };
   const node = findDOMNode(container).firstElementChild;
 
   return { comp, node, onChange, onError, onSubmit, rerender: rerenderFunction };
