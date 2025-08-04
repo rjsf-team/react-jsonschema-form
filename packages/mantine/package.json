@@ -1,0 +1,112 @@
+{
+  "name": "@rjsf/mantine",
+  "version": "6.0.0-beta.1",
+  "main": "dist/index.js",
+  "module": "lib/index.js",
+  "typings": "lib/index.d.ts",
+  "type": "module",
+  "description": "Mantine theme, fields and widgets for react-jsonschema-form",
+  "exports": {
+    ".": {
+      "types": "./lib/index.d.ts",
+      "require": "./dist/index.js",
+      "import": "./lib/index.js"
+    },
+    "./lib": {
+      "types": "./lib/index.d.ts",
+      "require": "./dist/index.js",
+      "import": "./lib/index.js"
+    },
+    "./lib/*.js": {
+      "types": "./lib/*.d.ts",
+      "require": "./dist/*.js",
+      "import": "./lib/*.js"
+    },
+    "./dist": {
+      "types": "./lib/index.d.ts",
+      "require": "./dist/index.js",
+      "import": "./lib/index.js"
+    },
+    "./dist/*.js": {
+      "types": "./lib/*.d.ts",
+      "require": "./dist/*.js",
+      "import": "./lib/*.js"
+    }
+  },
+  "files": [
+    "dist",
+    "lib",
+    "src"
+  ],
+  "engineStrict": false,
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build:ts": "tsc -b tsconfig.build.json && tsc-alias -p tsconfig.build.json",
+    "build:cjs": "esbuild ./src/index.ts --bundle --outfile=dist/index.js --sourcemap --packages=external --format=cjs",
+    "build:esm": "esbuild ./src/index.ts --bundle --outfile=dist/mantine.esm.js --sourcemap --packages=external --format=esm",
+    "build:umd": "rollup dist/mantine.esm.js --format=umd --file=dist/mantine.umd.js --name=@rjsf/mantine",
+    "build": "npm run build:ts && npm run build:cjs && npm run build:esm && npm run build:umd",
+    "cs-check": "prettier -l \"{src,test}/**/*.ts?(x)\"",
+    "cs-format": "prettier \"{src,test}/**/*.ts?(x)\" --write",
+    "lint": "eslint src test",
+    "precommit": "lint-staged",
+    "test": "jest",
+    "test:update": "jest --u"
+  },
+  "lint-staged": {
+    "{src,test}/**/*.ts?(x)": [
+      "eslint --fix"
+    ]
+  },
+  "peerDependencies": {
+    "@rjsf/core": "^6.0.0-beta",
+    "@rjsf/utils": "^6.0.0-beta",
+    "react": ">=18",
+    "@mantine/core": ">=8",
+    "@mantine/hooks": ">=8",
+    "@mantine/dates": ">=8"
+  },
+  "devDependencies": {
+    "@rjsf/core": "^6.0.0-beta.1",
+    "@rjsf/snapshot-tests": "^6.0.0-beta.1",
+    "@rjsf/utils": "^6.0.0-beta.1",
+    "@rjsf/validator-ajv8": "^6.0.0-beta.1",
+    "eslint": "^8.56.0",
+    "@mantine/core": ">=8",
+    "@mantine/hooks": ">=8",
+    "@mantine/dates": ">=8",
+    "@restart/hooks": "^0.6.2",
+    "@restart/ui": "^1.9.4",
+    "ajv": "^8.17.1",
+    "ajv-keywords": "^5.1.0",
+    "uncontrollable": "^9.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "author": "Farhad Zare <zfarhad.dev@gmail.com>",
+  "contributors": [
+    "Heath Chiavettone <heath.chiavettone@freenome.com",
+    "Algirdas Jokubauskas <sdkster@gmail.com"
+  ],
+  "keywords": [
+    "Mantine",
+    "Mantine UI",
+    "react-jsonschema-form",
+    "jsonschema",
+    "json-schema",
+    "json",
+    "schema",
+    "form",
+    "react",
+    "mantine-ui",
+    "rjsf-mantine"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rjsf-team/react-jsonschema-form.git"
+  },
+  "license": "Apache-2.0"
+}

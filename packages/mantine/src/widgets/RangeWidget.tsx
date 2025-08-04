@@ -1,0 +1,95 @@
+import { useCallback } from 'react';
+import {
+  ariaDescribedByIds,
+  rangeSpec,
+  FormContextType,
+  RJSFSchema,
+  StrictRJSFSchema,
+  WidgetProps,
+  titleId,
+} from '@rjsf/utils';
+import { Slider, Input } from '@mantine/core';
+
+import { cleanupOptions } from '../utils';
+
+/** The `RangeWidget` component uses the `BaseInputTemplate` changing the type to `range` and wrapping the result
+ * in a div, with the value alongside it.
+ *
+ * @param props - The `WidgetProps` for this component
+ */
+export default function RangeWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+  props: WidgetProps<T, S, F>,
+) {
+  const {
+    id,
+    name,
+    value,
+    required,
+    disabled,
+    readonly,
+    autofocus,
+    label,
+    hideLabel,
+    rawErrors,
+    options,
+    onChange,
+    onBlur,
+    onFocus,
+    schema,
+  } = props;
+
+  const themeProps = cleanupOptions(options);
+  const { min, max, step } = rangeSpec(schema);
+
+  const handleChange = useCallback(
+    (nextValue: any) => {
+      if (!disabled && !readonly && onChange) {
+        onChange(nextValue);
+      }
+    },
+    [onChange, disabled, readonly],
+  );
+
+  const handleBlur = useCallback(() => {
+    if (onBlur) {
+      onBlur(id, value);
+    }
+  }, [onBlur, id, value]);
+
+  const handleFocus = useCallback(() => {
+    if (onFocus) {
+      onFocus(id, value);
+    }
+  }, [onFocus, id, value]);
+
+  return (
+    <>
+      {!hideLabel && !!label && (
+        <Input.Label id={titleId<T>(id)} required={required}>
+          {label}
+        </Input.Label>
+      )}
+      {options?.description && <Input.Description>{options.description}</Input.Description>}
+      <Slider
+        id={id}
+        name={name}
+        value={value}
+        max={max}
+        min={min}
+        step={step}
+        disabled={disabled || readonly}
+        autoFocus={autofocus}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        onFocus={handleFocus}
+        {...themeProps}
+        aria-describedby={ariaDescribedByIds<T>(id)}
+      />
+      {rawErrors &&
+        rawErrors?.length > 0 &&
+        rawErrors.map((error: string, index: number) => (
+          <Input.Error key={`range-widget-input-errors-${index}`}>{error}</Input.Error>
+        ))}
+    </>
+  );
+}
