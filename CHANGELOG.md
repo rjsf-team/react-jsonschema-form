@@ -25,6 +25,7 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/shadcn
 
 - Updated the building of `shadcn` to use the `lodashReplacer` with `tsc-alias` fixing [#4678](https://github.com/rjsf-team/react-jsonschema-form/issues/4678)
+- Radio widget labels are now accessible and can be clicked on to select the associated option. 
 
 ## @rjsf/utils
 
