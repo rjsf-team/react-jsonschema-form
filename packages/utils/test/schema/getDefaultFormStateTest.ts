@@ -2757,7 +2757,6 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           }),
         ).toEqual({
           optionalNumberProperty: undefined,
-          optionalObjectProperty: {},
           requiredProperty: 'foo',
         });
       });
@@ -2894,7 +2893,6 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           }),
         ).toEqual({
           optionalNumberProperty: undefined,
-          optionalObjectProperty: {},
           requiredProperty: 'foo',
         });
       });
@@ -3104,7 +3102,6 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           }),
         ).toEqual({
           optionalNumberProperty: undefined,
-          optionalObjectProperty: {},
           requiredProperty: 'foo',
         });
       });
