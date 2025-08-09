@@ -115,10 +115,18 @@ function maybeAddDefaultToObject<T = any>(
   isConst = false,
 ) {
   const { emptyObjectFields = 'populateAllDefaults' } = experimental_defaultFormStateBehavior;
-  if (includeUndefinedValues || isConst) {
-    // If includeUndefinedValues
+
+  if (includeUndefinedValues === true || isConst) {
+    // If includeUndefinedValues is explicitly true
     // Or if the schema has a const property defined, then we should always return the computedDefault since it's coming from the const.
     obj[key] = computedDefault;
+  } else if (includeUndefinedValues === 'excludeObjectChildren') {
+    // Fix for Issue #4709: When in 'excludeObjectChildren' mode, don't set primitive fields to empty objects
+    // Only add the computed default if it's not an empty object placeholder for a primitive field
+    if (!isObject(computedDefault) || !isEmpty(computedDefault)) {
+      obj[key] = computedDefault;
+    }
+    // If computedDefault is an empty object {}, don't add it - let the field stay undefined
   } else if (emptyObjectFields !== 'skipDefaults') {
     // If isParentRequired is undefined, then we are at the root level of the schema so defer to the requiredness of
     // the field key itself in the `requiredField` list
@@ -473,6 +481,7 @@ export function getObjectDefaults<T = any, S extends StrictRJSFSchema = RJSFSche
           required: retrievedSchema.required?.includes(key),
           shouldMergeDefaultsIntoFormData,
         });
+
         maybeAddDefaultToObject<T>(
           acc,
           key,
@@ -483,6 +492,7 @@ export function getObjectDefaults<T = any, S extends StrictRJSFSchema = RJSFSche
           experimental_defaultFormStateBehavior,
           hasConst,
         );
+
         return acc;
       },
       {},
