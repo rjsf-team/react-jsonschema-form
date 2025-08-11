@@ -1818,4 +1818,170 @@ describe('anyOf', () => {
       expect(selects).to.have.length.of(0);
     });
   });
+
+  describe('Boolean field value preservation', () => {
+    it('should preserve boolean values when switching between anyOf options with shared properties', () => {
+      const schema = {
+        type: 'object',
+        properties: {
+          items: {
+            type: 'array',
+            items: {
+              type: 'object',
+              anyOf: [
+                {
+                  title: 'Type A',
+                  properties: {
+                    type: { type: 'string', enum: ['typeA'], default: 'typeA' },
+                    showField: { type: 'boolean' },
+                  },
+                },
+                {
+                  title: 'Type B',
+                  properties: {
+                    type: { type: 'string', enum: ['typeB'], default: 'typeB' },
+                    showField: { type: 'boolean' },
+                  },
+                },
+              ],
+            },
+          },
+        },
+      };
+
+      const { node, onChange } = createFormComponent({
+        schema,
+        formData: {
+          items: [{ type: 'typeA', showField: true }],
+        },
+        experimental_defaultFormStateBehavior: {
+          mergeDefaultsIntoFormData: 'useDefaultIfFormDataUndefined',
+        },
+      });
+
+      // Wait for initial form setup to complete
+      if (onChange.lastCall) {
+        // Initial state - should have showField = true
+        let lastFormData = onChange.lastCall.args[0].formData;
+        expect(lastFormData.items[0].showField).to.equal(true);
+      }
+
+      // Switch to typeB
+      const dropdown = node.querySelector('select[id="root_items_0__anyof_select"]');
+      if (dropdown) {
+        act(() => {
+          fireEvent.change(dropdown, { target: { value: '1' } });
+        });
+
+        // After switching, the boolean value should be preserved, not converted to {}
+        if (onChange.lastCall) {
+          const lastFormData = onChange.lastCall.args[0].formData;
+          expect(lastFormData.items[0].type).to.equal('typeB');
+          expect(lastFormData.items[0].showField).to.equal(true); // Should still be true, not {}
+        }
+      }
+    });
+
+    it('should handle undefined boolean fields correctly when switching anyOf options', () => {
+      const schema = {
+        type: 'object',
+        properties: {
+          items: {
+            type: 'array',
+            items: {
+              type: 'object',
+              anyOf: [
+                {
+                  title: 'Type A',
+                  properties: {
+                    type: { type: 'string', enum: ['typeA'], default: 'typeA' },
+                    showField: { type: 'boolean' },
+                  },
+                },
+                {
+                  title: 'Type B',
+                  properties: {
+                    type: { type: 'string', enum: ['typeB'], default: 'typeB' },
+                    showField: { type: 'boolean' },
+                  },
+                },
+              ],
+            },
+          },
+        },
+      };
+
+      const { node, onChange } = createFormComponent({
+        schema,
+        formData: {
+          items: [{ type: 'typeA' }], // No showField defined
+        },
+        experimental_defaultFormStateBehavior: {
+          mergeDefaultsIntoFormData: 'useDefaultIfFormDataUndefined',
+        },
+      });
+
+      // Switch to typeB
+      const dropdown = node.querySelector('select[id="root_items_0__anyof_select"]');
+      if (dropdown) {
+        act(() => {
+          fireEvent.change(dropdown, { target: { value: '1' } });
+        });
+
+        // After switching, undefined boolean should remain undefined, not become {}
+        const lastFormData = onChange.lastCall.args[0].formData;
+        expect(lastFormData.items[0].type).to.equal('typeB');
+
+        // showField should be undefined, not {} (the bug we fixed)
+        if ('showField' in lastFormData.items[0]) {
+          expect(lastFormData.items[0].showField).to.not.deep.equal({});
+        }
+      }
+    });
+
+    it('should handle boolean field values correctly in direct anyOf schemas', () => {
+      const schema = {
+        type: 'object',
+        anyOf: [
+          {
+            title: 'Option A',
+            properties: {
+              type: { type: 'string', enum: ['optionA'], default: 'optionA' },
+              enabled: { type: 'boolean' },
+            },
+          },
+          {
+            title: 'Option B',
+            properties: {
+              type: { type: 'string', enum: ['optionB'], default: 'optionB' },
+              enabled: { type: 'boolean' },
+            },
+          },
+        ],
+      };
+
+      const { node, onChange } = createFormComponent({
+        schema,
+        formData: { type: 'optionA', enabled: false },
+        experimental_defaultFormStateBehavior: {
+          mergeDefaultsIntoFormData: 'useDefaultIfFormDataUndefined',
+        },
+      });
+
+      // Switch to optionB
+      const dropdown = node.querySelector('select[id="root__anyof_select"]');
+      if (dropdown) {
+        act(() => {
+          fireEvent.change(dropdown, { target: { value: '1' } });
+        });
+
+        // After switching, the boolean value should be preserved, not converted to {}
+        if (onChange.lastCall) {
+          const lastFormData = onChange.lastCall.args[0].formData;
+          expect(lastFormData.type).to.equal('optionB');
+          expect(lastFormData.enabled).to.equal(false); // Should still be false, not {}
+        }
+      }
+    });
+  });
 });
