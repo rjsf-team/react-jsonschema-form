@@ -60,8 +60,8 @@ export default function CheckboxWidget<
   const required = schemaRequiresTrueValue<S>(schema);
   const checked = value == 'true' || value == true;
   const _onChange = (_: FormEvent<HTMLInputElement>, data: CheckboxProps) => onChange && onChange(data.checked);
-  const _onBlur = (event: FocusEvent<HTMLInputElement>) => onBlur && onBlur(id, event.currentTarget.checked);
-  const _onFocus = (event: FocusEvent<HTMLInputElement>) => onFocus && onFocus(id, event.currentTarget.checked);
+  const _onBlur: React.FocusEventHandler<HTMLInputElement> = () => onBlur && onBlur(id, value);
+  const _onFocus: React.FocusEventHandler<HTMLInputElement> = () => onFocus && onFocus(id, value);
   const description = options.description ?? schema.description;
 
   return (
