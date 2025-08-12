@@ -266,7 +266,7 @@ interface MyFormProps {
 }
 
 // In your React component that renders the form:
-const MyFormComponent: React.FC<MyFormProps> = ({ schema, formData }) => {
+function MyFormComponent({ schema, formData }: PropsWithChildren<MyFormProps>) {
   // Pre-compute expensive data once, and only re-compute if dependencies change
   const expensiveData = useMemo<Record<string, ExpensiveDataConfig>>(() => computeExpensiveData(), [/* dependencies */]);
 
