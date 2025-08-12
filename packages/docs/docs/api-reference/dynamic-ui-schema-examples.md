@@ -287,7 +287,7 @@ function MyFormComponent({ schema, formData }: PropsWithChildren<MyFormProps>) {
   };
 
   return <Form schema={schema} uiSchema={uiSchema} formData={formData} />;
-};
+}
 
 // Placeholder for the expensive computation function
 declare function computeExpensiveData(): Record<string, ExpensiveDataConfig>;
