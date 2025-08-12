@@ -247,7 +247,7 @@ When using dynamic `uiSchema.items` functions, keep in mind:
 Example of a performance-optimized approach:
 
 ```typescript
-import React, { useMemo } from 'react';
+import React, { PropsWithChildren, useMemo } from 'react';
 import Form from '@rjsf/core';
 import { RJSFSchema, UiSchema, FormContextType, IChangeEvent } from '@rjsf/utils';
 
