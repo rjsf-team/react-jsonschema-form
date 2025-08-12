@@ -144,15 +144,15 @@ const EXTRA_EXPECTED = { type: 'string', title: 'foo' };
 
 describe('findSchemaDefinition()', () => {
   it('throws error when ref is missing', () => {
-    expect(() => findSchemaDefinition()).toThrowError('Could not find a definition for undefined');
+    expect(() => findSchemaDefinition()).toThrow('Could not find a definition for undefined');
   });
   it('throws error when ref is malformed', () => {
-    expect(() => findSchemaDefinition('definitions/missing')).toThrowError(
+    expect(() => findSchemaDefinition('definitions/missing')).toThrow(
       'Could not find a definition for definitions/missing',
     );
   });
   it('throws error when ref does not exist', () => {
-    expect(() => findSchemaDefinition('#/definitions/missing', schema)).toThrowError(
+    expect(() => findSchemaDefinition('#/definitions/missing', schema)).toThrow(
       'Could not find a definition for #/definitions/missing',
     );
   });
@@ -166,22 +166,22 @@ describe('findSchemaDefinition()', () => {
     expect(findSchemaDefinition('#/definitions/extraNestedRef', schema)).toEqual(EXTRA_EXPECTED);
   });
   it('throws error when ref is a circular reference', () => {
-    expect(() => findSchemaDefinition('#/definitions/badCircularNestedRef', schema)).toThrowError(
+    expect(() => findSchemaDefinition('#/definitions/badCircularNestedRef', schema)).toThrow(
       'Definition for #/definitions/badCircularNestedRef is a circular reference',
     );
   });
   it('throws error when ref is a deep circular reference', () => {
-    expect(() => findSchemaDefinition('#/definitions/badCircularDeepNestedRef', schema)).toThrowError(
+    expect(() => findSchemaDefinition('#/definitions/badCircularDeepNestedRef', schema)).toThrow(
       'Definition for #/definitions/badCircularDeepNestedRef contains a circular reference through #/definitions/badCircularDeeperNestedRef -> #/definitions/badCircularDeepestNestedRef -> #/definitions/badCircularDeepNestedRef',
     );
   });
   it('throws error when bundled ref are not part of JSON Schema Draft 2020-12', () => {
-    expect(() => findSchemaDefinition('#/definitions/bundledRef', schema)).toThrowError(
+    expect(() => findSchemaDefinition('#/definitions/bundledRef', schema)).toThrow(
       'Could not find a definition for /bundled.ref.json',
     );
   });
   it('throws error when bundled ref with explicit baseURI are not part of JSON Schema Draft 2020-12', () => {
-    expect(() => findSchemaDefinition('#/properties/num', schema, 'https://example.com/bundled.ref.json')).toThrowError(
+    expect(() => findSchemaDefinition('#/properties/num', schema, 'https://example.com/bundled.ref.json')).toThrow(
       'Could not find a definition for #/properties/num',
     );
   });
@@ -224,27 +224,27 @@ describe('findSchemaDefinition()', () => {
     );
   });
   it('throws error when relative ref is undefined in a bundled JSON Schema', () => {
-    expect(() => findSchemaDefinition('#/$defs/undefinedRef', bundledSchema)).toThrowError(
+    expect(() => findSchemaDefinition('#/$defs/undefinedRef', bundledSchema)).toThrow(
       'Could not find a definition for /undefined.ref.json',
     );
   });
   it('throws error when relative ref with anchor is undefined in a bundled JSON Schema', () => {
-    expect(() => findSchemaDefinition('#/$defs/undefinedRefWithAnchor', bundledSchema)).toThrowError(
+    expect(() => findSchemaDefinition('#/$defs/undefinedRefWithAnchor', bundledSchema)).toThrow(
       'Could not find a definition for #/$defs/undefined',
     );
   });
   it('throws error when local ref is undefined in a bundled JSON Schema with explicit base URI', () => {
     expect(() =>
       findSchemaDefinition('#/properties/undefined', bundledSchema, 'https://example.com/bundled.ref.json'),
-    ).toThrowError('Could not find a definition for #/properties/undefined');
+    ).toThrow('Could not find a definition for #/properties/undefined');
   });
   it('throws error when explicit base URI is undefined in a bundled JSON Schema', () => {
     expect(() =>
       findSchemaDefinition('#/properties/undefined', bundledSchema, 'https://example.com/undefined.ref.json'),
-    ).toThrowError('Could not find a definition for #/properties/undefined');
+    ).toThrow('Could not find a definition for #/properties/undefined');
   });
   it('throws error when ref is a deep circular reference in a bundled JSON Schema', () => {
-    expect(() => findSchemaDefinition('#/$defs/circularRef', bundledSchema)).toThrowError(
+    expect(() => findSchemaDefinition('#/$defs/circularRef', bundledSchema)).toThrow(
       'Definition for #/$defs/circularRef contains a circular reference through /bundled.ref.json/#/$defs/circularRef -> /bundled.schema.json/#/$defs/circularRef -> #/$defs/circularRef',
     );
   });
@@ -252,15 +252,15 @@ describe('findSchemaDefinition()', () => {
 
 describe('findSchemaDefinitionRecursive()', () => {
   it('throws error when ref is missing', () => {
-    expect(() => findSchemaDefinitionRecursive()).toThrowError('Could not find a definition for undefined');
+    expect(() => findSchemaDefinitionRecursive()).toThrow('Could not find a definition for undefined');
   });
   it('throws error when ref is malformed', () => {
-    expect(() => findSchemaDefinitionRecursive('definitions/missing')).toThrowError(
+    expect(() => findSchemaDefinitionRecursive('definitions/missing')).toThrow(
       'Could not find a definition for definitions/missing',
     );
   });
   it('throws error when ref does not exist', () => {
-    expect(() => findSchemaDefinitionRecursive('#/definitions/missing', schema)).toThrowError(
+    expect(() => findSchemaDefinitionRecursive('#/definitions/missing', schema)).toThrow(
       'Could not find a definition for #/definitions/missing',
     );
   });
@@ -274,24 +274,24 @@ describe('findSchemaDefinitionRecursive()', () => {
     expect(findSchemaDefinitionRecursive('#/definitions/extraNestedRef', schema)).toEqual(EXTRA_EXPECTED);
   });
   it('throws error when ref is a circular reference', () => {
-    expect(() => findSchemaDefinitionRecursive('#/definitions/badCircularNestedRef', schema)).toThrowError(
+    expect(() => findSchemaDefinitionRecursive('#/definitions/badCircularNestedRef', schema)).toThrow(
       'Definition for #/definitions/badCircularNestedRef is a circular reference',
     );
   });
   it('throws error when ref is a deep circular reference', () => {
-    expect(() => findSchemaDefinitionRecursive('#/definitions/badCircularDeepNestedRef', schema)).toThrowError(
+    expect(() => findSchemaDefinitionRecursive('#/definitions/badCircularDeepNestedRef', schema)).toThrow(
       'Definition for #/definitions/badCircularDeepNestedRef contains a circular reference through #/definitions/badCircularDeeperNestedRef -> #/definitions/badCircularDeepestNestedRef -> #/definitions/badCircularDeepNestedRef',
     );
   });
   it('throws error when bundled ref are not part of JSON Schema Draft 2020-12', () => {
-    expect(() => findSchemaDefinitionRecursive('#/definitions/bundledRef', schema)).toThrowError(
+    expect(() => findSchemaDefinitionRecursive('#/definitions/bundledRef', schema)).toThrow(
       'Could not find a definition for /bundled.ref.json',
     );
   });
   it('throws error when bundled ref with explicit baseURI are not part of JSON Schema Draft 2020-12', () => {
     expect(() =>
       findSchemaDefinitionRecursive('#/properties/num', schema, [], 'https://example.com/bundled.ref.json'),
-    ).toThrowError('Could not find a definition for #/properties/num');
+    ).toThrow('Could not find a definition for #/properties/num');
   });
   it('correctly resolves absolute bundled refs within a JSON Schema Draft 2020-12', () => {
     expect(findSchemaDefinitionRecursive('#/$defs/bundledAbsoluteRef', bundledSchema)).toStrictEqual(internalSchema);
@@ -334,12 +334,12 @@ describe('findSchemaDefinitionRecursive()', () => {
     ).toBe(internalSchema.properties!.num);
   });
   it('throws error when relative ref is undefined in a bundled JSON Schema', () => {
-    expect(() => findSchemaDefinitionRecursive('#/$defs/undefinedRef', bundledSchema)).toThrowError(
+    expect(() => findSchemaDefinitionRecursive('#/$defs/undefinedRef', bundledSchema)).toThrow(
       'Could not find a definition for /undefined.ref.json',
     );
   });
   it('throws error when relative ref with anchor is undefined in a bundled JSON Schema', () => {
-    expect(() => findSchemaDefinitionRecursive('#/$defs/undefinedRefWithAnchor', bundledSchema)).toThrowError(
+    expect(() => findSchemaDefinitionRecursive('#/$defs/undefinedRefWithAnchor', bundledSchema)).toThrow(
       'Could not find a definition for #/$defs/undefined',
     );
   });
@@ -351,15 +351,15 @@ describe('findSchemaDefinitionRecursive()', () => {
         [],
         'https://example.com/bundled.ref.json',
       ),
-    ).toThrowError('Could not find a definition for #/properties/undefined');
+    ).toThrow('Could not find a definition for #/properties/undefined');
   });
   it('throws error when explicit base URI is undefined in a bundled JSON Schema', () => {
     expect(() =>
       findSchemaDefinition('#/properties/undefined', bundledSchema, 'https://example.com/undefined.ref.json'),
-    ).toThrowError('Could not find a definition for #/properties/undefined');
+    ).toThrow('Could not find a definition for #/properties/undefined');
   });
   it('throws error when ref is a deep circular reference in a bundled JSON Schema', () => {
-    expect(() => findSchemaDefinitionRecursive('#/$defs/circularRef', bundledSchema, [])).toThrowError(
+    expect(() => findSchemaDefinitionRecursive('#/$defs/circularRef', bundledSchema, [])).toThrow(
       'Definition for #/$defs/circularRef contains a circular reference through /bundled.ref.json/#/$defs/circularRef -> /bundled.schema.json/#/$defs/circularRef -> #/$defs/circularRef',
     );
   });

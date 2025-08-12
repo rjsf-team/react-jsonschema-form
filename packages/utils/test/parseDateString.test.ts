@@ -2,7 +2,7 @@ import { parseDateString } from '../src';
 
 describe('parseDateString()', () => {
   it('should raise on invalid JSON datetime', () => {
-    expect(() => parseDateString('plop')).toThrowError('Unable to parse');
+    expect(() => parseDateString('plop')).toThrow('Unable to parse');
   });
 
   it('should return a default object when no datetime is passed', () => {

@@ -34,22 +34,22 @@ describe('ParserValidator', () => {
     });
   });
   it('isValid() throws error when rootSchema differs', () => {
-    expect(() => validator.isValid(TINY_SCHEMA, undefined, ID_SCHEMA)).toThrowError(
+    expect(() => validator.isValid(TINY_SCHEMA, undefined, ID_SCHEMA)).toThrow(
       new Error('Unexpectedly calling isValid() with a rootSchema that differs from the construction rootSchema'),
     );
   });
   it('rawValidation() throws error when called', () => {
-    expect(() => validator.rawValidation(TINY_SCHEMA, undefined)).toThrowError(
+    expect(() => validator.rawValidation(TINY_SCHEMA, undefined)).toThrow(
       new Error('Unexpectedly calling the `rawValidation()` method during schema parsing'),
     );
   });
   it('toErrorList() throws error when called', () => {
-    expect(() => validator.toErrorList({})).toThrowError(
+    expect(() => validator.toErrorList({})).toThrow(
       new Error('Unexpectedly calling the `toErrorList()` method during schema parsing'),
     );
   });
   it('validateFormData() throws error when called', () => {
-    expect(() => validator.validateFormData({}, TINY_SCHEMA)).toThrowError(
+    expect(() => validator.validateFormData({}, TINY_SCHEMA)).toThrow(
       new Error('Unexpectedly calling the `validateFormData()` method during schema parsing'),
     );
   });
@@ -78,7 +78,7 @@ describe('ParserValidator', () => {
   it('calling isValid() with a schema that has a matching key throws error', () => {
     // Force the error condition
     validator.schemaMap[DUPLICATE_HASH] = TINY_SCHEMA;
-    expect(() => validator.isValid(DUPLICATE_SCHEMA, undefined, RECURSIVE_REF)).toThrowError(
+    expect(() => validator.isValid(DUPLICATE_SCHEMA, undefined, RECURSIVE_REF)).toThrow(
       new Error(
         `Two different schemas exist with the same key ${DUPLICATE_HASH}! What a bad coincidence. If possible, try adding an $id to one of the schemas`,
       ),
