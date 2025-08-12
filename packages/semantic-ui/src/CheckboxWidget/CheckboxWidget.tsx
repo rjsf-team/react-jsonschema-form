@@ -58,10 +58,10 @@ export default function CheckboxWidget<
   // the "required" attribute if the field value must be "true", due to the
   // "const" or "enum" keywords
   const required = schemaRequiresTrueValue<S>(schema);
-  const _onChange = (_: FormEvent<HTMLInputElement>, data: CheckboxProps) => onChange && onChange(data.checked);
-  const _onBlur = () => onBlur && onBlur(id, value);
-  const _onFocus = () => onFocus && onFocus(id, value);
   const checked = value == 'true' || value == true;
+  const _onChange = (_: FormEvent<HTMLInputElement>, data: CheckboxProps) => onChange && onChange(data.checked);
+  const _onBlur: React.FocusEventHandler<HTMLInputElement> = () => onBlur && onBlur(id, value);
+  const _onFocus: React.FocusEventHandler<HTMLInputElement> = () => onFocus && onFocus(id, value);
   const description = options.description ?? schema.description;
 
   return (
