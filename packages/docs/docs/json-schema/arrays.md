@@ -67,6 +67,8 @@ const uiSchema = {
 render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
 ```
 
+> **Note**: The `items` property in `uiSchema` can also accept a function for dynamic UI schema generation based on array item data. See [Dynamic UI Schema Examples](../api-reference/dynamic-ui-schema-examples.md) for advanced use cases.
+
 ## The `additionalItems` keyword
 
 The `additionalItems` keyword allows the user to add additional items of a given schema. For example:
@@ -276,7 +278,7 @@ const widgets = {
 
 render(
   <Form schema={schema} uiSchema={uiSchema} widgets={widgets} validator={validator} />,
-  document.getElementById('app')
+  document.getElementById('app'),
 );
 ```
 
