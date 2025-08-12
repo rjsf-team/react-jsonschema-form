@@ -31,6 +31,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Extended `Registry` interface to include optional `experimental_componentUpdateStrategy` property
 - Added `shallowEquals()` utility function for shallow equality comparisons
+- Fixed boolean fields incorrectly set to `{}` when switching oneOf/anyOf options with `mergeDefaultsIntoFormData` set to `useDefaultIfFormDataUndefined`, fixing [#4709](https://github.com/rjsf-team/react-jsonschema-form/issues/4709) ([#4710](https://github.com/rjsf-team/react-jsonschema-form/pull/4710))
 
 # 6.0.0-beta.13
 

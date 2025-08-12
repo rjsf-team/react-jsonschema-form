@@ -82,7 +82,7 @@ export default function mergeDefaultsWithFormData<T = any>(
       }
 
       acc[key as keyof T] = mergeDefaultsWithFormData<T>(
-        get(defaults, key) ?? {},
+        get(defaults, key),
         keyValue,
         mergeExtraArrayDefaults,
         defaultSupercedesUndefined,
