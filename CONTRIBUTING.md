@@ -10,4 +10,5 @@ Please abide by our [Code of Conduct](CODE_OF_CONDUCT.md) to maintain a welcomin
 
 ## 2. Getting Started
 
-This guide will help you understand how to contribute effectively to React-JSONSchema. [Contributor's guide](https://rjsf-team.github.io/react-jsonschema-form/docs/contributing)
+This guide will help you understand how to contribute effectively to React-JSONSchema-Form.
+[Contributor's guide](https://rjsf-team.github.io/react-jsonschema-form/docs/contributing)
