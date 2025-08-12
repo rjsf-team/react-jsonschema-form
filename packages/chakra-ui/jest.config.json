@@ -5,5 +5,5 @@
     "browsers": ["chrome", "firefox", "safari"]
   },
   "setupFilesAfterEnv": ["./test/setup-jest-env.js"],
-  "transformIgnorePatterns": ["/node_modules/(?!nanoid)"]
+  "transformIgnorePatterns": ["/node_modules/(?!nanoid|deep-freeze-es6)"]
 }
