@@ -15,6 +15,16 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+# 6.0.0-beta.14
+
+## @rjsf/utils
+
+- Added `title` property to `RJSFValidationError` [PR](https://github.com/rjsf-team/react-jsonschema-form/pull/4700)
+
+## @rjsf/validator-ajv8
+
+- Updated `transformRJSFValidationErrors()` to include the `title` property of a field with error fixing #4504 with [PR](https://github.com/rjsf-team/react-jsonschema-form/pull/4700)
+
 # 6.0.0-beta.13
 
 ## @rjsf/shadcn
@@ -52,11 +62,6 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/utils
 
 - Updated `SchemaUtils` and `createSchemaUtils()` to add a new `getRootSchema()` function
-- Added `title` property to `RJSFValidationError` [PR](https://github.com/rjsf-team/react-jsonschema-form/pull/4700)
-
-## @rjsf/validator-ajv8
-
-- Updated `transformRJSFValidationErrors()` to include the `title` property of a field with error fixing #4504 with [PR](https://github.com/rjsf-team/react-jsonschema-form/pull/4700)
 
 # 6.0.0-beta.11
 
