@@ -16,7 +16,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 -->
 
-# Unreleased
+# 6.0.0-beta.14
 
 ## @rjsf/core
 
