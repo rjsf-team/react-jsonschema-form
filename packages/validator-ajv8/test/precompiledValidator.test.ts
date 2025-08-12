@@ -53,7 +53,7 @@ describe('AJV8PrecompiledValidator', () => {
             name: { type: 'string' },
           },
         };
-        expect(() => validator.ensureSameRootSchema(schema)).toThrowError(
+        expect(() => validator.ensureSameRootSchema(schema)).toThrow(
           new Error(
             'The schema associated with the precompiled validator differs from the rootSchema provided for validation',
           ),
@@ -104,7 +104,7 @@ describe('AJV8PrecompiledValidator', () => {
       it('should throw if the schema is not recognized', () => {
         const schema: RJSFSchema = 'foobarbaz' as unknown as RJSFSchema;
         const hash = hashForSchema(schema);
-        expect(() => validator.isValid(schema, { name: 'bar' }, rootSchema)).toThrowError(
+        expect(() => validator.isValid(schema, { name: 'bar' }, rootSchema)).toThrow(
           new Error(`No precompiled validator function was found for the given schema for "${hash}"`),
         );
       });
@@ -115,7 +115,7 @@ describe('AJV8PrecompiledValidator', () => {
             name: { type: 'string' },
           },
         };
-        expect(() => validator.isValid(schema, { foo: { name: 'bar' } }, schema)).toThrowError(
+        expect(() => validator.isValid(schema, { foo: { name: 'bar' } }, schema)).toThrow(
           new Error(
             'The schema associated with the precompiled validator differs from the rootSchema provided for validation',
           ),
@@ -130,7 +130,7 @@ describe('AJV8PrecompiledValidator', () => {
             name: { type: 'string' },
           },
         };
-        expect(() => validator.validateFormData({}, schema)).toThrowError(
+        expect(() => validator.validateFormData({}, schema)).toThrow(
           new Error(
             'The schema associated with the precompiled validator differs from the rootSchema provided for validation',
           ),

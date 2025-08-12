@@ -88,19 +88,19 @@ const widgetProps: WidgetProps = {
 
 describe('getWidget()', () => {
   it('should fail if widget has incorrect type', () => {
-    expect(() => getWidget(schema)).toThrowError('Unsupported widget definition: undefined');
+    expect(() => getWidget(schema)).toThrow('Unsupported widget definition: undefined');
   });
 
   it('should fail if widget has no type property', () => {
-    expect(() => getWidget(schema, 'blabla')).toThrowError(`No widget for type 'object'`);
+    expect(() => getWidget(schema, 'blabla')).toThrow(`No widget for type 'object'`);
   });
 
   it('should fail if schema `type` has no widget property', () => {
-    expect(() => getWidget(subschema, 'blabla')).toThrowError(`No widget 'blabla' for type 'boolean'`);
+    expect(() => getWidget(subschema, 'blabla')).toThrow(`No widget 'blabla' for type 'boolean'`);
   });
 
   it('should fail if schema has no type property', () => {
-    expect(() => getWidget({}, 'blabla')).toThrowError(`No widget 'blabla' for type 'undefined'`);
+    expect(() => getWidget({}, 'blabla')).toThrow(`No widget 'blabla' for type 'undefined'`);
   });
 
   it('should return widget if in registered widgets', () => {
