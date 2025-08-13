@@ -76,7 +76,7 @@
     "@rjsf/utils": "^6.0.0-beta.13",
     "@rjsf/validator-ajv8": "^6.0.0-beta.13",
     "eslint": "^8.57.1",
-    "react-bootstrap": "2.10.10"
+    "react-bootstrap": "^2.10.10"
   },
   "publishConfig": {
     "access": "public"
