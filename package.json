@@ -60,7 +60,7 @@
     "ajv": "^8.17.1",
     "babel-jest": "^30.0.5",
     "cross-env": "^10.0.0",
-    "esbuild": "^0.25.8",
+    "esbuild": "^0.25.9",
     "eslint": "^8.57.1",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-import": "^2.32.0",

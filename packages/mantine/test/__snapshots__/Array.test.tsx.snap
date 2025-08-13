@@ -1,7 +1,19 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`array fields array 1`] = `
 [
+  <style
+    dangerouslySetInnerHTML={
+      {
+        "__html": "
+
+
+
+",
+      }
+    }
+    data-mantine-styles={true}
+  />,
   <style
     dangerouslySetInnerHTML={
       {
@@ -216,6 +228,18 @@ exports[`array fields array 1`] = `
 
 exports[`array fields array icons 1`] = `
 [
+  <style
+    dangerouslySetInnerHTML={
+      {
+        "__html": "
+
+
+
+",
+      }
+    }
+    data-mantine-styles={true}
+  />,
   <style
     dangerouslySetInnerHTML={
       {
@@ -655,7 +679,7 @@ exports[`array fields array icons 1`] = `
                           },
                         ],
                         "props": {
-                          "className": "m_8bffd616 __m__-r1p",
+                          "className": "m_8bffd616 __m__-r1c",
                           "data-size": undefined,
                           "data-variant": undefined,
                           "size": undefined,
@@ -1104,7 +1128,7 @@ exports[`array fields array icons 1`] = `
                           },
                         ],
                         "props": {
-                          "className": "m_8bffd616 __m__-r2a",
+                          "className": "m_8bffd616 __m__-r1t",
                           "data-size": undefined,
                           "data-variant": undefined,
                           "size": undefined,
@@ -1332,6 +1356,18 @@ exports[`array fields checkboxes 1`] = `
   <style
     dangerouslySetInnerHTML={
       {
+        "__html": "
+
+
+
+",
+      }
+    }
+    data-mantine-styles={true}
+  />,
+  <style
+    dangerouslySetInnerHTML={
+      {
         "__html": "@media (max-width: 35.99375em) {.mantine-visible-from-xs {display: none !important;}}@media (min-width: 36em) {.mantine-hidden-from-xs {display: none !important;}}@media (max-width: 47.99375em) {.mantine-visible-from-sm {display: none !important;}}@media (min-width: 48em) {.mantine-hidden-from-sm {display: none !important;}}@media (max-width: 61.99375em) {.mantine-visible-from-md {display: none !important;}}@media (min-width: 62em) {.mantine-hidden-from-md {display: none !important;}}@media (max-width: 74.99375em) {.mantine-visible-from-lg {display: none !important;}}@media (min-width: 75em) {.mantine-hidden-from-lg {display: none !important;}}@media (max-width: 87.99375em) {.mantine-visible-from-xl {display: none !important;}}@media (min-width: 88em) {.mantine-hidden-from-xl {display: none !important;}}",
       }
     }
@@ -1424,11 +1460,13 @@ exports[`array fields checkboxes 1`] = `
                         "props": {
                           "className": "m_2943220b",
                           "data-combobox-chevron": true,
-                          "data-size": undefined,
+                          "data-size": "sm",
                           "data-variant": undefined,
                           "fill": "none",
                           "size": undefined,
-                          "style": {},
+                          "style": {
+                            "--combobox-chevron-size": "var(--combobox-chevron-size-sm)",
+                          },
                           "viewBox": "0 0 15 15",
                           "xmlns": "http://www.w3.org/2000/svg",
                         },
@@ -1453,6 +1491,9 @@ exports[`array fields checkboxes 1`] = `
                   "data-with-right-section": true,
                   "size": undefined,
                   "style": {
+                    "--input-fz": "var(--mantine-font-size-sm)",
+                    "--input-height": "var(--input-height-sm)",
+                    "--input-padding-y": "var(--input-padding-y-sm)",
                     "--input-right-section-pointer-events": "none",
                   },
                 },
@@ -1466,269 +1507,6 @@ exports[`array fields checkboxes 1`] = `
               "data-variant": undefined,
               "size": undefined,
               "style": {},
-            },
-            "type": "div",
-            Symbol(cleaned): true,
-          },
-          {
-            "children": [
-              {
-                "children": [
-                  {
-                    "children": [
-                      {
-                        "children": [
-                          {
-                            "children": [
-                              {
-                                "children": [
-                                  {
-                                    "children": [
-                                      {
-                                        "children": [
-                                          {
-                                            "children": [
-                                              "a",
-                                            ],
-                                            "props": {},
-                                            "type": "span",
-                                            Symbol(cleaned): true,
-                                          },
-                                        ],
-                                        "props": {
-                                          "aria-selected": false,
-                                          "className": "m_92253aa5 m_390b5f4",
-                                          "data-combobox-option": true,
-                                          "data-size": undefined,
-                                          "data-variant": undefined,
-                                          "id": ":r1e:",
-                                          "onClick": [Function],
-                                          "onMouseDown": [Function],
-                                          "onMouseOver": [Function],
-                                          "role": "option",
-                                          "size": undefined,
-                                          "style": {},
-                                          "value": "0",
-                                        },
-                                        "type": "div",
-                                        Symbol(cleaned): true,
-                                      },
-                                      {
-                                        "children": [
-                                          {
-                                            "children": [
-                                              "b",
-                                            ],
-                                            "props": {},
-                                            "type": "span",
-                                            Symbol(cleaned): true,
-                                          },
-                                        ],
-                                        "props": {
-                                          "aria-selected": false,
-                                          "className": "m_92253aa5 m_390b5f4",
-                                          "data-combobox-option": true,
-                                          "data-size": undefined,
-                                          "data-variant": undefined,
-                                          "id": ":r1g:",
-                                          "onClick": [Function],
-                                          "onMouseDown": [Function],
-                                          "onMouseOver": [Function],
-                                          "role": "option",
-                                          "size": undefined,
-                                          "style": {},
-                                          "value": "1",
-                                        },
-                                        "type": "div",
-                                        Symbol(cleaned): true,
-                                      },
-                                      {
-                                        "children": [
-                                          {
-                                            "children": [
-                                              "c",
-                                            ],
-                                            "props": {},
-                                            "type": "span",
-                                            Symbol(cleaned): true,
-                                          },
-                                        ],
-                                        "props": {
-                                          "aria-selected": false,
-                                          "className": "m_92253aa5 m_390b5f4",
-                                          "data-combobox-option": true,
-                                          "data-size": undefined,
-                                          "data-variant": undefined,
-                                          "id": ":r1i:",
-                                          "onClick": [Function],
-                                          "onMouseDown": [Function],
-                                          "onMouseOver": [Function],
-                                          "role": "option",
-                                          "size": undefined,
-                                          "style": {},
-                                          "value": "2",
-                                        },
-                                        "type": "div",
-                                        Symbol(cleaned): true,
-                                      },
-                                    ],
-                                    "props": {
-                                      "className": "m_b1336c6",
-                                      "style": {},
-                                    },
-                                    "type": "div",
-                                    Symbol(cleaned): true,
-                                  },
-                                ],
-                                "props": {
-                                  "className": "m_c0783ff9",
-                                  "data-horizontal-hidden": undefined,
-                                  "data-offset-scrollbars": "y",
-                                  "data-scrollbars": "xy",
-                                  "data-size": undefined,
-                                  "data-variant": undefined,
-                                  "data-vertical-hidden": undefined,
-                                  "onScroll": [Function],
-                                  "size": undefined,
-                                  "style": {
-                                    "overflowX": "scroll",
-                                    "overflowY": "scroll",
-                                  },
-                                },
-                                "type": "div",
-                                Symbol(cleaned): true,
-                              },
-                              {
-                                "children": null,
-                                "props": {
-                                  "className": "m_c44ba933",
-                                  "data-hidden": undefined,
-                                  "data-mantine-scrollbar": true,
-                                  "data-orientation": "horizontal",
-                                  "data-state": "hidden",
-                                  "onLostPointerCapture": [Function],
-                                  "onMouseEnter": [Function],
-                                  "onMouseLeave": [Function],
-                                  "onPointerDown": [Function],
-                                  "onPointerEnter": [Function],
-                                  "onPointerLeave": [Function],
-                                  "onPointerMove": [Function],
-                                  "onPointerUp": [Function],
-                                  "style": {
-                                    "--sa-thumb-width": "18px",
-                                    "position": "absolute",
-                                  },
-                                },
-                                "type": "div",
-                                Symbol(cleaned): true,
-                              },
-                              {
-                                "children": null,
-                                "props": {
-                                  "className": "m_c44ba933",
-                                  "data-hidden": undefined,
-                                  "data-mantine-scrollbar": true,
-                                  "data-orientation": "vertical",
-                                  "data-state": "hidden",
-                                  "onLostPointerCapture": [Function],
-                                  "onMouseEnter": [Function],
-                                  "onMouseLeave": [Function],
-                                  "onPointerDown": [Function],
-                                  "onPointerEnter": [Function],
-                                  "onPointerLeave": [Function],
-                                  "onPointerMove": [Function],
-                                  "onPointerUp": [Function],
-                                  "style": {
-                                    "--sa-thumb-height": "18px",
-                                    "position": "absolute",
-                                  },
-                                },
-                                "type": "div",
-                                Symbol(cleaned): true,
-                              },
-                            ],
-                            "props": {
-                              "className": "m_d57069b5",
-                              "data-size": undefined,
-                              "data-variant": undefined,
-                              "size": undefined,
-                              "style": {
-                                "--sa-corner-height": "0px",
-                                "--sa-corner-width": "0px",
-                                "--scrollarea-scrollbar-size": "var(--combobox-padding)",
-                              },
-                            },
-                            "type": "div",
-                            Symbol(cleaned): true,
-                          },
-                        ],
-                        "props": {
-                          "className": "",
-                          "data-size": undefined,
-                          "data-variant": undefined,
-                          "size": undefined,
-                          "style": {
-                            "display": "flex",
-                            "flex": 1,
-                            "flexDirection": "column",
-                          },
-                        },
-                        "type": "div",
-                        Symbol(cleaned): true,
-                      },
-                    ],
-                    "props": {
-                      "className": "",
-                      "data-size": undefined,
-                      "data-variant": undefined,
-                      "size": undefined,
-                      "style": {
-                        "display": "flex",
-                        "maxHeight": "calc(13.75rem * var(--mantine-scale))",
-                        "overflow": "auto",
-                      },
-                    },
-                    "type": "div",
-                    Symbol(cleaned): true,
-                  },
-                ],
-                "props": {
-                  "aria-labelledby": undefined,
-                  "className": "m_b2821a6e",
-                  "data-size": undefined,
-                  "data-variant": undefined,
-                  "id": "",
-                  "onMouseDown": [Function],
-                  "role": "listbox",
-                  "size": undefined,
-                  "style": {
-                    "--combobox-option-fz": "var(--mantine-font-size-sm)",
-                    "--combobox-option-padding": "var(--combobox-option-padding-sm)",
-                  },
-                },
-                "type": "div",
-                Symbol(cleaned): true,
-              },
-            ],
-            "props": {
-              "className": "m_38a85659 m_88b62a41",
-              "data-composed": true,
-              "data-fixed": undefined,
-              "data-position": "bottom",
-              "data-size": undefined,
-              "data-variant": undefined,
-              "onKeyDownCapture": [Function],
-              "role": "presentation",
-              "size": undefined,
-              "style": {
-                "--combobox-option-fz": "var(--mantine-font-size-sm)",
-                "--combobox-option-padding": "var(--combobox-option-padding-sm)",
-                "display": "none",
-                "left": 0,
-                "top": 0,
-                "width": undefined,
-                "zIndex": 300,
-              },
             },
             "type": "div",
             Symbol(cleaned): true,
@@ -1822,6 +1600,18 @@ exports[`array fields empty errors array 1`] = `
   <style
     dangerouslySetInnerHTML={
       {
+        "__html": "
+
+
+
+",
+      }
+    }
+    data-mantine-styles={true}
+  />,
+  <style
+    dangerouslySetInnerHTML={
+      {
         "__html": "@media (max-width: 35.99375em) {.mantine-visible-from-xs {display: none !important;}}@media (min-width: 36em) {.mantine-hidden-from-xs {display: none !important;}}@media (max-width: 47.99375em) {.mantine-visible-from-sm {display: none !important;}}@media (min-width: 48em) {.mantine-hidden-from-sm {display: none !important;}}@media (max-width: 61.99375em) {.mantine-visible-from-md {display: none !important;}}@media (min-width: 62em) {.mantine-hidden-from-md {display: none !important;}}@media (max-width: 74.99375em) {.mantine-visible-from-lg {display: none !important;}}@media (min-width: 75em) {.mantine-hidden-from-lg {display: none !important;}}@media (max-width: 87.99375em) {.mantine-visible-from-xl {display: none !important;}}@media (min-width: 88em) {.mantine-hidden-from-xl {display: none !important;}}",
       }
     }
@@ -1837,7 +1627,7 @@ exports[`array fields empty errors array 1`] = `
                 "children": null,
                 "props": {
                   "dangerouslySetInnerHTML": {
-                    "__html": ".__m__-r3v{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
+                    "__html": ".__m__-r3i{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
                   },
                   "data-mantine-styles": "inline",
                   "nonce": undefined,
@@ -1939,7 +1729,7 @@ exports[`array fields empty errors array 1`] = `
                   },
                 ],
                 "props": {
-                  "className": "m_2415a157 __m__-r3v",
+                  "className": "m_2415a157 __m__-r3i",
                   "data-size": undefined,
                   "data-variant": undefined,
                   "size": undefined,
@@ -2039,6 +1829,18 @@ exports[`array fields empty errors array 1`] = `
 
 exports[`array fields fixed array 1`] = `
 [
+  <style
+    dangerouslySetInnerHTML={
+      {
+        "__html": "
+
+
+
+",
+      }
+    }
+    data-mantine-styles={true}
+  />,
   <style
     dangerouslySetInnerHTML={
       {
@@ -2496,6 +2298,18 @@ exports[`array fields has errors 1`] = `
   <style
     dangerouslySetInnerHTML={
       {
+        "__html": "
+
+
+
+",
+      }
+    }
+    data-mantine-styles={true}
+  />,
+  <style
+    dangerouslySetInnerHTML={
+      {
         "__html": "@media (max-width: 35.99375em) {.mantine-visible-from-xs {display: none !important;}}@media (min-width: 36em) {.mantine-hidden-from-xs {display: none !important;}}@media (max-width: 47.99375em) {.mantine-visible-from-sm {display: none !important;}}@media (min-width: 48em) {.mantine-hidden-from-sm {display: none !important;}}@media (max-width: 61.99375em) {.mantine-visible-from-md {display: none !important;}}@media (min-width: 62em) {.mantine-hidden-from-md {display: none !important;}}@media (max-width: 74.99375em) {.mantine-visible-from-lg {display: none !important;}}@media (min-width: 75em) {.mantine-hidden-from-lg {display: none !important;}}@media (max-width: 87.99375em) {.mantine-visible-from-xl {display: none !important;}}@media (min-width: 88em) {.mantine-hidden-from-xl {display: none !important;}}",
       }
     }
@@ -2713,7 +2527,7 @@ exports[`array fields has errors 1`] = `
                 "children": null,
                 "props": {
                   "dangerouslySetInnerHTML": {
-                    "__html": ".__m__-r35{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
+                    "__html": ".__m__-r2o{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
                   },
                   "data-mantine-styles": "inline",
                   "nonce": undefined,
@@ -2901,7 +2715,7 @@ exports[`array fields has errors 1`] = `
                   },
                 ],
                 "props": {
-                  "className": "m_2415a157 __m__-r35",
+                  "className": "m_2415a157 __m__-r2o",
                   "data-size": undefined,
                   "data-variant": undefined,
                   "size": undefined,
@@ -3004,6 +2818,18 @@ exports[`array fields no errors 1`] = `
   <style
     dangerouslySetInnerHTML={
       {
+        "__html": "
+
+
+
+",
+      }
+    }
+    data-mantine-styles={true}
+  />,
+  <style
+    dangerouslySetInnerHTML={
+      {
         "__html": "@media (max-width: 35.99375em) {.mantine-visible-from-xs {display: none !important;}}@media (min-width: 36em) {.mantine-hidden-from-xs {display: none !important;}}@media (max-width: 47.99375em) {.mantine-visible-from-sm {display: none !important;}}@media (min-width: 48em) {.mantine-hidden-from-sm {display: none !important;}}@media (max-width: 61.99375em) {.mantine-visible-from-md {display: none !important;}}@media (min-width: 62em) {.mantine-hidden-from-md {display: none !important;}}@media (max-width: 74.99375em) {.mantine-visible-from-lg {display: none !important;}}@media (min-width: 75em) {.mantine-hidden-from-lg {display: none !important;}}@media (max-width: 87.99375em) {.mantine-visible-from-xl {display: none !important;}}@media (min-width: 88em) {.mantine-hidden-from-xl {display: none !important;}}",
       }
     }
@@ -3019,7 +2845,7 @@ exports[`array fields no errors 1`] = `
                 "children": null,
                 "props": {
                   "dangerouslySetInnerHTML": {
-                    "__html": ".__m__-r3k{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
+                    "__html": ".__m__-r37{--sg-spacing-x:var(--mantine-spacing-md);--sg-spacing-y:var(--mantine-spacing-md);--sg-cols:1;}",
                   },
                   "data-mantine-styles": "inline",
                   "nonce": undefined,
@@ -3121,7 +2947,7 @@ exports[`array fields no errors 1`] = `
                   },
                 ],
                 "props": {
-                  "className": "m_2415a157 __m__-r3k",
+                  "className": "m_2415a157 __m__-r37",
                   "data-size": undefined,
                   "data-variant": undefined,
                   "size": undefined,
@@ -3221,6 +3047,18 @@ exports[`array fields no errors 1`] = `
 
 exports[`with title and description array 1`] = `
 [
+  <style
+    dangerouslySetInnerHTML={
+      {
+        "__html": "
+
+
+
+",
+      }
+    }
+    data-mantine-styles={true}
+  />,
   <style
     dangerouslySetInnerHTML={
       {
@@ -3487,6 +3325,18 @@ exports[`with title and description array icons 1`] = `
   <style
     dangerouslySetInnerHTML={
       {
+        "__html": "
+
+
+
+",
+      }
+    }
+    data-mantine-styles={true}
+  />,
+  <style
+    dangerouslySetInnerHTML={
+      {
         "__html": "@media (max-width: 35.99375em) {.mantine-visible-from-xs {display: none !important;}}@media (min-width: 36em) {.mantine-hidden-from-xs {display: none !important;}}@media (max-width: 47.99375em) {.mantine-visible-from-sm {display: none !important;}}@media (min-width: 48em) {.mantine-hidden-from-sm {display: none !important;}}@media (max-width: 61.99375em) {.mantine-visible-from-md {display: none !important;}}@media (min-width: 62em) {.mantine-hidden-from-md {display: none !important;}}@media (max-width: 74.99375em) {.mantine-visible-from-lg {display: none !important;}}@media (min-width: 75em) {.mantine-hidden-from-lg {display: none !important;}}@media (max-width: 87.99375em) {.mantine-visible-from-xl {display: none !important;}}@media (min-width: 88em) {.mantine-hidden-from-xl {display: none !important;}}",
       }
     }
@@ -4002,7 +3852,7 @@ exports[`with title and description array icons 1`] = `
                           },
                         ],
                         "props": {
-                          "className": "m_8bffd616 __m__-r6b",
+                          "className": "m_8bffd616 __m__-r5h",
                           "data-size": undefined,
                           "data-variant": undefined,
                           "size": undefined,
@@ -4481,7 +4331,7 @@ exports[`with title and description array icons 1`] = `
                           },
                         ],
                         "props": {
-                          "className": "m_8bffd616 __m__-r6t",
+                          "className": "m_8bffd616 __m__-r63",
                           "data-size": undefined,
                           "data-variant": undefined,
                           "size": undefined,
@@ -4709,6 +4559,18 @@ exports[`with title and description checkboxes 1`] = `
   <style
     dangerouslySetInnerHTML={
       {
+        "__html": "
+
+
+
+",
+      }
+    }
+    data-mantine-styles={true}
+  />,
+  <style
+    dangerouslySetInnerHTML={
+      {
         "__html": "@media (max-width: 35.99375em) {.mantine-visible-from-xs {display: none !important;}}@media (min-width: 36em) {.mantine-hidden-from-xs {display: none !important;}}@media (max-width: 47.99375em) {.mantine-visible-from-sm {display: none !important;}}@media (min-width: 48em) {.mantine-hidden-from-sm {display: none !important;}}@media (max-width: 61.99375em) {.mantine-visible-from-md {display: none !important;}}@media (min-width: 62em) {.mantine-hidden-from-md {display: none !important;}}@media (max-width: 74.99375em) {.mantine-visible-from-lg {display: none !important;}}@media (min-width: 75em) {.mantine-hidden-from-lg {display: none !important;}}@media (max-width: 87.99375em) {.mantine-visible-from-xl {display: none !important;}}@media (min-width: 88em) {.mantine-hidden-from-xl {display: none !important;}}",
       }
     }
@@ -4732,7 +4594,9 @@ exports[`with title and description checkboxes 1`] = `
                   "id": "root-label",
                   "onMouseDown": [Function],
                   "size": undefined,
-                  "style": {},
+                  "style": {
+                    "--input-label-size": "var(--mantine-font-size-sm)",
+                  },
                 },
                 "type": "label",
                 Symbol(cleaned): true,
@@ -4818,11 +4682,13 @@ exports[`with title and description checkboxes 1`] = `
                         "props": {
                           "className": "m_2943220b",
                           "data-combobox-chevron": true,
-                          "data-size": undefined,
+                          "data-size": "sm",
                           "data-variant": undefined,
                           "fill": "none",
                           "size": undefined,
-                          "style": {},
+                          "style": {
+                            "--combobox-chevron-size": "var(--combobox-chevron-size-sm)",
+                          },
                           "viewBox": "0 0 15 15",
                           "xmlns": "http://www.w3.org/2000/svg",
                         },
@@ -4847,6 +4713,9 @@ exports[`with title and description checkboxes 1`] = `
                   "data-with-right-section": true,
                   "size": undefined,
                   "style": {
+                    "--input-fz": "var(--mantine-font-size-sm)",
+                    "--input-height": "var(--input-height-sm)",
+                    "--input-padding-y": "var(--input-padding-y-sm)",
                     "--input-right-section-pointer-events": "none",
                   },
                 },
@@ -4860,269 +4729,6 @@ exports[`with title and description checkboxes 1`] = `
               "data-variant": undefined,
               "size": undefined,
               "style": {},
-            },
-            "type": "div",
-            Symbol(cleaned): true,
-          },
-          {
-            "children": [
-              {
-                "children": [
-                  {
-                    "children": [
-                      {
-                        "children": [
-                          {
-                            "children": [
-                              {
-                                "children": [
-                                  {
-                                    "children": [
-                                      {
-                                        "children": [
-                                          {
-                                            "children": [
-                                              "a",
-                                            ],
-                                            "props": {},
-                                            "type": "span",
-                                            Symbol(cleaned): true,
-                                          },
-                                        ],
-                                        "props": {
-                                          "aria-selected": false,
-                                          "className": "m_92253aa5 m_390b5f4",
-                                          "data-combobox-option": true,
-                                          "data-size": undefined,
-                                          "data-variant": undefined,
-                                          "id": ":r5u:",
-                                          "onClick": [Function],
-                                          "onMouseDown": [Function],
-                                          "onMouseOver": [Function],
-                                          "role": "option",
-                                          "size": undefined,
-                                          "style": {},
-                                          "value": "0",
-                                        },
-                                        "type": "div",
-                                        Symbol(cleaned): true,
-                                      },
-                                      {
-                                        "children": [
-                                          {
-                                            "children": [
-                                              "b",
-                                            ],
-                                            "props": {},
-                                            "type": "span",
-                                            Symbol(cleaned): true,
-                                          },
-                                        ],
-                                        "props": {
-                                          "aria-selected": false,
-                                          "className": "m_92253aa5 m_390b5f4",
-                                          "data-combobox-option": true,
-                                          "data-size": undefined,
-                                          "data-variant": undefined,
-                                          "id": ":r60:",
-                                          "onClick": [Function],
-                                          "onMouseDown": [Function],
-                                          "onMouseOver": [Function],
-                                          "role": "option",
-                                          "size": undefined,
-                                          "style": {},
-                                          "value": "1",
-                                        },
-                                        "type": "div",
-                                        Symbol(cleaned): true,
-                                      },
-                                      {
-                                        "children": [
-                                          {
-                                            "children": [
-                                              "c",
-                                            ],
-                                            "props": {},
-                                            "type": "span",
-                                            Symbol(cleaned): true,
-                                          },
-                                        ],
-                                        "props": {
-                                          "aria-selected": false,
-                                          "className": "m_92253aa5 m_390b5f4",
-                                          "data-combobox-option": true,
-                                          "data-size": undefined,
-                                          "data-variant": undefined,
-                                          "id": ":r62:",
-                                          "onClick": [Function],
-                                          "onMouseDown": [Function],
-                                          "onMouseOver": [Function],
-                                          "role": "option",
-                                          "size": undefined,
-                                          "style": {},
-                                          "value": "2",
-                                        },
-                                        "type": "div",
-                                        Symbol(cleaned): true,
-                                      },
-                                    ],
-                                    "props": {
-                                      "className": "m_b1336c6",
-                                      "style": {},
-                                    },
-                                    "type": "div",
-                                    Symbol(cleaned): true,
-                                  },
-                                ],
-                                "props": {
-                                  "className": "m_c0783ff9",
-                                  "data-horizontal-hidden": undefined,
-                                  "data-offset-scrollbars": "y",
-                                  "data-scrollbars": "xy",
-                                  "data-size": undefined,
-                                  "data-variant": undefined,
-                                  "data-vertical-hidden": undefined,
-                                  "onScroll": [Function],
-                                  "size": undefined,
-                                  "style": {
-                                    "overflowX": "scroll",
-                                    "overflowY": "scroll",
-                                  },
-                                },
-                                "type": "div",
-                                Symbol(cleaned): true,
-                              },
-                              {
-                                "children": null,
-                                "props": {
-                                  "className": "m_c44ba933",
-                                  "data-hidden": undefined,
-                                  "data-mantine-scrollbar": true,
-                                  "data-orientation": "horizontal",
-                                  "data-state": "hidden",
-                                  "onLostPointerCapture": [Function],
-                                  "onMouseEnter": [Function],
-                                  "onMouseLeave": [Function],
-                                  "onPointerDown": [Function],
-                                  "onPointerEnter": [Function],
-                                  "onPointerLeave": [Function],
-                                  "onPointerMove": [Function],
-                                  "onPointerUp": [Function],
-                                  "style": {
-                                    "--sa-thumb-width": "18px",
-                                    "position": "absolute",
-                                  },
-                                },
-                                "type": "div",
-                                Symbol(cleaned): true,
-                              },
-                              {
-                                "children": null,
-                                "props": {
-                                  "className": "m_c44ba933",
-                                  "data-hidden": undefined,
-                                  "data-mantine-scrollbar": true,
-                                  "data-orientation": "vertical",
-                                  "data-state": "hidden",
-                                  "onLostPointerCapture": [Function],
-                                  "onMouseEnter": [Function],
-                                  "onMouseLeave": [Function],
-                                  "onPointerDown": [Function],
-                                  "onPointerEnter": [Function],
-                                  "onPointerLeave": [Function],
-                                  "onPointerMove": [Function],
-                                  "onPointerUp": [Function],
-                                  "style": {
-                                    "--sa-thumb-height": "18px",
-                                    "position": "absolute",
-                                  },
-                                },
-                                "type": "div",
-                                Symbol(cleaned): true,
-                              },
-                            ],
-                            "props": {
-                              "className": "m_d57069b5",
-                              "data-size": undefined,
-                              "data-variant": undefined,
-                              "size": undefined,
-                              "style": {
-                                "--sa-corner-height": "0px",
-                                "--sa-corner-width": "0px",
-                                "--scrollarea-scrollbar-size": "var(--combobox-padding)",
-                              },
-                            },
-                            "type": "div",
-                            Symbol(cleaned): true,
-                          },
-                        ],
-                        "props": {
-                          "className": "",
-                          "data-size": undefined,
-                          "data-variant": undefined,
-                          "size": undefined,
-                          "style": {
-                            "display": "flex",
-                            "flex": 1,
-                            "flexDirection": "column",
-                          },
-                        },
-                        "type": "div",
-                        Symbol(cleaned): true,
-                      },
-                    ],
-                    "props": {
-                      "className": "",
-                      "data-size": undefined,
-                      "data-variant": undefined,
-                      "size": undefined,
-                      "style": {
-                        "display": "flex",
-                        "maxHeight": "calc(13.75rem * var(--mantine-scale))",
-                        "overflow": "auto",
-                      },
-                    },
-                    "type": "div",
-                    Symbol(cleaned): true,
-                  },
-                ],
-                "props": {
-                  "aria-labelledby": "root-label",
-                  "className": "m_b2821a6e",
-                  "data-size": undefined,
-                  "data-variant": undefined,
-                  "id": "",
-                  "onMouseDown": [Function],
-                  "role": "listbox",
-                  "size": undefined,
-                  "style": {
-                    "--combobox-option-fz": "var(--mantine-font-size-sm)",
-                    "--combobox-option-padding": "var(--combobox-option-padding-sm)",
-                  },
-                },
-                "type": "div",
-                Symbol(cleaned): true,
-              },
-            ],
-            "props": {
-              "className": "m_38a85659 m_88b62a41",
-              "data-composed": true,
-              "data-fixed": undefined,
-              "data-position": "bottom",
-              "data-size": undefined,
-              "data-variant": undefined,
-              "onKeyDownCapture": [Function],
-              "role": "presentation",
-              "size": undefined,
-              "style": {
-                "--combobox-option-fz": "var(--mantine-font-size-sm)",
-                "--combobox-option-padding": "var(--combobox-option-padding-sm)",
-                "display": "none",
-                "left": 0,
-                "top": 0,
-                "width": undefined,
-                "zIndex": 300,
-              },
             },
             "type": "div",
             Symbol(cleaned): true,
@@ -5213,6 +4819,18 @@ exports[`with title and description checkboxes 1`] = `
 
 exports[`with title and description fixed array 1`] = `
 [
+  <style
+    dangerouslySetInnerHTML={
+      {
+        "__html": "
+
+
+
+",
+      }
+    }
+    data-mantine-styles={true}
+  />,
   <style
     dangerouslySetInnerHTML={
       {
@@ -5389,7 +5007,7 @@ exports[`with title and description fixed array 1`] = `
                           },
                         ],
                         "props": {
-                          "className": "m_8bffd616 __m__-r4n",
+                          "className": "m_8bffd616 __m__-r4a",
                           "data-size": undefined,
                           "data-variant": undefined,
                           "size": undefined,
@@ -5653,7 +5271,7 @@ exports[`with title and description fixed array 1`] = `
                           },
                         ],
                         "props": {
-                          "className": "m_8bffd616 __m__-r50",
+                          "className": "m_8bffd616 __m__-r4j",
                           "data-size": undefined,
                           "data-variant": undefined,
                           "size": undefined,
@@ -5776,6 +5394,18 @@ exports[`with title and description fixed array 1`] = `
 
 exports[`with title and description from both array 1`] = `
 [
+  <style
+    dangerouslySetInnerHTML={
+      {
+        "__html": "
+
+
+
+",
+      }
+    }
+    data-mantine-styles={true}
+  />,
   <style
     dangerouslySetInnerHTML={
       {
@@ -6042,6 +5672,18 @@ exports[`with title and description from both array icons 1`] = `
   <style
     dangerouslySetInnerHTML={
       {
+        "__html": "
+
+
+
+",
+      }
+    }
+    data-mantine-styles={true}
+  />,
+  <style
+    dangerouslySetInnerHTML={
+      {
         "__html": "@media (max-width: 35.99375em) {.mantine-visible-from-xs {display: none !important;}}@media (min-width: 36em) {.mantine-hidden-from-xs {display: none !important;}}@media (max-width: 47.99375em) {.mantine-visible-from-sm {display: none !important;}}@media (min-width: 48em) {.mantine-hidden-from-sm {display: none !important;}}@media (max-width: 61.99375em) {.mantine-visible-from-md {display: none !important;}}@media (min-width: 62em) {.mantine-hidden-from-md {display: none !important;}}@media (max-width: 74.99375em) {.mantine-visible-from-lg {display: none !important;}}@media (min-width: 75em) {.mantine-hidden-from-lg {display: none !important;}}@media (max-width: 87.99375em) {.mantine-visible-from-xl {display: none !important;}}@media (min-width: 88em) {.mantine-hidden-from-xl {display: none !important;}}",
       }
     }
@@ -6574,7 +6216,7 @@ exports[`with title and description from both array icons 1`] = `
                           },
                         ],
                         "props": {
-                          "className": "m_8bffd616 __m__-rd7",
+                          "className": "m_8bffd616 __m__-rbj",
                           "data-size": undefined,
                           "data-variant": undefined,
                           "size": undefined,
@@ -7070,7 +6712,7 @@ exports[`with title and description from both array icons 1`] = `
                           },
                         ],
                         "props": {
-                          "className": "m_8bffd616 __m__-rdq",
+                          "className": "m_8bffd616 __m__-rc6",
                           "data-size": undefined,
                           "data-variant": undefined,
                           "size": undefined,
@@ -7298,6 +6940,18 @@ exports[`with title and description from both checkboxes 1`] = `
   <style
     dangerouslySetInnerHTML={
       {
+        "__html": "
+
+
+
+",
+      }
+    }
+    data-mantine-styles={true}
+  />,
+  <style
+    dangerouslySetInnerHTML={
+      {
         "__html": "@media (max-width: 35.99375em) {.mantine-visible-from-xs {display: none !important;}}@media (min-width: 36em) {.mantine-hidden-from-xs {display: none !important;}}@media (max-width: 47.99375em) {.mantine-visible-from-sm {display: none !important;}}@media (min-width: 48em) {.mantine-hidden-from-sm {display: none !important;}}@media (max-width: 61.99375em) {.mantine-visible-from-md {display: none !important;}}@media (min-width: 62em) {.mantine-hidden-from-md {display: none !important;}}@media (max-width: 74.99375em) {.mantine-visible-from-lg {display: none !important;}}@media (min-width: 75em) {.mantine-hidden-from-lg {display: none !important;}}@media (max-width: 87.99375em) {.mantine-visible-from-xl {display: none !important;}}@media (min-width: 88em) {.mantine-hidden-from-xl {display: none !important;}}",
       }
     }
@@ -7321,7 +6975,9 @@ exports[`with title and description from both checkboxes 1`] = `
                   "id": "root-label",
                   "onMouseDown": [Function],
                   "size": undefined,
-                  "style": {},
+                  "style": {
+                    "--input-label-size": "var(--mantine-font-size-sm)",
+                  },
                 },
                 "type": "label",
                 Symbol(cleaned): true,
@@ -7336,7 +6992,9 @@ exports[`with title and description from both checkboxes 1`] = `
                   "data-variant": undefined,
                   "id": "root-description",
                   "size": undefined,
-                  "style": {},
+                  "style": {
+                    "--input-description-size": "calc(var(--mantine-font-size-sm) - calc(0.125rem * var(--mantine-scale)))",
+                  },
                 },
                 "type": "p",
                 Symbol(cleaned): true,
@@ -7422,11 +7080,13 @@ exports[`with title and description from both checkboxes 1`] = `
                         "props": {
                           "className": "m_2943220b",
                           "data-combobox-chevron": true,
-                          "data-size": undefined,
+                          "data-size": "sm",
                           "data-variant": undefined,
                           "fill": "none",
                           "size": undefined,
-                          "style": {},
+                          "style": {
+                            "--combobox-chevron-size": "var(--combobox-chevron-size-sm)",
+                          },
                           "viewBox": "0 0 15 15",
                           "xmlns": "http://www.w3.org/2000/svg",
                         },
@@ -7451,7 +7111,10 @@ exports[`with title and description from both checkboxes 1`] = `
                   "data-with-right-section": true,
                   "size": undefined,
                   "style": {
+                    "--input-fz": "var(--mantine-font-size-sm)",
+                    "--input-height": "var(--input-height-sm)",
                     "--input-margin-top": "calc(var(--mantine-spacing-xs) / 2)",
+                    "--input-padding-y": "var(--input-padding-y-sm)",
                     "--input-right-section-pointer-events": "none",
                   },
                 },
@@ -7465,269 +7128,6 @@ exports[`with title and description from both checkboxes 1`] = `
               "data-variant": undefined,
               "size": undefined,
               "style": {},
-            },
-            "type": "div",
-            Symbol(cleaned): true,
-          },
-          {
-            "children": [
-              {
-                "children": [
-                  {
-                    "children": [
-                      {
-                        "children": [
-                          {
-                            "children": [
-                              {
-                                "children": [
-                                  {
-                                    "children": [
-                                      {
-                                        "children": [
-                                          {
-                                            "children": [
-                                              "a",
-                                            ],
-                                            "props": {},
-                                            "type": "span",
-                                            Symbol(cleaned): true,
-                                          },
-                                        ],
-                                        "props": {
-                                          "aria-selected": false,
-                                          "className": "m_92253aa5 m_390b5f4",
-                                          "data-combobox-option": true,
-                                          "data-size": undefined,
-                                          "data-variant": undefined,
-                                          "id": ":rcq:",
-                                          "onClick": [Function],
-                                          "onMouseDown": [Function],
-                                          "onMouseOver": [Function],
-                                          "role": "option",
-                                          "size": undefined,
-                                          "style": {},
-                                          "value": "0",
-                                        },
-                                        "type": "div",
-                                        Symbol(cleaned): true,
-                                      },
-                                      {
-                                        "children": [
-                                          {
-                                            "children": [
-                                              "b",
-                                            ],
-                                            "props": {},
-                                            "type": "span",
-                                            Symbol(cleaned): true,
-                                          },
-                                        ],
-                                        "props": {
-                                          "aria-selected": false,
-                                          "className": "m_92253aa5 m_390b5f4",
-                                          "data-combobox-option": true,
-                                          "data-size": undefined,
-                                          "data-variant": undefined,
-                                          "id": ":rcs:",
-                                          "onClick": [Function],
-                                          "onMouseDown": [Function],
-                                          "onMouseOver": [Function],
-                                          "role": "option",
-                                          "size": undefined,
-                                          "style": {},
-                                          "value": "1",
-                                        },
-                                        "type": "div",
-                                        Symbol(cleaned): true,
-                                      },
-                                      {
-                                        "children": [
-                                          {
-                                            "children": [
-                                              "c",
-                                            ],
-                                            "props": {},
-                                            "type": "span",
-                                            Symbol(cleaned): true,
-                                          },
-                                        ],
-                                        "props": {
-                                          "aria-selected": false,
-                                          "className": "m_92253aa5 m_390b5f4",
-                                          "data-combobox-option": true,
-                                          "data-size": undefined,
-                                          "data-variant": undefined,
-                                          "id": ":rcu:",
-                                          "onClick": [Function],
-                                          "onMouseDown": [Function],
-                                          "onMouseOver": [Function],
-                                          "role": "option",
-                                          "size": undefined,
-                                          "style": {},
-                                          "value": "2",
-                                        },
-                                        "type": "div",
-                                        Symbol(cleaned): true,
-                                      },
-                                    ],
-                                    "props": {
-                                      "className": "m_b1336c6",
-                                      "style": {},
-                                    },
-                                    "type": "div",
-                                    Symbol(cleaned): true,
-                                  },
-                                ],
-                                "props": {
-                                  "className": "m_c0783ff9",
-                                  "data-horizontal-hidden": undefined,
-                                  "data-offset-scrollbars": "y",
-                                  "data-scrollbars": "xy",
-                                  "data-size": undefined,
-                                  "data-variant": undefined,
-                                  "data-vertical-hidden": undefined,
-                                  "onScroll": [Function],
-                                  "size": undefined,
-                                  "style": {
-                                    "overflowX": "scroll",
-                                    "overflowY": "scroll",
-                                  },
-                                },
-                                "type": "div",
-                                Symbol(cleaned): true,
-                              },
-                              {
-                                "children": null,
-                                "props": {
-                                  "className": "m_c44ba933",
-                                  "data-hidden": undefined,
-                                  "data-mantine-scrollbar": true,
-                                  "data-orientation": "horizontal",
-                                  "data-state": "hidden",
-                                  "onLostPointerCapture": [Function],
-                                  "onMouseEnter": [Function],
-                                  "onMouseLeave": [Function],
-                                  "onPointerDown": [Function],
-                                  "onPointerEnter": [Function],
-                                  "onPointerLeave": [Function],
-                                  "onPointerMove": [Function],
-                                  "onPointerUp": [Function],
-                                  "style": {
-                                    "--sa-thumb-width": "18px",
-                                    "position": "absolute",
-                                  },
-                                },
-                                "type": "div",
-                                Symbol(cleaned): true,
-                              },
-                              {
-                                "children": null,
-                                "props": {
-                                  "className": "m_c44ba933",
-                                  "data-hidden": undefined,
-                                  "data-mantine-scrollbar": true,
-                                  "data-orientation": "vertical",
-                                  "data-state": "hidden",
-                                  "onLostPointerCapture": [Function],
-                                  "onMouseEnter": [Function],
-                                  "onMouseLeave": [Function],
-                                  "onPointerDown": [Function],
-                                  "onPointerEnter": [Function],
-                                  "onPointerLeave": [Function],
-                                  "onPointerMove": [Function],
-                                  "onPointerUp": [Function],
-                                  "style": {
-                                    "--sa-thumb-height": "18px",
-                                    "position": "absolute",
-                                  },
-                                },
-                                "type": "div",
-                                Symbol(cleaned): true,
-                              },
-                            ],
-                            "props": {
-                              "className": "m_d57069b5",
-                              "data-size": undefined,
-                              "data-variant": undefined,
-                              "size": undefined,
-                              "style": {
-                                "--sa-corner-height": "0px",
-                                "--sa-corner-width": "0px",
-                                "--scrollarea-scrollbar-size": "var(--combobox-padding)",
-                              },
-                            },
-                            "type": "div",
-                            Symbol(cleaned): true,
-                          },
-                        ],
-                        "props": {
-                          "className": "",
-                          "data-size": undefined,
-                          "data-variant": undefined,
-                          "size": undefined,
-                          "style": {
-                            "display": "flex",
-                            "flex": 1,
-                            "flexDirection": "column",
-                          },
-                        },
-                        "type": "div",
-                        Symbol(cleaned): true,
-                      },
-                    ],
-                    "props": {
-                      "className": "",
-                      "data-size": undefined,
-                      "data-variant": undefined,
-                      "size": undefined,
-                      "style": {
-                        "display": "flex",
-                        "maxHeight": "calc(13.75rem * var(--mantine-scale))",
-                        "overflow": "auto",
-                      },
-                    },
-                    "type": "div",
-                    Symbol(cleaned): true,
-                  },
-                ],
-                "props": {
-                  "aria-labelledby": "root-label",
-                  "className": "m_b2821a6e",
-                  "data-size": undefined,
-                  "data-variant": undefined,
-                  "id": "",
-                  "onMouseDown": [Function],
-                  "role": "listbox",
-                  "size": undefined,
-                  "style": {
-                    "--combobox-option-fz": "var(--mantine-font-size-sm)",
-                    "--combobox-option-padding": "var(--combobox-option-padding-sm)",
-                  },
-                },
-                "type": "div",
-                Symbol(cleaned): true,
-              },
-            ],
-            "props": {
-              "className": "m_38a85659 m_88b62a41",
-              "data-composed": true,
-              "data-fixed": undefined,
-              "data-position": "bottom",
-              "data-size": undefined,
-              "data-variant": undefined,
-              "onKeyDownCapture": [Function],
-              "role": "presentation",
-              "size": undefined,
-              "style": {
-                "--combobox-option-fz": "var(--mantine-font-size-sm)",
-                "--combobox-option-padding": "var(--combobox-option-padding-sm)",
-                "display": "none",
-                "left": 0,
-                "top": 0,
-                "width": undefined,
-                "zIndex": 300,
-              },
             },
             "type": "div",
             Symbol(cleaned): true,
@@ -7818,6 +7218,18 @@ exports[`with title and description from both checkboxes 1`] = `
 
 exports[`with title and description from both fixed array 1`] = `
 [
+  <style
+    dangerouslySetInnerHTML={
+      {
+        "__html": "
+
+
+
+",
+      }
+    }
+    data-mantine-styles={true}
+  />,
   <style
     dangerouslySetInnerHTML={
       {
@@ -8011,7 +7423,7 @@ exports[`with title and description from both fixed array 1`] = `
                           },
                         ],
                         "props": {
-                          "className": "m_8bffd616 __m__-rbg",
+                          "className": "m_8bffd616 __m__-ra9",
                           "data-size": undefined,
                           "data-variant": undefined,
                           "size": undefined,
@@ -8291,7 +7703,7 @@ exports[`with title and description from both fixed array 1`] = `
                           },
                         ],
                         "props": {
-                          "className": "m_8bffd616 __m__-rbq",
+                          "className": "m_8bffd616 __m__-raj",
                           "data-size": undefined,
                           "data-variant": undefined,
                           "size": undefined,
@@ -8414,6 +7826,18 @@ exports[`with title and description from both fixed array 1`] = `
 
 exports[`with title and description from uiSchema array 1`] = `
 [
+  <style
+    dangerouslySetInnerHTML={
+      {
+        "__html": "
+
+
+
+",
+      }
+    }
+    data-mantine-styles={true}
+  />,
   <style
     dangerouslySetInnerHTML={
       {
@@ -8680,6 +8104,18 @@ exports[`with title and description from uiSchema array icons 1`] = `
   <style
     dangerouslySetInnerHTML={
       {
+        "__html": "
+
+
+
+",
+      }
+    }
+    data-mantine-styles={true}
+  />,
+  <style
+    dangerouslySetInnerHTML={
+      {
         "__html": "@media (max-width: 35.99375em) {.mantine-visible-from-xs {display: none !important;}}@media (min-width: 36em) {.mantine-hidden-from-xs {display: none !important;}}@media (max-width: 47.99375em) {.mantine-visible-from-sm {display: none !important;}}@media (min-width: 48em) {.mantine-hidden-from-sm {display: none !important;}}@media (max-width: 61.99375em) {.mantine-visible-from-md {display: none !important;}}@media (min-width: 62em) {.mantine-hidden-from-md {display: none !important;}}@media (max-width: 74.99375em) {.mantine-visible-from-lg {display: none !important;}}@media (min-width: 75em) {.mantine-hidden-from-lg {display: none !important;}}@media (max-width: 87.99375em) {.mantine-visible-from-xl {display: none !important;}}@media (min-width: 88em) {.mantine-hidden-from-xl {display: none !important;}}",
       }
     }
@@ -9212,7 +8648,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                           },
                         ],
                         "props": {
-                          "className": "m_8bffd616 __m__-r9o",
+                          "className": "m_8bffd616 __m__-r8h",
                           "data-size": undefined,
                           "data-variant": undefined,
                           "size": undefined,
@@ -9708,7 +9144,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                           },
                         ],
                         "props": {
-                          "className": "m_8bffd616 __m__-rab",
+                          "className": "m_8bffd616 __m__-r94",
                           "data-size": undefined,
                           "data-variant": undefined,
                           "size": undefined,
@@ -9936,6 +9372,18 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
   <style
     dangerouslySetInnerHTML={
       {
+        "__html": "
+
+
+
+",
+      }
+    }
+    data-mantine-styles={true}
+  />,
+  <style
+    dangerouslySetInnerHTML={
+      {
         "__html": "@media (max-width: 35.99375em) {.mantine-visible-from-xs {display: none !important;}}@media (min-width: 36em) {.mantine-hidden-from-xs {display: none !important;}}@media (max-width: 47.99375em) {.mantine-visible-from-sm {display: none !important;}}@media (min-width: 48em) {.mantine-hidden-from-sm {display: none !important;}}@media (max-width: 61.99375em) {.mantine-visible-from-md {display: none !important;}}@media (min-width: 62em) {.mantine-hidden-from-md {display: none !important;}}@media (max-width: 74.99375em) {.mantine-visible-from-lg {display: none !important;}}@media (min-width: 75em) {.mantine-hidden-from-lg {display: none !important;}}@media (max-width: 87.99375em) {.mantine-visible-from-xl {display: none !important;}}@media (min-width: 88em) {.mantine-hidden-from-xl {display: none !important;}}",
       }
     }
@@ -9959,7 +9407,9 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
                   "id": "root-label",
                   "onMouseDown": [Function],
                   "size": undefined,
-                  "style": {},
+                  "style": {
+                    "--input-label-size": "var(--mantine-font-size-sm)",
+                  },
                 },
                 "type": "label",
                 Symbol(cleaned): true,
@@ -9974,7 +9424,9 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
                   "data-variant": undefined,
                   "id": "root-description",
                   "size": undefined,
-                  "style": {},
+                  "style": {
+                    "--input-description-size": "calc(var(--mantine-font-size-sm) - calc(0.125rem * var(--mantine-scale)))",
+                  },
                 },
                 "type": "p",
                 Symbol(cleaned): true,
@@ -10060,11 +9512,13 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
                         "props": {
                           "className": "m_2943220b",
                           "data-combobox-chevron": true,
-                          "data-size": undefined,
+                          "data-size": "sm",
                           "data-variant": undefined,
                           "fill": "none",
                           "size": undefined,
-                          "style": {},
+                          "style": {
+                            "--combobox-chevron-size": "var(--combobox-chevron-size-sm)",
+                          },
                           "viewBox": "0 0 15 15",
                           "xmlns": "http://www.w3.org/2000/svg",
                         },
@@ -10089,7 +9543,10 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
                   "data-with-right-section": true,
                   "size": undefined,
                   "style": {
+                    "--input-fz": "var(--mantine-font-size-sm)",
+                    "--input-height": "var(--input-height-sm)",
                     "--input-margin-top": "calc(var(--mantine-spacing-xs) / 2)",
+                    "--input-padding-y": "var(--input-padding-y-sm)",
                     "--input-right-section-pointer-events": "none",
                   },
                 },
@@ -10103,269 +9560,6 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
               "data-variant": undefined,
               "size": undefined,
               "style": {},
-            },
-            "type": "div",
-            Symbol(cleaned): true,
-          },
-          {
-            "children": [
-              {
-                "children": [
-                  {
-                    "children": [
-                      {
-                        "children": [
-                          {
-                            "children": [
-                              {
-                                "children": [
-                                  {
-                                    "children": [
-                                      {
-                                        "children": [
-                                          {
-                                            "children": [
-                                              "a",
-                                            ],
-                                            "props": {},
-                                            "type": "span",
-                                            Symbol(cleaned): true,
-                                          },
-                                        ],
-                                        "props": {
-                                          "aria-selected": false,
-                                          "className": "m_92253aa5 m_390b5f4",
-                                          "data-combobox-option": true,
-                                          "data-size": undefined,
-                                          "data-variant": undefined,
-                                          "id": ":r9b:",
-                                          "onClick": [Function],
-                                          "onMouseDown": [Function],
-                                          "onMouseOver": [Function],
-                                          "role": "option",
-                                          "size": undefined,
-                                          "style": {},
-                                          "value": "0",
-                                        },
-                                        "type": "div",
-                                        Symbol(cleaned): true,
-                                      },
-                                      {
-                                        "children": [
-                                          {
-                                            "children": [
-                                              "b",
-                                            ],
-                                            "props": {},
-                                            "type": "span",
-                                            Symbol(cleaned): true,
-                                          },
-                                        ],
-                                        "props": {
-                                          "aria-selected": false,
-                                          "className": "m_92253aa5 m_390b5f4",
-                                          "data-combobox-option": true,
-                                          "data-size": undefined,
-                                          "data-variant": undefined,
-                                          "id": ":r9d:",
-                                          "onClick": [Function],
-                                          "onMouseDown": [Function],
-                                          "onMouseOver": [Function],
-                                          "role": "option",
-                                          "size": undefined,
-                                          "style": {},
-                                          "value": "1",
-                                        },
-                                        "type": "div",
-                                        Symbol(cleaned): true,
-                                      },
-                                      {
-                                        "children": [
-                                          {
-                                            "children": [
-                                              "c",
-                                            ],
-                                            "props": {},
-                                            "type": "span",
-                                            Symbol(cleaned): true,
-                                          },
-                                        ],
-                                        "props": {
-                                          "aria-selected": false,
-                                          "className": "m_92253aa5 m_390b5f4",
-                                          "data-combobox-option": true,
-                                          "data-size": undefined,
-                                          "data-variant": undefined,
-                                          "id": ":r9f:",
-                                          "onClick": [Function],
-                                          "onMouseDown": [Function],
-                                          "onMouseOver": [Function],
-                                          "role": "option",
-                                          "size": undefined,
-                                          "style": {},
-                                          "value": "2",
-                                        },
-                                        "type": "div",
-                                        Symbol(cleaned): true,
-                                      },
-                                    ],
-                                    "props": {
-                                      "className": "m_b1336c6",
-                                      "style": {},
-                                    },
-                                    "type": "div",
-                                    Symbol(cleaned): true,
-                                  },
-                                ],
-                                "props": {
-                                  "className": "m_c0783ff9",
-                                  "data-horizontal-hidden": undefined,
-                                  "data-offset-scrollbars": "y",
-                                  "data-scrollbars": "xy",
-                                  "data-size": undefined,
-                                  "data-variant": undefined,
-                                  "data-vertical-hidden": undefined,
-                                  "onScroll": [Function],
-                                  "size": undefined,
-                                  "style": {
-                                    "overflowX": "scroll",
-                                    "overflowY": "scroll",
-                                  },
-                                },
-                                "type": "div",
-                                Symbol(cleaned): true,
-                              },
-                              {
-                                "children": null,
-                                "props": {
-                                  "className": "m_c44ba933",
-                                  "data-hidden": undefined,
-                                  "data-mantine-scrollbar": true,
-                                  "data-orientation": "horizontal",
-                                  "data-state": "hidden",
-                                  "onLostPointerCapture": [Function],
-                                  "onMouseEnter": [Function],
-                                  "onMouseLeave": [Function],
-                                  "onPointerDown": [Function],
-                                  "onPointerEnter": [Function],
-                                  "onPointerLeave": [Function],
-                                  "onPointerMove": [Function],
-                                  "onPointerUp": [Function],
-                                  "style": {
-                                    "--sa-thumb-width": "18px",
-                                    "position": "absolute",
-                                  },
-                                },
-                                "type": "div",
-                                Symbol(cleaned): true,
-                              },
-                              {
-                                "children": null,
-                                "props": {
-                                  "className": "m_c44ba933",
-                                  "data-hidden": undefined,
-                                  "data-mantine-scrollbar": true,
-                                  "data-orientation": "vertical",
-                                  "data-state": "hidden",
-                                  "onLostPointerCapture": [Function],
-                                  "onMouseEnter": [Function],
-                                  "onMouseLeave": [Function],
-                                  "onPointerDown": [Function],
-                                  "onPointerEnter": [Function],
-                                  "onPointerLeave": [Function],
-                                  "onPointerMove": [Function],
-                                  "onPointerUp": [Function],
-                                  "style": {
-                                    "--sa-thumb-height": "18px",
-                                    "position": "absolute",
-                                  },
-                                },
-                                "type": "div",
-                                Symbol(cleaned): true,
-                              },
-                            ],
-                            "props": {
-                              "className": "m_d57069b5",
-                              "data-size": undefined,
-                              "data-variant": undefined,
-                              "size": undefined,
-                              "style": {
-                                "--sa-corner-height": "0px",
-                                "--sa-corner-width": "0px",
-                                "--scrollarea-scrollbar-size": "var(--combobox-padding)",
-                              },
-                            },
-                            "type": "div",
-                            Symbol(cleaned): true,
-                          },
-                        ],
-                        "props": {
-                          "className": "",
-                          "data-size": undefined,
-                          "data-variant": undefined,
-                          "size": undefined,
-                          "style": {
-                            "display": "flex",
-                            "flex": 1,
-                            "flexDirection": "column",
-                          },
-                        },
-                        "type": "div",
-                        Symbol(cleaned): true,
-                      },
-                    ],
-                    "props": {
-                      "className": "",
-                      "data-size": undefined,
-                      "data-variant": undefined,
-                      "size": undefined,
-                      "style": {
-                        "display": "flex",
-                        "maxHeight": "calc(13.75rem * var(--mantine-scale))",
-                        "overflow": "auto",
-                      },
-                    },
-                    "type": "div",
-                    Symbol(cleaned): true,
-                  },
-                ],
-                "props": {
-                  "aria-labelledby": "root-label",
-                  "className": "m_b2821a6e",
-                  "data-size": undefined,
-                  "data-variant": undefined,
-                  "id": "",
-                  "onMouseDown": [Function],
-                  "role": "listbox",
-                  "size": undefined,
-                  "style": {
-                    "--combobox-option-fz": "var(--mantine-font-size-sm)",
-                    "--combobox-option-padding": "var(--combobox-option-padding-sm)",
-                  },
-                },
-                "type": "div",
-                Symbol(cleaned): true,
-              },
-            ],
-            "props": {
-              "className": "m_38a85659 m_88b62a41",
-              "data-composed": true,
-              "data-fixed": undefined,
-              "data-position": "bottom",
-              "data-size": undefined,
-              "data-variant": undefined,
-              "onKeyDownCapture": [Function],
-              "role": "presentation",
-              "size": undefined,
-              "style": {
-                "--combobox-option-fz": "var(--mantine-font-size-sm)",
-                "--combobox-option-padding": "var(--combobox-option-padding-sm)",
-                "display": "none",
-                "left": 0,
-                "top": 0,
-                "width": undefined,
-                "zIndex": 300,
-              },
             },
             "type": "div",
             Symbol(cleaned): true,
@@ -10456,6 +9650,18 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
 
 exports[`with title and description from uiSchema fixed array 1`] = `
 [
+  <style
+    dangerouslySetInnerHTML={
+      {
+        "__html": "
+
+
+
+",
+      }
+    }
+    data-mantine-styles={true}
+  />,
   <style
     dangerouslySetInnerHTML={
       {
@@ -10649,7 +9855,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                           },
                         ],
                         "props": {
-                          "className": "m_8bffd616 __m__-r81",
+                          "className": "m_8bffd616 __m__-r77",
                           "data-size": undefined,
                           "data-variant": undefined,
                           "size": undefined,
@@ -10929,7 +10135,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                           },
                         ],
                         "props": {
-                          "className": "m_8bffd616 __m__-r8b",
+                          "className": "m_8bffd616 __m__-r7h",
                           "data-size": undefined,
                           "data-variant": undefined,
                           "size": undefined,
@@ -11052,6 +10258,18 @@ exports[`with title and description from uiSchema fixed array 1`] = `
 
 exports[`with title and description with global label off array 1`] = `
 [
+  <style
+    dangerouslySetInnerHTML={
+      {
+        "__html": "
+
+
+
+",
+      }
+    }
+    data-mantine-styles={true}
+  />,
   <style
     dangerouslySetInnerHTML={
       {
@@ -11275,6 +10493,18 @@ exports[`with title and description with global label off array 1`] = `
 
 exports[`with title and description with global label off array icons 1`] = `
 [
+  <style
+    dangerouslySetInnerHTML={
+      {
+        "__html": "
+
+
+
+",
+      }
+    }
+    data-mantine-styles={true}
+  />,
   <style
     dangerouslySetInnerHTML={
       {
@@ -11723,7 +10953,7 @@ exports[`with title and description with global label off array icons 1`] = `
                           },
                         ],
                         "props": {
-                          "className": "m_8bffd616 __m__-rga",
+                          "className": "m_8bffd616 __m__-re9",
                           "data-size": undefined,
                           "data-variant": undefined,
                           "size": undefined,
@@ -12172,7 +11402,7 @@ exports[`with title and description with global label off array icons 1`] = `
                           },
                         ],
                         "props": {
-                          "className": "m_8bffd616 __m__-rgr",
+                          "className": "m_8bffd616 __m__-req",
                           "data-size": undefined,
                           "data-variant": undefined,
                           "size": undefined,
@@ -12400,6 +11630,18 @@ exports[`with title and description with global label off checkboxes 1`] = `
   <style
     dangerouslySetInnerHTML={
       {
+        "__html": "
+
+
+
+",
+      }
+    }
+    data-mantine-styles={true}
+  />,
+  <style
+    dangerouslySetInnerHTML={
+      {
         "__html": "@media (max-width: 35.99375em) {.mantine-visible-from-xs {display: none !important;}}@media (min-width: 36em) {.mantine-hidden-from-xs {display: none !important;}}@media (max-width: 47.99375em) {.mantine-visible-from-sm {display: none !important;}}@media (min-width: 48em) {.mantine-hidden-from-sm {display: none !important;}}@media (max-width: 61.99375em) {.mantine-visible-from-md {display: none !important;}}@media (min-width: 62em) {.mantine-hidden-from-md {display: none !important;}}@media (max-width: 74.99375em) {.mantine-visible-from-lg {display: none !important;}}@media (min-width: 75em) {.mantine-hidden-from-lg {display: none !important;}}@media (max-width: 87.99375em) {.mantine-visible-from-xl {display: none !important;}}@media (min-width: 88em) {.mantine-hidden-from-xl {display: none !important;}}",
       }
     }
@@ -12495,11 +11737,13 @@ exports[`with title and description with global label off checkboxes 1`] = `
                         "props": {
                           "className": "m_2943220b",
                           "data-combobox-chevron": true,
-                          "data-size": undefined,
+                          "data-size": "sm",
                           "data-variant": undefined,
                           "fill": "none",
                           "size": undefined,
-                          "style": {},
+                          "style": {
+                            "--combobox-chevron-size": "var(--combobox-chevron-size-sm)",
+                          },
                           "viewBox": "0 0 15 15",
                           "xmlns": "http://www.w3.org/2000/svg",
                         },
@@ -12524,6 +11768,9 @@ exports[`with title and description with global label off checkboxes 1`] = `
                   "data-with-right-section": true,
                   "size": undefined,
                   "style": {
+                    "--input-fz": "var(--mantine-font-size-sm)",
+                    "--input-height": "var(--input-height-sm)",
+                    "--input-padding-y": "var(--input-padding-y-sm)",
                     "--input-right-section-pointer-events": "none",
                   },
                 },
@@ -12537,269 +11784,6 @@ exports[`with title and description with global label off checkboxes 1`] = `
               "data-variant": undefined,
               "size": undefined,
               "style": {},
-            },
-            "type": "div",
-            Symbol(cleaned): true,
-          },
-          {
-            "children": [
-              {
-                "children": [
-                  {
-                    "children": [
-                      {
-                        "children": [
-                          {
-                            "children": [
-                              {
-                                "children": [
-                                  {
-                                    "children": [
-                                      {
-                                        "children": [
-                                          {
-                                            "children": [
-                                              "a",
-                                            ],
-                                            "props": {},
-                                            "type": "span",
-                                            Symbol(cleaned): true,
-                                          },
-                                        ],
-                                        "props": {
-                                          "aria-selected": false,
-                                          "className": "m_92253aa5 m_390b5f4",
-                                          "data-combobox-option": true,
-                                          "data-size": undefined,
-                                          "data-variant": undefined,
-                                          "id": ":rfv:",
-                                          "onClick": [Function],
-                                          "onMouseDown": [Function],
-                                          "onMouseOver": [Function],
-                                          "role": "option",
-                                          "size": undefined,
-                                          "style": {},
-                                          "value": "0",
-                                        },
-                                        "type": "div",
-                                        Symbol(cleaned): true,
-                                      },
-                                      {
-                                        "children": [
-                                          {
-                                            "children": [
-                                              "b",
-                                            ],
-                                            "props": {},
-                                            "type": "span",
-                                            Symbol(cleaned): true,
-                                          },
-                                        ],
-                                        "props": {
-                                          "aria-selected": false,
-                                          "className": "m_92253aa5 m_390b5f4",
-                                          "data-combobox-option": true,
-                                          "data-size": undefined,
-                                          "data-variant": undefined,
-                                          "id": ":rg1:",
-                                          "onClick": [Function],
-                                          "onMouseDown": [Function],
-                                          "onMouseOver": [Function],
-                                          "role": "option",
-                                          "size": undefined,
-                                          "style": {},
-                                          "value": "1",
-                                        },
-                                        "type": "div",
-                                        Symbol(cleaned): true,
-                                      },
-                                      {
-                                        "children": [
-                                          {
-                                            "children": [
-                                              "c",
-                                            ],
-                                            "props": {},
-                                            "type": "span",
-                                            Symbol(cleaned): true,
-                                          },
-                                        ],
-                                        "props": {
-                                          "aria-selected": false,
-                                          "className": "m_92253aa5 m_390b5f4",
-                                          "data-combobox-option": true,
-                                          "data-size": undefined,
-                                          "data-variant": undefined,
-                                          "id": ":rg3:",
-                                          "onClick": [Function],
-                                          "onMouseDown": [Function],
-                                          "onMouseOver": [Function],
-                                          "role": "option",
-                                          "size": undefined,
-                                          "style": {},
-                                          "value": "2",
-                                        },
-                                        "type": "div",
-                                        Symbol(cleaned): true,
-                                      },
-                                    ],
-                                    "props": {
-                                      "className": "m_b1336c6",
-                                      "style": {},
-                                    },
-                                    "type": "div",
-                                    Symbol(cleaned): true,
-                                  },
-                                ],
-                                "props": {
-                                  "className": "m_c0783ff9",
-                                  "data-horizontal-hidden": undefined,
-                                  "data-offset-scrollbars": "y",
-                                  "data-scrollbars": "xy",
-                                  "data-size": undefined,
-                                  "data-variant": undefined,
-                                  "data-vertical-hidden": undefined,
-                                  "onScroll": [Function],
-                                  "size": undefined,
-                                  "style": {
-                                    "overflowX": "scroll",
-                                    "overflowY": "scroll",
-                                  },
-                                },
-                                "type": "div",
-                                Symbol(cleaned): true,
-                              },
-                              {
-                                "children": null,
-                                "props": {
-                                  "className": "m_c44ba933",
-                                  "data-hidden": undefined,
-                                  "data-mantine-scrollbar": true,
-                                  "data-orientation": "horizontal",
-                                  "data-state": "hidden",
-                                  "onLostPointerCapture": [Function],
-                                  "onMouseEnter": [Function],
-                                  "onMouseLeave": [Function],
-                                  "onPointerDown": [Function],
-                                  "onPointerEnter": [Function],
-                                  "onPointerLeave": [Function],
-                                  "onPointerMove": [Function],
-                                  "onPointerUp": [Function],
-                                  "style": {
-                                    "--sa-thumb-width": "18px",
-                                    "position": "absolute",
-                                  },
-                                },
-                                "type": "div",
-                                Symbol(cleaned): true,
-                              },
-                              {
-                                "children": null,
-                                "props": {
-                                  "className": "m_c44ba933",
-                                  "data-hidden": undefined,
-                                  "data-mantine-scrollbar": true,
-                                  "data-orientation": "vertical",
-                                  "data-state": "hidden",
-                                  "onLostPointerCapture": [Function],
-                                  "onMouseEnter": [Function],
-                                  "onMouseLeave": [Function],
-                                  "onPointerDown": [Function],
-                                  "onPointerEnter": [Function],
-                                  "onPointerLeave": [Function],
-                                  "onPointerMove": [Function],
-                                  "onPointerUp": [Function],
-                                  "style": {
-                                    "--sa-thumb-height": "18px",
-                                    "position": "absolute",
-                                  },
-                                },
-                                "type": "div",
-                                Symbol(cleaned): true,
-                              },
-                            ],
-                            "props": {
-                              "className": "m_d57069b5",
-                              "data-size": undefined,
-                              "data-variant": undefined,
-                              "size": undefined,
-                              "style": {
-                                "--sa-corner-height": "0px",
-                                "--sa-corner-width": "0px",
-                                "--scrollarea-scrollbar-size": "var(--combobox-padding)",
-                              },
-                            },
-                            "type": "div",
-                            Symbol(cleaned): true,
-                          },
-                        ],
-                        "props": {
-                          "className": "",
-                          "data-size": undefined,
-                          "data-variant": undefined,
-                          "size": undefined,
-                          "style": {
-                            "display": "flex",
-                            "flex": 1,
-                            "flexDirection": "column",
-                          },
-                        },
-                        "type": "div",
-                        Symbol(cleaned): true,
-                      },
-                    ],
-                    "props": {
-                      "className": "",
-                      "data-size": undefined,
-                      "data-variant": undefined,
-                      "size": undefined,
-                      "style": {
-                        "display": "flex",
-                        "maxHeight": "calc(13.75rem * var(--mantine-scale))",
-                        "overflow": "auto",
-                      },
-                    },
-                    "type": "div",
-                    Symbol(cleaned): true,
-                  },
-                ],
-                "props": {
-                  "aria-labelledby": undefined,
-                  "className": "m_b2821a6e",
-                  "data-size": undefined,
-                  "data-variant": undefined,
-                  "id": "",
-                  "onMouseDown": [Function],
-                  "role": "listbox",
-                  "size": undefined,
-                  "style": {
-                    "--combobox-option-fz": "var(--mantine-font-size-sm)",
-                    "--combobox-option-padding": "var(--combobox-option-padding-sm)",
-                  },
-                },
-                "type": "div",
-                Symbol(cleaned): true,
-              },
-            ],
-            "props": {
-              "className": "m_38a85659 m_88b62a41",
-              "data-composed": true,
-              "data-fixed": undefined,
-              "data-position": "bottom",
-              "data-size": undefined,
-              "data-variant": undefined,
-              "onKeyDownCapture": [Function],
-              "role": "presentation",
-              "size": undefined,
-              "style": {
-                "--combobox-option-fz": "var(--mantine-font-size-sm)",
-                "--combobox-option-padding": "var(--combobox-option-padding-sm)",
-                "display": "none",
-                "left": 0,
-                "top": 0,
-                "width": undefined,
-                "zIndex": 300,
-              },
             },
             "type": "div",
             Symbol(cleaned): true,
@@ -12890,6 +11874,18 @@ exports[`with title and description with global label off checkboxes 1`] = `
 
 exports[`with title and description with global label off fixed array 1`] = `
 [
+  <style
+    dangerouslySetInnerHTML={
+      {
+        "__html": "
+
+
+
+",
+      }
+    }
+    data-mantine-styles={true}
+  />,
   <style
     dangerouslySetInnerHTML={
       {
@@ -12996,7 +11992,7 @@ exports[`with title and description with global label off fixed array 1`] = `
                           },
                         ],
                         "props": {
-                          "className": "m_8bffd616 __m__-rer",
+                          "className": "m_8bffd616 __m__-rd7",
                           "data-size": undefined,
                           "data-variant": undefined,
                           "size": undefined,
@@ -13230,7 +12226,7 @@ exports[`with title and description with global label off fixed array 1`] = `
                           },
                         ],
                         "props": {
-                          "className": "m_8bffd616 __m__-rf3",
+                          "className": "m_8bffd616 __m__-rdf",
                           "data-size": undefined,
                           "data-variant": undefined,
                           "size": undefined,
