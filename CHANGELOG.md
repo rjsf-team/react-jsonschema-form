@@ -18,6 +18,10 @@ should change the heading of the (upcoming) version to include a major version b
 
 # 6.0.0-beta.14
 
+## @rjsf/mantine
+
+- Added new theme!
+
 ## @rjsf/core
 
 - Added support for dynamic UI schema in array fields - the `items` property in `uiSchema` can now accept a function that returns a UI schema based on the array item's data, index, and form context ([#4706](https://github.com/rjsf-team/react-jsonschema-form/pull/4706))
@@ -75,11 +79,6 @@ should change the heading of the (upcoming) version to include a major version b
 - Fixed boolean fields incorrectly set to `{}` when switching oneOf/anyOf options with `mergeDefaultsIntoFormData` set to `useDefaultIfFormDataUndefined`, fixing [#4709](https://github.com/rjsf-team/react-jsonschema-form/issues/4709) ([#4710](https://github.com/rjsf-team/react-jsonschema-form/pull/4710))
 - Always make all references absolute in nested bundled schemas
 
-# 6.0.0-beta.14
-
-## @rjsf/mantine
-
-- Added new theme!
 # 6.0.0-beta.12
 
 ## @rjsf/core
