@@ -74,9 +74,9 @@
     "@rjsf/validator-ajv8": "^6.0.0-beta.13",
     "@rollup/plugin-replace": "^6.0.2",
     "eslint": "^8.57.1",
-    "primeflex": "4.0.0",
+    "primeflex": "^4.0.0",
     "primeicons": "^7.0.0",
-    "primereact": "10.9.6"
+    "primereact": "^10.9.6"
   },
   "repository": {
     "type": "git",
