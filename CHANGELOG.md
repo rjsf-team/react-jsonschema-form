@@ -15,7 +15,6 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
-
 # 6.0.0-beta.14
 
 ## @rjsf/core
@@ -26,6 +25,7 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/utils
 
 - Updated `UiSchema` type to support dynamic array item UI schemas - the `items` property can now be either a `UiSchema` object or a function that returns a `UiSchema` ([#4706](https://github.com/rjsf-team/react-jsonschema-form/pull/4706))
+- Added `title` property to `RJSFValidationError` [PR](https://github.com/rjsf-team/react-jsonschema-form/pull/4700)
 
 ## @rjsf/chakra-ui
 
@@ -55,6 +55,10 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Added comprehensive documentation for dynamic UI schema feature with TypeScript examples ([#4706](https://github.com/rjsf-team/react-jsonschema-form/pull/4706))
 - Updated array documentation to reference the new dynamic UI schema capabilities ([#4706](https://github.com/rjsf-team/react-jsonschema-form/pull/4706))
+
+## @rjsf/validator-ajv8
+
+- Updated `transformRJSFValidationErrors()` to include the `title` property of a field with error fixing #4504 with [PR](https://github.com/rjsf-team/react-jsonschema-form/pull/4700)
 
 # 6.0.0-beta.13
 

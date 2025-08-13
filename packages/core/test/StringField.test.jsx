@@ -808,6 +808,7 @@ describe('StringField', () => {
             property: '',
             schemaPath: '#/type',
             stack: 'must be string',
+            title: '',
           },
         ],
       });
@@ -843,6 +844,7 @@ describe('StringField', () => {
             property: '',
             schemaPath: '#/type',
             stack: 'must be string',
+            title: '',
           },
         ],
       });
@@ -1010,6 +1012,7 @@ describe('StringField', () => {
             property: '',
             schemaPath: '#/format',
             stack: 'must match format "date"',
+            title: '',
           },
         ],
       });
@@ -1141,6 +1144,7 @@ describe('StringField', () => {
             property: '',
             schemaPath: '#/format',
             stack: 'must match format "time"',
+            title: '',
           },
         ],
       });
@@ -1948,6 +1952,7 @@ describe('StringField', () => {
             property: '',
             schemaPath: '#/format',
             stack: 'must match format "email"',
+            title: '',
           },
         ],
       });
@@ -2088,6 +2093,7 @@ describe('StringField', () => {
             property: '',
             schemaPath: '#/format',
             stack: 'must match format "uri"',
+            title: '',
           },
         ],
       });
@@ -2209,6 +2215,7 @@ describe('StringField', () => {
             property: '',
             schemaPath: '#/format',
             stack: 'must match format "color"',
+            title: '',
           },
         ],
       });
