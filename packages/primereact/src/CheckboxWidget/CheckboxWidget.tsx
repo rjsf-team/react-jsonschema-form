@@ -47,10 +47,10 @@ export default function CheckboxWidget<
   );
 
   const required = schemaRequiresTrueValue<S>(schema);
-  const _onChange = (e: CheckboxChangeEvent) => onChange && onChange(e.checked);
-  const _onBlur = () => onBlur && onBlur(id, value);
-  const _onFocus = () => onFocus && onFocus(id, value);
   const checked = value === 'true' || value === true;
+  const _onChange = (e: CheckboxChangeEvent) => onChange && onChange(e.checked);
+  const _onBlur: React.FocusEventHandler<HTMLInputElement> = () => onBlur && onBlur(id, value);
+  const _onFocus: React.FocusEventHandler<HTMLInputElement> = () => onFocus && onFocus(id, value);
   const description = options.description ?? schema.description;
   const primeProps = (options.prime || {}) as object;
 

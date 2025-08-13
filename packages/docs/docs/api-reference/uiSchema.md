@@ -100,7 +100,7 @@ The `ui:options` property cannot be nested inside itself and thus is the last ex
 
 All the properties that follow can be specified in the `uiSchema` in either of the two equivalent ways.
 
-NOTE: The properties specific to array items can be found [here](../json-schema/arrays.md#array-item-uiSchema-options)
+> NOTE: The properties specific to array items can be found [here](../json-schema/arrays.md#array-item-uiSchema-options). For advanced dynamic UI schema capabilities for array items, see the [Dynamic UI Schema Examples](./dynamic-ui-schema-examples.md).
 
 ### widget
 

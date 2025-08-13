@@ -60,7 +60,7 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
     experimental_defaultFormStateBehavior: Experimental_DefaultFormStateBehavior,
     experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
   ) {
-    if (rootSchema[SCHEMA_KEY] === JSON_SCHEMA_DRAFT_2020_12) {
+    if (rootSchema && rootSchema[SCHEMA_KEY] === JSON_SCHEMA_DRAFT_2020_12) {
       this.rootSchema = makeAllReferencesAbsolute(rootSchema, get(rootSchema, ID_KEY, '#'));
     } else {
       this.rootSchema = rootSchema;
@@ -102,9 +102,12 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
     experimental_defaultFormStateBehavior = {},
     experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
   ): boolean {
+    // If either validator or rootSchema are falsy, return false to prevent the creation
+    // of a new SchemaUtilsType with incomplete properties.
     if (!validator || !rootSchema) {
       return false;
     }
+
     return (
       this.validator !== validator ||
       !deepEquals(this.rootSchema, rootSchema) ||

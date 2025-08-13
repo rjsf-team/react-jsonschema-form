@@ -17,9 +17,44 @@ should change the heading of the (upcoming) version to include a major version b
 -->
 # 6.0.0-beta.14
 
+## @rjsf/core
+
+- Added support for dynamic UI schema in array fields - the `items` property in `uiSchema` can now accept a function that returns a UI schema based on the array item's data, index, and form context ([#4706](https://github.com/rjsf-team/react-jsonschema-form/pull/4706))
+- Fixed checkbox widget to use current value instead of event target in onFocus/onBlur handlers, fixing [#4704](https://github.com/rjsf-team/react-jsonschema-form/issues/4704)
+
 ## @rjsf/utils
 
+- Updated `UiSchema` type to support dynamic array item UI schemas - the `items` property can now be either a `UiSchema` object or a function that returns a `UiSchema` ([#4706](https://github.com/rjsf-team/react-jsonschema-form/pull/4706))
 - Added `title` property to `RJSFValidationError` [PR](https://github.com/rjsf-team/react-jsonschema-form/pull/4700)
+
+## @rjsf/chakra-ui
+
+- Fixed checkbox widget to use current value instead of event target in onFocus/onBlur handlers, fixing [#4704](https://github.com/rjsf-team/react-jsonschema-form/issues/4704)
+
+## @rjsf/daisyui
+
+- Fixed checkbox widget to use current value instead of event target in onFocus/onBlur handlers, fixing [#4704](https://github.com/rjsf-team/react-jsonschema-form/issues/4704)
+
+## @rjsf/fluentui-rc
+
+- Fixed checkbox widget to use current value instead of event target in onFocus/onBlur handlers, fixing [#4704](https://github.com/rjsf-team/react-jsonschema-form/issues/4704)
+
+## @rjsf/mui
+
+- Fixed checkbox widget to use current value instead of event target in onFocus/onBlur handlers, fixing [#4704](https://github.com/rjsf-team/react-jsonschema-form/issues/4704)
+
+## @rjsf/primereact
+
+- Fixed checkbox widget to use current value instead of event target in onFocus/onBlur handlers, fixing [#4704](https://github.com/rjsf-team/react-jsonschema-form/issues/4704)
+
+## @rjsf/semantic-ui
+
+- Fixed checkbox widget to use current value instead of event target in onFocus/onBlur handlers, fixing [#4704](https://github.com/rjsf-team/react-jsonschema-form/issues/4704)
+
+## Dev / docs / playground
+
+- Added comprehensive documentation for dynamic UI schema feature with TypeScript examples ([#4706](https://github.com/rjsf-team/react-jsonschema-form/pull/4706))
+- Updated array documentation to reference the new dynamic UI schema capabilities ([#4706](https://github.com/rjsf-team/react-jsonschema-form/pull/4706))
 
 ## @rjsf/validator-ajv8
 
@@ -42,11 +77,6 @@ should change the heading of the (upcoming) version to include a major version b
 - Extended `Registry` interface to include optional `experimental_componentUpdateStrategy` property
 - Added `shallowEquals()` utility function for shallow equality comparisons
 - Fixed boolean fields incorrectly set to `{}` when switching oneOf/anyOf options with `mergeDefaultsIntoFormData` set to `useDefaultIfFormDataUndefined`, fixing [#4709](https://github.com/rjsf-team/react-jsonschema-form/issues/4709) ([#4710](https://github.com/rjsf-team/react-jsonschema-form/pull/4710))
-
-# 6.0.0-beta.13
-
-## rjsf/utils
-
 - Always make all references absolute in nested bundled schemas
 
 # 6.0.0-beta.12
