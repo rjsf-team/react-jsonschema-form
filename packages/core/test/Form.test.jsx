@@ -1780,6 +1780,7 @@ describeRepeated('Form common', (createFormComponent) => {
           property: '.shipping_address.street_address',
           schemaPath: '#/properties/shipping_address/required',
           stack: "must have required property 'street_address'",
+          title: '',
         },
         {
           message: "must have required property 'city'",
@@ -1788,6 +1789,7 @@ describeRepeated('Form common', (createFormComponent) => {
           property: '.shipping_address.city',
           schemaPath: '#/properties/shipping_address/required',
           stack: "must have required property 'city'",
+          title: '',
         },
         {
           message: "must have required property 'state'",
@@ -1796,6 +1798,7 @@ describeRepeated('Form common', (createFormComponent) => {
           property: '.shipping_address.state',
           schemaPath: '#/properties/shipping_address/required',
           stack: "must have required property 'state'",
+          title: '',
         },
       ]);
     });
@@ -1852,6 +1855,7 @@ describeRepeated('Form common', (createFormComponent) => {
           property: '.albums',
           schemaPath: '#/properties/albums/minItems',
           stack: "'Album Titles' must NOT have fewer than 3 items",
+          title: 'Album Titles',
         },
       ]);
     });
@@ -2061,6 +2065,7 @@ describeRepeated('Form common', (createFormComponent) => {
             property: '',
             schemaPath: '#/type',
             stack: 'must be number',
+            title: '',
           },
         ]);
       });
@@ -2544,6 +2549,7 @@ describeRepeated('Form common', (createFormComponent) => {
             property: '',
             schemaPath: '#/minLength',
             stack: 'must NOT have fewer than 8 characters',
+            title: '',
           },
         ]);
         sinon.assert.calledOnce(onError);
@@ -2606,6 +2612,7 @@ describeRepeated('Form common', (createFormComponent) => {
             property: '',
             schemaPath: '#/minLength',
             stack: 'must NOT have fewer than 8 characters',
+            title: '',
           },
         ]);
       });
@@ -2642,6 +2649,7 @@ describeRepeated('Form common', (createFormComponent) => {
             property: '',
             schemaPath: '#/minLength',
             stack: 'must NOT have fewer than 8 characters',
+            title: '',
           },
           {
             message: 'must match pattern "d+"',
@@ -2650,6 +2658,7 @@ describeRepeated('Form common', (createFormComponent) => {
             property: '',
             schemaPath: '#/pattern',
             stack: 'must match pattern "d+"',
+            title: '',
           },
         ]);
       });
@@ -2702,6 +2711,7 @@ describeRepeated('Form common', (createFormComponent) => {
             property: '.level1.level2',
             schemaPath: '#/properties/level1/properties/level2/minLength',
             stack: '.level1.level2 must NOT have fewer than 8 characters',
+            title: '',
           },
         ]);
       });
@@ -2742,6 +2752,7 @@ describeRepeated('Form common', (createFormComponent) => {
             property: '.1',
             schemaPath: '#/items/minLength',
             stack: '.1 must NOT have fewer than 4 characters',
+            title: '',
           },
         ]);
       });
@@ -2798,6 +2809,7 @@ describeRepeated('Form common', (createFormComponent) => {
             property: '.level1.1',
             schemaPath: '#/properties/level1/items/minLength',
             stack: '.level1.1 must NOT have fewer than 4 characters',
+            title: '',
           },
           {
             message: 'must NOT have fewer than 4 characters',
@@ -2806,6 +2818,7 @@ describeRepeated('Form common', (createFormComponent) => {
             property: '.level1.3',
             schemaPath: '#/properties/level1/items/minLength',
             stack: '.level1.3 must NOT have fewer than 4 characters',
+            title: '',
           },
         ]);
       });
@@ -2871,6 +2884,7 @@ describeRepeated('Form common', (createFormComponent) => {
             property: '.outer.0.1',
             schemaPath: '#/properties/outer/items/items/minLength',
             stack: '.outer.0.1 must NOT have fewer than 4 characters',
+            title: '',
           },
           {
             message: 'must NOT have fewer than 4 characters',
@@ -2879,6 +2893,7 @@ describeRepeated('Form common', (createFormComponent) => {
             property: '.outer.1.0',
             schemaPath: '#/properties/outer/items/items/minLength',
             stack: '.outer.1.0 must NOT have fewer than 4 characters',
+            title: '',
           },
         ]);
         sinon.assert.calledOnce(focusSpy);
@@ -2933,6 +2948,7 @@ describeRepeated('Form common', (createFormComponent) => {
             property: '.1.foo',
             schemaPath: '#/items/properties/foo/minLength',
             stack: '.1.foo must NOT have fewer than 4 characters',
+            title: '',
           },
         ]);
       });
@@ -3558,6 +3574,7 @@ describeRepeated('Form common', (createFormComponent) => {
           property: '.areaCode',
           schemaPath: '#/properties/areaCode/format',
           stack: '.areaCode must match format "area-code"',
+          title: '',
         },
       ]);
       // We use setTimeout with a delay of 0ms to allow all asynchronous operations to complete in the React component.
@@ -3606,6 +3623,7 @@ describeRepeated('Form common', (createFormComponent) => {
           property: '',
           schemaPath: '#/minLength',
           stack: 'must NOT have fewer than 8 characters',
+          title: '',
         },
         {
           message: 'must match pattern "d+"',
@@ -3614,6 +3632,7 @@ describeRepeated('Form common', (createFormComponent) => {
           property: '',
           schemaPath: '#/pattern',
           stack: 'must match pattern "d+"',
+          title: '',
         },
       ]);
     });
@@ -4648,6 +4667,7 @@ describe('Form omitExtraData and liveOmit', () => {
           },
           schemaPath: '#/required',
           stack: "must have required property 'foo'",
+          title: '',
         },
       ]);
 
