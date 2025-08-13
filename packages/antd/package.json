@@ -84,8 +84,8 @@
     "@rollup/plugin-replace": "^6.0.2",
     "antd": "5.27.0",
     "atob": "^2.1.2",
-    "dayjs": "^1.11.10",
-    "eslint": "^8.56.0"
+    "dayjs": "^1.11.13",
+    "eslint": "^8.57.1"
   },
   "repository": {
     "type": "git",

@@ -69,8 +69,8 @@
     "react": ">=18"
   },
   "devDependencies": {
-    "@emotion/jest": "^11.11.0",
-    "@emotion/react": "^11.11.3",
+    "@emotion/jest": "^11.13.0",
+    "@emotion/react": "^11.14.0",
     "@emotion/styled": "11.14.1",
     "@mui/icons-material": "7.3.1",
     "@mui/material": "7.3.1",
@@ -78,7 +78,7 @@
     "@rjsf/snapshot-tests": "^6.0.0-beta.13",
     "@rjsf/utils": "^6.0.0-beta.13",
     "@rjsf/validator-ajv8": "^6.0.0-beta.13",
-    "eslint": "^8.56.0"
+    "eslint": "^8.57.1"
   },
   "publishConfig": {
     "access": "public"

@@ -28,10 +28,10 @@
     "node": ">=20"
   },
   "peerDependencies": {
-    "react": ">=18",
-    "react-test-renderer": "^18.2.0",
     "@rjsf/core": "^6.0.0-beta",
-    "@rjsf/utils": "^6.0.0-beta"
+    "@rjsf/utils": "^6.0.0-beta",
+    "react": ">=18",
+    "react-test-renderer": "^18.2.0"
   },
   "devDependencies": {
     "@rjsf/core": "^6.0.0-beta.13",
