@@ -1,7 +1,19 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`object fields additionalProperties 1`] = `
 [
+  <style
+    dangerouslySetInnerHTML={
+      {
+        "__html": "
+
+
+
+",
+      }
+    }
+    data-mantine-styles={true}
+  />,
   <style
     dangerouslySetInnerHTML={
       {
@@ -590,6 +602,18 @@ exports[`object fields object 1`] = `
   <style
     dangerouslySetInnerHTML={
       {
+        "__html": "
+
+
+
+",
+      }
+    }
+    data-mantine-styles={true}
+  />,
+  <style
+    dangerouslySetInnerHTML={
+      {
         "__html": "@media (max-width: 35.99375em) {.mantine-visible-from-xs {display: none !important;}}@media (min-width: 36em) {.mantine-hidden-from-xs {display: none !important;}}@media (max-width: 47.99375em) {.mantine-visible-from-sm {display: none !important;}}@media (min-width: 48em) {.mantine-hidden-from-sm {display: none !important;}}@media (max-width: 61.99375em) {.mantine-visible-from-md {display: none !important;}}@media (min-width: 62em) {.mantine-hidden-from-md {display: none !important;}}@media (max-width: 74.99375em) {.mantine-visible-from-lg {display: none !important;}}@media (min-width: 75em) {.mantine-hidden-from-lg {display: none !important;}}@media (max-width: 87.99375em) {.mantine-visible-from-xl {display: none !important;}}@media (min-width: 88em) {.mantine-hidden-from-xl {display: none !important;}}",
       }
     }
@@ -1024,6 +1048,18 @@ exports[`object fields object 1`] = `
 
 exports[`object fields show add button and fields if additionalProperties is true and not an object 1`] = `
 [
+  <style
+    dangerouslySetInnerHTML={
+      {
+        "__html": "
+
+
+
+",
+      }
+    }
+    data-mantine-styles={true}
+  />,
   <style
     dangerouslySetInnerHTML={
       {
@@ -1609,6 +1645,18 @@ exports[`object fields show add button and fields if additionalProperties is tru
 
 exports[`object fields with title and description additionalProperties 1`] = `
 [
+  <style
+    dangerouslySetInnerHTML={
+      {
+        "__html": "
+
+
+
+",
+      }
+    }
+    data-mantine-styles={true}
+  />,
   <style
     dangerouslySetInnerHTML={
       {
@@ -2236,6 +2284,18 @@ exports[`object fields with title and description from both additionalProperties
   <style
     dangerouslySetInnerHTML={
       {
+        "__html": "
+
+
+
+",
+      }
+    }
+    data-mantine-styles={true}
+  />,
+  <style
+    dangerouslySetInnerHTML={
+      {
         "__html": "@media (max-width: 35.99375em) {.mantine-visible-from-xs {display: none !important;}}@media (min-width: 36em) {.mantine-hidden-from-xs {display: none !important;}}@media (max-width: 47.99375em) {.mantine-visible-from-sm {display: none !important;}}@media (min-width: 48em) {.mantine-hidden-from-sm {display: none !important;}}@media (max-width: 61.99375em) {.mantine-visible-from-md {display: none !important;}}@media (min-width: 62em) {.mantine-hidden-from-md {display: none !important;}}@media (max-width: 74.99375em) {.mantine-visible-from-lg {display: none !important;}}@media (min-width: 75em) {.mantine-hidden-from-lg {display: none !important;}}@media (max-width: 87.99375em) {.mantine-visible-from-xl {display: none !important;}}@media (min-width: 88em) {.mantine-hidden-from-xl {display: none !important;}}",
       }
     }
@@ -2860,6 +2920,18 @@ exports[`object fields with title and description from both object 1`] = `
   <style
     dangerouslySetInnerHTML={
       {
+        "__html": "
+
+
+
+",
+      }
+    }
+    data-mantine-styles={true}
+  />,
+  <style
+    dangerouslySetInnerHTML={
+      {
         "__html": "@media (max-width: 35.99375em) {.mantine-visible-from-xs {display: none !important;}}@media (min-width: 36em) {.mantine-hidden-from-xs {display: none !important;}}@media (max-width: 47.99375em) {.mantine-visible-from-sm {display: none !important;}}@media (min-width: 48em) {.mantine-hidden-from-sm {display: none !important;}}@media (max-width: 61.99375em) {.mantine-visible-from-md {display: none !important;}}@media (min-width: 62em) {.mantine-hidden-from-md {display: none !important;}}@media (max-width: 74.99375em) {.mantine-visible-from-lg {display: none !important;}}@media (min-width: 75em) {.mantine-hidden-from-lg {display: none !important;}}@media (max-width: 87.99375em) {.mantine-visible-from-xl {display: none !important;}}@media (min-width: 88em) {.mantine-hidden-from-xl {display: none !important;}}",
       }
     }
@@ -3366,6 +3438,18 @@ exports[`object fields with title and description from both object 1`] = `
 
 exports[`object fields with title and description from uiSchema additionalProperties 1`] = `
 [
+  <style
+    dangerouslySetInnerHTML={
+      {
+        "__html": "
+
+
+
+",
+      }
+    }
+    data-mantine-styles={true}
+  />,
   <style
     dangerouslySetInnerHTML={
       {
@@ -3993,6 +4077,18 @@ exports[`object fields with title and description from uiSchema object 1`] = `
   <style
     dangerouslySetInnerHTML={
       {
+        "__html": "
+
+
+
+",
+      }
+    }
+    data-mantine-styles={true}
+  />,
+  <style
+    dangerouslySetInnerHTML={
+      {
         "__html": "@media (max-width: 35.99375em) {.mantine-visible-from-xs {display: none !important;}}@media (min-width: 36em) {.mantine-hidden-from-xs {display: none !important;}}@media (max-width: 47.99375em) {.mantine-visible-from-sm {display: none !important;}}@media (min-width: 48em) {.mantine-hidden-from-sm {display: none !important;}}@media (max-width: 61.99375em) {.mantine-visible-from-md {display: none !important;}}@media (min-width: 62em) {.mantine-hidden-from-md {display: none !important;}}@media (max-width: 74.99375em) {.mantine-visible-from-lg {display: none !important;}}@media (min-width: 75em) {.mantine-hidden-from-lg {display: none !important;}}@media (max-width: 87.99375em) {.mantine-visible-from-xl {display: none !important;}}@media (min-width: 88em) {.mantine-hidden-from-xl {display: none !important;}}",
       }
     }
@@ -4499,6 +4595,18 @@ exports[`object fields with title and description from uiSchema object 1`] = `
 
 exports[`object fields with title and description from uiSchema show add button and fields if additionalProperties is true and not an object 1`] = `
 [
+  <style
+    dangerouslySetInnerHTML={
+      {
+        "__html": "
+
+
+
+",
+      }
+    }
+    data-mantine-styles={true}
+  />,
   <style
     dangerouslySetInnerHTML={
       {
@@ -5126,6 +5234,18 @@ exports[`object fields with title and description object 1`] = `
   <style
     dangerouslySetInnerHTML={
       {
+        "__html": "
+
+
+
+",
+      }
+    }
+    data-mantine-styles={true}
+  />,
+  <style
+    dangerouslySetInnerHTML={
+      {
         "__html": "@media (max-width: 35.99375em) {.mantine-visible-from-xs {display: none !important;}}@media (min-width: 36em) {.mantine-hidden-from-xs {display: none !important;}}@media (max-width: 47.99375em) {.mantine-visible-from-sm {display: none !important;}}@media (min-width: 48em) {.mantine-hidden-from-sm {display: none !important;}}@media (max-width: 61.99375em) {.mantine-visible-from-md {display: none !important;}}@media (min-width: 62em) {.mantine-hidden-from-md {display: none !important;}}@media (max-width: 74.99375em) {.mantine-visible-from-lg {display: none !important;}}@media (min-width: 75em) {.mantine-hidden-from-lg {display: none !important;}}@media (max-width: 87.99375em) {.mantine-visible-from-xl {display: none !important;}}@media (min-width: 88em) {.mantine-hidden-from-xl {display: none !important;}}",
       }
     }
@@ -5599,6 +5719,18 @@ exports[`object fields with title and description object 1`] = `
 
 exports[`object fields with title and description show add button and fields if additionalProperties is true and not an object 1`] = `
 [
+  <style
+    dangerouslySetInnerHTML={
+      {
+        "__html": "
+
+
+
+",
+      }
+    }
+    data-mantine-styles={true}
+  />,
   <style
     dangerouslySetInnerHTML={
       {
@@ -6226,6 +6358,18 @@ exports[`object fields with title and description with global label off addition
   <style
     dangerouslySetInnerHTML={
       {
+        "__html": "
+
+
+
+",
+      }
+    }
+    data-mantine-styles={true}
+  />,
+  <style
+    dangerouslySetInnerHTML={
+      {
         "__html": "@media (max-width: 35.99375em) {.mantine-visible-from-xs {display: none !important;}}@media (min-width: 36em) {.mantine-hidden-from-xs {display: none !important;}}@media (max-width: 47.99375em) {.mantine-visible-from-sm {display: none !important;}}@media (min-width: 48em) {.mantine-hidden-from-sm {display: none !important;}}@media (max-width: 61.99375em) {.mantine-visible-from-md {display: none !important;}}@media (min-width: 62em) {.mantine-hidden-from-md {display: none !important;}}@media (max-width: 74.99375em) {.mantine-visible-from-lg {display: none !important;}}@media (min-width: 75em) {.mantine-hidden-from-lg {display: none !important;}}@media (max-width: 87.99375em) {.mantine-visible-from-xl {display: none !important;}}@media (min-width: 88em) {.mantine-hidden-from-xl {display: none !important;}}",
       }
     }
@@ -6794,6 +6938,18 @@ exports[`object fields with title and description with global label off object 1
   <style
     dangerouslySetInnerHTML={
       {
+        "__html": "
+
+
+
+",
+      }
+    }
+    data-mantine-styles={true}
+  />,
+  <style
+    dangerouslySetInnerHTML={
+      {
         "__html": "@media (max-width: 35.99375em) {.mantine-visible-from-xs {display: none !important;}}@media (min-width: 36em) {.mantine-hidden-from-xs {display: none !important;}}@media (max-width: 47.99375em) {.mantine-visible-from-sm {display: none !important;}}@media (min-width: 48em) {.mantine-hidden-from-sm {display: none !important;}}@media (max-width: 61.99375em) {.mantine-visible-from-md {display: none !important;}}@media (min-width: 62em) {.mantine-hidden-from-md {display: none !important;}}@media (max-width: 74.99375em) {.mantine-visible-from-lg {display: none !important;}}@media (min-width: 75em) {.mantine-hidden-from-lg {display: none !important;}}@media (max-width: 87.99375em) {.mantine-visible-from-xl {display: none !important;}}@media (min-width: 88em) {.mantine-hidden-from-xl {display: none !important;}}",
       }
     }
@@ -7194,6 +7350,18 @@ exports[`object fields with title and description with global label off object 1
 
 exports[`object fields with title and description with global label off show add button and fields if additionalProperties is true and not an object 1`] = `
 [
+  <style
+    dangerouslySetInnerHTML={
+      {
+        "__html": "
+
+
+
+",
+      }
+    }
+    data-mantine-styles={true}
+  />,
   <style
     dangerouslySetInnerHTML={
       {

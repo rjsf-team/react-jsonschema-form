@@ -61,26 +61,24 @@
     ]
   },
   "peerDependencies": {
+    "@mantine/core": ">=8",
+    "@mantine/dates": ">=8",
+    "@mantine/hooks": ">=8",
     "@rjsf/core": "^6.0.0-beta",
     "@rjsf/utils": "^6.0.0-beta",
-    "react": ">=18",
-    "@mantine/core": ">=8",
-    "@mantine/hooks": ">=8",
-    "@mantine/dates": ">=8"
+    "react": ">=18"
   },
   "devDependencies": {
-    "@rjsf/core": "^6.0.0-beta.1",
-    "@rjsf/snapshot-tests": "^6.0.0-beta.1",
-    "@rjsf/utils": "^6.0.0-beta.1",
-    "@rjsf/validator-ajv8": "^6.0.0-beta.1",
-    "eslint": "^8.56.0",
-    "@mantine/core": ">=8",
-    "@mantine/hooks": ">=8",
-    "@mantine/dates": ">=8",
+    "@mantine/core": "^8.2.4",
+    "@mantine/dates": "^8.2.4",
+    "@mantine/hooks": "^8.2.4",
     "@restart/hooks": "^0.6.2",
     "@restart/ui": "^1.9.4",
-    "ajv": "^8.17.1",
-    "ajv-keywords": "^5.1.0",
+    "@rjsf/core": "^6.0.0-beta.1",
+    "@rjsf/snapshot-tests": "^6.0.0-beta.13",
+    "@rjsf/utils": "^6.0.0-beta.13",
+    "@rjsf/validator-ajv8": "^6.0.0-beta.13",
+    "eslint": "^8.57.1",
     "uncontrollable": "^9.0.0"
   },
   "publishConfig": {
