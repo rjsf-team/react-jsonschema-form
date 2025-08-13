@@ -80,8 +80,6 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/mantine
 
 - Added new theme!
-
-
 # 6.0.0-beta.12
 
 ## @rjsf/core
