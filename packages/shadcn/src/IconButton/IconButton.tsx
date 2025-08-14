@@ -1,7 +1,8 @@
 import { FormContextType, IconButtonProps, RJSFSchema, StrictRJSFSchema, TranslatableString } from '@rjsf/utils';
 import { ChevronDown, ChevronUp, Copy, Trash2 } from 'lucide-react';
+import type { VariantProps } from 'class-variance-authority';
 
-import { Button, ButtonProps } from '../components/ui/button';
+import { Button, buttonVariants } from '../components/ui/button';
 
 /** Base button component that renders a Shadcn button with an icon for RJSF form actions.
  * This component serves as the foundation for other specialized buttons used in array operations.
@@ -11,7 +12,7 @@ import { Button, ButtonProps } from '../components/ui/button';
  * @param props - The combined props from RJSF IconButtonProps and Shadcn ButtonProps, including icon and event handlers
  */
 export default function IconButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: IconButtonProps<T, S, F> & ButtonProps,
+  props: IconButtonProps<T, S, F> & VariantProps<typeof buttonVariants>,
 ) {
   const { icon, iconType, className, uiSchema, registry, ...otherProps } = props;
   return (
