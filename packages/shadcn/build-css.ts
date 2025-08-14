@@ -15,7 +15,7 @@ fs.readdirSync(srcDir).forEach((file) => {
     try {
       // Add --content flag to explicitly process all content files
       execSync(
-        `npx tailwindcss -i ${srcFile} -o ${distFile} --minify --content="./src/**/*.{js,jsx,ts,tsx},../playground/src/**/*.{js,jsx,ts,tsx}"`,
+        `npx @tailwindcss/cli -i ${srcFile} -o ${distFile} --minify --content="./src/**/*.{js,jsx,ts,tsx},../playground/src/**/*.{js,jsx,ts,tsx}"`,
         {
           stdio: 'ignore',
         },
