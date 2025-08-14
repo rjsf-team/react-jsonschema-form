@@ -212,6 +212,8 @@ export type RJSFValidationError = {
   schemaPath?: string;
   /** Full error name, for example ".name is a required property" */
   stack: string;
+  /** The title property for the failing field*/
+  title?: string;
 };
 
 /** The type that describes an error in a field */
@@ -423,6 +425,8 @@ export interface Registry<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
   translateString: (stringKey: TranslatableString, params?: string[]) => string;
   /** The optional global UI Options that are available for all templates, fields and widgets to access */
   globalUiOptions?: GlobalUISchemaOptions;
+  /** The component update strategy used by the Form and its fields for performance optimization */
+  experimental_componentUpdateStrategy?: 'customDeep' | 'shallow' | 'always';
 }
 
 /** The properties that are passed to a Field implementation */
@@ -1003,6 +1007,13 @@ export type UIOptionsType<
   [key: string]: boolean | number | string | object | any[] | null | undefined;
 };
 
+/**
+ * A utility type that extracts the element type from an array type.
+ * If the type is not an array, it returns the type itself as a safe fallback.
+ * Handles both standard arrays and readonly arrays.
+ */
+export type ArrayElement<A> = A extends readonly (infer E)[] ? E : A;
+
 /** Type describing the well-known properties of the `UiSchema` while also supporting all user defined properties,
  * starting with `ui:`.
  */
@@ -1028,6 +1039,13 @@ export type UiSchema<
     'ui:fieldReplacesAnyOrOneOf'?: boolean;
     /** An object that contains all the potential UI options in a single object */
     'ui:options'?: UIOptionsType<T, S, F>;
+    /** The uiSchema for items in an array. Can be an object for a uniform uiSchema across all items (current behavior),
+     * or a function that returns a dynamic uiSchema based on the item's data and index.
+     * When using a function, it receives the item data, index, and optionally the form context as parameters.
+     */
+    items?:
+      | UiSchema<ArrayElement<T>, S, F>
+      | ((itemData: ArrayElement<T>, index: number, formContext?: F) => UiSchema<ArrayElement<T>, S, F>);
   };
 
 /** A `CustomValidator` function takes in a `formData`, `errors` and `uiSchema` objects and returns the given `errors`

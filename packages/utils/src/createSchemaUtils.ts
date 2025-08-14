@@ -29,6 +29,9 @@ import {
   toIdSchema,
   toPathSchema,
 } from './schema';
+import { makeAllReferencesAbsolute } from './findSchemaDefinition';
+import { ID_KEY, JSON_SCHEMA_DRAFT_2020_12, SCHEMA_KEY } from './constants';
+import get from 'lodash/get';
 
 /** The `SchemaUtils` class provides a wrapper around the publicly exported APIs in the `utils/schema` directory such
  * that one does not have to explicitly pass the `validator`, `rootSchema`, `experimental_defaultFormStateBehavior` or
@@ -57,7 +60,11 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
     experimental_defaultFormStateBehavior: Experimental_DefaultFormStateBehavior,
     experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
   ) {
-    this.rootSchema = rootSchema;
+    if (rootSchema && rootSchema[SCHEMA_KEY] === JSON_SCHEMA_DRAFT_2020_12) {
+      this.rootSchema = makeAllReferencesAbsolute(rootSchema, get(rootSchema, ID_KEY, '#'));
+    } else {
+      this.rootSchema = rootSchema;
+    }
     this.validator = validator;
     this.experimental_defaultFormStateBehavior = experimental_defaultFormStateBehavior;
     this.experimental_customMergeAllOf = experimental_customMergeAllOf;
@@ -95,9 +102,12 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
     experimental_defaultFormStateBehavior = {},
     experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
   ): boolean {
+    // If either validator or rootSchema are falsy, return false to prevent the creation
+    // of a new SchemaUtilsType with incomplete properties.
     if (!validator || !rootSchema) {
       return false;
     }
+
     return (
       this.validator !== validator ||
       !deepEquals(this.rootSchema, rootSchema) ||

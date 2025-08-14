@@ -3,7 +3,7 @@
   "transform": {
     "^.+\\.(ts|tsx|js|jsx)$": ["babel-jest", { "configFile": "./babel.config.json" }]
   },
-  "transformIgnorePatterns": ["/node_modules/(?!nanoid/.*)"],
+  "transformIgnorePatterns": ["/node_modules/(?!nanoid|deep-freeze-es6)"],
   "moduleNameMapper": {
     "^@/(.*)$": "<rootDir>/src/$1"
   }

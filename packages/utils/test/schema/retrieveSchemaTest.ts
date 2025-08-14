@@ -91,7 +91,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         definitions: { address },
       };
 
-      expect(() => retrieveSchema(testValidator, schema, schema)).toThrowError('Could not find a definition');
+      expect(() => retrieveSchema(testValidator, schema, schema)).toThrow('Could not find a definition');
     });
     it('should give an error when JSON pointer does not point to anything', () => {
       const schema: RJSFSchema = {
@@ -99,7 +99,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         definitions: { schemas: {} },
       };
 
-      expect(() => retrieveSchema(testValidator, schema, schema)).toThrowError('Could not find a definition');
+      expect(() => retrieveSchema(testValidator, schema, schema)).toThrow('Could not find a definition');
     });
     it('should `resolve` escaped JSON Pointers', () => {
       const schema: RJSFSchema = { $ref: '#/definitions/a~0complex~1name' };
@@ -869,7 +869,7 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         const rootSchema: RJSFSchema = { definitions: {} };
         const formData = {};
         expect(retrieveSchema(testValidator, schema, rootSchema, formData)).toEqual({});
-        expect(consoleWarnSpy).toBeCalledWith(
+        expect(consoleWarnSpy).toHaveBeenCalledWith(
           expect.stringMatching(/could not merge subschemas in allOf/),
           expect.any(Error),
         );

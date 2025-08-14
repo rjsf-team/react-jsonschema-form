@@ -70,6 +70,12 @@ const liveSettingsBooleanSchema: RJSFSchema = {
     noValidate: { type: 'boolean', title: 'Disable validation' },
     noHtml5Validate: { type: 'boolean', title: 'Disable HTML 5 validation' },
     focusOnFirstError: { type: 'boolean', title: 'Focus on 1st Error' },
+    experimental_componentUpdateStrategy: {
+      type: 'string',
+      title: 'Component update strategy',
+      default: 'customDeep',
+      enum: ['customDeep', 'shallow', 'always'],
+    },
     showErrorList: {
       type: 'string',
       default: 'top',

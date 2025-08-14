@@ -16,7 +16,7 @@ describe('toConstant()', () => {
       const schema = { enum: ['foo', 'bar'] };
       expect(() => {
         toConstant(schema);
-      }).toThrowError('cannot be inferred');
+      }).toThrow('cannot be inferred');
     });
   });
 });

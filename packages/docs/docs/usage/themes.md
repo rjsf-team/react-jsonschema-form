@@ -11,8 +11,9 @@ meaning that you must load the Bootstrap stylesheet on the page to view the form
 | Chakra UI             | Published | `@rjsf/chakra-ui`       |
 | Bootstrap 3 (default) | Published | `@rjsf/core`            |
 | fluentui-rc           | Published | `@rjsf/fluentui-rc`     |
+| mantine               | Published | `@rjsf/mantine`         |
 | material-ui           | Published | `@rjsf/mui`             |
-| PrimeReact            | -         | `@rjsf/primereact`      |
+| PrimeReact            | Published | `@rjsf/primereact`      |
 | react-bootstrap       | Published | `@rjsf/react-bootstrap` |
 | Semantic UI           | Published | `@rjsf/semantic-ui`     |
 | shadcn                | Published | `@rjsf/shadcn`          |

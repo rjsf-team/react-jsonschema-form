@@ -1,4 +1,3 @@
-import { FocusEvent } from 'react';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import {
@@ -50,8 +49,8 @@ export default function CheckboxWidget<
   const required = schemaRequiresTrueValue<S>(schema);
 
   const _onChange = (_: any, checked: boolean) => onChange(checked);
-  const _onBlur = ({ target }: FocusEvent<HTMLButtonElement>) => onBlur(id, target && target.value);
-  const _onFocus = ({ target }: FocusEvent<HTMLButtonElement>) => onFocus(id, target && target.value);
+  const _onBlur: React.FocusEventHandler<HTMLButtonElement> = () => onBlur(id, value);
+  const _onFocus: React.FocusEventHandler<HTMLButtonElement> = () => onFocus(id, value);
   const description = options.description ?? schema.description;
 
   return (

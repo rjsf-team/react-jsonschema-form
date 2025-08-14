@@ -1,6 +1,6 @@
 {
   "name": "@rjsf/utils",
-  "version": "6.0.0-beta.12",
+  "version": "6.0.0-beta.13",
   "main": "dist/index.js",
   "module": "lib/index.js",
   "typings": "lib/index.d.ts",
@@ -71,14 +71,14 @@
     "lodash": "^4.17.21",
     "lodash-es": "^4.17.21",
     "nanoid": "^5.1.5",
-    "react-is": "^18.2.0"
+    "react-is": "^18.3.1"
   },
   "devDependencies": {
     "@types/json-schema": "^7.0.15",
     "@types/json-schema-merge-allof": "^0.6.5",
-    "@types/react-is": "^18.2.4",
-    "deep-freeze-es6": "^1.4.1",
-    "eslint": "^8.56.0"
+    "@types/react-is": "^18.3.1",
+    "deep-freeze-es6": "^4.0.1",
+    "eslint": "^8.57.1"
   },
   "publishConfig": {
     "access": "public"

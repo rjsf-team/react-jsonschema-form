@@ -22,7 +22,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
       consoleWarnSpy.mockRestore();
     });
     it('throws error when schema is not an object', () => {
-      expect(() => getDefaultFormState(testValidator, null as unknown as RJSFSchema)).toThrowError('Invalid schema:');
+      expect(() => getDefaultFormState(testValidator, null as unknown as RJSFSchema)).toThrow('Invalid schema:');
     });
 
     describe('object schemas', () => {
@@ -2757,7 +2757,6 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           }),
         ).toEqual({
           optionalNumberProperty: undefined,
-          optionalObjectProperty: {},
           requiredProperty: 'foo',
         });
       });
@@ -2894,7 +2893,6 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           }),
         ).toEqual({
           optionalNumberProperty: undefined,
-          optionalObjectProperty: {},
           requiredProperty: 'foo',
         });
       });
@@ -3104,7 +3102,6 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           }),
         ).toEqual({
           optionalNumberProperty: undefined,
-          optionalObjectProperty: {},
           requiredProperty: 'foo',
         });
       });

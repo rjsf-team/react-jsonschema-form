@@ -42,7 +42,7 @@ export default function CheckboxWidget<
 
   /** Handle focus events
    */
-  const handleFocus = useCallback(() => {
+  const handleFocus: React.FocusEventHandler<HTMLInputElement> = useCallback(() => {
     if (onFocus) {
       onFocus(id, value);
     }
@@ -50,7 +50,7 @@ export default function CheckboxWidget<
 
   /** Handle blur events
    */
-  const handleBlur = useCallback(() => {
+  const handleBlur: React.FocusEventHandler<HTMLInputElement> = useCallback(() => {
     if (onBlur) {
       onBlur(id, value);
     }
