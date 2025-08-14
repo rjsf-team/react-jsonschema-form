@@ -324,35 +324,35 @@ const themes: PlaygroundProps['themes'] = {
     theme: SuiTheme,
   },
   shadcn: {
-    stylesheet: 'https://cdn.jsdelivr.net/gh/tuanphung2308/rjsf-shadcn-css@main/public/default.css',
+    stylesheet: '//cdn.jsdelivr.net/gh/tuanphung2308/rjsf-shadcn-css@main/public/v4/default.css',
     theme: shadcnTheme,
     subthemes: {
       default: {
-        stylesheet: 'https://cdn.jsdelivr.net/gh/tuanphung2308/rjsf-shadcn-css@main/public/default.css',
+        stylesheet: '//cdn.jsdelivr.net/gh/tuanphung2308/rjsf-shadcn-css@main/public/v4/default.css',
       },
-      blue: {
-        stylesheet: 'https://cdn.jsdelivr.net/gh/tuanphung2308/rjsf-shadcn-css@main/public/blue.css',
+      'Amethyst Haze': {
+        stylesheet: '//cdn.jsdelivr.net/gh/tuanphung2308/rjsf-shadcn-css@main/public/v4/amethyst-haze.css',
       },
-      green: {
-        stylesheet: 'https://cdn.jsdelivr.net/gh/tuanphung2308/rjsf-shadcn-css@main/public/green.css',
+      Caffeine: {
+        stylesheet: '//cdn.jsdelivr.net/gh/tuanphung2308/rjsf-shadcn-css@main/public/v4/caffeine.css',
       },
-      orange: {
-        stylesheet: 'https://cdn.jsdelivr.net/gh/tuanphung2308/rjsf-shadcn-css@main/public/orange.css',
+      Claude: {
+        stylesheet: '//cdn.jsdelivr.net/gh/tuanphung2308/rjsf-shadcn-css@main/public/v4/claude.css',
       },
-      red: {
-        stylesheet: 'https://cdn.jsdelivr.net/gh/tuanphung2308/rjsf-shadcn-css@main/public/red.css',
+      'Neo Brutalism': {
+        stylesheet: '//cdn.jsdelivr.net/gh/tuanphung2308/rjsf-shadcn-css@main/public/v4/neo-brutalism.css',
       },
-      rose: {
-        stylesheet: 'https://cdn.jsdelivr.net/gh/tuanphung2308/rjsf-shadcn-css@main/public/rose.css',
+      'Pastel Dreams': {
+        stylesheet: '//cdn.jsdelivr.net/gh/tuanphung2308/rjsf-shadcn-css@main/public/v4/pastel-dreams.css',
       },
-      violet: {
-        stylesheet: 'https://cdn.jsdelivr.net/gh/tuanphung2308/rjsf-shadcn-css@main/public/violet.css',
+      'Soft Pop': {
+        stylesheet: '//cdn.jsdelivr.net/gh/tuanphung2308/rjsf-shadcn-css@main/public/v4/soft-pop.css',
       },
-      yellow: {
-        stylesheet: 'https://cdn.jsdelivr.net/gh/tuanphung2308/rjsf-shadcn-css@main/public/yellow.css',
+      Twitter: {
+        stylesheet: '//cdn.jsdelivr.net/gh/tuanphung2308/rjsf-shadcn-css@main/public/v4/twitter.css',
       },
-      zinc: {
-        stylesheet: 'https://cdn.jsdelivr.net/gh/tuanphung2308/rjsf-shadcn-css@main/public/zinc.css',
+      Vercel: {
+        stylesheet: '//cdn.jsdelivr.net/gh/tuanphung2308/rjsf-shadcn-css@main/public/v4/vercel.css',
       },
     },
   },
