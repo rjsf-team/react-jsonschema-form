@@ -2,7 +2,8 @@
 
 import { Indicator, Root } from '@radix-ui/react-checkbox';
 import { CheckIcon } from '@radix-ui/react-icons';
-import { ComponentPropsWithoutRef, ElementRef, forwardRef } from 'react';
+import { ComponentProps } from 'react';
+
 import { cn } from '../../lib/utils';
 
 /**
@@ -14,22 +15,24 @@ import { cn } from '../../lib/utils';
  * @param props.className - Additional CSS classes to apply to the checkbox
  * @param ref - Forward ref to access the underlying checkbox element
  */
-const Checkbox = forwardRef<ElementRef<typeof Root>, ComponentPropsWithoutRef<typeof Root>>(
-  ({ className, ...props }, ref) => (
+function Checkbox({ className, ...props }: ComponentProps<typeof Root>) {
+  return (
     <Root
-      ref={ref}
+      data-slot='checkbox'
       className={cn(
-        'peer h-4 w-4 shrink-0 rounded-sm border border-primary shadow focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground',
+        'peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50',
         className,
       )}
       {...props}
     >
-      <Indicator className={cn('flex items-center justify-center text-current')}>
-        <CheckIcon className='h-4 w-4' />
+      <Indicator
+        data-slot='checkbox-indicator'
+        className='flex items-center justify-center text-current transition-none'
+      >
+        <CheckIcon className='size-3.5' />
       </Indicator>
     </Root>
-  ),
-);
-Checkbox.displayName = Root.displayName;
+  );
+}
 
 export { Checkbox };
