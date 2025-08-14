@@ -12,7 +12,7 @@ export default function SubmitButton<T = any, S extends StrictRJSFSchema = RJSFS
     return null;
   }
   return (
-    <div>
+    <div className='flex items-center justify-start w-full'>
       <Button type='submit' {...submitButtonProps} className='my-2'>
         {submitText}
       </Button>
