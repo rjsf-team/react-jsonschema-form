@@ -171,7 +171,8 @@ export default function LayoutMultiSchemaField<
     if (newFormData) {
       set(newFormData, selectorField, opt);
     }
-    onChange(newFormData, undefined, id);
+    // Pass the component name in the path
+    onChange(newFormData, [name], undefined, id);
   };
 
   // filtering the options based on the type of widget because `selectField` does not recognize the `convertOther` prop

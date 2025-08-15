@@ -676,16 +676,14 @@ export default class LayoutGridField<
    * @returns - The `onChange` handling function for the `dottedPath` field
    */
   onFieldChange = (dottedPath: string) => {
-    return (value: unknown, errSchema?: ErrorSchema<T>, id?: string) => {
-      const { onChange, errorSchema, formData } = this.props;
-      const newFormData = cloneDeep(formData || ({} as T));
+    return (value: T | undefined, path?: (number | string)[], errSchema?: ErrorSchema<T>, id?: string) => {
+      const { onChange, errorSchema } = this.props;
       let newErrorSchema = errorSchema;
       if (errSchema && errorSchema) {
         newErrorSchema = cloneDeep(errorSchema);
         set(newErrorSchema, dottedPath, errSchema);
       }
-      set(newFormData as object, dottedPath, value);
-      onChange(newFormData, newErrorSchema, id);
+      onChange(value, dottedPath.split('.'), newErrorSchema, id);
     };
   };
 

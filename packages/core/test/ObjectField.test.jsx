@@ -10,17 +10,15 @@ import { TextWidgetTest } from './StringField.test';
 import { createFormComponent, createSandbox, submitForm } from './test_utils';
 
 const ObjectFieldTest = (props) => {
-  const onChangeTest = (newFormData, errorSchema, id) => {
-    const propertyValue = newFormData?.foo;
-    if (propertyValue !== 'test') {
-      const raiseError = {
+  const onChangeTest = (newFormData, path, errorSchema, id) => {
+    let newErrorSchema = errorSchema;
+    if (newFormData !== 'test') {
+      newErrorSchema = {
         ...errorSchema,
-        foo: {
-          __errors: ['Value must be "test"'],
-        },
+        __errors: ['Value must be "test"'],
       };
-      props.onChange(newFormData, raiseError, id);
     }
+    props.onChange(newFormData, path, newErrorSchema, id);
   };
   return <ObjectField {...props} onChange={onChangeTest} />;
 };

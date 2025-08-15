@@ -44,7 +44,7 @@ function NumberField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
    * @param value - The current value for the change occurring
    */
   const handleChange = useCallback(
-    (value: FieldProps<T, S, F>['value'], errorSchema?: ErrorSchema<T>, id?: string) => {
+    (value: FieldProps<T, S, F>['value'], path?: (number | string)[], errorSchema?: ErrorSchema<T>, id?: string) => {
       // Cache the original value in component state
       setLastValue(value);
 
@@ -62,7 +62,7 @@ function NumberField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
           ? asNumber(value.replace(trailingCharMatcher, ''))
           : asNumber(value);
 
-      onChange(processed as unknown as T, errorSchema, id);
+      onChange(processed as unknown as T, path, errorSchema, id);
     },
     [onChange],
   );

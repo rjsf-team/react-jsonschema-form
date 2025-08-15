@@ -141,9 +141,9 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
    * `onChange` chain if it is not already being provided from a deeper level in the hierarchy
    */
   const handleFieldComponentChange = useCallback(
-    (formData: T | undefined, newErrorSchema?: ErrorSchema<T>, id?: string) => {
+    (formData: T | undefined, path?: (number | string)[], newErrorSchema?: ErrorSchema<T>, id?: string) => {
       const theId = id || fieldId;
-      return onChange(formData, newErrorSchema, theId);
+      return onChange(formData, path, newErrorSchema, theId);
     },
     [fieldId, onChange],
   );
