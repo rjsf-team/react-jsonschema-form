@@ -1,4 +1,11 @@
-import { FieldTemplateProps, StrictRJSFSchema, RJSFSchema, FormContextType } from '@rjsf/utils';
+import {
+  FieldTemplateProps,
+  StrictRJSFSchema,
+  RJSFSchema,
+  FormContextType,
+  getTemplate,
+  getUiOptions,
+} from '@rjsf/utils';
 
 /** The `FieldTemplate` component provides the main layout for each form field
  * with DaisyUI styling. It handles:
@@ -47,20 +54,40 @@ export default function FieldTemplate<
 
   // Special handling for checkboxes - they should have the label after the input
   const isCheckbox = schema.type === 'boolean';
+  const uiOptions = getUiOptions<T, S, F>(uiSchema);
+  const WrapIfAdditionalTemplate = getTemplate<'WrapIfAdditionalTemplate', T, S, F>(
+    'WrapIfAdditionalTemplate',
+    registry,
+    uiOptions,
+  );
 
   return (
-    <div className={`field-template mb-3 ${classNames || ''}`} {...divProps}>
-      {displayLabel && !isCheckbox && (
-        <label htmlFor={id} className='label'>
-          <span className='label-text font-medium'>
-            {label}
-            {required && <span className='text-error ml-1'>*</span>}
-          </span>
-        </label>
-      )}
-      {children}
-      {errors}
-      {help}
-    </div>
+    <WrapIfAdditionalTemplate
+      classNames={classNames}
+      disabled={divProps.disabled}
+      id={id}
+      label={label}
+      onDropPropertyClick={onDropPropertyClick}
+      onKeyChange={onKeyChange}
+      readonly={readonly}
+      required={required}
+      schema={schema}
+      uiSchema={uiSchema}
+      registry={registry}
+    >
+      <div className={`field-template mb-3 ${classNames || ''}`} {...divProps}>
+        {displayLabel && !isCheckbox && (
+          <label htmlFor={id} className='label'>
+            <span className='label-text font-medium'>
+              {label}
+              {required && <span className='text-error ml-1'>*</span>}
+            </span>
+          </label>
+        )}
+        {children}
+        {errors}
+        {help}
+      </div>
+    </WrapIfAdditionalTemplate>
   );
 }
