@@ -78,7 +78,7 @@ class ObjectField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
         // set empty values to the empty string.
         value = '' as unknown as T;
       }
-      // Copy the current path and push in the property name into the first location
+      // Copy the current path and insert in the property name into the first location
       const changePath = Array.isArray(path) ? path.slice() : [];
       changePath.unshift(name);
       onChange(value, changePath, newErrorSchema, id);
