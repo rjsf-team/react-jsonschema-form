@@ -62,10 +62,10 @@ export default class AJV8Validator<T = any, S extends StrictRJSFSchema = RJSFSch
   rawValidation<Result = any>(schema: S, formData?: T): RawValidationErrorsType<Result> {
     let compilationError: Error | undefined = undefined;
     let compiledValidator: ValidateFunction | undefined;
-    if (schema[ID_KEY]) {
-      compiledValidator = this.ajv.getSchema(schema[ID_KEY]);
-    }
     try {
+      if (schema[ID_KEY]) {
+        compiledValidator = this.ajv.getSchema(schema[ID_KEY]);
+      }
       if (compiledValidator === undefined) {
         compiledValidator = this.ajv.compile(schema);
       }
