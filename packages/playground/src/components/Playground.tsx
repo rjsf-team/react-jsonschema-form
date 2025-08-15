@@ -22,7 +22,7 @@ export interface PlaygroundProps {
 export default function Playground({ themes, validators }: PlaygroundProps) {
   const [loaded, setLoaded] = useState(false);
   const [schema, setSchema] = useState<RJSFSchema>(samples.Simple.schema as RJSFSchema);
-  const [uiSchema, setUiSchema] = useState<UiSchema>(samples.Simple.uiSchema!);
+  const [uiSchema, setUiSchema] = useState<UiSchema>(samples.Simple.uiSchema as UiSchema);
   // Store the generator inside of an object, otherwise react treats it as an initializer function
   const [uiSchemaGenerator, setUiSchemaGenerator] = useState<{ generator: UiSchemaForTheme } | undefined>(undefined);
   const [formData, setFormData] = useState<any>(samples.Simple.formData);
@@ -60,7 +60,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
         setUiSchema(uiSchemaGenerator.generator(theme));
       }
     },
-    [uiSchemaGenerator, setTheme, setSubtheme, setFormComponent, setStylesheet],
+    [uiSchemaGenerator, setTheme, setFormComponent, setStylesheet],
   );
 
   const load = useCallback(
@@ -123,7 +123,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
     (sampleName: string) => {
       load({ ...samples[sampleName], sampleName, liveSettings, theme });
     },
-    [load, liveSettings, theme, samples],
+    [load, liveSettings, theme],
   );
 
   useEffect(() => {

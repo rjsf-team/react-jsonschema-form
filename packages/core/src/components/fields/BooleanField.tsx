@@ -1,3 +1,4 @@
+import { useCallback } from 'react';
 import {
   getWidget,
   getUiOptions,
@@ -5,6 +6,7 @@ import {
   FieldProps,
   FormContextType,
   EnumOptionsType,
+  ErrorSchema,
   RJSFSchema,
   StrictRJSFSchema,
   TranslatableString,
@@ -86,6 +88,13 @@ function BooleanField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
       enumOptions = optionsList<T, S, F>({ enum: enums } as S, uiSchema);
     }
   }
+  const onWidgetChange = useCallback(
+    (value: T | undefined, errorSchema?: ErrorSchema, id?: string) => {
+      // Boolean field change passes an empty path array to the parent field which adds the appropriate path
+      return onChange(value, [], errorSchema, id);
+    },
+    [onChange],
+  );
 
   return (
     <Widget
@@ -94,7 +103,7 @@ function BooleanField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
       uiSchema={uiSchema}
       id={idSchema.$id}
       name={name}
-      onChange={onChange}
+      onChange={onWidgetChange}
       onFocus={onFocus}
       onBlur={onBlur}
       label={label}

@@ -44,26 +44,27 @@ export default function AltDateWidget<
   } = props;
 
   const { translateString } = registry;
-
-  const [lastValue, setLastValue] = useState(value);
   const [state, setState] = useState(parseDateString(value, showTime));
 
   useEffect(() => {
-    const stateValue = toDateString(state, showTime);
-    if (lastValue !== value) {
-      // We got a new value in the props
-      setLastValue(value);
-      setState(parseDateString(value, showTime));
-    } else if (readyForChange(state) && stateValue !== value) {
-      // Selected date is ready to be submitted
-      onChange(stateValue);
-      setLastValue(stateValue);
-    }
-  }, [showTime, value, onChange, state, lastValue]);
+    setState(parseDateString(value, showTime));
+  }, [showTime, value]);
 
-  const handleChange = useCallback((property: keyof DateObject, nextValue: any) => {
-    setState((prev) => ({ ...prev, [property]: typeof nextValue === 'undefined' ? -1 : nextValue }));
-  }, []);
+  const handleChange = useCallback(
+    (property: keyof DateObject, nextValue: any) => {
+      const nextState = {
+        ...state,
+        [property]: typeof nextValue === 'undefined' ? -1 : nextValue,
+      };
+
+      if (readyForChange(nextState)) {
+        onChange(toDateString(nextState, showTime));
+      } else {
+        setState(nextState);
+      }
+    },
+    [state, onChange, showTime],
+  );
 
   const handleSetNow = useCallback(() => {
     if (!disabled && !readonly) {

@@ -331,7 +331,7 @@ export default function Header({
       setShareURL(null);
       console.error(error);
     }
-  }, [formData, liveSettings, schema, theme, uiSchema, validator, setShareURL]);
+  }, [formData, liveSettings, schema, theme, uiSchema, validator, setShareURL, sampleName]);
 
   return (
     <div className='page-header'>

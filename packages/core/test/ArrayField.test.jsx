@@ -164,21 +164,14 @@ const ArrayFieldTestItemTemplate = (props) => {
 };
 
 const ArrayFieldTest = (props) => {
-  const onChangeTest = (newFormData, errorSchema, id) => {
-    if (Array.isArray(newFormData) && newFormData.length === 1) {
-      const itemValue = newFormData[0]?.text;
-      if (itemValue !== 'Appie') {
-        const raiseError = {
-          ...errorSchema,
-          0: {
-            text: {
-              __errors: ['Value must be "Appie"'],
-            },
-          },
-        };
-        props.onChange(newFormData, raiseError, id);
-      }
+  const onChangeTest = (newFormData, path, errorSchema, id) => {
+    let newErrorSchema = errorSchema;
+    if (newFormData !== 'Appie') {
+      newErrorSchema = {
+        __errors: ['Value must be "Appie"'],
+      };
     }
+    props.onChange(newFormData, path, newErrorSchema, id);
   };
   return <ArrayField {...props} onChange={onChangeTest} />;
 };
