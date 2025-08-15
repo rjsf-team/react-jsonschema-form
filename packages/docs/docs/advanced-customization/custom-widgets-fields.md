@@ -131,7 +131,7 @@ const CustomTextWidget = function (props: WidgetProps) {
         __errors: ['Value must be "test"'],
       };
     }
-    props.onChange(value, raiseError, id);
+    props.onChange(value, [], raiseError, id);
   };
 
   return <input id={id} onChange={raiseErrorOnChange} value={value || ''} />;
@@ -402,7 +402,7 @@ A field component will always be passed the following props:
 - `idPrefix`: To avoid collisions with existing ids in the DOM, it is possible to change the prefix used for ids; Default is `root`
 - `idSeparator`: To avoid using a path separator that is present in field names, it is possible to change the separator used for ids (Default is `_`)
 - `rawErrors`: `An array of strings listing all generated error messages from encountered errors for this field
-- `onChange`: The field change event handler; called with the updated form data and an optional `ErrorSchema`
+- `onChange`: The field change event handler; called with the updated form data, the change path for the data, optional `ErrorSchema` and the optional id of the field being changed
 - `onBlur`: The input blur event handler; call it with the field id and value;
 - `onFocus`: The input focus event handler; call it with the field id and value;
 
@@ -535,13 +535,13 @@ const {
 function MyObjectField(props: FieldProps) {
   const { onChange } = props;
   const onChangeHandler = useCallback(
-    (newFormData: T | undefined, es?: ErrorSchema<T>, id?: string) => {
+    (newFormData: T | undefined, path: (number | string)[], es?: ErrorSchema<T>, id?: string) => {
       let data = newFormData;
       let error = es;
       if (checkBadData(newFormData)) {
         // Format the `error` and fix the `data` here
       }
-      onChange(data, error, id);
+      onChange(data, path, error, id);
     },
     [onChange],
   );

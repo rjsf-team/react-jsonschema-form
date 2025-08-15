@@ -320,7 +320,7 @@ export default function DateWidget<T = any, S extends StrictRJSFSchema = RJSFSch
 
     document.addEventListener('keydown', handleEscape);
     return () => document.removeEventListener('keydown', handleEscape);
-  }, [id, isOpen, onBlur, value]);
+  }, [id, isOpen, setIsOpen, onBlur, value]);
 
   // Add the handleDoneClick callback near the top of the component, with the other event handlers
   /** Handle clicking the "Done" button
@@ -332,7 +332,7 @@ export default function DateWidget<T = any, S extends StrictRJSFSchema = RJSFSch
       onBlur(id, value);
     }
     inputRef.current?.focus();
-  }, [localDate, onChange, onBlur, id, value]);
+  }, [localDate, onChange, onBlur, id, value, setIsOpen]);
 
   return (
     <div className='form-control my-4 w-full relative'>

@@ -7,7 +7,9 @@ import {
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
+  ErrorSchema,
 } from '@rjsf/utils';
+import { useCallback } from 'react';
 
 /** The `StringField` component is used to render a schema field that represents a string type
  *
@@ -44,6 +46,13 @@ function StringField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
   const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions);
   const label = uiTitle ?? title ?? name;
   const Widget = getWidget<T, S, F>(schema, widget, widgets);
+  const onWidgetChange = useCallback(
+    (value: T | undefined, errorSchema?: ErrorSchema, id?: string) => {
+      // String field change passes an empty path array to the parent field which adds the appropriate path
+      return onChange(value, [], errorSchema, id);
+    },
+    [onChange],
+  );
   return (
     <Widget
       options={{ ...options, enumOptions }}
@@ -55,7 +64,7 @@ function StringField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
       hideLabel={!displayLabel}
       hideError={hideError}
       value={formData}
-      onChange={onChange}
+      onChange={onWidgetChange}
       onBlur={onBlur}
       onFocus={onFocus}
       required={required}

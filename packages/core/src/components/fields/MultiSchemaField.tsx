@@ -131,7 +131,8 @@ class AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
     }
 
     this.setState({ selectedOption: intOption }, () => {
-      onChange(newFormData, undefined, this.getFieldId());
+      // Changing the option will pass an empty path array to the parent field which will add the appropriate path
+      onChange(newFormData, [], undefined, this.getFieldId());
     });
   };
 

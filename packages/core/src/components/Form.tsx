@@ -38,11 +38,13 @@ import {
   createErrorHandler,
   unwrapErrorHandler,
 } from '@rjsf/utils';
+import _cloneDeep from 'lodash/cloneDeep';
 import _forEach from 'lodash/forEach';
 import _get from 'lodash/get';
 import _isEmpty from 'lodash/isEmpty';
 import _isNil from 'lodash/isNil';
 import _pick from 'lodash/pick';
+import _set from 'lodash/set';
 import _toPath from 'lodash/toPath';
 
 import getDefaultRegistry from '../getDefaultRegistry';
@@ -272,6 +274,19 @@ export interface IChangeEvent<T = any, S extends StrictRJSFSchema = RJSFSchema, 
   status?: 'submitted';
 }
 
+/** The definition of a pending change that will be processed in the `onChange` handler
+ */
+interface PendingChange<T> {
+  /** The path into the formData/errorSchema at which the `newValue`/`newErrorSchema` will be set */
+  path?: (number | string)[];
+  /** The new value to set into the formData */
+  newValue?: T;
+  /** The new errors to be set into the errorSchema, if any */
+  newErrorSchema?: ErrorSchema<T>;
+  /** The optional id of the field for which the change is being made */
+  id?: string;
+}
+
 /** The `Form` component renders the outer form and all the fields defined in the `schema` */
 export default class Form<
   T = any,
@@ -282,6 +297,10 @@ export default class Form<
    * provide any possible type here
    */
   formElement: RefObject<any>;
+
+  /** The list of pending changes
+   */
+  pendingChanges: PendingChange<T>[] = [];
 
   /** Constructs the `Form` from the `props`. Will setup the initial state from the props. It will also call the
    * `onChange` handler if the initially provided `formData` is modified to add missing default values as part of the
@@ -539,8 +558,7 @@ export default class Form<
     let customValidateErrors = {};
     if (typeof customValidate === 'function') {
       const errorHandler = customValidate(prevFormData, createErrorHandler<T>(prevFormData), uiSchema);
-      const userErrorSchema = unwrapErrorHandler<T>(errorHandler);
-      customValidateErrors = userErrorSchema;
+      customValidateErrors = unwrapErrorHandler<T>(errorHandler);
     }
     return customValidateErrors;
   }
@@ -550,7 +568,8 @@ export default class Form<
    *
    * @param formData - The new form data to validate
    * @param schema - The schema used to validate against
-   * @param altSchemaUtils - The alternate schemaUtils to use for validation
+   * @param [altSchemaUtils] - The alternate schemaUtils to use for validation
+   * @param [retrievedSchema] - An optionally retrieved schema for per
    */
   validate(
     formData: T | undefined,
@@ -655,11 +674,16 @@ export default class Form<
     const retrievedSchema = schemaUtils.retrieveSchema(schema, formData);
     const pathSchema = schemaUtils.toPathSchema(retrievedSchema, '', formData);
     const fieldNames = this.getFieldNames(pathSchema, formData);
-    const newFormData = this.getUsedFormData(formData, fieldNames);
-    return newFormData;
+    return this.getUsedFormData(formData, fieldNames);
   };
 
-  // Filtering errors based on your retrieved schema to only show errors for properties in the selected branch.
+  /** Filtering errors based on your retrieved schema to only show errors for properties in the selected branch.
+   *
+   * @param schemaErrors - The schema errors to filter
+   * @param [resolvedSchema] - An optionally resolved schema to use for performance reasons
+   * @param [formData] - The formData to help filter errors
+   * @private
+   */
   private filterErrorsBasedOnSchema(schemaErrors: ErrorSchema<T>, resolvedSchema?: S, formData?: any): ErrorSchema<T> {
     const { retrievedSchema, schemaUtils } = this.state;
     const _retrievedSchema = resolvedSchema ?? retrievedSchema;
@@ -705,23 +729,47 @@ export default class Form<
     return filterNilOrEmptyErrors(filteredErrors, prevCustomValidateErrors);
   }
 
-  /** Function to handle changes made to a field in the `Form`. This handler receives an entirely new copy of the
-   * `formData` along with a new `ErrorSchema`. It will first update the `formData` with any missing default fields and
-   * then, if `omitExtraData` and `liveOmit` are turned on, the `formData` will be filtered to remove any extra data not
-   * in a form field. Then, the resulting formData will be validated if required. The state will be updated with the new
-   * updated (potentially filtered) `formData`, any errors that resulted from validation. Finally the `onChange`
-   * callback will be called if specified with the updated state.
+  /** Pushes the given change information into the `pendingChanges` array and then calls `processPendingChanges()` if
+   * the array only contains a single pending change.
    *
-   * @param formData - The new form data from a change to a field
-   * @param newErrorSchema - The new `ErrorSchema` based on the field change
-   * @param id - The id of the field that caused the change
+   * @param newValue - The new form data from a change to a field
+   * @param [path] - The path to the change into which to set the formData
+   * @param [newErrorSchema] - The new `ErrorSchema` based on the field change
+   * @param [id] - The id of the field that caused the change
    */
-  onChange = (formData: T | undefined, newErrorSchema?: ErrorSchema<T>, id?: string) => {
-    const { extraErrors, omitExtraData, liveOmit, noValidate, liveValidate, onChange } = this.props;
-    const { schemaUtils, schema } = this.state;
+  onChange = (newValue: T | undefined, path?: (number | string)[], newErrorSchema?: ErrorSchema<T>, id?: string) => {
+    this.pendingChanges.push({ newValue, path, newErrorSchema, id });
+    if (this.pendingChanges.length === 1) {
+      this.processPendingChange();
+    }
+  };
 
+  /** Function to handle changes made to a field in the `Form`. This handler gets the first change from the
+   * `pendingChanges` list, containing the `newValue` for the `formData` and the `path` at which the `newValue` is to be
+   * updated, along with a new, optional `ErrorSchema` for that same `path` and potentially the `id` of the field being
+   * changed. It will first update the `formData` with any missing default fields and then, if `omitExtraData` and
+   * `liveOmit` are turned on, the `formData` will be filtered to remove any extra data not in a form field. Then, the
+   * resulting `formData` will be validated if required. The state will be updated with the new updated (potentially
+   * filtered) `formData`, any errors that resulted from validation. Finally the `onChange` callback will be called, if
+   * specified, with the updated state and the `processPendingChange()` function is called again.
+   */
+  processPendingChange() {
+    if (this.pendingChanges.length === 0) {
+      return;
+    }
+    const { newValue, path, id } = this.pendingChanges[0];
+    let { newErrorSchema } = this.pendingChanges[0];
+    const { extraErrors, omitExtraData, liveOmit, noValidate, liveValidate, onChange, idPrefix = '' } = this.props;
+    const { formData: oldFormData, schemaUtils, schema, errorSchema } = this.state;
+
+    const isRootPath = !path || path.length === 0 || (path.length === 1 && path[0] === idPrefix);
     let retrievedSchema = this.state.retrievedSchema;
+    let formData = isRootPath ? newValue : _cloneDeep(oldFormData);
     if (isObject(formData) || Array.isArray(formData)) {
+      if (!isRootPath) {
+        // If the newValue is not on the root path, then set it into the form data
+        _set(formData, path, newValue);
+      }
       const newState = this.getStateFromProps(this.props, formData);
       formData = newState.formData;
       retrievedSchema = newState.retrievedSchema;
@@ -738,6 +786,15 @@ export default class Form<
       };
     }
 
+    // First update the value in the newErrorSchema if it was specified...
+    if (newErrorSchema) {
+      if (!isRootPath) {
+        // If the error schema is not on the root path, then set it into a copy of the error schema
+        const errorSchemaCopy = _cloneDeep(errorSchema);
+        _set(errorSchemaCopy, path, newErrorSchema);
+        newErrorSchema = errorSchemaCopy;
+      }
+    }
     if (mustValidate) {
       const schemaValidation = this.validate(newFormData, schema, schemaUtils, retrievedSchema);
       let errors = schemaValidation.errors;
@@ -762,6 +819,7 @@ export default class Form<
         schemaValidationErrorSchema,
       };
     } else if (!noValidate && newErrorSchema) {
+      // Merging 'newErrorSchema' into 'errorSchema' to display the custom raised errors.
       const errorSchema = extraErrors
         ? (mergeObjects(newErrorSchema, extraErrors, 'preventDuplicates') as ErrorSchema<T>)
         : newErrorSchema;
@@ -771,8 +829,15 @@ export default class Form<
         errors: toErrorList(errorSchema),
       };
     }
-    this.setState(state as FormState<T, S, F>, () => onChange && onChange({ ...this.state, ...state }, id));
-  };
+    this.setState(state as FormState<T, S, F>, () => {
+      if (onChange) {
+        onChange({ ...this.state, ...state }, id);
+        // Now remove the change we just completed and call this again
+      }
+      this.pendingChanges.shift();
+      this.processPendingChange();
+    });
+  }
 
   /**
    * If the retrievedSchema has changed the new retrievedSchema is returned.
@@ -1029,7 +1094,7 @@ export default class Form<
     const {
       children,
       id,
-      idPrefix,
+      idPrefix = '',
       idSeparator,
       className = '',
       tagName,
@@ -1082,7 +1147,7 @@ export default class Form<
       >
         {showErrorList === 'top' && this.renderErrors(registry)}
         <_SchemaField
-          name=''
+          name={idPrefix}
           schema={schema}
           uiSchema={uiSchema}
           errorSchema={errorSchema}

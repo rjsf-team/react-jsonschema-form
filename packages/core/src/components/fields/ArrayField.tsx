@@ -229,7 +229,8 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
         keyedFormData: newKeyedFormData,
         updatedKeyedFormData: true,
       },
-      () => onChange(keyedToPlainFormData(newKeyedFormData), newErrorSchema as ErrorSchema<T[]>),
+      // add click will pass the empty `path` array to the onChange which adds the appropriate path
+      () => onChange(keyedToPlainFormData(newKeyedFormData), [], newErrorSchema as ErrorSchema<T[]>),
     );
   }
 
@@ -298,7 +299,8 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
           keyedFormData: newKeyedFormData,
           updatedKeyedFormData: true,
         },
-        () => onChange(keyedToPlainFormData(newKeyedFormData), newErrorSchema as ErrorSchema<T[]>),
+        // Copy index will pass the empty `path` array to the onChange which adds the appropriate path
+        () => onChange(keyedToPlainFormData(newKeyedFormData), [], newErrorSchema as ErrorSchema<T[]>),
       );
     };
   };
@@ -335,7 +337,8 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
           keyedFormData: newKeyedFormData,
           updatedKeyedFormData: true,
         },
-        () => onChange(keyedToPlainFormData(newKeyedFormData), newErrorSchema as ErrorSchema<T[]>),
+        // drop index will pass the empty `path` array to the onChange which adds the appropriate path
+        () => onChange(keyedToPlainFormData(newKeyedFormData), [], newErrorSchema as ErrorSchema<T[]>),
       );
     };
   };
@@ -385,7 +388,8 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
         {
           keyedFormData: newKeyedFormData,
         },
-        () => onChange(keyedToPlainFormData(newKeyedFormData), newErrorSchema as ErrorSchema<T[]>),
+        // reorder click will pass the empty `path` array to the onChange which adds the appropriate path
+        () => onChange(keyedToPlainFormData(newKeyedFormData), [], newErrorSchema as ErrorSchema<T[]>),
       );
     };
   };
@@ -396,22 +400,17 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
    * @param index - The index of the item being changed
    */
   onChangeForIndex = (index: number) => {
-    return (value: any, newErrorSchema?: ErrorSchema<T>, id?: string) => {
-      const { formData, onChange, errorSchema } = this.props;
-      const arrayData = Array.isArray(formData) ? formData : [];
-      const newFormData = arrayData.map((item: T, i: number) => {
+    return (value: any, path?: (number | string)[], newErrorSchema?: ErrorSchema<T>, id?: string) => {
+      const { onChange } = this.props;
+      // Copy the current path and push in the index into the first location
+      const changePath = Array.isArray(path) ? path.slice() : [];
+      changePath.unshift(index);
+      onChange(
         // We need to treat undefined items as nulls to have validation.
         // See https://github.com/tdegrunt/jsonschema/issues/206
-        const jsonValue = typeof value === 'undefined' ? null : value;
-        return index === i ? jsonValue : item;
-      });
-      onChange(
-        newFormData,
-        errorSchema &&
-          errorSchema && {
-            ...errorSchema,
-            [index]: newErrorSchema,
-          },
+        value === undefined ? null : value,
+        changePath,
+        newErrorSchema as ErrorSchema<T[]>,
         id,
       );
     };
@@ -419,8 +418,9 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
 
   /** Callback handler used to change the value for a checkbox */
   onSelectChange = (value: any) => {
-    const { onChange, idSchema } = this.props;
-    onChange(value, undefined, idSchema && idSchema.$id);
+    const { name, onChange, idSchema } = this.props;
+    // select change will pass the `path` array with the name
+    onChange(value, [name], undefined, idSchema && idSchema.$id);
   };
 
   /** Helper method to compute item UI schema for both normal and fixed arrays

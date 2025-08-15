@@ -19,6 +19,7 @@
         "beforeSelfClosing": "always"
       }
     ],
+    "react-hooks/exhaustive-deps": "error",
     "curly": [
       2
     ],

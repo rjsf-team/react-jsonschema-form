@@ -10,16 +10,15 @@ import TextWidget from '../src/components/widgets/TextWidget';
 import { createFormComponent, createSandbox, getSelectedOptionValue, submitForm } from './test_utils';
 
 const StringFieldTest = (props) => {
-  const onChangeTest = (newFormData, errorSchema, id) => {
+  const onChangeTest = (newFormData, path, errorSchema, id) => {
     const value = newFormData;
     let raiseError = errorSchema;
     if (value !== 'test') {
       raiseError = {
-        ...raiseError,
         __errors: ['Value must be "test"'],
       };
     }
-    props.onChange(newFormData, raiseError, id);
+    props.onChange(newFormData, path, raiseError, id);
   };
   return <StringField {...props} onChange={onChangeTest} />;
 };
@@ -30,7 +29,6 @@ export const TextWidgetTest = (props) => {
     let raiseError = errorSchema;
     if (value !== 'test') {
       raiseError = {
-        ...raiseError,
         __errors: ['Value must be "test"'],
       };
     }
@@ -1369,10 +1367,13 @@ describe('StringField', () => {
           uiSchema,
         });
 
+        console.log(node.innerHTML);
+
         act(() => {
           fireEvent.click(node.querySelector('a.btn-now'));
           fireEvent.click(node.querySelector('a.btn-clear'));
         });
+        console.log(node.innerHTML);
 
         sinon.assert.calledWithMatch(onChange.lastCall, {
           formData: undefined,
