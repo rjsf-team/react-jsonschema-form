@@ -65,12 +65,14 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/validator-ajv8
 
 - Updated `transformRJSFValidationErrors()` to include the `title` property of a field with error fixing #4504 with [PR](https://github.com/rjsf-team/react-jsonschema-form/pull/4700)
+- Updated `AJVValidator` to handle the attempted compile of a bad schema, fixing [#4357](https://github.com/rjsf-team/react-jsonschema-form/issues/4357)
 
 ## Dev / docs / playground
 
-- Added comprehensive documentation for dynamic UI schema feature with TypeScript examples ([#4706](https://github.com/rjsf-team/react-jsonschema-form/pull/4706))
-- Updated array documentation to reference the new dynamic UI schema capabilities ([#4706](https://github.com/rjsf-team/react-jsonschema-form/pull/4706))
+- Added comprehensive documentation for dynamic UI schema feature with TypeScript examples [#4706](https://github.com/rjsf-team/react-jsonschema-form/pull/4706)
+- Updated array documentation to reference the new dynamic UI schema capabilities [#4706](https://github.com/rjsf-team/react-jsonschema-form/pull/4706)
 - Updated nearly all of the libraries in the `package.json` files to the latest non-breaking versions
+- Updated the playground to properly output the `validationError` when running `Raw Validate` 
 
 # 6.0.0-beta.13
 
