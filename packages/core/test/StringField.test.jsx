@@ -1367,13 +1367,10 @@ describe('StringField', () => {
           uiSchema,
         });
 
-        console.log(node.innerHTML);
-
         act(() => {
           fireEvent.click(node.querySelector('a.btn-now'));
           fireEvent.click(node.querySelector('a.btn-clear'));
         });
-        console.log(node.innerHTML);
 
         sinon.assert.calledWithMatch(onChange.lastCall, {
           formData: undefined,
