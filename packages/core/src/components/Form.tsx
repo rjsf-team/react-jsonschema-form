@@ -786,14 +786,12 @@ export default class Form<
       };
     }
 
-    // First update the value in the newErrorSchema if it was specified...
-    if (newErrorSchema) {
-      if (!isRootPath) {
-        // If the error schema is not on the root path, then set it into a copy of the error schema
-        const errorSchemaCopy = _cloneDeep(errorSchema);
-        _set(errorSchemaCopy, path, newErrorSchema);
-        newErrorSchema = errorSchemaCopy;
-      }
+    // First update the value in the newErrorSchema in a copy of the old error schema if it was specified and the path
+    // is not the root
+    if (newErrorSchema && !isRootPath) {
+      const errorSchemaCopy = _cloneDeep(errorSchema);
+      _set(errorSchemaCopy, path, newErrorSchema);
+      newErrorSchema = errorSchemaCopy;
     }
     if (mustValidate) {
       const schemaValidation = this.validate(newFormData, schema, schemaUtils, retrievedSchema);
@@ -832,8 +830,8 @@ export default class Form<
     this.setState(state as FormState<T, S, F>, () => {
       if (onChange) {
         onChange({ ...this.state, ...state }, id);
-        // Now remove the change we just completed and call this again
       }
+      // Now remove the change we just completed and call this again
       this.pendingChanges.shift();
       this.processPendingChange();
     });

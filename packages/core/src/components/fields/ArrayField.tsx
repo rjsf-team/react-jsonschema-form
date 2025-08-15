@@ -402,7 +402,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
   onChangeForIndex = (index: number) => {
     return (value: any, path?: (number | string)[], newErrorSchema?: ErrorSchema<T>, id?: string) => {
       const { onChange } = this.props;
-      // Copy the current path and push in the index into the first location
+      // Copy the current path and insert in the index into the first location
       const changePath = Array.isArray(path) ? path.slice() : [];
       changePath.unshift(index);
       onChange(
