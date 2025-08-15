@@ -1,3 +1,4 @@
+import { useCallback } from 'react';
 import {
   getWidget,
   getUiOptions,
@@ -9,7 +10,6 @@ import {
   StrictRJSFSchema,
   ErrorSchema,
 } from '@rjsf/utils';
-import { useCallback } from 'react';
 
 /** The `StringField` component is used to render a schema field that represents a string type
  *
