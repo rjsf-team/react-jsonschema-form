@@ -4,8 +4,9 @@ import {
   StrictRJSFSchema,
   RJSFSchema,
   FormContextType,
-  TranslatableString,
   buttonId,
+  ADDITIONAL_PROPERTY_FLAG,
+  TranslatableString,
 } from '@rjsf/utils';
 
 /** The `WrapIfAdditional` component is used by the `FieldTemplate` to rename, or remove properties that are
@@ -27,13 +28,18 @@ export default function WrapIfAdditionalTemplate<
     readonly,
     required,
     schema,
+    uiSchema,
     onKeyChange,
     onDropPropertyClick,
     registry,
     ...rest
   } = props;
 
-  const { translateString } = registry;
+  const additional = ADDITIONAL_PROPERTY_FLAG in schema;
+  const { templates, translateString } = registry;
+  // Button templates are not overridden in the uiSchema
+  const { RemoveButton } = templates.ButtonTemplates;
+  const keyLabel = translateString(TranslatableString.KeyLabel, [label]);
 
   const handleBlur = useCallback(
     (event: React.FocusEvent<HTMLInputElement>) => {
@@ -46,29 +52,38 @@ export default function WrapIfAdditionalTemplate<
     onDropPropertyClick(label)();
   }, [onDropPropertyClick, label]);
 
+  if (!additional) {
+    return <div className={classNames}>{children}</div>;
+  }
+
   return (
     <div className={`wrap-if-additional-template ${classNames}`} {...rest}>
-      <div className='flex items-center'>
-        <input
-          type='text'
-          className='input input-bordered'
-          id={`${id}-key`}
-          onBlur={handleBlur}
-          defaultValue={label}
-          disabled={disabled || readonly}
-        />
-        {schema.additionalProperties && (
-          <button
-            id={buttonId<T>(id, 'remove')}
-            className='rjsf-array-item-remove btn btn-danger ml-2'
-            onClick={handleRemove}
+      <div className='flex items-baseline' style={{ justifyContent: 'space-between' }}>
+        <div>
+          <label htmlFor={`${id}-key`} className='label'>
+            <span className='label-text'>{keyLabel}</span>
+          </label>
+          <input
+            type='text'
+            className='input input-bordered'
+            id={`${id}-key`}
+            onBlur={handleBlur}
+            defaultValue={label}
             disabled={disabled || readonly}
-          >
-            {translateString(TranslatableString.RemoveButton)}
-          </button>
-        )}
+          />
+        </div>
+        {children}
+        <div className='flex self-center'>
+          <RemoveButton
+            id={buttonId<T>(id, 'remove')}
+            className='rjsf-object-property-remove'
+            disabled={disabled || readonly}
+            onClick={handleRemove}
+            uiSchema={uiSchema}
+            registry={registry}
+          />
+        </div>
       </div>
-      {children}
     </div>
   );
 }
