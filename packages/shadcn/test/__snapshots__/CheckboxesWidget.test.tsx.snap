@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`CheckboxesWidget inline 1`] = `
 <div
@@ -12,8 +12,9 @@ exports[`CheckboxesWidget inline 1`] = `
       aria-describedby="_id__error _id__description _id__help"
       aria-required={true}
       autoFocus={true}
-      className="peer h-4 w-4 shrink-0 rounded-sm border border-primary shadow focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground"
+      className="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
       data-disabled=""
+      data-slot="checkbox"
       data-state="unchecked"
       disabled={true}
       id="_id-0"
@@ -45,7 +46,8 @@ exports[`CheckboxesWidget inline 1`] = `
       value="on"
     />
     <label
-      className="text-sm font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 leading-tight"
+      className="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
+      data-slot="label"
       htmlFor="_id-0"
       onMouseDown={[Function]}
     >
@@ -67,8 +69,9 @@ exports[`CheckboxesWidget simple 1`] = `
       aria-describedby="_id__error _id__description _id__help"
       aria-required={true}
       autoFocus={true}
-      className="peer h-4 w-4 shrink-0 rounded-sm border border-primary shadow focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground"
+      className="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
       data-disabled=""
+      data-slot="checkbox"
       data-state="unchecked"
       disabled={true}
       id="_id-0"
@@ -100,7 +103,8 @@ exports[`CheckboxesWidget simple 1`] = `
       value="on"
     />
     <label
-      className="text-sm font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70 leading-tight"
+      className="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
+      data-slot="label"
       htmlFor="_id-0"
       onMouseDown={[Function]}
     >
