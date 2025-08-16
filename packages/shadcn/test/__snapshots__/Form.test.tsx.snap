@@ -1617,6 +1617,7 @@ exports[`single fields radio field 1`] = `
             <label
               className="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
               data-slot="label"
+              htmlFor="root-0"
               onMouseDown={[Function]}
             >
               Yes
@@ -1664,6 +1665,7 @@ exports[`single fields radio field 1`] = `
             <label
               className="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
               data-slot="label"
+              htmlFor="root-1"
               onMouseDown={[Function]}
             >
               No
@@ -2699,6 +2701,7 @@ exports[`single fields select field single choice enumDisabled using radio widge
             <label
               className="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
               data-slot="label"
+              htmlFor="root-0"
               onMouseDown={[Function]}
             >
               foo
@@ -2747,6 +2750,7 @@ exports[`single fields select field single choice enumDisabled using radio widge
             <label
               className="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
               data-slot="label"
+              htmlFor="root-1"
               onMouseDown={[Function]}
             >
               bar
@@ -2851,6 +2855,7 @@ exports[`single fields select field single choice form disabled using radio widg
             <label
               className="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
               data-slot="label"
+              htmlFor="root-0"
               onMouseDown={[Function]}
             >
               foo
@@ -2899,6 +2904,7 @@ exports[`single fields select field single choice form disabled using radio widg
             <label
               className="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
               data-slot="label"
+              htmlFor="root-1"
               onMouseDown={[Function]}
             >
               bar
@@ -3099,6 +3105,7 @@ exports[`single fields select field single choice uiSchema disabled using radio 
             <label
               className="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
               data-slot="label"
+              htmlFor="root-0"
               onMouseDown={[Function]}
             >
               foo
@@ -3147,6 +3154,7 @@ exports[`single fields select field single choice uiSchema disabled using radio 
             <label
               className="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
               data-slot="label"
+              htmlFor="root-1"
               onMouseDown={[Function]}
             >
               bar

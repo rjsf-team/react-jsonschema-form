@@ -56,6 +56,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Bump `tailwindcss` to using v4 and css compiling process to use latest `@tailwindcss/cli`
 - Remove `postcss` due to new Oxide compiler of tailwindcss
 - Update playground themes with `default`, `Amethyst Haze`, `Caffeine`, `Claude`, `Neo Brutalism`, `Pastel Dreams`, `Soft Pop`, `Twitter`, `Vercel`
+- Radio widget labels are now accessible and can be clicked on to select the associated option.
 
 ## @rjsf/utils
 
