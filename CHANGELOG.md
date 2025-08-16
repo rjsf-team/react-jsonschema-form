@@ -50,6 +50,13 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Fixed checkbox widget to use current value instead of event target in onFocus/onBlur handlers, fixing [#4704](https://github.com/rjsf-team/react-jsonschema-form/issues/4704)
 
+## @rjsf/shadcn
+
+- Bump `@shadcn/ui` components to use latest version from https://ui.shadcn.com/
+- Bump `tailwindcss` to using v4 and css compiling process to use latest `@tailwindcss/cli`
+- Remove `postcss` due to new Oxide compiler of tailwindcss
+- Update playground themes with `default`, `Amethyst Haze`, `Caffeine`, `Claude`, `Neo Brutalism`, `Pastel Dreams`, `Soft Pop`, `Twitter`, `Vercel`
+
 ## @rjsf/utils
 
 - Updated `UiSchema` type to support dynamic array item UI schemas - the `items` property can now be either a `UiSchema` object or a function that returns a `UiSchema` ([#4706](https://github.com/rjsf-team/react-jsonschema-form/pull/4706))
