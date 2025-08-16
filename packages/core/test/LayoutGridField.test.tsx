@@ -370,7 +370,6 @@ const gridFormSchema = {
     },
   },
 } as RJSFSchema;
-
 const gridFormUISchema: UiSchema = {
   'ui:field': 'LayoutGridForm',
   'ui:layoutGrid': {
@@ -565,6 +564,35 @@ const gridFormUISchema: UiSchema = {
   },
 };
 
+const arraySchema: RJSFSchema = {
+  type: 'object',
+  properties: {
+    example: {
+      type: 'array',
+      title: 'Examples',
+      items: {
+        type: 'array',
+        minItems: 3,
+        maxItems: 3,
+        items: [
+          {
+            type: 'integer',
+          },
+          {
+            type: 'integer',
+          },
+          {
+            type: 'integer',
+          },
+        ],
+      },
+    },
+  },
+  required: ['example'],
+};
+const outerArraySchema = arraySchema?.properties?.example as RJSFSchema;
+const innerArraySchema = outerArraySchema?.items as RJSFSchema;
+
 const ERRORS = ['error'];
 const EXTRA_ERROR = new ErrorSchemaBuilder().addErrors(ERRORS).ErrorSchema;
 const DEFAULT_ID = 'test-id';
@@ -643,9 +671,11 @@ const simpleOneOfRegistry = getTestRegistry(SIMPLE_ONEOF, REGISTRY_FIELDS, {}, {
 const gridFormSchemaRegistry = getTestRegistry(GRID_FORM_SCHEMA, REGISTRY_FIELDS, {}, {}, REGISTRY_FORM_CONTEXT);
 const sampleSchemaRegistry = getTestRegistry(SAMPLE_SCHEMA, REGISTRY_FIELDS, {}, {}, REGISTRY_FORM_CONTEXT);
 const readonlySchemaRegistry = getTestRegistry(readonlySchema, REGISTRY_FIELDS, {}, {}, REGISTRY_FORM_CONTEXT);
+const arraySchemaRegistry = getTestRegistry(arraySchema, REGISTRY_FIELDS, {}, {}, REGISTRY_FORM_CONTEXT);
 const GRID_FORM_ID_SCHEMA = gridFormSchemaRegistry.schemaUtils.toIdSchema(GRID_FORM_SCHEMA);
 const SAMPLE_SCHEMA_ID_SCHEMA = sampleSchemaRegistry.schemaUtils.toIdSchema(SAMPLE_SCHEMA);
 const READONLY_ID_SCHEMA = readonlySchemaRegistry.schemaUtils.toIdSchema(readonlySchema);
+const ARRAY_ID_SCHEMA = arraySchemaRegistry.schemaUtils.toIdSchema(arraySchema);
 
 /** Simple mock idSchema generator that will take a dotted path string, and return the path joined by the `idSeparator`
  * and appended to `root` (default idPrefix in `toIdSchema`)
@@ -843,6 +873,40 @@ describe('LayoutGridField', () => {
     test('deals with unspecified schema', () => {
       const { schemaUtils } = simpleOneOfRegistry;
       expect(LayoutGridField.getIdSchema(schemaUtils, ID_SCHEMA, {})).toEqual(ID_SCHEMA);
+    });
+  });
+  describe('LayoutGridField.computeArraySchemasIfPresent()', () => {
+    test('returns undefined rawSchema and given idSchema for non-numeric potentialIndex', () => {
+      expect(LayoutGridField.computeArraySchemasIfPresent(undefined, ID_SCHEMA, 'string')).toEqual({
+        rawSchema: undefined,
+        idSchema: ID_SCHEMA,
+      });
+    });
+    test('returns undefined rawSchema and given idSchema for numeric potentialIndex, no schema', () => {
+      expect(LayoutGridField.computeArraySchemasIfPresent(undefined, ID_SCHEMA, '0')).toEqual({
+        rawSchema: undefined,
+        idSchema: ID_SCHEMA,
+      });
+    });
+    test('returns undefined rawSchema and given idSchema for numeric potentialIndex, non-array schema', () => {
+      expect(LayoutGridField.computeArraySchemasIfPresent(readonlySchema, ID_SCHEMA, '0')).toEqual({
+        rawSchema: undefined,
+        idSchema: ID_SCHEMA,
+      });
+    });
+    test('returns outer array rawSchema and generated idSchema for numeric potentialIndex, array schema', () => {
+      const idSchema = { [ID_KEY]: `${ID_SCHEMA[ID_KEY]}_0` } as IdSchema;
+      expect(LayoutGridField.computeArraySchemasIfPresent(outerArraySchema, ID_SCHEMA, '0')).toEqual({
+        rawSchema: outerArraySchema.items,
+        idSchema,
+      });
+    });
+    test('returns inner array rawSchema and generated idSchema for numeric potentialIndex, array schema, idSeparator', () => {
+      const idSchema = { [ID_KEY]: `${ID_SCHEMA[ID_KEY]}.1` } as IdSchema;
+      expect(LayoutGridField.computeArraySchemasIfPresent(innerArraySchema, ID_SCHEMA, '1', '.')).toEqual({
+        rawSchema: get(innerArraySchema.items, 1),
+        idSchema,
+      });
     });
   });
   describe('LayoutGridField.getSchemaDetailsForField(), blank schema', () => {
@@ -1067,9 +1131,9 @@ describe('LayoutGridField', () => {
   });
   describe('LayoutGridField.getSchemaDetailsForField(), readonlySchema', () => {
     beforeAll(() => {
-      retrieveSchemaSpy = jest.spyOn(gridFormSchemaRegistry.schemaUtils, 'retrieveSchema');
-      toIdSchemaSpy = jest.spyOn(gridFormSchemaRegistry.schemaUtils, 'toIdSchema');
-      findSelectedOptionInXxxOf = jest.spyOn(gridFormSchemaRegistry.schemaUtils, 'findSelectedOptionInXxxOf');
+      retrieveSchemaSpy = jest.spyOn(readonlySchemaRegistry.schemaUtils, 'retrieveSchema');
+      toIdSchemaSpy = jest.spyOn(readonlySchemaRegistry.schemaUtils, 'toIdSchema');
+      findSelectedOptionInXxxOf = jest.spyOn(readonlySchemaRegistry.schemaUtils, 'findSelectedOptionInXxxOf');
     });
     afterEach(() => {
       findSelectedOptionInXxxOf.mockClear();
@@ -1099,7 +1163,7 @@ describe('LayoutGridField', () => {
         idSchema: testGetIdSchema(path),
         optionsInfo: { options: get(schema, [ONE_OF_KEY]), hasDiscriminator: false },
       });
-      expect(retrieveSchemaSpy).not.toHaveBeenCalled();
+      expect(retrieveSchemaSpy).toHaveBeenCalledTimes(2);
       expect(toIdSchemaSpy).not.toHaveBeenCalled();
     });
     test('returns schema, isRequired: true, isReadonly: true, options: undefined when selecting readonly field', () => {
@@ -1120,7 +1184,7 @@ describe('LayoutGridField', () => {
         idSchema: testGetIdSchema(path),
         optionsInfo: undefined,
       });
-      expect(retrieveSchemaSpy).not.toHaveBeenCalled();
+      expect(retrieveSchemaSpy).toHaveBeenCalledTimes(2);
       expect(toIdSchemaSpy).not.toHaveBeenCalled();
     });
     test('returns schema, isRequired: true, isReadonly: true, options: undefined when selecting field on readonly parent', () => {
@@ -1141,7 +1205,7 @@ describe('LayoutGridField', () => {
         idSchema: testGetIdSchema(path),
         optionsInfo: undefined,
       });
-      expect(retrieveSchemaSpy).not.toHaveBeenCalled();
+      expect(retrieveSchemaSpy).toHaveBeenCalledTimes(3);
       expect(toIdSchemaSpy).not.toHaveBeenCalled();
     });
     test('returns schema, isRequired: true, isReadonly: false, options: undefined when selecting explicitly readonly false field', () => {
@@ -1163,7 +1227,65 @@ describe('LayoutGridField', () => {
         idSchema: testGetIdSchema(path),
         optionsInfo: undefined,
       });
-      expect(retrieveSchemaSpy).not.toHaveBeenCalled();
+      expect(retrieveSchemaSpy).toHaveBeenCalledTimes(3);
+      expect(toIdSchemaSpy).not.toHaveBeenCalled();
+    });
+  });
+  describe('LayoutGridField.getSchemaDetailsForField(), arraySchema', () => {
+    beforeAll(() => {
+      retrieveSchemaSpy = jest.spyOn(arraySchemaRegistry.schemaUtils, 'retrieveSchema');
+      toIdSchemaSpy = jest.spyOn(arraySchemaRegistry.schemaUtils, 'toIdSchema');
+      findSelectedOptionInXxxOf = jest.spyOn(arraySchemaRegistry.schemaUtils, 'findSelectedOptionInXxxOf');
+    });
+    afterEach(() => {
+      findSelectedOptionInXxxOf.mockClear();
+      retrieveSchemaSpy.mockClear();
+      toIdSchemaSpy.mockClear();
+    });
+    afterAll(() => {
+      retrieveSchemaSpy.mockRestore();
+      toIdSchemaSpy.mockRestore();
+    });
+    test('returns schema, isRequired: false, isReadonly: undefined, options when oneOf schema is requested', () => {
+      const path = 'example.0';
+      const schema = innerArraySchema;
+      expect(
+        LayoutGridField.getSchemaDetailsForField(
+          arraySchemaRegistry.schemaUtils,
+          path,
+          arraySchema,
+          {},
+          ARRAY_ID_SCHEMA,
+        ),
+      ).toEqual({
+        schema,
+        isRequired: false,
+        isReadonly: undefined,
+        idSchema: testGetIdSchema(path),
+        optionsInfo: undefined,
+      });
+      expect(retrieveSchemaSpy).toHaveBeenCalledTimes(2);
+      expect(toIdSchemaSpy).not.toHaveBeenCalled();
+    });
+    test('returns schema, isRequired: true, isReadonly: true, options: undefined when selecting readonly field', () => {
+      const path = 'example.0.1';
+      const schema = get(innerArraySchema.items, '1');
+      expect(
+        LayoutGridField.getSchemaDetailsForField(
+          arraySchemaRegistry.schemaUtils,
+          path,
+          arraySchema,
+          {},
+          ARRAY_ID_SCHEMA,
+        ),
+      ).toEqual({
+        schema,
+        isRequired: false,
+        isReadonly: undefined,
+        idSchema: testGetIdSchema(path),
+        optionsInfo: undefined,
+      });
+      expect(retrieveSchemaSpy).toHaveBeenCalledTimes(3);
       expect(toIdSchemaSpy).not.toHaveBeenCalled();
     });
   });
