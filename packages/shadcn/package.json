@@ -78,7 +78,7 @@
     "@rjsf/validator-ajv8": "^6.0.0-beta.13",
     "eslint": "^8.57.1",
     "jsdom": "^26.1.0",
-    "tailwindcss": "^4.1.11",
+    "tailwindcss": "^4.1.12",
     "@tailwindcss/cli": "^4.1.11"
   },
   "dependencies": {
