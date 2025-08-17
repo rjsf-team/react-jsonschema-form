@@ -865,6 +865,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       <label
                         className="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
                         data-slot="label"
+                        htmlFor="root_employment-0"
                         onMouseDown={[Function]}
                       >
                         Company
@@ -912,6 +913,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       <label
                         className="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
                         data-slot="label"
+                        htmlFor="root_employment-1"
                         onMouseDown={[Function]}
                       >
                         Education
@@ -959,6 +961,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       <label
                         className="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
                         data-slot="label"
+                        htmlFor="root_employment-2"
                         onMouseDown={[Function]}
                       >
                         Other
@@ -2026,6 +2029,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       <label
                         className="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
                         data-slot="label"
+                        htmlFor="root_employment-0"
                         onMouseDown={[Function]}
                       >
                         Company
@@ -2099,6 +2103,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       <label
                         className="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
                         data-slot="label"
+                        htmlFor="root_employment-1"
                         onMouseDown={[Function]}
                       >
                         Education
@@ -2146,6 +2151,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       <label
                         className="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
                         data-slot="label"
+                        htmlFor="root_employment-2"
                         onMouseDown={[Function]}
                       >
                         Other
@@ -3252,6 +3258,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       <label
                         className="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
                         data-slot="label"
+                        htmlFor="root_employment-0"
                         onMouseDown={[Function]}
                       >
                         Company
@@ -3299,6 +3306,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       <label
                         className="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
                         data-slot="label"
+                        htmlFor="root_employment-1"
                         onMouseDown={[Function]}
                       >
                         Education
@@ -3372,6 +3380,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       <label
                         className="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
                         data-slot="label"
+                        htmlFor="root_employment-2"
                         onMouseDown={[Function]}
                       >
                         Other
@@ -4304,6 +4313,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       <label
                         className="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
                         data-slot="label"
+                        htmlFor="root_employment-0"
                         onMouseDown={[Function]}
                       >
                         Company
@@ -4351,6 +4361,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       <label
                         className="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
                         data-slot="label"
+                        htmlFor="root_employment-1"
                         onMouseDown={[Function]}
                       >
                         Education
@@ -4398,6 +4409,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       <label
                         className="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
                         data-slot="label"
+                        htmlFor="root_employment-2"
                         onMouseDown={[Function]}
                       >
                         Other
