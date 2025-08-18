@@ -16,7 +16,20 @@ export default function RawValidatorTest({ validator, schema, formData }: RawVal
   if (rawValidation) {
     displayErrors =
       rawValidation.errors || rawValidation.validationError
-        ? JSON.stringify(rawValidation, null, 2)
+        ? JSON.stringify(
+            rawValidation,
+            (_, value: any) => {
+              if (value instanceof Error) {
+                return {
+                  name: value.name,
+                  message: value.message,
+                  stack: value.stack,
+                };
+              }
+              return value;
+            },
+            2,
+          )
         : 'No AJV errors encountered';
   }
   return (
