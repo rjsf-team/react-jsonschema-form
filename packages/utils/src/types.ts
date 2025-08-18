@@ -440,8 +440,10 @@ export interface FieldProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F 
   formData?: T;
   /** The tree of errors for this field and its children */
   errorSchema?: ErrorSchema<T>;
-  /** The field change event handler; called with the updated form data and an optional `ErrorSchema` */
-  onChange: (newFormData: T | undefined, es?: ErrorSchema<T>, id?: string) => any;
+  /** The field change event handler; called with the updated field value, the optional change path for the value
+   * (defaults to an empty array), an optional ErrorSchema and the optional id of the field being changed
+   */
+  onChange: (newValue: T | undefined, path?: (number | string)[], es?: ErrorSchema<T>, id?: string) => void;
   /** The input blur event handler; call it with the field id and value */
   onBlur: (id: string, value: any) => void;
   /** The input focus event handler; call it with the field id and value */
@@ -799,7 +801,7 @@ export interface MultiSchemaFieldTemplateProps<
 export interface WidgetProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>
   extends GenericObjectType,
     RJSFBaseProps<T, S, F>,
-    Pick<HTMLAttributes<HTMLElement>, Exclude<keyof HTMLAttributes<HTMLElement>, 'onBlur' | 'onFocus'>> {
+    Pick<HTMLAttributes<HTMLElement>, Exclude<keyof HTMLAttributes<HTMLElement>, 'onBlur' | 'onFocus' | 'onChange'>> {
   /** The generated id for this widget, used to provide unique `name`s and `id`s for the HTML field elements rendered by
    * widgets
    */

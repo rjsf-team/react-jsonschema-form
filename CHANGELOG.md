@@ -21,6 +21,9 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Added support for dynamic UI schema in array fields - the `items` property in `uiSchema` can now accept a function that returns a UI schema based on the array item's data, index, and form context ([#4706](https://github.com/rjsf-team/react-jsonschema-form/pull/4706))
 - Fixed checkbox widget to use current value instead of event target in onFocus/onBlur handlers, fixing [#4704](https://github.com/rjsf-team/react-jsonschema-form/issues/4704)
+- Updated all of the `XxxxField` components and `Form` to handle the new `path` parameter in `FieldProps.onChange`, making `Form` queue up changes so that they are all processed and no data is lost, fixing [#3367](https://github.com/rjsf-team/react-jsonschema-form/issues/3367)
+- Updated a bug in `AltDateWidget` related to the `clear` button not working after the fix for [#3367](https://github.com/rjsf-team/react-jsonschema-form/issues/3367)
+- Fixed the missing hook dependencies for the `CheckboxesWidget` so that they work properly
 
 ## @rjsf/chakra-ui
 
@@ -30,6 +33,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Fixed checkbox widget to use current value instead of event target in onFocus/onBlur handlers, fixing [#4704](https://github.com/rjsf-team/react-jsonschema-form/issues/4704)
 - Fixed additional properties rendering by properly connecting the `FieldTemplate` and `WrapIfAdditionalTemplate`, fixing [4707](https://github.com/rjsf-team/react-jsonschema-form/issues/4707)
+- Fixed the missing hook dependencies in the `DateTimeWidget` and `DateWidget` so that they work properly
 
 ## @rjsf/fluentui-rc
 
@@ -63,6 +67,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Updated `UiSchema` type to support dynamic array item UI schemas - the `items` property can now be either a `UiSchema` object or a function that returns a `UiSchema` ([#4706](https://github.com/rjsf-team/react-jsonschema-form/pull/4706))
 - Added `title` property to `RJSFValidationError` [PR](https://github.com/rjsf-team/react-jsonschema-form/pull/4700)
+- BREAKING CHANGE: Updated the `FieldProps` interface's `onChange` handler to inject a new optional `path` before the `ErrorSchema` parameter as part of the fix for [#3367](https://github.com/rjsf-team/react-jsonschema-form/issues/3367)
 
 ## @rjsf/validator-ajv8
 
@@ -73,6 +78,9 @@ should change the heading of the (upcoming) version to include a major version b
 - Added comprehensive documentation for dynamic UI schema feature with TypeScript examples ([#4706](https://github.com/rjsf-team/react-jsonschema-form/pull/4706))
 - Updated array documentation to reference the new dynamic UI schema capabilities ([#4706](https://github.com/rjsf-team/react-jsonschema-form/pull/4706))
 - Updated nearly all of the libraries in the `package.json` files to the latest non-breaking versions
+- Fixed the broken `Custom Array` sample
+- Improved the `Any Of with Custom Field` sample so that it renders using the appropriate theme components
+- Updated the `custom-widgets-fields.md` and `v6.x upgrade guide.md` to document the BREAKING CHANGE to the `FieldProps.onChange` behavior
 
 # 6.0.0-beta.13
 

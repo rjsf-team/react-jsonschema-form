@@ -1,11 +1,11 @@
-import * as React from 'react';
+import { Component, createRef, useEffect } from 'react';
 import { expect } from 'chai';
 import sinon from 'sinon';
-import { createRef } from 'react';
-import { fireEvent, act, render } from '@testing-library/react';
+import { fireEvent, act, render, waitFor } from '@testing-library/react';
 import { Simulate } from 'react-dom/test-utils';
 import { findDOMNode } from 'react-dom';
 import { Portal } from 'react-portal';
+import { getTemplate, getUiOptions } from '@rjsf/utils';
 import validator, { customizeValidator } from '@rjsf/validator-ajv8';
 
 import Form from '../src';
@@ -32,26 +32,26 @@ describeRepeated('Form common', (createFormComponent) => {
 
   describe('Empty schema', () => {
     it('Should throw error when Form is missing validator', () => {
-      expect(() => createFormComponent({ ref: React.createRef(), schema: {}, validator: undefined })).to.Throw(
+      expect(() => createFormComponent({ ref: createRef(), schema: {}, validator: undefined })).to.Throw(
         Error,
         'A validator is required for Form functionality to work',
       );
     });
 
     it('should render a form tag', () => {
-      const { node } = createFormComponent({ ref: React.createRef(), schema: {} });
+      const { node } = createFormComponent({ ref: createRef(), schema: {} });
 
       expect(node.tagName).eql('FORM');
     });
 
     it('should render a submit button', () => {
-      const { node } = createFormComponent({ ref: React.createRef(), schema: {} });
+      const { node } = createFormComponent({ ref: createRef(), schema: {} });
 
       expect(node.querySelectorAll('button[type=submit]')).to.have.length.of(1);
     });
 
     it('should render children buttons', () => {
-      const props = { ref: React.createRef(), schema: {}, validator };
+      const props = { ref: createRef(), schema: {}, validator };
       const comp = (
         <Form {...props}>
           <button type='submit'>Submit</button>
@@ -66,7 +66,7 @@ describeRepeated('Form common', (createFormComponent) => {
 
     it("should render errors if schema isn't object", () => {
       const props = {
-        ref: React.createRef(),
+        ref: createRef(),
         validator,
         schema: {
           type: 'object',
@@ -1126,7 +1126,7 @@ describeRepeated('Form common', (createFormComponent) => {
       const onSubmit = sandbox.spy();
       const event = { type: 'submit' };
       const { node } = createFormComponent({
-        ref: React.createRef(),
+        ref: createRef(),
         schema,
         formData,
         onSubmit,
@@ -1154,7 +1154,7 @@ describeRepeated('Form common', (createFormComponent) => {
       const onSubmit = sandbox.spy();
       const onError = sandbox.spy();
       const { node } = createFormComponent({
-        ref: React.createRef(),
+        ref: createRef(),
         schema,
         formData,
         onSubmit,
@@ -1188,7 +1188,7 @@ describeRepeated('Form common', (createFormComponent) => {
       };
       const onChange = sandbox.spy();
       const { node } = createFormComponent({
-        ref: React.createRef(),
+        ref: createRef(),
         schema,
         uiSchema,
         formData,
@@ -1225,7 +1225,7 @@ describeRepeated('Form common', (createFormComponent) => {
       const secondOnChange = sandbox.spy();
 
       const { comp, onChange } = createFormComponent({
-        ref: React.createRef(),
+        ref: createRef(),
         schema,
         formData: { foo: 'bar1' },
       });
@@ -1260,6 +1260,73 @@ describeRepeated('Form common', (createFormComponent) => {
 
       sinon.assert.callCount(onChange, 1);
       sinon.assert.callCount(secondOnChange, 1);
+    });
+    it('should call change handler with proper data after two near simultaneous changes', async () => {
+      const schema = {
+        type: 'object',
+        properties: {
+          foo: {
+            type: 'string',
+            default: 'bar',
+          },
+          baz: {
+            type: 'string',
+            default: 'blah',
+          },
+        },
+      };
+      function FooWidget(props) {
+        const { value, id, onChange, uiSchema, registry } = props;
+        const uiOptions = getUiOptions(uiSchema);
+        const BaseInputTemplate = getTemplate('BaseInputTemplate', registry, uiOptions);
+        useEffect(() => {
+          if (value === 'bar') {
+            onChange('bar2', undefined, id);
+          }
+        }, [value, onChange, id]);
+        return <BaseInputTemplate {...props} />;
+      }
+      function BazWidget(props) {
+        const { value, id, onChange, uiSchema, registry } = props;
+        const uiOptions = getUiOptions(uiSchema);
+        const BaseInputTemplate = getTemplate('BaseInputTemplate', registry, uiOptions);
+        useEffect(() => {
+          if (value === 'blah') {
+            onChange('blah2', undefined, id);
+          }
+        }, [value, onChange, id]);
+        return <BaseInputTemplate {...props} />;
+      }
+      const uiSchema = {
+        foo: {
+          'ui:widget': FooWidget,
+        },
+        baz: {
+          'ui:widget': BazWidget,
+        },
+      };
+
+      let formData = {};
+      const ids = [];
+      const onChange = (data, id) => {
+        const { formData: fd } = data;
+        formData = { ...formData, ...fd };
+        ids.push(id);
+      };
+      createFormComponent({
+        schema,
+        formData,
+        onChange,
+        uiSchema,
+      });
+
+      await waitFor(() => {
+        expect(ids).to.have.length(3);
+      });
+
+      expect(formData).to.eql({ foo: 'bar2', baz: 'blah2' });
+      // There will be 3 ids, undefined for the setting of the defaults and then the two updated components
+      expect(ids).to.eql([undefined, 'root_foo', 'root_baz']);
     });
     it('should modify an allOf field when the defaults are set', () => {
       const schema = {
@@ -1878,7 +1945,7 @@ describeRepeated('Form common', (createFormComponent) => {
     beforeEach(() => {
       onChangeProp = sinon.spy();
       formProps = {
-        ref: React.createRef(),
+        ref: createRef(),
         schema: {
           type: 'string',
           default: 'foobar',
@@ -1981,7 +2048,7 @@ describeRepeated('Form common', (createFormComponent) => {
     });
 
     describe('when the onChange prop sets formData to a falsey value', () => {
-      class TestForm extends React.Component {
+      class TestForm extends Component {
         constructor() {
           super();
 
@@ -2026,7 +2093,7 @@ describeRepeated('Form common', (createFormComponent) => {
   describe('External formData updates', () => {
     describe('root level', () => {
       const formProps = {
-        ref: React.createRef(),
+        ref: createRef(),
         schema: { type: 'string' },
         liveValidate: true,
       };
@@ -2074,7 +2141,7 @@ describeRepeated('Form common', (createFormComponent) => {
     describe('object level', () => {
       it('should call submit handler with new formData prop value', async () => {
         const formProps = {
-          ref: React.createRef(),
+          ref: createRef(),
           schema: { type: 'object', properties: { foo: { type: 'string' } } },
         };
         const { comp, onSubmit, node } = createFormComponent(formProps);
@@ -2101,7 +2168,7 @@ describeRepeated('Form common', (createFormComponent) => {
             type: 'string',
           },
         };
-        const { comp, node, onSubmit } = createFormComponent({ ref: React.createRef(), schema });
+        const { comp, node, onSubmit } = createFormComponent({ ref: createRef(), schema });
 
         setProps(comp, {
           ref: comp.ref,
@@ -2121,7 +2188,7 @@ describeRepeated('Form common', (createFormComponent) => {
   describe('Internal formData updates', () => {
     it('root', () => {
       const formProps = {
-        ref: React.createRef(),
+        ref: createRef(),
         schema: { type: 'string' },
         liveValidate: true,
       };
@@ -2141,7 +2208,7 @@ describeRepeated('Form common', (createFormComponent) => {
     });
     it('object', () => {
       const { node, onChange } = createFormComponent({
-        ref: React.createRef(),
+        ref: createRef(),
         schema: {
           type: 'object',
           properties: {
@@ -2171,7 +2238,7 @@ describeRepeated('Form common', (createFormComponent) => {
           type: 'string',
         },
       };
-      const { node, onChange } = createFormComponent({ ref: React.createRef(), schema });
+      const { node, onChange } = createFormComponent({ ref: createRef(), schema });
 
       fireEvent.click(node.querySelector('.rjsf-array-item-add button'));
 
@@ -2196,7 +2263,7 @@ describeRepeated('Form common', (createFormComponent) => {
           },
         },
       };
-      const { node, onChange } = createFormComponent({ ref: React.createRef(), schema });
+      const { node, onChange } = createFormComponent({ ref: createRef(), schema });
 
       fireEvent.click(node.querySelector('.rjsf-array-item-add button'));
 
@@ -2246,7 +2313,7 @@ describeRepeated('Form common', (createFormComponent) => {
           },
         },
       };
-      const { node, onChange } = createFormComponent({ ref: React.createRef(), schema });
+      const { node, onChange } = createFormComponent({ ref: createRef(), schema });
 
       const checkbox = node.querySelector('[type=checkbox]');
       fireEvent.click(checkbox);
@@ -2415,7 +2482,6 @@ describeRepeated('Form common', (createFormComponent) => {
           });
           fireEvent.submit(node);
 
-          console.log('onSubmit.lastCall ', onSubmit.lastCall);
           sinon.assert.calledWithMatch(onSubmit.lastCall, {
             errorSchema: {},
           });
@@ -3032,7 +3098,7 @@ describeRepeated('Form common', (createFormComponent) => {
 
       it('should only show errors for properties in selected branch', () => {
         const { node, onChange } = createFormComponent({
-          ref: React.createRef(),
+          ref: createRef(),
           schema,
           liveValidate: true,
           formData: { branch: 2 },
@@ -3062,7 +3128,7 @@ describeRepeated('Form common', (createFormComponent) => {
 
       it('should not show any errors when branch is empty', () => {
         const { node, onChange } = createFormComponent({
-          ref: React.createRef(),
+          ref: createRef(),
           schema,
           liveValidate: true,
           formData: { branch: 3 },
@@ -3174,7 +3240,7 @@ describeRepeated('Form common', (createFormComponent) => {
     it('should replace state when props remove formData keys', () => {
       const formData = { foo: 'foo', bar: 'bar' };
       const { comp, node, onChange } = createFormComponent({
-        ref: React.createRef(),
+        ref: createRef(),
         schema,
         formData,
       });
@@ -3206,7 +3272,7 @@ describeRepeated('Form common', (createFormComponent) => {
     it('should replace state when props change formData keys', () => {
       const formData = { foo: 'foo', bar: 'bar' };
       const { comp, node, onChange } = createFormComponent({
-        ref: React.createRef(),
+        ref: createRef(),
         schema,
         formData,
       });
@@ -3265,7 +3331,7 @@ describeRepeated('Form common', (createFormComponent) => {
     it('should not update idSchema for a falsey value', () => {
       const formData = { a: 'int' };
       const { comp, node, onSubmit } = createFormComponent({
-        ref: React.createRef(),
+        ref: createRef(),
         schema,
         formData,
       });
@@ -3309,7 +3375,7 @@ describeRepeated('Form common', (createFormComponent) => {
         a: 'int',
       };
       const { comp, node, onSubmit } = createFormComponent({
-        ref: React.createRef(),
+        ref: createRef(),
         schema,
         formData,
       });
@@ -3524,7 +3590,7 @@ describeRepeated('Form common', (createFormComponent) => {
   describe('Custom format updates', () => {
     it('Should update custom formats when customFormats is changed', () => {
       const formProps = {
-        ref: React.createRef(),
+        ref: createRef(),
         liveValidate: true,
         formData: {
           areaCode: '123455',
@@ -3585,7 +3651,7 @@ describeRepeated('Form common', (createFormComponent) => {
   describe('Meta schema updates', () => {
     it('Should update allowed meta schemas when additionalMetaSchemas is changed', () => {
       const formProps = {
-        ref: React.createRef(),
+        ref: createRef(),
         schema: {
           $schema: 'http://json-schema.org/draft-06/schema#',
           type: 'string',
@@ -3658,7 +3724,7 @@ describeRepeated('Form common', (createFormComponent) => {
       const outerOnSubmit = sandbox.spy();
       let innerRef;
 
-      class ArrayTemplateWithForm extends React.Component {
+      class ArrayTemplateWithForm extends Component {
         constructor(props) {
           super(props);
           innerRef = createRef();
@@ -3799,7 +3865,7 @@ describe('Form omitExtraData and liveOmit', () => {
     const liveOmit = true;
 
     const { node, comp } = createFormComponent({
-      ref: React.createRef(),
+      ref: createRef(),
       schema,
       formData,
       onChange,
@@ -3833,7 +3899,7 @@ describe('Form omitExtraData and liveOmit', () => {
     const onChange = sandbox.spy();
     const omitExtraData = true;
     const { node, comp } = createFormComponent({
-      ref: React.createRef(),
+      ref: createRef(),
       schema,
       formData,
       onChange,
@@ -3868,7 +3934,7 @@ describe('Form omitExtraData and liveOmit', () => {
       const onError = sandbox.spy();
       const omitExtraData = true;
       const { comp, node } = createFormComponent({
-        ref: React.createRef(),
+        ref: createRef(),
         schema,
         formData,
         onSubmit,
@@ -3894,7 +3960,7 @@ describe('Form omitExtraData and liveOmit', () => {
         },
       };
       const formData = { foo: 'bar', baz: 'baz' };
-      const formRef = React.createRef();
+      const formRef = createRef();
       const props = {
         ref: formRef,
         schema,
@@ -3918,7 +3984,7 @@ describe('Form omitExtraData and liveOmit', () => {
         },
       };
       const formData = { foo: 'bar', baz: 'baz' };
-      const formRef = React.createRef();
+      const formRef = createRef();
       const props = {
         ref: formRef,
         schema,
@@ -3943,7 +4009,7 @@ describe('Form omitExtraData and liveOmit', () => {
       const formData = 'foo';
       const onSubmit = sandbox.spy();
       const { comp } = createFormComponent({
-        ref: React.createRef(),
+        ref: createRef(),
         schema,
         formData,
         onSubmit,
@@ -3963,7 +4029,7 @@ describe('Form omitExtraData and liveOmit', () => {
       const formData = [];
       const onSubmit = sandbox.spy();
       const { comp } = createFormComponent({
-        ref: React.createRef(),
+        ref: createRef(),
         schema,
         formData,
         onSubmit,
@@ -3984,7 +4050,7 @@ describe('Form omitExtraData and liveOmit', () => {
         foo: 'bar',
       };
       const onSubmit = sandbox.spy();
-      const formRef = React.createRef();
+      const formRef = createRef();
       const { comp } = createFormComponent({
         ref: formRef,
         schema,
@@ -4025,7 +4091,7 @@ describe('Form omitExtraData and liveOmit', () => {
       };
       const onSubmit = sandbox.spy();
       const { comp } = createFormComponent({
-        ref: React.createRef(),
+        ref: createRef(),
         schema,
         formData,
         onSubmit,
@@ -4049,7 +4115,7 @@ describe('Form omitExtraData and liveOmit', () => {
 
       const onSubmit = sandbox.spy();
       const { comp } = createFormComponent({
-        ref: React.createRef(),
+        ref: createRef(),
         schema,
         formData,
         onSubmit,
@@ -4084,7 +4150,7 @@ describe('Form omitExtraData and liveOmit', () => {
 
       const onSubmit = sandbox.spy();
       const { comp } = createFormComponent({
-        ref: React.createRef(),
+        ref: createRef(),
         schema,
         formData,
         onSubmit,
@@ -4145,7 +4211,7 @@ describe('Form omitExtraData and liveOmit', () => {
 
       const onSubmit = sandbox.spy();
       const { comp } = createFormComponent({
-        ref: React.createRef(),
+        ref: createRef(),
         schema,
         formData,
         onSubmit,
@@ -4191,7 +4257,7 @@ describe('Form omitExtraData and liveOmit', () => {
 
       const onSubmit = sandbox.spy();
       const { comp } = createFormComponent({
-        ref: React.createRef(),
+        ref: createRef(),
         schema,
         formData,
         onSubmit,
@@ -4253,7 +4319,7 @@ describe('Form omitExtraData and liveOmit', () => {
     };
     const formData = { foo: 'foo', baz: 'baz' };
     const { node, onChange } = createFormComponent({
-      ref: React.createRef(),
+      ref: createRef(),
       schema,
       formData,
       omitExtraData,
@@ -4574,7 +4640,7 @@ describe('Form omitExtraData and liveOmit', () => {
         },
       };
 
-      const formRef = React.createRef();
+      const formRef = createRef();
       const props = {
         ref: formRef,
         schema,
@@ -4613,7 +4679,7 @@ describe('Form omitExtraData and liveOmit', () => {
         },
       };
 
-      const formRef = React.createRef();
+      const formRef = createRef();
       const props = {
         ref: formRef,
         schema,
@@ -4648,7 +4714,7 @@ describe('Form omitExtraData and liveOmit', () => {
       };
 
       const { comp, node } = createFormComponent({
-        ref: React.createRef(),
+        ref: createRef(),
         schema,
       });
 
@@ -4703,7 +4769,7 @@ describe('Form omitExtraData and liveOmit', () => {
 
     const onSubmit = sinon.spy();
 
-    const formRef = React.createRef();
+    const formRef = createRef();
     const props = {
       ref: formRef,
       schema,
@@ -4737,13 +4803,13 @@ describe('Form omitExtraData and liveOmit', () => {
     };
 
     let changed = false;
-    class ArrayThatTriggersOnChangeRightAfterUpdated extends React.Component {
+    class ArrayThatTriggersOnChangeRightAfterUpdated extends Component {
       componentDidUpdate = () => {
         if (changed) {
           return;
         }
         changed = true;
-        this.props.onChange([...this.props.formData, 'test']);
+        this.props.onChange('test', [this.props.formData.length]);
       };
       render() {
         const { ArrayField } = this.props.registry.fields;
@@ -4761,7 +4827,7 @@ describe('Form omitExtraData and liveOmit', () => {
       validator,
     };
 
-    class Container extends React.Component {
+    class Container extends Component {
       constructor(props) {
         super(props);
         this.state = {};
@@ -4792,7 +4858,7 @@ describe('Form omitExtraData and liveOmit', () => {
         title: 'Test form',
         type: 'string',
       };
-      const formRef = React.createRef();
+      const formRef = createRef();
       const props = {
         ref: formRef,
         schema,
@@ -4812,7 +4878,7 @@ describe('Form omitExtraData and liveOmit', () => {
         title: 'Test form',
         type: 'number',
       };
-      const formRef = React.createRef();
+      const formRef = createRef();
       const props = {
         ref: formRef,
         schema,
@@ -4841,7 +4907,7 @@ describe('Form omitExtraData and liveOmit', () => {
         type: 'string',
         default: 'Some-Value',
       };
-      const formRef = React.createRef();
+      const formRef = createRef();
       const props = {
         ref: formRef,
         schema: schemaWithDefault,
@@ -4864,7 +4930,7 @@ describe('Form omitExtraData and liveOmit', () => {
 
     it('Reset button test with complex schema', () => {
       const schema = widgetsSchema;
-      const formRef = React.createRef();
+      const formRef = createRef();
       const props = {
         ref: formRef,
         schema,
@@ -4904,7 +4970,7 @@ describe('Form omitExtraData and liveOmit', () => {
         },
       };
       const formData = { foo: 'bar', baz: 'baz' };
-      const formRef = React.createRef();
+      const formRef = createRef();
       const props = {
         ref: formRef,
         schema,
@@ -4930,7 +4996,7 @@ describe('Form omitExtraData and liveOmit', () => {
         },
       };
       const formData = { foo: 'bar', baz: 'baz' };
-      const formRef = React.createRef();
+      const formRef = createRef();
       const props = {
         ref: formRef,
         schema,

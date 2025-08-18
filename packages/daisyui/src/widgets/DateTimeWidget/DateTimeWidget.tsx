@@ -277,7 +277,7 @@ export default function DateTimeWidget<
     // Need to use native DOM events since we're attaching to document
     document.addEventListener('keydown', handleEscape as (e: KeyboardEvent) => void);
     return () => document.removeEventListener('keydown', handleEscape as (e: KeyboardEvent) => void);
-  }, [id, isOpen, onBlur, value]);
+  }, [id, isOpen, setIsOpen, onBlur, value]);
 
   // Add the handleDoneClick callback near the top of the component, with the other event handlers
   /** Handle clicking the "Done" button
@@ -289,7 +289,7 @@ export default function DateTimeWidget<
       onBlur(id, value);
     }
     inputRef.current?.focus();
-  }, [localDate, onChange, onBlur, id, value]);
+  }, [localDate, onChange, onBlur, id, value, setIsOpen]);
 
   return (
     <div className='form-control my-4 w-full relative'>
