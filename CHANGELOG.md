@@ -32,6 +32,7 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/daisyui
 
 - Fixed checkbox widget to use current value instead of event target in onFocus/onBlur handlers, fixing [#4704](https://github.com/rjsf-team/react-jsonschema-form/issues/4704)
+- Fixed additional properties rendering by properly connecting the `FieldTemplate` and `WrapIfAdditionalTemplate`, fixing [4707](https://github.com/rjsf-team/react-jsonschema-form/issues/4707)
 - Fixed the missing hook dependencies in the `DateTimeWidget` and `DateWidget` so that they work properly
 
 ## @rjsf/fluentui-rc
