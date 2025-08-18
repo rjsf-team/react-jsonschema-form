@@ -9,13 +9,13 @@ function ArrayFieldTemplate(props: ArrayFieldTemplateProps) {
         items.map((element) => (
           <div key={element.key} className={element.className}>
             <div>{element.children}</div>
-            {element.hasMoveDown && (
-              <button onClick={element.onReorderClick(element.index, element.index + 1)}>Down</button>
+            {element.buttonsProps.hasMoveDown && (
+              <button onClick={element.buttonsProps.onReorderClick(element.index, element.index + 1)}>Down</button>
             )}
-            {element.hasMoveUp && (
-              <button onClick={element.onReorderClick(element.index, element.index - 1)}>Up</button>
+            {element.buttonsProps.hasMoveUp && (
+              <button onClick={element.buttonsProps.onReorderClick(element.index, element.index - 1)}>Up</button>
             )}
-            <button onClick={element.onDropIndexClick(element.index)}>Delete</button>
+            <button onClick={element.buttonsProps.onDropIndexClick(element.index)}>Delete</button>
             <hr />
           </div>
         ))}

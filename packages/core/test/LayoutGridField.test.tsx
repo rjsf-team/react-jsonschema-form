@@ -587,12 +587,12 @@ function TestRenderer({ 'data-testid': testId, ...props }: Readonly<FieldProps>)
 
 // Render a div with the props stringified in a span, also render an input to test the onXXXX callbacks
 function FakeSchemaField({ 'data-testid': testId, ...props }: Readonly<FieldProps>) {
-  const { idSchema, formData, onChange, onBlur, onFocus, uiSchema } = props;
+  const { idSchema, formData, onChange, onBlur, onFocus, uiSchema, name } = props;
   const { [ID_KEY]: id } = idSchema;
   // Special test case that will pass an error schema into on change to allow coverage
   const error = has(uiSchema, UI_GLOBAL_OPTIONS_KEY) ? EXTRA_ERROR : undefined;
   const onTextChange = ({ target: { value: val } }: ChangeEvent<HTMLInputElement>) => {
-    onChange(val, error, id);
+    onChange(val, [name], error, id);
   };
   const onTextBlur = ({ target: { value: val } }: FocusEvent<HTMLInputElement>) => onBlur(id, val);
   const onTextFocus = ({ target: { value: val } }: FocusEvent<HTMLInputElement>) => onFocus(id, val);
@@ -1374,7 +1374,7 @@ describe('LayoutGridField', () => {
     expect(props.onFocus).toHaveBeenCalledWith(fieldId, '');
     // Type to trigger the onChange
     await userEvent.type(input, 'foo');
-    expect(props.onChange).toHaveBeenCalledWith({ [fieldName]: 'foo' }, props.errorSchema, fieldId);
+    expect(props.onChange).toHaveBeenCalledWith('foo', [fieldName], props.errorSchema, fieldId);
     // Tab out of the input field to cause the blur
     await userEvent.tab();
     expect(props.onBlur).toHaveBeenCalledWith(fieldId, 'foo');
@@ -1532,7 +1532,7 @@ describe('LayoutGridField', () => {
     expect(input).toHaveValue(props.formData[fieldName]);
     await userEvent.type(input, '!');
     const expectedErrors = new ErrorSchemaBuilder().addErrors(ERRORS, fieldName).ErrorSchema;
-    expect(props.onChange).toHaveBeenCalledWith({ [fieldName]: 'foo!' }, expectedErrors, fieldId);
+    expect(props.onChange).toHaveBeenCalledWith('foo!', [fieldName], expectedErrors, fieldId);
   });
   test('renderCondition, condition fails, field and null value, NONE operator, no data', () => {
     const gridProps = { operator: Operators.NONE, field: 'simpleString', value: null };
