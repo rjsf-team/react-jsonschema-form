@@ -1246,7 +1246,7 @@ describe('LayoutGridField', () => {
       retrieveSchemaSpy.mockRestore();
       toIdSchemaSpy.mockRestore();
     });
-    test('returns schema, isRequired: false, isReadonly: undefined, options when oneOf schema is requested', () => {
+    test('returns schema, isRequired: false, isReadonly: undefined, options undefined when 1d array schema is requested', () => {
       const path = 'example.0';
       const schema = innerArraySchema;
       expect(
@@ -1267,7 +1267,7 @@ describe('LayoutGridField', () => {
       expect(retrieveSchemaSpy).toHaveBeenCalledTimes(2);
       expect(toIdSchemaSpy).not.toHaveBeenCalled();
     });
-    test('returns schema, isRequired: true, isReadonly: true, options: undefined when selecting readonly field', () => {
+    test('returns schema, isRequired: false, isReadonly: undefined, options: undefined when 2d array schema is requested', () => {
       const path = 'example.0.1';
       const schema = get(innerArraySchema.items, '1');
       expect(

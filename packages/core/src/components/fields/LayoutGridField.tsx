@@ -134,11 +134,11 @@ function getNonNullishValue<T = unknown>(value?: T, fallback?: T): T | undefined
 
 /** Detects if a `str` is made up entirely of numeric characters
  *
- * @param str - The string to check to see if it as number
+ * @param str - The string to check to see if it is a numeric index
  * @return - True if the string consists entirely of numeric characters
  */
-function isNumeric(str: string) {
-  return /^-?\d+(\.\d+)?$/.test(str); // Matches integers or decimals, positive or negative
+function isNumericIndex(str: string) {
+  return /^\d+?$/.test(str); // Matches positive integers
 }
 
 /** The `LayoutGridField` will render a schema, uiSchema and formData combination out into a GridTemplate in the shape
@@ -531,7 +531,7 @@ export default class LayoutGridField<
     idSchema: IdSchema<T>;
   } {
     let rawSchema: S | undefined;
-    if (isNumeric(potentialIndex) && schema && schema?.type === 'array' && has(schema, ITEMS_KEY)) {
+    if (isNumericIndex(potentialIndex) && schema && schema?.type === 'array' && has(schema, ITEMS_KEY)) {
       const index = Number(potentialIndex);
       const items = schema[ITEMS_KEY];
       if (Array.isArray(items)) {
