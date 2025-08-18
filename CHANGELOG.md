@@ -24,6 +24,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Updated all of the `XxxxField` components and `Form` to handle the new `path` parameter in `FieldProps.onChange`, making `Form` queue up changes so that they are all processed and no data is lost, fixing [#3367](https://github.com/rjsf-team/react-jsonschema-form/issues/3367)
 - Updated a bug in `AltDateWidget` related to the `clear` button not working after the fix for [#3367](https://github.com/rjsf-team/react-jsonschema-form/issues/3367)
 - Fixed the missing hook dependencies for the `CheckboxesWidget` so that they work properly
+- Added support for array indexes in the `LayoutGridField`, fixing [#4676](https://github.com/rjsf-team/react-jsonschema-form/issues/4676)
 
 ## @rjsf/chakra-ui
 
