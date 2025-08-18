@@ -24,6 +24,7 @@ import {
   UI_OPTIONS_KEY,
   UI_GLOBAL_OPTIONS_KEY,
   UiSchema,
+  ITEMS_KEY,
 } from '@rjsf/utils';
 import cloneDeep from 'lodash/cloneDeep';
 import each from 'lodash/each';
@@ -39,6 +40,7 @@ import isObject from 'lodash/isObject';
 import isPlainObject from 'lodash/isPlainObject';
 import isString from 'lodash/isString';
 import isUndefined from 'lodash/isUndefined';
+import last from 'lodash/last';
 import set from 'lodash/set';
 
 /** The enumeration of the three different Layout GridTemplate type values
@@ -128,6 +130,15 @@ type UIComponentPropsType = {
  */
 function getNonNullishValue<T = unknown>(value?: T, fallback?: T): T | undefined {
   return value ?? fallback;
+}
+
+/** Detects if a `str` is made up entirely of numeric characters
+ *
+ * @param str - The string to check to see if it is a numeric index
+ * @return - True if the string consists entirely of numeric characters
+ */
+function isNumericIndex(str: string) {
+  return /^\d+?$/.test(str); // Matches positive integers
 }
 
 /** The `LayoutGridField` will render a schema, uiSchema and formData combination out into a GridTemplate in the shape
@@ -496,6 +507,47 @@ export default class LayoutGridField<
     return schemaUtils.toIdSchema(schema, baseId, formData, baseId, idSeparator);
   }
 
+  /** Computes the `rawSchema` and `idSchema` for a `schema` and a `potentialIndex`. If the `schema` is of type array,
+   * has an `ITEMS_KEY` element and `potentialIndex` represents a numeric value, the element at `ITEMS_KEY` is checked
+   * to see if it is an array. If it is AND the `potentialIndex`th element is available, it is used as the `rawSchema`,
+   * otherwise the last value of the element is used. If it is not, then the element is used as the `rawSchema`. In
+   * either case, an `idSchema` is computed for the array index. If the `schema` does not represent an array or the
+   * `potentialIndex` is not a numeric value, then `rawSchema` is returned as undefined and given `idSchema` is returned
+   * as is.
+   *
+   * @param schema - The schema to generate the idSchema for
+   * @param idSchema - The IdSchema for the schema
+   * @param potentialIndex - A string containing a potential index
+   * @param [idSeparator] - The param to pass into the `toIdSchema` util which will use it to join the `idSchema` paths
+   * @returns - An object containing the `rawSchema` and `idSchema` of an array item, otherwise an undefined `rawSchema`
+   */
+  static computeArraySchemasIfPresent<T = any, S extends StrictRJSFSchema = RJSFSchema>(
+    schema: S | undefined,
+    idSchema: IdSchema<T>,
+    potentialIndex: string,
+    idSeparator?: string,
+  ): {
+    rawSchema?: S;
+    idSchema: IdSchema<T>;
+  } {
+    let rawSchema: S | undefined;
+    if (isNumericIndex(potentialIndex) && schema && schema?.type === 'array' && has(schema, ITEMS_KEY)) {
+      const index = Number(potentialIndex);
+      const items = schema[ITEMS_KEY];
+      if (Array.isArray(items)) {
+        if (index > items.length) {
+          rawSchema = last(items) as S;
+        } else {
+          rawSchema = items[index] as S;
+        }
+      } else {
+        rawSchema = items as S;
+      }
+      idSchema = { [ID_KEY]: `${idSchema[ID_KEY]}${idSeparator ?? '_'}${index}` } as IdSchema<T>;
+    }
+    return { rawSchema, idSchema };
+  }
+
   /** Given a `dottedPath` to a field in the `initialSchema`, iterate through each individual path in the schema until
    * the leaf path is found and returned (along with whether that leaf path `isRequired`) OR no schema exists for an
    * element in the path. If the leaf schema element happens to be a oneOf/anyOf then also return the oneOf/anyOf as
@@ -552,7 +604,9 @@ export default class LayoutGridField<
         rawSchema = get(selectedSchema, [PROPERTIES_KEY, part], {}) as S;
         idSchema = get(selectedIdSchema, part, {}) as IdSchema<T>;
       } else {
-        rawSchema = {} as S;
+        const result = LayoutGridField.computeArraySchemasIfPresent<T, S>(schema, idSchema, part, idSeparator);
+        rawSchema = result.rawSchema ?? ({} as S);
+        idSchema = result.idSchema;
       }
       // Now drill into the innerData for the part, returning an empty object by default if it doesn't exist
       innerData = get(innerData, part, {}) as T;
@@ -578,11 +632,17 @@ export default class LayoutGridField<
         idSchema = mergeObjects(rawIdSchema, idSchema) as IdSchema<T>;
       }
       isRequired = schema !== undefined && Array.isArray(schema.required) && includes(schema.required, leafPath);
-      // Now grab the schema from the leafPath of the current schema properties
-      schema = get(schema, [PROPERTIES_KEY, leafPath]) as S | undefined;
-      // Resolve any `$ref`s for the current schema
-      schema = schema ? schemaUtils.retrieveSchema(schema) : schema;
-      idSchema = get(idSchema, leafPath, {}) as IdSchema<T>;
+      const result = LayoutGridField.computeArraySchemasIfPresent<T, S>(schema, idSchema, leafPath, idSeparator);
+      if (result.rawSchema) {
+        schema = result.rawSchema;
+        idSchema = result.idSchema;
+      } else {
+        // Now grab the schema from the leafPath of the current schema properties
+        schema = get(schema, [PROPERTIES_KEY, leafPath]) as S | undefined;
+        // Resolve any `$ref`s for the current schema
+        schema = schema ? schemaUtils.retrieveSchema(schema) : schema;
+        idSchema = get(idSchema, leafPath, {}) as IdSchema<T>;
+      }
       isReadonly = getNonNullishValue(schema?.readOnly, isReadonly);
       if (schema && (has(schema, ONE_OF_KEY) || has(schema, ANY_OF_KEY))) {
         const xxx = has(schema, ONE_OF_KEY) ? ONE_OF_KEY : ANY_OF_KEY;
