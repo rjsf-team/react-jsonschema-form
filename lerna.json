@@ -1,6 +1,6 @@
 {
   "packages": ["packages/*"],
-  "version": "5.24.12",
+  "version": "5.24.13",
   "$schema": "node_modules/lerna/schemas/lerna-schema.json",
   "useNx": true,
   "useWorkspaces": true
