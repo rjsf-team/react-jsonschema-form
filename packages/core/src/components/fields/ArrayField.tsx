@@ -22,7 +22,7 @@ import cloneDeep from 'lodash/cloneDeep';
 import get from 'lodash/get';
 import isObject from 'lodash/isObject';
 import set from 'lodash/set';
-import { nanoid } from 'nanoid';
+import uniqueId from 'lodash/uniqueId';
 
 /** Type used to represent the keyed form data used in the state */
 type KeyedFormDataType<T> = { key: string; item: T };
@@ -37,7 +37,7 @@ type ArrayFieldState<T> = {
 
 /** Used to generate a unique ID for an element in a row */
 function generateRowId() {
-  return nanoid();
+  return uniqueId('rjsf-array-item-');
 }
 
 /** Converts the `formData` into `KeyedFormDataType` data, using the `generateRowId()` function to create the key
