@@ -1,5 +1,5 @@
 {
   "verbose": true,
   "testEnvironment": "jsdom",
-  "transformIgnorePatterns": ["/node_modules/(?!nanoid|deep-freeze-es6)"]
+  "transformIgnorePatterns": ["/node_modules/(?!deep-freeze-es6)"]
 }
