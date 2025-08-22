@@ -5,12 +5,6 @@ import validator from '@rjsf/validator-ajv8';
 import Templates from '../../src/templates/Templates';
 import generateWidgets from '../../src/widgets/Widgets';
 
-// Mock any problematic dependencies
-// This helps when a dependency like uniqueId uses ESM
-jest.mock('lodash/uniqueId', () => ({
-  nanoid: () => 'test-id-12345',
-}));
-
 export const mockSchema: RJSFSchema = {
   type: 'array',
   items: {
