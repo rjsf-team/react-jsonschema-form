@@ -25,7 +25,19 @@ export default function CheckboxesWidget<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
->({ id, disabled, options, value, autofocus, readonly, required, onChange, onBlur, onFocus }: WidgetProps<T, S, F>) {
+>({
+  id,
+  disabled,
+  options,
+  value,
+  autofocus,
+  readonly,
+  required,
+  onChange,
+  onBlur,
+  onFocus,
+  className,
+}: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, inline, emptyValue } = options;
   const checkboxesValues = Array.isArray(value) ? value : [value];
 
@@ -56,6 +68,7 @@ export default function CheckboxesWidget<
                     onChange(enumOptionsDeselectValue<S>(index, checkboxesValues, enumOptions));
                   }
                 }}
+                className={className}
                 checked={checked}
                 autoFocus={autofocus && index === 0}
                 onBlur={_onBlur}

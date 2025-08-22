@@ -31,6 +31,7 @@ export default function TextareaWidget<
   onFocus,
   onChange,
   options,
+  className,
 }: CustomWidgetProps<T, S, F>) {
   const _onChange = ({ target: { value } }: ChangeEvent<HTMLTextAreaElement>) =>
     onChange(value === '' ? options.emptyValue : value);
@@ -53,6 +54,7 @@ export default function TextareaWidget<
         onBlur={_onBlur}
         onFocus={_onFocus}
         aria-describedby={ariaDescribedByIds<T>(id)}
+        className={className}
       />
     </div>
   );

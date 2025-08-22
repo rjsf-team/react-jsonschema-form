@@ -36,6 +36,7 @@ export default function SelectWidget<
   defaultValue,
   placeholder,
   rawErrors = [],
+  className,
 }: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, emptyValue: optEmptyValue } = options;
 
@@ -54,6 +55,8 @@ export default function SelectWidget<
     disabled: Array.isArray(enumDisabled) && enumDisabled.includes(value),
   }));
 
+  const cnClassName = cn({ 'border-destructive': rawErrors.length > 0 }, className);
+
   return (
     <div className='p-0.5'>
       {!multiple ? (
@@ -67,7 +70,7 @@ export default function SelectWidget<
           disabled={disabled || readonly}
           required={required}
           placeholder={placeholder}
-          className={cn({ 'border-destructive': rawErrors.length > 0 })}
+          className={cnClassName}
           onFocus={_onFancyFocus}
           onBlur={_onFancyBlur}
           ariaDescribedby={ariaDescribedByIds<T>(id)}
@@ -78,7 +81,7 @@ export default function SelectWidget<
           autoFocus={autofocus}
           disabled={disabled || readonly}
           multiple
-          className={rawErrors.length > 0 ? 'border-destructive' : ''}
+          className={cnClassName}
           items={items}
           selected={value}
           onValueChange={(values) => {

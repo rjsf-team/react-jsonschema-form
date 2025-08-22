@@ -40,6 +40,7 @@ export default function BaseInputTemplate<
   rawErrors = [],
   children,
   extraProps,
+  className,
 }: BaseInputTemplateProps<T, S, F>) {
   const inputProps = {
     ...extraProps,
@@ -61,7 +62,7 @@ export default function BaseInputTemplate<
         required={required}
         disabled={disabled}
         readOnly={readonly}
-        className={cn({ 'border-destructive focus-visible:ring-0': rawErrors.length > 0 })}
+        className={cn({ 'border-destructive focus-visible:ring-0': rawErrors.length > 0 }, className)}
         list={schema.examples ? examplesId<T>(id) : undefined}
         {...inputProps}
         value={value || value === 0 ? value : ''}
