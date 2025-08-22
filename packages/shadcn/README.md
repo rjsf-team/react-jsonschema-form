@@ -20,6 +20,11 @@
     <a href="https://github.com/rjsf-team/react-jsonschema-form/issues">Request Feature</a>
   </p>
 
+
+<p align="center">
+<img src="https://github.com/tuanphung2308/rjsf-shadcn-css/blob/main/shadcn-demo.png?raw=true" alt="Logo" width="720" height="240">
+</p>
+
 <!-- TABLE OF CONTENTS -->
 
 ## Table of Contents
@@ -134,8 +139,7 @@ Supported colors are:
 #### Coloring
 
 - Generate a theme from [official shadCN site](https://ui.shadcn.com/themes)
-  or  [zippy starter's shadcn/ui theme generator](https://zippystarter.com/tools/shadcn-ui-theme-generator)
-  or [Railly](https://customizer.railly.dev/)
+  or  [tweakcn](https://tweakcn.com/editor/theme)
 - Navigate to shadcn/css, create a new file called [your-theme].css
 - Replace the base layer code with your new color
 - Follow the next section to build your CSS file
