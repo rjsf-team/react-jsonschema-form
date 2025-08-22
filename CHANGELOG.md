@@ -17,10 +17,22 @@ should change the heading of the (upcoming) version to include a major version b
 -->
 # 6.0.0-beta.15
 
+## @rjsf/semantic-ui
+
+- Updated `ArrayField` to stop using `nanoid` and instead use `lodash/uniqueId` to fix [#4762](https://github.com/rjsf-team/react-jsonschema-form/issues/4726)
+
 ## @rjsf/shadcn
 
 - Update `README.md` with picture of the theme!
 - Allow passing `className` props to `AddButton`, `BaseInputTemplate`, `CheckboxWidget`, `CheckboxesWidget`, `RadioWidget`, `SelectWidget`, `SubmitButton`, `TextareaWidget` for extra Tailwind CSS customization through `ui:className`
+
+## @rjsf/utils
+
+- Updated `getTestIds` to stop using `nanoid` and instead use `lodash/uniqueId` to fix [#4762](https://github.com/rjsf-team/react-jsonschema-form/issues/4726)
+
+## Dev / docs / playground
+
+- Removed `nanoid` from the build system and `jest.config.js` files
 
 # 6.0.0-beta.14
 

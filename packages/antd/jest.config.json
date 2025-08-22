@@ -7,5 +7,5 @@
   "moduleNameMapper": {
     "\\.(css|less)$": "<rootDir>/__mocks__/styleMock.js"
   },
-  "transformIgnorePatterns": ["/node_modules/(?!nanoid|deep-freeze-es6)"]
+  "transformIgnorePatterns": ["/node_modules/(?!deep-freeze-es6)"]
 }

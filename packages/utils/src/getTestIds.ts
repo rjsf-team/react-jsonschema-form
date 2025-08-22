@@ -1,5 +1,5 @@
-import { nanoid } from 'nanoid';
 import get from 'lodash/get';
+import uniqueId from 'lodash/uniqueId';
 
 import { TestIdShape } from './types';
 
@@ -31,7 +31,7 @@ export default function getTestIds(): TestIdShape {
     {
       get(_obj, prop) {
         if (!ids.has(prop)) {
-          ids.set(prop, nanoid());
+          ids.set(prop, uniqueId('test-id-'));
         }
         return ids.get(prop);
       },

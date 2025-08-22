@@ -1,12 +1,13 @@
 import { TestIdShape, getTestIds } from '../src';
 
 const TEST_UUID_BASE = 'test-uuid-';
-jest.mock('nanoid');
-const nanoidMock = require('nanoid');
+jest.mock('lodash/uniqueId');
+const uniqueIdMock = require('lodash/uniqueId');
+const uniqueId = jest.requireActual('lodash/uniqueId');
 
-const nanoid = jest.requireActual('nanoid').nanoid;
+uniqueIdMock.mockImplementation(() => TEST_UUID_BASE + uniqueId());
 
-nanoidMock.nanoid.mockImplementation(() => TEST_UUID_BASE + nanoid());
+console.log(uniqueIdMock, uniqueId);
 
 describe('getTestIds', () => {
   describe('process.env.NODE_ENV === "test"', () => {
@@ -16,32 +17,32 @@ describe('getTestIds', () => {
       testIds = getTestIds();
     });
     afterAll(() => {
-      nanoidMock.nanoid.mockClear();
+      uniqueIdMock.mockClear();
     });
     it('does not return an empty object', () => {
       // it returns a Proxy object but since there isn't an easy way to test for it
       // the following tests will check for the Proxy functionality
       expect(testIds).not.toEqual({});
-      nanoidMock.nanoid.mockClear(); // resetting the call count since the Proxy calls it during the initialization process
+      uniqueIdMock.mockClear(); // resetting the call count since the Proxy calls it during the initialization process
     });
     it('returns a generated test id when getting a property value', () => {
       fooTestId = testIds.foo;
       expect(fooTestId).toEqual(expect.stringContaining(TEST_UUID_BASE));
     });
     it('called uuid once', () => {
-      expect(nanoidMock.nanoid).toHaveBeenCalledTimes(1);
+      expect(uniqueIdMock).toHaveBeenCalledTimes(1);
     });
     it('returns the same id when getting the same property value', () => {
       expect(testIds.foo).toEqual(fooTestId);
     });
     it('did not call uuid again', () => {
-      expect(nanoidMock.nanoid).toHaveBeenCalledTimes(1);
+      expect(uniqueIdMock).toHaveBeenCalledTimes(1);
     });
     it('returns a different id when getting a different property value', () => {
       expect(testIds.bar).not.toEqual(fooTestId);
     });
     it('called uuid again', () => {
-      expect(nanoidMock.nanoid).toHaveBeenCalledTimes(2);
+      expect(uniqueIdMock).toHaveBeenCalledTimes(2);
     });
   });
   describe('process.env.NODE_ENV !== "test"', () => {
@@ -62,7 +63,7 @@ describe('getTestIds', () => {
       expect(testIds.foo).toBeUndefined();
     });
     it('did not call uuid', () => {
-      expect(nanoidMock.nanoid).not.toHaveBeenCalled();
+      expect(uniqueIdMock).not.toHaveBeenCalled();
     });
   });
 });

@@ -70,7 +70,6 @@
     "jsonpointer": "^5.0.1",
     "lodash": "^4.17.21",
     "lodash-es": "^4.17.21",
-    "nanoid": "^5.1.5",
     "react-is": "^18.3.1"
   },
   "devDependencies": {

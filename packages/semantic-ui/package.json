@@ -73,7 +73,6 @@
     "@rjsf/validator-ajv8": "^6.0.0-beta.14",
     "atob": "^2.1.2",
     "eslint": "^8.57.1",
-    "nanoid": "^5.1.5",
     "semantic-ui-react": "^2.1.5"
   },
   "publishConfig": {
