@@ -15,6 +15,20 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+# 5.24.13
+
+## @rjsf/core
+
+- Updated `ArrayField` to stop using `nanoid` and instead use `lodash/uniqueId` to fix [#4762](https://github.com/rjsf-team/react-jsonschema-form/issues/4726)
+
+## @rjsf/semantic-ui
+
+- Updated `ArrayField` to stop using `nanoid` and instead use `lodash/uniqueId` to fix [#4762](https://github.com/rjsf-team/react-jsonschema-form/issues/4726)
+
+## Dev / docs / playground
+
+- Removed `nanoid` from the build system and `jest.config.js` files
+
 # 5.24.12
 
 ## @rjsf/utils
