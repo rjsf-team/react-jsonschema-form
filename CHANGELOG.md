@@ -15,6 +15,13 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+# 6.0.0-beta.15
+
+## @rjsf/shadcn
+
+- Update `README.md` with picture of the theme!
+- Allow passing `className` props to `AddButton`, `BaseInputTemplate`, `CheckboxWidget`, `CheckboxesWidget`, `RadioWidget`, `SelectWidget`, `SubmitButton`, `TextareaWidget` for extra Tailwind CSS customization through `ui:className`
+
 # 6.0.0-beta.14
 
 ## @rjsf/core
@@ -58,13 +65,11 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/shadcn
 
-- Update `README.md` with picture of the theme!
 - Bump `@shadcn/ui` components to use latest version from https://ui.shadcn.com/
 - Bump `tailwindcss` to using v4 and css compiling process to use latest `@tailwindcss/cli`
 - Remove `postcss` due to new Oxide compiler of tailwindcss
 - Update playground themes with `default`, `Amethyst Haze`, `Caffeine`, `Claude`, `Neo Brutalism`, `Pastel Dreams`, `Soft Pop`, `Twitter`, `Vercel`
 - Radio widget labels are now accessible and can be clicked on to select the associated option.
-- Allow passing `className` props to `AddButton`, `BaseInputTemplate`, `CheckboxWidget`, `CheckboxesWidget`, `RadioWidget`, `SelectWidget`, `SubmitButton`, `TextareaWidget` for extra Tailwind CSS customization through `ui:className`
 
 ## @rjsf/utils
 
