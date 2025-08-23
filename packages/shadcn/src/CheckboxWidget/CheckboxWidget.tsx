@@ -37,6 +37,7 @@ export default function CheckboxWidget<
     onFocus,
     registry,
     uiSchema,
+    className,
   } = props;
   // Because an unchecked checkbox will cause html5 validation to fail, only add
   // the "required" attribute if the field value must be "true", due to the
@@ -78,6 +79,7 @@ export default function CheckboxWidget<
           onCheckedChange={_onChange}
           onBlur={_onBlur}
           onFocus={_onFocus}
+          className={className}
         />
         <Label className='leading-tight' htmlFor={id}>
           {labelValue(label, hideLabel || !label)}

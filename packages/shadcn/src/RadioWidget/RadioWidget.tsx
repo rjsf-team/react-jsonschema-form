@@ -29,6 +29,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
   onChange,
   onBlur,
   onFocus,
+  className,
 }: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, emptyValue } = options;
 
@@ -53,7 +54,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
         onFocus={_onFocus}
         aria-describedby={ariaDescribedByIds<T>(id)}
         orientation={inline ? 'horizontal' : 'vertical'}
-        className={cn('flex flex-wrap', { 'flex-col': !inline })}
+        className={cn('flex flex-wrap', { 'flex-col': !inline }, className)}
       >
         {Array.isArray(enumOptions) &&
           enumOptions.map((option, index) => {
