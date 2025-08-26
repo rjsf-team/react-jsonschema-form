@@ -17,6 +17,10 @@ should change the heading of the (upcoming) version to include a major version b
 -->
 # 6.0.0-beta.15
 
+## @rjsf/core
+
+- Updated `ObjectField` `onPropertyChange` duplicating path if provided with only one path to fix [#4733](https://github.com/rjsf-team/react-jsonschema-form/issues/4733)
+
 ## @rjsf/semantic-ui
 
 - Updated `ArrayField` to stop using `nanoid` and instead use `lodash/uniqueId` to fix [#4762](https://github.com/rjsf-team/react-jsonschema-form/issues/4726)
