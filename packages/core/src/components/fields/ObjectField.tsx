@@ -1,28 +1,28 @@
-import { Component } from 'react';
 import {
-  getTemplate,
-  getUiOptions,
-  orderProperties,
+  ADDITIONAL_PROPERTY_FLAG,
+  ANY_OF_KEY,
   ErrorSchema,
   FieldProps,
   FormContextType,
   GenericObjectType,
+  getTemplate,
+  getUiOptions,
   IdSchema,
+  ONE_OF_KEY,
+  orderProperties,
+  PROPERTIES_KEY,
+  REF_KEY,
   RJSFSchema,
   StrictRJSFSchema,
   TranslatableString,
-  ADDITIONAL_PROPERTY_FLAG,
-  PROPERTIES_KEY,
-  REF_KEY,
-  ANY_OF_KEY,
-  ONE_OF_KEY,
 } from '@rjsf/utils';
-import Markdown from 'markdown-to-jsx';
 import get from 'lodash/get';
 import has from 'lodash/has';
 import isObject from 'lodash/isObject';
 import set from 'lodash/set';
 import unset from 'lodash/unset';
+import Markdown from 'markdown-to-jsx';
+import { Component } from 'react';
 
 /** Type used for the state of the `ObjectField` component */
 type ObjectFieldState = {
@@ -80,7 +80,10 @@ class ObjectField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
       }
       // Copy the current path and insert in the property name into the first location
       const changePath = Array.isArray(path) ? path.slice() : [];
-      changePath.unshift(name);
+      // Ensure we are not duplicating the path
+      if (!changePath.length || changePath[0] !== name) {
+        changePath.unshift(name);
+      }
       onChange(value, changePath, newErrorSchema, id);
     };
   };
