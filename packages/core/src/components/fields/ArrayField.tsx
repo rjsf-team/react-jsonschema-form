@@ -418,9 +418,9 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
 
   /** Callback handler used to change the value for a checkbox */
   onSelectChange = (value: any) => {
-    const { name, onChange, idSchema } = this.props;
-    // select change will pass the `path` array with the name
-    onChange(value, [name], undefined, idSchema && idSchema.$id);
+    const { onChange, idSchema } = this.props;
+    // select change will pass an empty `path` array since the `ObjectField` will add the path value automatically
+    onChange(value, [], undefined, idSchema && idSchema.$id);
   };
 
   /** Helper method to compute item UI schema for both normal and fixed arrays
