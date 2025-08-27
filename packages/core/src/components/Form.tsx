@@ -345,12 +345,18 @@ export default class Form<
     prevState: FormState<T, S, F>,
   ): { nextState: FormState<T, S, F>; shouldUpdate: true } | { shouldUpdate: false } {
     if (!deepEquals(this.props, prevProps)) {
+      // Compare the previous props formData against the current props formData
       const formDataChangedFields = getChangedFields(this.props.formData, prevProps.formData);
+      // Compare the current props formData against the current state's formData to determine if the new props were the
+      // result of the onChange from the existing state formData
+      const stateDataChangedFields = getChangedFields(this.props.formData, this.state.formData);
       const isSchemaChanged = !deepEquals(prevProps.schema, this.props.schema);
       // When formData is not an object, getChangedFields returns an empty array.
       // In this case, deepEquals is most needed to check again.
       const isFormDataChanged =
         formDataChangedFields.length > 0 || !deepEquals(prevProps.formData, this.props.formData);
+      const isStateDataChanged =
+        stateDataChangedFields.length > 0 || !deepEquals(this.state.formData, this.props.formData);
       const nextState = this.getStateFromProps(
         this.props,
         this.props.formData,
@@ -360,8 +366,8 @@ export default class Form<
         isSchemaChanged || isFormDataChanged ? undefined : this.state.retrievedSchema,
         isSchemaChanged,
         formDataChangedFields,
-        // Skip live validation for this request if no form data has changed
-        !isFormDataChanged,
+        // Skip live validation for this request if no form data has changed from the last state
+        !isStateDataChanged,
       );
       const shouldUpdate = !deepEquals(nextState, prevState);
       return { nextState, shouldUpdate };
