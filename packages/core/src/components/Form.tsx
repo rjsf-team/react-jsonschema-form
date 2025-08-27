@@ -360,6 +360,8 @@ export default class Form<
         isSchemaChanged || isFormDataChanged ? undefined : this.state.retrievedSchema,
         isSchemaChanged,
         formDataChangedFields,
+        // Skip live validation for this request if no form data has changed
+        !isFormDataChanged,
       );
       const shouldUpdate = !deepEquals(nextState, prevState);
       return { nextState, shouldUpdate };
@@ -415,6 +417,7 @@ export default class Form<
     retrievedSchema?: S,
     isSchemaChanged = false,
     formDataChangedFields: string[] = [],
+    skipLiveValidate = false,
   ): FormState<T, S, F> {
     const state: FormState<T, S, F> = this.state || {};
     const schema = 'schema' in props ? props.schema : this.props.schema;
@@ -422,7 +425,7 @@ export default class Form<
     const uiSchema: UiSchema<T, S, F> = ('uiSchema' in props ? props.uiSchema! : this.props.uiSchema!) || {};
     const edit = typeof inputFormData !== 'undefined';
     const liveValidate = 'liveValidate' in props ? props.liveValidate : this.props.liveValidate;
-    const mustValidate = edit && !props.noValidate && liveValidate;
+    const mustValidate = edit && !props.noValidate && liveValidate && !skipLiveValidate;
     const experimental_defaultFormStateBehavior =
       'experimental_defaultFormStateBehavior' in props
         ? props.experimental_defaultFormStateBehavior
@@ -770,7 +773,8 @@ export default class Form<
         // If the newValue is not on the root path, then set it into the form data
         _set(formData, path, newValue);
       }
-      const newState = this.getStateFromProps(this.props, formData);
+      // Pass true to skip live validation in `getStateFromProps()` since we will do it a bit later
+      const newState = this.getStateFromProps(this.props, formData, undefined, undefined, undefined, true);
       formData = newState.formData;
       retrievedSchema = newState.retrievedSchema;
     }
@@ -793,7 +797,7 @@ export default class Form<
       _set(errorSchemaCopy, path, newErrorSchema);
       newErrorSchema = errorSchemaCopy;
     }
-    if (mustValidate) {
+    if (mustValidate && this.pendingChanges.length === 1) {
       const schemaValidation = this.validate(newFormData, schema, schemaUtils, retrievedSchema);
       let errors = schemaValidation.errors;
       let errorSchema = schemaValidation.errorSchema;

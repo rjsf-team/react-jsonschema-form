@@ -17,6 +17,10 @@ should change the heading of the (upcoming) version to include a major version b
 -->
 # 6.0.0-beta.15
 
+## @rjsf/core
+
+- Updated `Form` to optimize the need for live validation in an attempt to improve performance, potentially fixing [#3616](https://github.com/rjsf-team/react-jsonschema-form/issues/3616)
+
 ## @rjsf/semantic-ui
 
 - Updated `ArrayField` to stop using `nanoid` and instead use `lodash/uniqueId` to fix [#4762](https://github.com/rjsf-team/react-jsonschema-form/issues/4726)
