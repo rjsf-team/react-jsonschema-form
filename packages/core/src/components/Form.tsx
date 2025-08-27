@@ -803,6 +803,7 @@ export default class Form<
       _set(errorSchemaCopy, path, newErrorSchema);
       newErrorSchema = errorSchemaCopy;
     }
+    // If there are pending changes in the queue, skip live validation since it will happen with the last change
     if (mustValidate && this.pendingChanges.length === 1) {
       const schemaValidation = this.validate(newFormData, schema, schemaUtils, retrievedSchema);
       let errors = schemaValidation.errors;
