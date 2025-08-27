@@ -91,10 +91,10 @@
     "@rjsf/utils": "^6.0.0-beta.14",
     "@rjsf/validator-ajv8": "^6.0.0-beta.14",
     "chakra-react-select": "^6.1.0",
-    "eslint": "^8.57.1",
-    "lucide-react": "^0.539.0"
+    "eslint": "^8.57.1"
   },
   "dependencies": {
+    "lucide-react": "^0.539.0",
     "react-icons": "^5.5.0",
     "react-select": "^5.10.2"
   }

@@ -17,8 +17,13 @@ should change the heading of the (upcoming) version to include a major version b
 -->
 # 6.0.0-beta.15
 
+## @rjsf/chakra-ui
+
+- Updated `package.json` for to make `lucide-react` a dependency rather than a devDependency, fixing [#4739](https://github.com/rjsf-team/react-jsonschema-form/issues/4739)
+
 ## @rjsf/core
 
+- Updated `ArrayField` `onSelectChange` to not pass `name` in the `path` since the `ObjectField` will automatically add it [#4733](https://github.com/rjsf-team/react-jsonschema-form/issues/4733)
 - Updated `Form` to optimize the need for live validation in an attempt to improve performance, potentially fixing [#3616](https://github.com/rjsf-team/react-jsonschema-form/issues/3616)
 
 ## @rjsf/semantic-ui
