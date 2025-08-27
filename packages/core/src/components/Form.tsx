@@ -345,12 +345,18 @@ export default class Form<
     prevState: FormState<T, S, F>,
   ): { nextState: FormState<T, S, F>; shouldUpdate: true } | { shouldUpdate: false } {
     if (!deepEquals(this.props, prevProps)) {
+      // Compare the previous props formData against the current props formData
       const formDataChangedFields = getChangedFields(this.props.formData, prevProps.formData);
+      // Compare the current props formData against the current state's formData to determine if the new props were the
+      // result of the onChange from the existing state formData
+      const stateDataChangedFields = getChangedFields(this.props.formData, this.state.formData);
       const isSchemaChanged = !deepEquals(prevProps.schema, this.props.schema);
       // When formData is not an object, getChangedFields returns an empty array.
       // In this case, deepEquals is most needed to check again.
       const isFormDataChanged =
         formDataChangedFields.length > 0 || !deepEquals(prevProps.formData, this.props.formData);
+      const isStateDataChanged =
+        stateDataChangedFields.length > 0 || !deepEquals(this.state.formData, this.props.formData);
       const nextState = this.getStateFromProps(
         this.props,
         this.props.formData,
@@ -360,6 +366,8 @@ export default class Form<
         isSchemaChanged || isFormDataChanged ? undefined : this.state.retrievedSchema,
         isSchemaChanged,
         formDataChangedFields,
+        // Skip live validation for this request if no form data has changed from the last state
+        !isStateDataChanged,
       );
       const shouldUpdate = !deepEquals(nextState, prevState);
       return { nextState, shouldUpdate };
@@ -415,6 +423,7 @@ export default class Form<
     retrievedSchema?: S,
     isSchemaChanged = false,
     formDataChangedFields: string[] = [],
+    skipLiveValidate = false,
   ): FormState<T, S, F> {
     const state: FormState<T, S, F> = this.state || {};
     const schema = 'schema' in props ? props.schema : this.props.schema;
@@ -422,7 +431,7 @@ export default class Form<
     const uiSchema: UiSchema<T, S, F> = ('uiSchema' in props ? props.uiSchema! : this.props.uiSchema!) || {};
     const edit = typeof inputFormData !== 'undefined';
     const liveValidate = 'liveValidate' in props ? props.liveValidate : this.props.liveValidate;
-    const mustValidate = edit && !props.noValidate && liveValidate;
+    const mustValidate = edit && !props.noValidate && liveValidate && !skipLiveValidate;
     const experimental_defaultFormStateBehavior =
       'experimental_defaultFormStateBehavior' in props
         ? props.experimental_defaultFormStateBehavior
@@ -770,7 +779,8 @@ export default class Form<
         // If the newValue is not on the root path, then set it into the form data
         _set(formData, path, newValue);
       }
-      const newState = this.getStateFromProps(this.props, formData);
+      // Pass true to skip live validation in `getStateFromProps()` since we will do it a bit later
+      const newState = this.getStateFromProps(this.props, formData, undefined, undefined, undefined, true);
       formData = newState.formData;
       retrievedSchema = newState.retrievedSchema;
     }
@@ -793,7 +803,8 @@ export default class Form<
       _set(errorSchemaCopy, path, newErrorSchema);
       newErrorSchema = errorSchemaCopy;
     }
-    if (mustValidate) {
+    // If there are pending changes in the queue, skip live validation since it will happen with the last change
+    if (mustValidate && this.pendingChanges.length === 1) {
       const schemaValidation = this.validate(newFormData, schema, schemaUtils, retrievedSchema);
       let errors = schemaValidation.errors;
       let errorSchema = schemaValidation.errorSchema;
