@@ -17,6 +17,10 @@ should change the heading of the (upcoming) version to include a major version b
 -->
 # 6.0.0-beta.15
 
+## @rjsf/chakra-ui
+
+- Updated `package.json` for to make `lucide-react` a dependency rather than a devDependency, fixing [#4739](https://github.com/rjsf-team/react-jsonschema-form/issues/4739)
+
 ## @rjsf/semantic-ui
 
 - Updated `ArrayField` to stop using `nanoid` and instead use `lodash/uniqueId` to fix [#4762](https://github.com/rjsf-team/react-jsonschema-form/issues/4726)
