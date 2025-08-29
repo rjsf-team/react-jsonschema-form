@@ -25,6 +25,10 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Updated `ArrayField`, `Form`, `LayoutMultiSchemaField` and `SchemaField` to stop passing `formContext`
 
+## @rjsf/daisyui
+
+- Updated `FieldTemplate` to remove `formContext` as it is never used
+
 ## @rjsf/semantic-ui
 
 - Updated the `ArrayFieldTemplate`, `BaseInputTemplate`, `CheckboxWidget`, `FieldTemplate`, `RadioWidget`, `RangeSelect`, `SelectWidget`, `TextareaWidget` and `ObjectFieldTemplate` to get `formContext` from the `registry`
