@@ -33,11 +33,11 @@ export default function TextareaWidget<
     onFocus,
     onChange,
     options,
-    formContext,
+    registry,
     rawErrors = [],
   } = props;
   const semanticProps = getSemanticProps<T, S, F>({
-    formContext,
+    formContext: registry.formContext,
     options,
     defaultSchemaProps: { inverted: 'false' },
   });

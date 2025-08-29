@@ -52,7 +52,7 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
 ) {
   const {
     uiSchema,
-    formContext,
+    registry,
     id,
     options,
     label,
@@ -72,7 +72,7 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
   } = props;
   const semanticProps = getSemanticProps<T, S, F>({
     uiSchema,
-    formContext,
+    formContext: registry.formContext,
     options,
     defaultSchemaProps: {
       inverted: 'false',

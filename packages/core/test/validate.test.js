@@ -394,7 +394,15 @@ describe('Validation', () => {
 
       const formData = 0;
 
-      const CustomErrorList = ({ errors, errorSchema, schema, uiSchema, formContext: { className } }) => (
+      const CustomErrorList = ({
+        errors,
+        errorSchema,
+        schema,
+        uiSchema,
+        registry: {
+          formContext: { className },
+        },
+      }) => (
         <div>
           <div className='CustomErrorList'>{errors.length} custom</div>
           <div className={'ErrorSchema'}>{errorSchema.__errors[0]}</div>

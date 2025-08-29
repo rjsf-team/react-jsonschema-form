@@ -30,7 +30,6 @@ export default function FieldTemplate<
     label,
     children,
     errors,
-    formContext,
     formData,
     help,
     hideError,

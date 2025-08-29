@@ -204,7 +204,10 @@ describe('ObjectField', () => {
         root_bar: 'bar-id',
       };
       function CustomSchemaField(props) {
-        const { formContext, idSchema } = props;
+        const {
+          registry: { formContext },
+          idSchema,
+        } = props;
         return (
           <>
             <code id={formContext[idSchema.$id]}>Ha</code>

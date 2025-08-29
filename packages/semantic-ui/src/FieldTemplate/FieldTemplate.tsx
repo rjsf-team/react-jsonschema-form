@@ -36,7 +36,10 @@ export default function FieldTemplate<
     uiSchema,
     ...otherProps
   } = props;
-  const semanticProps = getSemanticProps<T, S, F>(otherProps);
+  const semanticProps = getSemanticProps<T, S, F>({
+    ...otherProps,
+    formContext: registry.formContext,
+  });
   const { wrapLabel, wrapContent } = semanticProps;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const WrapIfAdditionalTemplate = getTemplate<'WrapIfAdditionalTemplate', T, S, F>(

@@ -37,7 +37,6 @@ export default function CheckboxesWidget<
     onChange,
     onBlur,
     onFocus,
-    formContext,
     schema,
     uiSchema,
     rawErrors = [],
@@ -48,7 +47,7 @@ export default function CheckboxesWidget<
   const checkboxesValues = Array.isArray(value) ? value : [value];
   const semanticProps = getSemanticProps<T, S, F>({
     options,
-    formContext,
+    formContext: registry.formContext,
     uiSchema,
     defaultSchemaProps: {
       inverted: 'false',

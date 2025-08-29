@@ -30,13 +30,13 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
     onBlur,
     onFocus,
     options,
-    formContext,
+    registry,
     uiSchema,
     rawErrors = [],
   } = props;
   const { enumOptions, enumDisabled, emptyValue } = options;
   const semanticProps = getSemanticProps<T, S, F>({
-    formContext,
+    formContext: registry.formContext,
     options,
     uiSchema,
   });

@@ -38,7 +38,6 @@ export default function ObjectFieldTemplate<
   const {
     description,
     disabled,
-    formContext,
     formData,
     idSchema,
     onAddClick,
@@ -57,6 +56,7 @@ export default function ObjectFieldTemplate<
     registry,
     uiOptions,
   );
+  const { formContext } = registry;
   // Button templates are not overridden in the uiSchema
   const {
     ButtonTemplates: { AddButton },
