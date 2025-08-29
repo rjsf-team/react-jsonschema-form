@@ -30,7 +30,6 @@ export default function ArrayFieldTemplate<
     canAdd,
     className,
     disabled,
-    formContext,
     idSchema,
     items,
     onAddClick,
@@ -57,6 +56,7 @@ export default function ArrayFieldTemplate<
     registry,
     uiOptions,
   );
+  const { formContext } = registry;
   // Button templates are not overridden in the uiSchema
   const {
     ButtonTemplates: { AddButton },

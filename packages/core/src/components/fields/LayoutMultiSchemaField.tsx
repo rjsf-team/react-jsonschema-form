@@ -190,7 +190,6 @@ export default function LayoutMultiSchemaField<
       label={(title || schema.title) ?? ''}
       disabled={disabled || (Array.isArray(enumOptions) && isEmpty(enumOptions))}
       uiSchema={uiSchema}
-      formContext={formContext}
       required={required}
       readonly={!!readonly}
       registry={registry}

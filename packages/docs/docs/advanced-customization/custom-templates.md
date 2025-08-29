@@ -116,7 +116,6 @@ The following props are passed to each `ArrayFieldTemplate`:
 - `schema`: The schema object for this array.
 - `uiSchema`: The uiSchema object for this array field.
 - `title`: A string value containing the title for the array.
-- `formContext`: The `formContext` object that you passed to Form.
 - `formData`: The formData for this array.
 - `errorSchema`: The optional validation errors for the array field and the items within it, in the form of an `ErrorSchema`
 - `rawErrors`: An array of strings listing all generated error messages from encountered errors for this widget
@@ -419,7 +418,6 @@ function BaseInputTemplate(props: BaseInputTemplateProps) {
     hideError,
     uiSchema,
     registry,
-    formContext,
     ...rest
   } = props;
   const onTextChange = ({ target: { value: val } }: ChangeEvent<HTMLInputElement>) => {
@@ -500,7 +498,6 @@ The following props are passed to the `BaseInputTemplate`:
 - `onFocus`: The input focus event handler; call it with the widget id and value;
 - `options`: A map of options passed as a prop to the component (see [Custom widget options](./custom-widgets-fields.md#custom-widget-options)).
 - `options.enumOptions`: For enum fields, this property contains the list of options for the enum as an array of \{ label, value } objects. If the enum is defined using the oneOf/anyOf syntax, the entire schema object for each option is appended onto the \{ schema, label, value } object.
-- `formContext`: The `formContext` object that you passed to `Form`.
 - `rawErrors`: An array of strings listing all generated error messages from encountered errors for this widget.
 - `registry`: The `registry` object
 
@@ -587,7 +584,6 @@ The following props are passed to the `ErrorListTemplate`:
 
 - `schema`: The schema that was passed to `Form`
 - `uiSchema`: The uiSchema that was passed to `Form`
-- `formContext`: The `formContext` object that you passed to `Form`.
 - `errors`: An array of all errors in this `Form`.
 - `errorSchema`: The `ErrorSchema` constructed by `Form`
 
@@ -755,7 +751,6 @@ The following props are passed to a custom field template component:
 - `schema`: The schema object for this field.
 - `uiSchema`: The uiSchema object for this field.
 - `onChange`: The value change event handler; Can be called with a new value to change the value for this field.
-- `formContext`: The `formContext` object that you passed to `Form`.
 - `formData`: The formData for this field.
 - `registry`: The `registry` object.
 
@@ -926,7 +921,6 @@ The following props are passed to each `ObjectFieldTemplate` as defined by the `
 - `idSchema`: An object containing the id for this object & ids for its properties.
 - `errorSchema`: The optional validation errors in the form of an `ErrorSchema`
 - `formData`: The form data for the object.
-- `formContext`: The `formContext` object that you passed to Form.
 - `registry`: The `registry` object.
 
 The following props are part of each element in `properties`:

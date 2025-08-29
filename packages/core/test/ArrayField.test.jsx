@@ -2988,7 +2988,10 @@ describe('ArrayField', () => {
         root_1: 'root_1-id',
       };
       function CustomSchemaField(props) {
-        const { formContext, idSchema } = props;
+        const {
+          registry: { formContext },
+          idSchema,
+        } = props;
         return (
           <>
             <code id={formContext[idSchema.$id]}>Ha</code>
@@ -3015,7 +3018,10 @@ describe('ArrayField', () => {
         root_1: 'root_1-id',
       };
       function CustomSchemaField(props) {
-        const { formContext, idSchema } = props;
+        const {
+          registry: { formContext },
+          idSchema,
+        } = props;
         return (
           <>
             <code id={formContext[idSchema.$id]}>Ha</code>
