@@ -23,11 +23,11 @@ export default function RangeWidget<T = any, S extends StrictRJSFSchema = RJSFSc
     options,
     schema,
     uiSchema,
-    formContext,
+    registry,
     rawErrors = [],
   } = props;
   const semanticProps = getSemanticProps<T, S, F>({
-    formContext,
+    formContext: registry.formContext,
     options,
     uiSchema,
     defaultSchemaProps: {

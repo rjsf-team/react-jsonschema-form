@@ -25,6 +25,10 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Updated `ArrayField`, `Form`, `LayoutMultiSchemaField` and `SchemaField` to stop passing `formContext`
 
+## @rjsf/semantic-ui
+
+- Updated the `ArrayFieldTemplate`, `BaseInputTemplate`, `CheckboxWidget`, `FieldTemplate`, `RadioWidget`, `RangeSelect`, `SelectWidget`, `TextareaWidget` and `ObjectFieldTemplate` to get `formContext` from the `registry`
+
 ## @rjsf/utils
 
 - BREAKING CHANGE: Removed `formContext` from the following interfaces because it is available on `registry`:
