@@ -37,6 +37,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 - BREAKING CHANGE: Removed `formContext` from the following interfaces because it is available on `registry`:
   - `ErrorListProps`, `FieldProps`, `FieldTemplateProps`, `ArrayFieldTemplateProps` and `WidgetProps`
+- Update `mergeDefaultsWithFormData` to properly handle overriding `undefined` formData with a `null` default value, fixing [#4734](https://github.com/rjsf-team/react-jsonschema-form/issues/4734)
 
 ## Dev / docs / playground
 

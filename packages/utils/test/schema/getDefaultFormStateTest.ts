@@ -4990,5 +4990,19 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         }),
       ).toEqual({ stringArray: [undefined], numberArray: [] });
     });
+    it('handles a `null` default value', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          empty: {
+            type: 'null',
+            default: null,
+          },
+        },
+      };
+      expect(getDefaultFormState(testValidator, schema, {}, schema)).toEqual({
+        empty: null,
+      });
+    });
   });
 }

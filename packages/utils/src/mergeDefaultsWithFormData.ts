@@ -102,7 +102,7 @@ export default function mergeDefaultsWithFormData<T = any>(
    */
   if (
     (defaultSupercedesUndefined &&
-      ((!isNil(defaults) && isNil(formData)) || (typeof formData === 'number' && isNaN(formData)))) ||
+      ((!(defaults === undefined) && isNil(formData)) || (typeof formData === 'number' && isNaN(formData)))) ||
     (overrideFormDataWithDefaults && !isNil(formData))
   ) {
     return defaults;
