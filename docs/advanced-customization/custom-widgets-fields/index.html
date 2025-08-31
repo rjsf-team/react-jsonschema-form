@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="generator" content="Docusaurus v3.8.1">
 <title data-rh="true">Custom Widgets and Fields | react-jsonschema-form</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:url" content="https://rjsf-team.github.io/react-jsonschema-form/docs/advanced-customization/custom-widgets-fields"><meta data-rh="true" property="og:locale" content="en"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docusaurus_version" content="current"><meta data-rh="true" name="docusaurus_tag" content="docs-default-current"><meta data-rh="true" name="docsearch:version" content="current"><meta data-rh="true" name="docsearch:docusaurus_tag" content="docs-default-current"><meta data-rh="true" property="og:title" content="Custom Widgets and Fields | react-jsonschema-form"><meta data-rh="true" name="description" content="The API allows to specify your own custom widget and field components:"><meta data-rh="true" property="og:description" content="The API allows to specify your own custom widget and field components:"><link data-rh="true" rel="icon" href="/react-jsonschema-form/docs/img/favicon.ico"><link data-rh="true" rel="canonical" href="https://rjsf-team.github.io/react-jsonschema-form/docs/advanced-customization/custom-widgets-fields"><link data-rh="true" rel="alternate" href="https://rjsf-team.github.io/react-jsonschema-form/docs/advanced-customization/custom-widgets-fields" hreflang="en"><link data-rh="true" rel="alternate" href="https://rjsf-team.github.io/react-jsonschema-form/docs/advanced-customization/custom-widgets-fields" hreflang="x-default"><link data-rh="true" rel="preconnect" href="https://LRQC6J0BO6-dsn.algolia.net" crossorigin="anonymous"><script data-rh="true" type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Advanced Customization","item":"https://rjsf-team.github.io/react-jsonschema-form/docs/advanced-customization/"},{"@type":"ListItem","position":2,"name":"Custom Widgets and Fields","item":"https://rjsf-team.github.io/react-jsonschema-form/docs/advanced-customization/custom-widgets-fields"}]}</script><link rel="search" type="application/opensearchdescription+xml" title="react-jsonschema-form" href="/react-jsonschema-form/docs/opensearch.xml"><link rel="stylesheet" href="/react-jsonschema-form/docs/assets/css/styles.a54ffa34.css">
-<script src="/react-jsonschema-form/docs/assets/js/runtime~main.514dfd24.js" defer="defer"></script>
+<script src="/react-jsonschema-form/docs/assets/js/runtime~main.d47e647c.js" defer="defer"></script>
 <script src="/react-jsonschema-form/docs/assets/js/main.659bdb6d.js" defer="defer"></script>
 </head>
 <body class="navigation-with-keyboard">
@@ -103,7 +103,6 @@ If you wish to add generic validation logic for your component, you should use t
 <li><code>onFocus</code>: The input focus event handler; call it with the widget id and value;</li>
 <li><code>options</code>: A map of options passed as a prop to the component (see <a href="#custom-widget-options">Custom widget options</a>).</li>
 <li><code>options.enumOptions</code>: For enum fields, this property contains the list of options for the enum as an array of { label, value } objects. If the enum is defined using the oneOf/anyOf syntax, the entire schema object for each option is appended onto the { schema, label, value } object.</li>
-<li><code>formContext</code>: The <code>formContext</code> object that you passed to <code>Form</code>.</li>
 <li><code>rawErrors</code>: An array of strings listing all generated error messages from encountered errors for this widget.</li>
 <li><code>registry</code>: A <a href="#the-registry-object">registry</a> object (read next).</li>
 </ul>
@@ -140,7 +139,6 @@ The way to do this varies based upon whether you are using core or some other th
 <li><code>formData</code>: The data for this field;</li>
 <li><code>errorSchema</code>: The tree of errors for this field and its children;</li>
 <li><code>registry</code>: A <a href="#the-registry-object">registry</a> object (read next).</li>
-<li><code>formContext</code>: A <a href="/react-jsonschema-form/docs/api-reference/form-props#formcontext">formContext</a> object (read next).</li>
 <li><code>required</code>: The required status of this field;</li>
 <li><code>disabled</code>: A boolean value stating if the field is disabled;</li>
 <li><code>readonly</code>: A boolean value stating if the field is read-only;</li>
@@ -159,7 +157,6 @@ The way to do this varies based upon whether you are using core or some other th
 <li><code>fields</code>: The set of all fields used by the <code>Form</code>. Includes fields from <code>core</code>, theme-specific fields and any <a href="#custom-field-components">custom registered fields</a>;</li>
 <li><code>widgets</code>: The set of all widgets used by the <code>Form</code>. Includes widgets from <code>core</code>, theme-specific widgets and any <a href="#custom-component-registration">custom registered widgets</a>, if any;</li>
 <li><code>rootSchema</code>: The root schema, as passed to the <code>Form</code>, which can contain referenced <a href="/react-jsonschema-form/docs/json-schema/definitions">definitions</a>;</li>
-<li><code>formContext</code>: The <a href="/react-jsonschema-form/docs/api-reference/form-props#formcontext">formContext</a> that was passed to <code>Form</code>;</li>
 <li><code>schemaUtils</code>: The current implementation of the <code>SchemaUtilsType</code> (from <code>@rjsf/utils</code>) in use by the <code>Form</code>. Used to call any of the validation-schema-based utility functions.</li>
 </ul>
 <p>The registry is passed down the component tree, so you can access it from your custom field, custom widget, custom template and <code>SchemaField</code> components.</p>
