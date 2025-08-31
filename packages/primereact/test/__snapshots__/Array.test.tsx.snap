@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`array fields array 1`] = `
 <form
@@ -35,7 +35,6 @@ exports[`array fields array 1`] = `
         className="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields p-fieldset p-component"
         data-pc-name="fieldset"
         data-pc-section="root"
-        formContext={{}}
         formData={[]}
         id="root"
         onClick={null}
@@ -143,7 +142,6 @@ exports[`array fields array icons 1`] = `
         className="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields p-fieldset p-component"
         data-pc-name="fieldset"
         data-pc-section="root"
-        formContext={{}}
         formData={
           [
             "a",
@@ -727,7 +725,6 @@ exports[`array fields fixed array 1`] = `
         data-pc-name="fieldset"
         data-pc-section="root"
         errorSchema={{}}
-        formContext={{}}
         formData={
           [
             undefined,
@@ -1180,7 +1177,6 @@ exports[`with title and description array 1`] = `
         className="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields p-fieldset p-component"
         data-pc-name="fieldset"
         data-pc-section="root"
-        formContext={{}}
         formData={[]}
         id="root"
         onClick={null}
@@ -1294,7 +1290,6 @@ exports[`with title and description array icons 1`] = `
         className="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields p-fieldset p-component"
         data-pc-name="fieldset"
         data-pc-section="root"
-        formContext={{}}
         formData={
           [
             "a",
@@ -1844,7 +1839,6 @@ exports[`with title and description fixed array 1`] = `
         data-pc-name="fieldset"
         data-pc-section="root"
         errorSchema={{}}
-        formContext={{}}
         formData={
           [
             undefined,
@@ -2051,7 +2045,6 @@ exports[`with title and description from both array 1`] = `
         className="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields p-fieldset p-component"
         data-pc-name="fieldset"
         data-pc-section="root"
-        formContext={{}}
         formData={[]}
         id="root"
         onClick={null}
@@ -2165,7 +2158,6 @@ exports[`with title and description from both array icons 1`] = `
         className="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields p-fieldset p-component"
         data-pc-name="fieldset"
         data-pc-section="root"
-        formContext={{}}
         formData={
           [
             "a",
@@ -2715,7 +2707,6 @@ exports[`with title and description from both fixed array 1`] = `
         data-pc-name="fieldset"
         data-pc-section="root"
         errorSchema={{}}
-        formContext={{}}
         formData={
           [
             undefined,
@@ -2922,7 +2913,6 @@ exports[`with title and description from uiSchema array 1`] = `
         className="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields p-fieldset p-component"
         data-pc-name="fieldset"
         data-pc-section="root"
-        formContext={{}}
         formData={[]}
         id="root"
         onClick={null}
@@ -3036,7 +3026,6 @@ exports[`with title and description from uiSchema array icons 1`] = `
         className="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields p-fieldset p-component"
         data-pc-name="fieldset"
         data-pc-section="root"
-        formContext={{}}
         formData={
           [
             "a",
@@ -3586,7 +3575,6 @@ exports[`with title and description from uiSchema fixed array 1`] = `
         data-pc-name="fieldset"
         data-pc-section="root"
         errorSchema={{}}
-        formContext={{}}
         formData={
           [
             undefined,
@@ -3793,7 +3781,6 @@ exports[`with title and description with global label off array 1`] = `
         className="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields p-fieldset p-component"
         data-pc-name="fieldset"
         data-pc-section="root"
-        formContext={{}}
         formData={[]}
         id="root"
         onClick={null}
@@ -3902,7 +3889,6 @@ exports[`with title and description with global label off array icons 1`] = `
         className="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields p-fieldset p-component"
         data-pc-name="fieldset"
         data-pc-section="root"
-        formContext={{}}
         formData={
           [
             "a",
@@ -4419,7 +4405,6 @@ exports[`with title and description with global label off fixed array 1`] = `
         data-pc-name="fieldset"
         data-pc-section="root"
         errorSchema={{}}
-        formContext={{}}
         formData={
           [
             undefined,

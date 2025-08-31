@@ -205,7 +205,6 @@ The following props are passed to custom widget components:
 - `onFocus`: The input focus event handler; call it with the widget id and value;
 - `options`: A map of options passed as a prop to the component (see [Custom widget options](#custom-widget-options)).
 - `options.enumOptions`: For enum fields, this property contains the list of options for the enum as an array of \{ label, value } objects. If the enum is defined using the oneOf/anyOf syntax, the entire schema object for each option is appended onto the \{ schema, label, value } object.
-- `formContext`: The `formContext` object that you passed to `Form`.
 - `rawErrors`: An array of strings listing all generated error messages from encountered errors for this widget.
 - `registry`: A [registry](#the-registry-object) object (read next).
 
@@ -393,7 +392,6 @@ A field component will always be passed the following props:
 - `formData`: The data for this field;
 - `errorSchema`: The tree of errors for this field and its children;
 - `registry`: A [registry](#the-registry-object) object (read next).
-- `formContext`: A [formContext](../api-reference/form-props.md#formcontext) object (read next).
 - `required`: The required status of this field;
 - `disabled`: A boolean value stating if the field is disabled;
 - `readonly`: A boolean value stating if the field is read-only;
@@ -413,7 +411,6 @@ The `registry` is an object containing the registered core, theme and custom fie
 - `fields`: The set of all fields used by the `Form`. Includes fields from `core`, theme-specific fields and any [custom registered fields](#custom-field-components);
 - `widgets`: The set of all widgets used by the `Form`. Includes widgets from `core`, theme-specific widgets and any [custom registered widgets](#custom-component-registration), if any;
 - `rootSchema`: The root schema, as passed to the `Form`, which can contain referenced [definitions](../json-schema/definitions.md);
-- `formContext`: The [formContext](../api-reference/form-props.md#formcontext) that was passed to `Form`;
 - `schemaUtils`: The current implementation of the `SchemaUtilsType` (from `@rjsf/utils`) in use by the `Form`. Used to call any of the validation-schema-based utility functions.
 
 The registry is passed down the component tree, so you can access it from your custom field, custom widget, custom template and `SchemaField` components.

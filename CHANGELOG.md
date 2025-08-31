@@ -15,6 +15,33 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+# 6.0.0-beta.16
+
+## @rjsf/antd
+
+- Updated the `ArrayFieldTemplate`, `FieldTemplate` and `ObjectFieldTemplate` to get `formContext` from the `registry`
+
+## @rjsf/core
+
+- Updated `ArrayField`, `Form`, `LayoutMultiSchemaField` and `SchemaField` to stop passing `formContext`
+
+## @rjsf/daisyui
+
+- Updated `FieldTemplate` to remove `formContext` as it is never used
+
+## @rjsf/semantic-ui
+
+- Updated the `ArrayFieldTemplate`, `BaseInputTemplate`, `CheckboxWidget`, `FieldTemplate`, `RadioWidget`, `RangeSelect`, `SelectWidget`, `TextareaWidget` and `ObjectFieldTemplate` to get `formContext` from the `registry`
+
+## @rjsf/utils
+
+- BREAKING CHANGE: Removed `formContext` from the following interfaces because it is available on `registry`:
+  - `ErrorListProps`, `FieldProps`, `FieldTemplateProps`, `ArrayFieldTemplateProps` and `WidgetProps`
+
+## Dev / docs / playground
+
+- Updated the documentation to remove `formContext` from the interface documentation, adding a BREAKING CHANGE notification in the `v6.x upgrade guide`
+
 # 6.0.0-beta.15
 
 ## @rjsf/chakra-ui

@@ -29,7 +29,6 @@ export default function ArrayFieldTemplate<
     className,
     // classNames, This is not part of the type, so it is likely never passed in
     disabled,
-    formContext,
     items,
     onAddClick,
     // options, This is not part of the type, so it is likely never passed in
@@ -41,7 +40,7 @@ export default function ArrayFieldTemplate<
   } = props;
   const semanticProps = getSemanticProps<T, S, F>({
     uiSchema,
-    formContext,
+    formContext: registry.formContext,
     defaultSchemaProps: { horizontalButtons: true, wrapItem: false },
   });
   const { horizontalButtons, wrapItem } = semanticProps;

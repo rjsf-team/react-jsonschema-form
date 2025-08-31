@@ -597,7 +597,6 @@ export default class Form<
   /** Renders any errors contained in the `state` in using the `ErrorList`, if not disabled by `showErrorList`. */
   renderErrors(registry: Registry<T, S, F>) {
     const { errors, errorSchema, schema, uiSchema } = this.state;
-    const { formContext } = this.props;
     const options = getUiOptions<T, S, F>(uiSchema);
     const ErrorListTemplate = getTemplate<'ErrorListTemplate', T, S, F>('ErrorListTemplate', registry, options);
 
@@ -608,7 +607,6 @@ export default class Form<
           errorSchema={errorSchema || {}}
           schema={schema}
           uiSchema={uiSchema}
-          formContext={formContext}
           registry={registry}
         />
       );
@@ -1117,7 +1115,6 @@ export default class Form<
       noHtml5Validate = false,
       disabled,
       readonly,
-      formContext,
       showErrorList = 'top',
       _internalFormWrapper,
     } = this.props;
@@ -1163,7 +1160,6 @@ export default class Form<
           idSchema={idSchema}
           idPrefix={idPrefix}
           idSeparator={idSeparator}
-          formContext={formContext}
           formData={formData}
           onChange={this.onChange}
           onBlur={this.onBlur}

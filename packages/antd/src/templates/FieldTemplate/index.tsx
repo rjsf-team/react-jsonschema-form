@@ -30,7 +30,6 @@ export default function FieldTemplate<
     disabled,
     displayLabel,
     errors,
-    formContext,
     help,
     hidden,
     id,
@@ -46,6 +45,7 @@ export default function FieldTemplate<
     schema,
     uiSchema,
   } = props;
+  const { formContext } = registry;
   const {
     colon,
     labelCol = VERTICAL_LABEL_COL,

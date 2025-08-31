@@ -606,7 +606,10 @@ describe('oneOf', () => {
     const formContext = { root: 'root-id', root_userId: 'userId-id' };
 
     function CustomSchemaField(props) {
-      const { formContext, idSchema } = props;
+      const {
+        registry: { formContext },
+        idSchema,
+      } = props;
       return (
         <>
           <code id={formContext[idSchema.$id]}>Ha</code>

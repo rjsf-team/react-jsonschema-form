@@ -263,7 +263,6 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
     displayLabel,
     classNames: classNames.join(' ').trim(),
     style: uiOptions.style,
-    formContext,
     formData,
     schema,
     uiSchema,

@@ -58,7 +58,10 @@ describe('allOf', () => {
     };
     const formContext = { root: 'root-id', root_foo: 'foo-id' };
     function CustomSchemaField(props) {
-      const { formContext, idSchema } = props;
+      const {
+        registry: { formContext },
+        idSchema,
+      } = props;
       return (
         <>
           <code id={formContext[idSchema.$id]}>Ha</code>

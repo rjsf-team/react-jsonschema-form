@@ -263,8 +263,6 @@ export type ErrorListProps<
   errorSchema: ErrorSchema<T>;
   /** An array of the errors */
   errors: RJSFValidationError[];
-  /** The `formContext` object that was passed to `Form` */
-  formContext?: F;
 };
 
 /** The properties that are passed to an `FieldErrorTemplate` implementation */
@@ -429,7 +427,7 @@ export interface Registry<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
   experimental_componentUpdateStrategy?: 'customDeep' | 'shallow' | 'always';
 }
 
-/** The properties that are passed to a Field implementation */
+/** The properties that are passed to a `Field` implementation */
 export interface FieldProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>
   extends GenericObjectType,
     RJSFBaseProps<T, S, F>,
@@ -448,8 +446,6 @@ export interface FieldProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F 
   onBlur: (id: string, value: any) => void;
   /** The input focus event handler; call it with the field id and value */
   onFocus: (id: string, value: any) => void;
-  /** The `formContext` object that you passed to `Form` */
-  formContext?: F;
   /** A boolean value stating if the field should autofocus */
   autofocus?: boolean;
   /** A boolean value stating if the field is disabled */
@@ -482,7 +478,7 @@ export type Field<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
   TEST_IDS?: TestIdShape;
 };
 
-/** The properties that are passed to a FieldTemplate implementation */
+/** The properties that are passed to a `FieldTemplate` implementation */
 export type FieldTemplateProps<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
@@ -528,8 +524,6 @@ export type FieldTemplateProps<
    * you don't want to clutter the UI
    */
   displayLabel?: boolean;
-  /** The `formContext` object that was passed to `Form` */
-  formContext?: F;
   /** The formData for this field */
   formData?: T;
   /** The value change event handler; Can be called with a new value to change the value for this field */
@@ -677,7 +671,7 @@ export type ArrayFieldTemplateItemType<
   F extends FormContextType = any,
 > = ArrayFieldItemTemplateType<T, S, F>;
 
-/** The properties that are passed to an ArrayFieldTemplate implementation */
+/** The properties that are passed to an `ArrayFieldTemplate` implementation */
 export type ArrayFieldTemplateProps<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
@@ -703,8 +697,6 @@ export type ArrayFieldTemplateProps<
   hideError?: boolean;
   /** A string value containing the title for the array */
   title: string;
-  /** The `formContext` object that was passed to Form */
-  formContext?: F;
   /** The formData for this array */
   formData?: T;
   /** The tree of errors for this field and its children */
@@ -755,8 +747,6 @@ export type ObjectFieldTemplateProps<
   errorSchema?: ErrorSchema<T>;
   /** The form data for the object */
   formData?: T;
-  /** The `formContext` object that was passed to Form */
-  formContext?: F;
 };
 
 /** The properties that are passed to a WrapIfAdditionalTemplate implementation */
@@ -797,7 +787,7 @@ export interface MultiSchemaFieldTemplateProps<
   optionSchemaField: ReactNode;
 }
 
-/** The properties that are passed to a Widget implementation */
+/** The properties that are passed to a `Widget` implementation */
 export interface WidgetProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>
   extends GenericObjectType,
     RJSFBaseProps<T, S, F>,
@@ -831,8 +821,6 @@ export interface WidgetProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F
     /** The enum options list for a type that supports them */
     enumOptions?: EnumOptionsType<S>[];
   };
-  /** The `formContext` object that you passed to `Form` */
-  formContext?: F;
   /** The input blur event handler; call it with the widget id and value */
   onBlur: (id: string, value: any) => void;
   /** The value change event handler; call it with the new value every time it changes */
