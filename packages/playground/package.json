@@ -62,7 +62,7 @@
     "deep-freeze-es6": "^4.0.1",
     "jss": "^10.10.0",
     "lodash": "^4.17.21",
-    "lucide-react": "^0.539.0",
+    "lucide-react": "^0.542.0",
     "monaco-editor": "^0.52.2",
     "react": "^18.3.1",
     "react-bootstrap": "^2.10.10",
