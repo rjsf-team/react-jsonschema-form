@@ -5004,5 +5004,171 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         empty: null,
       });
     });
+
+    describe('array object reference sharing fix (issue #4756)', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          config: {
+            oneOf: [
+              {
+                title: 'List Configuration',
+                properties: {
+                  items: {
+                    type: 'array',
+                    minItems: 2,
+                    items: {
+                      type: 'object',
+                      properties: {
+                        field: {
+                          type: 'string',
+                        },
+                      },
+                    },
+                  },
+                },
+                required: ['items'],
+              },
+            ],
+          },
+        },
+      };
+
+      it('should create independent object instances for array items via getDefaultFormState', () => {
+        const result = getDefaultFormState(testValidator, schema, undefined, schema);
+
+        expect(result).toStrictEqual({ config: { items: [{}, {}] } });
+
+        // Verify that modifying properties of one array item doesn't affect others
+        expect(result.config.items).toBeDefined();
+        expect(Array.isArray(result.config.items)).toBe(true);
+
+        // Verify objects are independent instances - modifying one shouldn't affect the other
+        (result.config.items[0] as any).field = 'test-value-1';
+        expect((result.config.items[1] as any).field).toBeUndefined();
+        expect(result.config.items[0]).not.toBe(result.config.items[1]);
+      });
+
+      it('should create independent object instances for array items via computeDefaults', () => {
+        const result = computeDefaults(testValidator, schema, {
+          rootSchema: schema,
+        });
+
+        expect(result).toStrictEqual({ config: { items: [{}, {}] } });
+
+        // Verify that modifying properties of one array item doesn't affect others
+        expect(result.config.items).toBeDefined();
+        expect(Array.isArray(result.config.items)).toBe(true);
+
+        // Verify objects are independent instances - modifying one shouldn't affect the other
+        (result.config.items[0] as any).field = 'test-value-1';
+        expect((result.config.items[1] as any).field).toBeUndefined();
+        expect(result.config.items[0]).not.toBe(result.config.items[1]);
+      });
+
+      it('should create independent object instances for array items via getArrayDefaults', () => {
+        const arraySchema: RJSFSchema = {
+          type: 'array',
+          minItems: 3,
+          items: {
+            type: 'object',
+            properties: {
+              field: {
+                type: 'string',
+              },
+            },
+          },
+        };
+
+        const result = getArrayDefaults(testValidator, arraySchema, {
+          rootSchema: arraySchema,
+        });
+
+        expect(result).toStrictEqual([{}, {}, {}]);
+
+        // Verify that array exists and objects are independent
+        expect(result).toBeDefined();
+        expect(Array.isArray(result)).toBe(true);
+
+        // Verify objects are independent instances
+        (result[0] as any).field = 'test-value-1';
+        (result[1] as any).field = 'test-value-2';
+        expect((result[2] as any).field).toBeUndefined();
+        expect(result[0]).not.toBe(result[1]);
+        expect(result[1]).not.toBe(result[2]);
+        expect(result[0]).not.toBe(result[2]);
+      });
+
+      it('should ensure array items with default values are independent instances', () => {
+        const arraySchemaWithDefaults: RJSFSchema = {
+          type: 'array',
+          minItems: 2,
+          items: {
+            type: 'object',
+            properties: {
+              field: {
+                type: 'string',
+                default: 'default-value',
+              },
+            },
+          },
+        };
+
+        const result = getArrayDefaults(testValidator, arraySchemaWithDefaults, {
+          rootSchema: arraySchemaWithDefaults,
+        });
+
+        expect(result).toStrictEqual([{ field: 'default-value' }, { field: 'default-value' }]);
+
+        // Verify that array exists and objects are independent
+        expect(result).toBeDefined();
+        expect(Array.isArray(result)).toBe(true);
+
+        // Verify objects are independent instances - modifying one shouldn't affect the other
+        (result[0] as any).field = 'modified-value';
+        expect((result[1] as any).field).toBe('default-value');
+        expect(result[0]).not.toBe(result[1]);
+      });
+
+      it('should ensure nested objects in arrays are independent instances', () => {
+        const nestedObjectSchema: RJSFSchema = {
+          type: 'array',
+          minItems: 2,
+          items: {
+            type: 'object',
+            properties: {
+              nested: {
+                type: 'object',
+                properties: {
+                  value: {
+                    type: 'string',
+                    default: 'nested-default',
+                  },
+                },
+              },
+            },
+          },
+        };
+
+        const result = getArrayDefaults(testValidator, nestedObjectSchema, {
+          rootSchema: nestedObjectSchema,
+        });
+
+        expect(result).toStrictEqual([
+          { nested: { value: 'nested-default' } },
+          { nested: { value: 'nested-default' } },
+        ]);
+
+        // Verify that array exists and nested objects are independent
+        expect(result).toBeDefined();
+        expect(Array.isArray(result)).toBe(true);
+
+        // Verify nested objects are independent instances
+        (result[0] as any).nested.value = 'modified-nested-value';
+        expect((result[1] as any).nested.value).toBe('nested-default');
+        expect(result[0]).not.toBe(result[1]);
+        expect((result[0] as any).nested).not.toBe((result[1] as any).nested);
+      });
+    });
   });
 }

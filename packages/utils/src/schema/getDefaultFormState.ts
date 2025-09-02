@@ -650,7 +650,7 @@ export function getArrayDefaults<T = any, S extends StrictRJSFSchema = RJSFSchem
   const fillerDefault = fillerSchema.default;
 
   // Calculate filler entries for remaining items (minItems - existing raw data/defaults)
-  const fillerEntries: T[] = new Array(schema.minItems - defaultsLength).fill(
+  const fillerEntries: T[] = Array.from({ length: schema.minItems - defaultsLength }, () =>
     computeDefaults<any, S, F>(validator, fillerSchema, {
       parentDefaults: fillerDefault,
       rootSchema,
