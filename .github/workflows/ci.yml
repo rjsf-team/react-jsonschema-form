@@ -14,7 +14,7 @@ jobs:
         node-version: [20.x, 22.x]
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
@@ -64,12 +64,12 @@ jobs:
     needs: [build]
     steps:
       - name: Download built playground
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: playground
           path: dist
       - name: Download built docs
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: docs
           path: dist/docs
