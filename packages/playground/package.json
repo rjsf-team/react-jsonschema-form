@@ -35,7 +35,7 @@
   },
   "dependencies": {
     "@ant-design/icons": "^6.0.0",
-    "@babel/runtime": "^7.28.2",
+    "@babel/runtime": "^7.28.3",
     "@chakra-ui/react": "^3.24.2",
     "@emotion/react": "^11.14.0",
     "@mantine/core": "^8.2.4",
