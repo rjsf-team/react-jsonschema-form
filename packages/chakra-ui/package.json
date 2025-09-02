@@ -94,7 +94,7 @@
     "eslint": "^8.57.1"
   },
   "dependencies": {
-    "lucide-react": "^0.539.0",
+    "lucide-react": "^0.542.0",
     "react-icons": "^5.5.0",
     "react-select": "^5.10.2"
   }

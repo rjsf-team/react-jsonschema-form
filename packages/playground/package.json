@@ -35,7 +35,7 @@
   },
   "dependencies": {
     "@ant-design/icons": "^6.0.0",
-    "@babel/runtime": "^7.28.2",
+    "@babel/runtime": "^7.28.3",
     "@chakra-ui/react": "^3.24.2",
     "@emotion/react": "^11.14.0",
     "@mantine/core": "^8.2.4",
@@ -62,7 +62,7 @@
     "deep-freeze-es6": "^4.0.1",
     "jss": "^10.10.0",
     "lodash": "^4.17.21",
-    "lucide-react": "^0.539.0",
+    "lucide-react": "^0.542.0",
     "monaco-editor": "^0.52.2",
     "react": "^18.3.1",
     "react-bootstrap": "^2.10.10",
