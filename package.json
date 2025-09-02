@@ -50,7 +50,7 @@
     "@types/estree": "^1.0.8",
     "@types/jest": "^30.0.0",
     "@types/lodash": "^4.17.20",
-    "@types/node": "^22.17.1",
+    "@types/node": "^24.3.0",
     "@types/prettier": "^3.0.0",
     "@types/react": "^18.3.23",
     "@types/react-dom": "^18.3.7",
