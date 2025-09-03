@@ -38,6 +38,7 @@ should change the heading of the (upcoming) version to include a major version b
 - BREAKING CHANGE: Removed `formContext` from the following interfaces because it is available on `registry`:
   - `ErrorListProps`, `FieldProps`, `FieldTemplateProps`, `ArrayFieldTemplateProps` and `WidgetProps`
 - Update `mergeDefaultsWithFormData` to properly handle overriding `undefined` formData with a `null` default value, fixing [#4734](https://github.com/rjsf-team/react-jsonschema-form/issues/4734)
+- Fixed object reference sharing in arrays with minItems when using oneOf schemas, fixing [#4756](https://github.com/rjsf-team/react-jsonschema-form/issues/4756)
 
 ## Dev / docs / playground
 
@@ -234,7 +235,7 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/mui
 
-- Fixed build process to remove the `tsc-alias` replacer that was adding `/index.js` onto the `@mui/Xxxx` imports since MUI 7 has proper ESM support 
+- Fixed build process to remove the `tsc-alias` replacer that was adding `/index.js` onto the `@mui/Xxxx` imports since MUI 7 has proper ESM support
 
 # 6.0.0-beta.9
 
