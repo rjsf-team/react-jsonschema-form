@@ -43,7 +43,7 @@ should change the heading of the (upcoming) version to include a major version b
 ## Dev / docs / playground
 
 - Updated the documentation to remove `formContext` from the interface documentation, adding a BREAKING CHANGE notification in the `v6.x upgrade guide`
-- POTENTIAL BREAKING CHANGE: Updated the `cjs` build for all packages to generate `.cjs` files instead of `.js` files, fixing [#4754]https://github.com/rjsf-team/react-jsonschema-form/issues/4754)
+- POTENTIAL BREAKING CHANGE: Updated the `cjs` build for all packages to generate `.cjs` files instead of `.js` files and updating the `exports` to make the `require` statements use `.cjs`, fixing [#4754]https://github.com/rjsf-team/react-jsonschema-form/issues/4754)
 - Updated `v6.x upgrade guide.md` to note the change to the `cjs` builds
 
 # 6.0.0-beta.15
