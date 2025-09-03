@@ -40,7 +40,7 @@
   ],
   "scripts": {
     "build:ts": "rimraf ./lib && tsc -b tsconfig.build.json && tsc-alias -p tsconfig.build.json",
-    "build:cjs": "esbuild ./src/index.ts --bundle --outfile=dist/index.js --sourcemap --packages=external --format=cjs",
+    "build:cjs": "esbuild ./src/index.ts --bundle --outfile=dist/index.cjs --sourcemap --packages=external --format=cjs",
     "build:esm": "esbuild ./src/index.ts --bundle --outfile=dist/mui.esm.js --sourcemap --packages=external --format=esm",
     "build:umd": "rollup dist/mui.esm.js --format=umd --file=dist/mui.umd.js --name=@rjsf/mui",
     "build": "npm run build:ts && npm run build:cjs && npm run build:esm && npm run build:umd",
