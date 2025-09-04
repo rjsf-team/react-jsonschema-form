@@ -25,7 +25,7 @@ export default function ArrayFieldItemTemplate<
   );
   return (
     <div>
-      <div className='mb-2 flex flex-row flex-wrap'>
+      <div className='mb-2 flex flex-row flex-wrap items-center'>
         <div className='grow shrink'>{children}</div>
         <div className='flex items-end justify-end p-0.5'>
           {hasToolbar && (
