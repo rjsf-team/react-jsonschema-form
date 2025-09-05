@@ -39,6 +39,7 @@ should change the heading of the (upcoming) version to include a major version b
   - `ErrorListProps`, `FieldProps`, `FieldTemplateProps`, `ArrayFieldTemplateProps` and `WidgetProps`
 - Update `mergeDefaultsWithFormData` to properly handle overriding `undefined` formData with a `null` default value, fixing [#4734](https://github.com/rjsf-team/react-jsonschema-form/issues/4734)
 - Fixed object reference sharing in arrays with minItems when using oneOf schemas, fixing [#4756](https://github.com/rjsf-team/react-jsonschema-form/issues/4756)
+- Updated `getWigets()` to output the `schema` when throwing errors, fixing [#4731](https://github.com/rjsf-team/react-jsonschema-form/issues/4731)
 
 ## Dev / docs / playground
 
