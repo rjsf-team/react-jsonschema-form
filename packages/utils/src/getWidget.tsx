@@ -110,7 +110,7 @@ export default function getWidget<T = any, S extends StrictRJSFSchema = RJSFSche
   }
 
   if (typeof widget !== 'string') {
-    throw new Error(`Unsupported widget definition: ${typeof widget}`);
+    throw new Error(`Unsupported widget definition: ${typeof widget} in schema: ${JSON.stringify(schema)}`);
   }
 
   if (widget in registeredWidgets) {
@@ -120,7 +120,7 @@ export default function getWidget<T = any, S extends StrictRJSFSchema = RJSFSche
 
   if (typeof type === 'string') {
     if (!(type in widgetMap)) {
-      throw new Error(`No widget for type '${type}'`);
+      throw new Error(`No widget for type '${type}' in schema: ${JSON.stringify(schema)}`);
     }
 
     if (widget in widgetMap[type]) {
@@ -129,5 +129,5 @@ export default function getWidget<T = any, S extends StrictRJSFSchema = RJSFSche
     }
   }
 
-  throw new Error(`No widget '${widget}' for type '${type}'`);
+  throw new Error(`No widget '${widget}' for type '${type}' in schema: ${JSON.stringify(schema)}`);
 }
