@@ -1,6 +1,6 @@
 {
   "name": "@rjsf/fluentui-rc",
-  "version": "6.0.0-beta.15",
+  "version": "6.0.0-beta.16",
   "description": "FluentUI React Components theme, fields and widgets for react-jsonschema-form",
   "scripts": {
     "build:ts": "tsc -b tsconfig.build.json && tsc-alias -p tsconfig.build.json",
@@ -68,18 +68,18 @@
     "@fluentui/react-components": "^9.63.0",
     "@fluentui/react-icons": "^2.0.298",
     "@fluentui/react-migration-v0-v9": "^9.3.10",
-    "@rjsf/core": "^6.0.0-beta.15",
-    "@rjsf/utils": "^6.0.0-beta.15",
+    "@rjsf/core": "^6.0.0-beta.16",
+    "@rjsf/utils": "^6.0.0-beta.16",
     "react": ">=18"
   },
   "devDependencies": {
-    "@fluentui/react-components": "^9.68.3",
-    "@fluentui/react-icons": "^2.0.307",
-    "@fluentui/react-migration-v0-v9": "^9.6.3",
-    "@rjsf/core": "^6.0.0-beta.15",
-    "@rjsf/snapshot-tests": "^6.0.0-beta.15",
-    "@rjsf/utils": "^6.0.0-beta.15",
-    "@rjsf/validator-ajv8": "^6.0.0-beta.15",
+    "@fluentui/react-components": "^9.70.0",
+    "@fluentui/react-icons": "^2.0.309",
+    "@fluentui/react-migration-v0-v9": "^9.6.6",
+    "@rjsf/core": "^6.0.0-beta.16",
+    "@rjsf/snapshot-tests": "^6.0.0-beta.16",
+    "@rjsf/utils": "^6.0.0-beta.16",
+    "@rjsf/validator-ajv8": "^6.0.0-beta.16",
     "eslint": "^8.57.1"
   },
   "directories": {

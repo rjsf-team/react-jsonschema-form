@@ -405,6 +405,7 @@ exports[`object fields additionalProperties 1`] = `
     className="rjsf-field rjsf-field-object"
   >
     <fieldset
+      aria-labelledby="fieldset:::r5:::legend"
       className="fieldset__root emotion-0"
       data-part="root"
       data-scope="fieldset"
@@ -454,6 +455,7 @@ exports[`object fields additionalProperties 1`] = `
               </div>
               <div>
                 <fieldset
+                  aria-labelledby="fieldset:::r7:::legend"
                   className="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -819,6 +821,7 @@ exports[`object fields object 1`] = `
     className="rjsf-field rjsf-field-object"
   >
     <fieldset
+      aria-labelledby="fieldset:::r0:::legend"
       className="fieldset__root emotion-0"
       data-part="root"
       data-scope="fieldset"
@@ -835,6 +838,7 @@ exports[`object fields object 1`] = `
               className="rjsf-field rjsf-field-string"
             >
               <fieldset
+                aria-labelledby="fieldset:::r1:::legend"
                 className="fieldset__root emotion-0"
                 data-part="root"
                 data-scope="fieldset"
@@ -887,6 +891,7 @@ exports[`object fields object 1`] = `
               className="rjsf-field rjsf-field-number"
             >
               <fieldset
+                aria-labelledby="fieldset:::r3:::legend"
                 className="fieldset__root emotion-0"
                 data-part="root"
                 data-scope="fieldset"
@@ -1358,6 +1363,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
     className="rjsf-field rjsf-field-object"
   >
     <fieldset
+      aria-labelledby="fieldset:::r9:::legend"
       className="fieldset__root emotion-0"
       data-part="root"
       data-scope="fieldset"
@@ -1407,6 +1413,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
               </div>
               <div>
                 <fieldset
+                  aria-labelledby="fieldset:::rb:::legend"
                   className="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -1974,6 +1981,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
     className="rjsf-field rjsf-field-object"
   >
     <fieldset
+      aria-labelledby="fieldset:::ri:::legend"
       className="fieldset__root emotion-0"
       data-part="root"
       data-scope="fieldset"
@@ -2044,6 +2052,7 @@ exports[`object fields with title and description additionalProperties 1`] = `
               </div>
               <div>
                 <fieldset
+                  aria-labelledby="fieldset:::rk:::legend"
                   className="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -2611,6 +2620,7 @@ exports[`object fields with title and description from both additionalProperties
     className="rjsf-field rjsf-field-object"
   >
     <fieldset
+      aria-labelledby="fieldset:::r1c:::legend"
       className="fieldset__root emotion-0"
       data-part="root"
       data-scope="fieldset"
@@ -2681,6 +2691,7 @@ exports[`object fields with title and description from both additionalProperties
               </div>
               <div>
                 <fieldset
+                  aria-labelledby="fieldset:::r1e:::legend"
                   className="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -3091,6 +3102,7 @@ exports[`object fields with title and description from both object 1`] = `
     className="rjsf-field rjsf-field-object"
   >
     <fieldset
+      aria-labelledby="fieldset:::r17:::legend"
       className="fieldset__root emotion-0"
       data-part="root"
       data-scope="fieldset"
@@ -3128,15 +3140,17 @@ exports[`object fields with title and description from both object 1`] = `
               className="rjsf-field rjsf-field-string"
             >
               <fieldset
+                aria-labelledby="fieldset:::r18:::legend"
                 className="fieldset__root emotion-0"
                 data-part="root"
                 data-scope="fieldset"
                 disabled={false}
               >
-                <legend
+                <div
                   className="fieldset__legend emotion-8"
                   data-part="legend"
                   data-scope="fieldset"
+                  id="fieldset:::r18:::legend"
                 >
                   <sup
                     className="emotion-5"
@@ -3144,7 +3158,7 @@ exports[`object fields with title and description from both object 1`] = `
                   >
                     a fancier item A description
                   </sup>
-                </legend>
+                </div>
                 <div
                   className="fieldset__content emotion-1"
                 >
@@ -3192,15 +3206,17 @@ exports[`object fields with title and description from both object 1`] = `
               className="rjsf-field rjsf-field-number"
             >
               <fieldset
+                aria-labelledby="fieldset:::r1a:::legend"
                 className="fieldset__root emotion-0"
                 data-part="root"
                 data-scope="fieldset"
                 disabled={false}
               >
-                <legend
+                <div
                   className="fieldset__legend emotion-8"
                   data-part="legend"
                   data-scope="fieldset"
+                  id="fieldset:::r1a:::legend"
                 >
                   <sup
                     className="emotion-5"
@@ -3208,7 +3224,7 @@ exports[`object fields with title and description from both object 1`] = `
                   >
                     a fancier item B description
                   </sup>
-                </legend>
+                </div>
                 <div
                   className="fieldset__content emotion-1"
                 >
@@ -3703,6 +3719,7 @@ exports[`object fields with title and description from uiSchema additionalProper
     className="rjsf-field rjsf-field-object"
   >
     <fieldset
+      aria-labelledby="fieldset:::rv:::legend"
       className="fieldset__root emotion-0"
       data-part="root"
       data-scope="fieldset"
@@ -3773,6 +3790,7 @@ exports[`object fields with title and description from uiSchema additionalProper
               </div>
               <div>
                 <fieldset
+                  aria-labelledby="fieldset:::r11:::legend"
                   className="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -4183,6 +4201,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
     className="rjsf-field rjsf-field-object"
   >
     <fieldset
+      aria-labelledby="fieldset:::rq:::legend"
       className="fieldset__root emotion-0"
       data-part="root"
       data-scope="fieldset"
@@ -4220,15 +4239,17 @@ exports[`object fields with title and description from uiSchema object 1`] = `
               className="rjsf-field rjsf-field-string"
             >
               <fieldset
+                aria-labelledby="fieldset:::rr:::legend"
                 className="fieldset__root emotion-0"
                 data-part="root"
                 data-scope="fieldset"
                 disabled={false}
               >
-                <legend
+                <div
                   className="fieldset__legend emotion-8"
                   data-part="legend"
                   data-scope="fieldset"
+                  id="fieldset:::rr:::legend"
                 >
                   <sup
                     className="emotion-5"
@@ -4236,7 +4257,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
                   >
                     a fancier item A description
                   </sup>
-                </legend>
+                </div>
                 <div
                   className="fieldset__content emotion-1"
                 >
@@ -4284,15 +4305,17 @@ exports[`object fields with title and description from uiSchema object 1`] = `
               className="rjsf-field rjsf-field-number"
             >
               <fieldset
+                aria-labelledby="fieldset:::rt:::legend"
                 className="fieldset__root emotion-0"
                 data-part="root"
                 data-scope="fieldset"
                 disabled={false}
               >
-                <legend
+                <div
                   className="fieldset__legend emotion-8"
                   data-part="legend"
                   data-scope="fieldset"
+                  id="fieldset:::rt:::legend"
                 >
                   <sup
                     className="emotion-5"
@@ -4300,7 +4323,7 @@ exports[`object fields with title and description from uiSchema object 1`] = `
                   >
                     a fancier item B description
                   </sup>
-                </legend>
+                </div>
                 <div
                   className="fieldset__content emotion-1"
                 >
@@ -4795,6 +4818,7 @@ exports[`object fields with title and description from uiSchema show add button 
     className="rjsf-field rjsf-field-object"
   >
     <fieldset
+      aria-labelledby="fieldset:::r13:::legend"
       className="fieldset__root emotion-0"
       data-part="root"
       data-scope="fieldset"
@@ -4865,6 +4889,7 @@ exports[`object fields with title and description from uiSchema show add button 
               </div>
               <div>
                 <fieldset
+                  aria-labelledby="fieldset:::r15:::legend"
                   className="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -5275,6 +5300,7 @@ exports[`object fields with title and description object 1`] = `
     className="rjsf-field rjsf-field-object"
   >
     <fieldset
+      aria-labelledby="fieldset:::rd:::legend"
       className="fieldset__root emotion-0"
       data-part="root"
       data-scope="fieldset"
@@ -5312,15 +5338,17 @@ exports[`object fields with title and description object 1`] = `
               className="rjsf-field rjsf-field-string"
             >
               <fieldset
+                aria-labelledby="fieldset:::re:::legend"
                 className="fieldset__root emotion-0"
                 data-part="root"
                 data-scope="fieldset"
                 disabled={false}
               >
-                <legend
+                <div
                   className="fieldset__legend emotion-8"
                   data-part="legend"
                   data-scope="fieldset"
+                  id="fieldset:::re:::legend"
                 >
                   <sup
                     className="emotion-5"
@@ -5328,7 +5356,7 @@ exports[`object fields with title and description object 1`] = `
                   >
                     A description
                   </sup>
-                </legend>
+                </div>
                 <div
                   className="fieldset__content emotion-1"
                 >
@@ -5376,15 +5404,17 @@ exports[`object fields with title and description object 1`] = `
               className="rjsf-field rjsf-field-number"
             >
               <fieldset
+                aria-labelledby="fieldset:::rg:::legend"
                 className="fieldset__root emotion-0"
                 data-part="root"
                 data-scope="fieldset"
                 disabled={false}
               >
-                <legend
+                <div
                   className="fieldset__legend emotion-8"
                   data-part="legend"
                   data-scope="fieldset"
+                  id="fieldset:::rg:::legend"
                 >
                   <sup
                     className="emotion-5"
@@ -5392,7 +5422,7 @@ exports[`object fields with title and description object 1`] = `
                   >
                     B description
                   </sup>
-                </legend>
+                </div>
                 <div
                   className="fieldset__content emotion-1"
                 >
@@ -5887,6 +5917,7 @@ exports[`object fields with title and description show add button and fields if 
     className="rjsf-field rjsf-field-object"
   >
     <fieldset
+      aria-labelledby="fieldset:::rm:::legend"
       className="fieldset__root emotion-0"
       data-part="root"
       data-scope="fieldset"
@@ -5957,6 +5988,7 @@ exports[`object fields with title and description show add button and fields if 
               </div>
               <div>
                 <fieldset
+                  aria-labelledby="fieldset:::ro:::legend"
                   className="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -6496,6 +6528,7 @@ exports[`object fields with title and description with global label off addition
     className="rjsf-field rjsf-field-object"
   >
     <fieldset
+      aria-labelledby="fieldset:::r1l:::legend"
       className="fieldset__root emotion-0"
       data-part="root"
       data-scope="fieldset"
@@ -6545,6 +6578,7 @@ exports[`object fields with title and description with global label off addition
               </div>
               <div>
                 <fieldset
+                  aria-labelledby="fieldset:::r1n:::legend"
                   className="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -6875,6 +6909,7 @@ exports[`object fields with title and description with global label off object 1
     className="rjsf-field rjsf-field-object"
   >
     <fieldset
+      aria-labelledby="fieldset:::r1g:::legend"
       className="fieldset__root emotion-0"
       data-part="root"
       data-scope="fieldset"
@@ -6891,6 +6926,7 @@ exports[`object fields with title and description with global label off object 1
               className="rjsf-field rjsf-field-string"
             >
               <fieldset
+                aria-labelledby="fieldset:::r1h:::legend"
                 className="fieldset__root emotion-0"
                 data-part="root"
                 data-scope="fieldset"
@@ -6934,6 +6970,7 @@ exports[`object fields with title and description with global label off object 1
               className="rjsf-field rjsf-field-number"
             >
               <fieldset
+                aria-labelledby="fieldset:::r1j:::legend"
                 className="fieldset__root emotion-0"
                 data-part="root"
                 data-scope="fieldset"
@@ -7396,6 +7433,7 @@ exports[`object fields with title and description with global label off show add
     className="rjsf-field rjsf-field-object"
   >
     <fieldset
+      aria-labelledby="fieldset:::r1p:::legend"
       className="fieldset__root emotion-0"
       data-part="root"
       data-scope="fieldset"
@@ -7445,6 +7483,7 @@ exports[`object fields with title and description with global label off show add
               </div>
               <div>
                 <fieldset
+                  aria-labelledby="fieldset:::r1r:::legend"
                   className="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"

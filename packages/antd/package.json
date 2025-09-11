@@ -1,6 +1,6 @@
 {
   "name": "@rjsf/antd",
-  "version": "6.0.0-beta.15",
+  "version": "6.0.0-beta.16",
   "description": "Ant Design theme, fields and widgets for react-jsonschema-form",
   "main": "dist/index.js",
   "module": "lib/index.js",
@@ -63,8 +63,8 @@
   },
   "peerDependencies": {
     "@ant-design/icons": "^6.0.0",
-    "@rjsf/core": "^6.0.0-beta.15",
-    "@rjsf/utils": "^6.0.0-beta.15",
+    "@rjsf/core": "^6.0.0-beta.16",
+    "@rjsf/utils": "^6.0.0-beta.16",
     "antd": "^5.8.5",
     "dayjs": "^1.8.0",
     "react": ">=18"
@@ -76,15 +76,15 @@
     "rc-picker": "^4.11.3"
   },
   "devDependencies": {
-    "@ant-design/icons": "^6.0.0",
-    "@rjsf/core": "^6.0.0-beta.15",
-    "@rjsf/snapshot-tests": "^6.0.0-beta.15",
-    "@rjsf/utils": "^6.0.0-beta.15",
-    "@rjsf/validator-ajv8": "^6.0.0-beta.15",
+    "@ant-design/icons": "^6.0.1",
+    "@rjsf/core": "^6.0.0-beta.16",
+    "@rjsf/snapshot-tests": "^6.0.0-beta.16",
+    "@rjsf/utils": "^6.0.0-beta.16",
+    "@rjsf/validator-ajv8": "^6.0.0-beta.16",
     "@rollup/plugin-replace": "^6.0.2",
-    "antd": "^5.27.0",
+    "antd": "^5.27.3",
     "atob": "^2.1.2",
-    "dayjs": "^1.11.13",
+    "dayjs": "^1.11.18",
     "eslint": "^8.57.1"
   },
   "repository": {

@@ -1,6 +1,6 @@
 {
   "name": "@rjsf/snapshot-tests",
-  "version": "6.0.0-beta.15",
+  "version": "6.0.0-beta.16",
   "description": "A set of snapshot tests to be used for testing RJSF theme.",
   "scripts": {
     "build": "tsc -b .",
@@ -28,15 +28,15 @@
     "node": ">=20"
   },
   "peerDependencies": {
-    "@rjsf/core": "^6.0.0-beta.15",
-    "@rjsf/utils": "^6.0.0-beta.15",
+    "@rjsf/core": "^6.0.0-beta.16",
+    "@rjsf/utils": "^6.0.0-beta.16",
     "react": ">=18",
     "react-test-renderer": "^18.2.0"
   },
   "devDependencies": {
-    "@rjsf/core": "^6.0.0-beta.15",
-    "@rjsf/utils": "^6.0.0-beta.15",
-    "@rjsf/validator-ajv8": "^6.0.0-beta.15"
+    "@rjsf/core": "^6.0.0-beta.16",
+    "@rjsf/utils": "^6.0.0-beta.16",
+    "@rjsf/validator-ajv8": "^6.0.0-beta.16"
   },
   "repository": {
     "type": "git",
