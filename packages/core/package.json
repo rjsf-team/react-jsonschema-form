@@ -79,7 +79,7 @@
     "@rjsf/snapshot-tests": "^6.0.0-beta.16",
     "@rjsf/utils": "^6.0.0-beta.16",
     "@rjsf/validator-ajv8": "^6.0.0-beta.16",
-    "@testing-library/jest-dom": "^6.6.4",
+    "@testing-library/jest-dom": "^6.8.0",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^14.6.1",
     "ajv": "^8.17.1",

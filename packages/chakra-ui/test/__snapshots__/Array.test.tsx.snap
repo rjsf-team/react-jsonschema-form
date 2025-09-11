@@ -143,6 +143,7 @@ exports[`array fields array 1`] = `
     className="rjsf-field rjsf-field-array"
   >
     <fieldset
+      aria-labelledby="fieldset:::r0:::legend"
       className="fieldset__root emotion-0"
       data-part="root"
       data-scope="fieldset"
@@ -585,6 +586,7 @@ exports[`array fields array icons 1`] = `
     className="rjsf-field rjsf-field-array"
   >
     <fieldset
+      aria-labelledby="fieldset:::r9:::legend"
       className="fieldset__root emotion-0"
       data-part="root"
       data-scope="fieldset"
@@ -608,6 +610,7 @@ exports[`array fields array icons 1`] = `
                     className="rjsf-field rjsf-field-string"
                   >
                     <fieldset
+                      aria-labelledby="fieldset:::ra:::legend"
                       className="fieldset__root emotion-0"
                       data-part="root"
                       data-scope="fieldset"
@@ -792,6 +795,7 @@ exports[`array fields array icons 1`] = `
                     className="rjsf-field rjsf-field-string"
                   >
                     <fieldset
+                      aria-labelledby="fieldset:::rc:::legend"
                       className="fieldset__root emotion-0"
                       data-part="root"
                       data-scope="fieldset"
@@ -1474,6 +1478,7 @@ exports[`array fields checkboxes 1`] = `
     className="rjsf-field rjsf-field-array"
   >
     <fieldset
+      aria-labelledby="fieldset:::r6:::legend"
       className="fieldset__root emotion-0"
       data-part="root"
       data-scope="fieldset"
@@ -2002,6 +2007,7 @@ exports[`array fields empty errors array 1`] = `
     className="rjsf-field rjsf-field-object"
   >
     <fieldset
+      aria-labelledby="fieldset:::rk:::legend"
       className="fieldset__root emotion-0"
       data-part="root"
       data-scope="fieldset"
@@ -2018,6 +2024,7 @@ exports[`array fields empty errors array 1`] = `
               className="rjsf-field rjsf-field-string"
             >
               <fieldset
+                aria-labelledby="fieldset:::rl:::legend"
                 className="fieldset__root emotion-0"
                 data-part="root"
                 data-scope="fieldset"
@@ -2306,6 +2313,7 @@ exports[`array fields fixed array 1`] = `
     className="rjsf-field rjsf-field-array"
   >
     <fieldset
+      aria-labelledby="fieldset:::r1:::legend"
       className="fieldset__root emotion-0"
       data-part="root"
       data-scope="fieldset"
@@ -2329,6 +2337,7 @@ exports[`array fields fixed array 1`] = `
                     className="rjsf-field rjsf-field-string"
                   >
                     <fieldset
+                      aria-labelledby="fieldset:::r2:::legend"
                       className="fieldset__root emotion-0"
                       data-part="root"
                       data-scope="fieldset"
@@ -2379,6 +2388,7 @@ exports[`array fields fixed array 1`] = `
                     className="rjsf-field rjsf-field-number"
                   >
                     <fieldset
+                      aria-labelledby="fieldset:::r4:::legend"
                       className="fieldset__root emotion-0"
                       data-part="root"
                       data-scope="fieldset"
@@ -2877,6 +2887,7 @@ exports[`array fields has errors 1`] = `
     className="rjsf-field rjsf-field-object"
   >
     <fieldset
+      aria-labelledby="fieldset:::re:::legend"
       className="fieldset__root emotion-8"
       data-part="root"
       data-scope="fieldset"
@@ -2893,6 +2904,7 @@ exports[`array fields has errors 1`] = `
               className="rjsf-field rjsf-field-string rjsf-field-error"
             >
               <fieldset
+                aria-labelledby="fieldset:::rf:::legend"
                 className="fieldset__root emotion-8"
                 data-invalid=""
                 data-part="root"
@@ -3203,6 +3215,7 @@ exports[`array fields no errors 1`] = `
     className="rjsf-field rjsf-field-object"
   >
     <fieldset
+      aria-labelledby="fieldset:::rh:::legend"
       className="fieldset__root emotion-0"
       data-part="root"
       data-scope="fieldset"
@@ -3219,6 +3232,7 @@ exports[`array fields no errors 1`] = `
               className="rjsf-field rjsf-field-string"
             >
               <fieldset
+                aria-labelledby="fieldset:::ri:::legend"
                 className="fieldset__root emotion-0"
                 data-part="root"
                 data-scope="fieldset"
@@ -3455,6 +3469,7 @@ exports[`with title and description array 1`] = `
     className="rjsf-field rjsf-field-array"
   >
     <fieldset
+      aria-labelledby="fieldset:::rn:::legend"
       className="fieldset__root emotion-0"
       data-part="root"
       data-scope="fieldset"
@@ -3996,6 +4011,7 @@ exports[`with title and description array icons 1`] = `
     className="rjsf-field rjsf-field-array"
   >
     <fieldset
+      aria-labelledby="fieldset:::r10:::legend"
       className="fieldset__root emotion-0"
       data-part="root"
       data-scope="fieldset"
@@ -4040,15 +4056,17 @@ exports[`with title and description array icons 1`] = `
                     className="rjsf-field rjsf-field-string"
                   >
                     <fieldset
+                      aria-labelledby="fieldset:::r11:::legend"
                       className="fieldset__root emotion-0"
                       data-part="root"
                       data-scope="fieldset"
                       disabled={false}
                     >
-                      <legend
+                      <div
                         className="fieldset__legend emotion-10"
                         data-part="legend"
                         data-scope="fieldset"
+                        id="fieldset:::r11:::legend"
                       >
                         <sup
                           className="emotion-5"
@@ -4056,7 +4074,7 @@ exports[`with title and description array icons 1`] = `
                         >
                           a test item description
                         </sup>
-                      </legend>
+                      </div>
                       <div
                         className="fieldset__content emotion-1"
                       >
@@ -4070,6 +4088,7 @@ exports[`with title and description array icons 1`] = `
                           <label
                             className="chakra-field__label emotion-14"
                             data-part="label"
+                            data-required=""
                             data-scope="field"
                             htmlFor=":r12:"
                             id="field:::r12:::label"
@@ -4251,15 +4270,17 @@ exports[`with title and description array icons 1`] = `
                     className="rjsf-field rjsf-field-string"
                   >
                     <fieldset
+                      aria-labelledby="fieldset:::r13:::legend"
                       className="fieldset__root emotion-0"
                       data-part="root"
                       data-scope="fieldset"
                       disabled={false}
                     >
-                      <legend
+                      <div
                         className="fieldset__legend emotion-10"
                         data-part="legend"
                         data-scope="fieldset"
+                        id="fieldset:::r13:::legend"
                       >
                         <sup
                           className="emotion-5"
@@ -4267,7 +4288,7 @@ exports[`with title and description array icons 1`] = `
                         >
                           a test item description
                         </sup>
-                      </legend>
+                      </div>
                       <div
                         className="fieldset__content emotion-1"
                       >
@@ -4281,6 +4302,7 @@ exports[`with title and description array icons 1`] = `
                           <label
                             className="chakra-field__label emotion-14"
                             data-part="label"
+                            data-required=""
                             data-scope="field"
                             htmlFor=":r14:"
                             id="field:::r14:::label"
@@ -5007,15 +5029,17 @@ exports[`with title and description checkboxes 1`] = `
     className="rjsf-field rjsf-field-array"
   >
     <fieldset
+      aria-labelledby="fieldset:::rt:::legend"
       className="fieldset__root emotion-0"
       data-part="root"
       data-scope="fieldset"
       disabled={false}
     >
-      <legend
+      <div
         className="fieldset__legend emotion-1"
         data-part="legend"
         data-scope="fieldset"
+        id="fieldset:::rt:::legend"
       >
         <sup
           className="emotion-2"
@@ -5023,7 +5047,7 @@ exports[`with title and description checkboxes 1`] = `
         >
           a test description
         </sup>
-      </legend>
+      </div>
       <div
         className="fieldset__content emotion-3"
       >
@@ -5626,6 +5650,7 @@ exports[`with title and description fixed array 1`] = `
     className="rjsf-field rjsf-field-array"
   >
     <fieldset
+      aria-labelledby="fieldset:::ro:::legend"
       className="fieldset__root emotion-0"
       data-part="root"
       data-scope="fieldset"
@@ -5670,15 +5695,17 @@ exports[`with title and description fixed array 1`] = `
                     className="rjsf-field rjsf-field-string"
                   >
                     <fieldset
+                      aria-labelledby="fieldset:::rp:::legend"
                       className="fieldset__root emotion-0"
                       data-part="root"
                       data-scope="fieldset"
                       disabled={false}
                     >
-                      <legend
+                      <div
                         className="fieldset__legend emotion-10"
                         data-part="legend"
                         data-scope="fieldset"
+                        id="fieldset:::rp:::legend"
                       >
                         <sup
                           className="emotion-5"
@@ -5686,7 +5713,7 @@ exports[`with title and description fixed array 1`] = `
                         >
                           a test item description
                         </sup>
-                      </legend>
+                      </div>
                       <div
                         className="fieldset__content emotion-1"
                       >
@@ -5700,6 +5727,7 @@ exports[`with title and description fixed array 1`] = `
                           <label
                             className="chakra-field__label emotion-14"
                             data-part="label"
+                            data-required=""
                             data-scope="field"
                             htmlFor=":rq:"
                             id="field:::rq:::label"
@@ -5747,15 +5775,17 @@ exports[`with title and description fixed array 1`] = `
                     className="rjsf-field rjsf-field-number"
                   >
                     <fieldset
+                      aria-labelledby="fieldset:::rr:::legend"
                       className="fieldset__root emotion-0"
                       data-part="root"
                       data-scope="fieldset"
                       disabled={false}
                     >
-                      <legend
+                      <div
                         className="fieldset__legend emotion-10"
                         data-part="legend"
                         data-scope="fieldset"
+                        id="fieldset:::rr:::legend"
                       >
                         <sup
                           className="emotion-5"
@@ -5763,7 +5793,7 @@ exports[`with title and description fixed array 1`] = `
                         >
                           a test item description
                         </sup>
-                      </legend>
+                      </div>
                       <div
                         className="fieldset__content emotion-1"
                       >
@@ -5777,6 +5807,7 @@ exports[`with title and description fixed array 1`] = `
                           <label
                             className="chakra-field__label emotion-14"
                             data-part="label"
+                            data-required=""
                             data-scope="field"
                             htmlFor=":rs:"
                             id="field:::rs:::label"
@@ -6006,6 +6037,7 @@ exports[`with title and description from both array 1`] = `
     className="rjsf-field rjsf-field-array"
   >
     <fieldset
+      aria-labelledby="fieldset:::r1j:::legend"
       className="fieldset__root emotion-0"
       data-part="root"
       data-scope="fieldset"
@@ -6547,6 +6579,7 @@ exports[`with title and description from both array icons 1`] = `
     className="rjsf-field rjsf-field-array"
   >
     <fieldset
+      aria-labelledby="fieldset:::r1s:::legend"
       className="fieldset__root emotion-0"
       data-part="root"
       data-scope="fieldset"
@@ -6591,15 +6624,17 @@ exports[`with title and description from both array icons 1`] = `
                     className="rjsf-field rjsf-field-string"
                   >
                     <fieldset
+                      aria-labelledby="fieldset:::r1t:::legend"
                       className="fieldset__root emotion-0"
                       data-part="root"
                       data-scope="fieldset"
                       disabled={false}
                     >
-                      <legend
+                      <div
                         className="fieldset__legend emotion-10"
                         data-part="legend"
                         data-scope="fieldset"
+                        id="fieldset:::r1t:::legend"
                       >
                         <sup
                           className="emotion-5"
@@ -6607,7 +6642,7 @@ exports[`with title and description from both array icons 1`] = `
                         >
                           a fancier item description
                         </sup>
-                      </legend>
+                      </div>
                       <div
                         className="fieldset__content emotion-1"
                       >
@@ -6621,6 +6656,7 @@ exports[`with title and description from both array icons 1`] = `
                           <label
                             className="chakra-field__label emotion-14"
                             data-part="label"
+                            data-required=""
                             data-scope="field"
                             htmlFor=":r1u:"
                             id="field:::r1u:::label"
@@ -6802,15 +6838,17 @@ exports[`with title and description from both array icons 1`] = `
                     className="rjsf-field rjsf-field-string"
                   >
                     <fieldset
+                      aria-labelledby="fieldset:::r1v:::legend"
                       className="fieldset__root emotion-0"
                       data-part="root"
                       data-scope="fieldset"
                       disabled={false}
                     >
-                      <legend
+                      <div
                         className="fieldset__legend emotion-10"
                         data-part="legend"
                         data-scope="fieldset"
+                        id="fieldset:::r1v:::legend"
                       >
                         <sup
                           className="emotion-5"
@@ -6818,7 +6856,7 @@ exports[`with title and description from both array icons 1`] = `
                         >
                           a fancier item description
                         </sup>
-                      </legend>
+                      </div>
                       <div
                         className="fieldset__content emotion-1"
                       >
@@ -6832,6 +6870,7 @@ exports[`with title and description from both array icons 1`] = `
                           <label
                             className="chakra-field__label emotion-14"
                             data-part="label"
+                            data-required=""
                             data-scope="field"
                             htmlFor=":r20:"
                             id="field:::r20:::label"
@@ -7558,15 +7597,17 @@ exports[`with title and description from both checkboxes 1`] = `
     className="rjsf-field rjsf-field-array"
   >
     <fieldset
+      aria-labelledby="fieldset:::r1p:::legend"
       className="fieldset__root emotion-0"
       data-part="root"
       data-scope="fieldset"
       disabled={false}
     >
-      <legend
+      <div
         className="fieldset__legend emotion-1"
         data-part="legend"
         data-scope="fieldset"
+        id="fieldset:::r1p:::legend"
       >
         <sup
           className="emotion-2"
@@ -7574,7 +7615,7 @@ exports[`with title and description from both checkboxes 1`] = `
         >
           a fancier description
         </sup>
-      </legend>
+      </div>
       <div
         className="fieldset__content emotion-3"
       >
@@ -8177,6 +8218,7 @@ exports[`with title and description from both fixed array 1`] = `
     className="rjsf-field rjsf-field-array"
   >
     <fieldset
+      aria-labelledby="fieldset:::r1k:::legend"
       className="fieldset__root emotion-0"
       data-part="root"
       data-scope="fieldset"
@@ -8221,15 +8263,17 @@ exports[`with title and description from both fixed array 1`] = `
                     className="rjsf-field rjsf-field-string"
                   >
                     <fieldset
+                      aria-labelledby="fieldset:::r1l:::legend"
                       className="fieldset__root emotion-0"
                       data-part="root"
                       data-scope="fieldset"
                       disabled={false}
                     >
-                      <legend
+                      <div
                         className="fieldset__legend emotion-10"
                         data-part="legend"
                         data-scope="fieldset"
+                        id="fieldset:::r1l:::legend"
                       >
                         <sup
                           className="emotion-5"
@@ -8237,7 +8281,7 @@ exports[`with title and description from both fixed array 1`] = `
                         >
                           a fancier item description
                         </sup>
-                      </legend>
+                      </div>
                       <div
                         className="fieldset__content emotion-1"
                       >
@@ -8251,6 +8295,7 @@ exports[`with title and description from both fixed array 1`] = `
                           <label
                             className="chakra-field__label emotion-14"
                             data-part="label"
+                            data-required=""
                             data-scope="field"
                             htmlFor=":r1m:"
                             id="field:::r1m:::label"
@@ -8298,15 +8343,17 @@ exports[`with title and description from both fixed array 1`] = `
                     className="rjsf-field rjsf-field-number"
                   >
                     <fieldset
+                      aria-labelledby="fieldset:::r1n:::legend"
                       className="fieldset__root emotion-0"
                       data-part="root"
                       data-scope="fieldset"
                       disabled={false}
                     >
-                      <legend
+                      <div
                         className="fieldset__legend emotion-10"
                         data-part="legend"
                         data-scope="fieldset"
+                        id="fieldset:::r1n:::legend"
                       >
                         <sup
                           className="emotion-5"
@@ -8314,7 +8361,7 @@ exports[`with title and description from both fixed array 1`] = `
                         >
                           a fancier item description
                         </sup>
-                      </legend>
+                      </div>
                       <div
                         className="fieldset__content emotion-1"
                       >
@@ -8328,6 +8375,7 @@ exports[`with title and description from both fixed array 1`] = `
                           <label
                             className="chakra-field__label emotion-14"
                             data-part="label"
+                            data-required=""
                             data-scope="field"
                             htmlFor=":r1o:"
                             id="field:::r1o:::label"
@@ -8557,6 +8605,7 @@ exports[`with title and description from uiSchema array 1`] = `
     className="rjsf-field rjsf-field-array"
   >
     <fieldset
+      aria-labelledby="fieldset:::r15:::legend"
       className="fieldset__root emotion-0"
       data-part="root"
       data-scope="fieldset"
@@ -9098,6 +9147,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
     className="rjsf-field rjsf-field-array"
   >
     <fieldset
+      aria-labelledby="fieldset:::r1e:::legend"
       className="fieldset__root emotion-0"
       data-part="root"
       data-scope="fieldset"
@@ -9142,15 +9192,17 @@ exports[`with title and description from uiSchema array icons 1`] = `
                     className="rjsf-field rjsf-field-string"
                   >
                     <fieldset
+                      aria-labelledby="fieldset:::r1f:::legend"
                       className="fieldset__root emotion-0"
                       data-part="root"
                       data-scope="fieldset"
                       disabled={false}
                     >
-                      <legend
+                      <div
                         className="fieldset__legend emotion-10"
                         data-part="legend"
                         data-scope="fieldset"
+                        id="fieldset:::r1f:::legend"
                       >
                         <sup
                           className="emotion-5"
@@ -9158,7 +9210,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                         >
                           a fancier item description
                         </sup>
-                      </legend>
+                      </div>
                       <div
                         className="fieldset__content emotion-1"
                       >
@@ -9172,6 +9224,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                           <label
                             className="chakra-field__label emotion-14"
                             data-part="label"
+                            data-required=""
                             data-scope="field"
                             htmlFor=":r1g:"
                             id="field:::r1g:::label"
@@ -9353,15 +9406,17 @@ exports[`with title and description from uiSchema array icons 1`] = `
                     className="rjsf-field rjsf-field-string"
                   >
                     <fieldset
+                      aria-labelledby="fieldset:::r1h:::legend"
                       className="fieldset__root emotion-0"
                       data-part="root"
                       data-scope="fieldset"
                       disabled={false}
                     >
-                      <legend
+                      <div
                         className="fieldset__legend emotion-10"
                         data-part="legend"
                         data-scope="fieldset"
+                        id="fieldset:::r1h:::legend"
                       >
                         <sup
                           className="emotion-5"
@@ -9369,7 +9424,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                         >
                           a fancier item description
                         </sup>
-                      </legend>
+                      </div>
                       <div
                         className="fieldset__content emotion-1"
                       >
@@ -9383,6 +9438,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
                           <label
                             className="chakra-field__label emotion-14"
                             data-part="label"
+                            data-required=""
                             data-scope="field"
                             htmlFor=":r1i:"
                             id="field:::r1i:::label"
@@ -10109,15 +10165,17 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
     className="rjsf-field rjsf-field-array"
   >
     <fieldset
+      aria-labelledby="fieldset:::r1b:::legend"
       className="fieldset__root emotion-0"
       data-part="root"
       data-scope="fieldset"
       disabled={false}
     >
-      <legend
+      <div
         className="fieldset__legend emotion-1"
         data-part="legend"
         data-scope="fieldset"
+        id="fieldset:::r1b:::legend"
       >
         <sup
           className="emotion-2"
@@ -10125,7 +10183,7 @@ exports[`with title and description from uiSchema checkboxes 1`] = `
         >
           a fancier description
         </sup>
-      </legend>
+      </div>
       <div
         className="fieldset__content emotion-3"
       >
@@ -10728,6 +10786,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
     className="rjsf-field rjsf-field-array"
   >
     <fieldset
+      aria-labelledby="fieldset:::r16:::legend"
       className="fieldset__root emotion-0"
       data-part="root"
       data-scope="fieldset"
@@ -10772,15 +10831,17 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                     className="rjsf-field rjsf-field-string"
                   >
                     <fieldset
+                      aria-labelledby="fieldset:::r17:::legend"
                       className="fieldset__root emotion-0"
                       data-part="root"
                       data-scope="fieldset"
                       disabled={false}
                     >
-                      <legend
+                      <div
                         className="fieldset__legend emotion-10"
                         data-part="legend"
                         data-scope="fieldset"
+                        id="fieldset:::r17:::legend"
                       >
                         <sup
                           className="emotion-5"
@@ -10788,7 +10849,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                         >
                           a fancier item description
                         </sup>
-                      </legend>
+                      </div>
                       <div
                         className="fieldset__content emotion-1"
                       >
@@ -10802,6 +10863,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                           <label
                             className="chakra-field__label emotion-14"
                             data-part="label"
+                            data-required=""
                             data-scope="field"
                             htmlFor=":r18:"
                             id="field:::r18:::label"
@@ -10849,15 +10911,17 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                     className="rjsf-field rjsf-field-number"
                   >
                     <fieldset
+                      aria-labelledby="fieldset:::r19:::legend"
                       className="fieldset__root emotion-0"
                       data-part="root"
                       data-scope="fieldset"
                       disabled={false}
                     >
-                      <legend
+                      <div
                         className="fieldset__legend emotion-10"
                         data-part="legend"
                         data-scope="fieldset"
+                        id="fieldset:::r19:::legend"
                       >
                         <sup
                           className="emotion-5"
@@ -10865,7 +10929,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                         >
                           a fancier item description
                         </sup>
-                      </legend>
+                      </div>
                       <div
                         className="fieldset__content emotion-1"
                       >
@@ -10879,6 +10943,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                           <label
                             className="chakra-field__label emotion-14"
                             data-part="label"
+                            data-required=""
                             data-scope="field"
                             htmlFor=":r1a:"
                             id="field:::r1a:::label"
@@ -11080,6 +11145,7 @@ exports[`with title and description with global label off array 1`] = `
     className="rjsf-field rjsf-field-array"
   >
     <fieldset
+      aria-labelledby="fieldset:::r21:::legend"
       className="fieldset__root emotion-0"
       data-part="root"
       data-scope="fieldset"
@@ -11522,6 +11588,7 @@ exports[`with title and description with global label off array icons 1`] = `
     className="rjsf-field rjsf-field-array"
   >
     <fieldset
+      aria-labelledby="fieldset:::r2a:::legend"
       className="fieldset__root emotion-0"
       data-part="root"
       data-scope="fieldset"
@@ -11545,6 +11612,7 @@ exports[`with title and description with global label off array icons 1`] = `
                     className="rjsf-field rjsf-field-string"
                   >
                     <fieldset
+                      aria-labelledby="fieldset:::r2b:::legend"
                       className="fieldset__root emotion-0"
                       data-part="root"
                       data-scope="fieldset"
@@ -11729,6 +11797,7 @@ exports[`with title and description with global label off array icons 1`] = `
                     className="rjsf-field rjsf-field-string"
                   >
                     <fieldset
+                      aria-labelledby="fieldset:::r2d:::legend"
                       className="fieldset__root emotion-0"
                       data-part="root"
                       data-scope="fieldset"
@@ -12458,15 +12527,17 @@ exports[`with title and description with global label off checkboxes 1`] = `
     className="rjsf-field rjsf-field-array"
   >
     <fieldset
+      aria-labelledby="fieldset:::r27:::legend"
       className="fieldset__root emotion-0"
       data-part="root"
       data-scope="fieldset"
       disabled={false}
     >
-      <legend
+      <div
         className="fieldset__legend emotion-1"
         data-part="legend"
         data-scope="fieldset"
+        id="fieldset:::r27:::legend"
       >
         <sup
           className="emotion-2"
@@ -12474,7 +12545,7 @@ exports[`with title and description with global label off checkboxes 1`] = `
         >
           a test description
         </sup>
-      </legend>
+      </div>
       <div
         className="fieldset__content emotion-3"
       >
@@ -12999,6 +13070,7 @@ exports[`with title and description with global label off fixed array 1`] = `
     className="rjsf-field rjsf-field-array"
   >
     <fieldset
+      aria-labelledby="fieldset:::r22:::legend"
       className="fieldset__root emotion-0"
       data-part="root"
       data-scope="fieldset"
@@ -13022,6 +13094,7 @@ exports[`with title and description with global label off fixed array 1`] = `
                     className="rjsf-field rjsf-field-string"
                   >
                     <fieldset
+                      aria-labelledby="fieldset:::r23:::legend"
                       className="fieldset__root emotion-0"
                       data-part="root"
                       data-scope="fieldset"
@@ -13072,6 +13145,7 @@ exports[`with title and description with global label off fixed array 1`] = `
                     className="rjsf-field rjsf-field-number"
                   >
                     <fieldset
+                      aria-labelledby="fieldset:::r25:::legend"
                       className="fieldset__root emotion-0"
                       data-part="root"
                       data-scope="fieldset"
