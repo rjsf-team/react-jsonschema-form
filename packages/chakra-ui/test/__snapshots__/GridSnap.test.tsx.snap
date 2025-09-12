@@ -900,6 +900,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
     className="rjsf-field rjsf-field-object"
   >
     <fieldset
+      aria-labelledby="fieldset:::r2t:::legend"
       className="fieldset__root emotion-0"
       data-part="root"
       data-scope="fieldset"
@@ -919,6 +920,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                 className="rjsf-field rjsf-field-object"
               >
                 <fieldset
+                  aria-labelledby="fieldset:::r2u:::legend"
                   className="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -955,6 +957,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                 className="rjsf-field rjsf-field-string"
               >
                 <fieldset
+                  aria-labelledby="fieldset:::r2v:::legend"
                   className="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -973,6 +976,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       <label
                         className="chakra-field__label emotion-13"
                         data-part="label"
+                        data-required=""
                         data-scope="field"
                         htmlFor=":r30:"
                         id="field:::r30:::label"
@@ -1014,6 +1018,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                 className="rjsf-field rjsf-field-string"
               >
                 <fieldset
+                  aria-labelledby="fieldset:::r31:::legend"
                   className="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -1066,6 +1071,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                 className="rjsf-field rjsf-field-string"
               >
                 <fieldset
+                  aria-labelledby="fieldset:::r33:::legend"
                   className="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -1084,6 +1090,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       <label
                         className="chakra-field__label emotion-13"
                         data-part="label"
+                        data-required=""
                         data-scope="field"
                         htmlFor=":r34:"
                         id="field:::r34:::label"
@@ -1129,6 +1136,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                 className="rjsf-field rjsf-field-string"
               >
                 <fieldset
+                  aria-labelledby="fieldset:::r35:::legend"
                   className="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -1147,6 +1155,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       <label
                         className="chakra-field__label emotion-13"
                         data-part="label"
+                        data-required=""
                         data-scope="field"
                         htmlFor=":r36:"
                         id="field:::r36:::label"
@@ -1190,15 +1199,17 @@ exports[`Complex grid renders person and address and employment in a complex gri
                 className="rjsf-field rjsf-field-array"
               >
                 <fieldset
+                  aria-labelledby="fieldset:::r37:::legend"
                   className="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
                   disabled={false}
                 >
-                  <legend
+                  <div
                     className="fieldset__legend emotion-36"
                     data-part="legend"
                     data-scope="fieldset"
+                    id="fieldset:::r37:::legend"
                   >
                     <sup
                       className="emotion-37"
@@ -1206,11 +1217,12 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     >
                       (Check all that apply)
                     </sup>
-                  </legend>
+                  </div>
                   <div
                     className="fieldset__content emotion-1"
                   >
                     <fieldset
+                      aria-labelledby="fieldset:::r38:::legend"
                       className="fieldset__root emotion-39"
                       data-part="root"
                       data-scope="fieldset"
@@ -1584,6 +1596,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                 className="rjsf-field rjsf-field-object"
               >
                 <fieldset
+                  aria-labelledby="fieldset:::r3e:::legend"
                   className="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -1602,6 +1615,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           className="rjsf-field rjsf-field-string"
                         >
                           <fieldset
+                            aria-labelledby="fieldset:::r3f:::legend"
                             className="fieldset__root emotion-0"
                             data-part="root"
                             data-scope="fieldset"
@@ -1620,6 +1634,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                 <label
                                   className="chakra-field__label emotion-13"
                                   data-part="label"
+                                  data-required=""
                                   data-scope="field"
                                   htmlFor=":r3g:"
                                   id="field:::r3g:::label"
@@ -1663,6 +1678,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           className="rjsf-field rjsf-field-string"
                         >
                           <fieldset
+                            aria-labelledby="fieldset:::r3h:::legend"
                             className="fieldset__root emotion-0"
                             data-part="root"
                             data-scope="fieldset"
@@ -1717,6 +1733,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           className="rjsf-field rjsf-field-string"
                         >
                           <fieldset
+                            aria-labelledby="fieldset:::r3j:::legend"
                             className="fieldset__root emotion-0"
                             data-part="root"
                             data-scope="fieldset"
@@ -1735,6 +1752,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                 <label
                                   className="chakra-field__label emotion-13"
                                   data-part="label"
+                                  data-required=""
                                   data-scope="field"
                                   htmlFor=":r3k:"
                                   id="field:::r3k:::label"
@@ -1778,6 +1796,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           className="rjsf-field rjsf-field-string"
                         >
                           <fieldset
+                            aria-labelledby="fieldset:::r3l:::legend"
                             className="fieldset__root emotion-0"
                             data-part="root"
                             data-scope="fieldset"
@@ -1796,6 +1815,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                 <label
                                   className="chakra-field__label emotion-13"
                                   data-part="label"
+                                  data-required=""
                                   data-scope="field"
                                   htmlFor=":r3m:"
                                   id="field:::r3m:::label"
@@ -4149,6 +4169,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           className="rjsf-field rjsf-field-string"
                         >
                           <fieldset
+                            aria-labelledby="fieldset:::r3o:::legend"
                             className="fieldset__root emotion-0"
                             data-part="root"
                             data-scope="fieldset"
@@ -4167,6 +4188,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                 <label
                                   className="chakra-field__label emotion-13"
                                   data-part="label"
+                                  data-required=""
                                   data-scope="field"
                                   htmlFor=":r3p:"
                                   id="field:::r3p:::label"
@@ -4222,6 +4244,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                 >
                   <div>
                     <fieldset
+                      aria-labelledby="fieldset:::r3q:::legend"
                       className="fieldset__root emotion-0"
                       data-part="root"
                       data-scope="fieldset"
@@ -4492,6 +4515,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     className="rjsf-field rjsf-field-string"
                   >
                     <fieldset
+                      aria-labelledby="fieldset:::r3t:::legend"
                       className="fieldset__root emotion-0"
                       data-part="root"
                       data-scope="fieldset"
@@ -4510,6 +4534,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           <label
                             className="chakra-field__label emotion-13"
                             data-part="label"
+                            data-required=""
                             data-scope="field"
                             htmlFor=":r3u:"
                             id="field:::r3u:::label"
@@ -4553,6 +4578,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     className="rjsf-field rjsf-field-string"
                   >
                     <fieldset
+                      aria-labelledby="fieldset:::r3v:::legend"
                       className="fieldset__root emotion-0"
                       data-part="root"
                       data-scope="fieldset"
@@ -4607,6 +4633,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     className="rjsf-field rjsf-field-string"
                   >
                     <fieldset
+                      aria-labelledby="fieldset:::r41:::legend"
                       className="fieldset__root emotion-0"
                       data-part="root"
                       data-scope="fieldset"
@@ -4625,6 +4652,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           <label
                             className="chakra-field__label emotion-13"
                             data-part="label"
+                            data-required=""
                             data-scope="field"
                             htmlFor=":r42:"
                             id="field:::r42:::label"
@@ -4666,6 +4694,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     className="rjsf-field rjsf-field-string"
                   >
                     <fieldset
+                      aria-labelledby="fieldset:::r43:::legend"
                       className="fieldset__root emotion-0"
                       data-part="root"
                       data-scope="fieldset"
@@ -4684,6 +4713,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           <label
                             className="chakra-field__label emotion-13"
                             data-part="label"
+                            data-required=""
                             data-scope="field"
                             htmlFor=":r44:"
                             id="field:::r44:::label"
@@ -7951,6 +7981,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
     className="rjsf-field rjsf-field-object"
   >
     <fieldset
+      aria-labelledby="fieldset:::r46:::legend"
       className="fieldset__root emotion-0"
       data-part="root"
       data-scope="fieldset"
@@ -7970,6 +8001,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                 className="rjsf-field rjsf-field-object"
               >
                 <fieldset
+                  aria-labelledby="fieldset:::r47:::legend"
                   className="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -8006,6 +8038,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                 className="rjsf-field rjsf-field-string"
               >
                 <fieldset
+                  aria-labelledby="fieldset:::r48:::legend"
                   className="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -8024,6 +8057,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       <label
                         className="chakra-field__label emotion-13"
                         data-part="label"
+                        data-required=""
                         data-scope="field"
                         htmlFor=":r49:"
                         id="field:::r49:::label"
@@ -8065,6 +8099,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                 className="rjsf-field rjsf-field-string"
               >
                 <fieldset
+                  aria-labelledby="fieldset:::r4a:::legend"
                   className="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -8117,6 +8152,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                 className="rjsf-field rjsf-field-string"
               >
                 <fieldset
+                  aria-labelledby="fieldset:::r4c:::legend"
                   className="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -8135,6 +8171,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       <label
                         className="chakra-field__label emotion-13"
                         data-part="label"
+                        data-required=""
                         data-scope="field"
                         htmlFor=":r4d:"
                         id="field:::r4d:::label"
@@ -8180,6 +8217,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                 className="rjsf-field rjsf-field-string"
               >
                 <fieldset
+                  aria-labelledby="fieldset:::r4e:::legend"
                   className="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -8198,6 +8236,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       <label
                         className="chakra-field__label emotion-13"
                         data-part="label"
+                        data-required=""
                         data-scope="field"
                         htmlFor=":r4f:"
                         id="field:::r4f:::label"
@@ -8241,15 +8280,17 @@ exports[`Complex grid renders person and address and employment in a complex gri
                 className="rjsf-field rjsf-field-array"
               >
                 <fieldset
+                  aria-labelledby="fieldset:::r4g:::legend"
                   className="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
                   disabled={false}
                 >
-                  <legend
+                  <div
                     className="fieldset__legend emotion-36"
                     data-part="legend"
                     data-scope="fieldset"
+                    id="fieldset:::r4g:::legend"
                   >
                     <sup
                       className="emotion-37"
@@ -8257,11 +8298,12 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     >
                       (Check all that apply)
                     </sup>
-                  </legend>
+                  </div>
                   <div
                     className="fieldset__content emotion-1"
                   >
                     <fieldset
+                      aria-labelledby="fieldset:::r4h:::legend"
                       className="fieldset__root emotion-39"
                       data-part="root"
                       data-scope="fieldset"
@@ -8635,6 +8677,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                 className="rjsf-field rjsf-field-object"
               >
                 <fieldset
+                  aria-labelledby="fieldset:::r4n:::legend"
                   className="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -8653,6 +8696,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           className="rjsf-field rjsf-field-string"
                         >
                           <fieldset
+                            aria-labelledby="fieldset:::r4o:::legend"
                             className="fieldset__root emotion-0"
                             data-part="root"
                             data-scope="fieldset"
@@ -8671,6 +8715,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                 <label
                                   className="chakra-field__label emotion-13"
                                   data-part="label"
+                                  data-required=""
                                   data-scope="field"
                                   htmlFor=":r4p:"
                                   id="field:::r4p:::label"
@@ -8714,6 +8759,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           className="rjsf-field rjsf-field-string"
                         >
                           <fieldset
+                            aria-labelledby="fieldset:::r4q:::legend"
                             className="fieldset__root emotion-0"
                             data-part="root"
                             data-scope="fieldset"
@@ -8768,6 +8814,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           className="rjsf-field rjsf-field-string"
                         >
                           <fieldset
+                            aria-labelledby="fieldset:::r4s:::legend"
                             className="fieldset__root emotion-0"
                             data-part="root"
                             data-scope="fieldset"
@@ -8786,6 +8833,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                 <label
                                   className="chakra-field__label emotion-13"
                                   data-part="label"
+                                  data-required=""
                                   data-scope="field"
                                   htmlFor=":r4t:"
                                   id="field:::r4t:::label"
@@ -8829,6 +8877,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           className="rjsf-field rjsf-field-string"
                         >
                           <fieldset
+                            aria-labelledby="fieldset:::r4u:::legend"
                             className="fieldset__root emotion-0"
                             data-part="root"
                             data-scope="fieldset"
@@ -8847,6 +8896,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                 <label
                                   className="chakra-field__label emotion-13"
                                   data-part="label"
+                                  data-required=""
                                   data-scope="field"
                                   htmlFor=":r4v:"
                                   id="field:::r4v:::label"
@@ -11200,6 +11250,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           className="rjsf-field rjsf-field-string"
                         >
                           <fieldset
+                            aria-labelledby="fieldset:::r51:::legend"
                             className="fieldset__root emotion-0"
                             data-part="root"
                             data-scope="fieldset"
@@ -11218,6 +11269,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                 <label
                                   className="chakra-field__label emotion-13"
                                   data-part="label"
+                                  data-required=""
                                   data-scope="field"
                                   htmlFor=":r52:"
                                   id="field:::r52:::label"
@@ -11273,6 +11325,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                 >
                   <div>
                     <fieldset
+                      aria-labelledby="fieldset:::r53:::legend"
                       className="fieldset__root emotion-0"
                       data-part="root"
                       data-scope="fieldset"
@@ -11543,6 +11596,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     className="rjsf-field rjsf-field-string"
                   >
                     <fieldset
+                      aria-labelledby="fieldset:::r56:::legend"
                       className="fieldset__root emotion-0"
                       data-part="root"
                       data-scope="fieldset"
@@ -11597,6 +11651,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     className="rjsf-field rjsf-field-string"
                   >
                     <fieldset
+                      aria-labelledby="fieldset:::r58:::legend"
                       className="fieldset__root emotion-0"
                       data-part="root"
                       data-scope="fieldset"
@@ -11615,6 +11670,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           <label
                             className="chakra-field__label emotion-13"
                             data-part="label"
+                            data-required=""
                             data-scope="field"
                             htmlFor=":r59:"
                             id="field:::r59:::label"
@@ -11658,6 +11714,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     className="rjsf-field rjsf-field-string"
                   >
                     <fieldset
+                      aria-labelledby="fieldset:::r5a:::legend"
                       className="fieldset__root emotion-0"
                       data-part="root"
                       data-scope="fieldset"
@@ -11712,6 +11769,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     className="rjsf-field rjsf-field-string"
                   >
                     <fieldset
+                      aria-labelledby="fieldset:::r5c:::legend"
                       className="fieldset__root emotion-0"
                       data-part="root"
                       data-scope="fieldset"
@@ -11730,6 +11788,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           <label
                             className="chakra-field__label emotion-13"
                             data-part="label"
+                            data-required=""
                             data-scope="field"
                             htmlFor=":r5d:"
                             id="field:::r5d:::label"
@@ -11771,6 +11830,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     className="rjsf-field rjsf-field-string"
                   >
                     <fieldset
+                      aria-labelledby="fieldset:::r5e:::legend"
                       className="fieldset__root emotion-0"
                       data-part="root"
                       data-scope="fieldset"
@@ -11789,6 +11849,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           <label
                             className="chakra-field__label emotion-13"
                             data-part="label"
+                            data-required=""
                             data-scope="field"
                             htmlFor=":r5f:"
                             id="field:::r5f:::label"
@@ -15101,6 +15162,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
     className="rjsf-field rjsf-field-object"
   >
     <fieldset
+      aria-labelledby="fieldset:::r5h:::legend"
       className="fieldset__root emotion-0"
       data-part="root"
       data-scope="fieldset"
@@ -15120,6 +15182,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                 className="rjsf-field rjsf-field-object"
               >
                 <fieldset
+                  aria-labelledby="fieldset:::r5i:::legend"
                   className="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -15156,6 +15219,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                 className="rjsf-field rjsf-field-string"
               >
                 <fieldset
+                  aria-labelledby="fieldset:::r5j:::legend"
                   className="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -15174,6 +15238,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       <label
                         className="chakra-field__label emotion-13"
                         data-part="label"
+                        data-required=""
                         data-scope="field"
                         htmlFor=":r5k:"
                         id="field:::r5k:::label"
@@ -15215,6 +15280,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                 className="rjsf-field rjsf-field-string"
               >
                 <fieldset
+                  aria-labelledby="fieldset:::r5l:::legend"
                   className="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -15267,6 +15333,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                 className="rjsf-field rjsf-field-string"
               >
                 <fieldset
+                  aria-labelledby="fieldset:::r5n:::legend"
                   className="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -15285,6 +15352,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       <label
                         className="chakra-field__label emotion-13"
                         data-part="label"
+                        data-required=""
                         data-scope="field"
                         htmlFor=":r5o:"
                         id="field:::r5o:::label"
@@ -15330,6 +15398,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                 className="rjsf-field rjsf-field-string"
               >
                 <fieldset
+                  aria-labelledby="fieldset:::r5p:::legend"
                   className="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -15348,6 +15417,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       <label
                         className="chakra-field__label emotion-13"
                         data-part="label"
+                        data-required=""
                         data-scope="field"
                         htmlFor=":r5q:"
                         id="field:::r5q:::label"
@@ -15391,15 +15461,17 @@ exports[`Complex grid renders person and address and employment in a complex gri
                 className="rjsf-field rjsf-field-array"
               >
                 <fieldset
+                  aria-labelledby="fieldset:::r5r:::legend"
                   className="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
                   disabled={false}
                 >
-                  <legend
+                  <div
                     className="fieldset__legend emotion-36"
                     data-part="legend"
                     data-scope="fieldset"
+                    id="fieldset:::r5r:::legend"
                   >
                     <sup
                       className="emotion-37"
@@ -15407,11 +15479,12 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     >
                       (Check all that apply)
                     </sup>
-                  </legend>
+                  </div>
                   <div
                     className="fieldset__content emotion-1"
                   >
                     <fieldset
+                      aria-labelledby="fieldset:::r5s:::legend"
                       className="fieldset__root emotion-39"
                       data-part="root"
                       data-scope="fieldset"
@@ -15785,6 +15858,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                 className="rjsf-field rjsf-field-object"
               >
                 <fieldset
+                  aria-labelledby="fieldset:::r62:::legend"
                   className="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -15803,6 +15877,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           className="rjsf-field rjsf-field-string"
                         >
                           <fieldset
+                            aria-labelledby="fieldset:::r63:::legend"
                             className="fieldset__root emotion-0"
                             data-part="root"
                             data-scope="fieldset"
@@ -15821,6 +15896,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                 <label
                                   className="chakra-field__label emotion-13"
                                   data-part="label"
+                                  data-required=""
                                   data-scope="field"
                                   htmlFor=":r64:"
                                   id="field:::r64:::label"
@@ -15864,6 +15940,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           className="rjsf-field rjsf-field-string"
                         >
                           <fieldset
+                            aria-labelledby="fieldset:::r65:::legend"
                             className="fieldset__root emotion-0"
                             data-part="root"
                             data-scope="fieldset"
@@ -15918,6 +15995,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           className="rjsf-field rjsf-field-string"
                         >
                           <fieldset
+                            aria-labelledby="fieldset:::r67:::legend"
                             className="fieldset__root emotion-0"
                             data-part="root"
                             data-scope="fieldset"
@@ -15936,6 +16014,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                 <label
                                   className="chakra-field__label emotion-13"
                                   data-part="label"
+                                  data-required=""
                                   data-scope="field"
                                   htmlFor=":r68:"
                                   id="field:::r68:::label"
@@ -15979,6 +16058,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           className="rjsf-field rjsf-field-string"
                         >
                           <fieldset
+                            aria-labelledby="fieldset:::r69:::legend"
                             className="fieldset__root emotion-0"
                             data-part="root"
                             data-scope="fieldset"
@@ -15997,6 +16077,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                 <label
                                   className="chakra-field__label emotion-13"
                                   data-part="label"
+                                  data-required=""
                                   data-scope="field"
                                   htmlFor=":r6a:"
                                   id="field:::r6a:::label"
@@ -18350,6 +18431,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           className="rjsf-field rjsf-field-string"
                         >
                           <fieldset
+                            aria-labelledby="fieldset:::r6c:::legend"
                             className="fieldset__root emotion-0"
                             data-part="root"
                             data-scope="fieldset"
@@ -18368,6 +18450,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                 <label
                                   className="chakra-field__label emotion-13"
                                   data-part="label"
+                                  data-required=""
                                   data-scope="field"
                                   htmlFor=":r6d:"
                                   id="field:::r6d:::label"
@@ -18423,6 +18506,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                 >
                   <div>
                     <fieldset
+                      aria-labelledby="fieldset:::r6e:::legend"
                       className="fieldset__root emotion-0"
                       data-part="root"
                       data-scope="fieldset"
@@ -18693,6 +18777,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     className="rjsf-field rjsf-field-string"
                   >
                     <fieldset
+                      aria-labelledby="fieldset:::r6h:::legend"
                       className="fieldset__root emotion-0"
                       data-part="root"
                       data-scope="fieldset"
@@ -18711,6 +18796,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           <label
                             className="chakra-field__label emotion-13"
                             data-part="label"
+                            data-required=""
                             data-scope="field"
                             htmlFor=":r6i:"
                             id="field:::r6i:::label"
@@ -19673,6 +19759,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
     className="rjsf-field rjsf-field-object"
   >
     <fieldset
+      aria-labelledby="fieldset:::r1k:::legend"
       className="fieldset__root emotion-0"
       data-part="root"
       data-scope="fieldset"
@@ -19692,6 +19779,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                 className="rjsf-field rjsf-field-object"
               >
                 <fieldset
+                  aria-labelledby="fieldset:::r1l:::legend"
                   className="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -19728,6 +19816,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                 className="rjsf-field rjsf-field-string"
               >
                 <fieldset
+                  aria-labelledby="fieldset:::r1m:::legend"
                   className="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -19746,6 +19835,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       <label
                         className="chakra-field__label emotion-13"
                         data-part="label"
+                        data-required=""
                         data-scope="field"
                         htmlFor=":r1n:"
                         id="field:::r1n:::label"
@@ -19787,6 +19877,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                 className="rjsf-field rjsf-field-string"
               >
                 <fieldset
+                  aria-labelledby="fieldset:::r1o:::legend"
                   className="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -19839,6 +19930,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                 className="rjsf-field rjsf-field-string"
               >
                 <fieldset
+                  aria-labelledby="fieldset:::r1q:::legend"
                   className="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -19857,6 +19949,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       <label
                         className="chakra-field__label emotion-13"
                         data-part="label"
+                        data-required=""
                         data-scope="field"
                         htmlFor=":r1r:"
                         id="field:::r1r:::label"
@@ -19902,6 +19995,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                 className="rjsf-field rjsf-field-string"
               >
                 <fieldset
+                  aria-labelledby="fieldset:::r1s:::legend"
                   className="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -19920,6 +20014,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                       <label
                         className="chakra-field__label emotion-13"
                         data-part="label"
+                        data-required=""
                         data-scope="field"
                         htmlFor=":r1t:"
                         id="field:::r1t:::label"
@@ -19963,15 +20058,17 @@ exports[`Complex grid renders person and address and employment in a complex gri
                 className="rjsf-field rjsf-field-array"
               >
                 <fieldset
+                  aria-labelledby="fieldset:::r1u:::legend"
                   className="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
                   disabled={false}
                 >
-                  <legend
+                  <div
                     className="fieldset__legend emotion-36"
                     data-part="legend"
                     data-scope="fieldset"
+                    id="fieldset:::r1u:::legend"
                   >
                     <sup
                       className="emotion-37"
@@ -19979,11 +20076,12 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     >
                       (Check all that apply)
                     </sup>
-                  </legend>
+                  </div>
                   <div
                     className="fieldset__content emotion-1"
                   >
                     <fieldset
+                      aria-labelledby="fieldset:::r1v:::legend"
                       className="fieldset__root emotion-39"
                       data-part="root"
                       data-scope="fieldset"
@@ -20357,6 +20455,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                 className="rjsf-field rjsf-field-object"
               >
                 <fieldset
+                  aria-labelledby="fieldset:::r25:::legend"
                   className="fieldset__root emotion-0"
                   data-part="root"
                   data-scope="fieldset"
@@ -20375,6 +20474,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           className="rjsf-field rjsf-field-string"
                         >
                           <fieldset
+                            aria-labelledby="fieldset:::r26:::legend"
                             className="fieldset__root emotion-0"
                             data-part="root"
                             data-scope="fieldset"
@@ -20393,6 +20493,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                 <label
                                   className="chakra-field__label emotion-13"
                                   data-part="label"
+                                  data-required=""
                                   data-scope="field"
                                   htmlFor=":r27:"
                                   id="field:::r27:::label"
@@ -20436,6 +20537,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           className="rjsf-field rjsf-field-string"
                         >
                           <fieldset
+                            aria-labelledby="fieldset:::r28:::legend"
                             className="fieldset__root emotion-0"
                             data-part="root"
                             data-scope="fieldset"
@@ -20490,6 +20592,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           className="rjsf-field rjsf-field-string"
                         >
                           <fieldset
+                            aria-labelledby="fieldset:::r2a:::legend"
                             className="fieldset__root emotion-0"
                             data-part="root"
                             data-scope="fieldset"
@@ -20508,6 +20611,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                 <label
                                   className="chakra-field__label emotion-13"
                                   data-part="label"
+                                  data-required=""
                                   data-scope="field"
                                   htmlFor=":r2b:"
                                   id="field:::r2b:::label"
@@ -20551,6 +20655,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           className="rjsf-field rjsf-field-string"
                         >
                           <fieldset
+                            aria-labelledby="fieldset:::r2c:::legend"
                             className="fieldset__root emotion-0"
                             data-part="root"
                             data-scope="fieldset"
@@ -20569,6 +20674,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                 <label
                                   className="chakra-field__label emotion-13"
                                   data-part="label"
+                                  data-required=""
                                   data-scope="field"
                                   htmlFor=":r2d:"
                                   id="field:::r2d:::label"
@@ -22922,6 +23028,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           className="rjsf-field rjsf-field-string"
                         >
                           <fieldset
+                            aria-labelledby="fieldset:::r2f:::legend"
                             className="fieldset__root emotion-0"
                             data-part="root"
                             data-scope="fieldset"
@@ -22940,6 +23047,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                 <label
                                   className="chakra-field__label emotion-13"
                                   data-part="label"
+                                  data-required=""
                                   data-scope="field"
                                   htmlFor=":r2g:"
                                   id="field:::r2g:::label"
@@ -22995,6 +23103,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                 >
                   <div>
                     <fieldset
+                      aria-labelledby="fieldset:::r2h:::legend"
                       className="fieldset__root emotion-0"
                       data-part="root"
                       data-scope="fieldset"
@@ -23265,6 +23374,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     className="rjsf-field rjsf-field-string"
                   >
                     <fieldset
+                      aria-labelledby="fieldset:::r2k:::legend"
                       className="fieldset__root emotion-0"
                       data-part="root"
                       data-scope="fieldset"
@@ -23283,6 +23393,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           <label
                             className="chakra-field__label emotion-13"
                             data-part="label"
+                            data-required=""
                             data-scope="field"
                             htmlFor=":r2l:"
                             id="field:::r2l:::label"
@@ -23326,6 +23437,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     className="rjsf-field rjsf-field-string"
                   >
                     <fieldset
+                      aria-labelledby="fieldset:::r2m:::legend"
                       className="fieldset__root emotion-0"
                       data-part="root"
                       data-scope="fieldset"
@@ -23380,6 +23492,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     className="rjsf-field rjsf-field-string"
                   >
                     <fieldset
+                      aria-labelledby="fieldset:::r2o:::legend"
                       className="fieldset__root emotion-0"
                       data-part="root"
                       data-scope="fieldset"
@@ -23398,6 +23511,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           <label
                             className="chakra-field__label emotion-13"
                             data-part="label"
+                            data-required=""
                             data-scope="field"
                             htmlFor=":r2p:"
                             id="field:::r2p:::label"
@@ -23439,6 +23553,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     className="rjsf-field rjsf-field-string"
                   >
                     <fieldset
+                      aria-labelledby="fieldset:::r2q:::legend"
                       className="fieldset__root emotion-0"
                       data-part="root"
                       data-scope="fieldset"
@@ -23457,6 +23572,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                           <label
                             className="chakra-field__label emotion-13"
                             data-part="label"
+                            data-required=""
                             data-scope="field"
                             htmlFor=":r2r:"
                             id="field:::r2r:::label"
@@ -26588,6 +26704,7 @@ exports[`Three even column grid renders person and address in three columns, no 
     className="rjsf-field rjsf-field-object"
   >
     <fieldset
+      aria-labelledby="fieldset:::rq:::legend"
       className="fieldset__root emotion-0"
       data-part="root"
       data-scope="fieldset"
@@ -26604,6 +26721,7 @@ exports[`Three even column grid renders person and address in three columns, no 
               className="rjsf-field rjsf-field-object"
             >
               <fieldset
+                aria-labelledby="fieldset:::rr:::legend"
                 className="fieldset__root emotion-0"
                 data-part="root"
                 data-scope="fieldset"
@@ -26636,6 +26754,7 @@ exports[`Three even column grid renders person and address in three columns, no 
               className="rjsf-field rjsf-field-string"
             >
               <fieldset
+                aria-labelledby="fieldset:::rs:::legend"
                 className="fieldset__root emotion-0"
                 data-part="root"
                 data-scope="fieldset"
@@ -26654,6 +26773,7 @@ exports[`Three even column grid renders person and address in three columns, no 
                     <label
                       className="chakra-field__label emotion-11"
                       data-part="label"
+                      data-required=""
                       data-scope="field"
                       htmlFor=":rt:"
                       id="field:::rt:::label"
@@ -26695,6 +26815,7 @@ exports[`Three even column grid renders person and address in three columns, no 
               className="rjsf-field rjsf-field-string"
             >
               <fieldset
+                aria-labelledby="fieldset:::ru:::legend"
                 className="fieldset__root emotion-0"
                 data-part="root"
                 data-scope="fieldset"
@@ -26747,6 +26868,7 @@ exports[`Three even column grid renders person and address in three columns, no 
               className="rjsf-field rjsf-field-string"
             >
               <fieldset
+                aria-labelledby="fieldset:::r10:::legend"
                 className="fieldset__root emotion-0"
                 data-part="root"
                 data-scope="fieldset"
@@ -26765,6 +26887,7 @@ exports[`Three even column grid renders person and address in three columns, no 
                     <label
                       className="chakra-field__label emotion-11"
                       data-part="label"
+                      data-required=""
                       data-scope="field"
                       htmlFor=":r11:"
                       id="field:::r11:::label"
@@ -26806,6 +26929,7 @@ exports[`Three even column grid renders person and address in three columns, no 
               className="rjsf-field rjsf-field-string"
             >
               <fieldset
+                aria-labelledby="fieldset:::r12:::legend"
                 className="fieldset__root emotion-0"
                 data-part="root"
                 data-scope="fieldset"
@@ -26824,6 +26948,7 @@ exports[`Three even column grid renders person and address in three columns, no 
                     <label
                       className="chakra-field__label emotion-11"
                       data-part="label"
+                      data-required=""
                       data-scope="field"
                       htmlFor=":r13:"
                       id="field:::r13:::label"
@@ -26865,15 +26990,17 @@ exports[`Three even column grid renders person and address in three columns, no 
               className="rjsf-field rjsf-field-array"
             >
               <fieldset
+                aria-labelledby="fieldset:::r14:::legend"
                 className="fieldset__root emotion-0"
                 data-part="root"
                 data-scope="fieldset"
                 disabled={false}
               >
-                <legend
+                <div
                   className="fieldset__legend emotion-32"
                   data-part="legend"
                   data-scope="fieldset"
+                  id="fieldset:::r14:::legend"
                 >
                   <sup
                     className="emotion-33"
@@ -26881,11 +27008,12 @@ exports[`Three even column grid renders person and address in three columns, no 
                   >
                     (Check all that apply)
                   </sup>
-                </legend>
+                </div>
                 <div
                   className="fieldset__content emotion-1"
                 >
                   <fieldset
+                    aria-labelledby="fieldset:::r15:::legend"
                     className="fieldset__root emotion-35"
                     data-part="root"
                     data-scope="fieldset"
@@ -27255,6 +27383,7 @@ exports[`Three even column grid renders person and address in three columns, no 
               className="rjsf-field rjsf-field-string"
             >
               <fieldset
+                aria-labelledby="fieldset:::r1b:::legend"
                 className="fieldset__root emotion-0"
                 data-part="root"
                 data-scope="fieldset"
@@ -27273,6 +27402,7 @@ exports[`Three even column grid renders person and address in three columns, no 
                     <label
                       className="chakra-field__label emotion-11"
                       data-part="label"
+                      data-required=""
                       data-scope="field"
                       htmlFor=":r1c:"
                       id="field:::r1c:::label"
@@ -27314,6 +27444,7 @@ exports[`Three even column grid renders person and address in three columns, no 
               className="rjsf-field rjsf-field-string"
             >
               <fieldset
+                aria-labelledby="fieldset:::r1d:::legend"
                 className="fieldset__root emotion-0"
                 data-part="root"
                 data-scope="fieldset"
@@ -27366,6 +27497,7 @@ exports[`Three even column grid renders person and address in three columns, no 
               className="rjsf-field rjsf-field-string"
             >
               <fieldset
+                aria-labelledby="fieldset:::r1f:::legend"
                 className="fieldset__root emotion-0"
                 data-part="root"
                 data-scope="fieldset"
@@ -27384,6 +27516,7 @@ exports[`Three even column grid renders person and address in three columns, no 
                     <label
                       className="chakra-field__label emotion-11"
                       data-part="label"
+                      data-required=""
                       data-scope="field"
                       htmlFor=":r1g:"
                       id="field:::r1g:::label"
@@ -27425,6 +27558,7 @@ exports[`Three even column grid renders person and address in three columns, no 
               className="rjsf-field rjsf-field-string"
             >
               <fieldset
+                aria-labelledby="fieldset:::r1h:::legend"
                 className="fieldset__root emotion-0"
                 data-part="root"
                 data-scope="fieldset"
@@ -27443,6 +27577,7 @@ exports[`Three even column grid renders person and address in three columns, no 
                     <label
                       className="chakra-field__label emotion-11"
                       data-part="label"
+                      data-required=""
                       data-scope="field"
                       htmlFor=":r1i:"
                       id="field:::r1i:::label"
@@ -30572,6 +30707,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
     className="rjsf-field rjsf-field-object"
   >
     <fieldset
+      aria-labelledby="fieldset:::r0:::legend"
       className="fieldset__root emotion-0"
       data-part="root"
       data-scope="fieldset"
@@ -30588,6 +30724,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
               className="rjsf-field rjsf-field-object"
             >
               <fieldset
+                aria-labelledby="fieldset:::r1:::legend"
                 className="fieldset__root emotion-0"
                 data-part="root"
                 data-scope="fieldset"
@@ -30620,6 +30757,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
               className="rjsf-field rjsf-field-string"
             >
               <fieldset
+                aria-labelledby="fieldset:::r2:::legend"
                 className="fieldset__root emotion-0"
                 data-part="root"
                 data-scope="fieldset"
@@ -30638,6 +30776,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
                     <label
                       className="chakra-field__label emotion-11"
                       data-part="label"
+                      data-required=""
                       data-scope="field"
                       htmlFor=":r3:"
                       id="field:::r3:::label"
@@ -30679,6 +30818,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
               className="rjsf-field rjsf-field-string"
             >
               <fieldset
+                aria-labelledby="fieldset:::r4:::legend"
                 className="fieldset__root emotion-0"
                 data-part="root"
                 data-scope="fieldset"
@@ -30731,6 +30871,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
               className="rjsf-field rjsf-field-string"
             >
               <fieldset
+                aria-labelledby="fieldset:::r6:::legend"
                 className="fieldset__root emotion-0"
                 data-part="root"
                 data-scope="fieldset"
@@ -30749,6 +30890,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
                     <label
                       className="chakra-field__label emotion-11"
                       data-part="label"
+                      data-required=""
                       data-scope="field"
                       htmlFor=":r7:"
                       id="field:::r7:::label"
@@ -30790,6 +30932,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
               className="rjsf-field rjsf-field-string"
             >
               <fieldset
+                aria-labelledby="fieldset:::r8:::legend"
                 className="fieldset__root emotion-0"
                 data-part="root"
                 data-scope="fieldset"
@@ -30808,6 +30951,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
                     <label
                       className="chakra-field__label emotion-11"
                       data-part="label"
+                      data-required=""
                       data-scope="field"
                       htmlFor=":r9:"
                       id="field:::r9:::label"
@@ -30849,15 +30993,17 @@ exports[`Two even column grid renders person and address in two columns, no empl
               className="rjsf-field rjsf-field-array"
             >
               <fieldset
+                aria-labelledby="fieldset:::ra:::legend"
                 className="fieldset__root emotion-0"
                 data-part="root"
                 data-scope="fieldset"
                 disabled={false}
               >
-                <legend
+                <div
                   className="fieldset__legend emotion-32"
                   data-part="legend"
                   data-scope="fieldset"
+                  id="fieldset:::ra:::legend"
                 >
                   <sup
                     className="emotion-33"
@@ -30865,11 +31011,12 @@ exports[`Two even column grid renders person and address in two columns, no empl
                   >
                     (Check all that apply)
                   </sup>
-                </legend>
+                </div>
                 <div
                   className="fieldset__content emotion-1"
                 >
                   <fieldset
+                    aria-labelledby="fieldset:::rb:::legend"
                     className="fieldset__root emotion-35"
                     data-part="root"
                     data-scope="fieldset"
@@ -31239,6 +31386,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
               className="rjsf-field rjsf-field-string"
             >
               <fieldset
+                aria-labelledby="fieldset:::rh:::legend"
                 className="fieldset__root emotion-0"
                 data-part="root"
                 data-scope="fieldset"
@@ -31257,6 +31405,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
                     <label
                       className="chakra-field__label emotion-11"
                       data-part="label"
+                      data-required=""
                       data-scope="field"
                       htmlFor=":ri:"
                       id="field:::ri:::label"
@@ -31298,6 +31447,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
               className="rjsf-field rjsf-field-string"
             >
               <fieldset
+                aria-labelledby="fieldset:::rj:::legend"
                 className="fieldset__root emotion-0"
                 data-part="root"
                 data-scope="fieldset"
@@ -31350,6 +31500,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
               className="rjsf-field rjsf-field-string"
             >
               <fieldset
+                aria-labelledby="fieldset:::rl:::legend"
                 className="fieldset__root emotion-0"
                 data-part="root"
                 data-scope="fieldset"
@@ -31368,6 +31519,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
                     <label
                       className="chakra-field__label emotion-11"
                       data-part="label"
+                      data-required=""
                       data-scope="field"
                       htmlFor=":rm:"
                       id="field:::rm:::label"
@@ -31409,6 +31561,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
               className="rjsf-field rjsf-field-string"
             >
               <fieldset
+                aria-labelledby="fieldset:::rn:::legend"
                 className="fieldset__root emotion-0"
                 data-part="root"
                 data-scope="fieldset"
@@ -31427,6 +31580,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
                     <label
                       className="chakra-field__label emotion-11"
                       data-part="label"
+                      data-required=""
                       data-scope="field"
                       htmlFor=":ro:"
                       id="field:::ro:::label"

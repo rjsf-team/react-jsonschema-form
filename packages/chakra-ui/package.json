@@ -1,6 +1,6 @@
 {
   "name": "@rjsf/chakra-ui",
-  "version": "6.0.0-beta.15",
+  "version": "6.0.0-beta.16",
   "description": "Chakra UI theme, fields, and widgets for react-jsonschema-form",
   "main": "dist/index.js",
   "module": "lib/index.js",
@@ -9,27 +9,27 @@
   "exports": {
     ".": {
       "types": "./lib/index.d.ts",
-      "require": "./dist/index.js",
+      "require": "./dist/index.cjs",
       "import": "./lib/index.js"
     },
     "./lib": {
       "types": "./lib/index.d.ts",
-      "require": "./dist/index.js",
+      "require": "./dist/index.cjs",
       "import": "./lib/index.js"
     },
     "./lib/*.js": {
       "types": "./lib/*.d.ts",
-      "require": "./dist/*.js",
+      "require": "./dist/*.cjs",
       "import": "./lib/*.js"
     },
     "./dist": {
       "types": "./lib/index.d.ts",
-      "require": "./dist/index.js",
+      "require": "./dist/index.cjs",
       "import": "./lib/index.js"
     },
-    "./dist/*.js": {
+    "./dist/*.cjs": {
       "types": "./lib/*.d.ts",
-      "require": "./dist/*.js",
+      "require": "./dist/*.cjs",
       "import": "./lib/*.js"
     }
   },
@@ -40,7 +40,7 @@
   ],
   "scripts": {
     "build:ts": "tsc -b tsconfig.build.json && tsc-alias -p tsconfig.build.json",
-    "build:cjs": "esbuild ./src/index.ts --bundle --outfile=dist/index.js --sourcemap --packages=external --format=cjs",
+    "build:cjs": "esbuild ./src/index.ts --bundle --outfile=dist/index.cjs --sourcemap --packages=external --format=cjs",
     "build:esm": "esbuild ./src/index.ts --bundle --outfile=dist/chakra-ui.esm.js --sourcemap --packages=external --format=esm",
     "build:umd": "rollup dist/chakra-ui.esm.js --format=umd --file=dist/chakra-ui.umd.js --name=@rjsf/chakra-ui",
     "build": "npm run build:ts && npm run build:cjs && npm run build:esm && npm run build:umd",
@@ -64,8 +64,8 @@
   },
   "peerDependencies": {
     "@chakra-ui/react": ">=3.16.1",
-    "@rjsf/core": "^6.0.0-beta.15",
-    "@rjsf/utils": "^6.0.0-beta.15",
+    "@rjsf/core": "^6.0.0-beta.16",
+    "@rjsf/utils": "^6.0.0-beta.16",
     "chakra-react-select": ">=6",
     "react": ">=18"
   },
@@ -81,20 +81,20 @@
   ],
   "license": "Apache-2.0",
   "devDependencies": {
-    "@chakra-ui/cli": "^3.24.2",
-    "@chakra-ui/react": "^3.24.2",
+    "@chakra-ui/cli": "^3.26.0",
+    "@chakra-ui/react": "^3.26.0",
     "@emotion/eslint-plugin": "^11.12.0",
     "@emotion/jest": "^11.13.0",
     "@emotion/react": "^11.14.0",
-    "@rjsf/core": "^6.0.0-beta.15",
-    "@rjsf/snapshot-tests": "^6.0.0-beta.15",
-    "@rjsf/utils": "^6.0.0-beta.15",
-    "@rjsf/validator-ajv8": "^6.0.0-beta.15",
+    "@rjsf/core": "^6.0.0-beta.16",
+    "@rjsf/snapshot-tests": "^6.0.0-beta.16",
+    "@rjsf/utils": "^6.0.0-beta.16",
+    "@rjsf/validator-ajv8": "^6.0.0-beta.16",
     "chakra-react-select": "^6.1.0",
     "eslint": "^8.57.1"
   },
   "dependencies": {
-    "lucide-react": "^0.539.0",
+    "lucide-react": "^0.542.0",
     "react-icons": "^5.5.0",
     "react-select": "^5.10.2"
   }

@@ -1,6 +1,6 @@
 {
   "name": "@rjsf/daisyui",
-  "version": "6.0.0-beta.15",
+  "version": "6.0.0-beta.16",
   "description": "Daisy UI components for react-jsonschema-form",
   "main": "dist/index.js",
   "module": "lib/index.js",
@@ -9,27 +9,27 @@
   "exports": {
     ".": {
       "types": "./lib/index.d.ts",
-      "require": "./dist/index.js",
+      "require": "./dist/index.cjs",
       "import": "./lib/index.js"
     },
     "./lib": {
       "types": "./lib/index.d.ts",
-      "require": "./dist/index.js",
+      "require": "./dist/index.cjs",
       "import": "./lib/index.js"
     },
     "./lib/*.js": {
       "types": "./lib/*.d.ts",
-      "require": "./dist/*.js",
+      "require": "./dist/*.cjs",
       "import": "./lib/*.js"
     },
     "./dist": {
       "types": "./lib/index.d.ts",
-      "require": "./dist/index.js",
+      "require": "./dist/index.cjs",
       "import": "./lib/index.js"
     },
-    "./dist/*.js": {
+    "./dist/*.cjs": {
       "types": "./lib/*.d.ts",
-      "require": "./dist/*.js",
+      "require": "./dist/*.cjs",
       "import": "./lib/*.js"
     }
   },
@@ -44,7 +44,7 @@
   },
   "scripts": {
     "build:ts": "tsc -b tsconfig.build.json && tsc-alias -p tsconfig.build.json",
-    "build:cjs": "esbuild ./src/index.ts --bundle --outfile=dist/index.js --sourcemap --packages=external --format=cjs",
+    "build:cjs": "esbuild ./src/index.ts --bundle --outfile=dist/index.cjs --sourcemap --packages=external --format=cjs",
     "build:esm": "esbuild ./src/index.ts --bundle --outfile=dist/chakra-ui.esm.js --sourcemap --packages=external --format=esm",
     "build:umd": "rollup dist/chakra-ui.esm.js --format=umd --file=dist/chakra-ui.umd.js --name=@rjsf/chakra-ui",
     "build": "npm run build:ts && npm run build:cjs && npm run build:esm && npm run build:umd",
@@ -63,28 +63,28 @@
     ]
   },
   "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "^7.0.0",
-    "@fortawesome/free-solid-svg-icons": "^7.0.0",
-    "@fortawesome/react-fontawesome": "^0.2.3",
+    "@fortawesome/fontawesome-svg-core": "^7.0.1",
+    "@fortawesome/free-solid-svg-icons": "^7.0.1",
+    "@fortawesome/react-fontawesome": "^0.2.6",
     "date-fns": "^4.1.0",
-    "react-day-picker": "^9.8.1",
+    "react-day-picker": "^9.9.0",
     "tailwindcss": "^4.1.12"
   },
   "peerDependencies": {
-    "@rjsf/core": "^6.0.0-beta.15",
-    "@rjsf/utils": "^6.0.0-beta.15",
+    "@rjsf/core": "^6.0.0-beta.16",
+    "@rjsf/utils": "^6.0.0-beta.16",
     "daisyui": "^5.0.29",
     "react": ">=18"
   },
   "devDependencies": {
-    "@rjsf/core": "^6.0.0-beta.15",
-    "@rjsf/snapshot-tests": "^6.0.0-beta.15",
-    "@rjsf/utils": "^6.0.0-beta.15",
-    "@rjsf/validator-ajv8": "^6.0.0-beta.15",
+    "@rjsf/core": "^6.0.0-beta.16",
+    "@rjsf/snapshot-tests": "^6.0.0-beta.16",
+    "@rjsf/utils": "^6.0.0-beta.16",
+    "@rjsf/validator-ajv8": "^6.0.0-beta.16",
     "@testing-library/dom": "^10.4.1",
-    "@testing-library/jest-dom": "^6.6.4",
+    "@testing-library/jest-dom": "^6.8.0",
     "@testing-library/react": "^16.3.0",
-    "daisyui": "^5.0.50"
+    "daisyui": "^5.1.10"
   },
   "repository": {
     "type": "git",

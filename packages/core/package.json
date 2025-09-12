@@ -1,11 +1,11 @@
 {
   "name": "@rjsf/core",
-  "version": "6.0.0-beta.15",
+  "version": "6.0.0-beta.16",
   "description": "A simple React component capable of building HTML forms out of a JSON schema.",
   "scripts": {
     "compileReplacer": "tsc -p tsconfig.replacer.json && move-file lodashReplacer.js lodashReplacer.cjs",
     "build:ts": "npm run compileReplacer && rimraf ./lib && tsc -b tsconfig.build.json && tsc-alias -p tsconfig.build.json",
-    "build:cjs": "esbuild ./src/index.ts --bundle --outfile=dist/index.js --sourcemap --packages=external --format=cjs",
+    "build:cjs": "esbuild ./src/index.ts --bundle --outfile=dist/index.cjs --sourcemap --packages=external --format=cjs",
     "build:esm": "esbuild ./src/index.ts --bundle --outfile=dist/index.esm.js --sourcemap --packages=external --format=esm",
     "build:umd": "rollup dist/index.esm.js --format=umd --file=dist/core.umd.js --name=JSONSchemaForm",
     "build": "npm run build:ts && npm run build:cjs && npm run build:esm && npm run build:umd",
@@ -32,27 +32,27 @@
   "exports": {
     ".": {
       "types": "./lib/index.d.ts",
-      "require": "./dist/index.js",
+      "require": "./dist/index.cjs",
       "import": "./lib/index.js"
     },
     "./lib": {
       "types": "./lib/index.d.ts",
-      "require": "./dist/index.js",
+      "require": "./dist/index.cjs",
       "import": "./lib/index.js"
     },
     "./lib/*.js": {
       "types": "./lib/*.d.ts",
-      "require": "./dist/*.js",
+      "require": "./dist/*.cjs",
       "import": "./lib/*.js"
     },
     "./dist": {
       "types": "./lib/index.d.ts",
-      "require": "./dist/index.js",
+      "require": "./dist/index.cjs",
       "import": "./lib/index.js"
     },
-    "./dist/*.js": {
+    "./dist/*.cjs": {
       "types": "./lib/*.d.ts",
-      "require": "./dist/*.js",
+      "require": "./dist/*.cjs",
       "import": "./lib/*.js"
     }
   },
@@ -66,7 +66,7 @@
     "node": ">=20"
   },
   "peerDependencies": {
-    "@rjsf/utils": "^6.0.0-beta.15",
+    "@rjsf/utils": "^6.0.0-beta.16",
     "react": ">=18"
   },
   "dependencies": {
@@ -76,10 +76,10 @@
     "prop-types": "^15.8.1"
   },
   "devDependencies": {
-    "@rjsf/snapshot-tests": "^6.0.0-beta.15",
-    "@rjsf/utils": "^6.0.0-beta.15",
-    "@rjsf/validator-ajv8": "^6.0.0-beta.15",
-    "@testing-library/jest-dom": "^6.6.4",
+    "@rjsf/snapshot-tests": "^6.0.0-beta.16",
+    "@rjsf/utils": "^6.0.0-beta.16",
+    "@rjsf/validator-ajv8": "^6.0.0-beta.16",
+    "@testing-library/jest-dom": "^6.8.0",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^14.6.1",
     "ajv": "^8.17.1",

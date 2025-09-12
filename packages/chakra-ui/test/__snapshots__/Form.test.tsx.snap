@@ -253,6 +253,7 @@ exports[`single fields checkbox field 1`] = `
     className="rjsf-field rjsf-field-boolean"
   >
     <fieldset
+      aria-labelledby="fieldset:::r23:::legend"
       className="fieldset__root emotion-0"
       data-part="root"
       data-scope="fieldset"
@@ -614,6 +615,7 @@ exports[`single fields checkbox field with label 1`] = `
     className="rjsf-field rjsf-field-boolean"
   >
     <fieldset
+      aria-labelledby="fieldset:::r26:::legend"
       className="fieldset__root emotion-0"
       data-part="root"
       data-scope="fieldset"
@@ -991,6 +993,7 @@ exports[`single fields checkbox field with label and description 1`] = `
     className="rjsf-field rjsf-field-boolean"
   >
     <fieldset
+      aria-labelledby="fieldset:::r29:::legend"
       className="fieldset__root emotion-0"
       data-part="root"
       data-scope="fieldset"
@@ -1374,6 +1377,7 @@ exports[`single fields checkbox field with label and rich text description 1`] =
     className="rjsf-field rjsf-field-boolean"
   >
     <fieldset
+      aria-labelledby="fieldset:::r2c:::legend"
       className="fieldset__root emotion-0"
       data-part="root"
       data-scope="fieldset"
@@ -1785,6 +1789,7 @@ exports[`single fields checkboxes field 1`] = `
     className="rjsf-field rjsf-field-array"
   >
     <fieldset
+      aria-labelledby="fieldset:::r2f:::legend"
       className="fieldset__root emotion-0"
       data-part="root"
       data-scope="fieldset"
@@ -1794,6 +1799,7 @@ exports[`single fields checkboxes field 1`] = `
         className="fieldset__content emotion-1"
       >
         <fieldset
+          aria-labelledby="fieldset:::r2g:::legend"
           className="fieldset__root emotion-2"
           data-part="root"
           data-scope="fieldset"
@@ -2355,6 +2361,7 @@ exports[`single fields field with description 1`] = `
     className="rjsf-field rjsf-field-object"
   >
     <fieldset
+      aria-labelledby="fieldset:::r2s:::legend"
       className="fieldset__root emotion-0"
       data-part="root"
       data-scope="fieldset"
@@ -2371,15 +2378,17 @@ exports[`single fields field with description 1`] = `
               className="rjsf-field rjsf-field-string"
             >
               <fieldset
+                aria-labelledby="fieldset:::r2t:::legend"
                 className="fieldset__root emotion-0"
                 data-part="root"
                 data-scope="fieldset"
                 disabled={false}
               >
-                <legend
+                <div
                   className="fieldset__legend emotion-4"
                   data-part="legend"
                   data-scope="fieldset"
+                  id="fieldset:::r2t:::legend"
                 >
                   <sup
                     className="emotion-5"
@@ -2387,7 +2396,7 @@ exports[`single fields field with description 1`] = `
                   >
                     some description
                   </sup>
-                </legend>
+                </div>
                 <div
                   className="fieldset__content emotion-1"
                 >
@@ -2700,6 +2709,7 @@ exports[`single fields field with description in uiSchema 1`] = `
     className="rjsf-field rjsf-field-object"
   >
     <fieldset
+      aria-labelledby="fieldset:::r2v:::legend"
       className="fieldset__root emotion-0"
       data-part="root"
       data-scope="fieldset"
@@ -2716,15 +2726,17 @@ exports[`single fields field with description in uiSchema 1`] = `
               className="rjsf-field rjsf-field-string"
             >
               <fieldset
+                aria-labelledby="fieldset:::r30:::legend"
                 className="fieldset__root emotion-0"
                 data-part="root"
                 data-scope="fieldset"
                 disabled={false}
               >
-                <legend
+                <div
                   className="fieldset__legend emotion-4"
                   data-part="legend"
                   data-scope="fieldset"
+                  id="fieldset:::r30:::legend"
                 >
                   <sup
                     className="emotion-5"
@@ -2732,7 +2744,7 @@ exports[`single fields field with description in uiSchema 1`] = `
                   >
                     some other description
                   </sup>
-                </legend>
+                </div>
                 <div
                   className="fieldset__content emotion-1"
                 >
@@ -3045,6 +3057,7 @@ exports[`single fields field with markdown description 1`] = `
     className="rjsf-field rjsf-field-object"
   >
     <fieldset
+      aria-labelledby="fieldset:::r32:::legend"
       className="fieldset__root emotion-0"
       data-part="root"
       data-scope="fieldset"
@@ -3061,15 +3074,17 @@ exports[`single fields field with markdown description 1`] = `
               className="rjsf-field rjsf-field-string"
             >
               <fieldset
+                aria-labelledby="fieldset:::r33:::legend"
                 className="fieldset__root emotion-0"
                 data-part="root"
                 data-scope="fieldset"
                 disabled={false}
               >
-                <legend
+                <div
                   className="fieldset__legend emotion-4"
                   data-part="legend"
                   data-scope="fieldset"
+                  id="fieldset:::r33:::legend"
                 >
                   <sup
                     className="emotion-5"
@@ -3083,7 +3098,7 @@ exports[`single fields field with markdown description 1`] = `
                        description
                     </span>
                   </sup>
-                </legend>
+                </div>
                 <div
                   className="fieldset__content emotion-1"
                 >
@@ -3396,6 +3411,7 @@ exports[`single fields field with markdown description in uiSchema 1`] = `
     className="rjsf-field rjsf-field-object"
   >
     <fieldset
+      aria-labelledby="fieldset:::r35:::legend"
       className="fieldset__root emotion-0"
       data-part="root"
       data-scope="fieldset"
@@ -3412,15 +3428,17 @@ exports[`single fields field with markdown description in uiSchema 1`] = `
               className="rjsf-field rjsf-field-string"
             >
               <fieldset
+                aria-labelledby="fieldset:::r36:::legend"
                 className="fieldset__root emotion-0"
                 data-part="root"
                 data-scope="fieldset"
                 disabled={false}
               >
-                <legend
+                <div
                   className="fieldset__legend emotion-4"
                   data-part="legend"
                   data-scope="fieldset"
+                  id="fieldset:::r36:::legend"
                 >
                   <sup
                     className="emotion-5"
@@ -3430,7 +3448,7 @@ exports[`single fields field with markdown description in uiSchema 1`] = `
                       some other description
                     </span>
                   </sup>
-                </legend>
+                </div>
                 <div
                   className="fieldset__content emotion-1"
                 >
@@ -3690,6 +3708,7 @@ exports[`single fields format color 1`] = `
     className="rjsf-field rjsf-field-string"
   >
     <fieldset
+      aria-labelledby="fieldset:::rg:::legend"
       className="fieldset__root emotion-0"
       data-part="root"
       data-scope="fieldset"
@@ -3940,6 +3959,7 @@ exports[`single fields format date 1`] = `
     className="rjsf-field rjsf-field-string"
   >
     <fieldset
+      aria-labelledby="fieldset:::ri:::legend"
       className="fieldset__root emotion-0"
       data-part="root"
       data-scope="fieldset"
@@ -4190,6 +4210,7 @@ exports[`single fields format datetime 1`] = `
     className="rjsf-field rjsf-field-string"
   >
     <fieldset
+      aria-labelledby="fieldset:::rk:::legend"
       className="fieldset__root emotion-0"
       data-part="root"
       data-scope="fieldset"
@@ -4440,6 +4461,7 @@ exports[`single fields format time 1`] = `
     className="rjsf-field rjsf-field-string"
   >
     <fieldset
+      aria-labelledby="fieldset:::rm:::legend"
       className="fieldset__root emotion-0"
       data-part="root"
       data-scope="fieldset"
@@ -4896,6 +4918,7 @@ exports[`single fields help and error display 1`] = `
     className="rjsf-field rjsf-field-string rjsf-field-error"
   >
     <fieldset
+      aria-labelledby="fieldset:::r3h:::legend"
       className="fieldset__root emotion-8"
       data-invalid=""
       data-part="root"
@@ -5102,6 +5125,7 @@ exports[`single fields hidden field 1`] = `
     className="rjsf-field rjsf-field-object"
   >
     <fieldset
+      aria-labelledby="fieldset:::r2r:::legend"
       className="fieldset__root emotion-0"
       data-part="root"
       data-scope="fieldset"
@@ -5344,6 +5368,7 @@ exports[`single fields hidden label 1`] = `
     className="rjsf-field rjsf-field-string"
   >
     <fieldset
+      aria-labelledby="fieldset:::r3b:::legend"
       className="fieldset__root emotion-0"
       data-part="root"
       data-scope="fieldset"
@@ -5526,6 +5551,7 @@ exports[`single fields null field 1`] = `
     className="rjsf-field rjsf-field-null"
   >
     <fieldset
+      aria-labelledby="fieldset:::re:::legend"
       className="fieldset__root emotion-0"
       data-part="root"
       data-scope="fieldset"
@@ -5749,6 +5775,7 @@ exports[`single fields number field 0 1`] = `
     className="rjsf-field rjsf-field-number"
   >
     <fieldset
+      aria-labelledby="fieldset:::rc:::legend"
       className="fieldset__root emotion-0"
       data-part="root"
       data-scope="fieldset"
@@ -6000,6 +6027,7 @@ exports[`single fields number field 1`] = `
     className="rjsf-field rjsf-field-number"
   >
     <fieldset
+      aria-labelledby="fieldset:::ra:::legend"
       className="fieldset__root emotion-0"
       data-part="root"
       data-scope="fieldset"
@@ -6251,6 +6279,7 @@ exports[`single fields password field 1`] = `
     className="rjsf-field rjsf-field-string"
   >
     <fieldset
+      aria-labelledby="fieldset:::ro:::legend"
       className="fieldset__root emotion-0"
       data-part="root"
       data-scope="fieldset"
@@ -6566,6 +6595,7 @@ exports[`single fields radio field 1`] = `
     className="rjsf-field rjsf-field-boolean"
   >
     <fieldset
+      aria-labelledby="fieldset:::r2l:::legend"
       className="fieldset__root emotion-0"
       data-part="root"
       data-scope="fieldset"
@@ -6959,6 +6989,7 @@ exports[`single fields schema examples 1`] = `
     className="rjsf-field rjsf-field-string"
   >
     <fieldset
+      aria-labelledby="fieldset:::r3f:::legend"
       className="fieldset__root emotion-0"
       data-part="root"
       data-scope="fieldset"
@@ -7481,6 +7512,7 @@ exports[`single fields select field 1`] = `
     className="rjsf-field rjsf-field-string"
   >
     <fieldset
+      aria-labelledby="fieldset:::rv:::legend"
       className="fieldset__root emotion-0"
       data-part="root"
       data-scope="fieldset"
@@ -8188,6 +8220,7 @@ exports[`single fields select field multiple choice 1`] = `
     className="rjsf-field rjsf-field-array"
   >
     <fieldset
+      aria-labelledby="fieldset:::r12:::legend"
       className="fieldset__root emotion-0"
       data-part="root"
       data-scope="fieldset"
@@ -8975,6 +9008,7 @@ exports[`single fields select field multiple choice enumDisabled 1`] = `
     className="rjsf-field rjsf-field-array"
   >
     <fieldset
+      aria-labelledby="fieldset:::r1k:::legend"
       className="fieldset__root emotion-0"
       data-part="root"
       data-scope="fieldset"
@@ -9606,6 +9640,7 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
     className="rjsf-field rjsf-field-array"
   >
     <fieldset
+      aria-labelledby="fieldset:::r1n:::legend"
       className="fieldset__root emotion-0"
       data-part="root"
       data-scope="fieldset"
@@ -9615,6 +9650,7 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
         className="fieldset__content emotion-1"
       >
         <fieldset
+          aria-labelledby="fieldset:::r1o:::legend"
           className="fieldset__root emotion-2"
           data-part="root"
           data-scope="fieldset"
@@ -10378,6 +10414,7 @@ exports[`single fields select field multiple choice formData 1`] = `
     className="rjsf-field rjsf-field-array"
   >
     <fieldset
+      aria-labelledby="fieldset:::r20:::legend"
       className="fieldset__root emotion-0"
       data-part="root"
       data-scope="fieldset"
@@ -11168,6 +11205,7 @@ exports[`single fields select field multiple choice with labels 1`] = `
     className="rjsf-field rjsf-field-array"
   >
     <fieldset
+      aria-labelledby="fieldset:::r15:::legend"
       className="fieldset__root emotion-0"
       data-part="root"
       data-scope="fieldset"
@@ -11916,6 +11954,7 @@ exports[`single fields select field single choice enumDisabled 1`] = `
     className="rjsf-field rjsf-field-string"
   >
     <fieldset
+      aria-labelledby="fieldset:::r18:::legend"
       className="fieldset__root emotion-0"
       data-part="root"
       data-scope="fieldset"
@@ -12438,6 +12477,7 @@ exports[`single fields select field single choice enumDisabled using radio widge
     className="rjsf-field rjsf-field-string"
   >
     <fieldset
+      aria-labelledby="fieldset:::r1b:::legend"
       className="fieldset__root emotion-0"
       data-part="root"
       data-scope="fieldset"
@@ -12899,6 +12939,7 @@ exports[`single fields select field single choice form disabled using radio widg
     className="rjsf-field rjsf-field-string"
   >
     <fieldset
+      aria-labelledby="fieldset:::r1h:::legend"
       className="fieldset__root emotion-0"
       data-disabled=""
       data-part="root"
@@ -13552,6 +13593,7 @@ exports[`single fields select field single choice formData 1`] = `
     className="rjsf-field rjsf-field-string"
   >
     <fieldset
+      aria-labelledby="fieldset:::r1t:::legend"
       className="fieldset__root emotion-0"
       data-part="root"
       data-scope="fieldset"
@@ -14071,6 +14113,7 @@ exports[`single fields select field single choice uiSchema disabled using radio 
     className="rjsf-field rjsf-field-string"
   >
     <fieldset
+      aria-labelledby="fieldset:::r1e:::legend"
       className="fieldset__root emotion-0"
       data-disabled=""
       data-part="root"
@@ -14554,6 +14597,7 @@ exports[`single fields slider field 1`] = `
     className="rjsf-field rjsf-field-integer"
   >
     <fieldset
+      aria-labelledby="fieldset:::r2o:::legend"
       className="fieldset__root emotion-0"
       data-part="root"
       data-scope="fieldset"
@@ -14892,6 +14936,7 @@ exports[`single fields string field format data-url 1`] = `
     className="rjsf-field rjsf-field-string"
   >
     <fieldset
+      aria-labelledby="fieldset:::r6:::legend"
       className="fieldset__root emotion-0"
       data-part="root"
       data-scope="fieldset"
@@ -15144,6 +15189,7 @@ exports[`single fields string field format email 1`] = `
     className="rjsf-field rjsf-field-string"
   >
     <fieldset
+      aria-labelledby="fieldset:::r2:::legend"
       className="fieldset__root emotion-0"
       data-part="root"
       data-scope="fieldset"
@@ -15394,6 +15440,7 @@ exports[`single fields string field format uri 1`] = `
     className="rjsf-field rjsf-field-string"
   >
     <fieldset
+      aria-labelledby="fieldset:::r4:::legend"
       className="fieldset__root emotion-0"
       data-part="root"
       data-scope="fieldset"
@@ -15644,6 +15691,7 @@ exports[`single fields string field regular 1`] = `
     className="rjsf-field rjsf-field-string"
   >
     <fieldset
+      aria-labelledby="fieldset:::r0:::legend"
       className="fieldset__root emotion-0"
       data-part="root"
       data-scope="fieldset"
@@ -15894,6 +15942,7 @@ exports[`single fields string field with placeholder 1`] = `
     className="rjsf-field rjsf-field-string"
   >
     <fieldset
+      aria-labelledby="fieldset:::r8:::legend"
       className="fieldset__root emotion-0"
       data-part="root"
       data-scope="fieldset"
@@ -16144,6 +16193,7 @@ exports[`single fields textarea field 1`] = `
     className="rjsf-field rjsf-field-string"
   >
     <fieldset
+      aria-labelledby="fieldset:::rt:::legend"
       className="fieldset__root emotion-0"
       data-part="root"
       data-scope="fieldset"
@@ -16454,6 +16504,7 @@ exports[`single fields title field 1`] = `
     className="rjsf-field rjsf-field-object"
   >
     <fieldset
+      aria-labelledby="fieldset:::r38:::legend"
       className="fieldset__root emotion-0"
       data-part="root"
       data-scope="fieldset"
@@ -16485,6 +16536,7 @@ exports[`single fields title field 1`] = `
               className="rjsf-field rjsf-field-string"
             >
               <fieldset
+                aria-labelledby="fieldset:::r39:::legend"
                 className="fieldset__root emotion-0"
                 data-part="root"
                 data-scope="fieldset"
@@ -16681,6 +16733,7 @@ exports[`single fields unsupported field 1`] = `
     className="rjsf-field rjsf-field-undefined"
   >
     <fieldset
+      aria-labelledby="fieldset:::rf:::legend"
       className="fieldset__root emotion-0"
       data-part="root"
       data-scope="fieldset"
@@ -17073,6 +17126,7 @@ exports[`single fields up/down field 1`] = `
     className="rjsf-field rjsf-field-number"
   >
     <fieldset
+      aria-labelledby="fieldset:::rq:::legend"
       className="fieldset__root emotion-0"
       data-part="root"
       data-scope="fieldset"
@@ -17400,6 +17454,7 @@ exports[`single fields using custom tagName 1`] = `
     className="rjsf-field rjsf-field-string"
   >
     <fieldset
+      aria-labelledby="fieldset:::r3d:::legend"
       className="fieldset__root emotion-0"
       data-part="root"
       data-scope="fieldset"

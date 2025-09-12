@@ -1,6 +1,6 @@
 {
   "name": "@rjsf/mantine",
-  "version": "6.0.0-beta.15",
+  "version": "6.0.0-beta.16",
   "main": "dist/index.js",
   "module": "lib/index.js",
   "typings": "lib/index.d.ts",
@@ -9,27 +9,27 @@
   "exports": {
     ".": {
       "types": "./lib/index.d.ts",
-      "require": "./dist/index.js",
+      "require": "./dist/index.cjs",
       "import": "./lib/index.js"
     },
     "./lib": {
       "types": "./lib/index.d.ts",
-      "require": "./dist/index.js",
+      "require": "./dist/index.cjs",
       "import": "./lib/index.js"
     },
     "./lib/*.js": {
       "types": "./lib/*.d.ts",
-      "require": "./dist/*.js",
+      "require": "./dist/*.cjs",
       "import": "./lib/*.js"
     },
     "./dist": {
       "types": "./lib/index.d.ts",
-      "require": "./dist/index.js",
+      "require": "./dist/index.cjs",
       "import": "./lib/index.js"
     },
-    "./dist/*.js": {
+    "./dist/*.cjs": {
       "types": "./lib/*.d.ts",
-      "require": "./dist/*.js",
+      "require": "./dist/*.cjs",
       "import": "./lib/*.js"
     }
   },
@@ -44,7 +44,7 @@
   },
   "scripts": {
     "build:ts": "tsc -b tsconfig.build.json && tsc-alias -p tsconfig.build.json",
-    "build:cjs": "esbuild ./src/index.ts --bundle --outfile=dist/index.js --sourcemap --packages=external --format=cjs",
+    "build:cjs": "esbuild ./src/index.ts --bundle --outfile=dist/index.cjs --sourcemap --packages=external --format=cjs",
     "build:esm": "esbuild ./src/index.ts --bundle --outfile=dist/mantine.esm.js --sourcemap --packages=external --format=esm",
     "build:umd": "rollup dist/mantine.esm.js --format=umd --file=dist/mantine.umd.js --name=@rjsf/mantine",
     "build": "npm run build:ts && npm run build:cjs && npm run build:esm && npm run build:umd",
@@ -64,20 +64,20 @@
     "@mantine/core": ">=8",
     "@mantine/dates": ">=8",
     "@mantine/hooks": ">=8",
-    "@rjsf/core": "^6.0.0-beta.15",
-    "@rjsf/utils": "^6.0.0-beta.15",
+    "@rjsf/core": "^6.0.0-beta.16",
+    "@rjsf/utils": "^6.0.0-beta.16",
     "react": ">=18"
   },
   "devDependencies": {
-    "@mantine/core": "^8.2.4",
-    "@mantine/dates": "^8.2.4",
-    "@mantine/hooks": "^8.2.4",
+    "@mantine/core": "^8.3.1",
+    "@mantine/dates": "^8.3.1",
+    "@mantine/hooks": "^8.3.1",
     "@restart/hooks": "^0.6.2",
     "@restart/ui": "^1.9.4",
-    "@rjsf/core": "^6.0.0-beta.15",
-    "@rjsf/snapshot-tests": "^6.0.0-beta.15",
-    "@rjsf/utils": "^6.0.0-beta.15",
-    "@rjsf/validator-ajv8": "^6.0.0-beta.15",
+    "@rjsf/core": "^6.0.0-beta.16",
+    "@rjsf/snapshot-tests": "^6.0.0-beta.16",
+    "@rjsf/utils": "^6.0.0-beta.16",
+    "@rjsf/validator-ajv8": "^6.0.0-beta.16",
     "eslint": "^8.57.1",
     "uncontrollable": "^9.0.0"
   },

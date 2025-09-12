@@ -1,6 +1,6 @@
 {
   "name": "@rjsf/validator-ajv8",
-  "version": "6.0.0-beta.15",
+  "version": "6.0.0-beta.16",
   "main": "dist/index.js",
   "module": "lib/index.js",
   "typings": "lib/index.d.ts",
@@ -9,42 +9,42 @@
   "exports": {
     ".": {
       "types": "./lib/index.d.ts",
-      "require": "./dist/index.js",
+      "require": "./dist/index.cjs",
       "import": "./lib/index.js"
     },
     "./compileSchemaValidators": {
       "types": "./lib/compileSchemaValidators.d.ts",
-      "require": "./dist/compileSchemaValidators.js",
+      "require": "./dist/compileSchemaValidators.cjs",
       "import": "./lib/compileSchemaValidators.js"
     },
     "./lib/compileSchemaValidators": {
       "types": "./lib/compileSchemaValidators.d.ts",
-      "require": "./dist/compileSchemaValidators.js",
+      "require": "./dist/compileSchemaValidators.cjs",
       "import": "./lib/compileSchemaValidators.js"
     },
     "./dist/compileSchemaValidators": {
       "types": "./lib/compileSchemaValidators.d.ts",
-      "require": "./dist/compileSchemaValidators.js",
+      "require": "./dist/compileSchemaValidators.cjs",
       "import": "./lib/compileSchemaValidators.js"
     },
     "./lib": {
       "types": "./lib/index.d.ts",
-      "require": "./dist/index.js",
+      "require": "./dist/index.cjs",
       "import": "./lib/index.js"
     },
     "./lib/*.js": {
       "types": "./lib/*.d.ts",
-      "require": "./dist/*.js",
+      "require": "./dist/*.cjs",
       "import": "./lib/*.js"
     },
     "./dist": {
       "types": "./lib/index.d.ts",
-      "require": "./dist/index.js",
+      "require": "./dist/index.cjs",
       "import": "./lib/index.js"
     },
-    "./dist/*.js": {
+    "./dist/*.cjs": {
       "types": "./lib/*.d.ts",
-      "require": "./dist/*.js",
+      "require": "./dist/*.cjs",
       "import": "./lib/*.js"
     }
   },
@@ -60,7 +60,7 @@
   "scripts": {
     "compileReplacer": "tsc -p tsconfig.replacer.json && move-file lodashReplacer.js lodashReplacer.cjs && move-file ajvReplacer.js ajvReplacer.cjs",
     "build:ts": "npm run compileReplacer && rimraf ./lib && tsc -b tsconfig.build.json && tsc-alias -p tsconfig.build.json",
-    "build:cjs": "esbuild ./src/index.ts --bundle --outfile=dist/index.js --sourcemap --packages=external --format=cjs && esbuild ./src/compileSchemaValidators.ts --bundle --outfile=dist/compileSchemaValidators.js --sourcemap --packages=external --format=cjs",
+    "build:cjs": "esbuild ./src/index.ts --bundle --outfile=dist/index.cjs --sourcemap --packages=external --format=cjs && esbuild ./src/compileSchemaValidators.ts --bundle --outfile=dist/compileSchemaValidators.cjs --sourcemap --packages=external --format=cjs",
     "build:esm": "esbuild ./src/index.ts --bundle --outfile=dist/validator-ajv8.esm.js --sourcemap --packages=external --format=esm  && esbuild ./src/compileSchemaValidators.ts --bundle --outfile=dist/compileSchemaValidators.esm.js --sourcemap --packages=external --format=esm",
     "build:umd": "rollup dist/validator-ajv8.esm.js --format=umd --file=dist/validator-ajv8.umd.js --name=@rjsf/validator-ajv8",
     "build": "npm run build:ts && npm run build:cjs && npm run build:esm && npm run build:umd",
@@ -83,10 +83,10 @@
     "lodash-es": "^4.17.21"
   },
   "peerDependencies": {
-    "@rjsf/utils": "^6.0.0-beta.15"
+    "@rjsf/utils": "^6.0.0-beta.16"
   },
   "devDependencies": {
-    "@rjsf/utils": "^6.0.0-beta.15",
+    "@rjsf/utils": "^6.0.0-beta.16",
     "@types/json-schema": "^7.0.15",
     "ajv-i18n": "^4.2.0",
     "eslint": "^8.57.1"
