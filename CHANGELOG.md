@@ -15,6 +15,12 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+# 6.0.0-beta.17
+
+## @rjsf/shadcn
+
+- Update ArrayFieldItemTemplate to align buttons with the input field [#4753](https://github.com/rjsf-team/react-jsonschema-form/pull/4753)
+
 # 6.0.0-beta.16
 
 ## @rjsf/antd
