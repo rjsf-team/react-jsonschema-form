@@ -109,7 +109,7 @@ exports[`array fields array icons 1`] = `
             >
               <div>
                 <div
-                  className="mb-2 flex flex-row flex-wrap"
+                  className="mb-2 flex flex-row flex-wrap items-center"
                 >
                   <div
                     className="grow shrink"
@@ -290,7 +290,7 @@ exports[`array fields array icons 1`] = `
               </div>
               <div>
                 <div
-                  className="mb-2 flex flex-row flex-wrap"
+                  className="mb-2 flex flex-row flex-wrap items-center"
                 >
                   <div
                     className="grow shrink"
@@ -724,7 +724,7 @@ exports[`array fields fixed array 1`] = `
             >
               <div>
                 <div
-                  className="mb-2 flex flex-row flex-wrap"
+                  className="mb-2 flex flex-row flex-wrap items-center"
                 >
                   <div
                     className="grow shrink"
@@ -772,7 +772,7 @@ exports[`array fields fixed array 1`] = `
               </div>
               <div>
                 <div
-                  className="mb-2 flex flex-row flex-wrap"
+                  className="mb-2 flex flex-row flex-wrap items-center"
                 >
                   <div
                     className="grow shrink"
@@ -1215,7 +1215,7 @@ exports[`with title and description array icons 1`] = `
             >
               <div>
                 <div
-                  className="mb-2 flex flex-row flex-wrap"
+                  className="mb-2 flex flex-row flex-wrap items-center"
                 >
                   <div
                     className="grow shrink"
@@ -1409,7 +1409,7 @@ exports[`with title and description array icons 1`] = `
               </div>
               <div>
                 <div
-                  className="mb-2 flex flex-row flex-wrap"
+                  className="mb-2 flex flex-row flex-wrap items-center"
                 >
                   <div
                     className="grow shrink"
@@ -1823,7 +1823,7 @@ exports[`with title and description fixed array 1`] = `
             >
               <div>
                 <div
-                  className="mb-2 flex flex-row flex-wrap"
+                  className="mb-2 flex flex-row flex-wrap items-center"
                 >
                   <div
                     className="grow shrink"
@@ -1884,7 +1884,7 @@ exports[`with title and description fixed array 1`] = `
               </div>
               <div>
                 <div
-                  className="mb-2 flex flex-row flex-wrap"
+                  className="mb-2 flex flex-row flex-wrap items-center"
                 >
                   <div
                     className="grow shrink"
@@ -2128,7 +2128,7 @@ exports[`with title and description from both array icons 1`] = `
             >
               <div>
                 <div
-                  className="mb-2 flex flex-row flex-wrap"
+                  className="mb-2 flex flex-row flex-wrap items-center"
                 >
                   <div
                     className="grow shrink"
@@ -2322,7 +2322,7 @@ exports[`with title and description from both array icons 1`] = `
               </div>
               <div>
                 <div
-                  className="mb-2 flex flex-row flex-wrap"
+                  className="mb-2 flex flex-row flex-wrap items-center"
                 >
                   <div
                     className="grow shrink"
@@ -2736,7 +2736,7 @@ exports[`with title and description from both fixed array 1`] = `
             >
               <div>
                 <div
-                  className="mb-2 flex flex-row flex-wrap"
+                  className="mb-2 flex flex-row flex-wrap items-center"
                 >
                   <div
                     className="grow shrink"
@@ -2797,7 +2797,7 @@ exports[`with title and description from both fixed array 1`] = `
               </div>
               <div>
                 <div
-                  className="mb-2 flex flex-row flex-wrap"
+                  className="mb-2 flex flex-row flex-wrap items-center"
                 >
                   <div
                     className="grow shrink"
@@ -3041,7 +3041,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
             >
               <div>
                 <div
-                  className="mb-2 flex flex-row flex-wrap"
+                  className="mb-2 flex flex-row flex-wrap items-center"
                 >
                   <div
                     className="grow shrink"
@@ -3235,7 +3235,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
               </div>
               <div>
                 <div
-                  className="mb-2 flex flex-row flex-wrap"
+                  className="mb-2 flex flex-row flex-wrap items-center"
                 >
                   <div
                     className="grow shrink"
@@ -3649,7 +3649,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
             >
               <div>
                 <div
-                  className="mb-2 flex flex-row flex-wrap"
+                  className="mb-2 flex flex-row flex-wrap items-center"
                 >
                   <div
                     className="grow shrink"
@@ -3710,7 +3710,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
               </div>
               <div>
                 <div
-                  className="mb-2 flex flex-row flex-wrap"
+                  className="mb-2 flex flex-row flex-wrap items-center"
                 >
                   <div
                     className="grow shrink"
@@ -3898,7 +3898,7 @@ exports[`with title and description with global label off array icons 1`] = `
             >
               <div>
                 <div
-                  className="mb-2 flex flex-row flex-wrap"
+                  className="mb-2 flex flex-row flex-wrap items-center"
                 >
                   <div
                     className="grow shrink"
@@ -4073,7 +4073,7 @@ exports[`with title and description with global label off array icons 1`] = `
               </div>
               <div>
                 <div
-                  className="mb-2 flex flex-row flex-wrap"
+                  className="mb-2 flex flex-row flex-wrap items-center"
                 >
                   <div
                     className="grow shrink"
@@ -4440,7 +4440,7 @@ exports[`with title and description with global label off fixed array 1`] = `
             >
               <div>
                 <div
-                  className="mb-2 flex flex-row flex-wrap"
+                  className="mb-2 flex flex-row flex-wrap items-center"
                 >
                   <div
                     className="grow shrink"
@@ -4482,7 +4482,7 @@ exports[`with title and description with global label off fixed array 1`] = `
               </div>
               <div>
                 <div
-                  className="mb-2 flex flex-row flex-wrap"
+                  className="mb-2 flex flex-row flex-wrap items-center"
                 >
                   <div
                     className="grow shrink"
