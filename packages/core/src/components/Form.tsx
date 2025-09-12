@@ -1153,7 +1153,7 @@ export default class Form<
       >
         {showErrorList === 'top' && this.renderErrors(registry)}
         <_SchemaField
-          name={idPrefix}
+          name=''
           schema={schema}
           uiSchema={uiSchema}
           errorSchema={errorSchema}

@@ -17,9 +17,14 @@ should change the heading of the (upcoming) version to include a major version b
 -->
 # 6.0.0-beta.17
 
+## @rjsf/core
+
+- Updated `ObjectField` to remove the `name` from the path passed to `onChange()` callback in `handleAddClick()` and `onDropPropertyClick()`, fixing [#4763](https://github.com/rjsf-team/react-jsonschema-form/issues/4763)
+- Updated `Form` to restore the passing of an empty string for `name` to avoid accidentally showing it as the title for the whole schema
+
 ## @rjsf/shadcn
 
-- Update ArrayFieldItemTemplate to align buttons with the input field [#4753](https://github.com/rjsf-team/react-jsonschema-form/pull/4753)
+- Update `ArrayFieldItemTemplate` to align buttons with the input field, fixing [#4753](https://github.com/rjsf-team/react-jsonschema-form/pull/4753)
 
 # 6.0.0-beta.16
 

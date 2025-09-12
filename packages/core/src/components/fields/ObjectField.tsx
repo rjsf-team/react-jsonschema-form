@@ -94,11 +94,11 @@ class ObjectField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
   onDropPropertyClick = (key: string) => {
     return (event: DragEvent) => {
       event.preventDefault();
-      const { onChange, formData, name } = this.props;
+      const { onChange, formData } = this.props;
       const copiedFormData = { ...formData } as T;
       unset(copiedFormData, key);
       // drop property will pass the name in `path` array
-      onChange(copiedFormData, [name]);
+      onChange(copiedFormData, []);
     };
   };
 
@@ -187,7 +187,7 @@ class ObjectField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
     if (!(schema.additionalProperties || schema.patternProperties)) {
       return;
     }
-    const { formData, name, onChange, registry } = this.props;
+    const { formData, onChange, registry } = this.props;
     const newFormData = { ...formData } as T;
     const newKey = this.getAvailableKey('newKey', newFormData);
     if (schema.patternProperties) {
@@ -220,7 +220,7 @@ class ObjectField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
     }
 
     // add will pass the name in `path` array
-    onChange(newFormData, [name]);
+    onChange(newFormData, []);
   };
 
   /** Renders the `ObjectField` from the given props
