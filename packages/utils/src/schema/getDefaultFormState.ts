@@ -84,6 +84,24 @@ export function getInnerSchemaForArrayItem<S extends StrictRJSFSchema = RJSFSche
   return {} as S;
 }
 
+/** Checks if the given `schema` contains the `null` type along with another type AND if the `default` contained within
+ * the schema is `null` AND the `computedDefault` is empty. If all of those conditions are true, then the `schema`'s
+ * default should be `null` rather than `computedDefault`.
+ *
+ * @param schema - The schema to inspect
+ * @param computedDefault - The computed default for the schema
+ * @returns - Flag indicating whether a null should be returned instead of the computedDefault
+ */
+export function computeDefaultBasedOnSchemaTypeAndDefaults<T = any, S extends StrictRJSFSchema = RJSFSchema>(
+  schema: S,
+  computedDefault: T,
+) {
+  const { default: schemaDefault, type } = schema;
+  const shouldReturnNullAsDefault =
+    Array.isArray(type) && type.includes('null') && isEmpty(computedDefault) && schemaDefault === null;
+  return shouldReturnNullAsDefault ? (null as T) : computedDefault;
+}
+
 /** Either add `computedDefault` at `key` into `obj` or not add it based on its value, the value of
  * `includeUndefinedValues`, the value of `emptyObjectFields` and if its parent field is required. Generally undefined
  * `computedDefault` values are added only when `includeUndefinedValues` is either true/"excludeObjectChildren". If `
@@ -446,7 +464,7 @@ export function getObjectDefaults<T = any, S extends StrictRJSFSchema = RJSFSche
     required,
     shouldMergeDefaultsIntoFormData,
   }: ComputeDefaultsProps<T, S> = {},
-  defaults?: T | T[] | undefined,
+  defaults?: T | T[],
 ): T {
   {
     const formData: T = (isObject(rawFormData) ? rawFormData : {}) as T;
@@ -539,7 +557,7 @@ export function getObjectDefaults<T = any, S extends StrictRJSFSchema = RJSFSche
         );
       });
     }
-    return objectDefaults;
+    return computeDefaultBasedOnSchemaTypeAndDefaults<T, S>(rawSchema, objectDefaults);
   }
 }
 
@@ -563,8 +581,8 @@ export function getArrayDefaults<T = any, S extends StrictRJSFSchema = RJSFSchem
     required,
     shouldMergeDefaultsIntoFormData,
   }: ComputeDefaultsProps<T, S> = {},
-  defaults?: T | T[] | undefined,
-): T | T[] | undefined {
+  defaults?: T[],
+): T[] | undefined {
   const schema: S = rawSchema;
 
   const arrayMinItemsStateBehavior = experimental_defaultFormStateBehavior?.arrayMinItems ?? {};
@@ -576,7 +594,7 @@ export function getArrayDefaults<T = any, S extends StrictRJSFSchema = RJSFSchem
   const computeSkipPopulate = arrayMinItemsStateBehavior?.computeSkipPopulate ?? (() => false);
   const isSkipEmptyDefaults = experimental_defaultFormStateBehavior?.emptyObjectFields === 'skipEmptyDefaults';
 
-  const emptyDefault = isSkipEmptyDefaults ? undefined : [];
+  const emptyDefault: T[] | undefined = isSkipEmptyDefaults ? undefined : [];
 
   // Inject defaults into existing array defaults
   if (Array.isArray(defaults)) {
@@ -598,7 +616,7 @@ export function getArrayDefaults<T = any, S extends StrictRJSFSchema = RJSFSchem
   if (Array.isArray(rawFormData)) {
     const schemaItem: S = getInnerSchemaForArrayItem<S>(schema);
     if (neverPopulate) {
-      defaults = rawFormData;
+      defaults = rawFormData as typeof defaults;
     } else {
       const itemDefaults = rawFormData.map((item: T, idx: number) => {
         return computeDefaults<T, S, F>(validator, schemaItem, {
@@ -635,6 +653,7 @@ export function getArrayDefaults<T = any, S extends StrictRJSFSchema = RJSFSchem
     }
   }
 
+  let arrayDefault: T[] | undefined;
   const defaultsLength = Array.isArray(defaults) ? defaults.length : 0;
   if (
     !schema.minItems ||
@@ -642,27 +661,29 @@ export function getArrayDefaults<T = any, S extends StrictRJSFSchema = RJSFSchem
     computeSkipPopulate<T, S, F>(validator, schema, rootSchema) ||
     schema.minItems <= defaultsLength
   ) {
-    return defaults ? defaults : emptyDefault;
+    arrayDefault = defaults ? defaults : emptyDefault;
+  } else {
+    const defaultEntries: T[] = (defaults || []) as T[];
+    const fillerSchema: S = getInnerSchemaForArrayItem<S>(schema, AdditionalItemsHandling.Invert);
+    const fillerDefault = fillerSchema.default;
+
+    // Calculate filler entries for remaining items (minItems - existing raw data/defaults)
+    const fillerEntries: T[] = Array.from({ length: schema.minItems - defaultsLength }, () =>
+      computeDefaults<any, S, F>(validator, fillerSchema, {
+        parentDefaults: fillerDefault,
+        rootSchema,
+        _recurseList,
+        experimental_defaultFormStateBehavior,
+        experimental_customMergeAllOf,
+        required,
+        shouldMergeDefaultsIntoFormData,
+      }),
+    ) as T[];
+    // then fill up the rest with either the item default or empty, up to minItems
+    arrayDefault = defaultEntries.concat(fillerEntries);
   }
 
-  const defaultEntries: T[] = (defaults || []) as T[];
-  const fillerSchema: S = getInnerSchemaForArrayItem<S>(schema, AdditionalItemsHandling.Invert);
-  const fillerDefault = fillerSchema.default;
-
-  // Calculate filler entries for remaining items (minItems - existing raw data/defaults)
-  const fillerEntries: T[] = Array.from({ length: schema.minItems - defaultsLength }, () =>
-    computeDefaults<any, S, F>(validator, fillerSchema, {
-      parentDefaults: fillerDefault,
-      rootSchema,
-      _recurseList,
-      experimental_defaultFormStateBehavior,
-      experimental_customMergeAllOf,
-      required,
-      shouldMergeDefaultsIntoFormData,
-    }),
-  ) as T[];
-  // then fill up the rest with either the item default or empty, up to minItems
-  return defaultEntries.concat(fillerEntries);
+  return computeDefaultBasedOnSchemaTypeAndDefaults<T[] | undefined, S>(rawSchema, arrayDefault);
 }
 
 /** Computes the default value based on the schema type.
@@ -689,7 +710,7 @@ export function getDefaultBasedOnSchemaType<
       return getObjectDefaults(validator, rawSchema, computeDefaultsProps, defaults);
     }
     case 'array': {
-      return getArrayDefaults(validator, rawSchema, computeDefaultsProps, defaults);
+      return getArrayDefaults(validator, rawSchema, computeDefaultsProps, defaults as T[]);
     }
   }
 }

@@ -26,6 +26,10 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Update `ArrayFieldItemTemplate` to align buttons with the input field, fixing [#4753](https://github.com/rjsf-team/react-jsonschema-form/pull/4753)
 
+## @rjsf/utils
+
+- Update `getDefaultFormState()` to add support for `null` defaults for `["null", "object"]` and `["null", "array"]`, fixing [#1581](https://github.com/rjsf-team/react-jsonschema-form/issues/1581)
+
 # 6.0.0-beta.16
 
 ## @rjsf/antd
