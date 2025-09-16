@@ -23,6 +23,7 @@ export default function BaseInputTemplate<
   const {
     id,
     name, // remove this from ...rest
+    htmlName, // remove this from ...rest
     value,
     readonly,
     disabled,
@@ -40,11 +41,12 @@ export default function BaseInputTemplate<
     type,
     hideLabel, // remove this from ...rest
     hideError, // remove this from ...rest
+    pathSegments, // remove this from ...rest
     ...rest
   } = props;
 
   // Note: since React 15.2.0 we can't forward unknown element attributes, so we
-  // exclude the "options" and "schema" ones here.
+  // exclude the "options", "schema", and other non-HTML props here.
   if (!id) {
     console.log('No id for', props);
     throw new Error(`no id for props ${JSON.stringify(props)}`);
@@ -78,7 +80,7 @@ export default function BaseInputTemplate<
     <>
       <input
         id={id}
-        name={id}
+        name={htmlName || id}
         className='form-control'
         readOnly={readonly}
         disabled={disabled}

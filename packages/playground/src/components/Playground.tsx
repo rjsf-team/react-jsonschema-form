@@ -1,6 +1,14 @@
 import { ComponentType, FormEvent, useCallback, useEffect, useRef, useState } from 'react';
 import { FormProps, IChangeEvent, withTheme } from '@rjsf/core';
-import { ErrorSchema, RJSFSchema, RJSFValidationError, UiSchema, ValidatorType } from '@rjsf/utils';
+import {
+  ErrorSchema,
+  RJSFSchema,
+  RJSFValidationError,
+  UiSchema,
+  ValidatorType,
+  bracketNameGenerator,
+  dotNotationNameGenerator,
+} from '@rjsf/utils';
 import { isFunction } from 'lodash';
 
 import { samples } from '../samples';
@@ -19,6 +27,17 @@ export interface PlaygroundProps {
   validators: { [validatorName: string]: ValidatorType };
 }
 
+function getNameGeneratorFunction(nameGeneratorType: string | null) {
+  switch (nameGeneratorType) {
+    case 'bracket':
+      return bracketNameGenerator;
+    case 'dotnotation':
+      return dotNotationNameGenerator;
+    default:
+      return undefined;
+  }
+}
+
 export default function Playground({ themes, validators }: PlaygroundProps) {
   const [loaded, setLoaded] = useState(false);
   const [schema, setSchema] = useState<RJSFSchema>(samples.Simple.schema as RJSFSchema);
@@ -33,6 +52,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
   const [subtheme, setSubtheme] = useState<string | null>(null);
   const [stylesheet, setStylesheet] = useState<string | null>(null);
   const [validator, setValidator] = useState<string>('AJV8');
+  const [nameGenerator, setNameGenerator] = useState<string | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [liveSettings, setLiveSettings] = useState<LiveSettings>({
     showErrorList: 'top',
@@ -64,7 +84,15 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
   );
 
   const load = useCallback(
-    (data: Sample & { theme: string; liveSettings: LiveSettings; sampleName?: string; validator?: string }) => {
+    (
+      data: Sample & {
+        theme: string;
+        liveSettings: LiveSettings;
+        sampleName?: string;
+        validator?: string;
+        nameGenerator?: string | null;
+      },
+    ) => {
       const {
         schema,
         // uiSchema is missing on some examples. Provide a default to
@@ -78,6 +106,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
         extraErrors,
         liveSettings,
         validator: theValidator,
+        nameGenerator: theNameGenerator,
         sampleName,
         ...rest
       } = data;
@@ -114,6 +143,9 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
       if ('validator' in data && theValidator !== undefined) {
         setValidator(theValidator);
       }
+      if ('nameGenerator' in data) {
+        setNameGenerator(theNameGenerator || null);
+      }
       setOtherFormProps({ fields, templates, ...rest });
     },
     [theme, onThemeSelected, themes],
@@ -121,9 +153,9 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
 
   const onSampleSelected = useCallback(
     (sampleName: string) => {
-      load({ ...samples[sampleName], sampleName, liveSettings, theme });
+      load({ ...samples[sampleName], sampleName, liveSettings, theme, nameGenerator });
     },
-    [load, liveSettings, theme],
+    [load, liveSettings, theme, nameGenerator],
   );
 
   useEffect(() => {
@@ -178,6 +210,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
         subtheme={subtheme}
         validators={validators}
         validator={validator}
+        nameGenerator={nameGenerator}
         liveSettings={liveSettings}
         sampleName={sampleName}
         playGroundFormRef={playGroundFormRef}
@@ -186,6 +219,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
         setSubtheme={setSubtheme}
         setStylesheet={setStylesheet}
         setValidator={setValidator}
+        setNameGenerator={setNameGenerator}
         setLiveSettings={setLiveSettings}
         setShareURL={setShareURL}
       />
@@ -230,6 +264,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
                   '/schemas/specialString': SpecialInput,
                 }}
                 validator={validators[validator]}
+                nameGenerator={getNameGeneratorFunction(nameGenerator)}
                 onChange={onFormDataChange}
                 onSubmit={onFormDataSubmit}
                 onBlur={(id: string, value: string) => console.log(`Touched ${id} with value ${value}`)}

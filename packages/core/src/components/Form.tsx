@@ -14,6 +14,7 @@ import {
   isObject,
   mergeObjects,
   NAME_KEY,
+  NameGeneratorFunction,
   PathSchema,
   StrictRJSFSchema,
   Registry,
@@ -212,6 +213,16 @@ export interface FormProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
    */
 
   experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>;
+  /** Optional function to generate HTML name attributes from path segments
+   * @param segments - Array of path segments representing the field hierarchy
+   * @param rootName - Optional root name prefix
+   * @returns - The generated name attribute string, or undefined to use default behavior
+   */
+  nameGenerator?: NameGeneratorFunction;
+  /** Optional root name to use with nameGenerator
+   * @default "root"
+   */
+  rootName?: string;
   // Private
   /**
    * _internalFormWrapper is currently used by the semantic-ui theme to provide a custom wrapper around `<Form />`
@@ -960,6 +971,7 @@ export default class Form<
     } = this.props;
     const { schema, schemaUtils } = this.state;
     const { fields, templates, widgets, formContext, translateString } = getDefaultRegistry<T, S, F>();
+
     return {
       fields: { ...fields, ...this.props.fields },
       templates: {
@@ -972,7 +984,13 @@ export default class Form<
       },
       widgets: { ...widgets, ...this.props.widgets },
       rootSchema: schema,
-      formContext: this.props.formContext || formContext,
+      formContext: {
+        ...(this.props.formContext || formContext),
+        ...(this.props.nameGenerator && {
+          nameGenerator: this.props.nameGenerator,
+          rootName: this.props.rootName || 'root',
+        }),
+      },
       schemaUtils,
       translateString: customTranslateString || translateString,
       globalUiOptions: uiSchema[UI_GLOBAL_OPTIONS_KEY],
@@ -1158,6 +1176,14 @@ export default class Form<
           uiSchema={uiSchema}
           errorSchema={errorSchema}
           idSchema={idSchema}
+          pathSchema={(() => {
+            try {
+              return isObject(schema) ? registry.schemaUtils.toPathSchema(schema, '', formData) : undefined;
+            } catch {
+              // Silently handle malformed schemas in tests
+              return undefined;
+            }
+          })()}
           idPrefix={idPrefix}
           idSeparator={idSeparator}
           formData={formData}

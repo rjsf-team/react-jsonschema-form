@@ -19,6 +19,7 @@ import {
   FormContextType,
   GenericObjectType,
   PathSchema,
+  PathSegment,
   RJSFSchema,
   StrictRJSFSchema,
   ValidatorType,
@@ -35,6 +36,7 @@ import deepEquals from '../deepEquals';
  * @param [name=''] - The base name for the schema
  * @param [rootSchema] - The root schema, used to primarily to look up `$ref`s
  * @param [formData] - The current formData, if any, to assist retrieving a schema
+ * @param [segments=[]] - The path segments array to build upon
  * @param [_recurseList=[]] - The list of retrieved schemas currently being recursed, used to prevent infinite recursion
  * @param [experimental_customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
  * @returns - The `PathSchema` object for the `schema`
@@ -45,6 +47,7 @@ function toPathSchemaInternal<T = any, S extends StrictRJSFSchema = RJSFSchema, 
   name: string,
   rootSchema?: S,
   formData?: T,
+  segments: PathSegment[] = [],
   _recurseList: S[] = [],
   experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
 ): PathSchema<T> {
@@ -58,6 +61,7 @@ function toPathSchemaInternal<T = any, S extends StrictRJSFSchema = RJSFSchema, 
         name,
         rootSchema,
         formData,
+        segments,
         _recurseList.concat(_schema),
         experimental_customMergeAllOf,
       );
@@ -66,6 +70,7 @@ function toPathSchemaInternal<T = any, S extends StrictRJSFSchema = RJSFSchema, 
 
   let pathSchema: PathSchema<T> = {
     [NAME_KEY]: name.replace(/^\./, ''),
+    $segments: segments,
   } as PathSchema<T>;
 
   if (ONE_OF_KEY in schema || ANY_OF_KEY in schema) {
@@ -89,6 +94,7 @@ function toPathSchemaInternal<T = any, S extends StrictRJSFSchema = RJSFSchema, 
         name,
         rootSchema,
         formData,
+        segments,
         _recurseList,
         experimental_customMergeAllOf,
       ),
@@ -105,22 +111,26 @@ function toPathSchemaInternal<T = any, S extends StrictRJSFSchema = RJSFSchema, 
     if (Array.isArray(schemaItems)) {
       formData.forEach((element, i: number) => {
         if (schemaItems[i]) {
+          const itemSegments: PathSegment[] = [...segments, { type: 'array', key: i }];
           (pathSchema as PathSchema<T[]>)[i] = toPathSchemaInternal<T, S, F>(
             validator,
             schemaItems[i] as S,
             `${name}.${i}`,
             rootSchema,
             element,
+            itemSegments,
             _recurseList,
             experimental_customMergeAllOf,
           );
         } else if (schemaAdditionalItems) {
+          const itemSegments: PathSegment[] = [...segments, { type: 'array', key: i }];
           (pathSchema as PathSchema<T[]>)[i] = toPathSchemaInternal<T, S, F>(
             validator,
             schemaAdditionalItems as S,
             `${name}.${i}`,
             rootSchema,
             element,
+            itemSegments,
             _recurseList,
             experimental_customMergeAllOf,
           );
@@ -130,12 +140,14 @@ function toPathSchemaInternal<T = any, S extends StrictRJSFSchema = RJSFSchema, 
       });
     } else {
       formData.forEach((element, i: number) => {
+        const itemSegments: PathSegment[] = [...segments, { type: 'array', key: i }];
         (pathSchema as PathSchema<T[]>)[i] = toPathSchemaInternal<T, S, F>(
           validator,
           schemaItems as S,
           `${name}.${i}`,
           rootSchema,
           element,
+          itemSegments,
           _recurseList,
           experimental_customMergeAllOf,
         );
@@ -144,6 +156,7 @@ function toPathSchemaInternal<T = any, S extends StrictRJSFSchema = RJSFSchema, 
   } else if (PROPERTIES_KEY in schema) {
     for (const property in schema.properties) {
       const field: S = get(schema, [PROPERTIES_KEY, property], {}) as S;
+      const propertySegments: PathSegment[] = [...segments, { type: 'object', key: property }];
       (pathSchema as PathSchema<GenericObjectType>)[property] = toPathSchemaInternal<T, S, F>(
         validator,
         field,
@@ -152,6 +165,7 @@ function toPathSchemaInternal<T = any, S extends StrictRJSFSchema = RJSFSchema, 
         // It's possible that formData is not an object -- this can happen if an
         // array item has just been added, but not populated with data yet
         get(formData, [property]),
+        propertySegments,
         _recurseList,
         experimental_customMergeAllOf,
       );
@@ -167,6 +181,7 @@ function toPathSchemaInternal<T = any, S extends StrictRJSFSchema = RJSFSchema, 
  * @param [name=''] - The base name for the schema
  * @param [rootSchema] - The root schema, used to primarily to look up `$ref`s
  * @param [formData] - The current formData, if any, to assist retrieving a schema
+ * @param [segments=[]] - The path segments array to build upon
  * @param [experimental_customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
  * @returns - The `PathSchema` object for the `schema`
  */
@@ -176,7 +191,17 @@ export default function toPathSchema<T = any, S extends StrictRJSFSchema = RJSFS
   name = '',
   rootSchema?: S,
   formData?: T,
+  segments: PathSegment[] = [],
   experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
 ): PathSchema<T> {
-  return toPathSchemaInternal(validator, schema, name, rootSchema, formData, undefined, experimental_customMergeAllOf);
+  return toPathSchemaInternal(
+    validator,
+    schema,
+    name,
+    rootSchema,
+    formData,
+    segments,
+    undefined,
+    experimental_customMergeAllOf,
+  );
 }

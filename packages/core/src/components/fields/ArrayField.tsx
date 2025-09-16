@@ -12,6 +12,8 @@ import {
   FieldProps,
   FormContextType,
   IdSchema,
+  PathSchema,
+  PathSegment,
   RJSFSchema,
   StrictRJSFSchema,
   TranslatableString,
@@ -502,6 +504,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
       uiSchema = {},
       errorSchema,
       idSchema,
+      pathSchema,
       name,
       title,
       disabled = false,
@@ -534,6 +537,14 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
         const itemIdPrefix = idSchema.$id + idSeparator + index;
         const itemIdSchema = schemaUtils.toIdSchema(itemSchema, itemIdPrefix, itemCast, idPrefix, idSeparator);
 
+        // Create path schema for array item with segments
+        const itemPathSegments: PathSegment[] = [...(pathSchema?.$segments || []), { type: 'array', key: index }];
+
+        const itemPathSchema: PathSchema<T> = {
+          $name: `${pathSchema?.$name || ''}.${index}`,
+          $segments: itemPathSegments,
+        };
+
         // Compute the item UI schema using the helper method
         const itemUiSchema = this.computeItemUiSchema(uiSchema, item, index, formContext);
 
@@ -547,6 +558,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
           canMoveDown: index < formData.length - 1,
           itemSchema,
           itemIdSchema,
+          itemPathSchema,
           itemErrorSchema,
           itemData: itemCast,
           itemUiSchema,
@@ -738,6 +750,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
       idPrefix,
       idSeparator = '_',
       idSchema,
+      pathSchema,
       name,
       title,
       disabled = false,
@@ -787,6 +800,15 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
             : itemSchemas[index]) || {};
         const itemIdPrefix = idSchema.$id + idSeparator + index;
         const itemIdSchema = schemaUtils.toIdSchema(itemSchema, itemIdPrefix, itemCast, idPrefix, idSeparator);
+
+        // Create path schema for array item with segments
+        const itemPathSegments: PathSegment[] = [...(pathSchema?.$segments || []), { type: 'array', key: index }];
+
+        const itemPathSchema: PathSchema<T> = {
+          $name: `${pathSchema?.$name || ''}.${index}`,
+          $segments: itemPathSegments,
+        };
+
         // Compute the item UI schema - handle both static and dynamic cases
         let itemUiSchema: UiSchema<T[], S, F> | undefined;
         if (additional) {
@@ -816,6 +838,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
           itemData: itemCast,
           itemUiSchema,
           itemIdSchema,
+          itemPathSchema,
           itemErrorSchema,
           autofocus: autofocus && index === 0,
           onBlur,
@@ -857,6 +880,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
     itemData: T[];
     itemUiSchema: UiSchema<T[], S, F> | undefined;
     itemIdSchema: IdSchema<T[]>;
+    itemPathSchema?: PathSchema<T>;
     itemErrorSchema?: ErrorSchema<T[]>;
     autofocus?: boolean;
     onBlur: FieldProps<T[], S, F>['onBlur'];
@@ -876,6 +900,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
       itemData,
       itemUiSchema,
       itemIdSchema,
+      itemPathSchema,
       itemErrorSchema,
       autofocus,
       onBlur,
@@ -914,6 +939,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
           idPrefix={idPrefix}
           idSeparator={idSeparator}
           idSchema={itemIdSchema}
+          pathSchema={itemPathSchema}
           required={this.isItemRequired(itemSchema)}
           onChange={this.onChangeForIndex(index)}
           onBlur={onBlur}

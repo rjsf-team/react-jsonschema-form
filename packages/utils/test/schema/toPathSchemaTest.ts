@@ -18,13 +18,14 @@ export default function toPathSchemaTest(testValidator: TestValidatorType) {
     it('should return a pathSchema for root field', () => {
       const schema: RJSFSchema = { type: 'string' };
 
-      expect(toPathSchema(testValidator, schema)).toEqual({ $name: '' });
+      expect(toPathSchema(testValidator, schema)).toEqual({ $name: '', $segments: [] });
     });
     it('should return a pathSchema for root field, with additional properties', () => {
       const schema: RJSFSchema = { type: 'string', additionalProperties: true };
 
       expect(toPathSchema(testValidator, schema)).toEqual({
         $name: '',
+        $segments: [],
         __rjsf_additionalProperties: true,
       });
     });
@@ -34,7 +35,7 @@ export default function toPathSchemaTest(testValidator: TestValidatorType) {
         additionalProperties: false,
       };
 
-      expect(toPathSchema(testValidator, schema)).toEqual({ $name: '' });
+      expect(toPathSchema(testValidator, schema)).toEqual({ $name: '', $segments: [] });
     });
     it('should return a pathSchema for nested objects', () => {
       const schema: RJSFSchema = {
@@ -51,9 +52,17 @@ export default function toPathSchemaTest(testValidator: TestValidatorType) {
 
       expect(toPathSchema(testValidator, schema)).toEqual({
         $name: '',
+        $segments: [],
         level1: {
           $name: 'level1',
-          level2: { $name: 'level1.level2' },
+          $segments: [{ type: 'object', key: 'level1' }],
+          level2: {
+            $name: 'level1.level2',
+            $segments: [
+              { type: 'object', key: 'level1' },
+              { type: 'object', key: 'level2' },
+            ],
+          },
         },
       });
     });
@@ -103,36 +112,85 @@ export default function toPathSchemaTest(testValidator: TestValidatorType) {
 
       expect(toPathSchema(testValidator, schema, '', schema, formData)).toEqual({
         $name: '',
+        $segments: [],
         list: {
           $name: 'list',
+          $segments: [{ type: 'object', key: 'list' }],
           '0': {
             $name: 'list.0',
+            $segments: [
+              { type: 'object', key: 'list' },
+              { type: 'array', key: 0 },
+            ],
             a: {
               $name: 'list.0.a',
+              $segments: [
+                { type: 'object', key: 'list' },
+                { type: 'array', key: 0 },
+                { type: 'object', key: 'a' },
+              ],
             },
             b: {
               $name: 'list.0.b',
+              $segments: [
+                { type: 'object', key: 'list' },
+                { type: 'array', key: 0 },
+                { type: 'object', key: 'b' },
+              ],
             },
             c: {
               $name: 'list.0.c',
+              $segments: [
+                { type: 'object', key: 'list' },
+                { type: 'array', key: 0 },
+                { type: 'object', key: 'c' },
+              ],
             },
           },
           '1': {
             $name: 'list.1',
+            $segments: [
+              { type: 'object', key: 'list' },
+              { type: 'array', key: 1 },
+            ],
             a: {
               $name: 'list.1.a',
+              $segments: [
+                { type: 'object', key: 'list' },
+                { type: 'array', key: 1 },
+                { type: 'object', key: 'a' },
+              ],
             },
             b: {
               $name: 'list.1.b',
+              $segments: [
+                { type: 'object', key: 'list' },
+                { type: 'array', key: 1 },
+                { type: 'object', key: 'b' },
+              ],
             },
           },
           '2': {
             $name: 'list.2',
+            $segments: [
+              { type: 'object', key: 'list' },
+              { type: 'array', key: 2 },
+            ],
             a: {
               $name: 'list.2.a',
+              $segments: [
+                { type: 'object', key: 'list' },
+                { type: 'array', key: 2 },
+                { type: 'object', key: 'a' },
+              ],
             },
             b: {
               $name: 'list.2.b',
+              $segments: [
+                { type: 'object', key: 'list' },
+                { type: 'array', key: 2 },
+                { type: 'object', key: 'b' },
+              ],
             },
           },
         },
@@ -176,16 +234,30 @@ export default function toPathSchemaTest(testValidator: TestValidatorType) {
 
       expect(toPathSchema(testValidator, schema, '', schema, formData)).toEqual({
         $name: '',
+        $segments: [],
         billing_address: {
           $name: 'billing_address',
+          $segments: [{ type: 'object', key: 'billing_address' }],
           city: {
             $name: 'billing_address.city',
+            $segments: [
+              { type: 'object', key: 'billing_address' },
+              { type: 'object', key: 'city' },
+            ],
           },
           state: {
             $name: 'billing_address.state',
+            $segments: [
+              { type: 'object', key: 'billing_address' },
+              { type: 'object', key: 'state' },
+            ],
           },
           street_address: {
             $name: 'billing_address.street_address',
+            $segments: [
+              { type: 'object', key: 'billing_address' },
+              { type: 'object', key: 'street_address' },
+            ],
           },
         },
       });
@@ -238,30 +310,70 @@ export default function toPathSchemaTest(testValidator: TestValidatorType) {
 
       expect(toPathSchema(testValidator, schema, '', schema, formData)).toEqual({
         $name: '',
+        $segments: [],
         address_list: {
           $name: 'address_list',
+          $segments: [{ type: 'object', key: 'address_list' }],
           '0': {
             $name: 'address_list.0',
+            $segments: [
+              { type: 'object', key: 'address_list' },
+              { type: 'array', key: 0 },
+            ],
             city: {
               $name: 'address_list.0.city',
+              $segments: [
+                { type: 'object', key: 'address_list' },
+                { type: 'array', key: 0 },
+                { type: 'object', key: 'city' },
+              ],
             },
             state: {
               $name: 'address_list.0.state',
+              $segments: [
+                { type: 'object', key: 'address_list' },
+                { type: 'array', key: 0 },
+                { type: 'object', key: 'state' },
+              ],
             },
             street_address: {
               $name: 'address_list.0.street_address',
+              $segments: [
+                { type: 'object', key: 'address_list' },
+                { type: 'array', key: 0 },
+                { type: 'object', key: 'street_address' },
+              ],
             },
           },
           '1': {
             $name: 'address_list.1',
+            $segments: [
+              { type: 'object', key: 'address_list' },
+              { type: 'array', key: 1 },
+            ],
             city: {
               $name: 'address_list.1.city',
+              $segments: [
+                { type: 'object', key: 'address_list' },
+                { type: 'array', key: 1 },
+                { type: 'object', key: 'city' },
+              ],
             },
             state: {
               $name: 'address_list.1.state',
+              $segments: [
+                { type: 'object', key: 'address_list' },
+                { type: 'array', key: 1 },
+                { type: 'object', key: 'state' },
+              ],
             },
             street_address: {
               $name: 'address_list.1.street_address',
+              $segments: [
+                { type: 'object', key: 'address_list' },
+                { type: 'array', key: 1 },
+                { type: 'object', key: 'street_address' },
+              ],
             },
           },
         },
@@ -441,163 +553,355 @@ export default function toPathSchemaTest(testValidator: TestValidatorType) {
       const schemaUtils = createSchemaUtils(testValidator, schema);
       expect(schemaUtils.toPathSchema(schema, '', formData)).toEqual({
         $name: '',
+        $segments: [],
         defaultsAndMinItems: {
           $name: 'defaultsAndMinItems',
+          $segments: [{ type: 'object', key: 'defaultsAndMinItems' }],
           '0': {
             $name: 'defaultsAndMinItems.0',
+            $segments: [
+              { type: 'object', key: 'defaultsAndMinItems' },
+              { type: 'array', key: 0 },
+            ],
           },
           '1': {
             $name: 'defaultsAndMinItems.1',
+            $segments: [
+              { type: 'object', key: 'defaultsAndMinItems' },
+              { type: 'array', key: 1 },
+            ],
           },
           '2': {
             $name: 'defaultsAndMinItems.2',
+            $segments: [
+              { type: 'object', key: 'defaultsAndMinItems' },
+              { type: 'array', key: 2 },
+            ],
           },
           '3': {
             $name: 'defaultsAndMinItems.3',
+            $segments: [
+              { type: 'object', key: 'defaultsAndMinItems' },
+              { type: 'array', key: 3 },
+            ],
           },
           '4': {
             $name: 'defaultsAndMinItems.4',
+            $segments: [
+              { type: 'object', key: 'defaultsAndMinItems' },
+              { type: 'array', key: 4 },
+            ],
           },
         },
         fixedItemsList: {
           $name: 'fixedItemsList',
+          $segments: [{ type: 'object', key: 'fixedItemsList' }],
           '0': {
             $name: 'fixedItemsList.0',
+            $segments: [
+              { type: 'object', key: 'fixedItemsList' },
+              { type: 'array', key: 0 },
+            ],
           },
           '1': {
             $name: 'fixedItemsList.1',
+            $segments: [
+              { type: 'object', key: 'fixedItemsList' },
+              { type: 'array', key: 1 },
+            ],
           },
           '2': {
             $name: 'fixedItemsList.2',
+            $segments: [
+              { type: 'object', key: 'fixedItemsList' },
+              { type: 'array', key: 2 },
+            ],
           },
         },
         fixedNoToolbar: {
           $name: 'fixedNoToolbar',
+          $segments: [{ type: 'object', key: 'fixedNoToolbar' }],
           '0': {
             $name: 'fixedNoToolbar.0',
+            $segments: [
+              { type: 'object', key: 'fixedNoToolbar' },
+              { type: 'array', key: 0 },
+            ],
           },
           '1': {
             $name: 'fixedNoToolbar.1',
+            $segments: [
+              { type: 'object', key: 'fixedNoToolbar' },
+              { type: 'array', key: 1 },
+            ],
           },
           '2': {
             $name: 'fixedNoToolbar.2',
+            $segments: [
+              { type: 'object', key: 'fixedNoToolbar' },
+              { type: 'array', key: 2 },
+            ],
           },
           '3': {
             $name: 'fixedNoToolbar.3',
+            $segments: [
+              { type: 'object', key: 'fixedNoToolbar' },
+              { type: 'array', key: 3 },
+            ],
           },
         },
         listOfObjects: {
           $name: 'listOfObjects',
+          $segments: [{ type: 'object', key: 'listOfObjects' }],
           '0': {
             $name: 'listOfObjects.0',
+            $segments: [
+              { type: 'object', key: 'listOfObjects' },
+              { type: 'array', key: 0 },
+            ],
             id: {
               $name: 'listOfObjects.0.id',
+              $segments: [
+                { type: 'object', key: 'listOfObjects' },
+                { type: 'array', key: 0 },
+                { type: 'object', key: 'id' },
+              ],
             },
             name: {
               $name: 'listOfObjects.0.name',
+              $segments: [
+                { type: 'object', key: 'listOfObjects' },
+                { type: 'array', key: 0 },
+                { type: 'object', key: 'name' },
+              ],
             },
           },
           '1': {
             $name: 'listOfObjects.1',
+            $segments: [
+              { type: 'object', key: 'listOfObjects' },
+              { type: 'array', key: 1 },
+            ],
             id: {
               $name: 'listOfObjects.1.id',
+              $segments: [
+                { type: 'object', key: 'listOfObjects' },
+                { type: 'array', key: 1 },
+                { type: 'object', key: 'id' },
+              ],
             },
             name: {
               $name: 'listOfObjects.1.name',
+              $segments: [
+                { type: 'object', key: 'listOfObjects' },
+                { type: 'array', key: 1 },
+                { type: 'object', key: 'name' },
+              ],
             },
           },
           '2': {
             $name: 'listOfObjects.2',
+            $segments: [
+              { type: 'object', key: 'listOfObjects' },
+              { type: 'array', key: 2 },
+            ],
             id: {
               $name: 'listOfObjects.2.id',
+              $segments: [
+                { type: 'object', key: 'listOfObjects' },
+                { type: 'array', key: 2 },
+                { type: 'object', key: 'id' },
+              ],
             },
             name: {
               $name: 'listOfObjects.2.name',
+              $segments: [
+                { type: 'object', key: 'listOfObjects' },
+                { type: 'array', key: 2 },
+                { type: 'object', key: 'name' },
+              ],
             },
           },
         },
         listOfStrings: {
           $name: 'listOfStrings',
+          $segments: [{ type: 'object', key: 'listOfStrings' }],
           '0': {
             $name: 'listOfStrings.0',
+            $segments: [
+              { type: 'object', key: 'listOfStrings' },
+              { type: 'array', key: 0 },
+            ],
           },
           '1': {
             $name: 'listOfStrings.1',
+            $segments: [
+              { type: 'object', key: 'listOfStrings' },
+              { type: 'array', key: 1 },
+            ],
           },
         },
         minItemsList: {
           $name: 'minItemsList',
+          $segments: [{ type: 'object', key: 'minItemsList' }],
           '0': {
             $name: 'minItemsList.0',
+            $segments: [
+              { type: 'object', key: 'minItemsList' },
+              { type: 'array', key: 0 },
+            ],
             name: {
               $name: 'minItemsList.0.name',
+              $segments: [
+                { type: 'object', key: 'minItemsList' },
+                { type: 'array', key: 0 },
+                { type: 'object', key: 'name' },
+              ],
             },
           },
           '1': {
             $name: 'minItemsList.1',
+            $segments: [
+              { type: 'object', key: 'minItemsList' },
+              { type: 'array', key: 1 },
+            ],
             name: {
               $name: 'minItemsList.1.name',
+              $segments: [
+                { type: 'object', key: 'minItemsList' },
+                { type: 'array', key: 1 },
+                { type: 'object', key: 'name' },
+              ],
             },
           },
           '2': {
             $name: 'minItemsList.2',
+            $segments: [
+              { type: 'object', key: 'minItemsList' },
+              { type: 'array', key: 2 },
+            ],
             name: {
               $name: 'minItemsList.2.name',
+              $segments: [
+                { type: 'object', key: 'minItemsList' },
+                { type: 'array', key: 2 },
+                { type: 'object', key: 'name' },
+              ],
             },
           },
         },
         multipleChoicesList: {
           $name: 'multipleChoicesList',
+          $segments: [{ type: 'object', key: 'multipleChoicesList' }],
           '0': {
             $name: 'multipleChoicesList.0',
+            $segments: [
+              { type: 'object', key: 'multipleChoicesList' },
+              { type: 'array', key: 0 },
+            ],
           },
           '1': {
             $name: 'multipleChoicesList.1',
+            $segments: [
+              { type: 'object', key: 'multipleChoicesList' },
+              { type: 'array', key: 1 },
+            ],
           },
         },
         nestedList: {
           $name: 'nestedList',
+          $segments: [{ type: 'object', key: 'nestedList' }],
           '0': {
             $name: 'nestedList.0',
+            $segments: [
+              { type: 'object', key: 'nestedList' },
+              { type: 'array', key: 0 },
+            ],
             '0': {
               $name: 'nestedList.0.0',
+              $segments: [
+                { type: 'object', key: 'nestedList' },
+                { type: 'array', key: 0 },
+                { type: 'array', key: 0 },
+              ],
             },
             '1': {
               $name: 'nestedList.0.1',
+              $segments: [
+                { type: 'object', key: 'nestedList' },
+                { type: 'array', key: 0 },
+                { type: 'array', key: 1 },
+              ],
             },
           },
           '1': {
             $name: 'nestedList.1',
+            $segments: [
+              { type: 'object', key: 'nestedList' },
+              { type: 'array', key: 1 },
+            ],
             '0': {
               $name: 'nestedList.1.0',
+              $segments: [
+                { type: 'object', key: 'nestedList' },
+                { type: 'array', key: 1 },
+                { type: 'array', key: 0 },
+              ],
             },
           },
         },
         noToolbar: {
           $name: 'noToolbar',
+          $segments: [{ type: 'object', key: 'noToolbar' }],
           '0': {
             $name: 'noToolbar.0',
+            $segments: [
+              { type: 'object', key: 'noToolbar' },
+              { type: 'array', key: 0 },
+            ],
           },
           '1': {
             $name: 'noToolbar.1',
+            $segments: [
+              { type: 'object', key: 'noToolbar' },
+              { type: 'array', key: 1 },
+            ],
           },
         },
         unorderable: {
           $name: 'unorderable',
+          $segments: [{ type: 'object', key: 'unorderable' }],
           '0': {
             $name: 'unorderable.0',
+            $segments: [
+              { type: 'object', key: 'unorderable' },
+              { type: 'array', key: 0 },
+            ],
           },
           '1': {
             $name: 'unorderable.1',
+            $segments: [
+              { type: 'object', key: 'unorderable' },
+              { type: 'array', key: 1 },
+            ],
           },
         },
         unremovable: {
           $name: 'unremovable',
+          $segments: [{ type: 'object', key: 'unremovable' }],
           '0': {
             $name: 'unremovable.0',
+            $segments: [
+              { type: 'object', key: 'unremovable' },
+              { type: 'array', key: 0 },
+            ],
           },
           '1': {
             $name: 'unremovable.1',
+            $segments: [
+              { type: 'object', key: 'unremovable' },
+              { type: 'array', key: 1 },
+            ],
           },
         },
       });
@@ -636,11 +940,14 @@ export default function toPathSchemaTest(testValidator: TestValidatorType) {
 
       expect(toPathSchema(testValidator, schema, '', schema, formData)).toEqual({
         $name: '',
+        $segments: [],
         lorem: {
           $name: 'lorem',
+          $segments: [{ type: 'object', key: 'lorem' }],
         },
         str: {
           $name: 'str',
+          $segments: [{ type: 'object', key: 'str' }],
         },
       });
     });
@@ -678,11 +985,14 @@ export default function toPathSchemaTest(testValidator: TestValidatorType) {
 
       expect(toPathSchema(testValidator, schema, '', schema, formData)).toEqual({
         $name: '',
+        $segments: [],
         ipsum: {
           $name: 'ipsum',
+          $segments: [{ type: 'object', key: 'ipsum' }],
         },
         str: {
           $name: 'str',
+          $segments: [{ type: 'object', key: 'str' }],
         },
       });
     });
@@ -690,16 +1000,27 @@ export default function toPathSchemaTest(testValidator: TestValidatorType) {
       const result = toPathSchema(testValidator, RECURSIVE_REF, undefined, RECURSIVE_REF);
       expect(result).toEqual({
         $name: '',
+        $segments: [],
         name: {
           $name: 'name',
+          $segments: [{ type: 'object', key: 'name' }],
         },
         children: {
           $name: 'children',
+          $segments: [{ type: 'object', key: 'children' }],
           name: {
             $name: 'children.name',
+            $segments: [
+              { type: 'object', key: 'children' },
+              { type: 'object', key: 'name' },
+            ],
           },
           children: {
             $name: 'children.children',
+            $segments: [
+              { type: 'object', key: 'children' },
+              { type: 'object', key: 'children' },
+            ],
           },
         },
       });
@@ -708,8 +1029,10 @@ export default function toPathSchemaTest(testValidator: TestValidatorType) {
       const result = toPathSchema(testValidator, RECURSIVE_REF_ALLOF, undefined, RECURSIVE_REF_ALLOF);
       expect(result).toEqual({
         $name: '',
+        $segments: [],
         value: {
           $name: 'value',
+          $segments: [{ type: 'object', key: 'value' }],
         },
       });
     });
@@ -740,17 +1063,29 @@ export default function toPathSchemaTest(testValidator: TestValidatorType) {
 
       expect(toPathSchema(testValidator, schema, '', schema, formData)).toEqual({
         $name: '',
+        $segments: [],
         arr: {
           $name: 'arr',
+          $segments: [{ type: 'object', key: 'arr' }],
           '0': {
             $name: 'arr.0',
+            $segments: [
+              { type: 'object', key: 'arr' },
+              { type: 'array', key: 0 },
+            ],
             name: {
               $name: 'arr.0.name',
+              $segments: [
+                { type: 'object', key: 'arr' },
+                { type: 'array', key: 0 },
+                { type: 'object', key: 'name' },
+              ],
             },
           },
         },
         str: {
           $name: 'str',
+          $segments: [{ type: 'object', key: 'str' }],
         },
       });
     });
@@ -784,20 +1119,36 @@ export default function toPathSchemaTest(testValidator: TestValidatorType) {
 
       expect(toPathSchema(testValidator, schema, '', schema, formData)).toEqual({
         $name: '',
+        $segments: [],
         arr: {
           $name: 'arr',
+          $segments: [{ type: 'object', key: 'arr' }],
           '0': {
             $name: 'arr.0',
+            $segments: [
+              { type: 'object', key: 'arr' },
+              { type: 'array', key: 0 },
+            ],
             name: {
               $name: 'arr.0.name',
+              $segments: [
+                { type: 'object', key: 'arr' },
+                { type: 'array', key: 0 },
+                { type: 'object', key: 'name' },
+              ],
             },
           },
           '1': {
             $name: 'arr.1',
+            $segments: [
+              { type: 'object', key: 'arr' },
+              { type: 'array', key: 1 },
+            ],
           },
         },
         str: {
           $name: 'str',
+          $segments: [{ type: 'object', key: 'str' }],
         },
       });
     });
@@ -831,17 +1182,29 @@ export default function toPathSchemaTest(testValidator: TestValidatorType) {
 
       expect(toPathSchema(testValidator, schema, '', schema, formData)).toEqual({
         $name: '',
+        $segments: [],
         arr: {
           $name: 'arr',
+          $segments: [{ type: 'object', key: 'arr' }],
           '0': {
             $name: 'arr.0',
+            $segments: [
+              { type: 'object', key: 'arr' },
+              { type: 'array', key: 0 },
+            ],
             name: {
               $name: 'arr.0.name',
+              $segments: [
+                { type: 'object', key: 'arr' },
+                { type: 'array', key: 0 },
+                { type: 'object', key: 'name' },
+              ],
             },
           },
         },
         str: {
           $name: 'str',
+          $segments: [{ type: 'object', key: 'str' }],
         },
       });
     });
@@ -873,17 +1236,29 @@ export default function toPathSchemaTest(testValidator: TestValidatorType) {
 
       expect(toPathSchema(testValidator, schema, '', schema, formData)).toEqual({
         $name: '',
+        $segments: [],
         arr: {
           $name: 'arr',
+          $segments: [{ type: 'object', key: 'arr' }],
           '0': {
             $name: 'arr.0',
+            $segments: [
+              { type: 'object', key: 'arr' },
+              { type: 'array', key: 0 },
+            ],
             name: {
               $name: 'arr.0.name',
+              $segments: [
+                { type: 'object', key: 'arr' },
+                { type: 'array', key: 0 },
+                { type: 'object', key: 'name' },
+              ],
             },
           },
         },
         str: {
           $name: 'str',
+          $segments: [{ type: 'object', key: 'str' }],
         },
       });
       expect(consoleWarnSpy).toHaveBeenCalledWith(
