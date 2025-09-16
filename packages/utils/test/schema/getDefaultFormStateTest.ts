@@ -1,6 +1,7 @@
 import { createSchemaUtils, Experimental_DefaultFormStateBehavior, getDefaultFormState, RJSFSchema } from '../../src';
 import {
   AdditionalItemsHandling,
+  computeDefaultBasedOnSchemaTypeAndDefaults,
   computeDefaults,
   getArrayDefaults,
   getDefaultBasedOnSchemaType,
@@ -1969,7 +1970,119 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         ]);
       });
     });
-
+    describe('computeDefaultBasedOnSchemaTypeAndDefaults()', () => {
+      let schema: RJSFSchema;
+      describe('Object', () => {
+        beforeAll(() => {
+          schema = {
+            type: 'object',
+            default: null,
+          };
+        });
+        it('computedDefaults is undefined', () => {
+          expect(computeDefaultBasedOnSchemaTypeAndDefaults(schema, undefined)).toBeUndefined();
+        });
+        it('computedDefaults is empty object', () => {
+          expect(computeDefaultBasedOnSchemaTypeAndDefaults(schema, {})).toEqual({});
+        });
+        it('computedDefaults is non-empty object', () => {
+          const computedDefault = { foo: 'bar' };
+          expect(computeDefaultBasedOnSchemaTypeAndDefaults(schema, computedDefault)).toEqual(computedDefault);
+        });
+      });
+      describe('Nullable Object', () => {
+        beforeAll(() => {
+          schema = {
+            type: ['null', 'object'],
+            default: null,
+          };
+        });
+        it('computedDefaults is undefined', () => {
+          expect(computeDefaultBasedOnSchemaTypeAndDefaults(schema, undefined)).toBeNull();
+        });
+        it('computedDefaults is empty object', () => {
+          expect(computeDefaultBasedOnSchemaTypeAndDefaults(schema, {})).toBeNull();
+        });
+        it('computedDefaults is non-empty object', () => {
+          const computedDefault = { foo: 'bar' };
+          expect(computeDefaultBasedOnSchemaTypeAndDefaults(schema, computedDefault)).toEqual(computedDefault);
+        });
+      });
+      describe('Array', () => {
+        beforeAll(() => {
+          schema = {
+            type: 'array',
+            default: null,
+            items: { type: 'string' },
+          };
+        });
+        it('computedDefaults is undefined', () => {
+          expect(computeDefaultBasedOnSchemaTypeAndDefaults(schema, undefined)).toBeUndefined();
+        });
+        it('computedDefaults is empty object', () => {
+          expect(computeDefaultBasedOnSchemaTypeAndDefaults(schema, [])).toEqual([]);
+        });
+        it('computedDefaults is non-empty object', () => {
+          const computedDefault = ['bar'];
+          expect(computeDefaultBasedOnSchemaTypeAndDefaults(schema, computedDefault)).toEqual(computedDefault);
+        });
+      });
+      describe('Nullable Array', () => {
+        beforeAll(() => {
+          schema = {
+            type: ['null', 'array'],
+            default: null,
+            items: { type: 'string' },
+          };
+        });
+        it('computedDefaults is undefined', () => {
+          expect(computeDefaultBasedOnSchemaTypeAndDefaults(schema, undefined)).toBeNull();
+        });
+        it('computedDefaults is empty object', () => {
+          expect(computeDefaultBasedOnSchemaTypeAndDefaults(schema, [])).toBeNull();
+        });
+        it('computedDefaults is non-empty object', () => {
+          const computedDefault = ['bar'];
+          expect(computeDefaultBasedOnSchemaTypeAndDefaults(schema, computedDefault)).toEqual(computedDefault);
+        });
+      });
+      describe('Nullable String', () => {
+        beforeAll(() => {
+          schema = {
+            type: 'string',
+            default: null,
+          };
+        });
+        it('computedDefaults is undefined', () => {
+          expect(computeDefaultBasedOnSchemaTypeAndDefaults(schema, undefined)).toBeUndefined();
+        });
+        it('computedDefaults is empty object', () => {
+          expect(computeDefaultBasedOnSchemaTypeAndDefaults(schema, '')).toEqual('');
+        });
+        it('computedDefaults is non-empty object', () => {
+          const computedDefault = 'bar';
+          expect(computeDefaultBasedOnSchemaTypeAndDefaults(schema, computedDefault)).toEqual(computedDefault);
+        });
+      });
+      describe('Nullable String', () => {
+        beforeAll(() => {
+          schema = {
+            type: ['null', 'string'],
+            default: null,
+          };
+        });
+        it('computedDefaults is undefined', () => {
+          expect(computeDefaultBasedOnSchemaTypeAndDefaults(schema, undefined)).toBeNull();
+        });
+        it('computedDefaults is empty object', () => {
+          expect(computeDefaultBasedOnSchemaTypeAndDefaults(schema, '')).toBeNull();
+        });
+        it('computedDefaults is non-empty object', () => {
+          const computedDefault = 'bar';
+          expect(computeDefaultBasedOnSchemaTypeAndDefaults(schema, computedDefault)).toEqual(computedDefault);
+        });
+      });
+    });
     describe('getValidFormData', () => {
       let schema: RJSFSchema;
       it('Test schema with non valid formData for enum property', () => {
@@ -5091,12 +5204,12 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         expect(Array.isArray(result)).toBe(true);
 
         // Verify objects are independent instances
-        (result[0] as any).field = 'test-value-1';
-        (result[1] as any).field = 'test-value-2';
-        expect((result[2] as any).field).toBeUndefined();
-        expect(result[0]).not.toBe(result[1]);
-        expect(result[1]).not.toBe(result[2]);
-        expect(result[0]).not.toBe(result[2]);
+        (result![0] as any).field = 'test-value-1';
+        (result![1] as any).field = 'test-value-2';
+        expect((result![2] as any).field).toBeUndefined();
+        expect(result![0]).not.toBe(result![1]);
+        expect(result![1]).not.toBe(result![2]);
+        expect(result![0]).not.toBe(result![2]);
       });
 
       it('should ensure array items with default values are independent instances', () => {
@@ -5125,9 +5238,9 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         expect(Array.isArray(result)).toBe(true);
 
         // Verify objects are independent instances - modifying one shouldn't affect the other
-        (result[0] as any).field = 'modified-value';
-        expect((result[1] as any).field).toBe('default-value');
-        expect(result[0]).not.toBe(result[1]);
+        (result![0] as any).field = 'modified-value';
+        expect((result![1] as any).field).toBe('default-value');
+        expect(result![0]).not.toBe(result![1]);
       });
 
       it('should ensure nested objects in arrays are independent instances', () => {
@@ -5164,10 +5277,10 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
         expect(Array.isArray(result)).toBe(true);
 
         // Verify nested objects are independent instances
-        (result[0] as any).nested.value = 'modified-nested-value';
-        expect((result[1] as any).nested.value).toBe('nested-default');
-        expect(result[0]).not.toBe(result[1]);
-        expect((result[0] as any).nested).not.toBe((result[1] as any).nested);
+        (result![0] as any).nested.value = 'modified-nested-value';
+        expect((result![1] as any).nested.value).toBe('nested-default');
+        expect(result![0]).not.toBe(result![1]);
+        expect((result![0] as any).nested).not.toBe((result![1] as any).nested);
       });
     });
   });
