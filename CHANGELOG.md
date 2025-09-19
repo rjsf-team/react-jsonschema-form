@@ -17,6 +17,10 @@ should change the heading of the (upcoming) version to include a major version b
 -->
 # 6.0.0-beta.17
 
+## @rjsf/chakra-ui
+
+- Updated `ObjectFieldTemplate` to always generate the "Add" button when `canExpand()` is true, fixing [#4772](https://github.com/rjsf-team/react-jsonschema-form/issues/4772)
+
 ## @rjsf/core
 
 - Updated `ObjectField` to remove the `name` from the path passed to `onChange()` callback in `handleAddClick()` and `onDropPropertyClick()`, fixing [#4763](https://github.com/rjsf-team/react-jsonschema-form/issues/4763)
