@@ -511,13 +511,12 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
       registry,
       onBlur,
       onFocus,
-      idPrefix,
-      idSeparator = '_',
       rawErrors,
     } = this.props;
     const { keyedFormData } = this.state;
     const fieldTitle = schema.title || title || name;
-    const { schemaUtils, formContext } = registry;
+    const { schemaUtils, formContext, globalFormOptions = {} } = registry;
+    const { idPrefix, idSeparator = '_' } = globalFormOptions;
     const uiOptions = getUiOptions<T[], S, F>(uiSchema);
     const _schemaItems: S = isObject(schema.items) ? (schema.items as S) : ({} as S);
     const itemsSchema: S = schemaUtils.retrieveSchema(_schemaItems);
@@ -735,8 +734,6 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
       uiSchema = {},
       formData = [],
       errorSchema,
-      idPrefix,
-      idSeparator = '_',
       idSchema,
       name,
       title,
@@ -753,7 +750,8 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
     let { formData: items = [] } = this.props;
     const fieldTitle = schema.title || title || name;
     const uiOptions = getUiOptions<T[], S, F>(uiSchema);
-    const { schemaUtils, formContext } = registry;
+    const { schemaUtils, formContext, globalFormOptions = {} } = registry;
+    const { idPrefix, idSeparator = '_' } = globalFormOptions;
     const _schemaItems: S[] = isObject(schema.items) ? (schema.items as S[]) : ([] as S[]);
     const itemSchemas = _schemaItems.map((item: S, index: number) =>
       schemaUtils.retrieveSchema(item, formData[index] as unknown as T[]),
@@ -884,7 +882,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
       totalItems,
       title,
     } = props;
-    const { disabled, hideError, idPrefix, idSeparator, readonly, uiSchema, registry, formContext } = this.props;
+    const { disabled, hideError, readonly, uiSchema, registry, formContext } = this.props;
     const {
       fields: { ArraySchemaField, SchemaField },
       globalUiOptions,
@@ -911,8 +909,6 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
           formData={itemData}
           formContext={formContext}
           errorSchema={itemErrorSchema}
-          idPrefix={idPrefix}
-          idSeparator={idSeparator}
           idSchema={itemIdSchema}
           required={this.isItemRequired(itemSchema)}
           onChange={this.onChangeForIndex(index)}

@@ -395,6 +395,22 @@ export type GlobalUISchemaOptions = GenericObjectType & {
   enableMarkdownInDescription?: boolean;
 };
 
+/** The set of options from the `Form` that will be available on the `Registry` for use in everywhere the `registry` is
+ * available.
+ */
+export type GlobalFormOptions = GenericObjectType & {
+  /** To avoid collisions with existing ids in the DOM, it is possible to change the prefix used for ids;
+   * Default is `root`
+   */
+  readonly idPrefix?: string;
+  /** To avoid using a path separator that is present in field names, it is possible to change the separator used for
+   * ids (Default is `_`)
+   */
+  readonly idSeparator?: string;
+  /** The component update strategy used by the Form and its fields for performance optimization */
+  readonly experimental_componentUpdateStrategy?: 'customDeep' | 'shallow' | 'always';
+};
+
 /** The object containing the registered core, theme and custom fields and widgets as well as the root schema, form
  * context, schema utils and templates.
  */
@@ -423,8 +439,8 @@ export interface Registry<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
   translateString: (stringKey: TranslatableString, params?: string[]) => string;
   /** The optional global UI Options that are available for all templates, fields and widgets to access */
   globalUiOptions?: GlobalUISchemaOptions;
-  /** The component update strategy used by the Form and its fields for performance optimization */
-  experimental_componentUpdateStrategy?: 'customDeep' | 'shallow' | 'always';
+  /** The optional global Form Options that are available for all templates, fields and widgets to access */
+  readonly globalFormOptions?: GlobalFormOptions;
 }
 
 /** The properties that are passed to a `Field` implementation */
@@ -458,14 +474,6 @@ export interface FieldProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F 
   required?: boolean;
   /** The unique name of the field, usually derived from the name of the property in the JSONSchema */
   name: string;
-  /** To avoid collisions with existing ids in the DOM, it is possible to change the prefix used for ids;
-   * Default is `root`
-   */
-  idPrefix?: string;
-  /** To avoid using a path separator that is present in field names, it is possible to change the separator used for
-   * ids (Default is `_`)
-   */
-  idSeparator?: string;
   /** An array of strings listing all generated error messages from encountered errors for this field */
   rawErrors?: string[];
 }

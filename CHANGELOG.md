@@ -25,6 +25,9 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Updated `ObjectField` to remove the `name` from the path passed to `onChange()` callback in `handleAddClick()` and `onDropPropertyClick()`, fixing [#4763](https://github.com/rjsf-team/react-jsonschema-form/issues/4763)
 - Updated `Form` to restore the passing of an empty string for `name` to avoid accidentally showing it as the title for the whole schema
+- Updated `Form` to add the `globalFormOptions` to the `registry` when there are `GlobalFormOptions` provided, also stopped passing `idPrefix` and `idSeparator` to `SchemaField`
+- Updated `ArrayField`, `LayoutGridField`, `ObjectField` and `SchemaField` to get `idPrefix`, `idSeparator` from the `registry.globalFormOptions`, no longer passing them on `FieldProps`
+  - Updated `SchemaField` to get `experimental_componentUpdateStrategy` from the `registry.globalFormOptions` as well
 
 ## @rjsf/shadcn
 
@@ -33,6 +36,13 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/utils
 
 - Update `getDefaultFormState()` to add support for `null` defaults for `["null", "object"]` and `["null", "array"]`, fixing [#1581](https://github.com/rjsf-team/react-jsonschema-form/issues/1581)
+- Added a new `GlobalFormProps` interface which contains the following props and replaced the `experimental_componentUpdateStrategy` in `Registry` with `globalFormProps?: GlobalFormProps`
+  - `experimental_componentUpdateStrategy` (refactored from `Registry`) and `idPrefix` & `idSeparator` (refactored from `FieldProps`)
+- BREAKING CHANGE: Removed the optional `idPrefix` and `idSeparator` props from the `FieldProps` interface
+
+## Dev / docs / playground
+
+- Updated the `custom-widget-fields.md` and `v6.x upgrade guide.md` to document the refactor of the `idPrefix` and `idSeparator` refactor
 
 # 6.0.0-beta.16
 

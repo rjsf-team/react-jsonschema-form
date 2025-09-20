@@ -956,10 +956,15 @@ export default class Form<
     const {
       translateString: customTranslateString,
       uiSchema = {},
-      experimental_componentUpdateStrategy = 'customDeep',
+      experimental_componentUpdateStrategy,
+      idSeparator,
+      idPrefix,
     } = this.props;
     const { schema, schemaUtils } = this.state;
     const { fields, templates, widgets, formContext, translateString } = getDefaultRegistry<T, S, F>();
+    const globalFormOptions = { idPrefix, idSeparator, experimental_componentUpdateStrategy };
+    // Now stringify it so that we can determine whether `globalFormOptions` actually contains data
+    const hasEmptyGlobalFormOptions = JSON.stringify(globalFormOptions) === '{}';
     return {
       fields: { ...fields, ...this.props.fields },
       templates: {
@@ -976,7 +981,7 @@ export default class Form<
       schemaUtils,
       translateString: customTranslateString || translateString,
       globalUiOptions: uiSchema[UI_GLOBAL_OPTIONS_KEY],
-      experimental_componentUpdateStrategy,
+      globalFormOptions: hasEmptyGlobalFormOptions ? undefined : globalFormOptions,
     };
   }
 
@@ -1101,8 +1106,6 @@ export default class Form<
     const {
       children,
       id,
-      idPrefix = '',
-      idSeparator,
       className = '',
       tagName,
       name,
@@ -1158,8 +1161,6 @@ export default class Form<
           uiSchema={uiSchema}
           errorSchema={errorSchema}
           idSchema={idSchema}
-          idPrefix={idPrefix}
-          idSeparator={idSeparator}
           formData={formData}
           onChange={this.onChange}
           onBlur={this.onBlur}

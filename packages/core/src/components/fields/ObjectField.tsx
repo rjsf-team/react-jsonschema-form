@@ -237,8 +237,6 @@ class ObjectField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
       disabled,
       readonly,
       hideError,
-      idPrefix,
-      idSeparator,
       onBlur,
       onFocus,
       registry,
@@ -292,8 +290,6 @@ class ObjectField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
               uiSchema={fieldUiSchema}
               errorSchema={get(errorSchema, name)}
               idSchema={fieldIdSchema}
-              idPrefix={idPrefix}
-              idSeparator={idSeparator}
               formData={get(formData, name)}
               formContext={formContext}
               wasPropertyKeyModified={this.state.wasPropertyKeyModified}

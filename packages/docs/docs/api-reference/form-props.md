@@ -56,6 +56,18 @@ Formerly the `validate` prop.
 The `customValidate` prop requires a function that specifies custom validation rules for the form.
 See [Validation](../usage/validation.md) for more information.
 
+## experimental_componentUpdateStrategy
+
+Experimental feature to specify an alternative component update strategy that accepts one of the following value:
+React's default `Component` rendering strategy is to re-render on every state change, see `shouldComponentUpdate` docs.
+`PureComponent`'s strategy uses shallow equality. One can also always update (not recommended for performance reasons, but can be useful for testing)
+
+| Option     | Description                                       |
+| ---------- | ------------------------------------------------- |
+| customDeep | Legacy behavior - uses RJSF's deepEquals function |
+| shallow    | shallow equality                                  |
+| always     | component always rerenders                        |
+
 ## experimental_defaultFormStateBehavior
 
 Experimental features to specify different form state behavior.
