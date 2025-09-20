@@ -398,7 +398,7 @@ export type GlobalUISchemaOptions = GenericObjectType & {
 /** The set of options from the `Form` that will be available on the `Registry` for use in everywhere the `registry` is
  * available.
  */
-export type GlobalFormOptions = GenericObjectType & {
+export type GlobalFormOptions = {
   /** To avoid collisions with existing ids in the DOM, it is possible to change the prefix used for ids;
    * Default is `root`
    */
@@ -419,7 +419,7 @@ export interface Registry<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
    * registered fields
    */
   fields: RegistryFieldsType<T, S, F>;
-  /** The set of templates used by the `Form`. Includes templates from `core`, theme-specific fields and any custom
+  /** The set of templates used by the `Form`. Includes templates from `core`, theme-specific templates and any custom
    * registered templates
    */
   templates: TemplatesType<T, S, F>;
@@ -437,10 +437,10 @@ export interface Registry<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
   schemaUtils: SchemaUtilsType<T, S>;
   /** The string translation function to use when displaying any of the RJSF strings in templates, fields or widgets */
   translateString: (stringKey: TranslatableString, params?: string[]) => string;
+  /** The global Form Options that are available for all templates, fields and widgets to access */
+  readonly globalFormOptions: GlobalFormOptions;
   /** The optional global UI Options that are available for all templates, fields and widgets to access */
   globalUiOptions?: GlobalUISchemaOptions;
-  /** The optional global Form Options that are available for all templates, fields and widgets to access */
-  readonly globalFormOptions?: GlobalFormOptions;
 }
 
 /** The properties that are passed to a `Field` implementation */

@@ -515,7 +515,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
     } = this.props;
     const { keyedFormData } = this.state;
     const fieldTitle = schema.title || title || name;
-    const { schemaUtils, formContext, globalFormOptions = {} } = registry;
+    const { schemaUtils, formContext, globalFormOptions } = registry;
     const { idPrefix, idSeparator = '_' } = globalFormOptions;
     const uiOptions = getUiOptions<T[], S, F>(uiSchema);
     const _schemaItems: S = isObject(schema.items) ? (schema.items as S) : ({} as S);
@@ -750,7 +750,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
     let { formData: items = [] } = this.props;
     const fieldTitle = schema.title || title || name;
     const uiOptions = getUiOptions<T[], S, F>(uiSchema);
-    const { schemaUtils, formContext, globalFormOptions = {} } = registry;
+    const { schemaUtils, formContext, globalFormOptions } = registry;
     const { idPrefix, idSeparator = '_' } = globalFormOptions;
     const _schemaItems: S[] = isObject(schema.items) ? (schema.items as S[]) : ([] as S[]);
     const itemSchemas = _schemaItems.map((item: S, index: number) =>

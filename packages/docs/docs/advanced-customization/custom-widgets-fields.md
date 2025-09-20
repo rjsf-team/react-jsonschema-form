@@ -408,8 +408,12 @@ The `registry` is an object containing the registered core, theme and custom fie
 
 - `fields`: The set of all fields used by the `Form`. Includes fields from `core`, theme-specific fields and any [custom registered fields](#custom-field-components);
 - `widgets`: The set of all widgets used by the `Form`. Includes widgets from `core`, theme-specific widgets and any [custom registered widgets](#custom-component-registration), if any;
+- `templates`: The set of templates used by the `Form`. Includes templates from `core`, theme-specific templates and any custom registered templates
 - `rootSchema`: The root schema, as passed to the `Form`, which can contain referenced [definitions](../json-schema/definitions.md);
 - `schemaUtils`: The current implementation of the `SchemaUtilsType` (from `@rjsf/utils`) in use by the `Form`. Used to call any of the validation-schema-based utility functions.
+- `translateString`: The string translation function to use when displaying any of the RJSF strings in templates, fields or widgets
+- `globalFormOptions`: The global Form Options that are available for all templates, fields and widgets to access
+- `globalUiOptions`: The optional global UI Options that are available for all templates, fields and widgets to access
 
 The registry is passed down the component tree, so you can access it from your custom field, custom widget, custom template and `SchemaField` components.
 

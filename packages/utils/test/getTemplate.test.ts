@@ -48,6 +48,7 @@ const registry: Registry = {
   },
   fields: {},
   widgets: {},
+  globalFormOptions: {},
 };
 
 const uiOptions: UIOptionsType = {

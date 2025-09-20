@@ -962,9 +962,10 @@ export default class Form<
     } = this.props;
     const { schema, schemaUtils } = this.state;
     const { fields, templates, widgets, formContext, translateString } = getDefaultRegistry<T, S, F>();
-    const globalFormOptions = { idPrefix, idSeparator, experimental_componentUpdateStrategy };
-    // Now stringify it so that we can determine whether `globalFormOptions` actually contains data
-    const hasEmptyGlobalFormOptions = JSON.stringify(globalFormOptions) === '{}';
+    // Use JSON.parse(), of the `JSON.stringify`'d version of the options to filter out all undefined ones
+    const globalFormOptions = JSON.parse(
+      JSON.stringify({ idPrefix, idSeparator, experimental_componentUpdateStrategy }),
+    );
     return {
       fields: { ...fields, ...this.props.fields },
       templates: {
@@ -981,7 +982,7 @@ export default class Form<
       schemaUtils,
       translateString: customTranslateString || translateString,
       globalUiOptions: uiSchema[UI_GLOBAL_OPTIONS_KEY],
-      globalFormOptions: hasEmptyGlobalFormOptions ? undefined : globalFormOptions,
+      globalFormOptions,
     };
   }
 

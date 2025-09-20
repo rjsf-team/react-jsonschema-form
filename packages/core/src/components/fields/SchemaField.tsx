@@ -118,7 +118,7 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
     registry,
     wasPropertyKeyModified = false,
   } = props;
-  const { formContext, schemaUtils, globalUiOptions, globalFormOptions = {} } = registry;
+  const { formContext, schemaUtils, globalUiOptions, globalFormOptions } = registry;
   const { idPrefix, idSeparator } = globalFormOptions;
   const uiOptions = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
   const FieldTemplate = getTemplate<'FieldTemplate', T, S, F>('FieldTemplate', registry, uiOptions);
@@ -338,7 +338,7 @@ class SchemaField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
 > {
   shouldComponentUpdate(nextProps: Readonly<FieldProps<T, S, F>>) {
     const {
-      registry: { globalFormOptions = {} },
+      registry: { globalFormOptions },
     } = this.props;
     const { experimental_componentUpdateStrategy = 'customDeep' } = globalFormOptions;
 

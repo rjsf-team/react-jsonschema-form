@@ -20,5 +20,6 @@ export default function getDefaultRegistry<
     rootSchema: {} as S,
     formContext: {} as F,
     translateString: englishStringTranslator,
+    globalFormOptions: {},
   };
 }

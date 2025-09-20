@@ -900,7 +900,7 @@ export default class LayoutGridField<
       layoutGridSchema, // Used to pull this out of otherProps since we don't want to pass it through
       ...otherProps
     } = this.props;
-    const { fields, schemaUtils, globalFormOptions = {} } = registry;
+    const { fields, schemaUtils, globalFormOptions } = registry;
     const { idSeparator } = globalFormOptions;
     const { SchemaField, LayoutMultiSchemaField } = fields;
     const uiComponentProps = LayoutGridField.computeUIComponentPropsFromGridSchema(registry, gridSchema);
