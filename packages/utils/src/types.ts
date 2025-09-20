@@ -400,11 +400,11 @@ export type GlobalUISchemaOptions = GenericObjectType & {
  */
 export type GlobalFormOptions = {
   /** To avoid collisions with existing ids in the DOM, it is possible to change the prefix used for ids;
-   * Default is `root`
+   * Default is `root`. This prop is passed to the `toIdSchema()` function within the RJSF field implementations.
    */
   readonly idPrefix?: string;
   /** To avoid using a path separator that is present in field names, it is possible to change the separator used for
-   * ids (Default is `_`)
+   * ids; Default is `_`. This prop is passed to the `toIdSchema()` function within the RJSF field implementations.
    */
   readonly idSeparator?: string;
   /** The component update strategy used by the Form and its fields for performance optimization */
