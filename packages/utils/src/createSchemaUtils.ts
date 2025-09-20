@@ -373,6 +373,7 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
       name,
       this.rootSchema,
       formData,
+      [], // segments parameter
       this.experimental_customMergeAllOf,
     );
   }

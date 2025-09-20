@@ -15,6 +15,7 @@ import CopyLink from './CopyLink';
 import ThemeSelector, { ThemesType } from './ThemeSelector';
 import SampleSelector, { SampleSelectorProps } from './SampleSelector';
 import ValidatorSelector from './ValidatorSelector';
+import NameGeneratorSelector from './NameGeneratorSelector';
 import SubthemeSelector, { SubthemeType } from './SubthemeSelector';
 import RawValidatorTest from './RawValidatorTest';
 
@@ -254,6 +255,7 @@ type HeaderProps = {
     [validatorName: string]: ValidatorType<any, RJSFSchema, any>;
   };
   validator: string;
+  nameGenerator: string | null;
   liveSettings: LiveSettings;
   playGroundFormRef: MutableRefObject<any>;
   onSampleSelected: SampleSelectorProps['onSelected'];
@@ -261,6 +263,7 @@ type HeaderProps = {
   setSubtheme: Dispatch<SetStateAction<string | null>>;
   setStylesheet: Dispatch<SetStateAction<string | null>>;
   setValidator: Dispatch<SetStateAction<string>>;
+  setNameGenerator: Dispatch<SetStateAction<string | null>>;
   setLiveSettings: Dispatch<SetStateAction<LiveSettings>>;
   setShareURL: Dispatch<SetStateAction<string | null>>;
 };
@@ -275,12 +278,14 @@ export default function Header({
   subtheme,
   validators,
   validator,
+  nameGenerator,
   liveSettings,
   playGroundFormRef,
   onThemeSelected,
   setSubtheme,
   setStylesheet,
   setValidator,
+  setNameGenerator,
   setLiveSettings,
   setShareURL,
   sampleName,
@@ -299,6 +304,13 @@ export default function Header({
       setValidator(validator);
     },
     [setValidator],
+  );
+
+  const onNameGeneratorSelected = useCallback(
+    (nameGenerator: string | null) => {
+      setNameGenerator(nameGenerator);
+    },
+    [setNameGenerator],
   );
 
   const handleSetLiveSettings = useCallback(
@@ -322,6 +334,7 @@ export default function Header({
           theme,
           liveSettings,
           validator,
+          nameGenerator,
           sampleName,
         }),
       );
@@ -331,7 +344,7 @@ export default function Header({
       setShareURL(null);
       console.error(error);
     }
-  }, [formData, liveSettings, schema, theme, uiSchema, validator, setShareURL, sampleName]);
+  }, [formData, liveSettings, schema, theme, uiSchema, validator, nameGenerator, setShareURL, sampleName]);
 
   return (
     <div className='page-header'>
@@ -370,6 +383,7 @@ export default function Header({
             <SubthemeSelector subthemes={themes[theme].subthemes!} subtheme={subtheme} select={onSubthemeSelected} />
           )}
           <ValidatorSelector validators={validators} validator={validator} select={onValidatorSelected} />
+          <NameGeneratorSelector nameGenerator={nameGenerator} select={onNameGeneratorSelected} />
           <HeaderButtons playGroundFormRef={playGroundFormRef} />
           <div style={{ marginTop: '5px' }} />
           <CopyLink shareURL={shareURL} onShare={onShare} />

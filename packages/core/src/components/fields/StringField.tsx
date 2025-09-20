@@ -23,6 +23,7 @@ function StringField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
     name,
     uiSchema,
     idSchema,
+    pathSchema,
     formData,
     required,
     disabled = false,
@@ -37,6 +38,14 @@ function StringField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
   } = props;
   const { title, format } = schema;
   const { widgets, formContext, schemaUtils, globalUiOptions } = registry;
+
+  // Generate HTML name if nameGenerator is provided
+  const { nameGenerator, rootName } = formContext || {};
+  let htmlName: string | undefined;
+
+  if (nameGenerator && pathSchema?.$segments) {
+    htmlName = nameGenerator(pathSchema.$segments, rootName);
+  }
   const enumOptions = schemaUtils.isSelect(schema) ? optionsList<T, S, F>(schema, uiSchema) : undefined;
   let defaultWidget = enumOptions ? 'select' : 'text';
   if (format && hasWidget<T, S, F>(schema, format, widgets)) {
@@ -60,6 +69,8 @@ function StringField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
       uiSchema={uiSchema}
       id={idSchema.$id}
       name={name}
+      htmlName={htmlName}
+      pathSegments={pathSchema?.$segments}
       label={label}
       hideLabel={!displayLabel}
       hideError={hideError}

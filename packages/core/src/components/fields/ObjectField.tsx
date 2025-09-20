@@ -8,6 +8,8 @@ import {
   FormContextType,
   GenericObjectType,
   IdSchema,
+  PathSchema,
+  PathSegment,
   RJSFSchema,
   StrictRJSFSchema,
   TranslatableString,
@@ -232,6 +234,7 @@ class ObjectField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
       formData,
       errorSchema,
       idSchema,
+      pathSchema,
       name,
       required = false,
       disabled,
@@ -282,6 +285,14 @@ class ObjectField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
         const hidden = getUiOptions<T, S, F>(fieldUiSchema).widget === 'hidden';
         const fieldIdSchema: IdSchema<T> = get(idSchema, [name], {});
 
+        // Create path schema for property with segments
+        const propertyPathSegments: PathSegment[] = [...(pathSchema?.$segments || []), { type: 'object', key: name }];
+
+        const propertyPathSchema: PathSchema<T> = (pathSchema?.[name] as PathSchema<T>) || {
+          $name: `${pathSchema?.$name || ''}.${name}`,
+          $segments: propertyPathSegments,
+        };
+
         return {
           content: (
             <SchemaField
@@ -292,6 +303,7 @@ class ObjectField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
               uiSchema={fieldUiSchema}
               errorSchema={get(errorSchema, name)}
               idSchema={fieldIdSchema}
+              pathSchema={propertyPathSchema}
               idPrefix={idPrefix}
               idSeparator={idSeparator}
               formData={get(formData, name)}
