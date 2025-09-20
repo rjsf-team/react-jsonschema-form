@@ -43,6 +43,7 @@ import _forEach from 'lodash/forEach';
 import _get from 'lodash/get';
 import _isEmpty from 'lodash/isEmpty';
 import _isNil from 'lodash/isNil';
+import _omitBy from 'lodash/omitBy';
 import _pick from 'lodash/pick';
 import _set from 'lodash/set';
 import _toPath from 'lodash/toPath';
@@ -962,10 +963,8 @@ export default class Form<
     } = this.props;
     const { schema, schemaUtils } = this.state;
     const { fields, templates, widgets, formContext, translateString } = getDefaultRegistry<T, S, F>();
-    // Use JSON.parse(), of the `JSON.stringify`'d version of the options to filter out all undefined ones
-    const globalFormOptions = JSON.parse(
-      JSON.stringify({ idPrefix, idSeparator, experimental_componentUpdateStrategy }),
-    );
+    // Omit any options that are undefined or null
+    const globalFormOptions = _omitBy({ idPrefix, idSeparator, experimental_componentUpdateStrategy }, _isNil);
     return {
       fields: { ...fields, ...this.props.fields },
       templates: {
