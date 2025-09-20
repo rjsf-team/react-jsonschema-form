@@ -397,8 +397,6 @@ A field component will always be passed the following props:
 - `readonly`: A boolean value stating if the field is read-only;
 - `autofocus`: A boolean value stating if the field should autofocus;
 - `name`: The unique name of the field, usually derived from the name of the property in the JSONSchema
-- `idPrefix`: To avoid collisions with existing ids in the DOM, it is possible to change the prefix used for ids; Default is `root`
-- `idSeparator`: To avoid using a path separator that is present in field names, it is possible to change the separator used for ids (Default is `_`)
 - `rawErrors`: `An array of strings listing all generated error messages from encountered errors for this field
 - `onChange`: The field change event handler; called with the updated field value, the optional change path for the value (defaults to an empty array), an optional ErrorSchema and the optional id of the field being changed
 - `onBlur`: The input blur event handler; call it with the field id and value;
@@ -410,8 +408,12 @@ The `registry` is an object containing the registered core, theme and custom fie
 
 - `fields`: The set of all fields used by the `Form`. Includes fields from `core`, theme-specific fields and any [custom registered fields](#custom-field-components);
 - `widgets`: The set of all widgets used by the `Form`. Includes widgets from `core`, theme-specific widgets and any [custom registered widgets](#custom-component-registration), if any;
+- `templates`: The set of templates used by the `Form`. Includes templates from `core`, theme-specific templates and any custom registered templates
 - `rootSchema`: The root schema, as passed to the `Form`, which can contain referenced [definitions](../json-schema/definitions.md);
 - `schemaUtils`: The current implementation of the `SchemaUtilsType` (from `@rjsf/utils`) in use by the `Form`. Used to call any of the validation-schema-based utility functions.
+- `translateString`: The string translation function to use when displaying any of the RJSF strings in templates, fields or widgets
+- `globalFormOptions`: The global Form Options that are available for all templates, fields and widgets to access
+- `globalUiOptions`: The optional global UI Options that are available for all templates, fields and widgets to access
 
 The registry is passed down the component tree, so you can access it from your custom field, custom widget, custom template and `SchemaField` components.
 

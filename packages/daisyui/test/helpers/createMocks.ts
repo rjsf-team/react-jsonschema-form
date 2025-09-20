@@ -25,6 +25,7 @@ export function mockRegistry() {
     rootSchema: {},
     schemaUtils: mockSchemaUtils,
     translateString: englishStringTranslator,
+    globalFormOptions: {},
   };
 }
 

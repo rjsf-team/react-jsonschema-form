@@ -395,6 +395,22 @@ export type GlobalUISchemaOptions = GenericObjectType & {
   enableMarkdownInDescription?: boolean;
 };
 
+/** The set of options from the `Form` that will be available on the `Registry` for use in everywhere the `registry` is
+ * available.
+ */
+export type GlobalFormOptions = {
+  /** To avoid collisions with existing ids in the DOM, it is possible to change the prefix used for ids;
+   * Default is `root`. This prop is passed to the `toIdSchema()` function within the RJSF field implementations.
+   */
+  readonly idPrefix?: string;
+  /** To avoid using a path separator that is present in field names, it is possible to change the separator used for
+   * ids; Default is `_`. This prop is passed to the `toIdSchema()` function within the RJSF field implementations.
+   */
+  readonly idSeparator?: string;
+  /** The component update strategy used by the Form and its fields for performance optimization */
+  readonly experimental_componentUpdateStrategy?: 'customDeep' | 'shallow' | 'always';
+};
+
 /** The object containing the registered core, theme and custom fields and widgets as well as the root schema, form
  * context, schema utils and templates.
  */
@@ -403,7 +419,7 @@ export interface Registry<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
    * registered fields
    */
   fields: RegistryFieldsType<T, S, F>;
-  /** The set of templates used by the `Form`. Includes templates from `core`, theme-specific fields and any custom
+  /** The set of templates used by the `Form`. Includes templates from `core`, theme-specific templates and any custom
    * registered templates
    */
   templates: TemplatesType<T, S, F>;
@@ -421,10 +437,10 @@ export interface Registry<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
   schemaUtils: SchemaUtilsType<T, S>;
   /** The string translation function to use when displaying any of the RJSF strings in templates, fields or widgets */
   translateString: (stringKey: TranslatableString, params?: string[]) => string;
+  /** The global Form Options that are available for all templates, fields and widgets to access */
+  readonly globalFormOptions: GlobalFormOptions;
   /** The optional global UI Options that are available for all templates, fields and widgets to access */
   globalUiOptions?: GlobalUISchemaOptions;
-  /** The component update strategy used by the Form and its fields for performance optimization */
-  experimental_componentUpdateStrategy?: 'customDeep' | 'shallow' | 'always';
 }
 
 /** The properties that are passed to a `Field` implementation */
@@ -458,14 +474,6 @@ export interface FieldProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F 
   required?: boolean;
   /** The unique name of the field, usually derived from the name of the property in the JSONSchema */
   name: string;
-  /** To avoid collisions with existing ids in the DOM, it is possible to change the prefix used for ids;
-   * Default is `root`
-   */
-  idPrefix?: string;
-  /** To avoid using a path separator that is present in field names, it is possible to change the separator used for
-   * ids (Default is `_`)
-   */
-  idSeparator?: string;
   /** An array of strings listing all generated error messages from encountered errors for this field */
   rawErrors?: string[];
 }

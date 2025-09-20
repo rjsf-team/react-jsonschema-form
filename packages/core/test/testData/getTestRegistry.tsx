@@ -22,5 +22,6 @@ export default function getTestRegistry(
     rootSchema,
     schemaUtils,
     translateString: englishStringTranslator,
+    globalFormOptions: {},
   };
 }

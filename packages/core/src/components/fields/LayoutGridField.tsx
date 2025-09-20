@@ -897,11 +897,11 @@ export default class LayoutGridField<
       formData,
       readonly,
       registry,
-      idSeparator,
       layoutGridSchema, // Used to pull this out of otherProps since we don't want to pass it through
       ...otherProps
     } = this.props;
-    const { fields, schemaUtils } = registry;
+    const { fields, schemaUtils, globalFormOptions } = registry;
+    const { idSeparator } = globalFormOptions;
     const { SchemaField, LayoutMultiSchemaField } = fields;
     const uiComponentProps = LayoutGridField.computeUIComponentPropsFromGridSchema(registry, gridSchema);
     if (uiComponentProps.rendered) {
@@ -953,7 +953,6 @@ export default class LayoutGridField<
           uiSchema={fieldUiSchema}
           errorSchema={get(errorSchema, name)}
           idSchema={fieldIdSchema}
-          idSeparator={idSeparator}
           formData={get(formData, name)}
           onChange={this.onFieldChange(name)}
           onBlur={onBlur}
@@ -977,7 +976,6 @@ export default class LayoutGridField<
           uiSchema={uiSchema}
           schema={initialSchema}
           idSchema={idSchema}
-          idSeparator={idSeparator}
           onBlur={onBlur}
           onFocus={onFocus}
           registry={registry}

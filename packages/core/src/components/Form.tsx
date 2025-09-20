@@ -43,6 +43,7 @@ import _forEach from 'lodash/forEach';
 import _get from 'lodash/get';
 import _isEmpty from 'lodash/isEmpty';
 import _isNil from 'lodash/isNil';
+import _omitBy from 'lodash/omitBy';
 import _pick from 'lodash/pick';
 import _set from 'lodash/set';
 import _toPath from 'lodash/toPath';
@@ -956,10 +957,14 @@ export default class Form<
     const {
       translateString: customTranslateString,
       uiSchema = {},
-      experimental_componentUpdateStrategy = 'customDeep',
+      experimental_componentUpdateStrategy,
+      idSeparator,
+      idPrefix,
     } = this.props;
     const { schema, schemaUtils } = this.state;
     const { fields, templates, widgets, formContext, translateString } = getDefaultRegistry<T, S, F>();
+    // Omit any options that are undefined or null
+    const globalFormOptions = _omitBy({ idPrefix, idSeparator, experimental_componentUpdateStrategy }, _isNil);
     return {
       fields: { ...fields, ...this.props.fields },
       templates: {
@@ -976,7 +981,7 @@ export default class Form<
       schemaUtils,
       translateString: customTranslateString || translateString,
       globalUiOptions: uiSchema[UI_GLOBAL_OPTIONS_KEY],
-      experimental_componentUpdateStrategy,
+      globalFormOptions,
     };
   }
 
@@ -1101,8 +1106,6 @@ export default class Form<
     const {
       children,
       id,
-      idPrefix = '',
-      idSeparator,
       className = '',
       tagName,
       name,
@@ -1158,8 +1161,6 @@ export default class Form<
           uiSchema={uiSchema}
           errorSchema={errorSchema}
           idSchema={idSchema}
-          idPrefix={idPrefix}
-          idSeparator={idSeparator}
           formData={formData}
           onChange={this.onChange}
           onBlur={this.onBlur}

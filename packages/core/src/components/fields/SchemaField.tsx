@@ -110,8 +110,6 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
     uiSchema,
     formData,
     errorSchema,
-    idPrefix,
-    idSeparator,
     name,
     onChange,
     onKeyChange,
@@ -120,7 +118,8 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
     registry,
     wasPropertyKeyModified = false,
   } = props;
-  const { formContext, schemaUtils, globalUiOptions } = registry;
+  const { formContext, schemaUtils, globalUiOptions, globalFormOptions } = registry;
+  const { idPrefix, idSeparator } = globalFormOptions;
   const uiOptions = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
   const FieldTemplate = getTemplate<'FieldTemplate', T, S, F>('FieldTemplate', registry, uiOptions);
   const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
@@ -291,9 +290,7 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
             errorSchema={errorSchema}
             formData={formData}
             formContext={formContext}
-            idPrefix={idPrefix}
             idSchema={idSchema}
-            idSeparator={idSeparator}
             onBlur={props.onBlur}
             onChange={props.onChange}
             onFocus={props.onFocus}
@@ -315,9 +312,7 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
             errorSchema={errorSchema}
             formData={formData}
             formContext={formContext}
-            idPrefix={idPrefix}
             idSchema={idSchema}
-            idSeparator={idSeparator}
             onBlur={props.onBlur}
             onChange={props.onChange}
             onFocus={props.onFocus}
@@ -342,7 +337,10 @@ class SchemaField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
   FieldProps<T, S, F>
 > {
   shouldComponentUpdate(nextProps: Readonly<FieldProps<T, S, F>>) {
-    const { experimental_componentUpdateStrategy = 'customDeep' } = this.props.registry;
+    const {
+      registry: { globalFormOptions },
+    } = this.props;
+    const { experimental_componentUpdateStrategy = 'customDeep' } = globalFormOptions;
 
     return shouldRender(this, nextProps, this.state, experimental_componentUpdateStrategy);
   }
