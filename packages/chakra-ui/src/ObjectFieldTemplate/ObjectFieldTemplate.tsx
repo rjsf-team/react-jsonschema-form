@@ -64,29 +64,27 @@ export default function ObjectFieldTemplate<
           registry={registry}
         />
       )}
-      {properties.length > 0 && (
-        <Grid gap={description ? 2 : 6} mb={4}>
-          {properties.map((element, index) =>
-            element.hidden ? (
-              element.content
-            ) : (
-              <GridItem key={`${idSchema.$id}-${element.name}-${index}`}>{element.content}</GridItem>
-            ),
-          )}
-          {canExpand<T, S, F>(schema, uiSchema, formData) && (
-            <GridItem justifySelf='flex-end'>
-              <AddButton
-                id={buttonId<T>(idSchema, 'add')}
-                className='rjsf-object-property-expand'
-                onClick={onAddClick(schema)}
-                disabled={disabled || readonly}
-                uiSchema={uiSchema}
-                registry={registry}
-              />
-            </GridItem>
-          )}
-        </Grid>
-      )}
+      <Grid gap={description ? 2 : 6} mb={4}>
+        {properties.map((element, index) =>
+          element.hidden ? (
+            element.content
+          ) : (
+            <GridItem key={`${idSchema.$id}-${element.name}-${index}`}>{element.content}</GridItem>
+          ),
+        )}
+        {canExpand<T, S, F>(schema, uiSchema, formData) && (
+          <GridItem justifySelf='flex-end'>
+            <AddButton
+              id={buttonId<T>(idSchema, 'add')}
+              className='rjsf-object-property-expand'
+              onClick={onAddClick(schema)}
+              disabled={disabled || readonly}
+              uiSchema={uiSchema}
+              registry={registry}
+            />
+          </GridItem>
+        )}
+      </Grid>
     </>
   );
 }
