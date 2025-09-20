@@ -15,7 +15,7 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
-# 6.0.0-beta.17
+# 6.0.0-beta.18
 
 ## @rjsf/chakra-ui
 
@@ -23,15 +23,9 @@ should change the heading of the (upcoming) version to include a major version b
 
 ## @rjsf/core
 
-- Updated `ObjectField` to remove the `name` from the path passed to `onChange()` callback in `handleAddClick()` and `onDropPropertyClick()`, fixing [#4763](https://github.com/rjsf-team/react-jsonschema-form/issues/4763)
-- Updated `Form` to restore the passing of an empty string for `name` to avoid accidentally showing it as the title for the whole schema
 - Updated `Form` to add the `globalFormOptions` to the `registry` when there are `GlobalFormOptions` provided, also stopped passing `idPrefix` and `idSeparator` to `SchemaField`
 - Updated `ArrayField`, `LayoutGridField`, `ObjectField` and `SchemaField` to get `idPrefix`, `idSeparator` from the `registry.globalFormOptions`, no longer passing them on `FieldProps`
   - Updated `SchemaField` to get `experimental_componentUpdateStrategy` from the `registry.globalFormOptions` as well
-
-## @rjsf/shadcn
-
-- Update `ArrayFieldItemTemplate` to align buttons with the input field, fixing [#4753](https://github.com/rjsf-team/react-jsonschema-form/pull/4753)
 
 ## @rjsf/utils
 
@@ -43,6 +37,17 @@ should change the heading of the (upcoming) version to include a major version b
 ## Dev / docs / playground
 
 - Updated the `custom-widget-fields.md` and `v6.x upgrade guide.md` to document the refactor of the `idPrefix` and `idSeparator` refactor
+
+# 6.0.0-beta.17
+
+## @rjsf/core
+
+- Updated `ObjectField` to remove the `name` from the path passed to `onChange()` callback in `handleAddClick()` and `onDropPropertyClick()`, fixing [#4763](https://github.com/rjsf-team/react-jsonschema-form/issues/4763)
+- Updated `Form` to restore the passing of an empty string for `name` to avoid accidentally showing it as the title for the whole schema
+
+## @rjsf/shadcn
+
+- Update `ArrayFieldItemTemplate` to align buttons with the input field, fixing [#4753](https://github.com/rjsf-team/react-jsonschema-form/pull/4753)
 
 # 6.0.0-beta.16
 
