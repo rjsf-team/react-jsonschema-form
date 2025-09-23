@@ -1926,5 +1926,349 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         ]);
       });
     });
+    describe('resolveReference() with experimental_customMergeAllOf', () => {
+      it('should pass experimental_customMergeAllOf parameter to retrieveSchemaInternal', () => {
+        const schema: RJSFSchema = {
+          $ref: '#/definitions/testRef',
+          allOf: [
+            {
+              type: 'object',
+              properties: {
+                string: { type: 'string' },
+              },
+            },
+            {
+              type: 'object',
+              properties: {
+                number: { type: 'number' },
+              },
+            },
+          ],
+        };
+        const rootSchema: RJSFSchema = {
+          definitions: {
+            testRef: {
+              type: 'object',
+              properties: {
+                base: { type: 'string' },
+              },
+            },
+          },
+        };
+        const customMergeAllOf = jest.fn().mockReturnValue({
+          type: 'object',
+          properties: {
+            base: { type: 'string' },
+            string: { type: 'string' },
+            number: { type: 'number' },
+          },
+        });
+        const result = retrieveSchema(testValidator, schema, rootSchema, {}, customMergeAllOf);
+        expect(customMergeAllOf).toHaveBeenCalled();
+        expect(result).toEqual({
+          type: 'object',
+          properties: {
+            base: { type: 'string' },
+            string: { type: 'string' },
+            number: { type: 'number' },
+          },
+        });
+      });
+    });
+    describe('resolveDependencies() with experimental_customMergeAllOf', () => {
+      it('should pass experimental_customMergeAllOf parameter through dependency resolution', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            a: { type: 'string' },
+          },
+          dependencies: {
+            a: {
+              allOf: [
+                {
+                  type: 'object',
+                  properties: {
+                    string: { type: 'string' },
+                  },
+                },
+                {
+                  type: 'object',
+                  properties: {
+                    number: { type: 'number' },
+                  },
+                },
+              ],
+            },
+          },
+        };
+        const rootSchema: RJSFSchema = { definitions: {} };
+        const formData = { a: 'test' };
+        const customMergeAllOf = jest.fn().mockReturnValue({
+          type: 'object',
+          properties: {
+            string: { type: 'string' },
+            number: { type: 'number' },
+          },
+        });
+        const result = retrieveSchema(testValidator, schema, rootSchema, formData, customMergeAllOf);
+        expect(customMergeAllOf).toHaveBeenCalled();
+        expect(result).toEqual({
+          type: 'object',
+          properties: {
+            a: { type: 'string' },
+            string: { type: 'string' },
+            number: { type: 'number' },
+          },
+        });
+      });
+    });
+    describe('resolveSchema() integration with experimental_customMergeAllOf', () => {
+      it('should properly pass experimental_customMergeAllOf through all resolution paths', () => {
+        const schema: RJSFSchema = {
+          $ref: '#/definitions/baseSchema',
+          dependencies: {
+            trigger: {
+              allOf: [
+                {
+                  type: 'object',
+                  properties: {
+                    prop1: { type: 'string' },
+                  },
+                },
+                {
+                  type: 'object',
+                  properties: {
+                    prop2: { type: 'number' },
+                  },
+                },
+              ],
+            },
+          },
+        };
+        const rootSchema: RJSFSchema = {
+          definitions: {
+            baseSchema: {
+              type: 'object',
+              properties: {
+                base: { type: 'string' },
+              },
+              allOf: [
+                {
+                  type: 'object',
+                  properties: {
+                    additional: { type: 'boolean' },
+                  },
+                },
+              ],
+            },
+          },
+        };
+        const formData = { trigger: 'value' };
+        const customMergeAllOf = jest.fn().mockImplementation((schema) => {
+          // Custom merge logic that combines all properties
+          const allProperties: any = {};
+          if (schema.properties) {
+            Object.assign(allProperties, schema.properties);
+          }
+          if (schema.allOf) {
+            schema.allOf.forEach((subSchema: any) => {
+              if (subSchema.properties) {
+                Object.assign(allProperties, subSchema.properties);
+              }
+            });
+          }
+          return {
+            ...schema,
+            properties: allProperties,
+            allOf: undefined,
+          };
+        });
+        const result = retrieveSchema(testValidator, schema, rootSchema, formData, customMergeAllOf);
+        // Verify that customMergeAllOf was called multiple times (for different allOf blocks)
+        expect(customMergeAllOf).toHaveBeenCalledTimes(3);
+        expect(result).toEqual({
+          type: 'object',
+          properties: {
+            base: { type: 'string' },
+            additional: { type: 'boolean' },
+          },
+          allOf: undefined,
+        });
+      });
+      it('should handle experimental_customMergeAllOf with nested $ref resolution', () => {
+        const schema: RJSFSchema = {
+          $ref: '#/definitions/nestedRef',
+        };
+        const rootSchema: RJSFSchema = {
+          definitions: {
+            nestedRef: {
+              $ref: '#/definitions/finalSchema',
+              allOf: [
+                {
+                  type: 'object',
+                  properties: {
+                    nested: { type: 'string' },
+                  },
+                },
+              ],
+            },
+            finalSchema: {
+              type: 'object',
+              properties: {
+                final: { type: 'number' },
+              },
+            },
+          },
+        };
+        const customMergeAllOf = jest.fn().mockReturnValue({
+          type: 'object',
+          properties: {
+            final: { type: 'number' },
+            nested: { type: 'string' },
+          },
+        });
+        const result = retrieveSchema(testValidator, schema, rootSchema, {}, customMergeAllOf);
+        expect(customMergeAllOf).toHaveBeenCalled();
+        expect(result).toEqual({
+          type: 'object',
+          properties: {
+            final: { type: 'number' },
+            nested: { type: 'string' },
+          },
+        });
+      });
+    });
+    describe('Edge cases for experimental_customMergeAllOf fix', () => {
+      it('should handle undefined experimental_customMergeAllOf parameter gracefully', () => {
+        const schema: RJSFSchema = {
+          $ref: '#/definitions/testRef',
+          dependencies: {
+            trigger: {
+              allOf: [
+                {
+                  type: 'object',
+                  properties: {
+                    prop: { type: 'string' },
+                  },
+                },
+              ],
+            },
+          },
+        };
+        const rootSchema: RJSFSchema = {
+          definitions: {
+            testRef: {
+              type: 'object',
+              properties: {
+                base: { type: 'string' },
+              },
+            },
+          },
+        };
+        const formData = { trigger: 'value' };
+        // Test with undefined experimental_customMergeAllOf (should use default mergeAllOf)
+        const result = retrieveSchema(testValidator, schema, rootSchema, formData, undefined);
+        expect(result).toEqual({
+          type: 'object',
+          properties: {
+            base: { type: 'string' },
+          },
+        });
+      });
+      it('should handle experimental_customMergeAllOf that throws an error', () => {
+        const schema: RJSFSchema = {
+          allOf: [
+            {
+              type: 'object',
+              properties: {
+                string: { type: 'string' },
+              },
+            },
+            {
+              type: 'object',
+              properties: {
+                number: { type: 'number' },
+              },
+            },
+          ],
+        };
+        const rootSchema: RJSFSchema = { definitions: {} };
+        const customMergeAllOf = jest.fn().mockImplementation(() => {
+          throw new Error('Custom merge failed');
+        });
+        const result = retrieveSchema(testValidator, schema, rootSchema, {}, customMergeAllOf);
+        // Should fall back to default behavior when custom merge fails
+        expect(result).toEqual({});
+        expect(consoleWarnSpy).toHaveBeenCalledWith('could not merge subschemas in allOf:\n', expect.any(Error));
+      });
+      it('should pass experimental_customMergeAllOf through complex nested resolution chains', () => {
+        const schema: RJSFSchema = {
+          $ref: '#/definitions/level1',
+        };
+        const rootSchema: RJSFSchema = {
+          definitions: {
+            level1: {
+              $ref: '#/definitions/level2',
+              dependencies: {
+                dep1: {
+                  allOf: [
+                    {
+                      type: 'object',
+                      properties: {
+                        nested1: { type: 'string' },
+                      },
+                    },
+                  ],
+                },
+              },
+            },
+            level2: {
+              type: 'object',
+              properties: {
+                base: { type: 'string' },
+              },
+              allOf: [
+                {
+                  type: 'object',
+                  properties: {
+                    additional: { type: 'number' },
+                  },
+                },
+              ],
+            },
+          },
+        };
+        const formData = { dep1: 'value' };
+        const customMergeAllOf = jest.fn().mockImplementation((schema) => {
+          const allProperties: any = {};
+          if (schema.properties) {
+            Object.assign(allProperties, schema.properties);
+          }
+          if (schema.allOf) {
+            schema.allOf.forEach((subSchema: any) => {
+              if (subSchema.properties) {
+                Object.assign(allProperties, subSchema.properties);
+              }
+            });
+          }
+          return {
+            ...schema,
+            properties: allProperties,
+            allOf: undefined,
+          };
+        });
+        const result = retrieveSchema(testValidator, schema, rootSchema, formData, customMergeAllOf);
+        // Should be called for both allOf blocks (level2 and dependency)
+        expect(customMergeAllOf).toHaveBeenCalledTimes(3);
+        expect(result).toEqual({
+          type: 'object',
+          properties: {
+            base: { type: 'string' },
+            additional: { type: 'number' },
+          },
+          allOf: undefined,
+        });
+      });
+    });
   });
 }

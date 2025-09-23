@@ -241,6 +241,7 @@ export function resolveSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, 
     expandAllBranches,
     recurseList,
     formData,
+    experimental_customMergeAllOf,
   );
   if (updatedSchemas.length > 1 || updatedSchemas[0] !== schema) {
     // return the updatedSchemas array if it has either multiple schemas within it
@@ -255,6 +256,7 @@ export function resolveSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, 
       expandAllBranches,
       recurseList,
       formData,
+      experimental_customMergeAllOf,
     );
     return resolvedSchemas.flatMap((s) => {
       return retrieveSchemaInternal<T, S, F>(
