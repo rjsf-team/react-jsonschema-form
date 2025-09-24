@@ -752,7 +752,7 @@ function getExpectedPropsForField(
     required = result?.required?.includes(name) || false;
     return schema1;
   }, props.schema);
-  // Null out nested properties that can show up for when additionalProperties is specified
+  // Null out nested properties that can show up when additionalProperties is specified
   if (!isEmpty(schema?.properties)) {
     schema.properties = {};
   }
