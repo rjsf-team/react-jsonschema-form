@@ -6,6 +6,7 @@ import {
   FormContextType,
   GenericObjectType,
   getDiscriminatorFieldFromSchema,
+  getSchemaType,
   getTemplate,
   getTestIds,
   getUiOptions,
@@ -139,6 +140,21 @@ function getNonNullishValue<T = unknown>(value?: T, fallback?: T): T | undefined
  */
 function isNumericIndex(str: string) {
   return /^\d+?$/.test(str); // Matches positive integers
+}
+
+/** Detects whether the given `type` indicates the schema is an object or array
+ *
+ * @param [type] - The potential type of the schema
+ * @returns - true if the type indicates it is an array or object, otherwise false
+ */
+function isObjectOrArrayType(type?: string | string[]) {
+  let realType: string | undefined;
+  if (Array.isArray(type)) {
+    realType = type.length === 1 ? type[0] : undefined;
+  } else {
+    realType = type;
+  }
+  return realType ? ['object', 'array'].includes(realType) : false;
 }
 
 /** The `LayoutGridField` will render a schema, uiSchema and formData combination out into a GridTemplate in the shape
@@ -730,12 +746,17 @@ export default class LayoutGridField<
 
   /** Generates an `onChange` handler for the field associated with the `dottedPath`. This handler will clone and update
    * the `formData` with the new `value` and the `errorSchema` if an `errSchema` is provided. After updating those two
-   * elements, they will then be passed on to the `onChange` handler of the `LayoutFieldGrid`.
+   * elements, they will then be passed on to the `onChange` handler of the `LayoutFieldGrid`. This handler is also
+   * given the `schemaType` and uses it to determine whether the inbound path on the `onChange` should be appended to
+   * the `dottedPath` that has been split on the `.` character. When the type is an 'object' or 'array', then the
+   * inbound path will be the index of the array item or name of the object's field.
    *
    * @param dottedPath - The dotted-path to the field for which to generate the onChange handler
-   * @returns - The `onChange` handling function for the `dottedPath` field
+   * @param schemaType - The optional type of the schema for the field
+   * @returns - The `onChange` handling function for the `dottedPath` field of the `schemaType` type
    */
-  onFieldChange = (dottedPath: string) => {
+  onFieldChange = (dottedPath: string, schemaType?: string | string[]) => {
+    const appendPath = isObjectOrArrayType(schemaType);
     return (value: T | undefined, path?: (number | string)[], errSchema?: ErrorSchema<T>, id?: string) => {
       const { onChange, errorSchema } = this.props;
       let newErrorSchema = errorSchema;
@@ -743,7 +764,11 @@ export default class LayoutGridField<
         newErrorSchema = cloneDeep(errorSchema);
         set(newErrorSchema, dottedPath, errSchema);
       }
-      onChange(value, dottedPath.split('.'), newErrorSchema, id);
+      let actualPath: (number | string)[] = dottedPath.split('.');
+      // When the `schemaType` is an object or array, then the path will contain the index of the array or the name of
+      // object's field, so append it to the path.
+      actualPath = Array.isArray(path) && appendPath ? actualPath.concat(...path) : actualPath;
+      onChange(value, actualPath, newErrorSchema, id);
     };
   };
 
@@ -954,7 +979,7 @@ export default class LayoutGridField<
           errorSchema={get(errorSchema, name)}
           idSchema={fieldIdSchema}
           formData={get(formData, name)}
-          onChange={this.onFieldChange(name)}
+          onChange={this.onFieldChange(name, getSchemaType<S>(schema))}
           onBlur={onBlur}
           onFocus={onFocus}
           options={optionsInfo?.options}

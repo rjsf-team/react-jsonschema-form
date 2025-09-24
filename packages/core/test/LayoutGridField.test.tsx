@@ -23,7 +23,7 @@ import {
 import validator from '@rjsf/validator-ajv8';
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { get, has, omit, pick } from 'lodash';
+import { get, has, isEmpty, omit, pick } from 'lodash';
 
 import LayoutGridField, {
   GridType,
@@ -593,6 +593,44 @@ const arraySchema: RJSFSchema = {
 const outerArraySchema = arraySchema?.properties?.example as RJSFSchema;
 const innerArraySchema = outerArraySchema?.items as RJSFSchema;
 
+const nestedSchema: RJSFSchema = {
+  type: 'object',
+  properties: {
+    listOfStrings: {
+      type: 'array',
+      title: 'A list of strings',
+      items: {
+        type: 'string',
+        default: 'bazinga',
+      },
+    },
+    mapOfStrings: {
+      type: 'object',
+      title: 'A map of strings',
+      additionalProperties: {
+        type: 'string',
+        default: 'bazinga',
+      },
+    },
+  },
+};
+
+const nestedUiSchema: UiSchema = {
+  'ui:field': 'LayoutGridField',
+  'ui:layoutGrid': {
+    'ui:row': {
+      children: [
+        {
+          'ui:columns': {
+            span: 6,
+            children: ['listOfStrings', 'mapOfStrings'],
+          },
+        },
+      ],
+    },
+  },
+};
+
 const ERRORS = ['error'];
 const EXTRA_ERROR = new ErrorSchemaBuilder().addErrors(ERRORS).ErrorSchema;
 const DEFAULT_ID = 'test-id';
@@ -672,6 +710,7 @@ const gridFormSchemaRegistry = getTestRegistry(GRID_FORM_SCHEMA, REGISTRY_FIELDS
 const sampleSchemaRegistry = getTestRegistry(SAMPLE_SCHEMA, REGISTRY_FIELDS, {}, {}, REGISTRY_FORM_CONTEXT);
 const readonlySchemaRegistry = getTestRegistry(readonlySchema, REGISTRY_FIELDS, {}, {}, REGISTRY_FORM_CONTEXT);
 const arraySchemaRegistry = getTestRegistry(arraySchema, REGISTRY_FIELDS, {}, {}, REGISTRY_FORM_CONTEXT);
+const nestedSchemaRegistry = getTestRegistry(nestedSchema, REGISTRY_FIELDS, {}, {}, REGISTRY_FORM_CONTEXT);
 const GRID_FORM_ID_SCHEMA = gridFormSchemaRegistry.schemaUtils.toIdSchema(GRID_FORM_SCHEMA);
 const SAMPLE_SCHEMA_ID_SCHEMA = sampleSchemaRegistry.schemaUtils.toIdSchema(SAMPLE_SCHEMA);
 const READONLY_ID_SCHEMA = readonlySchemaRegistry.schemaUtils.toIdSchema(readonlySchema);
@@ -713,6 +752,10 @@ function getExpectedPropsForField(
     required = result?.required?.includes(name) || false;
     return schema1;
   }, props.schema);
+  // Null out nested properties that can show up for when additionalProperties is specified
+  if (!isEmpty(schema?.properties)) {
+    schema.properties = {};
+  }
   // Get the readonly options from the schema, if any
   const readonly = get(schema, 'readOnly');
   // Get the options from the schema's oneOf, if any
@@ -1497,6 +1540,60 @@ describe('LayoutGridField', () => {
     // Type to trigger the onChange
     await userEvent.type(input, 'foo');
     expect(props.onChange).toHaveBeenCalledWith('foo', [fieldName], props.errorSchema, fieldId);
+    // Tab out of the input field to cause the blur
+    await userEvent.tab();
+    expect(props.onBlur).toHaveBeenCalledWith(fieldId, 'foo');
+  });
+  test('renderField via name explicit layoutGridSchema, nested array', async () => {
+    const fieldName = 'listOfStrings';
+    const props = getProps({
+      schema: nestedSchema,
+      uiSchema: nestedUiSchema,
+      layoutGridSchema: fieldName,
+      idSeparator: '.',
+      registry: nestedSchemaRegistry,
+    });
+    const fieldId = get(props.idSchema, [fieldName, ID_KEY]);
+    render(<LayoutGridField {...props} />);
+    // Renders a field
+    const field = screen.getByTestId(LayoutGridField.TEST_IDS.field);
+    expect(field).toHaveTextContent(stringifyProps(getExpectedPropsForField(props, fieldName)));
+    // Test onChange, onFocus, onBlur
+    const input = within(field).getByRole('textbox');
+    // Click on the input to cause the focus
+    await userEvent.click(input);
+    expect(props.onFocus).toHaveBeenCalledWith(fieldId, '');
+    // Type to trigger the onChange
+    await userEvent.type(input, 'foo');
+    // Due to the selection of schema type = `array` the path is appended to the fieldName, duplicating it
+    expect(props.onChange).toHaveBeenCalledWith('foo', [fieldName, fieldName], props.errorSchema, fieldId);
+    // Tab out of the input field to cause the blur
+    await userEvent.tab();
+    expect(props.onBlur).toHaveBeenCalledWith(fieldId, 'foo');
+  });
+  test('renderField via name explicit layoutGridSchema, nested object', async () => {
+    const fieldName = 'mapOfStrings';
+    const props = getProps({
+      schema: nestedSchema,
+      uiSchema: nestedUiSchema,
+      layoutGridSchema: fieldName,
+      idSeparator: '.',
+      registry: nestedSchemaRegistry,
+    });
+    const fieldId = get(props.idSchema, [fieldName, ID_KEY]);
+    render(<LayoutGridField {...props} />);
+    // Renders a field
+    const field = screen.getByTestId(LayoutGridField.TEST_IDS.field);
+    expect(field).toHaveTextContent(stringifyProps(getExpectedPropsForField(props, fieldName)));
+    // Test onChange, onFocus, onBlur
+    const input = within(field).getByRole('textbox');
+    // Click on the input to cause the focus
+    await userEvent.click(input);
+    expect(props.onFocus).toHaveBeenCalledWith(fieldId, '');
+    // Type to trigger the onChange
+    await userEvent.type(input, 'foo');
+    // Due to the selection of schema type = `array` the path is appended to the fieldName, duplicating it
+    expect(props.onChange).toHaveBeenCalledWith('foo', [fieldName, fieldName], props.errorSchema, fieldId);
     // Tab out of the input field to cause the blur
     await userEvent.tab();
     expect(props.onBlur).toHaveBeenCalledWith(fieldId, 'foo');
