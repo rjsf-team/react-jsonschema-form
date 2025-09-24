@@ -1592,7 +1592,7 @@ describe('LayoutGridField', () => {
     expect(props.onFocus).toHaveBeenCalledWith(fieldId, '');
     // Type to trigger the onChange
     await userEvent.type(input, 'foo');
-    // Due to the selection of schema type = `array` the path is appended to the fieldName, duplicating it
+    // Due to the selection of schema type = `object` the path is appended to the fieldName, duplicating it
     expect(props.onChange).toHaveBeenCalledWith('foo', [fieldName, fieldName], props.errorSchema, fieldId);
     // Tab out of the input field to cause the blur
     await userEvent.tab();
