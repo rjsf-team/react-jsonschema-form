@@ -11,6 +11,7 @@ export default function getTestRegistry(
   templates: Partial<Registry['templates']> = {},
   widgets: Registry['widgets'] = {},
   formContext: Registry['formContext'] = {},
+  globalFormOptions: Registry['globalFormOptions'] = {},
 ): Registry {
   const defaults = getDefaultRegistry();
   const schemaUtils = createSchemaUtils(validator, rootSchema);
@@ -22,6 +23,6 @@ export default function getTestRegistry(
     rootSchema,
     schemaUtils,
     translateString: englishStringTranslator,
-    globalFormOptions: {},
+    globalFormOptions,
   };
 }
