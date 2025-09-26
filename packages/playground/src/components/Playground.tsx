@@ -149,7 +149,8 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
   }, [onThemeSelected, load, loaded, setShowForm, theme, themes]);
 
   const onFormDataChange = useCallback(
-    ({ formData }: IChangeEvent, id?: string) => {
+    (event: IChangeEvent, id?: string) => {
+      const { formData } = event;
       if (id) {
         console.log('Field changed, id: ', id);
       }

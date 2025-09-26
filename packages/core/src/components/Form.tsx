@@ -416,6 +416,7 @@ export default class Form<
    * @param retrievedSchema - An expanded schema, if not provided, it will be retrieved from the `schema` and `formData`.
    * @param isSchemaChanged - A flag indicating whether the schema has changed.
    * @param formDataChangedFields - The changed fields of `formData`
+   * @param skipLiveValidate - Optional flag, if true, means that we are not running live validation
    * @returns - The new state for the `Form`
    */
   getStateFromProps(
@@ -432,7 +433,7 @@ export default class Form<
     const uiSchema: UiSchema<T, S, F> = ('uiSchema' in props ? props.uiSchema! : this.props.uiSchema!) || {};
     const edit = typeof inputFormData !== 'undefined';
     const liveValidate = 'liveValidate' in props ? props.liveValidate : this.props.liveValidate;
-    const mustValidate = edit && !props.noValidate && liveValidate && !skipLiveValidate;
+    const mustValidate = edit && !props.noValidate && liveValidate;
     const experimental_defaultFormStateBehavior =
       'experimental_defaultFormStateBehavior' in props
         ? props.experimental_defaultFormStateBehavior
@@ -484,7 +485,8 @@ export default class Form<
     let errorSchema: ErrorSchema<T> | undefined;
     let schemaValidationErrors: RJSFValidationError[] = state.schemaValidationErrors;
     let schemaValidationErrorSchema: ErrorSchema<T> = state.schemaValidationErrorSchema;
-    if (mustValidate) {
+    // If we are skipping live validate, it means that the state has already been updated with live validation errors
+    if (mustValidate && !skipLiveValidate) {
       const schemaValidation = this.validate(formData, rootSchema, schemaUtils, _retrievedSchema);
       errors = schemaValidation.errors;
       // If retrievedSchema is undefined which means the schema or formData has changed, we do not merge state.
@@ -504,7 +506,8 @@ export default class Form<
       const currentErrors = getCurrentErrors();
       errors = currentErrors.errors;
       errorSchema = currentErrors.errorSchema;
-      if (formDataChangedFields.length > 0) {
+      // We only update the error schema for changed fields if mustValidate is false
+      if (formDataChangedFields.length > 0 && !mustValidate) {
         const newErrorSchema = formDataChangedFields.reduce(
           (acc, key) => {
             acc[key] = undefined;
