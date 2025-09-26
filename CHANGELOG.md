@@ -15,6 +15,18 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+# 6.0.0-beta.19
+
+## @rjsf/core
+
+- Updated `Form` to fix live validation in `getStateFromProps()` broken by an optimization, fixing [#4782](https://github.com/rjsf-team/react-jsonschema-form/issues/4782)
+- Updated `Form` to fix error messages being displayed abnormally when `customValidate` is provided, fixing [#4783](https://github.com/rjsf-team/react-jsonschema-form/issues/4783)
+- Updated `Form` to fix `omitExtraData` when the leaf node happens to have an object value, fixing [#4784](https://github.com/rjsf-team/react-jsonschema-form/issues/4784)
+
+## @rjsf/utils
+
+- Updated `resolveSchema()` to pass the `experimental_customMergeAllOf` options properly to `resolveReference()` and `resolveDependencies()` called within it
+
 # 6.0.0-beta.18
 
 ## @rjsf/chakra-ui

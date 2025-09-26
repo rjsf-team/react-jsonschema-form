@@ -3,6 +3,7 @@ import {
   createSchemaUtils,
   CustomValidator,
   deepEquals,
+  ERRORS_KEY,
   ErrorSchema,
   ErrorTransformer,
   FormContextType,
@@ -416,6 +417,7 @@ export default class Form<
    * @param retrievedSchema - An expanded schema, if not provided, it will be retrieved from the `schema` and `formData`.
    * @param isSchemaChanged - A flag indicating whether the schema has changed.
    * @param formDataChangedFields - The changed fields of `formData`
+   * @param skipLiveValidate - Optional flag, if true, means that we are not running live validation
    * @returns - The new state for the `Form`
    */
   getStateFromProps(
@@ -432,7 +434,7 @@ export default class Form<
     const uiSchema: UiSchema<T, S, F> = ('uiSchema' in props ? props.uiSchema! : this.props.uiSchema!) || {};
     const edit = typeof inputFormData !== 'undefined';
     const liveValidate = 'liveValidate' in props ? props.liveValidate : this.props.liveValidate;
-    const mustValidate = edit && !props.noValidate && liveValidate && !skipLiveValidate;
+    const mustValidate = edit && !props.noValidate && liveValidate;
     const experimental_defaultFormStateBehavior =
       'experimental_defaultFormStateBehavior' in props
         ? props.experimental_defaultFormStateBehavior
@@ -484,7 +486,8 @@ export default class Form<
     let errorSchema: ErrorSchema<T> | undefined;
     let schemaValidationErrors: RJSFValidationError[] = state.schemaValidationErrors;
     let schemaValidationErrorSchema: ErrorSchema<T> = state.schemaValidationErrorSchema;
-    if (mustValidate) {
+    // If we are skipping live validate, it means that the state has already been updated with live validation errors
+    if (mustValidate && !skipLiveValidate) {
       const schemaValidation = this.validate(formData, rootSchema, schemaUtils, _retrievedSchema);
       errors = schemaValidation.errors;
       // If retrievedSchema is undefined which means the schema or formData has changed, we do not merge state.
@@ -504,7 +507,8 @@ export default class Form<
       const currentErrors = getCurrentErrors();
       errors = currentErrors.errors;
       errorSchema = currentErrors.errorSchema;
-      if (formDataChangedFields.length > 0) {
+      // We only update the error schema for changed fields if mustValidate is false
+      if (formDataChangedFields.length > 0 && !mustValidate) {
         const newErrorSchema = formDataChangedFields.reduce(
           (acc, key) => {
             acc[key] = undefined;
@@ -641,25 +645,28 @@ export default class Form<
    * @param [formData] - The form data to use while checking for empty objects/arrays
    */
   getFieldNames = (pathSchema: PathSchema<T>, formData?: T): string[][] => {
+    const formValueHasData = (value: T, isLeaf: boolean) =>
+      typeof value !== 'object' || _isEmpty(value) || (isLeaf && !_isEmpty(value));
     const getAllPaths = (_obj: GenericObjectType, acc: string[][] = [], paths: string[][] = [[]]) => {
-      Object.keys(_obj).forEach((key: string) => {
-        if (typeof _obj[key] === 'object') {
+      const objKeys = Object.keys(_obj);
+      objKeys.forEach((key: string) => {
+        const data = _obj[key];
+        if (typeof data === 'object') {
           const newPaths = paths.map((path) => [...path, key]);
           // If an object is marked with additionalProperties, all its keys are valid
-          if (_obj[key][RJSF_ADDITIONAL_PROPERTIES_FLAG] && _obj[key][NAME_KEY] !== '') {
-            acc.push(_obj[key][NAME_KEY]);
+          if (data[RJSF_ADDITIONAL_PROPERTIES_FLAG] && data[NAME_KEY] !== '') {
+            acc.push(data[NAME_KEY]);
           } else {
-            getAllPaths(_obj[key], acc, newPaths);
+            getAllPaths(data, acc, newPaths);
           }
-        } else if (key === NAME_KEY && _obj[key] !== '') {
+        } else if (key === NAME_KEY && data !== '') {
           paths.forEach((path) => {
             const formValue = _get(formData, path);
-            // adds path to fieldNames if it points to a value
-            // or an empty object/array
+            const isLeaf = objKeys.length === 1;
+            // adds path to fieldNames if it points to a value or an empty object/array which is not a leaf
             if (
-              typeof formValue !== 'object' ||
-              _isEmpty(formValue) ||
-              (Array.isArray(formValue) && formValue.every((val) => typeof val !== 'object'))
+              formValueHasData(formValue, isLeaf) ||
+              (Array.isArray(formValue) && formValue.every((val) => formValueHasData(val, isLeaf)))
             ) {
               acc.push(path);
             }
@@ -700,7 +707,7 @@ export default class Form<
     const filteredErrors: ErrorSchema<T> = _pick(schemaErrors, fieldNames as unknown as string[]);
     // If the root schema is of a primitive type, do not filter out the __errors
     if (resolvedSchema?.type !== 'object' && resolvedSchema?.type !== 'array') {
-      filteredErrors.__errors = schemaErrors.__errors;
+      filteredErrors[ERRORS_KEY] = schemaErrors[ERRORS_KEY];
     }
 
     const prevCustomValidateErrors = this.getPreviousCustomValidateErrors();
@@ -724,11 +731,16 @@ export default class Form<
         } else if (
           isObject(errorAtKey) &&
           isObject(prevCustomValidateErrorAtKey) &&
-          Array.isArray(prevCustomValidateErrorAtKey?.__errors)
+          Array.isArray(prevCustomValidateErrorAtKey?.[ERRORS_KEY])
         ) {
           // if previous customValidate error is an object and has __errors array, filter out the errors previous customValidate errors.
-          errors[errorKey] = filterPreviousCustomErrors(errorAtKey.__errors, prevCustomValidateErrorAtKey.__errors);
-        } else if (typeof errorAtKey === 'object' && !Array.isArray(errorAtKey.__errors)) {
+          errors[errorKey] = {
+            [ERRORS_KEY]: filterPreviousCustomErrors(
+              errorAtKey[ERRORS_KEY],
+              prevCustomValidateErrorAtKey?.[ERRORS_KEY],
+            ),
+          };
+        } else if (typeof errorAtKey === 'object' && !Array.isArray(errorAtKey[ERRORS_KEY])) {
           filterNilOrEmptyErrors(errorAtKey, previousCustomValidateErrors[errorKey]);
         }
       });
