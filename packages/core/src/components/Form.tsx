@@ -645,25 +645,28 @@ export default class Form<
    * @param [formData] - The form data to use while checking for empty objects/arrays
    */
   getFieldNames = (pathSchema: PathSchema<T>, formData?: T): string[][] => {
+    const formValueHasData = (value: T, isLeaf: boolean) =>
+      typeof value !== 'object' || _isEmpty(value) || (isLeaf && !_isEmpty(value));
     const getAllPaths = (_obj: GenericObjectType, acc: string[][] = [], paths: string[][] = [[]]) => {
-      Object.keys(_obj).forEach((key: string) => {
-        if (typeof _obj[key] === 'object') {
+      const objKeys = Object.keys(_obj);
+      objKeys.forEach((key: string) => {
+        const data = _obj[key];
+        if (typeof data === 'object') {
           const newPaths = paths.map((path) => [...path, key]);
           // If an object is marked with additionalProperties, all its keys are valid
-          if (_obj[key][RJSF_ADDITIONAL_PROPERTIES_FLAG] && _obj[key][NAME_KEY] !== '') {
-            acc.push(_obj[key][NAME_KEY]);
+          if (data[RJSF_ADDITIONAL_PROPERTIES_FLAG] && data[NAME_KEY] !== '') {
+            acc.push(data[NAME_KEY]);
           } else {
-            getAllPaths(_obj[key], acc, newPaths);
+            getAllPaths(data, acc, newPaths);
           }
-        } else if (key === NAME_KEY && _obj[key] !== '') {
+        } else if (key === NAME_KEY && data !== '') {
           paths.forEach((path) => {
             const formValue = _get(formData, path);
-            // adds path to fieldNames if it points to a value
-            // or an empty object/array
+            const isLeaf = objKeys.length === 1;
+            // adds path to fieldNames if it points to a value or an empty object/array which is not a leaf
             if (
-              typeof formValue !== 'object' ||
-              _isEmpty(formValue) ||
-              (Array.isArray(formValue) && formValue.every((val) => typeof val !== 'object'))
+              formValueHasData(formValue, isLeaf) ||
+              (Array.isArray(formValue) && formValue.every((val) => formValueHasData(val, isLeaf)))
             ) {
               acc.push(path);
             }
