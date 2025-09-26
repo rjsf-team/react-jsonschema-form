@@ -3,6 +3,7 @@ import {
   createSchemaUtils,
   CustomValidator,
   deepEquals,
+  ERRORS_KEY,
   ErrorSchema,
   ErrorTransformer,
   FormContextType,
@@ -703,7 +704,7 @@ export default class Form<
     const filteredErrors: ErrorSchema<T> = _pick(schemaErrors, fieldNames as unknown as string[]);
     // If the root schema is of a primitive type, do not filter out the __errors
     if (resolvedSchema?.type !== 'object' && resolvedSchema?.type !== 'array') {
-      filteredErrors.__errors = schemaErrors.__errors;
+      filteredErrors[ERRORS_KEY] = schemaErrors[ERRORS_KEY];
     }
 
     const prevCustomValidateErrors = this.getPreviousCustomValidateErrors();
@@ -727,11 +728,16 @@ export default class Form<
         } else if (
           isObject(errorAtKey) &&
           isObject(prevCustomValidateErrorAtKey) &&
-          Array.isArray(prevCustomValidateErrorAtKey?.__errors)
+          Array.isArray(prevCustomValidateErrorAtKey?.[ERRORS_KEY])
         ) {
           // if previous customValidate error is an object and has __errors array, filter out the errors previous customValidate errors.
-          errors[errorKey] = filterPreviousCustomErrors(errorAtKey.__errors, prevCustomValidateErrorAtKey.__errors);
-        } else if (typeof errorAtKey === 'object' && !Array.isArray(errorAtKey.__errors)) {
+          errors[errorKey] = {
+            [ERRORS_KEY]: filterPreviousCustomErrors(
+              errorAtKey[ERRORS_KEY],
+              prevCustomValidateErrorAtKey?.[ERRORS_KEY],
+            ),
+          };
+        } else if (typeof errorAtKey === 'object' && !Array.isArray(errorAtKey[ERRORS_KEY])) {
           filterNilOrEmptyErrors(errorAtKey, previousCustomValidateErrors[errorKey]);
         }
       });

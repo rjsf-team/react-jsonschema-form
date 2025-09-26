@@ -20,6 +20,7 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/core
 
 - Updated `Form` to fix live validation in `getStateFromProps()` broken by an optimization, fixing [#4782](https://github.com/rjsf-team/react-jsonschema-form/issues/4782)
+- Updated `Form` to fix error messages being displayed abnormally when `customValidate` is provided, fixing [#4783](https://github.com/rjsf-team/react-jsonschema-form/issues/4783)
 
 ## @rjsf/utils
 
