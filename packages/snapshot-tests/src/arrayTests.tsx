@@ -1,9 +1,14 @@
 import { ComponentType } from 'react';
 import renderer, { TestRendererOptions } from 'react-test-renderer';
+import { FormProps } from '@rjsf/core';
 import { RJSFSchema, ErrorSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
-import { FormProps } from '@rjsf/core';
+jest.mock('@rjsf/utils', () => ({
+  ...jest.requireActual('@rjsf/utils'),
+  // Disable the getTestIds within the snapshot tests by returning an empty object
+  getTestIds: jest.fn(() => ({})),
+}));
 
 const titleAndDesc = {
   title: 'Test field',

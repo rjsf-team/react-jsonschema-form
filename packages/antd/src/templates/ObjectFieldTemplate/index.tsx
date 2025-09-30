@@ -15,6 +15,7 @@ import {
   getTemplate,
   getUiOptions,
   titleId,
+  buttonId,
 } from '@rjsf/utils';
 import { Col, Row, ConfigProvider } from 'antd';
 import { useContext } from 'react';
@@ -32,12 +33,11 @@ const DESCRIPTION_COL_STYLE = {
 export default function ObjectFieldTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(props: ObjectFieldTemplateProps<T, S, F>) {
   const {
     description,
     disabled,
-    formContext,
     formData,
     idSchema,
     onAddClick,
@@ -54,8 +54,9 @@ export default function ObjectFieldTemplate<
   const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
     'DescriptionFieldTemplate',
     registry,
-    uiOptions
+    uiOptions,
   );
+  const { formContext } = registry;
   // Button templates are not overridden in the uiSchema
   const {
     ButtonTemplates: { AddButton },
@@ -109,7 +110,7 @@ export default function ObjectFieldTemplate<
   const labelClsBasic = `${prefixCls}-item-label`;
   const labelColClassName = classNames(
     labelClsBasic,
-    labelAlign === 'left' && `${labelClsBasic}-left`
+    labelAlign === 'left' && `${labelClsBasic}-left`,
     // labelCol.className,
   );
 
@@ -153,7 +154,8 @@ export default function ObjectFieldTemplate<
           <Row gutter={rowGutter} justify='end'>
             <Col flex='192px'>
               <AddButton
-                className='object-property-expand'
+                id={buttonId<T>(idSchema, 'add')}
+                className='rjsf-object-property-expand'
                 disabled={disabled || readonly}
                 onClick={onAddClick(schema)}
                 uiSchema={uiSchema}

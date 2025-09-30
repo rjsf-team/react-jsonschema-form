@@ -1,11 +1,11 @@
-import * as React from 'react';
+import { Component, createRef, useEffect } from 'react';
 import { expect } from 'chai';
 import sinon from 'sinon';
-import { createRef } from 'react';
-import { fireEvent, act, render } from '@testing-library/react';
+import { fireEvent, act, render, waitFor } from '@testing-library/react';
 import { Simulate } from 'react-dom/test-utils';
 import { findDOMNode } from 'react-dom';
 import { Portal } from 'react-portal';
+import { getTemplate, getUiOptions } from '@rjsf/utils';
 import validator, { customizeValidator } from '@rjsf/validator-ajv8';
 
 import Form from '../src';
@@ -32,26 +32,26 @@ describeRepeated('Form common', (createFormComponent) => {
 
   describe('Empty schema', () => {
     it('Should throw error when Form is missing validator', () => {
-      expect(() => createFormComponent({ ref: React.createRef(), schema: {}, validator: undefined })).to.Throw(
+      expect(() => createFormComponent({ ref: createRef(), schema: {}, validator: undefined })).to.Throw(
         Error,
-        'A validator is required for Form functionality to work'
+        'A validator is required for Form functionality to work',
       );
     });
 
     it('should render a form tag', () => {
-      const { node } = createFormComponent({ ref: React.createRef(), schema: {} });
+      const { node } = createFormComponent({ ref: createRef(), schema: {} });
 
       expect(node.tagName).eql('FORM');
     });
 
     it('should render a submit button', () => {
-      const { node } = createFormComponent({ ref: React.createRef(), schema: {} });
+      const { node } = createFormComponent({ ref: createRef(), schema: {} });
 
       expect(node.querySelectorAll('button[type=submit]')).to.have.length.of(1);
     });
 
     it('should render children buttons', () => {
-      const props = { ref: React.createRef(), schema: {}, validator };
+      const props = { ref: createRef(), schema: {}, validator };
       const comp = (
         <Form {...props}>
           <button type='submit'>Submit</button>
@@ -66,7 +66,7 @@ describeRepeated('Form common', (createFormComponent) => {
 
     it("should render errors if schema isn't object", () => {
       const props = {
-        ref: React.createRef(),
+        ref: createRef(),
         validator,
         schema: {
           type: 'object',
@@ -379,7 +379,7 @@ describeRepeated('Form common', (createFormComponent) => {
 
     it('should use the provided template for labels', () => {
       expect(node.querySelector('.my-template > label').textContent).eql('root object');
-      expect(node.querySelector('.my-template .field-string > label').textContent).eql('foo*');
+      expect(node.querySelector('.my-template .rjsf-field-string > label').textContent).eql('foo*');
     });
 
     it('should pass description as the provided React element', () => {
@@ -388,7 +388,7 @@ describeRepeated('Form common', (createFormComponent) => {
 
     it('should pass rawDescription as a string', () => {
       expect(node.querySelector('.raw-description').textContent).eql(
-        'this is description rendered from the raw format'
+        'this is description rendered from the raw format',
       );
     });
 
@@ -675,7 +675,7 @@ describeRepeated('Form common', (createFormComponent) => {
 
       const { node } = createFormComponent({ schema });
 
-      fireEvent.click(node.querySelector('.array-item-add button'));
+      fireEvent.click(node.querySelector('.rjsf-array-item-add button'));
 
       expect(node.querySelector('input[type=text]').value).eql('hello');
     });
@@ -742,7 +742,7 @@ describeRepeated('Form common', (createFormComponent) => {
 
       expect(node.querySelector('#root_children_0_name')).to.not.exist;
 
-      fireEvent.click(node.querySelector('.array-item-add button'));
+      fireEvent.click(node.querySelector('.rjsf-array-item-add button'));
 
       expect(node.querySelector('#root_children_0_name')).to.exist;
     });
@@ -898,7 +898,7 @@ describeRepeated('Form common', (createFormComponent) => {
     it('should propagate deeply nested defaults to submit handler', () => {
       const { node, onSubmit } = createFormComponent({ schema });
 
-      fireEvent.click(node.querySelector('.array-item-add button'));
+      fireEvent.click(node.querySelector('.rjsf-array-item-add button'));
       fireEvent.submit(node);
 
       sinon.assert.calledWithMatch(onSubmit.lastCall, {
@@ -1127,7 +1127,7 @@ describeRepeated('Form common', (createFormComponent) => {
       const onSubmit = sandbox.spy();
       const event = { type: 'submit' };
       const { node } = createFormComponent({
-        ref: React.createRef(),
+        ref: createRef(),
         schema,
         formData,
         onSubmit,
@@ -1155,7 +1155,7 @@ describeRepeated('Form common', (createFormComponent) => {
       const onSubmit = sandbox.spy();
       const onError = sandbox.spy();
       const { node } = createFormComponent({
-        ref: React.createRef(),
+        ref: createRef(),
         schema,
         formData,
         onSubmit,
@@ -1189,7 +1189,7 @@ describeRepeated('Form common', (createFormComponent) => {
       };
       const onChange = sandbox.spy();
       const { node } = createFormComponent({
-        ref: React.createRef(),
+        ref: createRef(),
         schema,
         uiSchema,
         formData,
@@ -1209,7 +1209,7 @@ describeRepeated('Form common', (createFormComponent) => {
           schema,
           uiSchema,
         },
-        'root_foo'
+        'root_foo',
       );
     });
     it('should call last provided change handler', async () => {
@@ -1226,7 +1226,7 @@ describeRepeated('Form common', (createFormComponent) => {
       const secondOnChange = sandbox.spy();
 
       const { comp, onChange } = createFormComponent({
-        ref: React.createRef(),
+        ref: createRef(),
         schema,
         formData: { foo: 'bar1' },
       });
@@ -1261,6 +1261,469 @@ describeRepeated('Form common', (createFormComponent) => {
 
       sinon.assert.callCount(onChange, 1);
       sinon.assert.callCount(secondOnChange, 1);
+    });
+    it('should call change handler with proper data after two near simultaneous changes', async () => {
+      const schema = {
+        type: 'object',
+        properties: {
+          foo: {
+            type: 'string',
+            default: 'bar',
+          },
+          baz: {
+            type: 'string',
+            default: 'blah',
+          },
+        },
+      };
+      function FooWidget(props) {
+        const { value, id, onChange, uiSchema, registry } = props;
+        const uiOptions = getUiOptions(uiSchema);
+        const BaseInputTemplate = getTemplate('BaseInputTemplate', registry, uiOptions);
+        useEffect(() => {
+          if (value === 'bar') {
+            onChange('bar2', undefined, id);
+          }
+        }, [value, onChange, id]);
+        return <BaseInputTemplate {...props} />;
+      }
+      function BazWidget(props) {
+        const { value, id, onChange, uiSchema, registry } = props;
+        const uiOptions = getUiOptions(uiSchema);
+        const BaseInputTemplate = getTemplate('BaseInputTemplate', registry, uiOptions);
+        useEffect(() => {
+          if (value === 'blah') {
+            onChange('blah2', undefined, id);
+          }
+        }, [value, onChange, id]);
+        return <BaseInputTemplate {...props} />;
+      }
+      const uiSchema = {
+        foo: {
+          'ui:widget': FooWidget,
+        },
+        baz: {
+          'ui:widget': BazWidget,
+        },
+      };
+
+      let formData = {};
+      const ids = [];
+      const onChange = (data, id) => {
+        const { formData: fd } = data;
+        formData = { ...formData, ...fd };
+        ids.push(id);
+      };
+      createFormComponent({
+        schema,
+        formData,
+        onChange,
+        uiSchema,
+      });
+
+      await waitFor(() => {
+        expect(ids).to.have.length(3);
+      });
+
+      expect(formData).to.eql({ foo: 'bar2', baz: 'blah2' });
+      // There will be 3 ids, undefined for the setting of the defaults and then the two updated components
+      expect(ids).to.eql([undefined, 'root_foo', 'root_baz']);
+    });
+    it('should modify an allOf field when the defaults are set', () => {
+      const schema = {
+        properties: {
+          all_of_field: {
+            allOf: [
+              {
+                properties: {
+                  first: {
+                    type: 'string',
+                  },
+                },
+              },
+              {
+                properties: {
+                  second: {
+                    type: 'string',
+                  },
+                },
+              },
+            ],
+            default: {
+              second: 'second!',
+            },
+          },
+        },
+        type: 'object',
+      };
+
+      const { node, onChange } = createFormComponent({
+        schema,
+      });
+
+      const secondInputID = '#root_all_of_field_second';
+      expect(node.querySelector(secondInputID).value).to.equal('second!');
+
+      act(() => {
+        fireEvent.change(node.querySelector(secondInputID), {
+          target: { value: 'changed!' },
+        });
+      });
+
+      sinon.assert.calledWithMatch(
+        onChange.lastCall,
+        {
+          formData: {
+            all_of_field: {
+              second: 'changed!',
+            },
+          },
+          schema,
+        },
+        'root_all_of_field_second',
+      );
+
+      expect(node.querySelector(secondInputID).value).to.equal('changed!');
+    });
+    it('should modify an oneOf field when the defaults are set', () => {
+      const schema = {
+        properties: {
+          one_of_field: {
+            oneOf: [
+              {
+                properties: {
+                  first: {
+                    type: 'string',
+                  },
+                },
+              },
+              {
+                properties: {
+                  second: {
+                    type: 'string',
+                  },
+                },
+              },
+            ],
+            default: {
+              second: 'second!',
+            },
+          },
+        },
+        type: 'object',
+      };
+
+      const { node, onChange } = createFormComponent({
+        schema,
+      });
+
+      const secondInputID = '#root_one_of_field_second';
+      expect(node.querySelector(secondInputID).value).to.equal('second!');
+
+      act(() => {
+        fireEvent.change(node.querySelector(secondInputID), {
+          target: { value: 'changed!' },
+        });
+      });
+
+      sinon.assert.calledWithMatch(
+        onChange.lastCall,
+        {
+          formData: {
+            one_of_field: {
+              second: 'changed!',
+            },
+          },
+          schema,
+        },
+        'root_one_of_field_second',
+      );
+
+      expect(node.querySelector(secondInputID).value).to.equal('changed!');
+    });
+    it('should modify an anyOf field when the defaults are set', () => {
+      const schema = {
+        properties: {
+          any_of_field: {
+            anyOf: [
+              {
+                properties: {
+                  first: {
+                    type: 'string',
+                  },
+                },
+              },
+              {
+                properties: {
+                  second: {
+                    type: 'string',
+                  },
+                },
+              },
+            ],
+            default: {
+              second: 'second!',
+            },
+          },
+        },
+        type: 'object',
+      };
+
+      const { node, onChange } = createFormComponent({
+        schema,
+      });
+
+      const secondInputID = '#root_any_of_field_second';
+      expect(node.querySelector(secondInputID).value).to.equal('second!');
+
+      act(() => {
+        fireEvent.change(node.querySelector(secondInputID), {
+          target: { value: 'changed!' },
+        });
+      });
+
+      sinon.assert.calledWithMatch(
+        onChange.lastCall,
+        {
+          formData: {
+            any_of_field: {
+              second: 'changed!',
+            },
+          },
+          schema,
+        },
+        'root_any_of_field_second',
+      );
+
+      expect(node.querySelector(secondInputID).value).to.equal('changed!');
+    });
+    it('Should modify anyOf definition references when the defaults are set.', () => {
+      const schema = {
+        definitions: {
+          option1: {
+            properties: {
+              first: {
+                type: 'string',
+              },
+            },
+          },
+          option2: {
+            properties: {
+              second: {
+                type: 'string',
+              },
+            },
+          },
+        },
+        properties: {
+          any_of_field: {
+            anyOf: [
+              {
+                $ref: '#/definitions/option1',
+              },
+              {
+                $ref: '#/definitions/option2',
+              },
+            ],
+            default: {
+              second: 'second!',
+            },
+          },
+        },
+        type: 'object',
+      };
+
+      const { node, onChange } = createFormComponent({
+        schema,
+      });
+
+      const secondInputID = '#root_any_of_field_second';
+      expect(node.querySelector(secondInputID).value).to.equal('second!');
+
+      act(() => {
+        fireEvent.change(node.querySelector(secondInputID), {
+          target: { value: 'changed!' },
+        });
+      });
+
+      sinon.assert.calledWithMatch(
+        onChange.lastCall,
+        {
+          formData: {
+            any_of_field: {
+              second: 'changed!',
+            },
+          },
+          schema,
+        },
+        'root_any_of_field_second',
+      );
+
+      expect(node.querySelector(secondInputID).value).to.equal('changed!');
+    });
+    it('Should modify oneOf object with references when the defaults are set.', () => {
+      const schema = {
+        type: 'object',
+        $defs: {
+          protocol: {
+            type: 'string',
+            enum: ['fast', 'balanced', 'stringent'],
+            default: 'fast',
+          },
+        },
+        oneOf: [
+          {
+            properties: {
+              protocol: {
+                $ref: '#/$defs/protocol',
+              },
+            },
+          },
+          {
+            properties: {
+              something: {
+                type: 'number',
+              },
+            },
+          },
+        ],
+      };
+
+      const { node, onChange } = createFormComponent({
+        schema,
+      });
+
+      const protocolInputID = '#root_protocol';
+      expect(node.querySelector(protocolInputID).value).to.equal('0');
+
+      act(() => {
+        fireEvent.change(node.querySelector(protocolInputID), {
+          target: { value: '1' },
+        });
+      });
+
+      sinon.assert.calledWithMatch(
+        onChange.lastCall,
+        {
+          formData: {
+            protocol: 'balanced',
+          },
+          schema,
+        },
+        'root_protocol',
+      );
+
+      expect(node.querySelector(protocolInputID).value).to.equal('1');
+    });
+    describe('Should modify oneOf radio button when the defaults are set.', () => {
+      const schema = {
+        type: 'object',
+        properties: {
+          a: {
+            type: ['boolean', 'null'],
+            default: null,
+            oneOf: [
+              {
+                const: false,
+                title: 'No',
+              },
+              {
+                const: null,
+                title: 'N/A',
+              },
+            ],
+          },
+        },
+        allOf: [
+          {
+            if: {
+              required: ['a'],
+              properties: {
+                a: {
+                  const: false,
+                },
+              },
+            },
+            then: {
+              required: ['b'],
+              properties: {
+                b: {
+                  type: 'string',
+                },
+              },
+            },
+          },
+        ],
+      };
+
+      const uiSchema = {
+        a: {
+          'ui:widget': 'radio',
+          'ui:label': false,
+        },
+      };
+      const notApplicableInputID = '#root_a-1';
+      const NoInputID = '#root_a-0';
+
+      it('Test with default constAsDefaults', () => {
+        const { node, onChange } = createFormComponent({
+          schema,
+          uiSchema,
+        });
+
+        expect(node.querySelector(notApplicableInputID).checked).to.equal(true);
+
+        act(() => {
+          fireEvent.click(node.querySelector(NoInputID));
+        });
+
+        sinon.assert.calledWithMatch(
+          onChange.lastCall,
+          {
+            formData: {
+              a: false,
+            },
+            schema,
+            uiSchema,
+          },
+          'root_a',
+        );
+
+        expect(node.querySelector(NoInputID).checked).to.equal(true);
+        expect(node.querySelector(notApplicableInputID).checked).to.equal(false);
+        expect(node.querySelector('#root_b')).to.exist;
+      });
+      it('Test with constAsDefaults set to "never"', () => {
+        const { node, onChange } = createFormComponent({
+          schema,
+          uiSchema,
+          experimental_defaultFormStateBehavior: {
+            constAsDefaults: 'never',
+          },
+        });
+
+        expect(node.querySelector(notApplicableInputID).checked).to.equal(true);
+
+        act(() => {
+          fireEvent.click(node.querySelector(NoInputID));
+        });
+
+        sinon.assert.calledWithMatch(
+          onChange.lastCall,
+          {
+            formData: {
+              a: false,
+            },
+            schema,
+            uiSchema,
+          },
+          'root_a',
+        );
+
+        expect(node.querySelector(NoInputID).checked).to.equal(true);
+        expect(node.querySelector(notApplicableInputID).checked).to.equal(false);
+        expect(node.querySelector('#root_b')).to.exist;
+      });
     });
   });
 
@@ -1385,6 +1848,7 @@ describeRepeated('Form common', (createFormComponent) => {
           property: '.shipping_address.street_address',
           schemaPath: '#/properties/shipping_address/required',
           stack: "must have required property 'street_address'",
+          title: '',
         },
         {
           message: "must have required property 'city'",
@@ -1393,6 +1857,7 @@ describeRepeated('Form common', (createFormComponent) => {
           property: '.shipping_address.city',
           schemaPath: '#/properties/shipping_address/required',
           stack: "must have required property 'city'",
+          title: '',
         },
         {
           message: "must have required property 'state'",
@@ -1401,6 +1866,7 @@ describeRepeated('Form common', (createFormComponent) => {
           property: '.shipping_address.state',
           schemaPath: '#/properties/shipping_address/required',
           stack: "must have required property 'state'",
+          title: '',
         },
       ]);
     });
@@ -1457,6 +1923,7 @@ describeRepeated('Form common', (createFormComponent) => {
           property: '.albums',
           schemaPath: '#/properties/albums/minItems',
           stack: "'Album Titles' must NOT have fewer than 3 items",
+          title: 'Album Titles',
         },
       ]);
     });
@@ -1479,7 +1946,7 @@ describeRepeated('Form common', (createFormComponent) => {
     beforeEach(() => {
       onChangeProp = sinon.spy();
       formProps = {
-        ref: React.createRef(),
+        ref: createRef(),
         schema: {
           type: 'string',
           default: 'foobar',
@@ -1496,7 +1963,7 @@ describeRepeated('Form common', (createFormComponent) => {
           ref: comp.ref,
           ...formProps,
           formData: null,
-        })
+        }),
       );
 
       it('should call onChange', () => {
@@ -1530,7 +1997,7 @@ describeRepeated('Form common', (createFormComponent) => {
           ref: comp.ref,
           schema: newSchema,
           formData: 'some value',
-        })
+        }),
       );
 
       it('should not call onChange', () => {
@@ -1550,7 +2017,7 @@ describeRepeated('Form common', (createFormComponent) => {
           ref: comp.ref,
           schema: newSchema,
           formData: 'something else',
-        })
+        }),
       );
 
       it('should not call onChange', () => {
@@ -1570,7 +2037,7 @@ describeRepeated('Form common', (createFormComponent) => {
           ref: comp.ref,
           schema: newSchema,
           formData: null,
-        })
+        }),
       );
 
       it('should call onChange', () => {
@@ -1583,7 +2050,7 @@ describeRepeated('Form common', (createFormComponent) => {
     });
 
     describe('when the onChange prop sets formData to a falsey value', () => {
-      class TestForm extends React.Component {
+      class TestForm extends Component {
         constructor() {
           super();
 
@@ -1628,7 +2095,7 @@ describeRepeated('Form common', (createFormComponent) => {
   describe('External formData updates', () => {
     describe('root level', () => {
       const formProps = {
-        ref: React.createRef(),
+        ref: createRef(),
         schema: { type: 'string' },
         liveValidate: true,
       };
@@ -1667,6 +2134,7 @@ describeRepeated('Form common', (createFormComponent) => {
             property: '',
             schemaPath: '#/type',
             stack: 'must be number',
+            title: '',
           },
         ]);
       });
@@ -1675,7 +2143,7 @@ describeRepeated('Form common', (createFormComponent) => {
     describe('object level', () => {
       it('should call submit handler with new formData prop value', async () => {
         const formProps = {
-          ref: React.createRef(),
+          ref: createRef(),
           schema: { type: 'object', properties: { foo: { type: 'string' } } },
         };
         const { comp, onSubmit, node } = createFormComponent(formProps);
@@ -1702,7 +2170,7 @@ describeRepeated('Form common', (createFormComponent) => {
             type: 'string',
           },
         };
-        const { comp, node, onSubmit } = createFormComponent({ ref: React.createRef(), schema });
+        const { comp, node, onSubmit } = createFormComponent({ ref: createRef(), schema });
 
         setProps(comp, {
           ref: comp.ref,
@@ -1722,7 +2190,7 @@ describeRepeated('Form common', (createFormComponent) => {
   describe('Internal formData updates', () => {
     it('root', () => {
       const formProps = {
-        ref: React.createRef(),
+        ref: createRef(),
         schema: { type: 'string' },
         liveValidate: true,
       };
@@ -1737,12 +2205,12 @@ describeRepeated('Form common', (createFormComponent) => {
         {
           formData: 'yo',
         },
-        'root'
+        'root',
       );
     });
     it('object', () => {
       const { node, onChange } = createFormComponent({
-        ref: React.createRef(),
+        ref: createRef(),
         schema: {
           type: 'object',
           properties: {
@@ -1762,7 +2230,7 @@ describeRepeated('Form common', (createFormComponent) => {
         {
           formData: { foo: 'yo' },
         },
-        'root_foo'
+        'root_foo',
       );
     });
     it('array of strings', () => {
@@ -1772,9 +2240,9 @@ describeRepeated('Form common', (createFormComponent) => {
           type: 'string',
         },
       };
-      const { node, onChange } = createFormComponent({ ref: React.createRef(), schema });
+      const { node, onChange } = createFormComponent({ ref: createRef(), schema });
 
-      fireEvent.click(node.querySelector('.array-item-add button'));
+      fireEvent.click(node.querySelector('.rjsf-array-item-add button'));
 
       fireEvent.change(node.querySelector('input[type=text]'), {
         target: { value: 'yo' },
@@ -1784,7 +2252,7 @@ describeRepeated('Form common', (createFormComponent) => {
         {
           formData: ['yo'],
         },
-        'root_0'
+        'root_0',
       );
     });
     it('array of objects', () => {
@@ -1797,9 +2265,9 @@ describeRepeated('Form common', (createFormComponent) => {
           },
         },
       };
-      const { node, onChange } = createFormComponent({ ref: React.createRef(), schema });
+      const { node, onChange } = createFormComponent({ ref: createRef(), schema });
 
-      fireEvent.click(node.querySelector('.array-item-add button'));
+      fireEvent.click(node.querySelector('.rjsf-array-item-add button'));
 
       fireEvent.change(node.querySelector('input[type=text]'), {
         target: { value: 'yo' },
@@ -1810,7 +2278,7 @@ describeRepeated('Form common', (createFormComponent) => {
         {
           formData: [{ name: 'yo' }],
         },
-        'root_0'
+        'root_0',
       );
     });
     it('dependency with array of objects', () => {
@@ -1847,12 +2315,12 @@ describeRepeated('Form common', (createFormComponent) => {
           },
         },
       };
-      const { node, onChange } = createFormComponent({ ref: React.createRef(), schema });
+      const { node, onChange } = createFormComponent({ ref: createRef(), schema });
 
       const checkbox = node.querySelector('[type=checkbox]');
       fireEvent.click(checkbox);
 
-      fireEvent.click(node.querySelector('.array-item-add button'));
+      fireEvent.click(node.querySelector('.rjsf-array-item-add button'));
 
       fireEvent.change(node.querySelector('input[type=text]'), {
         target: { value: 'yo' },
@@ -1866,7 +2334,7 @@ describeRepeated('Form common', (createFormComponent) => {
             participants: [{ name: 'yo' }],
           },
         },
-        'root_participants_0_name'
+        'root_participants_0_name',
       );
     });
   });
@@ -1890,7 +2358,7 @@ describeRepeated('Form common', (createFormComponent) => {
             {
               errorSchema: {},
             },
-            'root'
+            'root',
           );
         });
 
@@ -1901,7 +2369,7 @@ describeRepeated('Form common', (createFormComponent) => {
             target: { value: 'short' },
           });
 
-          expect(node.querySelectorAll('.field-error')).to.have.length.of(0);
+          expect(node.querySelectorAll('.rjsf-field-error')).to.have.length.of(0);
         });
 
         it("should clean contextualized errors up when they're fixed", () => {
@@ -1928,7 +2396,7 @@ describeRepeated('Form common', (createFormComponent) => {
           });
           fireEvent.submit(node);
 
-          expect(node.querySelectorAll('.field-error')).to.have.length.of(1);
+          expect(node.querySelectorAll('.rjsf-field-error')).to.have.length.of(1);
 
           // Fix the second field
           fireEvent.change(node.querySelectorAll('input[type=text]')[1], {
@@ -1939,7 +2407,7 @@ describeRepeated('Form common', (createFormComponent) => {
           // No error remaining, shouldn't throw.
           fireEvent.submit(node);
 
-          expect(node.querySelectorAll('.field-error')).to.have.length.of(0);
+          expect(node.querySelectorAll('.rjsf-field-error')).to.have.length.of(0);
         });
       });
 
@@ -1961,7 +2429,7 @@ describeRepeated('Form common', (createFormComponent) => {
                 __errors: ['must NOT have fewer than 8 characters'],
               },
             },
-            'root'
+            'root',
           );
         });
 
@@ -1975,9 +2443,9 @@ describeRepeated('Form common', (createFormComponent) => {
             target: { value: 'short' },
           });
 
-          expect(node.querySelectorAll('.field-error')).to.have.length.of(1);
-          expect(node.querySelector('.field-string .error-detail').textContent).eql(
-            'must NOT have fewer than 8 characters'
+          expect(node.querySelectorAll('.rjsf-field-error')).to.have.length.of(1);
+          expect(node.querySelector('.rjsf-field-string .error-detail').textContent).eql(
+            'must NOT have fewer than 8 characters',
           );
         });
       });
@@ -1999,7 +2467,7 @@ describeRepeated('Form common', (createFormComponent) => {
             {
               errorSchema: {},
             },
-            'root'
+            'root',
           );
         });
       });
@@ -2016,7 +2484,6 @@ describeRepeated('Form common', (createFormComponent) => {
           });
           fireEvent.submit(node);
 
-          console.log('onSubmit.lastCall ', onSubmit.lastCall);
           sinon.assert.calledWithMatch(onSubmit.lastCall, {
             errorSchema: {},
           });
@@ -2051,7 +2518,7 @@ describeRepeated('Form common', (createFormComponent) => {
           onError,
           sinon.match((value) => {
             return value.length === 1 && value[0].message === 'must NOT have fewer than 8 characters';
-          })
+          }),
         );
         sinon.assert.calledOnce(focusSpy);
       });
@@ -2087,7 +2554,7 @@ describeRepeated('Form common', (createFormComponent) => {
           onError,
           sinon.match((value) => {
             return value.length === 1 && value[0].message === 'must NOT have fewer than 8 characters';
-          })
+          }),
         );
         sinon.assert.notCalled(focusSpy);
         sinon.assert.calledOnce(focusOnFirstError);
@@ -2126,7 +2593,7 @@ describeRepeated('Form common', (createFormComponent) => {
           onError,
           sinon.match((value) => {
             return value.length === 1 && value[0].message === 'foo';
-          })
+          }),
         );
         sinon.assert.notCalled(focusSpy);
         sinon.assert.calledOnce(focusOnFirstError);
@@ -2150,6 +2617,7 @@ describeRepeated('Form common', (createFormComponent) => {
             property: '',
             schemaPath: '#/minLength',
             stack: 'must NOT have fewer than 8 characters',
+            title: '',
           },
         ]);
         sinon.assert.calledOnce(onError);
@@ -2212,6 +2680,7 @@ describeRepeated('Form common', (createFormComponent) => {
             property: '',
             schemaPath: '#/minLength',
             stack: 'must NOT have fewer than 8 characters',
+            title: '',
           },
         ]);
       });
@@ -2219,9 +2688,9 @@ describeRepeated('Form common', (createFormComponent) => {
       it('should denote the error in the field', () => {
         const { node } = createFormComponent(formProps);
 
-        expect(node.querySelectorAll('.field-error')).to.have.length.of(1);
-        expect(node.querySelector('.field-string .error-detail').textContent).eql(
-          'must NOT have fewer than 8 characters'
+        expect(node.querySelectorAll('.rjsf-field-error')).to.have.length.of(1);
+        expect(node.querySelector('.rjsf-field-string .error-detail').textContent).eql(
+          'must NOT have fewer than 8 characters',
         );
       });
     });
@@ -2248,6 +2717,7 @@ describeRepeated('Form common', (createFormComponent) => {
             property: '',
             schemaPath: '#/minLength',
             stack: 'must NOT have fewer than 8 characters',
+            title: '',
           },
           {
             message: 'must match pattern "d+"',
@@ -2256,6 +2726,7 @@ describeRepeated('Form common', (createFormComponent) => {
             property: '',
             schemaPath: '#/pattern',
             stack: 'must match pattern "d+"',
+            title: '',
           },
         ]);
       });
@@ -2263,7 +2734,7 @@ describeRepeated('Form common', (createFormComponent) => {
       it('should denote the error in the field', () => {
         const { node } = createFormComponent(formProps);
 
-        const liNodes = node.querySelectorAll('.field-string .error-detail li');
+        const liNodes = node.querySelectorAll('.rjsf-field-string .error-detail li');
         const errors = [].map.call(liNodes, (li) => li.textContent);
 
         expect(errors).eql(['must NOT have fewer than 8 characters', 'must match pattern "d+"']);
@@ -2308,15 +2779,16 @@ describeRepeated('Form common', (createFormComponent) => {
             property: '.level1.level2',
             schemaPath: '#/properties/level1/properties/level2/minLength',
             stack: '.level1.level2 must NOT have fewer than 8 characters',
+            title: '',
           },
         ]);
       });
 
       it('should denote the error in the field', () => {
         const { node } = createFormComponent(formProps);
-        const errorDetail = node.querySelector('.field-object .field-string .error-detail');
+        const errorDetail = node.querySelector('.rjsf-field-object .rjsf-field-string .error-detail');
 
-        expect(node.querySelectorAll('.field-error')).to.have.length.of(1);
+        expect(node.querySelectorAll('.rjsf-field-error')).to.have.length.of(1);
         expect(errorDetail.textContent).eql('must NOT have fewer than 8 characters');
       });
     });
@@ -2348,27 +2820,28 @@ describeRepeated('Form common', (createFormComponent) => {
             property: '.1',
             schemaPath: '#/items/minLength',
             stack: '.1 must NOT have fewer than 4 characters',
+            title: '',
           },
         ]);
       });
 
       it('should denote the error in the item field in error', () => {
         const { node } = createFormComponent(formProps);
-        const fieldNodes = node.querySelectorAll('.field-string');
+        const fieldNodes = node.querySelectorAll('.rjsf-field-string');
 
-        const liNodes = fieldNodes[1].querySelectorAll('.field-string .error-detail li');
+        const liNodes = fieldNodes[1].querySelectorAll('.rjsf-field-string .error-detail li');
         const errors = [].map.call(liNodes, (li) => li.textContent);
 
-        expect(fieldNodes[1].classList.contains('field-error')).eql(true);
+        expect(fieldNodes[1].classList.contains('rjsf-field-error')).eql(true);
         expect(errors).eql(['must NOT have fewer than 4 characters']);
       });
 
       it('should not denote errors on non impacted fields', () => {
         const { node } = createFormComponent(formProps);
-        const fieldNodes = node.querySelectorAll('.field-string');
+        const fieldNodes = node.querySelectorAll('.rjsf-field-string');
 
-        expect(fieldNodes[0].classList.contains('field-error')).eql(false);
-        expect(fieldNodes[2].classList.contains('field-error')).eql(false);
+        expect(fieldNodes[0].classList.contains('rjsf-field-error')).eql(false);
+        expect(fieldNodes[2].classList.contains('rjsf-field-error')).eql(false);
       });
     });
 
@@ -2404,6 +2877,7 @@ describeRepeated('Form common', (createFormComponent) => {
             property: '.level1.1',
             schemaPath: '#/properties/level1/items/minLength',
             stack: '.level1.1 must NOT have fewer than 4 characters',
+            title: '',
           },
           {
             message: 'must NOT have fewer than 4 characters',
@@ -2412,6 +2886,7 @@ describeRepeated('Form common', (createFormComponent) => {
             property: '.level1.3',
             schemaPath: '#/properties/level1/items/minLength',
             stack: '.level1.3 must NOT have fewer than 4 characters',
+            title: '',
           },
         ]);
       });
@@ -2424,7 +2899,7 @@ describeRepeated('Form common', (createFormComponent) => {
           },
         });
 
-        const liNodes = node.querySelectorAll('.field-string .error-detail li');
+        const liNodes = node.querySelectorAll('.rjsf-field-string .error-detail li');
         const errors = [].map.call(liNodes, (li) => li.textContent);
 
         expect(errors).eql(['must NOT have fewer than 4 characters']);
@@ -2477,6 +2952,7 @@ describeRepeated('Form common', (createFormComponent) => {
             property: '.outer.0.1',
             schemaPath: '#/properties/outer/items/items/minLength',
             stack: '.outer.0.1 must NOT have fewer than 4 characters',
+            title: '',
           },
           {
             message: 'must NOT have fewer than 4 characters',
@@ -2485,6 +2961,7 @@ describeRepeated('Form common', (createFormComponent) => {
             property: '.outer.1.0',
             schemaPath: '#/properties/outer/items/items/minLength',
             stack: '.outer.1.0 must NOT have fewer than 4 characters',
+            title: '',
           },
         ]);
         sinon.assert.calledOnce(focusSpy);
@@ -2492,7 +2969,7 @@ describeRepeated('Form common', (createFormComponent) => {
 
       it('should denote the error in the nested item field in error', () => {
         const { node } = createFormComponent(formProps);
-        const fields = node.querySelectorAll('.field-string');
+        const fields = node.querySelectorAll('.rjsf-field-string');
         const errors = [].map.call(fields, (field) => {
           const li = field.querySelector('.error-detail li');
           return li && li.textContent;
@@ -2539,18 +3016,19 @@ describeRepeated('Form common', (createFormComponent) => {
             property: '.1.foo',
             schemaPath: '#/items/properties/foo/minLength',
             stack: '.1.foo must NOT have fewer than 4 characters',
+            title: '',
           },
         ]);
       });
 
       it('should denote the error in the array nested item', () => {
         const { node } = createFormComponent(formProps);
-        const fieldNodes = node.querySelectorAll('.field-string');
+        const fieldNodes = node.querySelectorAll('.rjsf-field-string');
 
-        const liNodes = fieldNodes[1].querySelectorAll('.field-string .error-detail li');
+        const liNodes = fieldNodes[1].querySelectorAll('.rjsf-field-string .error-detail li');
         const errors = [].map.call(liNodes, (li) => li.textContent);
 
-        expect(fieldNodes[1].classList.contains('field-error')).eql(true);
+        expect(fieldNodes[1].classList.contains('rjsf-field-error')).eql(true);
         expect(errors).eql(['must NOT have fewer than 4 characters']);
       });
     });
@@ -2616,13 +3094,13 @@ describeRepeated('Form common', (createFormComponent) => {
           {
             errorSchema: { field1: { __errors: ['must be number'] } },
           },
-          'root'
+          'root',
         );
       });
 
       it('should only show errors for properties in selected branch', () => {
         const { node, onChange } = createFormComponent({
-          ref: React.createRef(),
+          ref: createRef(),
           schema,
           liveValidate: true,
           formData: { branch: 2 },
@@ -2646,13 +3124,13 @@ describeRepeated('Form common', (createFormComponent) => {
               },
             },
           },
-          'root_field1'
+          'root_field1',
         );
       });
 
       it('should not show any errors when branch is empty', () => {
         const { node, onChange } = createFormComponent({
-          ref: React.createRef(),
+          ref: createRef(),
           schema,
           liveValidate: true,
           formData: { branch: 3 },
@@ -2669,7 +3147,83 @@ describeRepeated('Form common', (createFormComponent) => {
           {
             errorSchema: {},
           },
-          'root_branch'
+          'root_branch',
+        );
+      });
+    });
+
+    describe('customValidate errors', () => {
+      it('customValidate should raise an error when End is larger than Start field.', () => {
+        let schema = {
+          required: ['Start', 'End'],
+          properties: {
+            Start: {
+              type: 'number',
+            },
+            End: {
+              type: 'number',
+            },
+          },
+          type: 'object',
+        };
+
+        // customValidate method to raise an error when Start is larger than End field.
+        const customValidate = (formData, errors) => {
+          if (formData['Start'] > formData['End']) {
+            errors['Start']?.addError('Validate error: Test should be LE than End');
+          }
+          return errors;
+        };
+
+        const { node, onChange } = createFormComponent({
+          schema,
+          liveValidate: true,
+          formData: { Start: 2, End: 1 },
+          customValidate,
+        });
+
+        expect(node.querySelectorAll('#root_Start__error')).to.have.length(1);
+        let errorMessageContent = node.querySelector('#root_Start__error .text-danger').textContent;
+        expect(errorMessageContent).to.contain('Validate error: Test should be LE than End');
+
+        // Change the End field to a larger value than Start field to remove customValidate raised errors.
+        const endInput = node.querySelector('#root_End');
+        act(() => {
+          fireEvent.change(endInput, {
+            target: { value: 3 },
+          });
+        });
+
+        expect(node.querySelectorAll('#root_Start__error')).to.have.length(0);
+        sinon.assert.calledWithMatch(
+          onChange.lastCall,
+          {
+            errorSchema: {},
+            errors: [],
+          },
+          'root',
+        );
+
+        // Change the End field to a lesser value than Start field to raise customValidate errors.
+        act(() => {
+          fireEvent.change(endInput, {
+            target: { value: 0 },
+          });
+        });
+
+        expect(node.querySelectorAll('#root_Start__error')).to.have.length(1);
+        errorMessageContent = node.querySelector('#root_Start__error .text-danger').textContent;
+        expect(errorMessageContent).to.contain('Validate error: Test should be LE than End');
+        sinon.assert.calledWithMatch(
+          onChange.lastCall,
+          {
+            errorSchema: {
+              Start: {
+                __errors: ['Validate error: Test should be LE than End'],
+              },
+            },
+          },
+          'root',
         );
       });
     });
@@ -2688,7 +3242,7 @@ describeRepeated('Form common', (createFormComponent) => {
     it('should replace state when props remove formData keys', () => {
       const formData = { foo: 'foo', bar: 'bar' };
       const { comp, node, onChange } = createFormComponent({
-        ref: React.createRef(),
+        ref: createRef(),
         schema,
         formData,
       });
@@ -2713,14 +3267,14 @@ describeRepeated('Form common', (createFormComponent) => {
         {
           formData: { bar: 'baz' },
         },
-        'root_bar'
+        'root_bar',
       );
     });
 
     it('should replace state when props change formData keys', () => {
       const formData = { foo: 'foo', bar: 'bar' };
       const { comp, node, onChange } = createFormComponent({
-        ref: React.createRef(),
+        ref: createRef(),
         schema,
         formData,
       });
@@ -2746,7 +3300,7 @@ describeRepeated('Form common', (createFormComponent) => {
         {
           formData: { foo: 'foo', baz: 'baz' },
         },
-        'root_baz'
+        'root_baz',
       );
     });
   });
@@ -2779,7 +3333,7 @@ describeRepeated('Form common', (createFormComponent) => {
     it('should not update idSchema for a falsey value', () => {
       const formData = { a: 'int' };
       const { comp, node, onSubmit } = createFormComponent({
-        ref: React.createRef(),
+        ref: createRef(),
         schema,
         formData,
       });
@@ -2823,7 +3377,7 @@ describeRepeated('Form common', (createFormComponent) => {
         a: 'int',
       };
       const { comp, node, onSubmit } = createFormComponent({
-        ref: React.createRef(),
+        ref: createRef(),
         schema,
         formData,
       });
@@ -2988,7 +3542,7 @@ describeRepeated('Form common', (createFormComponent) => {
       action: '/users/list',
       autoComplete: 'off',
       enctype: 'multipart/form-data',
-      acceptcharset: 'ISO-8859-1',
+      acceptCharset: 'ISO-8859-1',
       noHtml5Validate: true,
     };
 
@@ -3026,8 +3580,8 @@ describeRepeated('Form common', (createFormComponent) => {
       expect(node.getAttribute('enctype')).eql(formProps.enctype);
     });
 
-    it('should set attr acceptcharset of form', () => {
-      expect(node.getAttribute('accept-charset')).eql(formProps.acceptcharset);
+    it('should set attr acceptCharset of form', () => {
+      expect(node.getAttribute('accept-charset')).eql(formProps.acceptCharset);
     });
 
     it('should set attr novalidate of form', () => {
@@ -3038,7 +3592,7 @@ describeRepeated('Form common', (createFormComponent) => {
   describe('Custom format updates', () => {
     it('Should update custom formats when customFormats is changed', () => {
       const formProps = {
-        ref: React.createRef(),
+        ref: createRef(),
         liveValidate: true,
         formData: {
           areaCode: '123455',
@@ -3088,6 +3642,7 @@ describeRepeated('Form common', (createFormComponent) => {
           property: '.areaCode',
           schemaPath: '#/properties/areaCode/format',
           stack: '.areaCode must match format "area-code"',
+          title: '',
         },
       ]);
       // We use setTimeout with a delay of 0ms to allow all asynchronous operations to complete in the React component.
@@ -3098,7 +3653,7 @@ describeRepeated('Form common', (createFormComponent) => {
   describe('Meta schema updates', () => {
     it('Should update allowed meta schemas when additionalMetaSchemas is changed', () => {
       const formProps = {
-        ref: React.createRef(),
+        ref: createRef(),
         schema: {
           $schema: 'http://json-schema.org/draft-06/schema#',
           type: 'string',
@@ -3136,6 +3691,7 @@ describeRepeated('Form common', (createFormComponent) => {
           property: '',
           schemaPath: '#/minLength',
           stack: 'must NOT have fewer than 8 characters',
+          title: '',
         },
         {
           message: 'must match pattern "d+"',
@@ -3144,6 +3700,7 @@ describeRepeated('Form common', (createFormComponent) => {
           property: '',
           schemaPath: '#/pattern',
           stack: 'must match pattern "d+"',
+          title: '',
         },
       ]);
     });
@@ -3169,7 +3726,7 @@ describeRepeated('Form common', (createFormComponent) => {
       const outerOnSubmit = sandbox.spy();
       let innerRef;
 
-      class ArrayTemplateWithForm extends React.Component {
+      class ArrayTemplateWithForm extends Component {
         constructor(props) {
           super(props);
           innerRef = createRef();
@@ -3310,7 +3867,7 @@ describe('Form omitExtraData and liveOmit', () => {
     const liveOmit = true;
 
     const { node, comp } = createFormComponent({
-      ref: React.createRef(),
+      ref: createRef(),
       schema,
       formData,
       onChange,
@@ -3344,7 +3901,7 @@ describe('Form omitExtraData and liveOmit', () => {
     const onChange = sandbox.spy();
     const omitExtraData = true;
     const { node, comp } = createFormComponent({
-      ref: React.createRef(),
+      ref: createRef(),
       schema,
       formData,
       onChange,
@@ -3379,7 +3936,7 @@ describe('Form omitExtraData and liveOmit', () => {
       const onError = sandbox.spy();
       const omitExtraData = true;
       const { comp, node } = createFormComponent({
-        ref: React.createRef(),
+        ref: createRef(),
         schema,
         formData,
         onSubmit,
@@ -3405,7 +3962,7 @@ describe('Form omitExtraData and liveOmit', () => {
         },
       };
       const formData = { foo: 'bar', baz: 'baz' };
-      const formRef = React.createRef();
+      const formRef = createRef();
       const props = {
         ref: formRef,
         schema,
@@ -3429,7 +3986,7 @@ describe('Form omitExtraData and liveOmit', () => {
         },
       };
       const formData = { foo: 'bar', baz: 'baz' };
-      const formRef = React.createRef();
+      const formRef = createRef();
       const props = {
         ref: formRef,
         schema,
@@ -3454,7 +4011,7 @@ describe('Form omitExtraData and liveOmit', () => {
       const formData = 'foo';
       const onSubmit = sandbox.spy();
       const { comp } = createFormComponent({
-        ref: React.createRef(),
+        ref: createRef(),
         schema,
         formData,
         onSubmit,
@@ -3474,7 +4031,7 @@ describe('Form omitExtraData and liveOmit', () => {
       const formData = [];
       const onSubmit = sandbox.spy();
       const { comp } = createFormComponent({
-        ref: React.createRef(),
+        ref: createRef(),
         schema,
         formData,
         onSubmit,
@@ -3495,7 +4052,7 @@ describe('Form omitExtraData and liveOmit', () => {
         foo: 'bar',
       };
       const onSubmit = sandbox.spy();
-      const formRef = React.createRef();
+      const formRef = createRef();
       const { comp } = createFormComponent({
         ref: formRef,
         schema,
@@ -3536,7 +4093,7 @@ describe('Form omitExtraData and liveOmit', () => {
       };
       const onSubmit = sandbox.spy();
       const { comp } = createFormComponent({
-        ref: React.createRef(),
+        ref: createRef(),
         schema,
         formData,
         onSubmit,
@@ -3560,7 +4117,7 @@ describe('Form omitExtraData and liveOmit', () => {
 
       const onSubmit = sandbox.spy();
       const { comp } = createFormComponent({
-        ref: React.createRef(),
+        ref: createRef(),
         schema,
         formData,
         onSubmit,
@@ -3595,7 +4152,7 @@ describe('Form omitExtraData and liveOmit', () => {
 
       const onSubmit = sandbox.spy();
       const { comp } = createFormComponent({
-        ref: React.createRef(),
+        ref: createRef(),
         schema,
         formData,
         onSubmit,
@@ -3632,7 +4189,7 @@ describe('Form omitExtraData and liveOmit', () => {
           ['level1', 'level2'],
           ['level1', 'stringArray'],
           ['level1a'],
-        ].sort()
+        ].sort(),
       );
     });
 
@@ -3656,7 +4213,7 @@ describe('Form omitExtraData and liveOmit', () => {
 
       const onSubmit = sandbox.spy();
       const { comp } = createFormComponent({
-        ref: React.createRef(),
+        ref: createRef(),
         schema,
         formData,
         onSubmit,
@@ -3702,7 +4259,7 @@ describe('Form omitExtraData and liveOmit', () => {
 
       const onSubmit = sandbox.spy();
       const { comp } = createFormComponent({
-        ref: React.createRef(),
+        ref: createRef(),
         schema,
         formData,
         onSubmit,
@@ -3747,7 +4304,7 @@ describe('Form omitExtraData and liveOmit', () => {
           ['address_list', '1', 'city'],
           ['address_list', '1', 'state'],
           ['address_list', '1', 'street_address'],
-        ].sort()
+        ].sort(),
       );
     });
   });
@@ -3764,7 +4321,7 @@ describe('Form omitExtraData and liveOmit', () => {
     };
     const formData = { foo: 'foo', baz: 'baz' };
     const { node, onChange } = createFormComponent({
-      ref: React.createRef(),
+      ref: createRef(),
       schema,
       formData,
       omitExtraData,
@@ -3780,7 +4337,7 @@ describe('Form omitExtraData and liveOmit', () => {
       {
         formData: { foo: 'foobar', baz: 'baz' },
       },
-      'root_foo'
+      'root_foo',
     );
   });
 
@@ -3811,7 +4368,7 @@ describe('Form omitExtraData and liveOmit', () => {
       {
         formData: { foo: 'foobar', baz: 'baz' },
       },
-      'root_foo'
+      'root_foo',
     );
   });
 
@@ -3842,7 +4399,7 @@ describe('Form omitExtraData and liveOmit', () => {
       {
         formData: { foo: 'foobar', baz: 'baz' },
       },
-      'root_foo'
+      'root_foo',
     );
   });
 
@@ -3873,7 +4430,7 @@ describe('Form omitExtraData and liveOmit', () => {
       {
         formData: { foo: 'foobar' },
       },
-      'root_foo'
+      'root_foo',
     );
   });
 
@@ -3908,7 +4465,7 @@ describe('Form omitExtraData and liveOmit', () => {
       {
         formData: { foo: 'foobar', add: { prop: 123 } },
       },
-      'root_foo'
+      'root_foo',
     );
   });
 
@@ -3925,7 +4482,7 @@ describe('Form omitExtraData and liveOmit', () => {
         },
         formData: { nested: { key1: 'value' } },
       },
-      { omitExtraData: true, liveOmit: true }
+      { omitExtraData: true, liveOmit: true },
     );
 
     const textNode = node.querySelector('#root_nested_key1-key');
@@ -3938,7 +4495,7 @@ describe('Form omitExtraData and liveOmit', () => {
       {
         formData: { nested: { key1new: 'value' } },
       },
-      'root_nested'
+      'root_nested',
     );
   });
 
@@ -3968,7 +4525,7 @@ describe('Form omitExtraData and liveOmit', () => {
         },
         formData: { lorum: '' },
       },
-      { omitExtraData: true, liveOmit: true }
+      { omitExtraData: true, liveOmit: true },
     );
 
     const textNode = node.querySelector('#root_lorem');
@@ -4007,7 +4564,7 @@ describe('Form omitExtraData and liveOmit', () => {
         },
         formData: { ipsum: '' },
       },
-      { omitExtraData: true, liveOmit: true }
+      { omitExtraData: true, liveOmit: true },
     );
 
     const textNode = node.querySelector('#root_ipsum');
@@ -4085,7 +4642,7 @@ describe('Form omitExtraData and liveOmit', () => {
         },
       };
 
-      const formRef = React.createRef();
+      const formRef = createRef();
       const props = {
         ref: formRef,
         schema,
@@ -4124,7 +4681,7 @@ describe('Form omitExtraData and liveOmit', () => {
         },
       };
 
-      const formRef = React.createRef();
+      const formRef = createRef();
       const props = {
         ref: formRef,
         schema,
@@ -4159,7 +4716,7 @@ describe('Form omitExtraData and liveOmit', () => {
       };
 
       const { comp, node } = createFormComponent({
-        ref: React.createRef(),
+        ref: createRef(),
         schema,
       });
 
@@ -4178,6 +4735,7 @@ describe('Form omitExtraData and liveOmit', () => {
           },
           schemaPath: '#/required',
           stack: "must have required property 'foo'",
+          title: '',
         },
       ]);
 
@@ -4213,7 +4771,7 @@ describe('Form omitExtraData and liveOmit', () => {
 
     const onSubmit = sinon.spy();
 
-    const formRef = React.createRef();
+    const formRef = createRef();
     const props = {
       ref: formRef,
       schema,
@@ -4247,13 +4805,13 @@ describe('Form omitExtraData and liveOmit', () => {
     };
 
     let changed = false;
-    class ArrayThatTriggersOnChangeRightAfterUpdated extends React.Component {
+    class ArrayThatTriggersOnChangeRightAfterUpdated extends Component {
       componentDidUpdate = () => {
         if (changed) {
           return;
         }
         changed = true;
-        this.props.onChange([...this.props.formData, 'test']);
+        this.props.onChange('test', [this.props.formData.length]);
       };
       render() {
         const { ArrayField } = this.props.registry.fields;
@@ -4271,7 +4829,7 @@ describe('Form omitExtraData and liveOmit', () => {
       validator,
     };
 
-    class Container extends React.Component {
+    class Container extends Component {
       constructor(props) {
         super(props);
         this.state = {};
@@ -4289,7 +4847,7 @@ describe('Form omitExtraData and liveOmit', () => {
     it("doesn't cause a race condition", () => {
       const { node } = createComponent(Container, { ...props });
 
-      fireEvent.click(node.querySelector('.array-item-add button'));
+      fireEvent.click(node.querySelector('.rjsf-array-item-add button'));
 
       expect(node.querySelector('#root_0')).to.exist;
       expect(node.querySelector('#root_1').getAttribute('value')).to.eq('test');
@@ -4302,7 +4860,7 @@ describe('Form omitExtraData and liveOmit', () => {
         title: 'Test form',
         type: 'string',
       };
-      const formRef = React.createRef();
+      const formRef = createRef();
       const props = {
         ref: formRef,
         schema,
@@ -4322,7 +4880,7 @@ describe('Form omitExtraData and liveOmit', () => {
         title: 'Test form',
         type: 'number',
       };
-      const formRef = React.createRef();
+      const formRef = createRef();
       const props = {
         ref: formRef,
         schema,
@@ -4351,7 +4909,7 @@ describe('Form omitExtraData and liveOmit', () => {
         type: 'string',
         default: 'Some-Value',
       };
-      const formRef = React.createRef();
+      const formRef = createRef();
       const props = {
         ref: formRef,
         schema: schemaWithDefault,
@@ -4374,7 +4932,7 @@ describe('Form omitExtraData and liveOmit', () => {
 
     it('Reset button test with complex schema', () => {
       const schema = widgetsSchema;
-      const formRef = React.createRef();
+      const formRef = createRef();
       const props = {
         ref: formRef,
         schema,
@@ -4414,7 +4972,7 @@ describe('Form omitExtraData and liveOmit', () => {
         },
       };
       const formData = { foo: 'bar', baz: 'baz' };
-      const formRef = React.createRef();
+      const formRef = createRef();
       const props = {
         ref: formRef,
         schema,
@@ -4440,7 +4998,7 @@ describe('Form omitExtraData and liveOmit', () => {
         },
       };
       const formData = { foo: 'bar', baz: 'baz' };
-      const formRef = React.createRef();
+      const formRef = createRef();
       const props = {
         ref: formRef,
         schema,

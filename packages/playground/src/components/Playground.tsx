@@ -1,7 +1,7 @@
 import { ComponentType, FormEvent, useCallback, useEffect, useRef, useState } from 'react';
 import { FormProps, IChangeEvent, withTheme } from '@rjsf/core';
 import { ErrorSchema, RJSFSchema, RJSFValidationError, UiSchema, ValidatorType } from '@rjsf/utils';
-import base64 from '../utils/base64';
+import { isFunction } from 'lodash';
 
 import { samples } from '../samples';
 import Header, { LiveSettings } from './Header';
@@ -11,7 +11,8 @@ import GeoPosition from './GeoPosition';
 import { ThemesType } from './ThemeSelector';
 import Editors from './Editors';
 import SpecialInput from './SpecialInput';
-import { Sample } from '../samples/Sample';
+import { Sample, UiSchemaForTheme } from '../samples/Sample';
+import base64 from '../utils/base64';
 
 export interface PlaygroundProps {
   themes: { [themeName: string]: ThemesType };
@@ -21,11 +22,14 @@ export interface PlaygroundProps {
 export default function Playground({ themes, validators }: PlaygroundProps) {
   const [loaded, setLoaded] = useState(false);
   const [schema, setSchema] = useState<RJSFSchema>(samples.Simple.schema as RJSFSchema);
-  const [uiSchema, setUiSchema] = useState<UiSchema>(samples.Simple.uiSchema!);
+  const [uiSchema, setUiSchema] = useState<UiSchema>(samples.Simple.uiSchema as UiSchema);
+  // Store the generator inside of an object, otherwise react treats it as an initializer function
+  const [uiSchemaGenerator, setUiSchemaGenerator] = useState<{ generator: UiSchemaForTheme } | undefined>(undefined);
   const [formData, setFormData] = useState<any>(samples.Simple.formData);
   const [extraErrors, setExtraErrors] = useState<ErrorSchema | undefined>();
   const [shareURL, setShareURL] = useState<string | null>(null);
   const [theme, setTheme] = useState<string>('default');
+  const [sampleName, setSampleName] = useState<string>('Simple');
   const [subtheme, setSubtheme] = useState<string | null>(null);
   const [stylesheet, setStylesheet] = useState<string | null>(null);
   const [validator, setValidator] = useState<string>('AJV8');
@@ -38,25 +42,29 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
     readonly: false,
     omitExtraData: false,
     liveOmit: false,
+    experimental_componentUpdateStrategy: 'customDeep',
     experimental_defaultFormStateBehavior: { arrayMinItems: 'populate', emptyObjectFields: 'populateAllDefaults' },
   });
-  const [FormComponent, setFormComponent] = useState<ComponentType<FormProps>>(withTheme({}));
   const [otherFormProps, setOtherFormProps] = useState<Partial<FormProps>>({});
 
   const playGroundFormRef = useRef<any>(null);
 
+  const [FormComponent, setFormComponent] = useState<ComponentType<FormProps>>(withTheme({}));
+
   const onThemeSelected = useCallback(
     (theme: string, { stylesheet, theme: themeObj }: ThemesType) => {
       setTheme(theme);
-      setSubtheme(null);
       setFormComponent(withTheme(themeObj));
       setStylesheet(stylesheet);
+      if (uiSchemaGenerator) {
+        setUiSchema(uiSchemaGenerator.generator(theme));
+      }
     },
-    [setTheme, setSubtheme, setFormComponent, setStylesheet]
+    [uiSchemaGenerator, setTheme, setFormComponent, setStylesheet],
   );
 
   const load = useCallback(
-    (data: Sample & { theme: string; liveSettings: LiveSettings }) => {
+    (data: Sample & { theme: string; liveSettings: LiveSettings; sampleName?: string; validator?: string }) => {
       const {
         schema,
         // uiSchema is missing on some examples. Provide a default to
@@ -69,29 +77,53 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
         theme: dataTheme = theme,
         extraErrors,
         liveSettings,
-        validator,
+        validator: theValidator,
+        sampleName,
         ...rest
       } = data;
 
       // To support mui v6 `material-ui-5` was change to `mui` fix the load to update that as well
       const theTheme = dataTheme === 'material-ui-5' ? 'mui' : dataTheme;
+
       onThemeSelected(theTheme, themes[theTheme]);
+
+      let theUiSchema: UiSchema;
+      if (isFunction(uiSchema)) {
+        theUiSchema = uiSchema(theme);
+      } else {
+        theUiSchema = uiSchema;
+      }
+      if (sampleName) {
+        setSampleName(sampleName);
+        const sample = samples[sampleName];
+        if (isFunction(sample.uiSchema)) {
+          setUiSchemaGenerator({ generator: sample.uiSchema });
+        } else {
+          setUiSchemaGenerator(undefined);
+        }
+      }
 
       // force resetting form component instance
       setShowForm(false);
       setSchema(schema);
-      setUiSchema(uiSchema);
+      setUiSchema(theUiSchema);
       setFormData(formData);
       setExtraErrors(extraErrors);
-      setTheme(theTheme);
       setShowForm(true);
       setLiveSettings(liveSettings);
-      if ('validator' in data) {
-        setValidator(validator);
+      if ('validator' in data && theValidator !== undefined) {
+        setValidator(theValidator);
       }
       setOtherFormProps({ fields, templates, ...rest });
     },
-    [theme, onThemeSelected, themes]
+    [theme, onThemeSelected, themes],
+  );
+
+  const onSampleSelected = useCallback(
+    (sampleName: string) => {
+      load({ ...samples[sampleName], sampleName, liveSettings, theme });
+    },
+    [load, liveSettings, theme],
   );
 
   useEffect(() => {
@@ -117,7 +149,8 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
   }, [onThemeSelected, load, loaded, setShowForm, theme, themes]);
 
   const onFormDataChange = useCallback(
-    ({ formData }: IChangeEvent, id?: string) => {
+    (event: IChangeEvent, id?: string) => {
+      const { formData } = event;
       if (id) {
         console.log('Field changed, id: ', id);
       }
@@ -125,7 +158,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
       setFormData(formData);
       setShareURL(null);
     },
-    [setFormData, setShareURL]
+    [setFormData, setShareURL],
   );
 
   const onFormDataSubmit = useCallback(({ formData }: IChangeEvent, event: FormEvent<any>) => {
@@ -147,8 +180,9 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
         validators={validators}
         validator={validator}
         liveSettings={liveSettings}
+        sampleName={sampleName}
         playGroundFormRef={playGroundFormRef}
-        load={load}
+        onSampleSelected={onSampleSelected}
         onThemeSelected={onThemeSelected}
         setSubtheme={setSubtheme}
         setStylesheet={setStylesheet}
@@ -166,6 +200,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
         extraErrors={extraErrors}
         setExtraErrors={setExtraErrors}
         setShareURL={setShareURL}
+        hasUiSchemaGenerator={!!uiSchemaGenerator}
       />
       <div className='col-sm-5'>
         <ErrorBoundary>
@@ -182,6 +217,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
                 border: 0,
               }}
               theme={theme}
+              subtheme={subtheme || 'light'}
             >
               <FormComponent
                 {...otherFormProps}

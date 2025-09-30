@@ -1,13 +1,23 @@
 import { RJSFSchema, canExpand } from '../src';
 
 describe('canExpand()', () => {
-  it('no additional properties', () => {
+  it('no additional or pattern properties', () => {
     expect(canExpand({}, {}, {})).toBe(false);
   });
   it('has additional properties', () => {
     const schema: RJSFSchema = {
       additionalProperties: {
         type: 'string',
+      },
+    };
+    expect(canExpand(schema)).toBe(true);
+  });
+  it('has pattern properties', () => {
+    const schema: RJSFSchema = {
+      patternProperties: {
+        '^foo': {
+          type: 'string',
+        },
       },
     };
     expect(canExpand(schema)).toBe(true);

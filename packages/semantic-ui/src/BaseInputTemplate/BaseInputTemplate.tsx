@@ -21,7 +21,7 @@ import {
 export default function BaseInputTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(props: BaseInputTemplateProps<T, S, F>) {
   const {
     id,
@@ -40,14 +40,14 @@ export default function BaseInputTemplate<
     options,
     schema,
     uiSchema,
-    formContext,
+    registry,
     type,
     rawErrors = [],
   } = props;
   const inputProps = getInputProps<T, S, F>(schema, type, options);
   const semanticProps = getSemanticProps<T, S, F>({
     uiSchema,
-    formContext,
+    formContext: registry.formContext,
     options,
   });
   const _onChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) =>

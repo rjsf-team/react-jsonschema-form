@@ -4,7 +4,7 @@ title: <Form /> Props
 
 # &lt;Form /> props
 
-## acceptcharset
+## acceptCharset
 
 The value of this prop will be passed to the `accept-charset` [HTML attribute on the form](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/form#attr-accept-charset).
 
@@ -17,10 +17,6 @@ Note that this just renders the `action` attribute in the HTML markup. There is 
 ## autoComplete
 
 The value of this prop will be passed to the `autocomplete` [HTML attribute on the form](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/form#attr-autocomplete).
-
-## autocomplete
-
-Deprecated, same functionality as `autoComplete`
 
 ## className
 
@@ -48,7 +44,7 @@ render(
       <button type='button'>Cancel</button>
     </div>
   </Form>,
-  document.getElementById('app')
+  document.getElementById('app'),
 );
 ```
 
@@ -59,6 +55,18 @@ render(
 Formerly the `validate` prop.
 The `customValidate` prop requires a function that specifies custom validation rules for the form.
 See [Validation](../usage/validation.md) for more information.
+
+## experimental_componentUpdateStrategy
+
+Experimental feature to specify an alternative component update strategy that accepts one of the following value:
+React's default `Component` rendering strategy is to re-render on every state change, see `shouldComponentUpdate` docs.
+`PureComponent`'s strategy uses shallow equality. One can also always update (not recommended for performance reasons, but can be useful for testing)
+
+| Option     | Description                                       |
+| ---------- | ------------------------------------------------- |
+| customDeep | Legacy behavior - uses RJSF's deepEquals function |
+| shallow    | shallow equality                                  |
+| always     | component always rerenders                        |
 
 ## experimental_defaultFormStateBehavior
 
@@ -88,7 +96,7 @@ Optional enumerated flag controlling how array minItems are populated, defaultin
 
 The signature and documentation for this property is as follow:
 
-##### computeSkipPopulate <T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
+##### computeSkipPopulate &lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
 
 A function that determines whether to skip populating the array with default values based on the provided validator, schema, and root schema.
 If the function returns `true`, the array will not be populated with default values.
@@ -96,7 +104,7 @@ If the function returns `false`, the array will be populated with default values
 
 ###### Parameters
 
-- validator: ValidatorType<T, S, F> - An implementation of the `ValidatorType` interface that is used to detect valid schema conditions
+- validator: ValidatorType&lt;T, S, F> - An implementation of the `ValidatorType` interface that is used to detect valid schema conditions
 - schema: S - The schema for which resolving a condition is desired
 - [rootSchema]: S - The root schema that will be forwarded to all the APIs
 
@@ -184,7 +192,7 @@ render(
       emptyObjectFields: 'populateRequiredDefaults',
     }}
   />,
-  document.getElementById('app')
+  document.getElementById('app'),
 );
 ```
 
@@ -247,7 +255,7 @@ render(
       allOf: 'populateDefaults',
     }}
   />,
-  document.getElementById('app')
+  document.getElementById('app'),
 );
 ```
 
@@ -294,7 +302,7 @@ const customMergeAllOf = (schema: RJSFSchema): RJSFSchema => {
 
 render(
   <Form schema={schema} validator={validator} experimental_customMergeAllOf={customMergeAllOf} />,
-  document.getElementById('app')
+  document.getElementById('app'),
 );
 ```
 
@@ -468,7 +476,7 @@ Sometimes you may want to trigger events or modify external state when a field h
 If you plan on being notified every time the form data are updated, you can pass an `onChange` handler, which will receive the same first argument as `onSubmit` any time a value is updated in the form.
 It will also receive, as the second argument, the `id` of the field which experienced the change.
 Generally, this will be the `id` of the field for which input data is modified.
-In the case of adding/removing of new fields in arrays or objects with `additionalProperties` and the rearranging of items in arrays, the `id` will be that of the array or object itself, rather than the item/field being added, removed or moved.
+In the case of adding/removing of new fields in arrays or objects with `additionalProperties` or `patternProperties` and the rearranging of items in arrays, the `id` will be that of the array or object itself, rather than the item/field being added, removed or moved.
 
 ## onError
 

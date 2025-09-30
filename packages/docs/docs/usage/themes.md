@@ -5,25 +5,26 @@ meaning that you must load the Bootstrap stylesheet on the page to view the form
 
 ## Supported themes
 
-| Theme Name            | Status    | Package Name / Link |
-| --------------------- | --------- | ------------------- |
-| antd                  | Published | `@rjsf/antd`        |
-| Bootstrap 3 (default) | Published | `@rjsf/core`        |
-| Bootstrap 4           | Published | `@rjsf/bootstrap-4` |
-| Chakra UI             | Published | `@rjsf/chakra-ui`   |
-| fluent-ui             | Published | `@rjsf/fluent-ui`   |
-| fluentui-rc           | Published | `@rjsf/fluentui-rc` |
-| material-ui 4         | Published | `@rjsf/material-ui` |
-| material-ui 5         | Published | `@rjsf/mui`         |
-| Semantic UI           | Published | `@rjsf/semantic-ui` |
+| Theme Name            | Status    | Package Name / Link     |
+| --------------------- | --------- | ----------------------- |
+| antd                  | Published | `@rjsf/antd`            |
+| Chakra UI             | Published | `@rjsf/chakra-ui`       |
+| Bootstrap 3 (default) | Published | `@rjsf/core`            |
+| fluentui-rc           | Published | `@rjsf/fluentui-rc`     |
+| mantine               | Published | `@rjsf/mantine`         |
+| material-ui           | Published | `@rjsf/mui`             |
+| PrimeReact            | Published | `@rjsf/primereact`      |
+| react-bootstrap       | Published | `@rjsf/react-bootstrap` |
+| Semantic UI           | Published | `@rjsf/semantic-ui`     |
+| shadcn                | Published | `@rjsf/shadcn`          |
 
 ## Using themes
 
-To use a theme from a package, just import the `<Form />` component from that package. For example, to use the material ui form,
-first install both `@rjsf/core` and `@rjsf/material-ui`. Then you can import the form by doing:
+To use a theme from a package, just import the `<Form />` component from that package. For example, to use the Material UI form,
+first install both `@rjsf/core` and `@rjsf/mui`. Then you can import the form by doing:
 
 ```ts
-import Form from '@rjsf/material-ui';
+import Form from '@rjsf/mui';
 ```
 
 If you would like to contribute a theme with a new UI framework, please develop the theme using the `withTheme` component described in [Theme Customization](../advanced-customization/custom-themes.md) and make a PR!
@@ -40,10 +41,10 @@ For example, to use the standard bootstrap 3 form, you can run:
 import Form from '@rjsf/core';
 ```
 
-To use the material-ui 5 form, you should first install both `@rjsf/core` and `@rjsf/mui`. Then, you can run:
+To use the material-ui form, you should first install both `@rjsf/core` and `@rjsf/material-ui`. Then, you can run:
 
 ```ts
-import Form from '@rjsf/mui';
+import Form from '@rjsf/material-ui';
 ```
 
 For more information on how to create a custom theme, see documentation on the `withTheme` component.

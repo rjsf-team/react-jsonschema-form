@@ -32,7 +32,7 @@ const readyForChange = (state: DateObject) => {
 export default function AltDateWidget<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(props: WidgetProps<T, S, F>) {
   const {
     autofocus,
@@ -117,7 +117,7 @@ export default function AltDateWidget<
         state,
         showTime,
         options.yearsRange as [number, number] | undefined,
-        options.format as DateElementFormat | undefined
+        options.format as DateElementFormat | undefined,
       ).map((elemProps, i) => {
         const elemId = id + '_' + elemProps.type;
         return (

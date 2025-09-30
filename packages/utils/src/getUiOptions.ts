@@ -11,8 +11,12 @@ import { FormContextType, GlobalUISchemaOptions, RJSFSchema, StrictRJSFSchema, U
  */
 export default function getUiOptions<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   uiSchema: UiSchema<T, S, F> = {},
-  globalOptions: GlobalUISchemaOptions = {}
+  globalOptions: GlobalUISchemaOptions = {},
 ): UIOptionsType<T, S, F> {
+  // Handle null or undefined uiSchema
+  if (!uiSchema) {
+    return { ...globalOptions };
+  }
   return Object.keys(uiSchema)
     .filter((key) => key.indexOf('ui:') === 0)
     .reduce(
@@ -27,6 +31,6 @@ export default function getUiOptions<T = any, S extends StrictRJSFSchema = RJSFS
         }
         return { ...options, [key.substring(3)]: value };
       },
-      { ...globalOptions }
+      { ...globalOptions },
     );
 }

@@ -2,61 +2,56 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches: [main, v5]
   pull_request:
-    branches: [main]
+    branches: [main, v5]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [14.x, 16.x, 18.x]
+        node-version: [20.x, 22.x]
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
           cache-dependency-path: 'package-lock.json'
-      - run: npm i -g npm@9
       - run: npm ci
       - run: npm run lint
 
       - name: Build with Netlify badge
-        if: github.ref != 'refs/heads/main' && matrix.node-version != '14.x'
-        run: npm run build
+        run: npm run build-serial
         env:
           VITE_SHOW_NETLIFY_BADGE: true
           NODE_OPTIONS: --max_old_space_size=4096
 
       - name: Build
-        if: github.ref == 'refs/heads/main' && matrix.node-version != '14.x'
-        run: npm run build
+        run: npm run build-serial
         env:
           NODE_OPTIONS: --max_old_space_size=4096
 
       # Docusaurus doesn't support Node 14. These tasks can be removed once Node 14 is EOL (May 2023)
       - name: Build with Netlify badge (no docs)
-        if: github.ref != 'refs/heads/main' && matrix.node-version == '14.x'
-        run: npx nx run-many --target=build --exclude=@rjsf/docs
+        run: npx nx run-many --target=build --exclude=@rjsf/docs --parallel=false
         env:
           VITE_SHOW_NETLIFY_BADGE: true
           NODE_OPTIONS: --max_old_space_size=4096
       - name: Build (no docs)
-        if: github.ref == 'refs/heads/main' && matrix.node-version == '14.x'
-        run: npx nx run-many --target=build --exclude=@rjsf/docs
+        run: npx nx run-many --target=build --exclude=@rjsf/docs --parallel=false
         env:
           NODE_OPTIONS: --max_old_space_size=4096
 
-      - if: matrix.node-version == '18.x'
+      - if: matrix.node-version == '22.x'
         uses: actions/upload-artifact@v4
         with:
           name: playground
           path: packages/playground/dist
-      - if: matrix.node-version == '18.x'
+      - if: matrix.node-version == '22.x'
         uses: actions/upload-artifact@v4
         with:
           name: docs
@@ -69,17 +64,17 @@ jobs:
     needs: [build]
     steps:
       - name: Download built playground
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: playground
           path: dist
       - name: Download built docs
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: docs
           path: dist/docs
       - name: Deploy playground + docs to GitHub Pages
-        uses: crazy-max/ghaction-github-pages@v4.1.0
+        uses: crazy-max/ghaction-github-pages@v4.2.0
         with:
           keep_history: true
           target_branch: gh-pages

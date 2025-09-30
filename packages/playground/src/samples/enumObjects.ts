@@ -1,11 +1,13 @@
 import { Sample } from './Sample';
 
+const ENUM_NAMES = {
+  'ui:enumNames': ['New York', 'Amsterdam', 'Hong Kong'],
+};
+
 const enumObjects: Sample = {
   schema: {
     definitions: {
       locations: {
-        // @ts-expect-error -- enumNames an RJSF keyword and is not in the JSON Schema spec
-        enumNames: ['New York', 'Amsterdam', 'Hong Kong'],
         enum: [
           {
             name: 'New York',
@@ -54,11 +56,17 @@ const enumObjects: Sample = {
     },
   },
   uiSchema: {
+    location: ENUM_NAMES,
     locationRadio: {
       'ui:widget': 'RadioWidget',
+      ...ENUM_NAMES,
+    },
+    multiSelect: {
+      ...ENUM_NAMES,
     },
     checkboxes: {
       'ui:widget': 'CheckboxesWidget',
+      ...ENUM_NAMES,
     },
   },
   formData: {

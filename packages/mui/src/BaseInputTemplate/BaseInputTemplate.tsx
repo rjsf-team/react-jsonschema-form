@@ -22,7 +22,7 @@ const TYPES_THAT_SHRINK_LABEL = ['date', 'datetime-local', 'file', 'time'];
 export default function BaseInputTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(props: BaseInputTemplateProps<T, S, F>) {
   const {
     id,
@@ -76,16 +76,13 @@ export default function BaseInputTemplate<
         autoFocus={autofocus}
         required={required}
         disabled={disabled || readonly}
-        slotProps={{
-          htmlInput: htmlInputProps,
-        }}
+        slotProps={{ htmlInput: htmlInputProps, inputLabel: DisplayInputLabelProps }}
         {...rest}
         value={value || value === 0 ? value : ''}
         error={rawErrors.length > 0}
         onChange={onChangeOverride || _onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
-        InputLabelProps={DisplayInputLabelProps}
         {...(textFieldProps as TextFieldProps)}
         aria-describedby={ariaDescribedByIds<T>(id, !!schema.examples)}
       />

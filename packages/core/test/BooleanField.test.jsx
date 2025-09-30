@@ -25,7 +25,7 @@ describe('BooleanField', () => {
       },
     });
 
-    expect(node.querySelectorAll('.field input[type=checkbox]')).to.have.length.of(1);
+    expect(node.querySelectorAll('.rjsf-field input[type=checkbox]')).to.have.length.of(1);
   });
 
   it('should render a boolean field with the expected id', () => {
@@ -35,7 +35,7 @@ describe('BooleanField', () => {
       },
     });
 
-    expect(node.querySelector('.field input[type=checkbox]').id).eql('root');
+    expect(node.querySelector('.rjsf-field input[type=checkbox]').id).eql('root');
   });
 
   it('should render a boolean field with a label', () => {
@@ -46,7 +46,7 @@ describe('BooleanField', () => {
       },
     });
 
-    expect(node.querySelector('.field label span').textContent).eql('foo');
+    expect(node.querySelector('.rjsf-field label span').textContent).eql('foo');
   });
 
   describe('HTML5 required attribute', () => {
@@ -167,7 +167,7 @@ describe('BooleanField', () => {
       },
     });
 
-    expect(node.querySelectorAll('.field label')).to.have.length.of(1);
+    expect(node.querySelectorAll('.rjsf-field label')).to.have.length.of(1);
   });
 
   it('should render a description', () => {
@@ -233,7 +233,7 @@ describe('BooleanField', () => {
       },
     });
 
-    expect(node.querySelector('.field input').checked).eql(true);
+    expect(node.querySelector('.rjsf-field input').checked).eql(true);
   });
 
   it('formData should default to undefined', () => {
@@ -264,7 +264,7 @@ describe('BooleanField', () => {
     const focusSpys = [sinon.spy(), sinon.spy()];
     const inputs = node.querySelectorAll('input[id^=root_bool]');
     expect(inputs.length).eql(2);
-    let errorInputs = node.querySelectorAll('.form-group.field-error input[id^=root_bool]');
+    let errorInputs = node.querySelectorAll('.form-group.rjsf-field-error input[id^=root_bool]');
     expect(errorInputs).to.have.length.of(0);
     // Since programmatically triggering focus does not call onFocus, change the focus method to a spy
     inputs[0].focus = focusSpys[0];
@@ -275,7 +275,7 @@ describe('BooleanField', () => {
     });
     sinon.assert.calledOnce(focusSpys[0]);
     sinon.assert.notCalled(focusSpys[1]);
-    errorInputs = node.querySelectorAll('.form-group.field-error input[id^=root_bool]');
+    errorInputs = node.querySelectorAll('.form-group.rjsf-field-error input[id^=root_bool]');
     expect(errorInputs).to.have.length.of(2);
   });
 
@@ -296,7 +296,7 @@ describe('BooleanField', () => {
     const focusSpys = [sinon.spy(), sinon.spy()];
     const inputs = node.querySelectorAll('input[id^=root_bool]');
     expect(inputs.length).eql(2);
-    let errorInputs = node.querySelectorAll('.form-group.field-error input[id^=root_bool]');
+    let errorInputs = node.querySelectorAll('.form-group.rjsf-field-error input[id^=root_bool]');
     expect(errorInputs).to.have.length.of(0);
     // Since programmatically triggering focus does not call onFocus, change the focus method to a spy
     inputs[0].focus = focusSpys[0];
@@ -307,7 +307,7 @@ describe('BooleanField', () => {
     });
     sinon.assert.calledOnce(focusSpys[0]);
     sinon.assert.notCalled(focusSpys[1]);
-    errorInputs = node.querySelectorAll('.form-group.field-error input[id^=root_bool]');
+    errorInputs = node.querySelectorAll('.form-group.rjsf-field-error input[id^=root_bool]');
     expect(errorInputs).to.have.length.of(0);
   });
 
@@ -334,7 +334,7 @@ describe('BooleanField', () => {
       formData: true,
     });
 
-    expect(node.querySelector('.field input').checked).eql(true);
+    expect(node.querySelector('.rjsf-field input').checked).eql(true);
   });
 
   it('should render radio widgets with the expected id', () => {
@@ -375,19 +375,15 @@ describe('BooleanField', () => {
     expect(labels).eql(['No', 'Yes']);
   });
 
-  it('should support enumNames for radio widgets', () => {
+  it('should support ui:enumNames for radio widgets', () => {
     const { node } = createFormComponent({
-      schema: {
-        type: 'boolean',
-        enumNames: ['Yes', 'No'],
-      },
+      schema: { type: 'boolean' },
       formData: true,
-      uiSchema: { 'ui:widget': 'radio' },
+      uiSchema: { 'ui:widget': 'radio', 'ui:enumNames': ['Yes', 'No'] },
     });
 
     const labels = [].map.call(node.querySelectorAll('.field-radio-group label'), (label) => label.textContent);
     expect(labels).eql(['Yes', 'No']);
-    expect(console.warn.calledWithMatch(/The "enumNames" property in the schema is deprecated/)).to.be.true;
   });
 
   it('should support oneOf titles for radio widgets', () => {
@@ -518,19 +514,15 @@ describe('BooleanField', () => {
     expect(onBlur.calledWith(element.id, false)).to.be.true;
   });
 
-  it('should support enumNames for select, with overrides in uiSchema', () => {
+  it('should support ui:enumNames for select, with overrides in uiSchema', () => {
     const { node } = createFormComponent({
-      schema: {
-        type: 'boolean',
-        enumNames: ['Yes', 'No'],
-      },
+      schema: { type: 'boolean' },
       formData: true,
       uiSchema: { 'ui:widget': 'select', 'ui:enumNames': ['Si!', 'No!'] },
     });
 
-    const labels = [].map.call(node.querySelectorAll('.field option'), (label) => label.textContent);
+    const labels = [].map.call(node.querySelectorAll('.rjsf-field option'), (label) => label.textContent);
     expect(labels).eql(['', 'Si!', 'No!']);
-    expect(console.warn.calledWithMatch(/TThe "enumNames" property in the schema is deprecated/)).to.be.false;
   });
 
   it('should handle a focus event with checkbox', () => {
@@ -702,7 +694,7 @@ describe('BooleanField', () => {
         },
       });
 
-      expect(node.querySelectorAll('.field select')).to.have.length.of(1);
+      expect(node.querySelectorAll('.rjsf-field select')).to.have.length.of(1);
     });
 
     it('should infer the value from an enum on change', () => {
@@ -714,8 +706,8 @@ describe('BooleanField', () => {
         onChange: spy,
       });
 
-      expect(node.querySelectorAll('.field select')).to.have.length.of(1);
-      const $select = node.querySelector('.field select');
+      expect(node.querySelectorAll('.rjsf-field select')).to.have.length.of(1);
+      const $select = node.querySelector('.rjsf-field select');
       expect($select.value).eql('');
 
       act(() => {
@@ -736,7 +728,7 @@ describe('BooleanField', () => {
         },
       });
 
-      expect(node.querySelector('.field label').textContent).eql('foo');
+      expect(node.querySelector('.rjsf-field label').textContent).eql('foo');
     });
 
     it('should assign a default value', () => {
@@ -769,7 +761,7 @@ describe('BooleanField', () => {
         {
           formData: false,
         },
-        'root'
+        'root',
       );
     });
 

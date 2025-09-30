@@ -100,7 +100,7 @@ The `ui:options` property cannot be nested inside itself and thus is the last ex
 
 All the properties that follow can be specified in the `uiSchema` in either of the two equivalent ways.
 
-NOTE: The properties specific to array items can be found [here](../json-schema/arrays.md#array-item-uiSchema-options)
+> NOTE: The properties specific to array items can be found [here](../json-schema/arrays.md#array-item-uiSchema-options). For advanced dynamic UI schema capabilities for array items, see the [Dynamic UI Schema Examples](./dynamic-ui-schema-examples.md).
 
 ### widget
 
@@ -206,6 +206,41 @@ const uiSchema: UiSchema = {
 The `ui:disabled` uiSchema directive will disable all child widgets from a given field.
 
 > Note: If you're wondering about the difference between a `disabled` field and a `readonly` one: Marking a field as read-only will render it greyed out, but its text value will be selectable. Disabling it will prevent its value to be selected at all.
+
+### enableMarkdownInDescription
+
+The `ui:enableMarkdownInDescription` uiSchema directive enables the support of Markdown syntax within the description of
+a field.
+
+```tsx
+import { Form } from '@rjsf/core';
+import { RJSFSchema, UiSchema } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
+
+const schema: RJSFSchema = { type: 'string', description: '**bolded** text in the description' };
+const uiSchema: UiSchema = {
+  'ui:enableMarkdownInDescription': true,
+};
+render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
+```
+
+It can also be enabled globally by setting the `enableMarkdownInDescription` option to `true` in the `ui:globalOptions`
+uiSchema directive.
+
+```tsx
+import { Form } from '@rjsf/core';
+import { RJSFSchema, UiSchema } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
+
+const schema: RJSFSchema = { type: 'string', description: '**bolded** text in the description' };
+const uiSchema: UiSchema = {
+  'ui:globalOptions': {
+    enableMarkdownInDescription: true,
+  },
+};
+
+render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
+```
 
 ### emptyValue
 
@@ -563,4 +598,5 @@ const uiSchema: UiSchema = {
 
 - [AntD Customization](themes/antd/uiSchema.md)
 - [Chakra-UI Customization](themes/chakra-ui/uiSchema.md)
+- [PrimeReact Customization](themes/primereact/uiSchema.md)
 - [Semantic-UI Customization](themes/semantic-ui/uiSchema.md)

@@ -6,6 +6,7 @@ import createSchemaUtils from './createSchemaUtils';
 import dataURItoBlob from './dataURItoBlob';
 import dateRangeOptions from './dateRangeOptions';
 import deepEquals from './deepEquals';
+import shallowEquals from './shallowEquals';
 import englishStringTranslator from './englishStringTranslator';
 import enumOptionsDeselectValue from './enumOptionsDeselectValue';
 import enumOptionsIndexForValue from './enumOptionsIndexForValue';
@@ -20,18 +21,29 @@ import getInputProps from './getInputProps';
 import getSchemaType from './getSchemaType';
 import getSubmitButtonOptions from './getSubmitButtonOptions';
 import getTemplate from './getTemplate';
+import getTestIds from './getTestIds';
 import getUiOptions from './getUiOptions';
 import getWidget from './getWidget';
 import guessType from './guessType';
-import hashForSchema from './hashForSchema';
+import hashForSchema, { hashObject, hashString, sortedJSONStringify } from './hashForSchema';
 import hasWidget from './hasWidget';
-import { ariaDescribedByIds, descriptionId, errorId, examplesId, helpId, optionId, titleId } from './idGenerators';
+import {
+  ariaDescribedByIds,
+  buttonId,
+  descriptionId,
+  errorId,
+  examplesId,
+  helpId,
+  optionId,
+  titleId,
+} from './idGenerators';
 import isConstant from './isConstant';
 import isCustomWidget from './isCustomWidget';
 import isFixedItems from './isFixedItems';
 import isObject from './isObject';
 import labelValue from './labelValue';
 import localToUTC from './localToUTC';
+import lookupFromFormContext from './lookupFromFormContext';
 import mergeDefaultsWithFormData from './mergeDefaultsWithFormData';
 import mergeObjects from './mergeObjects';
 import mergeSchemas from './mergeSchemas';
@@ -65,6 +77,7 @@ export {
   allowAdditionalItems,
   ariaDescribedByIds,
   asNumber,
+  buttonId,
   canExpand,
   createErrorHandler,
   createSchemaUtils,
@@ -91,11 +104,14 @@ export {
   getSchemaType,
   getSubmitButtonOptions,
   getTemplate,
+  getTestIds,
   getUiOptions,
   getWidget,
   guessType,
   hasWidget,
   hashForSchema,
+  hashObject,
+  hashString,
   helpId,
   isConstant,
   isCustomWidget,
@@ -103,6 +119,7 @@ export {
   isObject,
   labelValue,
   localToUTC,
+  lookupFromFormContext,
   mergeDefaultsWithFormData,
   mergeObjects,
   mergeSchemas,
@@ -114,7 +131,9 @@ export {
   rangeSpec,
   replaceStringParameters,
   schemaRequiresTrueValue,
+  shallowEquals,
   shouldRender,
+  sortedJSONStringify,
   titleId,
   toConstant,
   toDateString,
@@ -125,3 +144,5 @@ export {
   validationDataMerge,
   withIdRefPrefix,
 };
+
+export type { ComponentUpdateStrategy } from './shouldRender';

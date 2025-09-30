@@ -31,7 +31,7 @@ export default function mergeDefaultsWithFormData<T = any>(
   formData?: T,
   mergeExtraArrayDefaults = false,
   defaultSupercedesUndefined = false,
-  overrideFormDataWithDefaults = false
+  overrideFormDataWithDefaults = false,
 ): T | undefined {
   if (Array.isArray(formData)) {
     const defaultsArray = Array.isArray(defaults) ? defaults : [];
@@ -48,7 +48,7 @@ export default function mergeDefaultsWithFormData<T = any>(
           formData[idx],
           mergeExtraArrayDefaults,
           defaultSupercedesUndefined,
-          overrideFormDataWithDefaults
+          overrideFormDataWithDefaults,
         );
       }
       return value;
@@ -67,14 +67,28 @@ export default function mergeDefaultsWithFormData<T = any>(
       const keyValue = get(formData, key);
       const keyExistsInDefaults = isObject(defaults) && key in (defaults as GenericObjectType);
       const keyExistsInFormData = key in (formData as GenericObjectType);
+      const keyDefault = get(defaults, key) ?? {};
+      const defaultValueIsNestedObject = keyExistsInDefaults && Object.entries(keyDefault).some(([, v]) => isObject(v));
+
+      const keyDefaultIsObject = keyExistsInDefaults && isObject(get(defaults, key));
+      const keyHasFormDataObject = keyExistsInFormData && isObject(keyValue);
+
+      if (keyDefaultIsObject && keyHasFormDataObject && !defaultValueIsNestedObject) {
+        acc[key as keyof T] = {
+          ...get(defaults, key),
+          ...keyValue,
+        };
+        return acc;
+      }
+
       acc[key as keyof T] = mergeDefaultsWithFormData<T>(
-        defaults ? get(defaults, key) : {},
+        get(defaults, key),
         keyValue,
         mergeExtraArrayDefaults,
         defaultSupercedesUndefined,
         // overrideFormDataWithDefaults can be true only when the key value exists in defaults
         // Or if the key value doesn't exist in formData
-        overrideFormDataWithDefaults && (keyExistsInDefaults || !keyExistsInFormData)
+        overrideFormDataWithDefaults && (keyExistsInDefaults || !keyExistsInFormData),
       );
       return acc;
     }, acc);
@@ -88,7 +102,7 @@ export default function mergeDefaultsWithFormData<T = any>(
    */
   if (
     (defaultSupercedesUndefined &&
-      ((!isNil(defaults) && isNil(formData)) || (typeof formData === 'number' && isNaN(formData)))) ||
+      ((!(defaults === undefined) && isNil(formData)) || (typeof formData === 'number' && isNaN(formData)))) ||
     (overrideFormDataWithDefaults && !isNil(formData))
   ) {
     return defaults;

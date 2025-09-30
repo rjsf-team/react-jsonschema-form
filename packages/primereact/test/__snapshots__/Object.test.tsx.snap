@@ -1,0 +1,2716 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`object fields additionalProperties 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <div
+        className="rjsf-field rjsf-field-string"
+        style={
+          {
+            "alignItems": "center",
+            "display": "flex",
+            "gap": "1rem",
+          }
+        }
+      >
+        <div
+          style={
+            {
+              "flex": 1,
+            }
+          }
+        >
+          <label
+            htmlFor="root_foo-key"
+            style={
+              {
+                "display": "block",
+                "marginBottom": "0.5rem",
+              }
+            }
+          >
+            foo Key
+          </label>
+          <input
+            className="p-inputtext p-component p-filled"
+            data-pc-name="inputtext"
+            data-pc-section="root"
+            defaultValue="foo"
+            disabled={false}
+            id="root_foo-key"
+            name="root_foo-key"
+            onBeforeInput={[Function]}
+            onBlur={[Function]}
+            onInput={[Function]}
+            onKeyDown={[Function]}
+            onPaste={[Function]}
+            required={false}
+            style={
+              {
+                "width": "100%",
+              }
+            }
+          />
+        </div>
+        <div
+          style={
+            {
+              "flex": 1,
+            }
+          }
+        >
+          <div
+            style={
+              {
+                "display": "flex",
+                "flexDirection": "column",
+                "gap": "0.5rem",
+                "marginBottom": "1rem",
+              }
+            }
+          >
+            <label
+              htmlFor="root_foo"
+            >
+              foo
+               
+            </label>
+            <input
+              aria-describedby="root_foo__error root_foo__description root_foo__help"
+              autoFocus={false}
+              className="p-inputtext p-component p-filled"
+              data-pc-name="inputtext"
+              data-pc-section="root"
+              disabled={false}
+              id="root_foo"
+              name="root_foo"
+              onBeforeInput={[Function]}
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              onInput={[Function]}
+              onKeyDown={[Function]}
+              onPaste={[Function]}
+              placeholder=""
+              required={false}
+              type="text"
+              value="foo"
+            />
+          </div>
+        </div>
+        <div>
+          <button
+            className="rjsf-object-property-remove p-button p-component p-button-icon-only p-button-text p-button-rounded p-button-secondary"
+            data-pc-name="button"
+            data-pc-section="root"
+            disabled={false}
+            id="root_foo__remove"
+            onClick={[Function]}
+            title="Remove"
+          >
+            <span
+              className="p-button-icon p-c pi pi-trash"
+              data-pc-section="icon"
+            />
+            <span
+              className="p-button-label p-c"
+              dangerouslySetInnerHTML={
+                {
+                  "__html": "&nbsp;",
+                }
+              }
+              data-pc-section="label"
+            />
+          </button>
+        </div>
+      </div>
+      <div
+        style={
+          {
+            "marginTop": "1rem",
+            "textAlign": "right",
+          }
+        }
+      >
+        <button
+          aria-label="Add Item"
+          className="rjsf-object-property-expand p-button p-component p-button-outlined p-button-sm p-button-secondary"
+          data-pc-name="button"
+          data-pc-section="root"
+          disabled={false}
+          id="root__add"
+          onClick={[Function]}
+        >
+          <span
+            className="p-button-icon p-c p-button-icon-left pi pi-plus"
+            data-pc-section="icon"
+          />
+          <span
+            className="p-button-label p-c"
+            data-pc-section="label"
+          >
+            Add Item
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`object fields object 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <div
+        className="rjsf-field rjsf-field-string"
+      >
+        <div
+          style={
+            {
+              "display": "flex",
+              "flexDirection": "column",
+              "gap": "0.5rem",
+              "marginBottom": "1rem",
+            }
+          }
+        >
+          <label
+            htmlFor="root_a"
+          >
+            A
+             
+          </label>
+          <input
+            aria-describedby="root_a__error root_a__description root_a__help"
+            autoFocus={false}
+            className="p-inputtext p-component"
+            data-pc-name="inputtext"
+            data-pc-section="root"
+            disabled={false}
+            id="root_a"
+            name="root_a"
+            onBeforeInput={[Function]}
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            onInput={[Function]}
+            onKeyDown={[Function]}
+            onPaste={[Function]}
+            placeholder=""
+            required={false}
+            type="text"
+            value=""
+          />
+        </div>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-number"
+      >
+        <div
+          style={
+            {
+              "display": "flex",
+              "flexDirection": "column",
+              "gap": "0.5rem",
+              "marginBottom": "1rem",
+            }
+          }
+        >
+          <label
+            htmlFor="root_b"
+          >
+            B
+             
+          </label>
+          <input
+            aria-describedby="root_b__error root_b__description root_b__help"
+            autoFocus={false}
+            className="p-inputtext p-component"
+            data-pc-name="inputtext"
+            data-pc-section="root"
+            disabled={false}
+            id="root_b"
+            name="root_b"
+            onBeforeInput={[Function]}
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            onInput={[Function]}
+            onKeyDown={[Function]}
+            onPaste={[Function]}
+            placeholder=""
+            required={false}
+            step="any"
+            type="number"
+            value=""
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`object fields show add button and fields if additionalProperties is true and not an object 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <div
+        className="rjsf-field rjsf-field-string"
+        style={
+          {
+            "alignItems": "center",
+            "display": "flex",
+            "gap": "1rem",
+          }
+        }
+      >
+        <div
+          style={
+            {
+              "flex": 1,
+            }
+          }
+        >
+          <label
+            htmlFor="root_additionalProperty-key"
+            style={
+              {
+                "display": "block",
+                "marginBottom": "0.5rem",
+              }
+            }
+          >
+            additionalProperty Key
+          </label>
+          <input
+            className="p-inputtext p-component p-filled"
+            data-pc-name="inputtext"
+            data-pc-section="root"
+            defaultValue="additionalProperty"
+            disabled={false}
+            id="root_additionalProperty-key"
+            name="root_additionalProperty-key"
+            onBeforeInput={[Function]}
+            onBlur={[Function]}
+            onInput={[Function]}
+            onKeyDown={[Function]}
+            onPaste={[Function]}
+            required={false}
+            style={
+              {
+                "width": "100%",
+              }
+            }
+          />
+        </div>
+        <div
+          style={
+            {
+              "flex": 1,
+            }
+          }
+        >
+          <div
+            style={
+              {
+                "display": "flex",
+                "flexDirection": "column",
+                "gap": "0.5rem",
+                "marginBottom": "1rem",
+              }
+            }
+          >
+            <label
+              htmlFor="root_additionalProperty"
+            >
+              additionalProperty
+               
+            </label>
+            <input
+              aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
+              autoFocus={false}
+              className="p-inputtext p-component p-filled"
+              data-pc-name="inputtext"
+              data-pc-section="root"
+              disabled={false}
+              id="root_additionalProperty"
+              name="root_additionalProperty"
+              onBeforeInput={[Function]}
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              onInput={[Function]}
+              onKeyDown={[Function]}
+              onPaste={[Function]}
+              placeholder=""
+              required={false}
+              type="text"
+              value="should appear"
+            />
+          </div>
+        </div>
+        <div>
+          <button
+            className="rjsf-object-property-remove p-button p-component p-button-icon-only p-button-text p-button-rounded p-button-secondary"
+            data-pc-name="button"
+            data-pc-section="root"
+            disabled={false}
+            id="root_additionalProperty__remove"
+            onClick={[Function]}
+            title="Remove"
+          >
+            <span
+              className="p-button-icon p-c pi pi-trash"
+              data-pc-section="icon"
+            />
+            <span
+              className="p-button-label p-c"
+              dangerouslySetInnerHTML={
+                {
+                  "__html": "&nbsp;",
+                }
+              }
+              data-pc-section="label"
+            />
+          </button>
+        </div>
+      </div>
+      <div
+        style={
+          {
+            "marginTop": "1rem",
+            "textAlign": "right",
+          }
+        }
+      >
+        <button
+          aria-label="Add Item"
+          className="rjsf-object-property-expand p-button p-component p-button-outlined p-button-sm p-button-secondary"
+          data-pc-name="button"
+          data-pc-section="root"
+          disabled={false}
+          id="root__add"
+          onClick={[Function]}
+        >
+          <span
+            className="p-button-icon p-c p-button-icon-left pi pi-plus"
+            data-pc-section="icon"
+          />
+          <span
+            className="p-button-label p-c"
+            data-pc-section="label"
+          >
+            Add Item
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`object fields with title and description additionalProperties 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <div
+        id="root__title"
+      >
+        <h5
+          style={
+            {
+              "fontSize": "1.5rem",
+              "margin": 0,
+            }
+          }
+        >
+          Test field
+           
+        </h5>
+        <div
+          aria-orientation="horizontal"
+          className="p-divider p-component p-divider-horizontal p-divider-solid p-divider-left"
+          data-pc-name="divider"
+          data-pc-section="root"
+          role="separator"
+          style={
+            {
+              "alignItems": null,
+              "justifyContent": "center",
+              "marginTop": "0.5rem",
+            }
+          }
+        >
+          <div
+            className="p-divider-content"
+            data-pc-section="content"
+          />
+        </div>
+      </div>
+      <div
+        style={
+          {
+            "marginBottom": "1rem",
+          }
+        }
+      >
+        <span
+          id="root__description"
+        >
+          a test description
+        </span>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-string"
+        style={
+          {
+            "alignItems": "center",
+            "display": "flex",
+            "gap": "1rem",
+          }
+        }
+      >
+        <div
+          style={
+            {
+              "flex": 1,
+            }
+          }
+        >
+          <label
+            htmlFor="root_foo-key"
+            style={
+              {
+                "display": "block",
+                "marginBottom": "0.5rem",
+              }
+            }
+          >
+            foo Key
+          </label>
+          <input
+            className="p-inputtext p-component p-filled"
+            data-pc-name="inputtext"
+            data-pc-section="root"
+            defaultValue="foo"
+            disabled={false}
+            id="root_foo-key"
+            name="root_foo-key"
+            onBeforeInput={[Function]}
+            onBlur={[Function]}
+            onInput={[Function]}
+            onKeyDown={[Function]}
+            onPaste={[Function]}
+            required={false}
+            style={
+              {
+                "width": "100%",
+              }
+            }
+          />
+        </div>
+        <div
+          style={
+            {
+              "flex": 1,
+            }
+          }
+        >
+          <div
+            style={
+              {
+                "display": "flex",
+                "flexDirection": "column",
+                "gap": "0.5rem",
+                "marginBottom": "1rem",
+              }
+            }
+          >
+            <label
+              htmlFor="root_foo"
+            >
+              foo
+               
+            </label>
+            <input
+              aria-describedby="root_foo__error root_foo__description root_foo__help"
+              autoFocus={false}
+              className="p-inputtext p-component p-filled"
+              data-pc-name="inputtext"
+              data-pc-section="root"
+              disabled={false}
+              id="root_foo"
+              name="root_foo"
+              onBeforeInput={[Function]}
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              onInput={[Function]}
+              onKeyDown={[Function]}
+              onPaste={[Function]}
+              placeholder=""
+              required={false}
+              type="text"
+              value="foo"
+            />
+          </div>
+        </div>
+        <div>
+          <button
+            className="rjsf-object-property-remove p-button p-component p-button-icon-only p-button-text p-button-rounded p-button-secondary"
+            data-pc-name="button"
+            data-pc-section="root"
+            disabled={false}
+            id="root_foo__remove"
+            onClick={[Function]}
+            title="Remove"
+          >
+            <span
+              className="p-button-icon p-c pi pi-trash"
+              data-pc-section="icon"
+            />
+            <span
+              className="p-button-label p-c"
+              dangerouslySetInnerHTML={
+                {
+                  "__html": "&nbsp;",
+                }
+              }
+              data-pc-section="label"
+            />
+          </button>
+        </div>
+      </div>
+      <div
+        style={
+          {
+            "marginTop": "1rem",
+            "textAlign": "right",
+          }
+        }
+      >
+        <button
+          aria-label="Add Item"
+          className="rjsf-object-property-expand p-button p-component p-button-outlined p-button-sm p-button-secondary"
+          data-pc-name="button"
+          data-pc-section="root"
+          disabled={false}
+          id="root__add"
+          onClick={[Function]}
+        >
+          <span
+            className="p-button-icon p-c p-button-icon-left pi pi-plus"
+            data-pc-section="icon"
+          />
+          <span
+            className="p-button-label p-c"
+            data-pc-section="label"
+          >
+            Add Item
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`object fields with title and description from both additionalProperties 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <div
+        id="root__title"
+      >
+        <h5
+          style={
+            {
+              "fontSize": "1.5rem",
+              "margin": 0,
+            }
+          }
+        >
+          My Field
+           
+        </h5>
+        <div
+          aria-orientation="horizontal"
+          className="p-divider p-component p-divider-horizontal p-divider-solid p-divider-left"
+          data-pc-name="divider"
+          data-pc-section="root"
+          role="separator"
+          style={
+            {
+              "alignItems": null,
+              "justifyContent": "center",
+              "marginTop": "0.5rem",
+            }
+          }
+        >
+          <div
+            className="p-divider-content"
+            data-pc-section="content"
+          />
+        </div>
+      </div>
+      <div
+        style={
+          {
+            "marginBottom": "1rem",
+          }
+        }
+      >
+        <span
+          id="root__description"
+        >
+          a fancier description
+        </span>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-string"
+        style={
+          {
+            "alignItems": "center",
+            "display": "flex",
+            "gap": "1rem",
+          }
+        }
+      >
+        <div
+          style={
+            {
+              "flex": 1,
+            }
+          }
+        >
+          <label
+            htmlFor="root_foo-key"
+            style={
+              {
+                "display": "block",
+                "marginBottom": "0.5rem",
+              }
+            }
+          >
+            foo Key
+          </label>
+          <input
+            className="p-inputtext p-component p-filled"
+            data-pc-name="inputtext"
+            data-pc-section="root"
+            defaultValue="foo"
+            disabled={false}
+            id="root_foo-key"
+            name="root_foo-key"
+            onBeforeInput={[Function]}
+            onBlur={[Function]}
+            onInput={[Function]}
+            onKeyDown={[Function]}
+            onPaste={[Function]}
+            required={false}
+            style={
+              {
+                "width": "100%",
+              }
+            }
+          />
+        </div>
+        <div
+          style={
+            {
+              "flex": 1,
+            }
+          }
+        >
+          <div
+            style={
+              {
+                "display": "flex",
+                "flexDirection": "column",
+                "gap": "0.5rem",
+                "marginBottom": "1rem",
+              }
+            }
+          >
+            <label
+              htmlFor="root_foo"
+            >
+              foo
+               
+            </label>
+            <input
+              aria-describedby="root_foo__error root_foo__description root_foo__help"
+              autoFocus={false}
+              className="p-inputtext p-component p-filled"
+              data-pc-name="inputtext"
+              data-pc-section="root"
+              disabled={false}
+              id="root_foo"
+              name="root_foo"
+              onBeforeInput={[Function]}
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              onInput={[Function]}
+              onKeyDown={[Function]}
+              onPaste={[Function]}
+              placeholder=""
+              required={false}
+              type="text"
+              value="foo"
+            />
+          </div>
+        </div>
+        <div>
+          <button
+            className="rjsf-object-property-remove p-button p-component p-button-icon-only p-button-text p-button-rounded p-button-secondary"
+            data-pc-name="button"
+            data-pc-section="root"
+            disabled={false}
+            id="root_foo__remove"
+            onClick={[Function]}
+            title="Remove"
+          >
+            <span
+              className="p-button-icon p-c pi pi-trash"
+              data-pc-section="icon"
+            />
+            <span
+              className="p-button-label p-c"
+              dangerouslySetInnerHTML={
+                {
+                  "__html": "&nbsp;",
+                }
+              }
+              data-pc-section="label"
+            />
+          </button>
+        </div>
+      </div>
+      <div
+        style={
+          {
+            "marginTop": "1rem",
+            "textAlign": "right",
+          }
+        }
+      >
+        <button
+          aria-label="Add Item"
+          className="rjsf-object-property-expand p-button p-component p-button-outlined p-button-sm p-button-secondary"
+          data-pc-name="button"
+          data-pc-section="root"
+          disabled={false}
+          id="root__add"
+          onClick={[Function]}
+        >
+          <span
+            className="p-button-icon p-c p-button-icon-left pi pi-plus"
+            data-pc-section="icon"
+          />
+          <span
+            className="p-button-label p-c"
+            data-pc-section="label"
+          >
+            Add Item
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`object fields with title and description from both object 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <div
+        id="root__title"
+      >
+        <h5
+          style={
+            {
+              "fontSize": "1.5rem",
+              "margin": 0,
+            }
+          }
+        >
+          My Field
+           
+        </h5>
+        <div
+          aria-orientation="horizontal"
+          className="p-divider p-component p-divider-horizontal p-divider-solid p-divider-left"
+          data-pc-name="divider"
+          data-pc-section="root"
+          role="separator"
+          style={
+            {
+              "alignItems": null,
+              "justifyContent": "center",
+              "marginTop": "0.5rem",
+            }
+          }
+        >
+          <div
+            className="p-divider-content"
+            data-pc-section="content"
+          />
+        </div>
+      </div>
+      <div
+        style={
+          {
+            "marginBottom": "1rem",
+          }
+        }
+      >
+        <span
+          id="root__description"
+        >
+          a fancier description
+        </span>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-string"
+      >
+        <div
+          style={
+            {
+              "display": "flex",
+              "flexDirection": "column",
+              "gap": "0.5rem",
+              "marginBottom": "1rem",
+            }
+          }
+        >
+          <label
+            htmlFor="root_a"
+          >
+            My Item A
+             
+          </label>
+          <input
+            aria-describedby="root_a__error root_a__description root_a__help"
+            autoFocus={false}
+            className="p-inputtext p-component"
+            data-pc-name="inputtext"
+            data-pc-section="root"
+            disabled={false}
+            id="root_a"
+            name="root_a"
+            onBeforeInput={[Function]}
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            onInput={[Function]}
+            onKeyDown={[Function]}
+            onPaste={[Function]}
+            placeholder=""
+            required={false}
+            type="text"
+            value=""
+          />
+          <small>
+            <span
+              id="root_a__description"
+            >
+              a fancier item A description
+            </span>
+          </small>
+        </div>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-number"
+      >
+        <div
+          style={
+            {
+              "display": "flex",
+              "flexDirection": "column",
+              "gap": "0.5rem",
+              "marginBottom": "1rem",
+            }
+          }
+        >
+          <label
+            htmlFor="root_b"
+          >
+            My Item B
+             
+          </label>
+          <input
+            aria-describedby="root_b__error root_b__description root_b__help"
+            autoFocus={false}
+            className="p-inputtext p-component"
+            data-pc-name="inputtext"
+            data-pc-section="root"
+            disabled={false}
+            id="root_b"
+            name="root_b"
+            onBeforeInput={[Function]}
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            onInput={[Function]}
+            onKeyDown={[Function]}
+            onPaste={[Function]}
+            placeholder=""
+            required={false}
+            step="any"
+            type="number"
+            value=""
+          />
+          <small>
+            <span
+              id="root_b__description"
+            >
+              a fancier item B description
+            </span>
+          </small>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`object fields with title and description from uiSchema additionalProperties 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <div
+        id="root__title"
+      >
+        <h5
+          style={
+            {
+              "fontSize": "1.5rem",
+              "margin": 0,
+            }
+          }
+        >
+          My Field
+           
+        </h5>
+        <div
+          aria-orientation="horizontal"
+          className="p-divider p-component p-divider-horizontal p-divider-solid p-divider-left"
+          data-pc-name="divider"
+          data-pc-section="root"
+          role="separator"
+          style={
+            {
+              "alignItems": null,
+              "justifyContent": "center",
+              "marginTop": "0.5rem",
+            }
+          }
+        >
+          <div
+            className="p-divider-content"
+            data-pc-section="content"
+          />
+        </div>
+      </div>
+      <div
+        style={
+          {
+            "marginBottom": "1rem",
+          }
+        }
+      >
+        <span
+          id="root__description"
+        >
+          a fancier description
+        </span>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-string"
+        style={
+          {
+            "alignItems": "center",
+            "display": "flex",
+            "gap": "1rem",
+          }
+        }
+      >
+        <div
+          style={
+            {
+              "flex": 1,
+            }
+          }
+        >
+          <label
+            htmlFor="root_foo-key"
+            style={
+              {
+                "display": "block",
+                "marginBottom": "0.5rem",
+              }
+            }
+          >
+            foo Key
+          </label>
+          <input
+            className="p-inputtext p-component p-filled"
+            data-pc-name="inputtext"
+            data-pc-section="root"
+            defaultValue="foo"
+            disabled={false}
+            id="root_foo-key"
+            name="root_foo-key"
+            onBeforeInput={[Function]}
+            onBlur={[Function]}
+            onInput={[Function]}
+            onKeyDown={[Function]}
+            onPaste={[Function]}
+            required={false}
+            style={
+              {
+                "width": "100%",
+              }
+            }
+          />
+        </div>
+        <div
+          style={
+            {
+              "flex": 1,
+            }
+          }
+        >
+          <div
+            style={
+              {
+                "display": "flex",
+                "flexDirection": "column",
+                "gap": "0.5rem",
+                "marginBottom": "1rem",
+              }
+            }
+          >
+            <label
+              htmlFor="root_foo"
+            >
+              foo
+               
+            </label>
+            <input
+              aria-describedby="root_foo__error root_foo__description root_foo__help"
+              autoFocus={false}
+              className="p-inputtext p-component p-filled"
+              data-pc-name="inputtext"
+              data-pc-section="root"
+              disabled={false}
+              id="root_foo"
+              name="root_foo"
+              onBeforeInput={[Function]}
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              onInput={[Function]}
+              onKeyDown={[Function]}
+              onPaste={[Function]}
+              placeholder=""
+              required={false}
+              type="text"
+              value="foo"
+            />
+          </div>
+        </div>
+        <div>
+          <button
+            className="rjsf-object-property-remove p-button p-component p-button-icon-only p-button-text p-button-rounded p-button-secondary"
+            data-pc-name="button"
+            data-pc-section="root"
+            disabled={false}
+            id="root_foo__remove"
+            onClick={[Function]}
+            title="Remove"
+          >
+            <span
+              className="p-button-icon p-c pi pi-trash"
+              data-pc-section="icon"
+            />
+            <span
+              className="p-button-label p-c"
+              dangerouslySetInnerHTML={
+                {
+                  "__html": "&nbsp;",
+                }
+              }
+              data-pc-section="label"
+            />
+          </button>
+        </div>
+      </div>
+      <div
+        style={
+          {
+            "marginTop": "1rem",
+            "textAlign": "right",
+          }
+        }
+      >
+        <button
+          aria-label="Add Item"
+          className="rjsf-object-property-expand p-button p-component p-button-outlined p-button-sm p-button-secondary"
+          data-pc-name="button"
+          data-pc-section="root"
+          disabled={false}
+          id="root__add"
+          onClick={[Function]}
+        >
+          <span
+            className="p-button-icon p-c p-button-icon-left pi pi-plus"
+            data-pc-section="icon"
+          />
+          <span
+            className="p-button-label p-c"
+            data-pc-section="label"
+          >
+            Add Item
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`object fields with title and description from uiSchema object 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <div
+        id="root__title"
+      >
+        <h5
+          style={
+            {
+              "fontSize": "1.5rem",
+              "margin": 0,
+            }
+          }
+        >
+          My Field
+           
+        </h5>
+        <div
+          aria-orientation="horizontal"
+          className="p-divider p-component p-divider-horizontal p-divider-solid p-divider-left"
+          data-pc-name="divider"
+          data-pc-section="root"
+          role="separator"
+          style={
+            {
+              "alignItems": null,
+              "justifyContent": "center",
+              "marginTop": "0.5rem",
+            }
+          }
+        >
+          <div
+            className="p-divider-content"
+            data-pc-section="content"
+          />
+        </div>
+      </div>
+      <div
+        style={
+          {
+            "marginBottom": "1rem",
+          }
+        }
+      >
+        <span
+          id="root__description"
+        >
+          a fancier description
+        </span>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-string"
+      >
+        <div
+          style={
+            {
+              "display": "flex",
+              "flexDirection": "column",
+              "gap": "0.5rem",
+              "marginBottom": "1rem",
+            }
+          }
+        >
+          <label
+            htmlFor="root_a"
+          >
+            My Item A
+             
+          </label>
+          <input
+            aria-describedby="root_a__error root_a__description root_a__help"
+            autoFocus={false}
+            className="p-inputtext p-component"
+            data-pc-name="inputtext"
+            data-pc-section="root"
+            disabled={false}
+            id="root_a"
+            name="root_a"
+            onBeforeInput={[Function]}
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            onInput={[Function]}
+            onKeyDown={[Function]}
+            onPaste={[Function]}
+            placeholder=""
+            required={false}
+            type="text"
+            value=""
+          />
+          <small>
+            <span
+              id="root_a__description"
+            >
+              a fancier item A description
+            </span>
+          </small>
+        </div>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-number"
+      >
+        <div
+          style={
+            {
+              "display": "flex",
+              "flexDirection": "column",
+              "gap": "0.5rem",
+              "marginBottom": "1rem",
+            }
+          }
+        >
+          <label
+            htmlFor="root_b"
+          >
+            My Item B
+             
+          </label>
+          <input
+            aria-describedby="root_b__error root_b__description root_b__help"
+            autoFocus={false}
+            className="p-inputtext p-component"
+            data-pc-name="inputtext"
+            data-pc-section="root"
+            disabled={false}
+            id="root_b"
+            name="root_b"
+            onBeforeInput={[Function]}
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            onInput={[Function]}
+            onKeyDown={[Function]}
+            onPaste={[Function]}
+            placeholder=""
+            required={false}
+            step="any"
+            type="number"
+            value=""
+          />
+          <small>
+            <span
+              id="root_b__description"
+            >
+              a fancier item B description
+            </span>
+          </small>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`object fields with title and description from uiSchema show add button and fields if additionalProperties is true and not an object 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <div
+        id="root__title"
+      >
+        <h5
+          style={
+            {
+              "fontSize": "1.5rem",
+              "margin": 0,
+            }
+          }
+        >
+          My Field
+           
+        </h5>
+        <div
+          aria-orientation="horizontal"
+          className="p-divider p-component p-divider-horizontal p-divider-solid p-divider-left"
+          data-pc-name="divider"
+          data-pc-section="root"
+          role="separator"
+          style={
+            {
+              "alignItems": null,
+              "justifyContent": "center",
+              "marginTop": "0.5rem",
+            }
+          }
+        >
+          <div
+            className="p-divider-content"
+            data-pc-section="content"
+          />
+        </div>
+      </div>
+      <div
+        style={
+          {
+            "marginBottom": "1rem",
+          }
+        }
+      >
+        <span
+          id="root__description"
+        >
+          a fancier description
+        </span>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-string"
+        style={
+          {
+            "alignItems": "center",
+            "display": "flex",
+            "gap": "1rem",
+          }
+        }
+      >
+        <div
+          style={
+            {
+              "flex": 1,
+            }
+          }
+        >
+          <label
+            htmlFor="root_additionalProperty-key"
+            style={
+              {
+                "display": "block",
+                "marginBottom": "0.5rem",
+              }
+            }
+          >
+            additionalProperty Key
+          </label>
+          <input
+            className="p-inputtext p-component p-filled"
+            data-pc-name="inputtext"
+            data-pc-section="root"
+            defaultValue="additionalProperty"
+            disabled={false}
+            id="root_additionalProperty-key"
+            name="root_additionalProperty-key"
+            onBeforeInput={[Function]}
+            onBlur={[Function]}
+            onInput={[Function]}
+            onKeyDown={[Function]}
+            onPaste={[Function]}
+            required={false}
+            style={
+              {
+                "width": "100%",
+              }
+            }
+          />
+        </div>
+        <div
+          style={
+            {
+              "flex": 1,
+            }
+          }
+        >
+          <div
+            style={
+              {
+                "display": "flex",
+                "flexDirection": "column",
+                "gap": "0.5rem",
+                "marginBottom": "1rem",
+              }
+            }
+          >
+            <label
+              htmlFor="root_additionalProperty"
+            >
+              additionalProperty
+               
+            </label>
+            <input
+              aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
+              autoFocus={false}
+              className="p-inputtext p-component p-filled"
+              data-pc-name="inputtext"
+              data-pc-section="root"
+              disabled={false}
+              id="root_additionalProperty"
+              name="root_additionalProperty"
+              onBeforeInput={[Function]}
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              onInput={[Function]}
+              onKeyDown={[Function]}
+              onPaste={[Function]}
+              placeholder=""
+              required={false}
+              type="text"
+              value="should appear"
+            />
+          </div>
+        </div>
+        <div>
+          <button
+            className="rjsf-object-property-remove p-button p-component p-button-icon-only p-button-text p-button-rounded p-button-secondary"
+            data-pc-name="button"
+            data-pc-section="root"
+            disabled={false}
+            id="root_additionalProperty__remove"
+            onClick={[Function]}
+            title="Remove"
+          >
+            <span
+              className="p-button-icon p-c pi pi-trash"
+              data-pc-section="icon"
+            />
+            <span
+              className="p-button-label p-c"
+              dangerouslySetInnerHTML={
+                {
+                  "__html": "&nbsp;",
+                }
+              }
+              data-pc-section="label"
+            />
+          </button>
+        </div>
+      </div>
+      <div
+        style={
+          {
+            "marginTop": "1rem",
+            "textAlign": "right",
+          }
+        }
+      >
+        <button
+          aria-label="Add Item"
+          className="rjsf-object-property-expand p-button p-component p-button-outlined p-button-sm p-button-secondary"
+          data-pc-name="button"
+          data-pc-section="root"
+          disabled={false}
+          id="root__add"
+          onClick={[Function]}
+        >
+          <span
+            className="p-button-icon p-c p-button-icon-left pi pi-plus"
+            data-pc-section="icon"
+          />
+          <span
+            className="p-button-label p-c"
+            data-pc-section="label"
+          >
+            Add Item
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`object fields with title and description object 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <div
+        id="root__title"
+      >
+        <h5
+          style={
+            {
+              "fontSize": "1.5rem",
+              "margin": 0,
+            }
+          }
+        >
+          Test field
+           
+        </h5>
+        <div
+          aria-orientation="horizontal"
+          className="p-divider p-component p-divider-horizontal p-divider-solid p-divider-left"
+          data-pc-name="divider"
+          data-pc-section="root"
+          role="separator"
+          style={
+            {
+              "alignItems": null,
+              "justifyContent": "center",
+              "marginTop": "0.5rem",
+            }
+          }
+        >
+          <div
+            className="p-divider-content"
+            data-pc-section="content"
+          />
+        </div>
+      </div>
+      <div
+        style={
+          {
+            "marginBottom": "1rem",
+          }
+        }
+      >
+        <span
+          id="root__description"
+        >
+          a test description
+        </span>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-string"
+      >
+        <div
+          style={
+            {
+              "display": "flex",
+              "flexDirection": "column",
+              "gap": "0.5rem",
+              "marginBottom": "1rem",
+            }
+          }
+        >
+          <label
+            htmlFor="root_a"
+          >
+            A
+             
+          </label>
+          <input
+            aria-describedby="root_a__error root_a__description root_a__help"
+            autoFocus={false}
+            className="p-inputtext p-component"
+            data-pc-name="inputtext"
+            data-pc-section="root"
+            disabled={false}
+            id="root_a"
+            name="root_a"
+            onBeforeInput={[Function]}
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            onInput={[Function]}
+            onKeyDown={[Function]}
+            onPaste={[Function]}
+            placeholder=""
+            required={false}
+            type="text"
+            value=""
+          />
+          <small>
+            <span
+              id="root_a__description"
+            >
+              A description
+            </span>
+          </small>
+        </div>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-number"
+      >
+        <div
+          style={
+            {
+              "display": "flex",
+              "flexDirection": "column",
+              "gap": "0.5rem",
+              "marginBottom": "1rem",
+            }
+          }
+        >
+          <label
+            htmlFor="root_b"
+          >
+            B
+             
+          </label>
+          <input
+            aria-describedby="root_b__error root_b__description root_b__help"
+            autoFocus={false}
+            className="p-inputtext p-component"
+            data-pc-name="inputtext"
+            data-pc-section="root"
+            disabled={false}
+            id="root_b"
+            name="root_b"
+            onBeforeInput={[Function]}
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            onInput={[Function]}
+            onKeyDown={[Function]}
+            onPaste={[Function]}
+            placeholder=""
+            required={false}
+            step="any"
+            type="number"
+            value=""
+          />
+          <small>
+            <span
+              id="root_b__description"
+            >
+              B description
+            </span>
+          </small>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`object fields with title and description show add button and fields if additionalProperties is true and not an object 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <div
+        id="root__title"
+      >
+        <h5
+          style={
+            {
+              "fontSize": "1.5rem",
+              "margin": 0,
+            }
+          }
+        >
+          Test field
+           
+        </h5>
+        <div
+          aria-orientation="horizontal"
+          className="p-divider p-component p-divider-horizontal p-divider-solid p-divider-left"
+          data-pc-name="divider"
+          data-pc-section="root"
+          role="separator"
+          style={
+            {
+              "alignItems": null,
+              "justifyContent": "center",
+              "marginTop": "0.5rem",
+            }
+          }
+        >
+          <div
+            className="p-divider-content"
+            data-pc-section="content"
+          />
+        </div>
+      </div>
+      <div
+        style={
+          {
+            "marginBottom": "1rem",
+          }
+        }
+      >
+        <span
+          id="root__description"
+        >
+          a test description
+        </span>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-string"
+        style={
+          {
+            "alignItems": "center",
+            "display": "flex",
+            "gap": "1rem",
+          }
+        }
+      >
+        <div
+          style={
+            {
+              "flex": 1,
+            }
+          }
+        >
+          <label
+            htmlFor="root_additionalProperty-key"
+            style={
+              {
+                "display": "block",
+                "marginBottom": "0.5rem",
+              }
+            }
+          >
+            additionalProperty Key
+          </label>
+          <input
+            className="p-inputtext p-component p-filled"
+            data-pc-name="inputtext"
+            data-pc-section="root"
+            defaultValue="additionalProperty"
+            disabled={false}
+            id="root_additionalProperty-key"
+            name="root_additionalProperty-key"
+            onBeforeInput={[Function]}
+            onBlur={[Function]}
+            onInput={[Function]}
+            onKeyDown={[Function]}
+            onPaste={[Function]}
+            required={false}
+            style={
+              {
+                "width": "100%",
+              }
+            }
+          />
+        </div>
+        <div
+          style={
+            {
+              "flex": 1,
+            }
+          }
+        >
+          <div
+            style={
+              {
+                "display": "flex",
+                "flexDirection": "column",
+                "gap": "0.5rem",
+                "marginBottom": "1rem",
+              }
+            }
+          >
+            <label
+              htmlFor="root_additionalProperty"
+            >
+              additionalProperty
+               
+            </label>
+            <input
+              aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
+              autoFocus={false}
+              className="p-inputtext p-component p-filled"
+              data-pc-name="inputtext"
+              data-pc-section="root"
+              disabled={false}
+              id="root_additionalProperty"
+              name="root_additionalProperty"
+              onBeforeInput={[Function]}
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              onInput={[Function]}
+              onKeyDown={[Function]}
+              onPaste={[Function]}
+              placeholder=""
+              required={false}
+              type="text"
+              value="should appear"
+            />
+          </div>
+        </div>
+        <div>
+          <button
+            className="rjsf-object-property-remove p-button p-component p-button-icon-only p-button-text p-button-rounded p-button-secondary"
+            data-pc-name="button"
+            data-pc-section="root"
+            disabled={false}
+            id="root_additionalProperty__remove"
+            onClick={[Function]}
+            title="Remove"
+          >
+            <span
+              className="p-button-icon p-c pi pi-trash"
+              data-pc-section="icon"
+            />
+            <span
+              className="p-button-label p-c"
+              dangerouslySetInnerHTML={
+                {
+                  "__html": "&nbsp;",
+                }
+              }
+              data-pc-section="label"
+            />
+          </button>
+        </div>
+      </div>
+      <div
+        style={
+          {
+            "marginTop": "1rem",
+            "textAlign": "right",
+          }
+        }
+      >
+        <button
+          aria-label="Add Item"
+          className="rjsf-object-property-expand p-button p-component p-button-outlined p-button-sm p-button-secondary"
+          data-pc-name="button"
+          data-pc-section="root"
+          disabled={false}
+          id="root__add"
+          onClick={[Function]}
+        >
+          <span
+            className="p-button-icon p-c p-button-icon-left pi pi-plus"
+            data-pc-section="icon"
+          />
+          <span
+            className="p-button-label p-c"
+            data-pc-section="label"
+          >
+            Add Item
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`object fields with title and description with global label off additionalProperties 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <div
+        className="rjsf-field rjsf-field-string"
+        style={
+          {
+            "alignItems": "center",
+            "display": "flex",
+            "gap": "1rem",
+          }
+        }
+      >
+        <div
+          style={
+            {
+              "flex": 1,
+            }
+          }
+        >
+          <label
+            htmlFor="root_foo-key"
+            style={
+              {
+                "display": "block",
+                "marginBottom": "0.5rem",
+              }
+            }
+          >
+            foo Key
+          </label>
+          <input
+            className="p-inputtext p-component p-filled"
+            data-pc-name="inputtext"
+            data-pc-section="root"
+            defaultValue="foo"
+            disabled={false}
+            id="root_foo-key"
+            name="root_foo-key"
+            onBeforeInput={[Function]}
+            onBlur={[Function]}
+            onInput={[Function]}
+            onKeyDown={[Function]}
+            onPaste={[Function]}
+            required={false}
+            style={
+              {
+                "width": "100%",
+              }
+            }
+          />
+        </div>
+        <div
+          style={
+            {
+              "flex": 1,
+            }
+          }
+        >
+          <div
+            style={
+              {
+                "display": "flex",
+                "flexDirection": "column",
+                "gap": "0.5rem",
+                "marginBottom": "1rem",
+              }
+            }
+          >
+            <input
+              aria-describedby="root_foo__error root_foo__description root_foo__help"
+              autoFocus={false}
+              className="p-inputtext p-component p-filled"
+              data-pc-name="inputtext"
+              data-pc-section="root"
+              disabled={false}
+              id="root_foo"
+              name="root_foo"
+              onBeforeInput={[Function]}
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              onInput={[Function]}
+              onKeyDown={[Function]}
+              onPaste={[Function]}
+              placeholder=""
+              required={false}
+              type="text"
+              value="foo"
+            />
+          </div>
+        </div>
+        <div>
+          <button
+            className="rjsf-object-property-remove p-button p-component p-button-icon-only p-button-text p-button-rounded p-button-secondary"
+            data-pc-name="button"
+            data-pc-section="root"
+            disabled={false}
+            id="root_foo__remove"
+            onClick={[Function]}
+            title="Remove"
+          >
+            <span
+              className="p-button-icon p-c pi pi-trash"
+              data-pc-section="icon"
+            />
+            <span
+              className="p-button-label p-c"
+              dangerouslySetInnerHTML={
+                {
+                  "__html": "&nbsp;",
+                }
+              }
+              data-pc-section="label"
+            />
+          </button>
+        </div>
+      </div>
+      <div
+        style={
+          {
+            "marginTop": "1rem",
+            "textAlign": "right",
+          }
+        }
+      >
+        <button
+          aria-label="Add Item"
+          className="rjsf-object-property-expand p-button p-component p-button-outlined p-button-sm p-button-secondary"
+          data-pc-name="button"
+          data-pc-section="root"
+          disabled={false}
+          id="root__add"
+          onClick={[Function]}
+        >
+          <span
+            className="p-button-icon p-c p-button-icon-left pi pi-plus"
+            data-pc-section="icon"
+          />
+          <span
+            className="p-button-label p-c"
+            data-pc-section="label"
+          >
+            Add Item
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`object fields with title and description with global label off object 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <div
+        className="rjsf-field rjsf-field-string"
+      >
+        <div
+          style={
+            {
+              "display": "flex",
+              "flexDirection": "column",
+              "gap": "0.5rem",
+              "marginBottom": "1rem",
+            }
+          }
+        >
+          <input
+            aria-describedby="root_a__error root_a__description root_a__help"
+            autoFocus={false}
+            className="p-inputtext p-component"
+            data-pc-name="inputtext"
+            data-pc-section="root"
+            disabled={false}
+            id="root_a"
+            name="root_a"
+            onBeforeInput={[Function]}
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            onInput={[Function]}
+            onKeyDown={[Function]}
+            onPaste={[Function]}
+            placeholder=""
+            required={false}
+            type="text"
+            value=""
+          />
+        </div>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-number"
+      >
+        <div
+          style={
+            {
+              "display": "flex",
+              "flexDirection": "column",
+              "gap": "0.5rem",
+              "marginBottom": "1rem",
+            }
+          }
+        >
+          <input
+            aria-describedby="root_b__error root_b__description root_b__help"
+            autoFocus={false}
+            className="p-inputtext p-component"
+            data-pc-name="inputtext"
+            data-pc-section="root"
+            disabled={false}
+            id="root_b"
+            name="root_b"
+            onBeforeInput={[Function]}
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            onInput={[Function]}
+            onKeyDown={[Function]}
+            onPaste={[Function]}
+            placeholder=""
+            required={false}
+            step="any"
+            type="number"
+            value=""
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`object fields with title and description with global label off show add button and fields if additionalProperties is true and not an object 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <div
+        className="rjsf-field rjsf-field-string"
+        style={
+          {
+            "alignItems": "center",
+            "display": "flex",
+            "gap": "1rem",
+          }
+        }
+      >
+        <div
+          style={
+            {
+              "flex": 1,
+            }
+          }
+        >
+          <label
+            htmlFor="root_additionalProperty-key"
+            style={
+              {
+                "display": "block",
+                "marginBottom": "0.5rem",
+              }
+            }
+          >
+            additionalProperty Key
+          </label>
+          <input
+            className="p-inputtext p-component p-filled"
+            data-pc-name="inputtext"
+            data-pc-section="root"
+            defaultValue="additionalProperty"
+            disabled={false}
+            id="root_additionalProperty-key"
+            name="root_additionalProperty-key"
+            onBeforeInput={[Function]}
+            onBlur={[Function]}
+            onInput={[Function]}
+            onKeyDown={[Function]}
+            onPaste={[Function]}
+            required={false}
+            style={
+              {
+                "width": "100%",
+              }
+            }
+          />
+        </div>
+        <div
+          style={
+            {
+              "flex": 1,
+            }
+          }
+        >
+          <div
+            style={
+              {
+                "display": "flex",
+                "flexDirection": "column",
+                "gap": "0.5rem",
+                "marginBottom": "1rem",
+              }
+            }
+          >
+            <input
+              aria-describedby="root_additionalProperty__error root_additionalProperty__description root_additionalProperty__help"
+              autoFocus={false}
+              className="p-inputtext p-component p-filled"
+              data-pc-name="inputtext"
+              data-pc-section="root"
+              disabled={false}
+              id="root_additionalProperty"
+              name="root_additionalProperty"
+              onBeforeInput={[Function]}
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              onInput={[Function]}
+              onKeyDown={[Function]}
+              onPaste={[Function]}
+              placeholder=""
+              required={false}
+              type="text"
+              value="should appear"
+            />
+          </div>
+        </div>
+        <div>
+          <button
+            className="rjsf-object-property-remove p-button p-component p-button-icon-only p-button-text p-button-rounded p-button-secondary"
+            data-pc-name="button"
+            data-pc-section="root"
+            disabled={false}
+            id="root_additionalProperty__remove"
+            onClick={[Function]}
+            title="Remove"
+          >
+            <span
+              className="p-button-icon p-c pi pi-trash"
+              data-pc-section="icon"
+            />
+            <span
+              className="p-button-label p-c"
+              dangerouslySetInnerHTML={
+                {
+                  "__html": "&nbsp;",
+                }
+              }
+              data-pc-section="label"
+            />
+          </button>
+        </div>
+      </div>
+      <div
+        style={
+          {
+            "marginTop": "1rem",
+            "textAlign": "right",
+          }
+        }
+      >
+        <button
+          aria-label="Add Item"
+          className="rjsf-object-property-expand p-button p-component p-button-outlined p-button-sm p-button-secondary"
+          data-pc-name="button"
+          data-pc-section="root"
+          disabled={false}
+          id="root__add"
+          onClick={[Function]}
+        >
+          <span
+            className="p-button-icon p-c p-button-icon-left pi pi-plus"
+            data-pc-section="icon"
+          />
+          <span
+            className="p-button-label p-c"
+            data-pc-section="label"
+          >
+            Add Item
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;

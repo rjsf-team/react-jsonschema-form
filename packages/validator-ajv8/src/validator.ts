@@ -2,14 +2,12 @@ import Ajv, { ErrorObject, ValidateFunction } from 'ajv';
 import {
   CustomValidator,
   deepEquals,
-  ErrorSchema,
   ErrorTransformer,
   FormContextType,
   ID_KEY,
   RJSFSchema,
   ROOT_SCHEMA_PREFIX,
   StrictRJSFSchema,
-  toErrorList,
   UiSchema,
   ValidationData,
   ValidatorType,
@@ -55,17 +53,6 @@ export default class AJV8Validator<T = any, S extends StrictRJSFSchema = RJSFSch
     this.ajv.removeSchema();
   }
 
-  /** Converts an `errorSchema` into a list of `RJSFValidationErrors`
-   *
-   * @param errorSchema - The `ErrorSchema` instance to convert
-   * @param [fieldPath=[]] - The current field path, defaults to [] if not specified
-   * @deprecated - Use the `toErrorList()` function provided by `@rjsf/utils` instead. This function will be removed in
-   *        the next major release.
-   */
-  toErrorList(errorSchema?: ErrorSchema<T>, fieldPath: string[] = []) {
-    return toErrorList(errorSchema, fieldPath);
-  }
-
   /** Runs the pure validation of the `schema` and `formData` without any of the RJSF functionality. Provided for use
    * by the playground. Returns the `errors` from the validation
    *
@@ -75,10 +62,10 @@ export default class AJV8Validator<T = any, S extends StrictRJSFSchema = RJSFSch
   rawValidation<Result = any>(schema: S, formData?: T): RawValidationErrorsType<Result> {
     let compilationError: Error | undefined = undefined;
     let compiledValidator: ValidateFunction | undefined;
-    if (schema[ID_KEY]) {
-      compiledValidator = this.ajv.getSchema(schema[ID_KEY]);
-    }
     try {
+      if (schema[ID_KEY]) {
+        compiledValidator = this.ajv.getSchema(schema[ID_KEY]);
+      }
       if (compiledValidator === undefined) {
         compiledValidator = this.ajv.compile(schema);
       }
@@ -153,7 +140,7 @@ export default class AJV8Validator<T = any, S extends StrictRJSFSchema = RJSFSch
     schema: S,
     customValidate?: CustomValidator<T, S, F>,
     transformErrors?: ErrorTransformer<T, S, F>,
-    uiSchema?: UiSchema<T, S, F>
+    uiSchema?: UiSchema<T, S, F>,
   ): ValidationData<T> {
     const rawErrors = this.rawValidation<ErrorObject>(schema, formData);
     return processRawValidationErrors(this, rawErrors, formData, schema, customValidate, transformErrors, uiSchema);

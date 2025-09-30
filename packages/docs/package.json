@@ -1,6 +1,6 @@
 {
   "name": "@rjsf/docs",
-  "version": "5.24.3",
+  "version": "6.0.0-beta.19",
   "private": true,
   "scripts": {
     "docusaurus": "docusaurus",
@@ -26,19 +26,17 @@
     ]
   },
   "dependencies": {
-    "@docusaurus/core": "^2.4.0",
-    "@docusaurus/preset-classic": "^2.4.3",
-    "@mdx-js/react": "^1.6.22",
-    "ajv": "^8.12.0",
-    "clsx": "^1.2.1",
-    "prism-react-renderer": "^1.3.5",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "@docusaurus/core": "^3.8.1",
+    "@docusaurus/preset-classic": "^3.8.1",
+    "@mdx-js/react": "^3.1.1",
+    "ajv": "^8.17.1",
+    "prism-react-renderer": "^2.4.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
   },
   "devDependencies": {
-    "@docusaurus/module-type-aliases": "^2.4.0",
-    "@tsconfig/docusaurus": "^1.0.7",
-    "typescript": "^4.9.5"
+    "@docusaurus/module-type-aliases": "^3.8.1",
+    "@tsconfig/docusaurus": "^2.0.3"
   },
   "browserslist": {
     "production": [
@@ -53,6 +51,6 @@
     ]
   },
   "engines": {
-    "node": ">=16.14"
+    "node": ">=20"
   }
 }

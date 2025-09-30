@@ -3,6 +3,7 @@ import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import {
   ADDITIONAL_PROPERTY_FLAG,
+  buttonId,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
@@ -18,7 +19,7 @@ import {
 export default function WrapIfAdditionalTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(props: WrapIfAdditionalTemplateProps<T, S, F>) {
   const {
     children,
@@ -59,7 +60,7 @@ export default function WrapIfAdditionalTemplate<
 
   return (
     <Grid container key={`${id}-key`} alignItems='center' spacing={2} className={classNames} style={style}>
-      <Grid item xs>
+      <Grid size='auto'>
         <TextField
           fullWidth={true}
           required={required}
@@ -72,11 +73,11 @@ export default function WrapIfAdditionalTemplate<
           type='text'
         />
       </Grid>
-      <Grid item={true} xs>
-        {children}
-      </Grid>
-      <Grid item={true}>
+      <Grid size='auto'>{children}</Grid>
+      <Grid>
         <RemoveButton
+          id={buttonId<T>(id, 'remove')}
+          className='rjsf-object-property-remove'
           iconType='default'
           style={btnStyle}
           disabled={disabled || readonly}

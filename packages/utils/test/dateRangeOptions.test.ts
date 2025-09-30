@@ -62,8 +62,8 @@ describe('dateRangeOptions()', () => {
     expect(dateRangeOptions(0, 0)).toEqual([{ value: startYear, label: `${startYear}` }]);
   });
   it('throws when start and stop are different signs', () => {
-    expect(() => dateRangeOptions(1, -1)).toThrowError(
-      new Error(`Both start (${1}) and stop (${-1}) must both be <= 0 or > 0, got one of each`)
+    expect(() => dateRangeOptions(1, -1)).toThrow(
+      new Error(`Both start (${1}) and stop (${-1}) must both be <= 0 or > 0, got one of each`),
     );
   });
 });

@@ -12,9 +12,10 @@ export type ThemeProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F exten
 
 /** A Higher-Order component that creates a wrapper around a `Form` with the overrides from the `WithThemeProps` */
 export default function withTheme<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  themeProps: ThemeProps<T, S, F>
+  themeProps: ThemeProps<T, S, F>,
 ): ComponentType<FormProps<T, S, F>> {
-  return forwardRef(
+  // @ts-expect-error TS2322 because the latest types complain about LegacyRef's string form not working with Form
+  return forwardRef<Form<T, S, F>, FormProps<T, S, F>>(
     ({ fields, widgets, templates, ...directProps }: FormProps<T, S, F>, ref: ForwardedRef<Form<T, S, F>>) => {
       fields = { ...themeProps?.fields, ...fields };
       widgets = { ...themeProps?.widgets, ...widgets };
@@ -37,6 +38,6 @@ export default function withTheme<T = any, S extends StrictRJSFSchema = RJSFSche
           ref={ref}
         />
       );
-    }
+    },
   );
 }

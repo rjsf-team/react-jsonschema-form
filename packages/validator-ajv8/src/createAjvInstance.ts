@@ -1,9 +1,9 @@
 import Ajv, { Options } from 'ajv';
 import addFormats, { FormatsPluginOptions } from 'ajv-formats';
 import isObject from 'lodash/isObject';
+import { ADDITIONAL_PROPERTY_FLAG, RJSF_ADDITIONAL_PROPERTIES_FLAG } from '@rjsf/utils';
 
 import { CustomValidatorOptionsType } from './types';
-import { ADDITIONAL_PROPERTY_FLAG, RJSF_ADDITIONAL_PROPERTIES_FLAG } from '@rjsf/utils';
 
 export const AJV_CONFIG: Options = {
   allErrors: true,
@@ -36,7 +36,7 @@ export default function createAjvInstance(
   customFormats?: CustomValidatorOptionsType['customFormats'],
   ajvOptionsOverrides: CustomValidatorOptionsType['ajvOptionsOverrides'] = {},
   ajvFormatOptions?: FormatsPluginOptions | false,
-  AjvClass: typeof Ajv = Ajv
+  AjvClass: typeof Ajv = Ajv,
 ) {
   const ajv = new AjvClass({ ...AJV_CONFIG, ...ajvOptionsOverrides });
   if (ajvFormatOptions) {

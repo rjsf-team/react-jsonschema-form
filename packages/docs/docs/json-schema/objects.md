@@ -87,7 +87,7 @@ const uiSchema: UiSchema = {
 };
 ```
 
-## Additional properties
+## Additional and pattern properties
 
 The `additionalProperties` keyword allows the user to add properties with arbitrary key names. Set this keyword equal to a schema object:
 
@@ -116,9 +116,36 @@ In this way, an add button for new properties is shown by default.
 
 You can also define `uiSchema` options for `additionalProperties` by setting the `additionalProperties` attribute in the `uiSchema`.
 
+The `patternProperties` keyword allows the user to add properties with names that match one or more of the specified regular expressions
+
+```tsx
+import { Form } from '@rjsf/core';
+import { RJSFSchema } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
+
+const schema: RJSFSchema = {
+  type: 'object',
+  properties: {
+    name: {
+      type: 'string',
+    },
+  },
+  patternProperties: {
+    '^foo+$': {
+      type: 'number',
+      enum: [1, 2, 3],
+    },
+  },
+};
+
+render(<Form schema={schema} validator={validator} />, document.getElementById('app'));
+```
+
+Also in this case, an add button for new properties is shown by default.
+
 ### `expandable` option
 
-You can turn support for `additionalProperties` off with the `expandable` option in `uiSchema`:
+You can turn support for `additionalProperties` and `patternProperties` off with the `expandable` option in `uiSchema`:
 
 ```ts
 import { UiSchema } from '@rjsf/utils';

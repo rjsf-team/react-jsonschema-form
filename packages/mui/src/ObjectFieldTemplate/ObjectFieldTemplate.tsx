@@ -9,6 +9,7 @@ import {
   getTemplate,
   getUiOptions,
   titleId,
+  buttonId,
 } from '@rjsf/utils';
 
 /** The `ObjectFieldTemplate` is the template to use to render all the inner properties of an object along with the
@@ -20,7 +21,7 @@ import {
 export default function ObjectFieldTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(props: ObjectFieldTemplateProps<T, S, F>) {
   const {
     description,
@@ -41,7 +42,7 @@ export default function ObjectFieldTemplate<
   const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
     'DescriptionFieldTemplate',
     registry,
-    uiOptions
+    uiOptions,
   );
   // Button templates are not overridden in the uiSchema
   const {
@@ -75,16 +76,17 @@ export default function ObjectFieldTemplate<
           element.hidden ? (
             element.content
           ) : (
-            <Grid item={true} xs={12} key={index} style={{ marginBottom: '10px' }}>
+            <Grid size={{ xs: 12 }} key={index} style={{ marginBottom: '10px' }}>
               {element.content}
             </Grid>
-          )
+          ),
         )}
         {canExpand<T, S, F>(schema, uiSchema, formData) && (
           <Grid container justifyContent='flex-end'>
-            <Grid item={true}>
+            <Grid>
               <AddButton
-                className='object-property-expand'
+                id={buttonId<T>(idSchema, 'add')}
+                className='rjsf-object-property-expand'
                 onClick={onAddClick(schema)}
                 disabled={disabled || readonly}
                 uiSchema={uiSchema}

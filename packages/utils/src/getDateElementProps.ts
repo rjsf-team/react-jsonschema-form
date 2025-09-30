@@ -23,7 +23,7 @@ export default function getDateElementProps(
   date: DateObject,
   time: boolean,
   yearRange: [number, number] = [1900, new Date().getFullYear() + 2],
-  format: DateElementFormat = 'YMD'
+  format: DateElementFormat = 'YMD',
 ) {
   const { day, month, year, hour, minute, second } = date;
 
@@ -48,7 +48,7 @@ export default function getDateElementProps(
     dateElementProp.push(
       { type: 'hour', range: [0, 23], value: hour },
       { type: 'minute', range: [0, 59], value: minute },
-      { type: 'second', range: [0, 59], value: second }
+      { type: 'second', range: [0, 59], value: second },
     );
   }
 

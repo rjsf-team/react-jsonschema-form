@@ -39,6 +39,662 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Updated `getDefaultFormState` calls to reflect addition of `initialDefaultsGenerated`
 
+# 6.0.0-beta.19
+
+## @rjsf/core
+
+- Updated `Form` to fix live validation in `getStateFromProps()` broken by an optimization, fixing [#4782](https://github.com/rjsf-team/react-jsonschema-form/issues/4782)
+- Updated `Form` to fix error messages being displayed abnormally when `customValidate` is provided, fixing [#4783](https://github.com/rjsf-team/react-jsonschema-form/issues/4783)
+- Updated `Form` to fix `omitExtraData` when the leaf node happens to have an object value, fixing [#4784](https://github.com/rjsf-team/react-jsonschema-form/issues/4784)
+
+## @rjsf/utils
+
+- Updated `resolveSchema()` to pass the `experimental_customMergeAllOf` options properly to `resolveReference()` and `resolveDependencies()` called within it
+
+# 6.0.0-beta.18
+
+## @rjsf/chakra-ui
+
+- Updated `ObjectFieldTemplate` to always generate the "Add" button when `canExpand()` is true, fixing [#4772](https://github.com/rjsf-team/react-jsonschema-form/issues/4772)
+
+## @rjsf/core
+
+- Updated `Form` to add the `globalFormOptions` to the `registry` when there are `GlobalFormOptions` provided, also stopped passing `idPrefix` and `idSeparator` to `SchemaField`
+- Updated `ArrayField`, `LayoutGridField`, `ObjectField` and `SchemaField` to get `idPrefix`, `idSeparator` from the `registry.globalFormOptions`, no longer passing them on `FieldProps`
+  - Updated `SchemaField` to get `experimental_componentUpdateStrategy` from the `registry.globalFormOptions` as well
+
+## @rjsf/utils
+
+- Update `getDefaultFormState()` to add support for `null` defaults for `["null", "object"]` and `["null", "array"]`, fixing [#1581](https://github.com/rjsf-team/react-jsonschema-form/issues/1581)
+- Added a new `GlobalFormProps` interface which contains the following props and replaced the `experimental_componentUpdateStrategy` in `Registry` with `globalFormProps?: GlobalFormProps`
+  - `experimental_componentUpdateStrategy` (refactored from `Registry`) and `idPrefix` & `idSeparator` (refactored from `FieldProps`)
+- BREAKING CHANGE: Removed the optional `idPrefix` and `idSeparator` props from the `FieldProps` interface
+
+## Dev / docs / playground
+
+- Updated the `custom-widget-fields.md` and `v6.x upgrade guide.md` to document the refactor of the `idPrefix` and `idSeparator` refactor
+
+# 6.0.0-beta.17
+
+## @rjsf/core
+
+- Updated `ObjectField` to remove the `name` from the path passed to `onChange()` callback in `handleAddClick()` and `onDropPropertyClick()`, fixing [#4763](https://github.com/rjsf-team/react-jsonschema-form/issues/4763)
+- Updated `Form` to restore the passing of an empty string for `name` to avoid accidentally showing it as the title for the whole schema
+
+## @rjsf/shadcn
+
+- Update `ArrayFieldItemTemplate` to align buttons with the input field, fixing [#4753](https://github.com/rjsf-team/react-jsonschema-form/pull/4753)
+
+# 6.0.0-beta.16
+
+## @rjsf/antd
+
+- Updated the `ArrayFieldTemplate`, `FieldTemplate` and `ObjectFieldTemplate` to get `formContext` from the `registry`
+
+## @rjsf/core
+
+- Updated `ArrayField`, `Form`, `LayoutMultiSchemaField` and `SchemaField` to stop passing `formContext`
+
+## @rjsf/daisyui
+
+- Updated `FieldTemplate` to remove `formContext` as it is never used
+
+## @rjsf/semantic-ui
+
+- Updated the `ArrayFieldTemplate`, `BaseInputTemplate`, `CheckboxWidget`, `FieldTemplate`, `RadioWidget`, `RangeSelect`, `SelectWidget`, `TextareaWidget` and `ObjectFieldTemplate` to get `formContext` from the `registry`
+
+## @rjsf/utils
+
+- BREAKING CHANGE: Removed `formContext` from the following interfaces because it is available on `registry`:
+  - `ErrorListProps`, `FieldProps`, `FieldTemplateProps`, `ArrayFieldTemplateProps` and `WidgetProps`
+- Update `mergeDefaultsWithFormData` to properly handle overriding `undefined` formData with a `null` default value, fixing [#4734](https://github.com/rjsf-team/react-jsonschema-form/issues/4734)
+- Fixed object reference sharing in arrays with minItems when using oneOf schemas, fixing [#4756](https://github.com/rjsf-team/react-jsonschema-form/issues/4756)
+- Updated `getWigets()` to output the `schema` when throwing errors, fixing [#4731](https://github.com/rjsf-team/react-jsonschema-form/issues/4731)
+
+## Dev / docs / playground
+
+- Updated the documentation to remove `formContext` from the interface documentation, adding a BREAKING CHANGE notification in the `v6.x upgrade guide`
+- POTENTIAL BREAKING CHANGE: Updated the `cjs` build for all packages to generate `.cjs` files instead of `.js` files and updating the `exports` to make the `require` statements use `.cjs`, fixing [#4754]https://github.com/rjsf-team/react-jsonschema-form/issues/4754)
+- Updated `v6.x upgrade guide.md` to note the change to the `cjs` builds
+
+# 6.0.0-beta.15
+
+## @rjsf/chakra-ui
+
+- Updated `package.json` for to make `lucide-react` a dependency rather than a devDependency, fixing [#4739](https://github.com/rjsf-team/react-jsonschema-form/issues/4739)
+
+## @rjsf/core
+
+- Updated `ArrayField` `onSelectChange` to not pass `name` in the `path` since the `ObjectField` will automatically add it [#4733](https://github.com/rjsf-team/react-jsonschema-form/issues/4733)
+- Updated `Form` to optimize the need for live validation in an attempt to improve performance, potentially fixing [#3616](https://github.com/rjsf-team/react-jsonschema-form/issues/3616)
+
+## @rjsf/semantic-ui
+
+- Updated `ArrayField` to stop using `nanoid` and instead use `lodash/uniqueId` to fix [#4762](https://github.com/rjsf-team/react-jsonschema-form/issues/4726)
+
+## @rjsf/shadcn
+
+- Update `README.md` with picture of the theme!
+- Allow passing `className` props to `AddButton`, `BaseInputTemplate`, `CheckboxWidget`, `CheckboxesWidget`, `RadioWidget`, `SelectWidget`, `SubmitButton`, `TextareaWidget` for extra Tailwind CSS customization through `ui:className`
+
+## @rjsf/utils
+
+- Updated `getTestIds` to stop using `nanoid` and instead use `lodash/uniqueId` to fix [#4762](https://github.com/rjsf-team/react-jsonschema-form/issues/4726)
+
+## Dev / docs / playground
+
+- Removed `nanoid` from the build system and `jest.config.js` files
+
+# 6.0.0-beta.14
+
+## @rjsf/core
+
+- Added support for dynamic UI schema in array fields - the `items` property in `uiSchema` can now accept a function that returns a UI schema based on the array item's data, index, and form context ([#4706](https://github.com/rjsf-team/react-jsonschema-form/pull/4706))
+- Fixed checkbox widget to use current value instead of event target in onFocus/onBlur handlers, fixing [#4704](https://github.com/rjsf-team/react-jsonschema-form/issues/4704)
+- Updated all of the `XxxxField` components and `Form` to handle the new `path` parameter in `FieldProps.onChange`, making `Form` queue up changes so that they are all processed and no data is lost, fixing [#3367](https://github.com/rjsf-team/react-jsonschema-form/issues/3367)
+- Updated a bug in `AltDateWidget` related to the `clear` button not working after the fix for [#3367](https://github.com/rjsf-team/react-jsonschema-form/issues/3367)
+- Fixed the missing hook dependencies for the `CheckboxesWidget` so that they work properly
+- Added support for array indexes in the `LayoutGridField`, fixing [#4676](https://github.com/rjsf-team/react-jsonschema-form/issues/4676)
+
+## @rjsf/chakra-ui
+
+- Fixed checkbox widget to use current value instead of event target in onFocus/onBlur handlers, fixing [#4704](https://github.com/rjsf-team/react-jsonschema-form/issues/4704)
+
+## @rjsf/daisyui
+
+- Fixed checkbox widget to use current value instead of event target in onFocus/onBlur handlers, fixing [#4704](https://github.com/rjsf-team/react-jsonschema-form/issues/4704)
+- Fixed additional properties rendering by properly connecting the `FieldTemplate` and `WrapIfAdditionalTemplate`, fixing [4707](https://github.com/rjsf-team/react-jsonschema-form/issues/4707)
+- Fixed the missing hook dependencies in the `DateTimeWidget` and `DateWidget` so that they work properly
+
+## @rjsf/fluentui-rc
+
+- Fixed checkbox widget to use current value instead of event target in onFocus/onBlur handlers, fixing [#4704](https://github.com/rjsf-team/react-jsonschema-form/issues/4704)
+
+## @rjsf/mantine
+
+- Added new theme!
+
+## @rjsf/mui
+
+- Fixed checkbox widget to use current value instead of event target in onFocus/onBlur handlers, fixing [#4704](https://github.com/rjsf-team/react-jsonschema-form/issues/4704)
+
+## @rjsf/primereact
+
+- Fixed checkbox widget to use current value instead of event target in onFocus/onBlur handlers, fixing [#4704](https://github.com/rjsf-team/react-jsonschema-form/issues/4704)
+
+## @rjsf/semantic-ui
+
+- Fixed checkbox widget to use current value instead of event target in onFocus/onBlur handlers, fixing [#4704](https://github.com/rjsf-team/react-jsonschema-form/issues/4704)
+
+## @rjsf/shadcn
+
+- Bump `@shadcn/ui` components to use latest version from https://ui.shadcn.com/
+- Bump `tailwindcss` to using v4 and css compiling process to use latest `@tailwindcss/cli`
+- Remove `postcss` due to new Oxide compiler of tailwindcss
+- Update playground themes with `default`, `Amethyst Haze`, `Caffeine`, `Claude`, `Neo Brutalism`, `Pastel Dreams`, `Soft Pop`, `Twitter`, `Vercel`
+- Radio widget labels are now accessible and can be clicked on to select the associated option.
+
+## @rjsf/utils
+
+- Updated `UiSchema` type to support dynamic array item UI schemas - the `items` property can now be either a `UiSchema` object or a function that returns a `UiSchema` ([#4706](https://github.com/rjsf-team/react-jsonschema-form/pull/4706))
+- Added `title` property to `RJSFValidationError` [PR](https://github.com/rjsf-team/react-jsonschema-form/pull/4700)
+- BREAKING CHANGE: Updated the `FieldProps` interface's `onChange` handler to inject a new optional `path` before the `ErrorSchema` parameter as part of the fix for [#3367](https://github.com/rjsf-team/react-jsonschema-form/issues/3367)
+
+## @rjsf/validator-ajv8
+
+- Updated `transformRJSFValidationErrors()` to include the `title` property of a field with error fixing #4504 with [PR](https://github.com/rjsf-team/react-jsonschema-form/pull/4700)
+- Updated `AJVValidator` to handle the attempted compile of a bad schema, fixing [#4357](https://github.com/rjsf-team/react-jsonschema-form/issues/4357)
+
+## Dev / docs / playground
+
+- Added comprehensive documentation for dynamic UI schema feature with TypeScript examples [#4706](https://github.com/rjsf-team/react-jsonschema-form/pull/4706)
+- Updated array documentation to reference the new dynamic UI schema capabilities [#4706](https://github.com/rjsf-team/react-jsonschema-form/pull/4706)
+- Updated nearly all of the libraries in the `package.json` files to the latest non-breaking versions
+- Fixed the broken `Custom Array` sample
+- Improved the `Any Of with Custom Field` sample so that it renders using the appropriate theme components
+- Updated the `custom-widgets-fields.md` and `v6.x upgrade guide.md` to document the BREAKING CHANGE to the `FieldProps.onChange` behavior
+- Updated the playground to properly output the `validationError` when running `Raw Validate`
+
+# 6.0.0-beta.13
+
+## @rjsf/shadcn
+
+- Updated `lodash` import in `fancy-multi-select.tsx` to to be direct import, fixing [#4696](https://github.com/rjsf-team/react-jsonschema-form/issues/4696)
+
+# 6.0.0-beta.13
+
+## @rjsf/core
+
+- Added `experimental_componentUpdateStrategy` prop to `Form` component to control re-render optimization behavior. Supports `'customDeep'` (default, uses deep equality checks that ignore functions), `'shallow'`, and `'always'`
+
+## @rjsf/utils
+
+- Extended `Registry` interface to include optional `experimental_componentUpdateStrategy` property
+- Added `shallowEquals()` utility function for shallow equality comparisons
+- Fixed boolean fields incorrectly set to `{}` when switching oneOf/anyOf options with `mergeDefaultsIntoFormData` set to `useDefaultIfFormDataUndefined`, fixing [#4709](https://github.com/rjsf-team/react-jsonschema-form/issues/4709) ([#4710](https://github.com/rjsf-team/react-jsonschema-form/pull/4710))
+- Always make all references absolute in nested bundled schemas
+
+# 6.0.0-beta.12
+
+## @rjsf/core
+
+- Updated `Form` to store the `schemaUtils.getRootSchema()` into the `state.schema` and use that everywhere as the `schema`
+
+## @rjsf/shadcn
+
+- Updated the building of `shadcn` to use the `lodashReplacer` with `tsc-alias` fixing [#4678](https://github.com/rjsf-team/react-jsonschema-form/issues/4678)
+
+## @rjsf/utils
+
+- Updated `SchemaUtils` and `createSchemaUtils()` to add a new `getRootSchema()` function
+
+# 6.0.0-beta.11
+
+## @rjsf/antd
+
+- Set peerDependency for `@ant-design/icons` to `^6.0.0`, fixing [#4643](https://github.com/rjsf-team/react-jsonschema-form/issues/4643)
+- Added `MultiSchemaFieldTemplate`
+
+## @rjsf/chakra-ui
+
+- Added `MultiSchemaFieldTemplate`
+- Improve visual styling of error validation boxes
+- Update `chakra-ui/react` package to `^3.19.1`
+
+## @rjsf/core
+
+- Refactored `MultiSchemaField` to use the `MultiSchemaFieldTemplate` provided by the registry.
+- Added `MultiSchemaFieldTemplate` component to maintain the same functionality as the previous `MultiSchemaField` implementation.
+
+## @rjsf/daisyui
+
+- Added `MultiSchemaFieldTemplate`
+
+## @rjsf/fluentui-rc
+
+- Added `MultiSchemaFieldTemplate`
+
+## @rjsf/mui
+
+- Added `MultiSchemaFieldTemplate`
+
+## @rjsf/primereact
+
+- New theme!
+
+## @rjsf/react-bootstrap
+
+- Added `MultiSchemaFieldTemplate`
+
+## @rjsf/semantic-ui
+
+- Added `MultiSchemaFieldTemplate`
+
+## @rjsf/shadcn
+
+- Added `MultiSchemaFieldTemplate`
+
+## @rjsf/utils
+
+- Fixed issue where oneOf radio button could not be modified when defaults were set, fixing [#4634](https://github.com/rjsf-team/react-jsonschema-form/issues/4634)
+- Fix default value for object properties such as enums that are rendered in select, radio inputs, etc.
+- Add support for `MultiSchemaFieldTemplate`, with new `MultiSchemaFieldTemplateProps`, to the `TemplatesType` interface
+
+## Dev / docs / playground
+
+- Added documentation for the new `MultiSchemaFieldTemplate`
+
+# 6.0.0-beta.10
+
+## @rjsf/mui
+
+- Fixed build process to remove the `tsc-alias` replacer that was adding `/index.js` onto the `@mui/Xxxx` imports since MUI 7 has proper ESM support
+
+# 6.0.0-beta.9
+
+## @rjsf/antd
+
+- Updated the `README.md` file for dependencies and snapshots due to updating to latest `antd`
+
+## @rjsf/chakra-ui
+
+- Updated `SelectWidget` to only pick the first element in a list when single selection is active, fixing [#4623](https://github.com/rjsf-team/react-jsonschema-form/issues/4623)
+- Updated the `README.md` file for dependencies
+
+## @rjsf/daisyui
+
+- Updated the `README.md` file for dependencies
+- Updated `package.json` to move `@fluentui` packages to peer and dev dependencies
+
+## @rjsf/fluentui-rc
+
+- Updated the `README.md` file for dependencies
+- Updated `package.json` to move `daisyui` to peer and dev dependencies
+
+## @rjsf/mui
+
+- Updated the `README.md` file for dependencies
+- BREAKING CHANGE: Upgraded MUI to version 7, dropping support for earlier versions due to conversion of `Grid`s to v7 version (a MUI breaking change)
+
+## @rjsf/react-bootstrap
+
+- Updated the `README.md` file for dependencies
+
+## @rjsf/semantic-ui
+
+- Updated the `README.md` file for dependencies
+- Deprecated the theme due to it appearing to be a dead project
+
+## @rjsf/shadcn
+
+- Updated the `README.md` file for dependencies
+
+## @rjsf/utils
+
+- Fixed form data propagation with `patternProperties` [#4617](https://github.com/rjsf-team/react-jsonschema-form/pull/4617)
+- Updated the `GlobalUISchemaOptions` types to extend `GenericObjectType` to support user-defined values for their extensions
+
+## Dev / docs / playground
+
+- Updated `playground` to use MUI version 7
+- Updated `v6 upgrade guide.md` to note the breaking change for MUI 7 and deprecation of `semantic-ui`
+
+# 6.0.0-beta.8
+
+## @rjsf/chakra-ui
+
+- Added `getChakra` to package exports
+- Restored the `ui:options` customization
+- Updated `SelectWidget` to only pick the first element in a list when single selection is active, fixing [#4623](https://github.com/rjsf-team/react-jsonschema-form/issues/4623)
+
+## @rjsf/core
+
+- Updated `LayoutGridField` to use the pre-existing `UI_GLOBAL_OPTIONS_KEY` instead of its own incorrect one.
+
+## @rjsf/utils
+
+- Fixed form data propagation with `patternProperties` [#4617](https://github.com/rjsf-team/react-jsonschema-form/pull/4617)
+- Fixed issue where oneOf schema references could not be modified when defaults were set, fixing [#4580](https://github.com/rjsf-team/react-jsonschema-form/issues/4580).
+- Updated the `GlobalUISchemaOptions` types to extend `GenericObjectType` to support user-defined values for their extensions
+
+## Dev / docs / playground
+
+- Updated precompiled schemas documentation in `validation.md` based on v6 changes, addressing [#4618](https://github.com/rjsf-team/react-jsonschema-form/issues/4618)
+
+# 6.0.0-beta.7
+
+## @rjsf/core
+
+- Fixed crash in `LayoutGridField` when the 'name' field is missing in the grid schema for a component
+
+# 6.0.0-beta.6
+
+## @rjsf/utils
+
+- Updated the `Field` type to add the optional `TEST_IDS?: TestIdShape` prop to it to support exposing the `TEST_IDS` static prop on `LayoutGridField`, `LayoutHeaderField` and `LayoutMultiSchemaField` for external users
+
+# 6.0.0-beta.5
+
+## Dev / docs / playground
+
+- Updated the peer dependencies for all packages from `6.0.0-beta` to `^6.0.0-beta` to avoid `npm install` dependency resolution issues
+
+# 6.0.0-beta.4
+
+## Dev / docs / playground
+
+- Updated the peer dependencies for all packages from `6` to `6.0.0-beta` to avoid `npm install` dependency resolution issues
+
+# 6.0.0-beta.3
+
+## Dev / docs / playground
+
+- Updated the peer dependencies for all packages from `^6.0.0-beta.x` to `6` to avoid `npm install` dependency resolution issues
+
+# 6.0.0-beta.2
+
+## @rjsf/antd
+
+- Updated `DescriptionField` to render the `description` using the `RichDescription` field
+
+## @rjsf/chakra-ui
+
+- Updated `DescriptionField` to render the `description` using the `RichDescription` field
+
+## @rjsf/core
+
+- Added new `RichDescription` component, refactored from `SchemaField` to support Rich Text descriptions in Markdown format
+- Updated `DescriptionField` to render the `description` using the `RichDescription` field
+
+## @rjsf/daisyui
+
+- Updated `DescriptionField` to render the `description` using the `RichDescription` field
+- Updated `FieldTemplate` to move the checkbox implementation into the `CheckboxWidget` adding the `description` for checkboxes
+- Updated `package.json` to make the package publishable
+- Updated `DaisyUIFrameProvider` to extract the bulk of the code into `DaisyUIFrameComponent` to add a `useEffect()` with a cleanup to remove the tailwind styles
+
+## @rjsf/fluentui-rc
+
+- Updated `DescriptionField` to render the `description` using the `RichDescription` field
+
+## @rjsf/mui
+
+- Updated `DescriptionField` to render the `description` using the `RichDescription` field
+
+## @rjsf/react-bootstrap
+
+- Updated `DescriptionField` to render the `description` using the `RichDescription` field
+- Updated `CheckboxField` to remove the `checkbox` class that breaks the UI
+
+## @rjsf/semantic-ui
+
+- Updated `DescriptionField` to render the `description` using the `RichDescription` field
+
+## @rjsf/shadcn
+
+- Updated `DescriptionField` to render the `description` using the `RichDescription` field
+
+## @rjsf/utils
+
+- Updated the `description` field in field props to be a `string | ReactElement` and added `enableMarkdownInDescription` to the `GlobalUISchemaOptions` interface
+- Support for bundled JSON Schemas [#4505](https://github.com/rjsf-team/react-jsonschema-form/issues/4505)
+- Fixed issue with schema references in combinators(allOf, anyOf, oneOf) could not be modified when defaults were set, fixing [#4555](https://github.com/rjsf-team/react-jsonschema-form/issues/4555)
+
+## Dev / docs / playground
+
+- Updated the `snapshot-tests` to disable `getTestId()` for snapshots and updated the `formTests.tsx` to add tests for rich text descriptions for generic fields and the `CheckboxWidget`
+- Updated the `uiSchema.md` to document new `enableMarkdownInDescription` prop
+- Updated the `playground` to move `daisyui` theme choice after `chakra-ui` and to stop freezing the samples to avoid an `AJV` validation issue
+  - Also removed `validator` from the `examples.ts` to fix [#4605](https://github.com/rjsf-team/react-jsonschema-form/issues/4605)
+- Added a playground example for bundled JSON Schemas
+
+# 6.0.0-beta.1
+
+## @rjsf/antd
+
+- BREAKING CHANGE: Refactored `ArrayFieldItemTemplate` to use the new `ArrayFieldItemButtonsTemplate`
+- Updated the `ArrayFieldTemplate`, `ObjectFieldTemplate`, and `WrapIfAdditionalTemplate` to a unique id using the `buttonId()` function and adding consistent marker classes
+- Implemented the `GridTemplate` component, adding it to the `templates` for the theme
+- BREAKING CHANGE: Removed support for version 4 of `antd`
+- Updated `ArrayFieldItemTemplate` to replace `Button.Group` with `Space.Compact` since `Button.Group` is deprecated in `antd` version 5
+- Upgraded to `@ant-design/icon@5`
+- BREAKING CHANGE: Removed the addition of `Bootstrap 3` classes from the `SchemaField` and added `rjsf-` prefix to marker classes, thereby changing theme `FieldTemplate` className prop output and associated snapshots
+
+## @rjsf/chakra-ui
+
+- BREAKING CHANGE: upgrade from v2 to v3
+- BREAKING CHANGE: remove deprecated `@chakra-ui/icon` in favor of `lucide-react`
+- BREAKING CHANGE: Refactored `ArrayFieldItemTemplate` to use the new `ArrayFieldItemButtonsTemplate`
+- Updated the `ArrayFieldTemplate`, `ObjectFieldTemplate`, and `WrapIfAdditionalTemplate` to a unique id using the `buttonId()` function and adding consistent marker classes
+- Implemented the `GridTemplate` component, adding it to the `templates` for the theme
+- BREAKING CHANGE: Removed the addition of `Bootstrap 3` classes from the `SchemaField` and added `rjsf-` prefix to marker classes, thereby changing theme `FieldTemplate` className prop output and associated snapshots
+
+## @rjsf/core
+
+- BREAKING CHANGE: Updated `ArrayField` to provide the `buttonsProps` to the `ArrayFieldItemTemplateType`
+- Added `ArrayFieldItemButtonsTemplate` component as a refactor of all the common buttons code from all the `ArrayFieldItemTemplate` implementations, adding a unique id using the `buttonId()` function
+- Refactored `ArrayFieldItemTemplate` to use the new `ArrayFieldItemButtonsTemplate`
+- Updated the `ArrayFieldTemplate`, `ObjectFieldTemplate`, and `WrapIfAdditionalTemplate` to a unique id using the `buttonId()` function and adding consistent marker classes
+- Implemented the `GridTemplate` component, adding it to the `templates` for the theme
+- Implemented the new `LayoutGridField`, `LayoutMultiSchemaField` and `LayoutHeaderField` fields, adding them to the `fields` list
+- BREAKING CHANGE: Removed support for the deprecated `schema.enumNames` and `uiSchema.classNames` as well as the deprecated `acceptcharset` prop on `Form`
+- BREAKING CHANGE: Moved the addition of `Bootstrap 3` classes from the `SchemaField` to the `WrapIfAdditionalTemplate`, thereby affecting all the other themes, fixing [#2280](https://github.com/rjsf-team/react-jsonschema-form/issues/2280)
+- BREAKING CHANGE: Added `rjsf-` prefix onto the following marker classes used in the fields and templates:
+  - `field`, `field-<schema.type>`, `field-error`, `field-hidden`, `field-array`, `field-array-of-<schema.type>`, `field-array-fixed-items`, `array-item`, `config-error`, `array-item-add`, `array-item-copy`, `array-item-move-down`, `array-item-move-up`, `array-item-remove`, `object-property-expand`
+- Added support for `patternProperties` [#1944](https://github.com/rjsf-team/react-jsonschema-form/issues/1944)
+
+## @rjsf/daisyui
+
+- Added new theme!
+
+## @rjsf/fluent-ui
+
+- BREAKING CHANGE: Deleted this theme in favor of `fluentui-rc`
+
+## @rjsf/fluentui-rc
+
+- BREAKING CHANGE: Refactored `ArrayFieldItemTemplate` to use the new `ArrayFieldItemButtonsTemplate`
+- Updated the `ArrayFieldTemplate`, `ObjectFieldTemplate`, and `WrapIfAdditionalTemplate` to a unique id using the `buttonId()` function and adding consistent marker classes
+- Implemented the `GridTemplate` component, adding it to the `templates` for the theme
+- BREAKING CHANGE: Removed the addition of `Bootstrap 3` classes from the `SchemaField` and added `rjsf-` prefix to marker classes, thereby changing theme `FieldTemplate` className prop output and associated snapshots
+
+## @rjsf/material-ui
+
+- BREAKING CHANGE: Deleted this theme in favor of `mui`
+
+## @rjsf/mui
+
+- BREAKING CHANGE: Refactored `ArrayFieldItemTemplate` to use the new `ArrayFieldItemButtonsTemplate`
+- Updated the `ArrayFieldTemplate`, `ObjectFieldTemplate`, and `WrapIfAdditionalTemplate` to a unique id using the `buttonId()` function and adding consistent marker classes
+- Updated the theme to use `Grid2` instead of the deprecated `Grid`
+- Implemented the `GridTemplate` component, adding it to the `templates` for the theme
+- BREAKING CHANGE: Removed the addition of `Bootstrap 3` classes from the `SchemaField` and added `rjsf-` prefix to marker classes, thereby changing theme `FieldTemplate` className prop output and associated snapshots
+
+## @rjsf/semantic-ui
+
+- BREAKING CHANGE: Refactored `ArrayFieldItemTemplate` to use the new `ArrayFieldItemButtonsTemplate`
+- Updated the `ArrayFieldTemplate`, `ObjectFieldTemplate`, and `WrapIfAdditionalTemplate` to a unique id using the `buttonId()` function and adding consistent marker classes
+- Implemented the `GridTemplate` component, adding it to the `templates` for the theme
+- BREAKING CHANGE: Removed the addition of `Bootstrap 3` classes from the `SchemaField` and added `rjsf-` prefix to marker classes, thereby changing theme `FieldTemplate` className prop output and associated snapshots
+- BREAKING CHANGE: Removed support for the v1 version of `semantic-ui-react`
+
+## @rjsf/shadcn
+
+- Added new theme!
+
+## @rjsf/utils
+
+- BREAKING CHANGE: Refactored the `ArrayFieldItemTemplateType` to extract out all the button related props to `ArrayFieldItemButtonsTemplateType`, adding `buttonsProps: ArrayFieldItemButtonsTemplateType` as a new prop
+  - Also created a deprecated alias type `ArrayFieldTemplateItemType` that points to `ArrayFieldItemTemplateType` for backwards compatibility
+- Added new `GridTemplateProps` type
+- BREAKING CHANGE: Added two the following new, required props to `TemplatesType`:
+  - `ArrayFieldItemButtonsTemplate: ComponentType<ArrayFieldItemButtonsTemplateType<T, S, F>>;`
+  - `GridTemplate: ComponentType<GridTemplateProps>`
+- BREAKING CHANGE: Updated the `SchemaUtilsType` to add new validator-based functions to the interface
+- Added the following new non-validator utility functions:
+  - `buttonId<T>(id: IdSchema<T> | string, btn: 'add' | 'copy' | 'moveDown' | 'moveUp' | 'remove')`: used to generate consistent ids for RJSF buttons
+  - `getTestIds(): TestIdShape`: Returns an object of test IDs that can only be used in test mode, helpful for writing unit tests for React components
+  - `hashObject(object: unknown): string`: Stringifies an `object` and returns the hash of the resulting string
+  - `hashString(string: string): string`: Hashes a string into hex format
+  - `lookupFromFormContext<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(regOrFc: Registry<T, S, F> | Registry<T, S, F>['formContext'], toLookup: string, fallback?: unknown)`: Given a React JSON Schema Form registry or formContext object, return the value associated with `toLookup`
+- Added the following new validator-based utility functions:
+  - `findFieldInSchema<T = undefined, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(validator: ValidatorType<T, S, F>, rootSchema: S, path: string | string[], schema: S, formData?: T, experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>): FoundFieldType<S>`: Finds the field specified by the `path` within the root or recursed `schema`
+  - `findSelectedOptionInXxxOf<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(validator: ValidatorType<T, S, F>, rootSchema: S, schema: S, fallbackField: string,xxx: 'anyOf' | 'oneOf', formData?: T, experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>): S | undefined`: Finds the option that matches the selector field in the `schema` or undefined if nothing is selected
+  - `getFromSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(validator: ValidatorType<T, S, F>, rootSchema: S, schema: S, path: string | string[], defaultValue: T | S, experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>): T | S`: Helper that acts like lodash's `get` but additionally retrieves `$ref`s as needed to get the path for schemas
+- BREAKING CHANGE: Removed support for the deprecated `schema.enumNames` from `getOptionsList()` while switching the order of its generic types
+- BREAKING CHANGE: Removed the deprecated `getMatchingOption()` and `mergeValidationData()` from the library export and the `SchemaUtilsType` interface
+- BREAKING CHANGE: Removed the deprecated `toErrorList()` function from the `ValidatorType` interface
+- BREAKING CHANGE: Removed the deprecated `RJSF_ADDITONAL_PROPERTIES_FLAG` constant
+- Updated the `WrapIfAdditionalTemplateProps` to include `hideError` and `rawErrors` in support of moving `Bootstrap 3` marker classes out of `SchemaField`
+- Added support for `patternProperties` [#1944](https://github.com/rjsf-team/react-jsonschema-form/issues/1944)
+- Updated `getTemplate()` to allow per-field customization using string key from `Registry`, fixing [#3695](https://github.com/rjsf-team/react-jsonschema-form/issues/3695).
+- Updated `TemplatesType` to allow for a string key to be used to reference a custom template in the `Registry`, fixing [#3695](https://github.com/rjsf-team/react-jsonschema-form/issues/3695)
+- Updated tests to cover the new `getTemplate()` functionality
+
+## @rjsf/validator-ajv6
+
+- BREAKING CHANGE: This deprecated validator has been removed
+
+## @rjsf/validator-ajv8
+
+- BREAKING CHANGE: Removed the implementation of the deprecated `toErrorList()` function from the validator implementations
+
+## Dev / docs / playground
+
+- Updated the playground to Chakra UI v3
+- Updated the playground to remove `fluent-ui` theme
+- Updated the `custom-templates.md` documentation for the changes to the `ArrayFieldTemplateItem` and add the two new templates
+- Updated the `utility-functions.md` documentation to add the `buttonId()` function
+- Added the `v6.x upgrade guide.md` documentation
+- Updated the `playground` to add a `Layout Grid` example and made the selected example now be part of the shared export
+- Replaced Lerna with Nx, updated all lerna commands to use the Nx CLI
+- BREAKING CHANGE: Updated all `peerDependencies` to change minimal `React` support to `>=18`
+- Added documentation and playground example for `patternProperties`
+- Updated `advanced-customization/custom-templates` with the new feature.
+
+# 6.0.0-alpha.0
+
+## @rjsf/bootstrap-4
+
+- BREAKING CHANGE: Package has been replaced with `@rjsf/react-bootstrap`. `react-boostrap` v1 / Bootstrap 4 are no longer supported in RJSF v6.
+
+## @rjsf/material-ui
+
+- BREAKING CHANGE: Removed `@rjsf/material-ui` package. Material UI v4 (`@material-ui/core`) has been deprecated since September 2021. To use Material UI v5 (`@mui/core`) with RJSF, please use the `@rjsf/mui` theme instead.
+
+## @rjsf/react-bootstrap
+
+- Added new package to replace `@rjsf/bootstrap-4`
+- `react-bootstrap` peer dependency bumped to `^2.0.0`, corresponding to Bootstrap 5
+- CheckboxesWidget: Remove deprecated prop `custom`
+- IconButton: Remove deprecated `block` prop
+- RangeWidget: Use `FormRange` component
+- SelectWidget: Use new FormSelect component, remove `bsPrefix` prop to achieve correct styling
+
+## Dev / docs / playground
+
+- Updated the playground to remove `material-ui-4` theme and replace the `bootstrap-4` theme with `react-bootstrap`
+
+# 5.24.10
+
+## Dev / docs / playground
+
+- Updated all `package.json` files in the `packages` directories to remove the `exports` blocks, fixing [#4537](https://github.com/rjsf-team/react-jsonschema-form/issues/4537)
+
+# 5.24.9
+
+## @rjsf/antd
+
+- Fixed ts errors in newer antd versions [#4525](https://github.com/rjsf-team/react-jsonschema-form/issues/4525)
+
+## @rjsf/chakra-ui
+
+- Restricted the chakra-react-select peerDependency to <6.0.0, fixing [#4539](https://github.com/rjsf-team/react-jsonschema-form/issues/4539)
+
+## @rjsf/core
+
+- Do not display input field in MultiSchemaField with null type
+
+## @rjsf/mui
+
+- Fixed issue in BaseInputTemplate where input props were passed to `slotProps.htmlInput`, which does not work in MUI v5.
+
+## @rjsf/utils
+
+- Fixed issue with schema combinators(allOf, anyOf, oneOf) could not be modified when defaults were set, fixing [#4555](https://github.com/rjsf-team/react-jsonschema-form/issues/4555)
+
+## Dev / docs / playground
+
+- Updated docs for ArrayFieldItemTemplate to include prop `onCopyIndexClick`, fixing [#4507](https://github.com/rjsf-team/react-jsonschema-form/issues/4507)
+- Use antd 5 in playground
+- Updated docs to clarify that errors raised within a widget are not caught during form validation
+- Updated docs where objects typed as RJSFValidationError were not valid ([#4558](https://github.com/rjsf-team/react-jsonschema-form/issues/4558))
+
+# 5.24.8
+
+## @rjsf/antd
+
+- Fixed the total disable of the `RadioWidget`, fixing [#4481](https://github.com/rjsf-team/react-jsonschema-form/issues/4481)
+
+## @rjsf/validator-ajv8
+
+- Fixed up the ESM build to properly handle ESM imports for `compileSchemaValidatorsCode()` by adding a new `ajvReplacer.ts` and using it
+
+## Dev / docs / playground
+
+- Updated `snapshot-tests` to add validation of disable `RadioWidget` via the `Form` prop as well as `uiSchema`
+
+# 5.24.7
+
+## Dev / docs / playground
+
+- Fixed build issues with small change to `core/src/tsconfig.json` and improvements to the `exports` for ESM support
+- Run NX serially in the pipelines to avoid odd out-of-sequence build issues
+
+# 5.24.6
+
+## @rjsf/core
+
+- Fixed `src/tsconfig.json` to add the `tsc-alias` block to support proper fixing up of ESM import
+
+# 5.24.5
+
+## @rjsf/utils
+
+- Fixed `package.json` to remove `node` from the `exports` block to fix ESM support
+
+# 5.24.4
+
+## @rjsf/utils
+
+- Fixed issue with customValidate errors are not cleared when the form is valid [4365](https://github.com/rjsf-team/react-jsonschema-form/pull/4365) due to regression
+- Add missing `experimental_customMergeAllOf` argument to `ensureFormDataMatchingSchema` introduced by [4388](https://github.com/rjsf-team/react-jsonschema-form/pull/4388)
+
+## Dev / docs / playground
+
+- Improved the ESM support for all public packages by adding explicit `exports` to each public `package.json`
+- Updated the ESM builds to use `tsc-alias` to add `.js` onto all ESM imports
+
 # 5.24.3
 
 ## @rjsf/utils
@@ -46,6 +702,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Rollback [4446](https://github.com/rjsf-team/react-jsonschema-form/pull/4446) due to regression
 
 ## Dev / docs / playground
+
 - Fixed issue with selector, where validator was getting refreshed on clicking on anything in selector. [#4472](https://github.com/rjsf-team/react-jsonschema-form/pull/4472)
 
 # 5.24.2

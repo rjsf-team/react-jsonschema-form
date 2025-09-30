@@ -7,7 +7,9 @@ The API allows to specify your own custom _widget_ and _field_ components:
 
 ## Customizing the default fields and widgets
 
-You can override any default field and widget, including the internal widgets like the `CheckboxWidget` that `BooleanField` renders for boolean values. You can override any field and widget just by providing the customized fields/widgets in the `fields` and `widgets` props:
+You can override any default field and widget, including the internal widgets like the `CheckboxWidget` that `BooleanField`
+renders for boolean values. You can override any field and widget just by providing the customized fields/widgets in the
+`fields` and `widgets` props:
 
 ```tsx
 import { RJSFSchema, UiSchema, WidgetProps, RegistryWidgetsType } from '@rjsf/utils';
@@ -36,7 +38,7 @@ const widgets: RegistryWidgetsType = {
 
 render(
   <Form schema={schema} uiSchema={uiSchema} validator={validator} widgets={widgets} />,
-  document.getElementById('app')
+  document.getElementById('app'),
 );
 ```
 
@@ -62,6 +64,9 @@ The default fields you can override are:
 - `DescriptionField`
 - `OneOfField`
 - `AnyOfField`
+- `LayoutGridField`
+- `LayoutMultiSchemaField`
+- `LayoutHeaderField`
 - `NullField`
 - `NumberField`
 - `ObjectField`
@@ -94,7 +99,15 @@ The default widgets you can override are:
 
 ## Raising errors from within a custom widget or field
 
-You can raise a custom error by overriding the `onChange` method to raise field/widget errors:
+You can raise custom 'live validation' errors by overriding the `onChange` method to provide feedback while users are actively changing the form data.
+Note that these errors are temporary and are not recognized during the form validation process.
+
+:::warning
+
+This method of raising errors _only_ runs during `onChange`, i.e. when the user is changing data. This will not catch errors `onSubmit`, i.e when submitting the form.
+If you wish to add generic validation logic for your component, you should use the [`customValidate` Form prop](../api-reference/form-props.md#customvalidate).
+
+:::
 
 ```tsx
 import { ErrorSchema, RJSFSchema, UiSchema, WidgetProps, RegistryWidgetsType } from '@rjsf/utils';
@@ -118,7 +131,7 @@ const CustomTextWidget = function (props: WidgetProps) {
         __errors: ['Value must be "test"'],
       };
     }
-    props.onChange(value, raiseError, id);
+    props.onChange(value, [], raiseError, id);
   };
 
   return <input id={id} onChange={raiseErrorOnChange} value={value || ''} />;
@@ -130,7 +143,7 @@ const widgets: RegistryWidgetsType = {
 
 render(
   <Form schema={schema} uiSchema={uiSchema} validator={validator} widgets={widgets} />,
-  document.getElementById('app')
+  document.getElementById('app'),
 );
 ```
 
@@ -191,8 +204,7 @@ The following props are passed to custom widget components:
 - `onBlur`: The input blur event handler; call it with the widget id and value;
 - `onFocus`: The input focus event handler; call it with the widget id and value;
 - `options`: A map of options passed as a prop to the component (see [Custom widget options](#custom-widget-options)).
-- `options.enumOptions`: For enum fields, this property contains the list of options for the enum as an array of { label, value } objects. If the enum is defined using the oneOf/anyOf syntax, the entire schema object for each option is appended onto the { schema, label, value } object.
-- `formContext`: The `formContext` object that you passed to `Form`.
+- `options.enumOptions`: For enum fields, this property contains the list of options for the enum as an array of \{ label, value } objects. If the enum is defined using the oneOf/anyOf syntax, the entire schema object for each option is appended onto the \{ schema, label, value } object.
 - `rawErrors`: An array of strings listing all generated error messages from encountered errors for this widget.
 - `registry`: A [registry](#the-registry-object) object (read next).
 
@@ -230,7 +242,7 @@ const uiSchema: UiSchema = {
 
 render(
   <Form schema={schema} uiSchema={uiSchema} validator={validator} widgets={widgets} />,
-  document.getElementById('app')
+  document.getElementById('app'),
 );
 ```
 
@@ -272,8 +284,6 @@ render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, docum
 ```
 
 > Note: This also applies to [registered custom components](#custom-component-registration).
-
-> Note: Since v0.41.0, the `ui:widget` object API, where a widget and options were specified with `"ui:widget": {component, options}` shape, is deprecated. It will be removed in a future release.
 
 ### Customizing widgets' text input
 
@@ -339,7 +349,7 @@ class GeoPosition extends React.Component<FieldProps> {
         {
           [name]: parseFloat(event.target.value),
         },
-        () => this.props.onChange(this.state)
+        () => this.props.onChange(this.state),
       );
     };
   }
@@ -366,7 +376,7 @@ const fields: RegistryFieldsType = { geo: GeoPosition };
 // as props
 render(
   <Form schema={schema} uiSchema={uiSchema} validator={validator} fields={fields} />,
-  document.getElementById('app')
+  document.getElementById('app'),
 );
 ```
 
@@ -382,16 +392,13 @@ A field component will always be passed the following props:
 - `formData`: The data for this field;
 - `errorSchema`: The tree of errors for this field and its children;
 - `registry`: A [registry](#the-registry-object) object (read next).
-- `formContext`: A [formContext](../api-reference/form-props.md#formcontext) object (read next).
 - `required`: The required status of this field;
 - `disabled`: A boolean value stating if the field is disabled;
 - `readonly`: A boolean value stating if the field is read-only;
 - `autofocus`: A boolean value stating if the field should autofocus;
 - `name`: The unique name of the field, usually derived from the name of the property in the JSONSchema
-- `idPrefix`: To avoid collisions with existing ids in the DOM, it is possible to change the prefix used for ids; Default is `root`
-- `idSeparator`: To avoid using a path separator that is present in field names, it is possible to change the separator used for ids (Default is `_`)
 - `rawErrors`: `An array of strings listing all generated error messages from encountered errors for this field
-- `onChange`: The field change event handler; called with the updated form data and an optional `ErrorSchema`
+- `onChange`: The field change event handler; called with the updated field value, the optional change path for the value (defaults to an empty array), an optional ErrorSchema and the optional id of the field being changed
 - `onBlur`: The input blur event handler; call it with the field id and value;
 - `onFocus`: The input focus event handler; call it with the field id and value;
 
@@ -401,9 +408,12 @@ The `registry` is an object containing the registered core, theme and custom fie
 
 - `fields`: The set of all fields used by the `Form`. Includes fields from `core`, theme-specific fields and any [custom registered fields](#custom-field-components);
 - `widgets`: The set of all widgets used by the `Form`. Includes widgets from `core`, theme-specific widgets and any [custom registered widgets](#custom-component-registration), if any;
+- `templates`: The set of templates used by the `Form`. Includes templates from `core`, theme-specific templates and any custom registered templates
 - `rootSchema`: The root schema, as passed to the `Form`, which can contain referenced [definitions](../json-schema/definitions.md);
-- `formContext`: The [formContext](../api-reference/form-props.md#formcontext) that was passed to `Form`;
 - `schemaUtils`: The current implementation of the `SchemaUtilsType` (from `@rjsf/utils`) in use by the `Form`. Used to call any of the validation-schema-based utility functions.
+- `translateString`: The string translation function to use when displaying any of the RJSF strings in templates, fields or widgets
+- `globalFormOptions`: The global Form Options that are available for all templates, fields and widgets to access
+- `globalUiOptions`: The optional global UI Options that are available for all templates, fields and widgets to access
 
 The registry is passed down the component tree, so you can access it from your custom field, custom widget, custom template and `SchemaField` components.
 
@@ -524,15 +534,15 @@ const {
 function MyObjectField(props: FieldProps) {
   const { onChange } = props;
   const onChangeHandler = useCallback(
-    (newFormData: T | undefined, es?: ErrorSchema<T>, id?: string) => {
+    (newFormData: T | undefined, path: (number | string)[], es?: ErrorSchema<T>, id?: string) => {
       let data = newFormData;
       let error = es;
       if (checkBadData(newFormData)) {
         // Format the `error` and fix the `data` here
       }
-      onChange(data, error, id);
+      onChange(data, path, error, id);
     },
-    [onChange]
+    [onChange],
   );
   return <ObjectField {...props} onChange={onChangeHandler} />;
 }

@@ -1,18 +1,46 @@
 {
   "name": "@rjsf/chakra-ui",
-  "version": "5.24.3",
+  "version": "6.0.0-beta.19",
   "description": "Chakra UI theme, fields, and widgets for react-jsonschema-form",
   "main": "dist/index.js",
   "module": "lib/index.js",
   "typings": "lib/index.d.ts",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./lib/index.d.ts",
+      "require": "./dist/index.cjs",
+      "import": "./lib/index.js"
+    },
+    "./lib": {
+      "types": "./lib/index.d.ts",
+      "require": "./dist/index.cjs",
+      "import": "./lib/index.js"
+    },
+    "./lib/*.js": {
+      "types": "./lib/*.d.ts",
+      "require": "./dist/*.cjs",
+      "import": "./lib/*.js"
+    },
+    "./dist": {
+      "types": "./lib/index.d.ts",
+      "require": "./dist/index.cjs",
+      "import": "./lib/index.js"
+    },
+    "./dist/*.cjs": {
+      "types": "./lib/*.d.ts",
+      "require": "./dist/*.cjs",
+      "import": "./lib/*.js"
+    }
+  },
   "files": [
     "dist",
     "lib",
     "src"
   ],
   "scripts": {
-    "build:ts": "tsc -b",
-    "build:cjs": "esbuild ./src/index.ts --bundle --outfile=dist/index.js --sourcemap --packages=external --format=cjs",
+    "build:ts": "tsc -b tsconfig.build.json && tsc-alias -p tsconfig.build.json",
+    "build:cjs": "esbuild ./src/index.ts --bundle --outfile=dist/index.cjs --sourcemap --packages=external --format=cjs",
     "build:esm": "esbuild ./src/index.ts --bundle --outfile=dist/chakra-ui.esm.js --sourcemap --packages=external --format=esm",
     "build:umd": "rollup dist/chakra-ui.esm.js --format=umd --file=dist/chakra-ui.umd.js --name=@rjsf/chakra-ui",
     "build": "npm run build:ts && npm run build:cjs && npm run build:esm && npm run build:umd",
@@ -22,7 +50,8 @@
     "precommit": "lint-staged",
     "test": "jest",
     "test:update": "jest --u",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "type-check": "tsc --noEmit"
   },
   "lint-staged": {
     "{src,test}/**/*.ts?(x)": [
@@ -31,17 +60,14 @@
   },
   "engineStrict": false,
   "engines": {
-    "node": ">=14"
+    "node": ">=20"
   },
   "peerDependencies": {
-    "@chakra-ui/icons": ">=1.1.1",
-    "@chakra-ui/react": ">=1.7.3 <3.0.0",
-    "@chakra-ui/system": ">=1.12.1",
-    "@rjsf/core": "^5.24.x",
-    "@rjsf/utils": "^5.24.x",
-    "chakra-react-select": ">=3.3.8",
-    "framer-motion": ">=5.6.0",
-    "react": "^16.14.0 || >=17"
+    "@chakra-ui/react": ">=3.16.1",
+    "@rjsf/core": "^6.0.0-beta.19",
+    "@rjsf/utils": "^6.0.0-beta.19",
+    "chakra-react-select": ">=6",
+    "react": ">=18"
   },
   "publishConfig": {
     "access": "public"
@@ -55,42 +81,21 @@
   ],
   "license": "Apache-2.0",
   "devDependencies": {
-    "@babel/core": "^7.23.9",
-    "@babel/plugin-proposal-class-properties": "^7.18.6",
-    "@babel/plugin-proposal-optional-chaining": "^7.21.0",
-    "@babel/preset-env": "^7.23.9",
-    "@babel/preset-react": "^7.23.3",
-    "@babel/preset-typescript": "^7.23.3",
-    "@chakra-ui/icons": "^1.1.7",
-    "@chakra-ui/react": "^1.8.9",
-    "@chakra-ui/system": "^1.12.1",
-    "@emotion/eslint-plugin": "^11.11.0",
-    "@emotion/jest": "^11.11.0",
-    "@emotion/react": "^11.11.3",
-    "@emotion/styled": "^11.11.0",
-    "@rjsf/core": "^5.24.3",
-    "@rjsf/snapshot-tests": "^5.24.3",
-    "@rjsf/utils": "^5.24.3",
-    "@rjsf/validator-ajv8": "^5.24.3",
-    "@types/jest": "^29.5.12",
-    "@types/react": "^18.2.58",
-    "@types/react-dom": "^18.2.19",
-    "@types/react-test-renderer": "^18.0.7",
-    "babel-jest": "^29.7.0",
-    "chakra-react-select": "^3.3.9",
-    "eslint": "^8.56.0",
-    "framer-motion": "^5.6.0",
-    "jest": "^29.7.0",
-    "jest-environment-jsdom": "^29.7.0",
-    "jest-watch-typeahead": "^2.2.2",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-test-renderer": "^18.2.0",
-    "rimraf": "^5.0.5",
-    "rollup": "^3.29.4",
-    "typescript": "^4.9.5"
+    "@chakra-ui/cli": "^3.26.0",
+    "@chakra-ui/react": "^3.26.0",
+    "@emotion/eslint-plugin": "^11.12.0",
+    "@emotion/jest": "^11.13.0",
+    "@emotion/react": "^11.14.0",
+    "@rjsf/core": "^6.0.0-beta.19",
+    "@rjsf/snapshot-tests": "^6.0.0-beta.19",
+    "@rjsf/utils": "^6.0.0-beta.19",
+    "@rjsf/validator-ajv8": "^6.0.0-beta.19",
+    "chakra-react-select": "^6.1.0",
+    "eslint": "^8.57.1"
   },
   "dependencies": {
-    "react-select": "^5.8.0"
+    "lucide-react": "^0.542.0",
+    "react-icons": "^5.5.0",
+    "react-select": "^5.10.2"
   }
 }

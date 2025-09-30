@@ -58,7 +58,7 @@ describe('FormContext', () => {
   });
 
   it('should be passed to TemplateField', () => {
-    function CustomTemplateField({ formContext }) {
+    function CustomTemplateField({ registry: { formContext } }) {
       return <div id={formContext.foo} />;
     }
 
@@ -79,7 +79,7 @@ describe('FormContext', () => {
   });
 
   it('should be passed to ArrayTemplateField', () => {
-    function CustomArrayTemplateField({ formContext }) {
+    function CustomArrayTemplateField({ registry: { formContext } }) {
       return <div id={formContext.foo} />;
     }
 

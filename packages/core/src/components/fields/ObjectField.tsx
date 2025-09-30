@@ -66,8 +66,8 @@ class ObjectField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
    * @returns - The onPropertyChange callback for the `name` property
    */
   onPropertyChange = (name: string, addedByAdditionalProperties = false) => {
-    return (value: T | undefined, newErrorSchema?: ErrorSchema<T>, id?: string) => {
-      const { formData, onChange, errorSchema } = this.props;
+    return (value: T | undefined, path?: (number | string)[], newErrorSchema?: ErrorSchema<T>, id?: string) => {
+      const { onChange } = this.props;
       if (value === undefined && addedByAdditionalProperties) {
         // Don't set value = undefined for fields added by
         // additionalProperties. Doing so removes them from the
@@ -78,16 +78,10 @@ class ObjectField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
         // set empty values to the empty string.
         value = '' as unknown as T;
       }
-      const newFormData = { ...formData, [name]: value } as unknown as T;
-      onChange(
-        newFormData,
-        errorSchema &&
-          errorSchema && {
-            ...errorSchema,
-            [name]: newErrorSchema,
-          },
-        id
-      );
+      // Copy the current path and insert in the property name into the first location
+      const changePath = Array.isArray(path) ? path.slice() : [];
+      changePath.unshift(name);
+      onChange(value, changePath, newErrorSchema, id);
     };
   };
 
@@ -103,7 +97,8 @@ class ObjectField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
       const { onChange, formData } = this.props;
       const copiedFormData = { ...formData } as T;
       unset(copiedFormData, key);
-      onChange(copiedFormData);
+      // drop property will pass the name in `path` array
+      onChange(copiedFormData, []);
     };
   };
 
@@ -133,11 +128,11 @@ class ObjectField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
    * @returns - The key change callback function
    */
   onKeyChange = (oldValue: any) => {
-    return (value: any, newErrorSchema: ErrorSchema<T>) => {
+    return (value: any) => {
       if (oldValue === value) {
         return;
       }
-      const { formData, onChange, errorSchema } = this.props;
+      const { formData, onChange } = this.props;
 
       value = this.getAvailableKey(value, formData);
       const newFormData: GenericObjectType = {
@@ -152,14 +147,8 @@ class ObjectField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
 
       this.setState({ wasPropertyKeyModified: true });
 
-      onChange(
-        renamedObj,
-        errorSchema &&
-          errorSchema && {
-            ...errorSchema,
-            [value]: newErrorSchema,
-          }
-      );
+      // rename will pass an empty `path` array since the onPropertyChange also gets called
+      onChange(renamedObj, []);
     };
   };
 
@@ -195,38 +184,43 @@ class ObjectField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
    * @param schema - The schema element to which the new property is being added
    */
   handleAddClick = (schema: S) => () => {
-    if (!schema.additionalProperties) {
+    if (!(schema.additionalProperties || schema.patternProperties)) {
       return;
     }
     const { formData, onChange, registry } = this.props;
     const newFormData = { ...formData } as T;
+    const newKey = this.getAvailableKey('newKey', newFormData);
+    if (schema.patternProperties) {
+      // Cast this to make the `set` work properly
+      set(newFormData as GenericObjectType, newKey, null);
+    } else {
+      let type: RJSFSchema['type'] = undefined;
+      let constValue: RJSFSchema['const'] = undefined;
+      let defaultValue: RJSFSchema['default'] = undefined;
+      if (isObject(schema.additionalProperties)) {
+        type = schema.additionalProperties.type;
+        constValue = schema.additionalProperties.const;
+        defaultValue = schema.additionalProperties.default;
+        let apSchema = schema.additionalProperties;
+        if (REF_KEY in apSchema) {
+          const { schemaUtils } = registry;
+          apSchema = schemaUtils.retrieveSchema({ $ref: apSchema[REF_KEY] } as S, formData);
+          type = apSchema.type;
+          constValue = apSchema.const;
+          defaultValue = apSchema.default;
+        }
+        if (!type && (ANY_OF_KEY in apSchema || ONE_OF_KEY in apSchema)) {
+          type = 'object';
+        }
+      }
 
-    let type: RJSFSchema['type'] = undefined;
-    let constValue: RJSFSchema['const'] = undefined;
-    let defaultValue: RJSFSchema['default'] = undefined;
-    if (isObject(schema.additionalProperties)) {
-      type = schema.additionalProperties.type;
-      constValue = schema.additionalProperties.const;
-      defaultValue = schema.additionalProperties.default;
-      let apSchema = schema.additionalProperties;
-      if (REF_KEY in apSchema) {
-        const { schemaUtils } = registry;
-        apSchema = schemaUtils.retrieveSchema({ $ref: apSchema[REF_KEY] } as S, formData);
-        type = apSchema.type;
-        constValue = apSchema.const;
-        defaultValue = apSchema.default;
-      }
-      if (!type && (ANY_OF_KEY in apSchema || ONE_OF_KEY in apSchema)) {
-        type = 'object';
-      }
+      const newValue = constValue ?? defaultValue ?? this.getDefaultValue(type);
+      // Cast this to make the `set` work properly
+      set(newFormData as GenericObjectType, newKey, newValue);
     }
 
-    const newKey = this.getAvailableKey('newKey', newFormData);
-    const newValue = constValue ?? defaultValue ?? this.getDefaultValue(type);
-    // Cast this to make the `set` work properly
-    set(newFormData as GenericObjectType, newKey, newValue);
-
-    onChange(newFormData);
+    // add will pass the name in `path` array
+    onChange(newFormData, []);
   };
 
   /** Renders the `ObjectField` from the given props
@@ -243,8 +237,6 @@ class ObjectField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
       disabled,
       readonly,
       hideError,
-      idPrefix,
-      idSeparator,
       onBlur,
       onFocus,
       registry,
@@ -266,7 +258,7 @@ class ObjectField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
     } catch (err) {
       return (
         <div>
-          <p className='config-error' style={{ color: 'red' }}>
+          <p className='rjsf-config-error' style={{ color: 'red' }}>
             <Markdown options={{ disableParsingRawHTML: true }}>
               {translateString(TranslatableString.InvalidObjectField, [name || 'root', (err as Error).message])}
             </Markdown>
@@ -294,12 +286,10 @@ class ObjectField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
               key={name}
               name={name}
               required={this.isRequired(name)}
-              schema={get(schema, [PROPERTIES_KEY, name], {})}
+              schema={get(schema, [PROPERTIES_KEY, name], {}) as S}
               uiSchema={fieldUiSchema}
               errorSchema={get(errorSchema, name)}
               idSchema={fieldIdSchema}
-              idPrefix={idPrefix}
-              idSeparator={idSeparator}
               formData={get(formData, name)}
               formContext={formContext}
               wasPropertyKeyModified={this.state.wasPropertyKeyModified}

@@ -13,9 +13,9 @@ import getUiOptions from './getUiOptions';
 export default function canExpand<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   schema: RJSFSchema,
   uiSchema: UiSchema<T, S, F> = {},
-  formData?: T
+  formData?: T,
 ) {
-  if (!schema.additionalProperties) {
+  if (!(schema.additionalProperties || schema.patternProperties)) {
     return false;
   }
   const { expandable = true } = getUiOptions<T, S, F>(uiSchema);

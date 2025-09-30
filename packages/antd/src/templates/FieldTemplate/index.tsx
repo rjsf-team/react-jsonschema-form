@@ -20,7 +20,7 @@ const VERTICAL_WRAPPER_COL = { span: 24 };
 export default function FieldTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(props: FieldTemplateProps<T, S, F>) {
   const {
     children,
@@ -30,7 +30,6 @@ export default function FieldTemplate<
     disabled,
     displayLabel,
     errors,
-    formContext,
     help,
     hidden,
     id,
@@ -46,6 +45,7 @@ export default function FieldTemplate<
     schema,
     uiSchema,
   } = props;
+  const { formContext } = registry;
   const {
     colon,
     labelCol = VERTICAL_LABEL_COL,
@@ -58,11 +58,11 @@ export default function FieldTemplate<
   const WrapIfAdditionalTemplate = getTemplate<'WrapIfAdditionalTemplate', T, S, F>(
     'WrapIfAdditionalTemplate',
     registry,
-    uiOptions
+    uiOptions,
   );
 
   if (hidden) {
-    return <div className='field-hidden'>{children}</div>;
+    return <div className='rjsf-field-hidden'>{children}</div>;
   }
 
   // check to see if there is rawDescription(string) before using description(ReactNode)

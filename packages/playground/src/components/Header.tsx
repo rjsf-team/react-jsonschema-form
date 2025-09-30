@@ -1,4 +1,11 @@
-import { useCallback } from 'react';
+import {
+  useCallback,
+  ButtonHTMLAttributes,
+  Dispatch,
+  MutableRefObject,
+  PropsWithChildren,
+  SetStateAction,
+} from 'react';
 import Form, { IChangeEvent } from '@rjsf/core';
 import { RJSFSchema, UiSchema, ValidatorType } from '@rjsf/utils';
 import localValidator from '@rjsf/validator-ajv8';
@@ -6,45 +13,45 @@ import base64 from '../utils/base64';
 
 import CopyLink from './CopyLink';
 import ThemeSelector, { ThemesType } from './ThemeSelector';
-import Selector from './Selector';
+import SampleSelector, { SampleSelectorProps } from './SampleSelector';
 import ValidatorSelector from './ValidatorSelector';
-import SubthemeSelector from './SubthemeSelector';
+import SubthemeSelector, { SubthemeType } from './SubthemeSelector';
 import RawValidatorTest from './RawValidatorTest';
 
-const HeaderButton: React.FC<
-  {
-    title: string;
-    onClick: () => void;
-  } & React.ButtonHTMLAttributes<HTMLButtonElement>
-> = ({ title, onClick, children, ...buttonProps }) => {
+type HeaderButtonProps = {
+  title: string;
+  onClick: () => void;
+} & ButtonHTMLAttributes<HTMLButtonElement>;
+
+function HeaderButton({ title, onClick, children, ...buttonProps }: PropsWithChildren<HeaderButtonProps>) {
   return (
     <button type='button' className='btn btn-default' title={title} onClick={onClick} {...buttonProps}>
       {children}
     </button>
   );
-};
+}
 
-function HeaderButtons({ playGroundFormRef }: { playGroundFormRef: React.MutableRefObject<any> }) {
+function HeaderButtons({ playGroundFormRef }: { playGroundFormRef: MutableRefObject<any> }) {
+  const submitClick = useCallback(() => {
+    playGroundFormRef.current.submit();
+  }, [playGroundFormRef]);
+  const validateClick = useCallback(() => {
+    playGroundFormRef.current.validateForm();
+  }, [playGroundFormRef]);
+  const resetClick = useCallback(() => {
+    playGroundFormRef.current.reset();
+  }, [playGroundFormRef]);
   return (
     <>
       <label className='control-label'>Programmatic</label>
       <div className='btn-group'>
-        <HeaderButton
-          title='Click me to submit the form programmatically.'
-          onClick={() => playGroundFormRef.current.submit()}
-        >
+        <HeaderButton title='Click me to submit the form programmatically.' onClick={submitClick}>
           Submit
         </HeaderButton>
-        <HeaderButton
-          title='Click me to validate the form programmatically.'
-          onClick={() => playGroundFormRef.current.validateForm()}
-        >
+        <HeaderButton title='Click me to validate the form programmatically.' onClick={validateClick}>
           Validate
         </HeaderButton>
-        <HeaderButton
-          title='Click me to reset the form programmatically.'
-          onClick={() => playGroundFormRef.current.reset()}
-        >
+        <HeaderButton title='Click me to reset the form programmatically.' onClick={resetClick}>
           Reset
         </HeaderButton>
       </div>
@@ -63,6 +70,12 @@ const liveSettingsBooleanSchema: RJSFSchema = {
     noValidate: { type: 'boolean', title: 'Disable validation' },
     noHtml5Validate: { type: 'boolean', title: 'Disable HTML 5 validation' },
     focusOnFirstError: { type: 'boolean', title: 'Focus on 1st Error' },
+    experimental_componentUpdateStrategy: {
+      type: 'string',
+      title: 'Component update strategy',
+      default: 'customDeep',
+      enum: ['customDeep', 'shallow', 'always'],
+    },
     showErrorList: {
       type: 'string',
       default: 'top',
@@ -236,19 +249,20 @@ type HeaderProps = {
   themes: { [themeName: string]: ThemesType };
   theme: string;
   subtheme: string | null;
+  sampleName: string;
   validators: {
     [validatorName: string]: ValidatorType<any, RJSFSchema, any>;
   };
   validator: string;
   liveSettings: LiveSettings;
-  playGroundFormRef: React.MutableRefObject<any>;
-  load: (data: any) => void;
+  playGroundFormRef: MutableRefObject<any>;
+  onSampleSelected: SampleSelectorProps['onSelected'];
   onThemeSelected: (theme: string, themeObj: ThemesType) => void;
-  setSubtheme: React.Dispatch<React.SetStateAction<string | null>>;
-  setStylesheet: React.Dispatch<React.SetStateAction<string | null>>;
-  setValidator: React.Dispatch<React.SetStateAction<string>>;
-  setLiveSettings: React.Dispatch<React.SetStateAction<LiveSettings>>;
-  setShareURL: React.Dispatch<React.SetStateAction<string | null>>;
+  setSubtheme: Dispatch<SetStateAction<string | null>>;
+  setStylesheet: Dispatch<SetStateAction<string | null>>;
+  setValidator: Dispatch<SetStateAction<string>>;
+  setLiveSettings: Dispatch<SetStateAction<LiveSettings>>;
+  setShareURL: Dispatch<SetStateAction<string | null>>;
 };
 
 export default function Header({
@@ -263,34 +277,35 @@ export default function Header({
   validator,
   liveSettings,
   playGroundFormRef,
-  load,
   onThemeSelected,
   setSubtheme,
   setStylesheet,
   setValidator,
   setLiveSettings,
   setShareURL,
+  sampleName,
+  onSampleSelected,
 }: HeaderProps) {
   const onSubthemeSelected = useCallback(
-    (subtheme: any, { stylesheet }: { stylesheet: any }) => {
+    (subtheme: any, { stylesheet }: SubthemeType) => {
       setSubtheme(subtheme);
-      setStylesheet(stylesheet);
+      setStylesheet(stylesheet || null);
     },
-    [setSubtheme, setStylesheet]
+    [setSubtheme, setStylesheet],
   );
 
   const onValidatorSelected = useCallback(
     (validator: string) => {
       setValidator(validator);
     },
-    [setValidator]
+    [setValidator],
   );
 
   const handleSetLiveSettings = useCallback(
     ({ formData }: IChangeEvent) => {
       setLiveSettings((previousLiveSettings) => ({ ...previousLiveSettings, ...formData }));
     },
-    [setLiveSettings]
+    [setLiveSettings],
   );
 
   const onShare = useCallback(() => {
@@ -307,7 +322,8 @@ export default function Header({
           theme,
           liveSettings,
           validator,
-        })
+          sampleName,
+        }),
       );
 
       setShareURL(`${origin}${pathname}#${hash}`);
@@ -315,14 +331,14 @@ export default function Header({
       setShareURL(null);
       console.error(error);
     }
-  }, [formData, liveSettings, schema, theme, uiSchema, validator, setShareURL]);
+  }, [formData, liveSettings, schema, theme, uiSchema, validator, setShareURL, sampleName]);
 
   return (
     <div className='page-header'>
       <h1>react-jsonschema-form</h1>
       <div className='row'>
         <div className='col-sm-4'>
-          <Selector onSelected={load} />
+          <SampleSelector onSelected={onSampleSelected} selectedSample={sampleName} />
         </div>
         <div className='col-sm-2'>
           <Form

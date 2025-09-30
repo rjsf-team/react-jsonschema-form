@@ -161,7 +161,7 @@ describe('anyOf', () => {
       {
         formData: { foo: 'defaultbar' },
       },
-      'root__anyof_select'
+      'root__anyof_select',
     );
   });
 
@@ -237,7 +237,7 @@ describe('anyOf', () => {
       {
         formData: { foo: 'defaultbar' },
       },
-      'root__anyof_select'
+      'root__anyof_select',
     );
   });
 
@@ -277,7 +277,7 @@ describe('anyOf', () => {
       {
         formData: { foo: 'defaultbar' },
       },
-      'root__anyof_select'
+      'root__anyof_select',
     );
   });
 
@@ -379,7 +379,7 @@ describe('anyOf', () => {
       {
         formData: { foo: 'Lorem ipsum dolor sit amet' },
       },
-      'root_foo'
+      'root_foo',
     );
   });
 
@@ -420,7 +420,7 @@ describe('anyOf', () => {
           buzz: 'Lorem ipsum dolor sit amet',
         },
       },
-      'root_buzz'
+      'root_buzz',
     );
 
     act(() => {
@@ -437,7 +437,7 @@ describe('anyOf', () => {
           foo: 'Consectetur adipiscing elit',
         },
       },
-      'root_foo'
+      'root_foo',
     );
 
     const $select = node.querySelector('select');
@@ -488,7 +488,7 @@ describe('anyOf', () => {
       {
         formData: { userId: 12345 },
       },
-      'root_userId'
+      'root_userId',
     );
 
     const $select = node.querySelector('select');
@@ -504,7 +504,7 @@ describe('anyOf', () => {
       {
         formData: { userId: undefined },
       },
-      'root_userId'
+      'root_userId',
     );
 
     act(() => {
@@ -518,7 +518,7 @@ describe('anyOf', () => {
       {
         formData: { userId: 'Lorem ipsum dolor sit amet' },
       },
-      'root_userId'
+      'root_userId',
     );
   });
 
@@ -1103,10 +1103,10 @@ describe('anyOf', () => {
         schema,
       });
 
-      expect(node.querySelector('.array-item-add button')).not.eql(null);
+      expect(node.querySelector('.rjsf-array-item-add button')).not.eql(null);
 
       act(() => {
-        fireEvent.click(node.querySelector('.array-item-add button'));
+        fireEvent.click(node.querySelector('.rjsf-array-item-add button'));
       });
 
       expect(node.querySelectorAll('select')).to.have.length.of(1);
@@ -1159,7 +1159,7 @@ describe('anyOf', () => {
       expect(selects[0].value).eql('0');
       expect(selects[1].value).eql('1');
 
-      const moveUpBtns = node.querySelectorAll('.array-item-move-up');
+      const moveUpBtns = node.querySelectorAll('.rjsf-array-item-move-up');
 
       act(() => {
         fireEvent.click(moveUpBtns[1]);
@@ -1206,12 +1206,12 @@ describe('anyOf', () => {
         },
       });
 
-      const moveDownBtns = node.querySelectorAll('.array-item-move-down');
+      const moveDownBtns = node.querySelectorAll('.rjsf-array-item-move-down');
       act(() => {
         fireEvent.click(moveDownBtns[0]);
       });
 
-      const strInputs = node.querySelectorAll('fieldset .field-string input[type=text]');
+      const strInputs = node.querySelectorAll('fieldset .rjsf-field-string input[type=text]');
 
       act(() => {
         fireEvent.change(strInputs[1], { target: { value: 'bar' } });
@@ -1250,10 +1250,10 @@ describe('anyOf', () => {
         schema,
       });
 
-      expect(node.querySelector('.array-item-add button')).not.eql(null);
+      expect(node.querySelector('.rjsf-array-item-add button')).not.eql(null);
 
       act(() => {
-        fireEvent.click(node.querySelector('.array-item-add button'));
+        fireEvent.click(node.querySelector('.rjsf-array-item-add button'));
       });
 
       const $select = node.querySelector('select');
@@ -1630,7 +1630,7 @@ describe('anyOf', () => {
         fireEvent.submit(node);
       });
 
-      let inputs = node.querySelectorAll('.form-group.field-error input[type=number]');
+      let inputs = node.querySelectorAll('.form-group.rjsf-field-error input[type=number]');
       expect(inputs[0].id).eql('root_userId');
 
       const $select = node.querySelector('select');
@@ -1650,7 +1650,7 @@ describe('anyOf', () => {
         fireEvent.submit(node);
       });
 
-      inputs = node.querySelectorAll('.form-group.field-error input[type=text]');
+      inputs = node.querySelectorAll('.form-group.rjsf-field-error input[type=text]');
       expect(inputs[0].id).eql('root_userId');
     });
 
@@ -1673,7 +1673,7 @@ describe('anyOf', () => {
         fireEvent.submit(node);
       });
 
-      let inputs = node.querySelectorAll('.form-group.field-error input[type=number]');
+      let inputs = node.querySelectorAll('.form-group.rjsf-field-error input[type=number]');
       expect(inputs).to.have.length.of(0);
 
       const $select = node.querySelector('select');
@@ -1693,7 +1693,7 @@ describe('anyOf', () => {
         fireEvent.submit(node);
       });
 
-      inputs = node.querySelectorAll('.form-group.field-error input[type=text]');
+      inputs = node.querySelectorAll('.form-group.rjsf-field-error input[type=text]');
       expect(inputs).to.have.length.of(0);
     });
   });
@@ -1816,6 +1816,172 @@ describe('anyOf', () => {
       const { node } = createFormComponent({ schema, uiSchema });
       const selects = node.querySelectorAll('select');
       expect(selects).to.have.length.of(0);
+    });
+  });
+
+  describe('Boolean field value preservation', () => {
+    it('should preserve boolean values when switching between anyOf options with shared properties', () => {
+      const schema = {
+        type: 'object',
+        properties: {
+          items: {
+            type: 'array',
+            items: {
+              type: 'object',
+              anyOf: [
+                {
+                  title: 'Type A',
+                  properties: {
+                    type: { type: 'string', enum: ['typeA'], default: 'typeA' },
+                    showField: { type: 'boolean' },
+                  },
+                },
+                {
+                  title: 'Type B',
+                  properties: {
+                    type: { type: 'string', enum: ['typeB'], default: 'typeB' },
+                    showField: { type: 'boolean' },
+                  },
+                },
+              ],
+            },
+          },
+        },
+      };
+
+      const { node, onChange } = createFormComponent({
+        schema,
+        formData: {
+          items: [{ type: 'typeA', showField: true }],
+        },
+        experimental_defaultFormStateBehavior: {
+          mergeDefaultsIntoFormData: 'useDefaultIfFormDataUndefined',
+        },
+      });
+
+      // Wait for initial form setup to complete
+      if (onChange.lastCall) {
+        // Initial state - should have showField = true
+        let lastFormData = onChange.lastCall.args[0].formData;
+        expect(lastFormData.items[0].showField).to.equal(true);
+      }
+
+      // Switch to typeB
+      const dropdown = node.querySelector('select[id="root_items_0__anyof_select"]');
+      if (dropdown) {
+        act(() => {
+          fireEvent.change(dropdown, { target: { value: '1' } });
+        });
+
+        // After switching, the boolean value should be preserved, not converted to {}
+        if (onChange.lastCall) {
+          const lastFormData = onChange.lastCall.args[0].formData;
+          expect(lastFormData.items[0].type).to.equal('typeB');
+          expect(lastFormData.items[0].showField).to.equal(true); // Should still be true, not {}
+        }
+      }
+    });
+
+    it('should handle undefined boolean fields correctly when switching anyOf options', () => {
+      const schema = {
+        type: 'object',
+        properties: {
+          items: {
+            type: 'array',
+            items: {
+              type: 'object',
+              anyOf: [
+                {
+                  title: 'Type A',
+                  properties: {
+                    type: { type: 'string', enum: ['typeA'], default: 'typeA' },
+                    showField: { type: 'boolean' },
+                  },
+                },
+                {
+                  title: 'Type B',
+                  properties: {
+                    type: { type: 'string', enum: ['typeB'], default: 'typeB' },
+                    showField: { type: 'boolean' },
+                  },
+                },
+              ],
+            },
+          },
+        },
+      };
+
+      const { node, onChange } = createFormComponent({
+        schema,
+        formData: {
+          items: [{ type: 'typeA' }], // No showField defined
+        },
+        experimental_defaultFormStateBehavior: {
+          mergeDefaultsIntoFormData: 'useDefaultIfFormDataUndefined',
+        },
+      });
+
+      // Switch to typeB
+      const dropdown = node.querySelector('select[id="root_items_0__anyof_select"]');
+      if (dropdown) {
+        act(() => {
+          fireEvent.change(dropdown, { target: { value: '1' } });
+        });
+
+        // After switching, undefined boolean should remain undefined, not become {}
+        const lastFormData = onChange.lastCall.args[0].formData;
+        expect(lastFormData.items[0].type).to.equal('typeB');
+
+        // showField should be undefined, not {} (the bug we fixed)
+        if ('showField' in lastFormData.items[0]) {
+          expect(lastFormData.items[0].showField).to.not.deep.equal({});
+        }
+      }
+    });
+
+    it('should handle boolean field values correctly in direct anyOf schemas', () => {
+      const schema = {
+        type: 'object',
+        anyOf: [
+          {
+            title: 'Option A',
+            properties: {
+              type: { type: 'string', enum: ['optionA'], default: 'optionA' },
+              enabled: { type: 'boolean' },
+            },
+          },
+          {
+            title: 'Option B',
+            properties: {
+              type: { type: 'string', enum: ['optionB'], default: 'optionB' },
+              enabled: { type: 'boolean' },
+            },
+          },
+        ],
+      };
+
+      const { node, onChange } = createFormComponent({
+        schema,
+        formData: { type: 'optionA', enabled: false },
+        experimental_defaultFormStateBehavior: {
+          mergeDefaultsIntoFormData: 'useDefaultIfFormDataUndefined',
+        },
+      });
+
+      // Switch to optionB
+      const dropdown = node.querySelector('select[id="root__anyof_select"]');
+      if (dropdown) {
+        act(() => {
+          fireEvent.change(dropdown, { target: { value: '1' } });
+        });
+
+        // After switching, the boolean value should be preserved, not converted to {}
+        if (onChange.lastCall) {
+          const lastFormData = onChange.lastCall.args[0].formData;
+          expect(lastFormData.type).to.equal('optionB');
+          expect(lastFormData.enabled).to.equal(false); // Should still be false, not {}
+        }
+      }
     });
   });
 });

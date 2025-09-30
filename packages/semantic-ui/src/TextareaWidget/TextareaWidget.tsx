@@ -17,7 +17,7 @@ import { getSemanticProps } from '../util';
 export default function TextareaWidget<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(props: WidgetProps<T, S, F>) {
   const {
     id,
@@ -33,11 +33,11 @@ export default function TextareaWidget<
     onFocus,
     onChange,
     options,
-    formContext,
+    registry,
     rawErrors = [],
   } = props;
   const semanticProps = getSemanticProps<T, S, F>({
-    formContext,
+    formContext: registry.formContext,
     options,
     defaultSchemaProps: { inverted: 'false' },
   });

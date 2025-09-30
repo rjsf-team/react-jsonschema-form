@@ -10,6 +10,8 @@ import { CopyButton, MoveDownButton, MoveUpButton, RemoveButton } from '../IconB
 import FieldErrorTemplate from '../FieldErrorTemplate';
 import FieldHelpTemplate from '../FieldHelpTemplate';
 import FieldTemplate from '../FieldTemplate';
+import GridTemplate from '../GridTemplate';
+import MultiSchemaFieldTemplate from '../MultiSchemaFieldTemplate';
 import ObjectFieldTemplate from '../ObjectFieldTemplate';
 import SubmitButton from '../SubmitButton';
 import TitleField from '../TitleField';
@@ -18,7 +20,7 @@ import WrapIfAdditionalTemplate from '../WrapIfAdditionalTemplate';
 export function generateTemplates<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(): Partial<TemplatesType<T, S, F>> {
   return {
     ArrayFieldItemTemplate,
@@ -37,6 +39,8 @@ export function generateTemplates<
     FieldErrorTemplate,
     FieldHelpTemplate,
     FieldTemplate,
+    GridTemplate,
+    MultiSchemaFieldTemplate,
     ObjectFieldTemplate,
     TitleFieldTemplate: TitleField,
     WrapIfAdditionalTemplate,

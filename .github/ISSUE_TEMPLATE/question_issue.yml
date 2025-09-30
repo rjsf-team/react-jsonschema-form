@@ -16,16 +16,17 @@ body:
     attributes:
       label: What theme are you using?
       options:
-        - core
         - antd
-        - bootstrap-4
         - chakra-ui
-        - fluent-ui
-        - material-ui
+        - core
+        - daisyui
+        - fluentui-rc
+        - mantine
         - mui
+        - react-bootstrap
         - semantic-ui
+        - shadcn
         - utils
-        - validator-ajv6
         - validator-ajv8
         - other
     validations:

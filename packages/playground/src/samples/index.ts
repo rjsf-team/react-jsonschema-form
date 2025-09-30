@@ -31,8 +31,12 @@ import defaults from './defaults';
 import options from './options';
 import ifThenElse from './ifThenElse';
 import customField from './customField';
+import layoutGrid from './layoutGrid';
 import { Sample } from './Sample';
-import deepFreeze from 'deep-freeze-es6';
+import patternProperties from './patternProperties';
+import bundledSchema from './bundledSchema';
+
+export type { Sample };
 
 const _samples: Record<string, Sample> = {
   Blank: { schema: {}, uiSchema: {}, formData: {} },
@@ -58,6 +62,7 @@ const _samples: Record<string, Sample> = {
   'Property dependencies': propertyDependencies,
   'Schema dependencies': schemaDependencies,
   'Additional Properties': additionalProperties,
+  'Pattern Properties': patternProperties,
   'Any Of': anyOf,
   'Any Of with Custom Field': customFieldAnyOf,
   'One Of': oneOf,
@@ -69,6 +74,8 @@ const _samples: Record<string, Sample> = {
   ErrorSchema: errorSchema,
   Defaults: defaults,
   'Custom Field': customField,
+  'Layout Grid': layoutGrid,
+  'Bundled Schema': bundledSchema,
 };
 
-export const samples = deepFreeze(_samples);
+export const samples = _samples;

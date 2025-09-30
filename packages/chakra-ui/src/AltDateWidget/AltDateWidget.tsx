@@ -1,9 +1,9 @@
-import { MouseEvent, useEffect, useState } from 'react';
+import { Box, Button, FieldsetRoot } from '@chakra-ui/react';
 import {
   ariaDescribedByIds,
-  dateRangeOptions,
   DateElementFormat,
   DateObject,
+  dateRangeOptions,
   FormContextType,
   getDateElementProps,
   parseDateString,
@@ -13,10 +13,11 @@ import {
   TranslatableString,
   WidgetProps,
 } from '@rjsf/utils';
-import { Box, Button } from '@chakra-ui/react';
+import { MouseEvent, useEffect, useState } from 'react';
+import { getChakra } from '../utils';
 
 function DateElement<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: WidgetProps<T, S, F>
+  props: WidgetProps<T, S, F>,
 ) {
   const { SelectWidget } = props.registry.widgets;
   const value = props.value ? props.value : undefined;
@@ -46,7 +47,7 @@ const readyForChange = (state: AltDateStateType) => {
 };
 
 function AltDateWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: WidgetProps<T, S, F>
+  props: WidgetProps<T, S, F>,
 ) {
   const { autofocus, disabled, id, onBlur, onChange, onFocus, options, readonly, registry, showTime, value } = props;
   const { translateString } = registry;
@@ -85,14 +86,16 @@ function AltDateWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F exten
     onChange(undefined);
   };
 
+  const chakraProps = getChakra({ uiSchema: props.uiSchema });
+
   return (
-    <Box>
+    <FieldsetRoot {...(chakraProps as any)}>
       <Box display='flex' flexWrap='wrap' alignItems='center'>
         {getDateElementProps(
           state,
           showTime,
           options.yearsRange as [number, number] | undefined,
-          options.format as DateElementFormat | undefined
+          options.format as DateElementFormat | undefined,
         ).map((elemProps: any, i) => {
           const elemId = id + '_' + elemProps.type;
           return (
@@ -127,7 +130,7 @@ function AltDateWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F exten
           </Button>
         )}
       </Box>
-    </Box>
+    </FieldsetRoot>
   );
 }
 

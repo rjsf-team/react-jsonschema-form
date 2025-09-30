@@ -19,7 +19,7 @@ import { Checkbox } from '@fluentui/react-components';
 export default function CheckboxWidget<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(props: WidgetProps<T, S, F>) {
   const {
     schema,
@@ -40,7 +40,7 @@ export default function CheckboxWidget<
   const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
     'DescriptionFieldTemplate',
     registry,
-    options
+    options,
   );
   // Because an unchecked checkbox will cause html5 validation to fail, only add
   // the "required" attribute if the field value must be "true", due to the
@@ -48,13 +48,13 @@ export default function CheckboxWidget<
   const required = schemaRequiresTrueValue<S>(schema);
 
   const _onChange = ({ target: { checked } }: ChangeEvent<HTMLInputElement>) => onChange(checked);
-  const _onBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target && target.value);
-  const _onFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target && target.value);
+  const _onBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target && target.checked);
+  const _onFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target && target.checked);
   const description = options.description ?? schema.description;
 
   return (
     <>
-      {!hideLabel && !!description && (
+      {!hideLabel && description && (
         <DescriptionFieldTemplate
           id={descriptionId<T>(id)}
           description={description}

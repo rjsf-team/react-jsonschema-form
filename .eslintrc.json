@@ -19,6 +19,7 @@
         "beforeSelfClosing": "always"
       }
     ],
+    "react-hooks/exhaustive-deps": "error",
     "curly": [
       2
     ],
@@ -33,6 +34,7 @@
     "comma-dangle": [
       0
     ],
+    "@typescript-eslint/no-require-imports": "off",
     "@typescript-eslint/no-unused-vars": [
       2,
       {
@@ -66,5 +68,8 @@
     "react": {
       "version": "detect"
     }
+  },
+  "globals": {
+    "jest": true
   }
 }

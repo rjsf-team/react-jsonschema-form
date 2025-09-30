@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`hashForSchema returns a hash for a more complex schema 1`] = `"7cf4cd8a"`;
 

@@ -17,7 +17,7 @@ import { getSemanticProps, MaybeWrap } from '../util';
 export default function FieldTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(props: FieldTemplateProps<T, S, F>) {
   const {
     id,
@@ -36,13 +36,16 @@ export default function FieldTemplate<
     uiSchema,
     ...otherProps
   } = props;
-  const semanticProps = getSemanticProps<T, S, F>(otherProps);
+  const semanticProps = getSemanticProps<T, S, F>({
+    ...otherProps,
+    formContext: registry.formContext,
+  });
   const { wrapLabel, wrapContent } = semanticProps;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const WrapIfAdditionalTemplate = getTemplate<'WrapIfAdditionalTemplate', T, S, F>(
     'WrapIfAdditionalTemplate',
     registry,
-    uiOptions
+    uiOptions,
   );
 
   if (hidden) {

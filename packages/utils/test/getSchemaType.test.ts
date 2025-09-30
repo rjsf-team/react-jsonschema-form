@@ -66,6 +66,10 @@ const cases: { schema: object; expected: string | undefined }[] = [
     expected: 'object',
   },
   {
+    schema: { patternProperties: { '^foo': {} } },
+    expected: 'object',
+  },
+  {
     schema: { enum: ['foo'] },
     expected: 'string',
   },
@@ -80,6 +84,6 @@ describe('getSchemaType()', () => {
     `should correctly guess the type "%s" of a schema %j`,
     (expected, schema) => {
       expect(getSchemaType(schema)).toBe(expected);
-    }
+    },
   );
 });

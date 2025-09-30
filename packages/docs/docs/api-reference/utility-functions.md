@@ -41,7 +41,7 @@ The user is warned in the console if `schema.additionalItems` has the value `tru
 
 - boolean: True if additional items is allowed, otherwise false
 
-### ariaDescribedByIds<T = any>()
+### ariaDescribedByIds&lt;T = any>()
 
 Return a list of element ids that contain additional information about the field that can be used to as the aria description of the field.
 
@@ -70,7 +70,20 @@ Otherwise, the string is wrapped by `Number()` and if that result is not `NaN`, 
 
 - undefined | null | string | number: The `value` converted to a number when appropriate, otherwise the `value`
 
-### canExpand<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
+### buttonId&lt;T = any>()
+
+Return a consistent `id` for the `btn` button element
+
+#### Parameters
+
+- id: IdSchema&lt;T> | string - Either simple string id or an IdSchema from which to extract it
+- btn: 'add' | 'copy' | 'moveDown' | 'moveUp' | 'remove' - The button type for which to generate the id
+
+#### Returns
+
+- string: The consistent id for the button from the given `id` and `btn` type
+
+### canExpand&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
 
 Checks whether the field described by `schema`, having the `uiSchema` and `formData` supports expanding.
 The UI for the field can expand if it has additional properties, is not forced as non-expandable by the `uiSchema` and the `formData` object doesn't already have `schema.maxProperties` elements.
@@ -78,14 +91,14 @@ The UI for the field can expand if it has additional properties, is not forced a
 #### Parameters
 
 - schema: S - The schema for the field that is being checked
-- [uiSchema={}]: UiSchema<T, S, F> - The uiSchema for the field
+- [uiSchema=\{}]: UiSchema&lt;T, S, F> - The uiSchema for the field
 - [formData]: T | undefined - The formData for the field
 
 #### Returns
 
-- boolean: True if the schema element has additionalProperties, is expandable, and not at the maxProperties limit
+- boolean: True if the schema element has additionalProperties or patternProperties keywords, is expandable, and not at the maxProperties limit
 
-### createErrorHandler<T = any>()
+### createErrorHandler&lt;T = any>()
 
 Given a `formData` object, recursively creates a `FormValidation` error handling structure around it
 
@@ -108,7 +121,7 @@ of that Blob if provided in the URL. If no name is provided, then the name falls
 
 #### Returns
 
-- { blob: Blob, name: string }: An object containing a Blob and its name, extracted from the URI
+- \{ blob: Blob, name: string }: An object containing a Blob and its name, extracted from the URI
 
 ### dateRangeOptions&lt;S extends StrictRJSFSchema = RJSFSchema>()
 
@@ -127,7 +140,7 @@ If `start` and `stop` are negative numbers (or zero), then they will be treated 
 
 #### Throws
 
-- Error when `start` and `stop` aren't both <= 0 or > 0
+- Error when `start` and `stop` aren't both %lt;= 0 or > 0
 
 ### deepEquals()
 
@@ -142,7 +155,7 @@ Implements a deep equals using the `lodash.isEqualWith` function, that provides 
 
 - boolean: True if the `a` and `b` are deeply equal, false otherwise
 
-### descriptionId<T = any>()
+### descriptionId&lt;T = any>()
 
 Return a consistent `id` for the field description element.
 
@@ -236,7 +249,7 @@ If `valueIndex` is an array, AND it contains an invalid index, the returned arra
 
 #### Parameters
 
-- valueIndex: string | number | Array<string | number> - The index(es) of the value(s) that should be returned
+- valueIndex: string | number | Array&lt;string | number> - The index(es) of the value(s) that should be returned
 - [allEnumOptions=[]]: EnumOptionsType&lt;S>[] - The list of all the known enumOptions
 - [emptyValue]: EnumOptionsType&lt;S>["value"] | undefined - The value to return when the non-array `valueIndex` does not refer to a real option
 
@@ -244,7 +257,7 @@ If `valueIndex` is an array, AND it contains an invalid index, the returned arra
 
 - EnumOptionsType&lt;S>["value"] | EnumOptionsType&lt;S>["value"][] | undefined: The single or list of values specified by the single or list of indexes if they are valid. Otherwise, `emptyValue` or an empty list.
 
-### errorId<T = any>()
+### errorId&lt;T = any>()
 
 Return a consistent `id` for the field error element.
 
@@ -256,7 +269,7 @@ Return a consistent `id` for the field error element.
 
 - string: The consistent id for the field error element from the given `id`
 
-### examplesId<T = any>()
+### examplesId&lt;T = any>()
 
 Return a consistent `id` for the field examples element.
 
@@ -339,7 +352,7 @@ Given date & time information with optional yearRange & format, returns props fo
 
 - Array of props for DateElement
 
-### getInputProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
+### getInputProps&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
 
 Using the `schema`, `defaultType` and `options`, extract out the props for the `<input>` element that make sense.
 
@@ -347,7 +360,7 @@ Using the `schema`, `defaultType` and `options`, extract out the props for the `
 
 - schema: S - The schema for the field provided by the widget
 - [defaultType]: string | undefined - The default type, if any, for the field provided by the widget
-- [options={}]: UIOptionsType<T, S, F> - The UI Options for the field provided by the widget
+- [options={}]: UIOptionsType&lt;T, S, F> - The UI Options for the field provided by the widget
 - [autoDefaultStepAny=true]: boolean - Determines whether to auto-default step=any when the type is number and no step
 
 #### Returns
@@ -379,6 +392,7 @@ If the type is not explicitly defined, then an attempt is made to infer it from 
 - schema.enum: Returns `string`
 - schema.properties: Returns `object`
 - schema.additionalProperties: Returns `object`
+- schema.patternProperties: Returns `object`
 - type is an array with a length of 2 and one type is 'null': Returns the other type
 
 #### Parameters
@@ -389,33 +403,19 @@ If the type is not explicitly defined, then an attempt is made to infer it from 
 
 - string | string[] | undefined: The type of the schema
 
-### getSubmitButtonOptions<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
+### getSubmitButtonOptions&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
 
 Extracts any `ui:submitButtonOptions` from the `uiSchema` and merges them onto the `DEFAULT_OPTIONS`
 
 #### Parameters
 
-- [uiSchema={}]: UiSchema<T, S, F> - the UI Schema from which to extract submit button props
+- [uiSchema={}]: UiSchema&lt;T, S, F> - the UI Schema from which to extract submit button props
 
 #### Returns
 
 - UISchemaSubmitButtonOptions: The merging of the `DEFAULT_OPTIONS` with any custom ones
 
-### getUiOptions<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
-
-Get all passed options from ui:options, and ui:&lt;optionName>, returning them in an object with the `ui:` stripped off.
-Any `globalOptions` will always be returned, unless they are overridden by options in the `uiSchema`.
-
-#### Parameters
-
-- [uiSchema={}]: UiSchema<T, S, F> - The UI Schema from which to get any `ui:xxx` options
-- [globalOptions={}]: GlobalUISchemaOptions - The optional Global UI Schema from which to get any fallback `xxx` options
-
-#### Returns
-
-- UIOptionsType<T, S, F> An object containing all of the `ui:xxx` options with the `ui:` stripped off along with all `globalOptions`
-
-### getTemplate<Name extends keyof TemplatesType<T, S, F>, T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
+### getTemplate&lt;Name extends keyof TemplatesType&lt;T, S, F>, T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
 
 Returns the template with the given `name` from either the `uiSchema` if it is defined or from the `registry`
 otherwise. NOTE, since `ButtonTemplates` are not overridden in `uiSchema` only those in the `registry` are returned.
@@ -423,14 +423,45 @@ otherwise. NOTE, since `ButtonTemplates` are not overridden in `uiSchema` only t
 #### Parameters
 
 - name: Name - The name of the template to fetch, restricted to the keys of `TemplatesType`
-- registry: Registry<T, S, F> - The `Registry` from which to read the template
-- [uiOptions={}]: UIOptionsType<T, S, F> - The `UIOptionsType` from which to read an alternate template
+- registry: Registry&lt;T, S, F> - The `Registry` from which to read the template
+- [uiOptions=\{}]: UIOptionsType&lt;T, S, F> - The `UIOptionsType` from which to read an alternate template
 
 #### Returns
 
-- TemplatesType<T, S, F>[Name] - The template from either the `uiSchema` or `registry` for the `name`
+- TemplatesType&lt;T, S, F>[Name] - The template from either the `uiSchema` or `registry` for the `name`
 
-### getWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
+### getTestIds()
+
+Returns an object of test IDs that can only be used in test mode.
+If the function is called in a test environment (`NODE_ENV === 'test'`, this is set by jest) then a Proxy object will be returned.
+If a key within the returned object is accessed, if the value already exists the object will return that value, otherwise it will create that key
+with a generated `uuid` value and return the generated ID.
+If it is called outside of a test environment, the function will return an empty object, therefore returning `undefined` for any property within the object and excluding the prop from the rendered output of the component in which it is used.
+To use this helper, you will want to generate a separate object for each component to avoid potential overlapping of ID names.
+You will also want to export the object for use in tests, because the keys will be generated in the component file, and used in the test file.
+Within the component file, add: `export const TEST_IDS = getTestIds();`
+Then pass `TEST_IDS.examplePropertyName` as the value of the test ID attribute of the intended component.
+This will allow you to use `TEST_IDS.examplePropertyName` within your tests, while keeping the test IDs out of your rendered output.
+
+#### Returns
+
+- TestIdShape: An object that auto-generates test ids upon request the first time and then returns the same value on subsequent calls
+
+### getUiOptions&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
+
+Get all passed options from ui:options, and ui:&lt;optionName>, returning them in an object with the `ui:` stripped off.
+Any `globalOptions` will always be returned, unless they are overridden by options in the `uiSchema`.
+
+#### Parameters
+
+- [uiSchema={}]: UiSchema&lt;T, S, F> - The UI Schema from which to get any `ui:xxx` options
+- [globalOptions={}]: GlobalUISchemaOptions - The optional Global UI Schema from which to get any fallback `xxx` options
+
+#### Returns
+
+- UIOptionsType&lt;T, S, F> An object containing all of the `ui:xxx` options with the `ui:` stripped off along with all `globalOptions`
+
+### getWidget&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
 
 Given a schema representing a field to render and either the name or actual `Widget` implementation, returns the
 React component that is used to render the widget. If the `widget` is already a React component, then it is wrapped
@@ -440,16 +471,41 @@ on the schema type and `widget` name. If no widget component can be found an `Er
 #### Parameters
 
 - schema: S - The schema for the field
-- widget: Widget<T, S, F> | string - Either the name of the widget OR a `Widget` implementation to use
-- [registeredWidgets={}]: RegistryWidgetsType<T, S, F> - A registry of widget name to `Widget` implementation
+- widget: Widget&lt;T, S, F> | string - Either the name of the widget OR a `Widget` implementation to use
+- [registeredWidgets={}]: RegistryWidgetsType&lt;T, S, F> - A registry of widget name to `Widget` implementation
 
 #### Returns
 
-- Widget<T, S, F>: The `Widget` component to use
+- Widget&lt;T, S, F>: The `Widget` component to use
 
 #### Throws
 
 - An error if there is no `Widget` component that can be returned
+
+### hashObject()
+
+Stringifies an `object` and returns the hash of the resulting string.
+Sorts object fields in consistent order before stringify to prevent different hash ids for the same object.
+
+#### Parameters
+
+- object: object - The object for which the hash is desired
+
+#### Returns
+
+- string: The string obtained from the hash of the stringified object
+
+### hashString()
+
+Hashes a string using the algorithm based on Java's hashing function.
+
+#### Parameters
+
+- string: string - The string for which to get the hash
+
+#### Returns
+
+- string: The resulting hash of the string in hex format
 
 ### guessType()
 
@@ -476,21 +532,21 @@ Stringifies the schema and returns the hash of the resulting string.
 
 - string: The string obtained from the hash of the stringified schema
 
-### hasWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
+### hasWidget&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
 
 Detects whether the `widget` exists for the `schema` with the associated `registryWidgets` and returns true if it does, or false if it doesn't.
 
 #### Parameters
 
 - schema: S - The schema for the field
-- widget: Widget<T, S, F> | string - Either the name of the widget OR a `Widget` implementation to use
-- [registeredWidgets={}]: RegistryWidgetsType<T, S, F> - A registry of widget name to `Widget` implementation
+- widget: Widget&lt;T, S, F> | string - Either the name of the widget OR a `Widget` implementation to use
+- [registeredWidgets={}]: RegistryWidgetsType&lt;T, S, F> - A registry of widget name to `Widget` implementation
 
 #### Returns
 
 - boolean: True if the widget exists, false otherwise
 
-### helpId<T = any>()
+### helpId&lt;T = any>()
 
 Return a consistent `id` for the field help element.
 
@@ -515,13 +571,13 @@ This happens when either the schema has an `enum` array with a single value or t
 
 - boolean: True if the `schema` has a single constant value, false otherwise
 
-### isCustomWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
+### isCustomWidget&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
 
 Checks to see if the `uiSchema` contains the `widget` field and that the widget is not `hidden`
 
 #### Parameters
 
-- uiSchema: UiSchema<T, S, F> - The UI Schema from which to detect if it is customized
+- uiSchema: UiSchema&lt;T, S, F> - The UI Schema from which to detect if it is customized
 
 #### Returns
 
@@ -582,7 +638,23 @@ Converts a local Date string into a UTC date string
 
 - string | undefined: A UTC date string if `dateString` is truthy, otherwise undefined
 
-### mergeDefaultsWithFormData<T = any, S extends StrictRJSFSchema = RJSFSchema,>()
+### lookupFromFormContext&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
+
+Given a React JSON Schema Form registry or formContext object, return the value associated with `toLookup`.
+This might be contained within the lookup map in the formContext.
+If no such value exists, return the `fallback` value.
+
+#### Parameters
+
+- regOrFc: Registry&lt;T, S, F> | Registry&lt;T, S, F>['formContext'] - The @rjsf registry or form context in which the lookup will occur
+- toLookup: string - The name of the field in the lookup map in the form context to get the value for
+- [fallback]: unknown - The fallback value to use if the form context does not contain a value for `toLookup`
+
+#### Returns
+
+- any: The value associated with `toLookup` in the form context or `fallback`
+
+### mergeDefaultsWithFormData&lt;T = any>()
 
 Merges the `defaults` object of type `T` into the `formData` of type `T`
 
@@ -646,25 +718,29 @@ Return a consistent `id` for the `optionIndex`s of a `Radio` or `Checkboxes` wid
 
 - string: An id for the option index based on the parent `id`
 
-### optionsList&lt;S extends StrictRJSFSchema = RJSFSchema, T = any, F extends FormContextType = any>()
+### optionsList&lt;T = any, S extends StrictRJSFSchema = RJSFSchema,F extends FormContextType = any>()
 
 Gets the list of options from the `schema`. If the schema has an enum list, then those enum values are returned.
-The labels for the options will be extracted from the non-standard, RJSF-deprecated `enumNames` if it exists, otherwise
-the label will be the same as the `value`. If the schema has a `oneOf` or `anyOf`, then the value is the list of
-`const` values from the schema and the label is either the `schema.title` or the value. If a `uiSchema` is provided
-and it has the `ui:enumNames` matched with `enum` or it has an associated `oneOf` or `anyOf` with a list of objects
-containing `ui:title` then the UI schema values will replace the values from the schema.
+The labels for the options will be extracted from the non-standard, RJSF-deprecated `enumNames` if it exists, otherwise the label will be the same as the `value`.
 
-NOTE: `enumNames` is deprecated and will be removed in a future major version of RJSF. Use the "ui:enumNames" property in the uiSchema instead.
+If the schema has a `oneOf` or `anyOf`, then the value is the list of either:
+
+-
+- The `const` values from the schema if present
+- If the schema has a discriminator and the label using either the `schema.title` or the value. If a `uiSchema` is
+  provided, and it has the `ui:enumNames` matched with `enum` or it has an associated `oneOf` or `anyOf` with a list of
+  objects containing `ui:title` then the UI schema values will replace the values from the schema.
+
+- NOTE: `enumNames` is deprecated and will be removed in a future major version of RJSF. Use the "ui:enumNames" property in the uiSchema instead.
 
 #### Parameters
 
 - schema: S - The schema from which to extract the options list
-- uiSchema: UiSchema<T, S, F> - The optional uiSchema from which to get alternate labels for the options
+- uiSchema: UiSchema&lt;T, S, F> - The optional uiSchema from which to get alternate labels for the options
 
 #### Returns
 
-- { schema?: S, label: string, value: any }: The list of options from the schema
+- \{ schema?: S, label: string, value: any }: The list of options from the schema
 
 ### orderProperties()
 
@@ -774,7 +850,19 @@ If either of those two sets are not the same, then the component should be reren
 
 - True if boolean: the component should be re-rendered, false otherwise
 
-### titleId<T = any>()
+### sortedJSONStringify()
+
+Stringifies an `object`, sorts object fields in consistent order before stringifying it.
+
+#### Parameters
+
+- object: object - The object for which the sorted stringify is desired
+
+#### Returns
+
+- string: The stringified object with keys sorted in a consistent order
+
+### titleId&lt;T = any>()
 
 Return a consistent `id` for the field title element.
 
@@ -817,7 +905,7 @@ If `time` is false, then the time portion of the string is removed.
 
 - string: The UTC date string
 
-### toErrorList<T = any>()
+### toErrorList&lt;T = any>()
 
 Converts an `errorSchema` into a list of `RJSFValidationErrors`
 
@@ -830,15 +918,15 @@ Converts an `errorSchema` into a list of `RJSFValidationErrors`
 
 - RJSFValidationErrors[]: The list of `RJSFValidationErrors` extracted from the `errorSchema`
 
-### toErrorSchema<T = any>()
+### toErrorSchema&lt;T = any>()
 
 Transforms a RJSF validation errors list into an `ErrorSchema`
 
 ```ts
 const changesThis = [
-  { property: '.level1.level2[2].level3', message: 'err a' },
-  { property: '.level1.level2[2].level3', message: 'err b' },
-  { property: '.level1.level2[4].level3', message: 'err b' },
+  { property: '.level1.level2[2].level3', message: 'err a', stack: '.level1.level2[2].level3 err a' },
+  { property: '.level1.level2[2].level3', message: 'err b', stack: '.level1.level2[2].level3 err b' },
+  { property: '.level1.level2[4].level3', message: 'err b', stack: '.level1.level2[4].level3 err b' },
 ];
 const intoThis = {
   level1: {
@@ -858,7 +946,7 @@ const intoThis = {
 
 - ErrorSchema&lt;T>: The `ErrorSchema` built from the list of `RJSFValidationErrors`
 
-#### unwrapErrorHandler<T = any>()
+#### unwrapErrorHandler&lt;T = any>()
 
 Unwraps the `errorHandler` structure into the associated `ErrorSchema`, stripping the `addError()` functions from it
 
@@ -882,7 +970,7 @@ Converts a UTC date string into a local Date format
 
 - string: An empty string when `jsonDate` is falsey, otherwise a date string in local format
 
-### validationDataMerge<T = any>()
+### validationDataMerge&lt;T = any>()
 
 Merges the errors in `additionalErrorSchema` into the existing `validationData` by combining the hierarchies in the two `ErrorSchema`s and then appending the error list from the `additionalErrorSchema` obtained by calling `toErrorList()` on the `errors` in the `validationData`.
 If no `additionalErrorSchema` is passed, then `validationData` is returned.
@@ -911,13 +999,49 @@ This is used in isValid to make references to the rootSchema
 
 ## Validator-based utility functions
 
-### getDefaultFormState<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
+### findFieldInSchema&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
 
 Returns the superset of `formData` that includes the given set updated to include any missing fields that have computed to have defaults provided in the `schema`.
 
 #### Parameters
 
-- validator: ValidatorType<T, S, F> - An implementation of the `ValidatorType` interface that will be used when necessary
+- validator: ValidatorType&lt;T, S, F> - An implementation of the `ValidatorType` interface that will be forwarded to all the APIs
+- rootSchema: S | undefined - The root schema that will be forwarded to all the APIs
+- schema: S - The node within the JSON schema in which to search
+- path: string | string[] - The keys in the path to the desired field
+- [formData={}]: T - The form data that is used to determine which anyOf/oneOf option to descend
+- [experimental_customMergeAllOf]: Experimental_CustomMergeAllOf&lt;S&gt; - See `Form` documentation for the [experimental_customMergeAllOf](./form-props.md#experimental_custommergeallof) prop
+
+#### Returns
+
+- FoundFieldType&lt;S>: An object that contains the field and its required state. If no field can be found then`{ field: undefined, isRequired: undefined }` is returned.
+
+### findSelectedOptionInXxxOf&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
+
+Finds the option inside the `schema['any/oneOf']` list which has the `properties[selectorField].default` or `properties[selectorField].const` that matches the `formData[selectorField]` value.
+For the purposes of this function, `selectorField` is either `schema.discriminator.propertyName` or `fallbackField`.
+
+#### Parameters
+
+- validator: ValidatorType&lt;T, S, F> - An implementation of the `ValidatorType` interface that will be forwarded to all the APIs
+- rootSchema: S | undefined - The root schema that will be forwarded to all the APIs
+- schema: S - The schema element in which to search for the selected anyOf/oneOf option
+- fallbackField: string - The field to use as a backup selector field if the schema does not have a required field
+- xxx: 'anyOf' | 'oneOf' - Either `anyOf` or `oneOf`, defines which value is being sought
+- [formData={}]: T - The form data that is used to determine which anyOf/oneOf option to descend
+- [experimental_customMergeAllOf]: Experimental_CustomMergeAllOf&lt;S&gt; - See `Form` documentation for the [experimental_customMergeAllOf](./form-props.md#experimental_custommergeallof) prop
+
+#### Returns
+
+- S | undefined: The anyOf/oneOf option that matches the selector field in the schema or undefined if nothing is selected
+
+### getDefaultFormState&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
+
+Returns the superset of `formData` that includes the given set updated to include any missing fields that have computed to have defaults provided in the `schema`.
+
+#### Parameters
+
+- validator: ValidatorType&lt;T, S, F> - An implementation of the `ValidatorType` interface that will be used when necessary
 - theSchema: S - The schema for which the default state is desired
 - [formData]: T | undefined - The current formData, if any, onto which to provide any missing defaults
 - [rootSchema]: S | undefined - The root schema, used to primarily to look up `$ref`s
@@ -930,24 +1054,23 @@ Returns the superset of `formData` that includes the given set updated to includ
 
 - T: The resulting `formData` with all the defaults provided
 
-### getDisplayLabel<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
+### getDisplayLabel&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
 
 Determines whether the combination of `schema` and `uiSchema` properties indicates that the label for the `schema` should be displayed in a UI.
 
 #### Parameters
 
-- validator: ValidatorType<T, S, F> - An implementation of the `ValidatorType` interface that will be used when necessary
+- validator: ValidatorType&lt;T, S, F> - An implementation of the `ValidatorType` interface that will be used when necessary
 - schema: S - The schema for which the display label flag is desired
-- [uiSchema={}]: UiSchema<T, S, F> - The UI schema from which to derive potentially displayable information
+- [uiSchema={}]: UiSchema&lt;T, S, F> - The UI schema from which to derive potentially displayable information
 - [rootSchema]: S | undefined - The root schema, used to primarily to look up `$ref`s
 - [globalOptions={}]: GlobalUISchemaOptions - The optional Global UI Schema from which to get any fallback `xxx` options
-- [experimental_customMergeAllOf]: Experimental_CustomMergeAllOf&lt;S&gt; - See `Form` documentation for the [experimental_customMergeAllOf](./form-props.md#experimental_custommergeallof) prop
 
 #### Returns
 
 - boolean: True if the label should be displayed or false if it should not
 
-### getClosestMatchingOption<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
+### getClosestMatchingOption&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
 
 Determines which of the given `options` provided most closely matches the `formData`.
 Returns the index of the option that is valid and is the closest match, or 0 if there is no match.
@@ -956,7 +1079,7 @@ The closest match is determined using the number of matching properties, and mor
 
 #### Parameters
 
-- validator: ValidatorType<T, S, F> - An implementation of the `ValidatorType` interface that will be used when necessary
+- validator: ValidatorType&lt;T, S, F> - An implementation of the `ValidatorType` interface that will be used when necessary
 - rootSchema: S - The root schema, used to primarily to look up `$ref`s
 - [formData]: T | undefined - The current formData, if any, used to figure out a match
 - options: S[] - The list of options to find a matching options from
@@ -968,14 +1091,48 @@ The closest match is determined using the number of matching properties, and mor
 
 - number: The index of the option that is the closest match to the `formData` or the `selectedOption` if no match
 
-### getFirstMatchingOption<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
+### getDisplayLabel&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
+
+Determines whether the combination of `schema` and `uiSchema` properties indicates that the label for the `schema` should be displayed in a UI.
+
+#### Parameters
+
+- validator: ValidatorType&lt;T, S, F> - An implementation of the `ValidatorType` interface that will be used when necessary
+- schema: S - The schema for which the display label flag is desired
+- [uiSchema={}]: UiSchema&lt;T, S, F> - The UI schema from which to derive potentially displayable information
+- [rootSchema]: S | undefined - The root schema, used to primarily to look up `$ref`s
+- [globalOptions={}]: GlobalUISchemaOptions - The optional Global UI Schema from which to get any fallback `xxx` options
+- [experimental_customMergeAllOf]: Experimental_CustomMergeAllOf&lt;S&gt; - See `Form` documentation for the [experimental_customMergeAllOf](./form-props.md#experimental_custommergeallof) prop
+
+#### Returns
+
+- boolean: True if the label should be displayed or false if it should not
+
+### getFromSchema&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
+
+Helper that acts like lodash's `get` but additionally retrieves `$ref`s as needed to get the path for schemas containing potentially nested `$ref`s.
+
+#### Parameters
+
+- validator: ValidatorType&lt;T, S, F> - An implementation of the `ValidatorType` interface that will be forwarded to all the APIs
+- rootSchema: S - The root schema that will be forwarded to all the APIs
+- schema: S - The current node within the JSON schema recursion
+- path: string | string[] - The keys in the path to the desired field
+- defaultValue: T | S - The value to return if a value is not found for the `pathList` path
+- [experimental_customMergeAllOf]: Experimental_CustomMergeAllOf&lt;S&gt; - See `Form` documentation for the [experimental_customMergeAllOf](./form-props.md#experimental_custommergeallof) prop
+
+#### Returns
+
+- T | S: The inner schema from the `schema` for the given `path` or the `defaultValue` if not found
+
+### getFirstMatchingOption&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
 
 Given the `formData` and list of `options`, attempts to find the index of the first option that matches the data.
 Always returns the first option if there is nothing that matches.
 
 #### Parameters
 
-- validator: ValidatorType<T, S, F> - An implementation of the `ValidatorType` interface that will be used when necessary
+- validator: ValidatorType&lt;T, S, F> - An implementation of the `ValidatorType` interface that will be used when necessary
 - [formData]: T | undefined - The current formData, if any, used to figure out a match
 - options: S[] - The list of options to find a matching options from
 - rootSchema: S - The root schema, used to primarily to look up `$ref`s
@@ -985,46 +1142,13 @@ Always returns the first option if there is nothing that matches.
 
 - number: The index of the first matched option or 0 if none is available
 
-### getMatchingOption<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
-
-Given the `formData` and list of `options`, attempts to find the index of the option that best matches the data.
-Deprecated, use `getFirstMatchingOption()` instead.
-
-#### Parameters
-
-- validator: ValidatorType<T, S, F> - An implementation of the `ValidatorType` interface that will be used when necessary
-- [formData]: T | undefined - The current formData, if any, used to figure out a match
-- options: S[] - The list of options to find a matching options from
-- rootSchema: S - The root schema, used to primarily to look up `$ref`s
-- [discriminatorField]: string | undefined - The optional name of the field within the options object whose value is used to determine which option is selected
-
-#### Returns
-
-- number: The index of the matched option or 0 if none is available
-
-### isFilesArray<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
-
-Checks to see if the `schema` and `uiSchema` combination represents an array of files
-
-#### Parameters
-
-- validator: ValidatorType<T, S, F> - An implementation of the `ValidatorType` interface that will be used when necessary
-- schema: S - The schema for which check for array of files flag is desired
-- [uiSchema={}]: UiSchema<T, S, F> - The UI schema from which to check the widget
-- [rootSchema]: S | undefined - The root schema, used to primarily to look up `$ref`s
-- [experimental_customMergeAllOf]: Experimental_CustomMergeAllOf&lt;S&gt; - See `Form` documentation for the [experimental_customMergeAllOf](./form-props.md#experimental_custommergeallof) prop
-
-#### Returns
-
-- boolean: True if schema/uiSchema contains an array of files, otherwise false
-
-### isMultiSelect<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
+### isMultiSelect&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
 
 Checks to see if the `schema` combination represents a multi-select
 
 #### Parameters
 
-- validator: ValidatorType<T, S, F> - An implementation of the `ValidatorType` interface that will be used when necessary
+- validator: ValidatorType&lt;T, S, F> - An implementation of the `ValidatorType` interface that will be used when necessary
 - schema: S - The schema for which check for a multi-select flag is desired
 - [rootSchema]: S | undefined - The root schema, used to primarily to look up `$ref`s
 - [experimental_customMergeAllOf]: Experimental_CustomMergeAllOf&lt;S&gt; - See `Form` documentation for the [experimental_customMergeAllOf](./form-props.md#experimental_custommergeallof) prop
@@ -1033,13 +1157,13 @@ Checks to see if the `schema` combination represents a multi-select
 
 - boolean: True if schema contains a multi-select, otherwise false
 
-### isSelect<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
+### isSelect&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
 
 Checks to see if the `schema` combination represents a select
 
 #### Parameters
 
-- validator: ValidatorType<T, S, F> - An implementation of the `ValidatorType` interface that will be used when necessary
+- validator: ValidatorType&lt;T, S, F> - An implementation of the `ValidatorType` interface that will be used when necessary
 - theSchema: S - The schema for which check for a select flag is desired
 - [rootSchema]: S | undefined - The root schema, used to primarily to look up `$ref`s
 - [experimental_customMergeAllOf]: Experimental_CustomMergeAllOf&lt;S&gt; - See `Form` documentation for the [experimental_customMergeAllOf](./form-props.md#experimental_custommergeallof) prop
@@ -1048,25 +1172,7 @@ Checks to see if the `schema` combination represents a select
 
 - boolean: True if schema contains a select, otherwise false
 
-### mergeValidationData<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
-
-Merges the errors in `additionalErrorSchema` into the existing `validationData` by combining the hierarchies in the two `ErrorSchema`s and then appending the error list from the `additionalErrorSchema` obtained by calling `validator.toErrorList()` onto the `errors` in the `validationData`.
-If no `additionalErrorSchema` is passed, then `validationData` is returned.
-
-> NOTE: This is function is deprecated. Use the `validationDataMerge()` function exported from `@rjsf/utils` instead. This function will be
-> removed in the next major release.
-
-#### Parameters
-
-- validator: ValidatorType&lt;T, S, F> - An implementation of the `ValidatorType` interface that will be used to convert an ErrorSchema to a list of errors
-- validationData: ValidationData&lt;T> - The current `ValidationData` into which to merge the additional errors
-- [additionalErrorSchema]: ErrorSchema&lt;T> | undefined - The additional set of errors in an `ErrorSchema`
-
-#### Returns
-
-- ValidationData&lt;T>: The `validationData` with the additional errors from `additionalErrorSchema` merged into it, if provided.
-
-### retrieveSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
+### retrieveSchema&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
 
 Retrieves an expanded schema that has had all of its conditions, additional properties, references and dependencies
 resolved and merged into the `schema` given a `validator`, `rootSchema` and `rawFormData` that is used to do the
@@ -1074,7 +1180,7 @@ potentially recursive resolution.
 
 #### Parameters
 
-- validator: ValidatorType<T, S, F> - An implementation of the `ValidatorType` interface that will be forwarded to all the APIs
+- validator: ValidatorType&lt;T, S, F> - An implementation of the `ValidatorType` interface that will be forwarded to all the APIs
 - schema: S - The schema for which retrieving a schema is desired
 - [rootSchema={}]: S - The root schema that will be forwarded to all the APIs
 - [rawFormData]: T | undefined - The current formData, if any, to assist retrieving a schema
@@ -1084,7 +1190,7 @@ potentially recursive resolution.
 
 - RJSFSchema: The schema having its conditions, additional properties, references and dependencies resolved
 
-### sanitizeDataForNewSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
+### sanitizeDataForNewSchema&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
 
 Sanitize the `data` associated with the `oldSchema` so it is considered appropriate for the `newSchema`.
 If the new schema does not contain any properties, then `undefined` is returned to clear all the form data.
@@ -1093,7 +1199,7 @@ Also, any properties in the old schema that are non-existent in the new schema a
 
 #### Parameters
 
-- validator: ValidatorType<T, S, F> - An implementation of the `ValidatorType` interface that will be used when necessary
+- validator: ValidatorType&lt;T, S, F> - An implementation of the `ValidatorType` interface that will be used when necessary
 - rootSchema: S - The root JSON schema of the entire form
 - [newSchema]: S | undefined - The new schema for which the data is being sanitized
 - [oldSchema]: S | undefined - The old schema from which the data originated
@@ -1104,13 +1210,13 @@ Also, any properties in the old schema that are non-existent in the new schema a
 
 - T: The new form data, with all the fields uniquely associated with the old schema set to `undefined`. Will return `undefined` if the new schema is not an object containing properties.
 
-### toIdSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
+### toIdSchema&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
 
 Generates an `IdSchema` object for the `schema`, recursively
 
 #### Parameters
 
-- validator: ValidatorType<T, S, F> - An implementation of the `ValidatorType` interface that will be used when necessary
+- validator: ValidatorType&lt;T, S, F> - An implementation of the `ValidatorType` interface that will be used when necessary
 - schema: S - The schema for which the `IdSchema` is desired
 - [id]: string | null - The base id for the schema
 - [rootSchema]: S | undefined- The root schema, used to primarily to look up `$ref`s
@@ -1123,13 +1229,13 @@ Generates an `IdSchema` object for the `schema`, recursively
 
 - IDSchema&lt;T>: The `IdSchema` object for the `schema`
 
-### toPathSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
+### toPathSchema&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
 
 Generates an `PathSchema` object for the `schema`, recursively
 
 #### Parameters
 
-- validator: ValidatorType<T, S, F> - An implementation of the `ValidatorType` interface that will be used when necessary
+- validator: ValidatorType&lt;T, S, F> - An implementation of the `ValidatorType` interface that will be used when necessary
 - schema: S - The schema for which the `PathSchema` is desired
 - [name='']: string - The base name for the schema
 - [rootSchema]: S | undefined - The root schema, used to primarily to look up `$ref`s
@@ -1142,19 +1248,19 @@ Generates an `PathSchema` object for the `schema`, recursively
 
 ## Schema utils creation function
 
-### createSchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
+### createSchemaUtils&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
 
 Creates a `SchemaUtilsType` interface that is based around the given `validator` and `rootSchema` parameters.
 The resulting interface implementation will forward the `validator` and `rootSchema` to all the wrapped APIs.
 
 #### Parameters
 
-- validator: ValidatorType<T, S, F> - an implementation of the `ValidatorType` interface that will be forwarded to all the APIs
+- validator: ValidatorType&lt;T, S, F> - an implementation of the `ValidatorType` interface that will be forwarded to all the APIs
 - rootSchema: S - The root schema that will be forwarded to all the APIs
 
 #### Returns
 
-- SchemaUtilsType<T, S, F> - An implementation of a `SchemaUtilsType` interface
+- SchemaUtilsType&lt;T, S, F> - An implementation of a `SchemaUtilsType` interface
 
 ## ErrorSchema builder class
 

@@ -1,4 +1,4 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`antd specific tests descriptionLocation tooltip in formContext 1`] = `
 <form
@@ -7,13 +7,13 @@ exports[`antd specific tests descriptionLocation tooltip in formContext 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
-      className="ant-form-item css-dev-only-do-not-override-1b0bdye"
+      className="ant-form-item css-dev-only-do-not-override-xepvsj ant-form-item-horizontal"
     >
       <div
-        className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+        className="ant-row ant-form-item-row css-dev-only-do-not-override-xepvsj"
         style={
           {
             "rowGap": undefined,
@@ -21,7 +21,7 @@ exports[`antd specific tests descriptionLocation tooltip in formContext 1`] = `
         }
       >
         <div
-          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-xepvsj"
           style={{}}
         >
           <div
@@ -34,7 +34,7 @@ exports[`antd specific tests descriptionLocation tooltip in formContext 1`] = `
                 id="root"
               >
                 <div
-                  className="ant-row css-dev-only-do-not-override-1b0bdye"
+                  className="ant-row css-dev-only-do-not-override-xepvsj"
                   style={
                     {
                       "marginLeft": -12,
@@ -44,7 +44,7 @@ exports[`antd specific tests descriptionLocation tooltip in formContext 1`] = `
                   }
                 >
                   <div
-                    className="ant-col ant-col-24 css-dev-only-do-not-override-1b0bdye"
+                    className="ant-col ant-col-24 css-dev-only-do-not-override-xepvsj"
                     style={
                       {
                         "paddingLeft": 12,
@@ -53,13 +53,13 @@ exports[`antd specific tests descriptionLocation tooltip in formContext 1`] = `
                     }
                   >
                     <div
-                      className="form-group field field-string"
+                      className="rjsf-field rjsf-field-string"
                     >
                       <div
-                        className="ant-form-item css-dev-only-do-not-override-1b0bdye"
+                        className="ant-form-item css-dev-only-do-not-override-xepvsj ant-form-item-horizontal"
                       >
                         <div
-                          className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+                          className="ant-row ant-form-item-row css-dev-only-do-not-override-xepvsj"
                           style={
                             {
                               "rowGap": undefined,
@@ -67,7 +67,7 @@ exports[`antd specific tests descriptionLocation tooltip in formContext 1`] = `
                           }
                         >
                           <div
-                            className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-1b0bdye"
+                            className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-xepvsj"
                             style={{}}
                           >
                             <label
@@ -77,6 +77,7 @@ exports[`antd specific tests descriptionLocation tooltip in formContext 1`] = `
                             >
                               my-field
                               <span
+                                aria-describedby="test-id"
                                 aria-label="question-circle"
                                 className="anticon anticon-question-circle ant-form-item-tooltip"
                                 onClick={[Function]}
@@ -108,7 +109,7 @@ exports[`antd specific tests descriptionLocation tooltip in formContext 1`] = `
                             </label>
                           </div>
                           <div
-                            className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+                            className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-xepvsj"
                             style={{}}
                           >
                             <div
@@ -118,7 +119,7 @@ exports[`antd specific tests descriptionLocation tooltip in formContext 1`] = `
                                 className="ant-form-item-control-input-content"
                               >
                                 <span
-                                  className="ant-input-affix-wrapper css-dev-only-do-not-override-1b0bdye ant-input-outlined"
+                                  className="ant-input-affix-wrapper css-dev-only-do-not-override-xepvsj ant-input-outlined"
                                   onClick={[Function]}
                                   style={
                                     {
@@ -128,7 +129,7 @@ exports[`antd specific tests descriptionLocation tooltip in formContext 1`] = `
                                 >
                                   <input
                                     aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
-                                    className="ant-input css-dev-only-do-not-override-1b0bdye"
+                                    className="ant-input css-dev-only-do-not-override-xepvsj"
                                     disabled={false}
                                     id="root_my-field"
                                     name="root_my-field"
@@ -138,6 +139,7 @@ exports[`antd specific tests descriptionLocation tooltip in formContext 1`] = `
                                     onCompositionStart={[Function]}
                                     onFocus={[Function]}
                                     onKeyDown={[Function]}
+                                    onKeyUp={[Function]}
                                     placeholder=""
                                     type="text"
                                     value=""
@@ -162,7 +164,7 @@ exports[`antd specific tests descriptionLocation tooltip in formContext 1`] = `
     </div>
   </div>
   <button
-    className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-submit"
+    className="ant-btn css-dev-only-do-not-override-xepvsj ant-btn-submit"
     disabled={false}
     onClick={[Function]}
     style={{}}
@@ -182,13 +184,13 @@ exports[`single fields checkbox field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-boolean"
+    className="rjsf-field rjsf-field-boolean"
   >
     <div
-      className="ant-form-item css-dev-only-do-not-override-1b0bdye"
+      className="ant-form-item css-dev-only-do-not-override-xepvsj ant-form-item-horizontal"
     >
       <div
-        className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+        className="ant-row ant-form-item-row css-dev-only-do-not-override-xepvsj"
         style={
           {
             "rowGap": undefined,
@@ -196,7 +198,7 @@ exports[`single fields checkbox field 1`] = `
         }
       >
         <div
-          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-xepvsj"
           style={{}}
         >
           <div
@@ -206,11 +208,12 @@ exports[`single fields checkbox field 1`] = `
               className="ant-form-item-control-input-content"
             >
               <label
-                className="ant-checkbox-wrapper ant-checkbox-wrapper-in-form-item css-dev-only-do-not-override-1b0bdye"
+                className="ant-checkbox-wrapper ant-checkbox-wrapper-in-form-item css-dev-only-do-not-override-xepvsj"
+                onClick={[Function]}
                 style={{}}
               >
                 <span
-                  className="ant-checkbox ant-wave-target css-dev-only-do-not-override-1b0bdye"
+                  className="ant-checkbox ant-wave-target css-dev-only-do-not-override-xepvsj"
                 >
                   <input
                     aria-describedby="root__error root__description root__help"
@@ -222,6 +225,7 @@ exports[`single fields checkbox field 1`] = `
                     name="root"
                     onBlur={[Function]}
                     onChange={[Function]}
+                    onClick={[Function]}
                     onFocus={[Function]}
                     type="checkbox"
                   />
@@ -229,7 +233,9 @@ exports[`single fields checkbox field 1`] = `
                     className="ant-checkbox-inner"
                   />
                 </span>
-                <span />
+                <span
+                  className="ant-checkbox-label"
+                />
               </label>
             </div>
           </div>
@@ -238,7 +244,7 @@ exports[`single fields checkbox field 1`] = `
     </div>
   </div>
   <button
-    className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-submit"
+    className="ant-btn css-dev-only-do-not-override-xepvsj ant-btn-submit"
     disabled={false}
     onClick={[Function]}
     style={{}}
@@ -258,13 +264,13 @@ exports[`single fields checkbox field with label 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-boolean"
+    className="rjsf-field rjsf-field-boolean"
   >
     <div
-      className="ant-form-item css-dev-only-do-not-override-1b0bdye"
+      className="ant-form-item css-dev-only-do-not-override-xepvsj ant-form-item-horizontal"
     >
       <div
-        className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+        className="ant-row ant-form-item-row css-dev-only-do-not-override-xepvsj"
         style={
           {
             "rowGap": undefined,
@@ -272,7 +278,7 @@ exports[`single fields checkbox field with label 1`] = `
         }
       >
         <div
-          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-xepvsj"
           style={{}}
         >
           <div
@@ -282,11 +288,12 @@ exports[`single fields checkbox field with label 1`] = `
               className="ant-form-item-control-input-content"
             >
               <label
-                className="ant-checkbox-wrapper ant-checkbox-wrapper-in-form-item css-dev-only-do-not-override-1b0bdye"
+                className="ant-checkbox-wrapper ant-checkbox-wrapper-in-form-item css-dev-only-do-not-override-xepvsj"
+                onClick={[Function]}
                 style={{}}
               >
                 <span
-                  className="ant-checkbox ant-wave-target css-dev-only-do-not-override-1b0bdye"
+                  className="ant-checkbox ant-wave-target css-dev-only-do-not-override-xepvsj"
                 >
                   <input
                     aria-describedby="root__error root__description root__help"
@@ -298,6 +305,7 @@ exports[`single fields checkbox field with label 1`] = `
                     name="root"
                     onBlur={[Function]}
                     onChange={[Function]}
+                    onClick={[Function]}
                     onFocus={[Function]}
                     type="checkbox"
                   />
@@ -305,7 +313,9 @@ exports[`single fields checkbox field with label 1`] = `
                     className="ant-checkbox-inner"
                   />
                 </span>
-                <span>
+                <span
+                  className="ant-checkbox-label"
+                >
                   test
                 </span>
               </label>
@@ -316,7 +326,207 @@ exports[`single fields checkbox field with label 1`] = `
     </div>
   </div>
   <button
-    className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-submit"
+    className="ant-btn css-dev-only-do-not-override-xepvsj ant-btn-submit"
+    disabled={false}
+    onClick={[Function]}
+    style={{}}
+    type="submit"
+  >
+    <span>
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields checkbox field with label and description 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-boolean"
+  >
+    <div
+      className="ant-form-item css-dev-only-do-not-override-xepvsj ant-form-item-horizontal"
+    >
+      <div
+        className="ant-row ant-form-item-row css-dev-only-do-not-override-xepvsj"
+        style={
+          {
+            "rowGap": undefined,
+          }
+        }
+      >
+        <div
+          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-xepvsj"
+          style={{}}
+        >
+          <div
+            className="ant-form-item-control-input"
+          >
+            <div
+              className="ant-form-item-control-input-content"
+            >
+              <label
+                className="ant-checkbox-wrapper ant-checkbox-wrapper-in-form-item css-dev-only-do-not-override-xepvsj"
+                onClick={[Function]}
+                style={{}}
+              >
+                <span
+                  className="ant-checkbox ant-wave-target css-dev-only-do-not-override-xepvsj"
+                >
+                  <input
+                    aria-describedby="root__error root__description root__help"
+                    autoFocus={false}
+                    checked={false}
+                    className="ant-checkbox-input"
+                    disabled={false}
+                    id="root"
+                    name="root"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onClick={[Function]}
+                    onFocus={[Function]}
+                    type="checkbox"
+                  />
+                  <span
+                    className="ant-checkbox-inner"
+                  />
+                </span>
+                <span
+                  className="ant-checkbox-label"
+                >
+                  test
+                </span>
+              </label>
+            </div>
+          </div>
+          <div
+            className="ant-form-item-additional"
+            style={{}}
+          >
+            <div
+              className="ant-form-item-extra"
+            >
+              <span
+                id="root__description"
+              >
+                test description
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    className="ant-btn css-dev-only-do-not-override-xepvsj ant-btn-submit"
+    disabled={false}
+    onClick={[Function]}
+    style={{}}
+    type="submit"
+  >
+    <span>
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields checkbox field with label and rich text description 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-boolean"
+  >
+    <div
+      className="ant-form-item css-dev-only-do-not-override-xepvsj ant-form-item-horizontal"
+    >
+      <div
+        className="ant-row ant-form-item-row css-dev-only-do-not-override-xepvsj"
+        style={
+          {
+            "rowGap": undefined,
+          }
+        }
+      >
+        <div
+          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-xepvsj"
+          style={{}}
+        >
+          <div
+            className="ant-form-item-control-input"
+          >
+            <div
+              className="ant-form-item-control-input-content"
+            >
+              <label
+                className="ant-checkbox-wrapper ant-checkbox-wrapper-in-form-item css-dev-only-do-not-override-xepvsj"
+                onClick={[Function]}
+                style={{}}
+              >
+                <span
+                  className="ant-checkbox ant-wave-target css-dev-only-do-not-override-xepvsj"
+                >
+                  <input
+                    aria-describedby="root__error root__description root__help"
+                    autoFocus={false}
+                    checked={false}
+                    className="ant-checkbox-input"
+                    disabled={false}
+                    id="root"
+                    name="root"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onClick={[Function]}
+                    onFocus={[Function]}
+                    type="checkbox"
+                  />
+                  <span
+                    className="ant-checkbox-inner"
+                  />
+                </span>
+                <span
+                  className="ant-checkbox-label"
+                >
+                  test
+                </span>
+              </label>
+            </div>
+          </div>
+          <div
+            className="ant-form-item-additional"
+            style={{}}
+          >
+            <div
+              className="ant-form-item-extra"
+            >
+              <span
+                id="root__description"
+              >
+                <span>
+                  <strong>
+                    test
+                  </strong>
+                   
+                  <strong>
+                    description
+                  </strong>
+                </span>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    className="ant-btn css-dev-only-do-not-override-xepvsj ant-btn-submit"
     disabled={false}
     onClick={[Function]}
     style={{}}
@@ -336,13 +546,13 @@ exports[`single fields checkboxes field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div
-      className="ant-form-item css-dev-only-do-not-override-1b0bdye"
+      className="ant-form-item css-dev-only-do-not-override-xepvsj ant-form-item-horizontal"
     >
       <div
-        className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+        className="ant-row ant-form-item-row css-dev-only-do-not-override-xepvsj"
         style={
           {
             "rowGap": undefined,
@@ -350,7 +560,7 @@ exports[`single fields checkboxes field 1`] = `
         }
       >
         <div
-          className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-1b0bdye"
+          className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-xepvsj"
           style={{}}
         >
           <label
@@ -362,7 +572,7 @@ exports[`single fields checkboxes field 1`] = `
           </label>
         </div>
         <div
-          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-xepvsj"
           style={{}}
         >
           <div
@@ -373,7 +583,7 @@ exports[`single fields checkboxes field 1`] = `
             >
               <div
                 aria-describedby="root__error root__description root__help"
-                className="ant-checkbox-group css-dev-only-do-not-override-1b0bdye"
+                className="ant-checkbox-group css-dev-only-do-not-override-xepvsj"
                 id="root"
                 name="root"
                 onBlur={[Function]}
@@ -381,11 +591,12 @@ exports[`single fields checkboxes field 1`] = `
               >
                 <span>
                   <label
-                    className="ant-checkbox-wrapper ant-checkbox-wrapper-in-form-item css-dev-only-do-not-override-1b0bdye"
+                    className="ant-checkbox-wrapper ant-checkbox-wrapper-in-form-item css-dev-only-do-not-override-xepvsj"
+                    onClick={[Function]}
                     style={{}}
                   >
                     <span
-                      className="ant-checkbox ant-wave-target css-dev-only-do-not-override-1b0bdye"
+                      className="ant-checkbox ant-wave-target css-dev-only-do-not-override-xepvsj"
                     >
                       <input
                         autoFocus={false}
@@ -395,6 +606,7 @@ exports[`single fields checkboxes field 1`] = `
                         id="root-0"
                         name="root"
                         onChange={[Function]}
+                        onClick={[Function]}
                         type="checkbox"
                         value="0"
                       />
@@ -402,7 +614,9 @@ exports[`single fields checkboxes field 1`] = `
                         className="ant-checkbox-inner"
                       />
                     </span>
-                    <span>
+                    <span
+                      className="ant-checkbox-label"
+                    >
                       foo
                     </span>
                   </label>
@@ -410,11 +624,12 @@ exports[`single fields checkboxes field 1`] = `
                 </span>
                 <span>
                   <label
-                    className="ant-checkbox-wrapper ant-checkbox-wrapper-in-form-item css-dev-only-do-not-override-1b0bdye"
+                    className="ant-checkbox-wrapper ant-checkbox-wrapper-in-form-item css-dev-only-do-not-override-xepvsj"
+                    onClick={[Function]}
                     style={{}}
                   >
                     <span
-                      className="ant-checkbox ant-wave-target css-dev-only-do-not-override-1b0bdye"
+                      className="ant-checkbox ant-wave-target css-dev-only-do-not-override-xepvsj"
                     >
                       <input
                         autoFocus={false}
@@ -424,6 +639,7 @@ exports[`single fields checkboxes field 1`] = `
                         id="root-1"
                         name="root"
                         onChange={[Function]}
+                        onClick={[Function]}
                         type="checkbox"
                         value="1"
                       />
@@ -431,7 +647,9 @@ exports[`single fields checkboxes field 1`] = `
                         className="ant-checkbox-inner"
                       />
                     </span>
-                    <span>
+                    <span
+                      className="ant-checkbox-label"
+                    >
                       bar
                     </span>
                   </label>
@@ -439,11 +657,12 @@ exports[`single fields checkboxes field 1`] = `
                 </span>
                 <span>
                   <label
-                    className="ant-checkbox-wrapper ant-checkbox-wrapper-in-form-item css-dev-only-do-not-override-1b0bdye"
+                    className="ant-checkbox-wrapper ant-checkbox-wrapper-in-form-item css-dev-only-do-not-override-xepvsj"
+                    onClick={[Function]}
                     style={{}}
                   >
                     <span
-                      className="ant-checkbox ant-wave-target css-dev-only-do-not-override-1b0bdye"
+                      className="ant-checkbox ant-wave-target css-dev-only-do-not-override-xepvsj"
                     >
                       <input
                         autoFocus={false}
@@ -453,6 +672,7 @@ exports[`single fields checkboxes field 1`] = `
                         id="root-2"
                         name="root"
                         onChange={[Function]}
+                        onClick={[Function]}
                         type="checkbox"
                         value="2"
                       />
@@ -460,7 +680,9 @@ exports[`single fields checkboxes field 1`] = `
                         className="ant-checkbox-inner"
                       />
                     </span>
-                    <span>
+                    <span
+                      className="ant-checkbox-label"
+                    >
                       fuzz
                     </span>
                   </label>
@@ -468,11 +690,12 @@ exports[`single fields checkboxes field 1`] = `
                 </span>
                 <span>
                   <label
-                    className="ant-checkbox-wrapper ant-checkbox-wrapper-in-form-item css-dev-only-do-not-override-1b0bdye"
+                    className="ant-checkbox-wrapper ant-checkbox-wrapper-in-form-item css-dev-only-do-not-override-xepvsj"
+                    onClick={[Function]}
                     style={{}}
                   >
                     <span
-                      className="ant-checkbox ant-wave-target css-dev-only-do-not-override-1b0bdye"
+                      className="ant-checkbox ant-wave-target css-dev-only-do-not-override-xepvsj"
                     >
                       <input
                         autoFocus={false}
@@ -482,6 +705,7 @@ exports[`single fields checkboxes field 1`] = `
                         id="root-3"
                         name="root"
                         onChange={[Function]}
+                        onClick={[Function]}
                         type="checkbox"
                         value="3"
                       />
@@ -489,7 +713,9 @@ exports[`single fields checkboxes field 1`] = `
                         className="ant-checkbox-inner"
                       />
                     </span>
-                    <span>
+                    <span
+                      className="ant-checkbox-label"
+                    >
                       qux
                     </span>
                   </label>
@@ -503,7 +729,7 @@ exports[`single fields checkboxes field 1`] = `
     </div>
   </div>
   <button
-    className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-submit"
+    className="ant-btn css-dev-only-do-not-override-xepvsj ant-btn-submit"
     disabled={false}
     onClick={[Function]}
     style={{}}
@@ -523,13 +749,13 @@ exports[`single fields field with description 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
-      className="ant-form-item css-dev-only-do-not-override-1b0bdye"
+      className="ant-form-item css-dev-only-do-not-override-xepvsj ant-form-item-horizontal"
     >
       <div
-        className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+        className="ant-row ant-form-item-row css-dev-only-do-not-override-xepvsj"
         style={
           {
             "rowGap": undefined,
@@ -537,7 +763,7 @@ exports[`single fields field with description 1`] = `
         }
       >
         <div
-          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-xepvsj"
           style={{}}
         >
           <div
@@ -550,7 +776,7 @@ exports[`single fields field with description 1`] = `
                 id="root"
               >
                 <div
-                  className="ant-row css-dev-only-do-not-override-1b0bdye"
+                  className="ant-row css-dev-only-do-not-override-xepvsj"
                   style={
                     {
                       "marginLeft": -12,
@@ -560,7 +786,7 @@ exports[`single fields field with description 1`] = `
                   }
                 >
                   <div
-                    className="ant-col ant-col-24 css-dev-only-do-not-override-1b0bdye"
+                    className="ant-col ant-col-24 css-dev-only-do-not-override-xepvsj"
                     style={
                       {
                         "paddingLeft": 12,
@@ -569,13 +795,13 @@ exports[`single fields field with description 1`] = `
                     }
                   >
                     <div
-                      className="form-group field field-string"
+                      className="rjsf-field rjsf-field-string"
                     >
                       <div
-                        className="ant-form-item css-dev-only-do-not-override-1b0bdye"
+                        className="ant-form-item css-dev-only-do-not-override-xepvsj ant-form-item-horizontal"
                       >
                         <div
-                          className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+                          className="ant-row ant-form-item-row css-dev-only-do-not-override-xepvsj"
                           style={
                             {
                               "rowGap": undefined,
@@ -583,7 +809,7 @@ exports[`single fields field with description 1`] = `
                           }
                         >
                           <div
-                            className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-1b0bdye"
+                            className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-xepvsj"
                             style={{}}
                           >
                             <label
@@ -595,7 +821,7 @@ exports[`single fields field with description 1`] = `
                             </label>
                           </div>
                           <div
-                            className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+                            className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-xepvsj"
                             style={{}}
                           >
                             <div
@@ -605,7 +831,7 @@ exports[`single fields field with description 1`] = `
                                 className="ant-form-item-control-input-content"
                               >
                                 <span
-                                  className="ant-input-affix-wrapper css-dev-only-do-not-override-1b0bdye ant-input-outlined"
+                                  className="ant-input-affix-wrapper css-dev-only-do-not-override-xepvsj ant-input-outlined"
                                   onClick={[Function]}
                                   style={
                                     {
@@ -615,7 +841,7 @@ exports[`single fields field with description 1`] = `
                                 >
                                   <input
                                     aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
-                                    className="ant-input css-dev-only-do-not-override-1b0bdye"
+                                    className="ant-input css-dev-only-do-not-override-xepvsj"
                                     disabled={false}
                                     id="root_my-field"
                                     name="root_my-field"
@@ -625,6 +851,7 @@ exports[`single fields field with description 1`] = `
                                     onCompositionStart={[Function]}
                                     onFocus={[Function]}
                                     onKeyDown={[Function]}
+                                    onKeyUp={[Function]}
                                     placeholder=""
                                     type="text"
                                     value=""
@@ -636,13 +863,18 @@ exports[`single fields field with description 1`] = `
                               </div>
                             </div>
                             <div
-                              className="ant-form-item-extra"
+                              className="ant-form-item-additional"
+                              style={{}}
                             >
-                              <span
-                                id="root_my-field__description"
+                              <div
+                                className="ant-form-item-extra"
                               >
-                                some description
-                              </span>
+                                <span
+                                  id="root_my-field__description"
+                                >
+                                  some description
+                                </span>
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -658,7 +890,7 @@ exports[`single fields field with description 1`] = `
     </div>
   </div>
   <button
-    className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-submit"
+    className="ant-btn css-dev-only-do-not-override-xepvsj ant-btn-submit"
     disabled={false}
     onClick={[Function]}
     style={{}}
@@ -678,13 +910,13 @@ exports[`single fields field with description in uiSchema 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
-      className="ant-form-item css-dev-only-do-not-override-1b0bdye"
+      className="ant-form-item css-dev-only-do-not-override-xepvsj ant-form-item-horizontal"
     >
       <div
-        className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+        className="ant-row ant-form-item-row css-dev-only-do-not-override-xepvsj"
         style={
           {
             "rowGap": undefined,
@@ -692,7 +924,7 @@ exports[`single fields field with description in uiSchema 1`] = `
         }
       >
         <div
-          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-xepvsj"
           style={{}}
         >
           <div
@@ -705,7 +937,7 @@ exports[`single fields field with description in uiSchema 1`] = `
                 id="root"
               >
                 <div
-                  className="ant-row css-dev-only-do-not-override-1b0bdye"
+                  className="ant-row css-dev-only-do-not-override-xepvsj"
                   style={
                     {
                       "marginLeft": -12,
@@ -715,7 +947,7 @@ exports[`single fields field with description in uiSchema 1`] = `
                   }
                 >
                   <div
-                    className="ant-col ant-col-24 css-dev-only-do-not-override-1b0bdye"
+                    className="ant-col ant-col-24 css-dev-only-do-not-override-xepvsj"
                     style={
                       {
                         "paddingLeft": 12,
@@ -724,13 +956,13 @@ exports[`single fields field with description in uiSchema 1`] = `
                     }
                   >
                     <div
-                      className="form-group field field-string"
+                      className="rjsf-field rjsf-field-string"
                     >
                       <div
-                        className="ant-form-item css-dev-only-do-not-override-1b0bdye"
+                        className="ant-form-item css-dev-only-do-not-override-xepvsj ant-form-item-horizontal"
                       >
                         <div
-                          className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+                          className="ant-row ant-form-item-row css-dev-only-do-not-override-xepvsj"
                           style={
                             {
                               "rowGap": undefined,
@@ -738,7 +970,7 @@ exports[`single fields field with description in uiSchema 1`] = `
                           }
                         >
                           <div
-                            className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-1b0bdye"
+                            className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-xepvsj"
                             style={{}}
                           >
                             <label
@@ -750,7 +982,7 @@ exports[`single fields field with description in uiSchema 1`] = `
                             </label>
                           </div>
                           <div
-                            className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+                            className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-xepvsj"
                             style={{}}
                           >
                             <div
@@ -760,7 +992,7 @@ exports[`single fields field with description in uiSchema 1`] = `
                                 className="ant-form-item-control-input-content"
                               >
                                 <span
-                                  className="ant-input-affix-wrapper css-dev-only-do-not-override-1b0bdye ant-input-outlined"
+                                  className="ant-input-affix-wrapper css-dev-only-do-not-override-xepvsj ant-input-outlined"
                                   onClick={[Function]}
                                   style={
                                     {
@@ -770,7 +1002,7 @@ exports[`single fields field with description in uiSchema 1`] = `
                                 >
                                   <input
                                     aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
-                                    className="ant-input css-dev-only-do-not-override-1b0bdye"
+                                    className="ant-input css-dev-only-do-not-override-xepvsj"
                                     disabled={false}
                                     id="root_my-field"
                                     name="root_my-field"
@@ -780,6 +1012,7 @@ exports[`single fields field with description in uiSchema 1`] = `
                                     onCompositionStart={[Function]}
                                     onFocus={[Function]}
                                     onKeyDown={[Function]}
+                                    onKeyUp={[Function]}
                                     placeholder=""
                                     type="text"
                                     value=""
@@ -791,13 +1024,18 @@ exports[`single fields field with description in uiSchema 1`] = `
                               </div>
                             </div>
                             <div
-                              className="ant-form-item-extra"
+                              className="ant-form-item-additional"
+                              style={{}}
                             >
-                              <span
-                                id="root_my-field__description"
+                              <div
+                                className="ant-form-item-extra"
                               >
-                                some other description
-                              </span>
+                                <span
+                                  id="root_my-field__description"
+                                >
+                                  some other description
+                                </span>
+                              </div>
                             </div>
                           </div>
                         </div>
@@ -813,7 +1051,337 @@ exports[`single fields field with description in uiSchema 1`] = `
     </div>
   </div>
   <button
-    className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-submit"
+    className="ant-btn css-dev-only-do-not-override-xepvsj ant-btn-submit"
+    disabled={false}
+    onClick={[Function]}
+    style={{}}
+    type="submit"
+  >
+    <span>
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields field with markdown description 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div
+      className="ant-form-item css-dev-only-do-not-override-xepvsj ant-form-item-horizontal"
+    >
+      <div
+        className="ant-row ant-form-item-row css-dev-only-do-not-override-xepvsj"
+        style={
+          {
+            "rowGap": undefined,
+          }
+        }
+      >
+        <div
+          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-xepvsj"
+          style={{}}
+        >
+          <div
+            className="ant-form-item-control-input"
+          >
+            <div
+              className="ant-form-item-control-input-content"
+            >
+              <fieldset
+                id="root"
+              >
+                <div
+                  className="ant-row css-dev-only-do-not-override-xepvsj"
+                  style={
+                    {
+                      "marginLeft": -12,
+                      "marginRight": -12,
+                      "rowGap": undefined,
+                    }
+                  }
+                >
+                  <div
+                    className="ant-col ant-col-24 css-dev-only-do-not-override-xepvsj"
+                    style={
+                      {
+                        "paddingLeft": 12,
+                        "paddingRight": 12,
+                      }
+                    }
+                  >
+                    <div
+                      className="rjsf-field rjsf-field-string"
+                    >
+                      <div
+                        className="ant-form-item css-dev-only-do-not-override-xepvsj ant-form-item-horizontal"
+                      >
+                        <div
+                          className="ant-row ant-form-item-row css-dev-only-do-not-override-xepvsj"
+                          style={
+                            {
+                              "rowGap": undefined,
+                            }
+                          }
+                        >
+                          <div
+                            className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-xepvsj"
+                            style={{}}
+                          >
+                            <label
+                              className=""
+                              htmlFor="root_my-field"
+                              title="my-field"
+                            >
+                              my-field
+                            </label>
+                          </div>
+                          <div
+                            className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-xepvsj"
+                            style={{}}
+                          >
+                            <div
+                              className="ant-form-item-control-input"
+                            >
+                              <div
+                                className="ant-form-item-control-input-content"
+                              >
+                                <span
+                                  className="ant-input-affix-wrapper css-dev-only-do-not-override-xepvsj ant-input-outlined"
+                                  onClick={[Function]}
+                                  style={
+                                    {
+                                      "width": "100%",
+                                    }
+                                  }
+                                >
+                                  <input
+                                    aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
+                                    className="ant-input css-dev-only-do-not-override-xepvsj"
+                                    disabled={false}
+                                    id="root_my-field"
+                                    name="root_my-field"
+                                    onBlur={[Function]}
+                                    onChange={[Function]}
+                                    onCompositionEnd={[Function]}
+                                    onCompositionStart={[Function]}
+                                    onFocus={[Function]}
+                                    onKeyDown={[Function]}
+                                    onKeyUp={[Function]}
+                                    placeholder=""
+                                    type="text"
+                                    value=""
+                                  />
+                                  <span
+                                    className="ant-input-suffix"
+                                  />
+                                </span>
+                              </div>
+                            </div>
+                            <div
+                              className="ant-form-item-additional"
+                              style={{}}
+                            >
+                              <div
+                                className="ant-form-item-extra"
+                              >
+                                <span
+                                  id="root_my-field__description"
+                                >
+                                  <span>
+                                    some 
+                                    <strong>
+                                      Rich
+                                    </strong>
+                                     description
+                                  </span>
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </fieldset>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    className="ant-btn css-dev-only-do-not-override-xepvsj ant-btn-submit"
+    disabled={false}
+    onClick={[Function]}
+    style={{}}
+    type="submit"
+  >
+    <span>
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields field with markdown description in uiSchema 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div
+      className="ant-form-item css-dev-only-do-not-override-xepvsj ant-form-item-horizontal"
+    >
+      <div
+        className="ant-row ant-form-item-row css-dev-only-do-not-override-xepvsj"
+        style={
+          {
+            "rowGap": undefined,
+          }
+        }
+      >
+        <div
+          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-xepvsj"
+          style={{}}
+        >
+          <div
+            className="ant-form-item-control-input"
+          >
+            <div
+              className="ant-form-item-control-input-content"
+            >
+              <fieldset
+                id="root"
+              >
+                <div
+                  className="ant-row css-dev-only-do-not-override-xepvsj"
+                  style={
+                    {
+                      "marginLeft": -12,
+                      "marginRight": -12,
+                      "rowGap": undefined,
+                    }
+                  }
+                >
+                  <div
+                    className="ant-col ant-col-24 css-dev-only-do-not-override-xepvsj"
+                    style={
+                      {
+                        "paddingLeft": 12,
+                        "paddingRight": 12,
+                      }
+                    }
+                  >
+                    <div
+                      className="rjsf-field rjsf-field-string"
+                    >
+                      <div
+                        className="ant-form-item css-dev-only-do-not-override-xepvsj ant-form-item-horizontal"
+                      >
+                        <div
+                          className="ant-row ant-form-item-row css-dev-only-do-not-override-xepvsj"
+                          style={
+                            {
+                              "rowGap": undefined,
+                            }
+                          }
+                        >
+                          <div
+                            className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-xepvsj"
+                            style={{}}
+                          >
+                            <label
+                              className=""
+                              htmlFor="root_my-field"
+                              title="my-field"
+                            >
+                              my-field
+                            </label>
+                          </div>
+                          <div
+                            className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-xepvsj"
+                            style={{}}
+                          >
+                            <div
+                              className="ant-form-item-control-input"
+                            >
+                              <div
+                                className="ant-form-item-control-input-content"
+                              >
+                                <span
+                                  className="ant-input-affix-wrapper css-dev-only-do-not-override-xepvsj ant-input-outlined"
+                                  onClick={[Function]}
+                                  style={
+                                    {
+                                      "width": "100%",
+                                    }
+                                  }
+                                >
+                                  <input
+                                    aria-describedby="root_my-field__error root_my-field__description root_my-field__help"
+                                    className="ant-input css-dev-only-do-not-override-xepvsj"
+                                    disabled={false}
+                                    id="root_my-field"
+                                    name="root_my-field"
+                                    onBlur={[Function]}
+                                    onChange={[Function]}
+                                    onCompositionEnd={[Function]}
+                                    onCompositionStart={[Function]}
+                                    onFocus={[Function]}
+                                    onKeyDown={[Function]}
+                                    onKeyUp={[Function]}
+                                    placeholder=""
+                                    type="text"
+                                    value=""
+                                  />
+                                  <span
+                                    className="ant-input-suffix"
+                                  />
+                                </span>
+                              </div>
+                            </div>
+                            <div
+                              className="ant-form-item-additional"
+                              style={{}}
+                            >
+                              <div
+                                className="ant-form-item-extra"
+                              >
+                                <span
+                                  id="root_my-field__description"
+                                >
+                                  <span>
+                                    some other description
+                                  </span>
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </fieldset>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    className="ant-btn css-dev-only-do-not-override-xepvsj ant-btn-submit"
     disabled={false}
     onClick={[Function]}
     style={{}}
@@ -833,13 +1401,13 @@ exports[`single fields format color 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="rjsf-field rjsf-field-string"
   >
     <div
-      className="ant-form-item css-dev-only-do-not-override-1b0bdye"
+      className="ant-form-item css-dev-only-do-not-override-xepvsj ant-form-item-horizontal"
     >
       <div
-        className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+        className="ant-row ant-form-item-row css-dev-only-do-not-override-xepvsj"
         style={
           {
             "rowGap": undefined,
@@ -847,7 +1415,7 @@ exports[`single fields format color 1`] = `
         }
       >
         <div
-          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-xepvsj"
           style={{}}
         >
           <div
@@ -857,7 +1425,7 @@ exports[`single fields format color 1`] = `
               className="ant-form-item-control-input-content"
             >
               <span
-                className="ant-input-affix-wrapper css-dev-only-do-not-override-1b0bdye ant-input-outlined"
+                className="ant-input-affix-wrapper css-dev-only-do-not-override-xepvsj ant-input-outlined"
                 onClick={[Function]}
                 style={
                   {
@@ -867,7 +1435,7 @@ exports[`single fields format color 1`] = `
               >
                 <input
                   aria-describedby="root__error root__description root__help"
-                  className="ant-input css-dev-only-do-not-override-1b0bdye"
+                  className="ant-input css-dev-only-do-not-override-xepvsj"
                   disabled={false}
                   id="root"
                   name="root"
@@ -877,6 +1445,7 @@ exports[`single fields format color 1`] = `
                   onCompositionStart={[Function]}
                   onFocus={[Function]}
                   onKeyDown={[Function]}
+                  onKeyUp={[Function]}
                   placeholder=""
                   type="color"
                   value=""
@@ -892,7 +1461,7 @@ exports[`single fields format color 1`] = `
     </div>
   </div>
   <button
-    className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-submit"
+    className="ant-btn css-dev-only-do-not-override-xepvsj ant-btn-submit"
     disabled={false}
     onClick={[Function]}
     style={{}}
@@ -912,13 +1481,13 @@ exports[`single fields format date 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="rjsf-field rjsf-field-string"
   >
     <div
-      className="ant-form-item css-dev-only-do-not-override-1b0bdye"
+      className="ant-form-item css-dev-only-do-not-override-xepvsj ant-form-item-horizontal"
     >
       <div
-        className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+        className="ant-row ant-form-item-row css-dev-only-do-not-override-xepvsj"
         style={
           {
             "rowGap": undefined,
@@ -926,7 +1495,7 @@ exports[`single fields format date 1`] = `
         }
       >
         <div
-          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-xepvsj"
           style={{}}
         >
           <div
@@ -936,8 +1505,9 @@ exports[`single fields format date 1`] = `
               className="ant-form-item-control-input-content"
             >
               <div
-                className="ant-picker ant-picker-outlined ant-picker-has-feedback css-dev-only-do-not-override-1b0bdye"
+                className="ant-picker ant-picker-outlined ant-picker-has-feedback css-dev-only-do-not-override-xepvsj"
                 onClick={[Function]}
+                onMouseDown={[Function]}
                 style={
                   {
                     "width": "100%",
@@ -949,6 +1519,7 @@ exports[`single fields format date 1`] = `
                 >
                   <input
                     aria-describedby="root__error root__description root__help"
+                    aria-invalid={false}
                     autoComplete="off"
                     disabled={false}
                     id="root"
@@ -957,16 +1528,12 @@ exports[`single fields format date 1`] = `
                     onChange={[Function]}
                     onFocus={[Function]}
                     onKeyDown={[Function]}
-                    onMouseDown={[Function]}
                     placeholder=""
-                    readOnly={true}
                     size={12}
-                    title=""
                     value=""
                   />
                   <span
                     className="ant-picker-suffix"
-                    onMouseDown={[Function]}
                   >
                     <span
                       aria-label="calendar"
@@ -997,7 +1564,7 @@ exports[`single fields format date 1`] = `
     </div>
   </div>
   <button
-    className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-submit"
+    className="ant-btn css-dev-only-do-not-override-xepvsj ant-btn-submit"
     disabled={false}
     onClick={[Function]}
     style={{}}
@@ -1017,13 +1584,13 @@ exports[`single fields format datetime 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="rjsf-field rjsf-field-string"
   >
     <div
-      className="ant-form-item css-dev-only-do-not-override-1b0bdye"
+      className="ant-form-item css-dev-only-do-not-override-xepvsj ant-form-item-horizontal"
     >
       <div
-        className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+        className="ant-row ant-form-item-row css-dev-only-do-not-override-xepvsj"
         style={
           {
             "rowGap": undefined,
@@ -1031,7 +1598,7 @@ exports[`single fields format datetime 1`] = `
         }
       >
         <div
-          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-xepvsj"
           style={{}}
         >
           <div
@@ -1041,8 +1608,9 @@ exports[`single fields format datetime 1`] = `
               className="ant-form-item-control-input-content"
             >
               <div
-                className="ant-picker ant-picker-outlined ant-picker-has-feedback css-dev-only-do-not-override-1b0bdye"
+                className="ant-picker ant-picker-outlined ant-picker-has-feedback css-dev-only-do-not-override-xepvsj"
                 onClick={[Function]}
+                onMouseDown={[Function]}
                 style={
                   {
                     "width": "100%",
@@ -1054,6 +1622,7 @@ exports[`single fields format datetime 1`] = `
                 >
                   <input
                     aria-describedby="root__error root__description root__help"
+                    aria-invalid={false}
                     autoComplete="off"
                     disabled={false}
                     id="root"
@@ -1062,16 +1631,12 @@ exports[`single fields format datetime 1`] = `
                     onChange={[Function]}
                     onFocus={[Function]}
                     onKeyDown={[Function]}
-                    onMouseDown={[Function]}
                     placeholder=""
-                    readOnly={true}
                     size={21}
-                    title=""
                     value=""
                   />
                   <span
                     className="ant-picker-suffix"
-                    onMouseDown={[Function]}
                   >
                     <span
                       aria-label="calendar"
@@ -1102,7 +1667,7 @@ exports[`single fields format datetime 1`] = `
     </div>
   </div>
   <button
-    className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-submit"
+    className="ant-btn css-dev-only-do-not-override-xepvsj ant-btn-submit"
     disabled={false}
     onClick={[Function]}
     style={{}}
@@ -1122,13 +1687,13 @@ exports[`single fields format time 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="rjsf-field rjsf-field-string"
   >
     <div
-      className="ant-form-item css-dev-only-do-not-override-1b0bdye"
+      className="ant-form-item css-dev-only-do-not-override-xepvsj ant-form-item-horizontal"
     >
       <div
-        className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+        className="ant-row ant-form-item-row css-dev-only-do-not-override-xepvsj"
         style={
           {
             "rowGap": undefined,
@@ -1136,7 +1701,7 @@ exports[`single fields format time 1`] = `
         }
       >
         <div
-          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-xepvsj"
           style={{}}
         >
           <div
@@ -1146,7 +1711,7 @@ exports[`single fields format time 1`] = `
               className="ant-form-item-control-input-content"
             >
               <span
-                className="ant-input-affix-wrapper css-dev-only-do-not-override-1b0bdye ant-input-outlined"
+                className="ant-input-affix-wrapper css-dev-only-do-not-override-xepvsj ant-input-outlined"
                 onClick={[Function]}
                 style={
                   {
@@ -1156,7 +1721,7 @@ exports[`single fields format time 1`] = `
               >
                 <input
                   aria-describedby="root__error root__description root__help"
-                  className="ant-input css-dev-only-do-not-override-1b0bdye"
+                  className="ant-input css-dev-only-do-not-override-xepvsj"
                   disabled={false}
                   id="root"
                   name="root"
@@ -1166,6 +1731,7 @@ exports[`single fields format time 1`] = `
                   onCompositionStart={[Function]}
                   onFocus={[Function]}
                   onKeyDown={[Function]}
+                  onKeyUp={[Function]}
                   placeholder=""
                   type="time"
                   value=""
@@ -1181,7 +1747,7 @@ exports[`single fields format time 1`] = `
     </div>
   </div>
   <button
-    className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-submit"
+    className="ant-btn css-dev-only-do-not-override-xepvsj ant-btn-submit"
     disabled={false}
     onClick={[Function]}
     style={{}}
@@ -1201,7 +1767,7 @@ exports[`single fields help and error display 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="ant-alert ant-alert-error ant-alert-with-description ant-alert-no-icon panel panel-danger errors css-dev-only-do-not-override-1b0bdye"
+    className="ant-alert ant-alert-error ant-alert-with-description ant-alert-no-icon panel panel-danger errors css-dev-only-do-not-override-xepvsj"
     data-show={true}
     role="alert"
     style={{}}
@@ -1218,11 +1784,11 @@ exports[`single fields help and error display 1`] = `
         className="ant-alert-description"
       >
         <div
-          className="ant-list ant-list-sm ant-list-split list-group css-dev-only-do-not-override-1b0bdye"
+          className="ant-list ant-list-sm ant-list-split list-group css-dev-only-do-not-override-xepvsj"
           style={{}}
         >
           <div
-            className="ant-spin-nested-loading css-dev-only-do-not-override-1b0bdye"
+            className="ant-spin-nested-loading css-dev-only-do-not-override-xepvsj"
           >
             <div
               className="ant-spin-container"
@@ -1231,7 +1797,7 @@ exports[`single fields help and error display 1`] = `
                 className="ant-list-item"
               >
                 <div
-                  className="ant-space css-dev-only-do-not-override-1b0bdye ant-space-horizontal ant-space-align-center ant-space-gap-row-small ant-space-gap-col-small"
+                  className="ant-space css-dev-only-do-not-override-xepvsj ant-space-horizontal ant-space-align-center ant-space-gap-row-small ant-space-gap-col-small"
                   style={{}}
                 >
                   <div
@@ -1274,13 +1840,13 @@ exports[`single fields help and error display 1`] = `
     </div>
   </div>
   <div
-    className="form-group field field-string field-error has-error has-danger"
+    className="rjsf-field rjsf-field-string rjsf-field-error"
   >
     <div
-      className="ant-form-item css-dev-only-do-not-override-1b0bdye ant-form-item-with-help ant-form-item-has-feedback ant-form-item-has-error"
+      className="ant-form-item css-dev-only-do-not-override-xepvsj ant-form-item-with-help ant-form-item-has-feedback ant-form-item-has-error ant-form-item-horizontal"
     >
       <div
-        className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+        className="ant-row ant-form-item-row css-dev-only-do-not-override-xepvsj"
         style={
           {
             "rowGap": undefined,
@@ -1288,7 +1854,7 @@ exports[`single fields help and error display 1`] = `
         }
       >
         <div
-          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-xepvsj"
           style={{}}
         >
           <div
@@ -1298,7 +1864,7 @@ exports[`single fields help and error display 1`] = `
               className="ant-form-item-control-input-content"
             >
               <span
-                className="ant-input-affix-wrapper css-dev-only-do-not-override-1b0bdye ant-input-outlined ant-input-status-error"
+                className="ant-input-affix-wrapper css-dev-only-do-not-override-xepvsj ant-input-outlined ant-input-status-error"
                 onClick={[Function]}
                 style={
                   {
@@ -1308,7 +1874,7 @@ exports[`single fields help and error display 1`] = `
               >
                 <input
                   aria-describedby="root__error root__description root__help"
-                  className="ant-input css-dev-only-do-not-override-1b0bdye"
+                  className="ant-input css-dev-only-do-not-override-xepvsj"
                   disabled={false}
                   id="root"
                   name="root"
@@ -1318,6 +1884,7 @@ exports[`single fields help and error display 1`] = `
                   onCompositionStart={[Function]}
                   onFocus={[Function]}
                   onKeyDown={[Function]}
+                  onKeyUp={[Function]}
                   placeholder=""
                   type="text"
                   value=""
@@ -1358,7 +1925,7 @@ exports[`single fields help and error display 1`] = `
     </div>
   </div>
   <button
-    className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-submit"
+    className="ant-btn css-dev-only-do-not-override-xepvsj ant-btn-submit"
     disabled={false}
     onClick={[Function]}
     style={{}}
@@ -1378,13 +1945,13 @@ exports[`single fields hidden field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
-      className="ant-form-item css-dev-only-do-not-override-1b0bdye"
+      className="ant-form-item css-dev-only-do-not-override-xepvsj ant-form-item-horizontal"
     >
       <div
-        className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+        className="ant-row ant-form-item-row css-dev-only-do-not-override-xepvsj"
         style={
           {
             "rowGap": undefined,
@@ -1392,7 +1959,7 @@ exports[`single fields hidden field 1`] = `
         }
       >
         <div
-          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-xepvsj"
           style={{}}
         >
           <div
@@ -1405,7 +1972,7 @@ exports[`single fields hidden field 1`] = `
                 id="root"
               >
                 <div
-                  className="ant-row css-dev-only-do-not-override-1b0bdye"
+                  className="ant-row css-dev-only-do-not-override-xepvsj"
                   style={
                     {
                       "marginLeft": -12,
@@ -1422,7 +1989,7 @@ exports[`single fields hidden field 1`] = `
     </div>
   </div>
   <button
-    className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-submit"
+    className="ant-btn css-dev-only-do-not-override-xepvsj ant-btn-submit"
     disabled={false}
     onClick={[Function]}
     style={{}}
@@ -1442,13 +2009,13 @@ exports[`single fields hidden label 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="rjsf-field rjsf-field-string"
   >
     <div
-      className="ant-form-item css-dev-only-do-not-override-1b0bdye"
+      className="ant-form-item css-dev-only-do-not-override-xepvsj ant-form-item-horizontal"
     >
       <div
-        className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+        className="ant-row ant-form-item-row css-dev-only-do-not-override-xepvsj"
         style={
           {
             "rowGap": undefined,
@@ -1456,7 +2023,7 @@ exports[`single fields hidden label 1`] = `
         }
       >
         <div
-          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-xepvsj"
           style={{}}
         >
           <div
@@ -1466,7 +2033,7 @@ exports[`single fields hidden label 1`] = `
               className="ant-form-item-control-input-content"
             >
               <span
-                className="ant-input-affix-wrapper css-dev-only-do-not-override-1b0bdye ant-input-outlined"
+                className="ant-input-affix-wrapper css-dev-only-do-not-override-xepvsj ant-input-outlined"
                 onClick={[Function]}
                 style={
                   {
@@ -1476,7 +2043,7 @@ exports[`single fields hidden label 1`] = `
               >
                 <input
                   aria-describedby="root__error root__description root__help"
-                  className="ant-input css-dev-only-do-not-override-1b0bdye"
+                  className="ant-input css-dev-only-do-not-override-xepvsj"
                   disabled={false}
                   id="root"
                   name="root"
@@ -1486,6 +2053,7 @@ exports[`single fields hidden label 1`] = `
                   onCompositionStart={[Function]}
                   onFocus={[Function]}
                   onKeyDown={[Function]}
+                  onKeyUp={[Function]}
                   placeholder=""
                   type="text"
                   value=""
@@ -1501,7 +2069,7 @@ exports[`single fields hidden label 1`] = `
     </div>
   </div>
   <button
-    className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-submit"
+    className="ant-btn css-dev-only-do-not-override-xepvsj ant-btn-submit"
     disabled={false}
     onClick={[Function]}
     style={{}}
@@ -1521,13 +2089,13 @@ exports[`single fields null field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-null"
+    className="rjsf-field rjsf-field-null"
   >
     <div
-      className="ant-form-item css-dev-only-do-not-override-1b0bdye"
+      className="ant-form-item css-dev-only-do-not-override-xepvsj ant-form-item-horizontal"
     >
       <div
-        className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+        className="ant-row ant-form-item-row css-dev-only-do-not-override-xepvsj"
         style={
           {
             "rowGap": undefined,
@@ -1535,7 +2103,7 @@ exports[`single fields null field 1`] = `
         }
       >
         <div
-          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-xepvsj"
           style={{}}
         >
           <div
@@ -1550,7 +2118,7 @@ exports[`single fields null field 1`] = `
     </div>
   </div>
   <button
-    className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-submit"
+    className="ant-btn css-dev-only-do-not-override-xepvsj ant-btn-submit"
     disabled={false}
     onClick={[Function]}
     style={{}}
@@ -1570,13 +2138,13 @@ exports[`single fields number field 0 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-number"
+    className="rjsf-field rjsf-field-number"
   >
     <div
-      className="ant-form-item css-dev-only-do-not-override-1b0bdye"
+      className="ant-form-item css-dev-only-do-not-override-xepvsj ant-form-item-horizontal"
     >
       <div
-        className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+        className="ant-row ant-form-item-row css-dev-only-do-not-override-xepvsj"
         style={
           {
             "rowGap": undefined,
@@ -1584,7 +2152,7 @@ exports[`single fields number field 0 1`] = `
         }
       >
         <div
-          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-xepvsj"
           style={{}}
         >
           <div
@@ -1594,7 +2162,7 @@ exports[`single fields number field 0 1`] = `
               className="ant-form-item-control-input-content"
             >
               <div
-                className="ant-input-number-affix-wrapper css-dev-only-do-not-override-1b0bdye ant-input-number-outlined ant-input-number-has-feedback"
+                className="ant-input-number-affix-wrapper css-dev-only-do-not-override-xepvsj ant-input-number-outlined ant-input-number-has-feedback"
                 onClick={[Function]}
                 style={
                   {
@@ -1603,7 +2171,7 @@ exports[`single fields number field 0 1`] = `
                 }
               >
                 <div
-                  className="ant-input-number ant-input-number-in-form-item css-dev-only-do-not-override-1b0bdye"
+                  className="ant-input-number ant-input-number-in-form-item css-dev-only-do-not-override-xepvsj"
                   onBeforeInput={[Function]}
                   onBlur={[Function]}
                   onCompositionEnd={[Function]}
@@ -1709,7 +2277,7 @@ exports[`single fields number field 0 1`] = `
     </div>
   </div>
   <button
-    className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-submit"
+    className="ant-btn css-dev-only-do-not-override-xepvsj ant-btn-submit"
     disabled={false}
     onClick={[Function]}
     style={{}}
@@ -1729,13 +2297,13 @@ exports[`single fields number field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-number"
+    className="rjsf-field rjsf-field-number"
   >
     <div
-      className="ant-form-item css-dev-only-do-not-override-1b0bdye"
+      className="ant-form-item css-dev-only-do-not-override-xepvsj ant-form-item-horizontal"
     >
       <div
-        className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+        className="ant-row ant-form-item-row css-dev-only-do-not-override-xepvsj"
         style={
           {
             "rowGap": undefined,
@@ -1743,7 +2311,7 @@ exports[`single fields number field 1`] = `
         }
       >
         <div
-          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-xepvsj"
           style={{}}
         >
           <div
@@ -1753,7 +2321,7 @@ exports[`single fields number field 1`] = `
               className="ant-form-item-control-input-content"
             >
               <div
-                className="ant-input-number-affix-wrapper css-dev-only-do-not-override-1b0bdye ant-input-number-outlined ant-input-number-has-feedback"
+                className="ant-input-number-affix-wrapper css-dev-only-do-not-override-xepvsj ant-input-number-outlined ant-input-number-has-feedback"
                 onClick={[Function]}
                 style={
                   {
@@ -1762,7 +2330,7 @@ exports[`single fields number field 1`] = `
                 }
               >
                 <div
-                  className="ant-input-number ant-input-number-in-form-item css-dev-only-do-not-override-1b0bdye"
+                  className="ant-input-number ant-input-number-in-form-item css-dev-only-do-not-override-xepvsj"
                   onBeforeInput={[Function]}
                   onBlur={[Function]}
                   onCompositionEnd={[Function]}
@@ -1868,7 +2436,7 @@ exports[`single fields number field 1`] = `
     </div>
   </div>
   <button
-    className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-submit"
+    className="ant-btn css-dev-only-do-not-override-xepvsj ant-btn-submit"
     disabled={false}
     onClick={[Function]}
     style={{}}
@@ -1888,13 +2456,13 @@ exports[`single fields password field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="rjsf-field rjsf-field-string"
   >
     <div
-      className="ant-form-item css-dev-only-do-not-override-1b0bdye"
+      className="ant-form-item css-dev-only-do-not-override-xepvsj ant-form-item-horizontal"
     >
       <div
-        className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+        className="ant-row ant-form-item-row css-dev-only-do-not-override-xepvsj"
         style={
           {
             "rowGap": undefined,
@@ -1902,7 +2470,7 @@ exports[`single fields password field 1`] = `
         }
       >
         <div
-          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-xepvsj"
           style={{}}
         >
           <div
@@ -1912,13 +2480,13 @@ exports[`single fields password field 1`] = `
               className="ant-form-item-control-input-content"
             >
               <span
-                className="ant-input-affix-wrapper css-dev-only-do-not-override-1b0bdye ant-input-outlined ant-input-password"
+                className="ant-input-affix-wrapper css-dev-only-do-not-override-xepvsj ant-input-outlined ant-input-password"
                 onClick={[Function]}
                 style={{}}
               >
                 <input
                   aria-describedby="root__error root__description root__help"
-                  className="ant-input css-dev-only-do-not-override-1b0bdye"
+                  className="ant-input css-dev-only-do-not-override-xepvsj"
                   disabled={false}
                   id="root"
                   name="root"
@@ -1928,6 +2496,7 @@ exports[`single fields password field 1`] = `
                   onCompositionStart={[Function]}
                   onFocus={[Function]}
                   onKeyDown={[Function]}
+                  onKeyUp={[Function]}
                   placeholder=""
                   type="password"
                   value=""
@@ -1970,7 +2539,7 @@ exports[`single fields password field 1`] = `
     </div>
   </div>
   <button
-    className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-submit"
+    className="ant-btn css-dev-only-do-not-override-xepvsj ant-btn-submit"
     disabled={false}
     onClick={[Function]}
     style={{}}
@@ -1990,13 +2559,13 @@ exports[`single fields radio field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-boolean"
+    className="rjsf-field rjsf-field-boolean"
   >
     <div
-      className="ant-form-item css-dev-only-do-not-override-1b0bdye"
+      className="ant-form-item css-dev-only-do-not-override-xepvsj ant-form-item-horizontal"
     >
       <div
-        className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+        className="ant-row ant-form-item-row css-dev-only-do-not-override-xepvsj"
         style={
           {
             "rowGap": undefined,
@@ -2004,7 +2573,7 @@ exports[`single fields radio field 1`] = `
         }
       >
         <div
-          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-xepvsj"
           style={{}}
         >
           <div
@@ -2015,13 +2584,14 @@ exports[`single fields radio field 1`] = `
             >
               <div
                 aria-describedby="root__error root__description root__help"
-                className="ant-radio-group ant-radio-group-outline css-dev-only-do-not-override-1b0bdye"
+                className="ant-radio-group ant-radio-group-outline css-dev-only-do-not-override-xepvsj"
                 id="root"
                 onBlur={[Function]}
                 onFocus={[Function]}
               >
                 <label
-                  className="ant-radio-wrapper ant-radio-wrapper-in-form-item css-dev-only-do-not-override-1b0bdye"
+                  className="ant-radio-wrapper ant-radio-wrapper-in-form-item css-dev-only-do-not-override-xepvsj"
+                  onClick={[Function]}
                   style={{}}
                 >
                   <span
@@ -2035,6 +2605,7 @@ exports[`single fields radio field 1`] = `
                       id="root-0"
                       name="root"
                       onChange={[Function]}
+                      onClick={[Function]}
                       type="radio"
                       value="0"
                     />
@@ -2042,12 +2613,15 @@ exports[`single fields radio field 1`] = `
                       className="ant-radio-inner"
                     />
                   </span>
-                  <span>
+                  <span
+                    className="ant-radio-label"
+                  >
                     Yes
                   </span>
                 </label>
                 <label
-                  className="ant-radio-wrapper ant-radio-wrapper-in-form-item css-dev-only-do-not-override-1b0bdye"
+                  className="ant-radio-wrapper ant-radio-wrapper-in-form-item css-dev-only-do-not-override-xepvsj"
+                  onClick={[Function]}
                   style={{}}
                 >
                   <span
@@ -2061,6 +2635,7 @@ exports[`single fields radio field 1`] = `
                       id="root-1"
                       name="root"
                       onChange={[Function]}
+                      onClick={[Function]}
                       type="radio"
                       value="1"
                     />
@@ -2068,7 +2643,9 @@ exports[`single fields radio field 1`] = `
                       className="ant-radio-inner"
                     />
                   </span>
-                  <span>
+                  <span
+                    className="ant-radio-label"
+                  >
                     No
                   </span>
                 </label>
@@ -2080,7 +2657,7 @@ exports[`single fields radio field 1`] = `
     </div>
   </div>
   <button
-    className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-submit"
+    className="ant-btn css-dev-only-do-not-override-xepvsj ant-btn-submit"
     disabled={false}
     onClick={[Function]}
     style={{}}
@@ -2100,13 +2677,13 @@ exports[`single fields schema examples 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="rjsf-field rjsf-field-string"
   >
     <div
-      className="ant-form-item css-dev-only-do-not-override-1b0bdye"
+      className="ant-form-item css-dev-only-do-not-override-xepvsj ant-form-item-horizontal"
     >
       <div
-        className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+        className="ant-row ant-form-item-row css-dev-only-do-not-override-xepvsj"
         style={
           {
             "rowGap": undefined,
@@ -2114,7 +2691,7 @@ exports[`single fields schema examples 1`] = `
         }
       >
         <div
-          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-xepvsj"
           style={{}}
         >
           <div
@@ -2124,7 +2701,7 @@ exports[`single fields schema examples 1`] = `
               className="ant-form-item-control-input-content"
             >
               <span
-                className="ant-input-affix-wrapper css-dev-only-do-not-override-1b0bdye ant-input-outlined"
+                className="ant-input-affix-wrapper css-dev-only-do-not-override-xepvsj ant-input-outlined"
                 onClick={[Function]}
                 style={
                   {
@@ -2134,7 +2711,7 @@ exports[`single fields schema examples 1`] = `
               >
                 <input
                   aria-describedby="root__error root__description root__help root__examples"
-                  className="ant-input css-dev-only-do-not-override-1b0bdye"
+                  className="ant-input css-dev-only-do-not-override-xepvsj"
                   disabled={false}
                   id="root"
                   list="root__examples"
@@ -2145,6 +2722,7 @@ exports[`single fields schema examples 1`] = `
                   onCompositionStart={[Function]}
                   onFocus={[Function]}
                   onKeyDown={[Function]}
+                  onKeyUp={[Function]}
                   placeholder=""
                   type="text"
                   value=""
@@ -2179,7 +2757,7 @@ exports[`single fields schema examples 1`] = `
     </div>
   </div>
   <button
-    className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-submit"
+    className="ant-btn css-dev-only-do-not-override-xepvsj ant-btn-submit"
     disabled={false}
     onClick={[Function]}
     style={{}}
@@ -2199,13 +2777,13 @@ exports[`single fields select field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="rjsf-field rjsf-field-string"
   >
     <div
-      className="ant-form-item css-dev-only-do-not-override-1b0bdye"
+      className="ant-form-item css-dev-only-do-not-override-xepvsj ant-form-item-horizontal"
     >
       <div
-        className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+        className="ant-row ant-form-item-row css-dev-only-do-not-override-xepvsj"
         style={
           {
             "rowGap": undefined,
@@ -2213,7 +2791,7 @@ exports[`single fields select field 1`] = `
         }
       >
         <div
-          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-xepvsj"
           style={{}}
         >
           <div
@@ -2224,7 +2802,7 @@ exports[`single fields select field 1`] = `
             >
               <div
                 aria-describedby="root__error root__description root__help"
-                className="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-dev-only-do-not-override-1b0bdye ant-select-single ant-select-show-arrow"
+                className="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-dev-only-do-not-override-xepvsj ant-select-single ant-select-show-arrow"
                 name="root"
                 onBlur={[Function]}
                 onFocus={[Function]}
@@ -2243,41 +2821,46 @@ exports[`single fields select field 1`] = `
                   onMouseDown={[Function]}
                 >
                   <span
-                    className="ant-select-selection-search"
+                    className="ant-select-selection-wrap"
                   >
-                    <input
-                      aria-autocomplete="list"
-                      aria-controls="root_list"
-                      aria-describedby="root__error root__description root__help"
-                      aria-expanded={false}
-                      aria-haspopup="listbox"
-                      aria-owns="root_list"
-                      autoComplete="off"
-                      autoFocus={false}
-                      className="ant-select-selection-search-input"
-                      disabled={false}
-                      id="root"
-                      onChange={[Function]}
-                      onCompositionEnd={[Function]}
-                      onCompositionStart={[Function]}
-                      onKeyDown={[Function]}
-                      onMouseDown={[Function]}
-                      onPaste={[Function]}
-                      readOnly={true}
-                      role="combobox"
-                      style={
-                        {
-                          "opacity": 0,
+                    <span
+                      className="ant-select-selection-search"
+                    >
+                      <input
+                        aria-autocomplete="list"
+                        aria-controls="root_list"
+                        aria-describedby="root__error root__description root__help"
+                        aria-expanded={false}
+                        aria-haspopup="listbox"
+                        aria-owns="root_list"
+                        autoComplete="off"
+                        autoFocus={false}
+                        className="ant-select-selection-search-input"
+                        disabled={false}
+                        id="root"
+                        onBlur={[Function]}
+                        onChange={[Function]}
+                        onCompositionEnd={[Function]}
+                        onCompositionStart={[Function]}
+                        onKeyDown={[Function]}
+                        onMouseDown={[Function]}
+                        onPaste={[Function]}
+                        readOnly={true}
+                        role="combobox"
+                        style={
+                          {
+                            "opacity": 0,
+                          }
                         }
-                      }
-                      type="search"
-                      unselectable="on"
-                      value=""
+                        type="search"
+                        unselectable="on"
+                        value=""
+                      />
+                    </span>
+                    <span
+                      className="ant-select-selection-placeholder"
                     />
                   </span>
-                  <span
-                    className="ant-select-selection-placeholder"
-                  />
                 </div>
                 <span
                   aria-hidden={true}
@@ -2319,7 +2902,7 @@ exports[`single fields select field 1`] = `
     </div>
   </div>
   <button
-    className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-submit"
+    className="ant-btn css-dev-only-do-not-override-xepvsj ant-btn-submit"
     disabled={false}
     onClick={[Function]}
     style={{}}
@@ -2339,13 +2922,13 @@ exports[`single fields select field multiple choice 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div
-      className="ant-form-item css-dev-only-do-not-override-1b0bdye"
+      className="ant-form-item css-dev-only-do-not-override-xepvsj ant-form-item-horizontal"
     >
       <div
-        className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+        className="ant-row ant-form-item-row css-dev-only-do-not-override-xepvsj"
         style={
           {
             "rowGap": undefined,
@@ -2353,7 +2936,7 @@ exports[`single fields select field multiple choice 1`] = `
         }
       >
         <div
-          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-xepvsj"
           style={{}}
         >
           <div
@@ -2364,7 +2947,7 @@ exports[`single fields select field multiple choice 1`] = `
             >
               <div
                 aria-describedby="root__error root__description root__help"
-                className="ant-select ant-select-outlined ant-select-in-form-item css-dev-only-do-not-override-1b0bdye ant-select-multiple ant-select-show-arrow ant-select-show-search"
+                className="ant-select ant-select-outlined ant-select-in-form-item css-dev-only-do-not-override-xepvsj ant-select-multiple ant-select-show-arrow ant-select-show-search"
                 name="root"
                 onBlur={[Function]}
                 onFocus={[Function]}
@@ -2382,73 +2965,78 @@ exports[`single fields select field multiple choice 1`] = `
                   onClick={[Function]}
                   onMouseDown={[Function]}
                 >
-                  <div
-                    className="ant-select-selection-overflow"
+                  <span
+                    className="ant-select-selection-wrap"
                   >
                     <div
-                      className="ant-select-selection-overflow-item ant-select-selection-overflow-item-suffix"
-                      style={
-                        {
-                          "height": undefined,
-                          "opacity": 1,
-                          "order": undefined,
-                          "overflowY": undefined,
-                          "pointerEvents": undefined,
-                          "position": undefined,
-                        }
-                      }
+                      className="ant-select-selection-overflow"
                     >
                       <div
-                        className="ant-select-selection-search"
-                        onBlur={[Function]}
-                        onFocus={[Function]}
+                        className="ant-select-selection-overflow-item ant-select-selection-overflow-item-suffix"
                         style={
                           {
-                            "width": 100,
+                            "height": undefined,
+                            "opacity": 1,
+                            "order": undefined,
+                            "overflowY": undefined,
+                            "pointerEvents": undefined,
+                            "position": undefined,
                           }
                         }
                       >
-                        <input
-                          aria-autocomplete="list"
-                          aria-controls="root_list"
-                          aria-describedby="root__error root__description root__help"
-                          aria-expanded={false}
-                          aria-haspopup="listbox"
-                          aria-owns="root_list"
-                          autoComplete="off"
-                          autoFocus={false}
-                          className="ant-select-selection-search-input"
-                          disabled={false}
-                          id="root"
-                          onChange={[Function]}
-                          onCompositionEnd={[Function]}
-                          onCompositionStart={[Function]}
-                          onKeyDown={[Function]}
-                          onMouseDown={[Function]}
-                          onPaste={[Function]}
-                          readOnly={true}
-                          role="combobox"
+                        <div
+                          className="ant-select-selection-search"
+                          onBlur={[Function]}
+                          onFocus={[Function]}
                           style={
                             {
-                              "opacity": 0,
+                              "width": 100,
                             }
                           }
-                          type="search"
-                          unselectable="on"
-                          value=""
-                        />
-                        <span
-                          aria-hidden={true}
-                          className="ant-select-selection-search-mirror"
                         >
-                           
-                        </span>
+                          <input
+                            aria-autocomplete="list"
+                            aria-controls="root_list"
+                            aria-describedby="root__error root__description root__help"
+                            aria-expanded={false}
+                            aria-haspopup="listbox"
+                            aria-owns="root_list"
+                            autoComplete="off"
+                            autoFocus={false}
+                            className="ant-select-selection-search-input"
+                            disabled={false}
+                            id="root"
+                            onBlur={[Function]}
+                            onChange={[Function]}
+                            onCompositionEnd={[Function]}
+                            onCompositionStart={[Function]}
+                            onKeyDown={[Function]}
+                            onMouseDown={[Function]}
+                            onPaste={[Function]}
+                            readOnly={true}
+                            role="combobox"
+                            style={
+                              {
+                                "opacity": 0,
+                              }
+                            }
+                            type="search"
+                            unselectable="on"
+                            value=""
+                          />
+                          <span
+                            aria-hidden={true}
+                            className="ant-select-selection-search-mirror"
+                          >
+                             
+                          </span>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  <span
-                    className="ant-select-selection-placeholder"
-                  />
+                    <span
+                      className="ant-select-selection-placeholder"
+                    />
+                  </span>
                 </div>
                 <span
                   aria-hidden={true}
@@ -2490,7 +3078,7 @@ exports[`single fields select field multiple choice 1`] = `
     </div>
   </div>
   <button
-    className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-submit"
+    className="ant-btn css-dev-only-do-not-override-xepvsj ant-btn-submit"
     disabled={false}
     onClick={[Function]}
     style={{}}
@@ -2510,13 +3098,13 @@ exports[`single fields select field multiple choice enumDisabled 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div
-      className="ant-form-item css-dev-only-do-not-override-1b0bdye"
+      className="ant-form-item css-dev-only-do-not-override-xepvsj ant-form-item-horizontal"
     >
       <div
-        className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+        className="ant-row ant-form-item-row css-dev-only-do-not-override-xepvsj"
         style={
           {
             "rowGap": undefined,
@@ -2524,7 +3112,7 @@ exports[`single fields select field multiple choice enumDisabled 1`] = `
         }
       >
         <div
-          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-xepvsj"
           style={{}}
         >
           <div
@@ -2535,7 +3123,7 @@ exports[`single fields select field multiple choice enumDisabled 1`] = `
             >
               <div
                 aria-describedby="root__error root__description root__help"
-                className="ant-select ant-select-outlined ant-select-in-form-item css-dev-only-do-not-override-1b0bdye ant-select-multiple ant-select-show-arrow ant-select-show-search"
+                className="ant-select ant-select-outlined ant-select-in-form-item css-dev-only-do-not-override-xepvsj ant-select-multiple ant-select-show-arrow ant-select-show-search"
                 name="root"
                 onBlur={[Function]}
                 onFocus={[Function]}
@@ -2553,73 +3141,78 @@ exports[`single fields select field multiple choice enumDisabled 1`] = `
                   onClick={[Function]}
                   onMouseDown={[Function]}
                 >
-                  <div
-                    className="ant-select-selection-overflow"
+                  <span
+                    className="ant-select-selection-wrap"
                   >
                     <div
-                      className="ant-select-selection-overflow-item ant-select-selection-overflow-item-suffix"
-                      style={
-                        {
-                          "height": undefined,
-                          "opacity": 1,
-                          "order": undefined,
-                          "overflowY": undefined,
-                          "pointerEvents": undefined,
-                          "position": undefined,
-                        }
-                      }
+                      className="ant-select-selection-overflow"
                     >
                       <div
-                        className="ant-select-selection-search"
-                        onBlur={[Function]}
-                        onFocus={[Function]}
+                        className="ant-select-selection-overflow-item ant-select-selection-overflow-item-suffix"
                         style={
                           {
-                            "width": 100,
+                            "height": undefined,
+                            "opacity": 1,
+                            "order": undefined,
+                            "overflowY": undefined,
+                            "pointerEvents": undefined,
+                            "position": undefined,
                           }
                         }
                       >
-                        <input
-                          aria-autocomplete="list"
-                          aria-controls="root_list"
-                          aria-describedby="root__error root__description root__help"
-                          aria-expanded={false}
-                          aria-haspopup="listbox"
-                          aria-owns="root_list"
-                          autoComplete="off"
-                          autoFocus={false}
-                          className="ant-select-selection-search-input"
-                          disabled={false}
-                          id="root"
-                          onChange={[Function]}
-                          onCompositionEnd={[Function]}
-                          onCompositionStart={[Function]}
-                          onKeyDown={[Function]}
-                          onMouseDown={[Function]}
-                          onPaste={[Function]}
-                          readOnly={true}
-                          role="combobox"
+                        <div
+                          className="ant-select-selection-search"
+                          onBlur={[Function]}
+                          onFocus={[Function]}
                           style={
                             {
-                              "opacity": 0,
+                              "width": 100,
                             }
                           }
-                          type="search"
-                          unselectable="on"
-                          value=""
-                        />
-                        <span
-                          aria-hidden={true}
-                          className="ant-select-selection-search-mirror"
                         >
-                           
-                        </span>
+                          <input
+                            aria-autocomplete="list"
+                            aria-controls="root_list"
+                            aria-describedby="root__error root__description root__help"
+                            aria-expanded={false}
+                            aria-haspopup="listbox"
+                            aria-owns="root_list"
+                            autoComplete="off"
+                            autoFocus={false}
+                            className="ant-select-selection-search-input"
+                            disabled={false}
+                            id="root"
+                            onBlur={[Function]}
+                            onChange={[Function]}
+                            onCompositionEnd={[Function]}
+                            onCompositionStart={[Function]}
+                            onKeyDown={[Function]}
+                            onMouseDown={[Function]}
+                            onPaste={[Function]}
+                            readOnly={true}
+                            role="combobox"
+                            style={
+                              {
+                                "opacity": 0,
+                              }
+                            }
+                            type="search"
+                            unselectable="on"
+                            value=""
+                          />
+                          <span
+                            aria-hidden={true}
+                            className="ant-select-selection-search-mirror"
+                          >
+                             
+                          </span>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  <span
-                    className="ant-select-selection-placeholder"
-                  />
+                    <span
+                      className="ant-select-selection-placeholder"
+                    />
+                  </span>
                 </div>
                 <span
                   aria-hidden={true}
@@ -2661,7 +3254,7 @@ exports[`single fields select field multiple choice enumDisabled 1`] = `
     </div>
   </div>
   <button
-    className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-submit"
+    className="ant-btn css-dev-only-do-not-override-xepvsj ant-btn-submit"
     disabled={false}
     onClick={[Function]}
     style={{}}
@@ -2681,13 +3274,13 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div
-      className="ant-form-item css-dev-only-do-not-override-1b0bdye"
+      className="ant-form-item css-dev-only-do-not-override-xepvsj ant-form-item-horizontal"
     >
       <div
-        className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+        className="ant-row ant-form-item-row css-dev-only-do-not-override-xepvsj"
         style={
           {
             "rowGap": undefined,
@@ -2695,7 +3288,7 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
         }
       >
         <div
-          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-xepvsj"
           style={{}}
         >
           <div
@@ -2706,7 +3299,7 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
             >
               <div
                 aria-describedby="root__error root__description root__help"
-                className="ant-checkbox-group css-dev-only-do-not-override-1b0bdye"
+                className="ant-checkbox-group css-dev-only-do-not-override-xepvsj"
                 id="root"
                 name="root"
                 onBlur={[Function]}
@@ -2714,11 +3307,12 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
               >
                 <span>
                   <label
-                    className="ant-checkbox-wrapper ant-checkbox-wrapper-in-form-item css-dev-only-do-not-override-1b0bdye"
+                    className="ant-checkbox-wrapper ant-checkbox-wrapper-in-form-item css-dev-only-do-not-override-xepvsj"
+                    onClick={[Function]}
                     style={{}}
                   >
                     <span
-                      className="ant-checkbox ant-wave-target css-dev-only-do-not-override-1b0bdye"
+                      className="ant-checkbox ant-wave-target css-dev-only-do-not-override-xepvsj"
                     >
                       <input
                         autoFocus={false}
@@ -2728,6 +3322,7 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
                         id="root-0"
                         name="root"
                         onChange={[Function]}
+                        onClick={[Function]}
                         type="checkbox"
                         value="0"
                       />
@@ -2735,7 +3330,9 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
                         className="ant-checkbox-inner"
                       />
                     </span>
-                    <span>
+                    <span
+                      className="ant-checkbox-label"
+                    >
                       foo
                     </span>
                   </label>
@@ -2743,11 +3340,12 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
                 </span>
                 <span>
                   <label
-                    className="ant-checkbox-wrapper ant-checkbox-wrapper-disabled ant-checkbox-wrapper-in-form-item css-dev-only-do-not-override-1b0bdye"
+                    className="ant-checkbox-wrapper ant-checkbox-wrapper-disabled ant-checkbox-wrapper-in-form-item css-dev-only-do-not-override-xepvsj"
+                    onClick={[Function]}
                     style={{}}
                   >
                     <span
-                      className="ant-checkbox ant-wave-target css-dev-only-do-not-override-1b0bdye ant-checkbox-disabled"
+                      className="ant-checkbox ant-wave-target css-dev-only-do-not-override-xepvsj ant-checkbox-disabled"
                     >
                       <input
                         autoFocus={false}
@@ -2757,6 +3355,7 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
                         id="root-1"
                         name="root"
                         onChange={[Function]}
+                        onClick={[Function]}
                         type="checkbox"
                         value="1"
                       />
@@ -2764,7 +3363,9 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
                         className="ant-checkbox-inner"
                       />
                     </span>
-                    <span>
+                    <span
+                      className="ant-checkbox-label"
+                    >
                       bar
                     </span>
                   </label>
@@ -2772,11 +3373,12 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
                 </span>
                 <span>
                   <label
-                    className="ant-checkbox-wrapper ant-checkbox-wrapper-in-form-item css-dev-only-do-not-override-1b0bdye"
+                    className="ant-checkbox-wrapper ant-checkbox-wrapper-in-form-item css-dev-only-do-not-override-xepvsj"
+                    onClick={[Function]}
                     style={{}}
                   >
                     <span
-                      className="ant-checkbox ant-wave-target css-dev-only-do-not-override-1b0bdye"
+                      className="ant-checkbox ant-wave-target css-dev-only-do-not-override-xepvsj"
                     >
                       <input
                         autoFocus={false}
@@ -2786,6 +3388,7 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
                         id="root-2"
                         name="root"
                         onChange={[Function]}
+                        onClick={[Function]}
                         type="checkbox"
                         value="2"
                       />
@@ -2793,7 +3396,9 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
                         className="ant-checkbox-inner"
                       />
                     </span>
-                    <span>
+                    <span
+                      className="ant-checkbox-label"
+                    >
                       fuzz
                     </span>
                   </label>
@@ -2801,11 +3406,12 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
                 </span>
                 <span>
                   <label
-                    className="ant-checkbox-wrapper ant-checkbox-wrapper-in-form-item css-dev-only-do-not-override-1b0bdye"
+                    className="ant-checkbox-wrapper ant-checkbox-wrapper-in-form-item css-dev-only-do-not-override-xepvsj"
+                    onClick={[Function]}
                     style={{}}
                   >
                     <span
-                      className="ant-checkbox ant-wave-target css-dev-only-do-not-override-1b0bdye"
+                      className="ant-checkbox ant-wave-target css-dev-only-do-not-override-xepvsj"
                     >
                       <input
                         autoFocus={false}
@@ -2815,6 +3421,7 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
                         id="root-3"
                         name="root"
                         onChange={[Function]}
+                        onClick={[Function]}
                         type="checkbox"
                         value="3"
                       />
@@ -2822,7 +3429,9 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
                         className="ant-checkbox-inner"
                       />
                     </span>
-                    <span>
+                    <span
+                      className="ant-checkbox-label"
+                    >
                       qux
                     </span>
                   </label>
@@ -2836,7 +3445,7 @@ exports[`single fields select field multiple choice enumDisabled using checkboxe
     </div>
   </div>
   <button
-    className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-submit"
+    className="ant-btn css-dev-only-do-not-override-xepvsj ant-btn-submit"
     disabled={false}
     onClick={[Function]}
     style={{}}
@@ -2856,13 +3465,13 @@ exports[`single fields select field multiple choice formData 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div
-      className="ant-form-item css-dev-only-do-not-override-1b0bdye"
+      className="ant-form-item css-dev-only-do-not-override-xepvsj ant-form-item-horizontal"
     >
       <div
-        className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+        className="ant-row ant-form-item-row css-dev-only-do-not-override-xepvsj"
         style={
           {
             "rowGap": undefined,
@@ -2870,7 +3479,7 @@ exports[`single fields select field multiple choice formData 1`] = `
         }
       >
         <div
-          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-xepvsj"
           style={{}}
         >
           <div
@@ -2881,7 +3490,7 @@ exports[`single fields select field multiple choice formData 1`] = `
             >
               <div
                 aria-describedby="root__error root__description root__help"
-                className="ant-select ant-select-outlined ant-select-in-form-item css-dev-only-do-not-override-1b0bdye ant-select-multiple ant-select-show-arrow ant-select-show-search"
+                className="ant-select ant-select-outlined ant-select-in-form-item css-dev-only-do-not-override-xepvsj ant-select-multiple ant-select-show-arrow ant-select-show-search"
                 name="root"
                 onBlur={[Function]}
                 onFocus={[Function]}
@@ -2899,186 +3508,191 @@ exports[`single fields select field multiple choice formData 1`] = `
                   onClick={[Function]}
                   onMouseDown={[Function]}
                 >
-                  <div
-                    className="ant-select-selection-overflow"
+                  <span
+                    className="ant-select-selection-wrap"
                   >
                     <div
-                      className="ant-select-selection-overflow-item"
-                      style={
-                        {
-                          "height": undefined,
-                          "opacity": 1,
-                          "order": undefined,
-                          "overflowY": undefined,
-                          "pointerEvents": undefined,
-                          "position": undefined,
-                        }
-                      }
-                    >
-                      <span
-                        className="ant-select-selection-item"
-                        title="foo"
-                      >
-                        <span
-                          className="ant-select-selection-item-content"
-                        >
-                          foo
-                        </span>
-                        <span
-                          aria-hidden={true}
-                          className="ant-select-selection-item-remove"
-                          onClick={[Function]}
-                          onMouseDown={[Function]}
-                          style={
-                            {
-                              "WebkitUserSelect": "none",
-                              "userSelect": "none",
-                            }
-                          }
-                          unselectable="on"
-                        >
-                          <span
-                            aria-label="close"
-                            className="anticon anticon-close"
-                            role="img"
-                          >
-                            <svg
-                              aria-hidden="true"
-                              data-icon="close"
-                              fill="currentColor"
-                              fillRule="evenodd"
-                              focusable="false"
-                              height="1em"
-                              viewBox="64 64 896 896"
-                              width="1em"
-                            >
-                              <path
-                                d="M799.86 166.31c.02 0 .04.02.08.06l57.69 57.7c.04.03.05.05.06.08a.12.12 0 010 .06c0 .03-.02.05-.06.09L569.93 512l287.7 287.7c.04.04.05.06.06.09a.12.12 0 010 .07c0 .02-.02.04-.06.08l-57.7 57.69c-.03.04-.05.05-.07.06a.12.12 0 01-.07 0c-.03 0-.05-.02-.09-.06L512 569.93l-287.7 287.7c-.04.04-.06.05-.09.06a.12.12 0 01-.07 0c-.02 0-.04-.02-.08-.06l-57.69-57.7c-.04-.03-.05-.05-.06-.07a.12.12 0 010-.07c0-.03.02-.05.06-.09L454.07 512l-287.7-287.7c-.04-.04-.05-.06-.06-.09a.12.12 0 010-.07c0-.02.02-.04.06-.08l57.7-57.69c.03-.04.05-.05.07-.06a.12.12 0 01.07 0c.03 0 .05.02.09.06L512 454.07l287.7-287.7c.04-.04.06-.05.09-.06a.12.12 0 01.07 0z"
-                              />
-                            </svg>
-                          </span>
-                        </span>
-                      </span>
-                    </div>
-                    <div
-                      className="ant-select-selection-overflow-item"
-                      style={
-                        {
-                          "height": undefined,
-                          "opacity": 1,
-                          "order": undefined,
-                          "overflowY": undefined,
-                          "pointerEvents": undefined,
-                          "position": undefined,
-                        }
-                      }
-                    >
-                      <span
-                        className="ant-select-selection-item"
-                        title="bar"
-                      >
-                        <span
-                          className="ant-select-selection-item-content"
-                        >
-                          bar
-                        </span>
-                        <span
-                          aria-hidden={true}
-                          className="ant-select-selection-item-remove"
-                          onClick={[Function]}
-                          onMouseDown={[Function]}
-                          style={
-                            {
-                              "WebkitUserSelect": "none",
-                              "userSelect": "none",
-                            }
-                          }
-                          unselectable="on"
-                        >
-                          <span
-                            aria-label="close"
-                            className="anticon anticon-close"
-                            role="img"
-                          >
-                            <svg
-                              aria-hidden="true"
-                              data-icon="close"
-                              fill="currentColor"
-                              fillRule="evenodd"
-                              focusable="false"
-                              height="1em"
-                              viewBox="64 64 896 896"
-                              width="1em"
-                            >
-                              <path
-                                d="M799.86 166.31c.02 0 .04.02.08.06l57.69 57.7c.04.03.05.05.06.08a.12.12 0 010 .06c0 .03-.02.05-.06.09L569.93 512l287.7 287.7c.04.04.05.06.06.09a.12.12 0 010 .07c0 .02-.02.04-.06.08l-57.7 57.69c-.03.04-.05.05-.07.06a.12.12 0 01-.07 0c-.03 0-.05-.02-.09-.06L512 569.93l-287.7 287.7c-.04.04-.06.05-.09.06a.12.12 0 01-.07 0c-.02 0-.04-.02-.08-.06l-57.69-57.7c-.04-.03-.05-.05-.06-.07a.12.12 0 010-.07c0-.03.02-.05.06-.09L454.07 512l-287.7-287.7c-.04-.04-.05-.06-.06-.09a.12.12 0 010-.07c0-.02.02-.04.06-.08l57.7-57.69c.03-.04.05-.05.07-.06a.12.12 0 01.07 0c.03 0 .05.02.09.06L512 454.07l287.7-287.7c.04-.04.06-.05.09-.06a.12.12 0 01.07 0z"
-                              />
-                            </svg>
-                          </span>
-                        </span>
-                      </span>
-                    </div>
-                    <div
-                      className="ant-select-selection-overflow-item ant-select-selection-overflow-item-suffix"
-                      style={
-                        {
-                          "height": undefined,
-                          "opacity": 1,
-                          "order": undefined,
-                          "overflowY": undefined,
-                          "pointerEvents": undefined,
-                          "position": undefined,
-                        }
-                      }
+                      className="ant-select-selection-overflow"
                     >
                       <div
-                        className="ant-select-selection-search"
-                        onBlur={[Function]}
-                        onFocus={[Function]}
+                        className="ant-select-selection-overflow-item"
                         style={
                           {
-                            "width": 100,
+                            "height": undefined,
+                            "opacity": 1,
+                            "order": undefined,
+                            "overflowY": undefined,
+                            "pointerEvents": undefined,
+                            "position": undefined,
                           }
                         }
                       >
-                        <input
-                          aria-autocomplete="list"
-                          aria-controls="root_list"
-                          aria-describedby="root__error root__description root__help"
-                          aria-expanded={false}
-                          aria-haspopup="listbox"
-                          aria-owns="root_list"
-                          autoComplete="off"
-                          autoFocus={false}
-                          className="ant-select-selection-search-input"
-                          disabled={false}
-                          id="root"
-                          onChange={[Function]}
-                          onCompositionEnd={[Function]}
-                          onCompositionStart={[Function]}
-                          onKeyDown={[Function]}
-                          onMouseDown={[Function]}
-                          onPaste={[Function]}
-                          readOnly={true}
-                          role="combobox"
-                          style={
-                            {
-                              "opacity": 0,
-                            }
-                          }
-                          type="search"
-                          unselectable="on"
-                          value=""
-                        />
                         <span
-                          aria-hidden={true}
-                          className="ant-select-selection-search-mirror"
+                          className="ant-select-selection-item"
+                          title="foo"
                         >
-                           
+                          <span
+                            className="ant-select-selection-item-content"
+                          >
+                            foo
+                          </span>
+                          <span
+                            aria-hidden={true}
+                            className="ant-select-selection-item-remove"
+                            onClick={[Function]}
+                            onMouseDown={[Function]}
+                            style={
+                              {
+                                "WebkitUserSelect": "none",
+                                "userSelect": "none",
+                              }
+                            }
+                            unselectable="on"
+                          >
+                            <span
+                              aria-label="close"
+                              className="anticon anticon-close"
+                              role="img"
+                            >
+                              <svg
+                                aria-hidden="true"
+                                data-icon="close"
+                                fill="currentColor"
+                                fillRule="evenodd"
+                                focusable="false"
+                                height="1em"
+                                viewBox="64 64 896 896"
+                                width="1em"
+                              >
+                                <path
+                                  d="M799.86 166.31c.02 0 .04.02.08.06l57.69 57.7c.04.03.05.05.06.08a.12.12 0 010 .06c0 .03-.02.05-.06.09L569.93 512l287.7 287.7c.04.04.05.06.06.09a.12.12 0 010 .07c0 .02-.02.04-.06.08l-57.7 57.69c-.03.04-.05.05-.07.06a.12.12 0 01-.07 0c-.03 0-.05-.02-.09-.06L512 569.93l-287.7 287.7c-.04.04-.06.05-.09.06a.12.12 0 01-.07 0c-.02 0-.04-.02-.08-.06l-57.69-57.7c-.04-.03-.05-.05-.06-.07a.12.12 0 010-.07c0-.03.02-.05.06-.09L454.07 512l-287.7-287.7c-.04-.04-.05-.06-.06-.09a.12.12 0 010-.07c0-.02.02-.04.06-.08l57.7-57.69c.03-.04.05-.05.07-.06a.12.12 0 01.07 0c.03 0 .05.02.09.06L512 454.07l287.7-287.7c.04-.04.06-.05.09-.06a.12.12 0 01.07 0z"
+                                />
+                              </svg>
+                            </span>
+                          </span>
                         </span>
                       </div>
+                      <div
+                        className="ant-select-selection-overflow-item"
+                        style={
+                          {
+                            "height": undefined,
+                            "opacity": 1,
+                            "order": undefined,
+                            "overflowY": undefined,
+                            "pointerEvents": undefined,
+                            "position": undefined,
+                          }
+                        }
+                      >
+                        <span
+                          className="ant-select-selection-item"
+                          title="bar"
+                        >
+                          <span
+                            className="ant-select-selection-item-content"
+                          >
+                            bar
+                          </span>
+                          <span
+                            aria-hidden={true}
+                            className="ant-select-selection-item-remove"
+                            onClick={[Function]}
+                            onMouseDown={[Function]}
+                            style={
+                              {
+                                "WebkitUserSelect": "none",
+                                "userSelect": "none",
+                              }
+                            }
+                            unselectable="on"
+                          >
+                            <span
+                              aria-label="close"
+                              className="anticon anticon-close"
+                              role="img"
+                            >
+                              <svg
+                                aria-hidden="true"
+                                data-icon="close"
+                                fill="currentColor"
+                                fillRule="evenodd"
+                                focusable="false"
+                                height="1em"
+                                viewBox="64 64 896 896"
+                                width="1em"
+                              >
+                                <path
+                                  d="M799.86 166.31c.02 0 .04.02.08.06l57.69 57.7c.04.03.05.05.06.08a.12.12 0 010 .06c0 .03-.02.05-.06.09L569.93 512l287.7 287.7c.04.04.05.06.06.09a.12.12 0 010 .07c0 .02-.02.04-.06.08l-57.7 57.69c-.03.04-.05.05-.07.06a.12.12 0 01-.07 0c-.03 0-.05-.02-.09-.06L512 569.93l-287.7 287.7c-.04.04-.06.05-.09.06a.12.12 0 01-.07 0c-.02 0-.04-.02-.08-.06l-57.69-57.7c-.04-.03-.05-.05-.06-.07a.12.12 0 010-.07c0-.03.02-.05.06-.09L454.07 512l-287.7-287.7c-.04-.04-.05-.06-.06-.09a.12.12 0 010-.07c0-.02.02-.04.06-.08l57.7-57.69c.03-.04.05-.05.07-.06a.12.12 0 01.07 0c.03 0 .05.02.09.06L512 454.07l287.7-287.7c.04-.04.06-.05.09-.06a.12.12 0 01.07 0z"
+                                />
+                              </svg>
+                            </span>
+                          </span>
+                        </span>
+                      </div>
+                      <div
+                        className="ant-select-selection-overflow-item ant-select-selection-overflow-item-suffix"
+                        style={
+                          {
+                            "height": undefined,
+                            "opacity": 1,
+                            "order": undefined,
+                            "overflowY": undefined,
+                            "pointerEvents": undefined,
+                            "position": undefined,
+                          }
+                        }
+                      >
+                        <div
+                          className="ant-select-selection-search"
+                          onBlur={[Function]}
+                          onFocus={[Function]}
+                          style={
+                            {
+                              "width": 100,
+                            }
+                          }
+                        >
+                          <input
+                            aria-autocomplete="list"
+                            aria-controls="root_list"
+                            aria-describedby="root__error root__description root__help"
+                            aria-expanded={false}
+                            aria-haspopup="listbox"
+                            aria-owns="root_list"
+                            autoComplete="off"
+                            autoFocus={false}
+                            className="ant-select-selection-search-input"
+                            disabled={false}
+                            id="root"
+                            onBlur={[Function]}
+                            onChange={[Function]}
+                            onCompositionEnd={[Function]}
+                            onCompositionStart={[Function]}
+                            onKeyDown={[Function]}
+                            onMouseDown={[Function]}
+                            onPaste={[Function]}
+                            readOnly={true}
+                            role="combobox"
+                            style={
+                              {
+                                "opacity": 0,
+                              }
+                            }
+                            type="search"
+                            unselectable="on"
+                            value=""
+                          />
+                          <span
+                            aria-hidden={true}
+                            className="ant-select-selection-search-mirror"
+                          >
+                             
+                          </span>
+                        </div>
+                      </div>
                     </div>
-                  </div>
+                  </span>
                 </div>
                 <span
                   aria-hidden={true}
@@ -3120,7 +3734,7 @@ exports[`single fields select field multiple choice formData 1`] = `
     </div>
   </div>
   <button
-    className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-submit"
+    className="ant-btn css-dev-only-do-not-override-xepvsj ant-btn-submit"
     disabled={false}
     onClick={[Function]}
     style={{}}
@@ -3140,13 +3754,13 @@ exports[`single fields select field multiple choice with labels 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-array"
+    className="rjsf-field rjsf-field-array"
   >
     <div
-      className="ant-form-item css-dev-only-do-not-override-1b0bdye"
+      className="ant-form-item css-dev-only-do-not-override-xepvsj ant-form-item-horizontal"
     >
       <div
-        className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+        className="ant-row ant-form-item-row css-dev-only-do-not-override-xepvsj"
         style={
           {
             "rowGap": undefined,
@@ -3154,7 +3768,7 @@ exports[`single fields select field multiple choice with labels 1`] = `
         }
       >
         <div
-          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-xepvsj"
           style={{}}
         >
           <div
@@ -3165,7 +3779,7 @@ exports[`single fields select field multiple choice with labels 1`] = `
             >
               <div
                 aria-describedby="root__error root__description root__help"
-                className="ant-select ant-select-outlined ant-select-in-form-item css-dev-only-do-not-override-1b0bdye ant-select-multiple ant-select-show-arrow ant-select-show-search"
+                className="ant-select ant-select-outlined ant-select-in-form-item css-dev-only-do-not-override-xepvsj ant-select-multiple ant-select-show-arrow ant-select-show-search"
                 name="root"
                 onBlur={[Function]}
                 onFocus={[Function]}
@@ -3183,73 +3797,78 @@ exports[`single fields select field multiple choice with labels 1`] = `
                   onClick={[Function]}
                   onMouseDown={[Function]}
                 >
-                  <div
-                    className="ant-select-selection-overflow"
+                  <span
+                    className="ant-select-selection-wrap"
                   >
                     <div
-                      className="ant-select-selection-overflow-item ant-select-selection-overflow-item-suffix"
-                      style={
-                        {
-                          "height": undefined,
-                          "opacity": 1,
-                          "order": undefined,
-                          "overflowY": undefined,
-                          "pointerEvents": undefined,
-                          "position": undefined,
-                        }
-                      }
+                      className="ant-select-selection-overflow"
                     >
                       <div
-                        className="ant-select-selection-search"
-                        onBlur={[Function]}
-                        onFocus={[Function]}
+                        className="ant-select-selection-overflow-item ant-select-selection-overflow-item-suffix"
                         style={
                           {
-                            "width": 100,
+                            "height": undefined,
+                            "opacity": 1,
+                            "order": undefined,
+                            "overflowY": undefined,
+                            "pointerEvents": undefined,
+                            "position": undefined,
                           }
                         }
                       >
-                        <input
-                          aria-autocomplete="list"
-                          aria-controls="root_list"
-                          aria-describedby="root__error root__description root__help"
-                          aria-expanded={false}
-                          aria-haspopup="listbox"
-                          aria-owns="root_list"
-                          autoComplete="off"
-                          autoFocus={false}
-                          className="ant-select-selection-search-input"
-                          disabled={false}
-                          id="root"
-                          onChange={[Function]}
-                          onCompositionEnd={[Function]}
-                          onCompositionStart={[Function]}
-                          onKeyDown={[Function]}
-                          onMouseDown={[Function]}
-                          onPaste={[Function]}
-                          readOnly={true}
-                          role="combobox"
+                        <div
+                          className="ant-select-selection-search"
+                          onBlur={[Function]}
+                          onFocus={[Function]}
                           style={
                             {
-                              "opacity": 0,
+                              "width": 100,
                             }
                           }
-                          type="search"
-                          unselectable="on"
-                          value=""
-                        />
-                        <span
-                          aria-hidden={true}
-                          className="ant-select-selection-search-mirror"
                         >
-                           
-                        </span>
+                          <input
+                            aria-autocomplete="list"
+                            aria-controls="root_list"
+                            aria-describedby="root__error root__description root__help"
+                            aria-expanded={false}
+                            aria-haspopup="listbox"
+                            aria-owns="root_list"
+                            autoComplete="off"
+                            autoFocus={false}
+                            className="ant-select-selection-search-input"
+                            disabled={false}
+                            id="root"
+                            onBlur={[Function]}
+                            onChange={[Function]}
+                            onCompositionEnd={[Function]}
+                            onCompositionStart={[Function]}
+                            onKeyDown={[Function]}
+                            onMouseDown={[Function]}
+                            onPaste={[Function]}
+                            readOnly={true}
+                            role="combobox"
+                            style={
+                              {
+                                "opacity": 0,
+                              }
+                            }
+                            type="search"
+                            unselectable="on"
+                            value=""
+                          />
+                          <span
+                            aria-hidden={true}
+                            className="ant-select-selection-search-mirror"
+                          >
+                             
+                          </span>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  <span
-                    className="ant-select-selection-placeholder"
-                  />
+                    <span
+                      className="ant-select-selection-placeholder"
+                    />
+                  </span>
                 </div>
                 <span
                   aria-hidden={true}
@@ -3291,7 +3910,7 @@ exports[`single fields select field multiple choice with labels 1`] = `
     </div>
   </div>
   <button
-    className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-submit"
+    className="ant-btn css-dev-only-do-not-override-xepvsj ant-btn-submit"
     disabled={false}
     onClick={[Function]}
     style={{}}
@@ -3311,13 +3930,13 @@ exports[`single fields select field single choice enumDisabled 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="rjsf-field rjsf-field-string"
   >
     <div
-      className="ant-form-item css-dev-only-do-not-override-1b0bdye"
+      className="ant-form-item css-dev-only-do-not-override-xepvsj ant-form-item-horizontal"
     >
       <div
-        className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+        className="ant-row ant-form-item-row css-dev-only-do-not-override-xepvsj"
         style={
           {
             "rowGap": undefined,
@@ -3325,7 +3944,7 @@ exports[`single fields select field single choice enumDisabled 1`] = `
         }
       >
         <div
-          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-xepvsj"
           style={{}}
         >
           <div
@@ -3336,7 +3955,7 @@ exports[`single fields select field single choice enumDisabled 1`] = `
             >
               <div
                 aria-describedby="root__error root__description root__help"
-                className="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-dev-only-do-not-override-1b0bdye ant-select-single ant-select-show-arrow"
+                className="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-dev-only-do-not-override-xepvsj ant-select-single ant-select-show-arrow"
                 name="root"
                 onBlur={[Function]}
                 onFocus={[Function]}
@@ -3355,41 +3974,46 @@ exports[`single fields select field single choice enumDisabled 1`] = `
                   onMouseDown={[Function]}
                 >
                   <span
-                    className="ant-select-selection-search"
+                    className="ant-select-selection-wrap"
                   >
-                    <input
-                      aria-autocomplete="list"
-                      aria-controls="root_list"
-                      aria-describedby="root__error root__description root__help"
-                      aria-expanded={false}
-                      aria-haspopup="listbox"
-                      aria-owns="root_list"
-                      autoComplete="off"
-                      autoFocus={false}
-                      className="ant-select-selection-search-input"
-                      disabled={false}
-                      id="root"
-                      onChange={[Function]}
-                      onCompositionEnd={[Function]}
-                      onCompositionStart={[Function]}
-                      onKeyDown={[Function]}
-                      onMouseDown={[Function]}
-                      onPaste={[Function]}
-                      readOnly={true}
-                      role="combobox"
-                      style={
-                        {
-                          "opacity": 0,
+                    <span
+                      className="ant-select-selection-search"
+                    >
+                      <input
+                        aria-autocomplete="list"
+                        aria-controls="root_list"
+                        aria-describedby="root__error root__description root__help"
+                        aria-expanded={false}
+                        aria-haspopup="listbox"
+                        aria-owns="root_list"
+                        autoComplete="off"
+                        autoFocus={false}
+                        className="ant-select-selection-search-input"
+                        disabled={false}
+                        id="root"
+                        onBlur={[Function]}
+                        onChange={[Function]}
+                        onCompositionEnd={[Function]}
+                        onCompositionStart={[Function]}
+                        onKeyDown={[Function]}
+                        onMouseDown={[Function]}
+                        onPaste={[Function]}
+                        readOnly={true}
+                        role="combobox"
+                        style={
+                          {
+                            "opacity": 0,
+                          }
                         }
-                      }
-                      type="search"
-                      unselectable="on"
-                      value=""
+                        type="search"
+                        unselectable="on"
+                        value=""
+                      />
+                    </span>
+                    <span
+                      className="ant-select-selection-placeholder"
                     />
                   </span>
-                  <span
-                    className="ant-select-selection-placeholder"
-                  />
                 </div>
                 <span
                   aria-hidden={true}
@@ -3431,7 +4055,7 @@ exports[`single fields select field single choice enumDisabled 1`] = `
     </div>
   </div>
   <button
-    className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-submit"
+    className="ant-btn css-dev-only-do-not-override-xepvsj ant-btn-submit"
     disabled={false}
     onClick={[Function]}
     style={{}}
@@ -3451,13 +4075,13 @@ exports[`single fields select field single choice enumDisabled using radio widge
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="rjsf-field rjsf-field-string"
   >
     <div
-      className="ant-form-item css-dev-only-do-not-override-1b0bdye"
+      className="ant-form-item css-dev-only-do-not-override-xepvsj ant-form-item-horizontal"
     >
       <div
-        className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+        className="ant-row ant-form-item-row css-dev-only-do-not-override-xepvsj"
         style={
           {
             "rowGap": undefined,
@@ -3465,7 +4089,7 @@ exports[`single fields select field single choice enumDisabled using radio widge
         }
       >
         <div
-          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-xepvsj"
           style={{}}
         >
           <div
@@ -3476,13 +4100,14 @@ exports[`single fields select field single choice enumDisabled using radio widge
             >
               <div
                 aria-describedby="root__error root__description root__help"
-                className="ant-radio-group ant-radio-group-outline css-dev-only-do-not-override-1b0bdye"
+                className="ant-radio-group ant-radio-group-outline css-dev-only-do-not-override-xepvsj"
                 id="root"
                 onBlur={[Function]}
                 onFocus={[Function]}
               >
                 <label
-                  className="ant-radio-wrapper ant-radio-wrapper-in-form-item css-dev-only-do-not-override-1b0bdye"
+                  className="ant-radio-wrapper ant-radio-wrapper-in-form-item css-dev-only-do-not-override-xepvsj"
+                  onClick={[Function]}
                   style={{}}
                 >
                   <span
@@ -3496,6 +4121,7 @@ exports[`single fields select field single choice enumDisabled using radio widge
                       id="root-0"
                       name="root"
                       onChange={[Function]}
+                      onClick={[Function]}
                       type="radio"
                       value="0"
                     />
@@ -3503,12 +4129,15 @@ exports[`single fields select field single choice enumDisabled using radio widge
                       className="ant-radio-inner"
                     />
                   </span>
-                  <span>
+                  <span
+                    className="ant-radio-label"
+                  >
                     foo
                   </span>
                 </label>
                 <label
-                  className="ant-radio-wrapper ant-radio-wrapper-disabled ant-radio-wrapper-in-form-item css-dev-only-do-not-override-1b0bdye"
+                  className="ant-radio-wrapper ant-radio-wrapper-disabled ant-radio-wrapper-in-form-item css-dev-only-do-not-override-xepvsj"
+                  onClick={[Function]}
                   style={{}}
                 >
                   <span
@@ -3522,6 +4151,7 @@ exports[`single fields select field single choice enumDisabled using radio widge
                       id="root-1"
                       name="root"
                       onChange={[Function]}
+                      onClick={[Function]}
                       type="radio"
                       value="1"
                     />
@@ -3529,7 +4159,9 @@ exports[`single fields select field single choice enumDisabled using radio widge
                       className="ant-radio-inner"
                     />
                   </span>
-                  <span>
+                  <span
+                    className="ant-radio-label"
+                  >
                     bar
                   </span>
                 </label>
@@ -3541,8 +4173,126 @@ exports[`single fields select field single choice enumDisabled using radio widge
     </div>
   </div>
   <button
-    className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-submit"
+    className="ant-btn css-dev-only-do-not-override-xepvsj ant-btn-submit"
     disabled={false}
+    onClick={[Function]}
+    style={{}}
+    type="submit"
+  >
+    <span>
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields select field single choice form disabled using radio widget 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-string"
+  >
+    <div
+      className="ant-form-item css-dev-only-do-not-override-xepvsj ant-form-item-horizontal"
+    >
+      <div
+        className="ant-row ant-form-item-row css-dev-only-do-not-override-xepvsj"
+        style={
+          {
+            "rowGap": undefined,
+          }
+        }
+      >
+        <div
+          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-xepvsj"
+          style={{}}
+        >
+          <div
+            className="ant-form-item-control-input"
+          >
+            <div
+              className="ant-form-item-control-input-content"
+            >
+              <div
+                aria-describedby="root__error root__description root__help"
+                className="ant-radio-group ant-radio-group-outline css-dev-only-do-not-override-xepvsj"
+                id="root"
+                onBlur={[Function]}
+                onFocus={[Function]}
+              >
+                <label
+                  className="ant-radio-wrapper ant-radio-wrapper-disabled ant-radio-wrapper-in-form-item css-dev-only-do-not-override-xepvsj"
+                  onClick={[Function]}
+                  style={{}}
+                >
+                  <span
+                    className="ant-radio ant-wave-target ant-radio-disabled"
+                  >
+                    <input
+                      autoFocus={false}
+                      checked={false}
+                      className="ant-radio-input"
+                      disabled={true}
+                      id="root-0"
+                      name="root"
+                      onChange={[Function]}
+                      onClick={[Function]}
+                      type="radio"
+                      value="0"
+                    />
+                    <span
+                      className="ant-radio-inner"
+                    />
+                  </span>
+                  <span
+                    className="ant-radio-label"
+                  >
+                    foo
+                  </span>
+                </label>
+                <label
+                  className="ant-radio-wrapper ant-radio-wrapper-disabled ant-radio-wrapper-in-form-item css-dev-only-do-not-override-xepvsj"
+                  onClick={[Function]}
+                  style={{}}
+                >
+                  <span
+                    className="ant-radio ant-wave-target ant-radio-disabled"
+                  >
+                    <input
+                      autoFocus={false}
+                      checked={false}
+                      className="ant-radio-input"
+                      disabled={true}
+                      id="root-1"
+                      name="root"
+                      onChange={[Function]}
+                      onClick={[Function]}
+                      type="radio"
+                      value="1"
+                    />
+                    <span
+                      className="ant-radio-inner"
+                    />
+                  </span>
+                  <span
+                    className="ant-radio-label"
+                  >
+                    bar
+                  </span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    className="ant-btn css-dev-only-do-not-override-xepvsj ant-btn-submit"
+    disabled={true}
     onClick={[Function]}
     style={{}}
     type="submit"
@@ -3561,13 +4311,13 @@ exports[`single fields select field single choice formData 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="rjsf-field rjsf-field-string"
   >
     <div
-      className="ant-form-item css-dev-only-do-not-override-1b0bdye"
+      className="ant-form-item css-dev-only-do-not-override-xepvsj ant-form-item-horizontal"
     >
       <div
-        className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+        className="ant-row ant-form-item-row css-dev-only-do-not-override-xepvsj"
         style={
           {
             "rowGap": undefined,
@@ -3575,7 +4325,7 @@ exports[`single fields select field single choice formData 1`] = `
         }
       >
         <div
-          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-xepvsj"
           style={{}}
         >
           <div
@@ -3586,7 +4336,7 @@ exports[`single fields select field single choice formData 1`] = `
             >
               <div
                 aria-describedby="root__error root__description root__help"
-                className="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-dev-only-do-not-override-1b0bdye ant-select-single ant-select-show-arrow"
+                className="ant-select ant-select-outlined ant-select-in-form-item ant-select-has-feedback css-dev-only-do-not-override-xepvsj ant-select-single ant-select-show-arrow"
                 name="root"
                 onBlur={[Function]}
                 onFocus={[Function]}
@@ -3605,43 +4355,48 @@ exports[`single fields select field single choice formData 1`] = `
                   onMouseDown={[Function]}
                 >
                   <span
-                    className="ant-select-selection-search"
+                    className="ant-select-selection-wrap"
                   >
-                    <input
-                      aria-autocomplete="list"
-                      aria-controls="root_list"
-                      aria-describedby="root__error root__description root__help"
-                      aria-expanded={false}
-                      aria-haspopup="listbox"
-                      aria-owns="root_list"
-                      autoComplete="off"
-                      autoFocus={false}
-                      className="ant-select-selection-search-input"
-                      disabled={false}
-                      id="root"
-                      onChange={[Function]}
-                      onCompositionEnd={[Function]}
-                      onCompositionStart={[Function]}
-                      onKeyDown={[Function]}
-                      onMouseDown={[Function]}
-                      onPaste={[Function]}
-                      readOnly={true}
-                      role="combobox"
-                      style={
-                        {
-                          "opacity": 0,
+                    <span
+                      className="ant-select-selection-search"
+                    >
+                      <input
+                        aria-autocomplete="list"
+                        aria-controls="root_list"
+                        aria-describedby="root__error root__description root__help"
+                        aria-expanded={false}
+                        aria-haspopup="listbox"
+                        aria-owns="root_list"
+                        autoComplete="off"
+                        autoFocus={false}
+                        className="ant-select-selection-search-input"
+                        disabled={false}
+                        id="root"
+                        onBlur={[Function]}
+                        onChange={[Function]}
+                        onCompositionEnd={[Function]}
+                        onCompositionStart={[Function]}
+                        onKeyDown={[Function]}
+                        onMouseDown={[Function]}
+                        onPaste={[Function]}
+                        readOnly={true}
+                        role="combobox"
+                        style={
+                          {
+                            "opacity": 0,
+                          }
                         }
-                      }
-                      type="search"
-                      unselectable="on"
-                      value=""
-                    />
-                  </span>
-                  <span
-                    className="ant-select-selection-item"
-                    title="bar"
-                  >
-                    bar
+                        type="search"
+                        unselectable="on"
+                        value=""
+                      />
+                    </span>
+                    <span
+                      className="ant-select-selection-item"
+                      title="bar"
+                    >
+                      bar
+                    </span>
                   </span>
                 </div>
                 <span
@@ -3684,7 +4439,125 @@ exports[`single fields select field single choice formData 1`] = `
     </div>
   </div>
   <button
-    className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-submit"
+    className="ant-btn css-dev-only-do-not-override-xepvsj ant-btn-submit"
+    disabled={false}
+    onClick={[Function]}
+    style={{}}
+    type="submit"
+  >
+    <span>
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields select field single choice uiSchema disabled using radio widget 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-string"
+  >
+    <div
+      className="ant-form-item css-dev-only-do-not-override-xepvsj ant-form-item-horizontal"
+    >
+      <div
+        className="ant-row ant-form-item-row css-dev-only-do-not-override-xepvsj"
+        style={
+          {
+            "rowGap": undefined,
+          }
+        }
+      >
+        <div
+          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-xepvsj"
+          style={{}}
+        >
+          <div
+            className="ant-form-item-control-input"
+          >
+            <div
+              className="ant-form-item-control-input-content"
+            >
+              <div
+                aria-describedby="root__error root__description root__help"
+                className="ant-radio-group ant-radio-group-outline css-dev-only-do-not-override-xepvsj"
+                id="root"
+                onBlur={[Function]}
+                onFocus={[Function]}
+              >
+                <label
+                  className="ant-radio-wrapper ant-radio-wrapper-disabled ant-radio-wrapper-in-form-item css-dev-only-do-not-override-xepvsj"
+                  onClick={[Function]}
+                  style={{}}
+                >
+                  <span
+                    className="ant-radio ant-wave-target ant-radio-disabled"
+                  >
+                    <input
+                      autoFocus={false}
+                      checked={false}
+                      className="ant-radio-input"
+                      disabled={true}
+                      id="root-0"
+                      name="root"
+                      onChange={[Function]}
+                      onClick={[Function]}
+                      type="radio"
+                      value="0"
+                    />
+                    <span
+                      className="ant-radio-inner"
+                    />
+                  </span>
+                  <span
+                    className="ant-radio-label"
+                  >
+                    foo
+                  </span>
+                </label>
+                <label
+                  className="ant-radio-wrapper ant-radio-wrapper-disabled ant-radio-wrapper-in-form-item css-dev-only-do-not-override-xepvsj"
+                  onClick={[Function]}
+                  style={{}}
+                >
+                  <span
+                    className="ant-radio ant-wave-target ant-radio-disabled"
+                  >
+                    <input
+                      autoFocus={false}
+                      checked={false}
+                      className="ant-radio-input"
+                      disabled={true}
+                      id="root-1"
+                      name="root"
+                      onChange={[Function]}
+                      onClick={[Function]}
+                      type="radio"
+                      value="1"
+                    />
+                    <span
+                      className="ant-radio-inner"
+                    />
+                  </span>
+                  <span
+                    className="ant-radio-label"
+                  >
+                    bar
+                  </span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    className="ant-btn css-dev-only-do-not-override-xepvsj ant-btn-submit"
     disabled={false}
     onClick={[Function]}
     style={{}}
@@ -3704,13 +4577,13 @@ exports[`single fields slider field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-integer"
+    className="rjsf-field rjsf-field-integer"
   >
     <div
-      className="ant-form-item css-dev-only-do-not-override-1b0bdye"
+      className="ant-form-item css-dev-only-do-not-override-xepvsj ant-form-item-horizontal"
     >
       <div
-        className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+        className="ant-row ant-form-item-row css-dev-only-do-not-override-xepvsj"
         style={
           {
             "rowGap": undefined,
@@ -3718,7 +4591,7 @@ exports[`single fields slider field 1`] = `
         }
       >
         <div
-          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-xepvsj"
           style={{}}
         >
           <div
@@ -3728,7 +4601,8 @@ exports[`single fields slider field 1`] = `
               className="ant-form-item-control-input-content"
             >
               <div
-                className="ant-slider css-dev-only-do-not-override-1b0bdye ant-slider-horizontal"
+                className="ant-slider css-dev-only-do-not-override-xepvsj ant-slider-horizontal"
+                id="root"
                 onMouseDown={[Function]}
                 style={{}}
               >
@@ -3751,6 +4625,7 @@ exports[`single fields slider field 1`] = `
                   className="ant-slider-step"
                 />
                 <div
+                  aria-describedby="test-id"
                   aria-disabled={false}
                   aria-orientation="horizontal"
                   aria-valuemax={100}
@@ -3784,7 +4659,7 @@ exports[`single fields slider field 1`] = `
     </div>
   </div>
   <button
-    className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-submit"
+    className="ant-btn css-dev-only-do-not-override-xepvsj ant-btn-submit"
     disabled={false}
     onClick={[Function]}
     style={{}}
@@ -3804,13 +4679,13 @@ exports[`single fields string field format data-url 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="rjsf-field rjsf-field-string"
   >
     <div
-      className="ant-form-item css-dev-only-do-not-override-1b0bdye"
+      className="ant-form-item css-dev-only-do-not-override-xepvsj ant-form-item-horizontal"
     >
       <div
-        className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+        className="ant-row ant-form-item-row css-dev-only-do-not-override-xepvsj"
         style={
           {
             "rowGap": undefined,
@@ -3818,7 +4693,7 @@ exports[`single fields string field format data-url 1`] = `
         }
       >
         <div
-          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-xepvsj"
           style={{}}
         >
           <div
@@ -3829,7 +4704,7 @@ exports[`single fields string field format data-url 1`] = `
             >
               <div>
                 <span
-                  className="ant-input-affix-wrapper css-dev-only-do-not-override-1b0bdye ant-input-outlined"
+                  className="ant-input-affix-wrapper css-dev-only-do-not-override-xepvsj ant-input-outlined"
                   onClick={[Function]}
                   style={
                     {
@@ -3839,7 +4714,7 @@ exports[`single fields string field format data-url 1`] = `
                 >
                   <input
                     aria-describedby="root__error root__description root__help"
-                    className="ant-input css-dev-only-do-not-override-1b0bdye"
+                    className="ant-input css-dev-only-do-not-override-xepvsj"
                     disabled={false}
                     id="root"
                     name="root"
@@ -3849,6 +4724,7 @@ exports[`single fields string field format data-url 1`] = `
                     onCompositionStart={[Function]}
                     onFocus={[Function]}
                     onKeyDown={[Function]}
+                    onKeyUp={[Function]}
                     placeholder=""
                     type="file"
                     value=""
@@ -3865,7 +4741,7 @@ exports[`single fields string field format data-url 1`] = `
     </div>
   </div>
   <button
-    className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-submit"
+    className="ant-btn css-dev-only-do-not-override-xepvsj ant-btn-submit"
     disabled={false}
     onClick={[Function]}
     style={{}}
@@ -3885,13 +4761,13 @@ exports[`single fields string field format email 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="rjsf-field rjsf-field-string"
   >
     <div
-      className="ant-form-item css-dev-only-do-not-override-1b0bdye"
+      className="ant-form-item css-dev-only-do-not-override-xepvsj ant-form-item-horizontal"
     >
       <div
-        className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+        className="ant-row ant-form-item-row css-dev-only-do-not-override-xepvsj"
         style={
           {
             "rowGap": undefined,
@@ -3899,7 +4775,7 @@ exports[`single fields string field format email 1`] = `
         }
       >
         <div
-          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-xepvsj"
           style={{}}
         >
           <div
@@ -3909,7 +4785,7 @@ exports[`single fields string field format email 1`] = `
               className="ant-form-item-control-input-content"
             >
               <span
-                className="ant-input-affix-wrapper css-dev-only-do-not-override-1b0bdye ant-input-outlined"
+                className="ant-input-affix-wrapper css-dev-only-do-not-override-xepvsj ant-input-outlined"
                 onClick={[Function]}
                 style={
                   {
@@ -3919,7 +4795,7 @@ exports[`single fields string field format email 1`] = `
               >
                 <input
                   aria-describedby="root__error root__description root__help"
-                  className="ant-input css-dev-only-do-not-override-1b0bdye"
+                  className="ant-input css-dev-only-do-not-override-xepvsj"
                   disabled={false}
                   id="root"
                   name="root"
@@ -3929,6 +4805,7 @@ exports[`single fields string field format email 1`] = `
                   onCompositionStart={[Function]}
                   onFocus={[Function]}
                   onKeyDown={[Function]}
+                  onKeyUp={[Function]}
                   placeholder=""
                   type="email"
                   value=""
@@ -3944,7 +4821,7 @@ exports[`single fields string field format email 1`] = `
     </div>
   </div>
   <button
-    className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-submit"
+    className="ant-btn css-dev-only-do-not-override-xepvsj ant-btn-submit"
     disabled={false}
     onClick={[Function]}
     style={{}}
@@ -3964,13 +4841,13 @@ exports[`single fields string field format uri 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="rjsf-field rjsf-field-string"
   >
     <div
-      className="ant-form-item css-dev-only-do-not-override-1b0bdye"
+      className="ant-form-item css-dev-only-do-not-override-xepvsj ant-form-item-horizontal"
     >
       <div
-        className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+        className="ant-row ant-form-item-row css-dev-only-do-not-override-xepvsj"
         style={
           {
             "rowGap": undefined,
@@ -3978,7 +4855,7 @@ exports[`single fields string field format uri 1`] = `
         }
       >
         <div
-          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-xepvsj"
           style={{}}
         >
           <div
@@ -3988,7 +4865,7 @@ exports[`single fields string field format uri 1`] = `
               className="ant-form-item-control-input-content"
             >
               <span
-                className="ant-input-affix-wrapper css-dev-only-do-not-override-1b0bdye ant-input-outlined"
+                className="ant-input-affix-wrapper css-dev-only-do-not-override-xepvsj ant-input-outlined"
                 onClick={[Function]}
                 style={
                   {
@@ -3998,7 +4875,7 @@ exports[`single fields string field format uri 1`] = `
               >
                 <input
                   aria-describedby="root__error root__description root__help"
-                  className="ant-input css-dev-only-do-not-override-1b0bdye"
+                  className="ant-input css-dev-only-do-not-override-xepvsj"
                   disabled={false}
                   id="root"
                   name="root"
@@ -4008,6 +4885,7 @@ exports[`single fields string field format uri 1`] = `
                   onCompositionStart={[Function]}
                   onFocus={[Function]}
                   onKeyDown={[Function]}
+                  onKeyUp={[Function]}
                   placeholder=""
                   type="url"
                   value=""
@@ -4023,7 +4901,7 @@ exports[`single fields string field format uri 1`] = `
     </div>
   </div>
   <button
-    className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-submit"
+    className="ant-btn css-dev-only-do-not-override-xepvsj ant-btn-submit"
     disabled={false}
     onClick={[Function]}
     style={{}}
@@ -4043,13 +4921,13 @@ exports[`single fields string field regular 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="rjsf-field rjsf-field-string"
   >
     <div
-      className="ant-form-item css-dev-only-do-not-override-1b0bdye"
+      className="ant-form-item css-dev-only-do-not-override-xepvsj ant-form-item-horizontal"
     >
       <div
-        className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+        className="ant-row ant-form-item-row css-dev-only-do-not-override-xepvsj"
         style={
           {
             "rowGap": undefined,
@@ -4057,7 +4935,7 @@ exports[`single fields string field regular 1`] = `
         }
       >
         <div
-          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-xepvsj"
           style={{}}
         >
           <div
@@ -4067,7 +4945,7 @@ exports[`single fields string field regular 1`] = `
               className="ant-form-item-control-input-content"
             >
               <span
-                className="ant-input-affix-wrapper css-dev-only-do-not-override-1b0bdye ant-input-outlined"
+                className="ant-input-affix-wrapper css-dev-only-do-not-override-xepvsj ant-input-outlined"
                 onClick={[Function]}
                 style={
                   {
@@ -4077,7 +4955,7 @@ exports[`single fields string field regular 1`] = `
               >
                 <input
                   aria-describedby="root__error root__description root__help"
-                  className="ant-input css-dev-only-do-not-override-1b0bdye"
+                  className="ant-input css-dev-only-do-not-override-xepvsj"
                   disabled={false}
                   id="root"
                   name="root"
@@ -4087,6 +4965,7 @@ exports[`single fields string field regular 1`] = `
                   onCompositionStart={[Function]}
                   onFocus={[Function]}
                   onKeyDown={[Function]}
+                  onKeyUp={[Function]}
                   placeholder=""
                   type="text"
                   value=""
@@ -4102,7 +4981,7 @@ exports[`single fields string field regular 1`] = `
     </div>
   </div>
   <button
-    className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-submit"
+    className="ant-btn css-dev-only-do-not-override-xepvsj ant-btn-submit"
     disabled={false}
     onClick={[Function]}
     style={{}}
@@ -4122,13 +5001,13 @@ exports[`single fields string field with placeholder 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="rjsf-field rjsf-field-string"
   >
     <div
-      className="ant-form-item css-dev-only-do-not-override-1b0bdye"
+      className="ant-form-item css-dev-only-do-not-override-xepvsj ant-form-item-horizontal"
     >
       <div
-        className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+        className="ant-row ant-form-item-row css-dev-only-do-not-override-xepvsj"
         style={
           {
             "rowGap": undefined,
@@ -4136,7 +5015,7 @@ exports[`single fields string field with placeholder 1`] = `
         }
       >
         <div
-          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-xepvsj"
           style={{}}
         >
           <div
@@ -4146,7 +5025,7 @@ exports[`single fields string field with placeholder 1`] = `
               className="ant-form-item-control-input-content"
             >
               <span
-                className="ant-input-affix-wrapper css-dev-only-do-not-override-1b0bdye ant-input-outlined"
+                className="ant-input-affix-wrapper css-dev-only-do-not-override-xepvsj ant-input-outlined"
                 onClick={[Function]}
                 style={
                   {
@@ -4156,7 +5035,7 @@ exports[`single fields string field with placeholder 1`] = `
               >
                 <input
                   aria-describedby="root__error root__description root__help"
-                  className="ant-input css-dev-only-do-not-override-1b0bdye"
+                  className="ant-input css-dev-only-do-not-override-xepvsj"
                   disabled={false}
                   id="root"
                   name="root"
@@ -4166,6 +5045,7 @@ exports[`single fields string field with placeholder 1`] = `
                   onCompositionStart={[Function]}
                   onFocus={[Function]}
                   onKeyDown={[Function]}
+                  onKeyUp={[Function]}
                   placeholder="placeholder"
                   type="text"
                   value=""
@@ -4181,7 +5061,7 @@ exports[`single fields string field with placeholder 1`] = `
     </div>
   </div>
   <button
-    className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-submit"
+    className="ant-btn css-dev-only-do-not-override-xepvsj ant-btn-submit"
     disabled={false}
     onClick={[Function]}
     style={{}}
@@ -4201,13 +5081,13 @@ exports[`single fields textarea field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="rjsf-field rjsf-field-string"
   >
     <div
-      className="ant-form-item css-dev-only-do-not-override-1b0bdye"
+      className="ant-form-item css-dev-only-do-not-override-xepvsj ant-form-item-horizontal"
     >
       <div
-        className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+        className="ant-row ant-form-item-row css-dev-only-do-not-override-xepvsj"
         style={
           {
             "rowGap": undefined,
@@ -4215,7 +5095,7 @@ exports[`single fields textarea field 1`] = `
         }
       >
         <div
-          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-xepvsj"
           style={{}}
         >
           <div
@@ -4225,7 +5105,7 @@ exports[`single fields textarea field 1`] = `
               className="ant-form-item-control-input-content"
             >
               <span
-                className="ant-input-affix-wrapper ant-input-textarea-affix-wrapper css-dev-only-do-not-override-1b0bdye ant-input-outlined"
+                className="ant-input-affix-wrapper ant-input-textarea-affix-wrapper css-dev-only-do-not-override-xepvsj ant-input-outlined"
                 onClick={[Function]}
                 style={
                   {
@@ -4235,7 +5115,7 @@ exports[`single fields textarea field 1`] = `
               >
                 <textarea
                   aria-describedby="root__error root__description root__help"
-                  className="ant-input css-dev-only-do-not-override-1b0bdye"
+                  className="ant-input css-dev-only-do-not-override-xepvsj"
                   disabled={false}
                   id="root"
                   name="root"
@@ -4245,6 +5125,7 @@ exports[`single fields textarea field 1`] = `
                   onCompositionStart={[Function]}
                   onFocus={[Function]}
                   onKeyDown={[Function]}
+                  onMouseDown={[Function]}
                   placeholder=""
                   rows={4}
                   style={
@@ -4270,7 +5151,7 @@ exports[`single fields textarea field 1`] = `
     </div>
   </div>
   <button
-    className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-submit"
+    className="ant-btn css-dev-only-do-not-override-xepvsj ant-btn-submit"
     disabled={false}
     onClick={[Function]}
     style={{}}
@@ -4290,13 +5171,13 @@ exports[`single fields title field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-object"
+    className="rjsf-field rjsf-field-object"
   >
     <div
-      className="ant-form-item css-dev-only-do-not-override-1b0bdye"
+      className="ant-form-item css-dev-only-do-not-override-xepvsj ant-form-item-horizontal"
     >
       <div
-        className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+        className="ant-row ant-form-item-row css-dev-only-do-not-override-xepvsj"
         style={
           {
             "rowGap": undefined,
@@ -4304,7 +5185,7 @@ exports[`single fields title field 1`] = `
         }
       >
         <div
-          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-xepvsj"
           style={{}}
         >
           <div
@@ -4317,7 +5198,7 @@ exports[`single fields title field 1`] = `
                 id="root"
               >
                 <div
-                  className="ant-row css-dev-only-do-not-override-1b0bdye"
+                  className="ant-row css-dev-only-do-not-override-xepvsj"
                   style={
                     {
                       "marginLeft": -12,
@@ -4327,7 +5208,7 @@ exports[`single fields title field 1`] = `
                   }
                 >
                   <div
-                    className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-1b0bdye"
+                    className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-xepvsj"
                     style={
                       {
                         "paddingLeft": 12,
@@ -4345,7 +5226,7 @@ exports[`single fields title field 1`] = `
                     </label>
                   </div>
                   <div
-                    className="ant-col ant-col-24 css-dev-only-do-not-override-1b0bdye"
+                    className="ant-col ant-col-24 css-dev-only-do-not-override-xepvsj"
                     style={
                       {
                         "paddingLeft": 12,
@@ -4354,13 +5235,13 @@ exports[`single fields title field 1`] = `
                     }
                   >
                     <div
-                      className="form-group field field-string"
+                      className="rjsf-field rjsf-field-string"
                     >
                       <div
-                        className="ant-form-item css-dev-only-do-not-override-1b0bdye"
+                        className="ant-form-item css-dev-only-do-not-override-xepvsj ant-form-item-horizontal"
                       >
                         <div
-                          className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+                          className="ant-row ant-form-item-row css-dev-only-do-not-override-xepvsj"
                           style={
                             {
                               "rowGap": undefined,
@@ -4368,7 +5249,7 @@ exports[`single fields title field 1`] = `
                           }
                         >
                           <div
-                            className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-1b0bdye"
+                            className="ant-col ant-col-24 ant-form-item-label css-dev-only-do-not-override-xepvsj"
                             style={{}}
                           >
                             <label
@@ -4380,7 +5261,7 @@ exports[`single fields title field 1`] = `
                             </label>
                           </div>
                           <div
-                            className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+                            className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-xepvsj"
                             style={{}}
                           >
                             <div
@@ -4390,7 +5271,7 @@ exports[`single fields title field 1`] = `
                                 className="ant-form-item-control-input-content"
                               >
                                 <span
-                                  className="ant-input-affix-wrapper css-dev-only-do-not-override-1b0bdye ant-input-outlined"
+                                  className="ant-input-affix-wrapper css-dev-only-do-not-override-xepvsj ant-input-outlined"
                                   onClick={[Function]}
                                   style={
                                     {
@@ -4400,7 +5281,7 @@ exports[`single fields title field 1`] = `
                                 >
                                   <input
                                     aria-describedby="root_title__error root_title__description root_title__help"
-                                    className="ant-input css-dev-only-do-not-override-1b0bdye"
+                                    className="ant-input css-dev-only-do-not-override-xepvsj"
                                     disabled={false}
                                     id="root_title"
                                     name="root_title"
@@ -4410,6 +5291,7 @@ exports[`single fields title field 1`] = `
                                     onCompositionStart={[Function]}
                                     onFocus={[Function]}
                                     onKeyDown={[Function]}
+                                    onKeyUp={[Function]}
                                     placeholder=""
                                     type="text"
                                     value=""
@@ -4434,7 +5316,7 @@ exports[`single fields title field 1`] = `
     </div>
   </div>
   <button
-    className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-submit"
+    className="ant-btn css-dev-only-do-not-override-xepvsj ant-btn-submit"
     disabled={false}
     onClick={[Function]}
     style={{}}
@@ -4454,13 +5336,13 @@ exports[`single fields unsupported field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-undefined"
+    className="rjsf-field rjsf-field-undefined"
   >
     <div
-      className="ant-form-item css-dev-only-do-not-override-1b0bdye"
+      className="ant-form-item css-dev-only-do-not-override-xepvsj ant-form-item-horizontal"
     >
       <div
-        className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+        className="ant-row ant-form-item-row css-dev-only-do-not-override-xepvsj"
         style={
           {
             "rowGap": undefined,
@@ -4468,7 +5350,7 @@ exports[`single fields unsupported field 1`] = `
         }
       >
         <div
-          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-xepvsj"
           style={{}}
         >
           <div
@@ -4504,7 +5386,7 @@ exports[`single fields unsupported field 1`] = `
     </div>
   </div>
   <button
-    className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-submit"
+    className="ant-btn css-dev-only-do-not-override-xepvsj ant-btn-submit"
     disabled={false}
     onClick={[Function]}
     style={{}}
@@ -4524,13 +5406,13 @@ exports[`single fields up/down field 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-number"
+    className="rjsf-field rjsf-field-number"
   >
     <div
-      className="ant-form-item css-dev-only-do-not-override-1b0bdye"
+      className="ant-form-item css-dev-only-do-not-override-xepvsj ant-form-item-horizontal"
     >
       <div
-        className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+        className="ant-row ant-form-item-row css-dev-only-do-not-override-xepvsj"
         style={
           {
             "rowGap": undefined,
@@ -4538,7 +5420,7 @@ exports[`single fields up/down field 1`] = `
         }
       >
         <div
-          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-xepvsj"
           style={{}}
         >
           <div
@@ -4548,7 +5430,7 @@ exports[`single fields up/down field 1`] = `
               className="ant-form-item-control-input-content"
             >
               <div
-                className="ant-input-number-affix-wrapper css-dev-only-do-not-override-1b0bdye ant-input-number-outlined ant-input-number-has-feedback"
+                className="ant-input-number-affix-wrapper css-dev-only-do-not-override-xepvsj ant-input-number-outlined ant-input-number-has-feedback"
                 onClick={[Function]}
                 style={
                   {
@@ -4557,7 +5439,7 @@ exports[`single fields up/down field 1`] = `
                 }
               >
                 <div
-                  className="ant-input-number ant-input-number-in-form-item css-dev-only-do-not-override-1b0bdye"
+                  className="ant-input-number ant-input-number-in-form-item css-dev-only-do-not-override-xepvsj"
                   onBeforeInput={[Function]}
                   onBlur={[Function]}
                   onCompositionEnd={[Function]}
@@ -4663,7 +5545,7 @@ exports[`single fields up/down field 1`] = `
     </div>
   </div>
   <button
-    className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-submit"
+    className="ant-btn css-dev-only-do-not-override-xepvsj ant-btn-submit"
     disabled={false}
     onClick={[Function]}
     style={{}}
@@ -4683,13 +5565,13 @@ exports[`single fields using custom tagName 1`] = `
   onSubmit={[Function]}
 >
   <div
-    className="form-group field field-string"
+    className="rjsf-field rjsf-field-string"
   >
     <div
-      className="ant-form-item css-dev-only-do-not-override-1b0bdye"
+      className="ant-form-item css-dev-only-do-not-override-xepvsj ant-form-item-horizontal"
     >
       <div
-        className="ant-row ant-form-item-row css-dev-only-do-not-override-1b0bdye"
+        className="ant-row ant-form-item-row css-dev-only-do-not-override-xepvsj"
         style={
           {
             "rowGap": undefined,
@@ -4697,7 +5579,7 @@ exports[`single fields using custom tagName 1`] = `
         }
       >
         <div
-          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-1b0bdye"
+          className="ant-col ant-col-24 ant-form-item-control css-dev-only-do-not-override-xepvsj"
           style={{}}
         >
           <div
@@ -4707,7 +5589,7 @@ exports[`single fields using custom tagName 1`] = `
               className="ant-form-item-control-input-content"
             >
               <span
-                className="ant-input-affix-wrapper css-dev-only-do-not-override-1b0bdye ant-input-outlined"
+                className="ant-input-affix-wrapper css-dev-only-do-not-override-xepvsj ant-input-outlined"
                 onClick={[Function]}
                 style={
                   {
@@ -4717,7 +5599,7 @@ exports[`single fields using custom tagName 1`] = `
               >
                 <input
                   aria-describedby="root__error root__description root__help"
-                  className="ant-input css-dev-only-do-not-override-1b0bdye"
+                  className="ant-input css-dev-only-do-not-override-xepvsj"
                   disabled={false}
                   id="root"
                   name="root"
@@ -4727,6 +5609,7 @@ exports[`single fields using custom tagName 1`] = `
                   onCompositionStart={[Function]}
                   onFocus={[Function]}
                   onKeyDown={[Function]}
+                  onKeyUp={[Function]}
                   placeholder=""
                   type="text"
                   value=""
@@ -4742,7 +5625,7 @@ exports[`single fields using custom tagName 1`] = `
     </div>
   </div>
   <button
-    className="ant-btn css-dev-only-do-not-override-1b0bdye ant-btn-submit"
+    className="ant-btn css-dev-only-do-not-override-xepvsj ant-btn-submit"
     disabled={false}
     onClick={[Function]}
     style={{}}

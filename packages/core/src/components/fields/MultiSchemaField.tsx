@@ -9,6 +9,7 @@ import {
   FieldProps,
   FormContextType,
   getDiscriminatorFieldFromSchema,
+  getTemplate,
   getUiOptions,
   getWidget,
   mergeSchemas,
@@ -130,7 +131,8 @@ class AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
     }
 
     this.setState({ selectedOption: intOption }, () => {
-      onChange(newFormData, undefined, this.getFieldId());
+      // Changing the option will pass an empty path array to the parent field which will add the appropriate path
+      onChange(newFormData, [], undefined, this.getFieldId());
     });
   };
 
@@ -157,6 +159,12 @@ class AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
 
     const { widgets, fields, translateString, globalUiOptions, schemaUtils } = registry;
     const { SchemaField: _SchemaField } = fields;
+    const MultiSchemaFieldTemplate = getTemplate<'MultiSchemaFieldTemplate', T, S, F>(
+      'MultiSchemaFieldTemplate',
+      registry,
+      globalUiOptions,
+    );
+
     const { selectedOption, retrievedOptions } = this.state;
     const {
       widget = 'select',
@@ -215,34 +223,45 @@ class AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
       };
     });
 
+    const selector = (
+      <Widget
+        id={this.getFieldId()}
+        name={`${name}${schema.oneOf ? '__oneof_select' : '__anyof_select'}`}
+        schema={{ type: 'number', default: 0 } as S}
+        onChange={this.onOptionChange}
+        onBlur={onBlur}
+        onFocus={onFocus}
+        disabled={disabled || isEmpty(enumOptions)}
+        multiple={false}
+        rawErrors={rawErrors}
+        errorSchema={fieldErrorSchema}
+        value={selectedOption >= 0 ? selectedOption : undefined}
+        options={{ enumOptions, ...uiOptions }}
+        registry={registry}
+        formContext={formContext}
+        placeholder={placeholder}
+        autocomplete={autocomplete}
+        autofocus={autofocus}
+        label={title ?? name}
+        hideLabel={!displayLabel}
+        readonly={readonly}
+      />
+    );
+
+    const optionsSchemaField =
+      (optionSchema && optionSchema.type !== 'null' && (
+        <_SchemaField {...this.props} schema={optionSchema} uiSchema={optionUiSchema} />
+      )) ||
+      null;
+
     return (
-      <div className='panel panel-default panel-body'>
-        <div className='form-group'>
-          <Widget
-            id={this.getFieldId()}
-            name={`${name}${schema.oneOf ? '__oneof_select' : '__anyof_select'}`}
-            schema={{ type: 'number', default: 0 } as S}
-            onChange={this.onOptionChange}
-            onBlur={onBlur}
-            onFocus={onFocus}
-            disabled={disabled || isEmpty(enumOptions)}
-            multiple={false}
-            rawErrors={rawErrors}
-            errorSchema={fieldErrorSchema}
-            value={selectedOption >= 0 ? selectedOption : undefined}
-            options={{ enumOptions, ...uiOptions }}
-            registry={registry}
-            formContext={formContext}
-            placeholder={placeholder}
-            autocomplete={autocomplete}
-            autofocus={autofocus}
-            label={title ?? name}
-            hideLabel={!displayLabel}
-            readonly={readonly}
-          />
-        </div>
-        {optionSchema && <_SchemaField {...this.props} schema={optionSchema} uiSchema={optionUiSchema} />}
-      </div>
+      <MultiSchemaFieldTemplate
+        schema={schema}
+        registry={registry}
+        uiSchema={uiSchema}
+        selector={selector}
+        optionSchemaField={optionsSchemaField}
+      />
     );
   }
 }

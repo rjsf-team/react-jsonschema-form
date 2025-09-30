@@ -7,14 +7,14 @@ import { FieldProps, FormContextType, RJSFSchema, StrictRJSFSchema } from '@rjsf
  * @param props - The `FieldProps` for this template
  */
 function NullField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: FieldProps<T, S, F>
+  props: FieldProps<T, S, F>,
 ) {
-  const { formData, onChange } = props;
+  const { name, formData, onChange } = props;
   useEffect(() => {
     if (formData === undefined) {
-      onChange(null as unknown as T);
+      onChange(null as unknown as T, [name]);
     }
-  }, [formData, onChange]);
+  }, [name, formData, onChange]);
 
   return null;
 }

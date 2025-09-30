@@ -1,3 +1,4 @@
+import { useCallback } from 'react';
 import {
   getWidget,
   getUiOptions,
@@ -7,6 +8,7 @@ import {
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
+  ErrorSchema,
 } from '@rjsf/utils';
 
 /** The `StringField` component is used to render a schema field that represents a string type
@@ -14,7 +16,7 @@ import {
  * @param props - The `FieldProps` for this template
  */
 function StringField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: FieldProps<T, S, F>
+  props: FieldProps<T, S, F>,
 ) {
   const {
     schema,
@@ -35,7 +37,7 @@ function StringField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
   } = props;
   const { title, format } = schema;
   const { widgets, formContext, schemaUtils, globalUiOptions } = registry;
-  const enumOptions = schemaUtils.isSelect(schema) ? optionsList<S, T, F>(schema, uiSchema) : undefined;
+  const enumOptions = schemaUtils.isSelect(schema) ? optionsList<T, S, F>(schema, uiSchema) : undefined;
   let defaultWidget = enumOptions ? 'select' : 'text';
   if (format && hasWidget<T, S, F>(schema, format, widgets)) {
     defaultWidget = format;
@@ -44,6 +46,13 @@ function StringField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
   const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions);
   const label = uiTitle ?? title ?? name;
   const Widget = getWidget<T, S, F>(schema, widget, widgets);
+  const onWidgetChange = useCallback(
+    (value: T | undefined, errorSchema?: ErrorSchema, id?: string) => {
+      // String field change passes an empty path array to the parent field which adds the appropriate path
+      return onChange(value, [], errorSchema, id);
+    },
+    [onChange],
+  );
   return (
     <Widget
       options={{ ...options, enumOptions }}
@@ -55,7 +64,7 @@ function StringField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
       hideLabel={!displayLabel}
       hideError={hideError}
       value={formData}
-      onChange={onChange}
+      onChange={onWidgetChange}
       onBlur={onBlur}
       onFocus={onFocus}
       required={required}

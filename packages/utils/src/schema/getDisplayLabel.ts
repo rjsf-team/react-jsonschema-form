@@ -28,14 +28,14 @@ import isMultiSelect from './isMultiSelect';
 export default function getDisplayLabel<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(
   validator: ValidatorType<T, S, F>,
   schema: S,
   uiSchema: UiSchema<T, S, F> = {},
   rootSchema?: S,
   globalOptions?: GlobalUISchemaOptions,
-  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>
+  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
 ): boolean {
   const uiOptions = getUiOptions<T, S, F>(uiSchema, globalOptions);
   const { label = true } = uiOptions;
@@ -52,10 +52,10 @@ export default function getDisplayLabel<
   if (schemaType === 'object') {
     displayLabel = false;
   }
-  if (schemaType === 'boolean' && !uiSchema[UI_WIDGET_KEY]) {
+  if (schemaType === 'boolean' && uiSchema && !uiSchema[UI_WIDGET_KEY]) {
     displayLabel = false;
   }
-  if (uiSchema[UI_FIELD_KEY]) {
+  if (uiSchema && uiSchema[UI_FIELD_KEY]) {
     displayLabel = false;
   }
   return displayLabel;

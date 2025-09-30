@@ -29,6 +29,13 @@ describe('mergeDefaultsWithFormData()', () => {
     expect(mergeDefaultsWithFormData({}, null, undefined, true)).toEqual({});
   });
 
+  it('should return null if default is null and formData is undefined and defaultSupercedesUndefined is true', () => {
+    const defaultValue = null;
+    const formData = undefined;
+    const defaultSupercedesUndefined = true;
+    expect(mergeDefaultsWithFormData(defaultValue, formData, undefined, defaultSupercedesUndefined)).toBeNull();
+  });
+
   it('should return undefined when formData is undefined', () => {
     expect(mergeDefaultsWithFormData(undefined, undefined)).toBeUndefined();
   });
@@ -170,8 +177,8 @@ describe('mergeDefaultsWithFormData()', () => {
           },
           undefined,
           undefined,
-          true
-        )
+          true,
+        ),
       ).toEqual({
         arrayWithDefaults: [null],
         objectWidthDefaults: {
@@ -203,7 +210,7 @@ describe('mergeDefaultsWithFormData()', () => {
 
     it('should override non-existing values of the first object with the values from the second', () => {
       expect(
-        mergeDefaultsWithFormData({ a: { b: undefined } }, { a: { b: { c: 1 } } }, undefined, undefined, true)
+        mergeDefaultsWithFormData({ a: { b: undefined } }, { a: { b: { c: 1 } } }, undefined, undefined, true),
       ).toEqual({
         a: { b: { c: 1 } },
       });

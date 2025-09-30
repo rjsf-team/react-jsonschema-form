@@ -1,15 +1,45 @@
+import { FieldProps, FieldTemplateProps, ID_KEY, IdSchema, RJSFSchema, getTemplate } from '@rjsf/utils';
+import noop from 'lodash/noop';
+
 import { Sample } from './Sample';
-import { FieldProps } from '@rjsf/utils';
 
 function UiField(props: FieldProps) {
-  const {
-    idSchema: { $id },
-    formData,
-    onChange,
-  } = props;
-  const changeHandlerFactory = (fieldName: string) => (event: any) => {
-    onChange(formData ? { ...formData, [fieldName]: event.target.value } : { [fieldName]: event.target.value });
+  const { idSchema, formData, onChange, registry, schema, uiSchema, ...otherProps } = props;
+  const { fields, schemaUtils } = registry;
+  const changeHandlerFactory = (fieldName: string) => (value: any) => {
+    onChange(value, [fieldName]);
   };
+
+  const { StringField, NumberField } = fields;
+  const FieldTemplate = getTemplate('FieldTemplate', registry);
+  const schema1 = (schema.anyOf?.[0] || {}) as RJSFSchema;
+  const schema2 = (schema.anyOf?.[1] || {}) as RJSFSchema;
+  const cityLabel = 'City';
+  const latLabel = 'Latitude';
+  const lonLabel = 'Longitude';
+  const cityKey = 'city';
+  const latKey = 'lat';
+  const lonKey = 'lon';
+  const citySchema = schemaUtils.findFieldInSchema(schema1, cityKey, {} as RJSFSchema);
+  const latSchema = schemaUtils.findFieldInSchema(schema2, latKey, {} as RJSFSchema);
+  const lonSchema = schemaUtils.findFieldInSchema(schema2, lonKey, {} as RJSFSchema);
+  const cityIdSchema: IdSchema = { [ID_KEY]: cityKey };
+  const latIdSchema: IdSchema = { [ID_KEY]: latKey };
+  const lonIdSchema: IdSchema = { [ID_KEY]: lonKey };
+
+  const fieldTemplateProps: Omit<FieldTemplateProps, 'label' | 'id' | 'children'> = {
+    registry,
+    schema,
+    uiSchema,
+    formContext: props.formContext,
+    displayLabel: true,
+    disabled: false,
+    readonly: false,
+    onChange,
+    onKeyChange: () => noop,
+    onDropPropertyClick: () => noop,
+  };
+
   return (
     <>
       <h4>Location</h4>
@@ -22,20 +52,18 @@ function UiField(props: FieldProps) {
             margin: '1rem',
           }}
         >
-          <div className='form-group field field-string'>
-            <label className='control-label' htmlFor={`${$id}-city`}>
-              City
-            </label>
-            <input
-              className='form-control'
-              id={`${$id}-city`}
-              required={false}
-              placeholder=''
-              type='text'
-              value={formData?.city || ''}
-              onChange={changeHandlerFactory('city')}
+          <FieldTemplate {...fieldTemplateProps} id={cityIdSchema[ID_KEY]} label={cityLabel}>
+            <StringField
+              schema={citySchema.field!}
+              registry={registry}
+              {...otherProps}
+              name={cityLabel}
+              required={citySchema.isRequired}
+              idSchema={cityIdSchema}
+              formData={formData.city}
+              onChange={changeHandlerFactory(cityKey)}
             />
-          </div>
+          </FieldTemplate>
         </div>
         <div
           style={{
@@ -45,30 +73,30 @@ function UiField(props: FieldProps) {
             margin: '1rem',
           }}
         >
-          <div className='form-group field field-string'>
-            <label className='control-label' htmlFor={`${$id}-lat`}>
-              Latitude
-            </label>
-            <input
-              className='form-control'
-              id={`${$id}-lat`}
-              type='number'
-              value={formData?.lat || 0}
-              onChange={changeHandlerFactory('lat')}
+          <FieldTemplate {...fieldTemplateProps} id={latIdSchema[ID_KEY]} label={latLabel}>
+            <NumberField
+              schema={latSchema.field!}
+              registry={registry}
+              {...otherProps}
+              name={latLabel}
+              required={latSchema.isRequired}
+              idSchema={latIdSchema}
+              formData={formData.lat}
+              onChange={changeHandlerFactory(latKey)}
             />
-          </div>
-          <div className='form-group field field-string'>
-            <label className='control-label' htmlFor={`${$id}-lon`}>
-              Longitude
-            </label>
-            <input
-              className='form-control'
-              id={`${$id}-lon`}
-              type='number'
-              value={formData?.lon || 0}
-              onChange={changeHandlerFactory('lon')}
+          </FieldTemplate>
+          <FieldTemplate {...fieldTemplateProps} id={lonIdSchema[ID_KEY]} label={lonLabel}>
+            <NumberField
+              schema={lonSchema.field!}
+              registry={registry}
+              {...otherProps}
+              name={lonLabel}
+              required={lonSchema.isRequired}
+              idSchema={lonIdSchema}
+              formData={formData.lon}
+              onChange={changeHandlerFactory(lonKey)}
             />
-          </div>
+          </FieldTemplate>
         </div>
       </div>
     </>
@@ -105,6 +133,7 @@ const customFieldAnyOf: Sample = {
   },
   uiSchema: {
     'ui:field': UiField,
+    'ui:fieldReplacesAnyOrOneOf': true,
   },
   formData: {},
 };

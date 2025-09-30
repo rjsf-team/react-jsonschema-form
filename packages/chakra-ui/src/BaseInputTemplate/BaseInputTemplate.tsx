@@ -1,5 +1,5 @@
 import { ChangeEvent, FocusEvent } from 'react';
-import { FormControl, FormLabel, Input } from '@chakra-ui/react';
+import { Input } from '@chakra-ui/react';
 import {
   ariaDescribedByIds,
   BaseInputTemplateProps,
@@ -10,12 +10,14 @@ import {
   RJSFSchema,
   StrictRJSFSchema,
 } from '@rjsf/utils';
+
+import { Field } from '../components/ui/field';
 import { getChakra } from '../utils';
 
 export default function BaseInputTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(props: BaseInputTemplateProps<T, S, F>) {
   const {
     id,
@@ -24,7 +26,6 @@ export default function BaseInputTemplate<
     label,
     hideLabel,
     schema,
-    uiSchema,
     onChange,
     onChangeOverride,
     onBlur,
@@ -36,30 +37,27 @@ export default function BaseInputTemplate<
     autofocus,
     placeholder,
     disabled,
+    uiSchema,
   } = props;
   const inputProps = getInputProps<T, S, F>(schema, type, options);
-  const chakraProps = getChakra({ uiSchema });
 
   const _onChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) =>
     onChange(value === '' ? options.emptyValue : value);
   const _onBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target && target.value);
   const _onFocus = ({ target }: FocusEvent<HTMLInputElement>) => onFocus(id, target && target.value);
 
+  const chakraProps = getChakra({ uiSchema });
+
   return (
-    <FormControl
+    <Field
       mb={1}
+      disabled={disabled || readonly}
+      required={required}
+      readOnly={readonly}
+      invalid={rawErrors && rawErrors.length > 0}
+      label={labelValue(label, hideLabel || !label)}
       {...chakraProps}
-      isDisabled={disabled || readonly}
-      isRequired={required}
-      isReadOnly={readonly}
-      isInvalid={rawErrors && rawErrors.length > 0}
     >
-      {labelValue(
-        <FormLabel htmlFor={id} id={`${id}-label`}>
-          {label}
-        </FormLabel>,
-        hideLabel || !label
-      )}
       <Input
         id={id}
         name={id}
@@ -82,6 +80,6 @@ export default function BaseInputTemplate<
             })}
         </datalist>
       ) : null}
-    </FormControl>
+    </Field>
   );
 }

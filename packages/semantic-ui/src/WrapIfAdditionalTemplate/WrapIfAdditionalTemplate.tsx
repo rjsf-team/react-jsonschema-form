@@ -1,6 +1,7 @@
 import { FocusEvent } from 'react';
 import {
   ADDITIONAL_PROPERTY_FLAG,
+  buttonId,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
@@ -17,7 +18,7 @@ import { Form, Grid } from 'semantic-ui-react';
 export default function WrapIfAdditionalTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(props: WrapIfAdditionalTemplateProps<T, S, F>) {
   const {
     children,
@@ -80,8 +81,9 @@ export default function WrapIfAdditionalTemplate<
           </Grid.Column>
           <Grid.Column>
             <RemoveButton
+              id={buttonId<T>(id, 'remove')}
               iconType='mini'
-              className='array-item-remove'
+              className='rjsf-object-property-remove'
               disabled={disabled || readonly}
               onClick={onDropPropertyClick(label)}
               uiSchema={uiSchema}

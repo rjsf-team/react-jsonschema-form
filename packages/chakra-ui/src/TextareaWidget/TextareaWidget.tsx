@@ -1,5 +1,5 @@
 import { ChangeEvent, FocusEvent } from 'react';
-import { FormControl, FormLabel, Textarea } from '@chakra-ui/react';
+import { Textarea } from '@chakra-ui/react';
 import {
   ariaDescribedByIds,
   labelValue,
@@ -8,12 +8,14 @@ import {
   StrictRJSFSchema,
   WidgetProps,
 } from '@rjsf/utils';
+
+import { Field } from '../components/ui/field';
 import { getChakra } from '../utils';
 
 export default function TextareaWidget<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >({
   id,
   placeholder,
@@ -27,27 +29,27 @@ export default function TextareaWidget<
   onFocus,
   onChange,
   options,
-  uiSchema,
   required,
   rawErrors,
+  uiSchema,
 }: WidgetProps<T, S, F>) {
-  const chakraProps = getChakra({ uiSchema });
-
   const _onChange = ({ target: { value } }: ChangeEvent<HTMLTextAreaElement>) =>
     onChange(value === '' ? options.emptyValue : value);
   const _onBlur = ({ target }: FocusEvent<HTMLTextAreaElement>) => onBlur(id, target && target.value);
   const _onFocus = ({ target }: FocusEvent<HTMLTextAreaElement>) => onFocus(id, target && target.value);
 
+  const chakraProps = getChakra({ uiSchema });
+
   return (
-    <FormControl
+    <Field
       mb={1}
+      disabled={disabled || readonly}
+      required={required}
+      readOnly={readonly}
+      invalid={rawErrors && rawErrors.length > 0}
+      label={labelValue(label, hideLabel || !label)}
       {...chakraProps}
-      isDisabled={disabled || readonly}
-      isRequired={required}
-      isReadOnly={readonly}
-      isInvalid={rawErrors && rawErrors.length > 0}
     >
-      {labelValue(<FormLabel htmlFor={id}>{label}</FormLabel>, hideLabel || !label)}
       <Textarea
         id={id}
         name={id}
@@ -60,6 +62,6 @@ export default function TextareaWidget<
         rows={options.rows}
         aria-describedby={ariaDescribedByIds<T>(id)}
       />
-    </FormControl>
+    </Field>
   );
 }

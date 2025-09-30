@@ -17,12 +17,12 @@ export default function labelValue(label?: ReactElement, hideLabel?: boolean, fa
 export default function labelValue(
   label?: ReactElement,
   hideLabel?: boolean,
-  fallback?: false
+  fallback?: false,
 ): undefined | false | ReactElement;
 export default function labelValue(
   label?: string | ReactElement,
   hideLabel?: boolean,
-  fallback?: false | ''
+  fallback?: false | '',
 ): undefined | false | string | ReactElement {
   return hideLabel ? fallback : label;
 }

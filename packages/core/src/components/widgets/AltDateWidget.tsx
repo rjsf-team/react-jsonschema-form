@@ -1,4 +1,4 @@
-import { MouseEvent, useCallback, useEffect, useReducer, useState } from 'react';
+import { MouseEvent, useCallback, useEffect, useState } from 'react';
 import {
   ariaDescribedByIds,
   dateRangeOptions,
@@ -84,26 +84,27 @@ function AltDateWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F exten
   value,
 }: WidgetProps<T, S, F>) {
   const { translateString } = registry;
-  const [lastValue, setLastValue] = useState(value);
-  const [state, setState] = useReducer((state: DateObject, action: Partial<DateObject>) => {
-    return { ...state, ...action };
-  }, parseDateString(value, time));
+  const [state, setState] = useState(parseDateString(value, time));
 
   useEffect(() => {
-    const stateValue = toDateString(state, time);
-    if (readyForChange(state) && stateValue !== value) {
-      // The user changed the date to a new valid data via the comboboxes, so call onChange
-      onChange(stateValue);
-    } else if (lastValue !== value) {
-      // We got a new value in the props
-      setLastValue(value);
-      setState(parseDateString(value, time));
-    }
-  }, [time, value, onChange, state, lastValue]);
+    setState(parseDateString(value, time));
+  }, [time, value]);
 
-  const handleChange = useCallback((property: keyof DateObject, value: string) => {
-    setState({ [property]: value });
-  }, []);
+  const handleChange = useCallback(
+    (property: keyof DateObject, value: string) => {
+      const nextState = {
+        ...state,
+        [property]: typeof value === 'undefined' ? -1 : value,
+      };
+
+      if (readyForChange(nextState)) {
+        onChange(toDateString(nextState, time));
+      } else {
+        setState(nextState);
+      }
+    },
+    [state, onChange, time],
+  );
 
   const handleSetNow = useCallback(
     (event: MouseEvent<HTMLAnchorElement>) => {
@@ -114,7 +115,7 @@ function AltDateWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F exten
       const nextState = parseDateString(new Date().toJSON(), time);
       onChange(toDateString(nextState, time));
     },
-    [disabled, readonly, time]
+    [disabled, readonly, time, onChange],
   );
 
   const handleClear = useCallback(
@@ -125,7 +126,7 @@ function AltDateWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F exten
       }
       onChange(undefined);
     },
-    [disabled, readonly, onChange]
+    [disabled, readonly, onChange],
   );
 
   return (
@@ -134,7 +135,7 @@ function AltDateWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F exten
         state,
         time,
         options.yearsRange as [number, number] | undefined,
-        options.format as DateElementFormat | undefined
+        options.format as DateElementFormat | undefined,
       ).map((elemProps, i) => (
         <li className='list-inline-item' key={i}>
           <DateElement

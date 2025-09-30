@@ -8,4 +8,6 @@ export { __createChakraFrameProvider } from './ChakraFrameProvider';
 
 export type { ChakraUiSchema as UiSchema } from './utils';
 
+export { getChakra } from './utils';
+
 export default Form;

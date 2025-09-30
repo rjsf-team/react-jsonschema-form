@@ -1,9 +1,14 @@
 import { ComponentType } from 'react';
 import renderer, { TestRendererOptions } from 'react-test-renderer';
-import { RJSFSchema, ErrorSchema } from '@rjsf/utils';
+import { FormProps } from '@rjsf/core';
+import { RJSFSchema, ErrorSchema, UiSchema } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
-import { FormProps } from '@rjsf/core';
+jest.mock('@rjsf/utils', () => ({
+  ...jest.requireActual('@rjsf/utils'),
+  // Disable the getTestIds within the snapshot tests by returning an empty object
+  getTestIds: jest.fn(() => ({})),
+}));
 
 export const SELECT_CUSTOMIZE = 'selectMulti';
 export const SLIDER_CUSTOMIZE = 'slider';
@@ -149,7 +154,7 @@ export function formTests(Form: ComponentType<FormProps>, customOptions: FormRen
         'ui:widget': 'textarea',
       };
       const tree = renderer
-        .create(<Form schema={schema} validator={validator} uiSchema={uiSchema} />, customOptions.textarea)
+        .create(<Form schema={schema} validator={validator} uiSchema={uiSchema} />, customOptions[TEXTAREA_CUSTOMIZE])
         .toJSON();
       expect(tree).toMatchSnapshot();
     });
@@ -170,7 +175,9 @@ export function formTests(Form: ComponentType<FormProps>, customOptions: FormRen
         },
         uniqueItems: true,
       };
-      const tree = renderer.create(<Form schema={schema} validator={validator} />, customOptions.selectMulti).toJSON();
+      const tree = renderer
+        .create(<Form schema={schema} validator={validator} />, customOptions[SELECT_CUSTOMIZE])
+        .toJSON();
       expect(tree).toMatchSnapshot();
     });
     test('select field multiple choice with labels', () => {
@@ -195,7 +202,9 @@ export function formTests(Form: ComponentType<FormProps>, customOptions: FormRen
         },
         uniqueItems: true,
       };
-      const tree = renderer.create(<Form schema={schema} validator={validator} />, customOptions.selectMulti).toJSON();
+      const tree = renderer
+        .create(<Form schema={schema} validator={validator} />, customOptions[SELECT_CUSTOMIZE])
+        .toJSON();
       expect(tree).toMatchSnapshot();
     });
     test('select field single choice enumDisabled', () => {
@@ -221,6 +230,31 @@ export function formTests(Form: ComponentType<FormProps>, customOptions: FormRen
       const tree = renderer.create(<Form schema={schema} uiSchema={uiSchema} validator={validator} />).toJSON();
       expect(tree).toMatchSnapshot();
     });
+    test('select field single choice uiSchema disabled using radio widget', () => {
+      const schema: RJSFSchema = {
+        type: 'string',
+        enum: ['foo', 'bar'],
+      };
+      const uiSchema = {
+        'ui:widget': 'radio',
+        'ui:disabled': true,
+      };
+      const tree = renderer.create(<Form schema={schema} uiSchema={uiSchema} validator={validator} />).toJSON();
+      expect(tree).toMatchSnapshot();
+    });
+    test('select field single choice form disabled using radio widget', () => {
+      const schema: RJSFSchema = {
+        type: 'string',
+        enum: ['foo', 'bar'],
+      };
+      const uiSchema = {
+        'ui:widget': 'radio',
+      };
+      const tree = renderer
+        .create(<Form schema={schema} uiSchema={uiSchema} validator={validator} disabled />)
+        .toJSON();
+      expect(tree).toMatchSnapshot();
+    });
     test('select field multiple choice enumDisabled', () => {
       const schema: RJSFSchema = {
         type: 'array',
@@ -234,7 +268,7 @@ export function formTests(Form: ComponentType<FormProps>, customOptions: FormRen
         'ui:enumDisabled': ['bar'],
       };
       const tree = renderer
-        .create(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, customOptions.selectMulti)
+        .create(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, customOptions[SELECT_CUSTOMIZE])
         .toJSON();
       expect(tree).toMatchSnapshot();
     });
@@ -252,7 +286,7 @@ export function formTests(Form: ComponentType<FormProps>, customOptions: FormRen
         'ui:enumDisabled': ['bar'],
       };
       const tree = renderer
-        .create(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, customOptions.selectMulti)
+        .create(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, customOptions[SELECT_CUSTOMIZE])
         .toJSON();
       expect(tree).toMatchSnapshot();
     });
@@ -276,7 +310,7 @@ export function formTests(Form: ComponentType<FormProps>, customOptions: FormRen
       };
       const formData = ['foo', 'bar'];
       const tree = renderer
-        .create(<Form schema={schema} formData={formData} validator={validator} />, customOptions.selectMulti)
+        .create(<Form schema={schema} formData={formData} validator={validator} />, customOptions[SELECT_CUSTOMIZE])
         .toJSON();
       expect(tree).toMatchSnapshot();
     });
@@ -293,6 +327,25 @@ export function formTests(Form: ComponentType<FormProps>, customOptions: FormRen
         title: 'test',
       };
       const tree = renderer.create(<Form schema={schema} validator={validator} />).toJSON();
+      expect(tree).toMatchSnapshot();
+    });
+    test('checkbox field with label and description', () => {
+      const schema: RJSFSchema = {
+        type: 'boolean',
+        title: 'test',
+        description: 'test description',
+      };
+      const tree = renderer.create(<Form schema={schema} validator={validator} />).toJSON();
+      expect(tree).toMatchSnapshot();
+    });
+    test('checkbox field with label and rich text description', () => {
+      const schema: RJSFSchema = {
+        type: 'boolean',
+        title: 'test',
+        description: '**test** __description__',
+      };
+      const uiSchema: UiSchema = { 'ui:enableMarkdownInDescription': true };
+      const tree = renderer.create(<Form schema={schema} uiSchema={uiSchema} validator={validator} />).toJSON();
       expect(tree).toMatchSnapshot();
     });
     test('checkboxes field', () => {
@@ -331,7 +384,10 @@ export function formTests(Form: ComponentType<FormProps>, customOptions: FormRen
         'ui:widget': 'range',
       };
       const tree = renderer
-        .create(<Form schema={schema} validator={validator} uiSchema={uiSchema} formData={75} />, customOptions.slider)
+        .create(
+          <Form schema={schema} validator={validator} uiSchema={uiSchema} formData={75} />,
+          customOptions[SLIDER_CUSTOMIZE],
+        )
         .toJSON();
       expect(tree).toMatchSnapshot();
     });
@@ -378,6 +434,41 @@ export function formTests(Form: ComponentType<FormProps>, customOptions: FormRen
       const uiSchema = {
         'my-field': {
           'ui:description': 'some other description',
+        },
+      };
+      const tree = renderer.create(<Form schema={schema} validator={validator} uiSchema={uiSchema} />).toJSON();
+      expect(tree).toMatchSnapshot();
+    });
+    test('field with markdown description', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          'my-field': {
+            type: 'string',
+            description: 'some **Rich** description',
+          },
+        },
+      };
+      const uiSchema = {
+        'my-field': { 'ui:enableMarkdownInDescription': true },
+      };
+      const tree = renderer.create(<Form schema={schema} uiSchema={uiSchema} validator={validator} />).toJSON();
+      expect(tree).toMatchSnapshot();
+    });
+    test('field with markdown description in uiSchema', () => {
+      const schema: RJSFSchema = {
+        type: 'object',
+        properties: {
+          'my-field': {
+            type: 'string',
+            description: 'some **Rich** description',
+          },
+        },
+      };
+      const uiSchema = {
+        'my-field': {
+          'ui:description': 'some other description',
+          'ui:enableMarkdownInDescription': true,
         },
       };
       const tree = renderer.create(<Form schema={schema} validator={validator} uiSchema={uiSchema} />).toJSON();

@@ -25,7 +25,7 @@ export default function dataURItoBlob(dataURILike: string) {
   const name = decodeURI(
     // parse the parameters into key-value pairs, find a key, and extract a value
     // if no key is found, then the name is unknown
-    mediaparams.map((param) => param.split('=')).find(([key]) => key === 'name')?.[1] || 'unknown'
+    mediaparams.map((param) => param.split('=')).find(([key]) => key === 'name')?.[1] || 'unknown',
   );
 
   // Built the Uint8Array Blob parameter from the base64 string.

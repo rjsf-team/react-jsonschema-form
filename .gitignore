@@ -140,3 +140,11 @@ out/
 
 # typescript tsbuildinfo
 *.tsbuildinfo
+*Replacer.js
+*Replacer.cjs
+
+# Need this due to shadcn default utils folder is lib
+!packages/shadcn/src/lib
+
+.nx/cache
+.nx/workspace-data

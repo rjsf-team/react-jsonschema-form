@@ -9,7 +9,7 @@ import deepEquals from './deepEquals';
  */
 export default function enumOptionsIsSelected<S extends StrictRJSFSchema = RJSFSchema>(
   value: EnumOptionsType<S>['value'],
-  selected: EnumOptionsType<S>['value'] | EnumOptionsType<S>['value'][]
+  selected: EnumOptionsType<S>['value'] | EnumOptionsType<S>['value'][],
 ) {
   if (Array.isArray(selected)) {
     return selected.some((sel) => deepEquals(sel, value));

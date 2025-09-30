@@ -18,7 +18,10 @@ import {
   ValidatorType,
 } from '@rjsf/utils';
 
-export type RawValidationErrorsType<Result = any> = { errors?: Result[]; validationError?: Error };
+export type RawValidationErrorsType<Result = any> = {
+  errors?: Result[];
+  validationError?: Error;
+};
 
 /** Transforming the error output from ajv to format used by @rjsf/utils.
  * At some point, components should be updated to support ajv.
@@ -29,13 +32,14 @@ export type RawValidationErrorsType<Result = any> = { errors?: Result[]; validat
 export function transformRJSFValidationErrors<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(errors: ErrorObject[] = [], uiSchema?: UiSchema<T, S, F>): RJSFValidationError[] {
   return errors.map((e: ErrorObject) => {
     const { instancePath, keyword, params, schemaPath, parentSchema, ...rest } = e;
     let { message = '' } = rest;
     let property = instancePath.replace(/\//g, '.');
     let stack = `${property} ${message}`.trim();
+    let uiTitle = '';
     const rawPropertyNames: string[] = [
       ...(params.deps?.split(', ') || []),
       params.missingProperty,
@@ -58,10 +62,12 @@ export function transformRJSFValidationErrors<
         }
         if (uiSchemaTitle) {
           message = message.replace(`'${currentProperty}'`, `'${uiSchemaTitle}'`);
+          uiTitle = uiSchemaTitle;
         } else {
           const parentSchemaTitle = get(parentSchema, [PROPERTIES_KEY, currentProperty, 'title']);
           if (parentSchemaTitle) {
             message = message.replace(`'${currentProperty}'`, `'${parentSchemaTitle}'`);
+            uiTitle = parentSchemaTitle;
           }
         }
       });
@@ -72,11 +78,13 @@ export function transformRJSFValidationErrors<
 
       if (uiSchemaTitle) {
         stack = `'${uiSchemaTitle}' ${message}`.trim();
+        uiTitle = uiSchemaTitle;
       } else {
         const parentSchemaTitle = parentSchema?.title;
 
         if (parentSchemaTitle) {
           stack = `'${parentSchemaTitle}' ${message}`.trim();
+          uiTitle = parentSchemaTitle;
         }
       }
     }
@@ -94,6 +102,7 @@ export function transformRJSFValidationErrors<
       params, // specific to ajv
       stack,
       schemaPath,
+      title: uiTitle,
     };
   });
 }
@@ -114,7 +123,7 @@ export function transformRJSFValidationErrors<
 export default function processRawValidationErrors<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any
+  F extends FormContextType = any,
 >(
   validator: ValidatorType<T, S, F>,
   rawErrors: RawValidationErrorsType<ErrorObject>,
@@ -122,7 +131,7 @@ export default function processRawValidationErrors<
   schema: S,
   customValidate?: CustomValidator<T, S, F>,
   transformErrors?: ErrorTransformer<T, S, F>,
-  uiSchema?: UiSchema<T, S, F>
+  uiSchema?: UiSchema<T, S, F>,
 ) {
   const { validationError: invalidSchemaError } = rawErrors;
   let errors = transformRJSFValidationErrors<T, S, F>(rawErrors.errors, uiSchema);

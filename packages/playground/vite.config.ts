@@ -16,21 +16,19 @@ export default defineConfig({
     alias: {
       // mapping packages in monorepo to make vite use sources directly avoiding build step
       '@rjsf/antd': path.resolve(__dirname, '../antd/src'),
-      '@rjsf/bootstrap-4': path.resolve(__dirname, '../bootstrap-4/src'),
       '@rjsf/chakra-ui': path.resolve(__dirname, '../chakra-ui/src'),
       '@rjsf/core': path.resolve(__dirname, '../core/src'),
-      '@rjsf/fluent-ui': path.resolve(__dirname, '../fluent-ui/src'),
       '@rjsf/fluentui-rc': path.resolve(__dirname, '../fluentui-rc/src'),
-      '@rjsf/material-ui': path.resolve(__dirname, '../material-ui/src'),
+      '@rjsf/mantine': path.resolve(__dirname, '../mantine/src'),
       '@rjsf/mui': path.resolve(__dirname, '../mui/src'),
+      '@rjsf/primereact': path.resolve(__dirname, '../primereact/src'),
+      '@rjsf/react-bootstrap': path.resolve(__dirname, '../react-bootstrap/src'),
       '@rjsf/semantic-ui': path.resolve(__dirname, '../semantic-ui/src'),
+      '@rjsf/shadcn': path.resolve(__dirname, '../shadcn/src'),
+      // We want to pick up the browser version of the utils
       '@rjsf/utils': path.resolve(__dirname, '../utils/src'),
       '@rjsf/validator-ajv8': path.resolve(__dirname, '../validator-ajv8/src'),
-      // validator-ajv6 can not be mapped directly to the sources, because that causes wrong ajv version resolution
-      // which looks related to: https://github.com/vitejs/vite/issues/12618
-      //
-      // the difference when mapping directly vs mapping to src folder - @vitejs/plugin-react can not be applied in the 2nd case
-      '@rjsf/validator-ajv6': '@rjsf/validator-ajv6/src',
+      '@rjsf/daisyui': path.resolve(__dirname, '../daisyui/src'),
     },
   },
 });

@@ -1,12 +1,14 @@
-import { forwardRef, memo } from 'react';
+import { forwardRef, memo, ForwardedRef } from 'react';
 import TestRenderer from 'react-test-renderer';
 
-import { IdSchema, Registry, RJSFSchema, WidgetProps, getWidget } from '../src';
+import { IdSchema, Registry, RJSFSchema, WidgetProps, getWidget, Widget } from '../src';
 
 const subschema: RJSFSchema = {
   type: 'boolean',
   default: true,
 };
+
+const subschemaStr = JSON.stringify(subschema);
 
 const schema: RJSFSchema = {
   type: 'object',
@@ -26,8 +28,12 @@ const schema: RJSFSchema = {
     },
   },
 };
+const schemaStr = JSON.stringify(schema);
 
-const TestRefWidget = forwardRef(function TestRefWidget(props: WidgetProps, ref: React.ForwardedRef<any>) {
+const TestRefWidget: Widget = forwardRef<HTMLSpanElement, Partial<WidgetProps>>(function TestRefWidget(
+  props: Partial<WidgetProps>,
+  ref: ForwardedRef<HTMLSpanElement>,
+) {
   const { options } = props;
   return (
     <span {...options} ref={ref}>
@@ -85,19 +91,21 @@ const widgetProps: WidgetProps = {
 
 describe('getWidget()', () => {
   it('should fail if widget has incorrect type', () => {
-    expect(() => getWidget(schema)).toThrowError('Unsupported widget definition: undefined');
+    expect(() => getWidget(schema)).toThrow(`Unsupported widget definition: undefined in schema: ${schemaStr}`);
   });
 
   it('should fail if widget has no type property', () => {
-    expect(() => getWidget(schema, 'blabla')).toThrowError(`No widget for type 'object'`);
+    expect(() => getWidget(schema, 'blabla')).toThrow(`No widget for type 'object' in schema: ${schemaStr}`);
   });
 
   it('should fail if schema `type` has no widget property', () => {
-    expect(() => getWidget(subschema, 'blabla')).toThrowError(`No widget 'blabla' for type 'boolean'`);
+    expect(() => getWidget(subschema, 'blabla')).toThrow(
+      `No widget 'blabla' for type 'boolean' in schema: ${subschemaStr}`,
+    );
   });
 
   it('should fail if schema has no type property', () => {
-    expect(() => getWidget({}, 'blabla')).toThrowError(`No widget 'blabla' for type 'undefined'`);
+    expect(() => getWidget({}, 'blabla')).toThrow(`No widget 'blabla' for type 'undefined' in schema: {}`);
   });
 
   it('should return widget if in registered widgets', () => {

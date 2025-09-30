@@ -27,7 +27,7 @@ function createDefaultValueOptionsForDropDown<S extends StrictRJSFSchema = RJSFS
   enumOptions?: EnumOptionsType<S>[],
   enumDisabled?: UIOptionsType['enumDisabled'],
   showPlaceholderOption?: boolean,
-  placeholder?: string
+  placeholder?: string,
 ) {
   const disabledOptions = enumDisabled || [];
   const options: DropdownItemProps[] = map(enumOptions, ({ label, value }, index) => ({
@@ -48,11 +48,11 @@ function createDefaultValueOptionsForDropDown<S extends StrictRJSFSchema = RJSFS
  * @param props - The `WidgetProps` for this component
  */
 export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: WidgetProps<T, S, F>
+  props: WidgetProps<T, S, F>,
 ) {
   const {
     uiSchema,
-    formContext,
+    registry,
     id,
     options,
     label,
@@ -72,7 +72,7 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
   } = props;
   const semanticProps = getSemanticProps<T, S, F>({
     uiSchema,
-    formContext,
+    formContext: registry.formContext,
     options,
     defaultSchemaProps: {
       inverted: 'false',
@@ -89,7 +89,7 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
     enumOptions,
     enumDisabled,
     showPlaceholderOption,
-    placeholder
+    placeholder,
   );
   const _onChange = (_: SyntheticEvent<HTMLElement>, { value }: DropdownProps) =>
     onChange(enumOptionsValueForIndex<S>(value as string[], enumOptions, optEmptyVal));

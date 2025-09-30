@@ -22,8 +22,8 @@ describe('getChangedFields()', () => {
     expect(
       getChangedFields(
         function a() {},
-        function b() {}
-      )
+        function b() {},
+      ),
     ).toEqual([]);
     expect(getChangedFields(new Date(), new Date())).toEqual([]);
   });
@@ -54,7 +54,7 @@ describe('getChangedFields()', () => {
         c: { c1: {}, c2: [], c3: [] },
         d: ['item1', 'item2'],
         e: function () {},
-      })
+      }),
     ).toEqual(['a', 'b', 'c', 'd']);
     expect(
       getChangedFields(
@@ -65,8 +65,8 @@ describe('getChangedFields()', () => {
           d: ['item1', 'item2'],
           e: function () {},
         },
-        complexObject
-      )
+        complexObject,
+      ),
     ).toEqual(['a', 'b', 'c', 'd']);
   });
   it('Delete one field', () => {
@@ -76,7 +76,7 @@ describe('getChangedFields()', () => {
         b: '2',
         c: { c1: {}, c2: [] },
         d: ['item1', 'item2', 'item2'],
-      })
+      }),
     ).toEqual(['e']);
     expect(
       getChangedFields(
@@ -86,8 +86,8 @@ describe('getChangedFields()', () => {
           c: { c1: {}, c2: [] },
           d: ['item1', 'item2', 'item2'],
         },
-        complexObject
-      )
+        complexObject,
+      ),
     ).toEqual(['e']);
   });
   it('Delete some fields', () => {
@@ -96,7 +96,7 @@ describe('getChangedFields()', () => {
         a: 1,
         b: '2',
         c: { c1: {}, c2: [] },
-      })
+      }),
     ).toEqual(['d', 'e']);
     expect(
       getChangedFields(
@@ -105,8 +105,8 @@ describe('getChangedFields()', () => {
           b: '2',
           c: { c1: {}, c2: [] },
         },
-        complexObject
-      )
+        complexObject,
+      ),
     ).toEqual(['d', 'e']);
   });
   it('Add one field', () => {
@@ -114,7 +114,7 @@ describe('getChangedFields()', () => {
       getChangedFields(complexObject, {
         ...complexObject,
         f: {},
-      })
+      }),
     ).toEqual(['f']);
     expect(
       getChangedFields(
@@ -122,8 +122,8 @@ describe('getChangedFields()', () => {
           ...complexObject,
           f: {},
         },
-        complexObject
-      )
+        complexObject,
+      ),
     ).toEqual(['f']);
   });
   it('Add some fields', () => {
@@ -132,7 +132,7 @@ describe('getChangedFields()', () => {
         ...complexObject,
         f: {},
         g: [],
-      })
+      }),
     ).toEqual(['f', 'g']);
     expect(
       getChangedFields(
@@ -141,8 +141,8 @@ describe('getChangedFields()', () => {
           f: {},
           g: [],
         },
-        complexObject
-      )
+        complexObject,
+      ),
     ).toEqual(['f', 'g']);
   });
 });

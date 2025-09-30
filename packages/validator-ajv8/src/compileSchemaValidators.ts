@@ -1,5 +1,6 @@
 import fs from 'fs';
 import { RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+
 import { CustomValidatorOptionsType } from './types';
 import { compileSchemaValidatorsCode } from './compileSchemaValidatorsCode';
 
@@ -19,7 +20,7 @@ export { compileSchemaValidatorsCode };
 export default function compileSchemaValidators<S extends StrictRJSFSchema = RJSFSchema>(
   schema: S,
   output: string,
-  options: CustomValidatorOptionsType = {}
+  options: CustomValidatorOptionsType = {},
 ) {
   console.log('parsing the schema');
 

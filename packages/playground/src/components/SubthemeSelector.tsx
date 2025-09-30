@@ -7,8 +7,9 @@ const uiSchema: UiSchema = {
   'ui:placeholder': 'Select subtheme',
 };
 
-interface SubthemeType {
-  stylesheet: string;
+export interface SubthemeType {
+  stylesheet?: string;
+  dataTheme?: string;
 }
 
 export interface SubthemesType {
@@ -28,7 +29,7 @@ export default function SubthemeSelector({ subtheme, subthemes, select }: Subthe
       title: 'Subtheme',
       enum: Object.keys(subthemes),
     }),
-    [subthemes]
+    [subthemes],
   );
 
   const handleChange = useCallback(
@@ -39,7 +40,7 @@ export default function SubthemeSelector({ subtheme, subthemes, select }: Subthe
 
       return select(formData, subthemes[formData]);
     },
-    [select, subthemes]
+    [select, subthemes],
   );
 
   return (

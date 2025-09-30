@@ -14,7 +14,7 @@ import { EnumOptionsType, RJSFSchema, StrictRJSFSchema } from './types';
 export default function enumOptionsValueForIndex<S extends StrictRJSFSchema = RJSFSchema>(
   valueIndex: string | number | Array<string | number>,
   allEnumOptions: EnumOptionsType<S>[] = [],
-  emptyValue?: EnumOptionsType<S>['value']
+  emptyValue?: EnumOptionsType<S>['value'],
 ): EnumOptionsType<S>['value'] | EnumOptionsType<S>['value'][] | undefined {
   if (Array.isArray(valueIndex)) {
     return (

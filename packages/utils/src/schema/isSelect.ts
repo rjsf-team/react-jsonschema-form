@@ -14,7 +14,7 @@ export default function isSelect<T = any, S extends StrictRJSFSchema = RJSFSchem
   validator: ValidatorType<T, S, F>,
   theSchema: S,
   rootSchema: S = {} as S,
-  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>
+  experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
 ) {
   const schema = retrieveSchema<T, S, F>(validator, theSchema, rootSchema, undefined, experimental_customMergeAllOf);
   const altSchemas = schema.oneOf || schema.anyOf;

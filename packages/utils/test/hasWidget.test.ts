@@ -13,7 +13,7 @@ jest.mock('../src/getWidget', () =>
     .mockImplementationOnce(() => {
       throw new TypeError();
     })
-    .mockImplementation(() => true)
+    .mockImplementation(() => true),
 );
 
 const schema: RJSFSchema = {
@@ -28,7 +28,7 @@ describe('hasWidget()', () => {
     expect(hasWidget(schema, 'foo')).toBe(false);
   });
   it('rethrows error', () => {
-    expect(() => hasWidget({ type: 'null' }, 'foo', { TextWidget: {} as Widget })).toThrowError(TypeError);
+    expect(() => hasWidget({ type: 'null' }, 'foo', { TextWidget: {} as Widget })).toThrow(TypeError);
   });
   it('returns true when widget is available', () => {
     expect(hasWidget(schema, 'text')).toBe(true);
