@@ -737,7 +737,7 @@ export function getDefaultBasedOnSchemaType<
  *          false when computing defaults for any nested object properties.
  * @param [experimental_defaultFormStateBehavior] Optional configuration object, if provided, allows users to override default form state behavior
  * @param [experimental_customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
- * @param initialDefaultsGenerated - Indicates whether or not initial defaults have been generated
+ * @param initialDefaultsGenerated - Optional flag, indicates whether or not initial defaults have been generated
  * @returns - The resulting `formData` with all the defaults provided
  */
 export default function getDefaultFormState<
