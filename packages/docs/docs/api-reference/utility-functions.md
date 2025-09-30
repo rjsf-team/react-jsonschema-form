@@ -951,7 +951,7 @@ const intoThis = {
 Constructs the `FieldPathId` for `fieldPath`. If `parentPathId` is provided, the `fieldPath` is appended to the end
 of the parent path. Then the `ID_KEY` of the resulting `FieldPathId` is constructed from the `idPrefix` and
 `idSeparator` contained within the `globalFormOptions`. If `fieldPath` is passed as an empty string, it will simply
-generate the path from the `parentPath` (if provided) and the `idPrefix. and `idSeparator`
+generate the path from the `parentPath` (if provided) and the `idPrefix` and `idSeparator`
 
 #### Parameters
 
