@@ -58,4 +58,20 @@ describe('toFieldPathId()', () => {
       path: [...parentPath, path],
     });
   });
+  test('fieldPath empty string, parent path list', () => {
+    const path = '';
+    const parentPath = [ONE];
+    expect(toFieldPathId(path, GLOBAL_FORM_OPTIONS, parentPath)).toEqual({
+      [ID_KEY]: ONE_ID,
+      path: [...parentPath],
+    });
+  });
+  test('fieldPath empty string, parent path list', () => {
+    const path = '';
+    const parentPath = [ONE, 'two'];
+    expect(toFieldPathId(path, GLOBAL_FORM_OPTIONS, parentPath)).toEqual({
+      [ID_KEY]: `${ONE_ID}${DEFAULT_ID_SEPARATOR}${parentPath[1]}`,
+      path: [...parentPath],
+    });
+  });
 });
