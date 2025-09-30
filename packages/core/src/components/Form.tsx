@@ -42,6 +42,7 @@ import {
   unwrapErrorHandler,
   DEFAULT_ID_SEPARATOR,
   DEFAULT_ID_PREFIX,
+  GlobalFormOptions,
 } from '@rjsf/utils';
 import _cloneDeep from 'lodash/cloneDeep';
 import _forEach from 'lodash/forEach';
@@ -532,10 +533,7 @@ export default class Form<
       errorSchema = merged.errorSchema;
       errors = merged.errors;
     }
-    const fieldPathId = toFieldPathId('', {
-      idPrefix: props.idPrefix || DEFAULT_ID_PREFIX,
-      idSeparator: props.idSeparator || DEFAULT_ID_SEPARATOR,
-    });
+    const fieldPathId = toFieldPathId('', this.getGlobalFormOptions(this.props));
     const nextState: FormState<T, S, F> = {
       schemaUtils,
       schema: rootSchema,
@@ -965,19 +963,29 @@ export default class Form<
     }
   };
 
-  /** Returns the registry for the form */
-  getRegistry(): Registry<T, S, F> {
+  /** Extracts the `GlobalFormOptions` from the given Form `props`
+   *
+   * @param props - The form props to extract the global form options from
+   * @returns - The `GlobalFormOptions` from the props
+   * @private
+   */
+  private getGlobalFormOptions(props: FormProps<T, S, F>): GlobalFormOptions {
     const {
-      translateString: customTranslateString,
       uiSchema = {},
       experimental_componentUpdateStrategy,
       idSeparator = DEFAULT_ID_SEPARATOR,
       idPrefix = DEFAULT_ID_PREFIX,
-    } = this.props;
+    } = props;
+    const rootFieldId = uiSchema['ui:rootFieldId'];
+    // Omit any options that are undefined or null
+    return { idPrefix: rootFieldId || idPrefix, idSeparator, experimental_componentUpdateStrategy };
+  }
+
+  /** Returns the registry for the form */
+  getRegistry(): Registry<T, S, F> {
+    const { translateString: customTranslateString, uiSchema = {} } = this.props;
     const { schema, schemaUtils } = this.state;
     const { fields, templates, widgets, formContext, translateString } = getDefaultRegistry<T, S, F>();
-    // Omit any options that are undefined or null
-    const globalFormOptions = { idPrefix, idSeparator, experimental_componentUpdateStrategy };
     return {
       fields: { ...fields, ...this.props.fields },
       templates: {
@@ -994,7 +1002,7 @@ export default class Form<
       schemaUtils,
       translateString: customTranslateString || translateString,
       globalUiOptions: uiSchema[UI_GLOBAL_OPTIONS_KEY],
-      globalFormOptions,
+      globalFormOptions: this.getGlobalFormOptions(this.props),
     };
   }
 

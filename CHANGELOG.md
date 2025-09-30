@@ -73,12 +73,12 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Added new `FieldPathList` and `FieldPathId` types and `DEFAULT_ID_PREFIX` and `DEFAULT_ID_SEPARATOR` to `constants.ts`
 - Added the new `toFieldPathId()` function to generate `FieldPathId`s, exporting it from the library
+- Deprecated the `ui:rootFieldId` in the `UiSchema` since `idPrefix` does the same exact thing
 - BREAKING CHANGES
   - Removed the `IdSchema` type, replacing `idSchema: IdSchema<T>` in all types with `fieldPathId: FieldPathId`
   - Updated the `idGenerators` to replace `id: IdSchema<T> | string` with `id: FieldPathId | string` removing the need for the `<T = any>` generic on the functions
   - Removed the `toIdSchema()` function in the `schema` directory
   - Updated the `SchemaUtilsType` and `createSchemaUtils()` to remove the `toIdSchema()` function
-  - Deleted the `ui:rootFieldId` from the `UiSchema` since `idPrefix` does the same exact thing
 
 ## @rjsf/validator-ajv8
 
@@ -87,9 +87,9 @@ should change the heading of the (upcoming) version to include a major version b
 ## Dev / docs / playground
 
 - Updated `custom-templates.md`, `custom-widgets-fields.md` and `layout-grid.md` to change the `idSchema` documentation to `fieldPathId`
-- Updated `uiSchema.md` to remove the `ui:rootFieldId` documentation
+- Updated `uiSchema.md` to mark the `ui:rootFieldId` as deprecated in the documentation
 - Updated `utility-functions.md` delete `toIdSchema()`, add `toFieldPathId()` and to remove the `<T>` from the id generator functions
-- Updated `v6.x upgrade guide.md` to document all the breaking changes made in this release
+- Updated `v6.x upgrade guide.md` to document all the breaking changes, new functions and deprecations made in `6.0.0-beta.20`
 
 # 6.0.0-beta.19
 

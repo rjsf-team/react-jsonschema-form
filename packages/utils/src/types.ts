@@ -1030,6 +1030,11 @@ export type UiSchema<
      * Registry for use everywhere.
      */
     'ui:globalOptions'?: GlobalUISchemaOptions;
+    /** Allows the form to generate a unique prefix for the `Form`'s root prefix
+     *
+     * @deprecated - use `Form.idPrefix` instead, will be removed in a future major version
+     */
+    'ui:rootFieldId'?: string;
     /** By default, any field that is rendered for an `anyOf`/`oneOf` schema will be wrapped inside the `AnyOfField` or
      * `OneOfField` component. This default behavior may be undesirable if your custom field already handles behavior
      * related to choosing one or more subschemas contained in the `anyOf`/`oneOf` schema.
