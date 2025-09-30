@@ -55,7 +55,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
               onChange={_onChange}
               onBlur={_onBlur}
               onFocus={_onFocus}
-              aria-describedby={ariaDescribedByIds<T>(id)}
+              aria-describedby={ariaDescribedByIds(id)}
             />
           );
           return radio;

@@ -78,7 +78,7 @@ export default function WrapIfAdditionalTemplate<
         </div>
 
         <RemoveButton
-          id={buttonId<T>(id, 'remove')}
+          id={buttonId(id, 'remove')}
           iconType='block'
           className='rjsf-object-property-remove w-full'
           disabled={disabled || readonly}

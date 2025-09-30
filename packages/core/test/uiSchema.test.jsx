@@ -1865,10 +1865,7 @@ describe('uiSchema', () => {
           },
         },
       };
-      const uiSchema = {
-        'ui:rootFieldId': 'myform',
-      };
-      const { node } = createFormComponent({ schema, uiSchema });
+      const { node } = createFormComponent({ schema, idPrefix: 'myform' });
 
       const ids = [].map.call(node.querySelectorAll('input[type=text]'), (node) => node.id);
       expect(ids).eql(['myform_foo', 'myform_bar']);
@@ -1881,12 +1878,9 @@ describe('uiSchema', () => {
           type: 'string',
         },
       };
-      const uiSchema = {
-        'ui:rootFieldId': 'myform',
-      };
       const { node } = createFormComponent({
         schema,
-        uiSchema,
+        idPrefix: 'myform',
         formData: ['foo', 'bar'],
       });
 
@@ -1909,12 +1903,9 @@ describe('uiSchema', () => {
           },
         },
       };
-      const uiSchema = {
-        'ui:rootFieldId': 'myform',
-      };
       const { node } = createFormComponent({
         schema,
-        uiSchema,
+        idPrefix: 'myform',
         formData: [
           {
             foo: 'foo1',

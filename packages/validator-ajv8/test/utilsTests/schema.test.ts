@@ -14,7 +14,6 @@ import {
   isSelectTest,
   retrieveSchemaTest,
   sanitizeDataForNewSchemaTest,
-  toIdSchemaTest,
   toPathSchemaTest,
 } from '../../../utils/test/schema';
 import getTestValidator from './getTestValidator';
@@ -34,7 +33,6 @@ isMultiSelectTest(testValidator);
 isSelectTest(testValidator);
 retrieveSchemaTest(testValidator);
 sanitizeDataForNewSchemaTest(testValidator);
-toIdSchemaTest(testValidator);
 toPathSchemaTest(testValidator);
 
 const testValidatorDiscriminated = getTestValidator({
@@ -54,7 +52,6 @@ isMultiSelectTest(testValidatorDiscriminated);
 isSelectTest(testValidatorDiscriminated);
 retrieveSchemaTest(testValidatorDiscriminated);
 sanitizeDataForNewSchemaTest(testValidatorDiscriminated);
-toIdSchemaTest(testValidatorDiscriminated);
 toPathSchemaTest(testValidatorDiscriminated);
 
 const testValidator2019 = getTestValidator({ AjvClass: Ajv2019 });
@@ -72,7 +69,6 @@ isMultiSelectTest(testValidator2019);
 isSelectTest(testValidator2019);
 retrieveSchemaTest(testValidator2019);
 sanitizeDataForNewSchemaTest(testValidator2019);
-toIdSchemaTest(testValidator2019);
 toPathSchemaTest(testValidator2019);
 
 const testValidator2020 = getTestValidator({ AjvClass: Ajv2020 });
@@ -90,5 +86,4 @@ isMultiSelectTest(testValidator2020);
 isSelectTest(testValidator2020);
 retrieveSchemaTest(testValidator2020);
 retrieveSchemaTest(testValidator2020);
-toIdSchemaTest(testValidator2020);
 toPathSchemaTest(testValidator2020);

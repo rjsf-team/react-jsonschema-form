@@ -63,7 +63,7 @@ export default function RangeWidget<T = any, S extends StrictRJSFSchema = RJSFSc
       step={step}
       value={value}
       {...extraProps}
-      aria-describedby={ariaDescribedByIds<T>(id)}
+      aria-describedby={ariaDescribedByIds(id)}
     />
   );
 }

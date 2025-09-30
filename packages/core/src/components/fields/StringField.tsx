@@ -22,7 +22,7 @@ function StringField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
     schema,
     name,
     uiSchema,
-    idSchema,
+    fieldPathId,
     formData,
     required,
     disabled = false,
@@ -49,16 +49,16 @@ function StringField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
   const onWidgetChange = useCallback(
     (value: T | undefined, errorSchema?: ErrorSchema, id?: string) => {
       // String field change passes an empty path array to the parent field which adds the appropriate path
-      return onChange(value, [], errorSchema, id);
+      return onChange(value, fieldPathId.path, errorSchema, id);
     },
-    [onChange],
+    [onChange, fieldPathId],
   );
   return (
     <Widget
       options={{ ...options, enumOptions }}
       schema={schema}
       uiSchema={uiSchema}
-      id={idSchema.$id}
+      id={fieldPathId.$id}
       name={name}
       label={label}
       hideLabel={!displayLabel}

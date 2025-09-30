@@ -10,7 +10,7 @@ import {
 } from '@rjsf/utils';
 
 /** The `ArrayFieldTitleTemplate` component renders a `TitleFieldTemplate` with an `id` derived from
- * the `idSchema`.
+ * the `fieldPathId`.
  *
  * @param props - The `ArrayFieldTitleProps` for the component
  */
@@ -19,7 +19,7 @@ export default function ArrayFieldTitleTemplate<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
 >(props: ArrayFieldTitleProps<T, S, F>) {
-  const { idSchema, title, schema, uiSchema, required, registry } = props;
+  const { fieldPathId, title, schema, uiSchema, required, registry } = props;
   const options = getUiOptions<T, S, F>(uiSchema, registry.globalUiOptions);
   const { label: displayLabel = true } = options;
   if (!title || !displayLabel) {
@@ -32,7 +32,7 @@ export default function ArrayFieldTitleTemplate<
   );
   return (
     <TitleFieldTemplate
-      id={titleId<T>(idSchema)}
+      id={titleId(fieldPathId)}
       title={title}
       required={required}
       schema={schema}

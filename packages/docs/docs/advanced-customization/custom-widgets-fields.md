@@ -388,7 +388,7 @@ A field component will always be passed the following props:
 
 - `schema`: The JSON subschema object for this field;
 - `uiSchema`: The [uiSchema](../api-reference/uiSchema.md) for this field;
-- `idSchema`: The tree of unique ids for every child field;
+- `idSchema`: The FieldPathId of the field in the hierarchy
 - `formData`: The data for this field;
 - `errorSchema`: The tree of errors for this field and its children;
 - `registry`: A [registry](#the-registry-object) object (read next).

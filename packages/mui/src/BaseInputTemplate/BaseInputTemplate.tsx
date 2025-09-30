@@ -54,7 +54,7 @@ export default function BaseInputTemplate<
   const inputProps = getInputProps<T, S, F>(schema, type, options);
   // Now we need to pull out the step, min, max into an inner `inputProps` for material-ui
   const { step, min, max, accept, ...rest } = inputProps;
-  const htmlInputProps = { step, min, max, accept, ...(schema.examples ? { list: examplesId<T>(id) } : undefined) };
+  const htmlInputProps = { step, min, max, accept, ...(schema.examples ? { list: examplesId(id) } : undefined) };
   const _onChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) =>
     onChange(value === '' ? options.emptyValue : value);
   const _onBlur = ({ target }: FocusEvent<HTMLInputElement>) => onBlur(id, target && target.value);
@@ -84,10 +84,10 @@ export default function BaseInputTemplate<
         onBlur={_onBlur}
         onFocus={_onFocus}
         {...(textFieldProps as TextFieldProps)}
-        aria-describedby={ariaDescribedByIds<T>(id, !!schema.examples)}
+        aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
       />
       {Array.isArray(schema.examples) && (
-        <datalist id={examplesId<T>(id)}>
+        <datalist id={examplesId(id)}>
           {(schema.examples as string[])
             .concat(schema.default && !schema.examples.includes(schema.default) ? ([schema.default] as string[]) : [])
             .map((example: any) => {

@@ -15,6 +15,82 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+# 6.0.0-beta-20
+
+## @rjsf/antd
+
+- BREAKING CHANGES - Updated all of the templates and widgets to change `idSchema` to `fieldPathId` or to remove the `<T>` off of the idGenerator functions
+
+## @rjsf/chakra-ui
+
+- BREAKING CHANGES - Updated all of the templates and widgets to change `idSchema` to `fieldPathId` or to remove the `<T>` off of the idGenerator functions
+
+## @rjsf/core
+
+- BREAKING CHANGES
+  - Updated all of the fields, templates and widgets to change `idSchema` to `fieldPathId` or to remove the `<T>` off of the idGenerator functions
+  - `ObjectField` and `ArrayField` to use `toFieldPathId` instead of `toIdSchema()` to generate the `fieldPathId`s of all its children
+  - Updated the `onChange` handling of fields to make `path` required and either pass it straight through, or use the `fieldPathId.path` instead of using an empty array or appending path information
+  - Updated `Form` to use `toFieldPathId()` to generate `fieldPathId` instead of `idSchema`, always providing the `idPrefix` and `idSeparator` in the `globalFormOptions` and make the `path: FieldPathList` required
+  - Updated `LayoutGridField` to remove the `IdSchema` related code in favor of `FieldPathId` code 
+- Also exported the `getTestRegistry()` function from the main `index.ts` to assist developers in creating `registry` object for tests
+- Updated all of the test to deal with the `idSchema` -> `fieldPathId` changes
+
+## @rjsf/daisyui
+
+- BREAKING CHANGES - Updated all of the templates and widgets to change `idSchema` to `fieldPathId` or to remove the `<T>` off of the idGenerator functions
+- Also fixed the `FieldTemplate` to extract the `description` element so that it was not spread onto the `div`, fixing the snapshots
+
+## @rjsf/fluent-ui
+
+- BREAKING CHANGES - Updated all of the templates and widgets to change `idSchema` to `fieldPathId` or to remove the `<T>` off of the idGenerator functions
+
+## @rjsf/mantine
+
+- BREAKING CHANGES - Updated all of the templates and widgets to change `idSchema` to `fieldPathId` or to remove the `<T>` off of the idGenerator functions
+
+## @rjsf/mui
+
+- BREAKING CHANGES - Updated all of the templates and widgets to change `idSchema` to `fieldPathId` or to remove the `<T>` off of the idGenerator functions
+
+## @rjsf/primereact
+
+- BREAKING CHANGES - Updated all of the templates and widgets to change `idSchema` to `fieldPathId` or to remove the `<T>` off of the idGenerator functions
+
+## @rjsf/react-bootstrap
+
+- BREAKING CHANGES - Updated all of the templates and widgets to change `idSchema` to `fieldPathId` or to remove the `<T>` off of the idGenerator functions
+
+## @rjsf/semantic-ui
+
+- BREAKING CHANGES - Updated all of the templates and widgets to change `idSchema` to `fieldPathId` or to remove the `<T>` off of the idGenerator functions
+
+## @rjsf/shadcn
+
+- BREAKING CHANGES - Updated all of the templates and widgets to change `idSchema` to `fieldPathId` or to remove the `<T>` off of the idGenerator functions
+
+## @rjsf/utils
+
+- Added new `FieldPathList` and `FieldPathId` types and `DEFAULT_ID_PREFIX` and `DEFAULT_ID_SEPARATOR` to `constants.ts`
+- Added the new `toFieldPathId()` function to generate `FieldPathId`s, exporting it from the library
+- BREAKING CHANGES
+  - Removed the `IdSchema` type, replacing `idSchema: IdSchema<T>` in all types with `fieldPathId: FieldPathId`
+  - Updated the `idGenerators` to replace `id: IdSchema<T> | string` with `id: FieldPathId | string` removing the need for the `<T = any>` generic on the functions
+  - Removed the `toIdSchema()` function in the `schema` directory
+  - Updated the `SchemaUtilsType` and `createSchemaUtils()` to remove the `toIdSchema()` function
+  - Deleted the `ui:rootFieldId` from the `UiSchema` since `idPrefix` does the same exact thing
+
+## @rjsf/validator-ajv8
+
+- Updated the test to no longer try to test the delete `toIdSchema` function
+
+## Dev / docs / playground
+
+- Updated `custom-templates.md`, `custom-widgets-fields.md` and `layout-grid.md` to change the `idSchema` documentation to `fieldPathId`
+- Updated `uiSchema.md` to remove the `ui:rootFieldId` documentation
+- Updated `utility-functions.md` delete `toIdSchema()`, add `toFieldPathId()` and to remove the `<T>` from the id generator functions
+- Updated `v6.x upgrade guide.md` to document all the breaking changes made in this release
+
 # 6.0.0-beta.19
 
 ## @rjsf/core

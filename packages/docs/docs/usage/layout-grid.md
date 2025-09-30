@@ -960,7 +960,7 @@ then nothing will be rendered.
 If you provide an empty string as the `name` along with the `render`, then your component will be rendered only with any
 additional properties passed in the `children` object. If you provide a `name` that matches a field in the `schema`,
 then the `render` component won't be used. Otherwise, the `render` component will be passed all of the `FieldProp`s,
-including the `schema`, `uiSchema`, `idSchema`, `errorSchema`, `formData`, `registry`, etc.
+including the `schema`, `uiSchema`, `fieldPathId`, `errorSchema`, `formData`, `registry`, etc.
 
 So our example will render the `LineShape` component with `size: 'small-size'` in the second column between the
 `My Favorite Shape` dropdown and the `Line Length` input. Also, it will render the `CircleShape` component with

@@ -96,7 +96,7 @@ export default function LayoutMultiSchemaField<
     baseType,
     disabled = false,
     formData,
-    idSchema,
+    fieldPathId,
     onBlur,
     onChange,
     options,
@@ -113,7 +113,7 @@ export default function LayoutMultiSchemaField<
   } = props;
   const { widgets, schemaUtils, globalUiOptions } = registry;
   const [enumOptions, setEnumOptions] = useState(computeEnumOptions(schema, options, schemaUtils, uiSchema, formData)!);
-  const id = get(idSchema, ID_KEY);
+  const id = get(fieldPathId, ID_KEY);
   const discriminator = getDiscriminatorFieldFromSchema(schema);
   const FieldErrorTemplate = getTemplate<'FieldErrorTemplate', T, S, F>('FieldErrorTemplate', registry, options);
   const FieldTemplate = getTemplate<'FieldTemplate', T, S, F>('FieldTemplate', registry, options);
@@ -172,14 +172,14 @@ export default function LayoutMultiSchemaField<
       set(newFormData, selectorField, opt);
     }
     // Pass the component name in the path
-    onChange(newFormData, [name], undefined, id);
+    onChange(newFormData, fieldPathId.path, undefined, id);
   };
 
   // filtering the options based on the type of widget because `selectField` does not recognize the `convertOther` prop
   const widgetOptions = { enumOptions, ...uiOptions };
   const errors =
     !hideFieldError && rawErrors.length > 0 ? (
-      <FieldErrorTemplate idSchema={idSchema} schema={schema} errors={rawErrors} registry={registry} />
+      <FieldErrorTemplate fieldPathId={fieldPathId} schema={schema} errors={rawErrors} registry={registry} />
     ) : undefined;
   const ignored = (value: string) => noop;
 

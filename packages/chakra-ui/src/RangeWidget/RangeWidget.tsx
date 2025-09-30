@@ -46,7 +46,7 @@ export default function RangeWidget<T = any, S extends StrictRJSFSchema = RJSFSc
         onValueChange={_onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
-        aria-describedby={ariaDescribedByIds<T>(id)}
+        aria-describedby={ariaDescribedByIds(id)}
       />
     </Field>
   );

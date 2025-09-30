@@ -65,10 +65,10 @@ export default function BaseInputTemplate<
         onFocus={!readonly ? handleFocus : undefined}
         placeholder={placeholder}
         style={INPUT_STYLE}
-        list={schema.examples ? examplesId<T>(id) : undefined}
+        list={schema.examples ? examplesId(id) : undefined}
         {...inputProps}
         value={value}
-        aria-describedby={ariaDescribedByIds<T>(id, !!schema.examples)}
+        aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
       />
     ) : (
       <Input
@@ -80,10 +80,10 @@ export default function BaseInputTemplate<
         onFocus={!readonly ? handleFocus : undefined}
         placeholder={placeholder}
         style={INPUT_STYLE}
-        list={schema.examples ? examplesId<T>(id) : undefined}
+        list={schema.examples ? examplesId(id) : undefined}
         {...inputProps}
         value={value}
-        aria-describedby={ariaDescribedByIds<T>(id, !!schema.examples)}
+        aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
       />
     );
 
@@ -91,7 +91,7 @@ export default function BaseInputTemplate<
     <>
       {input}
       {Array.isArray(schema.examples) && (
-        <datalist id={examplesId<T>(id)}>
+        <datalist id={examplesId(id)}>
           {(schema.examples as string[])
             .concat(schema.default && !schema.examples.includes(schema.default) ? ([schema.default] as string[]) : [])
             .map((example) => {

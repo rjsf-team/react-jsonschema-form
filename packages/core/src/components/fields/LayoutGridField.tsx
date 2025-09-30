@@ -3,25 +3,24 @@ import {
   ANY_OF_KEY,
   ErrorSchema,
   FieldProps,
+  FieldPathId,
+  FieldPathList,
   FormContextType,
   GenericObjectType,
   getDiscriminatorFieldFromSchema,
-  getSchemaType,
   getTemplate,
   getTestIds,
   getUiOptions,
   hashObject,
   ID_KEY,
-  IdSchema,
   lookupFromFormContext,
-  mergeObjects,
   ONE_OF_KEY,
   PROPERTIES_KEY,
   READONLY_KEY,
   RJSFSchema,
   Registry,
-  SchemaUtilsType,
   StrictRJSFSchema,
+  toFieldPathId,
   UI_OPTIONS_KEY,
   UI_GLOBAL_OPTIONS_KEY,
   UiSchema,
@@ -140,21 +139,6 @@ function getNonNullishValue<T = unknown>(value?: T, fallback?: T): T | undefined
  */
 function isNumericIndex(str: string) {
   return /^\d+?$/.test(str); // Matches positive integers
-}
-
-/** Detects whether the given `type` indicates the schema is an object or array
- *
- * @param [type] - The potential type of the schema
- * @returns - true if the type indicates it is an array or object, otherwise false
- */
-function isObjectOrArrayType(type?: string | string[]) {
-  let realType: string | undefined;
-  if (Array.isArray(type)) {
-    realType = type.length === 1 ? type[0] : undefined;
-  } else {
-    realType = type;
-  }
-  return realType ? ['object', 'array'].includes(realType) : false;
 }
 
 /** The `LayoutGridField` will render a schema, uiSchema and formData combination out into a GridTemplate in the shape
@@ -502,49 +486,26 @@ export default class LayoutGridField<
     return { children: children as LayoutGridSchemaType[], gridProps };
   }
 
-  /** Generates an idSchema for the `schema` using `@rjsf`'s `toIdSchema` util, passing the `baseIdSchema`'s `$id` value
-   * as the id prefix.
-   *
-   * @param schemaUtils - The `SchemaUtilsType` used to call `toIdSchema`
-   * @param schema - The schema to generate the idSchema for
-   * @param baseIdSchema - The IdSchema for the base
-   * @param formData - The formData to pass the `toIdSchema`
-   * @param [idSeparator] - The param to pass into the `toIdSchema` util which will use it to join the `idSchema` paths
-   * @returns - The generated `idSchema` for the `schema`
-   */
-  static getIdSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-    schemaUtils: SchemaUtilsType<T, S, F>,
-    baseIdSchema: IdSchema<T>,
-    formData: FieldProps['formData'],
-    schema: S = {} as S,
-    idSeparator?: string,
-  ): FieldProps<T, S, F>['idSchema'] {
-    const baseId = get(baseIdSchema, ID_KEY);
-    return schemaUtils.toIdSchema(schema, baseId, formData, baseId, idSeparator);
-  }
-
-  /** Computes the `rawSchema` and `idSchema` for a `schema` and a `potentialIndex`. If the `schema` is of type array,
+  /** Computes the `rawSchema` and `fieldPathId` for a `schema` and a `potentialIndex`. If the `schema` is of type array,
    * has an `ITEMS_KEY` element and `potentialIndex` represents a numeric value, the element at `ITEMS_KEY` is checked
    * to see if it is an array. If it is AND the `potentialIndex`th element is available, it is used as the `rawSchema`,
    * otherwise the last value of the element is used. If it is not, then the element is used as the `rawSchema`. In
-   * either case, an `idSchema` is computed for the array index. If the `schema` does not represent an array or the
-   * `potentialIndex` is not a numeric value, then `rawSchema` is returned as undefined and given `idSchema` is returned
+   * either case, an `fieldPathId` is computed for the array index. If the `schema` does not represent an array or the
+   * `potentialIndex` is not a numeric value, then `rawSchema` is returned as undefined and given `fieldPathId` is returned
    * as is.
    *
-   * @param schema - The schema to generate the idSchema for
-   * @param idSchema - The IdSchema for the schema
+   * @param schema - The schema to generate the fieldPathId for
+   * @param fieldPathId - The FieldPathId for the schema
    * @param potentialIndex - A string containing a potential index
-   * @param [idSeparator] - The param to pass into the `toIdSchema` util which will use it to join the `idSchema` paths
-   * @returns - An object containing the `rawSchema` and `idSchema` of an array item, otherwise an undefined `rawSchema`
+   * @returns - An object containing the `rawSchema` and `fieldPathId` of an array item, otherwise an undefined `rawSchema`
    */
-  static computeArraySchemasIfPresent<T = any, S extends StrictRJSFSchema = RJSFSchema>(
+  static computeArraySchemasIfPresent<S extends StrictRJSFSchema = RJSFSchema>(
     schema: S | undefined,
-    idSchema: IdSchema<T>,
+    fieldPathId: FieldPathId,
     potentialIndex: string,
-    idSeparator?: string,
   ): {
     rawSchema?: S;
-    idSchema: IdSchema<T>;
+    fieldPathId: FieldPathId;
   } {
     let rawSchema: S | undefined;
     if (isNumericIndex(potentialIndex) && schema && schema?.type === 'array' && has(schema, ITEMS_KEY)) {
@@ -559,9 +520,12 @@ export default class LayoutGridField<
       } else {
         rawSchema = items as S;
       }
-      idSchema = { [ID_KEY]: `${idSchema[ID_KEY]}${idSeparator ?? '_'}${index}` } as IdSchema<T>;
+      fieldPathId = {
+        [ID_KEY]: fieldPathId[ID_KEY],
+        path: [...fieldPathId.path.slice(0, fieldPathId.path.length - 1), index],
+      };
     }
-    return { rawSchema, idSchema };
+    return { rawSchema, fieldPathId };
   }
 
   /** Given a `dottedPath` to a field in the `initialSchema`, iterate through each individual path in the schema until
@@ -569,31 +533,30 @@ export default class LayoutGridField<
    * element in the path. If the leaf schema element happens to be a oneOf/anyOf then also return the oneOf/anyOf as
    * `options`.
    *
-   * @param schemaUtils - The `SchemaUtilsType` used to call `retrieveSchema`
+   * @param registry - The registry
    * @param dottedPath - The dotted-path to the field for which to get the schema
    * @param initialSchema - The initial schema to start the search from
    * @param formData - The formData, useful for resolving a oneOf/anyOf selection in the path hierarchy
-   * @param initialIdSchema - The initial idSchema to start the search from
-   * @param [idSeparator] - The param to pass into the `toIdSchema` util which will use it to join the `idSchema` paths
+   * @param initialFieldIdPath - The initial fieldPathId to start the search from
    * @returns - An object containing the destination schema, isRequired and isReadonly flags for the field and options
    *            info if a oneOf/anyOf
    */
   static getSchemaDetailsForField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-    schemaUtils: SchemaUtilsType<T, S, F>,
+    registry: Registry<T, S, F>,
     dottedPath: string,
     initialSchema: S,
     formData: FieldProps<T, S, F>['formData'],
-    initialIdSchema: IdSchema<T>,
-    idSeparator?: string,
+    initialFieldIdPath: FieldPathId,
   ): {
     schema?: S;
     isRequired: boolean;
     isReadonly?: boolean;
     optionsInfo?: OneOfOptionsInfoType<S>;
-    idSchema: IdSchema<T>;
+    fieldPathId: FieldPathId;
   } {
+    const { schemaUtils, globalFormOptions } = registry;
     let rawSchema: S = initialSchema;
-    let idSchema = initialIdSchema;
+    let fieldPathId = initialFieldIdPath;
     const parts: string[] = dottedPath.split('.');
     const leafPath: string | undefined = parts.pop(); // pop off the last element in the list as the leaf
     let schema: S | undefined = schemaUtils.retrieveSchema(rawSchema, formData); // always returns an object
@@ -603,26 +566,18 @@ export default class LayoutGridField<
     // For all the remaining path parts
     parts.forEach((part) => {
       // dive into the properties of the current schema (when it exists) and get the schema for the next part
+      fieldPathId = toFieldPathId(part, globalFormOptions, fieldPathId);
       if (has(schema, PROPERTIES_KEY)) {
         rawSchema = get(schema, [PROPERTIES_KEY, part], {}) as S;
-        idSchema = get(idSchema, part, {}) as IdSchema<T>;
       } else if (schema && (has(schema, ONE_OF_KEY) || has(schema, ANY_OF_KEY))) {
         const xxx = has(schema, ONE_OF_KEY) ? ONE_OF_KEY : ANY_OF_KEY;
         // When the schema represents a oneOf/anyOf, find the selected schema for it and grab the inner part
         const selectedSchema = schemaUtils.findSelectedOptionInXxxOf(schema, part, xxx, innerData);
-        const selectedIdSchema = LayoutGridField.getIdSchema<T, S, F>(
-          schemaUtils,
-          idSchema,
-          formData,
-          selectedSchema,
-          idSeparator,
-        );
         rawSchema = get(selectedSchema, [PROPERTIES_KEY, part], {}) as S;
-        idSchema = get(selectedIdSchema, part, {}) as IdSchema<T>;
       } else {
-        const result = LayoutGridField.computeArraySchemasIfPresent<T, S>(schema, idSchema, part, idSeparator);
+        const result = LayoutGridField.computeArraySchemasIfPresent<S>(schema, fieldPathId, part);
         rawSchema = result.rawSchema ?? ({} as S);
-        idSchema = result.idSchema;
+        fieldPathId = result.fieldPathId;
       }
       // Now drill into the innerData for the part, returning an empty object by default if it doesn't exist
       innerData = get(innerData, part, {}) as T;
@@ -643,21 +598,18 @@ export default class LayoutGridField<
         const xxx = has(schema, ONE_OF_KEY) ? ONE_OF_KEY : ANY_OF_KEY;
         // Grab the selected schema for the oneOf/anyOf value for the leafPath using the innerData
         schema = schemaUtils.findSelectedOptionInXxxOf(schema, leafPath, xxx, innerData);
-        // Generate the idSchema for the oneOf/anyOf value then merge with the existing `idSchema`
-        const rawIdSchema = LayoutGridField.getIdSchema<T, S, F>(schemaUtils, idSchema, formData, schema, idSeparator);
-        idSchema = mergeObjects(rawIdSchema, idSchema) as IdSchema<T>;
       }
+      fieldPathId = toFieldPathId(leafPath, globalFormOptions, fieldPathId);
       isRequired = schema !== undefined && Array.isArray(schema.required) && includes(schema.required, leafPath);
-      const result = LayoutGridField.computeArraySchemasIfPresent<T, S>(schema, idSchema, leafPath, idSeparator);
+      const result = LayoutGridField.computeArraySchemasIfPresent<S>(schema, fieldPathId, leafPath);
       if (result.rawSchema) {
         schema = result.rawSchema;
-        idSchema = result.idSchema;
+        fieldPathId = result.fieldPathId;
       } else {
         // Now grab the schema from the leafPath of the current schema properties
         schema = get(schema, [PROPERTIES_KEY, leafPath]) as S | undefined;
         // Resolve any `$ref`s for the current schema
         schema = schema ? schemaUtils.retrieveSchema(schema) : schema;
-        idSchema = get(idSchema, leafPath, {}) as IdSchema<T>;
       }
       isReadonly = getNonNullishValue(schema?.readOnly, isReadonly);
       if (schema && (has(schema, ONE_OF_KEY) || has(schema, ANY_OF_KEY))) {
@@ -668,7 +620,7 @@ export default class LayoutGridField<
       }
     }
 
-    return { schema, isRequired, isReadonly, optionsInfo, idSchema };
+    return { schema, isRequired, isReadonly, optionsInfo, fieldPathId };
   }
 
   /** Gets the custom render component from the `render`, by either determining that it is either already a function or
@@ -693,27 +645,27 @@ export default class LayoutGridField<
     return null;
   }
 
-  /** Extract the `name`, and optional `render` and all other props from the `gridSchema`. We look up the `render` to
+  /** Extract the `name`, and optional `render` and all other props from the `grfieldPathId`. We look up the `render` to
    * see if can be resolved to a UIComponent. If `name` does not exist and there is an optional `render` UIComponent, we
    * set the `rendered` component with only specified props for that component in the object.
    *
    * @param registry - The `@rjsf` Registry from which to look up `classNames` if they are present in the extra props
-   * @param gridSchema - The string or object that represents the configuration for the grid field
-   * @returns - The UIComponentPropsType computed from the gridSchema
+   * @param grfieldPathId - The string or object that represents the configuration for the grid field
+   * @returns - The UIComponentPropsType computed from the grfieldPathId
    */
   static computeUIComponentPropsFromGridSchema<
     T = any,
     S extends StrictRJSFSchema = RJSFSchema,
     F extends FormContextType = any,
-  >(registry: Registry<T, S, F>, gridSchema?: string | ConfigObject): UIComponentPropsType {
+  >(registry: Registry<T, S, F>, grfieldPathId?: string | ConfigObject): UIComponentPropsType {
     let name: string;
     let UIComponent: RenderComponent | null = null;
     let uiProps: ConfigObject = {};
     let rendered: ReactNode | undefined;
-    if (isString(gridSchema) || isUndefined(gridSchema)) {
-      name = gridSchema ?? '';
+    if (isString(grfieldPathId) || isUndefined(grfieldPathId)) {
+      name = grfieldPathId ?? '';
     } else {
-      const { name: innerName = '', render, ...innerProps } = gridSchema;
+      const { name: innerName = '', render, ...innerProps } = grfieldPathId;
       name = innerName;
       uiProps = innerProps;
       if (!isEmpty(uiProps)) {
@@ -746,29 +698,20 @@ export default class LayoutGridField<
 
   /** Generates an `onChange` handler for the field associated with the `dottedPath`. This handler will clone and update
    * the `formData` with the new `value` and the `errorSchema` if an `errSchema` is provided. After updating those two
-   * elements, they will then be passed on to the `onChange` handler of the `LayoutFieldGrid`. This handler is also
-   * given the `schemaType` and uses it to determine whether the inbound path on the `onChange` should be appended to
-   * the `dottedPath` that has been split on the `.` character. When the type is an 'object' or 'array', then the
-   * inbound path will be the index of the array item or name of the object's field.
+   * elements, they will then be passed on to the `onChange` handler of the `LayoutFieldGrid`.
    *
    * @param dottedPath - The dotted-path to the field for which to generate the onChange handler
-   * @param schemaType - The optional type of the schema for the field
    * @returns - The `onChange` handling function for the `dottedPath` field of the `schemaType` type
    */
-  onFieldChange = (dottedPath: string, schemaType?: string | string[]) => {
-    const appendPath = isObjectOrArrayType(schemaType);
-    return (value: T | undefined, path?: (number | string)[], errSchema?: ErrorSchema<T>, id?: string) => {
+  onFieldChange = (dottedPath: string) => {
+    return (value: T | undefined, path: FieldPathList, errSchema?: ErrorSchema<T>, id?: string) => {
       const { onChange, errorSchema } = this.props;
       let newErrorSchema = errorSchema;
       if (errSchema && errorSchema) {
         newErrorSchema = cloneDeep(errorSchema);
         set(newErrorSchema, dottedPath, errSchema);
       }
-      let actualPath: (number | string)[] = dottedPath.split('.');
-      // When the `schemaType` is an object or array, then the path will contain the index of the array or the name of
-      // object's field, so append it to the path.
-      actualPath = Array.isArray(path) && appendPath ? actualPath.concat(...path) : actualPath;
-      onChange(value, actualPath, newErrorSchema, id);
+      onChange(value, path, newErrorSchema, id);
     };
   };
 
@@ -872,21 +815,21 @@ export default class LayoutGridField<
     );
   }
 
-  /** Iterates through all the `childrenLayoutGridSchema`, rendering a nested `LayoutGridField` for each item in the
+  /** Iterates through all the `childrenLayoutGrfieldPathId`, rendering a nested `LayoutGridField` for each item in the
    * list, passing all the props for the current `LayoutGridField` along, updating the `schema` by calling
    * `retrieveSchema()` on it to resolve any `$ref`s. In addition to the updated `schema`, each item in
-   * `childrenLayoutGridSchema` is passed as `layoutGridSchema`.
+   * `childrenLayoutGrfieldPathId` is passed as `layoutGridSchema`.
    *
-   * @param childrenLayoutGridSchema - The list of strings or objects that represents the configurations for the
+   * @param childrenLayoutGrfieldPathId - The list of strings or objects that represents the configurations for the
    *          children fields
    * @returns - The nested `LayoutGridField`s
    */
-  renderChildren(childrenLayoutGridSchema: LayoutGridSchemaType[]) {
+  renderChildren(childrenLayoutGrfieldPathId: LayoutGridSchemaType[]) {
     const { registry, schema: rawSchema, formData } = this.props;
     const { schemaUtils } = registry;
     const schema = schemaUtils.retrieveSchema(rawSchema, formData);
 
-    return childrenLayoutGridSchema.map((layoutGridSchema) => (
+    return childrenLayoutGrfieldPathId.map((layoutGridSchema) => (
       <LayoutGridField<T, S, F>
         {...this.props}
         key={`layoutGrid-${hashObject(layoutGridSchema)}`}
@@ -896,14 +839,14 @@ export default class LayoutGridField<
     ));
   }
 
-  /** Renders the field described by `gridSchema`. If `gridSchema` is not an object, then is will be assumed
+  /** Renders the field described by `grfieldPathId`. If `grfieldPathId` is not an object, then is will be assumed
    * to be the dotted-path to the field in the schema. Otherwise, we extract the `name`, and optional `render` and all
    * other props. If `name` does not exist and there is an optional `render`, we return the `render` component with only
    * specified props for that component. If `name` exists, we take the name, the initial & root schemas and the formData
    * and get the destination schema, is required state and optional oneOf/anyOf options for it. If the destination
    * schema was located along with oneOf/anyOf options then a `LayoutMultiSchemaField` will be rendered with the
-   * `uiSchema`, `errorSchema`, `idSchema` and `formData` drilled down to the dotted-path field, spreading any other
-   * props from `gridSchema` into the `ui:options`. If the destination schema located without any oneOf/anyOf options,
+   * `uiSchema`, `errorSchema`, `fieldPathId` and `formData` drilled down to the dotted-path field, spreading any other
+   * props from `grfieldPathId` into the `ui:options`. If the destination schema located without any oneOf/anyOf options,
    * then a `SchemaField` will be rendered with the same props as mentioned in the previous sentence. If no destination
    * schema was located, but a custom render component was found, then it will be rendered with many of the non-event
    * handling props. If none of the previous render paths are valid, then a null is returned.
@@ -916,7 +859,7 @@ export default class LayoutGridField<
       schema: initialSchema,
       uiSchema,
       errorSchema,
-      idSchema,
+      fieldPathId,
       onBlur,
       onFocus,
       formData,
@@ -925,8 +868,7 @@ export default class LayoutGridField<
       layoutGridSchema, // Used to pull this out of otherProps since we don't want to pass it through
       ...otherProps
     } = this.props;
-    const { fields, schemaUtils, globalFormOptions } = registry;
-    const { idSeparator } = globalFormOptions;
+    const { fields } = registry;
     const { SchemaField, LayoutMultiSchemaField } = fields;
     const uiComponentProps = LayoutGridField.computeUIComponentPropsFromGridSchema(registry, gridSchema);
     if (uiComponentProps.rendered) {
@@ -938,15 +880,8 @@ export default class LayoutGridField<
       isRequired,
       isReadonly,
       optionsInfo,
-      idSchema: fieldIdSchema,
-    } = LayoutGridField.getSchemaDetailsForField<T, S, F>(
-      schemaUtils,
-      name,
-      initialSchema,
-      formData,
-      idSchema,
-      idSeparator,
-    );
+      fieldPathId: fieldIdSchema,
+    } = LayoutGridField.getSchemaDetailsForField<T, S, F>(registry, name, initialSchema, formData, fieldPathId);
 
     if (schema) {
       const Field = optionsInfo?.hasDiscriminator ? LayoutMultiSchemaField : SchemaField;
@@ -977,9 +912,9 @@ export default class LayoutGridField<
           schema={schema}
           uiSchema={fieldUiSchema}
           errorSchema={get(errorSchema, name)}
-          idSchema={fieldIdSchema}
+          fieldPathId={fieldIdSchema}
           formData={get(formData, name)}
-          onChange={this.onFieldChange(name, getSchemaType<S>(schema))}
+          onChange={this.onFieldChange(name)}
           onBlur={onBlur}
           onFocus={onFocus}
           options={optionsInfo?.options}
@@ -1000,7 +935,7 @@ export default class LayoutGridField<
           errorSchema={errorSchema}
           uiSchema={uiSchema}
           schema={initialSchema}
-          idSchema={idSchema}
+          fieldPathId={fieldPathId}
           onBlur={onBlur}
           onFocus={onFocus}
           registry={registry}

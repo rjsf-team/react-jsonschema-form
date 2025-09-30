@@ -46,7 +46,7 @@ export default function DateWidget<T = any, S extends StrictRJSFSchema = RJSFSch
       showTime={false}
       style={DATE_PICKER_STYLE}
       value={value && dayjs(value)}
-      aria-describedby={ariaDescribedByIds<T>(id)}
+      aria-describedby={ariaDescribedByIds(id)}
     />
   );
 }

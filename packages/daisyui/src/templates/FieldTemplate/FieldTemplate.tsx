@@ -36,6 +36,7 @@ export default function FieldTemplate<
     displayLabel,
     classNames,
     // Destructure props we don't want to pass to div
+    description,
     onKeyChange,
     onDropPropertyClick,
     uiSchema,

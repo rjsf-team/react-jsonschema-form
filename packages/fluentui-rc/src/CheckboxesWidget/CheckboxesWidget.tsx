@@ -81,7 +81,7 @@ export default function CheckboxesWidget<
                 onChange={_onChange(index)}
                 onBlur={_onBlur}
                 onFocus={_onFocus}
-                aria-describedby={ariaDescribedByIds<T>(id)}
+                aria-describedby={ariaDescribedByIds(id)}
               />
             );
           })}

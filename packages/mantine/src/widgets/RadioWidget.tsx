@@ -79,7 +79,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
       required={required}
       readOnly={disabled || readonly}
       error={rawErrors && rawErrors.length > 0 ? rawErrors.join('\n') : undefined}
-      aria-describedby={ariaDescribedByIds<T>(id)}
+      aria-describedby={ariaDescribedByIds(id)}
       {...themeProps}
     >
       {Array.isArray(enumOptions) ? (

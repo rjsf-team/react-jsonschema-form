@@ -119,7 +119,7 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
       onChange={_onChange}
       onBlur={_onBlur}
       onFocus={_onFocus}
-      aria-describedby={ariaDescribedByIds<T>(id)}
+      aria-describedby={ariaDescribedByIds(id)}
     />
   );
 }

@@ -134,7 +134,7 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
         onFocus={_onFocus}
         autoFocus={autofocus}
         value={formValue}
-        aria-describedby={ariaDescribedByIds<T>(id)}
+        aria-describedby={ariaDescribedByIds(id)}
         positioning={{ placement: 'bottom' }}
       >
         <ChakraSelect.Control>

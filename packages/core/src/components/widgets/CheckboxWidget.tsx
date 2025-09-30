@@ -62,7 +62,7 @@ function CheckboxWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F exte
     <div className={`checkbox ${disabled || readonly ? 'disabled' : ''}`}>
       {!hideLabel && description && (
         <DescriptionFieldTemplate
-          id={descriptionId<T>(id)}
+          id={descriptionId(id)}
           description={description}
           schema={schema}
           uiSchema={uiSchema}
@@ -81,7 +81,7 @@ function CheckboxWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F exte
           onChange={handleChange}
           onBlur={handleBlur}
           onFocus={handleFocus}
-          aria-describedby={ariaDescribedByIds<T>(id)}
+          aria-describedby={ariaDescribedByIds(id)}
         />
         {labelValue(<span>{label}</span>, hideLabel)}
       </label>

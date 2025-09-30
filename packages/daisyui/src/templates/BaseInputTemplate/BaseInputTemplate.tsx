@@ -50,7 +50,7 @@ export default function BaseInputTemplate<
 
   // Extract step, min, max, accept from inputProps
   const { step, min, max, accept, ...rest } = inputProps;
-  const htmlInputProps = { step, min, max, accept, ...(schema.examples ? { list: examplesId<T>(id) } : undefined) };
+  const htmlInputProps = { step, min, max, accept, ...(schema.examples ? { list: examplesId(id) } : undefined) };
 
   const _onChange = useCallback(
     ({ target: { value } }: ChangeEvent<HTMLInputElement>) => onChange(value === '' ? options.emptyValue : value),
@@ -87,11 +87,11 @@ export default function BaseInputTemplate<
           onChange={onChangeOverride || _onChange}
           onBlur={_onBlur}
           onFocus={_onFocus}
-          aria-describedby={ariaDescribedByIds<T>(id, !!schema.examples)}
+          aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
         />
       </div>
       {Array.isArray(schema.examples) && (
-        <datalist id={examplesId<T>(id)}>
+        <datalist id={examplesId(id)}>
           {(schema.examples as string[])
             .concat(schema.default && !schema.examples.includes(schema.default) ? ([schema.default] as string[]) : [])
             .map((example: any) => {

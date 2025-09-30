@@ -10,7 +10,6 @@ import isMultiSelectTest from './isMultiSelectTest';
 import isSelectTest from './isSelectTest';
 import retrieveSchemaTest from './retrieveSchemaTest';
 import sanitizeDataForNewSchemaTest from './sanitizeDataForNewSchemaTest';
-import toIdSchemaTest from './toIdSchemaTest';
 import toPathSchemaTest from './toPathSchemaTest';
 
 export * from './types';
@@ -28,6 +27,5 @@ export {
   isSelectTest,
   retrieveSchemaTest,
   sanitizeDataForNewSchemaTest,
-  toIdSchemaTest,
   toPathSchemaTest,
 };

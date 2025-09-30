@@ -102,7 +102,7 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
       error={rawErrors && rawErrors.length > 0 ? rawErrors.join('\n') : undefined}
       searchable
       {...themeProps}
-      aria-describedby={ariaDescribedByIds<T>(id)}
+      aria-describedby={ariaDescribedByIds(id)}
       comboboxProps={{ withinPortal: false }}
     />
   );

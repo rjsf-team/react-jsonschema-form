@@ -30,7 +30,7 @@ export default function ArrayFieldTemplate<T = any, S extends RJSFSchema = RJSFS
     canAdd,
     className,
     disabled,
-    idSchema,
+    fieldPathId,
     items,
     onAddClick,
     readonly,
@@ -78,7 +78,7 @@ export default function ArrayFieldTemplate<T = any, S extends RJSFSchema = RJSFS
   return (
     <div className={`array-field-template ${className}`}>
       <ArrayFieldTitleTemplate
-        idSchema={idSchema}
+        fieldPathId={fieldPathId}
         title={uiOptions.title || title}
         schema={schema}
         uiSchema={uiSchema}
@@ -86,7 +86,7 @@ export default function ArrayFieldTemplate<T = any, S extends RJSFSchema = RJSFS
         registry={registry}
       />
       <ArrayFieldDescriptionTemplate
-        idSchema={idSchema}
+        fieldPathId={fieldPathId}
         description={uiOptions.description || schema.description}
         schema={schema}
         uiSchema={uiSchema}
@@ -105,7 +105,7 @@ export default function ArrayFieldTemplate<T = any, S extends RJSFSchema = RJSFS
         {canAdd && (
           <div className='flex justify-end'>
             <AddButton
-              id={buttonId<T>(idSchema, 'add')}
+              id={buttonId(fieldPathId, 'add')}
               className='rjsf-array-item-add btn btn-primary btn-sm'
               onClick={handleAddClick}
               disabled={disabled || readonly}

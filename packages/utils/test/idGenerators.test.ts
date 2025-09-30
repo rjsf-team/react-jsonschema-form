@@ -1,5 +1,5 @@
 import {
-  IdSchema,
+  FieldPathId,
   ID_KEY,
   ariaDescribedByIds,
   buttonId,
@@ -13,43 +13,43 @@ import {
 
 const SIMPLE_ID = 'simpleID';
 const SCHEMA_ID = 'test';
-const ID_SCHEMA: IdSchema = { [ID_KEY]: SCHEMA_ID } as IdSchema;
+const ID_SCHEMA: FieldPathId = { [ID_KEY]: SCHEMA_ID, path: [SCHEMA_ID] };
 
 describe('idGenerators', () => {
   it('description id is generated for simple id', () => {
     expect(descriptionId(SIMPLE_ID)).toEqual(`${SIMPLE_ID}__description`);
   });
-  it('description id is generated for IdSchema', () => {
+  it('description id is generated for FieldPathId', () => {
     expect(descriptionId(ID_SCHEMA)).toEqual(`${SCHEMA_ID}__description`);
   });
   it('error id is generated for simple id', () => {
     expect(errorId(SIMPLE_ID)).toEqual(`${SIMPLE_ID}__error`);
   });
-  it('error id is generated for IdSchema', () => {
+  it('error id is generated for FieldPathId', () => {
     expect(errorId(ID_SCHEMA)).toEqual(`${SCHEMA_ID}__error`);
   });
   it('examples id is generated for simple id', () => {
     expect(examplesId(SIMPLE_ID)).toEqual(`${SIMPLE_ID}__examples`);
   });
-  it('examples id is generated for IdSchema', () => {
+  it('examples id is generated for FieldPathId', () => {
     expect(examplesId(ID_SCHEMA)).toEqual(`${SCHEMA_ID}__examples`);
   });
   it('help id is generated for simple id', () => {
     expect(helpId(SIMPLE_ID)).toEqual(`${SIMPLE_ID}__help`);
   });
-  it('help id is generated for IdSchema', () => {
+  it('help id is generated for FieldPathId', () => {
     expect(helpId(ID_SCHEMA)).toEqual(`${SCHEMA_ID}__help`);
   });
   it('title id is generated for simple id', () => {
     expect(titleId(SIMPLE_ID)).toEqual(`${SIMPLE_ID}__title`);
   });
-  it('title id is generated for IdSchema', () => {
+  it('title id is generated for FieldPathId', () => {
     expect(titleId(ID_SCHEMA)).toEqual(`${SCHEMA_ID}__title`);
   });
   it('ariaDescribedBy ids are generated for simple id', () => {
     expect(ariaDescribedByIds(SIMPLE_ID)).toEqual(`${SIMPLE_ID}__error ${SIMPLE_ID}__description ${SIMPLE_ID}__help`);
   });
-  it('ariaDescribedBy ids are generated for IdSchema', () => {
+  it('ariaDescribedBy ids are generated for FieldPathId', () => {
     expect(ariaDescribedByIds(ID_SCHEMA)).toEqual(`${SCHEMA_ID}__error ${SCHEMA_ID}__description ${SCHEMA_ID}__help`);
   });
   it('ariaDescribedBy ids are generated for simple id with examples', () => {
@@ -57,7 +57,7 @@ describe('idGenerators', () => {
       `${SIMPLE_ID}__error ${SIMPLE_ID}__description ${SIMPLE_ID}__help ${SIMPLE_ID}__examples`,
     );
   });
-  it('ariaDescribedBy ids are generated for IdSchema with examples', () => {
+  it('ariaDescribedBy ids are generated for FieldPathId with examples', () => {
     expect(ariaDescribedByIds(ID_SCHEMA, true)).toEqual(
       `${SCHEMA_ID}__error ${SCHEMA_ID}__description ${SCHEMA_ID}__help ${SCHEMA_ID}__examples`,
     );
@@ -71,10 +71,10 @@ describe('idGenerators', () => {
   it('button ids of an copy button are generated for simple id', () => {
     expect(buttonId(SIMPLE_ID, 'copy')).toEqual(`${SIMPLE_ID}__copy`);
   });
-  it('button ids of an move down button are generated for IdSchema ', () => {
+  it('button ids of an move down button are generated for FieldPathId ', () => {
     expect(buttonId(ID_SCHEMA, 'moveDown')).toEqual(`${SCHEMA_ID}__moveDown`);
   });
-  it('button ids of an move up button are generated for IdSchema ', () => {
+  it('button ids of an move up button are generated for FieldPathId ', () => {
     expect(buttonId(ID_SCHEMA, 'moveUp')).toEqual(`${SCHEMA_ID}__moveUp`);
   });
   it('button ids of an remove button are generated for simple id', () => {

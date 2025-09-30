@@ -61,7 +61,7 @@ export default function TextareaWidget<
       style={INPUT_STYLE}
       value={value}
       {...extraProps}
-      aria-describedby={ariaDescribedByIds<T>(id)}
+      aria-describedby={ariaDescribedByIds(id)}
     />
   );
 }

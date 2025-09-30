@@ -60,7 +60,7 @@ export default function TextareaWidget<
         onBlur={_onBlur}
         onFocus={_onFocus}
         rows={options.rows}
-        aria-describedby={ariaDescribedByIds<T>(id)}
+        aria-describedby={ariaDescribedByIds(id)}
       />
     </Field>
   );

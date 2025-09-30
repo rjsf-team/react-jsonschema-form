@@ -44,7 +44,7 @@ export default function RangeWidget<T = any, S extends StrictRJSFSchema = RJSFSc
         onFocus={_onFocus}
         valueLabelDisplay='auto'
         {...sliderProps}
-        aria-describedby={ariaDescribedByIds<T>(id)}
+        aria-describedby={ariaDescribedByIds(id)}
       />
     </>
   );

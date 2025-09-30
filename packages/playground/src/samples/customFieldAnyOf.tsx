@@ -4,7 +4,7 @@ import noop from 'lodash/noop';
 import { Sample } from './Sample';
 
 function UiField(props: FieldProps) {
-  const { idSchema, formData, onChange, registry, schema, uiSchema, ...otherProps } = props;
+  const { fieldPathId, formData, onChange, registry, schema, uiSchema, ...otherProps } = props;
   const { fields, schemaUtils } = registry;
   const changeHandlerFactory = (fieldName: string) => (value: any) => {
     onChange(value, [fieldName]);
@@ -59,7 +59,7 @@ function UiField(props: FieldProps) {
               {...otherProps}
               name={cityLabel}
               required={citySchema.isRequired}
-              idSchema={cityIdSchema}
+              fieldPathId={cityIdSchema}
               formData={formData.city}
               onChange={changeHandlerFactory(cityKey)}
             />
@@ -80,7 +80,7 @@ function UiField(props: FieldProps) {
               {...otherProps}
               name={latLabel}
               required={latSchema.isRequired}
-              idSchema={latIdSchema}
+              fieldPathId={latIdSchema}
               formData={formData.lat}
               onChange={changeHandlerFactory(latKey)}
             />
@@ -92,7 +92,7 @@ function UiField(props: FieldProps) {
               {...otherProps}
               name={lonLabel}
               required={lonSchema.isRequired}
-              idSchema={lonIdSchema}
+              fieldPathId={lonIdSchema}
               formData={formData.lon}
               onChange={changeHandlerFactory(lonKey)}
             />

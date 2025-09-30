@@ -73,7 +73,7 @@ export default function CheckboxesWidget<
                 autoFocus={autofocus && index === 0}
                 onBlur={_onBlur}
                 onFocus={_onFocus}
-                aria-describedby={ariaDescribedByIds<T>(id)}
+                aria-describedby={ariaDescribedByIds(id)}
               />
               <Label className='leading-tight' htmlFor={optionId(id, index)}>
                 {option.label}

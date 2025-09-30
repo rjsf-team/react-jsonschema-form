@@ -12,7 +12,6 @@ import {
   isSelectTest,
   retrieveSchemaTest,
   sanitizeDataForNewSchemaTest,
-  toIdSchemaTest,
   toPathSchemaTest,
 } from './schema';
 
@@ -31,5 +30,4 @@ isMultiSelectTest(testValidator);
 isSelectTest(testValidator);
 retrieveSchemaTest(testValidator);
 sanitizeDataForNewSchemaTest(testValidator);
-toIdSchemaTest(testValidator);
 toPathSchemaTest(testValidator);

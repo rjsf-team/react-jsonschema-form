@@ -85,7 +85,7 @@ export default function WrapIfAdditionalTemplate<
           </Grid.Col>
         </Grid>
         <RemoveButton
-          id={buttonId<T>(id, 'remove')}
+          id={buttonId(id, 'remove')}
           iconType='sm'
           className='rjsf-array-item-remove'
           disabled={disabled || readonly}

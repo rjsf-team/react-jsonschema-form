@@ -1,4 +1,4 @@
-import { titleId, FieldProps, ID_KEY, IdSchema, Registry, TitleFieldProps } from '@rjsf/utils';
+import { titleId, FieldProps, ID_KEY, Registry, TitleFieldProps } from '@rjsf/utils';
 import { render, screen, within } from '@testing-library/react';
 import noop from 'lodash/noop';
 
@@ -24,7 +24,14 @@ function TestTitleField(props: TitleFieldProps) {
 
 describe('LayoutHeaderField', () => {
   function getProps(overrideProps: Partial<FieldProps> = {}): FieldProps {
-    const { idSchema = {} as IdSchema, schema = {}, name = '', uiSchema = {}, required = false, title } = overrideProps;
+    const {
+      fieldPathId = { [ID_KEY]: 'root', path: [] },
+      schema = {},
+      name = '',
+      uiSchema = {},
+      required = false,
+      title,
+    } = overrideProps;
     return {
       // required FieldProps stubbed
       autofocus: false,
@@ -39,7 +46,7 @@ describe('LayoutHeaderField', () => {
       title,
       required,
       // end required FieldProps
-      idSchema,
+      fieldPathId,
       schema,
       uiSchema,
       name,
@@ -66,36 +73,36 @@ describe('LayoutHeaderField', () => {
     // renders header field and has expected text and no id
     const headerField = screen.getByTestId(TEST_ID);
     expect(headerField).toHaveTextContent(TITLE_BOLD);
-    expect(headerField).toHaveAttribute('id', titleId('undefined'));
+    expect(headerField).toHaveAttribute('id', titleId(props.fieldPathId));
 
     // Is required
     const requiredSpan = within(headerField).getByTestId(REQUIRED_ID);
     expect(requiredSpan).toBeInTheDocument();
   });
 
-  test('name is provided, schema has title, idSchema has ID_KEY, not required', () => {
+  test('name is provided, schema has title, fieldPathId has ID_KEY, not required', () => {
     const props = getProps({
       name: TITLE_BOLD,
       schema: { title: TITLE_NORMAL },
-      idSchema: { [ID_KEY]: 'foo' } as IdSchema,
+      fieldPathId: { [ID_KEY]: 'foo', path: [] },
     });
     render(<LayoutHeaderField {...props} />);
 
     // renders header field and has expected text and id
     const headerField = screen.getByTestId(TEST_ID);
     expect(headerField).toHaveTextContent(TITLE_NORMAL);
-    expect(headerField).toHaveAttribute('id', titleId(props.idSchema[ID_KEY]));
+    expect(headerField).toHaveAttribute('id', titleId(props.fieldPathId[ID_KEY]));
 
     // Is not required
     const requiredSpan = within(headerField).queryByTestId(REQUIRED_ID);
     expect(requiredSpan).not.toBeInTheDocument();
   });
 
-  test('title prop is passed, schema has title, idSchema has ID_KEY, required', () => {
+  test('title prop is passed, schema has title, fieldPathId has ID_KEY, required', () => {
     const props = getProps({
       title: TITLE_BOLD,
       schema: { title: TITLE_NORMAL },
-      idSchema: { [ID_KEY]: 'foo' } as IdSchema,
+      fieldPathId: { [ID_KEY]: 'foo', path: [] },
       required: true,
     });
     render(<LayoutHeaderField {...props} />);
@@ -103,7 +110,7 @@ describe('LayoutHeaderField', () => {
     // renders header field and has expected text and id
     const headerField = screen.getByTestId(TEST_ID);
     expect(headerField).toHaveTextContent(TITLE_BOLD);
-    expect(headerField).toHaveAttribute('id', titleId(props.idSchema[ID_KEY]));
+    expect(headerField).toHaveAttribute('id', titleId(props.fieldPathId[ID_KEY]));
 
     // Is not required
     const requiredSpan = within(headerField).getByTestId(REQUIRED_ID);
@@ -116,14 +123,14 @@ describe('LayoutHeaderField', () => {
       uiSchema: {
         'ui:title': TITLE_BOLD_2,
       },
-      idSchema: { [ID_KEY]: 'foo' } as IdSchema,
+      fieldPathId: { [ID_KEY]: 'foo', path: [] },
     });
     render(<LayoutHeaderField {...props} />);
 
     // renders header field and has expected text and no id
     const headerField = screen.getByTestId(TEST_ID);
     expect(headerField).toHaveTextContent(TITLE_BOLD_2);
-    expect(headerField).toHaveAttribute('id', titleId(props.idSchema[ID_KEY]));
+    expect(headerField).toHaveAttribute('id', titleId(props.fieldPathId[ID_KEY]));
 
     // Is not required
     const requiredSpan = within(headerField).queryByTestId(REQUIRED_ID);

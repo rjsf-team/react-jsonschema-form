@@ -59,13 +59,13 @@ export default function BaseInputTemplate<
       required={required}
       autoFocus={autofocus}
       disabled={disabled || readonly}
-      list={schema.examples ? examplesId<T>(id) : undefined}
+      list={schema.examples ? examplesId(id) : undefined}
       value={value || value === 0 ? value : ''}
       invalid={rawErrors.length > 0}
       onChange={onChangeOverride || _onChange}
       onBlur={_onBlur}
       onFocus={_onFocus}
-      aria-describedby={ariaDescribedByIds<T>(id, !!schema.examples)}
+      aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
     />
   );
 }

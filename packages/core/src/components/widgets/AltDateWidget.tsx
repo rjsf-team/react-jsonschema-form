@@ -61,7 +61,7 @@ function DateElement<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
       onFocus={onFocus}
       registry={registry}
       label=''
-      aria-describedby={ariaDescribedByIds<T>(rootId)}
+      aria-describedby={ariaDescribedByIds(rootId)}
     />
   );
 }

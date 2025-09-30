@@ -41,13 +41,13 @@ The user is warned in the console if `schema.additionalItems` has the value `tru
 
 - boolean: True if additional items is allowed, otherwise false
 
-### ariaDescribedByIds&lt;T = any>()
+### ariaDescribedByIds()
 
 Return a list of element ids that contain additional information about the field that can be used to as the aria description of the field.
 
 #### Parameters
 
-- id: IdSchema&lt;T> | string - Either simple string id or an IdSchema from which to extract it
+- id: FieldPathId | string - Either simple string id or an FieldPathId from which to extract it
 - [includeExamples=false]: boolean - Optional flag, if true, will add the `examplesId` into the list
 
 #### Returns
@@ -70,13 +70,13 @@ Otherwise, the string is wrapped by `Number()` and if that result is not `NaN`, 
 
 - undefined | null | string | number: The `value` converted to a number when appropriate, otherwise the `value`
 
-### buttonId&lt;T = any>()
+### buttonId()
 
 Return a consistent `id` for the `btn` button element
 
 #### Parameters
 
-- id: IdSchema&lt;T> | string - Either simple string id or an IdSchema from which to extract it
+- id: FieldPathId | string - Either simple string id or an FieldPathId from which to extract it
 - btn: 'add' | 'copy' | 'moveDown' | 'moveUp' | 'remove' - The button type for which to generate the id
 
 #### Returns
@@ -155,13 +155,13 @@ Implements a deep equals using the `lodash.isEqualWith` function, that provides 
 
 - boolean: True if the `a` and `b` are deeply equal, false otherwise
 
-### descriptionId&lt;T = any>()
+### descriptionId()
 
 Return a consistent `id` for the field description element.
 
 #### Parameters
 
-- id: IdSchema&lt;T> | string - Either simple string id or an IdSchema from which to extract it
+- id: FieldPathId | string - Either simple string id or an FieldPathId from which to extract it
 
 #### Returns
 
@@ -257,25 +257,25 @@ If `valueIndex` is an array, AND it contains an invalid index, the returned arra
 
 - EnumOptionsType&lt;S>["value"] | EnumOptionsType&lt;S>["value"][] | undefined: The single or list of values specified by the single or list of indexes if they are valid. Otherwise, `emptyValue` or an empty list.
 
-### errorId&lt;T = any>()
+### errorId()
 
 Return a consistent `id` for the field error element.
 
 #### Parameters
 
-- id: IdSchema&lt;T> | string - Either simple string id or an IdSchema from which to extract it
+- id: FieldPathId | string - Either simple string id or an FieldPathId from which to extract it
 
 #### Returns
 
 - string: The consistent id for the field error element from the given `id`
 
-### examplesId&lt;T = any>()
+### examplesId()
 
 Return a consistent `id` for the field examples element.
 
 #### Parameters
 
-- id: IdSchema&lt;T> | string - Either simple string id or an IdSchema from which to extract it
+- id: FieldPathId | string - Either simple string id or an FieldPathId from which to extract it
 
 #### Returns
 
@@ -546,13 +546,13 @@ Detects whether the `widget` exists for the `schema` with the associated `regist
 
 - boolean: True if the widget exists, false otherwise
 
-### helpId&lt;T = any>()
+### helpId()
 
 Return a consistent `id` for the field help element.
 
 #### Parameters
 
-- id: IdSchema&lt;T> | string - Either simple string id or an IdSchema from which to extract it
+- id: FieldPathId | string - Either simple string id or an FieldPathId from which to extract it
 
 #### Returns
 
@@ -862,13 +862,13 @@ Stringifies an `object`, sorts object fields in consistent order before stringif
 
 - string: The stringified object with keys sorted in a consistent order
 
-### titleId&lt;T = any>()
+### titleId()
 
 Return a consistent `id` for the field title element.
 
 #### Parameters
 
-- id: IdSchema&lt;T> | string - Either simple string id or an IdSchema from which to extract it
+- id: FieldPathId | string - Either simple string id or an FieldPathId from which to extract it
 
 #### Returns
 
@@ -946,7 +946,23 @@ const intoThis = {
 
 - ErrorSchema&lt;T>: The `ErrorSchema` built from the list of `RJSFValidationErrors`
 
-#### unwrapErrorHandler&lt;T = any>()
+### toFieldPathId()
+
+Constructs the `FieldPathId` for `fieldPath`. If `parentPathId` is provided, the `fieldPath` is appended to the end
+of the parent path. Then the `ID_KEY` of the resulting `FieldPathId` is constructed from the `idPrefix` and
+`idSeparator` contained within the `globalFormOptions`
+
+#### Parameters
+
+- fieldPath: string | number - The property name or array index of the current field element
+- globalFormOptions: GlobalFormOptions - The `GlobalFormOptions` used to get the `idPrefix` and `idSeparator`
+- [parentPath]: FieldPathId | FieldPathList | undefined - The optional `FieldPathId` or `FieldPathList` of the parent element for this field element
+
+#### Returns
+
+- FieldPathId: The `FieldPathId` for the given `fieldPath` and the optional `parentPathId`
+
+### unwrapErrorHandler&lt;T = any>()
 
 Unwraps the `errorHandler` structure into the associated `ErrorSchema`, stripping the `addError()` functions from it
 
@@ -1208,25 +1224,6 @@ Also, any properties in the old schema that are non-existent in the new schema a
 #### Returns
 
 - T: The new form data, with all the fields uniquely associated with the old schema set to `undefined`. Will return `undefined` if the new schema is not an object containing properties.
-
-### toIdSchema&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
-
-Generates an `IdSchema` object for the `schema`, recursively
-
-#### Parameters
-
-- validator: ValidatorType&lt;T, S, F> - An implementation of the `ValidatorType` interface that will be used when necessary
-- schema: S - The schema for which the `IdSchema` is desired
-- [id]: string | null - The base id for the schema
-- [rootSchema]: S | undefined- The root schema, used to primarily to look up `$ref`s
-- [formData]: T | undefined - The current formData, if any, to assist retrieving a schema
-- [idPrefix='root']: string - The prefix to use for the id
-- [idSeparator='_']: string - The separator to use for the path segments in the id
-- [experimental_customMergeAllOf]: Experimental_CustomMergeAllOf&lt;S&gt; - See `Form` documentation for the [experimental_customMergeAllOf](./form-props.md#experimental_custommergeallof) prop
-
-#### Returns
-
-- IDSchema&lt;T>: The `IdSchema` object for the `schema`
 
 ### toPathSchema&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
 

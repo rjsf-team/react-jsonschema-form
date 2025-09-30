@@ -1,7 +1,7 @@
 import { forwardRef, memo, ForwardedRef } from 'react';
 import TestRenderer from 'react-test-renderer';
 
-import { IdSchema, Registry, RJSFSchema, WidgetProps, getWidget, Widget } from '../src';
+import { FieldPathId, Registry, RJSFSchema, WidgetProps, getWidget, Widget } from '../src';
 
 const subschema: RJSFSchema = {
   type: 'boolean',
@@ -77,7 +77,7 @@ const widgetProps: WidgetProps = {
   onFocus: jest.fn(),
   readonly: false,
   required: false,
-  idSchema: {} as IdSchema,
+  fieldPathId: {} as FieldPathId,
   schema: {} as RJSFSchema,
   uiSchema: {},
   options: {},

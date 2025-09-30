@@ -9,7 +9,7 @@ import {
 } from '@rjsf/utils';
 
 /** The `ArrayFieldDescriptionTemplate` component renders a `DescriptionFieldTemplate` with an `id` derived from
- * the `idSchema`.
+ * the `fieldPathId`.
  *
  * @param props - The `ArrayFieldDescriptionProps` for the component
  */
@@ -18,7 +18,7 @@ export default function ArrayFieldDescriptionTemplate<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
 >(props: ArrayFieldDescriptionProps<T, S, F>) {
-  const { idSchema, description, registry, schema, uiSchema } = props;
+  const { fieldPathId, description, registry, schema, uiSchema } = props;
   const options = getUiOptions<T, S, F>(uiSchema, registry.globalUiOptions);
   const { label: displayLabel = true } = options;
   if (!description || !displayLabel) {
@@ -31,7 +31,7 @@ export default function ArrayFieldDescriptionTemplate<
   );
   return (
     <DescriptionFieldTemplate
-      id={descriptionId<T>(idSchema)}
+      id={descriptionId(fieldPathId)}
       description={description}
       schema={schema}
       uiSchema={uiSchema}

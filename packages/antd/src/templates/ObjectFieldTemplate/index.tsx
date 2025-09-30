@@ -39,7 +39,7 @@ export default function ObjectFieldTemplate<
     description,
     disabled,
     formData,
-    idSchema,
+    fieldPathId,
     onAddClick,
     properties,
     readonly,
@@ -115,12 +115,12 @@ export default function ObjectFieldTemplate<
   );
 
   return (
-    <fieldset id={idSchema.$id}>
+    <fieldset id={fieldPathId.$id}>
       <Row gutter={rowGutter}>
         {title && (
           <Col className={labelColClassName} span={24}>
             <TitleFieldTemplate
-              id={titleId<T>(idSchema)}
+              id={titleId(fieldPathId)}
               title={title}
               required={required}
               schema={schema}
@@ -132,7 +132,7 @@ export default function ObjectFieldTemplate<
         {description && (
           <Col span={24} style={DESCRIPTION_COL_STYLE}>
             <DescriptionFieldTemplate
-              id={descriptionId<T>(idSchema)}
+              id={descriptionId(fieldPathId)}
               description={description}
               schema={schema}
               uiSchema={uiSchema}
@@ -154,7 +154,7 @@ export default function ObjectFieldTemplate<
           <Row gutter={rowGutter} justify='end'>
             <Col flex='192px'>
               <AddButton
-                id={buttonId<T>(idSchema, 'add')}
+                id={buttonId(fieldPathId, 'add')}
                 className='rjsf-object-property-expand'
                 disabled={disabled || readonly}
                 onClick={onAddClick(schema)}

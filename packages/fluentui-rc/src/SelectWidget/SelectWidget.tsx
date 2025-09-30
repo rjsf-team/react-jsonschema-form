@@ -82,7 +82,7 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
         onFocus={_onFocus}
         onOptionSelect={_onChange}
         selectedOptions={selectedIndexesAsArray}
-        aria-describedby={ariaDescribedByIds<T>(id)}
+        aria-describedby={ariaDescribedByIds(id)}
       >
         {showPlaceholderOption && <Option value=''>{placeholder || ''}</Option>}
         {Array.isArray(enumOptions) &&
