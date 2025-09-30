@@ -744,7 +744,7 @@ const NO_SCHEMA_OR_OPTIONS = {
 };
 
 function fieldPathIdFromPaths(paths: FieldPathList, globalFormOptions: GlobalFormOptions, base: FieldPathId) {
-  return toFieldPathId(paths.pop()!, globalFormOptions, [...base.path, ...paths]);
+  return toFieldPathId('', globalFormOptions, [...base.path, ...paths]);
 }
 
 /** Function used to transform `props` the `field` additional `otherProps` and `otherUiProps` into a set of
@@ -1336,23 +1336,23 @@ describe('LayoutGridField', () => {
     });
   });
   describe('LayoutGridField.computeUIComponentPropsFromGridSchema()', () => {
-    test('grfieldPathId is undefined', () => {
+    test('gridSchema is undefined', () => {
       expect(LayoutGridField.computeUIComponentPropsFromGridSchema(registry)).toEqual({
         name: '',
         uiProps: {},
         UIComponent: null,
       });
     });
-    test('grfieldPathId is a string', () => {
+    test('gridSchema is a string', () => {
       expect(LayoutGridField.computeUIComponentPropsFromGridSchema(registry, 'foo')).toEqual({
         name: 'foo',
         uiProps: {},
         UIComponent: null,
       });
     });
-    test('grfieldPathId contains name and looked up placeholder', () => {
-      const grfieldPathId = { name: 'foo', placeholder: '$lookup=PlaceholderText' };
-      expect(LayoutGridField.computeUIComponentPropsFromGridSchema(registry, grfieldPathId)).toEqual({
+    test('gridSchema contains name and looked up placeholder', () => {
+      const gridSchema = { name: 'foo', placeholder: '$lookup=PlaceholderText' };
+      expect(LayoutGridField.computeUIComponentPropsFromGridSchema(registry, gridSchema)).toEqual({
         name: 'foo',
         uiProps: {
           placeholder: LOOKUP_MAP.PlaceholderText,
@@ -1360,9 +1360,9 @@ describe('LayoutGridField', () => {
         UIComponent: null,
       });
     });
-    test('grfieldPathId contains name, other props and a render', () => {
-      const grfieldPathId = { name: 'foo', fullWidth: true, render: TestRenderer };
-      expect(LayoutGridField.computeUIComponentPropsFromGridSchema(registry, grfieldPathId)).toEqual({
+    test('gridSchema contains name, other props and a render', () => {
+      const gridSchema = { name: 'foo', fullWidth: true, render: TestRenderer };
+      expect(LayoutGridField.computeUIComponentPropsFromGridSchema(registry, gridSchema)).toEqual({
         name: 'foo',
         uiProps: {
           fullWidth: true,
@@ -1370,9 +1370,9 @@ describe('LayoutGridField', () => {
         UIComponent: TestRenderer,
       });
     });
-    test('grfieldPathId contains other props and a render, no name', () => {
-      const grfieldPathId = { fullWidth: true, render: TestRenderer };
-      expect(LayoutGridField.computeUIComponentPropsFromGridSchema(registry, grfieldPathId)).toEqual({
+    test('gridSchema contains other props and a render, no name', () => {
+      const gridSchema = { fullWidth: true, render: TestRenderer };
+      expect(LayoutGridField.computeUIComponentPropsFromGridSchema(registry, gridSchema)).toEqual({
         name: '',
         uiProps: {
           fullWidth: true,

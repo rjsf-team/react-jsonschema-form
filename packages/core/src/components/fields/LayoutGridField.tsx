@@ -645,27 +645,27 @@ export default class LayoutGridField<
     return null;
   }
 
-  /** Extract the `name`, and optional `render` and all other props from the `grfieldPathId`. We look up the `render` to
+  /** Extract the `name`, and optional `render` and all other props from the `gridSchema`. We look up the `render` to
    * see if can be resolved to a UIComponent. If `name` does not exist and there is an optional `render` UIComponent, we
    * set the `rendered` component with only specified props for that component in the object.
    *
    * @param registry - The `@rjsf` Registry from which to look up `classNames` if they are present in the extra props
-   * @param grfieldPathId - The string or object that represents the configuration for the grid field
-   * @returns - The UIComponentPropsType computed from the grfieldPathId
+   * @param gridSchema - The string or object that represents the configuration for the grid field
+   * @returns - The UIComponentPropsType computed from the gridSchema
    */
   static computeUIComponentPropsFromGridSchema<
     T = any,
     S extends StrictRJSFSchema = RJSFSchema,
     F extends FormContextType = any,
-  >(registry: Registry<T, S, F>, grfieldPathId?: string | ConfigObject): UIComponentPropsType {
+  >(registry: Registry<T, S, F>, gridSchema?: string | ConfigObject): UIComponentPropsType {
     let name: string;
     let UIComponent: RenderComponent | null = null;
     let uiProps: ConfigObject = {};
     let rendered: ReactNode | undefined;
-    if (isString(grfieldPathId) || isUndefined(grfieldPathId)) {
-      name = grfieldPathId ?? '';
+    if (isString(gridSchema) || isUndefined(gridSchema)) {
+      name = gridSchema ?? '';
     } else {
-      const { name: innerName = '', render, ...innerProps } = grfieldPathId;
+      const { name: innerName = '', render, ...innerProps } = gridSchema;
       name = innerName;
       uiProps = innerProps;
       if (!isEmpty(uiProps)) {
@@ -839,14 +839,14 @@ export default class LayoutGridField<
     ));
   }
 
-  /** Renders the field described by `grfieldPathId`. If `grfieldPathId` is not an object, then is will be assumed
+  /** Renders the field described by `gridSchema`. If `gridSchema` is not an object, then is will be assumed
    * to be the dotted-path to the field in the schema. Otherwise, we extract the `name`, and optional `render` and all
    * other props. If `name` does not exist and there is an optional `render`, we return the `render` component with only
    * specified props for that component. If `name` exists, we take the name, the initial & root schemas and the formData
    * and get the destination schema, is required state and optional oneOf/anyOf options for it. If the destination
    * schema was located along with oneOf/anyOf options then a `LayoutMultiSchemaField` will be rendered with the
    * `uiSchema`, `errorSchema`, `fieldPathId` and `formData` drilled down to the dotted-path field, spreading any other
-   * props from `grfieldPathId` into the `ui:options`. If the destination schema located without any oneOf/anyOf options,
+   * props from `gridSchema` into the `ui:options`. If the destination schema located without any oneOf/anyOf options,
    * then a `SchemaField` will be rendered with the same props as mentioned in the previous sentence. If no destination
    * schema was located, but a custom render component was found, then it will be rendered with many of the non-event
    * handling props. If none of the previous render paths are valid, then a null is returned.
