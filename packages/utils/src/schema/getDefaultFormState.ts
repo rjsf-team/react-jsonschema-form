@@ -732,12 +732,12 @@ export function getDefaultBasedOnSchemaType<
  * @param theSchema - The schema for which the default state is desired
  * @param [formData] - The current formData, if any, onto which to provide any missing defaults
  * @param [rootSchema] - The root schema, used to primarily to look up `$ref`s
- * @param initialDefaultsGenerated - Indicates whether or not initial defaults have been generated
  * @param [includeUndefinedValues=false] - Optional flag, if true, cause undefined values to be added as defaults.
  *          If "excludeObjectChildren", cause undefined values for this object and pass `includeUndefinedValues` as
  *          false when computing defaults for any nested object properties.
  * @param [experimental_defaultFormStateBehavior] Optional configuration object, if provided, allows users to override default form state behavior
  * @param [experimental_customMergeAllOf] - Optional function that allows for custom merging of `allOf` schemas
+ * @param initialDefaultsGenerated - Indicates whether or not initial defaults have been generated
  * @returns - The resulting `formData` with all the defaults provided
  */
 export default function getDefaultFormState<
@@ -749,10 +749,10 @@ export default function getDefaultFormState<
   theSchema: S,
   formData?: T,
   rootSchema?: S,
-  initialDefaultsGenerated?: boolean,
   includeUndefinedValues: boolean | 'excludeObjectChildren' = false,
   experimental_defaultFormStateBehavior?: Experimental_DefaultFormStateBehavior,
   experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>,
+  initialDefaultsGenerated?: boolean,
 ) {
   if (!isObject(theSchema)) {
     throw new Error('Invalid schema: ' + theSchema);

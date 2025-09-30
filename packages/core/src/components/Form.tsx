@@ -464,7 +464,12 @@ export default class Form<
     }
 
     const rootSchema = schemaUtils.getRootSchema();
-    const formData: T = schemaUtils.getDefaultFormState(rootSchema, inputFormData, state.initialDefaultsGenerated) as T;
+    const formData: T = schemaUtils.getDefaultFormState(
+      rootSchema,
+      inputFormData,
+      false,
+      state.initialDefaultsGenerated,
+    ) as T;
     const _retrievedSchema = this.updateRetrievedSchema(
       retrievedSchema ?? schemaUtils.retrieveSchema(rootSchema, formData),
     );

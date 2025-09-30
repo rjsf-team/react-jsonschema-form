@@ -1218,7 +1218,7 @@ describe('ObjectField', () => {
         formData: {},
       });
 
-      fireEvent.click(node.querySelector('.array-item-remove'));
+      fireEvent.click(node.querySelector('.rjsf-object-property-remove'));
 
       sinon.assert.calledWithMatch(onChange.lastCall, {
         formData: {},
@@ -1292,7 +1292,7 @@ describe('ObjectField', () => {
         formData: {},
       });
 
-      fireEvent.click(node.querySelector('.array-item-remove'));
+      fireEvent.click(node.querySelector('.rjsf-object-property-remove'));
 
       sinon.assert.calledWithMatch(onChange.lastCall, {
         formData: {

@@ -1183,17 +1183,17 @@ export interface SchemaUtilsType<T = any, S extends StrictRJSFSchema = RJSFSchem
    *
    * @param schema - The schema for which the default state is desired
    * @param [formData] - The current formData, if any, onto which to provide any missing defaults
-   * @param initialDefaultsGenerated - Indicates whether or not initial defaults have been generated
    * @param [includeUndefinedValues=false] - Optional flag, if true, cause undefined values to be added as defaults.
    *          If "excludeObjectChildren", cause undefined values for this object and pass `includeUndefinedValues` as
    *          false when computing defaults for any nested object properties.
+   * @param initialDefaultsGenerated - Indicates whether or not initial defaults have been generated
    * @returns - The resulting `formData` with all the defaults provided
    */
   getDefaultFormState(
     schema: S,
     formData?: T,
-    initialDefaultsGenerated?: boolean,
     includeUndefinedValues?: boolean | 'excludeObjectChildren',
+    initialDefaultsGenerated?: boolean,
   ): T | T[] | undefined;
   /** Determines whether the combination of `schema` and `uiSchema` properties indicates that the label for the `schema`
    * should be displayed in a UI.
