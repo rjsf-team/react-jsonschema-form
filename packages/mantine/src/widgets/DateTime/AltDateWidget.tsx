@@ -82,7 +82,7 @@ export default function AltDateWidget<
   return (
     <>
       {!hideLabel && !!label && (
-        <Input.Label id={titleId<T>(id)} required={required}>
+        <Input.Label id={titleId(id)} required={required}>
           {label}
         </Input.Label>
       )}
@@ -107,7 +107,7 @@ export default function AltDateWidget<
                 searchable={false}
                 allowDeselect={false}
                 comboboxProps={{ withinPortal: false }}
-                aria-describedby={ariaDescribedByIds<T>(elemId)}
+                aria-describedby={ariaDescribedByIds(elemId)}
               />
             </Box>
           );

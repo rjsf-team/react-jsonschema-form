@@ -53,7 +53,7 @@ export default function TextareaWidget<
         onChange={_onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
-        aria-describedby={ariaDescribedByIds<T>(id)}
+        aria-describedby={ariaDescribedByIds(id)}
         className={className}
       />
     </div>

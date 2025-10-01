@@ -170,7 +170,7 @@ export default function FileWidget<T = any, S extends StrictRJSFSchema = RJSFSch
       onChange={handleChange}
       error={rawErrors && rawErrors.length > 0 ? rawErrors.join('\n') : undefined}
       {...themeProps}
-      aria-describedby={ariaDescribedByIds<T>(id)}
+      aria-describedby={ariaDescribedByIds(id)}
     />
   );
 }

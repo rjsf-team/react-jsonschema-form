@@ -52,7 +52,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
         }}
         onBlur={_onBlur}
         onFocus={_onFocus}
-        aria-describedby={ariaDescribedByIds<T>(id)}
+        aria-describedby={ariaDescribedByIds(id)}
         orientation={inline ? 'horizontal' : 'vertical'}
         className={cn('flex flex-wrap', { 'flex-col': !inline }, className)}
       >

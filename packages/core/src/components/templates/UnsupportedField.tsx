@@ -9,13 +9,13 @@ import Markdown from 'markdown-to-jsx';
 function UnsupportedField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: UnsupportedFieldProps<T, S, F>,
 ) {
-  const { schema, idSchema, reason, registry } = props;
+  const { schema, fieldPathId, reason, registry } = props;
   const { translateString } = registry;
   let translateEnum: TranslatableString = TranslatableString.UnsupportedField;
   const translateParams: string[] = [];
-  if (idSchema && idSchema.$id) {
+  if (fieldPathId && fieldPathId.$id) {
     translateEnum = TranslatableString.UnsupportedFieldWithId;
-    translateParams.push(idSchema.$id);
+    translateParams.push(fieldPathId.$id);
   }
   if (reason) {
     translateEnum =

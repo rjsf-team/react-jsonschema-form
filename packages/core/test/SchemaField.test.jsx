@@ -1,7 +1,7 @@
 import { Component } from 'react';
 import { expect } from 'chai';
 import { fireEvent, act } from '@testing-library/react';
-import { createSchemaUtils, englishStringTranslator } from '@rjsf/utils';
+import { DEFAULT_ID_PREFIX, DEFAULT_ID_SEPARATOR, createSchemaUtils, englishStringTranslator } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
 import SchemaField from '../src/components/fields/SchemaField';
@@ -52,7 +52,11 @@ describe('SchemaField', () => {
         schemaUtils,
         translateString: englishStringTranslator,
         globalUiOptions: undefined,
-        globalFormOptions: {},
+        globalFormOptions: {
+          idPrefix: DEFAULT_ID_PREFIX,
+          idSeparator: DEFAULT_ID_SEPARATOR,
+          experimental_componentUpdateStrategy: undefined,
+        },
       });
     });
     it('should provide expected registry with globalUiOptions as prop', () => {
@@ -87,7 +91,11 @@ describe('SchemaField', () => {
         schemaUtils,
         translateString: englishStringTranslator,
         globalUiOptions: { copyable: true },
-        globalFormOptions: {},
+        globalFormOptions: {
+          idPrefix: DEFAULT_ID_PREFIX,
+          idSeparator: DEFAULT_ID_SEPARATOR,
+          experimental_componentUpdateStrategy: undefined,
+        },
       });
     });
   });

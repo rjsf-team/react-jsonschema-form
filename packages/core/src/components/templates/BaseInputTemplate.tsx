@@ -85,14 +85,14 @@ export default function BaseInputTemplate<
         autoFocus={autofocus}
         value={inputValue}
         {...inputProps}
-        list={schema.examples ? examplesId<T>(id) : undefined}
+        list={schema.examples ? examplesId(id) : undefined}
         onChange={onChangeOverride || _onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
-        aria-describedby={ariaDescribedByIds<T>(id, !!schema.examples)}
+        aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
       />
       {Array.isArray(schema.examples) && (
-        <datalist key={`datalist_${id}`} id={examplesId<T>(id)}>
+        <datalist key={`datalist_${id}`} id={examplesId(id)}>
           {(schema.examples as string[])
             .concat(schema.default && !schema.examples.includes(schema.default) ? ([schema.default] as string[]) : [])
             .map((example: any) => {

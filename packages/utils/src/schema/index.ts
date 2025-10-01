@@ -10,7 +10,6 @@ import isMultiSelect from './isMultiSelect';
 import isSelect from './isSelect';
 import retrieveSchema from './retrieveSchema';
 import sanitizeDataForNewSchema from './sanitizeDataForNewSchema';
-import toIdSchema from './toIdSchema';
 import toPathSchema from './toPathSchema';
 
 export {
@@ -26,6 +25,5 @@ export {
   isSelect,
   retrieveSchema,
   sanitizeDataForNewSchema,
-  toIdSchema,
   toPathSchema,
 };

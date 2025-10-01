@@ -25,7 +25,7 @@ export default function ObjectFieldTemplate<
     disabled,
     readonly,
     uiSchema,
-    idSchema,
+    fieldPathId,
     schema,
     formData,
     onAddClick,
@@ -47,7 +47,7 @@ export default function ObjectFieldTemplate<
     <>
       {title && (
         <TitleFieldTemplate
-          id={titleId<T>(idSchema)}
+          id={titleId(fieldPathId)}
           title={title}
           required={required}
           schema={schema}
@@ -57,7 +57,7 @@ export default function ObjectFieldTemplate<
       )}
       {description && (
         <DescriptionFieldTemplate
-          id={descriptionId<T>(idSchema)}
+          id={descriptionId(fieldPathId)}
           description={description}
           schema={schema}
           uiSchema={uiSchema}
@@ -69,13 +69,13 @@ export default function ObjectFieldTemplate<
           element.hidden ? (
             element.content
           ) : (
-            <GridItem key={`${idSchema.$id}-${element.name}-${index}`}>{element.content}</GridItem>
+            <GridItem key={`${fieldPathId.$id}-${element.name}-${index}`}>{element.content}</GridItem>
           ),
         )}
         {canExpand<T, S, F>(schema, uiSchema, formData) && (
           <GridItem justifySelf='flex-end'>
             <AddButton
-              id={buttonId<T>(idSchema, 'add')}
+              id={buttonId(fieldPathId, 'add')}
               className='rjsf-object-property-expand'
               onClick={onAddClick(schema)}
               disabled={disabled || readonly}

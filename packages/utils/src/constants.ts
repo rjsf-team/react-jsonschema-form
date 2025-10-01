@@ -26,6 +26,8 @@ export const REQUIRED_KEY = 'required';
 export const SUBMIT_BTN_OPTIONS_KEY = 'submitButtonOptions';
 export const REF_KEY = '$ref';
 export const SCHEMA_KEY = '$schema';
+export const DEFAULT_ID_PREFIX = 'root';
+export const DEFAULT_ID_SEPARATOR = '_';
 /** The path of the discriminator value returned by the schema endpoint.
  * The discriminator is the value in a `oneOf` that determines which option is selected.
  */

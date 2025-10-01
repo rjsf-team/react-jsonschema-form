@@ -75,7 +75,7 @@ export default function WrapIfAdditionalTemplate<
         {children}
         <div className='flex self-center'>
           <RemoveButton
-            id={buttonId<T>(id, 'remove')}
+            id={buttonId(id, 'remove')}
             className='rjsf-object-property-remove'
             disabled={disabled || readonly}
             onClick={handleRemove}

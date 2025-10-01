@@ -73,7 +73,7 @@ export default function TextareaWidget<
         onChange={onChangeOverride || _onChange}
         onFocus={_onFocus}
         onBlur={_onBlur}
-        aria-describedby={ariaDescribedByIds<T>(id, !!schema.examples)}
+        aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
         rows={rows}
       />
     </>

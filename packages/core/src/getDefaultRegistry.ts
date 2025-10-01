@@ -1,4 +1,12 @@
-import { englishStringTranslator, FormContextType, Registry, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
+import {
+  DEFAULT_ID_PREFIX,
+  DEFAULT_ID_SEPARATOR,
+  englishStringTranslator,
+  FormContextType,
+  Registry,
+  RJSFSchema,
+  StrictRJSFSchema,
+} from '@rjsf/utils';
 
 import fields from './components/fields';
 import templates from './components/templates';
@@ -20,6 +28,6 @@ export default function getDefaultRegistry<
     rootSchema: {} as S,
     formContext: {} as F,
     translateString: englishStringTranslator,
-    globalFormOptions: {},
+    globalFormOptions: { idPrefix: DEFAULT_ID_PREFIX, idSeparator: DEFAULT_ID_SEPARATOR },
   };
 }

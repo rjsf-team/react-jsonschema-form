@@ -65,7 +65,7 @@ class AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
    * @param prevState - The previous `AnyOfFieldState` for this template
    */
   componentDidUpdate(prevProps: Readonly<FieldProps<T, S, F>>, prevState: Readonly<AnyOfFieldState>) {
-    const { formData, options, idSchema } = this.props;
+    const { formData, options, fieldPathId } = this.props;
     const { selectedOption } = this.state;
     let newState = this.state;
     if (!deepEquals(prevProps.options, options)) {
@@ -76,7 +76,7 @@ class AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
       const retrievedOptions = options.map((opt: S) => schemaUtils.retrieveSchema(opt, formData));
       newState = { selectedOption, retrievedOptions };
     }
-    if (!deepEquals(formData, prevProps.formData) && idSchema.$id === prevProps.idSchema.$id) {
+    if (!deepEquals(formData, prevProps.formData) && fieldPathId.$id === prevProps.fieldPathId.$id) {
       const { retrievedOptions } = newState;
       const matchingOption = this.getMatchingOption(selectedOption, formData, retrievedOptions);
 
@@ -114,7 +114,7 @@ class AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
    */
   onOptionChange = (option?: string) => {
     const { selectedOption, retrievedOptions } = this.state;
-    const { formData, onChange, registry } = this.props;
+    const { formData, onChange, registry, fieldPathId } = this.props;
     const { schemaUtils } = registry;
     const intOption = option !== undefined ? parseInt(option, 10) : -1;
     if (intOption === selectedOption) {
@@ -131,14 +131,13 @@ class AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
     }
 
     this.setState({ selectedOption: intOption }, () => {
-      // Changing the option will pass an empty path array to the parent field which will add the appropriate path
-      onChange(newFormData, [], undefined, this.getFieldId());
+      onChange(newFormData, fieldPathId.path, undefined, this.getFieldId());
     });
   };
 
   getFieldId() {
-    const { idSchema, schema } = this.props;
-    return `${idSchema.$id}${schema.oneOf ? '__oneof_select' : '__anyof_select'}`;
+    const { fieldPathId, schema } = this.props;
+    return `${fieldPathId.$id}${schema.oneOf ? '__oneof_select' : '__anyof_select'}`;
   }
 
   /** Renders the `AnyOfField` selector along with a `SchemaField` for the value of the `formData`

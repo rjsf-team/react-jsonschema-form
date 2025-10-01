@@ -75,7 +75,7 @@ export default function WrapIfAdditionalTemplate<
         <div className='form-additional form-group col-xs-5'>{children}</div>
         <div className='col-xs-2'>
           <RemoveButton
-            id={buttonId<T>(id, 'remove')}
+            id={buttonId(id, 'remove')}
             className='rjsf-object-property-remove btn-block'
             style={{ border: '0' }}
             disabled={disabled || readonly}

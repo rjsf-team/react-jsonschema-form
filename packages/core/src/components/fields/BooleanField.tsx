@@ -25,7 +25,7 @@ function BooleanField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
     schema,
     name,
     uiSchema,
-    idSchema,
+    fieldPathId,
     formData,
     registry,
     required,
@@ -91,9 +91,9 @@ function BooleanField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
   const onWidgetChange = useCallback(
     (value: T | undefined, errorSchema?: ErrorSchema, id?: string) => {
       // Boolean field change passes an empty path array to the parent field which adds the appropriate path
-      return onChange(value, [], errorSchema, id);
+      return onChange(value, fieldPathId.path, errorSchema, id);
     },
-    [onChange],
+    [onChange, fieldPathId],
   );
 
   return (
@@ -101,7 +101,7 @@ function BooleanField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
       options={{ ...options, enumOptions }}
       schema={schema}
       uiSchema={uiSchema}
-      id={idSchema.$id}
+      id={fieldPathId.$id}
       name={name}
       onChange={onWidgetChange}
       onFocus={onFocus}

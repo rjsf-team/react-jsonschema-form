@@ -63,7 +63,7 @@ export enum TranslatableString {
   InvalidObjectField = 'Invalid "%1" object field configuration: _%2_.',
   /** Unsupported field schema, used by UnsupportedField */
   UnsupportedField = 'Unsupported field schema.',
-  /** Unsupported field schema, where %1 will be replaced by the idSchema.$id as provided by UnsupportedField.
+  /** Unsupported field schema, where %1 will be replaced by the FieldPathId.$id as provided by UnsupportedField.
    * NOTE: Use markdown notation rather than html tags.
    */
   UnsupportedFieldWithId = 'Unsupported field schema for field `%1`.',
@@ -71,8 +71,8 @@ export enum TranslatableString {
    * NOTE: Use markdown notation rather than html tags.
    */
   UnsupportedFieldWithReason = 'Unsupported field schema: _%1_.',
-  /** Unsupported field schema, where %1 and %2 will be replaced by the idSchema.$id and reason strings, respectively,
-   * as provided by UnsupportedField.
+  /** Unsupported field schema, where %1 and %2 will be replaced by the FieldPathId.$id and reason strings,
+   * respectively, as provided by UnsupportedField.
    * NOTE: Use markdown notation rather than html tags.
    */
   UnsupportedFieldWithIdAndReason = 'Unsupported field schema for field `%1`: _%2_.',

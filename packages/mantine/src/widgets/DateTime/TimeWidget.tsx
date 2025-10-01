@@ -76,7 +76,7 @@ export default function TimeWidget<T = any, S extends StrictRJSFSchema = RJSFSch
       onFocus={handleFocus}
       error={rawErrors && rawErrors.length > 0 ? rawErrors.join('\n') : undefined}
       {...options}
-      aria-describedby={ariaDescribedByIds<T>(id)}
+      aria-describedby={ariaDescribedByIds(id)}
       classNames={typeof options?.classNames === 'object' ? options.classNames : undefined}
     />
   );

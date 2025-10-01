@@ -63,7 +63,9 @@ const uiSchema: UiSchema = {
 };
 ```
 
-### ui:rootFieldId
+### ui:rootFieldId (deprecated)
+
+> DEPRECATED: Use `Form.idPrefix` instead, will be removed in a future major version
 
 By default, this library will generate ids unique to the form for all rendered widgets.
 If you plan on using multiple instances of the `Form` component in a same page, it's wise to declare a root prefix for these, using the `ui:rootFieldId` uiSchema directive:

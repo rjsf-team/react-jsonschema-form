@@ -58,7 +58,7 @@ export default function PasswordWidget<
       onChange={onChangeOverride || _onChange}
       onBlur={_onBlur}
       onFocus={_onFocus}
-      aria-describedby={ariaDescribedByIds<T>(id, !!schema.examples)}
+      aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
       pt={{ root: { style: { display: 'flex', flexDirection: 'column' } } }}
     />
   );

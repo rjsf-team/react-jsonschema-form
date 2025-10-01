@@ -59,7 +59,7 @@ export default function CheckboxesWidget<
               onBlur={_onBlur}
               onFocus={_onFocus}
               disabled={disabled || itemDisabled || readonly}
-              aria-describedby={ariaDescribedByIds<T>(id)}
+              aria-describedby={ariaDescribedByIds(id)}
             />
           );
         })}

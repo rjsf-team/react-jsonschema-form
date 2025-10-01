@@ -40,7 +40,7 @@ export default function PasswordWidget<
       onFocus={!readonly ? handleFocus : undefined}
       placeholder={placeholder}
       value={value || ''}
-      aria-describedby={ariaDescribedByIds<T>(id)}
+      aria-describedby={ariaDescribedByIds(id)}
     />
   );
 }

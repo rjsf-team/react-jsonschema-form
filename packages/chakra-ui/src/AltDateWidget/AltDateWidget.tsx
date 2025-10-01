@@ -33,7 +33,7 @@ function DateElement<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
       placeholder={props.type}
       schema={{ type: 'integer' } as S}
       value={value}
-      aria-describedby={ariaDescribedByIds<T>(props.name)}
+      aria-describedby={ariaDescribedByIds(props.name)}
     />
   );
 }

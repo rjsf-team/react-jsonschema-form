@@ -19,7 +19,7 @@ export default function FieldErrorTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
->({ errors, idSchema, uiSchema, registry }: FieldErrorProps<T, S, F>) {
+>({ errors, fieldPathId, uiSchema, registry }: FieldErrorProps<T, S, F>) {
   const { formContext } = registry;
   const options = getSemanticErrorProps<T, S, F>({
     formContext,
@@ -28,7 +28,7 @@ export default function FieldErrorTemplate<
   });
   const { pointing, size } = options;
   if (errors && errors.length > 0) {
-    const id = errorId<T>(idSchema);
+    const id = errorId(fieldPathId);
     return (
       <Label id={id} color='red' pointing={pointing || 'above'} size={size || 'small'} basic>
         <List bulleted>

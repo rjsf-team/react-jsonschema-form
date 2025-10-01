@@ -3,11 +3,12 @@ import {
   getTemplate,
   getUiOptions,
   orderProperties,
+  toFieldPathId,
   ErrorSchema,
+  FieldPathList,
   FieldProps,
   FormContextType,
   GenericObjectType,
-  IdSchema,
   RJSFSchema,
   StrictRJSFSchema,
   TranslatableString,
@@ -66,7 +67,7 @@ class ObjectField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
    * @returns - The onPropertyChange callback for the `name` property
    */
   onPropertyChange = (name: string, addedByAdditionalProperties = false) => {
-    return (value: T | undefined, path?: (number | string)[], newErrorSchema?: ErrorSchema<T>, id?: string) => {
+    return (value: T | undefined, path: FieldPathList, newErrorSchema?: ErrorSchema<T>, id?: string) => {
       const { onChange } = this.props;
       if (value === undefined && addedByAdditionalProperties) {
         // Don't set value = undefined for fields added by
@@ -78,10 +79,7 @@ class ObjectField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
         // set empty values to the empty string.
         value = '' as unknown as T;
       }
-      // Copy the current path and insert in the property name into the first location
-      const changePath = Array.isArray(path) ? path.slice() : [];
-      changePath.unshift(name);
-      onChange(value, changePath, newErrorSchema, id);
+      onChange(value, path, newErrorSchema, id);
     };
   };
 
@@ -94,11 +92,11 @@ class ObjectField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
   onDropPropertyClick = (key: string) => {
     return (event: DragEvent) => {
       event.preventDefault();
-      const { onChange, formData } = this.props;
+      const { onChange, formData, fieldPathId } = this.props;
       const copiedFormData = { ...formData } as T;
       unset(copiedFormData, key);
       // drop property will pass the name in `path` array
-      onChange(copiedFormData, []);
+      onChange(copiedFormData, fieldPathId.path);
     };
   };
 
@@ -132,7 +130,7 @@ class ObjectField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
       if (oldValue === value) {
         return;
       }
-      const { formData, onChange } = this.props;
+      const { formData, onChange, fieldPathId } = this.props;
 
       value = this.getAvailableKey(value, formData);
       const newFormData: GenericObjectType = {
@@ -147,8 +145,7 @@ class ObjectField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
 
       this.setState({ wasPropertyKeyModified: true });
 
-      // rename will pass an empty `path` array since the onPropertyChange also gets called
-      onChange(renamedObj, []);
+      onChange(renamedObj, fieldPathId.path);
     };
   };
 
@@ -187,7 +184,7 @@ class ObjectField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
     if (!(schema.additionalProperties || schema.patternProperties)) {
       return;
     }
-    const { formData, onChange, registry } = this.props;
+    const { formData, onChange, registry, fieldPathId } = this.props;
     const newFormData = { ...formData } as T;
     const newKey = this.getAvailableKey('newKey', newFormData);
     if (schema.patternProperties) {
@@ -220,7 +217,7 @@ class ObjectField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
     }
 
     // add will pass the name in `path` array
-    onChange(newFormData, []);
+    onChange(newFormData, fieldPathId.path);
   };
 
   /** Renders the `ObjectField` from the given props
@@ -231,7 +228,7 @@ class ObjectField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
       uiSchema = {},
       formData,
       errorSchema,
-      idSchema,
+      fieldPathId,
       name,
       required = false,
       disabled,
@@ -243,7 +240,7 @@ class ObjectField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
       title,
     } = this.props;
 
-    const { fields, formContext, schemaUtils, translateString, globalUiOptions } = registry;
+    const { fields, formContext, schemaUtils, translateString, globalFormOptions, globalUiOptions } = registry;
     const { SchemaField } = fields;
     const schema: S = schemaUtils.retrieveSchema(rawSchema, formData);
     const uiOptions = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
@@ -278,7 +275,7 @@ class ObjectField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
         const addedByAdditionalProperties = has(schema, [PROPERTIES_KEY, name, ADDITIONAL_PROPERTY_FLAG]);
         const fieldUiSchema = addedByAdditionalProperties ? uiSchema.additionalProperties : uiSchema[name];
         const hidden = getUiOptions<T, S, F>(fieldUiSchema).widget === 'hidden';
-        const fieldIdSchema: IdSchema<T> = get(idSchema, [name], {});
+        const innerFieldIdPathId = toFieldPathId(name, globalFormOptions, fieldPathId);
 
         return {
           content: (
@@ -289,7 +286,7 @@ class ObjectField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
               schema={get(schema, [PROPERTIES_KEY, name], {}) as S}
               uiSchema={fieldUiSchema}
               errorSchema={get(errorSchema, name)}
-              idSchema={fieldIdSchema}
+              fieldPathId={innerFieldIdPathId}
               formData={get(formData, name)}
               formContext={formContext}
               wasPropertyKeyModified={this.state.wasPropertyKeyModified}
@@ -314,7 +311,7 @@ class ObjectField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
       readonly,
       disabled,
       required,
-      idSchema,
+      fieldPathId,
       uiSchema,
       errorSchema,
       schema,

@@ -75,7 +75,7 @@ export default function SelectWidget<
         const newValue = getValue(event, multiple);
         onChange(enumOptionsValueForIndex<S>(newValue, enumOptions, optEmptyValue));
       }}
-      aria-describedby={ariaDescribedByIds<T>(id)}
+      aria-describedby={ariaDescribedByIds(id)}
     >
       {showPlaceholderOption && <option value=''>{placeholder}</option>}
       {(enumOptions as any).map(({ value, label }: any, i: number) => {

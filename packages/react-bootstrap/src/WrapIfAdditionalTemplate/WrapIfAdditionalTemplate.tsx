@@ -68,7 +68,7 @@ export default function WrapIfAdditionalTemplate<
       <Col xs={5}>{children}</Col>
       <Col xs={2} className='py-4 d-grid gap-2'>
         <RemoveButton
-          id={buttonId<T>(id, 'remove')}
+          id={buttonId(id, 'remove')}
           className='rjsf-object-property-remove w-100'
           disabled={disabled || readonly}
           onClick={onDropPropertyClick(label)}

@@ -59,7 +59,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
         onFocus={_onFocus}
         value={selectedIndex}
         name={id}
-        aria-describedby={ariaDescribedByIds<T>(id)}
+        aria-describedby={ariaDescribedByIds(id)}
       >
         <Stack direction={row ? 'row' : 'column'}>
           {Array.isArray(enumOptions) &&

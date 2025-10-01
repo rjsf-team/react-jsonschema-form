@@ -44,7 +44,7 @@ export default function CheckboxWidget<
       name={id}
       onChange={!readonly ? handleChange : undefined}
       {...extraProps}
-      aria-describedby={ariaDescribedByIds<T>(id)}
+      aria-describedby={ariaDescribedByIds(id)}
     >
       {labelValue(label, hideLabel, '')}
     </Checkbox>

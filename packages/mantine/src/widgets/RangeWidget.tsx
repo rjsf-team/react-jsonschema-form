@@ -65,7 +65,7 @@ export default function RangeWidget<T = any, S extends StrictRJSFSchema = RJSFSc
   return (
     <>
       {!hideLabel && !!label && (
-        <Input.Label id={titleId<T>(id)} required={required}>
+        <Input.Label id={titleId(id)} required={required}>
           {label}
         </Input.Label>
       )}
@@ -83,7 +83,7 @@ export default function RangeWidget<T = any, S extends StrictRJSFSchema = RJSFSc
         onBlur={handleBlur}
         onFocus={handleFocus}
         {...themeProps}
-        aria-describedby={ariaDescribedByIds<T>(id)}
+        aria-describedby={ariaDescribedByIds(id)}
       />
       {rawErrors &&
         rawErrors?.length > 0 &&

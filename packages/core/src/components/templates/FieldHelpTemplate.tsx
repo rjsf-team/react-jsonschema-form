@@ -9,11 +9,11 @@ export default function FieldHelpTemplate<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
 >(props: FieldHelpProps<T, S, F>) {
-  const { idSchema, help } = props;
+  const { fieldPathId, help } = props;
   if (!help) {
     return null;
   }
-  const id = helpId<T>(idSchema);
+  const id = helpId(fieldPathId);
   if (typeof help === 'string') {
     return (
       <p id={id} className='help-block'>

@@ -82,7 +82,7 @@ function SingleSelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F 
       placeholder={placeholder}
       disabled={disabled || readonly}
       autoFocus={autofocus}
-      aria-describedby={ariaDescribedByIds<T>(id)}
+      aria-describedby={ariaDescribedByIds(id)}
       {...dropdownRemainingProps}
     />
   );
@@ -132,7 +132,7 @@ function MultiSelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
       disabled={disabled || readonly}
       autoFocus={autofocus}
       display={options.display === 'chip' ? 'chip' : 'comma'}
-      aria-describedby={ariaDescribedByIds<T>(id)}
+      aria-describedby={ariaDescribedByIds(id)}
       pt={{ root: { style: { position: 'relative' } } }}
     />
   );

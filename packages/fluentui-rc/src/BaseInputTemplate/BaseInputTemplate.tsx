@@ -77,16 +77,16 @@ export default function BaseInputTemplate<
         input={{
           className: classes.input,
           // Due to Fluent UI this does not work correctly
-          list: schema.examples ? examplesId<T>(id) : undefined,
+          list: schema.examples ? examplesId(id) : undefined,
         }}
         value={value || value === 0 ? value : ''}
         onChange={onChangeOverride || _onChange}
         onFocus={_onFocus}
         onBlur={_onBlur}
-        aria-describedby={ariaDescribedByIds<T>(id, !!schema.examples)}
+        aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
       />
       {Array.isArray(schema.examples) && (
-        <datalist id={examplesId<T>(id)}>
+        <datalist id={examplesId(id)}>
           {(schema.examples as string[])
             .concat(schema.default && !schema.examples.includes(schema.default) ? ([schema.default] as string[]) : [])
             .map((example: any) => {

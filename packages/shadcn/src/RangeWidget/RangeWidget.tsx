@@ -56,7 +56,7 @@ export default function RangeWidget<T = any, S extends StrictRJSFSchema = RJSFSc
         value={[value as number]}
         onValueChange={_onChange}
         {...uiProps}
-        aria-describedby={ariaDescribedByIds<T>(id)}
+        aria-describedby={ariaDescribedByIds(id)}
       />
       {value}
     </>

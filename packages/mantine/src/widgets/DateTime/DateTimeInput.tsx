@@ -88,7 +88,7 @@ export default function DateTimeInput<
       onFocus={handleFocus}
       error={rawErrors && rawErrors.length > 0 ? rawErrors.join('\n') : undefined}
       {...options}
-      aria-describedby={ariaDescribedByIds<T>(id)}
+      aria-describedby={ariaDescribedByIds(id)}
       popoverProps={{ withinPortal: false }}
       classNames={typeof options?.classNames === 'object' ? options.classNames : undefined}
       valueFormat={displayFormat}

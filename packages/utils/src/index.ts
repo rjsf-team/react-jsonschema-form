@@ -59,6 +59,7 @@ import toConstant from './toConstant';
 import toDateString from './toDateString';
 import toErrorList from './toErrorList';
 import toErrorSchema from './toErrorSchema';
+import toFieldPathId from './toFieldPathId';
 import unwrapErrorHandler from './unwrapErrorHandler';
 import utcToLocal from './utcToLocal';
 import validationDataMerge from './validationDataMerge';
@@ -139,6 +140,7 @@ export {
   toDateString,
   toErrorList,
   toErrorSchema,
+  toFieldPathId,
   unwrapErrorHandler,
   utcToLocal,
   validationDataMerge,

@@ -70,7 +70,7 @@ function CheckboxesWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
                 onChange={handleChange}
                 onBlur={handleBlur}
                 onFocus={handleFocus}
-                aria-describedby={ariaDescribedByIds<T>(id)}
+                aria-describedby={ariaDescribedByIds(id)}
               />
               <span>{option.label}</span>
             </span>

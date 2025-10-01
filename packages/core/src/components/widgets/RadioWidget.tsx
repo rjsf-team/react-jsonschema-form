@@ -65,7 +65,7 @@ function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
                 onChange={handleChange}
                 onBlur={handleBlur}
                 onFocus={handleFocus}
-                aria-describedby={ariaDescribedByIds<T>(id)}
+                aria-describedby={ariaDescribedByIds(id)}
               />
               <span>{option.label}</span>
             </span>

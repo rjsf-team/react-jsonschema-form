@@ -87,13 +87,13 @@ export default function BaseInputTemplate<
         onFocus={!readonly ? handleFocus : undefined}
         placeholder={placeholder}
         error={rawErrors && rawErrors.length > 0 ? rawErrors.join('\n') : undefined}
-        list={schema.examples ? examplesId<T>(id) : undefined}
+        list={schema.examples ? examplesId(id) : undefined}
         {...inputProps}
         {...themeProps}
         step={typeof inputProps.step === 'number' ? inputProps.step : 1}
         type='text'
         value={value}
-        aria-describedby={ariaDescribedByIds<T>(id, !!schema.examples)}
+        aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
       />
     ) : (
       <TextInput
@@ -108,11 +108,11 @@ export default function BaseInputTemplate<
         onFocus={!readonly ? handleFocus : undefined}
         placeholder={placeholder}
         error={rawErrors && rawErrors.length > 0 ? rawErrors.join('\n') : undefined}
-        list={schema.examples ? examplesId<T>(id) : undefined}
+        list={schema.examples ? examplesId(id) : undefined}
         {...inputProps}
         {...themeProps}
         value={value}
-        aria-describedby={ariaDescribedByIds<T>(id, !!schema.examples)}
+        aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
       />
     );
 
@@ -121,7 +121,7 @@ export default function BaseInputTemplate<
       {input}
       {children}
       {Array.isArray(schema.examples) && (
-        <datalist id={examplesId<T>(id)}>
+        <datalist id={examplesId(id)}>
           {(schema.examples as string[])
             .concat(schema.default && !schema.examples.includes(schema.default) ? ([schema.default] as string[]) : [])
             .map((example) => {

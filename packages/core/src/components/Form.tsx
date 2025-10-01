@@ -6,12 +6,13 @@ import {
   ERRORS_KEY,
   ErrorSchema,
   ErrorTransformer,
+  FieldPathId,
+  FieldPathList,
   FormContextType,
   GenericObjectType,
   getChangedFields,
   getTemplate,
   getUiOptions,
-  IdSchema,
   isObject,
   mergeObjects,
   NAME_KEY,
@@ -28,6 +29,7 @@ import {
   SUBMIT_BTN_OPTIONS_KEY,
   TemplatesType,
   toErrorList,
+  toFieldPathId,
   UiSchema,
   UI_GLOBAL_OPTIONS_KEY,
   UI_OPTIONS_KEY,
@@ -38,13 +40,15 @@ import {
   Experimental_CustomMergeAllOf,
   createErrorHandler,
   unwrapErrorHandler,
+  DEFAULT_ID_SEPARATOR,
+  DEFAULT_ID_PREFIX,
+  GlobalFormOptions,
 } from '@rjsf/utils';
 import _cloneDeep from 'lodash/cloneDeep';
 import _forEach from 'lodash/forEach';
 import _get from 'lodash/get';
 import _isEmpty from 'lodash/isEmpty';
 import _isNil from 'lodash/isNil';
-import _omitBy from 'lodash/omitBy';
 import _pick from 'lodash/pick';
 import _set from 'lodash/set';
 import _toPath from 'lodash/toPath';
@@ -242,10 +246,10 @@ export interface FormState<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   schema: S;
   /** The uiSchema for the form */
   uiSchema: UiSchema<T, S, F>;
-  /** The `IdSchema` for the form, computed from the `schema`, the `rootFieldId`, the `formData` and the `idPrefix` and
+  /** The `FieldPathId` for the form, computed from the `schema`, the `rootFieldId`, the `idPrefix` and
    * `idSeparator` props.
    */
-  idSchema: IdSchema<T>;
+  fieldPathId: FieldPathId;
   /** The schemaUtils implementation used by the `Form`, created from the `validator` and the `schema` */
   schemaUtils: SchemaUtilsType<T, S, F>;
   /** The current data for the form, computed from the `formData` prop and the changes made by the user */
@@ -280,7 +284,7 @@ export interface IChangeEvent<T = any, S extends StrictRJSFSchema = RJSFSchema, 
  */
 interface PendingChange<T> {
   /** The path into the formData/errorSchema at which the `newValue`/`newErrorSchema` will be set */
-  path?: (number | string)[];
+  path: FieldPathList;
   /** The new value to set into the formData */
   newValue?: T;
   /** The new errors to be set into the errorSchema, if any */
@@ -529,18 +533,12 @@ export default class Form<
       errorSchema = merged.errorSchema;
       errors = merged.errors;
     }
-    const idSchema = schemaUtils.toIdSchema(
-      _retrievedSchema,
-      uiSchema['ui:rootFieldId'],
-      formData,
-      props.idPrefix,
-      props.idSeparator,
-    );
+    const fieldPathId = toFieldPathId('', this.getGlobalFormOptions(this.props));
     const nextState: FormState<T, S, F> = {
       schemaUtils,
       schema: rootSchema,
       uiSchema,
-      idSchema,
+      fieldPathId,
       formData,
       edit,
       errors,
@@ -753,11 +751,11 @@ export default class Form<
    * the array only contains a single pending change.
    *
    * @param newValue - The new form data from a change to a field
-   * @param [path] - The path to the change into which to set the formData
+   * @param path - The path to the change into which to set the formData
    * @param [newErrorSchema] - The new `ErrorSchema` based on the field change
    * @param [id] - The id of the field that caused the change
    */
-  onChange = (newValue: T | undefined, path?: (number | string)[], newErrorSchema?: ErrorSchema<T>, id?: string) => {
+  onChange = (newValue: T | undefined, path: FieldPathList, newErrorSchema?: ErrorSchema<T>, id?: string) => {
     this.pendingChanges.push({ newValue, path, newErrorSchema, id });
     if (this.pendingChanges.length === 1) {
       this.processPendingChange();
@@ -779,10 +777,11 @@ export default class Form<
     }
     const { newValue, path, id } = this.pendingChanges[0];
     let { newErrorSchema } = this.pendingChanges[0];
-    const { extraErrors, omitExtraData, liveOmit, noValidate, liveValidate, onChange, idPrefix = '' } = this.props;
-    const { formData: oldFormData, schemaUtils, schema, errorSchema } = this.state;
+    const { extraErrors, omitExtraData, liveOmit, noValidate, liveValidate, onChange } = this.props;
+    const { formData: oldFormData, schemaUtils, schema, errorSchema, fieldPathId } = this.state;
+    const rootPathId = fieldPathId.path[0] || '';
 
-    const isRootPath = !path || path.length === 0 || (path.length === 1 && path[0] === idPrefix);
+    const isRootPath = !path || path.length === 0 || (path.length === 1 && path[0] === rootPathId);
     let retrievedSchema = this.state.retrievedSchema;
     let formData = isRootPath ? newValue : _cloneDeep(oldFormData);
     if (isObject(formData) || Array.isArray(formData)) {
@@ -964,19 +963,29 @@ export default class Form<
     }
   };
 
-  /** Returns the registry for the form */
-  getRegistry(): Registry<T, S, F> {
+  /** Extracts the `GlobalFormOptions` from the given Form `props`
+   *
+   * @param props - The form props to extract the global form options from
+   * @returns - The `GlobalFormOptions` from the props
+   * @private
+   */
+  private getGlobalFormOptions(props: FormProps<T, S, F>): GlobalFormOptions {
     const {
-      translateString: customTranslateString,
       uiSchema = {},
       experimental_componentUpdateStrategy,
-      idSeparator,
-      idPrefix,
-    } = this.props;
+      idSeparator = DEFAULT_ID_SEPARATOR,
+      idPrefix = DEFAULT_ID_PREFIX,
+    } = props;
+    const rootFieldId = uiSchema['ui:rootFieldId'];
+    // Omit any options that are undefined or null
+    return { idPrefix: rootFieldId || idPrefix, idSeparator, experimental_componentUpdateStrategy };
+  }
+
+  /** Returns the registry for the form */
+  getRegistry(): Registry<T, S, F> {
+    const { translateString: customTranslateString, uiSchema = {} } = this.props;
     const { schema, schemaUtils } = this.state;
     const { fields, templates, widgets, formContext, translateString } = getDefaultRegistry<T, S, F>();
-    // Omit any options that are undefined or null
-    const globalFormOptions = _omitBy({ idPrefix, idSeparator, experimental_componentUpdateStrategy }, _isNil);
     return {
       fields: { ...fields, ...this.props.fields },
       templates: {
@@ -993,7 +1002,7 @@ export default class Form<
       schemaUtils,
       translateString: customTranslateString || translateString,
       globalUiOptions: uiSchema[UI_GLOBAL_OPTIONS_KEY],
-      globalFormOptions,
+      globalFormOptions: this.getGlobalFormOptions(this.props),
     };
   }
 
@@ -1134,7 +1143,7 @@ export default class Form<
       _internalFormWrapper,
     } = this.props;
 
-    const { schema, uiSchema, formData, errorSchema, idSchema } = this.state;
+    const { schema, uiSchema, formData, errorSchema, fieldPathId } = this.state;
     const registry = this.getRegistry();
     const { SchemaField: _SchemaField } = registry.fields;
     const { SubmitButton } = registry.templates.ButtonTemplates;
@@ -1172,7 +1181,7 @@ export default class Form<
           schema={schema}
           uiSchema={uiSchema}
           errorSchema={errorSchema}
-          idSchema={idSchema}
+          fieldPathId={fieldPathId}
           formData={formData}
           onChange={this.onChange}
           onBlur={this.onBlur}

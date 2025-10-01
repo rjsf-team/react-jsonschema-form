@@ -70,7 +70,7 @@ export default function CheckboxesWidget<
   return (
     <>
       {!hideLabel && !!label && (
-        <TitleFieldTemplate id={titleId<T>(id)} title={label} schema={schema} uiSchema={uiSchema} registry={registry} />
+        <TitleFieldTemplate id={titleId(id)} title={label} schema={schema} uiSchema={uiSchema} registry={registry} />
       )}
       <Form.Group id={id} name={id} {...inlineOption}>
         {Array.isArray(enumOptions) &&
@@ -91,7 +91,7 @@ export default function CheckboxesWidget<
                 onChange={_onChange(index)}
                 onBlur={_onBlur}
                 onFocus={_onFocus}
-                aria-describedby={ariaDescribedByIds<T>(id)}
+                aria-describedby={ariaDescribedByIds(id)}
               />
             );
           })}

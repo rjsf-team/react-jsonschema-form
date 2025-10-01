@@ -58,7 +58,7 @@ export default function CheckboxWidget<
     <>
       {!hideLabel && !!description && (
         <DescriptionFieldTemplate
-          id={descriptionId<T>(id)}
+          id={descriptionId(id)}
           description={description}
           schema={schema}
           uiSchema={uiSchema}
@@ -77,7 +77,7 @@ export default function CheckboxWidget<
           onBlur={_onBlur}
           onFocus={_onFocus}
           required={required}
-          aria-describedby={ariaDescribedByIds<T>(id)}
+          aria-describedby={ariaDescribedByIds(id)}
         />
         {labelValue(<Label id={id} text={label} />, hideLabel, false)}
       </div>

@@ -9,7 +9,7 @@ import {
 import { Title } from '@mantine/core';
 
 /** The `ArrayFieldTitleTemplate` component renders a `TitleFieldTemplate` with an `id` derived from
- * the `idSchema`.
+ * the `fieldPathId`.
  *
  * @param props - The `ArrayFieldTitleProps` for the component
  */
@@ -18,7 +18,7 @@ export default function ArrayFieldTitleTemplate<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
 >(props: ArrayFieldTitleProps<T, S, F>) {
-  const { idSchema, title, uiSchema, registry } = props;
+  const { fieldPathId, title, uiSchema, registry } = props;
 
   const options = getUiOptions<T, S, F>(uiSchema, registry.globalUiOptions);
   const { label: displayLabel = true } = options;
@@ -26,7 +26,7 @@ export default function ArrayFieldTitleTemplate<
     return null;
   }
   return (
-    <Title id={titleId<T>(idSchema)} order={4} fw='normal'>
+    <Title id={titleId(fieldPathId)} order={4} fw='normal'>
       {title}
     </Title>
   );

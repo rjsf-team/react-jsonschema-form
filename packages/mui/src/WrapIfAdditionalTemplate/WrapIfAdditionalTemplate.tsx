@@ -76,7 +76,7 @@ export default function WrapIfAdditionalTemplate<
       <Grid size='auto'>{children}</Grid>
       <Grid>
         <RemoveButton
-          id={buttonId<T>(id, 'remove')}
+          id={buttonId(id, 'remove')}
           className='rjsf-object-property-remove'
           iconType='default'
           style={btnStyle}

@@ -24,7 +24,7 @@ export default function ArrayFieldTemplate<
 >(props: ArrayFieldTemplateProps<T, S, F>) {
   const {
     uiSchema,
-    idSchema,
+    fieldPathId,
     canAdd,
     className,
     // classNames, This is not part of the type, so it is likely never passed in
@@ -68,7 +68,7 @@ export default function ArrayFieldTemplate<
   return (
     <div className={cleanClassNames([className, isFixedItems<S>(schema) ? '' : 'sortable-form-fields'])}>
       <ArrayFieldTitleTemplate
-        idSchema={idSchema}
+        fieldPathId={fieldPathId}
         title={uiOptions.title || title}
         schema={schema}
         uiSchema={uiSchema}
@@ -76,13 +76,13 @@ export default function ArrayFieldTemplate<
         registry={registry}
       />
       <ArrayFieldDescriptionTemplate
-        idSchema={idSchema}
+        fieldPathId={fieldPathId}
         description={uiOptions.description || schema.description}
         schema={schema}
         uiSchema={uiSchema}
         registry={registry}
       />
-      <div key={`array-item-list-${idSchema.$id}`}>
+      <div key={`array-item-list-${fieldPathId.$id}`}>
         <div className='row array-item-list'>
           {items &&
             items.map(({ key, uiSchema: itemUiSchema = {}, ...props }: ArrayFieldItemTemplateType<T, S, F>) => {
@@ -106,7 +106,7 @@ export default function ArrayFieldTemplate<
             }}
           >
             <AddButton
-              id={buttonId<T>(idSchema, 'add')}
+              id={buttonId(fieldPathId, 'add')}
               className='rjsf-array-item-add'
               onClick={onAddClick}
               disabled={disabled || readonly}
