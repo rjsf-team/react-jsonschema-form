@@ -95,6 +95,7 @@ should change the heading of the (upcoming) version to include a major version b
   - Removed the `IdSchema` type, replacing `idSchema: IdSchema<T>` in all types with `fieldPathId: FieldPathId`
   - Updated the `idGenerators` to replace `id: IdSchema<T> | string` with `id: FieldPathId | string` removing the need for the `<T = any>` generic on the functions
   - Removed the `toIdSchema()` function in the `schema` directory
+  - Updated the `FieldProps` type's `onChange()` callback to make the `path: FieldPathList` parameter be required instead of optional
   - Updated the `SchemaUtilsType` and `createSchemaUtils()` to remove the `toIdSchema()` function
 
 ## @rjsf/validator-ajv8
