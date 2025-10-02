@@ -35,7 +35,7 @@ export default function ObjectFieldTemplate<
     disabled,
     readonly,
     uiSchema,
-    idSchema,
+    fieldPathId,
     schema,
     formData,
     onAddClick,
@@ -54,13 +54,13 @@ export default function ObjectFieldTemplate<
   } = registry.templates;
 
   // Check if this is the root object
-  const isRoot = idSchema.$id === 'root';
+  const isRoot = fieldPathId.$id === 'root';
 
   return (
     <div className={`form-control ${isRoot ? 'bg-base-100 p-6 rounded-xl shadow-lg' : ''}`}>
       {title && (
         <TitleFieldTemplate
-          id={titleId<T>(idSchema)}
+          id={titleId(fieldPathId)}
           title={title}
           required={required}
           schema={schema}
@@ -70,7 +70,7 @@ export default function ObjectFieldTemplate<
       )}
       {description && (
         <DescriptionFieldTemplate
-          id={descriptionId<T>(idSchema)}
+          id={descriptionId(fieldPathId)}
           description={description}
           schema={schema}
           uiSchema={uiSchema}
@@ -83,8 +83,8 @@ export default function ObjectFieldTemplate<
             element.content
           ) : (
             <div
-              key={`${idSchema.$id}-${element.name}-${index}`}
-              className={idSchema.$id === 'root' && element.name === 'tasks' ? 'mt-2' : ''}
+              key={`${fieldPathId.$id}-${element.name}-${index}`}
+              className={fieldPathId.$id === 'root' && element.name === 'tasks' ? 'mt-2' : ''}
             >
               {element.content}
             </div>
@@ -93,7 +93,7 @@ export default function ObjectFieldTemplate<
         {canExpand<T, S, F>(schema, uiSchema, formData) && (
           <div className='flex justify-end'>
             <AddButton
-              id={buttonId<T>(idSchema, 'add')}
+              id={buttonId(fieldPathId, 'add')}
               className='rjsf-object-property-expand btn btn-primary btn-sm'
               onClick={onAddClick(schema)}
               disabled={disabled || readonly}

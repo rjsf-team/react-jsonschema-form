@@ -7,11 +7,13 @@ import {
   allowAdditionalItems,
   isCustomWidget,
   optionsList,
+  toFieldPathId,
   ArrayFieldTemplateProps,
   ErrorSchema,
+  FieldPathId,
+  FieldPathList,
   FieldProps,
   FormContextType,
-  IdSchema,
   RJSFSchema,
   StrictRJSFSchema,
   TranslatableString,
@@ -198,7 +200,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
       event.preventDefault();
     }
 
-    const { onChange, errorSchema } = this.props;
+    const { onChange, errorSchema, fieldPathId } = this.props;
     const { keyedFormData } = this.state;
     // refs #195: revalidate to ensure properly reindexing errors
     let newErrorSchema: ErrorSchema<T>;
@@ -230,7 +232,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
         updatedKeyedFormData: true,
       },
       // add click will pass the empty `path` array to the onChange which adds the appropriate path
-      () => onChange(keyedToPlainFormData(newKeyedFormData), [], newErrorSchema as ErrorSchema<T[]>),
+      () => onChange(keyedToPlainFormData(newKeyedFormData), fieldPathId.path, newErrorSchema as ErrorSchema<T[]>),
     );
   }
 
@@ -268,7 +270,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
         event.preventDefault();
       }
 
-      const { onChange, errorSchema } = this.props;
+      const { onChange, errorSchema, fieldPathId } = this.props;
       const { keyedFormData } = this.state;
       // refs #195: revalidate to ensure properly reindexing errors
       let newErrorSchema: ErrorSchema<T>;
@@ -299,8 +301,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
           keyedFormData: newKeyedFormData,
           updatedKeyedFormData: true,
         },
-        // Copy index will pass the empty `path` array to the onChange which adds the appropriate path
-        () => onChange(keyedToPlainFormData(newKeyedFormData), [], newErrorSchema as ErrorSchema<T[]>),
+        () => onChange(keyedToPlainFormData(newKeyedFormData), fieldPathId.path, newErrorSchema as ErrorSchema<T[]>),
       );
     };
   };
@@ -316,7 +317,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
       if (event) {
         event.preventDefault();
       }
-      const { onChange, errorSchema } = this.props;
+      const { onChange, errorSchema, fieldPathId } = this.props;
       const { keyedFormData } = this.state;
       // refs #195: revalidate to ensure properly reindexing errors
       let newErrorSchema: ErrorSchema<T>;
@@ -337,8 +338,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
           keyedFormData: newKeyedFormData,
           updatedKeyedFormData: true,
         },
-        // drop index will pass the empty `path` array to the onChange which adds the appropriate path
-        () => onChange(keyedToPlainFormData(newKeyedFormData), [], newErrorSchema as ErrorSchema<T[]>),
+        () => onChange(keyedToPlainFormData(newKeyedFormData), fieldPathId.path, newErrorSchema as ErrorSchema<T[]>),
       );
     };
   };
@@ -356,7 +356,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
         event.preventDefault();
         event.currentTarget.blur();
       }
-      const { onChange, errorSchema } = this.props;
+      const { onChange, errorSchema, fieldPathId } = this.props;
       let newErrorSchema: ErrorSchema<T>;
       if (errorSchema) {
         newErrorSchema = {};
@@ -388,8 +388,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
         {
           keyedFormData: newKeyedFormData,
         },
-        // reorder click will pass the empty `path` array to the onChange which adds the appropriate path
-        () => onChange(keyedToPlainFormData(newKeyedFormData), [], newErrorSchema as ErrorSchema<T[]>),
+        () => onChange(keyedToPlainFormData(newKeyedFormData), fieldPathId.path, newErrorSchema as ErrorSchema<T[]>),
       );
     };
   };
@@ -400,16 +399,13 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
    * @param index - The index of the item being changed
    */
   onChangeForIndex = (index: number) => {
-    return (value: any, path?: (number | string)[], newErrorSchema?: ErrorSchema<T>, id?: string) => {
+    return (value: any, path: FieldPathList, newErrorSchema?: ErrorSchema<T>, id?: string) => {
       const { onChange } = this.props;
-      // Copy the current path and insert in the index into the first location
-      const changePath = Array.isArray(path) ? path.slice() : [];
-      changePath.unshift(index);
       onChange(
         // We need to treat undefined items as nulls to have validation.
         // See https://github.com/tdegrunt/jsonschema/issues/206
         value === undefined ? null : value,
-        changePath,
+        path,
         newErrorSchema as ErrorSchema<T[]>,
         id,
       );
@@ -418,9 +414,9 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
 
   /** Callback handler used to change the value for a checkbox */
   onSelectChange = (value: any) => {
-    const { onChange, idSchema } = this.props;
+    const { onChange, fieldPathId } = this.props;
     // select change will pass an empty `path` array since the `ObjectField` will add the path value automatically
-    onChange(value, [], undefined, idSchema && idSchema.$id);
+    onChange(value, fieldPathId.path, undefined, fieldPathId && fieldPathId.$id);
   };
 
   /** Helper method to compute item UI schema for both normal and fixed arrays
@@ -459,7 +455,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
   /** Renders the `ArrayField` depending on the specific needs of the schema and uischema elements
    */
   render() {
-    const { schema, uiSchema, idSchema, registry } = this.props;
+    const { schema, uiSchema, fieldPathId, registry } = this.props;
     const { schemaUtils, translateString } = registry;
     if (!(ITEMS_KEY in schema)) {
       const uiOptions = getUiOptions<T[], S, F>(uiSchema);
@@ -472,7 +468,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
       return (
         <UnsupportedFieldTemplate
           schema={schema}
-          idSchema={idSchema}
+          fieldPathId={fieldPathId}
           reason={translateString(TranslatableString.MissingItems)}
           registry={registry}
         />
@@ -501,7 +497,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
       schema,
       uiSchema = {},
       errorSchema,
-      idSchema,
+      fieldPathId,
       name,
       title,
       disabled = false,
@@ -516,7 +512,6 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
     const { keyedFormData } = this.state;
     const fieldTitle = schema.title || title || name;
     const { schemaUtils, formContext, globalFormOptions } = registry;
-    const { idPrefix, idSeparator = '_' } = globalFormOptions;
     const uiOptions = getUiOptions<T[], S, F>(uiSchema);
     const _schemaItems: S = isObject(schema.items) ? (schema.items as S) : ({} as S);
     const itemsSchema: S = schemaUtils.retrieveSchema(_schemaItems);
@@ -530,8 +525,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
         const itemCast = item as unknown as T[];
         const itemSchema = schemaUtils.retrieveSchema(_schemaItems, itemCast);
         const itemErrorSchema = errorSchema ? (errorSchema[index] as ErrorSchema<T[]>) : undefined;
-        const itemIdPrefix = idSchema.$id + idSeparator + index;
-        const itemIdSchema = schemaUtils.toIdSchema(itemSchema, itemIdPrefix, itemCast, idPrefix, idSeparator);
+        const itemFieldPathId = toFieldPathId(index, globalFormOptions, fieldPathId);
 
         // Compute the item UI schema using the helper method
         const itemUiSchema = this.computeItemUiSchema(uiSchema, item, index, formContext);
@@ -545,7 +539,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
           canMoveUp: index > 0,
           canMoveDown: index < formData.length - 1,
           itemSchema,
-          itemIdSchema,
+          itemFieldPathId,
           itemErrorSchema,
           itemData: itemCast,
           itemUiSchema,
@@ -558,7 +552,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
       }),
       className: `rjsf-field rjsf-field-array rjsf-field-array-of-${itemsSchema.type}`,
       disabled,
-      idSchema,
+      fieldPathId,
       uiSchema,
       onAddClick: this.onAddClick,
       readonly,
@@ -579,7 +573,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
   renderCustomWidget() {
     const {
       schema,
-      idSchema,
+      fieldPathId,
       uiSchema,
       disabled = false,
       readonly = false,
@@ -601,7 +595,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
     const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions);
     return (
       <Widget
-        id={idSchema.$id}
+        id={fieldPathId.$id}
         name={name}
         multiple
         onChange={this.onSelectChange}
@@ -631,7 +625,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
   renderMultiSelect() {
     const {
       schema,
-      idSchema,
+      fieldPathId,
       uiSchema,
       formData: items = [],
       disabled = false,
@@ -654,7 +648,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
     const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions);
     return (
       <Widget
-        id={idSchema.$id}
+        id={fieldPathId.$id}
         name={name}
         multiple
         onChange={this.onSelectChange}
@@ -684,7 +678,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
     const {
       schema,
       uiSchema,
-      idSchema,
+      fieldPathId,
       name,
       disabled = false,
       readonly = false,
@@ -704,7 +698,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
     return (
       <Widget
         options={options}
-        id={idSchema.$id}
+        id={fieldPathId.$id}
         name={name}
         multiple
         onChange={this.onSelectChange}
@@ -734,7 +728,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
       uiSchema = {},
       formData = [],
       errorSchema,
-      idSchema,
+      fieldPathId,
       name,
       title,
       disabled = false,
@@ -751,7 +745,6 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
     const fieldTitle = schema.title || title || name;
     const uiOptions = getUiOptions<T[], S, F>(uiSchema);
     const { schemaUtils, formContext, globalFormOptions } = registry;
-    const { idPrefix, idSeparator = '_' } = globalFormOptions;
     const _schemaItems: S[] = isObject(schema.items) ? (schema.items as S[]) : ([] as S[]);
     const itemSchemas = _schemaItems.map((item: S, index: number) =>
       schemaUtils.retrieveSchema(item, formData[index] as unknown as T[]),
@@ -772,7 +765,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
       canAdd,
       className: 'rjsf-field rjsf-field-array rjsf-field-array-fixed-items',
       disabled,
-      idSchema,
+      fieldPathId,
       formData,
       items: keyedFormData.map((keyedItem, index) => {
         const { key, item } = keyedItem;
@@ -783,8 +776,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
           (additional && isObject(schema.additionalItems)
             ? schemaUtils.retrieveSchema(schema.additionalItems as S, itemCast)
             : itemSchemas[index]) || {};
-        const itemIdPrefix = idSchema.$id + idSeparator + index;
-        const itemIdSchema = schemaUtils.toIdSchema(itemSchema, itemIdPrefix, itemCast, idPrefix, idSeparator);
+        const itemFieldPathId = toFieldPathId(index, globalFormOptions, fieldPathId);
         // Compute the item UI schema - handle both static and dynamic cases
         let itemUiSchema: UiSchema<T[], S, F> | undefined;
         if (additional) {
@@ -813,7 +805,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
           itemSchema,
           itemData: itemCast,
           itemUiSchema,
-          itemIdSchema,
+          itemFieldPathId,
           itemErrorSchema,
           autofocus: autofocus && index === 0,
           onBlur,
@@ -854,7 +846,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
     itemSchema: S;
     itemData: T[];
     itemUiSchema: UiSchema<T[], S, F> | undefined;
-    itemIdSchema: IdSchema<T[]>;
+    itemFieldPathId: FieldPathId;
     itemErrorSchema?: ErrorSchema<T[]>;
     autofocus?: boolean;
     onBlur: FieldProps<T[], S, F>['onBlur'];
@@ -873,7 +865,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
       itemSchema,
       itemData,
       itemUiSchema,
-      itemIdSchema,
+      itemFieldPathId,
       itemErrorSchema,
       autofocus,
       onBlur,
@@ -909,7 +901,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
           formData={itemData}
           formContext={formContext}
           errorSchema={itemErrorSchema}
-          idSchema={itemIdSchema}
+          fieldPathId={itemFieldPathId}
           required={this.isItemRequired(itemSchema)}
           onChange={this.onChangeForIndex(index)}
           onBlur={onBlur}
@@ -923,7 +915,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
         />
       ),
       buttonsProps: {
-        idSchema: itemIdSchema,
+        fieldPathId: itemFieldPathId,
         disabled: disabled,
         readonly: readonly,
         canAdd,

@@ -69,7 +69,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
               key={index}
               checked={checked}
               disabled={disabled || itemDisabled || readonly}
-              aria-describedby={ariaDescribedByIds<T>(id)}
+              aria-describedby={ariaDescribedByIds(id)}
             />
           );
         })}

@@ -88,7 +88,7 @@ export default function SelectWidget<
         ...SelectProps,
         multiple,
       }}
-      aria-describedby={ariaDescribedByIds<T>(id)}
+      aria-describedby={ariaDescribedByIds(id)}
     >
       {showPlaceholderOption && <MenuItem value=''>{placeholder}</MenuItem>}
       {Array.isArray(enumOptions) &&

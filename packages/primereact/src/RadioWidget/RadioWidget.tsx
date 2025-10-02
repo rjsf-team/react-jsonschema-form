@@ -47,7 +47,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
                 value={String(index)}
                 checked={checked}
                 disabled={disabled || itemDisabled || readonly}
-                aria-describedby={ariaDescribedByIds<T>(id)}
+                aria-describedby={ariaDescribedByIds(id)}
               />
               <label htmlFor={optionId(id, index)} style={{ marginLeft: '8px' }}>
                 {option.label}

@@ -34,7 +34,7 @@ export default function ObjectFieldTemplate<
     required,
     schema,
     uiSchema,
-    idSchema,
+    fieldPathId,
     formData,
     registry,
   } = props;
@@ -54,10 +54,10 @@ export default function ObjectFieldTemplate<
   const gridVerticalSpacing = uiOptions?.gridVerticalSpacing;
 
   return (
-    <Container id={idSchema.$id} p={0}>
+    <Container id={fieldPathId.$id} p={0}>
       {title && (
         <TitleFieldTemplate
-          id={titleId<T>(idSchema)}
+          id={titleId(fieldPathId)}
           title={title}
           required={required}
           schema={schema}
@@ -67,7 +67,7 @@ export default function ObjectFieldTemplate<
       )}
       {description && (
         <DescriptionFieldTemplate
-          id={descriptionId<T>(idSchema)}
+          id={descriptionId(fieldPathId)}
           description={description}
           schema={schema}
           uiSchema={uiSchema}
@@ -90,7 +90,7 @@ export default function ObjectFieldTemplate<
       {canExpand(schema, uiSchema, formData) && (
         <Group mt='xs' justify='flex-end'>
           <AddButton
-            id={buttonId<T>(idSchema, 'add')}
+            id={buttonId(fieldPathId, 'add')}
             disabled={disabled || readonly}
             onClick={onAddClick(schema)}
             className='rjsf-object-property-expand'

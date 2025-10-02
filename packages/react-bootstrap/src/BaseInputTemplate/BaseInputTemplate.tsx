@@ -54,17 +54,17 @@ export default function BaseInputTemplate<
         disabled={disabled}
         readOnly={readonly}
         className={rawErrors.length > 0 ? 'is-invalid' : ''}
-        list={schema.examples ? examplesId<T>(id) : undefined}
+        list={schema.examples ? examplesId(id) : undefined}
         {...inputProps}
         value={value || value === 0 ? value : ''}
         onChange={onChangeOverride || _onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
-        aria-describedby={ariaDescribedByIds<T>(id, !!schema.examples)}
+        aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
       />
       {children}
       {Array.isArray(schema.examples) ? (
-        <datalist id={examplesId<T>(id)}>
+        <datalist id={examplesId(id)}>
           {(schema.examples as string[])
             .concat(schema.default && !schema.examples.includes(schema.default) ? ([schema.default] as string[]) : [])
             .map((example: any) => {

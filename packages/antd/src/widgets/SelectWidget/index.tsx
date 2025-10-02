@@ -103,7 +103,7 @@ export default function SelectWidget<
       value={selectedIndexes}
       {...extraProps}
       filterOption={filterOption}
-      aria-describedby={ariaDescribedByIds<T>(id)}
+      aria-describedby={ariaDescribedByIds(id)}
       options={selectOptions}
     />
   );

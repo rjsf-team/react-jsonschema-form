@@ -1,4 +1,11 @@
-import { createSchemaUtils, englishStringTranslator, WidgetProps, RJSFSchema } from '@rjsf/utils';
+import {
+  createSchemaUtils,
+  DEFAULT_ID_PREFIX,
+  DEFAULT_ID_SEPARATOR,
+  englishStringTranslator,
+  RJSFSchema,
+  WidgetProps,
+} from '@rjsf/utils';
 import { getDefaultRegistry } from '@rjsf/core';
 import validator from '@rjsf/validator-ajv8';
 
@@ -25,7 +32,10 @@ export function mockRegistry() {
     rootSchema: {},
     schemaUtils: mockSchemaUtils,
     translateString: englishStringTranslator,
-    globalFormOptions: {},
+    globalFormOptions: {
+      idPrefix: DEFAULT_ID_PREFIX,
+      idSeparator: DEFAULT_ID_SEPARATOR,
+    },
   };
 }
 

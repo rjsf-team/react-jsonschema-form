@@ -57,7 +57,7 @@ export default function CheckboxesWidget<
       <CheckboxGroup
         onValueChange={(option) => onChange(enumOptionsValueForIndex<S>(option, enumOptions, emptyValue))}
         value={selectedIndexes}
-        aria-describedby={ariaDescribedByIds<T>(id)}
+        aria-describedby={ariaDescribedByIds(id)}
         readOnly={readonly}
         required={required}
         label={labelValue(label, hideLabel || !label)}

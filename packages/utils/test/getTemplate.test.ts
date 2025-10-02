@@ -1,5 +1,7 @@
 import {
   createSchemaUtils,
+  DEFAULT_ID_PREFIX,
+  DEFAULT_ID_SEPARATOR,
   englishStringTranslator,
   getTemplate,
   RJSFSchema,
@@ -48,7 +50,7 @@ const registry: Registry = {
   },
   fields: {},
   widgets: {},
-  globalFormOptions: {},
+  globalFormOptions: { idPrefix: DEFAULT_ID_PREFIX, idSeparator: DEFAULT_ID_SEPARATOR },
 };
 
 const uiOptions: UIOptionsType = {

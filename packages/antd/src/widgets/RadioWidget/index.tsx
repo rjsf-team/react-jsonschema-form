@@ -53,7 +53,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
       onBlur={!readonly ? handleBlur : undefined}
       onFocus={!readonly ? handleFocus : undefined}
       value={selectedIndexes}
-      aria-describedby={ariaDescribedByIds<T>(id)}
+      aria-describedby={ariaDescribedByIds(id)}
     >
       {Array.isArray(enumOptions) &&
         enumOptions.map((option, i) => (

@@ -57,11 +57,11 @@ export default function CheckboxWidget<
   return (
     <div
       className={`relative ${disabled || readonly ? 'cursor-not-allowed opacity-50' : ''}`}
-      aria-describedby={ariaDescribedByIds<T>(id)}
+      aria-describedby={ariaDescribedByIds(id)}
     >
       {!hideLabel && description && (
         <DescriptionFieldTemplate
-          id={descriptionId<T>(id)}
+          id={descriptionId(id)}
           description={description}
           schema={schema}
           uiSchema={uiSchema}

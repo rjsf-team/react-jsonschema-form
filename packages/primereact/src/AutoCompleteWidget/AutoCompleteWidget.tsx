@@ -74,7 +74,7 @@ export default function AutoCompleteWidget<
       onChange={(onChangeOverride as any) || _onChange}
       onBlur={_onBlur}
       onFocus={_onFocus}
-      aria-describedby={ariaDescribedByIds<T>(id, !!schema.examples)}
+      aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
       /* Make autocomplete look like a dropdown, which looks much nicer */
       pt={{
         root: {

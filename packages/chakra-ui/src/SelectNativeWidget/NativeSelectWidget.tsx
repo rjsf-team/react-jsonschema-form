@@ -124,7 +124,7 @@ export default function NativeSelectWidget<
           onFocus={_onFocus}
           autoFocus={autofocus}
           value={formValue}
-          aria-describedby={ariaDescribedByIds<T>(id)}
+          aria-describedby={ariaDescribedByIds(id)}
         >
           {selectOptions.items.map((item) => (
             <option key={item.value} value={item.value}>

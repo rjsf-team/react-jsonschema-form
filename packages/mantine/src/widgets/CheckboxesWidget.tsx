@@ -75,7 +75,7 @@ export default function CheckboxesWidget<
   return Array.isArray(enumOptions) && enumOptions.length > 0 ? (
     <>
       {!hideLabel && !!label && (
-        <Input.Label id={titleId<T>(id)} required={required}>
+        <Input.Label id={titleId(id)} required={required}>
           {label}
         </Input.Label>
       )}
@@ -86,7 +86,7 @@ export default function CheckboxesWidget<
         required={required}
         readOnly={disabled || readonly}
         error={rawErrors && rawErrors.length > 0 ? rawErrors.join('\n') : undefined}
-        aria-describedby={ariaDescribedByIds<T>(id)}
+        aria-describedby={ariaDescribedByIds(id)}
         {...themeProps}
       >
         {Array.isArray(enumOptions) ? (

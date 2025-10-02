@@ -57,7 +57,7 @@ export default function CheckboxWidget<
     <Field mb={1} required={required} {...chakraProps}>
       {!hideLabel && description && (
         <DescriptionFieldTemplate
-          id={descriptionId<T>(id)}
+          id={descriptionId(id)}
           description={description}
           schema={schema}
           uiSchema={uiSchema}
@@ -72,7 +72,7 @@ export default function CheckboxWidget<
         onCheckedChange={_onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
-        aria-describedby={ariaDescribedByIds<T>(id)}
+        aria-describedby={ariaDescribedByIds(id)}
       >
         {labelValue(<Text>{label}</Text>, hideLabel || !label)}
       </Checkbox>

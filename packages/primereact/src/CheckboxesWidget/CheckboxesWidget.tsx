@@ -70,7 +70,7 @@ export default function CheckboxesWidget<
     >
       {!hideLabel && !!description && (
         <DescriptionFieldTemplate
-          id={descriptionId<T>(id)}
+          id={descriptionId(id)}
           description={description}
           schema={schema}
           uiSchema={uiSchema}
@@ -94,7 +94,7 @@ export default function CheckboxesWidget<
                 onChange={_onChange(index)}
                 onBlur={_onBlur}
                 onFocus={_onFocus}
-                aria-describedby={ariaDescribedByIds<T>(id)}
+                aria-describedby={ariaDescribedByIds(id)}
               />
               <Label id={optionId(id, index)} text={option.label} />
             </div>

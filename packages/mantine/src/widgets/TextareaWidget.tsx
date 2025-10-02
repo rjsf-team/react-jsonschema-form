@@ -80,7 +80,7 @@ export default function TextareaWidget<
       onBlur={handleBlur}
       onFocus={handleFocus}
       error={rawErrors && rawErrors.length > 0 ? rawErrors.join('\n') : undefined}
-      aria-describedby={ariaDescribedByIds<T>(id)}
+      aria-describedby={ariaDescribedByIds(id)}
       {...themeProps}
     />
   );

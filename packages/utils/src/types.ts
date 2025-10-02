@@ -158,19 +158,24 @@ export type InputPropsType = Omit<RangeSpecType, 'step'> & {
   accept?: HTMLInputElement['accept'];
 };
 
-/** Type describing an id used for a field in the `IdSchema` */
-export type FieldId = {
+/** The list of path elements that represents where in the schema a field is located. When the item in the field list is
+ * a string, then it represents the name of the property within an object. When it is a number, then it represents the
+ * index within an array.
+ *
+ * For example:
+ * `[]` represents the root object of the schema
+ * `['foo', 'bar']` represents the `bar` element contained within the `foo` element of the schema
+ * `['baz', 1]` represents the second element in the list `baz` of the schema
+ */
+export type FieldPathList = (string | number)[];
+
+/** Type describing an id and path used for a field */
+export type FieldPathId = {
   /** The id for a field */
   $id: string;
+  /** The path for a field */
+  path: FieldPathList;
 };
-
-/** Type describing a recursive structure of `FieldId`s for an object with a non-empty set of keys */
-export type IdSchema<T = any> = T extends GenericObjectType
-  ? FieldId & {
-      /** The set of ids for fields in the recursive object structure */
-      [key in keyof T]?: IdSchema<T[key]>;
-    }
-  : FieldId;
 
 /** Type describing a name used for a field in the `PathSchema` */
 export type FieldPath = {
@@ -275,8 +280,8 @@ export type FieldErrorProps<
   errorSchema?: ErrorSchema<T>;
   /** An array of the errors */
   errors?: Array<string | ReactElement>;
-  /** The tree of unique ids for every child field */
-  idSchema: IdSchema<T>;
+  /** The FieldPathId of the field in the hierarchy */
+  fieldPathId: FieldPathId;
 };
 
 /** The properties that are passed to an `FieldHelpTemplate` implementation */
@@ -287,8 +292,8 @@ export type FieldHelpProps<
 > = RJSFBaseProps<T, S, F> & {
   /** The help information to be rendered */
   help?: string | ReactElement;
-  /** The tree of unique ids for every child field */
-  idSchema: IdSchema<T>;
+  /** The FieldPathId of the field in the hierarchy */
+  fieldPathId: FieldPathId;
   /** Flag indicating whether there are errors associated with this field */
   hasErrors?: boolean;
 };
@@ -400,13 +405,13 @@ export type GlobalUISchemaOptions = GenericObjectType & {
  */
 export type GlobalFormOptions = {
   /** To avoid collisions with existing ids in the DOM, it is possible to change the prefix used for ids;
-   * Default is `root`. This prop is passed to the `toIdSchema()` function within the RJSF field implementations.
+   * Default is `root`. This prop is passed to the `toFilePathId()` function within the RJSF field implementations.
    */
-  readonly idPrefix?: string;
+  readonly idPrefix: string;
   /** To avoid using a path separator that is present in field names, it is possible to change the separator used for
-   * ids; Default is `_`. This prop is passed to the `toIdSchema()` function within the RJSF field implementations.
+   * ids; Default is `_`. This prop is passed to the `toFilePathId()` function within the RJSF field implementations.
    */
-  readonly idSeparator?: string;
+  readonly idSeparator: string;
   /** The component update strategy used by the Form and its fields for performance optimization */
   readonly experimental_componentUpdateStrategy?: 'customDeep' | 'shallow' | 'always';
 };
@@ -448,16 +453,16 @@ export interface FieldProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F 
   extends GenericObjectType,
     RJSFBaseProps<T, S, F>,
     Pick<HTMLAttributes<HTMLElement>, Exclude<keyof HTMLAttributes<HTMLElement>, 'onBlur' | 'onFocus' | 'onChange'>> {
-  /** The tree of unique ids for every child field */
-  idSchema: IdSchema<T>;
+  /** The FieldPathId of the field in the hierarchy */
+  fieldPathId: FieldPathId;
   /** The data for this field */
   formData?: T;
   /** The tree of errors for this field and its children */
   errorSchema?: ErrorSchema<T>;
-  /** The field change event handler; called with the updated field value, the optional change path for the value
+  /** The field change event handler; called with the updated field value, the change path for the value
    * (defaults to an empty array), an optional ErrorSchema and the optional id of the field being changed
    */
-  onChange: (newValue: T | undefined, path?: (number | string)[], es?: ErrorSchema<T>, id?: string) => void;
+  onChange: (newValue: T | undefined, path: FieldPathList, es?: ErrorSchema<T>, id?: string) => void;
   /** The input blur event handler; call it with the field id and value */
   onBlur: (id: string, value: any) => void;
   /** The input focus event handler; call it with the field id and value */
@@ -548,8 +553,8 @@ export type UnsupportedFieldProps<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
 > = RJSFBaseProps<T, S, F> & {
-  /** The tree of unique ids for every child field */
-  idSchema?: IdSchema<T>;
+  /** The FieldPathId of the field in the hierarchy */
+  fieldPathId: FieldPathId;
   /** The reason why the schema field has an unsupported type */
   reason: string;
 };
@@ -588,8 +593,8 @@ export type ArrayFieldTitleProps<
 > = Omit<TitleFieldProps<T, S, F>, 'id' | 'title'> & {
   /** The title for the field being rendered */
   title?: string;
-  /** The idSchema of the field in the hierarchy */
-  idSchema: IdSchema<T>;
+  /** The FieldPathId of the field in the hierarchy */
+  fieldPathId: FieldPathId;
 };
 
 /** The properties that are passed to a `ArrayFieldDescriptionTemplate` implementation */
@@ -600,8 +605,8 @@ export type ArrayFieldDescriptionProps<
 > = Omit<DescriptionFieldProps<T, S, F>, 'id' | 'description'> & {
   /** The description of the field being rendered */
   description?: string | ReactElement;
-  /** The idSchema of the field in the hierarchy */
-  idSchema: IdSchema<T>;
+  /** An object containing the id and path for this field */
+  fieldPathId: FieldPathId;
 };
 
 /** The properties of the buttons to render for each element in the ArrayFieldTemplateProps.items array */
@@ -610,8 +615,8 @@ export type ArrayFieldItemButtonsTemplateType<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
 > = RJSFBaseProps<T, S, F> & {
-  /** The idSchema of the item for which buttons are being rendered */
-  idSchema: IdSchema<T>;
+  /** The FieldPathId of the item for which buttons are being rendered */
+  fieldPathId: FieldPathId;
   /** The className string */
   className?: string;
   /** Any optional style attributes */
@@ -691,8 +696,8 @@ export type ArrayFieldTemplateProps<
   className?: string;
   /** A boolean value stating if the array is disabled */
   disabled?: boolean;
-  /** An object containing the id for this object & ids for its properties */
-  idSchema: IdSchema<T>;
+  /** The FieldPathId of the field in the hierarchy */
+  fieldPathId: FieldPathId;
   /** An array of objects representing the items in the array */
   items: ArrayFieldItemTemplateType<T, S, F>[];
   /** A function that adds a new item to the array */
@@ -749,8 +754,8 @@ export type ObjectFieldTemplateProps<
   required?: boolean;
   /** A boolean value stating if the field is hiding its errors */
   hideError?: boolean;
-  /** An object containing the id for this object & ids for its properties */
-  idSchema: IdSchema<T>;
+  /** The FieldPathId of the field in the hierarchy */
+  fieldPathId: FieldPathId;
   /** The optional validation errors in the form of an `ErrorSchema` */
   errorSchema?: ErrorSchema<T>;
   /** The form data for the object */
@@ -1025,7 +1030,10 @@ export type UiSchema<
      * Registry for use everywhere.
      */
     'ui:globalOptions'?: GlobalUISchemaOptions;
-    /** Allows the form to generate a unique prefix for the `Form`'s root prefix  */
+    /** Allows the form to generate a unique prefix for the `Form`'s root prefix
+     *
+     * @deprecated - use `Form.idPrefix` instead, will be removed in a future major version
+     */
     'ui:rootFieldId'?: string;
     /** By default, any field that is rendered for an `anyOf`/`oneOf` schema will be wrapped inside the `AnyOfField` or
      * `OneOfField` component. This default behavior may be undesirable if your custom field already handles behavior
@@ -1284,16 +1292,6 @@ export interface SchemaUtilsType<T = any, S extends StrictRJSFSchema = RJSFSchem
    *      to `undefined`. Will return `undefined` if the new schema is not an object containing properties.
    */
   sanitizeDataForNewSchema(newSchema?: S, oldSchema?: S, data?: any): T;
-  /** Generates an `IdSchema` object for the `schema`, recursively
-   *
-   * @param schema - The schema for which the display label flag is desired
-   * @param [id] - The base id for the schema
-   * @param [formData] - The current formData, if any, onto which to provide any missing defaults
-   * @param [idPrefix='root'] - The prefix to use for the id
-   * @param [idSeparator='_'] - The separator to use for the path segments in the id
-   * @returns - The `IdSchema` object for the `schema`
-   */
-  toIdSchema(schema: S, id?: string, formData?: T, idPrefix?: string, idSeparator?: string): IdSchema<T>;
   /** Generates an `PathSchema` object for the `schema`, recursively
    *
    * @param schema - The schema for which the display label flag is desired

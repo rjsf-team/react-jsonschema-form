@@ -56,7 +56,7 @@ export default function ColorWidget<T = any, S extends StrictRJSFSchema = RJSFSc
       onChange={onChangeOverride || _onChange}
       onBlur={_onBlur}
       onFocus={_onFocus}
-      aria-describedby={ariaDescribedByIds<T>(id, !!schema.examples)}
+      aria-describedby={ariaDescribedByIds(id, !!schema.examples)}
     />
   );
 }

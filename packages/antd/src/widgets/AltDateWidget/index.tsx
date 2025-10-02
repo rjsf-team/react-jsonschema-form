@@ -107,7 +107,7 @@ export default function AltDateWidget<
       value={elemProps.value}
       registry={registry}
       label=''
-      aria-describedby={ariaDescribedByIds<T>(id)}
+      aria-describedby={ariaDescribedByIds(id)}
     />
   );
 

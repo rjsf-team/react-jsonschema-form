@@ -40,7 +40,7 @@ export default function UpDownWidget<T = any, S extends StrictRJSFSchema = RJSFS
         onValueChange={_onChange}
         onBlur={_onBlur}
         onFocus={_onFocus}
-        aria-describedby={ariaDescribedByIds<T>(id)}
+        aria-describedby={ariaDescribedByIds(id)}
         id={id}
         name={id}
       />

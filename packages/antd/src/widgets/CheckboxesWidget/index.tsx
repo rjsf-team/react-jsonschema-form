@@ -52,7 +52,7 @@ export default function CheckboxesWidget<
         onChange={!readonly ? handleChange : undefined}
         value={selectedIndexes}
         {...extraProps}
-        aria-describedby={ariaDescribedByIds<T>(id)}
+        aria-describedby={ariaDescribedByIds(id)}
       >
         {Array.isArray(enumOptions) &&
           enumOptions.map((option, i) => (

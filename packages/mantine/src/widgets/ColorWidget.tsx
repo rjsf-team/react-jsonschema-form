@@ -78,7 +78,7 @@ export default function ColorWidget<T = any, S extends StrictRJSFSchema = RJSFSc
       onFocus={handleFocus}
       error={rawErrors && rawErrors.length > 0 ? rawErrors.join('\n') : undefined}
       {...themeProps}
-      aria-describedby={ariaDescribedByIds<T>(id)}
+      aria-describedby={ariaDescribedByIds(id)}
       popoverProps={{ withinPortal: false }}
     />
   );

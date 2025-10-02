@@ -71,7 +71,7 @@ export default function WrapIfAdditionalTemplate<
       <div style={{ flex: 1 }}>{children}</div>
       <div>
         <RemoveButton
-          id={buttonId<T>(id, 'remove')}
+          id={buttonId(id, 'remove')}
           className='rjsf-object-property-remove'
           disabled={disabled || readonly}
           onClick={onDropPropertyClick(label)}

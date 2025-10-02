@@ -25,7 +25,7 @@ export default function ObjectFieldTemplate<
   properties,
   required,
   uiSchema,
-  idSchema,
+  fieldPathId,
   schema,
   formData,
   onAddClick,
@@ -48,7 +48,7 @@ export default function ObjectFieldTemplate<
     <>
       {title && (
         <TitleFieldTemplate
-          id={titleId<T>(idSchema)}
+          id={titleId(fieldPathId)}
           title={title}
           required={required}
           schema={schema}
@@ -58,7 +58,7 @@ export default function ObjectFieldTemplate<
       )}
       {description && (
         <DescriptionFieldTemplate
-          id={descriptionId<T>(idSchema)}
+          id={descriptionId(fieldPathId)}
           description={description}
           schema={schema}
           uiSchema={uiSchema}
@@ -75,7 +75,7 @@ export default function ObjectFieldTemplate<
           <Row>
             <Col xs={{ offset: 9, span: 3 }} className='py-4'>
               <AddButton
-                id={buttonId<T>(idSchema, 'add')}
+                id={buttonId(fieldPathId, 'add')}
                 onClick={onAddClick(schema)}
                 disabled={disabled || readonly}
                 className='rjsf-object-property-expand'

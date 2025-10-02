@@ -1,73 +1,73 @@
 import isString from 'lodash/isString';
 
-import { IdSchema } from './types';
+import { FieldPathId } from './types';
 import { ID_KEY } from './constants';
 
 /** Generates a consistent `id` pattern for a given `id` and a `suffix`
  *
- * @param id - Either simple string id or an IdSchema from which to extract it
+ * @param id - Either simple string id or an FieldPathId from which to extract it
  * @param suffix - The suffix to append to the id
  */
-function idGenerator<T = any>(id: IdSchema<T> | string, suffix: string) {
+function idGenerator(id: FieldPathId | string, suffix: string) {
   const theId = isString(id) ? id : id[ID_KEY];
   return `${theId}__${suffix}`;
 }
 /** Return a consistent `id` for the field description element
  *
- * @param id - Either simple string id or an IdSchema from which to extract it
+ * @param id - Either simple string id or an FieldPathId from which to extract it
  * @returns - The consistent id for the field description element from the given `id`
  */
-export function descriptionId<T = any>(id: IdSchema<T> | string) {
-  return idGenerator<T>(id, 'description');
+export function descriptionId(id: FieldPathId | string) {
+  return idGenerator(id, 'description');
 }
 
 /** Return a consistent `id` for the field error element
  *
- * @param id - Either simple string id or an IdSchema from which to extract it
+ * @param id - Either simple string id or an FieldPathId from which to extract it
  * @returns - The consistent id for the field error element from the given `id`
  */
-export function errorId<T = any>(id: IdSchema<T> | string) {
-  return idGenerator<T>(id, 'error');
+export function errorId(id: FieldPathId | string) {
+  return idGenerator(id, 'error');
 }
 
 /** Return a consistent `id` for the field examples element
  *
- * @param id - Either simple string id or an IdSchema from which to extract it
+ * @param id - Either simple string id or an FieldPathId from which to extract it
  * @returns - The consistent id for the field examples element from the given `id`
  */
-export function examplesId<T = any>(id: IdSchema<T> | string) {
-  return idGenerator<T>(id, 'examples');
+export function examplesId(id: FieldPathId | string) {
+  return idGenerator(id, 'examples');
 }
 
 /** Return a consistent `id` for the field help element
  *
- * @param id - Either simple string id or an IdSchema from which to extract it
+ * @param id - Either simple string id or an FieldPathId from which to extract it
  * @returns - The consistent id for the field help element from the given `id`
  */
-export function helpId<T = any>(id: IdSchema<T> | string) {
-  return idGenerator<T>(id, 'help');
+export function helpId(id: FieldPathId | string) {
+  return idGenerator(id, 'help');
 }
 
 /** Return a consistent `id` for the field title element
  *
- * @param id - Either simple string id or an IdSchema from which to extract it
+ * @param id - Either simple string id or an FieldPathId from which to extract it
  * @returns - The consistent id for the field title element from the given `id`
  */
-export function titleId<T = any>(id: IdSchema<T> | string) {
-  return idGenerator<T>(id, 'title');
+export function titleId(id: FieldPathId | string) {
+  return idGenerator(id, 'title');
 }
 
 /** Return a list of element ids that contain additional information about the field that can be used to as the aria
  * description of the field. This is correctly omitting `titleId` which would be "labeling" rather than "describing" the
  * element.
  *
- * @param id - Either simple string id or an IdSchema from which to extract it
+ * @param id - Either simple string id or an FieldPathId from which to extract it
  * @param [includeExamples=false] - Optional flag, if true, will add the `examplesId` into the list
  * @returns - The string containing the list of ids for use in an `aria-describedBy` attribute
  */
-export function ariaDescribedByIds<T = any>(id: IdSchema<T> | string, includeExamples = false) {
-  const examples = includeExamples ? ` ${examplesId<T>(id)}` : '';
-  return `${errorId<T>(id)} ${descriptionId<T>(id)} ${helpId<T>(id)}${examples}`;
+export function ariaDescribedByIds(id: FieldPathId | string, includeExamples = false) {
+  const examples = includeExamples ? ` ${examplesId(id)}` : '';
+  return `${errorId(id)} ${descriptionId(id)} ${helpId(id)}${examples}`;
 }
 
 /** Return a consistent `id` for the `optionIndex`s of a `Radio` or `Checkboxes` widget
@@ -82,10 +82,10 @@ export function optionId(id: string, optionIndex: number) {
 
 /** Return a consistent `id` for the `btn` button element
  *
- * @param id - Either simple string id or an IdSchema from which to extract it
+ * @param id - Either simple string id or an FieldPathId from which to extract it
  * @param btn - The button type for which to generate the id
  * @returns - The consistent id for the button from the given `id` and `btn` type
  */
-export function buttonId<T = any>(id: IdSchema<T> | string, btn: 'add' | 'copy' | 'moveDown' | 'moveUp' | 'remove') {
-  return idGenerator<T>(id, btn);
+export function buttonId(id: FieldPathId | string, btn: 'add' | 'copy' | 'moveDown' | 'moveUp' | 'remove') {
+  return idGenerator(id, btn);
 }

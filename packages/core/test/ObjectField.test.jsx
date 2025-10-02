@@ -206,11 +206,11 @@ describe('ObjectField', () => {
       function CustomSchemaField(props) {
         const {
           registry: { formContext },
-          idSchema,
+          fieldPathId,
         } = props;
         return (
           <>
-            <code id={formContext[idSchema.$id]}>Ha</code>
+            <code id={formContext[fieldPathId.$id]}>Ha</code>
             <SchemaField {...props} />
           </>
         );

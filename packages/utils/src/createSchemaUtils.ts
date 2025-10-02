@@ -5,7 +5,6 @@ import {
   FormContextType,
   FoundFieldType,
   GlobalUISchemaOptions,
-  IdSchema,
   PathSchema,
   RJSFSchema,
   SchemaUtilsType,
@@ -26,7 +25,6 @@ import {
   isSelect,
   retrieveSchema,
   sanitizeDataForNewSchema,
-  toIdSchema,
   toPathSchema,
 } from './schema';
 import { makeAllReferencesAbsolute } from './findSchemaDefinition';
@@ -336,28 +334,6 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
       newSchema,
       oldSchema,
       data,
-      this.experimental_customMergeAllOf,
-    );
-  }
-
-  /** Generates an `IdSchema` object for the `schema`, recursively
-   *
-   * @param schema - The schema for which the display label flag is desired
-   * @param [id] - The base id for the schema
-   * @param [formData] - The current formData, if any, onto which to provide any missing defaults
-   * @param [idPrefix='root'] - The prefix to use for the id
-   * @param [idSeparator='_'] - The separator to use for the path segments in the id
-   * @returns - The `IdSchema` object for the `schema`
-   */
-  toIdSchema(schema: S, id?: string | null, formData?: T, idPrefix = 'root', idSeparator = '_'): IdSchema<T> {
-    return toIdSchema<T, S, F>(
-      this.validator,
-      schema,
-      id,
-      this.rootSchema,
-      formData,
-      idPrefix,
-      idSeparator,
       this.experimental_customMergeAllOf,
     );
   }

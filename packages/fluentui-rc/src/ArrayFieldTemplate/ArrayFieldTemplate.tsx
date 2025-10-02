@@ -26,7 +26,7 @@ export default function ArrayFieldTemplate<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
 >(props: ArrayFieldTemplateProps<T, S, F>) {
-  const { canAdd, disabled, idSchema, uiSchema, items, onAddClick, readonly, registry, required, schema, title } =
+  const { canAdd, disabled, fieldPathId, uiSchema, items, onAddClick, readonly, registry, required, schema, title } =
     props;
   const classes = useStyles();
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
@@ -52,7 +52,7 @@ export default function ArrayFieldTemplate<
   return (
     <>
       <ArrayFieldTitleTemplate
-        idSchema={idSchema}
+        fieldPathId={fieldPathId}
         title={uiOptions.title || title}
         schema={schema}
         uiSchema={uiSchema}
@@ -60,13 +60,13 @@ export default function ArrayFieldTemplate<
         registry={registry}
       />
       <ArrayFieldDescriptionTemplate
-        idSchema={idSchema}
+        fieldPathId={fieldPathId}
         description={uiOptions.description || schema.description}
         schema={schema}
         uiSchema={uiSchema}
         registry={registry}
       />
-      <Flex column key={`array-item-list-${idSchema.$id}`} className={classes.arrayItemList}>
+      <Flex column key={`array-item-list-${fieldPathId.$id}`} className={classes.arrayItemList}>
         {items &&
           items.map(({ key, ...itemProps }: ArrayFieldItemTemplateType<T, S, F>) => (
             <ArrayFieldItemTemplate key={key} {...itemProps} />
@@ -74,7 +74,7 @@ export default function ArrayFieldTemplate<
         {canAdd && (
           <Flex hAlign='end'>
             <AddButton
-              id={buttonId<T>(idSchema, 'add')}
+              id={buttonId(fieldPathId, 'add')}
               className='rjsf-array-item-add'
               onClick={onAddClick}
               disabled={disabled || readonly}

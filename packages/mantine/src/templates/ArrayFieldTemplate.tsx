@@ -23,7 +23,7 @@ export default function ArrayFieldTemplate<
     canAdd,
     className,
     disabled,
-    idSchema,
+    fieldPathId,
     items,
     onAddClick,
     readonly,
@@ -57,7 +57,7 @@ export default function ArrayFieldTemplate<
 
   const legend = (uiOptions.title || title) && (
     <ArrayFieldTitleTemplate
-      idSchema={idSchema}
+      fieldPathId={fieldPathId}
       required={required}
       title={uiOptions.title || title}
       schema={schema}
@@ -67,11 +67,11 @@ export default function ArrayFieldTemplate<
   );
 
   return (
-    <Fieldset legend={legend} className={className} id={idSchema.$id}>
+    <Fieldset legend={legend} className={className} id={fieldPathId.$id}>
       {(uiOptions.description || schema.description) && (
         <ArrayFieldDescriptionTemplate
           description={uiOptions.description || schema.description}
-          idSchema={idSchema}
+          fieldPathId={fieldPathId}
           schema={schema}
           uiSchema={uiSchema}
           registry={registry}
@@ -88,7 +88,7 @@ export default function ArrayFieldTemplate<
       {canAdd && (
         <Group justify='flex-end'>
           <AddButton
-            id={buttonId<T>(idSchema, 'add')}
+            id={buttonId(fieldPathId, 'add')}
             className='rjsf-array-item-add'
             disabled={disabled || readonly}
             onClick={onAddClick}

@@ -142,7 +142,7 @@ describeRepeated('Form common', (createFormComponent) => {
           errors: [],
           edit: true,
           uiSchema: {},
-          idSchema: { $id: 'root', count: { $id: 'root_count' } },
+          fieldPathId: { $id: 'root', path: [] },
           schemaValidationErrors: undefined,
           schemaValidationErrorSchema: undefined,
           schemaUtils: sinon.match.object,
@@ -1973,7 +1973,7 @@ describeRepeated('Form common', (createFormComponent) => {
           errorSchema: {},
           errors: [],
           formData: 'foobar',
-          idSchema: { $id: 'root' },
+          fieldPathId: { $id: 'root', path: [] },
           schema: formProps.schema,
           uiSchema: {},
           schemaValidationErrors: undefined,
@@ -3304,121 +3304,6 @@ describeRepeated('Form common', (createFormComponent) => {
       );
     });
   });
-
-  describe('idSchema updates based on formData', () => {
-    const schema = {
-      type: 'object',
-      properties: {
-        a: { type: 'string', enum: ['int', 'bool'] },
-      },
-      dependencies: {
-        a: {
-          oneOf: [
-            {
-              properties: {
-                a: { enum: ['int'] },
-              },
-            },
-            {
-              properties: {
-                a: { enum: ['bool'] },
-                b: { type: 'boolean' },
-              },
-            },
-          ],
-        },
-      },
-    };
-
-    it('should not update idSchema for a falsey value', () => {
-      const formData = { a: 'int' };
-      const { comp, node, onSubmit } = createFormComponent({
-        ref: createRef(),
-        schema,
-        formData,
-      });
-
-      setProps(comp, {
-        onSubmit,
-        schema: {
-          type: 'object',
-          properties: {
-            a: { type: 'string', enum: ['int', 'bool'] },
-          },
-          dependencies: {
-            a: {
-              oneOf: [
-                {
-                  properties: {
-                    a: { enum: ['int'] },
-                  },
-                },
-                {
-                  properties: {
-                    a: { enum: ['bool'] },
-                    b: { type: 'boolean' },
-                  },
-                },
-              ],
-            },
-          },
-        },
-        formData: { a: 'int' },
-      });
-
-      submitForm(node);
-      sinon.assert.calledWithMatch(onSubmit.lastCall, {
-        idSchema: { $id: 'root', a: { $id: 'root_a' } },
-      });
-    });
-
-    it('should update idSchema based on truthy value', async () => {
-      const formData = {
-        a: 'int',
-      };
-      const { comp, node, onSubmit } = createFormComponent({
-        ref: createRef(),
-        schema,
-        formData,
-      });
-      setProps(comp, {
-        onSubmit,
-        schema: {
-          type: 'object',
-          properties: {
-            a: { type: 'string', enum: ['int', 'bool'] },
-          },
-          dependencies: {
-            a: {
-              oneOf: [
-                {
-                  properties: {
-                    a: { enum: ['int'] },
-                  },
-                },
-                {
-                  properties: {
-                    a: { enum: ['bool'] },
-                    b: { type: 'boolean' },
-                  },
-                },
-              ],
-            },
-          },
-        },
-        formData: { a: 'bool' },
-      });
-      await act(() => submitForm(node));
-      sinon.assert.calledWithMatch(onSubmit.lastCall, {
-        idSchema: {
-          $id: 'root',
-          a: { $id: 'root_a' },
-          b: { $id: 'root_b' },
-        },
-      });
-    });
-  });
-
   describe('Form disable prop', () => {
     const schema = {
       type: 'object',

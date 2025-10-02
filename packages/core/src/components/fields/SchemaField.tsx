@@ -3,6 +3,8 @@ import {
   ADDITIONAL_PROPERTY_FLAG,
   descriptionId,
   ErrorSchema,
+  FieldPathId,
+  FieldPathList,
   FieldProps,
   FieldTemplateProps,
   FormContextType,
@@ -10,8 +12,6 @@ import {
   getTemplate,
   getUiOptions,
   ID_KEY,
-  IdSchema,
-  mergeObjects,
   Registry,
   RJSFSchema,
   shouldRender,
@@ -40,14 +40,14 @@ const COMPONENT_TYPES: { [key: string]: string } = {
  *
  * @param schema - The schema from which to obtain the type
  * @param uiOptions - The UI Options that may affect the component decision
- * @param idSchema - The id that is passed to the `UnsupportedFieldTemplate`
+ * @param fieldPathId - The id that is passed to the `UnsupportedFieldTemplate`
  * @param registry - The registry from which fields and templates are obtained
  * @returns - The `Field` component that is used to render the actual field data
  */
 function getFieldComponent<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   schema: S,
   uiOptions: UIOptionsType<T, S, F>,
-  idSchema: IdSchema<T>,
+  fieldPathId: FieldPathId,
   registry: Registry<T, S, F>,
 ): ComponentType<FieldProps<T, S, F>> {
   const field = uiOptions.field;
@@ -87,7 +87,7 @@ function getFieldComponent<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
         return (
           <UnsupportedFieldTemplate
             schema={schema}
-            idSchema={idSchema}
+            fieldPathId={fieldPathId}
             reason={translateString(TranslatableString.UnknownFieldType, [String(schema.type)])}
             registry={registry}
           />
@@ -106,7 +106,7 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
 ) {
   const {
     schema: _schema,
-    idSchema: _idSchema,
+    fieldPathId,
     uiSchema,
     formData,
     errorSchema,
@@ -118,8 +118,7 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
     registry,
     wasPropertyKeyModified = false,
   } = props;
-  const { formContext, schemaUtils, globalUiOptions, globalFormOptions } = registry;
-  const { idPrefix, idSeparator } = globalFormOptions;
+  const { formContext, schemaUtils, globalUiOptions } = registry;
   const uiOptions = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
   const FieldTemplate = getTemplate<'FieldTemplate', T, S, F>('FieldTemplate', registry, uiOptions);
   const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
@@ -130,24 +129,20 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   const FieldHelpTemplate = getTemplate<'FieldHelpTemplate', T, S, F>('FieldHelpTemplate', registry, uiOptions);
   const FieldErrorTemplate = getTemplate<'FieldErrorTemplate', T, S, F>('FieldErrorTemplate', registry, uiOptions);
   const schema = schemaUtils.retrieveSchema(_schema, formData);
-  const fieldId = _idSchema[ID_KEY];
-  const idSchema = mergeObjects(
-    schemaUtils.toIdSchema(schema, fieldId, formData, idPrefix, idSeparator),
-    _idSchema,
-  ) as IdSchema<T>;
+  const fieldId = fieldPathId[ID_KEY];
 
   /** Intermediary `onChange` handler for field components that will inject the `id` of the current field into the
    * `onChange` chain if it is not already being provided from a deeper level in the hierarchy
    */
   const handleFieldComponentChange = useCallback(
-    (formData: T | undefined, path?: (number | string)[], newErrorSchema?: ErrorSchema<T>, id?: string) => {
+    (formData: T | undefined, path: FieldPathList, newErrorSchema?: ErrorSchema<T>, id?: string) => {
       const theId = id || fieldId;
       return onChange(formData, path, newErrorSchema, theId);
     },
     [fieldId, onChange],
   );
 
-  const FieldComponent = getFieldComponent<T, S, F>(schema, uiOptions, idSchema, registry);
+  const FieldComponent = getFieldComponent<T, S, F>(schema, uiOptions, fieldPathId, registry);
   const disabled = Boolean(uiOptions.disabled ?? props.disabled);
   const readonly = Boolean(uiOptions.readonly ?? (props.readonly || props.schema.readOnly || schema.readOnly));
   const uiSchemaHideError = uiOptions.hideError;
@@ -171,7 +166,7 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
     <FieldComponent
       {...props}
       onChange={handleFieldComponentChange}
-      idSchema={idSchema}
+      fieldPathId={fieldPathId}
       schema={schema}
       uiSchema={fieldUiSchema}
       disabled={disabled}
@@ -184,7 +179,7 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
     />
   );
 
-  const id = idSchema[ID_KEY];
+  const id = fieldPathId[ID_KEY];
 
   // If this schema has a title defined, but the user has set a new key/label, retain their input.
   let label;
@@ -212,7 +207,7 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   const helpComponent = (
     <FieldHelpTemplate
       help={help}
-      idSchema={idSchema}
+      fieldPathId={fieldPathId}
       schema={schema}
       uiSchema={uiSchema}
       hasErrors={!hideError && __errors && __errors.length > 0}
@@ -228,7 +223,7 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
       <FieldErrorTemplate
         errors={__errors}
         errorSchema={errorSchema}
-        idSchema={idSchema}
+        fieldPathId={fieldPathId}
         schema={schema}
         uiSchema={uiSchema}
         registry={registry}
@@ -237,7 +232,7 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   const fieldProps: Omit<FieldTemplateProps<T, S, F>, 'children'> = {
     description: (
       <DescriptionFieldTemplate
-        id={descriptionId<T>(id)}
+        id={descriptionId(id)}
         description={description}
         schema={schema}
         uiSchema={uiSchema}
@@ -290,7 +285,7 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
             errorSchema={errorSchema}
             formData={formData}
             formContext={formContext}
-            idSchema={idSchema}
+            fieldPathId={fieldPathId}
             onBlur={props.onBlur}
             onChange={props.onChange}
             onFocus={props.onFocus}
@@ -312,7 +307,7 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
             errorSchema={errorSchema}
             formData={formData}
             formContext={formContext}
-            idSchema={idSchema}
+            fieldPathId={fieldPathId}
             onBlur={props.onBlur}
             onChange={props.onChange}
             onFocus={props.onFocus}

@@ -73,7 +73,7 @@ export default function SelectWidget<
           className={cnClassName}
           onFocus={_onFancyFocus}
           onBlur={_onFancyBlur}
-          ariaDescribedby={ariaDescribedByIds<T>(id)}
+          ariaDescribedby={ariaDescribedByIds(id)}
         />
       ) : (
         <FancyMultiSelect

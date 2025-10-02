@@ -10,11 +10,11 @@ export default function FieldErrorTemplate<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
 >(props: FieldErrorProps<T, S, F>) {
-  const { errors = [], idSchema } = props;
+  const { errors = [], fieldPathId } = props;
   if (errors.length === 0) {
     return null;
   }
-  const id = errorId<T>(idSchema);
+  const id = errorId(fieldPathId);
 
   return errors.map((error, i: number) => {
     return (
