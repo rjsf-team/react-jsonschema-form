@@ -269,6 +269,8 @@ export interface FormState<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   // Private
   /** @description result of schemaUtils.retrieveSchema(schema, formData). This a memoized value to avoid re calculate at internal functions (getStateFromProps, onChange) */
   retrievedSchema: S;
+  /** Flag indicating whether the initial form defaults have been generated */
+  initialDefaultsGenerated: boolean;
 }
 
 /** The event data passed when changes have been made to the form, includes everything from the `FormState` except
@@ -464,8 +466,14 @@ export default class Form<
         experimental_customMergeAllOf,
       );
     }
+
     const rootSchema = schemaUtils.getRootSchema();
-    const formData: T = schemaUtils.getDefaultFormState(rootSchema, inputFormData) as T;
+    const formData: T = schemaUtils.getDefaultFormState(
+      rootSchema,
+      inputFormData,
+      false,
+      state.initialDefaultsGenerated,
+    ) as T;
     const _retrievedSchema = this.updateRetrievedSchema(
       retrievedSchema ?? schemaUtils.retrieveSchema(rootSchema, formData),
     );
@@ -546,6 +554,7 @@ export default class Form<
       schemaValidationErrors,
       schemaValidationErrorSchema,
       retrievedSchema: _retrievedSchema,
+      initialDefaultsGenerated: true,
     };
     return nextState;
   }
@@ -888,6 +897,7 @@ export default class Form<
       errors: [] as unknown,
       schemaValidationErrors: [] as unknown,
       schemaValidationErrorSchema: {},
+      initialDefaultsGenerated: false,
     } as FormState<T, S, F>;
 
     this.setState(state, () => onChange && onChange({ ...this.state, ...state }));

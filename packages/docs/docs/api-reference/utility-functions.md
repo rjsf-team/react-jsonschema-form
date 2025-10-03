@@ -1065,6 +1065,7 @@ Returns the superset of `formData` that includes the given set updated to includ
 - [includeUndefinedValues=false]: boolean | "excludeObjectChildren" - Optional flag, if true, cause undefined values to be added as defaults. If "excludeObjectChildren", cause undefined values for this object and pass `includeUndefinedValues` as false when computing defaults for any nested object properties.
 - [experimental_defaultFormStateBehavior]: Experimental_DefaultFormStateBehavior - See `Form` documentation for the [experimental_defaultFormStateBehavior](./form-props.md#experimental_defaultFormStateBehavior) prop
 - [experimental_customMergeAllOf]: Experimental_CustomMergeAllOf&lt;S&gt; - See `Form` documentation for the [experimental_customMergeAllOf](./form-props.md#experimental_custommergeallof) prop
+- [initialDefaultsGenerated]: boolean - Optional flag, indicates whether or not initial defaults have been generated
 
 #### Returns
 
