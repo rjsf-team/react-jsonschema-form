@@ -815,21 +815,21 @@ export default class LayoutGridField<
     );
   }
 
-  /** Iterates through all the `childrenLayoutGrfieldPathId`, rendering a nested `LayoutGridField` for each item in the
+  /** Iterates through all the `childrenLayoutGridSchemaId`, rendering a nested `LayoutGridField` for each item in the
    * list, passing all the props for the current `LayoutGridField` along, updating the `schema` by calling
    * `retrieveSchema()` on it to resolve any `$ref`s. In addition to the updated `schema`, each item in
-   * `childrenLayoutGrfieldPathId` is passed as `layoutGridSchema`.
+   * `childrenLayoutGridSchemaId` is passed as `layoutGridSchema`.
    *
-   * @param childrenLayoutGrfieldPathId - The list of strings or objects that represents the configurations for the
+   * @param childrenLayoutGridSchemaId - The list of strings or objects that represents the configurations for the
    *          children fields
    * @returns - The nested `LayoutGridField`s
    */
-  renderChildren(childrenLayoutGrfieldPathId: LayoutGridSchemaType[]) {
+  renderChildren(childrenLayoutGridSchemaId: LayoutGridSchemaType[]) {
     const { registry, schema: rawSchema, formData } = this.props;
     const { schemaUtils } = registry;
     const schema = schemaUtils.retrieveSchema(rawSchema, formData);
 
-    return childrenLayoutGrfieldPathId.map((layoutGridSchema) => (
+    return childrenLayoutGridSchemaId.map((layoutGridSchema) => (
       <LayoutGridField<T, S, F>
         {...this.props}
         key={`layoutGrid-${hashObject(layoutGridSchema)}`}
