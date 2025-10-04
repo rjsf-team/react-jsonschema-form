@@ -1,5 +1,6 @@
 import { ChangeEvent, FocusEvent, ReactElement } from 'react';
 import {
+  DEFAULT_ID_PREFIX,
   DEFINITIONS_KEY,
   DISCRIMINATOR_PATH,
   ErrorSchemaBuilder,
@@ -7,8 +8,8 @@ import {
   FieldPathList,
   FieldProps,
   GenericObjectType,
-  GlobalFormOptions,
   getUiOptions,
+  GlobalFormOptions,
   ID_KEY,
   LOOKUP_MAP_NAME,
   ONE_OF_KEY,
@@ -17,19 +18,25 @@ import {
   retrieveSchema,
   RJSFSchema,
   sortedJSONStringify,
-  UI_OPTIONS_KEY,
-  UI_GLOBAL_OPTIONS_KEY,
-  UiSchema,
   toFieldPathId,
-  DEFAULT_ID_PREFIX,
+  UI_GLOBAL_OPTIONS_KEY,
+  UI_OPTIONS_KEY,
+  UiSchema,
 } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { get, has, isEmpty, omit, pick } from 'lodash';
-
 import LayoutGridField, {
+  computeArraySchemasIfPresent,
+  computeFieldUiSchema,
+  computeUIComponentPropsFromGridSchema,
+  conditionMatches,
+  findChildrenAndProps,
+  getCustomRenderComponent,
+  getSchemaDetailsForField,
   GridType,
+  LAYOUT_GRID_FIELD_TEST_IDS,
   LAYOUT_GRID_OPTION,
   LayoutGridFieldProps,
   Operators,
@@ -846,64 +853,64 @@ describe('LayoutGridField', () => {
   beforeAll(() => {
     registry = getTestRegistry({}, REGISTRY_FIELDS, {}, {}, REGISTRY_FORM_CONTEXT);
   });
-  describe('LayoutGridField.conditionMatches()', () => {
+  describe('conditionMatches()', () => {
     test('returns false when no operator is passed', () => {
-      expect(LayoutGridField.conditionMatches()).toBe(false);
+      expect(conditionMatches()).toBe(false);
     });
     test('returns false for ALL operator and values !== data, non-arrays', () => {
-      expect(LayoutGridField.conditionMatches(Operators.ALL, '5', '6')).toBe(false);
+      expect(conditionMatches(Operators.ALL, '5', '6')).toBe(false);
     });
     test('returns false for ALL operator and values !== data, arrays', () => {
-      expect(LayoutGridField.conditionMatches(Operators.ALL, ['5', '6'], ['6'])).toBe(false);
+      expect(conditionMatches(Operators.ALL, ['5', '6'], ['6'])).toBe(false);
     });
     test('returns false for ALL operator and values !== data, mixed non-array and array', () => {
-      expect(LayoutGridField.conditionMatches(Operators.ALL, ['5', '6'], '6')).toBe(false);
+      expect(conditionMatches(Operators.ALL, ['5', '6'], '6')).toBe(false);
     });
     test('returns true for ALL operator and values === data, non-arrays', () => {
-      expect(LayoutGridField.conditionMatches(Operators.ALL, '6', '6')).toBe(true);
+      expect(conditionMatches(Operators.ALL, '6', '6')).toBe(true);
     });
     test('returns true for ALL operator and values === data, arrays', () => {
-      expect(LayoutGridField.conditionMatches(Operators.ALL, ['6', '7'], ['7', '6'])).toBe(true);
+      expect(conditionMatches(Operators.ALL, ['6', '7'], ['7', '6'])).toBe(true);
     });
     test('returns false for SOME operator and values !∩ data, non-arrays', () => {
-      expect(LayoutGridField.conditionMatches(Operators.SOME, '6', '7')).toBe(false);
+      expect(conditionMatches(Operators.SOME, '6', '7')).toBe(false);
     });
     test('returns false for SOME operator and values !∩ data, arrays', () => {
-      expect(LayoutGridField.conditionMatches(Operators.SOME, ['6'], ['7', '8'])).toBe(false);
+      expect(conditionMatches(Operators.SOME, ['6'], ['7', '8'])).toBe(false);
     });
     test('returns true for SOME operator and values ∩ data, non-array', () => {
-      expect(LayoutGridField.conditionMatches(Operators.SOME, '6', '6')).toBe(true);
+      expect(conditionMatches(Operators.SOME, '6', '6')).toBe(true);
     });
     test('returns true for SOME operator and values ∩ data, array', () => {
-      expect(LayoutGridField.conditionMatches(Operators.SOME, ['6', '7'], ['6', '8'])).toBe(true);
+      expect(conditionMatches(Operators.SOME, ['6', '7'], ['6', '8'])).toBe(true);
     });
     test('returns true for SOME operator and values ∩ data, mixed non-array and array', () => {
-      expect(LayoutGridField.conditionMatches(Operators.SOME, '6', ['6', '8'])).toBe(true);
+      expect(conditionMatches(Operators.SOME, '6', ['6', '8'])).toBe(true);
     });
     test('returns false for NONE operator and values ∩ data, non-array', () => {
-      expect(LayoutGridField.conditionMatches(Operators.NONE, '6', '6')).toBe(false);
+      expect(conditionMatches(Operators.NONE, '6', '6')).toBe(false);
     });
     test('returns false for NONE operator and values ∩ data, array', () => {
-      expect(LayoutGridField.conditionMatches(Operators.NONE, ['6', '7'], ['6', '8'])).toBe(false);
+      expect(conditionMatches(Operators.NONE, ['6', '7'], ['6', '8'])).toBe(false);
     });
     test('returns false for NONE operator and values ∩ data, mixed non-array and array', () => {
-      expect(LayoutGridField.conditionMatches(Operators.NONE, '6', ['6', '8'])).toBe(false);
+      expect(conditionMatches(Operators.NONE, '6', ['6', '8'])).toBe(false);
     });
     test('returns true for NONE operator and values !∩ data, non-arrays', () => {
-      expect(LayoutGridField.conditionMatches(Operators.NONE, '6', '7')).toBe(true);
+      expect(conditionMatches(Operators.NONE, '6', '7')).toBe(true);
     });
     test('returns true for NONE operator and values !∩ data, arrays', () => {
-      expect(LayoutGridField.conditionMatches(Operators.NONE, ['6'], ['7', '8'])).toBe(true);
+      expect(conditionMatches(Operators.NONE, ['6'], ['7', '8'])).toBe(true);
     });
   });
-  describe('LayoutGridField.findChildrenAndProps()', () => {
+  describe('findChildrenAndProps()', () => {
     test('throws TypeError when children is not an array', () => {
-      expect(() => LayoutGridField.findChildrenAndProps({}, GridType.ROW, registry)).toThrow(
+      expect(() => findChildrenAndProps({}, GridType.ROW, registry)).toThrow(
         new TypeError('Expected array for "ui:row" in {}'),
       );
     });
     test('returns the children array and empty grid props for the row', () => {
-      expect(LayoutGridField.findChildrenAndProps(TEST_LAYOUT_GRID_CHILDREN, GridType.ROW, registry)).toEqual({
+      expect(findChildrenAndProps(TEST_LAYOUT_GRID_CHILDREN, GridType.ROW, registry)).toEqual({
         children: TEST_LAYOUT_GRID_CHILDREN[GridType.ROW],
         gridProps: {},
       });
@@ -913,9 +920,7 @@ describe('LayoutGridField', () => {
         children: TEST_LAYOUT_GRID_CHILDREN[GridType.COLUMN].children,
         gridProps: { className: LOOKUP_MAP[TEST_LAYOUT_GRID_CHILDREN[GridType.COLUMN].className] },
       };
-      expect(LayoutGridField.findChildrenAndProps(TEST_LAYOUT_GRID_CHILDREN, GridType.COLUMN, registry)).toEqual(
-        expectedResult,
-      );
+      expect(findChildrenAndProps(TEST_LAYOUT_GRID_CHILDREN, GridType.COLUMN, registry)).toEqual(expectedResult);
     });
     test('returns the children array and expected looked up className values in grid props for the condition', () => {
       const classNames: string[] = TEST_LAYOUT_GRID_CHILDREN[GridType.CONDITION].className.split(' ');
@@ -924,26 +929,24 @@ describe('LayoutGridField', () => {
         children: TEST_LAYOUT_GRID_CHILDREN[GridType.CONDITION].children,
         gridProps: { ...omit(TEST_LAYOUT_GRID_CHILDREN[GridType.CONDITION], ['children']), className },
       };
-      expect(LayoutGridField.findChildrenAndProps(TEST_LAYOUT_GRID_CHILDREN, GridType.CONDITION, registry)).toEqual(
-        expectedResult,
-      );
+      expect(findChildrenAndProps(TEST_LAYOUT_GRID_CHILDREN, GridType.CONDITION, registry)).toEqual(expectedResult);
     });
   });
-  describe('LayoutGridField.computeArraySchemasIfPresent()', () => {
+  describe('computeArraySchemasIfPresent()', () => {
     test('returns undefined rawSchema and given fieldPathId for non-numeric potentialIndex', () => {
-      expect(LayoutGridField.computeArraySchemasIfPresent(undefined, FIELD_PATH_ID, 'string')).toEqual({
+      expect(computeArraySchemasIfPresent(undefined, FIELD_PATH_ID, 'string')).toEqual({
         rawSchema: undefined,
         fieldPathId: FIELD_PATH_ID,
       });
     });
     test('returns undefined rawSchema and given fieldPathId for numeric potentialIndex, no schema', () => {
-      expect(LayoutGridField.computeArraySchemasIfPresent(undefined, FIELD_PATH_ID, '0')).toEqual({
+      expect(computeArraySchemasIfPresent(undefined, FIELD_PATH_ID, '0')).toEqual({
         rawSchema: undefined,
         fieldPathId: FIELD_PATH_ID,
       });
     });
     test('returns undefined rawSchema and given fieldPathId for numeric potentialIndex, non-array schema', () => {
-      expect(LayoutGridField.computeArraySchemasIfPresent(readonlySchema, FIELD_PATH_ID, '0')).toEqual({
+      expect(computeArraySchemasIfPresent(readonlySchema, FIELD_PATH_ID, '0')).toEqual({
         rawSchema: undefined,
         fieldPathId: FIELD_PATH_ID,
       });
@@ -951,13 +954,13 @@ describe('LayoutGridField', () => {
     test('returns outer array rawSchema and generated fieldPathId for numeric potentialIndex, array schema', () => {
       const startPathId = toFieldPathId('0', arraySchemaRegistry.globalFormOptions, FIELD_PATH_ID);
       const fieldPathId = { [ID_KEY]: startPathId[ID_KEY], path: [DEFAULT_ID, 0] };
-      expect(LayoutGridField.computeArraySchemasIfPresent(outerArraySchema, startPathId, '0')).toEqual({
+      expect(computeArraySchemasIfPresent(outerArraySchema, startPathId, '0')).toEqual({
         rawSchema: outerArraySchema.items,
         fieldPathId,
       });
     });
   });
-  describe('LayoutGridField.getSchemaDetailsForField(), blank schema', () => {
+  describe('getSchemaDetailsForField(), blank schema', () => {
     beforeAll(() => {
       retrieveSchemaSpy = jest.spyOn(registry.schemaUtils, 'retrieveSchema');
       findSelectedOptionInXxxOf = jest.spyOn(registry.schemaUtils, 'findSelectedOptionInXxxOf');
@@ -970,19 +973,15 @@ describe('LayoutGridField', () => {
       retrieveSchemaSpy.mockRestore();
     });
     test('returns no schema or options when name is empty string', () => {
-      expect(LayoutGridField.getSchemaDetailsForField(registry, '', {}, {}, FIELD_PATH_ID)).toEqual(
-        NO_SCHEMA_OR_OPTIONS,
-      );
+      expect(getSchemaDetailsForField(registry, '', {}, {}, FIELD_PATH_ID)).toEqual(NO_SCHEMA_OR_OPTIONS);
       expect(retrieveSchemaSpy).toHaveBeenCalledTimes(1);
     });
     test('returns no schema or options when schema is empty', () => {
-      expect(LayoutGridField.getSchemaDetailsForField(registry, 'name', {}, {}, FIELD_PATH_ID)).toEqual(
-        NO_SCHEMA_OR_OPTIONS,
-      );
+      expect(getSchemaDetailsForField(registry, 'name', {}, {}, FIELD_PATH_ID)).toEqual(NO_SCHEMA_OR_OPTIONS);
       expect(retrieveSchemaSpy).toHaveBeenCalledTimes(1);
     });
   });
-  describe('LayoutGridField.getSchemaDetailsForField(), sampleSchema', () => {
+  describe('getSchemaDetailsForField(), sampleSchema', () => {
     beforeAll(() => {
       retrieveSchemaSpy = jest.spyOn(sampleSchemaRegistry.schemaUtils, 'retrieveSchema');
       findSelectedOptionInXxxOf = jest.spyOn(sampleSchemaRegistry.schemaUtils, 'findSelectedOptionInXxxOf');
@@ -1000,16 +999,18 @@ describe('LayoutGridField', () => {
       // pop off the `bad` since it won't end up in the fieldId
       paths.pop();
       const fieldPathId = fieldPathIdFromPaths(paths, sampleSchemaRegistry.globalFormOptions, FIELD_PATH_ID);
-      expect(
-        LayoutGridField.getSchemaDetailsForField(sampleSchemaRegistry, path, SAMPLE_SCHEMA, {}, FIELD_PATH_ID),
-      ).toEqual({ ...NO_SCHEMA_OR_OPTIONS, fieldPathId });
+      expect(getSchemaDetailsForField(sampleSchemaRegistry, path, SAMPLE_SCHEMA, {}, FIELD_PATH_ID)).toEqual({
+        ...NO_SCHEMA_OR_OPTIONS,
+        fieldPathId,
+      });
       expect(retrieveSchemaSpy).toHaveBeenCalledTimes(3);
     });
     test('returns no schema or options when leaf field is not found in the schema', () => {
       const fieldPathId = toFieldPathId('ignored', sampleSchemaRegistry.globalFormOptions, FIELD_PATH_ID);
-      expect(
-        LayoutGridField.getSchemaDetailsForField(sampleSchemaRegistry, 'ignored', SAMPLE_SCHEMA, {}, FIELD_PATH_ID),
-      ).toEqual({ ...NO_SCHEMA_OR_OPTIONS, fieldPathId }); // `path` digs into `fieldPathId`
+      expect(getSchemaDetailsForField(sampleSchemaRegistry, 'ignored', SAMPLE_SCHEMA, {}, FIELD_PATH_ID)).toEqual({
+        ...NO_SCHEMA_OR_OPTIONS,
+        fieldPathId,
+      }); // `path` digs into `fieldPathId`
       expect(retrieveSchemaSpy).toHaveBeenCalledTimes(1);
     });
     test('returns schema, isRequired: true, isReadonly: undefined, options: undefined, and fieldPathId when simple schema is used', () => {
@@ -1020,9 +1021,7 @@ describe('LayoutGridField', () => {
         SAMPLE_SCHEMA,
         {},
       );
-      expect(
-        LayoutGridField.getSchemaDetailsForField(sampleSchemaRegistry, path, SAMPLE_SCHEMA, {}, FIELD_PATH_ID),
-      ).toEqual({
+      expect(getSchemaDetailsForField(sampleSchemaRegistry, path, SAMPLE_SCHEMA, {}, FIELD_PATH_ID)).toEqual({
         schema,
         isRequired: true,
         isReadonly: undefined,
@@ -1032,7 +1031,7 @@ describe('LayoutGridField', () => {
       expect(retrieveSchemaSpy).toHaveBeenCalledTimes(2);
     });
   });
-  describe('LayoutGridField.getSchemaDetailsForField(), simpleOneOfSchema', () => {
+  describe('getSchemaDetailsForField(), simpleOneOfSchema', () => {
     beforeAll(() => {
       retrieveSchemaSpy = jest.spyOn(simpleOneOfRegistry.schemaUtils, 'retrieveSchema');
       findSelectedOptionInXxxOf = jest.spyOn(simpleOneOfRegistry.schemaUtils, 'findSelectedOptionInXxxOf');
@@ -1049,9 +1048,7 @@ describe('LayoutGridField', () => {
       const selectedSchema = get(SIMPLE_ONEOF, [ONE_OF_KEY, 1]);
       const schema = get(selectedSchema, [PROPERTIES_KEY, path]);
       const formData = { [path]: SIMPLE_ONEOF_OPTIONS[1].value };
-      expect(
-        LayoutGridField.getSchemaDetailsForField(simpleOneOfRegistry, path, SIMPLE_ONEOF, formData, FIELD_PATH_ID),
-      ).toEqual({
+      expect(getSchemaDetailsForField(simpleOneOfRegistry, path, SIMPLE_ONEOF, formData, FIELD_PATH_ID)).toEqual({
         schema,
         isRequired: false,
         isReadonly: true,
@@ -1061,7 +1058,7 @@ describe('LayoutGridField', () => {
       expect(findSelectedOptionInXxxOf).toHaveBeenCalledWith(SIMPLE_ONEOF, path, ONE_OF_KEY, formData);
     });
   });
-  describe('LayoutGridField.getSchemaDetailsForField(), gridFormSchema', () => {
+  describe('getSchemaDetailsForField(), gridFormSchema', () => {
     beforeAll(() => {
       retrieveSchemaSpy = jest.spyOn(gridFormSchemaRegistry.schemaUtils, 'retrieveSchema');
       findSelectedOptionInXxxOf = jest.spyOn(gridFormSchemaRegistry.schemaUtils, 'findSelectedOptionInXxxOf');
@@ -1077,9 +1074,7 @@ describe('LayoutGridField', () => {
       const path = 'employment';
       const { field: schema } = gridFormSchemaRegistry.schemaUtils.findFieldInSchema(GRID_FORM_SCHEMA, path);
       retrieveSchemaSpy.mockClear();
-      expect(
-        LayoutGridField.getSchemaDetailsForField(gridFormSchemaRegistry, path, GRID_FORM_SCHEMA, {}, FIELD_PATH_ID),
-      ).toEqual({
+      expect(getSchemaDetailsForField(gridFormSchemaRegistry, path, GRID_FORM_SCHEMA, {}, FIELD_PATH_ID)).toEqual({
         schema,
         isRequired: false,
         isReadonly: undefined,
@@ -1097,21 +1092,15 @@ describe('LayoutGridField', () => {
         [DEFINITIONS_KEY, 'Location', PROPERTIES_KEY, 'state'],
         {},
       );
-      expect(
-        LayoutGridField.getSchemaDetailsForField(
-          gridFormSchemaRegistry,
-          path,
-          GRID_FORM_SCHEMA,
-          formData,
-          FIELD_PATH_ID,
-        ),
-      ).toEqual({
-        schema,
-        isRequired: true,
-        isReadonly: undefined,
-        optionsInfo: undefined,
-        fieldPathId: fieldPathIdFromPaths(paths, gridFormSchemaRegistry.globalFormOptions, FIELD_PATH_ID),
-      });
+      expect(getSchemaDetailsForField(gridFormSchemaRegistry, path, GRID_FORM_SCHEMA, formData, FIELD_PATH_ID)).toEqual(
+        {
+          schema,
+          isRequired: true,
+          isReadonly: undefined,
+          optionsInfo: undefined,
+          fieldPathId: fieldPathIdFromPaths(paths, gridFormSchemaRegistry.globalFormOptions, FIELD_PATH_ID),
+        },
+      );
       const subschemaSchema = gridFormSchemaRegistry.schemaUtils.getFromSchema(
         GRID_FORM_SCHEMA,
         [PROPERTIES_KEY, 'employment'],
@@ -1125,7 +1114,7 @@ describe('LayoutGridField', () => {
       );
     });
   });
-  describe('LayoutGridField.getSchemaDetailsForField(), readonlySchema', () => {
+  describe('getSchemaDetailsForField(), readonlySchema', () => {
     beforeAll(() => {
       retrieveSchemaSpy = jest.spyOn(readonlySchemaRegistry.schemaUtils, 'retrieveSchema');
       findSelectedOptionInXxxOf = jest.spyOn(readonlySchemaRegistry.schemaUtils, 'findSelectedOptionInXxxOf');
@@ -1141,9 +1130,7 @@ describe('LayoutGridField', () => {
       const path = 'stringSelect';
       const { field: schema } = readonlySchemaRegistry.schemaUtils.findFieldInSchema(readonlySchema, path);
       retrieveSchemaSpy.mockClear();
-      expect(
-        LayoutGridField.getSchemaDetailsForField(readonlySchemaRegistry, path, readonlySchema, {}, FIELD_PATH_ID),
-      ).toEqual({
+      expect(getSchemaDetailsForField(readonlySchemaRegistry, path, readonlySchema, {}, FIELD_PATH_ID)).toEqual({
         schema,
         isRequired: false,
         isReadonly: undefined,
@@ -1155,9 +1142,7 @@ describe('LayoutGridField', () => {
     test('returns schema, isRequired: true, isReadonly: true, options: undefined when selecting readonly field', () => {
       const path = 'roString';
       const schema = readonlySchema.properties![path];
-      expect(
-        LayoutGridField.getSchemaDetailsForField(readonlySchemaRegistry, path, readonlySchema, {}, FIELD_PATH_ID),
-      ).toEqual({
+      expect(getSchemaDetailsForField(readonlySchemaRegistry, path, readonlySchema, {}, FIELD_PATH_ID)).toEqual({
         schema,
         isRequired: false,
         isReadonly: true,
@@ -1170,9 +1155,7 @@ describe('LayoutGridField', () => {
       const path = 'nested.roNumber';
       const paths = path.split('.');
       const schema = get(readonlySchema, [PROPERTIES_KEY, 'nested', PROPERTIES_KEY, 'roNumber']);
-      expect(
-        LayoutGridField.getSchemaDetailsForField(readonlySchemaRegistry, path, readonlySchema, {}, FIELD_PATH_ID),
-      ).toEqual({
+      expect(getSchemaDetailsForField(readonlySchemaRegistry, path, readonlySchema, {}, FIELD_PATH_ID)).toEqual({
         schema,
         isRequired: false,
         isReadonly: true,
@@ -1186,9 +1169,7 @@ describe('LayoutGridField', () => {
       const paths = path.split('.');
       const { field: schema } = readonlySchemaRegistry.schemaUtils.findFieldInSchema(readonlySchema, path);
       retrieveSchemaSpy.mockClear();
-      expect(
-        LayoutGridField.getSchemaDetailsForField(readonlySchemaRegistry, path, readonlySchema, {}, FIELD_PATH_ID),
-      ).toEqual({
+      expect(getSchemaDetailsForField(readonlySchemaRegistry, path, readonlySchema, {}, FIELD_PATH_ID)).toEqual({
         schema,
         isRequired: true,
         isReadonly: false,
@@ -1198,7 +1179,7 @@ describe('LayoutGridField', () => {
       expect(retrieveSchemaSpy).toHaveBeenCalledTimes(3);
     });
   });
-  describe('LayoutGridField.getSchemaDetailsForField(), arraySchema', () => {
+  describe('getSchemaDetailsForField(), arraySchema', () => {
     beforeAll(() => {
       retrieveSchemaSpy = jest.spyOn(arraySchemaRegistry.schemaUtils, 'retrieveSchema');
       findSelectedOptionInXxxOf = jest.spyOn(arraySchemaRegistry.schemaUtils, 'findSelectedOptionInXxxOf');
@@ -1214,9 +1195,7 @@ describe('LayoutGridField', () => {
       const paths = ['example', 0];
       const path = paths.join('.');
       const schema = innerArraySchema;
-      expect(
-        LayoutGridField.getSchemaDetailsForField(arraySchemaRegistry, path, arraySchema, {}, FIELD_PATH_ID),
-      ).toEqual({
+      expect(getSchemaDetailsForField(arraySchemaRegistry, path, arraySchema, {}, FIELD_PATH_ID)).toEqual({
         schema,
         isRequired: false,
         isReadonly: undefined,
@@ -1229,9 +1208,7 @@ describe('LayoutGridField', () => {
       const paths = ['example', 0, 1];
       const path = paths.join('.');
       const schema = get(innerArraySchema.items, '1');
-      expect(
-        LayoutGridField.getSchemaDetailsForField(arraySchemaRegistry, path, arraySchema, {}, FIELD_PATH_ID),
-      ).toEqual({
+      expect(getSchemaDetailsForField(arraySchemaRegistry, path, arraySchema, {}, FIELD_PATH_ID)).toEqual({
         schema,
         isRequired: false,
         isReadonly: undefined,
@@ -1241,31 +1218,31 @@ describe('LayoutGridField', () => {
       expect(retrieveSchemaSpy).toHaveBeenCalledTimes(3);
     });
   });
-  describe('LayoutGridField.getCustomRenderComponent()', () => {
+  describe('getCustomRenderComponent()', () => {
     test('returns null when render is not a string or function', () => {
-      expect(LayoutGridField.getCustomRenderComponent({} as string, registry)).toBeNull();
+      expect(getCustomRenderComponent({} as string, registry)).toBeNull();
     });
     test('returns null when render is a string without a lookup', () => {
-      expect(LayoutGridField.getCustomRenderComponent('nonexistant', registry)).toBeNull();
+      expect(getCustomRenderComponent('nonexistant', registry)).toBeNull();
     });
     test('returns the render function when render is a string with a lookup', () => {
-      expect(LayoutGridField.getCustomRenderComponent('TestRenderer', registry)).toBe(TestRenderer);
+      expect(getCustomRenderComponent('TestRenderer', registry)).toBe(TestRenderer);
     });
     test('returns the given function when render is a function', () => {
-      expect(LayoutGridField.getCustomRenderComponent(TestRenderer, registry)).toBe(TestRenderer);
+      expect(getCustomRenderComponent(TestRenderer, registry)).toBe(TestRenderer);
     });
   });
-  describe('LayoutGridField.computeFieldUiSchema()', () => {
+  describe('computeFieldUiSchema()', () => {
     test('field with empty uiProps', () => {
       const uiProps = {};
-      expect(LayoutGridField.computeFieldUiSchema('foo', uiProps)).toEqual({
+      expect(computeFieldUiSchema('foo', uiProps)).toEqual({
         fieldUiSchema: uiProps,
         uiReadonly: undefined,
       });
     });
     test('field with non-empty uiProps', () => {
       const uiProps = { fullWidth: true };
-      expect(LayoutGridField.computeFieldUiSchema('foo', uiProps)).toEqual({
+      expect(computeFieldUiSchema('foo', uiProps)).toEqual({
         fieldUiSchema: { [UI_OPTIONS_KEY]: uiProps },
         uiReadonly: undefined,
       });
@@ -1274,7 +1251,7 @@ describe('LayoutGridField', () => {
       const uiProps = {};
       const uiOptions = { classNames: 'baz' };
       const uiSchema = { foo: { 'ui:widget': 'bar', [UI_OPTIONS_KEY]: uiOptions } };
-      expect(LayoutGridField.computeFieldUiSchema('foo', uiProps, uiSchema)).toEqual({
+      expect(computeFieldUiSchema('foo', uiProps, uiSchema)).toEqual({
         fieldUiSchema: { ...uiSchema.foo, [UI_OPTIONS_KEY]: uiOptions },
         uiReadonly: undefined,
       });
@@ -1283,7 +1260,7 @@ describe('LayoutGridField', () => {
       const uiProps = { fullWidth: true };
       const globalOptions = { label: false };
       const uiSchema = { foo: { 'ui:widget': 'bar' }, [UI_GLOBAL_OPTIONS_KEY]: globalOptions };
-      expect(LayoutGridField.computeFieldUiSchema('foo', uiProps, uiSchema)).toEqual({
+      expect(computeFieldUiSchema('foo', uiProps, uiSchema)).toEqual({
         fieldUiSchema: {
           ...uiSchema.foo,
           [UI_OPTIONS_KEY]: { ...uiProps, ...globalOptions },
@@ -1294,7 +1271,7 @@ describe('LayoutGridField', () => {
     });
     test('field with empty uiProps, uiSchema for the field and schemaReadonly true', () => {
       const uiSchema = { foo: { 'ui:widget': 'bar' } };
-      expect(LayoutGridField.computeFieldUiSchema('foo', {}, uiSchema, true)).toEqual({
+      expect(computeFieldUiSchema('foo', {}, uiSchema, true)).toEqual({
         fieldUiSchema: {
           ...uiSchema.foo,
           'ui:readonly': true,
@@ -1305,7 +1282,7 @@ describe('LayoutGridField', () => {
     test('field with empty uiProps, uiSchema having readonly false in ui:options for the field and schemaReadonly true', () => {
       const uiOptions = { readonly: false };
       const uiSchema = { foo: { 'ui:widget': 'bar', [UI_OPTIONS_KEY]: uiOptions } };
-      expect(LayoutGridField.computeFieldUiSchema('foo', {}, uiSchema, true)).toEqual({
+      expect(computeFieldUiSchema('foo', {}, uiSchema, true)).toEqual({
         fieldUiSchema: {
           ...uiSchema.foo,
           [UI_OPTIONS_KEY]: { readonly: false },
@@ -1315,7 +1292,7 @@ describe('LayoutGridField', () => {
     });
     test('field with empty uiProps, uiSchema for the field and schemaReadonly false and forceReadonly true', () => {
       const uiSchema = { foo: { 'ui:widget': 'bar' } };
-      expect(LayoutGridField.computeFieldUiSchema('foo', {}, uiSchema, false, true)).toEqual({
+      expect(computeFieldUiSchema('foo', {}, uiSchema, false, true)).toEqual({
         fieldUiSchema: {
           ...uiSchema.foo,
           'ui:readonly': true,
@@ -1326,7 +1303,7 @@ describe('LayoutGridField', () => {
     test('field with empty uiProps, uiSchema having readonly false in ui:options for the field and schemaReadonly unspecified and forceReadonly true', () => {
       const uiOptions = { readonly: false };
       const uiSchema = { foo: { 'ui:widget': 'bar', [UI_OPTIONS_KEY]: uiOptions } };
-      expect(LayoutGridField.computeFieldUiSchema('foo', {}, uiSchema, undefined, true)).toEqual({
+      expect(computeFieldUiSchema('foo', {}, uiSchema, undefined, true)).toEqual({
         fieldUiSchema: {
           ...uiSchema.foo,
           [UI_OPTIONS_KEY]: { readonly: true },
@@ -1335,16 +1312,16 @@ describe('LayoutGridField', () => {
       });
     });
   });
-  describe('LayoutGridField.computeUIComponentPropsFromGridSchema()', () => {
+  describe('computeUIComponentPropsFromGridSchema()', () => {
     test('gridSchema is undefined', () => {
-      expect(LayoutGridField.computeUIComponentPropsFromGridSchema(registry)).toEqual({
+      expect(computeUIComponentPropsFromGridSchema(registry)).toEqual({
         name: '',
         uiProps: {},
         UIComponent: null,
       });
     });
     test('gridSchema is a string', () => {
-      expect(LayoutGridField.computeUIComponentPropsFromGridSchema(registry, 'foo')).toEqual({
+      expect(computeUIComponentPropsFromGridSchema(registry, 'foo')).toEqual({
         name: 'foo',
         uiProps: {},
         UIComponent: null,
@@ -1352,7 +1329,7 @@ describe('LayoutGridField', () => {
     });
     test('gridSchema contains name and looked up placeholder', () => {
       const gridSchema = { name: 'foo', placeholder: '$lookup=PlaceholderText' };
-      expect(LayoutGridField.computeUIComponentPropsFromGridSchema(registry, gridSchema)).toEqual({
+      expect(computeUIComponentPropsFromGridSchema(registry, gridSchema)).toEqual({
         name: 'foo',
         uiProps: {
           placeholder: LOOKUP_MAP.PlaceholderText,
@@ -1362,7 +1339,7 @@ describe('LayoutGridField', () => {
     });
     test('gridSchema contains name, other props and a render', () => {
       const gridSchema = { name: 'foo', fullWidth: true, render: TestRenderer };
-      expect(LayoutGridField.computeUIComponentPropsFromGridSchema(registry, gridSchema)).toEqual({
+      expect(computeUIComponentPropsFromGridSchema(registry, gridSchema)).toEqual({
         name: 'foo',
         uiProps: {
           fullWidth: true,
@@ -1372,14 +1349,14 @@ describe('LayoutGridField', () => {
     });
     test('gridSchema contains other props and a render, no name', () => {
       const gridSchema = { fullWidth: true, render: TestRenderer };
-      expect(LayoutGridField.computeUIComponentPropsFromGridSchema(registry, gridSchema)).toEqual({
+      expect(computeUIComponentPropsFromGridSchema(registry, gridSchema)).toEqual({
         name: '',
         uiProps: {
           fullWidth: true,
         },
         UIComponent: TestRenderer,
         // @ts-expect-error TS2740 because it is missing all of the FieldProps, which we don't need
-        rendered: <TestRenderer data-testid={LayoutGridField.TEST_IDS.uiComponent} fullWidth />,
+        rendered: <TestRenderer data-testid={LAYOUT_GRID_FIELD_TEST_IDS.uiComponent} fullWidth />,
       });
     });
   });
@@ -1388,11 +1365,11 @@ describe('LayoutGridField', () => {
     render(<LayoutGridField {...props} />);
 
     // Check for all the possible things rendered by the grid
-    const uiComponent = screen.queryByTestId(LayoutGridField.TEST_IDS.uiComponent);
-    const field = screen.queryByTestId(LayoutGridField.TEST_IDS.field);
-    const layoutMultiSchemaField = screen.queryByTestId(LayoutGridField.TEST_IDS.layoutMultiSchemaField);
-    const row = screen.queryByTestId(LayoutGridField.TEST_IDS.uiComponent);
-    const col = screen.queryByTestId(LayoutGridField.TEST_IDS.uiComponent);
+    const uiComponent = screen.queryByTestId(LAYOUT_GRID_FIELD_TEST_IDS.uiComponent);
+    const field = screen.queryByTestId(LAYOUT_GRID_FIELD_TEST_IDS.field);
+    const layoutMultiSchemaField = screen.queryByTestId(LAYOUT_GRID_FIELD_TEST_IDS.layoutMultiSchemaField);
+    const row = screen.queryByTestId(LAYOUT_GRID_FIELD_TEST_IDS.uiComponent);
+    const col = screen.queryByTestId(LAYOUT_GRID_FIELD_TEST_IDS.uiComponent);
 
     // and find none of them
     expect(uiComponent).not.toBeInTheDocument();
@@ -1412,7 +1389,7 @@ describe('LayoutGridField', () => {
     // The props readonly flag is transformed to readOnly
     const expectedProps = { ...props, ...options, readOnly: props.readonly, readonly: undefined };
     // Renders the uiComponent with the props and options forwarded
-    const uiComponent = screen.getByTestId(LayoutGridField.TEST_IDS.uiComponent);
+    const uiComponent = screen.getByTestId(LAYOUT_GRID_FIELD_TEST_IDS.uiComponent);
     expect(uiComponent).toHaveTextContent(stringifyProps(expectedProps));
   });
   test('renderField with render=TestRenderer via LAYOUT_GRID_OPTION and name is not provided', () => {
@@ -1424,7 +1401,7 @@ describe('LayoutGridField', () => {
     });
     render(<LayoutGridField {...props} />);
     // Renders the uiComponent with only the options forwarded
-    const uiComponent = screen.getByTestId(LayoutGridField.TEST_IDS.uiComponent);
+    const uiComponent = screen.getByTestId(LAYOUT_GRID_FIELD_TEST_IDS.uiComponent);
     expect(uiComponent).toHaveTextContent(stringifyProps(options));
   });
   test('renderField via name explicit layoutGridSchema', async () => {
@@ -1439,7 +1416,7 @@ describe('LayoutGridField', () => {
     const { [ID_KEY]: fieldId } = fieldPathId;
     render(<LayoutGridField {...props} />);
     // Renders a field
-    const field = screen.getByTestId(LayoutGridField.TEST_IDS.field);
+    const field = screen.getByTestId(LAYOUT_GRID_FIELD_TEST_IDS.field);
     expect(field).toHaveTextContent(stringifyProps(getExpectedPropsForField(props, fieldName)));
     // Test onChange, onFocus, onBlur
     const input = within(field).getByRole('textbox');
@@ -1465,7 +1442,7 @@ describe('LayoutGridField', () => {
     const { [ID_KEY]: fieldId } = fieldPathId;
     render(<LayoutGridField {...props} />);
     // Renders a field
-    const field = screen.getByTestId(LayoutGridField.TEST_IDS.field);
+    const field = screen.getByTestId(LAYOUT_GRID_FIELD_TEST_IDS.field);
     expect(field).toHaveTextContent(stringifyProps(getExpectedPropsForField(props, fieldName)));
     // Test onChange, onFocus, onBlur
     const input = within(field).getByRole('textbox');
@@ -1491,7 +1468,7 @@ describe('LayoutGridField', () => {
     const { [ID_KEY]: fieldId } = fieldPathId;
     render(<LayoutGridField {...props} />);
     // Renders a field
-    const field = screen.getByTestId(LayoutGridField.TEST_IDS.field);
+    const field = screen.getByTestId(LAYOUT_GRID_FIELD_TEST_IDS.field);
     expect(field).toHaveTextContent(stringifyProps(getExpectedPropsForField(props, fieldName)));
     // Test onChange, onFocus, onBlur
     const input = within(field).getByRole('textbox');
@@ -1523,7 +1500,7 @@ describe('LayoutGridField', () => {
       registry: gridFormSchemaRegistry,
     });
     render(<LayoutGridField {...props} {...otherProps} />);
-    const field = screen.getByTestId(LayoutGridField.TEST_IDS.layoutMultiSchemaField);
+    const field = screen.getByTestId(LAYOUT_GRID_FIELD_TEST_IDS.layoutMultiSchemaField);
     expect(field).toHaveTextContent(
       stringifyProps(getExpectedPropsForField(props, fieldName, otherProps, otherUIProps)),
     );
@@ -1542,7 +1519,7 @@ describe('LayoutGridField', () => {
       registry: readonlySchemaRegistry,
     });
     render(<LayoutGridField {...props} />);
-    const field = screen.getByTestId(LayoutGridField.TEST_IDS.field);
+    const field = screen.getByTestId(LAYOUT_GRID_FIELD_TEST_IDS.field);
     expect(field).toHaveTextContent(stringifyProps(getExpectedPropsForField(props, fieldName)));
   });
   test('renderRow not nested', () => {
@@ -1556,10 +1533,10 @@ describe('LayoutGridField', () => {
     });
     render(<LayoutGridField {...props} />);
     // Renders an outer grid row
-    const row = screen.getByTestId(LayoutGridField.TEST_IDS.row);
+    const row = screen.getByTestId(LAYOUT_GRID_FIELD_TEST_IDS.row);
     expect(row).toBeInTheDocument();
     // Renders 2 fields in the row
-    const fields = within(row).getAllByTestId(LayoutGridField.TEST_IDS.field);
+    const fields = within(row).getAllByTestId(LAYOUT_GRID_FIELD_TEST_IDS.field);
     expect(fields).toHaveLength(GRID_CHILDREN.length);
     // First field as the first child
     expect(fields[0]).toHaveTextContent(stringifyProps(getExpectedPropsForField(props, GRID_CHILDREN[0])));
@@ -1577,10 +1554,10 @@ describe('LayoutGridField', () => {
     });
     render(<LayoutGridField {...props} />);
     // Renders an outer grid row item with width 6
-    const row = screen.getByTestId(LayoutGridField.TEST_IDS.row);
+    const row = screen.getByTestId(LAYOUT_GRID_FIELD_TEST_IDS.row);
     expect(row).toHaveClass(ColumnWidth6);
     // Renders 2 fields in the row
-    const fields = within(row).getAllByTestId(LayoutGridField.TEST_IDS.field);
+    const fields = within(row).getAllByTestId(LAYOUT_GRID_FIELD_TEST_IDS.field);
     expect(fields).toHaveLength(GRID_CHILDREN.length);
     // First field as the first child
     expect(fields[0]).toHaveTextContent(stringifyProps(getExpectedPropsForField(props, GRID_CHILDREN[0])));
@@ -1597,10 +1574,10 @@ describe('LayoutGridField', () => {
     });
     render(<LayoutGridField {...props} />);
     // Renders an outer grid item with width 6, but not a row
-    const col = screen.getByTestId(LayoutGridField.TEST_IDS.col);
+    const col = screen.getByTestId(LAYOUT_GRID_FIELD_TEST_IDS.col);
     expect(col).toHaveClass(ColumnWidth6);
     // Renders 2 fields in the column
-    const fields = within(col).getAllByTestId(LayoutGridField.TEST_IDS.field);
+    const fields = within(col).getAllByTestId(LAYOUT_GRID_FIELD_TEST_IDS.field);
     expect(fields).toHaveLength(GRID_CHILDREN.length);
     // First field as the first child
     expect(fields[0]).toHaveTextContent(stringifyProps(getExpectedPropsForField(props, GRID_CHILDREN[0])));
@@ -1617,17 +1594,17 @@ describe('LayoutGridField', () => {
     });
     render(<LayoutGridField {...props} />);
     // Renders two outer columns
-    const cols = screen.getAllByTestId(LayoutGridField.TEST_IDS.col);
+    const cols = screen.getAllByTestId(LAYOUT_GRID_FIELD_TEST_IDS.col);
     expect(cols).toHaveLength(GRID_CHILDREN.length);
     // First column is a grid item with width 6
     expect(cols[0]).toHaveClass(ColumnWidth6);
     // Renders first field in the first column
-    let field = within(cols[0]).getByTestId(LayoutGridField.TEST_IDS.field);
+    let field = within(cols[0]).getByTestId(LAYOUT_GRID_FIELD_TEST_IDS.field);
     expect(field).toHaveTextContent(stringifyProps(getExpectedPropsForField(props, GRID_CHILDREN[0])));
     // First column is a grid item with 6
     expect(cols[1]).toHaveClass(ColumnWidth6);
     // Renders second field in the second column
-    field = within(cols[1]).getByTestId(LayoutGridField.TEST_IDS.field);
+    field = within(cols[1]).getByTestId(LAYOUT_GRID_FIELD_TEST_IDS.field);
     expect(field).toHaveTextContent(stringifyProps(getExpectedPropsForField(props, GRID_CHILDREN[1])));
   });
   test('renderCondition, condition passes, field and empty value, NONE operator, has formData', async () => {
@@ -1644,7 +1621,7 @@ describe('LayoutGridField', () => {
     const { [ID_KEY]: fieldId } = fieldPathId;
     render(<LayoutGridField {...props} />);
     // Renders 2 fields
-    const fields = screen.getAllByTestId(LayoutGridField.TEST_IDS.field);
+    const fields = screen.getAllByTestId(LAYOUT_GRID_FIELD_TEST_IDS.field);
     expect(fields).toHaveLength(GRID_CHILDREN.length);
     // First field as the first child
     expect(fields[0]).toHaveTextContent(stringifyProps(getExpectedPropsForField(props, GRID_CHILDREN[0])));
@@ -1667,11 +1644,11 @@ describe('LayoutGridField', () => {
     });
     render(<LayoutGridField {...props} />);
     // Check for all the possible things rendered by the grid
-    const uiComponent = screen.queryByTestId(LayoutGridField.TEST_IDS.uiComponent);
-    const field = screen.queryByTestId(LayoutGridField.TEST_IDS.field);
-    const layoutMultiSchemaField = screen.queryByTestId(LayoutGridField.TEST_IDS.layoutMultiSchemaField);
-    const row = screen.queryByTestId(LayoutGridField.TEST_IDS.uiComponent);
-    const col = screen.queryByTestId(LayoutGridField.TEST_IDS.uiComponent);
+    const uiComponent = screen.queryByTestId(LAYOUT_GRID_FIELD_TEST_IDS.uiComponent);
+    const field = screen.queryByTestId(LAYOUT_GRID_FIELD_TEST_IDS.field);
+    const layoutMultiSchemaField = screen.queryByTestId(LAYOUT_GRID_FIELD_TEST_IDS.layoutMultiSchemaField);
+    const row = screen.queryByTestId(LAYOUT_GRID_FIELD_TEST_IDS.uiComponent);
+    const col = screen.queryByTestId(LAYOUT_GRID_FIELD_TEST_IDS.uiComponent);
     // and find none of them
     expect(uiComponent).not.toBeInTheDocument();
     expect(field).not.toBeInTheDocument();
@@ -1689,11 +1666,11 @@ describe('LayoutGridField', () => {
     });
     render(<LayoutGridField {...props} />);
     // Check for all the possible things rendered by the grid
-    const uiComponent = screen.queryByTestId(LayoutGridField.TEST_IDS.uiComponent);
-    const field = screen.queryByTestId(LayoutGridField.TEST_IDS.field);
-    const layoutMultiSchemaField = screen.queryByTestId(LayoutGridField.TEST_IDS.layoutMultiSchemaField);
-    const row = screen.queryByTestId(LayoutGridField.TEST_IDS.uiComponent);
-    const col = screen.queryByTestId(LayoutGridField.TEST_IDS.uiComponent);
+    const uiComponent = screen.queryByTestId(LAYOUT_GRID_FIELD_TEST_IDS.uiComponent);
+    const field = screen.queryByTestId(LAYOUT_GRID_FIELD_TEST_IDS.field);
+    const layoutMultiSchemaField = screen.queryByTestId(LAYOUT_GRID_FIELD_TEST_IDS.layoutMultiSchemaField);
+    const row = screen.queryByTestId(LAYOUT_GRID_FIELD_TEST_IDS.uiComponent);
+    const col = screen.queryByTestId(LAYOUT_GRID_FIELD_TEST_IDS.uiComponent);
     // and find none of them
     expect(uiComponent).not.toBeInTheDocument();
     expect(field).not.toBeInTheDocument();

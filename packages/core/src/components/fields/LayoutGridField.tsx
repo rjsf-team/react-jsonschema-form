@@ -141,6 +141,8 @@ function isNumericIndex(str: string) {
   return /^\d+?$/.test(str); // Matches positive integers
 }
 
+export const LAYOUT_GRID_FIELD_TEST_IDS = getTestIds();
+
 /** The `LayoutGridField` will render a schema, uiSchema and formData combination out into a GridTemplate in the shape
  * described in the uiSchema. To define the grid to use to render the elements within a field in the schema, provide in
  * the uiSchema for that field the object contained under a `ui:layoutGrid` element. E.g. (as a JSON object):
@@ -373,321 +375,6 @@ export default class LayoutGridField<
     layoutGridSchema: undefined,
   };
 
-  static TEST_IDS = getTestIds();
-  /** Computes the uiSchema for the field with `name` from the `uiProps` and `uiSchema` provided. The field UI Schema
-   * will always contain a copy of the global options from the `uiSchema` (so they can be passed down) as well as
-   * copying them into the local ui options. When the `forceReadonly` flag is true, then the field UI Schema is
-   * updated to make "readonly" be true. When the `schemaReadonly` flag is true AND the field UI Schema does NOT have
-   * the flag already provided, then we also make "readonly" true. We always make sure to return the final value of the
-   * field UI Schema's "readonly" flag as `uiReadonly` along with the `fieldUiSchema` in the return value.
-   *
-   * @param field - The name of the field to pull the existing UI Schema for
-   * @param uiProps - Any props that should be put into the field's uiSchema
-   * @param [uiSchema] - The optional UI Schema from which to get the UI schema for the field
-   * @param [schemaReadonly] - Optional flag indicating whether the schema indicates the field is readonly
-   * @param [forceReadonly] - Optional flag indicating whether the Form itself is in readonly mode
-   */
-  static computeFieldUiSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-    field: string,
-    uiProps: ConfigObject,
-    uiSchema?: UiSchema<T, S, F>,
-    schemaReadonly?: boolean,
-    forceReadonly?: boolean,
-  ) {
-    const globalUiOptions = get(uiSchema, [UI_GLOBAL_OPTIONS_KEY], {});
-    const localUiSchema = get(uiSchema, field);
-    const localUiOptions = { ...get(localUiSchema, [UI_OPTIONS_KEY], {}), ...uiProps, ...globalUiOptions };
-    const fieldUiSchema = { ...localUiSchema };
-    if (!isEmpty(localUiOptions)) {
-      set(fieldUiSchema, [UI_OPTIONS_KEY], localUiOptions);
-    }
-    if (!isEmpty(globalUiOptions)) {
-      // pass the global uiOptions down to the field uiSchema so that they can be applied to all nested fields
-      set(fieldUiSchema, [UI_GLOBAL_OPTIONS_KEY], globalUiOptions);
-    }
-    let { readonly: uiReadonly } = getUiOptions<T, S, F>(fieldUiSchema);
-    if (forceReadonly === true || (isUndefined(uiReadonly) && schemaReadonly === true)) {
-      // If we are forcing all widgets to be readonly, OR the schema indicates it is readonly AND the uiSchema does not
-      // have an overriding value, then update the uiSchema to set readonly to true. Doing this will
-      uiReadonly = true;
-      if (has(localUiOptions, READONLY_KEY)) {
-        // If the local options has the key value provided in it, then set that one to true
-        set(fieldUiSchema, [UI_OPTIONS_KEY, READONLY_KEY], true);
-      } else {
-        // otherwise set the `ui:` version
-        set(fieldUiSchema, `ui:${READONLY_KEY}`, true);
-      }
-    }
-    return { fieldUiSchema, uiReadonly };
-  }
-
-  /** Given an `operator`, `datum` and `value` determines whether this condition is considered matching. Matching
-   * depends on the `operator`. The `datum` and `value` are converted into arrays if they aren't already and then the
-   * contents of the two arrays are compared using the `operator`. When `operator` is All, then the two arrays must be
-   * equal to match. When `operator` is SOME then the intersection of the two arrays must have at least one value in
-   * common to match. When `operator` is NONE then the intersection of the two arrays must not have any values in common
-   * to match.
-   *
-   * @param [operator] - The optional operator for the condition
-   * @param [datum] - The optional datum for the condition, this can be an item or a list of items of type unknown
-   * @param [value='$0m3tH1nG Un3xP3cT3d'] The optional value for the condition, defaulting to a highly unlikely value
-   *        to avoid comparing two undefined elements when `value` was forgotten in the condition definition.
-   *        This can be an item or a list of items of type unknown
-   * @returns - True if the condition matches, false otherwise
-   */
-  static conditionMatches(operator?: Operators, datum?: unknown, value: unknown = '$0m3tH1nG Un3xP3cT3d'): boolean {
-    const data = flatten([datum]).sort();
-    const values = flatten([value]).sort();
-    switch (operator) {
-      case Operators.ALL:
-        return isEqual(data, values);
-      case Operators.SOME:
-        return intersection(data, values).length > 0;
-      case Operators.NONE:
-        return intersection(data, values).length === 0;
-      default:
-        return false;
-    }
-  }
-
-  /** From within the `layoutGridSchema` finds the `children` and any extra `gridProps` from the object keyed by
-   * `schemaKey`. If the `children` contains extra `gridProps` and those props contain a `className` string, try to
-   * lookup whether that `className` has a replacement value in the `registry` using the `FORM_CONTEXT_LOOKUP_BASE`.
-   * When the `className` value contains multiple classNames separated by a space, the lookup will look for a
-   * replacement value for each `className` and combine them into one.
-   *
-   * @param layoutGridSchema - The GridSchemaType instance from which to obtain the `schemaKey` children and extra props
-   * @param schemaKey - A `GridType` value, used to get the children and extra props from within the `layoutGridSchema`
-   * @param registry - The `@rjsf` Registry from which to look up `classNames` if they are present in the extra props
-   * @returns - An object containing the list of `LayoutGridSchemaType` `children` and any extra `gridProps`
-   * @throws - A `TypeError` when the `children` is not an array
-   */
-  static findChildrenAndProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-    layoutGridSchema: GridSchemaType,
-    schemaKey: GridType,
-    registry: Registry<T, S, F>,
-  ) {
-    let gridProps: GridProps = {};
-    let children = layoutGridSchema[schemaKey];
-    if (isPlainObject(children)) {
-      const { children: elements, className: toMapClassNames, ...otherProps } = children as ConfigObject;
-      children = elements;
-      if (toMapClassNames) {
-        const classes = toMapClassNames.split(' ');
-        const className = classes.map((ele: string) => lookupFromFormContext<T, S, F>(registry, ele, ele)).join(' ');
-        gridProps = { ...otherProps, className };
-      } else {
-        gridProps = otherProps;
-      }
-    }
-    if (!Array.isArray(children)) {
-      throw new TypeError(`Expected array for "${schemaKey}" in ${JSON.stringify(layoutGridSchema)}`);
-    }
-    return { children: children as LayoutGridSchemaType[], gridProps };
-  }
-
-  /** Computes the `rawSchema` and `fieldPathId` for a `schema` and a `potentialIndex`. If the `schema` is of type array,
-   * has an `ITEMS_KEY` element and `potentialIndex` represents a numeric value, the element at `ITEMS_KEY` is checked
-   * to see if it is an array. If it is AND the `potentialIndex`th element is available, it is used as the `rawSchema`,
-   * otherwise the last value of the element is used. If it is not, then the element is used as the `rawSchema`. In
-   * either case, an `fieldPathId` is computed for the array index. If the `schema` does not represent an array or the
-   * `potentialIndex` is not a numeric value, then `rawSchema` is returned as undefined and given `fieldPathId` is returned
-   * as is.
-   *
-   * @param schema - The schema to generate the fieldPathId for
-   * @param fieldPathId - The FieldPathId for the schema
-   * @param potentialIndex - A string containing a potential index
-   * @returns - An object containing the `rawSchema` and `fieldPathId` of an array item, otherwise an undefined `rawSchema`
-   */
-  static computeArraySchemasIfPresent<S extends StrictRJSFSchema = RJSFSchema>(
-    schema: S | undefined,
-    fieldPathId: FieldPathId,
-    potentialIndex: string,
-  ): {
-    rawSchema?: S;
-    fieldPathId: FieldPathId;
-  } {
-    let rawSchema: S | undefined;
-    if (isNumericIndex(potentialIndex) && schema && schema?.type === 'array' && has(schema, ITEMS_KEY)) {
-      const index = Number(potentialIndex);
-      const items = schema[ITEMS_KEY];
-      if (Array.isArray(items)) {
-        if (index > items.length) {
-          rawSchema = last(items) as S;
-        } else {
-          rawSchema = items[index] as S;
-        }
-      } else {
-        rawSchema = items as S;
-      }
-      fieldPathId = {
-        [ID_KEY]: fieldPathId[ID_KEY],
-        path: [...fieldPathId.path.slice(0, fieldPathId.path.length - 1), index],
-      };
-    }
-    return { rawSchema, fieldPathId };
-  }
-
-  /** Given a `dottedPath` to a field in the `initialSchema`, iterate through each individual path in the schema until
-   * the leaf path is found and returned (along with whether that leaf path `isRequired`) OR no schema exists for an
-   * element in the path. If the leaf schema element happens to be a oneOf/anyOf then also return the oneOf/anyOf as
-   * `options`.
-   *
-   * @param registry - The registry
-   * @param dottedPath - The dotted-path to the field for which to get the schema
-   * @param initialSchema - The initial schema to start the search from
-   * @param formData - The formData, useful for resolving a oneOf/anyOf selection in the path hierarchy
-   * @param initialFieldIdPath - The initial fieldPathId to start the search from
-   * @returns - An object containing the destination schema, isRequired and isReadonly flags for the field and options
-   *            info if a oneOf/anyOf
-   */
-  static getSchemaDetailsForField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-    registry: Registry<T, S, F>,
-    dottedPath: string,
-    initialSchema: S,
-    formData: FieldProps<T, S, F>['formData'],
-    initialFieldIdPath: FieldPathId,
-  ): {
-    schema?: S;
-    isRequired: boolean;
-    isReadonly?: boolean;
-    optionsInfo?: OneOfOptionsInfoType<S>;
-    fieldPathId: FieldPathId;
-  } {
-    const { schemaUtils, globalFormOptions } = registry;
-    let rawSchema: S = initialSchema;
-    let fieldPathId = initialFieldIdPath;
-    const parts: string[] = dottedPath.split('.');
-    const leafPath: string | undefined = parts.pop(); // pop off the last element in the list as the leaf
-    let schema: S | undefined = schemaUtils.retrieveSchema(rawSchema, formData); // always returns an object
-    let innerData = formData;
-    let isReadonly: boolean | undefined = schema.readOnly;
-
-    // For all the remaining path parts
-    parts.forEach((part) => {
-      // dive into the properties of the current schema (when it exists) and get the schema for the next part
-      fieldPathId = toFieldPathId(part, globalFormOptions, fieldPathId);
-      if (has(schema, PROPERTIES_KEY)) {
-        rawSchema = get(schema, [PROPERTIES_KEY, part], {}) as S;
-      } else if (schema && (has(schema, ONE_OF_KEY) || has(schema, ANY_OF_KEY))) {
-        const xxx = has(schema, ONE_OF_KEY) ? ONE_OF_KEY : ANY_OF_KEY;
-        // When the schema represents a oneOf/anyOf, find the selected schema for it and grab the inner part
-        const selectedSchema = schemaUtils.findSelectedOptionInXxxOf(schema, part, xxx, innerData);
-        rawSchema = get(selectedSchema, [PROPERTIES_KEY, part], {}) as S;
-      } else {
-        const result = LayoutGridField.computeArraySchemasIfPresent<S>(schema, fieldPathId, part);
-        rawSchema = result.rawSchema ?? ({} as S);
-        fieldPathId = result.fieldPathId;
-      }
-      // Now drill into the innerData for the part, returning an empty object by default if it doesn't exist
-      innerData = get(innerData, part, {}) as T;
-      // Resolve any `$ref`s for the current rawSchema
-      schema = schemaUtils.retrieveSchema(rawSchema, innerData);
-      isReadonly = getNonNullishValue(schema.readOnly, isReadonly);
-    });
-
-    let optionsInfo: OneOfOptionsInfoType<S> | undefined;
-    let isRequired = false;
-    // retrieveSchema will return an empty schema in the worst case scenario, convert it to undefined
-    if (isEmpty(schema)) {
-      schema = undefined;
-    }
-    if (schema && leafPath) {
-      // When we have both a schema and a leafPath...
-      if (schema && (has(schema, ONE_OF_KEY) || has(schema, ANY_OF_KEY))) {
-        const xxx = has(schema, ONE_OF_KEY) ? ONE_OF_KEY : ANY_OF_KEY;
-        // Grab the selected schema for the oneOf/anyOf value for the leafPath using the innerData
-        schema = schemaUtils.findSelectedOptionInXxxOf(schema, leafPath, xxx, innerData);
-      }
-      fieldPathId = toFieldPathId(leafPath, globalFormOptions, fieldPathId);
-      isRequired = schema !== undefined && Array.isArray(schema.required) && includes(schema.required, leafPath);
-      const result = LayoutGridField.computeArraySchemasIfPresent<S>(schema, fieldPathId, leafPath);
-      if (result.rawSchema) {
-        schema = result.rawSchema;
-        fieldPathId = result.fieldPathId;
-      } else {
-        // Now grab the schema from the leafPath of the current schema properties
-        schema = get(schema, [PROPERTIES_KEY, leafPath]) as S | undefined;
-        // Resolve any `$ref`s for the current schema
-        schema = schema ? schemaUtils.retrieveSchema(schema) : schema;
-      }
-      isReadonly = getNonNullishValue(schema?.readOnly, isReadonly);
-      if (schema && (has(schema, ONE_OF_KEY) || has(schema, ANY_OF_KEY))) {
-        const xxx = has(schema, ONE_OF_KEY) ? ONE_OF_KEY : ANY_OF_KEY;
-        // Set the options if we have a schema with a oneOf/anyOf
-        const discriminator = getDiscriminatorFieldFromSchema(schema);
-        optionsInfo = { options: schema[xxx] as S[], hasDiscriminator: !!discriminator };
-      }
-    }
-
-    return { schema, isRequired, isReadonly, optionsInfo, fieldPathId };
-  }
-
-  /** Gets the custom render component from the `render`, by either determining that it is either already a function or
-   * it is a non-function value that can be used to look up the function in the registry. If no function can be found,
-   * null is returned.
-   *
-   * @param render - The potential render function or lookup name to one
-   * @param registry - The `@rjsf` Registry from which to look up `classNames` if they are present in the extra props
-   * @returns - Either a render function if available, or null if not
-   */
-  static getCustomRenderComponent<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-    render: string | RenderComponent,
-    registry: Registry<T, S, F>,
-  ): RenderComponent | null {
-    let customRenderer = render;
-    if (isString(customRenderer)) {
-      customRenderer = lookupFromFormContext<T, S, F>(registry, customRenderer);
-    }
-    if (isFunction(customRenderer)) {
-      return customRenderer;
-    }
-    return null;
-  }
-
-  /** Extract the `name`, and optional `render` and all other props from the `gridSchema`. We look up the `render` to
-   * see if can be resolved to a UIComponent. If `name` does not exist and there is an optional `render` UIComponent, we
-   * set the `rendered` component with only specified props for that component in the object.
-   *
-   * @param registry - The `@rjsf` Registry from which to look up `classNames` if they are present in the extra props
-   * @param gridSchema - The string or object that represents the configuration for the grid field
-   * @returns - The UIComponentPropsType computed from the gridSchema
-   */
-  static computeUIComponentPropsFromGridSchema<
-    T = any,
-    S extends StrictRJSFSchema = RJSFSchema,
-    F extends FormContextType = any,
-  >(registry: Registry<T, S, F>, gridSchema?: string | ConfigObject): UIComponentPropsType {
-    let name: string;
-    let UIComponent: RenderComponent | null = null;
-    let uiProps: ConfigObject = {};
-    let rendered: ReactNode | undefined;
-    if (isString(gridSchema) || isUndefined(gridSchema)) {
-      name = gridSchema ?? '';
-    } else {
-      const { name: innerName = '', render, ...innerProps } = gridSchema;
-      name = innerName;
-      uiProps = innerProps;
-      if (!isEmpty(uiProps)) {
-        // Transform any `$lookup=` in the uiProps props with the appropriate value
-        each(uiProps, (prop: ConfigObject, key: string) => {
-          if (isString(prop)) {
-            const match: string[] | null = LOOKUP_REGEX.exec(prop);
-            if (Array.isArray(match) && match.length > 1) {
-              const name = match[1];
-              uiProps[key] = lookupFromFormContext(registry, name, name);
-            }
-          }
-        });
-      }
-      UIComponent = LayoutGridField.getCustomRenderComponent<T, S, F>(render, registry);
-      if (!innerName && UIComponent) {
-        rendered = <UIComponent {...innerProps} data-testid={LayoutGridField.TEST_IDS.uiComponent} />;
-      }
-    }
-    return { name, UIComponent, uiProps, rendered };
-  }
-
   /** Constructs an `LayoutGridField` with the given `props`
    *
    * @param props - The `LayoutGridField` for this template
@@ -725,14 +412,10 @@ export default class LayoutGridField<
    */
   renderCondition(layoutGridSchema: GridSchemaType) {
     const { formData, registry } = this.props;
-    const { children, gridProps } = LayoutGridField.findChildrenAndProps<T, S, F>(
-      layoutGridSchema,
-      GridType.CONDITION,
-      registry,
-    );
+    const { children, gridProps } = findChildrenAndProps<T, S, F>(layoutGridSchema, GridType.CONDITION, registry);
     const { operator, field = '', value } = gridProps;
     const fieldData = get(formData, field, null);
-    if (LayoutGridField.conditionMatches(operator, fieldData, value)) {
+    if (conditionMatches(operator, fieldData, value)) {
       return this.renderChildren(children);
     }
     return null;
@@ -747,16 +430,12 @@ export default class LayoutGridField<
    */
   renderCol(layoutGridSchema: GridSchemaType) {
     const { registry, uiSchema } = this.props;
-    const { children, gridProps } = LayoutGridField.findChildrenAndProps<T, S, F>(
-      layoutGridSchema,
-      GridType.COLUMN,
-      registry,
-    );
+    const { children, gridProps } = findChildrenAndProps<T, S, F>(layoutGridSchema, GridType.COLUMN, registry);
     const uiOptions = getUiOptions<T, S, F>(uiSchema);
     const GridTemplate = getTemplate<'GridTemplate', T, S, F>('GridTemplate', registry, uiOptions);
 
     return (
-      <GridTemplate column data-testid={LayoutGridField.TEST_IDS.col} {...gridProps}>
+      <GridTemplate column data-testid={LAYOUT_GRID_FIELD_TEST_IDS.col} {...gridProps}>
         {this.renderChildren(children)}
       </GridTemplate>
     );
@@ -771,11 +450,7 @@ export default class LayoutGridField<
    */
   renderColumns(layoutGridSchema: GridSchemaType) {
     const { registry, uiSchema } = this.props;
-    const { children, gridProps } = LayoutGridField.findChildrenAndProps<T, S, F>(
-      layoutGridSchema,
-      GridType.COLUMNS,
-      registry,
-    );
+    const { children, gridProps } = findChildrenAndProps<T, S, F>(layoutGridSchema, GridType.COLUMNS, registry);
     const uiOptions = getUiOptions<T, S, F>(uiSchema);
     const GridTemplate = getTemplate<'GridTemplate', T, S, F>('GridTemplate', registry, uiOptions);
 
@@ -783,7 +458,7 @@ export default class LayoutGridField<
       <GridTemplate
         column
         key={`column-${hashObject(child)}`}
-        data-testid={LayoutGridField.TEST_IDS.col}
+        data-testid={LAYOUT_GRID_FIELD_TEST_IDS.col}
         {...gridProps}
       >
         {this.renderChildren([child])}
@@ -800,16 +475,12 @@ export default class LayoutGridField<
    */
   renderRow(layoutGridSchema: GridSchemaType) {
     const { registry, uiSchema } = this.props;
-    const { children, gridProps } = LayoutGridField.findChildrenAndProps<T, S, F>(
-      layoutGridSchema,
-      GridType.ROW,
-      registry,
-    );
+    const { children, gridProps } = findChildrenAndProps<T, S, F>(layoutGridSchema, GridType.ROW, registry);
     const uiOptions = getUiOptions<T, S, F>(uiSchema);
     const GridTemplate = getTemplate<'GridTemplate', T, S, F>('GridTemplate', registry, uiOptions);
 
     return (
-      <GridTemplate {...gridProps} data-testid={LayoutGridField.TEST_IDS.row}>
+      <GridTemplate {...gridProps} data-testid={LAYOUT_GRID_FIELD_TEST_IDS.row}>
         {this.renderChildren(children)}
       </GridTemplate>
     );
@@ -870,7 +541,7 @@ export default class LayoutGridField<
     } = this.props;
     const { fields } = registry;
     const { SchemaField, LayoutMultiSchemaField } = fields;
-    const uiComponentProps = LayoutGridField.computeUIComponentPropsFromGridSchema(registry, gridSchema);
+    const uiComponentProps = computeUIComponentPropsFromGridSchema(registry, gridSchema);
     if (uiComponentProps.rendered) {
       return uiComponentProps.rendered;
     }
@@ -881,7 +552,7 @@ export default class LayoutGridField<
       isReadonly,
       optionsInfo,
       fieldPathId: fieldIdSchema,
-    } = LayoutGridField.getSchemaDetailsForField<T, S, F>(registry, name, initialSchema, formData, fieldPathId);
+    } = getSchemaDetailsForField<T, S, F>(registry, name, initialSchema, formData, fieldPathId);
 
     if (schema) {
       const Field = optionsInfo?.hasDiscriminator ? LayoutMultiSchemaField : SchemaField;
@@ -890,7 +561,7 @@ export default class LayoutGridField<
       // state in the uiSchema over anything in the props or schema. Because we are implementing the "readonly" state of
       // the `Form` via the prop passed to `LayoutGridField` we need to make sure the uiSchema always has a true value
       // when it is needed
-      const { fieldUiSchema, uiReadonly } = LayoutGridField.computeFieldUiSchema<T, S, F>(
+      const { fieldUiSchema, uiReadonly } = computeFieldUiSchema<T, S, F>(
         name,
         uiProps,
         uiSchema,
@@ -902,8 +573,8 @@ export default class LayoutGridField<
         <Field
           data-testid={
             optionsInfo?.hasDiscriminator
-              ? LayoutGridField.TEST_IDS.layoutMultiSchemaField
-              : LayoutGridField.TEST_IDS.field
+              ? LAYOUT_GRID_FIELD_TEST_IDS.layoutMultiSchemaField
+              : LAYOUT_GRID_FIELD_TEST_IDS.field
           }
           {...otherProps}
           name={name}
@@ -926,7 +597,7 @@ export default class LayoutGridField<
     if (UIComponent) {
       return (
         <UIComponent
-          data-testid={LayoutGridField.TEST_IDS.uiComponent}
+          data-testid={LAYOUT_GRID_FIELD_TEST_IDS.uiComponent}
           {...otherProps}
           name={name}
           required={isRequired}
@@ -977,4 +648,327 @@ export default class LayoutGridField<
     }
     return this.renderField(layoutGridSchema);
   }
+}
+
+/** Computes the uiSchema for the field with `name` from the `uiProps` and `uiSchema` provided. The field UI Schema
+ * will always contain a copy of the global options from the `uiSchema` (so they can be passed down) as well as
+ * copying them into the local ui options. When the `forceReadonly` flag is true, then the field UI Schema is
+ * updated to make "readonly" be true. When the `schemaReadonly` flag is true AND the field UI Schema does NOT have
+ * the flag already provided, then we also make "readonly" true. We always make sure to return the final value of the
+ * field UI Schema's "readonly" flag as `uiReadonly` along with the `fieldUiSchema` in the return value.
+ *
+ * @param field - The name of the field to pull the existing UI Schema for
+ * @param uiProps - Any props that should be put into the field's uiSchema
+ * @param [uiSchema] - The optional UI Schema from which to get the UI schema for the field
+ * @param [schemaReadonly] - Optional flag indicating whether the schema indicates the field is readonly
+ * @param [forceReadonly] - Optional flag indicating whether the Form itself is in readonly mode
+ */
+export function computeFieldUiSchema<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+  field: string,
+  uiProps: ConfigObject,
+  uiSchema?: UiSchema<T, S, F>,
+  schemaReadonly?: boolean,
+  forceReadonly?: boolean,
+) {
+  const globalUiOptions = get(uiSchema, [UI_GLOBAL_OPTIONS_KEY], {});
+  const localUiSchema = get(uiSchema, field);
+  const localUiOptions = { ...get(localUiSchema, [UI_OPTIONS_KEY], {}), ...uiProps, ...globalUiOptions };
+  const fieldUiSchema = { ...localUiSchema };
+  if (!isEmpty(localUiOptions)) {
+    set(fieldUiSchema, [UI_OPTIONS_KEY], localUiOptions);
+  }
+  if (!isEmpty(globalUiOptions)) {
+    // pass the global uiOptions down to the field uiSchema so that they can be applied to all nested fields
+    set(fieldUiSchema, [UI_GLOBAL_OPTIONS_KEY], globalUiOptions);
+  }
+  let { readonly: uiReadonly } = getUiOptions<T, S, F>(fieldUiSchema);
+  if (forceReadonly === true || (isUndefined(uiReadonly) && schemaReadonly === true)) {
+    // If we are forcing all widgets to be readonly, OR the schema indicates it is readonly AND the uiSchema does not
+    // have an overriding value, then update the uiSchema to set readonly to true. Doing this will
+    uiReadonly = true;
+    if (has(localUiOptions, READONLY_KEY)) {
+      // If the local options has the key value provided in it, then set that one to true
+      set(fieldUiSchema, [UI_OPTIONS_KEY, READONLY_KEY], true);
+    } else {
+      // otherwise set the `ui:` version
+      set(fieldUiSchema, `ui:${READONLY_KEY}`, true);
+    }
+  }
+  return { fieldUiSchema, uiReadonly };
+}
+
+/** Given an `operator`, `datum` and `value` determines whether this condition is considered matching. Matching
+ * depends on the `operator`. The `datum` and `value` are converted into arrays if they aren't already and then the
+ * contents of the two arrays are compared using the `operator`. When `operator` is All, then the two arrays must be
+ * equal to match. When `operator` is SOME then the intersection of the two arrays must have at least one value in
+ * common to match. When `operator` is NONE then the intersection of the two arrays must not have any values in common
+ * to match.
+ *
+ * @param [operator] - The optional operator for the condition
+ * @param [datum] - The optional datum for the condition, this can be an item or a list of items of type unknown
+ * @param [value='$0m3tH1nG Un3xP3cT3d'] The optional value for the condition, defaulting to a highly unlikely value
+ *        to avoid comparing two undefined elements when `value` was forgotten in the condition definition.
+ *        This can be an item or a list of items of type unknown
+ * @returns - True if the condition matches, false otherwise
+ */
+export function conditionMatches(
+  operator?: Operators,
+  datum?: unknown,
+  value: unknown = '$0m3tH1nG Un3xP3cT3d',
+): boolean {
+  const data = flatten([datum]).sort();
+  const values = flatten([value]).sort();
+  switch (operator) {
+    case Operators.ALL:
+      return isEqual(data, values);
+    case Operators.SOME:
+      return intersection(data, values).length > 0;
+    case Operators.NONE:
+      return intersection(data, values).length === 0;
+    default:
+      return false;
+  }
+}
+
+/** From within the `layoutGridSchema` finds the `children` and any extra `gridProps` from the object keyed by
+ * `schemaKey`. If the `children` contains extra `gridProps` and those props contain a `className` string, try to
+ * lookup whether that `className` has a replacement value in the `registry` using the `FORM_CONTEXT_LOOKUP_BASE`.
+ * When the `className` value contains multiple classNames separated by a space, the lookup will look for a
+ * replacement value for each `className` and combine them into one.
+ *
+ * @param layoutGridSchema - The GridSchemaType instance from which to obtain the `schemaKey` children and extra props
+ * @param schemaKey - A `GridType` value, used to get the children and extra props from within the `layoutGridSchema`
+ * @param registry - The `@rjsf` Registry from which to look up `classNames` if they are present in the extra props
+ * @returns - An object containing the list of `LayoutGridSchemaType` `children` and any extra `gridProps`
+ * @throws - A `TypeError` when the `children` is not an array
+ */
+export function findChildrenAndProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+  layoutGridSchema: GridSchemaType,
+  schemaKey: GridType,
+  registry: Registry<T, S, F>,
+) {
+  let gridProps: GridProps = {};
+  let children = layoutGridSchema[schemaKey];
+  if (isPlainObject(children)) {
+    const { children: elements, className: toMapClassNames, ...otherProps } = children as ConfigObject;
+    children = elements;
+    if (toMapClassNames) {
+      const classes = toMapClassNames.split(' ');
+      const className = classes.map((ele: string) => lookupFromFormContext<T, S, F>(registry, ele, ele)).join(' ');
+      gridProps = { ...otherProps, className };
+    } else {
+      gridProps = otherProps;
+    }
+  }
+  if (!Array.isArray(children)) {
+    throw new TypeError(`Expected array for "${schemaKey}" in ${JSON.stringify(layoutGridSchema)}`);
+  }
+  return { children: children as LayoutGridSchemaType[], gridProps };
+}
+
+/** Computes the `rawSchema` and `fieldPathId` for a `schema` and a `potentialIndex`. If the `schema` is of type array,
+ * has an `ITEMS_KEY` element and `potentialIndex` represents a numeric value, the element at `ITEMS_KEY` is checked
+ * to see if it is an array. If it is AND the `potentialIndex`th element is available, it is used as the `rawSchema`,
+ * otherwise the last value of the element is used. If it is not, then the element is used as the `rawSchema`. In
+ * either case, an `fieldPathId` is computed for the array index. If the `schema` does not represent an array or the
+ * `potentialIndex` is not a numeric value, then `rawSchema` is returned as undefined and given `fieldPathId` is returned
+ * as is.
+ *
+ * @param schema - The schema to generate the fieldPathId for
+ * @param fieldPathId - The FieldPathId for the schema
+ * @param potentialIndex - A string containing a potential index
+ * @returns - An object containing the `rawSchema` and `fieldPathId` of an array item, otherwise an undefined `rawSchema`
+ */
+export function computeArraySchemasIfPresent<S extends StrictRJSFSchema = RJSFSchema>(
+  schema: S | undefined,
+  fieldPathId: FieldPathId,
+  potentialIndex: string,
+): {
+  rawSchema?: S;
+  fieldPathId: FieldPathId;
+} {
+  let rawSchema: S | undefined;
+  if (isNumericIndex(potentialIndex) && schema && schema?.type === 'array' && has(schema, ITEMS_KEY)) {
+    const index = Number(potentialIndex);
+    const items = schema[ITEMS_KEY];
+    if (Array.isArray(items)) {
+      if (index > items.length) {
+        rawSchema = last(items) as S;
+      } else {
+        rawSchema = items[index] as S;
+      }
+    } else {
+      rawSchema = items as S;
+    }
+    fieldPathId = {
+      [ID_KEY]: fieldPathId[ID_KEY],
+      path: [...fieldPathId.path.slice(0, fieldPathId.path.length - 1), index],
+    };
+  }
+  return { rawSchema, fieldPathId };
+}
+
+/** Given a `dottedPath` to a field in the `initialSchema`, iterate through each individual path in the schema until
+ * the leaf path is found and returned (along with whether that leaf path `isRequired`) OR no schema exists for an
+ * element in the path. If the leaf schema element happens to be a oneOf/anyOf then also return the oneOf/anyOf as
+ * `options`.
+ *
+ * @param registry - The registry
+ * @param dottedPath - The dotted-path to the field for which to get the schema
+ * @param initialSchema - The initial schema to start the search from
+ * @param formData - The formData, useful for resolving a oneOf/anyOf selection in the path hierarchy
+ * @param initialFieldIdPath - The initial fieldPathId to start the search from
+ * @returns - An object containing the destination schema, isRequired and isReadonly flags for the field and options
+ *            info if a oneOf/anyOf
+ */
+export function getSchemaDetailsForField<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any,
+>(
+  registry: Registry<T, S, F>,
+  dottedPath: string,
+  initialSchema: S,
+  formData: FieldProps<T, S, F>['formData'],
+  initialFieldIdPath: FieldPathId,
+): {
+  schema?: S;
+  isRequired: boolean;
+  isReadonly?: boolean;
+  optionsInfo?: OneOfOptionsInfoType<S>;
+  fieldPathId: FieldPathId;
+} {
+  const { schemaUtils, globalFormOptions } = registry;
+  let rawSchema: S = initialSchema;
+  let fieldPathId = initialFieldIdPath;
+  const parts: string[] = dottedPath.split('.');
+  const leafPath: string | undefined = parts.pop(); // pop off the last element in the list as the leaf
+  let schema: S | undefined = schemaUtils.retrieveSchema(rawSchema, formData); // always returns an object
+  let innerData = formData;
+  let isReadonly: boolean | undefined = schema.readOnly;
+
+  // For all the remaining path parts
+  parts.forEach((part) => {
+    // dive into the properties of the current schema (when it exists) and get the schema for the next part
+    fieldPathId = toFieldPathId(part, globalFormOptions, fieldPathId);
+    if (has(schema, PROPERTIES_KEY)) {
+      rawSchema = get(schema, [PROPERTIES_KEY, part], {}) as S;
+    } else if (schema && (has(schema, ONE_OF_KEY) || has(schema, ANY_OF_KEY))) {
+      const xxx = has(schema, ONE_OF_KEY) ? ONE_OF_KEY : ANY_OF_KEY;
+      // When the schema represents a oneOf/anyOf, find the selected schema for it and grab the inner part
+      const selectedSchema = schemaUtils.findSelectedOptionInXxxOf(schema, part, xxx, innerData);
+      rawSchema = get(selectedSchema, [PROPERTIES_KEY, part], {}) as S;
+    } else {
+      const result = computeArraySchemasIfPresent<S>(schema, fieldPathId, part);
+      rawSchema = result.rawSchema ?? ({} as S);
+      fieldPathId = result.fieldPathId;
+    }
+    // Now drill into the innerData for the part, returning an empty object by default if it doesn't exist
+    innerData = get(innerData, part, {}) as T;
+    // Resolve any `$ref`s for the current rawSchema
+    schema = schemaUtils.retrieveSchema(rawSchema, innerData);
+    isReadonly = getNonNullishValue(schema.readOnly, isReadonly);
+  });
+
+  let optionsInfo: OneOfOptionsInfoType<S> | undefined;
+  let isRequired = false;
+  // retrieveSchema will return an empty schema in the worst case scenario, convert it to undefined
+  if (isEmpty(schema)) {
+    schema = undefined;
+  }
+  if (schema && leafPath) {
+    // When we have both a schema and a leafPath...
+    if (schema && (has(schema, ONE_OF_KEY) || has(schema, ANY_OF_KEY))) {
+      const xxx = has(schema, ONE_OF_KEY) ? ONE_OF_KEY : ANY_OF_KEY;
+      // Grab the selected schema for the oneOf/anyOf value for the leafPath using the innerData
+      schema = schemaUtils.findSelectedOptionInXxxOf(schema, leafPath, xxx, innerData);
+    }
+    fieldPathId = toFieldPathId(leafPath, globalFormOptions, fieldPathId);
+    isRequired = schema !== undefined && Array.isArray(schema.required) && includes(schema.required, leafPath);
+    const result = computeArraySchemasIfPresent<S>(schema, fieldPathId, leafPath);
+    if (result.rawSchema) {
+      schema = result.rawSchema;
+      fieldPathId = result.fieldPathId;
+    } else {
+      // Now grab the schema from the leafPath of the current schema properties
+      schema = get(schema, [PROPERTIES_KEY, leafPath]) as S | undefined;
+      // Resolve any `$ref`s for the current schema
+      schema = schema ? schemaUtils.retrieveSchema(schema) : schema;
+    }
+    isReadonly = getNonNullishValue(schema?.readOnly, isReadonly);
+    if (schema && (has(schema, ONE_OF_KEY) || has(schema, ANY_OF_KEY))) {
+      const xxx = has(schema, ONE_OF_KEY) ? ONE_OF_KEY : ANY_OF_KEY;
+      // Set the options if we have a schema with a oneOf/anyOf
+      const discriminator = getDiscriminatorFieldFromSchema(schema);
+      optionsInfo = { options: schema[xxx] as S[], hasDiscriminator: !!discriminator };
+    }
+  }
+
+  return { schema, isRequired, isReadonly, optionsInfo, fieldPathId };
+}
+
+/** Gets the custom render component from the `render`, by either determining that it is either already a function or
+ * it is a non-function value that can be used to look up the function in the registry. If no function can be found,
+ * null is returned.
+ *
+ * @param render - The potential render function or lookup name to one
+ * @param registry - The `@rjsf` Registry from which to look up `classNames` if they are present in the extra props
+ * @returns - Either a render function if available, or null if not
+ */
+export function getCustomRenderComponent<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any,
+>(render: string | RenderComponent, registry: Registry<T, S, F>): RenderComponent | null {
+  let customRenderer = render;
+  if (isString(customRenderer)) {
+    customRenderer = lookupFromFormContext<T, S, F>(registry, customRenderer);
+  }
+  if (isFunction(customRenderer)) {
+    return customRenderer;
+  }
+  return null;
+}
+
+/** Extract the `name`, and optional `render` and all other props from the `gridSchema`. We look up the `render` to
+ * see if can be resolved to a UIComponent. If `name` does not exist and there is an optional `render` UIComponent, we
+ * set the `rendered` component with only specified props for that component in the object.
+ *
+ * @param registry - The `@rjsf` Registry from which to look up `classNames` if they are present in the extra props
+ * @param gridSchema - The string or object that represents the configuration for the grid field
+ * @returns - The UIComponentPropsType computed from the gridSchema
+ */
+export function computeUIComponentPropsFromGridSchema<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any,
+>(registry: Registry<T, S, F>, gridSchema?: string | ConfigObject): UIComponentPropsType {
+  let name: string;
+  let UIComponent: RenderComponent | null = null;
+  let uiProps: ConfigObject = {};
+  let rendered: ReactNode | undefined;
+  if (isString(gridSchema) || isUndefined(gridSchema)) {
+    name = gridSchema ?? '';
+  } else {
+    const { name: innerName = '', render, ...innerProps } = gridSchema;
+    name = innerName;
+    uiProps = innerProps;
+    if (!isEmpty(uiProps)) {
+      // Transform any `$lookup=` in the uiProps props with the appropriate value
+      each(uiProps, (prop: ConfigObject, key: string) => {
+        if (isString(prop)) {
+          const match: string[] | null = LOOKUP_REGEX.exec(prop);
+          if (Array.isArray(match) && match.length > 1) {
+            const name = match[1];
+            uiProps[key] = lookupFromFormContext(registry, name, name);
+          }
+        }
+      });
+    }
+    UIComponent = getCustomRenderComponent<T, S, F>(render, registry);
+    if (!innerName && UIComponent) {
+      rendered = <UIComponent {...innerProps} data-testid={LAYOUT_GRID_FIELD_TEST_IDS.uiComponent} />;
+    }
+  }
+  return { name, UIComponent, uiProps, rendered };
 }
