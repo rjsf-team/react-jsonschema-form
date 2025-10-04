@@ -28,6 +28,7 @@ export default function ObjectFieldTemplate<
   fieldPathId,
   schema,
   formData,
+  optionalDataControl,
   onAddClick,
   disabled,
   readonly,
@@ -40,6 +41,7 @@ export default function ObjectFieldTemplate<
     registry,
     uiOptions,
   );
+  const showOptionalDataControlInTitle = !readonly && !disabled;
   // Button templates are not overridden in the uiSchema
   const {
     ButtonTemplates: { AddButton },
@@ -54,6 +56,7 @@ export default function ObjectFieldTemplate<
           schema={schema}
           uiSchema={uiSchema}
           registry={registry}
+          optionalDataControl={showOptionalDataControlInTitle ? optionalDataControl : undefined}
         />
       )}
       {description && (
@@ -66,6 +69,7 @@ export default function ObjectFieldTemplate<
         />
       )}
       <Container fluid className='p-0'>
+        {!showOptionalDataControlInTitle ? optionalDataControl : undefined}
         {properties.map((element: any, index: number) => (
           <Row key={index} style={{ marginBottom: '10px' }} className={element.hidden ? 'd-none' : undefined}>
             <Col xs={12}> {element.content}</Col>

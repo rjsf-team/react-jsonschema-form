@@ -5224,6 +5224,15 @@ exports[`single fields title field 1`] = `
                     >
                       Titre 1
                     </label>
+                    <div
+                      className="ant-divider css-dev-only-do-not-override-xepvsj ant-divider-horizontal ant-divider-sm"
+                      role="separator"
+                      style={
+                        {
+                          "marginBlock": "1px",
+                        }
+                      }
+                    />
                   </div>
                   <div
                     className="ant-col ant-col-24 css-dev-only-do-not-override-xepvsj"

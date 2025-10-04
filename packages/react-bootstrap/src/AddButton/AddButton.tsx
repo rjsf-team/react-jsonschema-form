@@ -10,10 +10,10 @@ export default function AddButton<T = any, S extends StrictRJSFSchema = RJSFSche
   const { translateString } = registry;
   return (
     <Button
+      title={translateString(TranslatableString.AddItemButton)}
       {...props}
       style={{ width: '100%' }}
       className={`ml-1 ${props.className}`}
-      title={translateString(TranslatableString.AddItemButton)}
     >
       <BsPlus />
     </Button>

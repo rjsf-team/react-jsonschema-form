@@ -3,6 +3,8 @@ import deepFreeze from 'deep-freeze-es6';
 
 import {
   ANY_OF_KEY,
+  DEFAULT_ID_PREFIX,
+  DEFAULT_ID_SEPARATOR,
   EnumOptionsType,
   ErrorSchema,
   ErrorSchemaBuilder,
@@ -11,6 +13,8 @@ import {
   RJSFSchema,
   RJSFValidationError,
 } from '../../src';
+
+export const GLOBAL_FORM_OPTIONS = { idPrefix: DEFAULT_ID_PREFIX, idSeparator: DEFAULT_ID_SEPARATOR };
 
 export const oneOfData = {
   name: 'second_option',

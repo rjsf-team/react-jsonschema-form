@@ -2145,7 +2145,7 @@ exports[`single fields field with description 1`] = `
 
 .emotion-2 {
   display: grid;
-  gap: var(--chakra-spacing-6);
+  gap: var(--chakra-spacing-4);
   margin-bottom: var(--chakra-spacing-4);
 }
 
@@ -2493,7 +2493,7 @@ exports[`single fields field with description in uiSchema 1`] = `
 
 .emotion-2 {
   display: grid;
-  gap: var(--chakra-spacing-6);
+  gap: var(--chakra-spacing-4);
   margin-bottom: var(--chakra-spacing-4);
 }
 
@@ -2841,7 +2841,7 @@ exports[`single fields field with markdown description 1`] = `
 
 .emotion-2 {
   display: grid;
-  gap: var(--chakra-spacing-6);
+  gap: var(--chakra-spacing-4);
   margin-bottom: var(--chakra-spacing-4);
 }
 
@@ -3195,7 +3195,7 @@ exports[`single fields field with markdown description in uiSchema 1`] = `
 
 .emotion-2 {
   display: grid;
-  gap: var(--chakra-spacing-6);
+  gap: var(--chakra-spacing-4);
   margin-bottom: var(--chakra-spacing-4);
 }
 
@@ -5024,7 +5024,7 @@ exports[`single fields hidden field 1`] = `
 
 .emotion-2 {
   display: grid;
-  gap: var(--chakra-spacing-6);
+  gap: var(--chakra-spacing-4);
   margin-bottom: var(--chakra-spacing-4);
 }
 
@@ -16309,7 +16309,7 @@ exports[`single fields title field 1`] = `
 
 .emotion-5 {
   display: grid;
-  gap: var(--chakra-spacing-6);
+  gap: var(--chakra-spacing-4);
   margin-bottom: var(--chakra-spacing-4);
 }
 

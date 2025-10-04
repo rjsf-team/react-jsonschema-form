@@ -3825,7 +3825,7 @@ exports[`single fields title field 1`] = `
             Titre 1
           </h2>
           <div
-            className="divider divider-primary"
+            className="divider divider-primary my-0"
           />
         </div>
         <div

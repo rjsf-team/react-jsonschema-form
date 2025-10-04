@@ -200,6 +200,8 @@ interface ComputeDefaultsProps<T = any, S extends StrictRJSFSchema = RJSFSchema>
   experimental_customMergeAllOf?: Experimental_CustomMergeAllOf<S>;
   /** Optional flag, if true, indicates this schema was required in the parent schema. */
   required?: boolean;
+  /** Optional flag, if true, indicates this schema was required because it is the root. */
+  requiredAsRoot?: boolean;
   /** Optional flag, if true, It will merge defaults into formData.
    *  The formData should take precedence unless it's not valid. This is useful when for example the value from formData does not exist in the schema 'enum' property, in such cases we take the value from the defaults because the value from the formData is not valid.
    */
@@ -586,6 +588,7 @@ export function getArrayDefaults<T = any, S extends StrictRJSFSchema = RJSFSchem
     experimental_defaultFormStateBehavior = undefined,
     experimental_customMergeAllOf = undefined,
     required,
+    requiredAsRoot = false,
     shouldMergeDefaultsIntoFormData,
     initialDefaultsGenerated,
   }: ComputeDefaultsProps<T, S> = {},
@@ -671,7 +674,8 @@ export function getArrayDefaults<T = any, S extends StrictRJSFSchema = RJSFSchem
     computeSkipPopulate<T, S, F>(validator, schema, rootSchema) ||
     schema.minItems <= defaultsLength
   ) {
-    arrayDefault = defaults ? defaults : emptyDefault;
+    // we don't want undefined defaults unless it is both not required or not required as root
+    arrayDefault = defaults || (!required && !requiredAsRoot) ? defaults : emptyDefault;
   } else {
     const defaultEntries: T[] = (defaults || []) as T[];
     const fillerSchema: S = getInnerSchemaForArrayItem<S>(schema, AdditionalItemsHandling.Invert);
@@ -770,6 +774,7 @@ export default function getDefaultFormState<
     rawFormData: formData,
     shouldMergeDefaultsIntoFormData: true,
     initialDefaultsGenerated,
+    requiredAsRoot: true,
   });
 
   if (schema.type !== 'object' && isObject(schema.default)) {

@@ -8,6 +8,7 @@ import LayoutMultiSchemaField from './LayoutMultiSchemaField';
 import MultiSchemaField from './MultiSchemaField';
 import NumberField from './NumberField';
 import ObjectField from './ObjectField';
+import OptionalDataControlsField from './OptionalDataControlsField';
 import SchemaField from './SchemaField';
 import StringField from './StringField';
 import NullField from './NullField';
@@ -28,6 +29,7 @@ function fields<
     NumberField,
     ObjectField,
     OneOfField: MultiSchemaField,
+    OptionalDataControlsField,
     SchemaField,
     StringField,
     NullField,

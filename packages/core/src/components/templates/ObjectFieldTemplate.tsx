@@ -24,11 +24,13 @@ export default function ObjectFieldTemplate<
   F extends FormContextType = any,
 >(props: ObjectFieldTemplateProps<T, S, F>) {
   const {
+    className,
     description,
     disabled,
     formData,
     fieldPathId,
     onAddClick,
+    optionalDataControl,
     properties,
     readonly,
     registry,
@@ -44,12 +46,13 @@ export default function ObjectFieldTemplate<
     registry,
     options,
   );
+  const showOptionalDataControlInTitle = !readonly && !disabled;
   // Button templates are not overridden in the uiSchema
   const {
     ButtonTemplates: { AddButton },
   } = registry.templates;
   return (
-    <fieldset id={fieldPathId.$id}>
+    <fieldset className={className} id={fieldPathId.$id}>
       {title && (
         <TitleFieldTemplate
           id={titleId(fieldPathId)}
@@ -58,6 +61,7 @@ export default function ObjectFieldTemplate<
           schema={schema}
           uiSchema={uiSchema}
           registry={registry}
+          optionalDataControl={showOptionalDataControlInTitle ? optionalDataControl : undefined}
         />
       )}
       {description && (
@@ -69,6 +73,7 @@ export default function ObjectFieldTemplate<
           registry={registry}
         />
       )}
+      {!showOptionalDataControlInTitle ? optionalDataControl : undefined}
       {properties.map((prop: ObjectFieldTemplatePropertyType) => prop.content)}
       {canExpand<T, S, F>(schema, uiSchema, formData) && (
         <AddButton
