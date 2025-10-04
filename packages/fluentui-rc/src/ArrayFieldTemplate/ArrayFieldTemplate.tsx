@@ -26,8 +26,20 @@ export default function ArrayFieldTemplate<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
 >(props: ArrayFieldTemplateProps<T, S, F>) {
-  const { canAdd, disabled, fieldPathId, uiSchema, items, onAddClick, readonly, registry, required, schema, title } =
-    props;
+  const {
+    canAdd,
+    disabled,
+    fieldPathId,
+    uiSchema,
+    items,
+    optionalDataControl,
+    onAddClick,
+    readonly,
+    registry,
+    required,
+    schema,
+    title,
+  } = props;
   const classes = useStyles();
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const ArrayFieldDescriptionTemplate = getTemplate<'ArrayFieldDescriptionTemplate', T, S, F>(
@@ -45,6 +57,7 @@ export default function ArrayFieldTemplate<
     registry,
     uiOptions,
   );
+  const showOptionalDataControlInTitle = !readonly && !disabled;
   // Button templates are not overridden in the uiSchema
   const {
     ButtonTemplates: { AddButton },
@@ -58,6 +71,7 @@ export default function ArrayFieldTemplate<
         uiSchema={uiSchema}
         required={required}
         registry={registry}
+        optionalDataControl={showOptionalDataControlInTitle ? optionalDataControl : undefined}
       />
       <ArrayFieldDescriptionTemplate
         fieldPathId={fieldPathId}
@@ -67,10 +81,10 @@ export default function ArrayFieldTemplate<
         registry={registry}
       />
       <Flex column key={`array-item-list-${fieldPathId.$id}`} className={classes.arrayItemList}>
-        {items &&
-          items.map(({ key, ...itemProps }: ArrayFieldItemTemplateType<T, S, F>) => (
-            <ArrayFieldItemTemplate key={key} {...itemProps} />
-          ))}
+        {!showOptionalDataControlInTitle ? optionalDataControl : undefined}
+        {items.map(({ key, ...itemProps }: ArrayFieldItemTemplateType<T, S, F>) => (
+          <ArrayFieldItemTemplate key={key} {...itemProps} />
+        ))}
         {canAdd && (
           <Flex hAlign='end'>
             <AddButton

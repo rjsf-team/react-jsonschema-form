@@ -23,11 +23,11 @@ export default function AddButton<T = any, S extends StrictRJSFSchema = RJSFSche
     <div className='row'>
       <p className={`col-xs-3 col-xs-offset-9 text-right ${className}`}>
         <DaisyUIButton
+          title={translateString(TranslatableString.AddButton)}
           {...otherProps}
           iconType='info'
           icon={faPlus as IconDefinition}
           className='btn-add col-xs-12 btn-primary btn-primary-content'
-          title={translateString(TranslatableString.AddButton)}
           onClick={onClick}
           disabled={disabled}
           registry={registry}

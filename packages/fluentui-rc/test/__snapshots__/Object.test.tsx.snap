@@ -484,6 +484,11 @@ exports[`object fields with title and description additionalProperties 1`] = `
       >
         <h5
           className="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
+          style={
+            {
+              "marginBlock": 0,
+            }
+          }
         >
           Test field
         </h5>
@@ -679,6 +684,11 @@ exports[`object fields with title and description from both additionalProperties
       >
         <h5
           className="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
+          style={
+            {
+              "marginBlock": 0,
+            }
+          }
         >
           My Field
         </h5>
@@ -874,6 +884,11 @@ exports[`object fields with title and description from both object 1`] = `
       >
         <h5
           className="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
+          style={
+            {
+              "marginBlock": 0,
+            }
+          }
         >
           My Field
         </h5>
@@ -1045,6 +1060,11 @@ exports[`object fields with title and description from uiSchema additionalProper
       >
         <h5
           className="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
+          style={
+            {
+              "marginBlock": 0,
+            }
+          }
         >
           My Field
         </h5>
@@ -1240,6 +1260,11 @@ exports[`object fields with title and description from uiSchema object 1`] = `
       >
         <h5
           className="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
+          style={
+            {
+              "marginBlock": 0,
+            }
+          }
         >
           My Field
         </h5>
@@ -1411,6 +1436,11 @@ exports[`object fields with title and description from uiSchema show add button 
       >
         <h5
           className="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
+          style={
+            {
+              "marginBlock": 0,
+            }
+          }
         >
           My Field
         </h5>
@@ -1606,6 +1636,11 @@ exports[`object fields with title and description object 1`] = `
       >
         <h5
           className="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
+          style={
+            {
+              "marginBlock": 0,
+            }
+          }
         >
           Test field
         </h5>
@@ -1777,6 +1812,11 @@ exports[`object fields with title and description show add button and fields if 
       >
         <h5
           className="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
+          style={
+            {
+              "marginBlock": 0,
+            }
+          }
         >
           Test field
         </h5>

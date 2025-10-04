@@ -35,6 +35,7 @@ import layoutGrid from './layoutGrid';
 import { Sample } from './Sample';
 import patternProperties from './patternProperties';
 import bundledSchema from './bundledSchema';
+import optionalDataControls from './optionalDataControls';
 
 export type { Sample };
 
@@ -76,6 +77,7 @@ const _samples: Record<string, Sample> = {
   'Custom Field': customField,
   'Layout Grid': layoutGrid,
   'Bundled Schema': bundledSchema,
+  'Optional Data Controls': optionalDataControls,
 };
 
 export const samples = _samples;

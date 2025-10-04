@@ -9,11 +9,16 @@ const REQUIRED_FIELD_SYMBOL = '*';
 export default function TitleField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: TitleFieldProps<T, S, F>,
 ) {
-  const { id, title, required } = props;
+  const { id, title, required, optionalDataControl } = props;
   return (
     <legend id={id}>
       {title}
       {required && <span className='required'>{REQUIRED_FIELD_SYMBOL}</span>}
+      {optionalDataControl && (
+        <span className='pull-right' style={{ marginBottom: '2px' }}>
+          {optionalDataControl}
+        </span>
+      )}
     </legend>
   );
 }

@@ -15,9 +15,11 @@ import enumOptionsSelectValue from './enumOptionsSelectValue';
 import enumOptionsValueForIndex from './enumOptionsValueForIndex';
 import ErrorSchemaBuilder from './ErrorSchemaBuilder';
 import findSchemaDefinition from './findSchemaDefinition';
+import getChangedFields from './getChangedFields';
 import getDateElementProps, { type DateElementFormat } from './getDateElementProps';
 import getDiscriminatorFieldFromSchema from './getDiscriminatorFieldFromSchema';
 import getInputProps from './getInputProps';
+import getOptionMatchingSimpleDiscriminator from './getOptionMatchingSimpleDiscriminator';
 import getSchemaType from './getSchemaType';
 import getSubmitButtonOptions from './getSubmitButtonOptions';
 import getTemplate from './getTemplate';
@@ -40,7 +42,9 @@ import {
 import isConstant from './isConstant';
 import isCustomWidget from './isCustomWidget';
 import isFixedItems from './isFixedItems';
+import isFormDataAvailable from './isFormDataAvailable';
 import isObject from './isObject';
+import isRootSchema from './isRootSchema';
 import labelValue from './labelValue';
 import localToUTC from './localToUTC';
 import lookupFromFormContext from './lookupFromFormContext';
@@ -55,6 +59,7 @@ import rangeSpec from './rangeSpec';
 import replaceStringParameters from './replaceStringParameters';
 import schemaRequiresTrueValue from './schemaRequiresTrueValue';
 import shouldRender from './shouldRender';
+import shouldRenderOptionalField from './shouldRenderOptionalField';
 import toConstant from './toConstant';
 import toDateString from './toDateString';
 import toErrorList from './toErrorList';
@@ -64,8 +69,6 @@ import unwrapErrorHandler from './unwrapErrorHandler';
 import utcToLocal from './utcToLocal';
 import validationDataMerge from './validationDataMerge';
 import withIdRefPrefix from './withIdRefPrefix';
-import getOptionMatchingSimpleDiscriminator from './getOptionMatchingSimpleDiscriminator';
-import getChangedFields from './getChangedFields';
 
 export * from './types';
 export * from './enums';
@@ -117,7 +120,9 @@ export {
   isConstant,
   isCustomWidget,
   isFixedItems,
+  isFormDataAvailable,
   isObject,
+  isRootSchema,
   labelValue,
   localToUTC,
   lookupFromFormContext,
@@ -134,6 +139,7 @@ export {
   schemaRequiresTrueValue,
   shallowEquals,
   shouldRender,
+  shouldRenderOptionalField,
   sortedJSONStringify,
   titleId,
   toConstant,

@@ -596,7 +596,6 @@ exports[`single fields field with description 1`] = `
           <div
             className="w-full"
           >
-             
             <div
               className="rjsf-field rjsf-field-string"
             >
@@ -683,7 +682,6 @@ exports[`single fields field with description in uiSchema 1`] = `
           <div
             className="w-full"
           >
-             
             <div
               className="rjsf-field rjsf-field-string"
             >
@@ -770,7 +768,6 @@ exports[`single fields field with markdown description 1`] = `
           <div
             className="w-full"
           >
-             
             <div
               className="rjsf-field rjsf-field-string"
             >
@@ -863,7 +860,6 @@ exports[`single fields field with markdown description in uiSchema 1`] = `
           <div
             className="w-full"
           >
-             
             <div
               className="rjsf-field rjsf-field-string"
             >
@@ -1275,7 +1271,6 @@ exports[`single fields hidden field 1`] = `
           <div
             className="w-full"
           >
-             
             <div
               className="hidden"
             >
@@ -3628,7 +3623,6 @@ exports[`single fields title field 1`] = `
           <div
             className="w-full"
           >
-             
             <div
               className="rjsf-field rjsf-field-string"
             >

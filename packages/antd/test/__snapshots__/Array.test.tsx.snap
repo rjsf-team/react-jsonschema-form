@@ -87,7 +87,11 @@ exports[`array fields array 1`] = `
                           disabled={false}
                           id="root__add"
                           onClick={[Function]}
-                          style={{}}
+                          style={
+                            {
+                              "paddingTop": "4px",
+                            }
+                          }
                           title="Add Item"
                           type="button"
                         >
@@ -301,7 +305,11 @@ exports[`array fields array icons 1`] = `
                             disabled={true}
                             id="root_0__moveUp"
                             onClick={[Function]}
-                            style={{}}
+                            style={
+                              {
+                                "paddingTop": "4px",
+                              }
+                            }
                             title="Move up"
                             type="button"
                           >
@@ -335,7 +343,11 @@ exports[`array fields array icons 1`] = `
                             disabled={false}
                             id="root_0__moveDown"
                             onClick={[Function]}
-                            style={{}}
+                            style={
+                              {
+                                "paddingTop": "4px",
+                              }
+                            }
                             title="Move down"
                             type="button"
                           >
@@ -369,7 +381,11 @@ exports[`array fields array icons 1`] = `
                             disabled={false}
                             id="root_0__copy"
                             onClick={[Function]}
-                            style={{}}
+                            style={
+                              {
+                                "paddingTop": "4px",
+                              }
+                            }
                             title="Copy"
                             type="button"
                           >
@@ -403,7 +419,11 @@ exports[`array fields array icons 1`] = `
                             disabled={false}
                             id="root_0__remove"
                             onClick={[Function]}
-                            style={{}}
+                            style={
+                              {
+                                "paddingTop": "4px",
+                              }
+                            }
                             title="Remove"
                             type="button"
                           >
@@ -539,7 +559,11 @@ exports[`array fields array icons 1`] = `
                             disabled={false}
                             id="root_1__moveUp"
                             onClick={[Function]}
-                            style={{}}
+                            style={
+                              {
+                                "paddingTop": "4px",
+                              }
+                            }
                             title="Move up"
                             type="button"
                           >
@@ -573,7 +597,11 @@ exports[`array fields array icons 1`] = `
                             disabled={true}
                             id="root_1__moveDown"
                             onClick={[Function]}
-                            style={{}}
+                            style={
+                              {
+                                "paddingTop": "4px",
+                              }
+                            }
                             title="Move down"
                             type="button"
                           >
@@ -607,7 +635,11 @@ exports[`array fields array icons 1`] = `
                             disabled={false}
                             id="root_1__copy"
                             onClick={[Function]}
-                            style={{}}
+                            style={
+                              {
+                                "paddingTop": "4px",
+                              }
+                            }
                             title="Copy"
                             type="button"
                           >
@@ -641,7 +673,11 @@ exports[`array fields array icons 1`] = `
                             disabled={false}
                             id="root_1__remove"
                             onClick={[Function]}
-                            style={{}}
+                            style={
+                              {
+                                "paddingTop": "4px",
+                              }
+                            }
                             title="Remove"
                             type="button"
                           >
@@ -708,7 +744,11 @@ exports[`array fields array icons 1`] = `
                           disabled={false}
                           id="root__add"
                           onClick={[Function]}
-                          style={{}}
+                          style={
+                            {
+                              "paddingTop": "4px",
+                            }
+                          }
                           title="Add Item"
                           type="button"
                         >
@@ -1860,6 +1900,15 @@ exports[`with title and description array 1`] = `
                     >
                       Test field
                     </label>
+                    <div
+                      className="ant-divider css-dev-only-do-not-override-xepvsj ant-divider-horizontal ant-divider-sm"
+                      role="separator"
+                      style={
+                        {
+                          "marginBlock": "1px",
+                        }
+                      }
+                    />
                   </div>
                   <div
                     className="ant-col ant-col-24 css-dev-only-do-not-override-xepvsj"
@@ -1920,7 +1969,11 @@ exports[`with title and description array 1`] = `
                           disabled={false}
                           id="root__add"
                           onClick={[Function]}
-                          style={{}}
+                          style={
+                            {
+                              "paddingTop": "4px",
+                            }
+                          }
                           title="Add Item"
                           type="button"
                         >
@@ -2052,6 +2105,15 @@ exports[`with title and description array icons 1`] = `
                     >
                       Test field
                     </label>
+                    <div
+                      className="ant-divider css-dev-only-do-not-override-xepvsj ant-divider-horizontal ant-divider-sm"
+                      role="separator"
+                      style={
+                        {
+                          "marginBlock": "1px",
+                        }
+                      }
+                    />
                   </div>
                   <div
                     className="ant-col ant-col-24 css-dev-only-do-not-override-xepvsj"
@@ -2208,7 +2270,11 @@ exports[`with title and description array icons 1`] = `
                             disabled={true}
                             id="root_0__moveUp"
                             onClick={[Function]}
-                            style={{}}
+                            style={
+                              {
+                                "paddingTop": "4px",
+                              }
+                            }
                             title="Move up"
                             type="button"
                           >
@@ -2242,7 +2308,11 @@ exports[`with title and description array icons 1`] = `
                             disabled={false}
                             id="root_0__moveDown"
                             onClick={[Function]}
-                            style={{}}
+                            style={
+                              {
+                                "paddingTop": "4px",
+                              }
+                            }
                             title="Move down"
                             type="button"
                           >
@@ -2276,7 +2346,11 @@ exports[`with title and description array icons 1`] = `
                             disabled={false}
                             id="root_0__copy"
                             onClick={[Function]}
-                            style={{}}
+                            style={
+                              {
+                                "paddingTop": "4px",
+                              }
+                            }
                             title="Copy"
                             type="button"
                           >
@@ -2310,7 +2384,11 @@ exports[`with title and description array icons 1`] = `
                             disabled={false}
                             id="root_0__remove"
                             onClick={[Function]}
-                            style={{}}
+                            style={
+                              {
+                                "paddingTop": "4px",
+                              }
+                            }
                             title="Remove"
                             type="button"
                           >
@@ -2472,7 +2550,11 @@ exports[`with title and description array icons 1`] = `
                             disabled={false}
                             id="root_1__moveUp"
                             onClick={[Function]}
-                            style={{}}
+                            style={
+                              {
+                                "paddingTop": "4px",
+                              }
+                            }
                             title="Move up"
                             type="button"
                           >
@@ -2506,7 +2588,11 @@ exports[`with title and description array icons 1`] = `
                             disabled={true}
                             id="root_1__moveDown"
                             onClick={[Function]}
-                            style={{}}
+                            style={
+                              {
+                                "paddingTop": "4px",
+                              }
+                            }
                             title="Move down"
                             type="button"
                           >
@@ -2540,7 +2626,11 @@ exports[`with title and description array icons 1`] = `
                             disabled={false}
                             id="root_1__copy"
                             onClick={[Function]}
-                            style={{}}
+                            style={
+                              {
+                                "paddingTop": "4px",
+                              }
+                            }
                             title="Copy"
                             type="button"
                           >
@@ -2574,7 +2664,11 @@ exports[`with title and description array icons 1`] = `
                             disabled={false}
                             id="root_1__remove"
                             onClick={[Function]}
-                            style={{}}
+                            style={
+                              {
+                                "paddingTop": "4px",
+                              }
+                            }
                             title="Remove"
                             type="button"
                           >
@@ -2641,7 +2735,11 @@ exports[`with title and description array icons 1`] = `
                           disabled={false}
                           id="root__add"
                           onClick={[Function]}
-                          style={{}}
+                          style={
+                            {
+                              "paddingTop": "4px",
+                            }
+                          }
                           title="Add Item"
                           type="button"
                         >
@@ -2975,6 +3073,15 @@ exports[`with title and description fixed array 1`] = `
                     >
                       Test field
                     </label>
+                    <div
+                      className="ant-divider css-dev-only-do-not-override-xepvsj ant-divider-horizontal ant-divider-sm"
+                      role="separator"
+                      style={
+                        {
+                          "marginBlock": "1px",
+                        }
+                      }
+                    />
                   </div>
                   <div
                     className="ant-col ant-col-24 css-dev-only-do-not-override-xepvsj"
@@ -3394,6 +3501,15 @@ exports[`with title and description from both array 1`] = `
                     >
                       My Field
                     </label>
+                    <div
+                      className="ant-divider css-dev-only-do-not-override-xepvsj ant-divider-horizontal ant-divider-sm"
+                      role="separator"
+                      style={
+                        {
+                          "marginBlock": "1px",
+                        }
+                      }
+                    />
                   </div>
                   <div
                     className="ant-col ant-col-24 css-dev-only-do-not-override-xepvsj"
@@ -3454,7 +3570,11 @@ exports[`with title and description from both array 1`] = `
                           disabled={false}
                           id="root__add"
                           onClick={[Function]}
-                          style={{}}
+                          style={
+                            {
+                              "paddingTop": "4px",
+                            }
+                          }
                           title="Add Item"
                           type="button"
                         >
@@ -3586,6 +3706,15 @@ exports[`with title and description from both array icons 1`] = `
                     >
                       My Field
                     </label>
+                    <div
+                      className="ant-divider css-dev-only-do-not-override-xepvsj ant-divider-horizontal ant-divider-sm"
+                      role="separator"
+                      style={
+                        {
+                          "marginBlock": "1px",
+                        }
+                      }
+                    />
                   </div>
                   <div
                     className="ant-col ant-col-24 css-dev-only-do-not-override-xepvsj"
@@ -3742,7 +3871,11 @@ exports[`with title and description from both array icons 1`] = `
                             disabled={true}
                             id="root_0__moveUp"
                             onClick={[Function]}
-                            style={{}}
+                            style={
+                              {
+                                "paddingTop": "4px",
+                              }
+                            }
                             title="Move up"
                             type="button"
                           >
@@ -3776,7 +3909,11 @@ exports[`with title and description from both array icons 1`] = `
                             disabled={false}
                             id="root_0__moveDown"
                             onClick={[Function]}
-                            style={{}}
+                            style={
+                              {
+                                "paddingTop": "4px",
+                              }
+                            }
                             title="Move down"
                             type="button"
                           >
@@ -3810,7 +3947,11 @@ exports[`with title and description from both array icons 1`] = `
                             disabled={false}
                             id="root_0__copy"
                             onClick={[Function]}
-                            style={{}}
+                            style={
+                              {
+                                "paddingTop": "4px",
+                              }
+                            }
                             title="Copy"
                             type="button"
                           >
@@ -3844,7 +3985,11 @@ exports[`with title and description from both array icons 1`] = `
                             disabled={false}
                             id="root_0__remove"
                             onClick={[Function]}
-                            style={{}}
+                            style={
+                              {
+                                "paddingTop": "4px",
+                              }
+                            }
                             title="Remove"
                             type="button"
                           >
@@ -4006,7 +4151,11 @@ exports[`with title and description from both array icons 1`] = `
                             disabled={false}
                             id="root_1__moveUp"
                             onClick={[Function]}
-                            style={{}}
+                            style={
+                              {
+                                "paddingTop": "4px",
+                              }
+                            }
                             title="Move up"
                             type="button"
                           >
@@ -4040,7 +4189,11 @@ exports[`with title and description from both array icons 1`] = `
                             disabled={true}
                             id="root_1__moveDown"
                             onClick={[Function]}
-                            style={{}}
+                            style={
+                              {
+                                "paddingTop": "4px",
+                              }
+                            }
                             title="Move down"
                             type="button"
                           >
@@ -4074,7 +4227,11 @@ exports[`with title and description from both array icons 1`] = `
                             disabled={false}
                             id="root_1__copy"
                             onClick={[Function]}
-                            style={{}}
+                            style={
+                              {
+                                "paddingTop": "4px",
+                              }
+                            }
                             title="Copy"
                             type="button"
                           >
@@ -4108,7 +4265,11 @@ exports[`with title and description from both array icons 1`] = `
                             disabled={false}
                             id="root_1__remove"
                             onClick={[Function]}
-                            style={{}}
+                            style={
+                              {
+                                "paddingTop": "4px",
+                              }
+                            }
                             title="Remove"
                             type="button"
                           >
@@ -4175,7 +4336,11 @@ exports[`with title and description from both array icons 1`] = `
                           disabled={false}
                           id="root__add"
                           onClick={[Function]}
-                          style={{}}
+                          style={
+                            {
+                              "paddingTop": "4px",
+                            }
+                          }
                           title="Add Item"
                           type="button"
                         >
@@ -4509,6 +4674,15 @@ exports[`with title and description from both fixed array 1`] = `
                     >
                       My Field
                     </label>
+                    <div
+                      className="ant-divider css-dev-only-do-not-override-xepvsj ant-divider-horizontal ant-divider-sm"
+                      role="separator"
+                      style={
+                        {
+                          "marginBlock": "1px",
+                        }
+                      }
+                    />
                   </div>
                   <div
                     className="ant-col ant-col-24 css-dev-only-do-not-override-xepvsj"
@@ -4928,6 +5102,15 @@ exports[`with title and description from uiSchema array 1`] = `
                     >
                       My Field
                     </label>
+                    <div
+                      className="ant-divider css-dev-only-do-not-override-xepvsj ant-divider-horizontal ant-divider-sm"
+                      role="separator"
+                      style={
+                        {
+                          "marginBlock": "1px",
+                        }
+                      }
+                    />
                   </div>
                   <div
                     className="ant-col ant-col-24 css-dev-only-do-not-override-xepvsj"
@@ -4988,7 +5171,11 @@ exports[`with title and description from uiSchema array 1`] = `
                           disabled={false}
                           id="root__add"
                           onClick={[Function]}
-                          style={{}}
+                          style={
+                            {
+                              "paddingTop": "4px",
+                            }
+                          }
                           title="Add Item"
                           type="button"
                         >
@@ -5120,6 +5307,15 @@ exports[`with title and description from uiSchema array icons 1`] = `
                     >
                       My Field
                     </label>
+                    <div
+                      className="ant-divider css-dev-only-do-not-override-xepvsj ant-divider-horizontal ant-divider-sm"
+                      role="separator"
+                      style={
+                        {
+                          "marginBlock": "1px",
+                        }
+                      }
+                    />
                   </div>
                   <div
                     className="ant-col ant-col-24 css-dev-only-do-not-override-xepvsj"
@@ -5276,7 +5472,11 @@ exports[`with title and description from uiSchema array icons 1`] = `
                             disabled={true}
                             id="root_0__moveUp"
                             onClick={[Function]}
-                            style={{}}
+                            style={
+                              {
+                                "paddingTop": "4px",
+                              }
+                            }
                             title="Move up"
                             type="button"
                           >
@@ -5310,7 +5510,11 @@ exports[`with title and description from uiSchema array icons 1`] = `
                             disabled={false}
                             id="root_0__moveDown"
                             onClick={[Function]}
-                            style={{}}
+                            style={
+                              {
+                                "paddingTop": "4px",
+                              }
+                            }
                             title="Move down"
                             type="button"
                           >
@@ -5344,7 +5548,11 @@ exports[`with title and description from uiSchema array icons 1`] = `
                             disabled={false}
                             id="root_0__copy"
                             onClick={[Function]}
-                            style={{}}
+                            style={
+                              {
+                                "paddingTop": "4px",
+                              }
+                            }
                             title="Copy"
                             type="button"
                           >
@@ -5378,7 +5586,11 @@ exports[`with title and description from uiSchema array icons 1`] = `
                             disabled={false}
                             id="root_0__remove"
                             onClick={[Function]}
-                            style={{}}
+                            style={
+                              {
+                                "paddingTop": "4px",
+                              }
+                            }
                             title="Remove"
                             type="button"
                           >
@@ -5540,7 +5752,11 @@ exports[`with title and description from uiSchema array icons 1`] = `
                             disabled={false}
                             id="root_1__moveUp"
                             onClick={[Function]}
-                            style={{}}
+                            style={
+                              {
+                                "paddingTop": "4px",
+                              }
+                            }
                             title="Move up"
                             type="button"
                           >
@@ -5574,7 +5790,11 @@ exports[`with title and description from uiSchema array icons 1`] = `
                             disabled={true}
                             id="root_1__moveDown"
                             onClick={[Function]}
-                            style={{}}
+                            style={
+                              {
+                                "paddingTop": "4px",
+                              }
+                            }
                             title="Move down"
                             type="button"
                           >
@@ -5608,7 +5828,11 @@ exports[`with title and description from uiSchema array icons 1`] = `
                             disabled={false}
                             id="root_1__copy"
                             onClick={[Function]}
-                            style={{}}
+                            style={
+                              {
+                                "paddingTop": "4px",
+                              }
+                            }
                             title="Copy"
                             type="button"
                           >
@@ -5642,7 +5866,11 @@ exports[`with title and description from uiSchema array icons 1`] = `
                             disabled={false}
                             id="root_1__remove"
                             onClick={[Function]}
-                            style={{}}
+                            style={
+                              {
+                                "paddingTop": "4px",
+                              }
+                            }
                             title="Remove"
                             type="button"
                           >
@@ -5709,7 +5937,11 @@ exports[`with title and description from uiSchema array icons 1`] = `
                           disabled={false}
                           id="root__add"
                           onClick={[Function]}
-                          style={{}}
+                          style={
+                            {
+                              "paddingTop": "4px",
+                            }
+                          }
                           title="Add Item"
                           type="button"
                         >
@@ -6043,6 +6275,15 @@ exports[`with title and description from uiSchema fixed array 1`] = `
                     >
                       My Field
                     </label>
+                    <div
+                      className="ant-divider css-dev-only-do-not-override-xepvsj ant-divider-horizontal ant-divider-sm"
+                      role="separator"
+                      style={
+                        {
+                          "marginBlock": "1px",
+                        }
+                      }
+                    />
                   </div>
                   <div
                     className="ant-col ant-col-24 css-dev-only-do-not-override-xepvsj"
@@ -6507,7 +6748,11 @@ exports[`with title and description with global label off array 1`] = `
                           disabled={false}
                           id="root__add"
                           onClick={[Function]}
-                          style={{}}
+                          style={
+                            {
+                              "paddingTop": "4px",
+                            }
+                          }
                           title="Add Item"
                           type="button"
                         >
@@ -6768,7 +7013,11 @@ exports[`with title and description with global label off array icons 1`] = `
                             disabled={true}
                             id="root_0__moveUp"
                             onClick={[Function]}
-                            style={{}}
+                            style={
+                              {
+                                "paddingTop": "4px",
+                              }
+                            }
                             title="Move up"
                             type="button"
                           >
@@ -6802,7 +7051,11 @@ exports[`with title and description with global label off array icons 1`] = `
                             disabled={false}
                             id="root_0__moveDown"
                             onClick={[Function]}
-                            style={{}}
+                            style={
+                              {
+                                "paddingTop": "4px",
+                              }
+                            }
                             title="Move down"
                             type="button"
                           >
@@ -6836,7 +7089,11 @@ exports[`with title and description with global label off array icons 1`] = `
                             disabled={false}
                             id="root_0__copy"
                             onClick={[Function]}
-                            style={{}}
+                            style={
+                              {
+                                "paddingTop": "4px",
+                              }
+                            }
                             title="Copy"
                             type="button"
                           >
@@ -6870,7 +7127,11 @@ exports[`with title and description with global label off array icons 1`] = `
                             disabled={false}
                             id="root_0__remove"
                             onClick={[Function]}
-                            style={{}}
+                            style={
+                              {
+                                "paddingTop": "4px",
+                              }
+                            }
                             title="Remove"
                             type="button"
                           >
@@ -7020,7 +7281,11 @@ exports[`with title and description with global label off array icons 1`] = `
                             disabled={false}
                             id="root_1__moveUp"
                             onClick={[Function]}
-                            style={{}}
+                            style={
+                              {
+                                "paddingTop": "4px",
+                              }
+                            }
                             title="Move up"
                             type="button"
                           >
@@ -7054,7 +7319,11 @@ exports[`with title and description with global label off array icons 1`] = `
                             disabled={true}
                             id="root_1__moveDown"
                             onClick={[Function]}
-                            style={{}}
+                            style={
+                              {
+                                "paddingTop": "4px",
+                              }
+                            }
                             title="Move down"
                             type="button"
                           >
@@ -7088,7 +7357,11 @@ exports[`with title and description with global label off array icons 1`] = `
                             disabled={false}
                             id="root_1__copy"
                             onClick={[Function]}
-                            style={{}}
+                            style={
+                              {
+                                "paddingTop": "4px",
+                              }
+                            }
                             title="Copy"
                             type="button"
                           >
@@ -7122,7 +7395,11 @@ exports[`with title and description with global label off array icons 1`] = `
                             disabled={false}
                             id="root_1__remove"
                             onClick={[Function]}
-                            style={{}}
+                            style={
+                              {
+                                "paddingTop": "4px",
+                              }
+                            }
                             title="Remove"
                             type="button"
                           >
@@ -7189,7 +7466,11 @@ exports[`with title and description with global label off array icons 1`] = `
                           disabled={false}
                           id="root__add"
                           onClick={[Function]}
-                          style={{}}
+                          style={
+                            {
+                              "paddingTop": "4px",
+                            }
+                          }
                           title="Add Item"
                           type="button"
                         >

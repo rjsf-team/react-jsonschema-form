@@ -240,7 +240,11 @@ exports[`object fields additionalProperties 1`] = `
                             disabled={false}
                             id="root_foo__remove"
                             onClick={[Function]}
-                            style={{}}
+                            style={
+                              {
+                                "paddingTop": "4px",
+                              }
+                            }
                             title="Remove"
                             type="button"
                           >
@@ -303,7 +307,11 @@ exports[`object fields additionalProperties 1`] = `
                         disabled={false}
                         id="root__add"
                         onClick={[Function]}
-                        style={{}}
+                        style={
+                          {
+                            "paddingTop": "4px",
+                          }
+                        }
                         title="Add Item"
                         type="button"
                       >
@@ -907,7 +915,11 @@ exports[`object fields show add button and fields if additionalProperties is tru
                             disabled={false}
                             id="root_additionalProperty__remove"
                             onClick={[Function]}
-                            style={{}}
+                            style={
+                              {
+                                "paddingTop": "4px",
+                              }
+                            }
                             title="Remove"
                             type="button"
                           >
@@ -970,7 +982,11 @@ exports[`object fields show add button and fields if additionalProperties is tru
                         disabled={false}
                         id="root__add"
                         onClick={[Function]}
-                        style={{}}
+                        style={
+                          {
+                            "paddingTop": "4px",
+                          }
+                        }
                         title="Add Item"
                         type="button"
                       >
@@ -1086,6 +1102,15 @@ exports[`object fields with title and description additionalProperties 1`] = `
                     >
                       Test field
                     </label>
+                    <div
+                      className="ant-divider css-dev-only-do-not-override-xepvsj ant-divider-horizontal ant-divider-sm"
+                      role="separator"
+                      style={
+                        {
+                          "marginBlock": "1px",
+                        }
+                      }
+                    />
                   </div>
                   <div
                     className="ant-col ant-col-24 css-dev-only-do-not-override-xepvsj"
@@ -1300,7 +1325,11 @@ exports[`object fields with title and description additionalProperties 1`] = `
                             disabled={false}
                             id="root_foo__remove"
                             onClick={[Function]}
-                            style={{}}
+                            style={
+                              {
+                                "paddingTop": "4px",
+                              }
+                            }
                             title="Remove"
                             type="button"
                           >
@@ -1363,7 +1392,11 @@ exports[`object fields with title and description additionalProperties 1`] = `
                         disabled={false}
                         id="root__add"
                         onClick={[Function]}
-                        style={{}}
+                        style={
+                          {
+                            "paddingTop": "4px",
+                          }
+                        }
                         title="Add Item"
                         type="button"
                       >
@@ -1493,6 +1526,15 @@ exports[`object fields with title and description from both additionalProperties
                     >
                       My Field
                     </label>
+                    <div
+                      className="ant-divider css-dev-only-do-not-override-xepvsj ant-divider-horizontal ant-divider-sm"
+                      role="separator"
+                      style={
+                        {
+                          "marginBlock": "1px",
+                        }
+                      }
+                    />
                   </div>
                   <div
                     className="ant-col ant-col-24 css-dev-only-do-not-override-xepvsj"
@@ -1707,7 +1749,11 @@ exports[`object fields with title and description from both additionalProperties
                             disabled={false}
                             id="root_foo__remove"
                             onClick={[Function]}
-                            style={{}}
+                            style={
+                              {
+                                "paddingTop": "4px",
+                              }
+                            }
                             title="Remove"
                             type="button"
                           >
@@ -1770,7 +1816,11 @@ exports[`object fields with title and description from both additionalProperties
                         disabled={false}
                         id="root__add"
                         onClick={[Function]}
-                        style={{}}
+                        style={
+                          {
+                            "paddingTop": "4px",
+                          }
+                        }
                         title="Add Item"
                         type="button"
                       >
@@ -1900,6 +1950,15 @@ exports[`object fields with title and description from both object 1`] = `
                     >
                       My Field
                     </label>
+                    <div
+                      className="ant-divider css-dev-only-do-not-override-xepvsj ant-divider-horizontal ant-divider-sm"
+                      role="separator"
+                      style={
+                        {
+                          "marginBlock": "1px",
+                        }
+                      }
+                    />
                   </div>
                   <div
                     className="ant-col ant-col-24 css-dev-only-do-not-override-xepvsj"
@@ -2284,6 +2343,15 @@ exports[`object fields with title and description from uiSchema additionalProper
                     >
                       My Field
                     </label>
+                    <div
+                      className="ant-divider css-dev-only-do-not-override-xepvsj ant-divider-horizontal ant-divider-sm"
+                      role="separator"
+                      style={
+                        {
+                          "marginBlock": "1px",
+                        }
+                      }
+                    />
                   </div>
                   <div
                     className="ant-col ant-col-24 css-dev-only-do-not-override-xepvsj"
@@ -2498,7 +2566,11 @@ exports[`object fields with title and description from uiSchema additionalProper
                             disabled={false}
                             id="root_foo__remove"
                             onClick={[Function]}
-                            style={{}}
+                            style={
+                              {
+                                "paddingTop": "4px",
+                              }
+                            }
                             title="Remove"
                             type="button"
                           >
@@ -2561,7 +2633,11 @@ exports[`object fields with title and description from uiSchema additionalProper
                         disabled={false}
                         id="root__add"
                         onClick={[Function]}
-                        style={{}}
+                        style={
+                          {
+                            "paddingTop": "4px",
+                          }
+                        }
                         title="Add Item"
                         type="button"
                       >
@@ -2691,6 +2767,15 @@ exports[`object fields with title and description from uiSchema object 1`] = `
                     >
                       My Field
                     </label>
+                    <div
+                      className="ant-divider css-dev-only-do-not-override-xepvsj ant-divider-horizontal ant-divider-sm"
+                      role="separator"
+                      style={
+                        {
+                          "marginBlock": "1px",
+                        }
+                      }
+                    />
                   </div>
                   <div
                     className="ant-col ant-col-24 css-dev-only-do-not-override-xepvsj"
@@ -3075,6 +3160,15 @@ exports[`object fields with title and description from uiSchema show add button 
                     >
                       My Field
                     </label>
+                    <div
+                      className="ant-divider css-dev-only-do-not-override-xepvsj ant-divider-horizontal ant-divider-sm"
+                      role="separator"
+                      style={
+                        {
+                          "marginBlock": "1px",
+                        }
+                      }
+                    />
                   </div>
                   <div
                     className="ant-col ant-col-24 css-dev-only-do-not-override-xepvsj"
@@ -3289,7 +3383,11 @@ exports[`object fields with title and description from uiSchema show add button 
                             disabled={false}
                             id="root_additionalProperty__remove"
                             onClick={[Function]}
-                            style={{}}
+                            style={
+                              {
+                                "paddingTop": "4px",
+                              }
+                            }
                             title="Remove"
                             type="button"
                           >
@@ -3352,7 +3450,11 @@ exports[`object fields with title and description from uiSchema show add button 
                         disabled={false}
                         id="root__add"
                         onClick={[Function]}
-                        style={{}}
+                        style={
+                          {
+                            "paddingTop": "4px",
+                          }
+                        }
                         title="Add Item"
                         type="button"
                       >
@@ -3482,6 +3584,15 @@ exports[`object fields with title and description object 1`] = `
                     >
                       Test field
                     </label>
+                    <div
+                      className="ant-divider css-dev-only-do-not-override-xepvsj ant-divider-horizontal ant-divider-sm"
+                      role="separator"
+                      style={
+                        {
+                          "marginBlock": "1px",
+                        }
+                      }
+                    />
                   </div>
                   <div
                     className="ant-col ant-col-24 css-dev-only-do-not-override-xepvsj"
@@ -3866,6 +3977,15 @@ exports[`object fields with title and description show add button and fields if 
                     >
                       Test field
                     </label>
+                    <div
+                      className="ant-divider css-dev-only-do-not-override-xepvsj ant-divider-horizontal ant-divider-sm"
+                      role="separator"
+                      style={
+                        {
+                          "marginBlock": "1px",
+                        }
+                      }
+                    />
                   </div>
                   <div
                     className="ant-col ant-col-24 css-dev-only-do-not-override-xepvsj"
@@ -4080,7 +4200,11 @@ exports[`object fields with title and description show add button and fields if 
                             disabled={false}
                             id="root_additionalProperty__remove"
                             onClick={[Function]}
-                            style={{}}
+                            style={
+                              {
+                                "paddingTop": "4px",
+                              }
+                            }
                             title="Remove"
                             type="button"
                           >
@@ -4143,7 +4267,11 @@ exports[`object fields with title and description show add button and fields if 
                         disabled={false}
                         id="root__add"
                         onClick={[Function]}
-                        style={{}}
+                        style={
+                          {
+                            "paddingTop": "4px",
+                          }
+                        }
                         title="Add Item"
                         type="button"
                       >
@@ -4441,7 +4569,11 @@ exports[`object fields with title and description with global label off addition
                             disabled={false}
                             id="root_foo__remove"
                             onClick={[Function]}
-                            style={{}}
+                            style={
+                              {
+                                "paddingTop": "4px",
+                              }
+                            }
                             title="Remove"
                             type="button"
                           >
@@ -4504,7 +4636,11 @@ exports[`object fields with title and description with global label off addition
                         disabled={false}
                         id="root__add"
                         onClick={[Function]}
-                        style={{}}
+                        style={
+                          {
+                            "paddingTop": "4px",
+                          }
+                        }
                         title="Add Item"
                         type="button"
                       >
@@ -5128,7 +5264,11 @@ exports[`object fields with title and description with global label off show add
                             disabled={false}
                             id="root_additionalProperty__remove"
                             onClick={[Function]}
-                            style={{}}
+                            style={
+                              {
+                                "paddingTop": "4px",
+                              }
+                            }
                             title="Remove"
                             type="button"
                           >
@@ -5191,7 +5331,11 @@ exports[`object fields with title and description with global label off show add
                         disabled={false}
                         id="root__add"
                         onClick={[Function]}
-                        style={{}}
+                        style={
+                          {
+                            "paddingTop": "4px",
+                          }
+                        }
                         title="Add Item"
                         type="button"
                       >

@@ -1242,7 +1242,7 @@ exports[`with title and description array 1`] = `
             Test field
           </h2>
           <div
-            className="divider divider-primary"
+            className="divider divider-primary my-0"
           />
         </div>
         <div
@@ -1356,7 +1356,7 @@ exports[`with title and description array icons 1`] = `
             Test field
           </h2>
           <div
-            className="divider divider-primary"
+            className="divider divider-primary my-0"
           />
         </div>
         <div
@@ -1955,7 +1955,7 @@ exports[`with title and description fixed array 1`] = `
             Test field
           </h2>
           <div
-            className="divider divider-primary"
+            className="divider divider-primary my-0"
           />
         </div>
         <div
@@ -2178,7 +2178,7 @@ exports[`with title and description from both array 1`] = `
             My Field
           </h2>
           <div
-            className="divider divider-primary"
+            className="divider divider-primary my-0"
           />
         </div>
         <div
@@ -2292,7 +2292,7 @@ exports[`with title and description from both array icons 1`] = `
             My Field
           </h2>
           <div
-            className="divider divider-primary"
+            className="divider divider-primary my-0"
           />
         </div>
         <div
@@ -2891,7 +2891,7 @@ exports[`with title and description from both fixed array 1`] = `
             My Field
           </h2>
           <div
-            className="divider divider-primary"
+            className="divider divider-primary my-0"
           />
         </div>
         <div
@@ -3114,7 +3114,7 @@ exports[`with title and description from uiSchema array 1`] = `
             My Field
           </h2>
           <div
-            className="divider divider-primary"
+            className="divider divider-primary my-0"
           />
         </div>
         <div
@@ -3228,7 +3228,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
             My Field
           </h2>
           <div
-            className="divider divider-primary"
+            className="divider divider-primary my-0"
           />
         </div>
         <div
@@ -3827,7 +3827,7 @@ exports[`with title and description from uiSchema fixed array 1`] = `
             My Field
           </h2>
           <div
-            className="divider divider-primary"
+            className="divider divider-primary my-0"
           />
         </div>
         <div

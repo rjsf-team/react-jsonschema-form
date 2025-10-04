@@ -2508,7 +2508,7 @@ exports[`single fields title field 1`] = `
           Titre 1
         </h5>
         <hr
-          className="border-0 bg-secondary"
+          className="border-0 bg-secondary mt-0"
           style={
             {
               "height": "1px",

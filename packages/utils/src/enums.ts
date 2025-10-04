@@ -45,6 +45,12 @@ export enum TranslatableString {
   DecrementAriaLabel = 'Decrease value by 1',
   /** Increment button aria label, used by UpDownWidget */
   IncrementAriaLabel = 'Increase value by 1',
+  /** The label for the Add button in for an optional object field */
+  OptionalObjectAdd = 'Add data for optional field',
+  /** The label for the Remove button in for an optional object field */
+  OptionalObjectRemove = 'Remove data for optional field',
+  /** The label for when displaying a non-editable form with missing optional field data */
+  OptionalObjectEmptyMsg = 'No data for optional field',
   // Strings with replaceable parameters
   /** Unknown field type reason, where %1 will be replaced with the type as provided by SchemaField */
   UnknownFieldType = 'Unknown field type %1',

@@ -1250,6 +1250,7 @@ describe('ArrayField', () => {
             },
           },
         },
+        required: ['multipleChoicesList'],
       };
       const uiSchema = {
         multipleChoicesList: {

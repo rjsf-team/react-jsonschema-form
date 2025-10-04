@@ -5,8 +5,14 @@ import { IoIosRemove } from '@react-icons/all-files/io/IoIosRemove';
 import { AiOutlineArrowUp } from '@react-icons/all-files/ai/AiOutlineArrowUp';
 import { AiOutlineArrowDown } from '@react-icons/all-files/ai/AiOutlineArrowDown';
 
+export type BootstrapIconButtonProps<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any,
+> = IconButtonProps<T, S, F> & ButtonProps;
+
 export default function IconButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: IconButtonProps<T, S, F> & ButtonProps,
+  props: BootstrapIconButtonProps<T, S, F>,
 ) {
   const { icon, iconType, className, uiSchema, registry, ...otherProps } = props;
   return (
@@ -17,7 +23,7 @@ export default function IconButton<T = any, S extends StrictRJSFSchema = RJSFSch
 }
 
 export function CopyButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: IconButtonProps<T, S, F>,
+  props: BootstrapIconButtonProps<T, S, F>,
 ) {
   const {
     registry: { translateString },
@@ -26,7 +32,7 @@ export function CopyButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
 }
 
 export function MoveDownButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: IconButtonProps<T, S, F>,
+  props: BootstrapIconButtonProps<T, S, F>,
 ) {
   const {
     registry: { translateString },
@@ -37,7 +43,7 @@ export function MoveDownButton<T = any, S extends StrictRJSFSchema = RJSFSchema,
 }
 
 export function MoveUpButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: IconButtonProps<T, S, F>,
+  props: BootstrapIconButtonProps<T, S, F>,
 ) {
   const {
     registry: { translateString },
@@ -46,7 +52,7 @@ export function MoveUpButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F
 }
 
 export function RemoveButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: IconButtonProps<T, S, F>,
+  props: BootstrapIconButtonProps<T, S, F>,
 ) {
   const {
     registry: { translateString },
@@ -54,8 +60,8 @@ export function RemoveButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F
   return (
     <IconButton
       title={translateString(TranslatableString.RemoveButton)}
-      {...props}
       variant='danger'
+      {...props}
       icon={<IoIosRemove />}
     />
   );

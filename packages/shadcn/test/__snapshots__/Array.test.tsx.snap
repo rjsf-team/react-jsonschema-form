@@ -646,7 +646,6 @@ exports[`array fields empty errors array 1`] = `
           <div
             className="w-full"
           >
-             
             <div
               className="rjsf-field rjsf-field-string"
             >
@@ -911,7 +910,6 @@ exports[`array fields has errors 1`] = `
           <div
             className="w-full"
           >
-             
             <div
               className="rjsf-field rjsf-field-string rjsf-field-error"
             >
@@ -996,7 +994,6 @@ exports[`array fields no errors 1`] = `
           <div
             className="w-full"
           >
-             
             <div
               className="rjsf-field rjsf-field-string"
             >

@@ -82,6 +82,15 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                 >
                                   Person Info
                                 </label>
+                                <div
+                                  className="ant-divider css-dev-only-do-not-override-xepvsj ant-divider-horizontal ant-divider-sm"
+                                  role="separator"
+                                  style={
+                                    {
+                                      "marginBlock": "1px",
+                                    }
+                                  }
+                                />
                               </div>
                             </div>
                           </div>
@@ -1897,6 +1906,15 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                 >
                                   Person Info
                                 </label>
+                                <div
+                                  className="ant-divider css-dev-only-do-not-override-xepvsj ant-divider-horizontal ant-divider-sm"
+                                  role="separator"
+                                  style={
+                                    {
+                                      "marginBlock": "1px",
+                                    }
+                                  }
+                                />
                               </div>
                             </div>
                           </div>
@@ -3789,6 +3807,15 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                 >
                                   Person Info
                                 </label>
+                                <div
+                                  className="ant-divider css-dev-only-do-not-override-xepvsj ant-divider-horizontal ant-divider-sm"
+                                  role="separator"
+                                  style={
+                                    {
+                                      "marginBlock": "1px",
+                                    }
+                                  }
+                                />
                               </div>
                             </div>
                           </div>
@@ -5297,6 +5324,15 @@ exports[`Complex grid renders person and address and employment in a complex gri
                                 >
                                   Person Info
                                 </label>
+                                <div
+                                  className="ant-divider css-dev-only-do-not-override-xepvsj ant-divider-horizontal ant-divider-sm"
+                                  role="separator"
+                                  style={
+                                    {
+                                      "marginBlock": "1px",
+                                    }
+                                  }
+                                />
                               </div>
                             </div>
                           </div>
@@ -7104,6 +7140,15 @@ exports[`Three even column grid renders person and address in three columns, no 
                               >
                                 Person Info
                               </label>
+                              <div
+                                className="ant-divider css-dev-only-do-not-override-xepvsj ant-divider-horizontal ant-divider-sm"
+                                role="separator"
+                                style={
+                                  {
+                                    "marginBlock": "1px",
+                                  }
+                                }
+                              />
                             </div>
                           </div>
                         </div>
@@ -8149,6 +8194,15 @@ exports[`Two even column grid renders person and address in two columns, no empl
                               >
                                 Person Info
                               </label>
+                              <div
+                                className="ant-divider css-dev-only-do-not-override-xepvsj ant-divider-horizontal ant-divider-sm"
+                                role="separator"
+                                style={
+                                  {
+                                    "marginBlock": "1px",
+                                  }
+                                }
+                              />
                             </div>
                           </div>
                         </div>

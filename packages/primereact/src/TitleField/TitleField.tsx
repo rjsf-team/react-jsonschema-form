@@ -10,13 +10,25 @@ export default function TitleField<T = any, S extends StrictRJSFSchema = RJSFSch
   title,
   uiSchema,
   required,
+  optionalDataControl,
 }: TitleFieldProps<T, S, F>) {
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
+  let heading = (
+    <h5 style={{ margin: 0, fontSize: id === titleId('root') ? '1.5rem' : '1.2rem' }}>
+      {uiOptions.title || title} {required ? '*' : ''}
+    </h5>
+  );
+  if (optionalDataControl) {
+    heading = (
+      <div style={{ display: 'flex' }}>
+        <div style={{ flexGrow: 1 }}>{heading}</div>
+        <div style={{ marginLeft: '-5px' }}>{optionalDataControl}</div>
+      </div>
+    );
+  }
   return (
     <div id={id}>
-      <h5 style={{ margin: 0, fontSize: id === titleId('root') ? '1.5rem' : '1.2rem' }}>
-        {uiOptions.title || title} {required ? '*' : ''}
-      </h5>
+      {heading}
       <Divider pt={{ root: { style: { marginTop: '0.5rem' } } }} />
     </div>
   );

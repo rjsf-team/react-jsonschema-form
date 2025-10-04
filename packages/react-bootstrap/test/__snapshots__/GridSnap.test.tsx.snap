@@ -31,7 +31,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     Person Info
                   </h5>
                   <hr
-                    className="border-0 bg-secondary"
+                    className="border-0 bg-secondary mt-0"
                     style={
                       {
                         "height": "1px",
@@ -1594,7 +1594,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     Person Info
                   </h5>
                   <hr
-                    className="border-0 bg-secondary"
+                    className="border-0 bg-secondary mt-0"
                     style={
                       {
                         "height": "1px",
@@ -3189,7 +3189,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     Person Info
                   </h5>
                   <hr
-                    className="border-0 bg-secondary"
+                    className="border-0 bg-secondary mt-0"
                     style={
                       {
                         "height": "1px",
@@ -4264,7 +4264,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     Person Info
                   </h5>
                   <hr
-                    className="border-0 bg-secondary"
+                    className="border-0 bg-secondary mt-0"
                     style={
                       {
                         "height": "1px",
@@ -5824,7 +5824,7 @@ exports[`Three even column grid renders person and address in three columns, no 
                   Person Info
                 </h5>
                 <hr
-                  className="border-0 bg-secondary"
+                  className="border-0 bg-secondary mt-0"
                   style={
                     {
                       "height": "1px",
@@ -6692,7 +6692,7 @@ exports[`Two even column grid renders person and address in two columns, no empl
                   Person Info
                 </h5>
                 <hr
-                  className="border-0 bg-secondary"
+                  className="border-0 bg-secondary mt-0"
                   style={
                     {
                       "height": "1px",

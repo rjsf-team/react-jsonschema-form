@@ -1,3 +1,4 @@
+import { Flex } from '@fluentui/react-migration-v0-v9';
 import { Text, Divider, makeStyles } from '@fluentui/react-components';
 import { FormContextType, TitleFieldProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
 
@@ -15,13 +16,25 @@ const useStyles = makeStyles({
 export default function TitleField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
   id,
   title,
+  optionalDataControl,
 }: TitleFieldProps<T, S, F>) {
   const classes = useStyles();
+  let heading = (
+    <Text as='h5' size={600} style={{ marginBlock: 0 }}>
+      {title}
+    </Text>
+  );
+  if (optionalDataControl) {
+    heading = (
+      <Flex>
+        <Flex fill>{heading}</Flex>
+        <Flex hAlign='end'>{optionalDataControl}</Flex>
+      </Flex>
+    );
+  }
   return (
     <div id={id} className={classes.root}>
-      <Text as='h5' size={600}>
-        {title}
-      </Text>
+      {heading}
       <Divider />
     </div>
   );

@@ -304,15 +304,17 @@ class SchemaUtils<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
    *
    * @param schema - The schema for which retrieving a schema is desired
    * @param [rawFormData] - The current formData, if any, to assist retrieving a schema
+   * @param [resolveAnyOfOrOneOfRefs] - Optional flag indicating whether to resolved refs in anyOf/oneOf lists
    * @returns - The schema having its conditions, additional properties, references and dependencies resolved
    */
-  retrieveSchema(schema: S, rawFormData?: T) {
+  retrieveSchema(schema: S, rawFormData?: T, resolveAnyOfOrOneOfRefs?: boolean) {
     return retrieveSchema<T, S, F>(
       this.validator,
       schema,
       this.rootSchema,
       rawFormData,
       this.experimental_customMergeAllOf,
+      resolveAnyOfOrOneOfRefs,
     );
   }
 

@@ -13,6 +13,7 @@ import FieldTemplate from '../FieldTemplate';
 import GridTemplate from '../GridTemplate';
 import MultiSchemaFieldTemplate from '../MultiSchemaFieldTemplate';
 import ObjectFieldTemplate from '../ObjectFieldTemplate';
+import OptionalDataControlsTemplate from '../OptionalDataControlsTemplate';
 import SubmitButton from '../SubmitButton';
 import TitleField from '../TitleField';
 import WrapIfAdditionalTemplate from '../WrapIfAdditionalTemplate';
@@ -42,6 +43,7 @@ export function generateTemplates<
     GridTemplate,
     MultiSchemaFieldTemplate,
     ObjectFieldTemplate,
+    OptionalDataControlsTemplate,
     TitleFieldTemplate: TitleField,
     WrapIfAdditionalTemplate,
   };

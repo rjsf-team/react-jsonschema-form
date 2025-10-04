@@ -29,6 +29,7 @@ export default function ArrayFieldTemplate<
     className,
     disabled,
     items,
+    optionalDataControl,
     onAddClick,
     readonly,
     schema,
@@ -54,6 +55,7 @@ export default function ArrayFieldTemplate<
     registry,
     uiOptions,
   );
+  const showOptionalDataControlInTitle = !readonly && !disabled;
 
   return (
     <>
@@ -64,6 +66,7 @@ export default function ArrayFieldTemplate<
         uiSchema={uiSchema}
         required={required}
         registry={registry}
+        optionalDataControl={showOptionalDataControlInTitle ? optionalDataControl : undefined}
       />
       <Fieldset
         {...rest}
@@ -79,16 +82,16 @@ export default function ArrayFieldTemplate<
         />
         <div key={`array-item-list-${fieldPathId.$id}`}>
           <div>
-            {items &&
-              items.map(({ key, uiSchema: itemUiSchema = {}, ...props }: ArrayFieldItemTemplateType<T, S, F>) => {
-                const mergedUiSchema = {
-                  ...itemUiSchema,
-                  [UI_OPTIONS_KEY]: {
-                    ...itemUiSchema[UI_OPTIONS_KEY],
-                  },
-                };
-                return <ArrayFieldItemTemplate key={key} {...props} uiSchema={mergedUiSchema} />;
-              })}
+            {!showOptionalDataControlInTitle ? optionalDataControl : undefined}
+            {items.map(({ key, uiSchema: itemUiSchema = {}, ...props }: ArrayFieldItemTemplateType<T, S, F>) => {
+              const mergedUiSchema = {
+                ...itemUiSchema,
+                [UI_OPTIONS_KEY]: {
+                  ...itemUiSchema[UI_OPTIONS_KEY],
+                },
+              };
+              return <ArrayFieldItemTemplate key={key} {...props} uiSchema={mergedUiSchema} />;
+            })}
           </div>
           {canAdd && (
             <div

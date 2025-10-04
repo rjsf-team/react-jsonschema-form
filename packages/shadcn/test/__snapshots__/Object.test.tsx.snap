@@ -21,7 +21,6 @@ exports[`object fields additionalProperties 1`] = `
           <div
             className="w-full"
           >
-             
             <div
               className="flex flex-row items-center gap-2 relative w-full rjsf-field rjsf-field-string"
             >
@@ -215,7 +214,6 @@ exports[`object fields object 1`] = `
           <div
             className="w-full"
           >
-             
             <div
               className="rjsf-field rjsf-field-string"
             >
@@ -259,7 +257,6 @@ exports[`object fields object 1`] = `
           <div
             className="w-full"
           >
-             
             <div
               className="rjsf-field rjsf-field-number"
             >
@@ -335,7 +332,6 @@ exports[`object fields show add button and fields if additionalProperties is tru
           <div
             className="w-full"
           >
-             
             <div
               className="flex flex-row items-center gap-2 relative w-full rjsf-field rjsf-field-string"
             >
@@ -557,7 +553,6 @@ exports[`object fields with title and description additionalProperties 1`] = `
           <div
             className="w-full"
           >
-             
             <div
               className="flex flex-row items-center gap-2 relative w-full rjsf-field rjsf-field-string"
             >
@@ -779,7 +774,6 @@ exports[`object fields with title and description from both additionalProperties
           <div
             className="w-full"
           >
-             
             <div
               className="flex flex-row items-center gap-2 relative w-full rjsf-field rjsf-field-string"
             >
@@ -1001,7 +995,6 @@ exports[`object fields with title and description from both object 1`] = `
           <div
             className="w-full"
           >
-             
             <div
               className="rjsf-field rjsf-field-string"
             >
@@ -1057,7 +1050,6 @@ exports[`object fields with title and description from both object 1`] = `
           <div
             className="w-full"
           >
-             
             <div
               className="rjsf-field rjsf-field-number"
             >
@@ -1173,7 +1165,6 @@ exports[`object fields with title and description from uiSchema additionalProper
           <div
             className="w-full"
           >
-             
             <div
               className="flex flex-row items-center gap-2 relative w-full rjsf-field rjsf-field-string"
             >
@@ -1395,7 +1386,6 @@ exports[`object fields with title and description from uiSchema object 1`] = `
           <div
             className="w-full"
           >
-             
             <div
               className="rjsf-field rjsf-field-string"
             >
@@ -1451,7 +1441,6 @@ exports[`object fields with title and description from uiSchema object 1`] = `
           <div
             className="w-full"
           >
-             
             <div
               className="rjsf-field rjsf-field-number"
             >
@@ -1567,7 +1556,6 @@ exports[`object fields with title and description from uiSchema show add button 
           <div
             className="w-full"
           >
-             
             <div
               className="flex flex-row items-center gap-2 relative w-full rjsf-field rjsf-field-string"
             >
@@ -1789,7 +1777,6 @@ exports[`object fields with title and description object 1`] = `
           <div
             className="w-full"
           >
-             
             <div
               className="rjsf-field rjsf-field-string"
             >
@@ -1845,7 +1832,6 @@ exports[`object fields with title and description object 1`] = `
           <div
             className="w-full"
           >
-             
             <div
               className="rjsf-field rjsf-field-number"
             >
@@ -1961,7 +1947,6 @@ exports[`object fields with title and description show add button and fields if 
           <div
             className="w-full"
           >
-             
             <div
               className="flex flex-row items-center gap-2 relative w-full rjsf-field rjsf-field-string"
             >
@@ -2155,7 +2140,6 @@ exports[`object fields with title and description with global label off addition
           <div
             className="w-full"
           >
-             
             <div
               className="flex flex-row items-center gap-2 relative w-full rjsf-field rjsf-field-string"
             >
@@ -2343,7 +2327,6 @@ exports[`object fields with title and description with global label off object 1
           <div
             className="w-full"
           >
-             
             <div
               className="rjsf-field rjsf-field-string"
             >
@@ -2381,7 +2364,6 @@ exports[`object fields with title and description with global label off object 1
           <div
             className="w-full"
           >
-             
             <div
               className="rjsf-field rjsf-field-number"
             >
@@ -2451,7 +2433,6 @@ exports[`object fields with title and description with global label off show add
           <div
             className="w-full"
           >
-             
             <div
               className="flex flex-row items-center gap-2 relative w-full rjsf-field rjsf-field-string"
             >

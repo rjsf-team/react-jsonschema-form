@@ -2270,5 +2270,52 @@ export default function retrieveSchemaTest(testValidator: TestValidatorType) {
         });
       });
     });
+    describe('retrieveSchema() with resolveAnyOfOrOneOfRefs', () => {
+      it('resolves simple ref with no anyOf or oneOfs when false', () => {
+        const priceSchema: RJSFSchema = SUPER_SCHEMA.properties?.price as RJSFSchema;
+        expect(retrieveSchema(testValidator, priceSchema, SUPER_SCHEMA, {}, undefined)).toEqual({
+          ...(SUPER_SCHEMA.definitions?.price as RJSFSchema),
+        });
+      });
+      it('resolves simple ref with no anyOf or oneOfs when true', () => {
+        const priceSchema: RJSFSchema = SUPER_SCHEMA.properties?.price as RJSFSchema;
+        expect(retrieveSchema(testValidator, priceSchema, SUPER_SCHEMA, {}, undefined, true)).toEqual({
+          ...(SUPER_SCHEMA.definitions?.price as RJSFSchema),
+        });
+      });
+      it('does not resolves the references inside of anyOfs when false', () => {
+        const anyOfSchema: RJSFSchema = SUPER_SCHEMA.properties?.multi as RJSFSchema;
+        expect(retrieveSchema(testValidator, anyOfSchema, SUPER_SCHEMA, {}, undefined)).toEqual(anyOfSchema);
+      });
+      it('resolves the references inside of anyOfs when true', () => {
+        const anyOfSchema: RJSFSchema = SUPER_SCHEMA.properties?.multi as RJSFSchema;
+        expect(retrieveSchema(testValidator, anyOfSchema, SUPER_SCHEMA, {}, undefined, true)).toEqual({
+          ...anyOfSchema,
+          anyOf: [
+            {
+              ...(SUPER_SCHEMA.definitions?.foo as RJSFSchema),
+            },
+          ],
+        });
+      });
+      it('does not resolves the references inside of oneOfs when false', () => {
+        const oneOfSchema: RJSFSchema = SUPER_SCHEMA.properties?.single as RJSFSchema;
+        expect(retrieveSchema(testValidator, oneOfSchema, SUPER_SCHEMA, {}, undefined, false)).toEqual(oneOfSchema);
+      });
+      it('resolves the references inside of oneOfs when true', () => {
+        const oneOfSchema: RJSFSchema = SUPER_SCHEMA.properties?.single as RJSFSchema;
+        expect(retrieveSchema(testValidator, oneOfSchema, SUPER_SCHEMA, {}, undefined, true)).toEqual({
+          ...oneOfSchema,
+          oneOf: [
+            {
+              ...(SUPER_SCHEMA.definitions?.choice1 as RJSFSchema),
+            },
+            {
+              ...(SUPER_SCHEMA.definitions?.choice2 as RJSFSchema),
+            },
+          ],
+        });
+      });
+    });
   });
 }

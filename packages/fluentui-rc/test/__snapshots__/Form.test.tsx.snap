@@ -2920,6 +2920,11 @@ exports[`single fields title field 1`] = `
       >
         <h5
           className="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
+          style={
+            {
+              "marginBlock": 0,
+            }
+          }
         >
           Titre 1
         </h5>

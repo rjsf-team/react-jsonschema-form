@@ -350,6 +350,8 @@ export type TemplatesType<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
   MultiSchemaFieldTemplate: ComponentType<MultiSchemaFieldTemplateProps<T, S, F>>;
   /** The template to use while rendering an object */
   ObjectFieldTemplate: ComponentType<ObjectFieldTemplateProps<T, S, F>>;
+  /** The template to use while rendering the Optional Data field controls */
+  OptionalDataControlsTemplate: ComponentType<OptionalDataControlsTemplateProps<T, S, F>>;
   /** The template to use for rendering the title of a field */
   TitleFieldTemplate: ComponentType<TitleFieldProps<T, S, F>>;
   /** The template to use for rendering information about an unsupported field type in the schema */
@@ -398,6 +400,10 @@ export type GlobalUISchemaOptions = GenericObjectType & {
   /** Enables the displaying of description text that contains markdown
    */
   enableMarkdownInDescription?: boolean;
+  /** Enables the rendering of the Optional Data Field UI for specific types of schemas, either `object`, `array` or
+   * both. To disable the Optional Data Field UI for a specific field, provide an empty array within the UI schema.
+   */
+  enableOptionalDataFieldForType?: ('object' | 'array')[];
 };
 
 /** The set of options from the `Form` that will be available on the `Registry` for use in everywhere the `registry` is
@@ -571,6 +577,8 @@ export type TitleFieldProps<
   title: string;
   /** A boolean value stating if the field is required */
   required?: boolean;
+  /** Add optional data control */
+  optionalDataControl?: ReactNode;
 };
 
 /** The properties that are passed to a `DescriptionFieldTemplate` implementation */
@@ -595,6 +603,8 @@ export type ArrayFieldTitleProps<
   title?: string;
   /** The FieldPathId of the field in the hierarchy */
   fieldPathId: FieldPathId;
+  /** Add optional data control */
+  optionalDataControl?: ReactNode;
 };
 
 /** The properties that are passed to a `ArrayFieldDescriptionTemplate` implementation */
@@ -684,24 +694,18 @@ export type ArrayFieldTemplateItemType<
   F extends FormContextType = any,
 > = ArrayFieldItemTemplateType<T, S, F>;
 
-/** The properties that are passed to an `ArrayFieldTemplate` implementation */
-export type ArrayFieldTemplateProps<
+/** The common properties of the two container templates: `ArrayFieldTemplateProps` and `ObjectFieldTemplateProps` */
+export type ContainerFieldTemplateProps<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
 > = RJSFBaseProps<T, S, F> & {
-  /** A boolean value stating whether new elements can be added to the array */
-  canAdd?: boolean;
   /** The className string */
   className?: string;
   /** A boolean value stating if the array is disabled */
   disabled?: boolean;
   /** The FieldPathId of the field in the hierarchy */
   fieldPathId: FieldPathId;
-  /** An array of objects representing the items in the array */
-  items: ArrayFieldItemTemplateType<T, S, F>[];
-  /** A function that adds a new item to the array */
-  onAddClick: (event?: any) => void;
   /** A boolean value stating if the array is read-only */
   readonly?: boolean;
   /** A boolean value stating if the array is required */
@@ -712,8 +716,24 @@ export type ArrayFieldTemplateProps<
   title: string;
   /** The formData for this array */
   formData?: T;
-  /** The tree of errors for this field and its children */
+  /** The optional validation errors in the form of an `ErrorSchema` */
   errorSchema?: ErrorSchema<T>;
+  /** The optional data control node to render within the ObjectFieldTemplate that controls */
+  optionalDataControl?: ReactNode;
+};
+
+/** The properties that are passed to an `ArrayFieldTemplate` implementation */
+export type ArrayFieldTemplateProps<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any,
+> = ContainerFieldTemplateProps<T, S, F> & {
+  /** A boolean value stating whether new elements can be added to the array */
+  canAdd?: boolean;
+  /** An array of objects representing the items in the array */
+  items: ArrayFieldItemTemplateType<T, S, F>[];
+  /** A function that adds a new item to the array */
+  onAddClick: (event?: any) => void;
   /** An array of strings listing all generated error messages from encountered errors for this widget */
   rawErrors?: string[];
 };
@@ -737,13 +757,9 @@ export type ObjectFieldTemplateProps<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
-> = RJSFBaseProps<T, S, F> & {
-  /** A string value containing the title for the object */
-  title: string;
+> = ContainerFieldTemplateProps<T, S, F> & {
   /** A string value containing the description for the object */
   description?: string | ReactElement;
-  /** A boolean value stating if the object is disabled */
-  disabled?: boolean;
   /** An array of objects representing the properties in the object */
   properties: ObjectFieldTemplatePropertyType[];
   /** Returns a function that adds a new property to the object (to be used with additionalProperties) */
@@ -760,6 +776,20 @@ export type ObjectFieldTemplateProps<
   errorSchema?: ErrorSchema<T>;
   /** The form data for the object */
   formData?: T;
+};
+
+/** The properties that are passed to a OptionalDataControlsTemplate implementation */
+export type OptionalDataControlsTemplateProps<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any,
+> = RJSFBaseProps<T, S, F> & {
+  /** The label to use for the control */
+  label: string;
+  /** Optional callback to call when clicking on the optional data control to add data */
+  onAddClick?: () => void;
+  /** Optional callback to call when clicking on the optional data control to add data */
+  onRemoveClick?: () => void;
 };
 
 /** The properties that are passed to a WrapIfAdditionalTemplate implementation */
@@ -1277,9 +1307,10 @@ export interface SchemaUtilsType<T = any, S extends StrictRJSFSchema = RJSFSchem
    *
    * @param schema - The schema for which retrieving a schema is desired
    * @param [formData] - The current formData, if any, to assist retrieving a schema
+   * @param [resolveAnyOfOrOneOfRefs] - Optional flag indicating whether to resolved refs in anyOf/oneOf lists
    * @returns - The schema having its conditions, additional properties, references and dependencies resolved
    */
-  retrieveSchema(schema: S, formData?: T): S;
+  retrieveSchema(schema: S, formData?: T, resolveAnyOfOrOneOfRefs?: boolean): S;
   /** Sanitize the `data` associated with the `oldSchema` so it is considered appropriate for the `newSchema`. If the
    * new schema does not contain any properties, then `undefined` is returned to clear all the form data. Due to the
    * nature of schemas, this sanitization happens recursively for nested objects of data. Also, any properties in the

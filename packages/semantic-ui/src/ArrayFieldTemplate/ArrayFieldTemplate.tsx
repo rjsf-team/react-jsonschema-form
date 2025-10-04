@@ -30,6 +30,7 @@ export default function ArrayFieldTemplate<
     // classNames, This is not part of the type, so it is likely never passed in
     disabled,
     items,
+    optionalDataControl,
     onAddClick,
     // options, This is not part of the type, so it is likely never passed in
     readonly,
@@ -61,6 +62,7 @@ export default function ArrayFieldTemplate<
     registry,
     uiOptions,
   );
+  const showOptionalDataControlInTitle = !readonly && !disabled;
   // Button templates are not overridden in the uiSchema
   const {
     ButtonTemplates: { AddButton },
@@ -74,6 +76,7 @@ export default function ArrayFieldTemplate<
         uiSchema={uiSchema}
         required={required}
         registry={registry}
+        optionalDataControl={showOptionalDataControlInTitle ? optionalDataControl : undefined}
       />
       <ArrayFieldDescriptionTemplate
         fieldPathId={fieldPathId}
@@ -84,18 +87,18 @@ export default function ArrayFieldTemplate<
       />
       <div key={`array-item-list-${fieldPathId.$id}`}>
         <div className='row array-item-list'>
-          {items &&
-            items.map(({ key, uiSchema: itemUiSchema = {}, ...props }: ArrayFieldItemTemplateType<T, S, F>) => {
-              // Merge in the semantic props from the ArrayFieldTemplate into each of the items
-              const mergedUiSchema = {
-                ...itemUiSchema,
-                [UI_OPTIONS_KEY]: {
-                  ...itemUiSchema[UI_OPTIONS_KEY],
-                  semantic,
-                },
-              };
-              return <ArrayFieldItemTemplate key={key} {...props} uiSchema={mergedUiSchema} />;
-            })}
+          {!showOptionalDataControlInTitle ? optionalDataControl : undefined}
+          {items.map(({ key, uiSchema: itemUiSchema = {}, ...props }: ArrayFieldItemTemplateType<T, S, F>) => {
+            // Merge in the semantic props from the ArrayFieldTemplate into each of the items
+            const mergedUiSchema = {
+              ...itemUiSchema,
+              [UI_OPTIONS_KEY]: {
+                ...itemUiSchema[UI_OPTIONS_KEY],
+                semantic,
+              },
+            };
+            return <ArrayFieldItemTemplate key={key} {...props} uiSchema={mergedUiSchema} />;
+          })}
         </div>
         {canAdd && (
           <div

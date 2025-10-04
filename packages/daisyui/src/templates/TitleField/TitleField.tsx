@@ -14,13 +14,22 @@ import { TitleFieldProps, StrictRJSFSchema, RJSFSchema, FormContextType, getUiOp
 export default function TitleField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: TitleFieldProps<T, S, F>,
 ) {
-  const { id, title, uiSchema } = props;
+  const { id, title, uiSchema, optionalDataControl } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
 
+  let heading = <h2 className='text-3xl font-bold text-primary mb-2'>{uiOptions.title || title}</h2>;
+  if (optionalDataControl) {
+    heading = (
+      <div className='flex'>
+        <div className='flex flex-auto'>{heading}</div>
+        <div className='flex justify-end'>{optionalDataControl}</div>
+      </div>
+    );
+  }
   return (
     <div id={id} className='title-field mb-6'>
-      <h2 className='text-3xl font-bold text-primary mb-2'>{uiOptions.title || title}</h2>
-      <div className='divider divider-primary'></div>
+      {heading}
+      <div className='divider divider-primary my-0'></div>
     </div>
   );
 }
