@@ -1724,6 +1724,5540 @@ exports[`single fields number field 1`] = `
 </form>
 `;
 
+exports[`single fields optional data controls does not show optional controls when not turned on in uiSchema and no formData 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <div
+        id="root__title"
+      >
+        <h5
+          style={
+            {
+              "fontSize": "1.5rem",
+              "margin": 0,
+            }
+          }
+        >
+          test
+           
+        </h5>
+        <div
+          aria-orientation="horizontal"
+          className="p-divider p-component p-divider-horizontal p-divider-solid p-divider-left"
+          data-pc-name="divider"
+          data-pc-section="root"
+          role="separator"
+          style={
+            {
+              "alignItems": null,
+              "justifyContent": "center",
+              "marginTop": "0.5rem",
+            }
+          }
+        >
+          <div
+            className="p-divider-content"
+            data-pc-section="content"
+          />
+        </div>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-object"
+      >
+        <div
+          style={
+            {
+              "display": "flex",
+              "flexDirection": "column",
+              "gap": "0.5rem",
+              "marginBottom": "1rem",
+            }
+          }
+        >
+          <div
+            id="root_nestedObjectOptional__title"
+          >
+            <h5
+              style={
+                {
+                  "fontSize": "1.2rem",
+                  "margin": 0,
+                }
+              }
+            >
+              nestedObjectOptional
+               
+            </h5>
+            <div
+              aria-orientation="horizontal"
+              className="p-divider p-component p-divider-horizontal p-divider-solid p-divider-left"
+              data-pc-name="divider"
+              data-pc-section="root"
+              role="separator"
+              style={
+                {
+                  "alignItems": null,
+                  "justifyContent": "center",
+                  "marginTop": "0.5rem",
+                }
+              }
+            >
+              <div
+                className="p-divider-content"
+                data-pc-section="content"
+              />
+            </div>
+          </div>
+          <div
+            className="rjsf-field rjsf-field-string"
+          >
+            <div
+              style={
+                {
+                  "display": "flex",
+                  "flexDirection": "column",
+                  "gap": "0.5rem",
+                  "marginBottom": "1rem",
+                }
+              }
+            >
+              <label
+                htmlFor="root_nestedObjectOptional_test"
+              >
+                test
+                 
+              </label>
+              <input
+                aria-describedby="root_nestedObjectOptional_test__error root_nestedObjectOptional_test__description root_nestedObjectOptional_test__help"
+                autoFocus={false}
+                className="p-inputtext p-component"
+                data-pc-name="inputtext"
+                data-pc-section="root"
+                disabled={false}
+                id="root_nestedObjectOptional_test"
+                name="root_nestedObjectOptional_test"
+                onBeforeInput={[Function]}
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onInput={[Function]}
+                onKeyDown={[Function]}
+                onPaste={[Function]}
+                placeholder=""
+                required={false}
+                type="text"
+                value=""
+              />
+            </div>
+          </div>
+          <div
+            className="rjsf-field rjsf-field-object"
+          >
+            <div
+              style={
+                {
+                  "display": "flex",
+                  "flexDirection": "column",
+                  "gap": "0.5rem",
+                  "marginBottom": "1rem",
+                }
+              }
+            >
+              <div
+                id="root_nestedObjectOptional_deepObjectOptional__title"
+              >
+                <h5
+                  style={
+                    {
+                      "fontSize": "1.2rem",
+                      "margin": 0,
+                    }
+                  }
+                >
+                  deepObjectOptional
+                   
+                </h5>
+                <div
+                  aria-orientation="horizontal"
+                  className="p-divider p-component p-divider-horizontal p-divider-solid p-divider-left"
+                  data-pc-name="divider"
+                  data-pc-section="root"
+                  role="separator"
+                  style={
+                    {
+                      "alignItems": null,
+                      "justifyContent": "center",
+                      "marginTop": "0.5rem",
+                    }
+                  }
+                >
+                  <div
+                    className="p-divider-content"
+                    data-pc-section="content"
+                  />
+                </div>
+              </div>
+              <div
+                className="rjsf-field rjsf-field-string"
+              >
+                <div
+                  style={
+                    {
+                      "display": "flex",
+                      "flexDirection": "column",
+                      "gap": "0.5rem",
+                      "marginBottom": "1rem",
+                    }
+                  }
+                >
+                  <label
+                    htmlFor="root_nestedObjectOptional_deepObjectOptional_deepTest"
+                  >
+                    deepTest
+                     
+                  </label>
+                  <input
+                    aria-describedby="root_nestedObjectOptional_deepObjectOptional_deepTest__error root_nestedObjectOptional_deepObjectOptional_deepTest__description root_nestedObjectOptional_deepObjectOptional_deepTest__help"
+                    autoFocus={false}
+                    className="p-inputtext p-component"
+                    data-pc-name="inputtext"
+                    data-pc-section="root"
+                    disabled={false}
+                    id="root_nestedObjectOptional_deepObjectOptional_deepTest"
+                    name="root_nestedObjectOptional_deepObjectOptional_deepTest"
+                    onBeforeInput={[Function]}
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    onInput={[Function]}
+                    onKeyDown={[Function]}
+                    onPaste={[Function]}
+                    placeholder=""
+                    required={false}
+                    type="text"
+                    value=""
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            className="rjsf-field rjsf-field-object"
+          >
+            <div
+              style={
+                {
+                  "display": "flex",
+                  "flexDirection": "column",
+                  "gap": "0.5rem",
+                  "marginBottom": "1rem",
+                }
+              }
+            >
+              <div
+                id="root_nestedObjectOptional_deepObject__title"
+              >
+                <h5
+                  style={
+                    {
+                      "fontSize": "1.2rem",
+                      "margin": 0,
+                    }
+                  }
+                >
+                  deepObject
+                   
+                  *
+                </h5>
+                <div
+                  aria-orientation="horizontal"
+                  className="p-divider p-component p-divider-horizontal p-divider-solid p-divider-left"
+                  data-pc-name="divider"
+                  data-pc-section="root"
+                  role="separator"
+                  style={
+                    {
+                      "alignItems": null,
+                      "justifyContent": "center",
+                      "marginTop": "0.5rem",
+                    }
+                  }
+                >
+                  <div
+                    className="p-divider-content"
+                    data-pc-section="content"
+                  />
+                </div>
+              </div>
+              <div
+                className="rjsf-field rjsf-field-string"
+              >
+                <div
+                  style={
+                    {
+                      "display": "flex",
+                      "flexDirection": "column",
+                      "gap": "0.5rem",
+                      "marginBottom": "1rem",
+                    }
+                  }
+                >
+                  <label
+                    htmlFor="root_nestedObjectOptional_deepObject_deepTest"
+                  >
+                    deepTest
+                     
+                  </label>
+                  <input
+                    aria-describedby="root_nestedObjectOptional_deepObject_deepTest__error root_nestedObjectOptional_deepObject_deepTest__description root_nestedObjectOptional_deepObject_deepTest__help"
+                    autoFocus={false}
+                    className="p-inputtext p-component"
+                    data-pc-name="inputtext"
+                    data-pc-section="root"
+                    disabled={false}
+                    id="root_nestedObjectOptional_deepObject_deepTest"
+                    name="root_nestedObjectOptional_deepObject_deepTest"
+                    onBeforeInput={[Function]}
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    onInput={[Function]}
+                    onKeyDown={[Function]}
+                    onPaste={[Function]}
+                    placeholder=""
+                    required={false}
+                    type="text"
+                    value=""
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            className="rjsf-field rjsf-field-array"
+          >
+            <div
+              style={
+                {
+                  "display": "flex",
+                  "flexDirection": "column",
+                  "gap": "0.5rem",
+                  "marginBottom": "1rem",
+                }
+              }
+            >
+              <h5
+                id="root_nestedObjectOptional_deepArrayOptional__title"
+                style={
+                  {
+                    "fontSize": "1.5rem",
+                    "margin": 0,
+                    "marginBottom": "0.2rem",
+                  }
+                }
+              >
+                deepArrayOptional
+                 
+              </h5>
+              <fieldset
+                className="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields p-fieldset p-component"
+                data-pc-name="fieldset"
+                data-pc-section="root"
+                formData={[]}
+                id="root_nestedObjectOptional_deepArrayOptional"
+                onClick={null}
+                style={{}}
+              >
+                <div
+                  aria-labelledby="root_nestedObjectOptional_deepArrayOptional_header"
+                  className="p-toggleable-content"
+                  data-pc-section="toggleablecontent"
+                  id="root_nestedObjectOptional_deepArrayOptional_content"
+                  role="region"
+                >
+                  <div
+                    className="p-fieldset-content"
+                    data-pc-section="content"
+                  >
+                    <div>
+                      <div />
+                      <div
+                        style={
+                          {
+                            "marginTop": "1rem",
+                            "position": "relative",
+                            "textAlign": "right",
+                          }
+                        }
+                      >
+                        <button
+                          aria-label="Add Item"
+                          className="rjsf-array-item-add p-button p-component p-button-outlined p-button-sm p-button-secondary"
+                          data-pc-name="button"
+                          data-pc-section="root"
+                          disabled={false}
+                          id="root_nestedObjectOptional_deepArrayOptional__add"
+                          onClick={[Function]}
+                        >
+                          <span
+                            className="p-button-icon p-c p-button-icon-left pi pi-plus"
+                            data-pc-section="icon"
+                          />
+                          <span
+                            className="p-button-label p-c"
+                            data-pc-section="label"
+                          >
+                            Add Item
+                          </span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </fieldset>
+            </div>
+          </div>
+          <div
+            className="rjsf-field rjsf-field-array"
+          >
+            <div
+              style={
+                {
+                  "display": "flex",
+                  "flexDirection": "column",
+                  "gap": "0.5rem",
+                  "marginBottom": "1rem",
+                }
+              }
+            >
+              <h5
+                id="root_nestedObjectOptional_deepArrayOptional2__title"
+                style={
+                  {
+                    "fontSize": "1.5rem",
+                    "margin": 0,
+                    "marginBottom": "0.2rem",
+                  }
+                }
+              >
+                deepArrayOptional2
+                 
+              </h5>
+              <fieldset
+                className="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields p-fieldset p-component"
+                data-pc-name="fieldset"
+                data-pc-section="root"
+                formData={[]}
+                id="root_nestedObjectOptional_deepArrayOptional2"
+                onClick={null}
+                style={{}}
+              >
+                <div
+                  aria-labelledby="root_nestedObjectOptional_deepArrayOptional2_header"
+                  className="p-toggleable-content"
+                  data-pc-section="toggleablecontent"
+                  id="root_nestedObjectOptional_deepArrayOptional2_content"
+                  role="region"
+                >
+                  <div
+                    className="p-fieldset-content"
+                    data-pc-section="content"
+                  >
+                    <div>
+                      <div />
+                      <div
+                        style={
+                          {
+                            "marginTop": "1rem",
+                            "position": "relative",
+                            "textAlign": "right",
+                          }
+                        }
+                      >
+                        <button
+                          aria-label="Add Item"
+                          className="rjsf-array-item-add p-button p-component p-button-outlined p-button-sm p-button-secondary"
+                          data-pc-name="button"
+                          data-pc-section="root"
+                          disabled={false}
+                          id="root_nestedObjectOptional_deepArrayOptional2__add"
+                          onClick={[Function]}
+                        >
+                          <span
+                            className="p-button-icon p-c p-button-icon-left pi pi-plus"
+                            data-pc-section="icon"
+                          />
+                          <span
+                            className="p-button-label p-c"
+                            data-pc-section="label"
+                          >
+                            Add Item
+                          </span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </fieldset>
+            </div>
+          </div>
+          <div
+            className="rjsf-field rjsf-field-array"
+          >
+            <div
+              style={
+                {
+                  "display": "flex",
+                  "flexDirection": "column",
+                  "gap": "0.5rem",
+                  "marginBottom": "1rem",
+                }
+              }
+            >
+              <h5
+                id="root_nestedObjectOptional_deepArray__title"
+                style={
+                  {
+                    "fontSize": "1.5rem",
+                    "margin": 0,
+                    "marginBottom": "0.2rem",
+                  }
+                }
+              >
+                deepArray
+                 
+                *
+              </h5>
+              <fieldset
+                className="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields p-fieldset p-component"
+                data-pc-name="fieldset"
+                data-pc-section="root"
+                formData={[]}
+                id="root_nestedObjectOptional_deepArray"
+                onClick={null}
+                style={{}}
+              >
+                <div
+                  aria-labelledby="root_nestedObjectOptional_deepArray_header"
+                  className="p-toggleable-content"
+                  data-pc-section="toggleablecontent"
+                  id="root_nestedObjectOptional_deepArray_content"
+                  role="region"
+                >
+                  <div
+                    className="p-fieldset-content"
+                    data-pc-section="content"
+                  >
+                    <div>
+                      <div />
+                      <div
+                        style={
+                          {
+                            "marginTop": "1rem",
+                            "position": "relative",
+                            "textAlign": "right",
+                          }
+                        }
+                      >
+                        <button
+                          aria-label="Add Item"
+                          className="rjsf-array-item-add p-button p-component p-button-outlined p-button-sm p-button-secondary"
+                          data-pc-name="button"
+                          data-pc-section="root"
+                          disabled={false}
+                          id="root_nestedObjectOptional_deepArray__add"
+                          onClick={[Function]}
+                        >
+                          <span
+                            className="p-button-icon p-c p-button-icon-left pi pi-plus"
+                            data-pc-section="icon"
+                          />
+                          <span
+                            className="p-button-label p-c"
+                            data-pc-section="label"
+                          >
+                            Add Item
+                          </span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </fieldset>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-array"
+      >
+        <div
+          style={
+            {
+              "display": "flex",
+              "flexDirection": "column",
+              "gap": "0.5rem",
+              "marginBottom": "1rem",
+            }
+          }
+        >
+          <h5
+            id="root_nestedArrayOptional__title"
+            style={
+              {
+                "fontSize": "1.5rem",
+                "margin": 0,
+                "marginBottom": "0.2rem",
+              }
+            }
+          >
+            nestedArrayOptional
+             
+          </h5>
+          <fieldset
+            className="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields p-fieldset p-component"
+            data-pc-name="fieldset"
+            data-pc-section="root"
+            formData={[]}
+            id="root_nestedArrayOptional"
+            onClick={null}
+            style={{}}
+          >
+            <div
+              aria-labelledby="root_nestedArrayOptional_header"
+              className="p-toggleable-content"
+              data-pc-section="toggleablecontent"
+              id="root_nestedArrayOptional_content"
+              role="region"
+            >
+              <div
+                className="p-fieldset-content"
+                data-pc-section="content"
+              >
+                <div>
+                  <div />
+                  <div
+                    style={
+                      {
+                        "marginTop": "1rem",
+                        "position": "relative",
+                        "textAlign": "right",
+                      }
+                    }
+                  >
+                    <button
+                      aria-label="Add Item"
+                      className="rjsf-array-item-add p-button p-component p-button-outlined p-button-sm p-button-secondary"
+                      data-pc-name="button"
+                      data-pc-section="root"
+                      disabled={false}
+                      id="root_nestedArrayOptional__add"
+                      onClick={[Function]}
+                    >
+                      <span
+                        className="p-button-icon p-c p-button-icon-left pi pi-plus"
+                        data-pc-section="icon"
+                      />
+                      <span
+                        className="p-button-label p-c"
+                        data-pc-section="label"
+                      >
+                        Add Item
+                      </span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-object"
+      >
+        <div
+          style={
+            {
+              "display": "flex",
+              "flexDirection": "column",
+              "gap": "0.5rem",
+              "marginBottom": "1rem",
+            }
+          }
+        >
+          <div
+            id="root_nestedObject__title"
+          >
+            <h5
+              style={
+                {
+                  "fontSize": "1.2rem",
+                  "margin": 0,
+                }
+              }
+            >
+              nestedObject
+               
+              *
+            </h5>
+            <div
+              aria-orientation="horizontal"
+              className="p-divider p-component p-divider-horizontal p-divider-solid p-divider-left"
+              data-pc-name="divider"
+              data-pc-section="root"
+              role="separator"
+              style={
+                {
+                  "alignItems": null,
+                  "justifyContent": "center",
+                  "marginTop": "0.5rem",
+                }
+              }
+            >
+              <div
+                className="p-divider-content"
+                data-pc-section="content"
+              />
+            </div>
+          </div>
+          <div
+            className="rjsf-field rjsf-field-string"
+          >
+            <div
+              style={
+                {
+                  "display": "flex",
+                  "flexDirection": "column",
+                  "gap": "0.5rem",
+                  "marginBottom": "1rem",
+                }
+              }
+            >
+              <label
+                htmlFor="root_nestedObject_test"
+              >
+                test
+                 
+              </label>
+              <input
+                aria-describedby="root_nestedObject_test__error root_nestedObject_test__description root_nestedObject_test__help"
+                autoFocus={false}
+                className="p-inputtext p-component"
+                data-pc-name="inputtext"
+                data-pc-section="root"
+                disabled={false}
+                id="root_nestedObject_test"
+                name="root_nestedObject_test"
+                onBeforeInput={[Function]}
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onInput={[Function]}
+                onKeyDown={[Function]}
+                onPaste={[Function]}
+                placeholder=""
+                required={false}
+                type="text"
+                value=""
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-array"
+      >
+        <div
+          style={
+            {
+              "display": "flex",
+              "flexDirection": "column",
+              "gap": "0.5rem",
+              "marginBottom": "1rem",
+            }
+          }
+        >
+          <h5
+            id="root_nestedArray__title"
+            style={
+              {
+                "fontSize": "1.5rem",
+                "margin": 0,
+                "marginBottom": "0.2rem",
+              }
+            }
+          >
+            nestedArray
+             
+            *
+          </h5>
+          <fieldset
+            className="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields p-fieldset p-component"
+            data-pc-name="fieldset"
+            data-pc-section="root"
+            formData={[]}
+            id="root_nestedArray"
+            onClick={null}
+            style={{}}
+          >
+            <div
+              aria-labelledby="root_nestedArray_header"
+              className="p-toggleable-content"
+              data-pc-section="toggleablecontent"
+              id="root_nestedArray_content"
+              role="region"
+            >
+              <div
+                className="p-fieldset-content"
+                data-pc-section="content"
+              >
+                <div>
+                  <div />
+                  <div
+                    style={
+                      {
+                        "marginTop": "1rem",
+                        "position": "relative",
+                        "textAlign": "right",
+                      }
+                    }
+                  >
+                    <button
+                      aria-label="Add Item"
+                      className="rjsf-array-item-add p-button p-component p-button-outlined p-button-sm p-button-secondary"
+                      data-pc-name="button"
+                      data-pc-section="root"
+                      disabled={false}
+                      id="root_nestedArray__add"
+                      onClick={[Function]}
+                    >
+                      <span
+                        className="p-button-icon p-c p-button-icon-left pi pi-plus"
+                        data-pc-section="icon"
+                      />
+                      <span
+                        className="p-button-label p-c"
+                        data-pc-section="label"
+                      >
+                        Add Item
+                      </span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-undefined"
+      >
+        <div
+          style={
+            {
+              "display": "flex",
+              "flexDirection": "column",
+              "gap": "0.5rem",
+              "marginBottom": "1rem",
+            }
+          }
+        >
+          <label
+            htmlFor="root_optionalObjectWithOneofs"
+          >
+            optionalObjectWithOneofs
+             
+          </label>
+          <fieldset
+            className="p-fieldset p-component"
+            data-pc-name="fieldset"
+            data-pc-section="root"
+            id={null}
+            onClick={null}
+            style={{}}
+          >
+            <div
+              aria-labelledby="null_header"
+              className="p-toggleable-content"
+              data-pc-section="toggleablecontent"
+              id="null_content"
+              role="region"
+            >
+              <div
+                className="p-fieldset-content"
+                data-pc-section="content"
+              >
+                <div
+                  style={
+                    {
+                      "marginBottom": "1rem",
+                    }
+                  }
+                >
+                  <select
+                    aria-describedby="root_optionalObjectWithOneofs__oneof_select__error root_optionalObjectWithOneofs__oneof_select__description root_optionalObjectWithOneofs__oneof_select__help"
+                    disabled={false}
+                    id="root_optionalObjectWithOneofs__oneof_select"
+                    name="root_optionalObjectWithOneofs__oneof_select"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    options={
+                      [
+                        {
+                          "disabled": false,
+                          "label": "Option 1",
+                          "value": "0",
+                        },
+                        {
+                          "disabled": false,
+                          "label": "Option 2",
+                          "value": "1",
+                        },
+                        {
+                          "disabled": false,
+                          "label": "Option 3",
+                          "value": "2",
+                        },
+                      ]
+                    }
+                    value="0"
+                  />
+                </div>
+                <div
+                  className="rjsf-field rjsf-field-object"
+                >
+                  <div
+                    style={
+                      {
+                        "display": "flex",
+                        "flexDirection": "column",
+                        "gap": "0.5rem",
+                        "marginBottom": "1rem",
+                      }
+                    }
+                  >
+                    <div
+                      id="root_optionalObjectWithOneofs__title"
+                    >
+                      <h5
+                        style={
+                          {
+                            "fontSize": "1.2rem",
+                            "margin": 0,
+                          }
+                        }
+                      >
+                        optionalObjectWithOneofs
+                         
+                      </h5>
+                      <div
+                        aria-orientation="horizontal"
+                        className="p-divider p-component p-divider-horizontal p-divider-solid p-divider-left"
+                        data-pc-name="divider"
+                        data-pc-section="root"
+                        role="separator"
+                        style={
+                          {
+                            "alignItems": null,
+                            "justifyContent": "center",
+                            "marginTop": "0.5rem",
+                          }
+                        }
+                      >
+                        <div
+                          className="p-divider-content"
+                          data-pc-section="content"
+                        />
+                      </div>
+                    </div>
+                    <div
+                      className="rjsf-field rjsf-field-string"
+                    >
+                      <div
+                        style={
+                          {
+                            "display": "flex",
+                            "flexDirection": "column",
+                            "gap": "0.5rem",
+                            "marginBottom": "1rem",
+                          }
+                        }
+                      >
+                        <label
+                          htmlFor="root_optionalObjectWithOneofs_name"
+                        >
+                          name
+                           
+                        </label>
+                        <input
+                          aria-describedby="root_optionalObjectWithOneofs_name__error root_optionalObjectWithOneofs_name__description root_optionalObjectWithOneofs_name__help"
+                          autoFocus={false}
+                          className="p-inputtext p-component p-disabled"
+                          data-pc-name="inputtext"
+                          data-pc-section="root"
+                          disabled={true}
+                          id="root_optionalObjectWithOneofs_name"
+                          name="root_optionalObjectWithOneofs_name"
+                          onBeforeInput={[Function]}
+                          onBlur={[Function]}
+                          onChange={[Function]}
+                          onFocus={[Function]}
+                          onInput={[Function]}
+                          onKeyDown={[Function]}
+                          onPaste={[Function]}
+                          placeholder=""
+                          required={false}
+                          type="text"
+                          value=""
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields optional data controls does not show optional controls when not turned on in uiSchema, readonly and no formData 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <div
+        id="root__title"
+      >
+        <h5
+          style={
+            {
+              "fontSize": "1.5rem",
+              "margin": 0,
+            }
+          }
+        >
+          test
+           
+        </h5>
+        <div
+          aria-orientation="horizontal"
+          className="p-divider p-component p-divider-horizontal p-divider-solid p-divider-left"
+          data-pc-name="divider"
+          data-pc-section="root"
+          role="separator"
+          style={
+            {
+              "alignItems": null,
+              "justifyContent": "center",
+              "marginTop": "0.5rem",
+            }
+          }
+        >
+          <div
+            className="p-divider-content"
+            data-pc-section="content"
+          />
+        </div>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-object"
+      >
+        <div
+          style={
+            {
+              "display": "flex",
+              "flexDirection": "column",
+              "gap": "0.5rem",
+              "marginBottom": "1rem",
+            }
+          }
+        >
+          <div
+            id="root_nestedObjectOptional__title"
+          >
+            <h5
+              style={
+                {
+                  "fontSize": "1.2rem",
+                  "margin": 0,
+                }
+              }
+            >
+              nestedObjectOptional
+               
+            </h5>
+            <div
+              aria-orientation="horizontal"
+              className="p-divider p-component p-divider-horizontal p-divider-solid p-divider-left"
+              data-pc-name="divider"
+              data-pc-section="root"
+              role="separator"
+              style={
+                {
+                  "alignItems": null,
+                  "justifyContent": "center",
+                  "marginTop": "0.5rem",
+                }
+              }
+            >
+              <div
+                className="p-divider-content"
+                data-pc-section="content"
+              />
+            </div>
+          </div>
+          <div
+            className="rjsf-field rjsf-field-string"
+          >
+            <div
+              style={
+                {
+                  "display": "flex",
+                  "flexDirection": "column",
+                  "gap": "0.5rem",
+                  "marginBottom": "1rem",
+                }
+              }
+            >
+              <label
+                htmlFor="root_nestedObjectOptional_test"
+              >
+                test
+                 
+              </label>
+              <input
+                aria-describedby="root_nestedObjectOptional_test__error root_nestedObjectOptional_test__description root_nestedObjectOptional_test__help"
+                autoFocus={false}
+                className="p-inputtext p-component p-disabled"
+                data-pc-name="inputtext"
+                data-pc-section="root"
+                disabled={true}
+                id="root_nestedObjectOptional_test"
+                name="root_nestedObjectOptional_test"
+                onBeforeInput={[Function]}
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onInput={[Function]}
+                onKeyDown={[Function]}
+                onPaste={[Function]}
+                placeholder=""
+                required={false}
+                type="text"
+                value=""
+              />
+            </div>
+          </div>
+          <div
+            className="rjsf-field rjsf-field-object"
+          >
+            <div
+              style={
+                {
+                  "display": "flex",
+                  "flexDirection": "column",
+                  "gap": "0.5rem",
+                  "marginBottom": "1rem",
+                }
+              }
+            >
+              <div
+                id="root_nestedObjectOptional_deepObjectOptional__title"
+              >
+                <h5
+                  style={
+                    {
+                      "fontSize": "1.2rem",
+                      "margin": 0,
+                    }
+                  }
+                >
+                  deepObjectOptional
+                   
+                </h5>
+                <div
+                  aria-orientation="horizontal"
+                  className="p-divider p-component p-divider-horizontal p-divider-solid p-divider-left"
+                  data-pc-name="divider"
+                  data-pc-section="root"
+                  role="separator"
+                  style={
+                    {
+                      "alignItems": null,
+                      "justifyContent": "center",
+                      "marginTop": "0.5rem",
+                    }
+                  }
+                >
+                  <div
+                    className="p-divider-content"
+                    data-pc-section="content"
+                  />
+                </div>
+              </div>
+              <div
+                className="rjsf-field rjsf-field-string"
+              >
+                <div
+                  style={
+                    {
+                      "display": "flex",
+                      "flexDirection": "column",
+                      "gap": "0.5rem",
+                      "marginBottom": "1rem",
+                    }
+                  }
+                >
+                  <label
+                    htmlFor="root_nestedObjectOptional_deepObjectOptional_deepTest"
+                  >
+                    deepTest
+                     
+                  </label>
+                  <input
+                    aria-describedby="root_nestedObjectOptional_deepObjectOptional_deepTest__error root_nestedObjectOptional_deepObjectOptional_deepTest__description root_nestedObjectOptional_deepObjectOptional_deepTest__help"
+                    autoFocus={false}
+                    className="p-inputtext p-component p-disabled"
+                    data-pc-name="inputtext"
+                    data-pc-section="root"
+                    disabled={true}
+                    id="root_nestedObjectOptional_deepObjectOptional_deepTest"
+                    name="root_nestedObjectOptional_deepObjectOptional_deepTest"
+                    onBeforeInput={[Function]}
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    onInput={[Function]}
+                    onKeyDown={[Function]}
+                    onPaste={[Function]}
+                    placeholder=""
+                    required={false}
+                    type="text"
+                    value=""
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            className="rjsf-field rjsf-field-object"
+          >
+            <div
+              style={
+                {
+                  "display": "flex",
+                  "flexDirection": "column",
+                  "gap": "0.5rem",
+                  "marginBottom": "1rem",
+                }
+              }
+            >
+              <div
+                id="root_nestedObjectOptional_deepObject__title"
+              >
+                <h5
+                  style={
+                    {
+                      "fontSize": "1.2rem",
+                      "margin": 0,
+                    }
+                  }
+                >
+                  deepObject
+                   
+                  *
+                </h5>
+                <div
+                  aria-orientation="horizontal"
+                  className="p-divider p-component p-divider-horizontal p-divider-solid p-divider-left"
+                  data-pc-name="divider"
+                  data-pc-section="root"
+                  role="separator"
+                  style={
+                    {
+                      "alignItems": null,
+                      "justifyContent": "center",
+                      "marginTop": "0.5rem",
+                    }
+                  }
+                >
+                  <div
+                    className="p-divider-content"
+                    data-pc-section="content"
+                  />
+                </div>
+              </div>
+              <div
+                className="rjsf-field rjsf-field-string"
+              >
+                <div
+                  style={
+                    {
+                      "display": "flex",
+                      "flexDirection": "column",
+                      "gap": "0.5rem",
+                      "marginBottom": "1rem",
+                    }
+                  }
+                >
+                  <label
+                    htmlFor="root_nestedObjectOptional_deepObject_deepTest"
+                  >
+                    deepTest
+                     
+                  </label>
+                  <input
+                    aria-describedby="root_nestedObjectOptional_deepObject_deepTest__error root_nestedObjectOptional_deepObject_deepTest__description root_nestedObjectOptional_deepObject_deepTest__help"
+                    autoFocus={false}
+                    className="p-inputtext p-component p-disabled"
+                    data-pc-name="inputtext"
+                    data-pc-section="root"
+                    disabled={true}
+                    id="root_nestedObjectOptional_deepObject_deepTest"
+                    name="root_nestedObjectOptional_deepObject_deepTest"
+                    onBeforeInput={[Function]}
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    onInput={[Function]}
+                    onKeyDown={[Function]}
+                    onPaste={[Function]}
+                    placeholder=""
+                    required={false}
+                    type="text"
+                    value=""
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            className="rjsf-field rjsf-field-array"
+          >
+            <div
+              style={
+                {
+                  "display": "flex",
+                  "flexDirection": "column",
+                  "gap": "0.5rem",
+                  "marginBottom": "1rem",
+                }
+              }
+            >
+              <h5
+                id="root_nestedObjectOptional_deepArrayOptional__title"
+                style={
+                  {
+                    "fontSize": "1.5rem",
+                    "margin": 0,
+                    "marginBottom": "0.2rem",
+                  }
+                }
+              >
+                deepArrayOptional
+                 
+              </h5>
+              <fieldset
+                className="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields p-fieldset p-component"
+                data-pc-name="fieldset"
+                data-pc-section="root"
+                formData={[]}
+                id="root_nestedObjectOptional_deepArrayOptional"
+                onClick={null}
+                style={{}}
+              >
+                <div
+                  aria-labelledby="root_nestedObjectOptional_deepArrayOptional_header"
+                  className="p-toggleable-content"
+                  data-pc-section="toggleablecontent"
+                  id="root_nestedObjectOptional_deepArrayOptional_content"
+                  role="region"
+                >
+                  <div
+                    className="p-fieldset-content"
+                    data-pc-section="content"
+                  >
+                    <div>
+                      <div />
+                      <div
+                        style={
+                          {
+                            "marginTop": "1rem",
+                            "position": "relative",
+                            "textAlign": "right",
+                          }
+                        }
+                      >
+                        <button
+                          aria-label="Add Item"
+                          className="rjsf-array-item-add p-button p-component p-disabled p-button-outlined p-button-sm p-button-secondary"
+                          data-pc-name="button"
+                          data-pc-section="root"
+                          disabled={true}
+                          id="root_nestedObjectOptional_deepArrayOptional__add"
+                          onClick={[Function]}
+                        >
+                          <span
+                            className="p-button-icon p-c p-button-icon-left pi pi-plus"
+                            data-pc-section="icon"
+                          />
+                          <span
+                            className="p-button-label p-c"
+                            data-pc-section="label"
+                          >
+                            Add Item
+                          </span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </fieldset>
+            </div>
+          </div>
+          <div
+            className="rjsf-field rjsf-field-array"
+          >
+            <div
+              style={
+                {
+                  "display": "flex",
+                  "flexDirection": "column",
+                  "gap": "0.5rem",
+                  "marginBottom": "1rem",
+                }
+              }
+            >
+              <h5
+                id="root_nestedObjectOptional_deepArrayOptional2__title"
+                style={
+                  {
+                    "fontSize": "1.5rem",
+                    "margin": 0,
+                    "marginBottom": "0.2rem",
+                  }
+                }
+              >
+                deepArrayOptional2
+                 
+              </h5>
+              <fieldset
+                className="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields p-fieldset p-component"
+                data-pc-name="fieldset"
+                data-pc-section="root"
+                formData={[]}
+                id="root_nestedObjectOptional_deepArrayOptional2"
+                onClick={null}
+                style={{}}
+              >
+                <div
+                  aria-labelledby="root_nestedObjectOptional_deepArrayOptional2_header"
+                  className="p-toggleable-content"
+                  data-pc-section="toggleablecontent"
+                  id="root_nestedObjectOptional_deepArrayOptional2_content"
+                  role="region"
+                >
+                  <div
+                    className="p-fieldset-content"
+                    data-pc-section="content"
+                  >
+                    <div>
+                      <div />
+                      <div
+                        style={
+                          {
+                            "marginTop": "1rem",
+                            "position": "relative",
+                            "textAlign": "right",
+                          }
+                        }
+                      >
+                        <button
+                          aria-label="Add Item"
+                          className="rjsf-array-item-add p-button p-component p-disabled p-button-outlined p-button-sm p-button-secondary"
+                          data-pc-name="button"
+                          data-pc-section="root"
+                          disabled={true}
+                          id="root_nestedObjectOptional_deepArrayOptional2__add"
+                          onClick={[Function]}
+                        >
+                          <span
+                            className="p-button-icon p-c p-button-icon-left pi pi-plus"
+                            data-pc-section="icon"
+                          />
+                          <span
+                            className="p-button-label p-c"
+                            data-pc-section="label"
+                          >
+                            Add Item
+                          </span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </fieldset>
+            </div>
+          </div>
+          <div
+            className="rjsf-field rjsf-field-array"
+          >
+            <div
+              style={
+                {
+                  "display": "flex",
+                  "flexDirection": "column",
+                  "gap": "0.5rem",
+                  "marginBottom": "1rem",
+                }
+              }
+            >
+              <h5
+                id="root_nestedObjectOptional_deepArray__title"
+                style={
+                  {
+                    "fontSize": "1.5rem",
+                    "margin": 0,
+                    "marginBottom": "0.2rem",
+                  }
+                }
+              >
+                deepArray
+                 
+                *
+              </h5>
+              <fieldset
+                className="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields p-fieldset p-component"
+                data-pc-name="fieldset"
+                data-pc-section="root"
+                formData={[]}
+                id="root_nestedObjectOptional_deepArray"
+                onClick={null}
+                style={{}}
+              >
+                <div
+                  aria-labelledby="root_nestedObjectOptional_deepArray_header"
+                  className="p-toggleable-content"
+                  data-pc-section="toggleablecontent"
+                  id="root_nestedObjectOptional_deepArray_content"
+                  role="region"
+                >
+                  <div
+                    className="p-fieldset-content"
+                    data-pc-section="content"
+                  >
+                    <div>
+                      <div />
+                      <div
+                        style={
+                          {
+                            "marginTop": "1rem",
+                            "position": "relative",
+                            "textAlign": "right",
+                          }
+                        }
+                      >
+                        <button
+                          aria-label="Add Item"
+                          className="rjsf-array-item-add p-button p-component p-disabled p-button-outlined p-button-sm p-button-secondary"
+                          data-pc-name="button"
+                          data-pc-section="root"
+                          disabled={true}
+                          id="root_nestedObjectOptional_deepArray__add"
+                          onClick={[Function]}
+                        >
+                          <span
+                            className="p-button-icon p-c p-button-icon-left pi pi-plus"
+                            data-pc-section="icon"
+                          />
+                          <span
+                            className="p-button-label p-c"
+                            data-pc-section="label"
+                          >
+                            Add Item
+                          </span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </fieldset>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-array"
+      >
+        <div
+          style={
+            {
+              "display": "flex",
+              "flexDirection": "column",
+              "gap": "0.5rem",
+              "marginBottom": "1rem",
+            }
+          }
+        >
+          <h5
+            id="root_nestedArrayOptional__title"
+            style={
+              {
+                "fontSize": "1.5rem",
+                "margin": 0,
+                "marginBottom": "0.2rem",
+              }
+            }
+          >
+            nestedArrayOptional
+             
+          </h5>
+          <fieldset
+            className="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields p-fieldset p-component"
+            data-pc-name="fieldset"
+            data-pc-section="root"
+            formData={[]}
+            id="root_nestedArrayOptional"
+            onClick={null}
+            style={{}}
+          >
+            <div
+              aria-labelledby="root_nestedArrayOptional_header"
+              className="p-toggleable-content"
+              data-pc-section="toggleablecontent"
+              id="root_nestedArrayOptional_content"
+              role="region"
+            >
+              <div
+                className="p-fieldset-content"
+                data-pc-section="content"
+              >
+                <div>
+                  <div />
+                  <div
+                    style={
+                      {
+                        "marginTop": "1rem",
+                        "position": "relative",
+                        "textAlign": "right",
+                      }
+                    }
+                  >
+                    <button
+                      aria-label="Add Item"
+                      className="rjsf-array-item-add p-button p-component p-disabled p-button-outlined p-button-sm p-button-secondary"
+                      data-pc-name="button"
+                      data-pc-section="root"
+                      disabled={true}
+                      id="root_nestedArrayOptional__add"
+                      onClick={[Function]}
+                    >
+                      <span
+                        className="p-button-icon p-c p-button-icon-left pi pi-plus"
+                        data-pc-section="icon"
+                      />
+                      <span
+                        className="p-button-label p-c"
+                        data-pc-section="label"
+                      >
+                        Add Item
+                      </span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-object"
+      >
+        <div
+          style={
+            {
+              "display": "flex",
+              "flexDirection": "column",
+              "gap": "0.5rem",
+              "marginBottom": "1rem",
+            }
+          }
+        >
+          <div
+            id="root_nestedObject__title"
+          >
+            <h5
+              style={
+                {
+                  "fontSize": "1.2rem",
+                  "margin": 0,
+                }
+              }
+            >
+              nestedObject
+               
+              *
+            </h5>
+            <div
+              aria-orientation="horizontal"
+              className="p-divider p-component p-divider-horizontal p-divider-solid p-divider-left"
+              data-pc-name="divider"
+              data-pc-section="root"
+              role="separator"
+              style={
+                {
+                  "alignItems": null,
+                  "justifyContent": "center",
+                  "marginTop": "0.5rem",
+                }
+              }
+            >
+              <div
+                className="p-divider-content"
+                data-pc-section="content"
+              />
+            </div>
+          </div>
+          <div
+            className="rjsf-field rjsf-field-string"
+          >
+            <div
+              style={
+                {
+                  "display": "flex",
+                  "flexDirection": "column",
+                  "gap": "0.5rem",
+                  "marginBottom": "1rem",
+                }
+              }
+            >
+              <label
+                htmlFor="root_nestedObject_test"
+              >
+                test
+                 
+              </label>
+              <input
+                aria-describedby="root_nestedObject_test__error root_nestedObject_test__description root_nestedObject_test__help"
+                autoFocus={false}
+                className="p-inputtext p-component p-disabled"
+                data-pc-name="inputtext"
+                data-pc-section="root"
+                disabled={true}
+                id="root_nestedObject_test"
+                name="root_nestedObject_test"
+                onBeforeInput={[Function]}
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onInput={[Function]}
+                onKeyDown={[Function]}
+                onPaste={[Function]}
+                placeholder=""
+                required={false}
+                type="text"
+                value=""
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-array"
+      >
+        <div
+          style={
+            {
+              "display": "flex",
+              "flexDirection": "column",
+              "gap": "0.5rem",
+              "marginBottom": "1rem",
+            }
+          }
+        >
+          <h5
+            id="root_nestedArray__title"
+            style={
+              {
+                "fontSize": "1.5rem",
+                "margin": 0,
+                "marginBottom": "0.2rem",
+              }
+            }
+          >
+            nestedArray
+             
+            *
+          </h5>
+          <fieldset
+            className="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields p-fieldset p-component"
+            data-pc-name="fieldset"
+            data-pc-section="root"
+            formData={[]}
+            id="root_nestedArray"
+            onClick={null}
+            style={{}}
+          >
+            <div
+              aria-labelledby="root_nestedArray_header"
+              className="p-toggleable-content"
+              data-pc-section="toggleablecontent"
+              id="root_nestedArray_content"
+              role="region"
+            >
+              <div
+                className="p-fieldset-content"
+                data-pc-section="content"
+              >
+                <div>
+                  <div />
+                  <div
+                    style={
+                      {
+                        "marginTop": "1rem",
+                        "position": "relative",
+                        "textAlign": "right",
+                      }
+                    }
+                  >
+                    <button
+                      aria-label="Add Item"
+                      className="rjsf-array-item-add p-button p-component p-disabled p-button-outlined p-button-sm p-button-secondary"
+                      data-pc-name="button"
+                      data-pc-section="root"
+                      disabled={true}
+                      id="root_nestedArray__add"
+                      onClick={[Function]}
+                    >
+                      <span
+                        className="p-button-icon p-c p-button-icon-left pi pi-plus"
+                        data-pc-section="icon"
+                      />
+                      <span
+                        className="p-button-label p-c"
+                        data-pc-section="label"
+                      >
+                        Add Item
+                      </span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-undefined"
+      >
+        <div
+          style={
+            {
+              "display": "flex",
+              "flexDirection": "column",
+              "gap": "0.5rem",
+              "marginBottom": "1rem",
+            }
+          }
+        >
+          <label
+            htmlFor="root_optionalObjectWithOneofs"
+          >
+            optionalObjectWithOneofs
+             
+          </label>
+          <fieldset
+            className="p-fieldset p-component"
+            data-pc-name="fieldset"
+            data-pc-section="root"
+            id="pr_id_44"
+            onClick={null}
+            style={{}}
+          >
+            <div
+              aria-labelledby="pr_id_44_header"
+              className="p-toggleable-content"
+              data-pc-section="toggleablecontent"
+              id="pr_id_44_content"
+              role="region"
+            >
+              <div
+                className="p-fieldset-content"
+                data-pc-section="content"
+              >
+                <div
+                  style={
+                    {
+                      "marginBottom": "1rem",
+                    }
+                  }
+                >
+                  <select
+                    aria-describedby="root_optionalObjectWithOneofs__oneof_select__error root_optionalObjectWithOneofs__oneof_select__description root_optionalObjectWithOneofs__oneof_select__help"
+                    disabled={true}
+                    id="root_optionalObjectWithOneofs__oneof_select"
+                    name="root_optionalObjectWithOneofs__oneof_select"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    options={
+                      [
+                        {
+                          "disabled": false,
+                          "label": "Option 1",
+                          "value": "0",
+                        },
+                        {
+                          "disabled": false,
+                          "label": "Option 2",
+                          "value": "1",
+                        },
+                        {
+                          "disabled": false,
+                          "label": "Option 3",
+                          "value": "2",
+                        },
+                      ]
+                    }
+                    value="0"
+                  />
+                </div>
+                <div
+                  className="rjsf-field rjsf-field-object"
+                >
+                  <div
+                    style={
+                      {
+                        "display": "flex",
+                        "flexDirection": "column",
+                        "gap": "0.5rem",
+                        "marginBottom": "1rem",
+                      }
+                    }
+                  >
+                    <div
+                      id="root_optionalObjectWithOneofs__title"
+                    >
+                      <h5
+                        style={
+                          {
+                            "fontSize": "1.2rem",
+                            "margin": 0,
+                          }
+                        }
+                      >
+                        optionalObjectWithOneofs
+                         
+                      </h5>
+                      <div
+                        aria-orientation="horizontal"
+                        className="p-divider p-component p-divider-horizontal p-divider-solid p-divider-left"
+                        data-pc-name="divider"
+                        data-pc-section="root"
+                        role="separator"
+                        style={
+                          {
+                            "alignItems": null,
+                            "justifyContent": "center",
+                            "marginTop": "0.5rem",
+                          }
+                        }
+                      >
+                        <div
+                          className="p-divider-content"
+                          data-pc-section="content"
+                        />
+                      </div>
+                    </div>
+                    <div
+                      className="rjsf-field rjsf-field-string"
+                    >
+                      <div
+                        style={
+                          {
+                            "display": "flex",
+                            "flexDirection": "column",
+                            "gap": "0.5rem",
+                            "marginBottom": "1rem",
+                          }
+                        }
+                      >
+                        <label
+                          htmlFor="root_optionalObjectWithOneofs_name"
+                        >
+                          name
+                           
+                        </label>
+                        <input
+                          aria-describedby="root_optionalObjectWithOneofs_name__error root_optionalObjectWithOneofs_name__description root_optionalObjectWithOneofs_name__help"
+                          autoFocus={false}
+                          className="p-inputtext p-component p-disabled"
+                          data-pc-name="inputtext"
+                          data-pc-section="root"
+                          disabled={true}
+                          id="root_optionalObjectWithOneofs_name"
+                          name="root_optionalObjectWithOneofs_name"
+                          onBeforeInput={[Function]}
+                          onBlur={[Function]}
+                          onChange={[Function]}
+                          onFocus={[Function]}
+                          onInput={[Function]}
+                          onKeyDown={[Function]}
+                          onPaste={[Function]}
+                          placeholder=""
+                          required={false}
+                          type="text"
+                          value=""
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields optional data controls shows "add" and "remove" optional controls when turned on in uiSchema and formData 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <div
+        id="root__title"
+      >
+        <h5
+          style={
+            {
+              "fontSize": "1.5rem",
+              "margin": 0,
+            }
+          }
+        >
+          test
+           
+        </h5>
+        <div
+          aria-orientation="horizontal"
+          className="p-divider p-component p-divider-horizontal p-divider-solid p-divider-left"
+          data-pc-name="divider"
+          data-pc-section="root"
+          role="separator"
+          style={
+            {
+              "alignItems": null,
+              "justifyContent": "center",
+              "marginTop": "0.5rem",
+            }
+          }
+        >
+          <div
+            className="p-divider-content"
+            data-pc-section="content"
+          />
+        </div>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-object"
+      >
+        <div
+          style={
+            {
+              "display": "flex",
+              "flexDirection": "column",
+              "gap": "0.5rem",
+              "marginBottom": "1rem",
+            }
+          }
+        >
+          <div
+            id="root_nestedObjectOptional__title"
+          >
+            <div
+              style={
+                {
+                  "display": "flex",
+                }
+              }
+            >
+              <div
+                style={
+                  {
+                    "flexGrow": 1,
+                  }
+                }
+              >
+                <h5
+                  style={
+                    {
+                      "fontSize": "1.2rem",
+                      "margin": 0,
+                    }
+                  }
+                >
+                  nestedObjectOptional
+                   
+                </h5>
+              </div>
+              <div
+                style={
+                  {
+                    "marginLeft": "-5px",
+                  }
+                }
+              >
+                <button
+                  className="rjsf-remove-optional-data p-button p-component p-button-icon-only p-button-text p-button-rounded p-button-secondary"
+                  data-pc-name="button"
+                  data-pc-section="root"
+                  disabled={false}
+                  onClick={[Function]}
+                  style={
+                    {
+                      "height": "1.5rem",
+                      "width": "1.5rem",
+                    }
+                  }
+                  title="Remove data for optional field"
+                >
+                  <span
+                    className="p-button-icon p-c pi pi-trash"
+                    data-pc-section="icon"
+                  />
+                  <span
+                    className="p-button-label p-c"
+                    dangerouslySetInnerHTML={
+                      {
+                        "__html": "&nbsp;",
+                      }
+                    }
+                    data-pc-section="label"
+                  />
+                </button>
+              </div>
+            </div>
+            <div
+              aria-orientation="horizontal"
+              className="p-divider p-component p-divider-horizontal p-divider-solid p-divider-left"
+              data-pc-name="divider"
+              data-pc-section="root"
+              role="separator"
+              style={
+                {
+                  "alignItems": null,
+                  "justifyContent": "center",
+                  "marginTop": "0.5rem",
+                }
+              }
+            >
+              <div
+                className="p-divider-content"
+                data-pc-section="content"
+              />
+            </div>
+          </div>
+          <div
+            className="rjsf-field rjsf-field-string"
+          >
+            <div
+              style={
+                {
+                  "display": "flex",
+                  "flexDirection": "column",
+                  "gap": "0.5rem",
+                  "marginBottom": "1rem",
+                }
+              }
+            >
+              <label
+                htmlFor="root_nestedObjectOptional_test"
+              >
+                test
+                 
+              </label>
+              <input
+                aria-describedby="root_nestedObjectOptional_test__error root_nestedObjectOptional_test__description root_nestedObjectOptional_test__help"
+                autoFocus={false}
+                className="p-inputtext p-component p-filled"
+                data-pc-name="inputtext"
+                data-pc-section="root"
+                disabled={false}
+                id="root_nestedObjectOptional_test"
+                name="root_nestedObjectOptional_test"
+                onBeforeInput={[Function]}
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onInput={[Function]}
+                onKeyDown={[Function]}
+                onPaste={[Function]}
+                placeholder=""
+                required={false}
+                type="text"
+                value="foo"
+              />
+            </div>
+          </div>
+          <div
+            className="rjsf-field rjsf-field-object"
+          >
+            <div
+              style={
+                {
+                  "display": "flex",
+                  "flexDirection": "column",
+                  "gap": "0.5rem",
+                  "marginBottom": "1rem",
+                }
+              }
+            >
+              <div
+                id="root_nestedObjectOptional_deepObjectOptional__title"
+              >
+                <div
+                  style={
+                    {
+                      "display": "flex",
+                    }
+                  }
+                >
+                  <div
+                    style={
+                      {
+                        "flexGrow": 1,
+                      }
+                    }
+                  >
+                    <h5
+                      style={
+                        {
+                          "fontSize": "1.2rem",
+                          "margin": 0,
+                        }
+                      }
+                    >
+                      deepObjectOptional
+                       
+                    </h5>
+                  </div>
+                  <div
+                    style={
+                      {
+                        "marginLeft": "-5px",
+                      }
+                    }
+                  >
+                    <button
+                      className="rjsf-add-optional-data p-button p-component p-button-icon-only p-button-text p-button-rounded p-button-secondary"
+                      data-pc-name="button"
+                      data-pc-section="root"
+                      disabled={false}
+                      onClick={[Function]}
+                      style={
+                        {
+                          "height": "1.5rem",
+                          "width": "1.5rem",
+                        }
+                      }
+                      title="Add data for optional field"
+                    >
+                      <span
+                        className="p-button-icon p-c pi pi-pi pi-plus"
+                        data-pc-section="icon"
+                      />
+                      <span
+                        className="p-button-label p-c"
+                        dangerouslySetInnerHTML={
+                          {
+                            "__html": "&nbsp;",
+                          }
+                        }
+                        data-pc-section="label"
+                      />
+                    </button>
+                  </div>
+                </div>
+                <div
+                  aria-orientation="horizontal"
+                  className="p-divider p-component p-divider-horizontal p-divider-solid p-divider-left"
+                  data-pc-name="divider"
+                  data-pc-section="root"
+                  role="separator"
+                  style={
+                    {
+                      "alignItems": null,
+                      "justifyContent": "center",
+                      "marginTop": "0.5rem",
+                    }
+                  }
+                >
+                  <div
+                    className="p-divider-content"
+                    data-pc-section="content"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            className="rjsf-field rjsf-field-object"
+          >
+            <div
+              style={
+                {
+                  "display": "flex",
+                  "flexDirection": "column",
+                  "gap": "0.5rem",
+                  "marginBottom": "1rem",
+                }
+              }
+            >
+              <div
+                id="root_nestedObjectOptional_deepObject__title"
+              >
+                <h5
+                  style={
+                    {
+                      "fontSize": "1.2rem",
+                      "margin": 0,
+                    }
+                  }
+                >
+                  deepObject
+                   
+                  *
+                </h5>
+                <div
+                  aria-orientation="horizontal"
+                  className="p-divider p-component p-divider-horizontal p-divider-solid p-divider-left"
+                  data-pc-name="divider"
+                  data-pc-section="root"
+                  role="separator"
+                  style={
+                    {
+                      "alignItems": null,
+                      "justifyContent": "center",
+                      "marginTop": "0.5rem",
+                    }
+                  }
+                >
+                  <div
+                    className="p-divider-content"
+                    data-pc-section="content"
+                  />
+                </div>
+              </div>
+              <div
+                className="rjsf-field rjsf-field-string"
+              >
+                <div
+                  style={
+                    {
+                      "display": "flex",
+                      "flexDirection": "column",
+                      "gap": "0.5rem",
+                      "marginBottom": "1rem",
+                    }
+                  }
+                >
+                  <label
+                    htmlFor="root_nestedObjectOptional_deepObject_deepTest"
+                  >
+                    deepTest
+                     
+                  </label>
+                  <input
+                    aria-describedby="root_nestedObjectOptional_deepObject_deepTest__error root_nestedObjectOptional_deepObject_deepTest__description root_nestedObjectOptional_deepObject_deepTest__help"
+                    autoFocus={false}
+                    className="p-inputtext p-component"
+                    data-pc-name="inputtext"
+                    data-pc-section="root"
+                    disabled={false}
+                    id="root_nestedObjectOptional_deepObject_deepTest"
+                    name="root_nestedObjectOptional_deepObject_deepTest"
+                    onBeforeInput={[Function]}
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    onInput={[Function]}
+                    onKeyDown={[Function]}
+                    onPaste={[Function]}
+                    placeholder=""
+                    required={false}
+                    type="text"
+                    value=""
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            className="rjsf-field rjsf-field-array"
+          >
+            <div
+              style={
+                {
+                  "display": "flex",
+                  "flexDirection": "column",
+                  "gap": "0.5rem",
+                  "marginBottom": "1rem",
+                }
+              }
+            >
+              <h5
+                id="root_nestedObjectOptional_deepArrayOptional__title"
+                style={
+                  {
+                    "fontSize": "1.5rem",
+                    "margin": 0,
+                    "marginBottom": "0.2rem",
+                  }
+                }
+              >
+                deepArrayOptional
+                 
+              </h5>
+              <fieldset
+                className="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields p-fieldset p-component"
+                data-pc-name="fieldset"
+                data-pc-section="root"
+                formData={[]}
+                id="root_nestedObjectOptional_deepArrayOptional"
+                onClick={null}
+                style={{}}
+              >
+                <div
+                  aria-labelledby="root_nestedObjectOptional_deepArrayOptional_header"
+                  className="p-toggleable-content"
+                  data-pc-section="toggleablecontent"
+                  id="root_nestedObjectOptional_deepArrayOptional_content"
+                  role="region"
+                >
+                  <div
+                    className="p-fieldset-content"
+                    data-pc-section="content"
+                  >
+                    <div>
+                      <div />
+                      <div
+                        style={
+                          {
+                            "marginTop": "1rem",
+                            "position": "relative",
+                            "textAlign": "right",
+                          }
+                        }
+                      >
+                        <button
+                          aria-label="Add Item"
+                          className="rjsf-array-item-add p-button p-component p-button-outlined p-button-sm p-button-secondary"
+                          data-pc-name="button"
+                          data-pc-section="root"
+                          disabled={false}
+                          id="root_nestedObjectOptional_deepArrayOptional__add"
+                          onClick={[Function]}
+                        >
+                          <span
+                            className="p-button-icon p-c p-button-icon-left pi pi-plus"
+                            data-pc-section="icon"
+                          />
+                          <span
+                            className="p-button-label p-c"
+                            data-pc-section="label"
+                          >
+                            Add Item
+                          </span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </fieldset>
+            </div>
+          </div>
+          <div
+            className="rjsf-field rjsf-field-array"
+          >
+            <div
+              style={
+                {
+                  "display": "flex",
+                  "flexDirection": "column",
+                  "gap": "0.5rem",
+                  "marginBottom": "1rem",
+                }
+              }
+            >
+              <div
+                style={
+                  {
+                    "display": "flex",
+                  }
+                }
+              >
+                <div
+                  style={
+                    {
+                      "flexGrow": 1,
+                    }
+                  }
+                >
+                  <h5
+                    id="root_nestedObjectOptional_deepArrayOptional2__title"
+                    style={
+                      {
+                        "fontSize": "1.5rem",
+                        "margin": 0,
+                        "marginBottom": "0.2rem",
+                      }
+                    }
+                  >
+                    deepArrayOptional2
+                     
+                  </h5>
+                </div>
+                <div>
+                  <button
+                    className="rjsf-add-optional-data p-button p-component p-button-icon-only p-button-text p-button-rounded p-button-secondary"
+                    data-pc-name="button"
+                    data-pc-section="root"
+                    disabled={false}
+                    onClick={[Function]}
+                    style={
+                      {
+                        "height": "1.5rem",
+                        "width": "1.5rem",
+                      }
+                    }
+                    title="Add data for optional field"
+                  >
+                    <span
+                      className="p-button-icon p-c pi pi-pi pi-plus"
+                      data-pc-section="icon"
+                    />
+                    <span
+                      className="p-button-label p-c"
+                      dangerouslySetInnerHTML={
+                        {
+                          "__html": "&nbsp;",
+                        }
+                      }
+                      data-pc-section="label"
+                    />
+                  </button>
+                </div>
+              </div>
+              <fieldset
+                className="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field sortable-form-fields p-fieldset p-component"
+                data-pc-name="fieldset"
+                data-pc-section="root"
+                formData={[]}
+                id="root_nestedObjectOptional_deepArrayOptional2"
+                onClick={null}
+                style={{}}
+              >
+                <div
+                  aria-labelledby="root_nestedObjectOptional_deepArrayOptional2_header"
+                  className="p-toggleable-content"
+                  data-pc-section="toggleablecontent"
+                  id="root_nestedObjectOptional_deepArrayOptional2_content"
+                  role="region"
+                >
+                  <div
+                    className="p-fieldset-content"
+                    data-pc-section="content"
+                  >
+                    <div>
+                      <div />
+                    </div>
+                  </div>
+                </div>
+              </fieldset>
+            </div>
+          </div>
+          <div
+            className="rjsf-field rjsf-field-array"
+          >
+            <div
+              style={
+                {
+                  "display": "flex",
+                  "flexDirection": "column",
+                  "gap": "0.5rem",
+                  "marginBottom": "1rem",
+                }
+              }
+            >
+              <h5
+                id="root_nestedObjectOptional_deepArray__title"
+                style={
+                  {
+                    "fontSize": "1.5rem",
+                    "margin": 0,
+                    "marginBottom": "0.2rem",
+                  }
+                }
+              >
+                deepArray
+                 
+                *
+              </h5>
+              <fieldset
+                className="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields p-fieldset p-component"
+                data-pc-name="fieldset"
+                data-pc-section="root"
+                formData={[]}
+                id="root_nestedObjectOptional_deepArray"
+                onClick={null}
+                style={{}}
+              >
+                <div
+                  aria-labelledby="root_nestedObjectOptional_deepArray_header"
+                  className="p-toggleable-content"
+                  data-pc-section="toggleablecontent"
+                  id="root_nestedObjectOptional_deepArray_content"
+                  role="region"
+                >
+                  <div
+                    className="p-fieldset-content"
+                    data-pc-section="content"
+                  >
+                    <div>
+                      <div />
+                      <div
+                        style={
+                          {
+                            "marginTop": "1rem",
+                            "position": "relative",
+                            "textAlign": "right",
+                          }
+                        }
+                      >
+                        <button
+                          aria-label="Add Item"
+                          className="rjsf-array-item-add p-button p-component p-button-outlined p-button-sm p-button-secondary"
+                          data-pc-name="button"
+                          data-pc-section="root"
+                          disabled={false}
+                          id="root_nestedObjectOptional_deepArray__add"
+                          onClick={[Function]}
+                        >
+                          <span
+                            className="p-button-icon p-c p-button-icon-left pi pi-plus"
+                            data-pc-section="icon"
+                          />
+                          <span
+                            className="p-button-label p-c"
+                            data-pc-section="label"
+                          >
+                            Add Item
+                          </span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </fieldset>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-array"
+      >
+        <div
+          style={
+            {
+              "display": "flex",
+              "flexDirection": "column",
+              "gap": "0.5rem",
+              "marginBottom": "1rem",
+            }
+          }
+        >
+          <div
+            style={
+              {
+                "display": "flex",
+              }
+            }
+          >
+            <div
+              style={
+                {
+                  "flexGrow": 1,
+                }
+              }
+            >
+              <h5
+                id="root_nestedArrayOptional__title"
+                style={
+                  {
+                    "fontSize": "1.5rem",
+                    "margin": 0,
+                    "marginBottom": "0.2rem",
+                  }
+                }
+              >
+                nestedArrayOptional
+                 
+              </h5>
+            </div>
+            <div>
+              <button
+                className="rjsf-remove-optional-data p-button p-component p-button-icon-only p-button-text p-button-rounded p-button-secondary"
+                data-pc-name="button"
+                data-pc-section="root"
+                disabled={false}
+                onClick={[Function]}
+                style={
+                  {
+                    "height": "1.5rem",
+                    "width": "1.5rem",
+                  }
+                }
+                title="Remove data for optional field"
+              >
+                <span
+                  className="p-button-icon p-c pi pi-trash"
+                  data-pc-section="icon"
+                />
+                <span
+                  className="p-button-label p-c"
+                  dangerouslySetInnerHTML={
+                    {
+                      "__html": "&nbsp;",
+                    }
+                  }
+                  data-pc-section="label"
+                />
+              </button>
+            </div>
+          </div>
+          <fieldset
+            className="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field sortable-form-fields p-fieldset p-component"
+            data-pc-name="fieldset"
+            data-pc-section="root"
+            formData={
+              [
+                "bar",
+              ]
+            }
+            id="root_nestedArrayOptional"
+            onClick={null}
+            style={{}}
+          >
+            <div
+              aria-labelledby="root_nestedArrayOptional_header"
+              className="p-toggleable-content"
+              data-pc-section="toggleablecontent"
+              id="root_nestedArrayOptional_content"
+              role="region"
+            >
+              <div
+                className="p-fieldset-content"
+                data-pc-section="content"
+              >
+                <div>
+                  <div>
+                    <div
+                      style={
+                        {
+                          "position": "relative",
+                        }
+                      }
+                    >
+                      <div
+                        style={
+                          {
+                            "position": "absolute",
+                            "right": 0,
+                            "top": "-10px",
+                          }
+                        }
+                      >
+                        <div
+                          style={
+                            {
+                              "flexDirection": "row",
+                            }
+                          }
+                        >
+                          <button
+                            className="rjsf-array-item-remove p-button p-component p-button-icon-only p-button-text p-button-rounded p-button-secondary"
+                            data-pc-name="button"
+                            data-pc-section="root"
+                            disabled={false}
+                            id="root_nestedArrayOptional_0__remove"
+                            onClick={[Function]}
+                            title="Remove"
+                          >
+                            <span
+                              className="p-button-icon p-c pi pi-trash"
+                              data-pc-section="icon"
+                            />
+                            <span
+                              className="p-button-label p-c"
+                              dangerouslySetInnerHTML={
+                                {
+                                  "__html": "&nbsp;",
+                                }
+                              }
+                              data-pc-section="label"
+                            />
+                          </button>
+                        </div>
+                      </div>
+                      <div
+                        className="rjsf-field rjsf-field-string"
+                      >
+                        <div
+                          style={
+                            {
+                              "display": "flex",
+                              "flexDirection": "column",
+                              "gap": "0.5rem",
+                              "marginBottom": "1rem",
+                            }
+                          }
+                        >
+                          <label
+                            htmlFor="root_nestedArrayOptional_0"
+                          >
+                            nestedArrayOptional-1
+                             
+                            *
+                          </label>
+                          <input
+                            aria-describedby="root_nestedArrayOptional_0__error root_nestedArrayOptional_0__description root_nestedArrayOptional_0__help"
+                            autoFocus={false}
+                            className="p-inputtext p-component p-filled"
+                            data-pc-name="inputtext"
+                            data-pc-section="root"
+                            disabled={false}
+                            id="root_nestedArrayOptional_0"
+                            name="root_nestedArrayOptional_0"
+                            onBeforeInput={[Function]}
+                            onBlur={[Function]}
+                            onChange={[Function]}
+                            onFocus={[Function]}
+                            onInput={[Function]}
+                            onKeyDown={[Function]}
+                            onPaste={[Function]}
+                            placeholder=""
+                            required={true}
+                            type="text"
+                            value="bar"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    style={
+                      {
+                        "marginTop": "1rem",
+                        "position": "relative",
+                        "textAlign": "right",
+                      }
+                    }
+                  >
+                    <button
+                      aria-label="Add Item"
+                      className="rjsf-array-item-add p-button p-component p-button-outlined p-button-sm p-button-secondary"
+                      data-pc-name="button"
+                      data-pc-section="root"
+                      disabled={false}
+                      id="root_nestedArrayOptional__add"
+                      onClick={[Function]}
+                    >
+                      <span
+                        className="p-button-icon p-c p-button-icon-left pi pi-plus"
+                        data-pc-section="icon"
+                      />
+                      <span
+                        className="p-button-label p-c"
+                        data-pc-section="label"
+                      >
+                        Add Item
+                      </span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-object"
+      >
+        <div
+          style={
+            {
+              "display": "flex",
+              "flexDirection": "column",
+              "gap": "0.5rem",
+              "marginBottom": "1rem",
+            }
+          }
+        >
+          <div
+            id="root_nestedObject__title"
+          >
+            <h5
+              style={
+                {
+                  "fontSize": "1.2rem",
+                  "margin": 0,
+                }
+              }
+            >
+              nestedObject
+               
+              *
+            </h5>
+            <div
+              aria-orientation="horizontal"
+              className="p-divider p-component p-divider-horizontal p-divider-solid p-divider-left"
+              data-pc-name="divider"
+              data-pc-section="root"
+              role="separator"
+              style={
+                {
+                  "alignItems": null,
+                  "justifyContent": "center",
+                  "marginTop": "0.5rem",
+                }
+              }
+            >
+              <div
+                className="p-divider-content"
+                data-pc-section="content"
+              />
+            </div>
+          </div>
+          <div
+            className="rjsf-field rjsf-field-string"
+          >
+            <div
+              style={
+                {
+                  "display": "flex",
+                  "flexDirection": "column",
+                  "gap": "0.5rem",
+                  "marginBottom": "1rem",
+                }
+              }
+            >
+              <label
+                htmlFor="root_nestedObject_test"
+              >
+                test
+                 
+              </label>
+              <input
+                aria-describedby="root_nestedObject_test__error root_nestedObject_test__description root_nestedObject_test__help"
+                autoFocus={false}
+                className="p-inputtext p-component"
+                data-pc-name="inputtext"
+                data-pc-section="root"
+                disabled={false}
+                id="root_nestedObject_test"
+                name="root_nestedObject_test"
+                onBeforeInput={[Function]}
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onInput={[Function]}
+                onKeyDown={[Function]}
+                onPaste={[Function]}
+                placeholder=""
+                required={false}
+                type="text"
+                value=""
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-array"
+      >
+        <div
+          style={
+            {
+              "display": "flex",
+              "flexDirection": "column",
+              "gap": "0.5rem",
+              "marginBottom": "1rem",
+            }
+          }
+        >
+          <h5
+            id="root_nestedArray__title"
+            style={
+              {
+                "fontSize": "1.5rem",
+                "margin": 0,
+                "marginBottom": "0.2rem",
+              }
+            }
+          >
+            nestedArray
+             
+            *
+          </h5>
+          <fieldset
+            className="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields p-fieldset p-component"
+            data-pc-name="fieldset"
+            data-pc-section="root"
+            formData={[]}
+            id="root_nestedArray"
+            onClick={null}
+            style={{}}
+          >
+            <div
+              aria-labelledby="root_nestedArray_header"
+              className="p-toggleable-content"
+              data-pc-section="toggleablecontent"
+              id="root_nestedArray_content"
+              role="region"
+            >
+              <div
+                className="p-fieldset-content"
+                data-pc-section="content"
+              >
+                <div>
+                  <div />
+                  <div
+                    style={
+                      {
+                        "marginTop": "1rem",
+                        "position": "relative",
+                        "textAlign": "right",
+                      }
+                    }
+                  >
+                    <button
+                      aria-label="Add Item"
+                      className="rjsf-array-item-add p-button p-component p-button-outlined p-button-sm p-button-secondary"
+                      data-pc-name="button"
+                      data-pc-section="root"
+                      disabled={false}
+                      id="root_nestedArray__add"
+                      onClick={[Function]}
+                    >
+                      <span
+                        className="p-button-icon p-c p-button-icon-left pi pi-plus"
+                        data-pc-section="icon"
+                      />
+                      <span
+                        className="p-button-label p-c"
+                        data-pc-section="label"
+                      >
+                        Add Item
+                      </span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-undefined"
+      >
+        <div
+          style={
+            {
+              "display": "flex",
+              "flexDirection": "column",
+              "gap": "0.5rem",
+              "marginBottom": "1rem",
+            }
+          }
+        >
+          <label
+            htmlFor="root_optionalObjectWithOneofs"
+          >
+            optionalObjectWithOneofs
+             
+          </label>
+          <fieldset
+            className="p-fieldset p-component"
+            data-pc-name="fieldset"
+            data-pc-section="root"
+            id={null}
+            onClick={null}
+            style={{}}
+          >
+            <div
+              aria-labelledby="null_header"
+              className="p-toggleable-content"
+              data-pc-section="toggleablecontent"
+              id="null_content"
+              role="region"
+            >
+              <div
+                className="p-fieldset-content"
+                data-pc-section="content"
+              >
+                <div
+                  style={
+                    {
+                      "marginBottom": "1rem",
+                    }
+                  }
+                >
+                  <select
+                    aria-describedby="root_optionalObjectWithOneofs__oneof_select__error root_optionalObjectWithOneofs__oneof_select__description root_optionalObjectWithOneofs__oneof_select__help"
+                    disabled={false}
+                    id="root_optionalObjectWithOneofs__oneof_select"
+                    name="root_optionalObjectWithOneofs__oneof_select"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    options={
+                      [
+                        {
+                          "disabled": false,
+                          "label": "Option 1",
+                          "value": "0",
+                        },
+                        {
+                          "disabled": false,
+                          "label": "Option 2",
+                          "value": "1",
+                        },
+                        {
+                          "disabled": false,
+                          "label": "Option 3",
+                          "value": "2",
+                        },
+                      ]
+                    }
+                    value="0"
+                  />
+                </div>
+                <div
+                  className="rjsf-field rjsf-field-object"
+                >
+                  <div
+                    style={
+                      {
+                        "display": "flex",
+                        "flexDirection": "column",
+                        "gap": "0.5rem",
+                        "marginBottom": "1rem",
+                      }
+                    }
+                  >
+                    <div
+                      id="root_optionalObjectWithOneofs__title"
+                    >
+                      <h5
+                        style={
+                          {
+                            "fontSize": "1.2rem",
+                            "margin": 0,
+                          }
+                        }
+                      >
+                        optionalObjectWithOneofs
+                         
+                      </h5>
+                      <div
+                        aria-orientation="horizontal"
+                        className="p-divider p-component p-divider-horizontal p-divider-solid p-divider-left"
+                        data-pc-name="divider"
+                        data-pc-section="root"
+                        role="separator"
+                        style={
+                          {
+                            "alignItems": null,
+                            "justifyContent": "center",
+                            "marginTop": "0.5rem",
+                          }
+                        }
+                      >
+                        <div
+                          className="p-divider-content"
+                          data-pc-section="content"
+                        />
+                      </div>
+                    </div>
+                    <div
+                      className="rjsf-field rjsf-field-string"
+                    >
+                      <div
+                        style={
+                          {
+                            "display": "flex",
+                            "flexDirection": "column",
+                            "gap": "0.5rem",
+                            "marginBottom": "1rem",
+                          }
+                        }
+                      >
+                        <label
+                          htmlFor="root_optionalObjectWithOneofs_name"
+                        >
+                          name
+                           
+                        </label>
+                        <input
+                          aria-describedby="root_optionalObjectWithOneofs_name__error root_optionalObjectWithOneofs_name__description root_optionalObjectWithOneofs_name__help"
+                          autoFocus={false}
+                          className="p-inputtext p-component p-disabled"
+                          data-pc-name="inputtext"
+                          data-pc-section="root"
+                          disabled={true}
+                          id="root_optionalObjectWithOneofs_name"
+                          name="root_optionalObjectWithOneofs_name"
+                          onBeforeInput={[Function]}
+                          onBlur={[Function]}
+                          onChange={[Function]}
+                          onFocus={[Function]}
+                          onInput={[Function]}
+                          onKeyDown={[Function]}
+                          onPaste={[Function]}
+                          placeholder=""
+                          required={false}
+                          type="text"
+                          value=""
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields optional data controls shows "add" and "remove" optional controls when turned on in uiSchema, readonly and formData 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <div
+        id="root__title"
+      >
+        <h5
+          style={
+            {
+              "fontSize": "1.5rem",
+              "margin": 0,
+            }
+          }
+        >
+          test
+           
+        </h5>
+        <div
+          aria-orientation="horizontal"
+          className="p-divider p-component p-divider-horizontal p-divider-solid p-divider-left"
+          data-pc-name="divider"
+          data-pc-section="root"
+          role="separator"
+          style={
+            {
+              "alignItems": null,
+              "justifyContent": "center",
+              "marginTop": "0.5rem",
+            }
+          }
+        >
+          <div
+            className="p-divider-content"
+            data-pc-section="content"
+          />
+        </div>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-object"
+      >
+        <div
+          style={
+            {
+              "display": "flex",
+              "flexDirection": "column",
+              "gap": "0.5rem",
+              "marginBottom": "1rem",
+            }
+          }
+        >
+          <div
+            id="root_nestedObjectOptional__title"
+          >
+            <h5
+              style={
+                {
+                  "fontSize": "1.2rem",
+                  "margin": 0,
+                }
+              }
+            >
+              nestedObjectOptional
+               
+            </h5>
+            <div
+              aria-orientation="horizontal"
+              className="p-divider p-component p-divider-horizontal p-divider-solid p-divider-left"
+              data-pc-name="divider"
+              data-pc-section="root"
+              role="separator"
+              style={
+                {
+                  "alignItems": null,
+                  "justifyContent": "center",
+                  "marginTop": "0.5rem",
+                }
+              }
+            >
+              <div
+                className="p-divider-content"
+                data-pc-section="content"
+              />
+            </div>
+          </div>
+          <div
+            className="rjsf-field rjsf-field-string"
+          >
+            <div
+              style={
+                {
+                  "display": "flex",
+                  "flexDirection": "column",
+                  "gap": "0.5rem",
+                  "marginBottom": "1rem",
+                }
+              }
+            >
+              <label
+                htmlFor="root_nestedObjectOptional_test"
+              >
+                test
+                 
+              </label>
+              <input
+                aria-describedby="root_nestedObjectOptional_test__error root_nestedObjectOptional_test__description root_nestedObjectOptional_test__help"
+                autoFocus={false}
+                className="p-inputtext p-component p-disabled p-filled"
+                data-pc-name="inputtext"
+                data-pc-section="root"
+                disabled={true}
+                id="root_nestedObjectOptional_test"
+                name="root_nestedObjectOptional_test"
+                onBeforeInput={[Function]}
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onInput={[Function]}
+                onKeyDown={[Function]}
+                onPaste={[Function]}
+                placeholder=""
+                required={false}
+                type="text"
+                value="foo"
+              />
+            </div>
+          </div>
+          <div
+            className="rjsf-field rjsf-field-object"
+          >
+            <div
+              style={
+                {
+                  "display": "flex",
+                  "flexDirection": "column",
+                  "gap": "0.5rem",
+                  "marginBottom": "1rem",
+                }
+              }
+            >
+              <div
+                id="root_nestedObjectOptional_deepObjectOptional__title"
+              >
+                <h5
+                  style={
+                    {
+                      "fontSize": "1.2rem",
+                      "margin": 0,
+                    }
+                  }
+                >
+                  deepObjectOptional
+                   
+                </h5>
+                <div
+                  aria-orientation="horizontal"
+                  className="p-divider p-component p-divider-horizontal p-divider-solid p-divider-left"
+                  data-pc-name="divider"
+                  data-pc-section="root"
+                  role="separator"
+                  style={
+                    {
+                      "alignItems": null,
+                      "justifyContent": "center",
+                      "marginTop": "0.5rem",
+                    }
+                  }
+                >
+                  <div
+                    className="p-divider-content"
+                    data-pc-section="content"
+                  />
+                </div>
+              </div>
+              <em>
+                No data for optional field
+              </em>
+            </div>
+          </div>
+          <div
+            className="rjsf-field rjsf-field-object"
+          >
+            <div
+              style={
+                {
+                  "display": "flex",
+                  "flexDirection": "column",
+                  "gap": "0.5rem",
+                  "marginBottom": "1rem",
+                }
+              }
+            >
+              <div
+                id="root_nestedObjectOptional_deepObject__title"
+              >
+                <h5
+                  style={
+                    {
+                      "fontSize": "1.2rem",
+                      "margin": 0,
+                    }
+                  }
+                >
+                  deepObject
+                   
+                  *
+                </h5>
+                <div
+                  aria-orientation="horizontal"
+                  className="p-divider p-component p-divider-horizontal p-divider-solid p-divider-left"
+                  data-pc-name="divider"
+                  data-pc-section="root"
+                  role="separator"
+                  style={
+                    {
+                      "alignItems": null,
+                      "justifyContent": "center",
+                      "marginTop": "0.5rem",
+                    }
+                  }
+                >
+                  <div
+                    className="p-divider-content"
+                    data-pc-section="content"
+                  />
+                </div>
+              </div>
+              <div
+                className="rjsf-field rjsf-field-string"
+              >
+                <div
+                  style={
+                    {
+                      "display": "flex",
+                      "flexDirection": "column",
+                      "gap": "0.5rem",
+                      "marginBottom": "1rem",
+                    }
+                  }
+                >
+                  <label
+                    htmlFor="root_nestedObjectOptional_deepObject_deepTest"
+                  >
+                    deepTest
+                     
+                  </label>
+                  <input
+                    aria-describedby="root_nestedObjectOptional_deepObject_deepTest__error root_nestedObjectOptional_deepObject_deepTest__description root_nestedObjectOptional_deepObject_deepTest__help"
+                    autoFocus={false}
+                    className="p-inputtext p-component p-disabled"
+                    data-pc-name="inputtext"
+                    data-pc-section="root"
+                    disabled={true}
+                    id="root_nestedObjectOptional_deepObject_deepTest"
+                    name="root_nestedObjectOptional_deepObject_deepTest"
+                    onBeforeInput={[Function]}
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    onInput={[Function]}
+                    onKeyDown={[Function]}
+                    onPaste={[Function]}
+                    placeholder=""
+                    required={false}
+                    type="text"
+                    value=""
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            className="rjsf-field rjsf-field-array"
+          >
+            <div
+              style={
+                {
+                  "display": "flex",
+                  "flexDirection": "column",
+                  "gap": "0.5rem",
+                  "marginBottom": "1rem",
+                }
+              }
+            >
+              <h5
+                id="root_nestedObjectOptional_deepArrayOptional__title"
+                style={
+                  {
+                    "fontSize": "1.5rem",
+                    "margin": 0,
+                    "marginBottom": "0.2rem",
+                  }
+                }
+              >
+                deepArrayOptional
+                 
+              </h5>
+              <fieldset
+                className="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields p-fieldset p-component"
+                data-pc-name="fieldset"
+                data-pc-section="root"
+                formData={[]}
+                id="root_nestedObjectOptional_deepArrayOptional"
+                onClick={null}
+                style={{}}
+              >
+                <div
+                  aria-labelledby="root_nestedObjectOptional_deepArrayOptional_header"
+                  className="p-toggleable-content"
+                  data-pc-section="toggleablecontent"
+                  id="root_nestedObjectOptional_deepArrayOptional_content"
+                  role="region"
+                >
+                  <div
+                    className="p-fieldset-content"
+                    data-pc-section="content"
+                  >
+                    <div>
+                      <div />
+                      <div
+                        style={
+                          {
+                            "marginTop": "1rem",
+                            "position": "relative",
+                            "textAlign": "right",
+                          }
+                        }
+                      >
+                        <button
+                          aria-label="Add Item"
+                          className="rjsf-array-item-add p-button p-component p-disabled p-button-outlined p-button-sm p-button-secondary"
+                          data-pc-name="button"
+                          data-pc-section="root"
+                          disabled={true}
+                          id="root_nestedObjectOptional_deepArrayOptional__add"
+                          onClick={[Function]}
+                        >
+                          <span
+                            className="p-button-icon p-c p-button-icon-left pi pi-plus"
+                            data-pc-section="icon"
+                          />
+                          <span
+                            className="p-button-label p-c"
+                            data-pc-section="label"
+                          >
+                            Add Item
+                          </span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </fieldset>
+            </div>
+          </div>
+          <div
+            className="rjsf-field rjsf-field-array"
+          >
+            <div
+              style={
+                {
+                  "display": "flex",
+                  "flexDirection": "column",
+                  "gap": "0.5rem",
+                  "marginBottom": "1rem",
+                }
+              }
+            >
+              <h5
+                id="root_nestedObjectOptional_deepArrayOptional2__title"
+                style={
+                  {
+                    "fontSize": "1.5rem",
+                    "margin": 0,
+                    "marginBottom": "0.2rem",
+                  }
+                }
+              >
+                deepArrayOptional2
+                 
+              </h5>
+              <fieldset
+                className="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field sortable-form-fields p-fieldset p-component"
+                data-pc-name="fieldset"
+                data-pc-section="root"
+                formData={[]}
+                id="root_nestedObjectOptional_deepArrayOptional2"
+                onClick={null}
+                style={{}}
+              >
+                <div
+                  aria-labelledby="root_nestedObjectOptional_deepArrayOptional2_header"
+                  className="p-toggleable-content"
+                  data-pc-section="toggleablecontent"
+                  id="root_nestedObjectOptional_deepArrayOptional2_content"
+                  role="region"
+                >
+                  <div
+                    className="p-fieldset-content"
+                    data-pc-section="content"
+                  >
+                    <div>
+                      <div>
+                        <em>
+                          No data for optional field
+                        </em>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </fieldset>
+            </div>
+          </div>
+          <div
+            className="rjsf-field rjsf-field-array"
+          >
+            <div
+              style={
+                {
+                  "display": "flex",
+                  "flexDirection": "column",
+                  "gap": "0.5rem",
+                  "marginBottom": "1rem",
+                }
+              }
+            >
+              <h5
+                id="root_nestedObjectOptional_deepArray__title"
+                style={
+                  {
+                    "fontSize": "1.5rem",
+                    "margin": 0,
+                    "marginBottom": "0.2rem",
+                  }
+                }
+              >
+                deepArray
+                 
+                *
+              </h5>
+              <fieldset
+                className="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields p-fieldset p-component"
+                data-pc-name="fieldset"
+                data-pc-section="root"
+                formData={[]}
+                id="root_nestedObjectOptional_deepArray"
+                onClick={null}
+                style={{}}
+              >
+                <div
+                  aria-labelledby="root_nestedObjectOptional_deepArray_header"
+                  className="p-toggleable-content"
+                  data-pc-section="toggleablecontent"
+                  id="root_nestedObjectOptional_deepArray_content"
+                  role="region"
+                >
+                  <div
+                    className="p-fieldset-content"
+                    data-pc-section="content"
+                  >
+                    <div>
+                      <div />
+                      <div
+                        style={
+                          {
+                            "marginTop": "1rem",
+                            "position": "relative",
+                            "textAlign": "right",
+                          }
+                        }
+                      >
+                        <button
+                          aria-label="Add Item"
+                          className="rjsf-array-item-add p-button p-component p-disabled p-button-outlined p-button-sm p-button-secondary"
+                          data-pc-name="button"
+                          data-pc-section="root"
+                          disabled={true}
+                          id="root_nestedObjectOptional_deepArray__add"
+                          onClick={[Function]}
+                        >
+                          <span
+                            className="p-button-icon p-c p-button-icon-left pi pi-plus"
+                            data-pc-section="icon"
+                          />
+                          <span
+                            className="p-button-label p-c"
+                            data-pc-section="label"
+                          >
+                            Add Item
+                          </span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </fieldset>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-array"
+      >
+        <div
+          style={
+            {
+              "display": "flex",
+              "flexDirection": "column",
+              "gap": "0.5rem",
+              "marginBottom": "1rem",
+            }
+          }
+        >
+          <h5
+            id="root_nestedArrayOptional__title"
+            style={
+              {
+                "fontSize": "1.5rem",
+                "margin": 0,
+                "marginBottom": "0.2rem",
+              }
+            }
+          >
+            nestedArrayOptional
+             
+          </h5>
+          <fieldset
+            className="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field sortable-form-fields p-fieldset p-component"
+            data-pc-name="fieldset"
+            data-pc-section="root"
+            formData={
+              [
+                "bar",
+              ]
+            }
+            id="root_nestedArrayOptional"
+            onClick={null}
+            style={{}}
+          >
+            <div
+              aria-labelledby="root_nestedArrayOptional_header"
+              className="p-toggleable-content"
+              data-pc-section="toggleablecontent"
+              id="root_nestedArrayOptional_content"
+              role="region"
+            >
+              <div
+                className="p-fieldset-content"
+                data-pc-section="content"
+              >
+                <div>
+                  <div>
+                    <div
+                      style={
+                        {
+                          "position": "relative",
+                        }
+                      }
+                    >
+                      <div
+                        style={
+                          {
+                            "position": "absolute",
+                            "right": 0,
+                            "top": "-10px",
+                          }
+                        }
+                      >
+                        <div
+                          style={
+                            {
+                              "flexDirection": "row",
+                            }
+                          }
+                        >
+                          <button
+                            className="rjsf-array-item-remove p-button p-component p-button-icon-only p-disabled p-button-text p-button-rounded p-button-secondary"
+                            data-pc-name="button"
+                            data-pc-section="root"
+                            disabled={true}
+                            id="root_nestedArrayOptional_0__remove"
+                            onClick={[Function]}
+                            title="Remove"
+                          >
+                            <span
+                              className="p-button-icon p-c pi pi-trash"
+                              data-pc-section="icon"
+                            />
+                            <span
+                              className="p-button-label p-c"
+                              dangerouslySetInnerHTML={
+                                {
+                                  "__html": "&nbsp;",
+                                }
+                              }
+                              data-pc-section="label"
+                            />
+                          </button>
+                        </div>
+                      </div>
+                      <div
+                        className="rjsf-field rjsf-field-string"
+                      >
+                        <div
+                          style={
+                            {
+                              "display": "flex",
+                              "flexDirection": "column",
+                              "gap": "0.5rem",
+                              "marginBottom": "1rem",
+                            }
+                          }
+                        >
+                          <label
+                            htmlFor="root_nestedArrayOptional_0"
+                          >
+                            nestedArrayOptional-1
+                             
+                            *
+                          </label>
+                          <input
+                            aria-describedby="root_nestedArrayOptional_0__error root_nestedArrayOptional_0__description root_nestedArrayOptional_0__help"
+                            autoFocus={false}
+                            className="p-inputtext p-component p-disabled p-filled"
+                            data-pc-name="inputtext"
+                            data-pc-section="root"
+                            disabled={true}
+                            id="root_nestedArrayOptional_0"
+                            name="root_nestedArrayOptional_0"
+                            onBeforeInput={[Function]}
+                            onBlur={[Function]}
+                            onChange={[Function]}
+                            onFocus={[Function]}
+                            onInput={[Function]}
+                            onKeyDown={[Function]}
+                            onPaste={[Function]}
+                            placeholder=""
+                            required={true}
+                            type="text"
+                            value="bar"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    style={
+                      {
+                        "marginTop": "1rem",
+                        "position": "relative",
+                        "textAlign": "right",
+                      }
+                    }
+                  >
+                    <button
+                      aria-label="Add Item"
+                      className="rjsf-array-item-add p-button p-component p-disabled p-button-outlined p-button-sm p-button-secondary"
+                      data-pc-name="button"
+                      data-pc-section="root"
+                      disabled={true}
+                      id="root_nestedArrayOptional__add"
+                      onClick={[Function]}
+                    >
+                      <span
+                        className="p-button-icon p-c p-button-icon-left pi pi-plus"
+                        data-pc-section="icon"
+                      />
+                      <span
+                        className="p-button-label p-c"
+                        data-pc-section="label"
+                      >
+                        Add Item
+                      </span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-object"
+      >
+        <div
+          style={
+            {
+              "display": "flex",
+              "flexDirection": "column",
+              "gap": "0.5rem",
+              "marginBottom": "1rem",
+            }
+          }
+        >
+          <div
+            id="root_nestedObject__title"
+          >
+            <h5
+              style={
+                {
+                  "fontSize": "1.2rem",
+                  "margin": 0,
+                }
+              }
+            >
+              nestedObject
+               
+              *
+            </h5>
+            <div
+              aria-orientation="horizontal"
+              className="p-divider p-component p-divider-horizontal p-divider-solid p-divider-left"
+              data-pc-name="divider"
+              data-pc-section="root"
+              role="separator"
+              style={
+                {
+                  "alignItems": null,
+                  "justifyContent": "center",
+                  "marginTop": "0.5rem",
+                }
+              }
+            >
+              <div
+                className="p-divider-content"
+                data-pc-section="content"
+              />
+            </div>
+          </div>
+          <div
+            className="rjsf-field rjsf-field-string"
+          >
+            <div
+              style={
+                {
+                  "display": "flex",
+                  "flexDirection": "column",
+                  "gap": "0.5rem",
+                  "marginBottom": "1rem",
+                }
+              }
+            >
+              <label
+                htmlFor="root_nestedObject_test"
+              >
+                test
+                 
+              </label>
+              <input
+                aria-describedby="root_nestedObject_test__error root_nestedObject_test__description root_nestedObject_test__help"
+                autoFocus={false}
+                className="p-inputtext p-component p-disabled"
+                data-pc-name="inputtext"
+                data-pc-section="root"
+                disabled={true}
+                id="root_nestedObject_test"
+                name="root_nestedObject_test"
+                onBeforeInput={[Function]}
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onInput={[Function]}
+                onKeyDown={[Function]}
+                onPaste={[Function]}
+                placeholder=""
+                required={false}
+                type="text"
+                value=""
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-array"
+      >
+        <div
+          style={
+            {
+              "display": "flex",
+              "flexDirection": "column",
+              "gap": "0.5rem",
+              "marginBottom": "1rem",
+            }
+          }
+        >
+          <h5
+            id="root_nestedArray__title"
+            style={
+              {
+                "fontSize": "1.5rem",
+                "margin": 0,
+                "marginBottom": "0.2rem",
+              }
+            }
+          >
+            nestedArray
+             
+            *
+          </h5>
+          <fieldset
+            className="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields p-fieldset p-component"
+            data-pc-name="fieldset"
+            data-pc-section="root"
+            formData={[]}
+            id="root_nestedArray"
+            onClick={null}
+            style={{}}
+          >
+            <div
+              aria-labelledby="root_nestedArray_header"
+              className="p-toggleable-content"
+              data-pc-section="toggleablecontent"
+              id="root_nestedArray_content"
+              role="region"
+            >
+              <div
+                className="p-fieldset-content"
+                data-pc-section="content"
+              >
+                <div>
+                  <div />
+                  <div
+                    style={
+                      {
+                        "marginTop": "1rem",
+                        "position": "relative",
+                        "textAlign": "right",
+                      }
+                    }
+                  >
+                    <button
+                      aria-label="Add Item"
+                      className="rjsf-array-item-add p-button p-component p-disabled p-button-outlined p-button-sm p-button-secondary"
+                      data-pc-name="button"
+                      data-pc-section="root"
+                      disabled={true}
+                      id="root_nestedArray__add"
+                      onClick={[Function]}
+                    >
+                      <span
+                        className="p-button-icon p-c p-button-icon-left pi pi-plus"
+                        data-pc-section="icon"
+                      />
+                      <span
+                        className="p-button-label p-c"
+                        data-pc-section="label"
+                      >
+                        Add Item
+                      </span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-undefined"
+      >
+        <div
+          style={
+            {
+              "display": "flex",
+              "flexDirection": "column",
+              "gap": "0.5rem",
+              "marginBottom": "1rem",
+            }
+          }
+        >
+          <label
+            htmlFor="root_optionalObjectWithOneofs"
+          >
+            optionalObjectWithOneofs
+             
+          </label>
+          <fieldset
+            className="p-fieldset p-component"
+            data-pc-name="fieldset"
+            data-pc-section="root"
+            id="pr_id_66"
+            onClick={null}
+            style={{}}
+          >
+            <div
+              aria-labelledby="pr_id_66_header"
+              className="p-toggleable-content"
+              data-pc-section="toggleablecontent"
+              id="pr_id_66_content"
+              role="region"
+            >
+              <div
+                className="p-fieldset-content"
+                data-pc-section="content"
+              >
+                <div
+                  style={
+                    {
+                      "marginBottom": "1rem",
+                    }
+                  }
+                >
+                  <select
+                    aria-describedby="root_optionalObjectWithOneofs__oneof_select__error root_optionalObjectWithOneofs__oneof_select__description root_optionalObjectWithOneofs__oneof_select__help"
+                    disabled={true}
+                    id="root_optionalObjectWithOneofs__oneof_select"
+                    name="root_optionalObjectWithOneofs__oneof_select"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    options={
+                      [
+                        {
+                          "disabled": false,
+                          "label": "Option 1",
+                          "value": "0",
+                        },
+                        {
+                          "disabled": false,
+                          "label": "Option 2",
+                          "value": "1",
+                        },
+                        {
+                          "disabled": false,
+                          "label": "Option 3",
+                          "value": "2",
+                        },
+                      ]
+                    }
+                    value="0"
+                  />
+                </div>
+                <div
+                  className="rjsf-field rjsf-field-object"
+                >
+                  <div
+                    style={
+                      {
+                        "display": "flex",
+                        "flexDirection": "column",
+                        "gap": "0.5rem",
+                        "marginBottom": "1rem",
+                      }
+                    }
+                  >
+                    <div
+                      id="root_optionalObjectWithOneofs__title"
+                    >
+                      <h5
+                        style={
+                          {
+                            "fontSize": "1.2rem",
+                            "margin": 0,
+                          }
+                        }
+                      >
+                        optionalObjectWithOneofs
+                         
+                      </h5>
+                      <div
+                        aria-orientation="horizontal"
+                        className="p-divider p-component p-divider-horizontal p-divider-solid p-divider-left"
+                        data-pc-name="divider"
+                        data-pc-section="root"
+                        role="separator"
+                        style={
+                          {
+                            "alignItems": null,
+                            "justifyContent": "center",
+                            "marginTop": "0.5rem",
+                          }
+                        }
+                      >
+                        <div
+                          className="p-divider-content"
+                          data-pc-section="content"
+                        />
+                      </div>
+                    </div>
+                    <div
+                      className="rjsf-field rjsf-field-string"
+                    >
+                      <div
+                        style={
+                          {
+                            "display": "flex",
+                            "flexDirection": "column",
+                            "gap": "0.5rem",
+                            "marginBottom": "1rem",
+                          }
+                        }
+                      >
+                        <label
+                          htmlFor="root_optionalObjectWithOneofs_name"
+                        >
+                          name
+                           
+                        </label>
+                        <input
+                          aria-describedby="root_optionalObjectWithOneofs_name__error root_optionalObjectWithOneofs_name__description root_optionalObjectWithOneofs_name__help"
+                          autoFocus={false}
+                          className="p-inputtext p-component p-disabled"
+                          data-pc-name="inputtext"
+                          data-pc-section="root"
+                          disabled={true}
+                          id="root_optionalObjectWithOneofs_name"
+                          name="root_optionalObjectWithOneofs_name"
+                          onBeforeInput={[Function]}
+                          onBlur={[Function]}
+                          onChange={[Function]}
+                          onFocus={[Function]}
+                          onInput={[Function]}
+                          onKeyDown={[Function]}
+                          onPaste={[Function]}
+                          placeholder=""
+                          required={false}
+                          type="text"
+                          value=""
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields optional data controls shows "add" optional controls when turned on in uiSchema and no formData 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <div
+        id="root__title"
+      >
+        <h5
+          style={
+            {
+              "fontSize": "1.5rem",
+              "margin": 0,
+            }
+          }
+        >
+          test
+           
+        </h5>
+        <div
+          aria-orientation="horizontal"
+          className="p-divider p-component p-divider-horizontal p-divider-solid p-divider-left"
+          data-pc-name="divider"
+          data-pc-section="root"
+          role="separator"
+          style={
+            {
+              "alignItems": null,
+              "justifyContent": "center",
+              "marginTop": "0.5rem",
+            }
+          }
+        >
+          <div
+            className="p-divider-content"
+            data-pc-section="content"
+          />
+        </div>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-object"
+      >
+        <div
+          style={
+            {
+              "display": "flex",
+              "flexDirection": "column",
+              "gap": "0.5rem",
+              "marginBottom": "1rem",
+            }
+          }
+        >
+          <div
+            id="root_nestedObjectOptional__title"
+          >
+            <div
+              style={
+                {
+                  "display": "flex",
+                }
+              }
+            >
+              <div
+                style={
+                  {
+                    "flexGrow": 1,
+                  }
+                }
+              >
+                <h5
+                  style={
+                    {
+                      "fontSize": "1.2rem",
+                      "margin": 0,
+                    }
+                  }
+                >
+                  nestedObjectOptional
+                   
+                </h5>
+              </div>
+              <div
+                style={
+                  {
+                    "marginLeft": "-5px",
+                  }
+                }
+              >
+                <button
+                  className="rjsf-add-optional-data p-button p-component p-button-icon-only p-button-text p-button-rounded p-button-secondary"
+                  data-pc-name="button"
+                  data-pc-section="root"
+                  disabled={false}
+                  onClick={[Function]}
+                  style={
+                    {
+                      "height": "1.5rem",
+                      "width": "1.5rem",
+                    }
+                  }
+                  title="Add data for optional field"
+                >
+                  <span
+                    className="p-button-icon p-c pi pi-pi pi-plus"
+                    data-pc-section="icon"
+                  />
+                  <span
+                    className="p-button-label p-c"
+                    dangerouslySetInnerHTML={
+                      {
+                        "__html": "&nbsp;",
+                      }
+                    }
+                    data-pc-section="label"
+                  />
+                </button>
+              </div>
+            </div>
+            <div
+              aria-orientation="horizontal"
+              className="p-divider p-component p-divider-horizontal p-divider-solid p-divider-left"
+              data-pc-name="divider"
+              data-pc-section="root"
+              role="separator"
+              style={
+                {
+                  "alignItems": null,
+                  "justifyContent": "center",
+                  "marginTop": "0.5rem",
+                }
+              }
+            >
+              <div
+                className="p-divider-content"
+                data-pc-section="content"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-array"
+      >
+        <div
+          style={
+            {
+              "display": "flex",
+              "flexDirection": "column",
+              "gap": "0.5rem",
+              "marginBottom": "1rem",
+            }
+          }
+        >
+          <div
+            style={
+              {
+                "display": "flex",
+              }
+            }
+          >
+            <div
+              style={
+                {
+                  "flexGrow": 1,
+                }
+              }
+            >
+              <h5
+                id="root_nestedArrayOptional__title"
+                style={
+                  {
+                    "fontSize": "1.5rem",
+                    "margin": 0,
+                    "marginBottom": "0.2rem",
+                  }
+                }
+              >
+                nestedArrayOptional
+                 
+              </h5>
+            </div>
+            <div>
+              <button
+                className="rjsf-add-optional-data p-button p-component p-button-icon-only p-button-text p-button-rounded p-button-secondary"
+                data-pc-name="button"
+                data-pc-section="root"
+                disabled={false}
+                onClick={[Function]}
+                style={
+                  {
+                    "height": "1.5rem",
+                    "width": "1.5rem",
+                  }
+                }
+                title="Add data for optional field"
+              >
+                <span
+                  className="p-button-icon p-c pi pi-pi pi-plus"
+                  data-pc-section="icon"
+                />
+                <span
+                  className="p-button-label p-c"
+                  dangerouslySetInnerHTML={
+                    {
+                      "__html": "&nbsp;",
+                    }
+                  }
+                  data-pc-section="label"
+                />
+              </button>
+            </div>
+          </div>
+          <fieldset
+            className="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field sortable-form-fields p-fieldset p-component"
+            data-pc-name="fieldset"
+            data-pc-section="root"
+            formData={[]}
+            id="root_nestedArrayOptional"
+            onClick={null}
+            style={{}}
+          >
+            <div
+              aria-labelledby="root_nestedArrayOptional_header"
+              className="p-toggleable-content"
+              data-pc-section="toggleablecontent"
+              id="root_nestedArrayOptional_content"
+              role="region"
+            >
+              <div
+                className="p-fieldset-content"
+                data-pc-section="content"
+              >
+                <div>
+                  <div />
+                </div>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-object"
+      >
+        <div
+          style={
+            {
+              "display": "flex",
+              "flexDirection": "column",
+              "gap": "0.5rem",
+              "marginBottom": "1rem",
+            }
+          }
+        >
+          <div
+            id="root_nestedObject__title"
+          >
+            <h5
+              style={
+                {
+                  "fontSize": "1.2rem",
+                  "margin": 0,
+                }
+              }
+            >
+              nestedObject
+               
+              *
+            </h5>
+            <div
+              aria-orientation="horizontal"
+              className="p-divider p-component p-divider-horizontal p-divider-solid p-divider-left"
+              data-pc-name="divider"
+              data-pc-section="root"
+              role="separator"
+              style={
+                {
+                  "alignItems": null,
+                  "justifyContent": "center",
+                  "marginTop": "0.5rem",
+                }
+              }
+            >
+              <div
+                className="p-divider-content"
+                data-pc-section="content"
+              />
+            </div>
+          </div>
+          <div
+            className="rjsf-field rjsf-field-string"
+          >
+            <div
+              style={
+                {
+                  "display": "flex",
+                  "flexDirection": "column",
+                  "gap": "0.5rem",
+                  "marginBottom": "1rem",
+                }
+              }
+            >
+              <label
+                htmlFor="root_nestedObject_test"
+              >
+                test
+                 
+              </label>
+              <input
+                aria-describedby="root_nestedObject_test__error root_nestedObject_test__description root_nestedObject_test__help"
+                autoFocus={false}
+                className="p-inputtext p-component"
+                data-pc-name="inputtext"
+                data-pc-section="root"
+                disabled={false}
+                id="root_nestedObject_test"
+                name="root_nestedObject_test"
+                onBeforeInput={[Function]}
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onInput={[Function]}
+                onKeyDown={[Function]}
+                onPaste={[Function]}
+                placeholder=""
+                required={false}
+                type="text"
+                value=""
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-array"
+      >
+        <div
+          style={
+            {
+              "display": "flex",
+              "flexDirection": "column",
+              "gap": "0.5rem",
+              "marginBottom": "1rem",
+            }
+          }
+        >
+          <h5
+            id="root_nestedArray__title"
+            style={
+              {
+                "fontSize": "1.5rem",
+                "margin": 0,
+                "marginBottom": "0.2rem",
+              }
+            }
+          >
+            nestedArray
+             
+            *
+          </h5>
+          <fieldset
+            className="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields p-fieldset p-component"
+            data-pc-name="fieldset"
+            data-pc-section="root"
+            formData={[]}
+            id="root_nestedArray"
+            onClick={null}
+            style={{}}
+          >
+            <div
+              aria-labelledby="root_nestedArray_header"
+              className="p-toggleable-content"
+              data-pc-section="toggleablecontent"
+              id="root_nestedArray_content"
+              role="region"
+            >
+              <div
+                className="p-fieldset-content"
+                data-pc-section="content"
+              >
+                <div>
+                  <div />
+                  <div
+                    style={
+                      {
+                        "marginTop": "1rem",
+                        "position": "relative",
+                        "textAlign": "right",
+                      }
+                    }
+                  >
+                    <button
+                      aria-label="Add Item"
+                      className="rjsf-array-item-add p-button p-component p-button-outlined p-button-sm p-button-secondary"
+                      data-pc-name="button"
+                      data-pc-section="root"
+                      disabled={false}
+                      id="root_nestedArray__add"
+                      onClick={[Function]}
+                    >
+                      <span
+                        className="p-button-icon p-c p-button-icon-left pi pi-plus"
+                        data-pc-section="icon"
+                      />
+                      <span
+                        className="p-button-label p-c"
+                        data-pc-section="label"
+                      >
+                        Add Item
+                      </span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-undefined"
+      >
+        <div
+          style={
+            {
+              "display": "flex",
+              "flexDirection": "column",
+              "gap": "0.5rem",
+              "marginBottom": "1rem",
+            }
+          }
+        >
+          <label
+            htmlFor="root_optionalObjectWithOneofs"
+          >
+            optionalObjectWithOneofs
+             
+          </label>
+          <fieldset
+            className="p-fieldset p-component"
+            data-pc-name="fieldset"
+            data-pc-section="root"
+            id="pr_id_20"
+            onClick={null}
+            style={{}}
+          >
+            <div
+              aria-labelledby="pr_id_20_header"
+              className="p-toggleable-content"
+              data-pc-section="toggleablecontent"
+              id="pr_id_20_content"
+              role="region"
+            >
+              <div
+                className="p-fieldset-content"
+                data-pc-section="content"
+              >
+                <div
+                  style={
+                    {
+                      "marginBottom": "1rem",
+                    }
+                  }
+                >
+                  <select
+                    aria-describedby="root_optionalObjectWithOneofs__oneof_select__error root_optionalObjectWithOneofs__oneof_select__description root_optionalObjectWithOneofs__oneof_select__help"
+                    disabled={false}
+                    id="root_optionalObjectWithOneofs__oneof_select"
+                    name="root_optionalObjectWithOneofs__oneof_select"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    options={
+                      [
+                        {
+                          "disabled": false,
+                          "label": "Option 1",
+                          "value": "0",
+                        },
+                        {
+                          "disabled": false,
+                          "label": "Option 2",
+                          "value": "1",
+                        },
+                        {
+                          "disabled": false,
+                          "label": "Option 3",
+                          "value": "2",
+                        },
+                      ]
+                    }
+                    value="0"
+                  />
+                </div>
+                <div
+                  className="rjsf-field rjsf-field-object"
+                >
+                  <div
+                    style={
+                      {
+                        "display": "flex",
+                        "flexDirection": "column",
+                        "gap": "0.5rem",
+                        "marginBottom": "1rem",
+                      }
+                    }
+                  >
+                    <div
+                      id="root_optionalObjectWithOneofs__title"
+                    >
+                      <h5
+                        style={
+                          {
+                            "fontSize": "1.2rem",
+                            "margin": 0,
+                          }
+                        }
+                      >
+                        optionalObjectWithOneofs
+                         
+                      </h5>
+                      <div
+                        aria-orientation="horizontal"
+                        className="p-divider p-component p-divider-horizontal p-divider-solid p-divider-left"
+                        data-pc-name="divider"
+                        data-pc-section="root"
+                        role="separator"
+                        style={
+                          {
+                            "alignItems": null,
+                            "justifyContent": "center",
+                            "marginTop": "0.5rem",
+                          }
+                        }
+                      >
+                        <div
+                          className="p-divider-content"
+                          data-pc-section="content"
+                        />
+                      </div>
+                    </div>
+                    <div
+                      className="rjsf-field rjsf-field-string"
+                    >
+                      <div
+                        style={
+                          {
+                            "display": "flex",
+                            "flexDirection": "column",
+                            "gap": "0.5rem",
+                            "marginBottom": "1rem",
+                          }
+                        }
+                      >
+                        <label
+                          htmlFor="root_optionalObjectWithOneofs_name"
+                        >
+                          name
+                           
+                        </label>
+                        <input
+                          aria-describedby="root_optionalObjectWithOneofs_name__error root_optionalObjectWithOneofs_name__description root_optionalObjectWithOneofs_name__help"
+                          autoFocus={false}
+                          className="p-inputtext p-component p-disabled"
+                          data-pc-name="inputtext"
+                          data-pc-section="root"
+                          disabled={true}
+                          id="root_optionalObjectWithOneofs_name"
+                          name="root_optionalObjectWithOneofs_name"
+                          onBeforeInput={[Function]}
+                          onBlur={[Function]}
+                          onChange={[Function]}
+                          onFocus={[Function]}
+                          onInput={[Function]}
+                          onKeyDown={[Function]}
+                          onPaste={[Function]}
+                          placeholder=""
+                          required={false}
+                          type="text"
+                          value=""
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`single fields optional data controls shows "add" optional controls when turned on in uiSchema, disabled and no formData 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <div
+        id="root__title"
+      >
+        <h5
+          style={
+            {
+              "fontSize": "1.5rem",
+              "margin": 0,
+            }
+          }
+        >
+          test
+           
+        </h5>
+        <div
+          aria-orientation="horizontal"
+          className="p-divider p-component p-divider-horizontal p-divider-solid p-divider-left"
+          data-pc-name="divider"
+          data-pc-section="root"
+          role="separator"
+          style={
+            {
+              "alignItems": null,
+              "justifyContent": "center",
+              "marginTop": "0.5rem",
+            }
+          }
+        >
+          <div
+            className="p-divider-content"
+            data-pc-section="content"
+          />
+        </div>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-object"
+      >
+        <div
+          style={
+            {
+              "display": "flex",
+              "flexDirection": "column",
+              "gap": "0.5rem",
+              "marginBottom": "1rem",
+            }
+          }
+        >
+          <div
+            id="root_nestedObjectOptional__title"
+          >
+            <h5
+              style={
+                {
+                  "fontSize": "1.2rem",
+                  "margin": 0,
+                }
+              }
+            >
+              nestedObjectOptional
+               
+            </h5>
+            <div
+              aria-orientation="horizontal"
+              className="p-divider p-component p-divider-horizontal p-divider-solid p-divider-left"
+              data-pc-name="divider"
+              data-pc-section="root"
+              role="separator"
+              style={
+                {
+                  "alignItems": null,
+                  "justifyContent": "center",
+                  "marginTop": "0.5rem",
+                }
+              }
+            >
+              <div
+                className="p-divider-content"
+                data-pc-section="content"
+              />
+            </div>
+          </div>
+          <em>
+            No data for optional field
+          </em>
+        </div>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-array"
+      >
+        <div
+          style={
+            {
+              "display": "flex",
+              "flexDirection": "column",
+              "gap": "0.5rem",
+              "marginBottom": "1rem",
+            }
+          }
+        >
+          <h5
+            id="root_nestedArrayOptional__title"
+            style={
+              {
+                "fontSize": "1.5rem",
+                "margin": 0,
+                "marginBottom": "0.2rem",
+              }
+            }
+          >
+            nestedArrayOptional
+             
+          </h5>
+          <fieldset
+            className="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field sortable-form-fields p-fieldset p-component"
+            data-pc-name="fieldset"
+            data-pc-section="root"
+            formData={[]}
+            id="root_nestedArrayOptional"
+            onClick={null}
+            style={{}}
+          >
+            <div
+              aria-labelledby="root_nestedArrayOptional_header"
+              className="p-toggleable-content"
+              data-pc-section="toggleablecontent"
+              id="root_nestedArrayOptional_content"
+              role="region"
+            >
+              <div
+                className="p-fieldset-content"
+                data-pc-section="content"
+              >
+                <div>
+                  <div>
+                    <em>
+                      No data for optional field
+                    </em>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-object"
+      >
+        <div
+          style={
+            {
+              "display": "flex",
+              "flexDirection": "column",
+              "gap": "0.5rem",
+              "marginBottom": "1rem",
+            }
+          }
+        >
+          <div
+            id="root_nestedObject__title"
+          >
+            <h5
+              style={
+                {
+                  "fontSize": "1.2rem",
+                  "margin": 0,
+                }
+              }
+            >
+              nestedObject
+               
+              *
+            </h5>
+            <div
+              aria-orientation="horizontal"
+              className="p-divider p-component p-divider-horizontal p-divider-solid p-divider-left"
+              data-pc-name="divider"
+              data-pc-section="root"
+              role="separator"
+              style={
+                {
+                  "alignItems": null,
+                  "justifyContent": "center",
+                  "marginTop": "0.5rem",
+                }
+              }
+            >
+              <div
+                className="p-divider-content"
+                data-pc-section="content"
+              />
+            </div>
+          </div>
+          <div
+            className="rjsf-field rjsf-field-string"
+          >
+            <div
+              style={
+                {
+                  "display": "flex",
+                  "flexDirection": "column",
+                  "gap": "0.5rem",
+                  "marginBottom": "1rem",
+                }
+              }
+            >
+              <label
+                htmlFor="root_nestedObject_test"
+              >
+                test
+                 
+              </label>
+              <input
+                aria-describedby="root_nestedObject_test__error root_nestedObject_test__description root_nestedObject_test__help"
+                autoFocus={false}
+                className="p-inputtext p-component p-disabled"
+                data-pc-name="inputtext"
+                data-pc-section="root"
+                disabled={true}
+                id="root_nestedObject_test"
+                name="root_nestedObject_test"
+                onBeforeInput={[Function]}
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onInput={[Function]}
+                onKeyDown={[Function]}
+                onPaste={[Function]}
+                placeholder=""
+                required={false}
+                type="text"
+                value=""
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-array"
+      >
+        <div
+          style={
+            {
+              "display": "flex",
+              "flexDirection": "column",
+              "gap": "0.5rem",
+              "marginBottom": "1rem",
+            }
+          }
+        >
+          <h5
+            id="root_nestedArray__title"
+            style={
+              {
+                "fontSize": "1.5rem",
+                "margin": 0,
+                "marginBottom": "0.2rem",
+              }
+            }
+          >
+            nestedArray
+             
+            *
+          </h5>
+          <fieldset
+            className="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields p-fieldset p-component"
+            data-pc-name="fieldset"
+            data-pc-section="root"
+            formData={[]}
+            id="root_nestedArray"
+            onClick={null}
+            style={{}}
+          >
+            <div
+              aria-labelledby="root_nestedArray_header"
+              className="p-toggleable-content"
+              data-pc-section="toggleablecontent"
+              id="root_nestedArray_content"
+              role="region"
+            >
+              <div
+                className="p-fieldset-content"
+                data-pc-section="content"
+              >
+                <div>
+                  <div />
+                  <div
+                    style={
+                      {
+                        "marginTop": "1rem",
+                        "position": "relative",
+                        "textAlign": "right",
+                      }
+                    }
+                  >
+                    <button
+                      aria-label="Add Item"
+                      className="rjsf-array-item-add p-button p-component p-disabled p-button-outlined p-button-sm p-button-secondary"
+                      data-pc-name="button"
+                      data-pc-section="root"
+                      disabled={true}
+                      id="root_nestedArray__add"
+                      onClick={[Function]}
+                    >
+                      <span
+                        className="p-button-icon p-c p-button-icon-left pi pi-plus"
+                        data-pc-section="icon"
+                      />
+                      <span
+                        className="p-button-label p-c"
+                        data-pc-section="label"
+                      >
+                        Add Item
+                      </span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-undefined"
+      >
+        <div
+          style={
+            {
+              "display": "flex",
+              "flexDirection": "column",
+              "gap": "0.5rem",
+              "marginBottom": "1rem",
+            }
+          }
+        >
+          <label
+            htmlFor="root_optionalObjectWithOneofs"
+          >
+            optionalObjectWithOneofs
+             
+          </label>
+          <fieldset
+            className="p-fieldset p-component"
+            data-pc-name="fieldset"
+            data-pc-section="root"
+            id={null}
+            onClick={null}
+            style={{}}
+          >
+            <div
+              aria-labelledby="null_header"
+              className="p-toggleable-content"
+              data-pc-section="toggleablecontent"
+              id="null_content"
+              role="region"
+            >
+              <div
+                className="p-fieldset-content"
+                data-pc-section="content"
+              >
+                <div
+                  style={
+                    {
+                      "marginBottom": "1rem",
+                    }
+                  }
+                >
+                  <select
+                    aria-describedby="root_optionalObjectWithOneofs__oneof_select__error root_optionalObjectWithOneofs__oneof_select__description root_optionalObjectWithOneofs__oneof_select__help"
+                    disabled={true}
+                    id="root_optionalObjectWithOneofs__oneof_select"
+                    name="root_optionalObjectWithOneofs__oneof_select"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    options={
+                      [
+                        {
+                          "disabled": false,
+                          "label": "Option 1",
+                          "value": "0",
+                        },
+                        {
+                          "disabled": false,
+                          "label": "Option 2",
+                          "value": "1",
+                        },
+                        {
+                          "disabled": false,
+                          "label": "Option 3",
+                          "value": "2",
+                        },
+                      ]
+                    }
+                    value="0"
+                  />
+                </div>
+                <div
+                  className="rjsf-field rjsf-field-object"
+                >
+                  <div
+                    style={
+                      {
+                        "display": "flex",
+                        "flexDirection": "column",
+                        "gap": "0.5rem",
+                        "marginBottom": "1rem",
+                      }
+                    }
+                  >
+                    <div
+                      id="root_optionalObjectWithOneofs__title"
+                    >
+                      <h5
+                        style={
+                          {
+                            "fontSize": "1.2rem",
+                            "margin": 0,
+                          }
+                        }
+                      >
+                        optionalObjectWithOneofs
+                         
+                      </h5>
+                      <div
+                        aria-orientation="horizontal"
+                        className="p-divider p-component p-divider-horizontal p-divider-solid p-divider-left"
+                        data-pc-name="divider"
+                        data-pc-section="root"
+                        role="separator"
+                        style={
+                          {
+                            "alignItems": null,
+                            "justifyContent": "center",
+                            "marginTop": "0.5rem",
+                          }
+                        }
+                      >
+                        <div
+                          className="p-divider-content"
+                          data-pc-section="content"
+                        />
+                      </div>
+                    </div>
+                    <div
+                      className="rjsf-field rjsf-field-string"
+                    >
+                      <div
+                        style={
+                          {
+                            "display": "flex",
+                            "flexDirection": "column",
+                            "gap": "0.5rem",
+                            "marginBottom": "1rem",
+                          }
+                        }
+                      >
+                        <label
+                          htmlFor="root_optionalObjectWithOneofs_name"
+                        >
+                          name
+                           
+                        </label>
+                        <input
+                          aria-describedby="root_optionalObjectWithOneofs_name__error root_optionalObjectWithOneofs_name__description root_optionalObjectWithOneofs_name__help"
+                          autoFocus={false}
+                          className="p-inputtext p-component p-disabled"
+                          data-pc-name="inputtext"
+                          data-pc-section="root"
+                          disabled={true}
+                          id="root_optionalObjectWithOneofs_name"
+                          name="root_optionalObjectWithOneofs_name"
+                          onBeforeInput={[Function]}
+                          onBlur={[Function]}
+                          onChange={[Function]}
+                          onFocus={[Function]}
+                          onInput={[Function]}
+                          onKeyDown={[Function]}
+                          onPaste={[Function]}
+                          placeholder=""
+                          required={false}
+                          type="text"
+                          value=""
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component p-disabled"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={true}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
 exports[`single fields password field 1`] = `
 <form
   className="rjsf"

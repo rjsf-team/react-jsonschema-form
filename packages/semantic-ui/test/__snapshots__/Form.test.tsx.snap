@@ -1313,6 +1313,3379 @@ exports[`single fields number field 1`] = `
 </form>
 `;
 
+exports[`single fields optional data controls does not show optional controls when not turned on in uiSchema and no formData 1`] = `
+<form
+  className="ui form rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div
+      className="grouped equal width fields"
+    >
+      <h5
+        className="ui dividing header"
+        id="root__title"
+      >
+        test
+      </h5>
+      <div
+        className="rjsf-field rjsf-field-object"
+      >
+        <div
+          className="grouped equal width fields"
+        >
+          <h5
+            className="ui dividing header"
+            id="root_nestedObjectOptional__title"
+          >
+            nestedObjectOptional
+          </h5>
+          <div
+            className="rjsf-field rjsf-field-string"
+          >
+            <div
+              className="grouped equal width fields"
+            >
+              <div
+                className="field"
+              >
+                <label
+                  htmlFor="root_nestedObjectOptional_test"
+                >
+                  test
+                </label>
+                <div
+                  className="ui fluid input"
+                >
+                  <input
+                    aria-describedby="root_nestedObjectOptional_test__error root_nestedObjectOptional_test__description root_nestedObjectOptional_test__help"
+                    autoFocus={false}
+                    disabled={false}
+                    id="root_nestedObjectOptional_test"
+                    name="root_nestedObjectOptional_test"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    required={false}
+                    type="text"
+                    value=""
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            className="rjsf-field rjsf-field-object"
+          >
+            <div
+              className="grouped equal width fields"
+            >
+              <h5
+                className="ui dividing header"
+                id="root_nestedObjectOptional_deepObjectOptional__title"
+              >
+                deepObjectOptional
+              </h5>
+              <div
+                className="rjsf-field rjsf-field-string"
+              >
+                <div
+                  className="grouped equal width fields"
+                >
+                  <div
+                    className="field"
+                  >
+                    <label
+                      htmlFor="root_nestedObjectOptional_deepObjectOptional_deepTest"
+                    >
+                      deepTest
+                    </label>
+                    <div
+                      className="ui fluid input"
+                    >
+                      <input
+                        aria-describedby="root_nestedObjectOptional_deepObjectOptional_deepTest__error root_nestedObjectOptional_deepObjectOptional_deepTest__description root_nestedObjectOptional_deepObjectOptional_deepTest__help"
+                        autoFocus={false}
+                        disabled={false}
+                        id="root_nestedObjectOptional_deepObjectOptional_deepTest"
+                        name="root_nestedObjectOptional_deepObjectOptional_deepTest"
+                        onBlur={[Function]}
+                        onChange={[Function]}
+                        onFocus={[Function]}
+                        placeholder=""
+                        required={false}
+                        type="text"
+                        value=""
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            className="rjsf-field rjsf-field-object"
+          >
+            <div
+              className="grouped equal width fields"
+            >
+              <h5
+                className="ui dividing header"
+                id="root_nestedObjectOptional_deepObject__title"
+              >
+                deepObject
+              </h5>
+              <div
+                className="rjsf-field rjsf-field-string"
+              >
+                <div
+                  className="grouped equal width fields"
+                >
+                  <div
+                    className="field"
+                  >
+                    <label
+                      htmlFor="root_nestedObjectOptional_deepObject_deepTest"
+                    >
+                      deepTest
+                    </label>
+                    <div
+                      className="ui fluid input"
+                    >
+                      <input
+                        aria-describedby="root_nestedObjectOptional_deepObject_deepTest__error root_nestedObjectOptional_deepObject_deepTest__description root_nestedObjectOptional_deepObject_deepTest__help"
+                        autoFocus={false}
+                        disabled={false}
+                        id="root_nestedObjectOptional_deepObject_deepTest"
+                        name="root_nestedObjectOptional_deepObject_deepTest"
+                        onBlur={[Function]}
+                        onChange={[Function]}
+                        onFocus={[Function]}
+                        placeholder=""
+                        required={false}
+                        type="text"
+                        value=""
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            className="rjsf-field rjsf-field-array"
+          >
+            <div
+              className="grouped equal width fields"
+            >
+              <div
+                className="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields"
+              >
+                <h5
+                  className="ui dividing header"
+                  id="root_nestedObjectOptional_deepArrayOptional__title"
+                >
+                  deepArrayOptional
+                </h5>
+                <div>
+                  <div
+                    className="row array-item-list"
+                  />
+                  <div
+                    style={
+                      {
+                        "marginTop": "1rem",
+                        "position": "relative",
+                        "textAlign": "right",
+                      }
+                    }
+                  >
+                    <button
+                      className="ui tiny icon button rjsf-array-item-add"
+                      id="root_nestedObjectOptional_deepArrayOptional__add"
+                      onClick={[Function]}
+                      title="Add Item"
+                    >
+                      <i
+                        aria-hidden="true"
+                        className="plus icon"
+                        onClick={[Function]}
+                      />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            className="rjsf-field rjsf-field-array"
+          >
+            <div
+              className="grouped equal width fields"
+            >
+              <div
+                className="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields"
+              >
+                <h5
+                  className="ui dividing header"
+                  id="root_nestedObjectOptional_deepArrayOptional2__title"
+                >
+                  deepArrayOptional2
+                </h5>
+                <div>
+                  <div
+                    className="row array-item-list"
+                  />
+                  <div
+                    style={
+                      {
+                        "marginTop": "1rem",
+                        "position": "relative",
+                        "textAlign": "right",
+                      }
+                    }
+                  >
+                    <button
+                      className="ui tiny icon button rjsf-array-item-add"
+                      id="root_nestedObjectOptional_deepArrayOptional2__add"
+                      onClick={[Function]}
+                      title="Add Item"
+                    >
+                      <i
+                        aria-hidden="true"
+                        className="plus icon"
+                        onClick={[Function]}
+                      />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            className="rjsf-field rjsf-field-array"
+          >
+            <div
+              className="grouped equal width fields"
+            >
+              <div
+                className="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields"
+              >
+                <h5
+                  className="ui dividing header"
+                  id="root_nestedObjectOptional_deepArray__title"
+                >
+                  deepArray
+                </h5>
+                <div>
+                  <div
+                    className="row array-item-list"
+                  />
+                  <div
+                    style={
+                      {
+                        "marginTop": "1rem",
+                        "position": "relative",
+                        "textAlign": "right",
+                      }
+                    }
+                  >
+                    <button
+                      className="ui tiny icon button rjsf-array-item-add"
+                      id="root_nestedObjectOptional_deepArray__add"
+                      onClick={[Function]}
+                      title="Add Item"
+                    >
+                      <i
+                        aria-hidden="true"
+                        className="plus icon"
+                        onClick={[Function]}
+                      />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-array"
+      >
+        <div
+          className="grouped equal width fields"
+        >
+          <div
+            className="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields"
+          >
+            <h5
+              className="ui dividing header"
+              id="root_nestedArrayOptional__title"
+            >
+              nestedArrayOptional
+            </h5>
+            <div>
+              <div
+                className="row array-item-list"
+              />
+              <div
+                style={
+                  {
+                    "marginTop": "1rem",
+                    "position": "relative",
+                    "textAlign": "right",
+                  }
+                }
+              >
+                <button
+                  className="ui tiny icon button rjsf-array-item-add"
+                  id="root_nestedArrayOptional__add"
+                  onClick={[Function]}
+                  title="Add Item"
+                >
+                  <i
+                    aria-hidden="true"
+                    className="plus icon"
+                    onClick={[Function]}
+                  />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-object"
+      >
+        <div
+          className="grouped equal width fields"
+        >
+          <h5
+            className="ui dividing header"
+            id="root_nestedObject__title"
+          >
+            nestedObject
+          </h5>
+          <div
+            className="rjsf-field rjsf-field-string"
+          >
+            <div
+              className="grouped equal width fields"
+            >
+              <div
+                className="field"
+              >
+                <label
+                  htmlFor="root_nestedObject_test"
+                >
+                  test
+                </label>
+                <div
+                  className="ui fluid input"
+                >
+                  <input
+                    aria-describedby="root_nestedObject_test__error root_nestedObject_test__description root_nestedObject_test__help"
+                    autoFocus={false}
+                    disabled={false}
+                    id="root_nestedObject_test"
+                    name="root_nestedObject_test"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    required={false}
+                    type="text"
+                    value=""
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-array"
+      >
+        <div
+          className="grouped equal width fields"
+        >
+          <div
+            className="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields"
+          >
+            <h5
+              className="ui dividing header"
+              id="root_nestedArray__title"
+            >
+              nestedArray
+            </h5>
+            <div>
+              <div
+                className="row array-item-list"
+              />
+              <div
+                style={
+                  {
+                    "marginTop": "1rem",
+                    "position": "relative",
+                    "textAlign": "right",
+                  }
+                }
+              >
+                <button
+                  className="ui tiny icon button rjsf-array-item-add"
+                  id="root_nestedArray__add"
+                  onClick={[Function]}
+                  title="Add Item"
+                >
+                  <i
+                    aria-hidden="true"
+                    className="plus icon"
+                    onClick={[Function]}
+                  />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-undefined"
+      >
+        <div
+          className="grouped equal width fields"
+        >
+          <div>
+            <div>
+              <div
+                className="field"
+              >
+                <label
+                  htmlFor="root_optionalObjectWithOneofs__oneof_select"
+                >
+                  optionalObjectWithOneofs
+                </label>
+                <div
+                  aria-describedby="root_optionalObjectWithOneofs__oneof_select__error root_optionalObjectWithOneofs__oneof_select__description root_optionalObjectWithOneofs__oneof_select__help"
+                  aria-disabled={false}
+                  aria-expanded={false}
+                  aria-multiselectable={false}
+                  className="ui fluid selection scrolling dropdown"
+                  id="root_optionalObjectWithOneofs__oneof_select"
+                  inverted="false"
+                  name="root_optionalObjectWithOneofs__oneof_select"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onClick={[Function]}
+                  onFocus={[Function]}
+                  onKeyDown={[Function]}
+                  onMouseDown={[Function]}
+                  readOnly={false}
+                  role="listbox"
+                  tabIndex={0}
+                >
+                  <div
+                    aria-atomic={true}
+                    aria-live="polite"
+                    className="divider text"
+                    role="alert"
+                  >
+                    Option 1
+                  </div>
+                  <i
+                    aria-hidden="true"
+                    className="dropdown icon"
+                    onClick={[Function]}
+                  />
+                  <div
+                    className="menu transition"
+                  >
+                    <div
+                      aria-checked={true}
+                      aria-disabled={false}
+                      aria-selected={true}
+                      className="active selected item"
+                      onClick={[Function]}
+                      role="option"
+                      style={
+                        {
+                          "pointerEvents": "all",
+                        }
+                      }
+                    >
+                      <span
+                        className="text"
+                      >
+                        Option 1
+                      </span>
+                    </div>
+                    <div
+                      aria-checked={false}
+                      aria-disabled={false}
+                      aria-selected={false}
+                      className="item"
+                      onClick={[Function]}
+                      role="option"
+                      style={
+                        {
+                          "pointerEvents": "all",
+                        }
+                      }
+                    >
+                      <span
+                        className="text"
+                      >
+                        Option 2
+                      </span>
+                    </div>
+                    <div
+                      aria-checked={false}
+                      aria-disabled={false}
+                      aria-selected={false}
+                      className="item"
+                      onClick={[Function]}
+                      role="option"
+                      style={
+                        {
+                          "pointerEvents": "all",
+                        }
+                      }
+                    >
+                      <span
+                        className="text"
+                      >
+                        Option 3
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              className="rjsf-field rjsf-field-object"
+            >
+              <div
+                className="grouped equal width fields"
+              >
+                <h5
+                  className="ui dividing header"
+                  id="root_optionalObjectWithOneofs__title"
+                >
+                  optionalObjectWithOneofs
+                </h5>
+                <div
+                  className="rjsf-field rjsf-field-string"
+                >
+                  <div
+                    className="grouped equal width fields"
+                  >
+                    <div
+                      className="disabled field"
+                    >
+                      <label
+                        htmlFor="root_optionalObjectWithOneofs_name"
+                      >
+                        name
+                      </label>
+                      <div
+                        className="ui disabled fluid input"
+                      >
+                        <input
+                          aria-describedby="root_optionalObjectWithOneofs_name__error root_optionalObjectWithOneofs_name__description root_optionalObjectWithOneofs_name__help"
+                          autoFocus={false}
+                          disabled={true}
+                          id="root_optionalObjectWithOneofs_name"
+                          name="root_optionalObjectWithOneofs_name"
+                          onBlur={[Function]}
+                          onChange={[Function]}
+                          onFocus={[Function]}
+                          placeholder=""
+                          required={false}
+                          tabIndex={-1}
+                          type="text"
+                          value=""
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    className="ui primary button"
+    onClick={[Function]}
+    type="submit"
+  >
+    Submit
+  </button>
+</form>
+`;
+
+exports[`single fields optional data controls does not show optional controls when not turned on in uiSchema, readonly and no formData 1`] = `
+<form
+  className="ui form rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div
+      className="grouped equal width fields"
+    >
+      <h5
+        className="ui dividing header"
+        id="root__title"
+      >
+        test
+      </h5>
+      <div
+        className="rjsf-field rjsf-field-object"
+      >
+        <div
+          className="grouped equal width fields"
+        >
+          <h5
+            className="ui dividing header"
+            id="root_nestedObjectOptional__title"
+          >
+            nestedObjectOptional
+          </h5>
+          <div
+            className="rjsf-field rjsf-field-string"
+          >
+            <div
+              className="grouped equal width fields"
+            >
+              <div
+                className="disabled field"
+              >
+                <label
+                  htmlFor="root_nestedObjectOptional_test"
+                >
+                  test
+                </label>
+                <div
+                  className="ui disabled fluid input"
+                >
+                  <input
+                    aria-describedby="root_nestedObjectOptional_test__error root_nestedObjectOptional_test__description root_nestedObjectOptional_test__help"
+                    autoFocus={false}
+                    disabled={true}
+                    id="root_nestedObjectOptional_test"
+                    name="root_nestedObjectOptional_test"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    required={false}
+                    tabIndex={-1}
+                    type="text"
+                    value=""
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            className="rjsf-field rjsf-field-object"
+          >
+            <div
+              className="grouped equal width fields"
+            >
+              <h5
+                className="ui dividing header"
+                id="root_nestedObjectOptional_deepObjectOptional__title"
+              >
+                deepObjectOptional
+              </h5>
+              <div
+                className="rjsf-field rjsf-field-string"
+              >
+                <div
+                  className="grouped equal width fields"
+                >
+                  <div
+                    className="disabled field"
+                  >
+                    <label
+                      htmlFor="root_nestedObjectOptional_deepObjectOptional_deepTest"
+                    >
+                      deepTest
+                    </label>
+                    <div
+                      className="ui disabled fluid input"
+                    >
+                      <input
+                        aria-describedby="root_nestedObjectOptional_deepObjectOptional_deepTest__error root_nestedObjectOptional_deepObjectOptional_deepTest__description root_nestedObjectOptional_deepObjectOptional_deepTest__help"
+                        autoFocus={false}
+                        disabled={true}
+                        id="root_nestedObjectOptional_deepObjectOptional_deepTest"
+                        name="root_nestedObjectOptional_deepObjectOptional_deepTest"
+                        onBlur={[Function]}
+                        onChange={[Function]}
+                        onFocus={[Function]}
+                        placeholder=""
+                        required={false}
+                        tabIndex={-1}
+                        type="text"
+                        value=""
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            className="rjsf-field rjsf-field-object"
+          >
+            <div
+              className="grouped equal width fields"
+            >
+              <h5
+                className="ui dividing header"
+                id="root_nestedObjectOptional_deepObject__title"
+              >
+                deepObject
+              </h5>
+              <div
+                className="rjsf-field rjsf-field-string"
+              >
+                <div
+                  className="grouped equal width fields"
+                >
+                  <div
+                    className="disabled field"
+                  >
+                    <label
+                      htmlFor="root_nestedObjectOptional_deepObject_deepTest"
+                    >
+                      deepTest
+                    </label>
+                    <div
+                      className="ui disabled fluid input"
+                    >
+                      <input
+                        aria-describedby="root_nestedObjectOptional_deepObject_deepTest__error root_nestedObjectOptional_deepObject_deepTest__description root_nestedObjectOptional_deepObject_deepTest__help"
+                        autoFocus={false}
+                        disabled={true}
+                        id="root_nestedObjectOptional_deepObject_deepTest"
+                        name="root_nestedObjectOptional_deepObject_deepTest"
+                        onBlur={[Function]}
+                        onChange={[Function]}
+                        onFocus={[Function]}
+                        placeholder=""
+                        required={false}
+                        tabIndex={-1}
+                        type="text"
+                        value=""
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            className="rjsf-field rjsf-field-array"
+          >
+            <div
+              className="grouped equal width fields"
+            >
+              <div
+                className="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields"
+              >
+                <h5
+                  className="ui dividing header"
+                  id="root_nestedObjectOptional_deepArrayOptional__title"
+                >
+                  deepArrayOptional
+                </h5>
+                <div>
+                  <div
+                    className="row array-item-list"
+                  />
+                  <div
+                    style={
+                      {
+                        "marginTop": "1rem",
+                        "position": "relative",
+                        "textAlign": "right",
+                      }
+                    }
+                  >
+                    <button
+                      className="ui tiny icon disabled button rjsf-array-item-add"
+                      disabled={true}
+                      id="root_nestedObjectOptional_deepArrayOptional__add"
+                      onClick={[Function]}
+                      tabIndex={-1}
+                      title="Add Item"
+                    >
+                      <i
+                        aria-hidden="true"
+                        className="plus icon"
+                        onClick={[Function]}
+                      />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            className="rjsf-field rjsf-field-array"
+          >
+            <div
+              className="grouped equal width fields"
+            >
+              <div
+                className="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields"
+              >
+                <h5
+                  className="ui dividing header"
+                  id="root_nestedObjectOptional_deepArrayOptional2__title"
+                >
+                  deepArrayOptional2
+                </h5>
+                <div>
+                  <div
+                    className="row array-item-list"
+                  />
+                  <div
+                    style={
+                      {
+                        "marginTop": "1rem",
+                        "position": "relative",
+                        "textAlign": "right",
+                      }
+                    }
+                  >
+                    <button
+                      className="ui tiny icon disabled button rjsf-array-item-add"
+                      disabled={true}
+                      id="root_nestedObjectOptional_deepArrayOptional2__add"
+                      onClick={[Function]}
+                      tabIndex={-1}
+                      title="Add Item"
+                    >
+                      <i
+                        aria-hidden="true"
+                        className="plus icon"
+                        onClick={[Function]}
+                      />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            className="rjsf-field rjsf-field-array"
+          >
+            <div
+              className="grouped equal width fields"
+            >
+              <div
+                className="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields"
+              >
+                <h5
+                  className="ui dividing header"
+                  id="root_nestedObjectOptional_deepArray__title"
+                >
+                  deepArray
+                </h5>
+                <div>
+                  <div
+                    className="row array-item-list"
+                  />
+                  <div
+                    style={
+                      {
+                        "marginTop": "1rem",
+                        "position": "relative",
+                        "textAlign": "right",
+                      }
+                    }
+                  >
+                    <button
+                      className="ui tiny icon disabled button rjsf-array-item-add"
+                      disabled={true}
+                      id="root_nestedObjectOptional_deepArray__add"
+                      onClick={[Function]}
+                      tabIndex={-1}
+                      title="Add Item"
+                    >
+                      <i
+                        aria-hidden="true"
+                        className="plus icon"
+                        onClick={[Function]}
+                      />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-array"
+      >
+        <div
+          className="grouped equal width fields"
+        >
+          <div
+            className="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields"
+          >
+            <h5
+              className="ui dividing header"
+              id="root_nestedArrayOptional__title"
+            >
+              nestedArrayOptional
+            </h5>
+            <div>
+              <div
+                className="row array-item-list"
+              />
+              <div
+                style={
+                  {
+                    "marginTop": "1rem",
+                    "position": "relative",
+                    "textAlign": "right",
+                  }
+                }
+              >
+                <button
+                  className="ui tiny icon disabled button rjsf-array-item-add"
+                  disabled={true}
+                  id="root_nestedArrayOptional__add"
+                  onClick={[Function]}
+                  tabIndex={-1}
+                  title="Add Item"
+                >
+                  <i
+                    aria-hidden="true"
+                    className="plus icon"
+                    onClick={[Function]}
+                  />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-object"
+      >
+        <div
+          className="grouped equal width fields"
+        >
+          <h5
+            className="ui dividing header"
+            id="root_nestedObject__title"
+          >
+            nestedObject
+          </h5>
+          <div
+            className="rjsf-field rjsf-field-string"
+          >
+            <div
+              className="grouped equal width fields"
+            >
+              <div
+                className="disabled field"
+              >
+                <label
+                  htmlFor="root_nestedObject_test"
+                >
+                  test
+                </label>
+                <div
+                  className="ui disabled fluid input"
+                >
+                  <input
+                    aria-describedby="root_nestedObject_test__error root_nestedObject_test__description root_nestedObject_test__help"
+                    autoFocus={false}
+                    disabled={true}
+                    id="root_nestedObject_test"
+                    name="root_nestedObject_test"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    required={false}
+                    tabIndex={-1}
+                    type="text"
+                    value=""
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-array"
+      >
+        <div
+          className="grouped equal width fields"
+        >
+          <div
+            className="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields"
+          >
+            <h5
+              className="ui dividing header"
+              id="root_nestedArray__title"
+            >
+              nestedArray
+            </h5>
+            <div>
+              <div
+                className="row array-item-list"
+              />
+              <div
+                style={
+                  {
+                    "marginTop": "1rem",
+                    "position": "relative",
+                    "textAlign": "right",
+                  }
+                }
+              >
+                <button
+                  className="ui tiny icon disabled button rjsf-array-item-add"
+                  disabled={true}
+                  id="root_nestedArray__add"
+                  onClick={[Function]}
+                  tabIndex={-1}
+                  title="Add Item"
+                >
+                  <i
+                    aria-hidden="true"
+                    className="plus icon"
+                    onClick={[Function]}
+                  />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-undefined"
+      >
+        <div
+          className="grouped equal width fields"
+        >
+          <div>
+            <div>
+              <div
+                className="field"
+              >
+                <label
+                  htmlFor="root_optionalObjectWithOneofs__oneof_select"
+                >
+                  optionalObjectWithOneofs
+                </label>
+                <div
+                  aria-describedby="root_optionalObjectWithOneofs__oneof_select__error root_optionalObjectWithOneofs__oneof_select__description root_optionalObjectWithOneofs__oneof_select__help"
+                  aria-disabled={false}
+                  aria-expanded={false}
+                  aria-multiselectable={false}
+                  className="ui fluid selection scrolling dropdown"
+                  id="root_optionalObjectWithOneofs__oneof_select"
+                  inverted="false"
+                  name="root_optionalObjectWithOneofs__oneof_select"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onClick={[Function]}
+                  onFocus={[Function]}
+                  onKeyDown={[Function]}
+                  onMouseDown={[Function]}
+                  readOnly={true}
+                  role="listbox"
+                  tabIndex={0}
+                >
+                  <div
+                    aria-atomic={true}
+                    aria-live="polite"
+                    className="divider text"
+                    role="alert"
+                  >
+                    Option 1
+                  </div>
+                  <i
+                    aria-hidden="true"
+                    className="dropdown icon"
+                    onClick={[Function]}
+                  />
+                  <div
+                    className="menu transition"
+                  >
+                    <div
+                      aria-checked={true}
+                      aria-disabled={false}
+                      aria-selected={true}
+                      className="active selected item"
+                      onClick={[Function]}
+                      role="option"
+                      style={
+                        {
+                          "pointerEvents": "all",
+                        }
+                      }
+                    >
+                      <span
+                        className="text"
+                      >
+                        Option 1
+                      </span>
+                    </div>
+                    <div
+                      aria-checked={false}
+                      aria-disabled={false}
+                      aria-selected={false}
+                      className="item"
+                      onClick={[Function]}
+                      role="option"
+                      style={
+                        {
+                          "pointerEvents": "all",
+                        }
+                      }
+                    >
+                      <span
+                        className="text"
+                      >
+                        Option 2
+                      </span>
+                    </div>
+                    <div
+                      aria-checked={false}
+                      aria-disabled={false}
+                      aria-selected={false}
+                      className="item"
+                      onClick={[Function]}
+                      role="option"
+                      style={
+                        {
+                          "pointerEvents": "all",
+                        }
+                      }
+                    >
+                      <span
+                        className="text"
+                      >
+                        Option 3
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              className="rjsf-field rjsf-field-object"
+            >
+              <div
+                className="grouped equal width fields"
+              >
+                <h5
+                  className="ui dividing header"
+                  id="root_optionalObjectWithOneofs__title"
+                >
+                  optionalObjectWithOneofs
+                </h5>
+                <div
+                  className="rjsf-field rjsf-field-string"
+                >
+                  <div
+                    className="grouped equal width fields"
+                  >
+                    <div
+                      className="disabled field"
+                    >
+                      <label
+                        htmlFor="root_optionalObjectWithOneofs_name"
+                      >
+                        name
+                      </label>
+                      <div
+                        className="ui disabled fluid input"
+                      >
+                        <input
+                          aria-describedby="root_optionalObjectWithOneofs_name__error root_optionalObjectWithOneofs_name__description root_optionalObjectWithOneofs_name__help"
+                          autoFocus={false}
+                          disabled={true}
+                          id="root_optionalObjectWithOneofs_name"
+                          name="root_optionalObjectWithOneofs_name"
+                          onBlur={[Function]}
+                          onChange={[Function]}
+                          onFocus={[Function]}
+                          placeholder=""
+                          required={false}
+                          tabIndex={-1}
+                          type="text"
+                          value=""
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    className="ui primary button"
+    onClick={[Function]}
+    type="submit"
+  >
+    Submit
+  </button>
+</form>
+`;
+
+exports[`single fields optional data controls shows "add" and "remove" optional controls when turned on in uiSchema and formData 1`] = `
+<form
+  className="ui form rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div
+      className="grouped equal width fields"
+    >
+      <h5
+        className="ui dividing header"
+        id="root__title"
+      >
+        test
+      </h5>
+      <div
+        className="rjsf-field rjsf-field-object"
+      >
+        <div
+          className="grouped equal width fields"
+        >
+          <div
+            className="ui relaxed grid"
+            colums={2}
+          >
+            <div
+              className="fourteen wide column"
+              style={
+                {
+                  "paddingRight": 0,
+                }
+              }
+            >
+              <h5
+                className="ui dividing header"
+                id="root_nestedObjectOptional__title"
+              >
+                nestedObjectOptional
+              </h5>
+            </div>
+            <div
+              className="two wide column"
+            >
+              <button
+                className="ui mini icon button rjsf-remove-optional-data"
+                onClick={[Function]}
+                title="Remove data for optional field"
+              >
+                <i
+                  aria-hidden="true"
+                  className="trash icon"
+                  onClick={[Function]}
+                />
+              </button>
+            </div>
+          </div>
+          <div
+            className="rjsf-field rjsf-field-string"
+          >
+            <div
+              className="grouped equal width fields"
+            >
+              <div
+                className="field"
+              >
+                <label
+                  htmlFor="root_nestedObjectOptional_test"
+                >
+                  test
+                </label>
+                <div
+                  className="ui fluid input"
+                >
+                  <input
+                    aria-describedby="root_nestedObjectOptional_test__error root_nestedObjectOptional_test__description root_nestedObjectOptional_test__help"
+                    autoFocus={false}
+                    disabled={false}
+                    id="root_nestedObjectOptional_test"
+                    name="root_nestedObjectOptional_test"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    required={false}
+                    type="text"
+                    value="foo"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            className="rjsf-field rjsf-field-object"
+          >
+            <div
+              className="grouped equal width fields"
+            >
+              <div
+                className="ui relaxed grid"
+                colums={2}
+              >
+                <div
+                  className="fourteen wide column"
+                  style={
+                    {
+                      "paddingRight": 0,
+                    }
+                  }
+                >
+                  <h5
+                    className="ui dividing header"
+                    id="root_nestedObjectOptional_deepObjectOptional__title"
+                  >
+                    deepObjectOptional
+                  </h5>
+                </div>
+                <div
+                  className="two wide column"
+                >
+                  <button
+                    className="ui mini icon button rjsf-add-optional-data"
+                    onClick={[Function]}
+                    title="Add data for optional field"
+                  >
+                    <i
+                      aria-hidden="true"
+                      className="plus icon"
+                      onClick={[Function]}
+                    />
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            className="rjsf-field rjsf-field-object"
+          >
+            <div
+              className="grouped equal width fields"
+            >
+              <h5
+                className="ui dividing header"
+                id="root_nestedObjectOptional_deepObject__title"
+              >
+                deepObject
+              </h5>
+              <div
+                className="rjsf-field rjsf-field-string"
+              >
+                <div
+                  className="grouped equal width fields"
+                >
+                  <div
+                    className="field"
+                  >
+                    <label
+                      htmlFor="root_nestedObjectOptional_deepObject_deepTest"
+                    >
+                      deepTest
+                    </label>
+                    <div
+                      className="ui fluid input"
+                    >
+                      <input
+                        aria-describedby="root_nestedObjectOptional_deepObject_deepTest__error root_nestedObjectOptional_deepObject_deepTest__description root_nestedObjectOptional_deepObject_deepTest__help"
+                        autoFocus={false}
+                        disabled={false}
+                        id="root_nestedObjectOptional_deepObject_deepTest"
+                        name="root_nestedObjectOptional_deepObject_deepTest"
+                        onBlur={[Function]}
+                        onChange={[Function]}
+                        onFocus={[Function]}
+                        placeholder=""
+                        required={false}
+                        type="text"
+                        value=""
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            className="rjsf-field rjsf-field-array"
+          >
+            <div
+              className="grouped equal width fields"
+            >
+              <div
+                className="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields"
+              >
+                <h5
+                  className="ui dividing header"
+                  id="root_nestedObjectOptional_deepArrayOptional__title"
+                >
+                  deepArrayOptional
+                </h5>
+                <div>
+                  <div
+                    className="row array-item-list"
+                  />
+                  <div
+                    style={
+                      {
+                        "marginTop": "1rem",
+                        "position": "relative",
+                        "textAlign": "right",
+                      }
+                    }
+                  >
+                    <button
+                      className="ui tiny icon button rjsf-array-item-add"
+                      id="root_nestedObjectOptional_deepArrayOptional__add"
+                      onClick={[Function]}
+                      title="Add Item"
+                    >
+                      <i
+                        aria-hidden="true"
+                        className="plus icon"
+                        onClick={[Function]}
+                      />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            className="rjsf-field rjsf-field-array"
+          >
+            <div
+              className="grouped equal width fields"
+            >
+              <div
+                className="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field sortable-form-fields"
+              >
+                <div
+                  className="ui relaxed grid"
+                  colums={2}
+                >
+                  <div
+                    className="fourteen wide column"
+                    style={
+                      {
+                        "paddingRight": 0,
+                      }
+                    }
+                  >
+                    <h5
+                      className="ui dividing header"
+                      id="root_nestedObjectOptional_deepArrayOptional2__title"
+                    >
+                      deepArrayOptional2
+                    </h5>
+                  </div>
+                  <div
+                    className="two wide column"
+                  >
+                    <button
+                      className="ui mini icon button rjsf-add-optional-data"
+                      onClick={[Function]}
+                      title="Add data for optional field"
+                    >
+                      <i
+                        aria-hidden="true"
+                        className="plus icon"
+                        onClick={[Function]}
+                      />
+                    </button>
+                  </div>
+                </div>
+                <div>
+                  <div
+                    className="row array-item-list"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            className="rjsf-field rjsf-field-array"
+          >
+            <div
+              className="grouped equal width fields"
+            >
+              <div
+                className="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields"
+              >
+                <h5
+                  className="ui dividing header"
+                  id="root_nestedObjectOptional_deepArray__title"
+                >
+                  deepArray
+                </h5>
+                <div>
+                  <div
+                    className="row array-item-list"
+                  />
+                  <div
+                    style={
+                      {
+                        "marginTop": "1rem",
+                        "position": "relative",
+                        "textAlign": "right",
+                      }
+                    }
+                  >
+                    <button
+                      className="ui tiny icon button rjsf-array-item-add"
+                      id="root_nestedObjectOptional_deepArray__add"
+                      onClick={[Function]}
+                      title="Add Item"
+                    >
+                      <i
+                        aria-hidden="true"
+                        className="plus icon"
+                        onClick={[Function]}
+                      />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-array"
+      >
+        <div
+          className="grouped equal width fields"
+        >
+          <div
+            className="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field sortable-form-fields"
+          >
+            <div
+              className="ui relaxed grid"
+              colums={2}
+            >
+              <div
+                className="fourteen wide column"
+                style={
+                  {
+                    "paddingRight": 0,
+                  }
+                }
+              >
+                <h5
+                  className="ui dividing header"
+                  id="root_nestedArrayOptional__title"
+                >
+                  nestedArrayOptional
+                </h5>
+              </div>
+              <div
+                className="two wide column"
+              >
+                <button
+                  className="ui mini icon button rjsf-remove-optional-data"
+                  onClick={[Function]}
+                  title="Remove data for optional field"
+                >
+                  <i
+                    aria-hidden="true"
+                    className="trash icon"
+                    onClick={[Function]}
+                  />
+                </button>
+              </div>
+            </div>
+            <div>
+              <div
+                className="row array-item-list"
+              >
+                <div
+                  className="rjsf-array-item"
+                >
+                  <div
+                    className="ui grid"
+                    style={
+                      {
+                        "alignItems": "center",
+                        "display": "grid",
+                        "gridTemplateColumns": "1fr 150px",
+                      }
+                    }
+                  >
+                    <div
+                      className="middle aligned sixteen wide column"
+                    >
+                      <div
+                        className="rjsf-field rjsf-field-string"
+                      >
+                        <div
+                          className="grouped equal width fields"
+                        >
+                          <div
+                            className="required field"
+                          >
+                            <label
+                              htmlFor="root_nestedArrayOptional_0"
+                            >
+                              nestedArrayOptional-0
+                            </label>
+                            <div
+                              className="ui fluid input"
+                            >
+                              <input
+                                aria-describedby="root_nestedArrayOptional_0__error root_nestedArrayOptional_0__description root_nestedArrayOptional_0__help"
+                                autoFocus={false}
+                                disabled={false}
+                                id="root_nestedArrayOptional_0"
+                                name="root_nestedArrayOptional_0"
+                                onBlur={[Function]}
+                                onChange={[Function]}
+                                onFocus={[Function]}
+                                placeholder=""
+                                required={true}
+                                type="text"
+                                value="bar"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      className="column"
+                    >
+                      <div
+                        className="ui mini buttons"
+                      >
+                        <button
+                          className="ui icon button rjsf-array-item-remove"
+                          id="root_nestedArrayOptional_0__remove"
+                          onClick={[Function]}
+                          title="Remove"
+                        >
+                          <i
+                            aria-hidden="true"
+                            className="trash icon"
+                            onClick={[Function]}
+                          />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                style={
+                  {
+                    "marginTop": "1rem",
+                    "position": "relative",
+                    "textAlign": "right",
+                  }
+                }
+              >
+                <button
+                  className="ui tiny icon button rjsf-array-item-add"
+                  id="root_nestedArrayOptional__add"
+                  onClick={[Function]}
+                  title="Add Item"
+                >
+                  <i
+                    aria-hidden="true"
+                    className="plus icon"
+                    onClick={[Function]}
+                  />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-object"
+      >
+        <div
+          className="grouped equal width fields"
+        >
+          <h5
+            className="ui dividing header"
+            id="root_nestedObject__title"
+          >
+            nestedObject
+          </h5>
+          <div
+            className="rjsf-field rjsf-field-string"
+          >
+            <div
+              className="grouped equal width fields"
+            >
+              <div
+                className="field"
+              >
+                <label
+                  htmlFor="root_nestedObject_test"
+                >
+                  test
+                </label>
+                <div
+                  className="ui fluid input"
+                >
+                  <input
+                    aria-describedby="root_nestedObject_test__error root_nestedObject_test__description root_nestedObject_test__help"
+                    autoFocus={false}
+                    disabled={false}
+                    id="root_nestedObject_test"
+                    name="root_nestedObject_test"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    required={false}
+                    type="text"
+                    value=""
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-array"
+      >
+        <div
+          className="grouped equal width fields"
+        >
+          <div
+            className="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields"
+          >
+            <h5
+              className="ui dividing header"
+              id="root_nestedArray__title"
+            >
+              nestedArray
+            </h5>
+            <div>
+              <div
+                className="row array-item-list"
+              />
+              <div
+                style={
+                  {
+                    "marginTop": "1rem",
+                    "position": "relative",
+                    "textAlign": "right",
+                  }
+                }
+              >
+                <button
+                  className="ui tiny icon button rjsf-array-item-add"
+                  id="root_nestedArray__add"
+                  onClick={[Function]}
+                  title="Add Item"
+                >
+                  <i
+                    aria-hidden="true"
+                    className="plus icon"
+                    onClick={[Function]}
+                  />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-undefined"
+      >
+        <div
+          className="grouped equal width fields"
+        >
+          <div>
+            <div>
+              <div
+                className="field"
+              >
+                <label
+                  htmlFor="root_optionalObjectWithOneofs__oneof_select"
+                >
+                  optionalObjectWithOneofs
+                </label>
+                <div
+                  aria-describedby="root_optionalObjectWithOneofs__oneof_select__error root_optionalObjectWithOneofs__oneof_select__description root_optionalObjectWithOneofs__oneof_select__help"
+                  aria-disabled={false}
+                  aria-expanded={false}
+                  aria-multiselectable={false}
+                  className="ui fluid selection scrolling dropdown"
+                  id="root_optionalObjectWithOneofs__oneof_select"
+                  inverted="false"
+                  name="root_optionalObjectWithOneofs__oneof_select"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onClick={[Function]}
+                  onFocus={[Function]}
+                  onKeyDown={[Function]}
+                  onMouseDown={[Function]}
+                  readOnly={false}
+                  role="listbox"
+                  tabIndex={0}
+                >
+                  <div
+                    aria-atomic={true}
+                    aria-live="polite"
+                    className="divider text"
+                    role="alert"
+                  >
+                    Option 1
+                  </div>
+                  <i
+                    aria-hidden="true"
+                    className="dropdown icon"
+                    onClick={[Function]}
+                  />
+                  <div
+                    className="menu transition"
+                  >
+                    <div
+                      aria-checked={true}
+                      aria-disabled={false}
+                      aria-selected={true}
+                      className="active selected item"
+                      onClick={[Function]}
+                      role="option"
+                      style={
+                        {
+                          "pointerEvents": "all",
+                        }
+                      }
+                    >
+                      <span
+                        className="text"
+                      >
+                        Option 1
+                      </span>
+                    </div>
+                    <div
+                      aria-checked={false}
+                      aria-disabled={false}
+                      aria-selected={false}
+                      className="item"
+                      onClick={[Function]}
+                      role="option"
+                      style={
+                        {
+                          "pointerEvents": "all",
+                        }
+                      }
+                    >
+                      <span
+                        className="text"
+                      >
+                        Option 2
+                      </span>
+                    </div>
+                    <div
+                      aria-checked={false}
+                      aria-disabled={false}
+                      aria-selected={false}
+                      className="item"
+                      onClick={[Function]}
+                      role="option"
+                      style={
+                        {
+                          "pointerEvents": "all",
+                        }
+                      }
+                    >
+                      <span
+                        className="text"
+                      >
+                        Option 3
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              className="rjsf-field rjsf-field-object"
+            >
+              <div
+                className="grouped equal width fields"
+              >
+                <h5
+                  className="ui dividing header"
+                  id="root_optionalObjectWithOneofs__title"
+                >
+                  optionalObjectWithOneofs
+                </h5>
+                <div
+                  className="rjsf-field rjsf-field-string"
+                >
+                  <div
+                    className="grouped equal width fields"
+                  >
+                    <div
+                      className="disabled field"
+                    >
+                      <label
+                        htmlFor="root_optionalObjectWithOneofs_name"
+                      >
+                        name
+                      </label>
+                      <div
+                        className="ui disabled fluid input"
+                      >
+                        <input
+                          aria-describedby="root_optionalObjectWithOneofs_name__error root_optionalObjectWithOneofs_name__description root_optionalObjectWithOneofs_name__help"
+                          autoFocus={false}
+                          disabled={true}
+                          id="root_optionalObjectWithOneofs_name"
+                          name="root_optionalObjectWithOneofs_name"
+                          onBlur={[Function]}
+                          onChange={[Function]}
+                          onFocus={[Function]}
+                          placeholder=""
+                          required={false}
+                          tabIndex={-1}
+                          type="text"
+                          value=""
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    className="ui primary button"
+    onClick={[Function]}
+    type="submit"
+  >
+    Submit
+  </button>
+</form>
+`;
+
+exports[`single fields optional data controls shows "add" and "remove" optional controls when turned on in uiSchema, readonly and formData 1`] = `
+<form
+  className="ui form rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div
+      className="grouped equal width fields"
+    >
+      <h5
+        className="ui dividing header"
+        id="root__title"
+      >
+        test
+      </h5>
+      <div
+        className="rjsf-field rjsf-field-object"
+      >
+        <div
+          className="grouped equal width fields"
+        >
+          <h5
+            className="ui dividing header"
+            id="root_nestedObjectOptional__title"
+          >
+            nestedObjectOptional
+          </h5>
+          <div
+            className="rjsf-field rjsf-field-string"
+          >
+            <div
+              className="grouped equal width fields"
+            >
+              <div
+                className="disabled field"
+              >
+                <label
+                  htmlFor="root_nestedObjectOptional_test"
+                >
+                  test
+                </label>
+                <div
+                  className="ui disabled fluid input"
+                >
+                  <input
+                    aria-describedby="root_nestedObjectOptional_test__error root_nestedObjectOptional_test__description root_nestedObjectOptional_test__help"
+                    autoFocus={false}
+                    disabled={true}
+                    id="root_nestedObjectOptional_test"
+                    name="root_nestedObjectOptional_test"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    required={false}
+                    tabIndex={-1}
+                    type="text"
+                    value="foo"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            className="rjsf-field rjsf-field-object"
+          >
+            <div
+              className="grouped equal width fields"
+            >
+              <h5
+                className="ui dividing header"
+                id="root_nestedObjectOptional_deepObjectOptional__title"
+              >
+                deepObjectOptional
+              </h5>
+              <em>
+                No data for optional field
+              </em>
+            </div>
+          </div>
+          <div
+            className="rjsf-field rjsf-field-object"
+          >
+            <div
+              className="grouped equal width fields"
+            >
+              <h5
+                className="ui dividing header"
+                id="root_nestedObjectOptional_deepObject__title"
+              >
+                deepObject
+              </h5>
+              <div
+                className="rjsf-field rjsf-field-string"
+              >
+                <div
+                  className="grouped equal width fields"
+                >
+                  <div
+                    className="disabled field"
+                  >
+                    <label
+                      htmlFor="root_nestedObjectOptional_deepObject_deepTest"
+                    >
+                      deepTest
+                    </label>
+                    <div
+                      className="ui disabled fluid input"
+                    >
+                      <input
+                        aria-describedby="root_nestedObjectOptional_deepObject_deepTest__error root_nestedObjectOptional_deepObject_deepTest__description root_nestedObjectOptional_deepObject_deepTest__help"
+                        autoFocus={false}
+                        disabled={true}
+                        id="root_nestedObjectOptional_deepObject_deepTest"
+                        name="root_nestedObjectOptional_deepObject_deepTest"
+                        onBlur={[Function]}
+                        onChange={[Function]}
+                        onFocus={[Function]}
+                        placeholder=""
+                        required={false}
+                        tabIndex={-1}
+                        type="text"
+                        value=""
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            className="rjsf-field rjsf-field-array"
+          >
+            <div
+              className="grouped equal width fields"
+            >
+              <div
+                className="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields"
+              >
+                <h5
+                  className="ui dividing header"
+                  id="root_nestedObjectOptional_deepArrayOptional__title"
+                >
+                  deepArrayOptional
+                </h5>
+                <div>
+                  <div
+                    className="row array-item-list"
+                  />
+                  <div
+                    style={
+                      {
+                        "marginTop": "1rem",
+                        "position": "relative",
+                        "textAlign": "right",
+                      }
+                    }
+                  >
+                    <button
+                      className="ui tiny icon disabled button rjsf-array-item-add"
+                      disabled={true}
+                      id="root_nestedObjectOptional_deepArrayOptional__add"
+                      onClick={[Function]}
+                      tabIndex={-1}
+                      title="Add Item"
+                    >
+                      <i
+                        aria-hidden="true"
+                        className="plus icon"
+                        onClick={[Function]}
+                      />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            className="rjsf-field rjsf-field-array"
+          >
+            <div
+              className="grouped equal width fields"
+            >
+              <div
+                className="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field sortable-form-fields"
+              >
+                <h5
+                  className="ui dividing header"
+                  id="root_nestedObjectOptional_deepArrayOptional2__title"
+                >
+                  deepArrayOptional2
+                </h5>
+                <div>
+                  <div
+                    className="row array-item-list"
+                  >
+                    <em>
+                      No data for optional field
+                    </em>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            className="rjsf-field rjsf-field-array"
+          >
+            <div
+              className="grouped equal width fields"
+            >
+              <div
+                className="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields"
+              >
+                <h5
+                  className="ui dividing header"
+                  id="root_nestedObjectOptional_deepArray__title"
+                >
+                  deepArray
+                </h5>
+                <div>
+                  <div
+                    className="row array-item-list"
+                  />
+                  <div
+                    style={
+                      {
+                        "marginTop": "1rem",
+                        "position": "relative",
+                        "textAlign": "right",
+                      }
+                    }
+                  >
+                    <button
+                      className="ui tiny icon disabled button rjsf-array-item-add"
+                      disabled={true}
+                      id="root_nestedObjectOptional_deepArray__add"
+                      onClick={[Function]}
+                      tabIndex={-1}
+                      title="Add Item"
+                    >
+                      <i
+                        aria-hidden="true"
+                        className="plus icon"
+                        onClick={[Function]}
+                      />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-array"
+      >
+        <div
+          className="grouped equal width fields"
+        >
+          <div
+            className="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field sortable-form-fields"
+          >
+            <h5
+              className="ui dividing header"
+              id="root_nestedArrayOptional__title"
+            >
+              nestedArrayOptional
+            </h5>
+            <div>
+              <div
+                className="row array-item-list"
+              >
+                <div
+                  className="rjsf-array-item"
+                >
+                  <div
+                    className="ui grid"
+                    style={
+                      {
+                        "alignItems": "center",
+                        "display": "grid",
+                        "gridTemplateColumns": "1fr 150px",
+                      }
+                    }
+                  >
+                    <div
+                      className="middle aligned sixteen wide column"
+                    >
+                      <div
+                        className="rjsf-field rjsf-field-string"
+                      >
+                        <div
+                          className="grouped equal width fields"
+                        >
+                          <div
+                            className="disabled required field"
+                          >
+                            <label
+                              htmlFor="root_nestedArrayOptional_0"
+                            >
+                              nestedArrayOptional-0
+                            </label>
+                            <div
+                              className="ui disabled fluid input"
+                            >
+                              <input
+                                aria-describedby="root_nestedArrayOptional_0__error root_nestedArrayOptional_0__description root_nestedArrayOptional_0__help"
+                                autoFocus={false}
+                                disabled={true}
+                                id="root_nestedArrayOptional_0"
+                                name="root_nestedArrayOptional_0"
+                                onBlur={[Function]}
+                                onChange={[Function]}
+                                onFocus={[Function]}
+                                placeholder=""
+                                required={true}
+                                tabIndex={-1}
+                                type="text"
+                                value="bar"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      className="column"
+                    >
+                      <div
+                        className="ui mini buttons"
+                      >
+                        <button
+                          className="ui icon disabled button rjsf-array-item-remove"
+                          disabled={true}
+                          id="root_nestedArrayOptional_0__remove"
+                          onClick={[Function]}
+                          tabIndex={-1}
+                          title="Remove"
+                        >
+                          <i
+                            aria-hidden="true"
+                            className="trash icon"
+                            onClick={[Function]}
+                          />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                style={
+                  {
+                    "marginTop": "1rem",
+                    "position": "relative",
+                    "textAlign": "right",
+                  }
+                }
+              >
+                <button
+                  className="ui tiny icon disabled button rjsf-array-item-add"
+                  disabled={true}
+                  id="root_nestedArrayOptional__add"
+                  onClick={[Function]}
+                  tabIndex={-1}
+                  title="Add Item"
+                >
+                  <i
+                    aria-hidden="true"
+                    className="plus icon"
+                    onClick={[Function]}
+                  />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-object"
+      >
+        <div
+          className="grouped equal width fields"
+        >
+          <h5
+            className="ui dividing header"
+            id="root_nestedObject__title"
+          >
+            nestedObject
+          </h5>
+          <div
+            className="rjsf-field rjsf-field-string"
+          >
+            <div
+              className="grouped equal width fields"
+            >
+              <div
+                className="disabled field"
+              >
+                <label
+                  htmlFor="root_nestedObject_test"
+                >
+                  test
+                </label>
+                <div
+                  className="ui disabled fluid input"
+                >
+                  <input
+                    aria-describedby="root_nestedObject_test__error root_nestedObject_test__description root_nestedObject_test__help"
+                    autoFocus={false}
+                    disabled={true}
+                    id="root_nestedObject_test"
+                    name="root_nestedObject_test"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    required={false}
+                    tabIndex={-1}
+                    type="text"
+                    value=""
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-array"
+      >
+        <div
+          className="grouped equal width fields"
+        >
+          <div
+            className="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields"
+          >
+            <h5
+              className="ui dividing header"
+              id="root_nestedArray__title"
+            >
+              nestedArray
+            </h5>
+            <div>
+              <div
+                className="row array-item-list"
+              />
+              <div
+                style={
+                  {
+                    "marginTop": "1rem",
+                    "position": "relative",
+                    "textAlign": "right",
+                  }
+                }
+              >
+                <button
+                  className="ui tiny icon disabled button rjsf-array-item-add"
+                  disabled={true}
+                  id="root_nestedArray__add"
+                  onClick={[Function]}
+                  tabIndex={-1}
+                  title="Add Item"
+                >
+                  <i
+                    aria-hidden="true"
+                    className="plus icon"
+                    onClick={[Function]}
+                  />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-undefined"
+      >
+        <div
+          className="grouped equal width fields"
+        >
+          <div>
+            <div>
+              <div
+                className="field"
+              >
+                <label
+                  htmlFor="root_optionalObjectWithOneofs__oneof_select"
+                >
+                  optionalObjectWithOneofs
+                </label>
+                <div
+                  aria-describedby="root_optionalObjectWithOneofs__oneof_select__error root_optionalObjectWithOneofs__oneof_select__description root_optionalObjectWithOneofs__oneof_select__help"
+                  aria-disabled={false}
+                  aria-expanded={false}
+                  aria-multiselectable={false}
+                  className="ui fluid selection scrolling dropdown"
+                  id="root_optionalObjectWithOneofs__oneof_select"
+                  inverted="false"
+                  name="root_optionalObjectWithOneofs__oneof_select"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onClick={[Function]}
+                  onFocus={[Function]}
+                  onKeyDown={[Function]}
+                  onMouseDown={[Function]}
+                  readOnly={true}
+                  role="listbox"
+                  tabIndex={0}
+                >
+                  <div
+                    aria-atomic={true}
+                    aria-live="polite"
+                    className="divider text"
+                    role="alert"
+                  >
+                    Option 1
+                  </div>
+                  <i
+                    aria-hidden="true"
+                    className="dropdown icon"
+                    onClick={[Function]}
+                  />
+                  <div
+                    className="menu transition"
+                  >
+                    <div
+                      aria-checked={true}
+                      aria-disabled={false}
+                      aria-selected={true}
+                      className="active selected item"
+                      onClick={[Function]}
+                      role="option"
+                      style={
+                        {
+                          "pointerEvents": "all",
+                        }
+                      }
+                    >
+                      <span
+                        className="text"
+                      >
+                        Option 1
+                      </span>
+                    </div>
+                    <div
+                      aria-checked={false}
+                      aria-disabled={false}
+                      aria-selected={false}
+                      className="item"
+                      onClick={[Function]}
+                      role="option"
+                      style={
+                        {
+                          "pointerEvents": "all",
+                        }
+                      }
+                    >
+                      <span
+                        className="text"
+                      >
+                        Option 2
+                      </span>
+                    </div>
+                    <div
+                      aria-checked={false}
+                      aria-disabled={false}
+                      aria-selected={false}
+                      className="item"
+                      onClick={[Function]}
+                      role="option"
+                      style={
+                        {
+                          "pointerEvents": "all",
+                        }
+                      }
+                    >
+                      <span
+                        className="text"
+                      >
+                        Option 3
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              className="rjsf-field rjsf-field-object"
+            >
+              <div
+                className="grouped equal width fields"
+              >
+                <h5
+                  className="ui dividing header"
+                  id="root_optionalObjectWithOneofs__title"
+                >
+                  optionalObjectWithOneofs
+                </h5>
+                <div
+                  className="rjsf-field rjsf-field-string"
+                >
+                  <div
+                    className="grouped equal width fields"
+                  >
+                    <div
+                      className="disabled field"
+                    >
+                      <label
+                        htmlFor="root_optionalObjectWithOneofs_name"
+                      >
+                        name
+                      </label>
+                      <div
+                        className="ui disabled fluid input"
+                      >
+                        <input
+                          aria-describedby="root_optionalObjectWithOneofs_name__error root_optionalObjectWithOneofs_name__description root_optionalObjectWithOneofs_name__help"
+                          autoFocus={false}
+                          disabled={true}
+                          id="root_optionalObjectWithOneofs_name"
+                          name="root_optionalObjectWithOneofs_name"
+                          onBlur={[Function]}
+                          onChange={[Function]}
+                          onFocus={[Function]}
+                          placeholder=""
+                          required={false}
+                          tabIndex={-1}
+                          type="text"
+                          value=""
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    className="ui primary button"
+    onClick={[Function]}
+    type="submit"
+  >
+    Submit
+  </button>
+</form>
+`;
+
+exports[`single fields optional data controls shows "add" optional controls when turned on in uiSchema and no formData 1`] = `
+<form
+  className="ui form rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div
+      className="grouped equal width fields"
+    >
+      <h5
+        className="ui dividing header"
+        id="root__title"
+      >
+        test
+      </h5>
+      <div
+        className="rjsf-field rjsf-field-object"
+      >
+        <div
+          className="grouped equal width fields"
+        >
+          <div
+            className="ui relaxed grid"
+            colums={2}
+          >
+            <div
+              className="fourteen wide column"
+              style={
+                {
+                  "paddingRight": 0,
+                }
+              }
+            >
+              <h5
+                className="ui dividing header"
+                id="root_nestedObjectOptional__title"
+              >
+                nestedObjectOptional
+              </h5>
+            </div>
+            <div
+              className="two wide column"
+            >
+              <button
+                className="ui mini icon button rjsf-add-optional-data"
+                onClick={[Function]}
+                title="Add data for optional field"
+              >
+                <i
+                  aria-hidden="true"
+                  className="plus icon"
+                  onClick={[Function]}
+                />
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-array"
+      >
+        <div
+          className="grouped equal width fields"
+        >
+          <div
+            className="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field sortable-form-fields"
+          >
+            <div
+              className="ui relaxed grid"
+              colums={2}
+            >
+              <div
+                className="fourteen wide column"
+                style={
+                  {
+                    "paddingRight": 0,
+                  }
+                }
+              >
+                <h5
+                  className="ui dividing header"
+                  id="root_nestedArrayOptional__title"
+                >
+                  nestedArrayOptional
+                </h5>
+              </div>
+              <div
+                className="two wide column"
+              >
+                <button
+                  className="ui mini icon button rjsf-add-optional-data"
+                  onClick={[Function]}
+                  title="Add data for optional field"
+                >
+                  <i
+                    aria-hidden="true"
+                    className="plus icon"
+                    onClick={[Function]}
+                  />
+                </button>
+              </div>
+            </div>
+            <div>
+              <div
+                className="row array-item-list"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-object"
+      >
+        <div
+          className="grouped equal width fields"
+        >
+          <h5
+            className="ui dividing header"
+            id="root_nestedObject__title"
+          >
+            nestedObject
+          </h5>
+          <div
+            className="rjsf-field rjsf-field-string"
+          >
+            <div
+              className="grouped equal width fields"
+            >
+              <div
+                className="field"
+              >
+                <label
+                  htmlFor="root_nestedObject_test"
+                >
+                  test
+                </label>
+                <div
+                  className="ui fluid input"
+                >
+                  <input
+                    aria-describedby="root_nestedObject_test__error root_nestedObject_test__description root_nestedObject_test__help"
+                    autoFocus={false}
+                    disabled={false}
+                    id="root_nestedObject_test"
+                    name="root_nestedObject_test"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    required={false}
+                    type="text"
+                    value=""
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-array"
+      >
+        <div
+          className="grouped equal width fields"
+        >
+          <div
+            className="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields"
+          >
+            <h5
+              className="ui dividing header"
+              id="root_nestedArray__title"
+            >
+              nestedArray
+            </h5>
+            <div>
+              <div
+                className="row array-item-list"
+              />
+              <div
+                style={
+                  {
+                    "marginTop": "1rem",
+                    "position": "relative",
+                    "textAlign": "right",
+                  }
+                }
+              >
+                <button
+                  className="ui tiny icon button rjsf-array-item-add"
+                  id="root_nestedArray__add"
+                  onClick={[Function]}
+                  title="Add Item"
+                >
+                  <i
+                    aria-hidden="true"
+                    className="plus icon"
+                    onClick={[Function]}
+                  />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-undefined"
+      >
+        <div
+          className="grouped equal width fields"
+        >
+          <div>
+            <div>
+              <div
+                className="field"
+              >
+                <label
+                  htmlFor="root_optionalObjectWithOneofs__oneof_select"
+                >
+                  optionalObjectWithOneofs
+                </label>
+                <div
+                  aria-describedby="root_optionalObjectWithOneofs__oneof_select__error root_optionalObjectWithOneofs__oneof_select__description root_optionalObjectWithOneofs__oneof_select__help"
+                  aria-disabled={false}
+                  aria-expanded={false}
+                  aria-multiselectable={false}
+                  className="ui fluid selection scrolling dropdown"
+                  id="root_optionalObjectWithOneofs__oneof_select"
+                  inverted="false"
+                  name="root_optionalObjectWithOneofs__oneof_select"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onClick={[Function]}
+                  onFocus={[Function]}
+                  onKeyDown={[Function]}
+                  onMouseDown={[Function]}
+                  readOnly={false}
+                  role="listbox"
+                  tabIndex={0}
+                >
+                  <div
+                    aria-atomic={true}
+                    aria-live="polite"
+                    className="divider text"
+                    role="alert"
+                  >
+                    Option 1
+                  </div>
+                  <i
+                    aria-hidden="true"
+                    className="dropdown icon"
+                    onClick={[Function]}
+                  />
+                  <div
+                    className="menu transition"
+                  >
+                    <div
+                      aria-checked={true}
+                      aria-disabled={false}
+                      aria-selected={true}
+                      className="active selected item"
+                      onClick={[Function]}
+                      role="option"
+                      style={
+                        {
+                          "pointerEvents": "all",
+                        }
+                      }
+                    >
+                      <span
+                        className="text"
+                      >
+                        Option 1
+                      </span>
+                    </div>
+                    <div
+                      aria-checked={false}
+                      aria-disabled={false}
+                      aria-selected={false}
+                      className="item"
+                      onClick={[Function]}
+                      role="option"
+                      style={
+                        {
+                          "pointerEvents": "all",
+                        }
+                      }
+                    >
+                      <span
+                        className="text"
+                      >
+                        Option 2
+                      </span>
+                    </div>
+                    <div
+                      aria-checked={false}
+                      aria-disabled={false}
+                      aria-selected={false}
+                      className="item"
+                      onClick={[Function]}
+                      role="option"
+                      style={
+                        {
+                          "pointerEvents": "all",
+                        }
+                      }
+                    >
+                      <span
+                        className="text"
+                      >
+                        Option 3
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              className="rjsf-field rjsf-field-object"
+            >
+              <div
+                className="grouped equal width fields"
+              >
+                <h5
+                  className="ui dividing header"
+                  id="root_optionalObjectWithOneofs__title"
+                >
+                  optionalObjectWithOneofs
+                </h5>
+                <div
+                  className="rjsf-field rjsf-field-string"
+                >
+                  <div
+                    className="grouped equal width fields"
+                  >
+                    <div
+                      className="disabled field"
+                    >
+                      <label
+                        htmlFor="root_optionalObjectWithOneofs_name"
+                      >
+                        name
+                      </label>
+                      <div
+                        className="ui disabled fluid input"
+                      >
+                        <input
+                          aria-describedby="root_optionalObjectWithOneofs_name__error root_optionalObjectWithOneofs_name__description root_optionalObjectWithOneofs_name__help"
+                          autoFocus={false}
+                          disabled={true}
+                          id="root_optionalObjectWithOneofs_name"
+                          name="root_optionalObjectWithOneofs_name"
+                          onBlur={[Function]}
+                          onChange={[Function]}
+                          onFocus={[Function]}
+                          placeholder=""
+                          required={false}
+                          tabIndex={-1}
+                          type="text"
+                          value=""
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    className="ui primary button"
+    onClick={[Function]}
+    type="submit"
+  >
+    Submit
+  </button>
+</form>
+`;
+
+exports[`single fields optional data controls shows "add" optional controls when turned on in uiSchema, disabled and no formData 1`] = `
+<form
+  className="ui form rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div
+      className="grouped equal width fields"
+    >
+      <h5
+        className="ui dividing header"
+        id="root__title"
+      >
+        test
+      </h5>
+      <div
+        className="rjsf-field rjsf-field-object"
+      >
+        <div
+          className="grouped equal width fields"
+        >
+          <h5
+            className="ui dividing header"
+            id="root_nestedObjectOptional__title"
+          >
+            nestedObjectOptional
+          </h5>
+          <em>
+            No data for optional field
+          </em>
+        </div>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-array"
+      >
+        <div
+          className="grouped equal width fields"
+        >
+          <div
+            className="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field sortable-form-fields"
+          >
+            <h5
+              className="ui dividing header"
+              id="root_nestedArrayOptional__title"
+            >
+              nestedArrayOptional
+            </h5>
+            <div>
+              <div
+                className="row array-item-list"
+              >
+                <em>
+                  No data for optional field
+                </em>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-object"
+      >
+        <div
+          className="grouped equal width fields"
+        >
+          <h5
+            className="ui dividing header"
+            id="root_nestedObject__title"
+          >
+            nestedObject
+          </h5>
+          <div
+            className="rjsf-field rjsf-field-string"
+          >
+            <div
+              className="grouped equal width fields"
+            >
+              <div
+                className="disabled field"
+              >
+                <label
+                  htmlFor="root_nestedObject_test"
+                >
+                  test
+                </label>
+                <div
+                  className="ui disabled fluid input"
+                >
+                  <input
+                    aria-describedby="root_nestedObject_test__error root_nestedObject_test__description root_nestedObject_test__help"
+                    autoFocus={false}
+                    disabled={true}
+                    id="root_nestedObject_test"
+                    name="root_nestedObject_test"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    required={false}
+                    tabIndex={-1}
+                    type="text"
+                    value=""
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-array"
+      >
+        <div
+          className="grouped equal width fields"
+        >
+          <div
+            className="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields"
+          >
+            <h5
+              className="ui dividing header"
+              id="root_nestedArray__title"
+            >
+              nestedArray
+            </h5>
+            <div>
+              <div
+                className="row array-item-list"
+              />
+              <div
+                style={
+                  {
+                    "marginTop": "1rem",
+                    "position": "relative",
+                    "textAlign": "right",
+                  }
+                }
+              >
+                <button
+                  className="ui tiny icon disabled button rjsf-array-item-add"
+                  disabled={true}
+                  id="root_nestedArray__add"
+                  onClick={[Function]}
+                  tabIndex={-1}
+                  title="Add Item"
+                >
+                  <i
+                    aria-hidden="true"
+                    className="plus icon"
+                    onClick={[Function]}
+                  />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-undefined"
+      >
+        <div
+          className="grouped equal width fields"
+        >
+          <div>
+            <div>
+              <div
+                className="disabled field"
+              >
+                <label
+                  htmlFor="root_optionalObjectWithOneofs__oneof_select"
+                >
+                  optionalObjectWithOneofs
+                </label>
+                <div
+                  aria-describedby="root_optionalObjectWithOneofs__oneof_select__error root_optionalObjectWithOneofs__oneof_select__description root_optionalObjectWithOneofs__oneof_select__help"
+                  aria-disabled={true}
+                  aria-expanded={false}
+                  aria-multiselectable={false}
+                  className="ui disabled fluid selection scrolling dropdown"
+                  id="root_optionalObjectWithOneofs__oneof_select"
+                  inverted="false"
+                  name="root_optionalObjectWithOneofs__oneof_select"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onClick={[Function]}
+                  onFocus={[Function]}
+                  onKeyDown={[Function]}
+                  onMouseDown={[Function]}
+                  readOnly={false}
+                  role="listbox"
+                  tabIndex={-1}
+                >
+                  <div
+                    aria-atomic={true}
+                    aria-live="polite"
+                    className="divider text"
+                    role="alert"
+                  >
+                    Option 1
+                  </div>
+                  <i
+                    aria-hidden="true"
+                    className="dropdown icon"
+                    onClick={[Function]}
+                  />
+                  <div
+                    className="menu transition"
+                  >
+                    <div
+                      aria-checked={true}
+                      aria-disabled={false}
+                      aria-selected={true}
+                      className="active selected item"
+                      onClick={[Function]}
+                      role="option"
+                      style={
+                        {
+                          "pointerEvents": "all",
+                        }
+                      }
+                    >
+                      <span
+                        className="text"
+                      >
+                        Option 1
+                      </span>
+                    </div>
+                    <div
+                      aria-checked={false}
+                      aria-disabled={false}
+                      aria-selected={false}
+                      className="item"
+                      onClick={[Function]}
+                      role="option"
+                      style={
+                        {
+                          "pointerEvents": "all",
+                        }
+                      }
+                    >
+                      <span
+                        className="text"
+                      >
+                        Option 2
+                      </span>
+                    </div>
+                    <div
+                      aria-checked={false}
+                      aria-disabled={false}
+                      aria-selected={false}
+                      className="item"
+                      onClick={[Function]}
+                      role="option"
+                      style={
+                        {
+                          "pointerEvents": "all",
+                        }
+                      }
+                    >
+                      <span
+                        className="text"
+                      >
+                        Option 3
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              className="rjsf-field rjsf-field-object"
+            >
+              <div
+                className="grouped equal width fields"
+              >
+                <h5
+                  className="ui dividing header"
+                  id="root_optionalObjectWithOneofs__title"
+                >
+                  optionalObjectWithOneofs
+                </h5>
+                <div
+                  className="rjsf-field rjsf-field-string"
+                >
+                  <div
+                    className="grouped equal width fields"
+                  >
+                    <div
+                      className="disabled field"
+                    >
+                      <label
+                        htmlFor="root_optionalObjectWithOneofs_name"
+                      >
+                        name
+                      </label>
+                      <div
+                        className="ui disabled fluid input"
+                      >
+                        <input
+                          aria-describedby="root_optionalObjectWithOneofs_name__error root_optionalObjectWithOneofs_name__description root_optionalObjectWithOneofs_name__help"
+                          autoFocus={false}
+                          disabled={true}
+                          id="root_optionalObjectWithOneofs_name"
+                          name="root_optionalObjectWithOneofs_name"
+                          onBlur={[Function]}
+                          onChange={[Function]}
+                          onFocus={[Function]}
+                          placeholder=""
+                          required={false}
+                          tabIndex={-1}
+                          type="text"
+                          value=""
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    className="ui primary disabled button"
+    disabled={true}
+    onClick={[Function]}
+    tabIndex={-1}
+    type="submit"
+  >
+    Submit
+  </button>
+</form>
+`;
+
 exports[`single fields password field 1`] = `
 <form
   className="ui form rjsf"
