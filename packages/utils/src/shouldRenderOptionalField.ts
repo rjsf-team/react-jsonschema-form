@@ -24,19 +24,19 @@ export function getSchemaTypesForXxxOf<S extends StrictRJSFSchema = RJSFSchema>(
 
 /** Determines whether the field information from the combination of `schema` and `required` along with the
  * `enableOptionalDataFieldForType` settings from the global UI options in the `registry` all indicate that this field
- * should rendered with the optional field UI.
+ * should be rendered with the Optional Data Controls UI.
  *
  * @param registry - The `registry` object
  * @param schema - The schema for the field
  * @param required - Flag indicating whether the field is required
  * @param [uiSchema] - The uiSchema for the field
- * @return - true if the field should be rendered with the optional field UI, otherwise false
+ * @return - True if the field should be rendered with the optional field UI, otherwise false
  */
 export default function shouldRenderOptionalField<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
->(registry: Registry<T, S, F>, schema: S, required: boolean, uiSchema?: UiSchema<T, S, F>) {
+>(registry: Registry<T, S, F>, schema: S, required: boolean, uiSchema?: UiSchema<T, S, F>): boolean {
   const { enableOptionalDataFieldForType = [] } = getUiOptions<T, S, F>(uiSchema, registry.globalUiOptions);
   let schemaType: ReturnType<typeof getSchemaType<S>>;
   if (ANY_OF_KEY in schema && Array.isArray(schema[ANY_OF_KEY])) {

@@ -784,15 +784,14 @@ export type OptionalDataControlsTemplateProps<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
 > = RJSFBaseProps<T, S, F> & {
-  /** The generated id for this optionalDataControls instance
-   */
+  /** The generated id for this Optional Data Control instance */
   id: string;
-  /** The label to use for the control */
+  /** The label to use for the Optional Data Control */
   label: string;
-  /** Optional callback to call when clicking on the optional data control to add data */
-  onAddClick?: () => void;
-  /** Optional callback to call when clicking on the optional data control to add data */
+  /** Optional callback to call when clicking on the Optional Data Control to add data */
   onRemoveClick?: () => void;
+  /** Optional callback to call when clicking on the Optional Data Control to remove data */
+  onAddClick?: () => void;
 };
 
 /** The properties that are passed to a WrapIfAdditionalTemplate implementation */

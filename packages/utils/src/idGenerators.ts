@@ -82,7 +82,7 @@ export function optionId(id: string, optionIndex: number) {
 
 /** Return a consistent `id` for the `btn` button element
  *
- * @param id - Either simple string id or an FieldPathId from which to extract it
+ * @param id - The id of the parent component for the option
  * @param btn - The button type for which to generate the id
  * @returns - The consistent id for the button from the given `id` and `btn` type
  */
@@ -92,7 +92,7 @@ export function buttonId(id: FieldPathId | string, btn: 'add' | 'copy' | 'moveDo
 
 /** Return a consistent `id` for the optional data controls `element`
  *
- * @param id - Either simple string id or an FieldPathId from which to extract it
+ * @param id - The id of the parent component for the option
  * @param element - The element type for which to generate the id
  * @returns - The consistent id for the optional data controls element from the given `id` and `element` type
  */
