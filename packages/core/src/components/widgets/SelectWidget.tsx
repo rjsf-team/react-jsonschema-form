@@ -73,7 +73,7 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
   return (
     <select
       id={id}
-      name={id || htmlName}
+      name={htmlName || id}
       multiple={multiple}
       role='combobox'
       className='form-control'
