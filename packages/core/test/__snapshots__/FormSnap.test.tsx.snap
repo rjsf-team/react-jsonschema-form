@@ -1134,6 +1134,7 @@ exports[`single fields optional data controls does not show optional controls wh
                   <button
                     className="btn btn-info btn-add col-xs-12"
                     disabled={false}
+                    id="root_nestedObjectOptional_deepArrayOptional__add"
                     onClick={[Function]}
                     title="Add"
                     type="button"
@@ -1170,6 +1171,7 @@ exports[`single fields optional data controls does not show optional controls wh
                   <button
                     className="btn btn-info btn-add col-xs-12"
                     disabled={false}
+                    id="root_nestedObjectOptional_deepArrayOptional2__add"
                     onClick={[Function]}
                     title="Add"
                     type="button"
@@ -1211,6 +1213,7 @@ exports[`single fields optional data controls does not show optional controls wh
                   <button
                     className="btn btn-info btn-add col-xs-12"
                     disabled={false}
+                    id="root_nestedObjectOptional_deepArray__add"
                     onClick={[Function]}
                     title="Add"
                     type="button"
@@ -1249,6 +1252,7 @@ exports[`single fields optional data controls does not show optional controls wh
               <button
                 className="btn btn-info btn-add col-xs-12"
                 disabled={false}
+                id="root_nestedArrayOptional__add"
                 onClick={[Function]}
                 title="Add"
                 type="button"
@@ -1335,6 +1339,7 @@ exports[`single fields optional data controls does not show optional controls wh
               <button
                 className="btn btn-info btn-add col-xs-12"
                 disabled={false}
+                id="root_nestedArray__add"
                 onClick={[Function]}
                 title="Add"
                 type="button"
@@ -1613,6 +1618,7 @@ exports[`single fields optional data controls does not show optional controls wh
                   <button
                     className="btn btn-info btn-add col-xs-12"
                     disabled={true}
+                    id="root_nestedObjectOptional_deepArrayOptional__add"
                     onClick={[Function]}
                     title="Add"
                     type="button"
@@ -1649,6 +1655,7 @@ exports[`single fields optional data controls does not show optional controls wh
                   <button
                     className="btn btn-info btn-add col-xs-12"
                     disabled={true}
+                    id="root_nestedObjectOptional_deepArrayOptional2__add"
                     onClick={[Function]}
                     title="Add"
                     type="button"
@@ -1690,6 +1697,7 @@ exports[`single fields optional data controls does not show optional controls wh
                   <button
                     className="btn btn-info btn-add col-xs-12"
                     disabled={true}
+                    id="root_nestedObjectOptional_deepArray__add"
                     onClick={[Function]}
                     title="Add"
                     type="button"
@@ -1728,6 +1736,7 @@ exports[`single fields optional data controls does not show optional controls wh
               <button
                 className="btn btn-info btn-add col-xs-12"
                 disabled={true}
+                id="root_nestedArrayOptional__add"
                 onClick={[Function]}
                 title="Add"
                 type="button"
@@ -1814,6 +1823,7 @@ exports[`single fields optional data controls does not show optional controls wh
               <button
                 className="btn btn-info btn-add col-xs-12"
                 disabled={true}
+                id="root_nestedArray__add"
                 onClick={[Function]}
                 title="Add"
                 type="button"
@@ -2107,6 +2117,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                   <button
                     className="btn btn-info btn-add col-xs-12"
                     disabled={false}
+                    id="root_nestedObjectOptional_deepArrayOptional__add"
                     onClick={[Function]}
                     title="Add"
                     type="button"
@@ -2185,6 +2196,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                   <button
                     className="btn btn-info btn-add col-xs-12"
                     disabled={false}
+                    id="root_nestedObjectOptional_deepArray__add"
                     onClick={[Function]}
                     title="Add"
                     type="button"
@@ -2310,6 +2322,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
               <button
                 className="btn btn-info btn-add col-xs-12"
                 disabled={false}
+                id="root_nestedArrayOptional__add"
                 onClick={[Function]}
                 title="Add"
                 type="button"
@@ -2396,6 +2409,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
               <button
                 className="btn btn-info btn-add col-xs-12"
                 disabled={false}
+                id="root_nestedArray__add"
                 onClick={[Function]}
                 title="Add"
                 type="button"
@@ -2578,7 +2592,9 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
               >
                 deepObjectOptional
               </legend>
-              <em>
+              <em
+                id="root_nestedObjectOptional_deepObjectOptional__optionalMsg"
+              >
                 No data for optional field
               </em>
             </fieldset>
@@ -2652,6 +2668,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                   <button
                     className="btn btn-info btn-add col-xs-12"
                     disabled={true}
+                    id="root_nestedObjectOptional_deepArrayOptional__add"
                     onClick={[Function]}
                     title="Add"
                     type="button"
@@ -2676,7 +2693,9 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
               >
                 deepArrayOptional2
               </legend>
-              <em>
+              <em
+                id="root_nestedObjectOptional_deepArrayOptional2__optionalMsg"
+              >
                 No data for optional field
               </em>
               <div
@@ -2713,6 +2732,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                   <button
                     className="btn btn-info btn-add col-xs-12"
                     disabled={true}
+                    id="root_nestedObjectOptional_deepArray__add"
                     onClick={[Function]}
                     title="Add"
                     type="button"
@@ -2818,6 +2838,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
               <button
                 className="btn btn-info btn-add col-xs-12"
                 disabled={true}
+                id="root_nestedArrayOptional__add"
                 onClick={[Function]}
                 title="Add"
                 type="button"
@@ -2904,6 +2925,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
               <button
                 className="btn btn-info btn-add col-xs-12"
                 disabled={true}
+                id="root_nestedArray__add"
                 onClick={[Function]}
                 title="Add"
                 type="button"
@@ -3180,6 +3202,7 @@ exports[`single fields optional data controls shows "add" optional controls when
               <button
                 className="btn btn-info btn-add col-xs-12"
                 disabled={false}
+                id="root_nestedArray__add"
                 onClick={[Function]}
                 title="Add"
                 type="button"
@@ -3323,7 +3346,9 @@ exports[`single fields optional data controls shows "add" optional controls when
           >
             nestedObjectOptional
           </legend>
-          <em>
+          <em
+            id="root_nestedObjectOptional__optionalMsg"
+          >
             No data for optional field
           </em>
         </fieldset>
@@ -3340,7 +3365,9 @@ exports[`single fields optional data controls shows "add" optional controls when
           >
             nestedArrayOptional
           </legend>
-          <em>
+          <em
+            id="root_nestedArrayOptional__optionalMsg"
+          >
             No data for optional field
           </em>
           <div
@@ -3422,6 +3449,7 @@ exports[`single fields optional data controls shows "add" optional controls when
               <button
                 className="btn btn-info btn-add col-xs-12"
                 disabled={true}
+                id="root_nestedArray__add"
                 onClick={[Function]}
                 title="Add"
                 type="button"

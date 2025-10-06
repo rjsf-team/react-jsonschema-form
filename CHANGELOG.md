@@ -98,7 +98,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Updated `retrieveSchema()` to add an additional  property `resolveAnyOfOrOneOfRefs?: boolean` which causes `resolveAllSchemas()` to resolve `$ref`s inside of the options of `anyOf`/`oneOf` schemas
 - Updated `getDefaultFormState` to fix an issue where optional array props had their default set to an empty array when they shouldn't be
 - Updated the `TranslatableString` enum to add three new strings in support of the new feature: `OptionalObjectAdd`, `OptionalObjectRemove` and `OptionalObjectEmptyMsg`
-- Added three new utility functions: `isFormDataAvailable()`, `isRootSchema()` and `shouldRenderOptionalField()`
+- Added four new utility functions: `isFormDataAvailable()`, `isRootSchema()`, `optionalControlsId()`, and `shouldRenderOptionalField()`
 
 ## Dev / docs / playground
 

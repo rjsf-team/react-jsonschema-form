@@ -39,5 +39,5 @@ export default function OptionalDataControlsTemplate<
       />
     );
   }
-  return <em>{label}</em>;
+  return <em id={id}>{label}</em>;
 }

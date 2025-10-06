@@ -5,7 +5,7 @@ import { fireEvent, act, render, waitFor } from '@testing-library/react';
 import { Simulate } from 'react-dom/test-utils';
 import { findDOMNode } from 'react-dom';
 import { Portal } from 'react-portal';
-import { getTemplate, getUiOptions } from '@rjsf/utils';
+import { getTemplate, getUiOptions, optionalControlsId, buttonId } from '@rjsf/utils';
 import validator, { customizeValidator } from '@rjsf/validator-ajv8';
 
 import Form from '../src';
@@ -4943,6 +4943,291 @@ describe('Form omitExtraData and liveOmit', () => {
       });
       errors = node.querySelectorAll('.error-detail');
       expect(errors).to.have.lengthOf(0);
+    });
+  });
+
+  describe('optionalDataControls', () => {
+    const schema = {
+      title: 'test',
+      properties: {
+        nestedObjectOptional: {
+          type: 'object',
+          properties: {
+            test: {
+              type: 'string',
+            },
+          },
+        },
+        nestedArrayOptional: {
+          type: 'array',
+          items: {
+            type: 'string',
+          },
+        },
+      },
+    };
+    const arrayOnUiSchema = {
+      'ui:globalOptions': {
+        enableOptionalDataFieldForType: ['array'],
+      },
+    };
+    const objectOnUiSchema = {
+      'ui:globalOptions': {
+        enableOptionalDataFieldForType: ['object'],
+      },
+    };
+    const bothOnUiSchema = {
+      'ui:globalOptions': {
+        enableOptionalDataFieldForType: ['object', 'array'],
+      },
+    };
+    const experimental_defaultFormStateBehavior = {
+      // Set the emptyObjectFields to only populate required defaults to highlight the code working
+      emptyObjectFields: 'populateRequiredDefaults',
+    };
+    const arrayId = 'root_nestedArrayOptional';
+    const objectId = 'root_nestedObjectOptional';
+    const arrayControlAddId = optionalControlsId(arrayId, 'Add');
+    const arrayControlRemoveId = optionalControlsId(arrayId, 'Remove');
+    const arrayControlMsgId = optionalControlsId(arrayId, 'Msg');
+    const arrayAddId = buttonId(arrayId, 'add');
+    const objectControlAddId = optionalControlsId(objectId, 'Add');
+    const objectControlRemoveId = optionalControlsId(objectId, 'Remove');
+    const objectControlMsgId = optionalControlsId(objectId, 'Msg');
+    it('does not render any optional data control messages when not turned on and readonly and disabled', () => {
+      const props = {
+        schema,
+        experimental_defaultFormStateBehavior,
+        readonly: true,
+        disabled: true,
+      };
+      const { node } = createFormComponent(props);
+      const addArrayControlNode = node.querySelector(`#${arrayControlAddId}`);
+      const removeArrayControlNode = node.querySelector(`#${arrayControlRemoveId}`);
+      const msgArrayControlNode = node.querySelector(`#${arrayControlMsgId}`);
+      const addArrayBtn = node.querySelector(`#${arrayAddId}`);
+      const addObjectControlNode = node.querySelector(`#${objectControlAddId}`);
+      const removeObjectControlNode = node.querySelector(`#${objectControlRemoveId}`);
+      const msgObjectControlNode = node.querySelector(`#${objectControlMsgId}`);
+      const testInput = node.querySelector(`#${objectId}_test`);
+      // Check that the expected html elements are rendered (or not) as expected
+      expect(addArrayControlNode).eql(null);
+      expect(removeArrayControlNode).eql(null);
+      expect(msgArrayControlNode).eql(null);
+      expect(addArrayBtn).not.eql(null);
+      expect(addObjectControlNode).eql(null);
+      expect(removeObjectControlNode).eql(null);
+      expect(msgObjectControlNode).eql(null);
+      expect(testInput).not.eql(null);
+    });
+    it('renders optional data control messages when turned on and readonly', () => {
+      const props = {
+        schema,
+        uiSchema: bothOnUiSchema,
+        experimental_defaultFormStateBehavior,
+        readonly: true,
+      };
+      const { node } = createFormComponent(props);
+      const addArrayControlNode = node.querySelector(`#${arrayControlAddId}`);
+      const removeArrayControlNode = node.querySelector(`#${arrayControlRemoveId}`);
+      const msgArrayControlNode = node.querySelector(`#${arrayControlMsgId}`);
+      const addArrayBtn = node.querySelector(`#${arrayAddId}`);
+      const addObjectControlNode = node.querySelector(`#${objectControlAddId}`);
+      const removeObjectControlNode = node.querySelector(`#${objectControlRemoveId}`);
+      const msgObjectControlNode = node.querySelector(`#${objectControlMsgId}`);
+      const testInput = node.querySelector(`#${objectId}_test`);
+      // Check that the expected html elements are rendered (or not) as expected
+      expect(addArrayControlNode).eql(null);
+      expect(removeArrayControlNode).eql(null);
+      expect(msgArrayControlNode).not.eql(null);
+      expect(addArrayBtn).eql(null);
+      expect(addObjectControlNode).eql(null);
+      expect(removeObjectControlNode).eql(null);
+      expect(msgObjectControlNode).not.eql(null);
+      expect(testInput).eql(null);
+    });
+    it('renders optional data control messages when turned on and readonly', () => {
+      const props = {
+        schema,
+        uiSchema: bothOnUiSchema,
+        experimental_defaultFormStateBehavior,
+        disabled: true,
+      };
+      const { node } = createFormComponent(props);
+      const addArrayControlNode = node.querySelector(`#${arrayControlAddId}`);
+      const removeArrayControlNode = node.querySelector(`#${arrayControlRemoveId}`);
+      const msgArrayControlNode = node.querySelector(`#${arrayControlMsgId}`);
+      const addArrayBtn = node.querySelector(`#${arrayAddId}`);
+      const addObjectControlNode = node.querySelector(`#${objectControlAddId}`);
+      const removeObjectControlNode = node.querySelector(`#${objectControlRemoveId}`);
+      const msgObjectControlNode = node.querySelector(`#${objectControlMsgId}`);
+      const testInput = node.querySelector(`#${objectId}_test`);
+      // Check that the expected html elements are rendered (or not) as expected
+      expect(addArrayControlNode).eql(null);
+      expect(removeArrayControlNode).eql(null);
+      expect(msgArrayControlNode).not.eql(null);
+      expect(addArrayBtn).eql(null);
+      expect(addObjectControlNode).eql(null);
+      expect(removeObjectControlNode).eql(null);
+      expect(msgObjectControlNode).not.eql(null);
+      expect(testInput).eql(null);
+    });
+    it('does not render any optional data controls when not turned on', () => {
+      const props = {
+        schema,
+        experimental_defaultFormStateBehavior,
+      };
+      const { node } = createFormComponent(props);
+      const addArrayControlNode = node.querySelector(`#${arrayControlAddId}`);
+      const removeArrayControlNode = node.querySelector(`#${arrayControlRemoveId}`);
+      const addArrayBtn = node.querySelector(`#${arrayAddId}`);
+      const addObjectControlNode = node.querySelector(`#${objectControlAddId}`);
+      const removeObjectControlNode = node.querySelector(`#${objectControlRemoveId}`);
+      const testInput = node.querySelector(`#${objectId}_test`);
+      // Check that the expected html elements are rendered (or not) as expected
+      expect(addArrayControlNode).eql(null);
+      expect(removeArrayControlNode).eql(null);
+      expect(addArrayBtn).not.eql(null);
+      expect(addObjectControlNode).eql(null);
+      expect(removeObjectControlNode).eql(null);
+      expect(testInput).not.eql(null);
+    });
+    it('only render object optional data controls when only object is turned on', () => {
+      const props = {
+        schema,
+        uiSchema: objectOnUiSchema,
+        experimental_defaultFormStateBehavior,
+      };
+      const { node } = createFormComponent(props);
+      const addArrayControlNode = node.querySelector(`#${arrayControlAddId}`);
+      const removeArrayControlNode = node.querySelector(`#${arrayControlRemoveId}`);
+      const addArrayBtn = node.querySelector(`#${arrayAddId}`);
+      let addObjectControlNode = node.querySelector(`#${objectControlAddId}`);
+      let removeObjectControlNode = node.querySelector(`#${objectControlRemoveId}`);
+      let testInput = node.querySelector(`#${objectId}_test`);
+      // Check that the expected html elements are rendered (or not) as expected
+      expect(addArrayControlNode).eql(null);
+      expect(removeArrayControlNode).eql(null);
+      expect(addArrayBtn).not.eql(null);
+      expect(addObjectControlNode).not.eql(null);
+      expect(removeObjectControlNode).eql(null);
+      expect(testInput).eql(null);
+
+      // now click on the add optional data button
+      act(() => addObjectControlNode.click());
+      // now check to see if the UI adjusted
+      addObjectControlNode = node.querySelector(`#${objectControlAddId}`);
+      removeObjectControlNode = node.querySelector(`#${objectControlRemoveId}`);
+      testInput = node.querySelector(`#${objectId}_test`);
+      expect(addObjectControlNode).eql(null);
+      expect(removeObjectControlNode).not.eql(null);
+      expect(testInput).not.eql(null);
+
+      // now click on the remove optional data button
+      act(() => removeObjectControlNode.click());
+      // now check to see if the UI adjusted
+      addObjectControlNode = node.querySelector(`#${objectControlAddId}`);
+      removeObjectControlNode = node.querySelector(`#${objectControlRemoveId}`);
+      testInput = node.querySelector(`#${objectId}_test`);
+      expect(addObjectControlNode).not.eql(null);
+      expect(removeObjectControlNode).eql(null);
+      expect(testInput).eql(null);
+    });
+    it('only render array optional data controls when only array is turned on', () => {
+      const props = {
+        schema,
+        uiSchema: arrayOnUiSchema,
+        experimental_defaultFormStateBehavior,
+      };
+      const { node } = createFormComponent(props);
+      let addArrayControlNode = node.querySelector(`#${arrayControlAddId}`);
+      let removeArrayControlNode = node.querySelector(`#${arrayControlRemoveId}`);
+      let addArrayBtn = node.querySelector(`#${arrayAddId}`);
+      const addObjectControlNode = node.querySelector(`#${objectControlAddId}`);
+      const removeObjectControlNode = node.querySelector(`#${objectControlRemoveId}`);
+      const testInput = node.querySelector(`#${objectId}_test`);
+      // Check that the expected html elements are rendered (or not) as expected
+      expect(addArrayControlNode).not.eql(null);
+      expect(removeArrayControlNode).eql(null);
+      expect(addArrayBtn).eql(null);
+      expect(addObjectControlNode).eql(null);
+      expect(removeObjectControlNode).eql(null);
+      expect(testInput).not.eql(null);
+
+      // now click on the add optional data button
+      act(() => addArrayControlNode.click());
+      // now check to see if the UI adjusted
+      addArrayControlNode = node.querySelector(`#${arrayControlAddId}`);
+      removeArrayControlNode = node.querySelector(`#${arrayControlRemoveId}`);
+      addArrayBtn = node.querySelector(`#${arrayAddId}`);
+      expect(addArrayControlNode).eql(null);
+      expect(removeArrayControlNode).not.eql(null);
+      expect(addArrayBtn).not.eql(null);
+
+      // now click on the remove optional data button
+      act(() => removeArrayControlNode.click());
+      // now check to see if the UI adjusted
+      addArrayControlNode = node.querySelector(`#${arrayControlAddId}`);
+      removeArrayControlNode = node.querySelector(`#${arrayControlRemoveId}`);
+      addArrayBtn = node.querySelector(`#${arrayAddId}`);
+      expect(addArrayControlNode).not.eql(null);
+      expect(removeArrayControlNode).eql(null);
+      expect(addArrayBtn).eql(null);
+    });
+    it('render both kinds of optional data controls when only both are turned on', () => {
+      const props = {
+        schema,
+        uiSchema: bothOnUiSchema,
+        experimental_defaultFormStateBehavior,
+      };
+      const { node } = createFormComponent(props);
+      let addArrayControlNode = node.querySelector(`#${arrayControlAddId}`);
+      let removeArrayControlNode = node.querySelector(`#${arrayControlRemoveId}`);
+      let addArrayBtn = node.querySelector(`#${arrayAddId}`);
+      let addObjectControlNode = node.querySelector(`#${objectControlAddId}`);
+      let removeObjectControlNode = node.querySelector(`#${objectControlRemoveId}`);
+      let testInput = node.querySelector(`#${objectId}_test`);
+      // Check that the expected html elements are rendered (or not) as expected
+      expect(addArrayControlNode).not.eql(null);
+      expect(removeArrayControlNode).eql(null);
+      expect(addArrayBtn).eql(null);
+      expect(addObjectControlNode).not.eql(null);
+      expect(removeObjectControlNode).eql(null);
+      expect(testInput).eql(null);
+
+      // now click on the add optional data button
+      act(() => addArrayControlNode.click());
+      act(() => addObjectControlNode.click());
+      // now check to see if the UI adjusted
+      addArrayControlNode = node.querySelector(`#${arrayControlAddId}`);
+      removeArrayControlNode = node.querySelector(`#${arrayControlRemoveId}`);
+      addArrayBtn = node.querySelector(`#${arrayAddId}`);
+      addObjectControlNode = node.querySelector(`#${objectControlAddId}`);
+      removeObjectControlNode = node.querySelector(`#${objectControlRemoveId}`);
+      testInput = node.querySelector(`#${objectId}_test`);
+      expect(addArrayControlNode).eql(null);
+      expect(removeArrayControlNode).not.eql(null);
+      expect(addArrayBtn).not.eql(null);
+      expect(addObjectControlNode).eql(null);
+      expect(removeObjectControlNode).not.eql(null);
+      expect(testInput).not.eql(null);
+
+      // now click on the remove optional data button
+      act(() => removeArrayControlNode.click());
+      act(() => removeObjectControlNode.click());
+      // now check to see if the UI adjusted
+      addArrayControlNode = node.querySelector(`#${arrayControlAddId}`);
+      removeArrayControlNode = node.querySelector(`#${arrayControlRemoveId}`);
+      addArrayBtn = node.querySelector(`#${arrayAddId}`);
+      addObjectControlNode = node.querySelector(`#${objectControlAddId}`);
+      removeObjectControlNode = node.querySelector(`#${objectControlRemoveId}`);
+      testInput = node.querySelector(`#${objectId}_test`);
+      expect(addArrayControlNode).not.eql(null);
+      expect(removeArrayControlNode).eql(null);
+      expect(addArrayBtn).eql(null);
+      expect(addObjectControlNode).not.eql(null);
+      expect(removeObjectControlNode).eql(null);
+      expect(testInput).eql(null);
     });
   });
 });
