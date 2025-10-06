@@ -36,6 +36,7 @@ import {
   errorId,
   examplesId,
   helpId,
+  optionalControlsId,
   optionId,
   titleId,
 } from './idGenerators';
@@ -129,6 +130,7 @@ export {
   mergeDefaultsWithFormData,
   mergeObjects,
   mergeSchemas,
+  optionalControlsId,
   optionId,
   optionsList,
   orderProperties,

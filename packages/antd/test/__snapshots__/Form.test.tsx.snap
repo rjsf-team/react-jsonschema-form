@@ -6424,6 +6424,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                                           <button
                                             className="ant-btn css-dev-only-do-not-override-xepvsj ant-btn-default ant-btn-dangerous ant-btn-color-dangerous ant-btn-variant-outlined ant-btn-sm ant-btn-icon-only rjsf-remove-optional-data"
                                             disabled={false}
+                                            id="root_nestedObjectOptional__optionalRemove"
                                             onClick={[Function]}
                                             style={
                                               {
@@ -6643,6 +6644,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                                                             <button
                                                               className="ant-btn css-dev-only-do-not-override-xepvsj ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-sm ant-btn-icon-only rjsf-add-optional-data"
                                                               disabled={false}
+                                                              id="root_nestedObjectOptional_deepObjectOptional__optionalAdd"
                                                               onClick={[Function]}
                                                               style={
                                                                 {
@@ -7122,6 +7124,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                                                             <button
                                                               className="ant-btn css-dev-only-do-not-override-xepvsj ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-sm ant-btn-icon-only rjsf-add-optional-data"
                                                               disabled={false}
+                                                              id="root_nestedObjectOptional_deepArrayOptional2__optionalAdd"
                                                               onClick={[Function]}
                                                               style={
                                                                 {
@@ -7455,6 +7458,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                                           <button
                                             className="ant-btn css-dev-only-do-not-override-xepvsj ant-btn-default ant-btn-dangerous ant-btn-color-dangerous ant-btn-variant-outlined ant-btn-sm ant-btn-icon-only rjsf-remove-optional-data"
                                             disabled={false}
+                                            id="root_nestedArrayOptional__optionalRemove"
                                             onClick={[Function]}
                                             style={
                                               {
@@ -8728,7 +8732,9 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                                                           }
                                                         }
                                                       >
-                                                        <em>
+                                                        <em
+                                                          id="root_nestedObjectOptional_deepObjectOptional__optionalMsg"
+                                                        >
                                                           No data for optional field
                                                         </em>
                                                       </div>
@@ -9162,7 +9168,9 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                                                           }
                                                         }
                                                       >
-                                                        <em>
+                                                        <em
+                                                          id="root_nestedObjectOptional_deepArrayOptional2__optionalMsg"
+                                                        >
                                                           No data for optional field
                                                         </em>
                                                       </div>
@@ -10504,6 +10512,7 @@ exports[`single fields optional data controls shows "add" optional controls when
                                           <button
                                             className="ant-btn css-dev-only-do-not-override-xepvsj ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-sm ant-btn-icon-only rjsf-add-optional-data"
                                             disabled={false}
+                                            id="root_nestedObjectOptional__optionalAdd"
                                             onClick={[Function]}
                                             style={
                                               {
@@ -10654,6 +10663,7 @@ exports[`single fields optional data controls shows "add" optional controls when
                                           <button
                                             className="ant-btn css-dev-only-do-not-override-xepvsj ant-btn-default ant-btn-color-default ant-btn-variant-outlined ant-btn-sm ant-btn-icon-only rjsf-add-optional-data"
                                             disabled={false}
+                                            id="root_nestedArrayOptional__optionalAdd"
                                             onClick={[Function]}
                                             style={
                                               {
@@ -11540,7 +11550,9 @@ exports[`single fields optional data controls shows "add" optional controls when
                                         }
                                       }
                                     >
-                                      <em>
+                                      <em
+                                        id="root_nestedObjectOptional__optionalMsg"
+                                      >
                                         No data for optional field
                                       </em>
                                     </div>
@@ -11636,7 +11648,9 @@ exports[`single fields optional data controls shows "add" optional controls when
                                         }
                                       }
                                     >
-                                      <em>
+                                      <em
+                                        id="root_nestedArrayOptional__optionalMsg"
+                                      >
                                         No data for optional field
                                       </em>
                                     </div>

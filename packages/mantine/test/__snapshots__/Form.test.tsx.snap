@@ -9742,6 +9742,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                                               "className": "rjsf-remove-optional-data m_8d3f4000 m_87cf2631",
                                               "data-size": "sm",
                                               "data-variant": "subtle",
+                                              "id": "root_nestedObjectOptional__optionalRemove",
                                               "onClick": [Function],
                                               "size": undefined,
                                               "style": {
@@ -10047,6 +10048,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                                                               "className": "rjsf-add-optional-data m_8d3f4000 m_87cf2631",
                                                               "data-size": "sm",
                                                               "data-variant": "subtle",
+                                                              "id": "root_nestedObjectOptional_deepObjectOptional__optionalAdd",
                                                               "onClick": [Function],
                                                               "size": undefined,
                                                               "style": {
@@ -12596,7 +12598,9 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                                                     "children": [
                                                       "No data for optional field",
                                                     ],
-                                                    "props": {},
+                                                    "props": {
+                                                      "id": "root_nestedObjectOptional_deepObjectOptional__optionalMsg",
+                                                    },
                                                     "type": "em",
                                                     Symbol(cleaned): true,
                                                   },
@@ -13056,7 +13060,9 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                                                     "children": [
                                                       "No data for optional field",
                                                     ],
-                                                    "props": {},
+                                                    "props": {
+                                                      "id": "root_nestedObjectOptional_deepArrayOptional2__optionalMsg",
+                                                    },
                                                     "type": "em",
                                                     Symbol(cleaned): true,
                                                   },
@@ -15079,6 +15085,7 @@ exports[`single fields optional data controls shows "add" optional controls when
                                               "className": "rjsf-add-optional-data m_8d3f4000 m_87cf2631",
                                               "data-size": "sm",
                                               "data-variant": "subtle",
+                                              "id": "root_nestedObjectOptional__optionalAdd",
                                               "onClick": [Function],
                                               "size": undefined,
                                               "style": {
@@ -16469,7 +16476,9 @@ exports[`single fields optional data controls shows "add" optional controls when
                                     "children": [
                                       "No data for optional field",
                                     ],
-                                    "props": {},
+                                    "props": {
+                                      "id": "root_nestedObjectOptional__optionalMsg",
+                                    },
                                     "type": "em",
                                     Symbol(cleaned): true,
                                   },
@@ -16563,7 +16572,9 @@ exports[`single fields optional data controls shows "add" optional controls when
                                     "children": [
                                       "No data for optional field",
                                     ],
-                                    "props": {},
+                                    "props": {
+                                      "id": "root_nestedArrayOptional__optionalMsg",
+                                    },
                                     "type": "em",
                                     Symbol(cleaned): true,
                                   },

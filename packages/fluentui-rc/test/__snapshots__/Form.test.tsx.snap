@@ -3188,6 +3188,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                   >
                     <button
                       className="fui-Button r1alrhcs rjsf-remove-optional-data ___d2i6ur0_1f7yp8q f17fgpbq fu97m5z ft85np5 fy9rknc figsok6 fwrc4pm fazmxh f1jt17bm"
+                      id="root_nestedObjectOptional__optionalRemove"
                       onClick={[Function]}
                       title="Remove data for optional field"
                       type="button"
@@ -3304,6 +3305,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                           >
                             <button
                               className="fui-Button r1alrhcs rjsf-add-optional-data ___d2i6ur0_1f7yp8q f17fgpbq fu97m5z ft85np5 fy9rknc figsok6 fwrc4pm fazmxh f1jt17bm"
+                              id="root_nestedObjectOptional_deepObjectOptional__optionalAdd"
                               onClick={[Function]}
                               title="Add data for optional field"
                               type="button"
@@ -3536,6 +3538,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                           >
                             <button
                               className="fui-Button r1alrhcs rjsf-add-optional-data ___d2i6ur0_1f7yp8q f17fgpbq fu97m5z ft85np5 fy9rknc figsok6 fwrc4pm fazmxh f1jt17bm"
+                              id="root_nestedObjectOptional_deepArrayOptional2__optionalAdd"
                               onClick={[Function]}
                               title="Add data for optional field"
                               type="button"
@@ -3689,6 +3692,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                   >
                     <button
                       className="fui-Button r1alrhcs rjsf-remove-optional-data ___d2i6ur0_1f7yp8q f17fgpbq fu97m5z ft85np5 fy9rknc figsok6 fwrc4pm fazmxh f1jt17bm"
+                      id="root_nestedArrayOptional__optionalRemove"
                       onClick={[Function]}
                       title="Remove data for optional field"
                       type="button"
@@ -4336,7 +4340,9 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                       <div
                         className="fui-Flex ___2axmsj0_qpg1ts0 f22iagw f1vx9l62 fly5x3f f1l02sjl f16r77es"
                       >
-                        <em>
+                        <em
+                          id="root_nestedObjectOptional_deepObjectOptional__optionalMsg"
+                        >
                           No data for optional field
                         </em>
                       </div>
@@ -4535,7 +4541,9 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                       <div
                         className="fui-Flex ___7chxox0_17y04c0 f22iagw f1vx9l62 f4akndk fe5j3v"
                       >
-                        <em>
+                        <em
+                          id="root_nestedObjectOptional_deepArrayOptional2__optionalMsg"
+                        >
                           No data for optional field
                         </em>
                       </div>
@@ -5191,6 +5199,7 @@ exports[`single fields optional data controls shows "add" optional controls when
                   >
                     <button
                       className="fui-Button r1alrhcs rjsf-add-optional-data ___d2i6ur0_1f7yp8q f17fgpbq fu97m5z ft85np5 fy9rknc figsok6 fwrc4pm fazmxh f1jt17bm"
+                      id="root_nestedObjectOptional__optionalAdd"
                       onClick={[Function]}
                       title="Add data for optional field"
                       type="button"
@@ -5268,6 +5277,7 @@ exports[`single fields optional data controls shows "add" optional controls when
                   >
                     <button
                       className="fui-Button r1alrhcs rjsf-add-optional-data ___d2i6ur0_1f7yp8q f17fgpbq fu97m5z ft85np5 fy9rknc figsok6 fwrc4pm fazmxh f1jt17bm"
+                      id="root_nestedArrayOptional__optionalAdd"
                       onClick={[Function]}
                       title="Add data for optional field"
                       type="button"
@@ -5721,7 +5731,9 @@ exports[`single fields optional data controls shows "add" optional controls when
               <div
                 className="fui-Flex ___2axmsj0_qpg1ts0 f22iagw f1vx9l62 fly5x3f f1l02sjl f16r77es"
               >
-                <em>
+                <em
+                  id="root_nestedObjectOptional__optionalMsg"
+                >
                   No data for optional field
                 </em>
               </div>
@@ -5765,7 +5777,9 @@ exports[`single fields optional data controls shows "add" optional controls when
               <div
                 className="fui-Flex ___7chxox0_17y04c0 f22iagw f1vx9l62 f4akndk fe5j3v"
               >
-                <em>
+                <em
+                  id="root_nestedArrayOptional__optionalMsg"
+                >
                   No data for optional field
                 </em>
               </div>

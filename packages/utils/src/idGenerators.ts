@@ -89,3 +89,13 @@ export function optionId(id: string, optionIndex: number) {
 export function buttonId(id: FieldPathId | string, btn: 'add' | 'copy' | 'moveDown' | 'moveUp' | 'remove') {
   return idGenerator(id, btn);
 }
+
+/** Return a consistent `id` for the optional data controls `element`
+ *
+ * @param id - Either simple string id or an FieldPathId from which to extract it
+ * @param element - The element type for which to generate the id
+ * @returns - The consistent id for the optional data controls element from the given `id` and `element` type
+ */
+export function optionalControlsId(id: FieldPathId | string, element: 'Add' | 'Msg' | 'Remove') {
+  return idGenerator(id, `optional${element}`);
+}

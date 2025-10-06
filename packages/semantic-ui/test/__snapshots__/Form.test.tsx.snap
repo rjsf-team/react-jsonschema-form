@@ -2607,6 +2607,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
             >
               <button
                 className="ui mini icon button rjsf-remove-optional-data"
+                id="root_nestedObjectOptional__optionalRemove"
                 onClick={[Function]}
                 title="Remove data for optional field"
               >
@@ -2683,6 +2684,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                 >
                   <button
                     className="ui mini icon button rjsf-add-optional-data"
+                    id="root_nestedObjectOptional_deepObjectOptional__optionalAdd"
                     onClick={[Function]}
                     title="Add data for optional field"
                   >
@@ -2823,6 +2825,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                   >
                     <button
                       className="ui mini icon button rjsf-add-optional-data"
+                      id="root_nestedObjectOptional_deepArrayOptional2__optionalAdd"
                       onClick={[Function]}
                       title="Add data for optional field"
                     >
@@ -2922,6 +2925,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
               >
                 <button
                   className="ui mini icon button rjsf-remove-optional-data"
+                  id="root_nestedArrayOptional__optionalRemove"
                   onClick={[Function]}
                   title="Remove data for optional field"
                 >
@@ -3387,7 +3391,9 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
               >
                 deepObjectOptional
               </h5>
-              <em>
+              <em
+                id="root_nestedObjectOptional_deepObjectOptional__optionalMsg"
+              >
                 No data for optional field
               </em>
             </div>
@@ -3508,7 +3514,9 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                   <div
                     className="row array-item-list"
                   >
-                    <em>
+                    <em
+                      id="root_nestedObjectOptional_deepArrayOptional2__optionalMsg"
+                    >
                       No data for optional field
                     </em>
                   </div>
@@ -4012,6 +4020,7 @@ exports[`single fields optional data controls shows "add" optional controls when
             >
               <button
                 className="ui mini icon button rjsf-add-optional-data"
+                id="root_nestedObjectOptional__optionalAdd"
                 onClick={[Function]}
                 title="Add data for optional field"
               >
@@ -4058,6 +4067,7 @@ exports[`single fields optional data controls shows "add" optional controls when
               >
                 <button
                   className="ui mini icon button rjsf-add-optional-data"
+                  id="root_nestedArrayOptional__optionalAdd"
                   onClick={[Function]}
                   title="Add data for optional field"
                 >
@@ -4378,7 +4388,9 @@ exports[`single fields optional data controls shows "add" optional controls when
           >
             nestedObjectOptional
           </h5>
-          <em>
+          <em
+            id="root_nestedObjectOptional__optionalMsg"
+          >
             No data for optional field
           </em>
         </div>
@@ -4402,7 +4414,9 @@ exports[`single fields optional data controls shows "add" optional controls when
               <div
                 className="row array-item-list"
               >
-                <em>
+                <em
+                  id="root_nestedArrayOptional__optionalMsg"
+                >
                   No data for optional field
                 </em>
               </div>

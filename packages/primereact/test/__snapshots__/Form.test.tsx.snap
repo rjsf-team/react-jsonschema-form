@@ -3895,6 +3895,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                   data-pc-name="button"
                   data-pc-section="root"
                   disabled={false}
+                  id="root_nestedObjectOptional__optionalRemove"
                   onClick={[Function]}
                   style={
                     {
@@ -4036,6 +4037,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                       data-pc-name="button"
                       data-pc-section="root"
                       disabled={false}
+                      id="root_nestedObjectOptional_deepObjectOptional__optionalAdd"
                       onClick={[Function]}
                       style={
                         {
@@ -4306,6 +4308,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                     data-pc-name="button"
                     data-pc-section="root"
                     disabled={false}
+                    id="root_nestedObjectOptional_deepArrayOptional2__optionalAdd"
                     onClick={[Function]}
                     style={
                       {
@@ -4493,6 +4496,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                 data-pc-name="button"
                 data-pc-section="root"
                 disabled={false}
+                id="root_nestedArrayOptional__optionalRemove"
                 onClick={[Function]}
                 style={
                   {
@@ -5230,7 +5234,9 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                   />
                 </div>
               </div>
-              <em>
+              <em
+                id="root_nestedObjectOptional_deepObjectOptional__optionalMsg"
+              >
                 No data for optional field
               </em>
             </div>
@@ -5459,7 +5465,9 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                   >
                     <div>
                       <div>
-                        <em>
+                        <em
+                          id="root_nestedObjectOptional_deepArrayOptional2__optionalMsg"
+                        >
                           No data for optional field
                         </em>
                       </div>
@@ -6212,6 +6220,7 @@ exports[`single fields optional data controls shows "add" optional controls when
                   data-pc-name="button"
                   data-pc-section="root"
                   disabled={false}
+                  id="root_nestedObjectOptional__optionalAdd"
                   onClick={[Function]}
                   style={
                     {
@@ -6306,6 +6315,7 @@ exports[`single fields optional data controls shows "add" optional controls when
                 data-pc-name="button"
                 data-pc-section="root"
                 disabled={false}
+                id="root_nestedArrayOptional__optionalAdd"
                 onClick={[Function]}
                 style={
                   {
@@ -6827,7 +6837,9 @@ exports[`single fields optional data controls shows "add" optional controls when
               />
             </div>
           </div>
-          <em>
+          <em
+            id="root_nestedObjectOptional__optionalMsg"
+          >
             No data for optional field
           </em>
         </div>
@@ -6880,7 +6892,9 @@ exports[`single fields optional data controls shows "add" optional controls when
               >
                 <div>
                   <div>
-                    <em>
+                    <em
+                      id="root_nestedArrayOptional__optionalMsg"
+                    >
                       No data for optional field
                     </em>
                   </div>

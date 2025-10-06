@@ -10756,6 +10756,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                       <button
                         aria-label="Remove data for optional field"
                         className="chakra-button rjsf-remove-optional-data btn-sm emotion-12"
+                        id="root_nestedObjectOptional__optionalRemove"
                         onClick={[Function]}
                         title="Remove data for optional field"
                         type="button"
@@ -10879,6 +10880,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                                 <button
                                   aria-label="Add data for optional field"
                                   className="chakra-button rjsf-add-optional-data btn-sm emotion-12"
+                                  id="root_nestedObjectOptional_deepObjectOptional__optionalAdd"
                                   onClick={[Function]}
                                   title="Add data for optional field"
                                   type="button"
@@ -11118,6 +11120,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                                   <button
                                     aria-label="Add data for optional field"
                                     className="chakra-button rjsf-add-optional-data btn-sm emotion-12"
+                                    id="root_nestedObjectOptional_deepArrayOptional2__optionalAdd"
                                     onClick={[Function]}
                                     title="Add data for optional field"
                                     type="button"
@@ -11275,6 +11278,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                         <button
                           aria-label="Remove data for optional field"
                           className="chakra-button rjsf-remove-optional-data btn-sm emotion-12"
+                          id="root_nestedArrayOptional__optionalRemove"
                           onClick={[Function]}
                           title="Remove data for optional field"
                           type="button"
@@ -13008,7 +13012,9 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                               className="emotion-5"
                             >
                               <div>
-                                <em>
+                                <em
+                                  id="root_nestedObjectOptional_deepObjectOptional__optionalMsg"
+                                >
                                   No data for optional field
                                 </em>
                               </div>
@@ -13224,7 +13230,9 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                                 className="emotion-39"
                               >
                                 <div>
-                                  <em>
+                                  <em
+                                    id="root_nestedObjectOptional_deepArrayOptional2__optionalMsg"
+                                  >
                                     No data for optional field
                                   </em>
                                 </div>
@@ -14922,6 +14930,7 @@ exports[`single fields optional data controls shows "add" optional controls when
                       <button
                         aria-label="Add data for optional field"
                         className="chakra-button rjsf-add-optional-data btn-sm emotion-12"
+                        id="root_nestedObjectOptional__optionalAdd"
                         onClick={[Function]}
                         title="Add data for optional field"
                         type="button"
@@ -14994,6 +15003,7 @@ exports[`single fields optional data controls shows "add" optional controls when
                         <button
                           aria-label="Add data for optional field"
                           className="chakra-button rjsf-add-optional-data btn-sm emotion-12"
+                          id="root_nestedArrayOptional__optionalAdd"
                           onClick={[Function]}
                           title="Add data for optional field"
                           type="button"
@@ -16322,7 +16332,9 @@ exports[`single fields optional data controls shows "add" optional controls when
                     className="emotion-5"
                   >
                     <div>
-                      <em>
+                      <em
+                        id="root_nestedObjectOptional__optionalMsg"
+                      >
                         No data for optional field
                       </em>
                     </div>
@@ -16366,7 +16378,9 @@ exports[`single fields optional data controls shows "add" optional controls when
                       className="emotion-17"
                     >
                       <div>
-                        <em>
+                        <em
+                          id="root_nestedArrayOptional__optionalMsg"
+                        >
                           No data for optional field
                         </em>
                       </div>

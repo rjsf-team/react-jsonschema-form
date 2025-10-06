@@ -15,10 +15,11 @@ export default function OptionalDataControlsTemplate<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
 >(props: OptionalDataControlsTemplateProps<T, S, F>) {
-  const { registry, label, onAddClick, onRemoveClick } = props;
+  const { id, registry, label, onAddClick, onRemoveClick } = props;
   if (onAddClick) {
     return (
       <AddButton
+        id={id}
         registry={registry}
         className='rjsf-add-optional-data'
         onClick={onAddClick}
@@ -31,6 +32,7 @@ export default function OptionalDataControlsTemplate<
   } else if (onRemoveClick) {
     return (
       <RemoveButton
+        id={id}
         registry={registry}
         className='rjsf-remove-optional-data'
         onClick={onRemoveClick}
@@ -41,5 +43,5 @@ export default function OptionalDataControlsTemplate<
       />
     );
   }
-  return <em>{label}</em>;
+  return <em id={id}>{label}</em>;
 }

@@ -784,6 +784,9 @@ export type OptionalDataControlsTemplateProps<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
 > = RJSFBaseProps<T, S, F> & {
+  /** The generated id for this optionalDataControls instance
+   */
+  id: string;
   /** The label to use for the control */
   label: string;
   /** Optional callback to call when clicking on the optional data control to add data */

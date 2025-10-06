@@ -1966,6 +1966,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
             >
               <button
                 className="btn btn-default rjsf-remove-optional-data btn-sm"
+                id="root_nestedObjectOptional__optionalRemove"
                 onClick={[Function]}
                 title="Remove data for optional field"
                 type="button"
@@ -2024,6 +2025,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                 >
                   <button
                     className="btn btn-default rjsf-add-optional-data btn-sm"
+                    id="root_nestedObjectOptional_deepObjectOptional__optionalAdd"
                     onClick={[Function]}
                     title="Add data for optional field"
                     type="button"
@@ -2138,6 +2140,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                 >
                   <button
                     className="btn btn-default rjsf-add-optional-data btn-sm"
+                    id="root_nestedObjectOptional_deepArrayOptional2__optionalAdd"
                     onClick={[Function]}
                     title="Add data for optional field"
                     type="button"
@@ -2217,6 +2220,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
             >
               <button
                 className="btn btn-default rjsf-remove-optional-data btn-sm"
+                id="root_nestedArrayOptional__optionalRemove"
                 onClick={[Function]}
                 title="Remove data for optional field"
                 type="button"
@@ -3052,6 +3056,7 @@ exports[`single fields optional data controls shows "add" optional controls when
             >
               <button
                 className="btn btn-default rjsf-add-optional-data btn-sm"
+                id="root_nestedObjectOptional__optionalAdd"
                 onClick={[Function]}
                 title="Add data for optional field"
                 type="button"
@@ -3085,6 +3090,7 @@ exports[`single fields optional data controls shows "add" optional controls when
             >
               <button
                 className="btn btn-default rjsf-add-optional-data btn-sm"
+                id="root_nestedArrayOptional__optionalAdd"
                 onClick={[Function]}
                 title="Add data for optional field"
                 type="button"

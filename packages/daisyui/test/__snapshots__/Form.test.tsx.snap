@@ -4099,6 +4099,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                         <button
                           aria-label="Remove data for optional field"
                           className="rjsf-remove-optional-data"
+                          id="root_nestedObjectOptional__optionalRemove"
                           onClick={[Function]}
                           title="Remove data for optional field"
                           type="button"
@@ -4230,6 +4231,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                                   <button
                                     aria-label="Add data for optional field"
                                     className="rjsf-add-optional-data"
+                                    id="root_nestedObjectOptional_deepObjectOptional__optionalAdd"
                                     onClick={[Function]}
                                     title="Add data for optional field"
                                     type="button"
@@ -4513,6 +4515,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                                   <button
                                     aria-label="Add data for optional field"
                                     className="rjsf-add-optional-data"
+                                    id="root_nestedObjectOptional_deepArrayOptional2__optionalAdd"
                                     onClick={[Function]}
                                     title="Add data for optional field"
                                     type="button"
@@ -4702,6 +4705,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                         <button
                           aria-label="Remove data for optional field"
                           className="rjsf-remove-optional-data"
+                          id="root_nestedArrayOptional__optionalRemove"
                           onClick={[Function]}
                           title="Remove data for optional field"
                           type="button"
@@ -5500,7 +5504,9 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                             <div
                               className="grid grid-cols-1 gap-4 mb-4"
                             >
-                              <em>
+                              <em
+                                id="root_nestedObjectOptional_deepObjectOptional__optionalMsg"
+                              >
                                 No data for optional field
                               </em>
                             </div>
@@ -5754,7 +5760,9 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                             <div
                               className="flex flex-col gap-4"
                             >
-                              <em>
+                              <em
+                                id="root_nestedObjectOptional_deepArrayOptional2__optionalMsg"
+                              >
                                 No data for optional field
                               </em>
                               <div
@@ -6592,6 +6600,7 @@ exports[`single fields optional data controls shows "add" optional controls when
                         <button
                           aria-label="Add data for optional field"
                           className="rjsf-add-optional-data"
+                          id="root_nestedObjectOptional__optionalAdd"
                           onClick={[Function]}
                           title="Add data for optional field"
                           type="button"
@@ -6670,6 +6679,7 @@ exports[`single fields optional data controls shows "add" optional controls when
                         <button
                           aria-label="Add data for optional field"
                           className="rjsf-add-optional-data"
+                          id="root_nestedArrayOptional__optionalAdd"
                           onClick={[Function]}
                           title="Add data for optional field"
                           type="button"
@@ -7233,7 +7243,9 @@ exports[`single fields optional data controls shows "add" optional controls when
                   <div
                     className="grid grid-cols-1 gap-4 mb-4"
                   >
-                    <em>
+                    <em
+                      id="root_nestedObjectOptional__optionalMsg"
+                    >
                       No data for optional field
                     </em>
                   </div>
@@ -7282,7 +7294,9 @@ exports[`single fields optional data controls shows "add" optional controls when
                   <div
                     className="flex flex-col gap-4"
                   >
-                    <em>
+                    <em
+                      id="root_nestedArrayOptional__optionalMsg"
+                    >
                       No data for optional field
                     </em>
                     <div

@@ -13676,6 +13676,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-151:focus::-ms-input
                     <button
                       className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeSmall rjsf-remove-optional-data emotion-12"
                       disabled={null}
+                      id="root_nestedObjectOptional__optionalRemove"
                       onBlur={[Function]}
                       onClick={[Function]}
                       onContextMenu={[Function]}
@@ -13819,6 +13820,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-151:focus::-ms-input
                             <button
                               className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall rjsf-add-optional-data emotion-31"
                               disabled={null}
+                              id="root_nestedObjectOptional_deepObjectOptional__optionalAdd"
                               onBlur={[Function]}
                               onClick={[Function]}
                               onContextMenu={[Function]}
@@ -14105,6 +14107,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-151:focus::-ms-input
                                 <button
                                   className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall rjsf-add-optional-data emotion-31"
                                   disabled={null}
+                                  id="root_nestedObjectOptional_deepArrayOptional2__optionalAdd"
                                   onBlur={[Function]}
                                   onClick={[Function]}
                                   onContextMenu={[Function]}
@@ -14286,6 +14289,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-151:focus::-ms-input
                         <button
                           className="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeSmall rjsf-remove-optional-data emotion-12"
                           disabled={null}
+                          id="root_nestedArrayOptional__optionalRemove"
                           onBlur={[Function]}
                           onClick={[Function]}
                           onContextMenu={[Function]}
@@ -16139,7 +16143,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-131:focus::-ms-input
                           }
                         }
                       >
-                        <em>
+                        <em
+                          id="root_nestedObjectOptional_deepObjectOptional__optionalMsg"
+                        >
                           No data for optional field
                         </em>
                       </div>
@@ -16377,7 +16383,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-131:focus::-ms-input
                               className="MuiDivider-root MuiDivider-fullWidth emotion-3"
                             />
                           </div>
-                          <em>
+                          <em
+                            id="root_nestedObjectOptional_deepArrayOptional2__optionalMsg"
+                          >
                             No data for optional field
                           </em>
                         </div>
@@ -18233,6 +18241,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-61:focus::-ms-input-
                     <button
                       className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall rjsf-add-optional-data emotion-12"
                       disabled={null}
+                      id="root_nestedObjectOptional__optionalAdd"
                       onBlur={[Function]}
                       onClick={[Function]}
                       onContextMenu={[Function]}
@@ -18327,6 +18336,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-61:focus::-ms-input-
                         <button
                           className="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall rjsf-add-optional-data emotion-12"
                           disabled={null}
+                          id="root_nestedArrayOptional__optionalAdd"
                           onBlur={[Function]}
                           onClick={[Function]}
                           onContextMenu={[Function]}
@@ -19747,7 +19757,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-51:focus::-ms-input-
                   }
                 }
               >
-                <em>
+                <em
+                  id="root_nestedObjectOptional__optionalMsg"
+                >
                   No data for optional field
                 </em>
               </div>
@@ -19793,7 +19805,9 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-51:focus::-ms-input-
                       className="MuiDivider-root MuiDivider-fullWidth emotion-3"
                     />
                   </div>
-                  <em>
+                  <em
+                    id="root_nestedArrayOptional__optionalMsg"
+                  >
                     No data for optional field
                   </em>
                 </div>

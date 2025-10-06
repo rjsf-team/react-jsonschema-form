@@ -5,6 +5,7 @@ import {
   getTemplate,
   getUiOptions,
   isFormDataAvailable,
+  optionalControlsId,
   OptionalDataControlsTemplateProps,
   RJSFSchema,
   StrictRJSFSchema,
@@ -41,17 +42,21 @@ export default function OptionalDataControlsField<
     uiOptions,
   );
   const hasFormData = isFormDataAvailable(formData);
+  let id: string;
   let label: string | undefined;
   let onAddClick: OptionalDataControlsTemplateProps['onAddClick'];
   let onRemoveClick: OptionalDataControlsTemplateProps['onRemoveClick'];
   if (disabled || readonly) {
+    id = optionalControlsId(fieldPathId, 'Msg');
     label = hasFormData ? undefined : translateString(TranslatableString.OptionalObjectEmptyMsg);
   } else {
     const labelEnum = hasFormData ? TranslatableString.OptionalObjectRemove : TranslatableString.OptionalObjectAdd;
     label = translateString(labelEnum);
     if (hasFormData) {
+      id = optionalControlsId(fieldPathId, 'Remove');
       onRemoveClick = () => onChange(undefined as T, fieldPathId.path, errorSchema);
     } else {
+      id = optionalControlsId(fieldPathId, 'Add');
       onAddClick = () => {
         // If it has form data, store an empty object, otherwise use get the default form state and use it
         let newFormData: unknown = schemaUtils.getDefaultFormState(schema, formData, 'excludeObjectChildren');
@@ -66,6 +71,7 @@ export default function OptionalDataControlsField<
   return (
     label && (
       <OptionalDataControlsTemplate
+        id={id}
         registry={registry}
         schema={schema}
         uiSchema={uiSchema}
