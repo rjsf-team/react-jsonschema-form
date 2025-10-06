@@ -27,6 +27,7 @@ function CheckboxesWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
   onChange,
   onBlur,
   onFocus,
+  htmlName,
 }: WidgetProps<T, S, F>) {
   const checkboxesValues = Array.isArray(value) ? value : [value];
 
@@ -62,7 +63,7 @@ function CheckboxesWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
               <input
                 type='checkbox'
                 id={optionId(id, index)}
-                name={id}
+                name={htmlName || id}
                 checked={checked}
                 value={String(index)}
                 disabled={disabled || itemDisabled || readonly}

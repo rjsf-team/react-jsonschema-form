@@ -8,8 +8,9 @@ import { FormContextType, RJSFSchema, StrictRJSFSchema, WidgetProps } from '@rjs
 function HiddenWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
   id,
   value,
+  htmlName,
 }: WidgetProps<T, S, F>) {
-  return <input type='hidden' id={id} name={id} value={typeof value === 'undefined' ? '' : value} />;
+  return <input type='hidden' id={id} name={htmlName || id} value={typeof value === 'undefined' ? '' : value} />;
 }
 
 export default HiddenWidget;

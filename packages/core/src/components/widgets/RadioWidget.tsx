@@ -26,6 +26,7 @@ function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
   onFocus,
   onChange,
   id,
+  htmlName,
 }: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, inline, emptyValue } = options;
 
@@ -57,7 +58,7 @@ function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
                 type='radio'
                 id={optionId(id, i)}
                 checked={checked}
-                name={id}
+                name={htmlName || id}
                 required={required}
                 value={String(i)}
                 disabled={disabled || itemDisabled || readonly}

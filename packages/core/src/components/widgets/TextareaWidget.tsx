@@ -17,6 +17,7 @@ function TextareaWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F exte
   onChange,
   onBlur,
   onFocus,
+  htmlName,
 }: WidgetProps<T, S, F>) {
   const handleChange = useCallback(
     ({ target: { value } }: ChangeEvent<HTMLTextAreaElement>) => onChange(value === '' ? options.emptyValue : value),
@@ -36,7 +37,7 @@ function TextareaWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F exte
   return (
     <textarea
       id={id}
-      name={id}
+      name={htmlName || id}
       className='form-control'
       value={value ? value : ''}
       placeholder={placeholder}
