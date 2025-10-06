@@ -24,10 +24,7 @@ export default function toFieldPathId(
   // Generate name attribute if nameGenerator is provided
   let name: string | undefined;
   if (globalFormOptions.nameGenerator && path.length > 0) {
-    // Determine element type based on the last element in the path
-    const lastPathElement = path[path.length - 1];
-    const elementType = typeof lastPathElement === 'number' ? 'array' : 'object';
-    name = globalFormOptions.nameGenerator(path, elementType);
+    name = globalFormOptions.nameGenerator(path, globalFormOptions.idPrefix);
   }
 
   return { path, [ID_KEY]: id, ...(name !== undefined && { name }) };
