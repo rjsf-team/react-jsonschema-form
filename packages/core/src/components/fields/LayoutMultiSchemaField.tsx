@@ -222,6 +222,7 @@ export default function LayoutMultiSchemaField<
         onFocus={onFocus}
         value={selectedOption}
         options={widgetOptions}
+        htmlName={fieldPathId.name}
       />
     </FieldTemplate>
   );

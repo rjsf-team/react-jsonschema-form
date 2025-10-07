@@ -117,6 +117,7 @@ function BooleanField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
       formContext={formContext}
       autofocus={autofocus}
       rawErrors={rawErrors}
+      htmlName={fieldPathId.name}
     />
   );
 }

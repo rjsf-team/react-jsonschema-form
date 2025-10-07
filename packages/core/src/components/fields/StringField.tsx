@@ -75,6 +75,7 @@ function StringField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
       registry={registry}
       placeholder={placeholder}
       rawErrors={rawErrors}
+      htmlName={fieldPathId.name}
     />
   );
 }

@@ -43,6 +43,7 @@ import {
   DEFAULT_ID_SEPARATOR,
   DEFAULT_ID_PREFIX,
   GlobalFormOptions,
+  NameGeneratorFunction,
 } from '@rjsf/utils';
 import _cloneDeep from 'lodash/cloneDeep';
 import _forEach from 'lodash/forEach';
@@ -198,6 +199,7 @@ export interface FormProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
    * to put the second parameter before the first in its translation.
    */
   translateString?: Registry['translateString'];
+  nameGenerator?: NameGeneratorFunction;
   /** Optional configuration object with flags, if provided, allows users to override default form state behavior
    * Currently only affecting minItems on array fields and handling of setting defaults based on the value of
    * `emptyObjectFields`
@@ -985,10 +987,16 @@ export default class Form<
       experimental_componentUpdateStrategy,
       idSeparator = DEFAULT_ID_SEPARATOR,
       idPrefix = DEFAULT_ID_PREFIX,
+      nameGenerator,
     } = props;
     const rootFieldId = uiSchema['ui:rootFieldId'];
     // Omit any options that are undefined or null
-    return { idPrefix: rootFieldId || idPrefix, idSeparator, experimental_componentUpdateStrategy };
+    return {
+      idPrefix: rootFieldId || idPrefix,
+      idSeparator,
+      ...(experimental_componentUpdateStrategy !== undefined && { experimental_componentUpdateStrategy }),
+      ...(nameGenerator !== undefined && { nameGenerator }),
+    };
   }
 
   /** Returns the registry for the form */

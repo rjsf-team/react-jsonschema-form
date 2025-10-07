@@ -616,6 +616,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
         formContext={formContext}
         autofocus={autofocus}
         rawErrors={rawErrors}
+        htmlName={fieldPathId.name}
       />
     );
   }
@@ -668,6 +669,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
         formContext={formContext}
         autofocus={autofocus}
         rawErrors={rawErrors}
+        htmlName={fieldPathId.name}
       />
     );
   }
@@ -716,6 +718,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
         rawErrors={rawErrors}
         label={label}
         hideLabel={!displayLabel}
+        htmlName={fieldPathId.name}
       />
     );
   }

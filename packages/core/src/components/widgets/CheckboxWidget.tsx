@@ -31,6 +31,7 @@ function CheckboxWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F exte
   onFocus,
   onChange,
   registry,
+  htmlName,
 }: WidgetProps<T, S, F>) {
   const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
     'DescriptionFieldTemplate',
@@ -73,7 +74,7 @@ function CheckboxWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F exte
         <input
           type='checkbox'
           id={id}
-          name={id}
+          name={htmlName || id}
           checked={typeof value === 'undefined' ? false : value}
           required={required}
           disabled={disabled || readonly}

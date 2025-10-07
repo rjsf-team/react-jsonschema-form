@@ -29,6 +29,7 @@ export default function RatingWidget<
   onBlur,
   schema,
   options,
+  htmlName,
 }: WidgetProps<T, S, F>) {
   const { stars = 5, shape = 'star' } = options;
 
@@ -117,7 +118,7 @@ export default function RatingWidget<
         <input
           type='hidden'
           id={id}
-          name={id}
+          name={htmlName || id}
           value={value || ''}
           required={required}
           disabled={disabled || readonly}
