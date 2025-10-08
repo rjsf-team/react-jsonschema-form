@@ -244,6 +244,78 @@ const uiSchema: UiSchema = {
 render(<Form schema={schema} uiSchema={uiSchema} validator={validator} />, document.getElementById('app'));
 ```
 
+### enableOptionalDataFieldForType
+
+The `ui:enableOptionalDataFieldForType` uiSchema directive enables support for displaying the `Optional Data Controls` feature.
+The intention of this feature is to allow developers to provide a condensed UI for users who don't care to enter an optional list of array items or set of optional object fields (see [examples](#add-optional-data-controls) below).
+
+This directive takes, as its value, an array in one of four forms:
+
+1. `[]` - Disables the feature at a global or field level
+2. `['array']` - Enables the feature only for optional arrays at a global or field level
+3. `['object']` - Enables the feature only for optional object at a global or field level
+4. `['array', 'object']`- Enables the feature for both optional object and arrays at a global or field level
+
+It can be specified in either the `ui:globalOptions` to turn the feature on for everything or in a specific field's `uiSchema`
+To work properly this option must be coupled with the [emptyObjectFields](./form-props.md#emptyobjectfields) experimental feature on `Form` using the `populateRequiredDefaults` or `skipDefaults` options.
+
+When enabled for either (or both) the `array` or `object` types, any optional object or array field which has an "undefined" value in `formData` will NOT render any of the container's UI elements.
+Instead the object/array container's field title will have an "Add optional data" icon button that, when clicked will cause an empty container data element to be added to `formData`.
+
+When enabled for either (or both) the `array` or `object` types, any optional object or array field which has an "defined" value in `formData` will render all of the container's UI elements as normal AND the object/array container's field title will have a "Remove optional data" icon button that, when clicked will set the data for field in the `formData` to "undefined".
+
+Here is an example of what the UI will look like when enabled using the following `Form` configuration:
+
+```tsx
+const schema: RJSFSchema = {
+  title: 'test',
+  properties: {
+    nestedObjectOptional: {
+      type: 'object',
+      properties: {
+        test: {
+          type: 'string',
+        },
+      },
+    },
+    nestedArrayOptional: {
+      type: 'array',
+      items: {
+        type: 'string',
+      },
+    },
+  },
+};
+const uiSchema = {
+  'ui:globalOptions': {
+    enableOptionalDataFieldForType: ['object', 'array'],
+  },
+};
+const experimental_defaultFormStateBehavior = {
+  // Set the emptyObjectFields to only populate required defaults to highlight the code working
+  emptyObjectFields: 'populateRequiredDefaults',
+};
+
+render(
+  <Form
+    schema={schema}
+    validator={validator}
+    uiSchema={uiSchema}
+    experimental_defaultFormStateBehavior={experimental_defaultFormStateBehavior}
+    templates={{ OptionalDataControlsTemplate }}
+  />,
+  document.getElementById('app'),
+);
+```
+
+#### Add Optional Data Controls
+
+<img width="600" alt="add optional data controls" src="./OptionalDataControlsAdd.png" />
+
+#### Remove Optional Data Controls
+
+<img width="600" alt="remove optional data controls" src="./OptionalDataControlsRemove.png" />
+
 ### emptyValue
 
 The `ui:emptyValue` uiSchema directive provides the default value to use when an input for a field is empty

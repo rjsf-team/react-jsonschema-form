@@ -1,7 +1,5 @@
 import {
   createSchemaUtils,
-  DEFAULT_ID_PREFIX,
-  DEFAULT_ID_SEPARATOR,
   englishStringTranslator,
   getTemplate,
   RJSFSchema,
@@ -11,6 +9,7 @@ import {
 } from '../src';
 import getTestValidator from './testUtils/getTestValidator';
 import cloneDeep from 'lodash/cloneDeep';
+import { GLOBAL_FORM_OPTIONS } from './testUtils/testData';
 
 const FakeTemplate = () => null;
 
@@ -44,13 +43,14 @@ const registry: Registry = {
     GridTemplate: FakeTemplate,
     MultiSchemaFieldTemplate: FakeTemplate,
     ObjectFieldTemplate: FakeTemplate,
+    OptionalDataControlsTemplate: FakeTemplate,
     TitleFieldTemplate: FakeTemplate,
     UnsupportedFieldTemplate: FakeTemplate,
     WrapIfAdditionalTemplate: FakeTemplate,
   },
   fields: {},
   widgets: {},
-  globalFormOptions: { idPrefix: DEFAULT_ID_PREFIX, idSeparator: DEFAULT_ID_SEPARATOR },
+  globalFormOptions: GLOBAL_FORM_OPTIONS,
 };
 
 const uiOptions: UIOptionsType = {
@@ -68,6 +68,7 @@ const uiOptions: UIOptionsType = {
   GridTemplate: CustomTemplate as unknown as UIOptionsType['GridTemplate'],
   MultiSchemaFieldTemplate: CustomTemplate as unknown as UIOptionsType['MultiSchemaFieldTemplate'],
   ObjectFieldTemplate: CustomTemplate as unknown as UIOptionsType['ObjectFieldTemplate'],
+  OptionalDataControlsTemplate: CustomTemplate as unknown as UIOptionsType['OptionalDataControlsTemplate'],
   TitleFieldTemplate: CustomTemplate as unknown as UIOptionsType['TitleFieldTemplate'],
   UnsupportedFieldTemplate: CustomTemplate as unknown as UIOptionsType['UnsupportedFieldTemplate'],
   WrapIfAdditionalTemplate: CustomTemplate as unknown as UIOptionsType['WrapIfAdditionalTemplate'],

@@ -32,6 +32,7 @@ export default function ArrayFieldTemplate<
     disabled,
     fieldPathId,
     items,
+    optionalDataControl,
     onAddClick,
     readonly,
     registry,
@@ -56,6 +57,7 @@ export default function ArrayFieldTemplate<
     registry,
     uiOptions,
   );
+  const showOptionalDataControlInTitle = !readonly && !disabled;
   const { formContext } = registry;
   // Button templates are not overridden in the uiSchema
   const {
@@ -84,6 +86,7 @@ export default function ArrayFieldTemplate<
               schema={schema}
               uiSchema={uiSchema}
               registry={registry}
+              optionalDataControl={showOptionalDataControlInTitle ? optionalDataControl : undefined}
             />
           </Col>
         )}
@@ -99,12 +102,11 @@ export default function ArrayFieldTemplate<
           </Col>
         )}
         <Col className='row array-item-list' span={24}>
-          {items &&
-            items.map(({ key, ...itemProps }: ArrayFieldItemTemplateType<T, S, F>) => (
-              <ArrayFieldItemTemplate key={key} {...itemProps} />
-            ))}
+          {!showOptionalDataControlInTitle ? optionalDataControl : undefined}
+          {items.map(({ key, ...itemProps }: ArrayFieldItemTemplateType<T, S, F>) => (
+            <ArrayFieldItemTemplate key={key} {...itemProps} />
+          ))}
         </Col>
-
         {canAdd && (
           <Col span={24}>
             <Row gutter={rowGutter} justify='end'>

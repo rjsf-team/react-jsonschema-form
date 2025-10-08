@@ -25,6 +25,7 @@ export default function ArrayFieldTemplate<
     disabled,
     fieldPathId,
     items,
+    optionalDataControl,
     onAddClick,
     readonly,
     required,
@@ -50,6 +51,7 @@ export default function ArrayFieldTemplate<
     registry,
     uiOptions,
   );
+  const showOptionalDataControlInTitle = !readonly && !disabled;
   // Button templates are not overridden in the uiSchema
   const {
     ButtonTemplates: { AddButton },
@@ -63,6 +65,7 @@ export default function ArrayFieldTemplate<
       schema={schema}
       uiSchema={uiSchema}
       registry={registry}
+      optionalDataControl={showOptionalDataControlInTitle ? optionalDataControl : undefined}
     />
   );
 
@@ -77,14 +80,12 @@ export default function ArrayFieldTemplate<
           registry={registry}
         />
       )}
-
       <Box className='row rjsf-array-item-list'>
-        {items &&
-          items.map(({ key, ...itemProps }: ArrayFieldItemTemplateType<T, S, F>) => (
-            <ArrayFieldItemTemplate key={key} {...itemProps} />
-          ))}
+        {!showOptionalDataControlInTitle ? optionalDataControl : undefined}
+        {items.map(({ key, ...itemProps }: ArrayFieldItemTemplateType<T, S, F>) => (
+          <ArrayFieldItemTemplate key={key} {...itemProps} />
+        ))}
       </Box>
-
       {canAdd && (
         <Group justify='flex-end'>
           <AddButton

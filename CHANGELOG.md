@@ -17,20 +17,98 @@ should change the heading of the (upcoming) version to include a major version b
 -->
 # 6.0.0-beta.21
 
+## @rjsf/antd
+
+- Updated `ArrayFieldTemplate`, `ObjectFieldTemplate`, `TitleField` to add support for the new `optionalDataControl` feature
+  - Added the new `OptionalDataControlTemplate` to the theme, adding it to the `templates` list
+- Updated the `ButtonTemplates` classes to fix up the props in `AntdIconButtonProps` and the `IconButton`s associated with them to better support the `OptionalDataControlTemplate`
+
+## @rjsf/chakra-ui
+
+- Updated `ArrayFieldTemplate`, `ObjectFieldTemplate`, `TitleField` to add support for the new `optionalDataControl` feature
+  - Added the new `OptionalDataControlTemplate` to the theme, adding it to the `templates` list
+- Updated the `ButtonTemplates` classes to add `ChakraIconButtonProps` and the `IconButton`s associated with them to better support the `OptionalDataControlTemplate`
+
 ## @rjsf/core
 
 - Added `initialDefaultsGenerated` flag to state, which indicates whether the initial generation of defaults has been completed
-- Added `ObjectField` tests for additionalProperties with defaults  
+- Added `ObjectField` tests for additionalProperties with defaults
+- Added a new `OptionalDataControlsField` to the `fields` that renders either undefined (when there is data for a readonly/disabled field) or gets the `OptionalDataControlsTemplate` and renders the `label` and potentially an `onAddClick` or `onRemoveClick` function
+- Updated `ArrayField` and `ObjectField` to check whether it `shouldRenderOptionalData()` and if true, calls `ObjectDataControlsField` and passes the result to its associated render template as `optionalDataControl`
+- Updated `ArrayFieldTemplate`, `ObjectFieldTemplate`, `TitleField` to add support for the new `optionalDataControl` feature
+  - Added the new `OptionalDataControlTemplate` to the theme, adding it to the `templates` list
+
+## @rjsf/daisyui
+
+- Updated `ArrayFieldTemplate`, `ArrayFieldTitleTemplate`, `ObjectFieldTemplate`, `TitleField` to add support for the new `optionalDataControl` feature
+  - Added the new `OptionalDataControlTemplate` to the theme, adding it to the `templates` list
+- Updated the `ButtonTemplates` classes to better support the `OptionalDataControlTemplate`
+
+## @rjsf/fluentui-rc
+
+- Updated `ArrayFieldTemplate`, `ObjectFieldTemplate`, `TitleField` to add support for the new `optionalDataControl` feature
+  - Added the new `OptionalDataControlTemplate` to the theme, adding it to the `templates` list
+- Updated the `ButtonTemplates` classes to add `FluentIconButtonProps` and the `IconButton`s associated with them to better support the `OptionalDataControlTemplate`
+
+## @rjsf/mantine
+
+- Updated `ArrayFieldTemplate`, `ObjectFieldTemplate`, `TitleField` to add support for the new `optionalDataControl` feature
+  - Added the new `OptionalDataControlTemplate` to the theme, adding it to the `templates` list
+
+## @rjsf/mui
+
+- Updated `ArrayFieldTemplate`, `ObjectFieldTemplate`, `TitleField` to add support for the new `optionalDataControl` feature
+  - Added the new `OptionalDataControlTemplate` to the theme, adding it to the `templates` list
+
+## @rjsf/primereact
+
+- Updated `ArrayFieldTemplate`, `ObjectFieldTemplate`, `TitleField` to add support for the new `optionalDataControl` feature
+  - Added the new `OptionalDataControlTemplate` to the theme, adding it to the `templates` list
+- Updated the `ButtonTemplates` classes to add `PrimeIconButtonProps` and the `IconButton`s associated with them to better support the `OptionalDataControlTemplate`
+
+## @rjsf/react-bootstrap
+
+- Updated `ArrayFieldTemplate`, `ObjectFieldTemplate`, `TitleField` to add support for the new `optionalDataControl` feature
+  - Added the new `OptionalDataControlTemplate` to the theme, adding it to the `templates` list
+- Updated the `ButtonTemplates` classes to add `BootstrapIconButtonProps` and the `IconButton`s associated with them to better support the `OptionalDataControlTemplate`
+
+## @rjsf/semantic-ui
+
+- Updated `ArrayFieldTemplate`, `ObjectFieldTemplate`, `TitleField` to add support for the new `optionalDataControl` feature
+  - Added the new `OptionalDataControlTemplate` to the theme, adding it to the `templates` list
+- Updated the `ButtonTemplates` classes to add `SemanticIconButtonProps` and the `IconButton`s associated with them to better support the `OptionalDataControlTemplate`
+
+## @rjsf/shadcn
+
+- Updated `ArrayFieldTemplate`, `ObjectFieldTemplate`, `TitleField` to add support for the new `optionalDataControl` feature
+  - Added the new `OptionalDataControlTemplate` to the theme, adding it to the `templates` list
+- Updated the `ButtonTemplates` classes to add `ShadIconButtonProps` and the `IconButton`s associated with them to better support the `OptionalDataControlTemplate`
 
 ## @rjsf/utils
 
 - Updated `getDefaultFormState` to add a new `initialDefaultsGenerated` prop flag, along with type definitions, fixing uneditable & permanent defaults with additional properties [3759](https://github.com/rjsf-team/react-jsonschema-form/issues/3759)
 - Updated `createSchemaUtils` definition to reflect addition of `initialDefaultsGenerated`
 - Updated existing tests where `getDefaultFormState` is used to reflect addition of `initialDefaultsGenerated`
+- Updated `types.ts` to support the new `Optional Data Controls` feature as follows:
+  - Added new `OptionalDataControlsTemplateProps` and refactored the common props from `ArrayFieldTemplateProps` and `ObjectFieldTemplateProps` into a new super type, `ContainerFieldTemplateProps`
+  - Added new `optionalDataControl?: ReactNode` to the `ArrayFieldTitleProps`, `TitleFieldProps` and `ContainerFieldTemplateProps`
+  - Updated `GlobalFormOptions` to add new `enableOptionalDataFieldForType?: ('object' | 'array')[]` prop
+  - Updated `SchemaUtilsType`'s `retrieveSchema()` function to add an additional, property `resolveAnyOfOrOneOfRefs?: boolean`
+- Updated the `Templates` interface to add a new required template `OptionalDataControlsTemplate: ComponentType<OptionalDataControlsTemplateProps<T, S, F>>`
+- Updated `retrieveSchema()` to add an additional  property `resolveAnyOfOrOneOfRefs?: boolean` which causes `resolveAllSchemas()` to resolve `$ref`s inside of the options of `anyOf`/`oneOf` schemas
+- Updated `getDefaultFormState` to fix an issue where optional array props had their default set to an empty array when they shouldn't be
+- Updated the `TranslatableString` enum to add three new strings in support of the new feature: `OptionalObjectAdd`, `OptionalObjectRemove` and `OptionalObjectEmptyMsg`
+- Added four new utility functions: `isFormDataAvailable()`, `isRootSchema()`, `optionalControlsId()`, and `shouldRenderOptionalField()`
 
-## @rjsf/docs 
+## Dev / docs / playground
 
-- Updated docs for `getDefaultFormState` to reflect addition of `initialDefaultsGenerated` prop
+- Updated docs for `getDefaultFormState` to reflect addition of the `initialDefaultsGenerated` prop
+- Updated `utility-function.me` docs to add documentation for the new functions
+  - Also updated docs for `retrieveSchema` and `SchemaUtilsType` for the new prop
+- Updated `uiSchema.md` to add documentation for the new `enableOptionalDataFieldForType` prop
+- Updated the `v6x upgrade guide.md` to document the new feature and utility functions and changes to `retrieveSchema`
+- Updated the playground to add a new `Optional Data Controls` example
+- Updated the snapshot and jest tests for `Form` to test the new `Optional Data Controls` feature
 
 # 6.0.0-beta-20
 

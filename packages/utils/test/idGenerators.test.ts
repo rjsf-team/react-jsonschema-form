@@ -7,50 +7,51 @@ import {
   errorId,
   examplesId,
   helpId,
+  optionalControlsId,
   optionId,
   titleId,
 } from '../src';
 
 const SIMPLE_ID = 'simpleID';
-const SCHEMA_ID = 'test';
-const ID_SCHEMA: FieldPathId = { [ID_KEY]: SCHEMA_ID, path: [SCHEMA_ID] };
+const PATH_ID = 'test';
+const FIELD_PATH_ID: FieldPathId = { [ID_KEY]: PATH_ID, path: [PATH_ID] };
 
 describe('idGenerators', () => {
   it('description id is generated for simple id', () => {
     expect(descriptionId(SIMPLE_ID)).toEqual(`${SIMPLE_ID}__description`);
   });
   it('description id is generated for FieldPathId', () => {
-    expect(descriptionId(ID_SCHEMA)).toEqual(`${SCHEMA_ID}__description`);
+    expect(descriptionId(FIELD_PATH_ID)).toEqual(`${PATH_ID}__description`);
   });
   it('error id is generated for simple id', () => {
     expect(errorId(SIMPLE_ID)).toEqual(`${SIMPLE_ID}__error`);
   });
   it('error id is generated for FieldPathId', () => {
-    expect(errorId(ID_SCHEMA)).toEqual(`${SCHEMA_ID}__error`);
+    expect(errorId(FIELD_PATH_ID)).toEqual(`${PATH_ID}__error`);
   });
   it('examples id is generated for simple id', () => {
     expect(examplesId(SIMPLE_ID)).toEqual(`${SIMPLE_ID}__examples`);
   });
   it('examples id is generated for FieldPathId', () => {
-    expect(examplesId(ID_SCHEMA)).toEqual(`${SCHEMA_ID}__examples`);
+    expect(examplesId(FIELD_PATH_ID)).toEqual(`${PATH_ID}__examples`);
   });
   it('help id is generated for simple id', () => {
     expect(helpId(SIMPLE_ID)).toEqual(`${SIMPLE_ID}__help`);
   });
   it('help id is generated for FieldPathId', () => {
-    expect(helpId(ID_SCHEMA)).toEqual(`${SCHEMA_ID}__help`);
+    expect(helpId(FIELD_PATH_ID)).toEqual(`${PATH_ID}__help`);
   });
   it('title id is generated for simple id', () => {
     expect(titleId(SIMPLE_ID)).toEqual(`${SIMPLE_ID}__title`);
   });
   it('title id is generated for FieldPathId', () => {
-    expect(titleId(ID_SCHEMA)).toEqual(`${SCHEMA_ID}__title`);
+    expect(titleId(FIELD_PATH_ID)).toEqual(`${PATH_ID}__title`);
   });
   it('ariaDescribedBy ids are generated for simple id', () => {
     expect(ariaDescribedByIds(SIMPLE_ID)).toEqual(`${SIMPLE_ID}__error ${SIMPLE_ID}__description ${SIMPLE_ID}__help`);
   });
   it('ariaDescribedBy ids are generated for FieldPathId', () => {
-    expect(ariaDescribedByIds(ID_SCHEMA)).toEqual(`${SCHEMA_ID}__error ${SCHEMA_ID}__description ${SCHEMA_ID}__help`);
+    expect(ariaDescribedByIds(FIELD_PATH_ID)).toEqual(`${PATH_ID}__error ${PATH_ID}__description ${PATH_ID}__help`);
   });
   it('ariaDescribedBy ids are generated for simple id with examples', () => {
     expect(ariaDescribedByIds(SIMPLE_ID, true)).toEqual(
@@ -58,8 +59,8 @@ describe('idGenerators', () => {
     );
   });
   it('ariaDescribedBy ids are generated for FieldPathId with examples', () => {
-    expect(ariaDescribedByIds(ID_SCHEMA, true)).toEqual(
-      `${SCHEMA_ID}__error ${SCHEMA_ID}__description ${SCHEMA_ID}__help ${SCHEMA_ID}__examples`,
+    expect(ariaDescribedByIds(FIELD_PATH_ID, true)).toEqual(
+      `${PATH_ID}__error ${PATH_ID}__description ${PATH_ID}__help ${PATH_ID}__examples`,
     );
   });
   it('optionId generates the proper id for an option', () => {
@@ -72,12 +73,21 @@ describe('idGenerators', () => {
     expect(buttonId(SIMPLE_ID, 'copy')).toEqual(`${SIMPLE_ID}__copy`);
   });
   it('button ids of an move down button are generated for FieldPathId ', () => {
-    expect(buttonId(ID_SCHEMA, 'moveDown')).toEqual(`${SCHEMA_ID}__moveDown`);
+    expect(buttonId(FIELD_PATH_ID, 'moveDown')).toEqual(`${PATH_ID}__moveDown`);
   });
   it('button ids of an move up button are generated for FieldPathId ', () => {
-    expect(buttonId(ID_SCHEMA, 'moveUp')).toEqual(`${SCHEMA_ID}__moveUp`);
+    expect(buttonId(FIELD_PATH_ID, 'moveUp')).toEqual(`${PATH_ID}__moveUp`);
   });
   it('button ids of an remove button are generated for simple id', () => {
     expect(buttonId(SIMPLE_ID, 'remove')).toEqual(`${SIMPLE_ID}__remove`);
+  });
+  it('optional controls ids of an Add element are generated for simple id', () => {
+    expect(optionalControlsId(SIMPLE_ID, 'Add')).toEqual(`${SIMPLE_ID}__optionalAdd`);
+  });
+  it('optional controls ids of an Add element are generated for FieldPathId', () => {
+    expect(optionalControlsId(FIELD_PATH_ID, 'Msg')).toEqual(`${PATH_ID}__optionalMsg`);
+  });
+  it('optional controls ids of an Add element are generated for simple id', () => {
+    expect(optionalControlsId(FIELD_PATH_ID, 'Remove')).toEqual(`${PATH_ID}__optionalRemove`);
   });
 });

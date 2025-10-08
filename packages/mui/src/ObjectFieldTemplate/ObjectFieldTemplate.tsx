@@ -34,6 +34,7 @@ export default function ObjectFieldTemplate<
     fieldPathId,
     schema,
     formData,
+    optionalDataControl,
     onAddClick,
     registry,
   } = props;
@@ -44,6 +45,7 @@ export default function ObjectFieldTemplate<
     registry,
     uiOptions,
   );
+  const showOptionalDataControlInTitle = !readonly && !disabled;
   // Button templates are not overridden in the uiSchema
   const {
     ButtonTemplates: { AddButton },
@@ -58,6 +60,7 @@ export default function ObjectFieldTemplate<
           schema={schema}
           uiSchema={uiSchema}
           registry={registry}
+          optionalDataControl={showOptionalDataControlInTitle ? optionalDataControl : undefined}
         />
       )}
       {description && (
@@ -70,6 +73,7 @@ export default function ObjectFieldTemplate<
         />
       )}
       <Grid container={true} spacing={2} style={{ marginTop: '10px' }}>
+        {!showOptionalDataControlInTitle ? optionalDataControl : undefined}
         {properties.map((element, index) =>
           // Remove the <Grid> if the inner element is hidden as the <Grid>
           // itself would otherwise still take up space.

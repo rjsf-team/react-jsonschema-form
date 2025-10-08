@@ -29,6 +29,7 @@ export default function ObjectFieldTemplate<
     description,
     disabled,
     properties,
+    optionalDataControl,
     onAddClick,
     readonly,
     required,
@@ -45,6 +46,7 @@ export default function ObjectFieldTemplate<
     registry,
     uiOptions,
   );
+  const showOptionalDataControlInTitle = !readonly && !disabled;
   // Button templates are not overridden in the uiSchema
   const {
     ButtonTemplates: { AddButton },
@@ -63,6 +65,7 @@ export default function ObjectFieldTemplate<
           schema={schema}
           uiSchema={uiSchema}
           registry={registry}
+          optionalDataControl={showOptionalDataControlInTitle ? optionalDataControl : undefined}
         />
       )}
       {description && (
@@ -80,13 +83,13 @@ export default function ObjectFieldTemplate<
         verticalSpacing={gridVerticalSpacing as MantineSpacing | undefined}
         mb='sm'
       >
+        {!showOptionalDataControlInTitle ? optionalDataControl : undefined}
         {properties
           .filter((e) => !e.hidden)
           .map((element: ObjectFieldTemplatePropertyType) => (
             <Box key={element.name}>{element.content}</Box>
           ))}
       </SimpleGrid>
-
       {canExpand(schema, uiSchema, formData) && (
         <Group mt='xs' justify='flex-end'>
           <AddButton

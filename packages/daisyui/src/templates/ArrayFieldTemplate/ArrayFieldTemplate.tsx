@@ -32,6 +32,7 @@ export default function ArrayFieldTemplate<T = any, S extends RJSFSchema = RJSFS
     disabled,
     fieldPathId,
     items,
+    optionalDataControl,
     onAddClick,
     readonly,
     registry,
@@ -57,6 +58,7 @@ export default function ArrayFieldTemplate<T = any, S extends RJSFSchema = RJSFS
     registry as Registry<T, S, F>,
     uiOptions,
   );
+  const showOptionalDataControlInTitle = !readonly && !disabled;
   // Button templates are not overridden in the uiSchema
   const {
     ButtonTemplates: { AddButton },
@@ -84,6 +86,7 @@ export default function ArrayFieldTemplate<T = any, S extends RJSFSchema = RJSFS
         uiSchema={uiSchema}
         required={required}
         registry={registry}
+        optionalDataControl={showOptionalDataControlInTitle ? optionalDataControl : undefined}
       />
       <ArrayFieldDescriptionTemplate
         fieldPathId={fieldPathId}
@@ -93,11 +96,11 @@ export default function ArrayFieldTemplate<T = any, S extends RJSFSchema = RJSFS
         registry={registry}
       />
       <div className='flex flex-col gap-4'>
+        {!showOptionalDataControlInTitle ? optionalDataControl : undefined}
         <div className='rjsf-array-item-list'>
-          {items &&
-            items.map(({ key, ...itemProps }, index) => (
-              <ArrayFieldItemTemplate key={key} {...itemProps} index={index} totalItems={items.length} />
-            ))}
+          {items.map(({ key, ...itemProps }, index) => (
+            <ArrayFieldItemTemplate key={key} {...itemProps} index={index} totalItems={items.length} />
+          ))}
           {items && items.length === 0 && canAdd && (
             <div className='text-center italic text-base-content/70'>{TranslatableString.EmptyArray}</div>
           )}

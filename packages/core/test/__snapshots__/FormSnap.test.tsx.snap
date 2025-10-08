@@ -970,6 +970,2600 @@ exports[`single fields number field 1`] = `
 </form>
 `;
 
+exports[`single fields optional data controls does not show optional controls when not turned on in uiSchema and no formData 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group rjsf-field rjsf-field-object"
+  >
+    <fieldset
+      id="root"
+    >
+      <legend
+        id="root__title"
+      >
+        test
+      </legend>
+      <div
+        className="form-group rjsf-field rjsf-field-object"
+      >
+        <fieldset
+          id="root_nestedObjectOptional"
+        >
+          <legend
+            id="root_nestedObjectOptional__title"
+          >
+            nestedObjectOptional
+          </legend>
+          <div
+            className="form-group rjsf-field rjsf-field-string"
+          >
+            <label
+              className="control-label"
+              htmlFor="root_nestedObjectOptional_test"
+            >
+              test
+            </label>
+            <input
+              aria-describedby="root_nestedObjectOptional_test__error root_nestedObjectOptional_test__description root_nestedObjectOptional_test__help"
+              autoFocus={false}
+              className="form-control"
+              disabled={false}
+              id="root_nestedObjectOptional_test"
+              label="test"
+              name="root_nestedObjectOptional_test"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              placeholder=""
+              readOnly={false}
+              required={false}
+              type="text"
+              value=""
+            />
+          </div>
+          <div
+            className="form-group rjsf-field rjsf-field-object"
+          >
+            <fieldset
+              id="root_nestedObjectOptional_deepObjectOptional"
+            >
+              <legend
+                id="root_nestedObjectOptional_deepObjectOptional__title"
+              >
+                deepObjectOptional
+              </legend>
+              <div
+                className="form-group rjsf-field rjsf-field-string"
+              >
+                <label
+                  className="control-label"
+                  htmlFor="root_nestedObjectOptional_deepObjectOptional_deepTest"
+                >
+                  deepTest
+                </label>
+                <input
+                  aria-describedby="root_nestedObjectOptional_deepObjectOptional_deepTest__error root_nestedObjectOptional_deepObjectOptional_deepTest__description root_nestedObjectOptional_deepObjectOptional_deepTest__help"
+                  autoFocus={false}
+                  className="form-control"
+                  disabled={false}
+                  id="root_nestedObjectOptional_deepObjectOptional_deepTest"
+                  label="deepTest"
+                  name="root_nestedObjectOptional_deepObjectOptional_deepTest"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                  placeholder=""
+                  readOnly={false}
+                  required={false}
+                  type="text"
+                  value=""
+                />
+              </div>
+            </fieldset>
+          </div>
+          <div
+            className="form-group rjsf-field rjsf-field-object"
+          >
+            <fieldset
+              id="root_nestedObjectOptional_deepObject"
+            >
+              <legend
+                id="root_nestedObjectOptional_deepObject__title"
+              >
+                deepObject
+                <span
+                  className="required"
+                >
+                  *
+                </span>
+              </legend>
+              <div
+                className="form-group rjsf-field rjsf-field-string"
+              >
+                <label
+                  className="control-label"
+                  htmlFor="root_nestedObjectOptional_deepObject_deepTest"
+                >
+                  deepTest
+                </label>
+                <input
+                  aria-describedby="root_nestedObjectOptional_deepObject_deepTest__error root_nestedObjectOptional_deepObject_deepTest__description root_nestedObjectOptional_deepObject_deepTest__help"
+                  autoFocus={false}
+                  className="form-control"
+                  disabled={false}
+                  id="root_nestedObjectOptional_deepObject_deepTest"
+                  label="deepTest"
+                  name="root_nestedObjectOptional_deepObject_deepTest"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                  placeholder=""
+                  readOnly={false}
+                  required={false}
+                  type="text"
+                  value=""
+                />
+              </div>
+            </fieldset>
+          </div>
+          <div
+            className="form-group rjsf-field rjsf-field-array"
+          >
+            <fieldset
+              className="rjsf-field rjsf-field-array rjsf-field-array-of-string"
+              id="root_nestedObjectOptional_deepArrayOptional"
+            >
+              <legend
+                id="root_nestedObjectOptional_deepArrayOptional__title"
+              >
+                deepArrayOptional
+              </legend>
+              <div
+                className="row array-item-list"
+              />
+              <div
+                className="row"
+              >
+                <p
+                  className="col-xs-3 col-xs-offset-9 text-right rjsf-array-item-add"
+                >
+                  <button
+                    className="btn btn-info btn-add col-xs-12"
+                    disabled={false}
+                    id="root_nestedObjectOptional_deepArrayOptional__add"
+                    onClick={[Function]}
+                    title="Add"
+                    type="button"
+                  >
+                    <i
+                      className="glyphicon glyphicon-plus"
+                    />
+                  </button>
+                </p>
+              </div>
+            </fieldset>
+          </div>
+          <div
+            className="form-group rjsf-field rjsf-field-array"
+          >
+            <fieldset
+              className="rjsf-field rjsf-field-array rjsf-field-array-of-string"
+              id="root_nestedObjectOptional_deepArrayOptional2"
+            >
+              <legend
+                id="root_nestedObjectOptional_deepArrayOptional2__title"
+              >
+                deepArrayOptional2
+              </legend>
+              <div
+                className="row array-item-list"
+              />
+              <div
+                className="row"
+              >
+                <p
+                  className="col-xs-3 col-xs-offset-9 text-right rjsf-array-item-add"
+                >
+                  <button
+                    className="btn btn-info btn-add col-xs-12"
+                    disabled={false}
+                    id="root_nestedObjectOptional_deepArrayOptional2__add"
+                    onClick={[Function]}
+                    title="Add"
+                    type="button"
+                  >
+                    <i
+                      className="glyphicon glyphicon-plus"
+                    />
+                  </button>
+                </p>
+              </div>
+            </fieldset>
+          </div>
+          <div
+            className="form-group rjsf-field rjsf-field-array"
+          >
+            <fieldset
+              className="rjsf-field rjsf-field-array rjsf-field-array-of-string"
+              id="root_nestedObjectOptional_deepArray"
+            >
+              <legend
+                id="root_nestedObjectOptional_deepArray__title"
+              >
+                deepArray
+                <span
+                  className="required"
+                >
+                  *
+                </span>
+              </legend>
+              <div
+                className="row array-item-list"
+              />
+              <div
+                className="row"
+              >
+                <p
+                  className="col-xs-3 col-xs-offset-9 text-right rjsf-array-item-add"
+                >
+                  <button
+                    className="btn btn-info btn-add col-xs-12"
+                    disabled={false}
+                    id="root_nestedObjectOptional_deepArray__add"
+                    onClick={[Function]}
+                    title="Add"
+                    type="button"
+                  >
+                    <i
+                      className="glyphicon glyphicon-plus"
+                    />
+                  </button>
+                </p>
+              </div>
+            </fieldset>
+          </div>
+        </fieldset>
+      </div>
+      <div
+        className="form-group rjsf-field rjsf-field-array"
+      >
+        <fieldset
+          className="rjsf-field rjsf-field-array rjsf-field-array-of-string"
+          id="root_nestedArrayOptional"
+        >
+          <legend
+            id="root_nestedArrayOptional__title"
+          >
+            nestedArrayOptional
+          </legend>
+          <div
+            className="row array-item-list"
+          />
+          <div
+            className="row"
+          >
+            <p
+              className="col-xs-3 col-xs-offset-9 text-right rjsf-array-item-add"
+            >
+              <button
+                className="btn btn-info btn-add col-xs-12"
+                disabled={false}
+                id="root_nestedArrayOptional__add"
+                onClick={[Function]}
+                title="Add"
+                type="button"
+              >
+                <i
+                  className="glyphicon glyphicon-plus"
+                />
+              </button>
+            </p>
+          </div>
+        </fieldset>
+      </div>
+      <div
+        className="form-group rjsf-field rjsf-field-object"
+      >
+        <fieldset
+          id="root_nestedObject"
+        >
+          <legend
+            id="root_nestedObject__title"
+          >
+            nestedObject
+            <span
+              className="required"
+            >
+              *
+            </span>
+          </legend>
+          <div
+            className="form-group rjsf-field rjsf-field-string"
+          >
+            <label
+              className="control-label"
+              htmlFor="root_nestedObject_test"
+            >
+              test
+            </label>
+            <input
+              aria-describedby="root_nestedObject_test__error root_nestedObject_test__description root_nestedObject_test__help"
+              autoFocus={false}
+              className="form-control"
+              disabled={false}
+              id="root_nestedObject_test"
+              label="test"
+              name="root_nestedObject_test"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              placeholder=""
+              readOnly={false}
+              required={false}
+              type="text"
+              value=""
+            />
+          </div>
+        </fieldset>
+      </div>
+      <div
+        className="form-group rjsf-field rjsf-field-array"
+      >
+        <fieldset
+          className="rjsf-field rjsf-field-array rjsf-field-array-of-string"
+          id="root_nestedArray"
+        >
+          <legend
+            id="root_nestedArray__title"
+          >
+            nestedArray
+            <span
+              className="required"
+            >
+              *
+            </span>
+          </legend>
+          <div
+            className="row array-item-list"
+          />
+          <div
+            className="row"
+          >
+            <p
+              className="col-xs-3 col-xs-offset-9 text-right rjsf-array-item-add"
+            >
+              <button
+                className="btn btn-info btn-add col-xs-12"
+                disabled={false}
+                id="root_nestedArray__add"
+                onClick={[Function]}
+                title="Add"
+                type="button"
+              >
+                <i
+                  className="glyphicon glyphicon-plus"
+                />
+              </button>
+            </p>
+          </div>
+        </fieldset>
+      </div>
+      <div
+        className="form-group rjsf-field rjsf-field-undefined"
+      >
+        <label
+          className="control-label"
+          htmlFor="root_optionalObjectWithOneofs"
+        >
+          optionalObjectWithOneofs
+        </label>
+        <div
+          className="panel panel-default panel-body"
+        >
+          <div
+            className="form-group"
+          >
+            <select
+              aria-describedby="root_optionalObjectWithOneofs__oneof_select__error root_optionalObjectWithOneofs__oneof_select__description root_optionalObjectWithOneofs__oneof_select__help"
+              autoFocus={false}
+              className="form-control"
+              disabled={false}
+              id="root_optionalObjectWithOneofs__oneof_select"
+              multiple={false}
+              name="root_optionalObjectWithOneofs__oneof_select"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              role="combobox"
+              value="0"
+            >
+              <option
+                value="0"
+              >
+                Option 1
+              </option>
+              <option
+                value="1"
+              >
+                Option 2
+              </option>
+              <option
+                value="2"
+              >
+                Option 3
+              </option>
+            </select>
+          </div>
+          <div
+            className="form-group rjsf-field rjsf-field-object"
+          >
+            <fieldset
+              id="root_optionalObjectWithOneofs"
+            >
+              <legend
+                id="root_optionalObjectWithOneofs__title"
+              >
+                optionalObjectWithOneofs
+              </legend>
+              <div
+                className="form-group rjsf-field rjsf-field-string"
+              >
+                <label
+                  className="control-label"
+                  htmlFor="root_optionalObjectWithOneofs_name"
+                >
+                  name
+                </label>
+                <input
+                  aria-describedby="root_optionalObjectWithOneofs_name__error root_optionalObjectWithOneofs_name__description root_optionalObjectWithOneofs_name__help"
+                  autoFocus={false}
+                  className="form-control"
+                  disabled={false}
+                  id="root_optionalObjectWithOneofs_name"
+                  label="name"
+                  name="root_optionalObjectWithOneofs_name"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                  placeholder=""
+                  readOnly={true}
+                  required={false}
+                  type="text"
+                  value=""
+                />
+              </div>
+            </fieldset>
+          </div>
+        </div>
+      </div>
+    </fieldset>
+  </div>
+  <div>
+    <button
+      className="btn btn-info "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields optional data controls does not show optional controls when not turned on in uiSchema, readonly and no formData 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group rjsf-field rjsf-field-object"
+  >
+    <fieldset
+      id="root"
+    >
+      <legend
+        id="root__title"
+      >
+        test
+      </legend>
+      <div
+        className="form-group rjsf-field rjsf-field-object"
+      >
+        <fieldset
+          id="root_nestedObjectOptional"
+        >
+          <legend
+            id="root_nestedObjectOptional__title"
+          >
+            nestedObjectOptional
+          </legend>
+          <div
+            className="form-group rjsf-field rjsf-field-string"
+          >
+            <label
+              className="control-label"
+              htmlFor="root_nestedObjectOptional_test"
+            >
+              test
+            </label>
+            <input
+              aria-describedby="root_nestedObjectOptional_test__error root_nestedObjectOptional_test__description root_nestedObjectOptional_test__help"
+              autoFocus={false}
+              className="form-control"
+              disabled={false}
+              id="root_nestedObjectOptional_test"
+              label="test"
+              name="root_nestedObjectOptional_test"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              placeholder=""
+              readOnly={true}
+              required={false}
+              type="text"
+              value=""
+            />
+          </div>
+          <div
+            className="form-group rjsf-field rjsf-field-object"
+          >
+            <fieldset
+              id="root_nestedObjectOptional_deepObjectOptional"
+            >
+              <legend
+                id="root_nestedObjectOptional_deepObjectOptional__title"
+              >
+                deepObjectOptional
+              </legend>
+              <div
+                className="form-group rjsf-field rjsf-field-string"
+              >
+                <label
+                  className="control-label"
+                  htmlFor="root_nestedObjectOptional_deepObjectOptional_deepTest"
+                >
+                  deepTest
+                </label>
+                <input
+                  aria-describedby="root_nestedObjectOptional_deepObjectOptional_deepTest__error root_nestedObjectOptional_deepObjectOptional_deepTest__description root_nestedObjectOptional_deepObjectOptional_deepTest__help"
+                  autoFocus={false}
+                  className="form-control"
+                  disabled={false}
+                  id="root_nestedObjectOptional_deepObjectOptional_deepTest"
+                  label="deepTest"
+                  name="root_nestedObjectOptional_deepObjectOptional_deepTest"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                  placeholder=""
+                  readOnly={true}
+                  required={false}
+                  type="text"
+                  value=""
+                />
+              </div>
+            </fieldset>
+          </div>
+          <div
+            className="form-group rjsf-field rjsf-field-object"
+          >
+            <fieldset
+              id="root_nestedObjectOptional_deepObject"
+            >
+              <legend
+                id="root_nestedObjectOptional_deepObject__title"
+              >
+                deepObject
+                <span
+                  className="required"
+                >
+                  *
+                </span>
+              </legend>
+              <div
+                className="form-group rjsf-field rjsf-field-string"
+              >
+                <label
+                  className="control-label"
+                  htmlFor="root_nestedObjectOptional_deepObject_deepTest"
+                >
+                  deepTest
+                </label>
+                <input
+                  aria-describedby="root_nestedObjectOptional_deepObject_deepTest__error root_nestedObjectOptional_deepObject_deepTest__description root_nestedObjectOptional_deepObject_deepTest__help"
+                  autoFocus={false}
+                  className="form-control"
+                  disabled={false}
+                  id="root_nestedObjectOptional_deepObject_deepTest"
+                  label="deepTest"
+                  name="root_nestedObjectOptional_deepObject_deepTest"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                  placeholder=""
+                  readOnly={true}
+                  required={false}
+                  type="text"
+                  value=""
+                />
+              </div>
+            </fieldset>
+          </div>
+          <div
+            className="form-group rjsf-field rjsf-field-array"
+          >
+            <fieldset
+              className="rjsf-field rjsf-field-array rjsf-field-array-of-string"
+              id="root_nestedObjectOptional_deepArrayOptional"
+            >
+              <legend
+                id="root_nestedObjectOptional_deepArrayOptional__title"
+              >
+                deepArrayOptional
+              </legend>
+              <div
+                className="row array-item-list"
+              />
+              <div
+                className="row"
+              >
+                <p
+                  className="col-xs-3 col-xs-offset-9 text-right rjsf-array-item-add"
+                >
+                  <button
+                    className="btn btn-info btn-add col-xs-12"
+                    disabled={true}
+                    id="root_nestedObjectOptional_deepArrayOptional__add"
+                    onClick={[Function]}
+                    title="Add"
+                    type="button"
+                  >
+                    <i
+                      className="glyphicon glyphicon-plus"
+                    />
+                  </button>
+                </p>
+              </div>
+            </fieldset>
+          </div>
+          <div
+            className="form-group rjsf-field rjsf-field-array"
+          >
+            <fieldset
+              className="rjsf-field rjsf-field-array rjsf-field-array-of-string"
+              id="root_nestedObjectOptional_deepArrayOptional2"
+            >
+              <legend
+                id="root_nestedObjectOptional_deepArrayOptional2__title"
+              >
+                deepArrayOptional2
+              </legend>
+              <div
+                className="row array-item-list"
+              />
+              <div
+                className="row"
+              >
+                <p
+                  className="col-xs-3 col-xs-offset-9 text-right rjsf-array-item-add"
+                >
+                  <button
+                    className="btn btn-info btn-add col-xs-12"
+                    disabled={true}
+                    id="root_nestedObjectOptional_deepArrayOptional2__add"
+                    onClick={[Function]}
+                    title="Add"
+                    type="button"
+                  >
+                    <i
+                      className="glyphicon glyphicon-plus"
+                    />
+                  </button>
+                </p>
+              </div>
+            </fieldset>
+          </div>
+          <div
+            className="form-group rjsf-field rjsf-field-array"
+          >
+            <fieldset
+              className="rjsf-field rjsf-field-array rjsf-field-array-of-string"
+              id="root_nestedObjectOptional_deepArray"
+            >
+              <legend
+                id="root_nestedObjectOptional_deepArray__title"
+              >
+                deepArray
+                <span
+                  className="required"
+                >
+                  *
+                </span>
+              </legend>
+              <div
+                className="row array-item-list"
+              />
+              <div
+                className="row"
+              >
+                <p
+                  className="col-xs-3 col-xs-offset-9 text-right rjsf-array-item-add"
+                >
+                  <button
+                    className="btn btn-info btn-add col-xs-12"
+                    disabled={true}
+                    id="root_nestedObjectOptional_deepArray__add"
+                    onClick={[Function]}
+                    title="Add"
+                    type="button"
+                  >
+                    <i
+                      className="glyphicon glyphicon-plus"
+                    />
+                  </button>
+                </p>
+              </div>
+            </fieldset>
+          </div>
+        </fieldset>
+      </div>
+      <div
+        className="form-group rjsf-field rjsf-field-array"
+      >
+        <fieldset
+          className="rjsf-field rjsf-field-array rjsf-field-array-of-string"
+          id="root_nestedArrayOptional"
+        >
+          <legend
+            id="root_nestedArrayOptional__title"
+          >
+            nestedArrayOptional
+          </legend>
+          <div
+            className="row array-item-list"
+          />
+          <div
+            className="row"
+          >
+            <p
+              className="col-xs-3 col-xs-offset-9 text-right rjsf-array-item-add"
+            >
+              <button
+                className="btn btn-info btn-add col-xs-12"
+                disabled={true}
+                id="root_nestedArrayOptional__add"
+                onClick={[Function]}
+                title="Add"
+                type="button"
+              >
+                <i
+                  className="glyphicon glyphicon-plus"
+                />
+              </button>
+            </p>
+          </div>
+        </fieldset>
+      </div>
+      <div
+        className="form-group rjsf-field rjsf-field-object"
+      >
+        <fieldset
+          id="root_nestedObject"
+        >
+          <legend
+            id="root_nestedObject__title"
+          >
+            nestedObject
+            <span
+              className="required"
+            >
+              *
+            </span>
+          </legend>
+          <div
+            className="form-group rjsf-field rjsf-field-string"
+          >
+            <label
+              className="control-label"
+              htmlFor="root_nestedObject_test"
+            >
+              test
+            </label>
+            <input
+              aria-describedby="root_nestedObject_test__error root_nestedObject_test__description root_nestedObject_test__help"
+              autoFocus={false}
+              className="form-control"
+              disabled={false}
+              id="root_nestedObject_test"
+              label="test"
+              name="root_nestedObject_test"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              placeholder=""
+              readOnly={true}
+              required={false}
+              type="text"
+              value=""
+            />
+          </div>
+        </fieldset>
+      </div>
+      <div
+        className="form-group rjsf-field rjsf-field-array"
+      >
+        <fieldset
+          className="rjsf-field rjsf-field-array rjsf-field-array-of-string"
+          id="root_nestedArray"
+        >
+          <legend
+            id="root_nestedArray__title"
+          >
+            nestedArray
+            <span
+              className="required"
+            >
+              *
+            </span>
+          </legend>
+          <div
+            className="row array-item-list"
+          />
+          <div
+            className="row"
+          >
+            <p
+              className="col-xs-3 col-xs-offset-9 text-right rjsf-array-item-add"
+            >
+              <button
+                className="btn btn-info btn-add col-xs-12"
+                disabled={true}
+                id="root_nestedArray__add"
+                onClick={[Function]}
+                title="Add"
+                type="button"
+              >
+                <i
+                  className="glyphicon glyphicon-plus"
+                />
+              </button>
+            </p>
+          </div>
+        </fieldset>
+      </div>
+      <div
+        className="form-group rjsf-field rjsf-field-undefined"
+      >
+        <label
+          className="control-label"
+          htmlFor="root_optionalObjectWithOneofs"
+        >
+          optionalObjectWithOneofs
+        </label>
+        <div
+          className="panel panel-default panel-body"
+        >
+          <div
+            className="form-group"
+          >
+            <select
+              aria-describedby="root_optionalObjectWithOneofs__oneof_select__error root_optionalObjectWithOneofs__oneof_select__description root_optionalObjectWithOneofs__oneof_select__help"
+              autoFocus={false}
+              className="form-control"
+              disabled={true}
+              id="root_optionalObjectWithOneofs__oneof_select"
+              multiple={false}
+              name="root_optionalObjectWithOneofs__oneof_select"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              role="combobox"
+              value="0"
+            >
+              <option
+                value="0"
+              >
+                Option 1
+              </option>
+              <option
+                value="1"
+              >
+                Option 2
+              </option>
+              <option
+                value="2"
+              >
+                Option 3
+              </option>
+            </select>
+          </div>
+          <div
+            className="form-group rjsf-field rjsf-field-object"
+          >
+            <fieldset
+              id="root_optionalObjectWithOneofs"
+            >
+              <legend
+                id="root_optionalObjectWithOneofs__title"
+              >
+                optionalObjectWithOneofs
+              </legend>
+              <div
+                className="form-group rjsf-field rjsf-field-string"
+              >
+                <label
+                  className="control-label"
+                  htmlFor="root_optionalObjectWithOneofs_name"
+                >
+                  name
+                </label>
+                <input
+                  aria-describedby="root_optionalObjectWithOneofs_name__error root_optionalObjectWithOneofs_name__description root_optionalObjectWithOneofs_name__help"
+                  autoFocus={false}
+                  className="form-control"
+                  disabled={false}
+                  id="root_optionalObjectWithOneofs_name"
+                  label="name"
+                  name="root_optionalObjectWithOneofs_name"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                  placeholder=""
+                  readOnly={true}
+                  required={false}
+                  type="text"
+                  value=""
+                />
+              </div>
+            </fieldset>
+          </div>
+        </div>
+      </div>
+    </fieldset>
+  </div>
+  <div>
+    <button
+      className="btn btn-info "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields optional data controls shows "add" and "remove" optional controls when turned on in uiSchema and formData 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group rjsf-field rjsf-field-object"
+  >
+    <fieldset
+      id="root"
+    >
+      <legend
+        id="root__title"
+      >
+        test
+      </legend>
+      <div
+        className="form-group rjsf-field rjsf-field-object"
+      >
+        <fieldset
+          className="rjsf-optional-object-field"
+          id="root_nestedObjectOptional"
+        >
+          <legend
+            id="root_nestedObjectOptional__title"
+          >
+            nestedObjectOptional
+            <span
+              className="pull-right"
+              style={
+                {
+                  "marginBottom": "2px",
+                }
+              }
+            >
+              <button
+                className="btn btn-default rjsf-remove-optional-data btn-sm"
+                id="root_nestedObjectOptional__optionalRemove"
+                onClick={[Function]}
+                title="Remove data for optional field"
+                type="button"
+              >
+                <i
+                  className="glyphicon glyphicon-remove"
+                />
+              </button>
+            </span>
+          </legend>
+          <div
+            className="form-group rjsf-field rjsf-field-string"
+          >
+            <label
+              className="control-label"
+              htmlFor="root_nestedObjectOptional_test"
+            >
+              test
+            </label>
+            <input
+              aria-describedby="root_nestedObjectOptional_test__error root_nestedObjectOptional_test__description root_nestedObjectOptional_test__help"
+              autoFocus={false}
+              className="form-control"
+              disabled={false}
+              id="root_nestedObjectOptional_test"
+              label="test"
+              name="root_nestedObjectOptional_test"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              placeholder=""
+              readOnly={false}
+              required={false}
+              type="text"
+              value="foo"
+            />
+          </div>
+          <div
+            className="form-group rjsf-field rjsf-field-object"
+          >
+            <fieldset
+              className="rjsf-optional-object-field"
+              id="root_nestedObjectOptional_deepObjectOptional"
+            >
+              <legend
+                id="root_nestedObjectOptional_deepObjectOptional__title"
+              >
+                deepObjectOptional
+                <span
+                  className="pull-right"
+                  style={
+                    {
+                      "marginBottom": "2px",
+                    }
+                  }
+                >
+                  <button
+                    className="btn btn-default rjsf-add-optional-data btn-sm"
+                    id="root_nestedObjectOptional_deepObjectOptional__optionalAdd"
+                    onClick={[Function]}
+                    title="Add data for optional field"
+                    type="button"
+                  >
+                    <i
+                      className="glyphicon glyphicon-plus"
+                    />
+                  </button>
+                </span>
+              </legend>
+            </fieldset>
+          </div>
+          <div
+            className="form-group rjsf-field rjsf-field-object"
+          >
+            <fieldset
+              id="root_nestedObjectOptional_deepObject"
+            >
+              <legend
+                id="root_nestedObjectOptional_deepObject__title"
+              >
+                deepObject
+                <span
+                  className="required"
+                >
+                  *
+                </span>
+              </legend>
+              <div
+                className="form-group rjsf-field rjsf-field-string"
+              >
+                <label
+                  className="control-label"
+                  htmlFor="root_nestedObjectOptional_deepObject_deepTest"
+                >
+                  deepTest
+                </label>
+                <input
+                  aria-describedby="root_nestedObjectOptional_deepObject_deepTest__error root_nestedObjectOptional_deepObject_deepTest__description root_nestedObjectOptional_deepObject_deepTest__help"
+                  autoFocus={false}
+                  className="form-control"
+                  disabled={false}
+                  id="root_nestedObjectOptional_deepObject_deepTest"
+                  label="deepTest"
+                  name="root_nestedObjectOptional_deepObject_deepTest"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                  placeholder=""
+                  readOnly={false}
+                  required={false}
+                  type="text"
+                  value=""
+                />
+              </div>
+            </fieldset>
+          </div>
+          <div
+            className="form-group rjsf-field rjsf-field-array"
+          >
+            <fieldset
+              className="rjsf-field rjsf-field-array rjsf-field-array-of-string"
+              id="root_nestedObjectOptional_deepArrayOptional"
+            >
+              <legend
+                id="root_nestedObjectOptional_deepArrayOptional__title"
+              >
+                deepArrayOptional
+              </legend>
+              <div
+                className="row array-item-list"
+              />
+              <div
+                className="row"
+              >
+                <p
+                  className="col-xs-3 col-xs-offset-9 text-right rjsf-array-item-add"
+                >
+                  <button
+                    className="btn btn-info btn-add col-xs-12"
+                    disabled={false}
+                    id="root_nestedObjectOptional_deepArrayOptional__add"
+                    onClick={[Function]}
+                    title="Add"
+                    type="button"
+                  >
+                    <i
+                      className="glyphicon glyphicon-plus"
+                    />
+                  </button>
+                </p>
+              </div>
+            </fieldset>
+          </div>
+          <div
+            className="form-group rjsf-field rjsf-field-array"
+          >
+            <fieldset
+              className="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field"
+              id="root_nestedObjectOptional_deepArrayOptional2"
+            >
+              <legend
+                id="root_nestedObjectOptional_deepArrayOptional2__title"
+              >
+                deepArrayOptional2
+                <span
+                  className="pull-right"
+                  style={
+                    {
+                      "marginBottom": "2px",
+                    }
+                  }
+                >
+                  <button
+                    className="btn btn-default rjsf-add-optional-data btn-sm"
+                    id="root_nestedObjectOptional_deepArrayOptional2__optionalAdd"
+                    onClick={[Function]}
+                    title="Add data for optional field"
+                    type="button"
+                  >
+                    <i
+                      className="glyphicon glyphicon-plus"
+                    />
+                  </button>
+                </span>
+              </legend>
+              <div
+                className="row array-item-list"
+              />
+            </fieldset>
+          </div>
+          <div
+            className="form-group rjsf-field rjsf-field-array"
+          >
+            <fieldset
+              className="rjsf-field rjsf-field-array rjsf-field-array-of-string"
+              id="root_nestedObjectOptional_deepArray"
+            >
+              <legend
+                id="root_nestedObjectOptional_deepArray__title"
+              >
+                deepArray
+                <span
+                  className="required"
+                >
+                  *
+                </span>
+              </legend>
+              <div
+                className="row array-item-list"
+              />
+              <div
+                className="row"
+              >
+                <p
+                  className="col-xs-3 col-xs-offset-9 text-right rjsf-array-item-add"
+                >
+                  <button
+                    className="btn btn-info btn-add col-xs-12"
+                    disabled={false}
+                    id="root_nestedObjectOptional_deepArray__add"
+                    onClick={[Function]}
+                    title="Add"
+                    type="button"
+                  >
+                    <i
+                      className="glyphicon glyphicon-plus"
+                    />
+                  </button>
+                </p>
+              </div>
+            </fieldset>
+          </div>
+        </fieldset>
+      </div>
+      <div
+        className="form-group rjsf-field rjsf-field-array"
+      >
+        <fieldset
+          className="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field"
+          id="root_nestedArrayOptional"
+        >
+          <legend
+            id="root_nestedArrayOptional__title"
+          >
+            nestedArrayOptional
+            <span
+              className="pull-right"
+              style={
+                {
+                  "marginBottom": "2px",
+                }
+              }
+            >
+              <button
+                className="btn btn-default rjsf-remove-optional-data btn-sm"
+                id="root_nestedArrayOptional__optionalRemove"
+                onClick={[Function]}
+                title="Remove data for optional field"
+                type="button"
+              >
+                <i
+                  className="glyphicon glyphicon-remove"
+                />
+              </button>
+            </span>
+          </legend>
+          <div
+            className="row array-item-list"
+          >
+            <div
+              className="rjsf-array-item"
+            >
+              <div
+                className="col-xs-9"
+              >
+                <div
+                  className="form-group rjsf-field rjsf-field-string"
+                >
+                  <label
+                    className="control-label"
+                    htmlFor="root_nestedArrayOptional_0"
+                  >
+                    nestedArrayOptional-1
+                    <span
+                      className="required"
+                    >
+                      *
+                    </span>
+                  </label>
+                  <input
+                    aria-describedby="root_nestedArrayOptional_0__error root_nestedArrayOptional_0__description root_nestedArrayOptional_0__help"
+                    autoFocus={false}
+                    className="form-control"
+                    disabled={false}
+                    id="root_nestedArrayOptional_0"
+                    label="nestedArrayOptional-0"
+                    name="root_nestedArrayOptional_0"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    readOnly={false}
+                    required={true}
+                    type="text"
+                    value="bar"
+                  />
+                </div>
+              </div>
+              <div
+                className="col-xs-3 array-item-toolbox"
+              >
+                <div
+                  className="btn-group"
+                  style={
+                    {
+                      "display": "flex",
+                      "justifyContent": "space-around",
+                    }
+                  }
+                >
+                  <button
+                    className="btn btn-danger rjsf-array-item-remove"
+                    disabled={false}
+                    id="root_nestedArrayOptional_0__remove"
+                    onClick={[Function]}
+                    title="Remove"
+                    type="button"
+                  >
+                    <i
+                      className="glyphicon glyphicon-remove"
+                    />
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            className="row"
+          >
+            <p
+              className="col-xs-3 col-xs-offset-9 text-right rjsf-array-item-add"
+            >
+              <button
+                className="btn btn-info btn-add col-xs-12"
+                disabled={false}
+                id="root_nestedArrayOptional__add"
+                onClick={[Function]}
+                title="Add"
+                type="button"
+              >
+                <i
+                  className="glyphicon glyphicon-plus"
+                />
+              </button>
+            </p>
+          </div>
+        </fieldset>
+      </div>
+      <div
+        className="form-group rjsf-field rjsf-field-object"
+      >
+        <fieldset
+          id="root_nestedObject"
+        >
+          <legend
+            id="root_nestedObject__title"
+          >
+            nestedObject
+            <span
+              className="required"
+            >
+              *
+            </span>
+          </legend>
+          <div
+            className="form-group rjsf-field rjsf-field-string"
+          >
+            <label
+              className="control-label"
+              htmlFor="root_nestedObject_test"
+            >
+              test
+            </label>
+            <input
+              aria-describedby="root_nestedObject_test__error root_nestedObject_test__description root_nestedObject_test__help"
+              autoFocus={false}
+              className="form-control"
+              disabled={false}
+              id="root_nestedObject_test"
+              label="test"
+              name="root_nestedObject_test"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              placeholder=""
+              readOnly={false}
+              required={false}
+              type="text"
+              value=""
+            />
+          </div>
+        </fieldset>
+      </div>
+      <div
+        className="form-group rjsf-field rjsf-field-array"
+      >
+        <fieldset
+          className="rjsf-field rjsf-field-array rjsf-field-array-of-string"
+          id="root_nestedArray"
+        >
+          <legend
+            id="root_nestedArray__title"
+          >
+            nestedArray
+            <span
+              className="required"
+            >
+              *
+            </span>
+          </legend>
+          <div
+            className="row array-item-list"
+          />
+          <div
+            className="row"
+          >
+            <p
+              className="col-xs-3 col-xs-offset-9 text-right rjsf-array-item-add"
+            >
+              <button
+                className="btn btn-info btn-add col-xs-12"
+                disabled={false}
+                id="root_nestedArray__add"
+                onClick={[Function]}
+                title="Add"
+                type="button"
+              >
+                <i
+                  className="glyphicon glyphicon-plus"
+                />
+              </button>
+            </p>
+          </div>
+        </fieldset>
+      </div>
+      <div
+        className="form-group rjsf-field rjsf-field-undefined"
+      >
+        <label
+          className="control-label"
+          htmlFor="root_optionalObjectWithOneofs"
+        >
+          optionalObjectWithOneofs
+        </label>
+        <div
+          className="panel panel-default panel-body"
+        >
+          <div
+            className="form-group"
+          >
+            <select
+              aria-describedby="root_optionalObjectWithOneofs__oneof_select__error root_optionalObjectWithOneofs__oneof_select__description root_optionalObjectWithOneofs__oneof_select__help"
+              autoFocus={false}
+              className="form-control"
+              disabled={false}
+              id="root_optionalObjectWithOneofs__oneof_select"
+              multiple={false}
+              name="root_optionalObjectWithOneofs__oneof_select"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              role="combobox"
+              value="0"
+            >
+              <option
+                value="0"
+              >
+                Option 1
+              </option>
+              <option
+                value="1"
+              >
+                Option 2
+              </option>
+              <option
+                value="2"
+              >
+                Option 3
+              </option>
+            </select>
+          </div>
+          <div
+            className="form-group rjsf-field rjsf-field-object"
+          >
+            <fieldset
+              id="root_optionalObjectWithOneofs"
+            >
+              <legend
+                id="root_optionalObjectWithOneofs__title"
+              >
+                optionalObjectWithOneofs
+              </legend>
+              <div
+                className="form-group rjsf-field rjsf-field-string"
+              >
+                <label
+                  className="control-label"
+                  htmlFor="root_optionalObjectWithOneofs_name"
+                >
+                  name
+                </label>
+                <input
+                  aria-describedby="root_optionalObjectWithOneofs_name__error root_optionalObjectWithOneofs_name__description root_optionalObjectWithOneofs_name__help"
+                  autoFocus={false}
+                  className="form-control"
+                  disabled={false}
+                  id="root_optionalObjectWithOneofs_name"
+                  label="name"
+                  name="root_optionalObjectWithOneofs_name"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                  placeholder=""
+                  readOnly={true}
+                  required={false}
+                  type="text"
+                  value=""
+                />
+              </div>
+            </fieldset>
+          </div>
+        </div>
+      </div>
+    </fieldset>
+  </div>
+  <div>
+    <button
+      className="btn btn-info "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields optional data controls shows "add" and "remove" optional controls when turned on in uiSchema, readonly and formData 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group rjsf-field rjsf-field-object"
+  >
+    <fieldset
+      id="root"
+    >
+      <legend
+        id="root__title"
+      >
+        test
+      </legend>
+      <div
+        className="form-group rjsf-field rjsf-field-object"
+      >
+        <fieldset
+          className="rjsf-optional-object-field"
+          id="root_nestedObjectOptional"
+        >
+          <legend
+            id="root_nestedObjectOptional__title"
+          >
+            nestedObjectOptional
+          </legend>
+          <div
+            className="form-group rjsf-field rjsf-field-string"
+          >
+            <label
+              className="control-label"
+              htmlFor="root_nestedObjectOptional_test"
+            >
+              test
+            </label>
+            <input
+              aria-describedby="root_nestedObjectOptional_test__error root_nestedObjectOptional_test__description root_nestedObjectOptional_test__help"
+              autoFocus={false}
+              className="form-control"
+              disabled={false}
+              id="root_nestedObjectOptional_test"
+              label="test"
+              name="root_nestedObjectOptional_test"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              placeholder=""
+              readOnly={true}
+              required={false}
+              type="text"
+              value="foo"
+            />
+          </div>
+          <div
+            className="form-group rjsf-field rjsf-field-object"
+          >
+            <fieldset
+              className="rjsf-optional-object-field"
+              id="root_nestedObjectOptional_deepObjectOptional"
+            >
+              <legend
+                id="root_nestedObjectOptional_deepObjectOptional__title"
+              >
+                deepObjectOptional
+              </legend>
+              <em
+                id="root_nestedObjectOptional_deepObjectOptional__optionalMsg"
+              >
+                No data for optional field
+              </em>
+            </fieldset>
+          </div>
+          <div
+            className="form-group rjsf-field rjsf-field-object"
+          >
+            <fieldset
+              id="root_nestedObjectOptional_deepObject"
+            >
+              <legend
+                id="root_nestedObjectOptional_deepObject__title"
+              >
+                deepObject
+                <span
+                  className="required"
+                >
+                  *
+                </span>
+              </legend>
+              <div
+                className="form-group rjsf-field rjsf-field-string"
+              >
+                <label
+                  className="control-label"
+                  htmlFor="root_nestedObjectOptional_deepObject_deepTest"
+                >
+                  deepTest
+                </label>
+                <input
+                  aria-describedby="root_nestedObjectOptional_deepObject_deepTest__error root_nestedObjectOptional_deepObject_deepTest__description root_nestedObjectOptional_deepObject_deepTest__help"
+                  autoFocus={false}
+                  className="form-control"
+                  disabled={false}
+                  id="root_nestedObjectOptional_deepObject_deepTest"
+                  label="deepTest"
+                  name="root_nestedObjectOptional_deepObject_deepTest"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                  placeholder=""
+                  readOnly={true}
+                  required={false}
+                  type="text"
+                  value=""
+                />
+              </div>
+            </fieldset>
+          </div>
+          <div
+            className="form-group rjsf-field rjsf-field-array"
+          >
+            <fieldset
+              className="rjsf-field rjsf-field-array rjsf-field-array-of-string"
+              id="root_nestedObjectOptional_deepArrayOptional"
+            >
+              <legend
+                id="root_nestedObjectOptional_deepArrayOptional__title"
+              >
+                deepArrayOptional
+              </legend>
+              <div
+                className="row array-item-list"
+              />
+              <div
+                className="row"
+              >
+                <p
+                  className="col-xs-3 col-xs-offset-9 text-right rjsf-array-item-add"
+                >
+                  <button
+                    className="btn btn-info btn-add col-xs-12"
+                    disabled={true}
+                    id="root_nestedObjectOptional_deepArrayOptional__add"
+                    onClick={[Function]}
+                    title="Add"
+                    type="button"
+                  >
+                    <i
+                      className="glyphicon glyphicon-plus"
+                    />
+                  </button>
+                </p>
+              </div>
+            </fieldset>
+          </div>
+          <div
+            className="form-group rjsf-field rjsf-field-array"
+          >
+            <fieldset
+              className="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field"
+              id="root_nestedObjectOptional_deepArrayOptional2"
+            >
+              <legend
+                id="root_nestedObjectOptional_deepArrayOptional2__title"
+              >
+                deepArrayOptional2
+              </legend>
+              <em
+                id="root_nestedObjectOptional_deepArrayOptional2__optionalMsg"
+              >
+                No data for optional field
+              </em>
+              <div
+                className="row array-item-list"
+              />
+            </fieldset>
+          </div>
+          <div
+            className="form-group rjsf-field rjsf-field-array"
+          >
+            <fieldset
+              className="rjsf-field rjsf-field-array rjsf-field-array-of-string"
+              id="root_nestedObjectOptional_deepArray"
+            >
+              <legend
+                id="root_nestedObjectOptional_deepArray__title"
+              >
+                deepArray
+                <span
+                  className="required"
+                >
+                  *
+                </span>
+              </legend>
+              <div
+                className="row array-item-list"
+              />
+              <div
+                className="row"
+              >
+                <p
+                  className="col-xs-3 col-xs-offset-9 text-right rjsf-array-item-add"
+                >
+                  <button
+                    className="btn btn-info btn-add col-xs-12"
+                    disabled={true}
+                    id="root_nestedObjectOptional_deepArray__add"
+                    onClick={[Function]}
+                    title="Add"
+                    type="button"
+                  >
+                    <i
+                      className="glyphicon glyphicon-plus"
+                    />
+                  </button>
+                </p>
+              </div>
+            </fieldset>
+          </div>
+        </fieldset>
+      </div>
+      <div
+        className="form-group rjsf-field rjsf-field-array"
+      >
+        <fieldset
+          className="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field"
+          id="root_nestedArrayOptional"
+        >
+          <legend
+            id="root_nestedArrayOptional__title"
+          >
+            nestedArrayOptional
+          </legend>
+          <div
+            className="row array-item-list"
+          >
+            <div
+              className="rjsf-array-item"
+            >
+              <div
+                className="col-xs-9"
+              >
+                <div
+                  className="form-group rjsf-field rjsf-field-string"
+                >
+                  <label
+                    className="control-label"
+                    htmlFor="root_nestedArrayOptional_0"
+                  >
+                    nestedArrayOptional-1
+                    <span
+                      className="required"
+                    >
+                      *
+                    </span>
+                  </label>
+                  <input
+                    aria-describedby="root_nestedArrayOptional_0__error root_nestedArrayOptional_0__description root_nestedArrayOptional_0__help"
+                    autoFocus={false}
+                    className="form-control"
+                    disabled={false}
+                    id="root_nestedArrayOptional_0"
+                    label="nestedArrayOptional-0"
+                    name="root_nestedArrayOptional_0"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    readOnly={true}
+                    required={true}
+                    type="text"
+                    value="bar"
+                  />
+                </div>
+              </div>
+              <div
+                className="col-xs-3 array-item-toolbox"
+              >
+                <div
+                  className="btn-group"
+                  style={
+                    {
+                      "display": "flex",
+                      "justifyContent": "space-around",
+                    }
+                  }
+                >
+                  <button
+                    className="btn btn-danger rjsf-array-item-remove"
+                    disabled={true}
+                    id="root_nestedArrayOptional_0__remove"
+                    onClick={[Function]}
+                    title="Remove"
+                    type="button"
+                  >
+                    <i
+                      className="glyphicon glyphicon-remove"
+                    />
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            className="row"
+          >
+            <p
+              className="col-xs-3 col-xs-offset-9 text-right rjsf-array-item-add"
+            >
+              <button
+                className="btn btn-info btn-add col-xs-12"
+                disabled={true}
+                id="root_nestedArrayOptional__add"
+                onClick={[Function]}
+                title="Add"
+                type="button"
+              >
+                <i
+                  className="glyphicon glyphicon-plus"
+                />
+              </button>
+            </p>
+          </div>
+        </fieldset>
+      </div>
+      <div
+        className="form-group rjsf-field rjsf-field-object"
+      >
+        <fieldset
+          id="root_nestedObject"
+        >
+          <legend
+            id="root_nestedObject__title"
+          >
+            nestedObject
+            <span
+              className="required"
+            >
+              *
+            </span>
+          </legend>
+          <div
+            className="form-group rjsf-field rjsf-field-string"
+          >
+            <label
+              className="control-label"
+              htmlFor="root_nestedObject_test"
+            >
+              test
+            </label>
+            <input
+              aria-describedby="root_nestedObject_test__error root_nestedObject_test__description root_nestedObject_test__help"
+              autoFocus={false}
+              className="form-control"
+              disabled={false}
+              id="root_nestedObject_test"
+              label="test"
+              name="root_nestedObject_test"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              placeholder=""
+              readOnly={true}
+              required={false}
+              type="text"
+              value=""
+            />
+          </div>
+        </fieldset>
+      </div>
+      <div
+        className="form-group rjsf-field rjsf-field-array"
+      >
+        <fieldset
+          className="rjsf-field rjsf-field-array rjsf-field-array-of-string"
+          id="root_nestedArray"
+        >
+          <legend
+            id="root_nestedArray__title"
+          >
+            nestedArray
+            <span
+              className="required"
+            >
+              *
+            </span>
+          </legend>
+          <div
+            className="row array-item-list"
+          />
+          <div
+            className="row"
+          >
+            <p
+              className="col-xs-3 col-xs-offset-9 text-right rjsf-array-item-add"
+            >
+              <button
+                className="btn btn-info btn-add col-xs-12"
+                disabled={true}
+                id="root_nestedArray__add"
+                onClick={[Function]}
+                title="Add"
+                type="button"
+              >
+                <i
+                  className="glyphicon glyphicon-plus"
+                />
+              </button>
+            </p>
+          </div>
+        </fieldset>
+      </div>
+      <div
+        className="form-group rjsf-field rjsf-field-undefined"
+      >
+        <label
+          className="control-label"
+          htmlFor="root_optionalObjectWithOneofs"
+        >
+          optionalObjectWithOneofs
+        </label>
+        <div
+          className="panel panel-default panel-body"
+        >
+          <div
+            className="form-group"
+          >
+            <select
+              aria-describedby="root_optionalObjectWithOneofs__oneof_select__error root_optionalObjectWithOneofs__oneof_select__description root_optionalObjectWithOneofs__oneof_select__help"
+              autoFocus={false}
+              className="form-control"
+              disabled={true}
+              id="root_optionalObjectWithOneofs__oneof_select"
+              multiple={false}
+              name="root_optionalObjectWithOneofs__oneof_select"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              role="combobox"
+              value="0"
+            >
+              <option
+                value="0"
+              >
+                Option 1
+              </option>
+              <option
+                value="1"
+              >
+                Option 2
+              </option>
+              <option
+                value="2"
+              >
+                Option 3
+              </option>
+            </select>
+          </div>
+          <div
+            className="form-group rjsf-field rjsf-field-object"
+          >
+            <fieldset
+              id="root_optionalObjectWithOneofs"
+            >
+              <legend
+                id="root_optionalObjectWithOneofs__title"
+              >
+                optionalObjectWithOneofs
+              </legend>
+              <div
+                className="form-group rjsf-field rjsf-field-string"
+              >
+                <label
+                  className="control-label"
+                  htmlFor="root_optionalObjectWithOneofs_name"
+                >
+                  name
+                </label>
+                <input
+                  aria-describedby="root_optionalObjectWithOneofs_name__error root_optionalObjectWithOneofs_name__description root_optionalObjectWithOneofs_name__help"
+                  autoFocus={false}
+                  className="form-control"
+                  disabled={false}
+                  id="root_optionalObjectWithOneofs_name"
+                  label="name"
+                  name="root_optionalObjectWithOneofs_name"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                  placeholder=""
+                  readOnly={true}
+                  required={false}
+                  type="text"
+                  value=""
+                />
+              </div>
+            </fieldset>
+          </div>
+        </div>
+      </div>
+    </fieldset>
+  </div>
+  <div>
+    <button
+      className="btn btn-info "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields optional data controls shows "add" optional controls when turned on in uiSchema and no formData 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group rjsf-field rjsf-field-object"
+  >
+    <fieldset
+      id="root"
+    >
+      <legend
+        id="root__title"
+      >
+        test
+      </legend>
+      <div
+        className="form-group rjsf-field rjsf-field-object"
+      >
+        <fieldset
+          className="rjsf-optional-object-field"
+          id="root_nestedObjectOptional"
+        >
+          <legend
+            id="root_nestedObjectOptional__title"
+          >
+            nestedObjectOptional
+            <span
+              className="pull-right"
+              style={
+                {
+                  "marginBottom": "2px",
+                }
+              }
+            >
+              <button
+                className="btn btn-default rjsf-add-optional-data btn-sm"
+                id="root_nestedObjectOptional__optionalAdd"
+                onClick={[Function]}
+                title="Add data for optional field"
+                type="button"
+              >
+                <i
+                  className="glyphicon glyphicon-plus"
+                />
+              </button>
+            </span>
+          </legend>
+        </fieldset>
+      </div>
+      <div
+        className="form-group rjsf-field rjsf-field-array"
+      >
+        <fieldset
+          className="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field"
+          id="root_nestedArrayOptional"
+        >
+          <legend
+            id="root_nestedArrayOptional__title"
+          >
+            nestedArrayOptional
+            <span
+              className="pull-right"
+              style={
+                {
+                  "marginBottom": "2px",
+                }
+              }
+            >
+              <button
+                className="btn btn-default rjsf-add-optional-data btn-sm"
+                id="root_nestedArrayOptional__optionalAdd"
+                onClick={[Function]}
+                title="Add data for optional field"
+                type="button"
+              >
+                <i
+                  className="glyphicon glyphicon-plus"
+                />
+              </button>
+            </span>
+          </legend>
+          <div
+            className="row array-item-list"
+          />
+        </fieldset>
+      </div>
+      <div
+        className="form-group rjsf-field rjsf-field-object"
+      >
+        <fieldset
+          id="root_nestedObject"
+        >
+          <legend
+            id="root_nestedObject__title"
+          >
+            nestedObject
+            <span
+              className="required"
+            >
+              *
+            </span>
+          </legend>
+          <div
+            className="form-group rjsf-field rjsf-field-string"
+          >
+            <label
+              className="control-label"
+              htmlFor="root_nestedObject_test"
+            >
+              test
+            </label>
+            <input
+              aria-describedby="root_nestedObject_test__error root_nestedObject_test__description root_nestedObject_test__help"
+              autoFocus={false}
+              className="form-control"
+              disabled={false}
+              id="root_nestedObject_test"
+              label="test"
+              name="root_nestedObject_test"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              placeholder=""
+              readOnly={false}
+              required={false}
+              type="text"
+              value=""
+            />
+          </div>
+        </fieldset>
+      </div>
+      <div
+        className="form-group rjsf-field rjsf-field-array"
+      >
+        <fieldset
+          className="rjsf-field rjsf-field-array rjsf-field-array-of-string"
+          id="root_nestedArray"
+        >
+          <legend
+            id="root_nestedArray__title"
+          >
+            nestedArray
+            <span
+              className="required"
+            >
+              *
+            </span>
+          </legend>
+          <div
+            className="row array-item-list"
+          />
+          <div
+            className="row"
+          >
+            <p
+              className="col-xs-3 col-xs-offset-9 text-right rjsf-array-item-add"
+            >
+              <button
+                className="btn btn-info btn-add col-xs-12"
+                disabled={false}
+                id="root_nestedArray__add"
+                onClick={[Function]}
+                title="Add"
+                type="button"
+              >
+                <i
+                  className="glyphicon glyphicon-plus"
+                />
+              </button>
+            </p>
+          </div>
+        </fieldset>
+      </div>
+      <div
+        className="form-group rjsf-field rjsf-field-undefined"
+      >
+        <label
+          className="control-label"
+          htmlFor="root_optionalObjectWithOneofs"
+        >
+          optionalObjectWithOneofs
+        </label>
+        <div
+          className="panel panel-default panel-body"
+        >
+          <div
+            className="form-group"
+          >
+            <select
+              aria-describedby="root_optionalObjectWithOneofs__oneof_select__error root_optionalObjectWithOneofs__oneof_select__description root_optionalObjectWithOneofs__oneof_select__help"
+              autoFocus={false}
+              className="form-control"
+              disabled={false}
+              id="root_optionalObjectWithOneofs__oneof_select"
+              multiple={false}
+              name="root_optionalObjectWithOneofs__oneof_select"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              role="combobox"
+              value="0"
+            >
+              <option
+                value="0"
+              >
+                Option 1
+              </option>
+              <option
+                value="1"
+              >
+                Option 2
+              </option>
+              <option
+                value="2"
+              >
+                Option 3
+              </option>
+            </select>
+          </div>
+          <div
+            className="form-group rjsf-field rjsf-field-object"
+          >
+            <fieldset
+              id="root_optionalObjectWithOneofs"
+            >
+              <legend
+                id="root_optionalObjectWithOneofs__title"
+              >
+                optionalObjectWithOneofs
+              </legend>
+              <div
+                className="form-group rjsf-field rjsf-field-string"
+              >
+                <label
+                  className="control-label"
+                  htmlFor="root_optionalObjectWithOneofs_name"
+                >
+                  name
+                </label>
+                <input
+                  aria-describedby="root_optionalObjectWithOneofs_name__error root_optionalObjectWithOneofs_name__description root_optionalObjectWithOneofs_name__help"
+                  autoFocus={false}
+                  className="form-control"
+                  disabled={false}
+                  id="root_optionalObjectWithOneofs_name"
+                  label="name"
+                  name="root_optionalObjectWithOneofs_name"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                  placeholder=""
+                  readOnly={true}
+                  required={false}
+                  type="text"
+                  value=""
+                />
+              </div>
+            </fieldset>
+          </div>
+        </div>
+      </div>
+    </fieldset>
+  </div>
+  <div>
+    <button
+      className="btn btn-info "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`single fields optional data controls shows "add" optional controls when turned on in uiSchema, disabled and no formData 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group rjsf-field rjsf-field-object"
+  >
+    <fieldset
+      id="root"
+    >
+      <legend
+        id="root__title"
+      >
+        test
+      </legend>
+      <div
+        className="form-group rjsf-field rjsf-field-object"
+      >
+        <fieldset
+          className="rjsf-optional-object-field"
+          id="root_nestedObjectOptional"
+        >
+          <legend
+            id="root_nestedObjectOptional__title"
+          >
+            nestedObjectOptional
+          </legend>
+          <em
+            id="root_nestedObjectOptional__optionalMsg"
+          >
+            No data for optional field
+          </em>
+        </fieldset>
+      </div>
+      <div
+        className="form-group rjsf-field rjsf-field-array"
+      >
+        <fieldset
+          className="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field"
+          id="root_nestedArrayOptional"
+        >
+          <legend
+            id="root_nestedArrayOptional__title"
+          >
+            nestedArrayOptional
+          </legend>
+          <em
+            id="root_nestedArrayOptional__optionalMsg"
+          >
+            No data for optional field
+          </em>
+          <div
+            className="row array-item-list"
+          />
+        </fieldset>
+      </div>
+      <div
+        className="form-group rjsf-field rjsf-field-object"
+      >
+        <fieldset
+          id="root_nestedObject"
+        >
+          <legend
+            id="root_nestedObject__title"
+          >
+            nestedObject
+            <span
+              className="required"
+            >
+              *
+            </span>
+          </legend>
+          <div
+            className="form-group rjsf-field rjsf-field-string"
+          >
+            <label
+              className="control-label"
+              htmlFor="root_nestedObject_test"
+            >
+              test
+            </label>
+            <input
+              aria-describedby="root_nestedObject_test__error root_nestedObject_test__description root_nestedObject_test__help"
+              autoFocus={false}
+              className="form-control"
+              disabled={true}
+              id="root_nestedObject_test"
+              label="test"
+              name="root_nestedObject_test"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              placeholder=""
+              readOnly={false}
+              required={false}
+              type="text"
+              value=""
+            />
+          </div>
+        </fieldset>
+      </div>
+      <div
+        className="form-group rjsf-field rjsf-field-array"
+      >
+        <fieldset
+          className="rjsf-field rjsf-field-array rjsf-field-array-of-string"
+          id="root_nestedArray"
+        >
+          <legend
+            id="root_nestedArray__title"
+          >
+            nestedArray
+            <span
+              className="required"
+            >
+              *
+            </span>
+          </legend>
+          <div
+            className="row array-item-list"
+          />
+          <div
+            className="row"
+          >
+            <p
+              className="col-xs-3 col-xs-offset-9 text-right rjsf-array-item-add"
+            >
+              <button
+                className="btn btn-info btn-add col-xs-12"
+                disabled={true}
+                id="root_nestedArray__add"
+                onClick={[Function]}
+                title="Add"
+                type="button"
+              >
+                <i
+                  className="glyphicon glyphicon-plus"
+                />
+              </button>
+            </p>
+          </div>
+        </fieldset>
+      </div>
+      <div
+        className="form-group rjsf-field rjsf-field-undefined"
+      >
+        <label
+          className="control-label"
+          htmlFor="root_optionalObjectWithOneofs"
+        >
+          optionalObjectWithOneofs
+        </label>
+        <div
+          className="panel panel-default panel-body"
+        >
+          <div
+            className="form-group"
+          >
+            <select
+              aria-describedby="root_optionalObjectWithOneofs__oneof_select__error root_optionalObjectWithOneofs__oneof_select__description root_optionalObjectWithOneofs__oneof_select__help"
+              autoFocus={false}
+              className="form-control"
+              disabled={true}
+              id="root_optionalObjectWithOneofs__oneof_select"
+              multiple={false}
+              name="root_optionalObjectWithOneofs__oneof_select"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              role="combobox"
+              value="0"
+            >
+              <option
+                value="0"
+              >
+                Option 1
+              </option>
+              <option
+                value="1"
+              >
+                Option 2
+              </option>
+              <option
+                value="2"
+              >
+                Option 3
+              </option>
+            </select>
+          </div>
+          <div
+            className="form-group rjsf-field rjsf-field-object"
+          >
+            <fieldset
+              id="root_optionalObjectWithOneofs"
+            >
+              <legend
+                id="root_optionalObjectWithOneofs__title"
+              >
+                optionalObjectWithOneofs
+              </legend>
+              <div
+                className="form-group rjsf-field rjsf-field-string"
+              >
+                <label
+                  className="control-label"
+                  htmlFor="root_optionalObjectWithOneofs_name"
+                >
+                  name
+                </label>
+                <input
+                  aria-describedby="root_optionalObjectWithOneofs_name__error root_optionalObjectWithOneofs_name__description root_optionalObjectWithOneofs_name__help"
+                  autoFocus={false}
+                  className="form-control"
+                  disabled={true}
+                  id="root_optionalObjectWithOneofs_name"
+                  label="name"
+                  name="root_optionalObjectWithOneofs_name"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                  placeholder=""
+                  readOnly={true}
+                  required={false}
+                  type="text"
+                  value=""
+                />
+              </div>
+            </fieldset>
+          </div>
+        </div>
+      </div>
+    </fieldset>
+  </div>
+  <div>
+    <button
+      className="btn btn-info "
+      disabled={true}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
 exports[`single fields password field 1`] = `
 <form
   className="rjsf"

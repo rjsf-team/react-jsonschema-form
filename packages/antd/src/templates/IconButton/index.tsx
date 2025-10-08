@@ -14,22 +14,24 @@ import {
 } from '@rjsf/utils';
 import { MouseEventHandler } from 'react';
 
-// The `type` and `color` for IconButtonProps collides with props of `ButtonProps` so omit it to avoid Typescript issue
 export type AntdIconButtonProps<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
-> = Omit<IconButtonProps<T, S, F>, 'type' | 'color'>;
+> = IconButtonProps<T, S, F> & Pick<ButtonProps, 'block' | 'danger' | 'size'>;
 
 export default function IconButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: AntdIconButtonProps<T, S, F> & Omit<ButtonProps, 'onClick'>,
+  props: AntdIconButtonProps<T, S, F>,
 ) {
-  const { iconType = 'default', icon, onClick, uiSchema, registry, ...otherProps } = props;
+  const { iconType = 'default', icon, onClick, uiSchema, registry, color, ...otherProps } = props;
   return (
     <Button
       onClick={onClick as MouseEventHandler<HTMLAnchorElement> & MouseEventHandler<HTMLButtonElement>}
-      type={iconType as ButtonProps['type']}
+      // @ts-expect-error TS2322, Because even casting as `ButtonProps['type']` has issues
+      type={iconType}
       icon={icon}
+      color={color as ButtonProps['color']}
+      style={{ paddingTop: '4px' /* Center the button */ }}
       {...otherProps}
     />
   );
@@ -44,9 +46,9 @@ export function AddButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
   return (
     <IconButton
       title={translateString(TranslatableString.AddItemButton)}
-      {...props}
-      block
       iconType='primary'
+      block
+      {...props}
       icon={<PlusCircleOutlined />}
     />
   );
@@ -92,10 +94,10 @@ export function RemoveButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F
   return (
     <IconButton
       title={translateString(TranslatableString.RemoveButton)}
-      {...props}
       danger
       block={!!options.block}
       iconType='primary'
+      {...props}
       icon={<DeleteOutlined />}
     />
   );

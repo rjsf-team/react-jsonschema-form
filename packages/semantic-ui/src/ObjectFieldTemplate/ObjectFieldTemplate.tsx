@@ -25,6 +25,7 @@ export default function ObjectFieldTemplate<
 >(props: ObjectFieldTemplateProps<T, S, F>) {
   const {
     description,
+    optionalDataControl,
     onAddClick,
     title,
     properties,
@@ -44,6 +45,7 @@ export default function ObjectFieldTemplate<
     registry,
     uiOptions,
   );
+  const showOptionalDataControlInTitle = !readonly && !disabled;
   // Button templates are not overridden in the uiSchema
   const {
     ButtonTemplates: { AddButton },
@@ -58,6 +60,7 @@ export default function ObjectFieldTemplate<
           schema={schema}
           uiSchema={uiSchema}
           registry={registry}
+          optionalDataControl={showOptionalDataControlInTitle ? optionalDataControl : undefined}
         />
       )}
       {description && (
@@ -69,6 +72,7 @@ export default function ObjectFieldTemplate<
           registry={registry}
         />
       )}
+      {!showOptionalDataControlInTitle ? optionalDataControl : undefined}
       {properties.map((prop) => prop.content)}
       {canExpand<T, S, F>(schema, uiSchema, formData) && (
         <Grid.Column width={16} verticalAlign='middle'>

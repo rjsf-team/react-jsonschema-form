@@ -932,6 +932,11 @@ exports[`with title and description array 1`] = `
       >
         <h5
           className="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
+          style={
+            {
+              "marginBlock": 0,
+            }
+          }
         >
           Test field
         </h5>
@@ -1017,6 +1022,11 @@ exports[`with title and description array icons 1`] = `
       >
         <h5
           className="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
+          style={
+            {
+              "marginBlock": 0,
+            }
+          }
         >
           Test field
         </h5>
@@ -1559,6 +1569,11 @@ exports[`with title and description fixed array 1`] = `
       >
         <h5
           className="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
+          style={
+            {
+              "marginBlock": 0,
+            }
+          }
         >
           Test field
         </h5>
@@ -1740,6 +1755,11 @@ exports[`with title and description from both array 1`] = `
       >
         <h5
           className="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
+          style={
+            {
+              "marginBlock": 0,
+            }
+          }
         >
           My Field
         </h5>
@@ -1825,6 +1845,11 @@ exports[`with title and description from both array icons 1`] = `
       >
         <h5
           className="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
+          style={
+            {
+              "marginBlock": 0,
+            }
+          }
         >
           My Field
         </h5>
@@ -2367,6 +2392,11 @@ exports[`with title and description from both fixed array 1`] = `
       >
         <h5
           className="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
+          style={
+            {
+              "marginBlock": 0,
+            }
+          }
         >
           My Field
         </h5>
@@ -2548,6 +2578,11 @@ exports[`with title and description from uiSchema array 1`] = `
       >
         <h5
           className="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
+          style={
+            {
+              "marginBlock": 0,
+            }
+          }
         >
           My Field
         </h5>
@@ -2633,6 +2668,11 @@ exports[`with title and description from uiSchema array icons 1`] = `
       >
         <h5
           className="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
+          style={
+            {
+              "marginBlock": 0,
+            }
+          }
         >
           My Field
         </h5>
@@ -3175,6 +3215,11 @@ exports[`with title and description from uiSchema fixed array 1`] = `
       >
         <h5
           className="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
+          style={
+            {
+              "marginBlock": 0,
+            }
+          }
         >
           My Field
         </h5>

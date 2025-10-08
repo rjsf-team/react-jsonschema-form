@@ -5,6 +5,7 @@ import IconButton from './IconButton';
 /** The `AddButton` renders a button that represent the `Add` action on a form
  */
 export default function AddButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
+  id,
   className,
   onClick,
   disabled,
@@ -15,6 +16,7 @@ export default function AddButton<T = any, S extends StrictRJSFSchema = RJSFSche
     <div className='row'>
       <p className={`col-xs-3 col-xs-offset-9 text-right ${className}`}>
         <IconButton
+          id={id}
           iconType='info'
           icon='plus'
           className='btn-add col-xs-12'
