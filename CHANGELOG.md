@@ -112,15 +112,13 @@ should change the heading of the (upcoming) version to include a major version b
 ## Dev / docs / playground
 
 - Updated docs for `getDefaultFormState` to reflect addition of the `initialDefaultsGenerated` prop
-- Updated `utility-function.me` docs to add documentation for the new functions
+- Updated `utility-function.me` docs to add documentation for the new functions and to update the `validationDataMerge()` function's new parameter
   - Also updated docs for `retrieveSchema` and `SchemaUtilsType` for the new prop
 - Updated `uiSchema.md` to add documentation for the new `enableOptionalDataFieldForType` prop
-- Updated the `v6x upgrade guide.md` to document the new feature and utility functions and changes to `retrieveSchema`
 - Updated the playground to add a new `Optional Data Controls` example
 - Updated the snapshot and jest tests for `Form` to test the new `Optional Data Controls` feature
-- Updated `utility-functions.md` to update the `validationDataMerge()` function's new parameter
 - Updated `custom-widgets-fields.md` to change the documentation around passing errors via `onChange()` to reflect the new reality
-- Updated `v6.x upgrade guide.md` to document the changes mentioned above
+- Updated the `v6x upgrade guide.md` to document the new feature and utility functions and changes to `retrieveSchema`
 
 # 6.0.0-beta-20
 
