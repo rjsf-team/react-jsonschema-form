@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="generator" content="Docusaurus v3.8.1">
 <title data-rh="true">RJSF utility functions, constants and types | react-jsonschema-form</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:url" content="https://rjsf-team.github.io/react-jsonschema-form/docs/api-reference/utility-functions"><meta data-rh="true" property="og:locale" content="en"><meta data-rh="true" name="docusaurus_locale" content="en"><meta data-rh="true" name="docsearch:language" content="en"><meta data-rh="true" name="docusaurus_version" content="current"><meta data-rh="true" name="docusaurus_tag" content="docs-default-current"><meta data-rh="true" name="docsearch:version" content="current"><meta data-rh="true" name="docsearch:docusaurus_tag" content="docs-default-current"><meta data-rh="true" property="og:title" content="RJSF utility functions, constants and types | react-jsonschema-form"><meta data-rh="true" name="description" content="In version 5, the utility functions from @rjsf/core/utils were refactored into their own library called @rjsf/utils."><meta data-rh="true" property="og:description" content="In version 5, the utility functions from @rjsf/core/utils were refactored into their own library called @rjsf/utils."><link data-rh="true" rel="icon" href="/react-jsonschema-form/docs/img/favicon.ico"><link data-rh="true" rel="canonical" href="https://rjsf-team.github.io/react-jsonschema-form/docs/api-reference/utility-functions"><link data-rh="true" rel="alternate" href="https://rjsf-team.github.io/react-jsonschema-form/docs/api-reference/utility-functions" hreflang="en"><link data-rh="true" rel="alternate" href="https://rjsf-team.github.io/react-jsonschema-form/docs/api-reference/utility-functions" hreflang="x-default"><link data-rh="true" rel="preconnect" href="https://LRQC6J0BO6-dsn.algolia.net" crossorigin="anonymous"><script data-rh="true" type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"API Reference","item":"https://rjsf-team.github.io/react-jsonschema-form/docs/api-reference/"},{"@type":"ListItem","position":2,"name":"RJSF utility functions, constants and types","item":"https://rjsf-team.github.io/react-jsonschema-form/docs/api-reference/utility-functions"}]}</script><link rel="search" type="application/opensearchdescription+xml" title="react-jsonschema-form" href="/react-jsonschema-form/docs/opensearch.xml"><link rel="stylesheet" href="/react-jsonschema-form/docs/assets/css/styles.a54ffa34.css">
-<script src="/react-jsonschema-form/docs/assets/js/runtime~main.7c006914.js" defer="defer"></script>
+<script src="/react-jsonschema-form/docs/assets/js/runtime~main.b05bdc8e.js" defer="defer"></script>
 <script src="/react-jsonschema-form/docs/assets/js/main.f6e27991.js" defer="defer"></script>
 </head>
 <body class="navigation-with-keyboard">
@@ -69,7 +69,7 @@ Otherwise, the string is wrapped by <code>Number()</code> and if that result is 
 <p>Return a consistent <code>id</code> for the <code>btn</code> button element</p>
 <h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-3">Parameters<a href="#parameters-3" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
 <ul>
-<li>id: FieldPathId | string - Either simple string id or an FieldPathId from which to extract it</li>
+<li>id: FieldPathId | string - The id of the parent component for the option</li>
 <li>btn: &#x27;add&#x27; | &#x27;copy&#x27; | &#x27;moveDown&#x27; | &#x27;moveUp&#x27; | &#x27;remove&#x27; - The button type for which to generate the id</li>
 </ul>
 <h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-3">Returns<a href="#returns-3" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
@@ -510,23 +510,48 @@ This is the case when <code>schema.items</code> is a non-empty array that only c
 <ul>
 <li>boolean: True if there are fixed items in the schema, false otherwise</li>
 </ul>
-<h3 class="anchor anchorWithStickyNavbar_fF9Z" id="isobject">isObject()<a href="#isobject" class="hash-link" aria-label="Direct link to isObject()" title="Direct link to isObject()">​</a></h3>
-<p>Determines whether a <code>thing</code> is an object for the purposes of RSJF.
-In this case, <code>thing</code> is an object if it has the type <code>object</code> but is NOT null, an array or a File.</p>
+<h3 class="anchor anchorWithStickyNavbar_fF9Z" id="isformdataavailablet--any">isFormDataAvailable&lt;T = any&gt;()<a href="#isformdataavailablet--any" class="hash-link" aria-label="Direct link to isFormDataAvailable&lt;T = any&gt;()" title="Direct link to isFormDataAvailable&lt;T = any&gt;()">​</a></h3>
+<p>Determines whether the given <code>formData</code> represents valid form data, such as a primitive type, an array, or a non-empty object.</p>
 <h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-38">Parameters<a href="#parameters-38" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
 <ul>
-<li>thing: any - The thing to check to see whether it is an object</li>
+<li>formData: T - The data to check</li>
 </ul>
 <h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-39">Returns<a href="#returns-39" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
 <ul>
+<li>boolean: True if <code>formData</code> is not undefined, null, a primitive type or an array or an empty object</li>
+</ul>
+<h3 class="anchor anchorWithStickyNavbar_fF9Z" id="isobject">isObject()<a href="#isobject" class="hash-link" aria-label="Direct link to isObject()" title="Direct link to isObject()">​</a></h3>
+<p>Determines whether a <code>thing</code> is an object for the purposes of RSJF.
+In this case, <code>thing</code> is an object if it has the type <code>object</code> but is NOT null, an array or a File.</p>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-39">Parameters<a href="#parameters-39" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
+<ul>
+<li>thing: any - The thing to check to see whether it is an object</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-40">Returns<a href="#returns-40" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
+<ul>
 <li>boolean: True if it is a non-null, non-array, non-File object</li>
+</ul>
+<h3 class="anchor anchorWithStickyNavbar_fF9Z" id="isrootschemat--any-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--any">isRootSchema&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any&gt;()<a href="#isrootschemat--any-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--any" class="hash-link" aria-label="Direct link to isRootSchema&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any&gt;()" title="Direct link to isRootSchema&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any&gt;()">​</a></h3>
+<p>Helper to check whether a JSON schema object is the root schema. The schema is a root schema with root <code>properties</code>
+key or a root <code>$ref</code> key. If the <code>schemaToCompare</code> has a root <code>oneOf</code> property, the function will
+return false. Else if <code>schemaToCompare</code> and <code>rootSchema</code> are the same object or equal, the function will return
+<code>true</code>. Else if the <code>rootSchema</code> has a $ref, it will be resolved using <code>schemaUtils.resolveSchema</code> utility. If the
+resolved schema matches the <code>schemaToCompare</code> the function will return <code>true</code>. Otherwise, it will return false.</p>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-40">Parameters<a href="#parameters-40" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
+<ul>
+<li>registry: Registry&lt;T, S, F&gt; - The <code>Registry</code> used to get the <code>rootSchema</code> and <code>schemaUtils</code></li>
+<li>schemaToCompare: S - The JSON schema object to check. If <code>schemaToCompare</code> is an root schema, the function will return true.</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-41">Returns<a href="#returns-41" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
+<ul>
+<li>boolean: True if the <code>uiSchema</code> describes a custom widget, false otherwise</li>
 </ul>
 <h3 class="anchor anchorWithStickyNavbar_fF9Z" id="labelvalue">labelValue()<a href="#labelvalue" class="hash-link" aria-label="Direct link to labelValue()" title="Direct link to labelValue()">​</a></h3>
 <p>Helper function that will return the value to use for a widget <code>label</code> based on <code>hideLabel</code>.
 The <code>fallback</code> is used as the return value from the function when <code>hideLabel</code> is true.
 Due to the implementation of theme components, it may be necessary to return something other than <code>undefined</code> to cause the theme component to not render a label.
 Some themes require may <code>false</code> and others may require an empty string.</p>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-39">Parameters<a href="#parameters-39" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-41">Parameters<a href="#parameters-41" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
 <ul>
 <li>
 <p>[label]: string | ReactElement | undefined - The label string or component to render when not hidden</p>
@@ -538,7 +563,7 @@ Some themes require may <code>false</code> and others may require an empty strin
 <p>[fallback]: undefined | false | &#x27;&#x27; - One of 3 values, <code>undefined</code> (the default), <code>false</code> or an empty string</p>
 </li>
 <li>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-40">Returns<a href="#returns-40" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-42">Returns<a href="#returns-42" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
 </li>
 <li>
 <p>string | boolean | undefined: <code>fallback</code> if <code>hideLabel</code> is true, otherwise <code>label</code></p>
@@ -546,11 +571,11 @@ Some themes require may <code>false</code> and others may require an empty strin
 </ul>
 <h3 class="anchor anchorWithStickyNavbar_fF9Z" id="localtoutc">localToUTC()<a href="#localtoutc" class="hash-link" aria-label="Direct link to localToUTC()" title="Direct link to localToUTC()">​</a></h3>
 <p>Converts a local Date string into a UTC date string</p>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-40">Parameters<a href="#parameters-40" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-42">Parameters<a href="#parameters-42" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
 <ul>
 <li>dateString: string - The string representation of a date as accepted by the <code>Date()</code> constructor</li>
 </ul>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-41">Returns<a href="#returns-41" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-43">Returns<a href="#returns-43" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
 <ul>
 <li>string | undefined: A UTC date string if <code>dateString</code> is truthy, otherwise undefined</li>
 </ul>
@@ -558,13 +583,13 @@ Some themes require may <code>false</code> and others may require an empty strin
 <p>Given a React JSON Schema Form registry or formContext object, return the value associated with <code>toLookup</code>.
 This might be contained within the lookup map in the formContext.
 If no such value exists, return the <code>fallback</code> value.</p>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-41">Parameters<a href="#parameters-41" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-43">Parameters<a href="#parameters-43" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
 <ul>
 <li>regOrFc: Registry&lt;T, S, F&gt; | Registry&lt;T, S, F&gt;[&#x27;formContext&#x27;] - The @rjsf registry or form context in which the lookup will occur</li>
 <li>toLookup: string - The name of the field in the lookup map in the form context to get the value for</li>
 <li>[fallback]: unknown - The fallback value to use if the form context does not contain a value for <code>toLookup</code></li>
 </ul>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-42">Returns<a href="#returns-42" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-44">Returns<a href="#returns-44" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
 <ul>
 <li>any: The value associated with <code>toLookup</code> in the form context or <code>fallback</code></li>
 </ul>
@@ -581,47 +606,58 @@ If no such value exists, return the <code>fallback</code> value.</p>
 </li>
 <li>scalars are overwritten/set by form data</li>
 </ul>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-42">Parameters<a href="#parameters-42" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-44">Parameters<a href="#parameters-44" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
 <ul>
 <li>[defaults]: T | undefined - The defaults to merge</li>
 <li>[formData]: T | undefined - The form data into which the defaults will be merged</li>
 <li>[mergeExtraArrayDefaults=false]: boolean - If true, any additional default array entries are appended onto the formData</li>
 <li>[defaultSupercedesUndefined=false]: boolean - If true, an explicit undefined value will be overwritten by the default value</li>
 </ul>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-43">Returns<a href="#returns-43" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-45">Returns<a href="#returns-45" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
 <ul>
 <li>T | undefined: The resulting merged form data with defaults</li>
 </ul>
 <h3 class="anchor anchorWithStickyNavbar_fF9Z" id="mergeobjects">mergeObjects()<a href="#mergeobjects" class="hash-link" aria-label="Direct link to mergeObjects()" title="Direct link to mergeObjects()">​</a></h3>
 <p>Recursively merge deeply nested objects.</p>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-43">Parameters<a href="#parameters-43" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-45">Parameters<a href="#parameters-45" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
 <ul>
 <li>obj1: GenericObjectType - The first object to merge</li>
 <li>obj2: GenericObjectType - The second object to merge</li>
 <li>[concatArrays=false]: boolean | &quot;preventDuplicates&quot; - Optional flag that, when true, will cause arrays to be concatenated. Use &quot;preventDuplicates&quot; to merge arrays in a manner that prevents any duplicate entries from being merged.</li>
 </ul>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-44">Returns<a href="#returns-44" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-46">Returns<a href="#returns-46" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
 <p>@returns - A new object that is the merge of the two given objects</p>
 <h3 class="anchor anchorWithStickyNavbar_fF9Z" id="mergeschemas">mergeSchemas()<a href="#mergeschemas" class="hash-link" aria-label="Direct link to mergeSchemas()" title="Direct link to mergeSchemas()">​</a></h3>
 <p>Recursively merge deeply nested schemas.
 The difference between mergeSchemas and mergeObjects is that mergeSchemas only concats arrays for values under the &#x27;required&#x27; keyword, and when it does, it doesn&#x27;t include duplicate values. NOTE: Uses shallow comparison for the duplicate checking.</p>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-44">Parameters<a href="#parameters-44" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-46">Parameters<a href="#parameters-46" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
 <ul>
 <li>obj1: GenericObjectType - The first object to merge</li>
 <li>obj2: GenericObjectType - The second object to merge</li>
 </ul>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-45">Returns<a href="#returns-45" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-47">Returns<a href="#returns-47" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
 <ul>
 <li>GenericObjectType: The merged schema object</li>
 </ul>
+<h3 class="anchor anchorWithStickyNavbar_fF9Z" id="optionalcontrolsid">optionalControlsId()<a href="#optionalcontrolsid" class="hash-link" aria-label="Direct link to optionalControlsId()" title="Direct link to optionalControlsId()">​</a></h3>
+<p>Return a consistent <code>id</code> for the optional data controls <code>element</code></p>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-47">Parameters<a href="#parameters-47" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
+<ul>
+<li>id: string - The id of the parent component for the option</li>
+<li>element: &#x27;Add&#x27; | &#x27;Msg&#x27; | &#x27;Remove&#x27; - The element type for which to generate the id</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-48">Returns<a href="#returns-48" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
+<ul>
+<li>string: The consistent id for the optional data controls element from the given <code>id</code> and <code>element</code> type</li>
+</ul>
 <h3 class="anchor anchorWithStickyNavbar_fF9Z" id="optionid">optionId()<a href="#optionid" class="hash-link" aria-label="Direct link to optionId()" title="Direct link to optionId()">​</a></h3>
 <p>Return a consistent <code>id</code> for the <code>optionIndex</code>s of a <code>Radio</code> or <code>Checkboxes</code> widget</p>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-45">Parameters<a href="#parameters-45" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-48">Parameters<a href="#parameters-48" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
 <ul>
 <li>id: string - The id of the parent component for the option</li>
 <li>optionIndex: number - The index of the option for which the id is desired</li>
 </ul>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-46">Returns<a href="#returns-46" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-49">Returns<a href="#returns-49" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
 <ul>
 <li>string: An id for the option index based on the parent <code>id</code></li>
 </ul>
@@ -643,12 +679,12 @@ objects containing <code>ui:title</code> then the UI schema values will replace 
 <p>NOTE: <code>enumNames</code> is deprecated and will be removed in a future major version of RJSF. Use the &quot;ui<!-- -->:enumNames<!-- -->&quot; property in the uiSchema instead.</p>
 </li>
 </ul>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-46">Parameters<a href="#parameters-46" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-49">Parameters<a href="#parameters-49" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
 <ul>
 <li>schema: S - The schema from which to extract the options list</li>
-<li>uiSchema: UiSchema&lt;T, S, F&gt; - The optional uiSchema from which to get alternate labels for the options</li>
+<li>[uiSchema]: UiSchema&lt;T, S, F&gt; - The optional uiSchema from which to get alternate labels for the options</li>
 </ul>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-47">Returns<a href="#returns-47" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-50">Returns<a href="#returns-50" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
 <ul>
 <li>{ schema?: S, label: string, value: any }: The list of options from the schema</li>
 </ul>
@@ -657,12 +693,12 @@ objects containing <code>ui:title</code> then the UI schema values will replace 
 If <code>order</code> is not an array, then the untouched <code>properties</code> list is returned.
 Otherwise <code>properties</code> is ordered per the <code>order</code> list.
 If <code>order</code> contains a &#x27;_&#x27; then any <code>properties</code> that are not mentioned explicity in <code>order</code> will be places in the location of the <code>_</code>.</p>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-47">Parameters<a href="#parameters-47" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-50">Parameters<a href="#parameters-50" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
 <ul>
 <li>properties: string[] - The list of property keys to be ordered</li>
 <li>order: string[] - An array of property keys to be ordered first, with an optional &#x27;*&#x27; property</li>
 </ul>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-48">Returns<a href="#returns-48" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-51">Returns<a href="#returns-51" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
 <ul>
 <li>string[]: A list with the <code>properties</code> ordered</li>
 </ul>
@@ -672,23 +708,23 @@ If <code>order</code> contains a &#x27;_&#x27; then any <code>properties</code> 
 </ul>
 <h3 class="anchor anchorWithStickyNavbar_fF9Z" id="pad">pad()<a href="#pad" class="hash-link" aria-label="Direct link to pad()" title="Direct link to pad()">​</a></h3>
 <p>Returns a string representation of the <code>num</code> that is padded with leading &quot;0&quot;s if necessary</p>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-48">Parameters<a href="#parameters-48" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-51">Parameters<a href="#parameters-51" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
 <ul>
 <li>num: number - The number to pad</li>
 <li>width: number - The width of the string at which no lead padding is necessary</li>
 </ul>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-49">Returns<a href="#returns-49" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-52">Returns<a href="#returns-52" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
 <ul>
 <li>string: The number converted to a string with leading zero padding if the number of digits is less than <code>width</code></li>
 </ul>
 <h3 class="anchor anchorWithStickyNavbar_fF9Z" id="parsedatestring">parseDateString()<a href="#parsedatestring" class="hash-link" aria-label="Direct link to parseDateString()" title="Direct link to parseDateString()">​</a></h3>
 <p>Parses the <code>dateString</code> into a <code>DateObject</code>, including the time information when <code>includeTime</code> is true</p>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-49">Parameters<a href="#parameters-49" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-52">Parameters<a href="#parameters-52" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
 <ul>
 <li>dateString: string - The date string to parse into a DateObject</li>
 <li>[includeTime=true]: boolean - Optional flag, if false, will not include the time data into the object</li>
 </ul>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-50">Returns<a href="#returns-50" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-53">Returns<a href="#returns-53" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
 <ul>
 <li>DateObject: The date string converted to a <code>DateObject</code></li>
 </ul>
@@ -698,23 +734,23 @@ If <code>order</code> contains a &#x27;_&#x27; then any <code>properties</code> 
 </ul>
 <h3 class="anchor anchorWithStickyNavbar_fF9Z" id="rangespecs-extends-strictrjsfschema--rjsfschema">rangeSpec&lt;S extends StrictRJSFSchema = RJSFSchema&gt;()<a href="#rangespecs-extends-strictrjsfschema--rjsfschema" class="hash-link" aria-label="Direct link to rangeSpec&lt;S extends StrictRJSFSchema = RJSFSchema&gt;()" title="Direct link to rangeSpec&lt;S extends StrictRJSFSchema = RJSFSchema&gt;()">​</a></h3>
 <p>Extracts the range spec information <code>{ step?: number, min?: number, max?: number }</code> that can be spread onto an HTML input from the range analog in the schema <code>{ multipleOf?: number, minimum?: number, maximum?: number }</code>.</p>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-50">Parameters<a href="#parameters-50" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-53">Parameters<a href="#parameters-53" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
 <ul>
 <li>schema: S - The schema from which to extract the range spec</li>
 </ul>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-51">Returns<a href="#returns-51" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-54">Returns<a href="#returns-54" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
 <ul>
 <li>RangeSpecType: A range specification from the schema</li>
 </ul>
 <h3 class="anchor anchorWithStickyNavbar_fF9Z" id="replacestringparameters">replaceStringParameters()<a href="#replacestringparameters" class="hash-link" aria-label="Direct link to replaceStringParameters()" title="Direct link to replaceStringParameters()">​</a></h3>
 <p>Potentially substitutes all replaceable parameters with the associated value(s) from the <code>params</code> if available.
 When a <code>params</code> array is provided, each value in the array is used to replace any of the replaceable parameters in the <code>inputString</code> using the <code>%1</code>, <code>%2</code>, etc. replacement specifiers.</p>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-51">Parameters<a href="#parameters-51" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-54">Parameters<a href="#parameters-54" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
 <ul>
 <li>inputString: string - The string which will be potentially updated with replacement parameters</li>
 <li>[params]: string[] - The optional list of replaceable parameter values to substitute into the english string</li>
 </ul>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-52">Returns<a href="#returns-52" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-55">Returns<a href="#returns-55" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
 <ul>
 <li>string: The updated string with any replacement specifiers replaced</li>
 </ul>
@@ -726,55 +762,70 @@ When a <code>params</code> array is provided, each value in the array is used to
 <li><code>schema.anyOf</code> or <code>schema.oneOf</code> has a single value which recursively returns true</li>
 <li><code>schema.allOf</code> has at least one value which recursively returns true</li>
 </ul>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-52">Parameters<a href="#parameters-52" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-55">Parameters<a href="#parameters-55" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
 <ul>
 <li>schema: S - The schema to check</li>
 </ul>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-53">Returns<a href="#returns-53" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-56">Returns<a href="#returns-56" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
 <ul>
 <li>boolean: True if the schema specifies a value that must be true, false otherwise</li>
 </ul>
 <h3 class="anchor anchorWithStickyNavbar_fF9Z" id="shouldrender">shouldRender()<a href="#shouldrender" class="hash-link" aria-label="Direct link to shouldRender()" title="Direct link to shouldRender()">​</a></h3>
 <p>Determines whether the given <code>component</code> should be rerendered by comparing its current set of props and state against the next set.
 If either of those two sets are not the same, then the component should be rerendered.</p>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-53">Parameters<a href="#parameters-53" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-56">Parameters<a href="#parameters-56" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
 <ul>
 <li>component: React.Component - A React component being checked</li>
 <li>nextProps: any - The next set of props against which to check</li>
 <li>nextState: any - The next set of state against which to check</li>
 </ul>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-54">Returns<a href="#returns-54" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-57">Returns<a href="#returns-57" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
 <ul>
 <li>True if boolean: the component should be re-rendered, false otherwise</li>
 </ul>
+<h3 class="anchor anchorWithStickyNavbar_fF9Z" id="shouldrenderoptionalfieldt--any-s-extends-strictrjsfschema--rjsfschemaf-extends-formcontexttype--any">shouldRenderOptionalField&lt;T = any, S extends StrictRJSFSchema = RJSFSchema,F extends FormContextType = any&gt;()<a href="#shouldrenderoptionalfieldt--any-s-extends-strictrjsfschema--rjsfschemaf-extends-formcontexttype--any" class="hash-link" aria-label="Direct link to shouldRenderOptionalField&lt;T = any, S extends StrictRJSFSchema = RJSFSchema,F extends FormContextType = any&gt;()" title="Direct link to shouldRenderOptionalField&lt;T = any, S extends StrictRJSFSchema = RJSFSchema,F extends FormContextType = any&gt;()">​</a></h3>
+<p>Determines whether the field information from the combination of <code>schema</code> and <code>required</code> along with the
+<code>enableOptionalDataFieldForType</code> settings from the global UI options in the <code>registry</code> all indicate that this field
+should be rendered with the Optional Data Controls UI.</p>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-57">Parameters<a href="#parameters-57" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
+<ul>
+<li>registry: Registry&lt;T, S, F&gt; - The <code>registry</code> object</li>
+<li>schema: S - The schema for the field</li>
+<li>required - Flag indicating whether the field is required</li>
+<li>[uiSchema]: UiSchema&lt;T, S, F&gt; - The optional uiSchema for the field</li>
+</ul>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-58">Returns<a href="#returns-58" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
+<ul>
+<li>boolean: True if the field should be rendered with the optional field UI, otherwise false</li>
+</ul>
 <h3 class="anchor anchorWithStickyNavbar_fF9Z" id="sortedjsonstringify">sortedJSONStringify()<a href="#sortedjsonstringify" class="hash-link" aria-label="Direct link to sortedJSONStringify()" title="Direct link to sortedJSONStringify()">​</a></h3>
 <p>Stringifies an <code>object</code>, sorts object fields in consistent order before stringifying it.</p>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-54">Parameters<a href="#parameters-54" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-58">Parameters<a href="#parameters-58" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
 <ul>
 <li>object: object - The object for which the sorted stringify is desired</li>
 </ul>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-55">Returns<a href="#returns-55" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-59">Returns<a href="#returns-59" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
 <ul>
 <li>string: The stringified object with keys sorted in a consistent order</li>
 </ul>
 <h3 class="anchor anchorWithStickyNavbar_fF9Z" id="titleid">titleId()<a href="#titleid" class="hash-link" aria-label="Direct link to titleId()" title="Direct link to titleId()">​</a></h3>
 <p>Return a consistent <code>id</code> for the field title element.</p>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-55">Parameters<a href="#parameters-55" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-59">Parameters<a href="#parameters-59" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
 <ul>
 <li>id: FieldPathId | string - Either simple string id or an FieldPathId from which to extract it</li>
 </ul>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-56">Returns<a href="#returns-56" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-60">Returns<a href="#returns-60" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
 <ul>
 <li>string: The consistent id for the field title element from the given <code>id</code></li>
 </ul>
 <h3 class="anchor anchorWithStickyNavbar_fF9Z" id="toconstants-extends-strictrjsfschema--rjsfschema">toConstant&lt;S extends StrictRJSFSchema = RJSFSchema&gt;()<a href="#toconstants-extends-strictrjsfschema--rjsfschema" class="hash-link" aria-label="Direct link to toConstant&lt;S extends StrictRJSFSchema = RJSFSchema&gt;()" title="Direct link to toConstant&lt;S extends StrictRJSFSchema = RJSFSchema&gt;()">​</a></h3>
 <p>Returns the constant value from the schema when it is either a single value enum or has a const key.
 Otherwise, throws an error.</p>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-56">Parameters<a href="#parameters-56" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-60">Parameters<a href="#parameters-60" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
 <ul>
 <li>schema: S - The schema from which to obtain the constant value</li>
 </ul>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-57">Returns<a href="#returns-57" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-61">Returns<a href="#returns-61" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
 <ul>
 <li>string | number | boolean: The constant value for the schema</li>
 </ul>
@@ -785,34 +836,34 @@ Otherwise, throws an error.</p>
 <h3 class="anchor anchorWithStickyNavbar_fF9Z" id="todatestring">toDateString()<a href="#todatestring" class="hash-link" aria-label="Direct link to toDateString()" title="Direct link to toDateString()">​</a></h3>
 <p>Returns a UTC date string for the given <code>dateObject</code>.
 If <code>time</code> is false, then the time portion of the string is removed.</p>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-57">Parameters<a href="#parameters-57" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-61">Parameters<a href="#parameters-61" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
 <ul>
 <li>dateObject: DateObject - The <code>DateObject</code> to convert to a date string</li>
 <li>[time=true]: boolean - Optional flag used to remove the time portion of the date string if false</li>
 </ul>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-58">Returns<a href="#returns-58" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-62">Returns<a href="#returns-62" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
 <ul>
 <li>string: The UTC date string</li>
 </ul>
 <h3 class="anchor anchorWithStickyNavbar_fF9Z" id="toerrorlistt--any">toErrorList&lt;T = any&gt;()<a href="#toerrorlistt--any" class="hash-link" aria-label="Direct link to toErrorList&lt;T = any&gt;()" title="Direct link to toErrorList&lt;T = any&gt;()">​</a></h3>
 <p>Converts an <code>errorSchema</code> into a list of <code>RJSFValidationErrors</code></p>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-58">Parameters<a href="#parameters-58" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-62">Parameters<a href="#parameters-62" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
 <ul>
 <li>errorSchema: ErrorSchema&lt;T&gt; - The <code>ErrorSchema</code> instance to convert</li>
 <li>[fieldPath=[]]: string[] | undefined - The current field path, defaults to [] if not specified</li>
 </ul>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-59">Returns<a href="#returns-59" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-63">Returns<a href="#returns-63" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
 <ul>
 <li>RJSFValidationErrors[]: The list of <code>RJSFValidationErrors</code> extracted from the <code>errorSchema</code></li>
 </ul>
 <h3 class="anchor anchorWithStickyNavbar_fF9Z" id="toerrorschemat--any">toErrorSchema&lt;T = any&gt;()<a href="#toerrorschemat--any" class="hash-link" aria-label="Direct link to toErrorSchema&lt;T = any&gt;()" title="Direct link to toErrorSchema&lt;T = any&gt;()">​</a></h3>
 <p>Transforms a RJSF validation errors list into an <code>ErrorSchema</code></p>
 <div class="language-ts codeBlockContainer_ZGJx theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_kX1v"><pre tabindex="0" class="prism-code language-ts codeBlock_TAPP thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_AdAo"><span class="token-line" style="color:#393A34"><span class="token keyword" style="color:#00009f">const</span><span class="token plain"> changesThis </span><span class="token operator" style="color:#393A34">=</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">[</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"> property</span><span class="token operator" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&#x27;.level1.level2[2].level3&#x27;</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> message</span><span class="token operator" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&#x27;err a&#x27;</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> stack</span><span class="token operator" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&#x27;.level1.level2[2].level3 err a&#x27;</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">}</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"> property</span><span class="token operator" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&#x27;.level1.level2[2].level3&#x27;</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> message</span><span class="token operator" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&#x27;err b&#x27;</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> stack</span><span class="token operator" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&#x27;.level1.level2[2].level3 err b&#x27;</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">}</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"> property</span><span class="token operator" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&#x27;.level1.level2[4].level3&#x27;</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> message</span><span class="token operator" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&#x27;err b&#x27;</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> stack</span><span class="token operator" style="color:#393A34">:</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&#x27;.level1.level2[4].level3 err b&#x27;</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">}</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">]</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token keyword" style="color:#00009f">const</span><span class="token plain"> intoThis </span><span class="token operator" style="color:#393A34">=</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  level1</span><span class="token operator" style="color:#393A34">:</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    level2</span><span class="token operator" style="color:#393A34">:</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">      </span><span class="token number" style="color:#36acaa">2</span><span class="token operator" style="color:#393A34">:</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"> level3</span><span class="token operator" style="color:#393A34">:</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"> errors</span><span class="token operator" style="color:#393A34">:</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">[</span><span class="token string" style="color:#e3116c">&#x27;err a&#x27;</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&#x27;err b&#x27;</span><span class="token punctuation" style="color:#393A34">]</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">}</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">}</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">      </span><span class="token number" style="color:#36acaa">4</span><span class="token operator" style="color:#393A34">:</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"> level3</span><span class="token operator" style="color:#393A34">:</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"> errors</span><span class="token operator" style="color:#393A34">:</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">[</span><span class="token string" style="color:#e3116c">&#x27;err b&#x27;</span><span class="token punctuation" style="color:#393A34">]</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">}</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">}</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">    </span><span class="token punctuation" style="color:#393A34">}</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain">  </span><span class="token punctuation" style="color:#393A34">}</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token punctuation" style="color:#393A34">}</span><span class="token punctuation" style="color:#393A34">;</span><br></span></code></pre></div></div>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-59">Parameters<a href="#parameters-59" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-63">Parameters<a href="#parameters-63" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
 <ul>
 <li>errors: RJSFValidationError[] - The list of RJSFValidationError objects</li>
 </ul>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-60">Returns<a href="#returns-60" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-64">Returns<a href="#returns-64" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
 <ul>
 <li>ErrorSchema&lt;T&gt;: The <code>ErrorSchema</code> built from the list of <code>RJSFValidationErrors</code></li>
 </ul>
@@ -821,63 +872,63 @@ If <code>time</code> is false, then the time portion of the string is removed.</
 of the parent path. Then the <code>ID_KEY</code> of the resulting <code>FieldPathId</code> is constructed from the <code>idPrefix</code> and
 <code>idSeparator</code> contained within the <code>globalFormOptions</code>. If <code>fieldPath</code> is passed as an empty string, it will simply
 generate the path from the <code>parentPath</code> (if provided) and the <code>idPrefix</code> and <code>idSeparator</code></p>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-60">Parameters<a href="#parameters-60" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-64">Parameters<a href="#parameters-64" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
 <ul>
 <li>fieldPath: string | number - The property name or array index of the current field element</li>
 <li>globalFormOptions: GlobalFormOptions - The <code>GlobalFormOptions</code> used to get the <code>idPrefix</code> and <code>idSeparator</code></li>
 <li>[parentPath]: FieldPathId | FieldPathList | undefined - The optional <code>FieldPathId</code> or <code>FieldPathList</code> of the parent element for this field element</li>
 </ul>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-61">Returns<a href="#returns-61" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-65">Returns<a href="#returns-65" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
 <ul>
 <li>FieldPathId: The <code>FieldPathId</code> for the given <code>fieldPath</code> and the optional <code>parentPathId</code></li>
 </ul>
 <h3 class="anchor anchorWithStickyNavbar_fF9Z" id="unwraperrorhandlert--any">unwrapErrorHandler&lt;T = any&gt;()<a href="#unwraperrorhandlert--any" class="hash-link" aria-label="Direct link to unwrapErrorHandler&lt;T = any&gt;()" title="Direct link to unwrapErrorHandler&lt;T = any&gt;()">​</a></h3>
 <p>Unwraps the <code>errorHandler</code> structure into the associated <code>ErrorSchema</code>, stripping the <code>addError()</code> functions from it</p>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-61">Parameters<a href="#parameters-61" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-65">Parameters<a href="#parameters-65" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
 <ul>
 <li>errorHandler: FormValidation&lt;T&gt; - The <code>FormValidation</code> error handling structure</li>
 </ul>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-62">Returns<a href="#returns-62" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-66">Returns<a href="#returns-66" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
 <ul>
 <li>ErrorSchema&lt;T&gt;: The <code>ErrorSchema</code> resulting from the stripping of the <code>addError()</code> function</li>
 </ul>
 <h3 class="anchor anchorWithStickyNavbar_fF9Z" id="utctolocal">utcToLocal()<a href="#utctolocal" class="hash-link" aria-label="Direct link to utcToLocal()" title="Direct link to utcToLocal()">​</a></h3>
 <p>Converts a UTC date string into a local Date format</p>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-62">Parameters<a href="#parameters-62" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-66">Parameters<a href="#parameters-66" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
 <ul>
 <li>jsonDate: string - A UTC date string</li>
 </ul>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-63">Returns<a href="#returns-63" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-67">Returns<a href="#returns-67" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
 <ul>
 <li>string: An empty string when <code>jsonDate</code> is falsey, otherwise a date string in local format</li>
 </ul>
 <h3 class="anchor anchorWithStickyNavbar_fF9Z" id="validationdatamerget--any">validationDataMerge&lt;T = any&gt;()<a href="#validationdatamerget--any" class="hash-link" aria-label="Direct link to validationDataMerge&lt;T = any&gt;()" title="Direct link to validationDataMerge&lt;T = any&gt;()">​</a></h3>
 <p>Merges the errors in <code>additionalErrorSchema</code> into the existing <code>validationData</code> by combining the hierarchies in the two <code>ErrorSchema</code>s and then appending the error list from the <code>additionalErrorSchema</code> obtained by calling <code>toErrorList()</code> on the <code>errors</code> in the <code>validationData</code>.
 If no <code>additionalErrorSchema</code> is passed, then <code>validationData</code> is returned.</p>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-63">Parameters<a href="#parameters-63" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-67">Parameters<a href="#parameters-67" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
 <ul>
 <li>validationData: ValidationData&lt;T&gt; - The current <code>ValidationData</code> into which to merge the additional errors</li>
 <li>[additionalErrorSchema]: ErrorSchema&lt;T&gt; | undefined - The optional additional set of errors in an <code>ErrorSchema</code></li>
 </ul>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-64">Returns<a href="#returns-64" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-68">Returns<a href="#returns-68" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
 <ul>
 <li>ValidationData&lt;T&gt;: The <code>validationData</code> with the additional errors from <code>additionalErrorSchema</code> merged into it, if provided.</li>
 </ul>
 <h3 class="anchor anchorWithStickyNavbar_fF9Z" id="withidrefprefixs-extends-strictrjsfschema--rjsfschema">withIdRefPrefix&lt;S extends StrictRJSFSchema = RJSFSchema&gt;()<a href="#withidrefprefixs-extends-strictrjsfschema--rjsfschema" class="hash-link" aria-label="Direct link to withIdRefPrefix&lt;S extends StrictRJSFSchema = RJSFSchema&gt;()" title="Direct link to withIdRefPrefix&lt;S extends StrictRJSFSchema = RJSFSchema&gt;()">​</a></h3>
 <p>Recursively prefixes all <code>$ref</code>s in a schema with the value of the <code>ROOT_SCHEMA_PREFIX</code> constant.
 This is used in isValid to make references to the rootSchema</p>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-64">Parameters<a href="#parameters-64" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-68">Parameters<a href="#parameters-68" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
 <ul>
 <li>schemaNode: S - The object node to which a <code>ROOT_SCHEMA_PREFIX</code> is added when a <code>$ref</code> is part of it</li>
 </ul>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-65">Returns<a href="#returns-65" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-69">Returns<a href="#returns-69" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
 <ul>
 <li>S: A copy of the <code>schemaNode</code> with updated <code>$ref</code>s</li>
 </ul>
 <h2 class="anchor anchorWithStickyNavbar_fF9Z" id="validator-based-utility-functions">Validator-based utility functions<a href="#validator-based-utility-functions" class="hash-link" aria-label="Direct link to Validator-based utility functions" title="Direct link to Validator-based utility functions">​</a></h2>
 <h3 class="anchor anchorWithStickyNavbar_fF9Z" id="findfieldinschemat--any-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--any">findFieldInSchema&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any&gt;()<a href="#findfieldinschemat--any-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--any" class="hash-link" aria-label="Direct link to findFieldInSchema&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any&gt;()" title="Direct link to findFieldInSchema&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any&gt;()">​</a></h3>
 <p>Returns the superset of <code>formData</code> that includes the given set updated to include any missing fields that have computed to have defaults provided in the <code>schema</code>.</p>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-65">Parameters<a href="#parameters-65" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-69">Parameters<a href="#parameters-69" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
 <ul>
 <li>validator: ValidatorType&lt;T, S, F&gt; - An implementation of the <code>ValidatorType</code> interface that will be forwarded to all the APIs</li>
 <li>rootSchema: S | undefined - The root schema that will be forwarded to all the APIs</li>
@@ -886,14 +937,14 @@ This is used in isValid to make references to the rootSchema</p>
 <li>[formData=<!-- -->]: T - The form data that is used to determine which anyOf/oneOf option to descend</li>
 <li>[experimental_customMergeAllOf]: Experimental_CustomMergeAllOf&lt;S&gt; - See <code>Form</code> documentation for the <a href="/react-jsonschema-form/docs/api-reference/form-props#experimental_custommergeallof">experimental_customMergeAllOf</a> prop</li>
 </ul>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-66">Returns<a href="#returns-66" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-70">Returns<a href="#returns-70" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
 <ul>
 <li>FoundFieldType&lt;S&gt;: An object that contains the field and its required state. If no field can be found then<code>{ field: undefined, isRequired: undefined }</code> is returned.</li>
 </ul>
 <h3 class="anchor anchorWithStickyNavbar_fF9Z" id="findselectedoptioninxxxoft--any-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--any">findSelectedOptionInXxxOf&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any&gt;()<a href="#findselectedoptioninxxxoft--any-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--any" class="hash-link" aria-label="Direct link to findSelectedOptionInXxxOf&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any&gt;()" title="Direct link to findSelectedOptionInXxxOf&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any&gt;()">​</a></h3>
 <p>Finds the option inside the <code>schema[&#x27;any/oneOf&#x27;]</code> list which has the <code>properties[selectorField].default</code> or <code>properties[selectorField].const</code> that matches the <code>formData[selectorField]</code> value.
 For the purposes of this function, <code>selectorField</code> is either <code>schema.discriminator.propertyName</code> or <code>fallbackField</code>.</p>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-66">Parameters<a href="#parameters-66" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-70">Parameters<a href="#parameters-70" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
 <ul>
 <li>validator: ValidatorType&lt;T, S, F&gt; - An implementation of the <code>ValidatorType</code> interface that will be forwarded to all the APIs</li>
 <li>rootSchema: S | undefined - The root schema that will be forwarded to all the APIs</li>
@@ -903,13 +954,13 @@ For the purposes of this function, <code>selectorField</code> is either <code>sc
 <li>[formData=<!-- -->]: T - The form data that is used to determine which anyOf/oneOf option to descend</li>
 <li>[experimental_customMergeAllOf]: Experimental_CustomMergeAllOf&lt;S&gt; - See <code>Form</code> documentation for the <a href="/react-jsonschema-form/docs/api-reference/form-props#experimental_custommergeallof">experimental_customMergeAllOf</a> prop</li>
 </ul>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-67">Returns<a href="#returns-67" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-71">Returns<a href="#returns-71" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
 <ul>
 <li>S | undefined: The anyOf/oneOf option that matches the selector field in the schema or undefined if nothing is selected</li>
 </ul>
 <h3 class="anchor anchorWithStickyNavbar_fF9Z" id="getdefaultformstatet--any-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--any">getDefaultFormState&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any&gt;()<a href="#getdefaultformstatet--any-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--any" class="hash-link" aria-label="Direct link to getDefaultFormState&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any&gt;()" title="Direct link to getDefaultFormState&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any&gt;()">​</a></h3>
 <p>Returns the superset of <code>formData</code> that includes the given set updated to include any missing fields that have computed to have defaults provided in the <code>schema</code>.</p>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-67">Parameters<a href="#parameters-67" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-71">Parameters<a href="#parameters-71" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
 <ul>
 <li>validator: ValidatorType&lt;T, S, F&gt; - An implementation of the <code>ValidatorType</code> interface that will be used when necessary</li>
 <li>theSchema: S - The schema for which the default state is desired</li>
@@ -920,13 +971,13 @@ For the purposes of this function, <code>selectorField</code> is either <code>sc
 <li>[experimental_customMergeAllOf]: Experimental_CustomMergeAllOf&lt;S&gt; - See <code>Form</code> documentation for the <a href="/react-jsonschema-form/docs/api-reference/form-props#experimental_custommergeallof">experimental_customMergeAllOf</a> prop</li>
 <li>[initialDefaultsGenerated]: boolean - Optional flag, indicates whether or not initial defaults have been generated</li>
 </ul>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-68">Returns<a href="#returns-68" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-72">Returns<a href="#returns-72" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
 <ul>
 <li>T: The resulting <code>formData</code> with all the defaults provided</li>
 </ul>
 <h3 class="anchor anchorWithStickyNavbar_fF9Z" id="getdisplaylabelt--any-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--any">getDisplayLabel&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any&gt;()<a href="#getdisplaylabelt--any-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--any" class="hash-link" aria-label="Direct link to getDisplayLabel&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any&gt;()" title="Direct link to getDisplayLabel&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any&gt;()">​</a></h3>
 <p>Determines whether the combination of <code>schema</code> and <code>uiSchema</code> properties indicates that the label for the <code>schema</code> should be displayed in a UI.</p>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-68">Parameters<a href="#parameters-68" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-72">Parameters<a href="#parameters-72" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
 <ul>
 <li>validator: ValidatorType&lt;T, S, F&gt; - An implementation of the <code>ValidatorType</code> interface that will be used when necessary</li>
 <li>schema: S - The schema for which the display label flag is desired</li>
@@ -934,7 +985,7 @@ For the purposes of this function, <code>selectorField</code> is either <code>sc
 <li>[rootSchema]: S | undefined - The root schema, used to primarily to look up <code>$ref</code>s</li>
 <li>[globalOptions=<!-- -->]: GlobalUISchemaOptions - The optional Global UI Schema from which to get any fallback <code>xxx</code> options</li>
 </ul>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-69">Returns<a href="#returns-69" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-73">Returns<a href="#returns-73" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
 <ul>
 <li>boolean: True if the label should be displayed or false if it should not</li>
 </ul>
@@ -942,7 +993,7 @@ For the purposes of this function, <code>selectorField</code> is either <code>sc
 <p>Determines which of the given <code>options</code> provided most closely matches the <code>formData</code>.
 Returns the index of the option that is valid and is the closest match, or 0 if there is no match.</p>
 <p>The closest match is determined using the number of matching properties, and more heavily favors options with matching readOnly, default, or const values.</p>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-69">Parameters<a href="#parameters-69" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-73">Parameters<a href="#parameters-73" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
 <ul>
 <li>validator: ValidatorType&lt;T, S, F&gt; - An implementation of the <code>ValidatorType</code> interface that will be used when necessary</li>
 <li>rootSchema: S - The root schema, used to primarily to look up <code>$ref</code>s</li>
@@ -952,13 +1003,13 @@ Returns the index of the option that is valid and is the closest match, or 0 if 
 <li>[discriminatorField]: string | undefined - The optional name of the field within the options object whose value is used to determine which option is selected</li>
 <li>[experimental_customMergeAllOf]: Experimental_CustomMergeAllOf&lt;S&gt; - See <code>Form</code> documentation for the <a href="/react-jsonschema-form/docs/api-reference/form-props#experimental_custommergeallof">experimental_customMergeAllOf</a> prop</li>
 </ul>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-70">Returns<a href="#returns-70" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-74">Returns<a href="#returns-74" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
 <ul>
 <li>number: The index of the option that is the closest match to the <code>formData</code> or the <code>selectedOption</code> if no match</li>
 </ul>
 <h3 class="anchor anchorWithStickyNavbar_fF9Z" id="getdisplaylabelt--any-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--any-1">getDisplayLabel&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any&gt;()<a href="#getdisplaylabelt--any-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--any-1" class="hash-link" aria-label="Direct link to getDisplayLabel&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any&gt;()" title="Direct link to getDisplayLabel&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any&gt;()">​</a></h3>
 <p>Determines whether the combination of <code>schema</code> and <code>uiSchema</code> properties indicates that the label for the <code>schema</code> should be displayed in a UI.</p>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-70">Parameters<a href="#parameters-70" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-74">Parameters<a href="#parameters-74" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
 <ul>
 <li>validator: ValidatorType&lt;T, S, F&gt; - An implementation of the <code>ValidatorType</code> interface that will be used when necessary</li>
 <li>schema: S - The schema for which the display label flag is desired</li>
@@ -967,13 +1018,13 @@ Returns the index of the option that is valid and is the closest match, or 0 if 
 <li>[globalOptions=<!-- -->]: GlobalUISchemaOptions - The optional Global UI Schema from which to get any fallback <code>xxx</code> options</li>
 <li>[experimental_customMergeAllOf]: Experimental_CustomMergeAllOf&lt;S&gt; - See <code>Form</code> documentation for the <a href="/react-jsonschema-form/docs/api-reference/form-props#experimental_custommergeallof">experimental_customMergeAllOf</a> prop</li>
 </ul>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-71">Returns<a href="#returns-71" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-75">Returns<a href="#returns-75" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
 <ul>
 <li>boolean: True if the label should be displayed or false if it should not</li>
 </ul>
 <h3 class="anchor anchorWithStickyNavbar_fF9Z" id="getfromschemat--any-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--any">getFromSchema&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any&gt;()<a href="#getfromschemat--any-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--any" class="hash-link" aria-label="Direct link to getFromSchema&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any&gt;()" title="Direct link to getFromSchema&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any&gt;()">​</a></h3>
 <p>Helper that acts like lodash&#x27;s <code>get</code> but additionally retrieves <code>$ref</code>s as needed to get the path for schemas containing potentially nested <code>$ref</code>s.</p>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-71">Parameters<a href="#parameters-71" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-75">Parameters<a href="#parameters-75" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
 <ul>
 <li>validator: ValidatorType&lt;T, S, F&gt; - An implementation of the <code>ValidatorType</code> interface that will be forwarded to all the APIs</li>
 <li>rootSchema: S - The root schema that will be forwarded to all the APIs</li>
@@ -982,14 +1033,14 @@ Returns the index of the option that is valid and is the closest match, or 0 if 
 <li>defaultValue: T | S - The value to return if a value is not found for the <code>pathList</code> path</li>
 <li>[experimental_customMergeAllOf]: Experimental_CustomMergeAllOf&lt;S&gt; - See <code>Form</code> documentation for the <a href="/react-jsonschema-form/docs/api-reference/form-props#experimental_custommergeallof">experimental_customMergeAllOf</a> prop</li>
 </ul>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-72">Returns<a href="#returns-72" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-76">Returns<a href="#returns-76" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
 <ul>
 <li>T | S: The inner schema from the <code>schema</code> for the given <code>path</code> or the <code>defaultValue</code> if not found</li>
 </ul>
 <h3 class="anchor anchorWithStickyNavbar_fF9Z" id="getfirstmatchingoptiont--any-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--any">getFirstMatchingOption&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any&gt;()<a href="#getfirstmatchingoptiont--any-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--any" class="hash-link" aria-label="Direct link to getFirstMatchingOption&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any&gt;()" title="Direct link to getFirstMatchingOption&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any&gt;()">​</a></h3>
 <p>Given the <code>formData</code> and list of <code>options</code>, attempts to find the index of the first option that matches the data.
 Always returns the first option if there is nothing that matches.</p>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-72">Parameters<a href="#parameters-72" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-76">Parameters<a href="#parameters-76" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
 <ul>
 <li>validator: ValidatorType&lt;T, S, F&gt; - An implementation of the <code>ValidatorType</code> interface that will be used when necessary</li>
 <li>[formData]: T | undefined - The current formData, if any, used to figure out a match</li>
@@ -997,33 +1048,33 @@ Always returns the first option if there is nothing that matches.</p>
 <li>rootSchema: S - The root schema, used to primarily to look up <code>$ref</code>s</li>
 <li>[discriminatorField]: string | undefined - The optional name of the field within the options object whose value is used to determine which option is selected</li>
 </ul>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-73">Returns<a href="#returns-73" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-77">Returns<a href="#returns-77" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
 <ul>
 <li>number: The index of the first matched option or 0 if none is available</li>
 </ul>
 <h3 class="anchor anchorWithStickyNavbar_fF9Z" id="ismultiselectt--any-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--any">isMultiSelect&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any&gt;()<a href="#ismultiselectt--any-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--any" class="hash-link" aria-label="Direct link to isMultiSelect&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any&gt;()" title="Direct link to isMultiSelect&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any&gt;()">​</a></h3>
 <p>Checks to see if the <code>schema</code> combination represents a multi-select</p>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-73">Parameters<a href="#parameters-73" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-77">Parameters<a href="#parameters-77" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
 <ul>
 <li>validator: ValidatorType&lt;T, S, F&gt; - An implementation of the <code>ValidatorType</code> interface that will be used when necessary</li>
 <li>schema: S - The schema for which check for a multi-select flag is desired</li>
 <li>[rootSchema]: S | undefined - The root schema, used to primarily to look up <code>$ref</code>s</li>
 <li>[experimental_customMergeAllOf]: Experimental_CustomMergeAllOf&lt;S&gt; - See <code>Form</code> documentation for the <a href="/react-jsonschema-form/docs/api-reference/form-props#experimental_custommergeallof">experimental_customMergeAllOf</a> prop</li>
 </ul>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-74">Returns<a href="#returns-74" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-78">Returns<a href="#returns-78" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
 <ul>
 <li>boolean: True if schema contains a multi-select, otherwise false</li>
 </ul>
 <h3 class="anchor anchorWithStickyNavbar_fF9Z" id="isselectt--any-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--any">isSelect&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any&gt;()<a href="#isselectt--any-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--any" class="hash-link" aria-label="Direct link to isSelect&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any&gt;()" title="Direct link to isSelect&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any&gt;()">​</a></h3>
 <p>Checks to see if the <code>schema</code> combination represents a select</p>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-74">Parameters<a href="#parameters-74" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-78">Parameters<a href="#parameters-78" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
 <ul>
 <li>validator: ValidatorType&lt;T, S, F&gt; - An implementation of the <code>ValidatorType</code> interface that will be used when necessary</li>
 <li>theSchema: S - The schema for which check for a select flag is desired</li>
 <li>[rootSchema]: S | undefined - The root schema, used to primarily to look up <code>$ref</code>s</li>
 <li>[experimental_customMergeAllOf]: Experimental_CustomMergeAllOf&lt;S&gt; - See <code>Form</code> documentation for the <a href="/react-jsonschema-form/docs/api-reference/form-props#experimental_custommergeallof">experimental_customMergeAllOf</a> prop</li>
 </ul>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-75">Returns<a href="#returns-75" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-79">Returns<a href="#returns-79" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
 <ul>
 <li>boolean: True if schema contains a select, otherwise false</li>
 </ul>
@@ -1031,7 +1082,7 @@ Always returns the first option if there is nothing that matches.</p>
 <p>Retrieves an expanded schema that has had all of its conditions, additional properties, references and dependencies
 resolved and merged into the <code>schema</code> given a <code>validator</code>, <code>rootSchema</code> and <code>rawFormData</code> that is used to do the
 potentially recursive resolution.</p>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-75">Parameters<a href="#parameters-75" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-79">Parameters<a href="#parameters-79" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
 <ul>
 <li>validator: ValidatorType&lt;T, S, F&gt; - An implementation of the <code>ValidatorType</code> interface that will be forwarded to all the APIs</li>
 <li>schema: S - The schema for which retrieving a schema is desired</li>
@@ -1039,7 +1090,7 @@ potentially recursive resolution.</p>
 <li>[rawFormData]: T | undefined - The current formData, if any, to assist retrieving a schema</li>
 <li>[experimental_customMergeAllOf]: Experimental_CustomMergeAllOf&lt;S&gt; - See <code>Form</code> documentation for the <a href="/react-jsonschema-form/docs/api-reference/form-props#experimental_custommergeallof">experimental_customMergeAllOf</a> prop</li>
 </ul>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-76">Returns<a href="#returns-76" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-80">Returns<a href="#returns-80" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
 <ul>
 <li>RJSFSchema: The schema having its conditions, additional properties, references and dependencies resolved</li>
 </ul>
@@ -1048,7 +1099,7 @@ potentially recursive resolution.</p>
 If the new schema does not contain any properties, then <code>undefined</code> is returned to clear all the form data.
 Due to the nature of schemas, this sanitization happens recursively for nested objects of data.
 Also, any properties in the old schema that are non-existent in the new schema are set to <code>undefined</code>.</p>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-76">Parameters<a href="#parameters-76" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-80">Parameters<a href="#parameters-80" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
 <ul>
 <li>validator: ValidatorType&lt;T, S, F&gt; - An implementation of the <code>ValidatorType</code> interface that will be used when necessary</li>
 <li>rootSchema: S - The root JSON schema of the entire form</li>
@@ -1057,13 +1108,13 @@ Also, any properties in the old schema that are non-existent in the new schema a
 <li>[data=<!-- -->]: any - The form data associated with the schema, defaulting to an empty object when undefined</li>
 <li>[experimental_customMergeAllOf]: Experimental_CustomMergeAllOf&lt;S&gt; - See <code>Form</code> documentation for the <a href="/react-jsonschema-form/docs/api-reference/form-props#experimental_custommergeallof">experimental_customMergeAllOf</a> prop</li>
 </ul>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-77">Returns<a href="#returns-77" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-81">Returns<a href="#returns-81" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
 <ul>
 <li>T: The new form data, with all the fields uniquely associated with the old schema set to <code>undefined</code>. Will return <code>undefined</code> if the new schema is not an object containing properties.</li>
 </ul>
 <h3 class="anchor anchorWithStickyNavbar_fF9Z" id="topathschemat--any-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--any">toPathSchema&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any&gt;()<a href="#topathschemat--any-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--any" class="hash-link" aria-label="Direct link to toPathSchema&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any&gt;()" title="Direct link to toPathSchema&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any&gt;()">​</a></h3>
 <p>Generates an <code>PathSchema</code> object for the <code>schema</code>, recursively</p>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-77">Parameters<a href="#parameters-77" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-81">Parameters<a href="#parameters-81" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
 <ul>
 <li>validator: ValidatorType&lt;T, S, F&gt; - An implementation of the <code>ValidatorType</code> interface that will be used when necessary</li>
 <li>schema: S - The schema for which the <code>PathSchema</code> is desired</li>
@@ -1072,7 +1123,7 @@ Also, any properties in the old schema that are non-existent in the new schema a
 <li>[formData]: T | undefined - The current formData, if any, to assist retrieving a schema</li>
 <li>[experimental_customMergeAllOf]: Experimental_CustomMergeAllOf&lt;S&gt; - See <code>Form</code> documentation for the <a href="/react-jsonschema-form/docs/api-reference/form-props#experimental_custommergeallof">experimental_customMergeAllOf</a> prop</li>
 </ul>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-78">Returns<a href="#returns-78" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-82">Returns<a href="#returns-82" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
 <ul>
 <li>PathSchema&lt;T&gt; - The <code>PathSchema</code> object for the <code>schema</code></li>
 </ul>
@@ -1080,12 +1131,12 @@ Also, any properties in the old schema that are non-existent in the new schema a
 <h3 class="anchor anchorWithStickyNavbar_fF9Z" id="createschemautilst--any-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--any">createSchemaUtils&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any&gt;()<a href="#createschemautilst--any-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--any" class="hash-link" aria-label="Direct link to createSchemaUtils&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any&gt;()" title="Direct link to createSchemaUtils&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any&gt;()">​</a></h3>
 <p>Creates a <code>SchemaUtilsType</code> interface that is based around the given <code>validator</code> and <code>rootSchema</code> parameters.
 The resulting interface implementation will forward the <code>validator</code> and <code>rootSchema</code> to all the wrapped APIs.</p>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-78">Parameters<a href="#parameters-78" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-82">Parameters<a href="#parameters-82" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
 <ul>
 <li>validator: ValidatorType&lt;T, S, F&gt; - an implementation of the <code>ValidatorType</code> interface that will be forwarded to all the APIs</li>
 <li>rootSchema: S - The root schema that will be forwarded to all the APIs</li>
 </ul>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-79">Returns<a href="#returns-79" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-83">Returns<a href="#returns-83" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
 <ul>
 <li>SchemaUtilsType&lt;T, S, F&gt; - An implementation of a <code>SchemaUtilsType</code> interface</li>
 </ul>
@@ -1094,11 +1145,11 @@ The resulting interface implementation will forward the <code>validator</code> a
 <p>The <code>ErrorSchemaBuilder&amp;lt;T&gt;</code> is used to build an <code>ErrorSchema&amp;lt;T&gt;</code> since the definition of the <code>ErrorSchema</code> type is designed for reading information rather than writing it.
 Use this class to add, replace or clear errors in an error schema by using either dotted path or an array of path names.
 Once you are done building the <code>ErrorSchema</code>, you can get the result and/or reset all the errors back to an initial set and start again.</p>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-79">Parameters<a href="#parameters-79" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-83">Parameters<a href="#parameters-83" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
 <ul>
 <li>[initialSchema]: ErrorSchema&lt;T&gt; | undefined - The optional set of initial errors, that will be cloned into the class</li>
 </ul>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-80">Returns<a href="#returns-80" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-84">Returns<a href="#returns-84" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
 <ul>
 <li>ErrorSchemaBuilder&lt;T&gt; - The instance of the <code>ErrorSchemaBuilder</code> class</li>
 </ul>
@@ -1108,48 +1159,48 @@ Once you are done building the <code>ErrorSchema</code>, you can get the result 
 <div class="language-ts codeBlockContainer_ZGJx theme-code-block" style="--prism-color:#393A34;--prism-background-color:#f6f8fa"><div class="codeBlockContent_kX1v"><pre tabindex="0" class="prism-code language-ts codeBlock_TAPP thin-scrollbar" style="color:#393A34;background-color:#f6f8fa"><code class="codeBlockLines_AdAo"><span class="token-line" style="color:#393A34"><span class="token keyword" style="color:#00009f">import</span><span class="token plain"> </span><span class="token punctuation" style="color:#393A34">{</span><span class="token plain"> ErrorSchemaBuilder</span><span class="token punctuation" style="color:#393A34">,</span><span class="token plain"> ErrorSchema </span><span class="token punctuation" style="color:#393A34">}</span><span class="token plain"> </span><span class="token keyword" style="color:#00009f">from</span><span class="token plain"> </span><span class="token string" style="color:#e3116c">&quot;@rjsf/utils&quot;</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token keyword" style="color:#00009f">const</span><span class="token plain"> builder </span><span class="token operator" style="color:#393A34">=</span><span class="token plain"> </span><span class="token keyword" style="color:#00009f">new</span><span class="token plain"> </span><span class="token class-name">ErrorSchemaBuilder</span><span class="token punctuation" style="color:#393A34">(</span><span class="token punctuation" style="color:#393A34">)</span><span class="token punctuation" style="color:#393A34">;</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token comment" style="color:#999988;font-style:italic">// Do some work using the builder</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token operator" style="color:#393A34">...</span><span class="token plain"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain" style="display:inline-block"></span><br></span><span class="token-line" style="color:#393A34"><span class="token plain"></span><span class="token keyword" style="color:#00009f">const</span><span class="token plain"> errorSchema</span><span class="token operator" style="color:#393A34">:</span><span class="token plain"> ErrorSchema </span><span class="token operator" style="color:#393A34">=</span><span class="token plain"> builder</span><span class="token punctuation" style="color:#393A34">.</span><span class="token plain">ErrorSchema</span><span class="token punctuation" style="color:#393A34">;</span><br></span></code></pre></div></div>
 <h3 class="anchor anchorWithStickyNavbar_fF9Z" id="resetallerrors">resetAllErrors()<a href="#resetallerrors" class="hash-link" aria-label="Direct link to resetAllErrors()" title="Direct link to resetAllErrors()">​</a></h3>
 <p>Resets all errors in the <code>ErrorSchemaBuilder</code> back to the <code>initialSchema</code> if provided, otherwise an empty set.</p>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-80">Parameters<a href="#parameters-80" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-84">Parameters<a href="#parameters-84" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
 <ul>
 <li>[initialSchema]: ErrorSchema&lt;T&gt; | undefined - The optional set of initial errors, that will be cloned into the class</li>
 </ul>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-81">Returns<a href="#returns-81" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-85">Returns<a href="#returns-85" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
 <ul>
 <li>ErrorSchemaBuilder&lt;T&gt; - The instance of the <code>ErrorSchemaBuilder</code> class</li>
 </ul>
 <h3 class="anchor anchorWithStickyNavbar_fF9Z" id="adderrors">addErrors()<a href="#adderrors" class="hash-link" aria-label="Direct link to addErrors()" title="Direct link to addErrors()">​</a></h3>
 <p>Adds the <code>errorOrList</code> to the list of errors in the <code>ErrorSchema</code> at either the root level or the location within the schema described by the <code>pathOfError</code>.
 For more information about how to specify the path see the <a href="https://github.com/wix/eslint-plugin-lodash/blob/master/docs/rules/path-style.md" target="_blank" rel="noopener noreferrer">eslint lodash plugin docs</a>.</p>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-81">Parameters<a href="#parameters-81" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-85">Parameters<a href="#parameters-85" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
 <ul>
 <li>errorOrList: string | string[] - The error or list of errors to add into the <code>ErrorSchema</code></li>
 <li>[pathOfError]: string | (string | number)[] | undefined - The optional path into the <code>ErrorSchema</code> at which to add the error(s)</li>
 </ul>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-82">Returns<a href="#returns-82" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-86">Returns<a href="#returns-86" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
 <ul>
 <li>ErrorSchemaBuilder&lt;T&gt; - The instance of the <code>ErrorSchemaBuilder</code> class</li>
 </ul>
 <h3 class="anchor anchorWithStickyNavbar_fF9Z" id="seterrors">setErrors()<a href="#seterrors" class="hash-link" aria-label="Direct link to setErrors()" title="Direct link to setErrors()">​</a></h3>
 <p>Sets/replaces the <code>errorOrList</code> as the error(s) in the <code>ErrorSchema</code> at either the root level or the location within the schema described by the <code>pathOfError</code>.
 For more information about how to specify the path see the <a href="https://github.com/wix/eslint-plugin-lodash/blob/master/docs/rules/path-style.md" target="_blank" rel="noopener noreferrer">eslint lodash plugin docs</a>.</p>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-82">Parameters<a href="#parameters-82" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-86">Parameters<a href="#parameters-86" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
 <ul>
 <li>errorOrList: string | string[] - The error or list of errors to add into the <code>ErrorSchema</code></li>
 <li>[pathOfError]: string | (string | number)[] | undefined - The optional path into the <code>ErrorSchema</code> at which to add the error(s)</li>
 </ul>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-83">Returns<a href="#returns-83" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-87">Returns<a href="#returns-87" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
 <ul>
 <li>ErrorSchemaBuilder&lt;T&gt; - The instance of the <code>ErrorSchemaBuilder</code> class</li>
 </ul>
 <h3 class="anchor anchorWithStickyNavbar_fF9Z" id="clearerrors">clearErrors()<a href="#clearerrors" class="hash-link" aria-label="Direct link to clearErrors()" title="Direct link to clearErrors()">​</a></h3>
 <p>Clears the error(s) in the <code>ErrorSchema</code> at either the root level or the location within the schema described by the <code>pathOfError</code>.
 For more information about how to specify the path see the <a href="https://github.com/wix/eslint-plugin-lodash/blob/master/docs/rules/path-style.md" target="_blank" rel="noopener noreferrer">eslint lodash plugin docs</a>.</p>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-83">Parameters<a href="#parameters-83" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="parameters-87">Parameters<a href="#parameters-87" class="hash-link" aria-label="Direct link to Parameters" title="Direct link to Parameters">​</a></h4>
 <ul>
 <li>[pathOfError]: string | (string | number)[] | undefined - The optional path into the <code>ErrorSchema</code> at which to add the error(s)</li>
 </ul>
-<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-84">Returns<a href="#returns-84" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
+<h4 class="anchor anchorWithStickyNavbar_fF9Z" id="returns-88">Returns<a href="#returns-88" class="hash-link" aria-label="Direct link to Returns" title="Direct link to Returns">​</a></h4>
 <ul>
 <li>ErrorSchemaBuilder&lt;T&gt; - The instance of the <code>ErrorSchemaBuilder</code> class</li>
-</ul></div><footer class="theme-doc-footer docusaurus-mt-lg"><div class="row margin-top--sm theme-doc-footer-edit-meta-row"><div class="col"><a href="https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/docs/docs/api-reference/utility-functions.md" target="_blank" rel="noopener noreferrer" class="theme-edit-this-page"><svg fill="currentColor" height="20" width="20" viewBox="0 0 40 40" class="iconEdit_UohW" aria-hidden="true"><g><path d="m34.5 11.7l-3 3.1-6.3-6.3 3.1-3q0.5-0.5 1.2-0.5t1.1 0.5l3.9 3.9q0.5 0.4 0.5 1.1t-0.5 1.2z m-29.5 17.1l18.4-18.5 6.3 6.3-18.4 18.4h-6.3v-6.2z"></path></g></svg>Edit this page</a></div><div class="col lastUpdated_g62E"></div></div></footer></article><nav class="docusaurus-mt-lg pagination-nav" aria-label="Docs pages"><a class="pagination-nav__link pagination-nav__link--prev" href="/react-jsonschema-form/docs/api-reference/uiSchema"><div class="pagination-nav__sublabel">Previous</div><div class="pagination-nav__label">uiSchema</div></a><a class="pagination-nav__link pagination-nav__link--next" href="/react-jsonschema-form/docs/api-reference/validator-ajv8"><div class="pagination-nav__sublabel">Next</div><div class="pagination-nav__label">@rjsf/validator-ajv8 APIs</div></a></nav></div></div><div class="col col--3"><div class="tableOfContents_TN1Q thin-scrollbar theme-doc-toc-desktop"><ul class="table-of-contents table-of-contents__left-border"><li><a href="#constants" class="table-of-contents__link toc-highlight">Constants</a></li><li><a href="#types" class="table-of-contents__link toc-highlight">Types</a></li><li><a href="#enums" class="table-of-contents__link toc-highlight">Enums</a></li><li><a href="#non-validator-utility-functions" class="table-of-contents__link toc-highlight">Non-Validator utility functions</a><ul><li><a href="#allowadditionalitems" class="table-of-contents__link toc-highlight">allowAdditionalItems()</a></li><li><a href="#ariadescribedbyids" class="table-of-contents__link toc-highlight">ariaDescribedByIds()</a></li><li><a href="#asnumber" class="table-of-contents__link toc-highlight">asNumber()</a></li><li><a href="#buttonid" class="table-of-contents__link toc-highlight">buttonId()</a></li><li><a href="#canexpandt--any-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--any" class="table-of-contents__link toc-highlight">canExpand&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any&gt;()</a></li><li><a href="#createerrorhandlert--any" class="table-of-contents__link toc-highlight">createErrorHandler&lt;T = any&gt;()</a></li><li><a href="#datauritoblob" class="table-of-contents__link toc-highlight">dataURItoBlob()</a></li><li><a href="#daterangeoptionss-extends-strictrjsfschema--rjsfschema" class="table-of-contents__link toc-highlight">dateRangeOptions&lt;S extends StrictRJSFSchema = RJSFSchema&gt;()</a></li><li><a href="#deepequals" class="table-of-contents__link toc-highlight">deepEquals()</a></li><li><a href="#descriptionid" class="table-of-contents__link toc-highlight">descriptionId()</a></li><li><a href="#englishstringtranslator" class="table-of-contents__link toc-highlight">englishStringTranslator()</a></li><li><a href="#enumoptionsdeselectvalues-extends-strictrjsfschema--rjsfschema" class="table-of-contents__link toc-highlight">enumOptionsDeselectValue&lt;S extends StrictRJSFSchema = RJSFSchema&gt;()</a></li><li><a href="#enumoptionsindexforvalues-extends-strictrjsfschema--rjsfschema" class="table-of-contents__link toc-highlight">enumOptionsIndexForValue&lt;S extends StrictRJSFSchema = RJSFSchema&gt;()</a></li><li><a href="#enumoptionsisselecteds-extends-strictrjsfschema--rjsfschema" class="table-of-contents__link toc-highlight">enumOptionsIsSelected&lt;S extends StrictRJSFSchema = RJSFSchema&gt;()</a></li><li><a href="#enumoptionsselectvalues-extends-strictrjsfschema--rjsfschema" class="table-of-contents__link toc-highlight">enumOptionsSelectValue&lt;S extends StrictRJSFSchema = RJSFSchema&gt;()</a></li><li><a href="#enumoptionsvalueforindexs-extends-strictrjsfschema--rjsfschema" class="table-of-contents__link toc-highlight">enumOptionsValueForIndex&lt;S extends StrictRJSFSchema = RJSFSchema&gt;()</a></li><li><a href="#errorid" class="table-of-contents__link toc-highlight">errorId()</a></li><li><a href="#examplesid" class="table-of-contents__link toc-highlight">examplesId()</a></li><li><a href="#findschemadefinitions-extends-strictrjsfschema--rjsfschema" class="table-of-contents__link toc-highlight">findSchemaDefinition&lt;S extends StrictRJSFSchema = RJSFSchema&gt;()</a></li><li><a href="#getchangedfieldsa-unknown-b-unknown" class="table-of-contents__link toc-highlight">getChangedFields(a: unknown, b: unknown)</a></li><li><a href="#getdiscriminatorfieldfromschemas-extends-strictrjsfschema--rjsfschema" class="table-of-contents__link toc-highlight">getDiscriminatorFieldFromSchema&lt;S extends StrictRJSFSchema = RJSFSchema&gt;()</a></li><li><a href="#getdateelementprops" class="table-of-contents__link toc-highlight">getDateElementProps()</a></li><li><a href="#getinputpropst--any-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--any" class="table-of-contents__link toc-highlight">getInputProps&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any&gt;()</a></li><li><a href="#getoptionmatchingsimplediscriminator" class="table-of-contents__link toc-highlight">getOptionMatchingSimpleDiscriminator()</a></li><li><a href="#getschematype" class="table-of-contents__link toc-highlight">getSchemaType()</a></li><li><a href="#getsubmitbuttonoptionst--any-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--any" class="table-of-contents__link toc-highlight">getSubmitButtonOptions&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any&gt;()</a></li><li><a href="#gettemplatename-extends-keyof-templatestypet-s-f-t--any-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--any" class="table-of-contents__link toc-highlight">getTemplate&lt;Name extends keyof TemplatesType&lt;T, S, F&gt;, T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any&gt;()</a></li><li><a href="#gettestids" class="table-of-contents__link toc-highlight">getTestIds()</a></li><li><a href="#getuioptionst--any-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--any" class="table-of-contents__link toc-highlight">getUiOptions&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any&gt;()</a></li><li><a href="#getwidgett--any-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--any" class="table-of-contents__link toc-highlight">getWidget&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any&gt;()</a></li><li><a href="#hashobject" class="table-of-contents__link toc-highlight">hashObject()</a></li><li><a href="#hashstring" class="table-of-contents__link toc-highlight">hashString()</a></li><li><a href="#guesstype" class="table-of-contents__link toc-highlight">guessType()</a></li><li><a href="#hashforschemas-extends-strictrjsfschema--rjsfschema" class="table-of-contents__link toc-highlight">hashForSchema&lt;S extends StrictRJSFSchema = RJSFSchema&gt;()</a></li><li><a href="#haswidgett--any-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--any" class="table-of-contents__link toc-highlight">hasWidget&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any&gt;()</a></li><li><a href="#helpid" class="table-of-contents__link toc-highlight">helpId()</a></li><li><a href="#isconstants-extends-strictrjsfschema--rjsfschema" class="table-of-contents__link toc-highlight">isConstant&lt;S extends StrictRJSFSchema = RJSFSchema&gt;()</a></li><li><a href="#iscustomwidgett--any-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--any" class="table-of-contents__link toc-highlight">isCustomWidget&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any&gt;()</a></li><li><a href="#isfixeditemss-extends-strictrjsfschema--rjsfschema" class="table-of-contents__link toc-highlight">isFixedItems&lt;S extends StrictRJSFSchema = RJSFSchema&gt;()</a></li><li><a href="#isobject" class="table-of-contents__link toc-highlight">isObject()</a></li><li><a href="#labelvalue" class="table-of-contents__link toc-highlight">labelValue()</a></li><li><a href="#localtoutc" class="table-of-contents__link toc-highlight">localToUTC()</a></li><li><a href="#lookupfromformcontextt--any-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--any" class="table-of-contents__link toc-highlight">lookupFromFormContext&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any&gt;()</a></li><li><a href="#mergedefaultswithformdatat--any" class="table-of-contents__link toc-highlight">mergeDefaultsWithFormData&lt;T = any&gt;()</a></li><li><a href="#mergeobjects" class="table-of-contents__link toc-highlight">mergeObjects()</a></li><li><a href="#mergeschemas" class="table-of-contents__link toc-highlight">mergeSchemas()</a></li><li><a href="#optionid" class="table-of-contents__link toc-highlight">optionId()</a></li><li><a href="#optionslistt--any-s-extends-strictrjsfschema--rjsfschemaf-extends-formcontexttype--any" class="table-of-contents__link toc-highlight">optionsList&lt;T = any, S extends StrictRJSFSchema = RJSFSchema,F extends FormContextType = any&gt;()</a></li><li><a href="#orderproperties" class="table-of-contents__link toc-highlight">orderProperties()</a></li><li><a href="#pad" class="table-of-contents__link toc-highlight">pad()</a></li><li><a href="#parsedatestring" class="table-of-contents__link toc-highlight">parseDateString()</a></li><li><a href="#rangespecs-extends-strictrjsfschema--rjsfschema" class="table-of-contents__link toc-highlight">rangeSpec&lt;S extends StrictRJSFSchema = RJSFSchema&gt;()</a></li><li><a href="#replacestringparameters" class="table-of-contents__link toc-highlight">replaceStringParameters()</a></li><li><a href="#schemarequirestruevalues-extends-strictrjsfschema--rjsfschema" class="table-of-contents__link toc-highlight">schemaRequiresTrueValue&lt;S extends StrictRJSFSchema = RJSFSchema&gt;()</a></li><li><a href="#shouldrender" class="table-of-contents__link toc-highlight">shouldRender()</a></li><li><a href="#sortedjsonstringify" class="table-of-contents__link toc-highlight">sortedJSONStringify()</a></li><li><a href="#titleid" class="table-of-contents__link toc-highlight">titleId()</a></li><li><a href="#toconstants-extends-strictrjsfschema--rjsfschema" class="table-of-contents__link toc-highlight">toConstant&lt;S extends StrictRJSFSchema = RJSFSchema&gt;()</a></li><li><a href="#todatestring" class="table-of-contents__link toc-highlight">toDateString()</a></li><li><a href="#toerrorlistt--any" class="table-of-contents__link toc-highlight">toErrorList&lt;T = any&gt;()</a></li><li><a href="#toerrorschemat--any" class="table-of-contents__link toc-highlight">toErrorSchema&lt;T = any&gt;()</a></li><li><a href="#tofieldpathid" class="table-of-contents__link toc-highlight">toFieldPathId()</a></li><li><a href="#unwraperrorhandlert--any" class="table-of-contents__link toc-highlight">unwrapErrorHandler&lt;T = any&gt;()</a></li><li><a href="#utctolocal" class="table-of-contents__link toc-highlight">utcToLocal()</a></li><li><a href="#validationdatamerget--any" class="table-of-contents__link toc-highlight">validationDataMerge&lt;T = any&gt;()</a></li><li><a href="#withidrefprefixs-extends-strictrjsfschema--rjsfschema" class="table-of-contents__link toc-highlight">withIdRefPrefix&lt;S extends StrictRJSFSchema = RJSFSchema&gt;()</a></li></ul></li><li><a href="#validator-based-utility-functions" class="table-of-contents__link toc-highlight">Validator-based utility functions</a><ul><li><a href="#findfieldinschemat--any-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--any" class="table-of-contents__link toc-highlight">findFieldInSchema&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any&gt;()</a></li><li><a href="#findselectedoptioninxxxoft--any-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--any" class="table-of-contents__link toc-highlight">findSelectedOptionInXxxOf&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any&gt;()</a></li><li><a href="#getdefaultformstatet--any-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--any" class="table-of-contents__link toc-highlight">getDefaultFormState&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any&gt;()</a></li><li><a href="#getdisplaylabelt--any-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--any" class="table-of-contents__link toc-highlight">getDisplayLabel&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any&gt;()</a></li><li><a href="#getclosestmatchingoptiont--any-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--any" class="table-of-contents__link toc-highlight">getClosestMatchingOption&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any&gt;()</a></li><li><a href="#getdisplaylabelt--any-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--any-1" class="table-of-contents__link toc-highlight">getDisplayLabel&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any&gt;()</a></li><li><a href="#getfromschemat--any-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--any" class="table-of-contents__link toc-highlight">getFromSchema&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any&gt;()</a></li><li><a href="#getfirstmatchingoptiont--any-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--any" class="table-of-contents__link toc-highlight">getFirstMatchingOption&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any&gt;()</a></li><li><a href="#ismultiselectt--any-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--any" class="table-of-contents__link toc-highlight">isMultiSelect&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any&gt;()</a></li><li><a href="#isselectt--any-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--any" class="table-of-contents__link toc-highlight">isSelect&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any&gt;()</a></li><li><a href="#retrieveschemat--any-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--any" class="table-of-contents__link toc-highlight">retrieveSchema&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any&gt;()</a></li><li><a href="#sanitizedatafornewschemat--any-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--any" class="table-of-contents__link toc-highlight">sanitizeDataForNewSchema&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any&gt;()</a></li><li><a href="#topathschemat--any-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--any" class="table-of-contents__link toc-highlight">toPathSchema&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any&gt;()</a></li></ul></li><li><a href="#schema-utils-creation-function" class="table-of-contents__link toc-highlight">Schema utils creation function</a><ul><li><a href="#createschemautilst--any-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--any" class="table-of-contents__link toc-highlight">createSchemaUtils&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any&gt;()</a></li></ul></li><li><a href="#errorschema-builder-class" class="table-of-contents__link toc-highlight">ErrorSchema builder class</a><ul><li><a href="#errorschemabuildert--anyinitialschema-errorschemat-constructor" class="table-of-contents__link toc-highlight">ErrorSchemaBuilder&lt;T = any&gt;(initialSchema?: ErrorSchema&lt;T&gt;) constructor</a></li><li><a href="#errorschema-getter-function" class="table-of-contents__link toc-highlight">ErrorSchema getter function</a></li><li><a href="#resetallerrors" class="table-of-contents__link toc-highlight">resetAllErrors()</a></li><li><a href="#adderrors" class="table-of-contents__link toc-highlight">addErrors()</a></li><li><a href="#seterrors" class="table-of-contents__link toc-highlight">setErrors()</a></li><li><a href="#clearerrors" class="table-of-contents__link toc-highlight">clearErrors()</a></li></ul></li></ul></div></div></div></div></main></div></div></div><footer class="theme-layout-footer footer footer--dark"><div class="container container-fluid"><div class="row footer__links"><div class="theme-layout-footer-column col footer__col"><div class="footer__title">Docs</div><ul class="footer__items clean-list"><li class="footer__item"><a class="footer__link-item" href="/react-jsonschema-form/docs/quickstart">Quickstart</a></li><li class="footer__item"><a class="footer__link-item" href="/react-jsonschema-form/docs/api-reference">API Reference</a></li></ul></div><div class="theme-layout-footer-column col footer__col"><div class="footer__title">Community</div><ul class="footer__items clean-list"><li class="footer__item"><a href="https://github.com/rjsf-team/react-jsonschema-form" target="_blank" rel="noopener noreferrer" class="footer__link-item">GitHub<svg width="13.5" height="13.5" aria-hidden="true" class="iconExternalLink_awgD"><use href="#theme-svg-external-link"></use></svg></a></li><li class="footer__item"><a href="https://discord.gg/fdZm2JZJrX" target="_blank" rel="noopener noreferrer" class="footer__link-item">Discord<svg width="13.5" height="13.5" aria-hidden="true" class="iconExternalLink_awgD"><use href="#theme-svg-external-link"></use></svg></a></li></ul></div></div><div class="footer__bottom text--center"><div class="footer__copyright">Copyright © 2025. Built with Docusaurus.</div></div></div></footer></div>
+</ul></div><footer class="theme-doc-footer docusaurus-mt-lg"><div class="row margin-top--sm theme-doc-footer-edit-meta-row"><div class="col"><a href="https://github.com/rjsf-team/react-jsonschema-form/tree/main/packages/docs/docs/api-reference/utility-functions.md" target="_blank" rel="noopener noreferrer" class="theme-edit-this-page"><svg fill="currentColor" height="20" width="20" viewBox="0 0 40 40" class="iconEdit_UohW" aria-hidden="true"><g><path d="m34.5 11.7l-3 3.1-6.3-6.3 3.1-3q0.5-0.5 1.2-0.5t1.1 0.5l3.9 3.9q0.5 0.4 0.5 1.1t-0.5 1.2z m-29.5 17.1l18.4-18.5 6.3 6.3-18.4 18.4h-6.3v-6.2z"></path></g></svg>Edit this page</a></div><div class="col lastUpdated_g62E"></div></div></footer></article><nav class="docusaurus-mt-lg pagination-nav" aria-label="Docs pages"><a class="pagination-nav__link pagination-nav__link--prev" href="/react-jsonschema-form/docs/api-reference/uiSchema"><div class="pagination-nav__sublabel">Previous</div><div class="pagination-nav__label">uiSchema</div></a><a class="pagination-nav__link pagination-nav__link--next" href="/react-jsonschema-form/docs/api-reference/validator-ajv8"><div class="pagination-nav__sublabel">Next</div><div class="pagination-nav__label">@rjsf/validator-ajv8 APIs</div></a></nav></div></div><div class="col col--3"><div class="tableOfContents_TN1Q thin-scrollbar theme-doc-toc-desktop"><ul class="table-of-contents table-of-contents__left-border"><li><a href="#constants" class="table-of-contents__link toc-highlight">Constants</a></li><li><a href="#types" class="table-of-contents__link toc-highlight">Types</a></li><li><a href="#enums" class="table-of-contents__link toc-highlight">Enums</a></li><li><a href="#non-validator-utility-functions" class="table-of-contents__link toc-highlight">Non-Validator utility functions</a><ul><li><a href="#allowadditionalitems" class="table-of-contents__link toc-highlight">allowAdditionalItems()</a></li><li><a href="#ariadescribedbyids" class="table-of-contents__link toc-highlight">ariaDescribedByIds()</a></li><li><a href="#asnumber" class="table-of-contents__link toc-highlight">asNumber()</a></li><li><a href="#buttonid" class="table-of-contents__link toc-highlight">buttonId()</a></li><li><a href="#canexpandt--any-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--any" class="table-of-contents__link toc-highlight">canExpand&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any&gt;()</a></li><li><a href="#createerrorhandlert--any" class="table-of-contents__link toc-highlight">createErrorHandler&lt;T = any&gt;()</a></li><li><a href="#datauritoblob" class="table-of-contents__link toc-highlight">dataURItoBlob()</a></li><li><a href="#daterangeoptionss-extends-strictrjsfschema--rjsfschema" class="table-of-contents__link toc-highlight">dateRangeOptions&lt;S extends StrictRJSFSchema = RJSFSchema&gt;()</a></li><li><a href="#deepequals" class="table-of-contents__link toc-highlight">deepEquals()</a></li><li><a href="#descriptionid" class="table-of-contents__link toc-highlight">descriptionId()</a></li><li><a href="#englishstringtranslator" class="table-of-contents__link toc-highlight">englishStringTranslator()</a></li><li><a href="#enumoptionsdeselectvalues-extends-strictrjsfschema--rjsfschema" class="table-of-contents__link toc-highlight">enumOptionsDeselectValue&lt;S extends StrictRJSFSchema = RJSFSchema&gt;()</a></li><li><a href="#enumoptionsindexforvalues-extends-strictrjsfschema--rjsfschema" class="table-of-contents__link toc-highlight">enumOptionsIndexForValue&lt;S extends StrictRJSFSchema = RJSFSchema&gt;()</a></li><li><a href="#enumoptionsisselecteds-extends-strictrjsfschema--rjsfschema" class="table-of-contents__link toc-highlight">enumOptionsIsSelected&lt;S extends StrictRJSFSchema = RJSFSchema&gt;()</a></li><li><a href="#enumoptionsselectvalues-extends-strictrjsfschema--rjsfschema" class="table-of-contents__link toc-highlight">enumOptionsSelectValue&lt;S extends StrictRJSFSchema = RJSFSchema&gt;()</a></li><li><a href="#enumoptionsvalueforindexs-extends-strictrjsfschema--rjsfschema" class="table-of-contents__link toc-highlight">enumOptionsValueForIndex&lt;S extends StrictRJSFSchema = RJSFSchema&gt;()</a></li><li><a href="#errorid" class="table-of-contents__link toc-highlight">errorId()</a></li><li><a href="#examplesid" class="table-of-contents__link toc-highlight">examplesId()</a></li><li><a href="#findschemadefinitions-extends-strictrjsfschema--rjsfschema" class="table-of-contents__link toc-highlight">findSchemaDefinition&lt;S extends StrictRJSFSchema = RJSFSchema&gt;()</a></li><li><a href="#getchangedfieldsa-unknown-b-unknown" class="table-of-contents__link toc-highlight">getChangedFields(a: unknown, b: unknown)</a></li><li><a href="#getdiscriminatorfieldfromschemas-extends-strictrjsfschema--rjsfschema" class="table-of-contents__link toc-highlight">getDiscriminatorFieldFromSchema&lt;S extends StrictRJSFSchema = RJSFSchema&gt;()</a></li><li><a href="#getdateelementprops" class="table-of-contents__link toc-highlight">getDateElementProps()</a></li><li><a href="#getinputpropst--any-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--any" class="table-of-contents__link toc-highlight">getInputProps&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any&gt;()</a></li><li><a href="#getoptionmatchingsimplediscriminator" class="table-of-contents__link toc-highlight">getOptionMatchingSimpleDiscriminator()</a></li><li><a href="#getschematype" class="table-of-contents__link toc-highlight">getSchemaType()</a></li><li><a href="#getsubmitbuttonoptionst--any-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--any" class="table-of-contents__link toc-highlight">getSubmitButtonOptions&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any&gt;()</a></li><li><a href="#gettemplatename-extends-keyof-templatestypet-s-f-t--any-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--any" class="table-of-contents__link toc-highlight">getTemplate&lt;Name extends keyof TemplatesType&lt;T, S, F&gt;, T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any&gt;()</a></li><li><a href="#gettestids" class="table-of-contents__link toc-highlight">getTestIds()</a></li><li><a href="#getuioptionst--any-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--any" class="table-of-contents__link toc-highlight">getUiOptions&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any&gt;()</a></li><li><a href="#getwidgett--any-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--any" class="table-of-contents__link toc-highlight">getWidget&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any&gt;()</a></li><li><a href="#hashobject" class="table-of-contents__link toc-highlight">hashObject()</a></li><li><a href="#hashstring" class="table-of-contents__link toc-highlight">hashString()</a></li><li><a href="#guesstype" class="table-of-contents__link toc-highlight">guessType()</a></li><li><a href="#hashforschemas-extends-strictrjsfschema--rjsfschema" class="table-of-contents__link toc-highlight">hashForSchema&lt;S extends StrictRJSFSchema = RJSFSchema&gt;()</a></li><li><a href="#haswidgett--any-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--any" class="table-of-contents__link toc-highlight">hasWidget&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any&gt;()</a></li><li><a href="#helpid" class="table-of-contents__link toc-highlight">helpId()</a></li><li><a href="#isconstants-extends-strictrjsfschema--rjsfschema" class="table-of-contents__link toc-highlight">isConstant&lt;S extends StrictRJSFSchema = RJSFSchema&gt;()</a></li><li><a href="#iscustomwidgett--any-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--any" class="table-of-contents__link toc-highlight">isCustomWidget&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any&gt;()</a></li><li><a href="#isfixeditemss-extends-strictrjsfschema--rjsfschema" class="table-of-contents__link toc-highlight">isFixedItems&lt;S extends StrictRJSFSchema = RJSFSchema&gt;()</a></li><li><a href="#isformdataavailablet--any" class="table-of-contents__link toc-highlight">isFormDataAvailable&lt;T = any&gt;()</a></li><li><a href="#isobject" class="table-of-contents__link toc-highlight">isObject()</a></li><li><a href="#isrootschemat--any-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--any" class="table-of-contents__link toc-highlight">isRootSchema&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any&gt;()</a></li><li><a href="#labelvalue" class="table-of-contents__link toc-highlight">labelValue()</a></li><li><a href="#localtoutc" class="table-of-contents__link toc-highlight">localToUTC()</a></li><li><a href="#lookupfromformcontextt--any-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--any" class="table-of-contents__link toc-highlight">lookupFromFormContext&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any&gt;()</a></li><li><a href="#mergedefaultswithformdatat--any" class="table-of-contents__link toc-highlight">mergeDefaultsWithFormData&lt;T = any&gt;()</a></li><li><a href="#mergeobjects" class="table-of-contents__link toc-highlight">mergeObjects()</a></li><li><a href="#mergeschemas" class="table-of-contents__link toc-highlight">mergeSchemas()</a></li><li><a href="#optionalcontrolsid" class="table-of-contents__link toc-highlight">optionalControlsId()</a></li><li><a href="#optionid" class="table-of-contents__link toc-highlight">optionId()</a></li><li><a href="#optionslistt--any-s-extends-strictrjsfschema--rjsfschemaf-extends-formcontexttype--any" class="table-of-contents__link toc-highlight">optionsList&lt;T = any, S extends StrictRJSFSchema = RJSFSchema,F extends FormContextType = any&gt;()</a></li><li><a href="#orderproperties" class="table-of-contents__link toc-highlight">orderProperties()</a></li><li><a href="#pad" class="table-of-contents__link toc-highlight">pad()</a></li><li><a href="#parsedatestring" class="table-of-contents__link toc-highlight">parseDateString()</a></li><li><a href="#rangespecs-extends-strictrjsfschema--rjsfschema" class="table-of-contents__link toc-highlight">rangeSpec&lt;S extends StrictRJSFSchema = RJSFSchema&gt;()</a></li><li><a href="#replacestringparameters" class="table-of-contents__link toc-highlight">replaceStringParameters()</a></li><li><a href="#schemarequirestruevalues-extends-strictrjsfschema--rjsfschema" class="table-of-contents__link toc-highlight">schemaRequiresTrueValue&lt;S extends StrictRJSFSchema = RJSFSchema&gt;()</a></li><li><a href="#shouldrender" class="table-of-contents__link toc-highlight">shouldRender()</a></li><li><a href="#shouldrenderoptionalfieldt--any-s-extends-strictrjsfschema--rjsfschemaf-extends-formcontexttype--any" class="table-of-contents__link toc-highlight">shouldRenderOptionalField&lt;T = any, S extends StrictRJSFSchema = RJSFSchema,F extends FormContextType = any&gt;()</a></li><li><a href="#sortedjsonstringify" class="table-of-contents__link toc-highlight">sortedJSONStringify()</a></li><li><a href="#titleid" class="table-of-contents__link toc-highlight">titleId()</a></li><li><a href="#toconstants-extends-strictrjsfschema--rjsfschema" class="table-of-contents__link toc-highlight">toConstant&lt;S extends StrictRJSFSchema = RJSFSchema&gt;()</a></li><li><a href="#todatestring" class="table-of-contents__link toc-highlight">toDateString()</a></li><li><a href="#toerrorlistt--any" class="table-of-contents__link toc-highlight">toErrorList&lt;T = any&gt;()</a></li><li><a href="#toerrorschemat--any" class="table-of-contents__link toc-highlight">toErrorSchema&lt;T = any&gt;()</a></li><li><a href="#tofieldpathid" class="table-of-contents__link toc-highlight">toFieldPathId()</a></li><li><a href="#unwraperrorhandlert--any" class="table-of-contents__link toc-highlight">unwrapErrorHandler&lt;T = any&gt;()</a></li><li><a href="#utctolocal" class="table-of-contents__link toc-highlight">utcToLocal()</a></li><li><a href="#validationdatamerget--any" class="table-of-contents__link toc-highlight">validationDataMerge&lt;T = any&gt;()</a></li><li><a href="#withidrefprefixs-extends-strictrjsfschema--rjsfschema" class="table-of-contents__link toc-highlight">withIdRefPrefix&lt;S extends StrictRJSFSchema = RJSFSchema&gt;()</a></li></ul></li><li><a href="#validator-based-utility-functions" class="table-of-contents__link toc-highlight">Validator-based utility functions</a><ul><li><a href="#findfieldinschemat--any-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--any" class="table-of-contents__link toc-highlight">findFieldInSchema&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any&gt;()</a></li><li><a href="#findselectedoptioninxxxoft--any-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--any" class="table-of-contents__link toc-highlight">findSelectedOptionInXxxOf&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any&gt;()</a></li><li><a href="#getdefaultformstatet--any-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--any" class="table-of-contents__link toc-highlight">getDefaultFormState&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any&gt;()</a></li><li><a href="#getdisplaylabelt--any-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--any" class="table-of-contents__link toc-highlight">getDisplayLabel&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any&gt;()</a></li><li><a href="#getclosestmatchingoptiont--any-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--any" class="table-of-contents__link toc-highlight">getClosestMatchingOption&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any&gt;()</a></li><li><a href="#getdisplaylabelt--any-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--any-1" class="table-of-contents__link toc-highlight">getDisplayLabel&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any&gt;()</a></li><li><a href="#getfromschemat--any-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--any" class="table-of-contents__link toc-highlight">getFromSchema&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any&gt;()</a></li><li><a href="#getfirstmatchingoptiont--any-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--any" class="table-of-contents__link toc-highlight">getFirstMatchingOption&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any&gt;()</a></li><li><a href="#ismultiselectt--any-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--any" class="table-of-contents__link toc-highlight">isMultiSelect&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any&gt;()</a></li><li><a href="#isselectt--any-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--any" class="table-of-contents__link toc-highlight">isSelect&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any&gt;()</a></li><li><a href="#retrieveschemat--any-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--any" class="table-of-contents__link toc-highlight">retrieveSchema&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any&gt;()</a></li><li><a href="#sanitizedatafornewschemat--any-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--any" class="table-of-contents__link toc-highlight">sanitizeDataForNewSchema&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any&gt;()</a></li><li><a href="#topathschemat--any-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--any" class="table-of-contents__link toc-highlight">toPathSchema&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any&gt;()</a></li></ul></li><li><a href="#schema-utils-creation-function" class="table-of-contents__link toc-highlight">Schema utils creation function</a><ul><li><a href="#createschemautilst--any-s-extends-strictrjsfschema--rjsfschema-f-extends-formcontexttype--any" class="table-of-contents__link toc-highlight">createSchemaUtils&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any&gt;()</a></li></ul></li><li><a href="#errorschema-builder-class" class="table-of-contents__link toc-highlight">ErrorSchema builder class</a><ul><li><a href="#errorschemabuildert--anyinitialschema-errorschemat-constructor" class="table-of-contents__link toc-highlight">ErrorSchemaBuilder&lt;T = any&gt;(initialSchema?: ErrorSchema&lt;T&gt;) constructor</a></li><li><a href="#errorschema-getter-function" class="table-of-contents__link toc-highlight">ErrorSchema getter function</a></li><li><a href="#resetallerrors" class="table-of-contents__link toc-highlight">resetAllErrors()</a></li><li><a href="#adderrors" class="table-of-contents__link toc-highlight">addErrors()</a></li><li><a href="#seterrors" class="table-of-contents__link toc-highlight">setErrors()</a></li><li><a href="#clearerrors" class="table-of-contents__link toc-highlight">clearErrors()</a></li></ul></li></ul></div></div></div></div></main></div></div></div><footer class="theme-layout-footer footer footer--dark"><div class="container container-fluid"><div class="row footer__links"><div class="theme-layout-footer-column col footer__col"><div class="footer__title">Docs</div><ul class="footer__items clean-list"><li class="footer__item"><a class="footer__link-item" href="/react-jsonschema-form/docs/quickstart">Quickstart</a></li><li class="footer__item"><a class="footer__link-item" href="/react-jsonschema-form/docs/api-reference">API Reference</a></li></ul></div><div class="theme-layout-footer-column col footer__col"><div class="footer__title">Community</div><ul class="footer__items clean-list"><li class="footer__item"><a href="https://github.com/rjsf-team/react-jsonschema-form" target="_blank" rel="noopener noreferrer" class="footer__link-item">GitHub<svg width="13.5" height="13.5" aria-hidden="true" class="iconExternalLink_awgD"><use href="#theme-svg-external-link"></use></svg></a></li><li class="footer__item"><a href="https://discord.gg/fdZm2JZJrX" target="_blank" rel="noopener noreferrer" class="footer__link-item">Discord<svg width="13.5" height="13.5" aria-hidden="true" class="iconExternalLink_awgD"><use href="#theme-svg-external-link"></use></svg></a></li></ul></div></div><div class="footer__bottom text--center"><div class="footer__copyright">Copyright © 2025. Built with Docusaurus.</div></div></div></footer></div>
 </body>
 </html>
