@@ -1055,6 +1055,7 @@ If no `additionalErrorSchema` is passed, then `validationData` is returned.
 
 - validationData: ValidationData&lt;T> - The current `ValidationData` into which to merge the additional errors
 - [additionalErrorSchema]: ErrorSchema&lt;T> | undefined - The optional additional set of errors in an `ErrorSchema`
+- [preventDuplicates=false]: boolean - Optional flag, if true, will call `mergeObjects()` with `preventDuplicates`
 
 #### Returns
 

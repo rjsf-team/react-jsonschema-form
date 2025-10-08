@@ -37,6 +37,14 @@ should change the heading of the (upcoming) version to include a major version b
 - Updated `ArrayField` and `ObjectField` to check whether it `shouldRenderOptionalData()` and if true, calls `ObjectDataControlsField` and passes the result to its associated render template as `optionalDataControl`
 - Updated `ArrayFieldTemplate`, `ObjectFieldTemplate`, `TitleField` to add support for the new `optionalDataControl` feature
   - Added the new `OptionalDataControlTemplate` to the theme, adding it to the `templates` list
+- Updated `Form` as follows to fix [#4796](https://github.com/rjsf-team/react-jsonschema-form/issues/4796)
+    - Refactored the `liveValidate()` and `mergeErrors()` functions out of `getStateFromProp()` and `processPendingChange()`
+    - Added new, optional `customErrors?: ErrorSchemaBuilder<T>` to the `FormState`, updating the `IChangeEvent` interface to remove all of the private variables
+    - Reworked the `newErrorSchema` handling in `processPendingChange()` to simplify the handling since `newErrorSchema` is now path-specific, adding `newErrorSchema` to `customErrors` when they don't match an existing validator-based validation
+        - This rework resulted in any custom errors passed from custom widgets/fields will now be remembered during the validation stage
+    - Removed the now unused `getPreviousCustomValidateErrors()` and `filterErrorsBasedOnSchema()` methods
+- Updated `LayoutGridField` to simplify `onFieldChange()` to just return the given `errorSchema` now that it is path-specific, fixing [#4796](https://github.com/rjsf-team/react-jsonschema-form/issues/4796)
+- Updated `NullField` to pass `fieldPathId.path` for the `onChange()` instead of `[name]`
 
 ## @rjsf/daisyui
 
@@ -99,6 +107,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Updated `getDefaultFormState` to fix an issue where optional array props had their default set to an empty array when they shouldn't be
 - Updated the `TranslatableString` enum to add three new strings in support of the new feature: `OptionalObjectAdd`, `OptionalObjectRemove` and `OptionalObjectEmptyMsg`
 - Added four new utility functions: `isFormDataAvailable()`, `isRootSchema()`, `optionalControlsId()`, and `shouldRenderOptionalField()`
+- Updated `validationDataMerge()` to add an additional, optional parameter `preventDuplicates = false`, that causes the `mergeObjects()` call to receive `preventDuplicates` instead of `true`
 
 ## Dev / docs / playground
 
@@ -109,6 +118,8 @@ should change the heading of the (upcoming) version to include a major version b
 - Updated the `v6x upgrade guide.md` to document the new feature and utility functions and changes to `retrieveSchema`
 - Updated the playground to add a new `Optional Data Controls` example
 - Updated the snapshot and jest tests for `Form` to test the new `Optional Data Controls` feature
+- Updated `utility-functions.md` to update the `validationDataMerge()` function's new parameter
+- Updated `custom-widgets-fields.md` to change the documentation around passing errors via `onChange()` to reflect the new reality
 
 # 6.0.0-beta-20
 

@@ -26,7 +26,6 @@ import {
   UiSchema,
   ITEMS_KEY,
 } from '@rjsf/utils';
-import cloneDeep from 'lodash/cloneDeep';
 import each from 'lodash/each';
 import flatten from 'lodash/flatten';
 import get from 'lodash/get';
@@ -705,13 +704,8 @@ export default class LayoutGridField<
    */
   onFieldChange = (dottedPath: string) => {
     return (value: T | undefined, path: FieldPathList, errSchema?: ErrorSchema<T>, id?: string) => {
-      const { onChange, errorSchema } = this.props;
-      let newErrorSchema = errorSchema;
-      if (errSchema && errorSchema) {
-        newErrorSchema = cloneDeep(errorSchema);
-        set(newErrorSchema, dottedPath, errSchema);
-      }
-      onChange(value, path, newErrorSchema, id);
+      const { onChange } = this.props;
+      onChange(value, path, errSchema, id);
     };
   };
 
