@@ -58,7 +58,7 @@ export default function OptionalDataControlsField<
     } else {
       id = optionalControlsId(fieldPathId, 'Add');
       onAddClick = () => {
-        // If it has form data, store an empty object, otherwise use get the default form state and use it
+        // If it has form data, store an empty object, otherwise get the default form state and use it
         let newFormData: unknown = schemaUtils.getDefaultFormState(schema, formData, 'excludeObjectChildren');
         if (newFormData === undefined) {
           // If new form data ended up being undefined, and we have pushed the add button we need to actually add data

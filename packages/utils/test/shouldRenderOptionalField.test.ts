@@ -117,7 +117,7 @@ describe('shouldRenderOptionalField()', () => {
     const globalUiOptions: GlobalUISchemaOptions = { enableOptionalDataFieldForType: ['array'] };
     expect(shouldRenderOptionalField({ ...registry, globalUiOptions }, ANY_OF_SCHEMA_ARRAY, false)).toBe(true);
   });
-  test('schemaType for mixed-type oneOf IS in enableOptionalDataFieldForType returns true', () => {
+  test('schemaType for mixed-type oneOf IS in enableOptionalDataFieldForType returns false', () => {
     const globalUiOptions: GlobalUISchemaOptions = { enableOptionalDataFieldForType: ['array'] };
     expect(shouldRenderOptionalField({ ...registry, globalUiOptions }, ONE_OF_SCHEMA_MIXED, false)).toBe(false);
   });
