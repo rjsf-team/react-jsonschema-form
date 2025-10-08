@@ -310,11 +310,11 @@ render(
 
 #### Add Optional Data Controls
 
-<img width="600" alt="add optional data controls" src="./OptionalDataControlsAdd.png" />
+![add optional data controls](./OptionalDataControlsAdd.png)
 
 #### Remove Optional Data Controls
 
-<img width="600" alt="remove optional data controls" src="./OptionalDataControlsRemove.png" />
+![remove optional data controls](./OptionalDataControlsRemove.png)
 
 ### emptyValue
 
