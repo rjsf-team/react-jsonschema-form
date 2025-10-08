@@ -3337,6 +3337,38 @@ describe('ArrayField', () => {
       expect(errorMessages).to.have.length(0);
     });
 
+    it('should clear an error if value is entered correctly', () => {
+      const { node } = createFormComponent({
+        schema,
+        formData: [
+          {
+            text: 'y',
+          },
+        ],
+        templates,
+        fields: {
+          ArrayField: ArrayFieldTest,
+        },
+      });
+
+      const inputs = node.querySelectorAll('.rjsf-field-string input[type=text]');
+      act(() => {
+        fireEvent.change(inputs[0], { target: { value: 'test' } });
+      });
+
+      let errorMessages = node.querySelectorAll('#root_0_text__error');
+      expect(errorMessages).to.have.length(1);
+      const errorMessageContent = node.querySelector('#root_0_text__error .text-danger').textContent;
+      expect(errorMessageContent).to.contain('Value must be "Appie"');
+
+      act(() => {
+        fireEvent.change(inputs[0], { target: { value: 'Appie' } });
+      });
+
+      errorMessages = node.querySelectorAll('#root_0_text__error');
+      expect(errorMessages).to.have.length(0);
+    });
+
     it('raise an error and check if the error is displayed using custom text widget', () => {
       const { node } = createFormComponent({
         schema,
@@ -3382,6 +3414,38 @@ describe('ArrayField', () => {
       });
 
       const errorMessages = node.querySelectorAll('#root_0_text__error');
+      expect(errorMessages).to.have.length(0);
+    });
+
+    it('should clear an error if value is entered correctly using custom text widget', () => {
+      const { node } = createFormComponent({
+        schema,
+        formData: [
+          {
+            text: 'y',
+          },
+        ],
+        templates,
+        widgets: {
+          TextWidget: TextWidgetTest,
+        },
+      });
+
+      const inputs = node.querySelectorAll('.rjsf-field-string input[type=text]');
+      act(() => {
+        fireEvent.change(inputs[0], { target: { value: 'hello' } });
+      });
+
+      let errorMessages = node.querySelectorAll('#root_0_text__error');
+      expect(errorMessages).to.have.length(1);
+      const errorMessageContent = node.querySelector('#root_0_text__error .text-danger').textContent;
+      expect(errorMessageContent).to.contain('Value must be "test"');
+
+      act(() => {
+        fireEvent.change(inputs[0], { target: { value: 'test' } });
+      });
+
+      errorMessages = node.querySelectorAll('#root_0_text__error');
       expect(errorMessages).to.have.length(0);
     });
   });

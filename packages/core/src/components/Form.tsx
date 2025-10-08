@@ -3,8 +3,8 @@ import {
   createSchemaUtils,
   CustomValidator,
   deepEquals,
-  ERRORS_KEY,
   ErrorSchema,
+  ErrorSchemaBuilder,
   ErrorTransformer,
   FieldPathId,
   FieldPathList,
@@ -38,17 +38,14 @@ import {
   ValidatorType,
   Experimental_DefaultFormStateBehavior,
   Experimental_CustomMergeAllOf,
-  createErrorHandler,
-  unwrapErrorHandler,
   DEFAULT_ID_SEPARATOR,
   DEFAULT_ID_PREFIX,
   GlobalFormOptions,
+  ERRORS_KEY,
 } from '@rjsf/utils';
 import _cloneDeep from 'lodash/cloneDeep';
-import _forEach from 'lodash/forEach';
 import _get from 'lodash/get';
 import _isEmpty from 'lodash/isEmpty';
-import _isNil from 'lodash/isNil';
 import _pick from 'lodash/pick';
 import _set from 'lodash/set';
 import _toPath from 'lodash/toPath';
@@ -259,13 +256,15 @@ export interface FormState<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   errors: RJSFValidationError[];
   /** The current errors, in `ErrorSchema` format, for the form, includes `extraErrors` */
   errorSchema: ErrorSchema<T>;
+  // Private
   /** The current list of errors for the form directly from schema validation, does NOT include `extraErrors` */
   schemaValidationErrors: RJSFValidationError[];
   /** The current errors, in `ErrorSchema` format, for the form directly from schema validation, does NOT include
    * `extraErrors`
    */
   schemaValidationErrorSchema: ErrorSchema<T>;
-  // Private
+  /** A container used to handle custom errors provided via `onChange` */
+  customErrors?: ErrorSchemaBuilder<T>;
   /** @description result of schemaUtils.retrieveSchema(schema, formData). This a memoized value to avoid re calculate at internal functions (getStateFromProps, onChange) */
   retrievedSchema: S;
   /** Flag indicating whether the initial form defaults have been generated */
@@ -276,7 +275,14 @@ export interface FormState<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
  * the schema validation errors. An additional `status` is added when returned from `onSubmit`
  */
 export interface IChangeEvent<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>
-  extends Omit<FormState<T, S, F>, 'schemaValidationErrors' | 'schemaValidationErrorSchema'> {
+  extends Omit<
+    FormState<T, S, F>,
+    | 'schemaValidationErrors'
+    | 'schemaValidationErrorSchema'
+    | 'retrievedSchema'
+    | 'customErrors'
+    | 'initialDefaultsGenerated'
+  > {
   /** The status of the form when submitted */
   status?: 'submitted';
 }
@@ -499,21 +505,22 @@ export default class Form<
     let schemaValidationErrorSchema: ErrorSchema<T> = state.schemaValidationErrorSchema;
     // If we are skipping live validate, it means that the state has already been updated with live validation errors
     if (mustValidate && !skipLiveValidate) {
-      const schemaValidation = this.validate(formData, rootSchema, schemaUtils, _retrievedSchema);
-      errors = schemaValidation.errors;
-      // If retrievedSchema is undefined which means the schema or formData has changed, we do not merge state.
-      // Else in the case where it hasn't changed, we merge 'state.errorSchema' with 'schemaValidation.errorSchema.' This done to display the raised field error.
-      if (retrievedSchema === undefined) {
-        errorSchema = schemaValidation.errorSchema;
-      } else {
-        errorSchema = mergeObjects(
-          this.state?.errorSchema,
-          schemaValidation.errorSchema,
-          'preventDuplicates',
-        ) as ErrorSchema<T>;
-      }
-      schemaValidationErrors = errors;
-      schemaValidationErrorSchema = errorSchema;
+      const liveValidation = this.liveValidate(
+        rootSchema,
+        schemaUtils,
+        state.errorSchema,
+        formData,
+        undefined,
+        state.customErrors,
+        retrievedSchema,
+        // If retrievedSchema is undefined which means the schema or formData has changed, we do not merge state.
+        // Else in the case where it hasn't changed,
+        retrievedSchema !== undefined,
+      );
+      errors = liveValidation.errors;
+      errorSchema = liveValidation.errorSchema;
+      schemaValidationErrors = liveValidation.schemaValidationErrors;
+      schemaValidationErrorSchema = liveValidation.schemaValidationErrorSchema;
     } else {
       const currentErrors = getCurrentErrors();
       errors = currentErrors.errors;
@@ -533,13 +540,11 @@ export default class Form<
           'preventDuplicates',
         ) as ErrorSchema<T>;
       }
+      const mergedErrors = this.mergeErrors({ errorSchema, errors }, props.extraErrors, state.customErrors);
+      errors = mergedErrors.errors;
+      errorSchema = mergedErrors.errorSchema;
     }
 
-    if (props.extraErrors) {
-      const merged = validationDataMerge({ errorSchema, errors }, props.extraErrors);
-      errorSchema = merged.errorSchema;
-      errors = merged.errors;
-    }
     const fieldPathId = toFieldPathId('', this.getGlobalFormOptions(this.props));
     const nextState: FormState<T, S, F> = {
       schemaUtils,
@@ -567,20 +572,6 @@ export default class Form<
   shouldComponentUpdate(nextProps: FormProps<T, S, F>, nextState: FormState<T, S, F>): boolean {
     const { experimental_componentUpdateStrategy = 'customDeep' } = this.props;
     return shouldRender(this, nextProps, nextState, experimental_componentUpdateStrategy);
-  }
-  /** Gets the previously raised customValidate errors.
-   *
-   * @returns the previous customValidate errors
-   */
-  private getPreviousCustomValidateErrors(): ErrorSchema<T> {
-    const { customValidate, uiSchema } = this.props;
-    const prevFormData = this.state.formData as T;
-    let customValidateErrors = {};
-    if (typeof customValidate === 'function') {
-      const errorHandler = customValidate(prevFormData, createErrorHandler<T>(prevFormData), uiSchema);
-      customValidateErrors = unwrapErrorHandler<T>(errorHandler);
-    }
-    return customValidateErrors;
   }
 
   /** Validates the `formData` against the `schema` using the `altSchemaUtils` (if provided otherwise it uses the
@@ -623,6 +614,75 @@ export default class Form<
       );
     }
     return null;
+  }
+
+  /** Merges any `extraErrors` or `customErrors` into the given `schemaValidation` object, returning the result
+   *
+   * @param schemaValidation - The `ValidationData` object into which additional errors are merged
+   * @param [extraErrors] - The extra errors from the props
+   * @param [customErrors] - The customErrors from custom components
+   * @return - The `extraErrors` and `customErrors` merged into the `schemaValidation`
+   * @private
+   */
+  private mergeErrors(
+    schemaValidation: ValidationData<T>,
+    extraErrors?: FormProps['extraErrors'],
+    customErrors?: ErrorSchemaBuilder,
+  ): ValidationData<T> {
+    let errorSchema: ErrorSchema<T> = schemaValidation.errorSchema;
+    let errors: RJSFValidationError[] = schemaValidation.errors;
+    if (extraErrors) {
+      const merged = validationDataMerge(schemaValidation, extraErrors);
+      errorSchema = merged.errorSchema;
+      errors = merged.errors;
+    }
+    if (customErrors) {
+      const merged = validationDataMerge(schemaValidation, customErrors.ErrorSchema, true);
+      errorSchema = merged.errorSchema;
+      errors = merged.errors;
+    }
+    return { errors, errorSchema };
+  }
+
+  /** Performs live validation and then updates and returns the errors and error schemas by potentially merging in
+   * `extraErrors` and `customErrors`.
+   *
+   * @param rootSchema - The `rootSchema` from the state
+   * @param schemaUtils - The `SchemaUtilsType` from the state
+   * @param originalErrorSchema - The original `ErrorSchema` from the state
+   * @param [formData] - The new form data to validate
+   * @param [extraErrors] - The extra errors from the props
+   * @param [customErrors] - The customErrors from custom components
+   * @param [retrievedSchema] - An expanded schema, if not provided, it will be retrieved from the `schema` and `formData`
+   * @param [mergeIntoOriginalErrorSchema=false] - Optional flag indicating whether we merge into original schema
+   * @returns - An object containing `errorSchema`, `errors`, `schemaValidationErrors` and `schemaValidationErrorSchema`
+   * @private
+   */
+  private liveValidate(
+    rootSchema: S,
+    schemaUtils: SchemaUtilsType<T, S, F>,
+    originalErrorSchema: ErrorSchema<S>,
+    formData?: T,
+    extraErrors?: FormProps['extraErrors'],
+    customErrors?: ErrorSchemaBuilder<T>,
+    retrievedSchema?: S,
+    mergeIntoOriginalErrorSchema = false,
+  ) {
+    const schemaValidation = this.validate(formData, rootSchema, schemaUtils, retrievedSchema);
+    const errors = schemaValidation.errors;
+    let errorSchema = schemaValidation.errorSchema;
+    // We merge 'originalErrorSchema' with 'schemaValidation.errorSchema.'; This done to display the raised field error.
+    if (mergeIntoOriginalErrorSchema) {
+      errorSchema = mergeObjects(
+        originalErrorSchema,
+        schemaValidation.errorSchema,
+        'preventDuplicates',
+      ) as ErrorSchema<T>;
+    }
+    const schemaValidationErrors = errors;
+    const schemaValidationErrorSchema = errorSchema;
+    const mergedErrors = this.mergeErrors({ errorSchema, errors }, extraErrors, customErrors);
+    return { ...mergedErrors, schemaValidationErrors, schemaValidationErrorSchema };
   }
 
   /** Returns the `formData` with only the elements specified in the `fields` list
@@ -698,63 +758,6 @@ export default class Form<
     return this.getUsedFormData(formData, fieldNames);
   };
 
-  /** Filtering errors based on your retrieved schema to only show errors for properties in the selected branch.
-   *
-   * @param schemaErrors - The schema errors to filter
-   * @param [resolvedSchema] - An optionally resolved schema to use for performance reasons
-   * @param [formData] - The formData to help filter errors
-   * @private
-   */
-  private filterErrorsBasedOnSchema(schemaErrors: ErrorSchema<T>, resolvedSchema?: S, formData?: any): ErrorSchema<T> {
-    const { retrievedSchema, schemaUtils } = this.state;
-    const _retrievedSchema = resolvedSchema ?? retrievedSchema;
-    const pathSchema = schemaUtils.toPathSchema(_retrievedSchema, '', formData);
-    const fieldNames = this.getFieldNames(pathSchema, formData);
-    const filteredErrors: ErrorSchema<T> = _pick(schemaErrors, fieldNames as unknown as string[]);
-    // If the root schema is of a primitive type, do not filter out the __errors
-    if (resolvedSchema?.type !== 'object' && resolvedSchema?.type !== 'array') {
-      filteredErrors[ERRORS_KEY] = schemaErrors[ERRORS_KEY];
-    }
-
-    const prevCustomValidateErrors = this.getPreviousCustomValidateErrors();
-    // Filtering out the previous raised customValidate errors so that they are cleared when no longer valid.
-    const filterPreviousCustomErrors = (errors: string[] = [], prevCustomErrors: string[]) => {
-      if (errors.length === 0) {
-        return errors;
-      }
-
-      return errors.filter((error) => {
-        return !prevCustomErrors.includes(error);
-      });
-    };
-
-    // Removing undefined, null and empty errors.
-    const filterNilOrEmptyErrors = (errors: any, previousCustomValidateErrors: any = {}): ErrorSchema<T> => {
-      _forEach(errors, (errorAtKey: ErrorSchema<T>['__errors'] | undefined, errorKey: keyof typeof errors) => {
-        const prevCustomValidateErrorAtKey: ErrorSchema<T> | undefined = previousCustomValidateErrors[errorKey];
-        if (_isNil(errorAtKey) || (Array.isArray(errorAtKey) && errorAtKey.length === 0)) {
-          delete errors[errorKey];
-        } else if (
-          isObject(errorAtKey) &&
-          isObject(prevCustomValidateErrorAtKey) &&
-          Array.isArray(prevCustomValidateErrorAtKey?.[ERRORS_KEY])
-        ) {
-          // if previous customValidate error is an object and has __errors array, filter out the errors previous customValidate errors.
-          errors[errorKey] = {
-            [ERRORS_KEY]: filterPreviousCustomErrors(
-              errorAtKey[ERRORS_KEY],
-              prevCustomValidateErrorAtKey?.[ERRORS_KEY],
-            ),
-          };
-        } else if (typeof errorAtKey === 'object' && !Array.isArray(errorAtKey[ERRORS_KEY])) {
-          filterNilOrEmptyErrors(errorAtKey, previousCustomValidateErrors[errorKey]);
-        }
-      });
-      return errors;
-    };
-    return filterNilOrEmptyErrors(filteredErrors, prevCustomValidateErrors);
-  }
-
   /** Pushes the given change information into the `pendingChanges` array and then calls `processPendingChanges()` if
    * the array only contains a single pending change.
    *
@@ -784,9 +787,10 @@ export default class Form<
       return;
     }
     const { newValue, path, id } = this.pendingChanges[0];
-    let { newErrorSchema } = this.pendingChanges[0];
+    const { newErrorSchema } = this.pendingChanges[0];
     const { extraErrors, omitExtraData, liveOmit, noValidate, liveValidate, onChange } = this.props;
-    const { formData: oldFormData, schemaUtils, schema, errorSchema, fieldPathId } = this.state;
+    const { formData: oldFormData, schemaUtils, schema, fieldPathId, schemaValidationErrorSchema, errors } = this.state;
+    let { customErrors, errorSchema: originalErrorSchema } = this.state;
     const rootPathId = fieldPathId.path[0] || '';
 
     const isRootPath = !path || path.length === 0 || (path.length === 1 && path[0] === rootPathId);
@@ -814,46 +818,51 @@ export default class Form<
       };
     }
 
-    // First update the value in the newErrorSchema in a copy of the old error schema if it was specified and the path
-    // is not the root
-    if (newErrorSchema && !isRootPath) {
-      const errorSchemaCopy = _cloneDeep(errorSchema);
-      _set(errorSchemaCopy, path, newErrorSchema);
-      newErrorSchema = errorSchemaCopy;
+    if (newErrorSchema) {
+      // First check to see if there is an existing validation error on this path...
+      // @ts-expect-error TS2590, because getting from the error schema is confusing TS
+      const oldValidationError = !isRootPath ? _get(schemaValidationErrorSchema, path) : schemaValidationErrorSchema;
+      // If there is an old validation error for this path, assume we are updating it directly
+      if (!_isEmpty(oldValidationError)) {
+        // Update the originalErrorSchema "in place" or replace it if it is the root
+        if (!isRootPath) {
+          _set(originalErrorSchema, path, newErrorSchema);
+        } else {
+          originalErrorSchema = newErrorSchema;
+        }
+      } else {
+        if (!customErrors) {
+          customErrors = new ErrorSchemaBuilder<T>();
+        }
+        if (isRootPath) {
+          customErrors.setErrors(_get(newErrorSchema, ERRORS_KEY, ''));
+        } else {
+          _set(customErrors.ErrorSchema, path, newErrorSchema);
+        }
+      }
+    } else if (customErrors && _get(customErrors.ErrorSchema, [...path, ERRORS_KEY])) {
+      // If we have custom errors and the path has an error, then we need to clear it
+      customErrors.clearErrors(path);
     }
     // If there are pending changes in the queue, skip live validation since it will happen with the last change
     if (mustValidate && this.pendingChanges.length === 1) {
-      const schemaValidation = this.validate(newFormData, schema, schemaUtils, retrievedSchema);
-      let errors = schemaValidation.errors;
-      let errorSchema = schemaValidation.errorSchema;
-      const schemaValidationErrors = errors;
-      const schemaValidationErrorSchema = errorSchema;
-      if (extraErrors) {
-        const merged = validationDataMerge(schemaValidation, extraErrors);
-        errorSchema = merged.errorSchema;
-        errors = merged.errors;
-      }
-      // Merging 'newErrorSchema' into 'errorSchema' to display the custom raised errors.
-      if (newErrorSchema) {
-        const filteredErrors = this.filterErrorsBasedOnSchema(newErrorSchema, retrievedSchema, newFormData);
-        errorSchema = mergeObjects(errorSchema, filteredErrors, 'preventDuplicates') as ErrorSchema<T>;
-      }
-      state = {
-        formData: newFormData,
-        errors,
-        errorSchema,
-        schemaValidationErrors,
-        schemaValidationErrorSchema,
-      };
+      const liveValidation = this.liveValidate(
+        schema,
+        schemaUtils,
+        originalErrorSchema,
+        newFormData,
+        extraErrors,
+        customErrors,
+        retrievedSchema,
+      );
+      state = { formData: newFormData, ...liveValidation, customErrors };
     } else if (!noValidate && newErrorSchema) {
       // Merging 'newErrorSchema' into 'errorSchema' to display the custom raised errors.
-      const errorSchema = extraErrors
-        ? (mergeObjects(newErrorSchema, extraErrors, 'preventDuplicates') as ErrorSchema<T>)
-        : newErrorSchema;
+      const mergedErrors = this.mergeErrors({ errorSchema: originalErrorSchema, errors }, extraErrors, customErrors);
       state = {
         formData: newFormData,
-        errorSchema: errorSchema,
-        errors: toErrorList(errorSchema),
+        ...mergedErrors,
+        customErrors,
       };
     }
     this.setState(state as FormState<T, S, F>, () => {
@@ -897,6 +906,7 @@ export default class Form<
       schemaValidationErrors: [] as unknown,
       schemaValidationErrorSchema: {},
       initialDefaultsGenerated: false,
+      customErrors: undefined,
     } as FormState<T, S, F>;
 
     this.setState(state, () => onChange && onChange({ ...this.state, ...state }));
