@@ -118,7 +118,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Updated the playground to add a new `Optional Data Controls` example
 - Updated the snapshot and jest tests for `Form` to test the new `Optional Data Controls` feature
 - Updated `custom-widgets-fields.md` to change the documentation around passing errors via `onChange()` to reflect the new reality
-- Updated the `v6x upgrade guide.md` to document the new feature and utility functions and changes to `retrieveSchema`
+- Updated the `v6x upgrade guide.md` to document the new feature, utility functions and changes to existing method parameters
 
 # 6.0.0-beta-20
 
