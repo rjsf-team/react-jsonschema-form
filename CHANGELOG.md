@@ -120,6 +120,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Updated the snapshot and jest tests for `Form` to test the new `Optional Data Controls` feature
 - Updated `utility-functions.md` to update the `validationDataMerge()` function's new parameter
 - Updated `custom-widgets-fields.md` to change the documentation around passing errors via `onChange()` to reflect the new reality
+- Updated `v6.x upgrade guide.md` to document the changes mentioned above
 
 # 6.0.0-beta-20
 
