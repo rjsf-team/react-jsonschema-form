@@ -1440,6 +1440,91 @@ exports[`single fields optional data controls does not show optional controls wh
           </div>
         </div>
       </div>
+      <div
+        className="form-group rjsf-field rjsf-field-undefined"
+      >
+        <label
+          className="control-label"
+          htmlFor="root_optionalArrayWithAnyofs"
+        >
+          optionalArrayWithAnyofs
+        </label>
+        <div
+          className="panel panel-default panel-body"
+        >
+          <div
+            className="form-group"
+          >
+            <select
+              aria-describedby="root_optionalArrayWithAnyofs__anyof_select__error root_optionalArrayWithAnyofs__anyof_select__description root_optionalArrayWithAnyofs__anyof_select__help"
+              autoFocus={false}
+              className="form-control"
+              disabled={false}
+              id="root_optionalArrayWithAnyofs__anyof_select"
+              multiple={false}
+              name="root_optionalArrayWithAnyofs__anyof_select"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              role="combobox"
+              value="0"
+            >
+              <option
+                value="0"
+              >
+                Option 1
+              </option>
+              <option
+                value="1"
+              >
+                Option 2
+              </option>
+              <option
+                value="2"
+              >
+                Option 3
+              </option>
+            </select>
+          </div>
+          <div
+            className="form-group rjsf-field rjsf-field-array"
+          >
+            <fieldset
+              className="rjsf-field rjsf-field-array rjsf-field-array-of-string"
+              id="root_optionalArrayWithAnyofs"
+            >
+              <legend
+                id="root_optionalArrayWithAnyofs__title"
+              >
+                optionalArrayWithAnyofs
+              </legend>
+              <div
+                className="row array-item-list"
+              />
+              <div
+                className="row"
+              >
+                <p
+                  className="col-xs-3 col-xs-offset-9 text-right rjsf-array-item-add"
+                >
+                  <button
+                    className="btn btn-info btn-add col-xs-12"
+                    disabled={false}
+                    id="root_optionalArrayWithAnyofs__add"
+                    onClick={[Function]}
+                    title="Add"
+                    type="button"
+                  >
+                    <i
+                      className="glyphicon glyphicon-plus"
+                    />
+                  </button>
+                </p>
+              </div>
+            </fieldset>
+          </div>
+        </div>
+      </div>
     </fieldset>
   </div>
   <div>
@@ -1919,6 +2004,91 @@ exports[`single fields optional data controls does not show optional controls wh
                   type="text"
                   value=""
                 />
+              </div>
+            </fieldset>
+          </div>
+        </div>
+      </div>
+      <div
+        className="form-group rjsf-field rjsf-field-undefined"
+      >
+        <label
+          className="control-label"
+          htmlFor="root_optionalArrayWithAnyofs"
+        >
+          optionalArrayWithAnyofs
+        </label>
+        <div
+          className="panel panel-default panel-body"
+        >
+          <div
+            className="form-group"
+          >
+            <select
+              aria-describedby="root_optionalArrayWithAnyofs__anyof_select__error root_optionalArrayWithAnyofs__anyof_select__description root_optionalArrayWithAnyofs__anyof_select__help"
+              autoFocus={false}
+              className="form-control"
+              disabled={true}
+              id="root_optionalArrayWithAnyofs__anyof_select"
+              multiple={false}
+              name="root_optionalArrayWithAnyofs__anyof_select"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              role="combobox"
+              value="0"
+            >
+              <option
+                value="0"
+              >
+                Option 1
+              </option>
+              <option
+                value="1"
+              >
+                Option 2
+              </option>
+              <option
+                value="2"
+              >
+                Option 3
+              </option>
+            </select>
+          </div>
+          <div
+            className="form-group rjsf-field rjsf-field-array"
+          >
+            <fieldset
+              className="rjsf-field rjsf-field-array rjsf-field-array-of-string"
+              id="root_optionalArrayWithAnyofs"
+            >
+              <legend
+                id="root_optionalArrayWithAnyofs__title"
+              >
+                optionalArrayWithAnyofs
+              </legend>
+              <div
+                className="row array-item-list"
+              />
+              <div
+                className="row"
+              >
+                <p
+                  className="col-xs-3 col-xs-offset-9 text-right rjsf-array-item-add"
+                >
+                  <button
+                    className="btn btn-info btn-add col-xs-12"
+                    disabled={true}
+                    id="root_optionalArrayWithAnyofs__add"
+                    onClick={[Function]}
+                    title="Add"
+                    type="button"
+                  >
+                    <i
+                      className="glyphicon glyphicon-plus"
+                    />
+                  </button>
+                </p>
               </div>
             </fieldset>
           </div>
@@ -2425,87 +2595,92 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
       <div
         className="form-group rjsf-field rjsf-field-undefined"
       >
-        <label
-          className="control-label"
-          htmlFor="root_optionalObjectWithOneofs"
-        >
-          optionalObjectWithOneofs
-        </label>
         <div
           className="panel panel-default panel-body"
         >
           <div
             className="form-group"
-          >
-            <select
-              aria-describedby="root_optionalObjectWithOneofs__oneof_select__error root_optionalObjectWithOneofs__oneof_select__description root_optionalObjectWithOneofs__oneof_select__help"
-              autoFocus={false}
-              className="form-control"
-              disabled={false}
-              id="root_optionalObjectWithOneofs__oneof_select"
-              multiple={false}
-              name="root_optionalObjectWithOneofs__oneof_select"
-              onBlur={[Function]}
-              onChange={[Function]}
-              onFocus={[Function]}
-              role="combobox"
-              value="0"
-            >
-              <option
-                value="0"
-              >
-                Option 1
-              </option>
-              <option
-                value="1"
-              >
-                Option 2
-              </option>
-              <option
-                value="2"
-              >
-                Option 3
-              </option>
-            </select>
-          </div>
+          />
           <div
             className="form-group rjsf-field rjsf-field-object"
           >
             <fieldset
+              className="rjsf-optional-object-field"
               id="root_optionalObjectWithOneofs"
             >
               <legend
                 id="root_optionalObjectWithOneofs__title"
               >
                 optionalObjectWithOneofs
+                <span
+                  className="pull-right"
+                  style={
+                    {
+                      "marginBottom": "2px",
+                    }
+                  }
+                >
+                  <button
+                    className="btn btn-default rjsf-add-optional-data btn-sm"
+                    id="root_optionalObjectWithOneofs__optionalAdd"
+                    onClick={[Function]}
+                    title="Add data for optional field"
+                    type="button"
+                  >
+                    <i
+                      className="glyphicon glyphicon-plus"
+                    />
+                  </button>
+                </span>
+              </legend>
+            </fieldset>
+          </div>
+        </div>
+      </div>
+      <div
+        className="form-group rjsf-field rjsf-field-undefined"
+      >
+        <div
+          className="panel panel-default panel-body"
+        >
+          <div
+            className="form-group"
+          />
+          <div
+            className="form-group rjsf-field rjsf-field-array"
+          >
+            <fieldset
+              className="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field"
+              id="root_optionalArrayWithAnyofs"
+            >
+              <legend
+                id="root_optionalArrayWithAnyofs__title"
+              >
+                optionalArrayWithAnyofs
+                <span
+                  className="pull-right"
+                  style={
+                    {
+                      "marginBottom": "2px",
+                    }
+                  }
+                >
+                  <button
+                    className="btn btn-default rjsf-add-optional-data btn-sm"
+                    id="root_optionalArrayWithAnyofs__optionalAdd"
+                    onClick={[Function]}
+                    title="Add data for optional field"
+                    type="button"
+                  >
+                    <i
+                      className="glyphicon glyphicon-plus"
+                    />
+                  </button>
+                </span>
               </legend>
               <div
-                className="form-group rjsf-field rjsf-field-string"
-              >
-                <label
-                  className="control-label"
-                  htmlFor="root_optionalObjectWithOneofs_name"
-                >
-                  name
-                </label>
-                <input
-                  aria-describedby="root_optionalObjectWithOneofs_name__error root_optionalObjectWithOneofs_name__description root_optionalObjectWithOneofs_name__help"
-                  autoFocus={false}
-                  className="form-control"
-                  disabled={false}
-                  id="root_optionalObjectWithOneofs_name"
-                  label="name"
-                  name="root_optionalObjectWithOneofs_name"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  onFocus={[Function]}
-                  placeholder=""
-                  readOnly={true}
-                  required={false}
-                  type="text"
-                  value=""
-                />
-              </div>
+                className="row array-item-list"
+              />
             </fieldset>
           </div>
         </div>
@@ -2941,53 +3116,17 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
       <div
         className="form-group rjsf-field rjsf-field-undefined"
       >
-        <label
-          className="control-label"
-          htmlFor="root_optionalObjectWithOneofs"
-        >
-          optionalObjectWithOneofs
-        </label>
         <div
           className="panel panel-default panel-body"
         >
           <div
             className="form-group"
-          >
-            <select
-              aria-describedby="root_optionalObjectWithOneofs__oneof_select__error root_optionalObjectWithOneofs__oneof_select__description root_optionalObjectWithOneofs__oneof_select__help"
-              autoFocus={false}
-              className="form-control"
-              disabled={true}
-              id="root_optionalObjectWithOneofs__oneof_select"
-              multiple={false}
-              name="root_optionalObjectWithOneofs__oneof_select"
-              onBlur={[Function]}
-              onChange={[Function]}
-              onFocus={[Function]}
-              role="combobox"
-              value="0"
-            >
-              <option
-                value="0"
-              >
-                Option 1
-              </option>
-              <option
-                value="1"
-              >
-                Option 2
-              </option>
-              <option
-                value="2"
-              >
-                Option 3
-              </option>
-            </select>
-          </div>
+          />
           <div
             className="form-group rjsf-field rjsf-field-object"
           >
             <fieldset
+              className="rjsf-optional-object-field"
               id="root_optionalObjectWithOneofs"
             >
               <legend
@@ -2995,33 +3134,44 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
               >
                 optionalObjectWithOneofs
               </legend>
-              <div
-                className="form-group rjsf-field rjsf-field-string"
+              <em
+                id="root_optionalObjectWithOneofs__optionalMsg"
               >
-                <label
-                  className="control-label"
-                  htmlFor="root_optionalObjectWithOneofs_name"
-                >
-                  name
-                </label>
-                <input
-                  aria-describedby="root_optionalObjectWithOneofs_name__error root_optionalObjectWithOneofs_name__description root_optionalObjectWithOneofs_name__help"
-                  autoFocus={false}
-                  className="form-control"
-                  disabled={false}
-                  id="root_optionalObjectWithOneofs_name"
-                  label="name"
-                  name="root_optionalObjectWithOneofs_name"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  onFocus={[Function]}
-                  placeholder=""
-                  readOnly={true}
-                  required={false}
-                  type="text"
-                  value=""
-                />
-              </div>
+                No data for optional field
+              </em>
+            </fieldset>
+          </div>
+        </div>
+      </div>
+      <div
+        className="form-group rjsf-field rjsf-field-undefined"
+      >
+        <div
+          className="panel panel-default panel-body"
+        >
+          <div
+            className="form-group"
+          />
+          <div
+            className="form-group rjsf-field rjsf-field-array"
+          >
+            <fieldset
+              className="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field"
+              id="root_optionalArrayWithAnyofs"
+            >
+              <legend
+                id="root_optionalArrayWithAnyofs__title"
+              >
+                optionalArrayWithAnyofs
+              </legend>
+              <em
+                id="root_optionalArrayWithAnyofs__optionalMsg"
+              >
+                No data for optional field
+              </em>
+              <div
+                className="row array-item-list"
+              />
             </fieldset>
           </div>
         </div>
@@ -3218,87 +3368,92 @@ exports[`single fields optional data controls shows "add" optional controls when
       <div
         className="form-group rjsf-field rjsf-field-undefined"
       >
-        <label
-          className="control-label"
-          htmlFor="root_optionalObjectWithOneofs"
-        >
-          optionalObjectWithOneofs
-        </label>
         <div
           className="panel panel-default panel-body"
         >
           <div
             className="form-group"
-          >
-            <select
-              aria-describedby="root_optionalObjectWithOneofs__oneof_select__error root_optionalObjectWithOneofs__oneof_select__description root_optionalObjectWithOneofs__oneof_select__help"
-              autoFocus={false}
-              className="form-control"
-              disabled={false}
-              id="root_optionalObjectWithOneofs__oneof_select"
-              multiple={false}
-              name="root_optionalObjectWithOneofs__oneof_select"
-              onBlur={[Function]}
-              onChange={[Function]}
-              onFocus={[Function]}
-              role="combobox"
-              value="0"
-            >
-              <option
-                value="0"
-              >
-                Option 1
-              </option>
-              <option
-                value="1"
-              >
-                Option 2
-              </option>
-              <option
-                value="2"
-              >
-                Option 3
-              </option>
-            </select>
-          </div>
+          />
           <div
             className="form-group rjsf-field rjsf-field-object"
           >
             <fieldset
+              className="rjsf-optional-object-field"
               id="root_optionalObjectWithOneofs"
             >
               <legend
                 id="root_optionalObjectWithOneofs__title"
               >
                 optionalObjectWithOneofs
+                <span
+                  className="pull-right"
+                  style={
+                    {
+                      "marginBottom": "2px",
+                    }
+                  }
+                >
+                  <button
+                    className="btn btn-default rjsf-add-optional-data btn-sm"
+                    id="root_optionalObjectWithOneofs__optionalAdd"
+                    onClick={[Function]}
+                    title="Add data for optional field"
+                    type="button"
+                  >
+                    <i
+                      className="glyphicon glyphicon-plus"
+                    />
+                  </button>
+                </span>
+              </legend>
+            </fieldset>
+          </div>
+        </div>
+      </div>
+      <div
+        className="form-group rjsf-field rjsf-field-undefined"
+      >
+        <div
+          className="panel panel-default panel-body"
+        >
+          <div
+            className="form-group"
+          />
+          <div
+            className="form-group rjsf-field rjsf-field-array"
+          >
+            <fieldset
+              className="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field"
+              id="root_optionalArrayWithAnyofs"
+            >
+              <legend
+                id="root_optionalArrayWithAnyofs__title"
+              >
+                optionalArrayWithAnyofs
+                <span
+                  className="pull-right"
+                  style={
+                    {
+                      "marginBottom": "2px",
+                    }
+                  }
+                >
+                  <button
+                    className="btn btn-default rjsf-add-optional-data btn-sm"
+                    id="root_optionalArrayWithAnyofs__optionalAdd"
+                    onClick={[Function]}
+                    title="Add data for optional field"
+                    type="button"
+                  >
+                    <i
+                      className="glyphicon glyphicon-plus"
+                    />
+                  </button>
+                </span>
               </legend>
               <div
-                className="form-group rjsf-field rjsf-field-string"
-              >
-                <label
-                  className="control-label"
-                  htmlFor="root_optionalObjectWithOneofs_name"
-                >
-                  name
-                </label>
-                <input
-                  aria-describedby="root_optionalObjectWithOneofs_name__error root_optionalObjectWithOneofs_name__description root_optionalObjectWithOneofs_name__help"
-                  autoFocus={false}
-                  className="form-control"
-                  disabled={false}
-                  id="root_optionalObjectWithOneofs_name"
-                  label="name"
-                  name="root_optionalObjectWithOneofs_name"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  onFocus={[Function]}
-                  placeholder=""
-                  readOnly={true}
-                  required={false}
-                  type="text"
-                  value=""
-                />
-              </div>
+                className="row array-item-list"
+              />
             </fieldset>
           </div>
         </div>
@@ -3465,53 +3620,17 @@ exports[`single fields optional data controls shows "add" optional controls when
       <div
         className="form-group rjsf-field rjsf-field-undefined"
       >
-        <label
-          className="control-label"
-          htmlFor="root_optionalObjectWithOneofs"
-        >
-          optionalObjectWithOneofs
-        </label>
         <div
           className="panel panel-default panel-body"
         >
           <div
             className="form-group"
-          >
-            <select
-              aria-describedby="root_optionalObjectWithOneofs__oneof_select__error root_optionalObjectWithOneofs__oneof_select__description root_optionalObjectWithOneofs__oneof_select__help"
-              autoFocus={false}
-              className="form-control"
-              disabled={true}
-              id="root_optionalObjectWithOneofs__oneof_select"
-              multiple={false}
-              name="root_optionalObjectWithOneofs__oneof_select"
-              onBlur={[Function]}
-              onChange={[Function]}
-              onFocus={[Function]}
-              role="combobox"
-              value="0"
-            >
-              <option
-                value="0"
-              >
-                Option 1
-              </option>
-              <option
-                value="1"
-              >
-                Option 2
-              </option>
-              <option
-                value="2"
-              >
-                Option 3
-              </option>
-            </select>
-          </div>
+          />
           <div
             className="form-group rjsf-field rjsf-field-object"
           >
             <fieldset
+              className="rjsf-optional-object-field"
               id="root_optionalObjectWithOneofs"
             >
               <legend
@@ -3519,33 +3638,44 @@ exports[`single fields optional data controls shows "add" optional controls when
               >
                 optionalObjectWithOneofs
               </legend>
-              <div
-                className="form-group rjsf-field rjsf-field-string"
+              <em
+                id="root_optionalObjectWithOneofs__optionalMsg"
               >
-                <label
-                  className="control-label"
-                  htmlFor="root_optionalObjectWithOneofs_name"
-                >
-                  name
-                </label>
-                <input
-                  aria-describedby="root_optionalObjectWithOneofs_name__error root_optionalObjectWithOneofs_name__description root_optionalObjectWithOneofs_name__help"
-                  autoFocus={false}
-                  className="form-control"
-                  disabled={true}
-                  id="root_optionalObjectWithOneofs_name"
-                  label="name"
-                  name="root_optionalObjectWithOneofs_name"
-                  onBlur={[Function]}
-                  onChange={[Function]}
-                  onFocus={[Function]}
-                  placeholder=""
-                  readOnly={true}
-                  required={false}
-                  type="text"
-                  value=""
-                />
-              </div>
+                No data for optional field
+              </em>
+            </fieldset>
+          </div>
+        </div>
+      </div>
+      <div
+        className="form-group rjsf-field rjsf-field-undefined"
+      >
+        <div
+          className="panel panel-default panel-body"
+        >
+          <div
+            className="form-group"
+          />
+          <div
+            className="form-group rjsf-field rjsf-field-array"
+          >
+            <fieldset
+              className="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field"
+              id="root_optionalArrayWithAnyofs"
+            >
+              <legend
+                id="root_optionalArrayWithAnyofs__title"
+              >
+                optionalArrayWithAnyofs
+              </legend>
+              <em
+                id="root_optionalArrayWithAnyofs__optionalMsg"
+              >
+                No data for optional field
+              </em>
+              <div
+                className="row array-item-list"
+              />
             </fieldset>
           </div>
         </div>

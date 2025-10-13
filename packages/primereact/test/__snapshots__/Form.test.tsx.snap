@@ -2736,6 +2736,170 @@ exports[`single fields optional data controls does not show optional controls wh
           </fieldset>
         </div>
       </div>
+      <div
+        className="rjsf-field rjsf-field-undefined"
+      >
+        <div
+          style={
+            {
+              "display": "flex",
+              "flexDirection": "column",
+              "gap": "0.5rem",
+              "marginBottom": "1rem",
+            }
+          }
+        >
+          <label
+            htmlFor="root_optionalArrayWithAnyofs"
+          >
+            optionalArrayWithAnyofs
+             
+          </label>
+          <fieldset
+            className="p-fieldset p-component"
+            data-pc-name="fieldset"
+            data-pc-section="root"
+            id={null}
+            onClick={null}
+            style={{}}
+          >
+            <div
+              aria-labelledby="null_header"
+              className="p-toggleable-content"
+              data-pc-section="toggleablecontent"
+              id="null_content"
+              role="region"
+            >
+              <div
+                className="p-fieldset-content"
+                data-pc-section="content"
+              >
+                <div
+                  style={
+                    {
+                      "marginBottom": "1rem",
+                    }
+                  }
+                >
+                  <select
+                    aria-describedby="root_optionalArrayWithAnyofs__anyof_select__error root_optionalArrayWithAnyofs__anyof_select__description root_optionalArrayWithAnyofs__anyof_select__help"
+                    disabled={false}
+                    id="root_optionalArrayWithAnyofs__anyof_select"
+                    name="root_optionalArrayWithAnyofs__anyof_select"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    options={
+                      [
+                        {
+                          "disabled": false,
+                          "label": "Option 1",
+                          "value": "0",
+                        },
+                        {
+                          "disabled": false,
+                          "label": "Option 2",
+                          "value": "1",
+                        },
+                        {
+                          "disabled": false,
+                          "label": "Option 3",
+                          "value": "2",
+                        },
+                      ]
+                    }
+                    value="0"
+                  />
+                </div>
+                <div
+                  className="rjsf-field rjsf-field-array"
+                >
+                  <div
+                    style={
+                      {
+                        "display": "flex",
+                        "flexDirection": "column",
+                        "gap": "0.5rem",
+                        "marginBottom": "1rem",
+                      }
+                    }
+                  >
+                    <h5
+                      id="root_optionalArrayWithAnyofs__title"
+                      style={
+                        {
+                          "fontSize": "1.5rem",
+                          "margin": 0,
+                          "marginBottom": "0.2rem",
+                        }
+                      }
+                    >
+                      optionalArrayWithAnyofs
+                       
+                    </h5>
+                    <fieldset
+                      className="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields p-fieldset p-component"
+                      data-pc-name="fieldset"
+                      data-pc-section="root"
+                      formData={[]}
+                      id="root_optionalArrayWithAnyofs"
+                      onClick={null}
+                      style={{}}
+                    >
+                      <div
+                        aria-labelledby="root_optionalArrayWithAnyofs_header"
+                        className="p-toggleable-content"
+                        data-pc-section="toggleablecontent"
+                        id="root_optionalArrayWithAnyofs_content"
+                        role="region"
+                      >
+                        <div
+                          className="p-fieldset-content"
+                          data-pc-section="content"
+                        >
+                          <div>
+                            <div />
+                            <div
+                              style={
+                                {
+                                  "marginTop": "1rem",
+                                  "position": "relative",
+                                  "textAlign": "right",
+                                }
+                              }
+                            >
+                              <button
+                                aria-label="Add Item"
+                                className="rjsf-array-item-add p-button p-component p-button-outlined p-button-sm p-button-secondary"
+                                data-pc-name="button"
+                                data-pc-section="root"
+                                disabled={false}
+                                id="root_optionalArrayWithAnyofs__add"
+                                onClick={[Function]}
+                              >
+                                <span
+                                  className="p-button-icon p-c p-button-icon-left pi pi-plus"
+                                  data-pc-section="icon"
+                                />
+                                <span
+                                  className="p-button-label p-c"
+                                  data-pc-section="label"
+                                >
+                                  Add Item
+                                </span>
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </fieldset>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+      </div>
     </div>
   </div>
   <button
@@ -3620,15 +3784,15 @@ exports[`single fields optional data controls does not show optional controls wh
             className="p-fieldset p-component"
             data-pc-name="fieldset"
             data-pc-section="root"
-            id="pr_id_44"
+            id="pr_id_56"
             onClick={null}
             style={{}}
           >
             <div
-              aria-labelledby="pr_id_44_header"
+              aria-labelledby="pr_id_56_header"
               className="p-toggleable-content"
               data-pc-section="toggleablecontent"
-              id="pr_id_44_content"
+              id="pr_id_56_content"
               role="region"
             >
               <div
@@ -3761,6 +3925,170 @@ exports[`single fields optional data controls does not show optional controls wh
                         />
                       </div>
                     </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-undefined"
+      >
+        <div
+          style={
+            {
+              "display": "flex",
+              "flexDirection": "column",
+              "gap": "0.5rem",
+              "marginBottom": "1rem",
+            }
+          }
+        >
+          <label
+            htmlFor="root_optionalArrayWithAnyofs"
+          >
+            optionalArrayWithAnyofs
+             
+          </label>
+          <fieldset
+            className="p-fieldset p-component"
+            data-pc-name="fieldset"
+            data-pc-section="root"
+            id="pr_id_57"
+            onClick={null}
+            style={{}}
+          >
+            <div
+              aria-labelledby="pr_id_57_header"
+              className="p-toggleable-content"
+              data-pc-section="toggleablecontent"
+              id="pr_id_57_content"
+              role="region"
+            >
+              <div
+                className="p-fieldset-content"
+                data-pc-section="content"
+              >
+                <div
+                  style={
+                    {
+                      "marginBottom": "1rem",
+                    }
+                  }
+                >
+                  <select
+                    aria-describedby="root_optionalArrayWithAnyofs__anyof_select__error root_optionalArrayWithAnyofs__anyof_select__description root_optionalArrayWithAnyofs__anyof_select__help"
+                    disabled={true}
+                    id="root_optionalArrayWithAnyofs__anyof_select"
+                    name="root_optionalArrayWithAnyofs__anyof_select"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    options={
+                      [
+                        {
+                          "disabled": false,
+                          "label": "Option 1",
+                          "value": "0",
+                        },
+                        {
+                          "disabled": false,
+                          "label": "Option 2",
+                          "value": "1",
+                        },
+                        {
+                          "disabled": false,
+                          "label": "Option 3",
+                          "value": "2",
+                        },
+                      ]
+                    }
+                    value="0"
+                  />
+                </div>
+                <div
+                  className="rjsf-field rjsf-field-array"
+                >
+                  <div
+                    style={
+                      {
+                        "display": "flex",
+                        "flexDirection": "column",
+                        "gap": "0.5rem",
+                        "marginBottom": "1rem",
+                      }
+                    }
+                  >
+                    <h5
+                      id="root_optionalArrayWithAnyofs__title"
+                      style={
+                        {
+                          "fontSize": "1.5rem",
+                          "margin": 0,
+                          "marginBottom": "0.2rem",
+                        }
+                      }
+                    >
+                      optionalArrayWithAnyofs
+                       
+                    </h5>
+                    <fieldset
+                      className="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields p-fieldset p-component"
+                      data-pc-name="fieldset"
+                      data-pc-section="root"
+                      formData={[]}
+                      id="root_optionalArrayWithAnyofs"
+                      onClick={null}
+                      style={{}}
+                    >
+                      <div
+                        aria-labelledby="root_optionalArrayWithAnyofs_header"
+                        className="p-toggleable-content"
+                        data-pc-section="toggleablecontent"
+                        id="root_optionalArrayWithAnyofs_content"
+                        role="region"
+                      >
+                        <div
+                          className="p-fieldset-content"
+                          data-pc-section="content"
+                        >
+                          <div>
+                            <div />
+                            <div
+                              style={
+                                {
+                                  "marginTop": "1rem",
+                                  "position": "relative",
+                                  "textAlign": "right",
+                                }
+                              }
+                            >
+                              <button
+                                aria-label="Add Item"
+                                className="rjsf-array-item-add p-button p-component p-disabled p-button-outlined p-button-sm p-button-secondary"
+                                data-pc-name="button"
+                                data-pc-section="root"
+                                disabled={true}
+                                id="root_optionalArrayWithAnyofs__add"
+                                onClick={[Function]}
+                              >
+                                <span
+                                  className="p-button-icon p-c p-button-icon-left pi pi-plus"
+                                  data-pc-section="icon"
+                                />
+                                <span
+                                  className="p-button-label p-c"
+                                  data-pc-section="label"
+                                >
+                                  Add Item
+                                </span>
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </fieldset>
                   </div>
                 </div>
               </div>
@@ -4867,12 +5195,6 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
             }
           }
         >
-          <label
-            htmlFor="root_optionalObjectWithOneofs"
-          >
-            optionalObjectWithOneofs
-             
-          </label>
           <fieldset
             className="p-fieldset p-component"
             data-pc-name="fieldset"
@@ -4898,37 +5220,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                       "marginBottom": "1rem",
                     }
                   }
-                >
-                  <select
-                    aria-describedby="root_optionalObjectWithOneofs__oneof_select__error root_optionalObjectWithOneofs__oneof_select__description root_optionalObjectWithOneofs__oneof_select__help"
-                    disabled={false}
-                    id="root_optionalObjectWithOneofs__oneof_select"
-                    name="root_optionalObjectWithOneofs__oneof_select"
-                    onBlur={[Function]}
-                    onChange={[Function]}
-                    onFocus={[Function]}
-                    options={
-                      [
-                        {
-                          "disabled": false,
-                          "label": "Option 1",
-                          "value": "0",
-                        },
-                        {
-                          "disabled": false,
-                          "label": "Option 2",
-                          "value": "1",
-                        },
-                        {
-                          "disabled": false,
-                          "label": "Option 3",
-                          "value": "2",
-                        },
-                      ]
-                    }
-                    value="0"
-                  />
-                </div>
+                />
                 <div
                   className="rjsf-field rjsf-field-object"
                 >
@@ -4945,17 +5237,70 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                     <div
                       id="root_optionalObjectWithOneofs__title"
                     >
-                      <h5
+                      <div
                         style={
                           {
-                            "fontSize": "1.2rem",
-                            "margin": 0,
+                            "display": "flex",
                           }
                         }
                       >
-                        optionalObjectWithOneofs
-                         
-                      </h5>
+                        <div
+                          style={
+                            {
+                              "flexGrow": 1,
+                            }
+                          }
+                        >
+                          <h5
+                            style={
+                              {
+                                "fontSize": "1.2rem",
+                                "margin": 0,
+                              }
+                            }
+                          >
+                            optionalObjectWithOneofs
+                             
+                          </h5>
+                        </div>
+                        <div
+                          style={
+                            {
+                              "marginLeft": "-5px",
+                            }
+                          }
+                        >
+                          <button
+                            className="rjsf-add-optional-data p-button p-component p-button-icon-only p-button-text p-button-rounded p-button-secondary"
+                            data-pc-name="button"
+                            data-pc-section="root"
+                            disabled={false}
+                            id="root_optionalObjectWithOneofs__optionalAdd"
+                            onClick={[Function]}
+                            style={
+                              {
+                                "height": "1.5rem",
+                                "width": "1.5rem",
+                              }
+                            }
+                            title="Add data for optional field"
+                          >
+                            <span
+                              className="p-button-icon p-c pi pi-pi pi-plus"
+                              data-pc-section="icon"
+                            />
+                            <span
+                              className="p-button-label p-c"
+                              dangerouslySetInnerHTML={
+                                {
+                                  "__html": "&nbsp;",
+                                }
+                              }
+                              data-pc-section="label"
+                            />
+                          </button>
+                        </div>
+                      </div>
                       <div
                         aria-orientation="horizontal"
                         className="p-divider p-component p-divider-horizontal p-divider-solid p-divider-left"
@@ -4976,48 +5321,151 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                         />
                       </div>
                     </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-undefined"
+      >
+        <div
+          style={
+            {
+              "display": "flex",
+              "flexDirection": "column",
+              "gap": "0.5rem",
+              "marginBottom": "1rem",
+            }
+          }
+        >
+          <fieldset
+            className="p-fieldset p-component"
+            data-pc-name="fieldset"
+            data-pc-section="root"
+            id={null}
+            onClick={null}
+            style={{}}
+          >
+            <div
+              aria-labelledby="null_header"
+              className="p-toggleable-content"
+              data-pc-section="toggleablecontent"
+              id="null_content"
+              role="region"
+            >
+              <div
+                className="p-fieldset-content"
+                data-pc-section="content"
+              >
+                <div
+                  style={
+                    {
+                      "marginBottom": "1rem",
+                    }
+                  }
+                />
+                <div
+                  className="rjsf-field rjsf-field-array"
+                >
+                  <div
+                    style={
+                      {
+                        "display": "flex",
+                        "flexDirection": "column",
+                        "gap": "0.5rem",
+                        "marginBottom": "1rem",
+                      }
+                    }
+                  >
                     <div
-                      className="rjsf-field rjsf-field-string"
+                      style={
+                        {
+                          "display": "flex",
+                        }
+                      }
                     >
                       <div
                         style={
                           {
-                            "display": "flex",
-                            "flexDirection": "column",
-                            "gap": "0.5rem",
-                            "marginBottom": "1rem",
+                            "flexGrow": 1,
                           }
                         }
                       >
-                        <label
-                          htmlFor="root_optionalObjectWithOneofs_name"
+                        <h5
+                          id="root_optionalArrayWithAnyofs__title"
+                          style={
+                            {
+                              "fontSize": "1.5rem",
+                              "margin": 0,
+                              "marginBottom": "0.2rem",
+                            }
+                          }
                         >
-                          name
+                          optionalArrayWithAnyofs
                            
-                        </label>
-                        <input
-                          aria-describedby="root_optionalObjectWithOneofs_name__error root_optionalObjectWithOneofs_name__description root_optionalObjectWithOneofs_name__help"
-                          autoFocus={false}
-                          className="p-inputtext p-component p-disabled"
-                          data-pc-name="inputtext"
+                        </h5>
+                      </div>
+                      <div>
+                        <button
+                          className="rjsf-add-optional-data p-button p-component p-button-icon-only p-button-text p-button-rounded p-button-secondary"
+                          data-pc-name="button"
                           data-pc-section="root"
-                          disabled={true}
-                          id="root_optionalObjectWithOneofs_name"
-                          name="root_optionalObjectWithOneofs_name"
-                          onBeforeInput={[Function]}
-                          onBlur={[Function]}
-                          onChange={[Function]}
-                          onFocus={[Function]}
-                          onInput={[Function]}
-                          onKeyDown={[Function]}
-                          onPaste={[Function]}
-                          placeholder=""
-                          required={false}
-                          type="text"
-                          value=""
-                        />
+                          disabled={false}
+                          id="root_optionalArrayWithAnyofs__optionalAdd"
+                          onClick={[Function]}
+                          style={
+                            {
+                              "height": "1.5rem",
+                              "width": "1.5rem",
+                            }
+                          }
+                          title="Add data for optional field"
+                        >
+                          <span
+                            className="p-button-icon p-c pi pi-pi pi-plus"
+                            data-pc-section="icon"
+                          />
+                          <span
+                            className="p-button-label p-c"
+                            dangerouslySetInnerHTML={
+                              {
+                                "__html": "&nbsp;",
+                              }
+                            }
+                            data-pc-section="label"
+                          />
+                        </button>
                       </div>
                     </div>
+                    <fieldset
+                      className="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field sortable-form-fields p-fieldset p-component"
+                      data-pc-name="fieldset"
+                      data-pc-section="root"
+                      formData={[]}
+                      id="root_optionalArrayWithAnyofs"
+                      onClick={null}
+                      style={{}}
+                    >
+                      <div
+                        aria-labelledby="root_optionalArrayWithAnyofs_header"
+                        className="p-toggleable-content"
+                        data-pc-section="toggleablecontent"
+                        id="root_optionalArrayWithAnyofs_content"
+                        role="region"
+                      >
+                        <div
+                          className="p-fieldset-content"
+                          data-pc-section="content"
+                        >
+                          <div>
+                            <div />
+                          </div>
+                        </div>
+                      </div>
+                    </fieldset>
                   </div>
                 </div>
               </div>
@@ -5935,25 +6383,19 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
             }
           }
         >
-          <label
-            htmlFor="root_optionalObjectWithOneofs"
-          >
-            optionalObjectWithOneofs
-             
-          </label>
           <fieldset
             className="p-fieldset p-component"
             data-pc-name="fieldset"
             data-pc-section="root"
-            id="pr_id_66"
+            id="pr_id_83"
             onClick={null}
             style={{}}
           >
             <div
-              aria-labelledby="pr_id_66_header"
+              aria-labelledby="pr_id_83_header"
               className="p-toggleable-content"
               data-pc-section="toggleablecontent"
-              id="pr_id_66_content"
+              id="pr_id_83_content"
               role="region"
             >
               <div
@@ -5966,37 +6408,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                       "marginBottom": "1rem",
                     }
                   }
-                >
-                  <select
-                    aria-describedby="root_optionalObjectWithOneofs__oneof_select__error root_optionalObjectWithOneofs__oneof_select__description root_optionalObjectWithOneofs__oneof_select__help"
-                    disabled={true}
-                    id="root_optionalObjectWithOneofs__oneof_select"
-                    name="root_optionalObjectWithOneofs__oneof_select"
-                    onBlur={[Function]}
-                    onChange={[Function]}
-                    onFocus={[Function]}
-                    options={
-                      [
-                        {
-                          "disabled": false,
-                          "label": "Option 1",
-                          "value": "0",
-                        },
-                        {
-                          "disabled": false,
-                          "label": "Option 2",
-                          "value": "1",
-                        },
-                        {
-                          "disabled": false,
-                          "label": "Option 3",
-                          "value": "2",
-                        },
-                      ]
-                    }
-                    value="0"
-                  />
-                </div>
+                />
                 <div
                   className="rjsf-field rjsf-field-object"
                 >
@@ -6044,48 +6456,115 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                         />
                       </div>
                     </div>
-                    <div
-                      className="rjsf-field rjsf-field-string"
+                    <em
+                      id="root_optionalObjectWithOneofs__optionalMsg"
+                    >
+                      No data for optional field
+                    </em>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-undefined"
+      >
+        <div
+          style={
+            {
+              "display": "flex",
+              "flexDirection": "column",
+              "gap": "0.5rem",
+              "marginBottom": "1rem",
+            }
+          }
+        >
+          <fieldset
+            className="p-fieldset p-component"
+            data-pc-name="fieldset"
+            data-pc-section="root"
+            id="pr_id_84"
+            onClick={null}
+            style={{}}
+          >
+            <div
+              aria-labelledby="pr_id_84_header"
+              className="p-toggleable-content"
+              data-pc-section="toggleablecontent"
+              id="pr_id_84_content"
+              role="region"
+            >
+              <div
+                className="p-fieldset-content"
+                data-pc-section="content"
+              >
+                <div
+                  style={
+                    {
+                      "marginBottom": "1rem",
+                    }
+                  }
+                />
+                <div
+                  className="rjsf-field rjsf-field-array"
+                >
+                  <div
+                    style={
+                      {
+                        "display": "flex",
+                        "flexDirection": "column",
+                        "gap": "0.5rem",
+                        "marginBottom": "1rem",
+                      }
+                    }
+                  >
+                    <h5
+                      id="root_optionalArrayWithAnyofs__title"
+                      style={
+                        {
+                          "fontSize": "1.5rem",
+                          "margin": 0,
+                          "marginBottom": "0.2rem",
+                        }
+                      }
+                    >
+                      optionalArrayWithAnyofs
+                       
+                    </h5>
+                    <fieldset
+                      className="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field sortable-form-fields p-fieldset p-component"
+                      data-pc-name="fieldset"
+                      data-pc-section="root"
+                      formData={[]}
+                      id="root_optionalArrayWithAnyofs"
+                      onClick={null}
+                      style={{}}
                     >
                       <div
-                        style={
-                          {
-                            "display": "flex",
-                            "flexDirection": "column",
-                            "gap": "0.5rem",
-                            "marginBottom": "1rem",
-                          }
-                        }
+                        aria-labelledby="root_optionalArrayWithAnyofs_header"
+                        className="p-toggleable-content"
+                        data-pc-section="toggleablecontent"
+                        id="root_optionalArrayWithAnyofs_content"
+                        role="region"
                       >
-                        <label
-                          htmlFor="root_optionalObjectWithOneofs_name"
+                        <div
+                          className="p-fieldset-content"
+                          data-pc-section="content"
                         >
-                          name
-                           
-                        </label>
-                        <input
-                          aria-describedby="root_optionalObjectWithOneofs_name__error root_optionalObjectWithOneofs_name__description root_optionalObjectWithOneofs_name__help"
-                          autoFocus={false}
-                          className="p-inputtext p-component p-disabled"
-                          data-pc-name="inputtext"
-                          data-pc-section="root"
-                          disabled={true}
-                          id="root_optionalObjectWithOneofs_name"
-                          name="root_optionalObjectWithOneofs_name"
-                          onBeforeInput={[Function]}
-                          onBlur={[Function]}
-                          onChange={[Function]}
-                          onFocus={[Function]}
-                          onInput={[Function]}
-                          onKeyDown={[Function]}
-                          onPaste={[Function]}
-                          placeholder=""
-                          required={false}
-                          type="text"
-                          value=""
-                        />
+                          <div>
+                            <div>
+                              <em
+                                id="root_optionalArrayWithAnyofs__optionalMsg"
+                              >
+                                No data for optional field
+                              </em>
+                            </div>
+                          </div>
+                        </div>
                       </div>
-                    </div>
+                    </fieldset>
                   </div>
                 </div>
               </div>
@@ -6559,25 +7038,19 @@ exports[`single fields optional data controls shows "add" optional controls when
             }
           }
         >
-          <label
-            htmlFor="root_optionalObjectWithOneofs"
-          >
-            optionalObjectWithOneofs
-             
-          </label>
           <fieldset
             className="p-fieldset p-component"
             data-pc-name="fieldset"
             data-pc-section="root"
-            id="pr_id_20"
+            id="pr_id_24"
             onClick={null}
             style={{}}
           >
             <div
-              aria-labelledby="pr_id_20_header"
+              aria-labelledby="pr_id_24_header"
               className="p-toggleable-content"
               data-pc-section="toggleablecontent"
-              id="pr_id_20_content"
+              id="pr_id_24_content"
               role="region"
             >
               <div
@@ -6590,37 +7063,7 @@ exports[`single fields optional data controls shows "add" optional controls when
                       "marginBottom": "1rem",
                     }
                   }
-                >
-                  <select
-                    aria-describedby="root_optionalObjectWithOneofs__oneof_select__error root_optionalObjectWithOneofs__oneof_select__description root_optionalObjectWithOneofs__oneof_select__help"
-                    disabled={false}
-                    id="root_optionalObjectWithOneofs__oneof_select"
-                    name="root_optionalObjectWithOneofs__oneof_select"
-                    onBlur={[Function]}
-                    onChange={[Function]}
-                    onFocus={[Function]}
-                    options={
-                      [
-                        {
-                          "disabled": false,
-                          "label": "Option 1",
-                          "value": "0",
-                        },
-                        {
-                          "disabled": false,
-                          "label": "Option 2",
-                          "value": "1",
-                        },
-                        {
-                          "disabled": false,
-                          "label": "Option 3",
-                          "value": "2",
-                        },
-                      ]
-                    }
-                    value="0"
-                  />
-                </div>
+                />
                 <div
                   className="rjsf-field rjsf-field-object"
                 >
@@ -6637,17 +7080,70 @@ exports[`single fields optional data controls shows "add" optional controls when
                     <div
                       id="root_optionalObjectWithOneofs__title"
                     >
-                      <h5
+                      <div
                         style={
                           {
-                            "fontSize": "1.2rem",
-                            "margin": 0,
+                            "display": "flex",
                           }
                         }
                       >
-                        optionalObjectWithOneofs
-                         
-                      </h5>
+                        <div
+                          style={
+                            {
+                              "flexGrow": 1,
+                            }
+                          }
+                        >
+                          <h5
+                            style={
+                              {
+                                "fontSize": "1.2rem",
+                                "margin": 0,
+                              }
+                            }
+                          >
+                            optionalObjectWithOneofs
+                             
+                          </h5>
+                        </div>
+                        <div
+                          style={
+                            {
+                              "marginLeft": "-5px",
+                            }
+                          }
+                        >
+                          <button
+                            className="rjsf-add-optional-data p-button p-component p-button-icon-only p-button-text p-button-rounded p-button-secondary"
+                            data-pc-name="button"
+                            data-pc-section="root"
+                            disabled={false}
+                            id="root_optionalObjectWithOneofs__optionalAdd"
+                            onClick={[Function]}
+                            style={
+                              {
+                                "height": "1.5rem",
+                                "width": "1.5rem",
+                              }
+                            }
+                            title="Add data for optional field"
+                          >
+                            <span
+                              className="p-button-icon p-c pi pi-pi pi-plus"
+                              data-pc-section="icon"
+                            />
+                            <span
+                              className="p-button-label p-c"
+                              dangerouslySetInnerHTML={
+                                {
+                                  "__html": "&nbsp;",
+                                }
+                              }
+                              data-pc-section="label"
+                            />
+                          </button>
+                        </div>
+                      </div>
                       <div
                         aria-orientation="horizontal"
                         className="p-divider p-component p-divider-horizontal p-divider-solid p-divider-left"
@@ -6668,48 +7164,151 @@ exports[`single fields optional data controls shows "add" optional controls when
                         />
                       </div>
                     </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-undefined"
+      >
+        <div
+          style={
+            {
+              "display": "flex",
+              "flexDirection": "column",
+              "gap": "0.5rem",
+              "marginBottom": "1rem",
+            }
+          }
+        >
+          <fieldset
+            className="p-fieldset p-component"
+            data-pc-name="fieldset"
+            data-pc-section="root"
+            id="pr_id_25"
+            onClick={null}
+            style={{}}
+          >
+            <div
+              aria-labelledby="pr_id_25_header"
+              className="p-toggleable-content"
+              data-pc-section="toggleablecontent"
+              id="pr_id_25_content"
+              role="region"
+            >
+              <div
+                className="p-fieldset-content"
+                data-pc-section="content"
+              >
+                <div
+                  style={
+                    {
+                      "marginBottom": "1rem",
+                    }
+                  }
+                />
+                <div
+                  className="rjsf-field rjsf-field-array"
+                >
+                  <div
+                    style={
+                      {
+                        "display": "flex",
+                        "flexDirection": "column",
+                        "gap": "0.5rem",
+                        "marginBottom": "1rem",
+                      }
+                    }
+                  >
                     <div
-                      className="rjsf-field rjsf-field-string"
+                      style={
+                        {
+                          "display": "flex",
+                        }
+                      }
                     >
                       <div
                         style={
                           {
-                            "display": "flex",
-                            "flexDirection": "column",
-                            "gap": "0.5rem",
-                            "marginBottom": "1rem",
+                            "flexGrow": 1,
                           }
                         }
                       >
-                        <label
-                          htmlFor="root_optionalObjectWithOneofs_name"
+                        <h5
+                          id="root_optionalArrayWithAnyofs__title"
+                          style={
+                            {
+                              "fontSize": "1.5rem",
+                              "margin": 0,
+                              "marginBottom": "0.2rem",
+                            }
+                          }
                         >
-                          name
+                          optionalArrayWithAnyofs
                            
-                        </label>
-                        <input
-                          aria-describedby="root_optionalObjectWithOneofs_name__error root_optionalObjectWithOneofs_name__description root_optionalObjectWithOneofs_name__help"
-                          autoFocus={false}
-                          className="p-inputtext p-component p-disabled"
-                          data-pc-name="inputtext"
+                        </h5>
+                      </div>
+                      <div>
+                        <button
+                          className="rjsf-add-optional-data p-button p-component p-button-icon-only p-button-text p-button-rounded p-button-secondary"
+                          data-pc-name="button"
                           data-pc-section="root"
-                          disabled={true}
-                          id="root_optionalObjectWithOneofs_name"
-                          name="root_optionalObjectWithOneofs_name"
-                          onBeforeInput={[Function]}
-                          onBlur={[Function]}
-                          onChange={[Function]}
-                          onFocus={[Function]}
-                          onInput={[Function]}
-                          onKeyDown={[Function]}
-                          onPaste={[Function]}
-                          placeholder=""
-                          required={false}
-                          type="text"
-                          value=""
-                        />
+                          disabled={false}
+                          id="root_optionalArrayWithAnyofs__optionalAdd"
+                          onClick={[Function]}
+                          style={
+                            {
+                              "height": "1.5rem",
+                              "width": "1.5rem",
+                            }
+                          }
+                          title="Add data for optional field"
+                        >
+                          <span
+                            className="p-button-icon p-c pi pi-pi pi-plus"
+                            data-pc-section="icon"
+                          />
+                          <span
+                            className="p-button-label p-c"
+                            dangerouslySetInnerHTML={
+                              {
+                                "__html": "&nbsp;",
+                              }
+                            }
+                            data-pc-section="label"
+                          />
+                        </button>
                       </div>
                     </div>
+                    <fieldset
+                      className="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field sortable-form-fields p-fieldset p-component"
+                      data-pc-name="fieldset"
+                      data-pc-section="root"
+                      formData={[]}
+                      id="root_optionalArrayWithAnyofs"
+                      onClick={null}
+                      style={{}}
+                    >
+                      <div
+                        aria-labelledby="root_optionalArrayWithAnyofs_header"
+                        className="p-toggleable-content"
+                        data-pc-section="toggleablecontent"
+                        id="root_optionalArrayWithAnyofs_content"
+                        role="region"
+                      >
+                        <div
+                          className="p-fieldset-content"
+                          data-pc-section="content"
+                        >
+                          <div>
+                            <div />
+                          </div>
+                        </div>
+                      </div>
+                    </fieldset>
                   </div>
                 </div>
               </div>
@@ -7094,12 +7693,6 @@ exports[`single fields optional data controls shows "add" optional controls when
             }
           }
         >
-          <label
-            htmlFor="root_optionalObjectWithOneofs"
-          >
-            optionalObjectWithOneofs
-             
-          </label>
           <fieldset
             className="p-fieldset p-component"
             data-pc-name="fieldset"
@@ -7125,37 +7718,7 @@ exports[`single fields optional data controls shows "add" optional controls when
                       "marginBottom": "1rem",
                     }
                   }
-                >
-                  <select
-                    aria-describedby="root_optionalObjectWithOneofs__oneof_select__error root_optionalObjectWithOneofs__oneof_select__description root_optionalObjectWithOneofs__oneof_select__help"
-                    disabled={true}
-                    id="root_optionalObjectWithOneofs__oneof_select"
-                    name="root_optionalObjectWithOneofs__oneof_select"
-                    onBlur={[Function]}
-                    onChange={[Function]}
-                    onFocus={[Function]}
-                    options={
-                      [
-                        {
-                          "disabled": false,
-                          "label": "Option 1",
-                          "value": "0",
-                        },
-                        {
-                          "disabled": false,
-                          "label": "Option 2",
-                          "value": "1",
-                        },
-                        {
-                          "disabled": false,
-                          "label": "Option 3",
-                          "value": "2",
-                        },
-                      ]
-                    }
-                    value="0"
-                  />
-                </div>
+                />
                 <div
                   className="rjsf-field rjsf-field-object"
                 >
@@ -7203,48 +7766,115 @@ exports[`single fields optional data controls shows "add" optional controls when
                         />
                       </div>
                     </div>
-                    <div
-                      className="rjsf-field rjsf-field-string"
+                    <em
+                      id="root_optionalObjectWithOneofs__optionalMsg"
+                    >
+                      No data for optional field
+                    </em>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-undefined"
+      >
+        <div
+          style={
+            {
+              "display": "flex",
+              "flexDirection": "column",
+              "gap": "0.5rem",
+              "marginBottom": "1rem",
+            }
+          }
+        >
+          <fieldset
+            className="p-fieldset p-component"
+            data-pc-name="fieldset"
+            data-pc-section="root"
+            id={null}
+            onClick={null}
+            style={{}}
+          >
+            <div
+              aria-labelledby="null_header"
+              className="p-toggleable-content"
+              data-pc-section="toggleablecontent"
+              id="null_content"
+              role="region"
+            >
+              <div
+                className="p-fieldset-content"
+                data-pc-section="content"
+              >
+                <div
+                  style={
+                    {
+                      "marginBottom": "1rem",
+                    }
+                  }
+                />
+                <div
+                  className="rjsf-field rjsf-field-array"
+                >
+                  <div
+                    style={
+                      {
+                        "display": "flex",
+                        "flexDirection": "column",
+                        "gap": "0.5rem",
+                        "marginBottom": "1rem",
+                      }
+                    }
+                  >
+                    <h5
+                      id="root_optionalArrayWithAnyofs__title"
+                      style={
+                        {
+                          "fontSize": "1.5rem",
+                          "margin": 0,
+                          "marginBottom": "0.2rem",
+                        }
+                      }
+                    >
+                      optionalArrayWithAnyofs
+                       
+                    </h5>
+                    <fieldset
+                      className="rjsf-field rjsf-field-array rjsf-field-array-of-string rjsf-optional-array-field sortable-form-fields p-fieldset p-component"
+                      data-pc-name="fieldset"
+                      data-pc-section="root"
+                      formData={[]}
+                      id="root_optionalArrayWithAnyofs"
+                      onClick={null}
+                      style={{}}
                     >
                       <div
-                        style={
-                          {
-                            "display": "flex",
-                            "flexDirection": "column",
-                            "gap": "0.5rem",
-                            "marginBottom": "1rem",
-                          }
-                        }
+                        aria-labelledby="root_optionalArrayWithAnyofs_header"
+                        className="p-toggleable-content"
+                        data-pc-section="toggleablecontent"
+                        id="root_optionalArrayWithAnyofs_content"
+                        role="region"
                       >
-                        <label
-                          htmlFor="root_optionalObjectWithOneofs_name"
+                        <div
+                          className="p-fieldset-content"
+                          data-pc-section="content"
                         >
-                          name
-                           
-                        </label>
-                        <input
-                          aria-describedby="root_optionalObjectWithOneofs_name__error root_optionalObjectWithOneofs_name__description root_optionalObjectWithOneofs_name__help"
-                          autoFocus={false}
-                          className="p-inputtext p-component p-disabled"
-                          data-pc-name="inputtext"
-                          data-pc-section="root"
-                          disabled={true}
-                          id="root_optionalObjectWithOneofs_name"
-                          name="root_optionalObjectWithOneofs_name"
-                          onBeforeInput={[Function]}
-                          onBlur={[Function]}
-                          onChange={[Function]}
-                          onFocus={[Function]}
-                          onInput={[Function]}
-                          onKeyDown={[Function]}
-                          onPaste={[Function]}
-                          placeholder=""
-                          required={false}
-                          type="text"
-                          value=""
-                        />
+                          <div>
+                            <div>
+                              <em
+                                id="root_optionalArrayWithAnyofs__optionalMsg"
+                              >
+                                No data for optional field
+                              </em>
+                            </div>
+                          </div>
+                        </div>
                       </div>
-                    </div>
+                    </fieldset>
                   </div>
                 </div>
               </div>
