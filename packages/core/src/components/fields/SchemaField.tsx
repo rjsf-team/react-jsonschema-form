@@ -164,7 +164,7 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   /** If the schema `anyOf` or 'oneOf' can be rendered as a select control, don't render the selection and let
    * `StringField` component handle rendering unless there is a field override and that field replaces the any or one of
    */
-  const isReplacingAnyOrOneOf = uiSchema?.['ui:field'] && uiSchema?.['ui:fieldReplacesAnyOrOneOf'] === true;
+  const isReplacingAnyOrOneOf = uiOptions.field && uiOptions.fieldReplacesAnyOrOneOf === true;
   let XxxOfField: Field<T, S, F> | undefined;
   let XxxOfOptions: S[] | undefined;
   if ((ANY_OF_KEY in schema || ONE_OF_KEY in schema) && !isReplacingAnyOrOneOf && !schemaUtils.isSelect(schema)) {
