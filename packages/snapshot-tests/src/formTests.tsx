@@ -655,6 +655,33 @@ export function formTests(Form: ComponentType<FormProps>, customOptions: FormRen
                 },
               ],
             },
+            optionalArrayWithAnyofs: {
+              anyOf: [
+                {
+                  type: 'array',
+                  items: {
+                    type: 'string',
+                  },
+                },
+                {
+                  type: 'array',
+                  items: {
+                    type: 'number',
+                  },
+                },
+                {
+                  type: 'array',
+                  items: {
+                    type: 'object',
+                    properties: {
+                      test: {
+                        type: 'string',
+                      },
+                    },
+                  },
+                },
+              ],
+            },
           },
           required: ['nestedObject', 'nestedArray'],
         };
@@ -666,9 +693,6 @@ export function formTests(Form: ComponentType<FormProps>, customOptions: FormRen
             deepArrayOptional: {
               'ui:enableOptionalDataFieldForType': ['object'],
             },
-          },
-          optionalObjectWithOneofs: {
-            'ui:enableOptionalDataFieldForType': [],
           },
         };
         experimental_defaultFormStateBehavior = {

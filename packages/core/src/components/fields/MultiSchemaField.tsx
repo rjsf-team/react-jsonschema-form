@@ -12,9 +12,11 @@ import {
   getTemplate,
   getUiOptions,
   getWidget,
+  isFormDataAvailable,
   mergeSchemas,
   ONE_OF_KEY,
   RJSFSchema,
+  shouldRenderOptionalField,
   StrictRJSFSchema,
   TranslatableString,
   UiSchema,
@@ -148,9 +150,11 @@ class AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
       disabled = false,
       errorSchema = {},
       formContext,
+      formData,
       onBlur,
       onFocus,
       readonly,
+      required = false,
       registry,
       schema,
       uiSchema,
@@ -163,6 +167,8 @@ class AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
       registry,
       globalUiOptions,
     );
+    const isOptionalRender = shouldRenderOptionalField<T, S, F>(registry, schema, required, uiSchema);
+    const hasFormData = isFormDataAvailable(formData);
 
     const { selectedOption, retrievedOptions } = this.state;
     const {
@@ -222,30 +228,31 @@ class AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
       };
     });
 
-    const selector = (
-      <Widget
-        id={this.getFieldId()}
-        name={`${name}${schema.oneOf ? '__oneof_select' : '__anyof_select'}`}
-        schema={{ type: 'number', default: 0 } as S}
-        onChange={this.onOptionChange}
-        onBlur={onBlur}
-        onFocus={onFocus}
-        disabled={disabled || isEmpty(enumOptions)}
-        multiple={false}
-        rawErrors={rawErrors}
-        errorSchema={fieldErrorSchema}
-        value={selectedOption >= 0 ? selectedOption : undefined}
-        options={{ enumOptions, ...uiOptions }}
-        registry={registry}
-        formContext={formContext}
-        placeholder={placeholder}
-        autocomplete={autocomplete}
-        autofocus={autofocus}
-        label={title ?? name}
-        hideLabel={!displayLabel}
-        readonly={readonly}
-      />
-    );
+    const selector =
+      !isOptionalRender || hasFormData ? (
+        <Widget
+          id={this.getFieldId()}
+          name={`${name}${schema.oneOf ? '__oneof_select' : '__anyof_select'}`}
+          schema={{ type: 'number', default: 0 } as S}
+          onChange={this.onOptionChange}
+          onBlur={onBlur}
+          onFocus={onFocus}
+          disabled={disabled || isEmpty(enumOptions)}
+          multiple={false}
+          rawErrors={rawErrors}
+          errorSchema={fieldErrorSchema}
+          value={selectedOption >= 0 ? selectedOption : undefined}
+          options={{ enumOptions, ...uiOptions }}
+          registry={registry}
+          formContext={formContext}
+          placeholder={placeholder}
+          autocomplete={autocomplete}
+          autofocus={autofocus}
+          label={title ?? name}
+          hideLabel={!displayLabel}
+          readonly={readonly}
+        />
+      ) : undefined;
 
     const optionsSchemaField =
       (optionSchema && optionSchema.type !== 'null' && (

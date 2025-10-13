@@ -15,6 +15,19 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+# 6.0.0-beta.22
+
+## @rjsf/core
+
+- Updated `MultiSchemaField` and `SchemaField` to properly display `anyOf`/`oneOf` optional data fields by hiding the label and selector control when it is an optional field AND there is no form data
+
+## Dev / docs / playground
+- Updated the `formTests.tsx` snapshots to add an `anyOf` of all arrays with different item types and removed the disabling of the optional data controls feature for the optional object with oneOfs
+  - Updated the snapshots in all of the themes accordingly
+- Updated the playground to make the same changes as `formTests.tsx` in the `optionalDataControls.ts` sample, moving the `experimental_defaultFormStateBehavior` inside of a `liveSettings` block
+- Updated the `Sample` and `LiveSettings` types to support the `liveSettings` inside of a sample
+- Updated the `Playground`'s `onSampleSelected` callback to merge any `liveSettings` in the sample on top of those already used in the playground
+
 # 6.0.0-beta.21
 
 ## @rjsf/antd

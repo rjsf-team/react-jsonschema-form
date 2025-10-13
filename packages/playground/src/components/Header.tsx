@@ -237,7 +237,7 @@ const liveSettingsSelectUiSchema: UiSchema = {
 };
 
 export interface LiveSettings {
-  showErrorList: false | 'top' | 'bottom';
+  showErrorList?: false | 'top' | 'bottom';
   [key: string]: any;
 }
 

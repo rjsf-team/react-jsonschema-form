@@ -1,8 +1,10 @@
 import { useCallback, Component, ComponentType } from 'react';
 import {
   ADDITIONAL_PROPERTY_FLAG,
+  ANY_OF_KEY,
   descriptionId,
   ErrorSchema,
+  Field,
   FieldPathId,
   FieldPathList,
   FieldProps,
@@ -12,9 +14,12 @@ import {
   getTemplate,
   getUiOptions,
   ID_KEY,
+  isFormDataAvailable,
+  ONE_OF_KEY,
   Registry,
   RJSFSchema,
   shouldRender,
+  shouldRenderOptionalField,
   StrictRJSFSchema,
   TranslatableString,
   UI_OPTIONS_KEY,
@@ -114,11 +119,12 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
     onChange,
     onKeyChange,
     onDropPropertyClick,
-    required,
+    required = false,
     registry,
     wasPropertyKeyModified = false,
   } = props;
-  const { formContext, schemaUtils, globalUiOptions } = registry;
+  const { formContext, schemaUtils, globalUiOptions, fields } = registry;
+  const { AnyOfField: _AnyOfField, OneOfField: _OneOfField } = fields;
   const uiOptions = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
   const FieldTemplate = getTemplate<'FieldTemplate', T, S, F>('FieldTemplate', registry, uiOptions);
   const DescriptionFieldTemplate = getTemplate<'DescriptionFieldTemplate', T, S, F>(
@@ -153,7 +159,31 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
     return null;
   }
 
-  const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions);
+  let displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions);
+
+  /** If the schema `anyOf` or 'oneOf' can be rendered as a select control, don't render the selection and let
+   * `StringField` component handle rendering unless there is a field override and that field replaces the any or one of
+   */
+  const isReplacingAnyOrOneOf = uiOptions.field && uiOptions.fieldReplacesAnyOrOneOf === true;
+  let XxxOfField: Field<T, S, F> | undefined;
+  let XxxOfOptions: S[] | undefined;
+  if ((ANY_OF_KEY in schema || ONE_OF_KEY in schema) && !isReplacingAnyOrOneOf && !schemaUtils.isSelect(schema)) {
+    if (schema[ANY_OF_KEY]) {
+      XxxOfField = _AnyOfField;
+      XxxOfOptions = schema[ANY_OF_KEY].map((_schema) =>
+        schemaUtils.retrieveSchema(isObject(_schema) ? (_schema as S) : ({} as S), formData),
+      );
+    } else if (schema[ONE_OF_KEY]) {
+      XxxOfField = _OneOfField;
+      XxxOfOptions = schema[ONE_OF_KEY].map((_schema) =>
+        schemaUtils.retrieveSchema(isObject(_schema) ? (_schema as S) : ({} as S), formData),
+      );
+    }
+    // When the anyOf/oneOf is an optional data control render AND it does not have form data, hide the label
+    const isOptionalRender = shouldRenderOptionalField<T, S, F>(registry, schema, required, uiSchema);
+    const hasFormData = isFormDataAvailable(formData);
+    displayLabel = displayLabel && (!isOptionalRender || hasFormData);
+  }
 
   const { __errors, ...fieldErrorSchema } = errorSchema || {};
   // See #439: uiSchema: Don't pass consumed class names or style to child components
@@ -219,7 +249,7 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
    * unless it can be rendered as select control
    */
   const errorsComponent =
-    hideError || ((schema.anyOf || schema.oneOf) && !schemaUtils.isSelect(schema)) ? undefined : (
+    hideError || (XxxOfField && !schemaUtils.isSelect(schema)) ? undefined : (
       <FieldErrorTemplate
         errors={__errors}
         errorSchema={errorSchema}
@@ -263,21 +293,12 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
     registry,
   };
 
-  const _AnyOfField = registry.fields.AnyOfField;
-  const _OneOfField = registry.fields.OneOfField;
-  const isReplacingAnyOrOneOf = uiSchema?.['ui:field'] && uiSchema?.['ui:fieldReplacesAnyOrOneOf'] === true;
-
   return (
     <FieldTemplate {...fieldProps}>
       <>
         {field}
-        {/*
-        If the schema `anyOf` or 'oneOf' can be rendered as a select control, don't
-        render the selection and let `StringField` component handle
-        rendering
-      */}
-        {schema.anyOf && !isReplacingAnyOrOneOf && !schemaUtils.isSelect(schema) && (
-          <_AnyOfField
+        {XxxOfField && (
+          <XxxOfField
             name={name}
             disabled={disabled}
             readonly={readonly}
@@ -289,31 +310,7 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
             onBlur={props.onBlur}
             onChange={props.onChange}
             onFocus={props.onFocus}
-            options={schema.anyOf.map((_schema) =>
-              schemaUtils.retrieveSchema(isObject(_schema) ? (_schema as S) : ({} as S), formData),
-            )}
-            registry={registry}
-            required={required}
-            schema={schema}
-            uiSchema={uiSchema}
-          />
-        )}
-        {schema.oneOf && !isReplacingAnyOrOneOf && !schemaUtils.isSelect(schema) && (
-          <_OneOfField
-            name={name}
-            disabled={disabled}
-            readonly={readonly}
-            hideError={hideError}
-            errorSchema={errorSchema}
-            formData={formData}
-            formContext={formContext}
-            fieldPathId={fieldPathId}
-            onBlur={props.onBlur}
-            onChange={props.onChange}
-            onFocus={props.onFocus}
-            options={schema.oneOf.map((_schema) =>
-              schemaUtils.retrieveSchema(isObject(_schema) ? (_schema as S) : ({} as S), formData),
-            )}
+            options={XxxOfOptions}
             registry={registry}
             required={required}
             schema={schema}

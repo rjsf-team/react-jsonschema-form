@@ -117,6 +117,33 @@ const optionalDataControls: Sample = {
           },
         ],
       },
+      optionalArrayWithAnyofs: {
+        anyOf: [
+          {
+            type: 'array',
+            items: {
+              type: 'string',
+            },
+          },
+          {
+            type: 'array',
+            items: {
+              type: 'number',
+            },
+          },
+          {
+            type: 'array',
+            items: {
+              type: 'object',
+              properties: {
+                test: {
+                  type: 'string',
+                },
+              },
+            },
+          },
+        ],
+      },
     },
     required: ['nestedObject', 'nestedArray'],
   },
@@ -129,13 +156,12 @@ const optionalDataControls: Sample = {
         'ui:enableOptionalDataFieldForType': ['object'],
       },
     },
-    optionalObjectWithOneofs: {
-      'ui:enableOptionalDataFieldForType': [],
-    },
   },
-  experimental_defaultFormStateBehavior: {
-    // Set the emptyObjectFields to only populate required defaults to highlight the code working
-    emptyObjectFields: 'populateRequiredDefaults',
+  liveSettings: {
+    experimental_defaultFormStateBehavior: {
+      // Set the emptyObjectFields to only populate required defaults to highlight the code working
+      emptyObjectFields: 'populateRequiredDefaults',
+    },
   },
 };
 

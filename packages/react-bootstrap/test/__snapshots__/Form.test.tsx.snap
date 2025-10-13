@@ -2191,6 +2191,173 @@ exports[`single fields optional data controls does not show optional controls wh
             </div>
           </div>
         </div>
+        <div
+          className="row"
+          style={
+            {
+              "marginBottom": "10px",
+            }
+          }
+        >
+          <div
+            className="col-12"
+          >
+             
+            <div
+              className="rjsf-field rjsf-field-undefined"
+            >
+              <div>
+                <label
+                  className="form-label"
+                  htmlFor="root_optionalArrayWithAnyofs"
+                >
+                  optionalArrayWithAnyofs
+                </label>
+                <div
+                  className="card"
+                  style={
+                    {
+                      "marginBottom": "1rem",
+                    }
+                  }
+                >
+                  <div
+                    className="card-body"
+                  >
+                    <select
+                      aria-describedby="root_optionalArrayWithAnyofs__anyof_select__error root_optionalArrayWithAnyofs__anyof_select__description root_optionalArrayWithAnyofs__anyof_select__help"
+                      className="form-select"
+                      disabled={false}
+                      id="root_optionalArrayWithAnyofs__anyof_select"
+                      multiple={false}
+                      name="root_optionalArrayWithAnyofs__anyof_select"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      onFocus={[Function]}
+                      value="0"
+                    >
+                      <option
+                        disabled={false}
+                        id="Option 1"
+                        value="0"
+                      >
+                        Option 1
+                      </option>
+                      <option
+                        disabled={false}
+                        id="Option 2"
+                        value="1"
+                      >
+                        Option 2
+                      </option>
+                      <option
+                        disabled={false}
+                        id="Option 3"
+                        value="2"
+                      >
+                        Option 3
+                      </option>
+                    </select>
+                  </div>
+                  <div
+                    className="card-body"
+                  >
+                    <div
+                      className="rjsf-field rjsf-field-array"
+                    >
+                      <div>
+                        <div>
+                          <div
+                            className="p-0 m-0 row"
+                          >
+                            <div
+                              className="p-0 m-0 col"
+                            >
+                              <div
+                                className="my-1"
+                                id="root_optionalArrayWithAnyofs__title"
+                              >
+                                <h5>
+                                  optionalArrayWithAnyofs
+                                </h5>
+                                <hr
+                                  className="border-0 bg-secondary mt-0"
+                                  style={
+                                    {
+                                      "height": "1px",
+                                    }
+                                  }
+                                />
+                              </div>
+                              <div
+                                className="p-0 m-0 container-fluid"
+                              >
+                                <div
+                                  className="container"
+                                >
+                                  <div
+                                    className="mt-2 row"
+                                  >
+                                    <div
+                                      className="col-9"
+                                    />
+                                    <div
+                                      className="py-4 col-lg-3 col-3 col-3"
+                                    >
+                                      <button
+                                        className="ml-1 rjsf-array-item-add btn btn-primary"
+                                        disabled={false}
+                                        id="root_optionalArrayWithAnyofs__add"
+                                        onClick={[Function]}
+                                        style={
+                                          {
+                                            "width": "100%",
+                                          }
+                                        }
+                                        title="Add Item"
+                                        type="button"
+                                      >
+                                        <svg
+                                          fill="currentColor"
+                                          height="1em"
+                                          stroke="currentColor"
+                                          strokeWidth="0"
+                                          style={
+                                            {
+                                              "color": undefined,
+                                            }
+                                          }
+                                          viewBox="0 0 16 16"
+                                          width="1em"
+                                          xmlns="http://www.w3.org/2000/svg"
+                                        >
+                                          <path
+                                            clipRule="evenodd"
+                                            d="M8 3.5a.5.5 0 01.5.5v4a.5.5 0 01-.5.5H4a.5.5 0 010-1h3.5V4a.5.5 0 01.5-.5z"
+                                            fillRule="evenodd"
+                                          />
+                                          <path
+                                            clipRule="evenodd"
+                                            d="M7.5 8a.5.5 0 01.5-.5h4a.5.5 0 010 1H8.5V12a.5.5 0 01-1 0V8z"
+                                            fillRule="evenodd"
+                                          />
+                                        </svg>
+                                      </button>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -3215,6 +3382,173 @@ exports[`single fields optional data controls does not show optional controls wh
                                     type="text"
                                     value=""
                                   />
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          className="row"
+          style={
+            {
+              "marginBottom": "10px",
+            }
+          }
+        >
+          <div
+            className="col-12"
+          >
+             
+            <div
+              className="rjsf-field rjsf-field-undefined"
+            >
+              <div>
+                <label
+                  className="form-label"
+                  htmlFor="root_optionalArrayWithAnyofs"
+                >
+                  optionalArrayWithAnyofs
+                </label>
+                <div
+                  className="card"
+                  style={
+                    {
+                      "marginBottom": "1rem",
+                    }
+                  }
+                >
+                  <div
+                    className="card-body"
+                  >
+                    <select
+                      aria-describedby="root_optionalArrayWithAnyofs__anyof_select__error root_optionalArrayWithAnyofs__anyof_select__description root_optionalArrayWithAnyofs__anyof_select__help"
+                      className="form-select"
+                      disabled={true}
+                      id="root_optionalArrayWithAnyofs__anyof_select"
+                      multiple={false}
+                      name="root_optionalArrayWithAnyofs__anyof_select"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      onFocus={[Function]}
+                      value="0"
+                    >
+                      <option
+                        disabled={false}
+                        id="Option 1"
+                        value="0"
+                      >
+                        Option 1
+                      </option>
+                      <option
+                        disabled={false}
+                        id="Option 2"
+                        value="1"
+                      >
+                        Option 2
+                      </option>
+                      <option
+                        disabled={false}
+                        id="Option 3"
+                        value="2"
+                      >
+                        Option 3
+                      </option>
+                    </select>
+                  </div>
+                  <div
+                    className="card-body"
+                  >
+                    <div
+                      className="rjsf-field rjsf-field-array"
+                    >
+                      <div>
+                        <div>
+                          <div
+                            className="p-0 m-0 row"
+                          >
+                            <div
+                              className="p-0 m-0 col"
+                            >
+                              <div
+                                className="my-1"
+                                id="root_optionalArrayWithAnyofs__title"
+                              >
+                                <h5>
+                                  optionalArrayWithAnyofs
+                                </h5>
+                                <hr
+                                  className="border-0 bg-secondary mt-0"
+                                  style={
+                                    {
+                                      "height": "1px",
+                                    }
+                                  }
+                                />
+                              </div>
+                              <div
+                                className="p-0 m-0 container-fluid"
+                              >
+                                <div
+                                  className="container"
+                                >
+                                  <div
+                                    className="mt-2 row"
+                                  >
+                                    <div
+                                      className="col-9"
+                                    />
+                                    <div
+                                      className="py-4 col-lg-3 col-3 col-3"
+                                    >
+                                      <button
+                                        className="ml-1 rjsf-array-item-add btn btn-primary"
+                                        disabled={true}
+                                        id="root_optionalArrayWithAnyofs__add"
+                                        onClick={[Function]}
+                                        style={
+                                          {
+                                            "width": "100%",
+                                          }
+                                        }
+                                        title="Add Item"
+                                        type="button"
+                                      >
+                                        <svg
+                                          fill="currentColor"
+                                          height="1em"
+                                          stroke="currentColor"
+                                          strokeWidth="0"
+                                          style={
+                                            {
+                                              "color": undefined,
+                                            }
+                                          }
+                                          viewBox="0 0 16 16"
+                                          width="1em"
+                                          xmlns="http://www.w3.org/2000/svg"
+                                        >
+                                          <path
+                                            clipRule="evenodd"
+                                            d="M8 3.5a.5.5 0 01.5.5v4a.5.5 0 01-.5.5H4a.5.5 0 010-1h3.5V4a.5.5 0 01.5-.5z"
+                                            fillRule="evenodd"
+                                          />
+                                          <path
+                                            clipRule="evenodd"
+                                            d="M7.5 8a.5.5 0 01.5-.5h4a.5.5 0 010 1H8.5V12a.5.5 0 01-1 0V8z"
+                                            fillRule="evenodd"
+                                          />
+                                        </svg>
+                                      </button>
+                                    </div>
+                                  </div>
                                 </div>
                               </div>
                             </div>
@@ -4318,12 +4652,6 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
               className="rjsf-field rjsf-field-undefined"
             >
               <div>
-                <label
-                  className="form-label"
-                  htmlFor="root_optionalObjectWithOneofs"
-                >
-                  optionalObjectWithOneofs
-                </label>
                 <div
                   className="card"
                   style={
@@ -4334,42 +4662,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                 >
                   <div
                     className="card-body"
-                  >
-                    <select
-                      aria-describedby="root_optionalObjectWithOneofs__oneof_select__error root_optionalObjectWithOneofs__oneof_select__description root_optionalObjectWithOneofs__oneof_select__help"
-                      className="form-select"
-                      disabled={false}
-                      id="root_optionalObjectWithOneofs__oneof_select"
-                      multiple={false}
-                      name="root_optionalObjectWithOneofs__oneof_select"
-                      onBlur={[Function]}
-                      onChange={[Function]}
-                      onFocus={[Function]}
-                      value="0"
-                    >
-                      <option
-                        disabled={false}
-                        id="Option 1"
-                        value="0"
-                      >
-                        Option 1
-                      </option>
-                      <option
-                        disabled={false}
-                        id="Option 2"
-                        value="1"
-                      >
-                        Option 2
-                      </option>
-                      <option
-                        disabled={false}
-                        id="Option 3"
-                        value="2"
-                      >
-                        Option 3
-                      </option>
-                    </select>
-                  </div>
+                  />
                   <div
                     className="card-body"
                   >
@@ -4381,9 +4674,64 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                           className="my-1"
                           id="root_optionalObjectWithOneofs__title"
                         >
-                          <h5>
-                            optionalObjectWithOneofs
-                          </h5>
+                          <div
+                            className="p-0 container-fluid"
+                          >
+                            <div
+                              className="row"
+                            >
+                              <div
+                                className="col-11"
+                              >
+                                <h5>
+                                  optionalObjectWithOneofs
+                                </h5>
+                              </div>
+                              <div
+                                className="col-1"
+                                style={
+                                  {
+                                    "marginLeft": "-5px",
+                                  }
+                                }
+                              >
+                                <button
+                                  className="btn btn-secondary btn-sm"
+                                  disabled={false}
+                                  id="root_optionalObjectWithOneofs__optionalAdd"
+                                  onClick={[Function]}
+                                  title="Add data for optional field"
+                                  type="button"
+                                >
+                                  <svg
+                                    fill="currentColor"
+                                    height="1em"
+                                    stroke="currentColor"
+                                    strokeWidth="0"
+                                    style={
+                                      {
+                                        "color": undefined,
+                                      }
+                                    }
+                                    viewBox="0 0 16 16"
+                                    width="1em"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                  >
+                                    <path
+                                      clipRule="evenodd"
+                                      d="M8 3.5a.5.5 0 01.5.5v4a.5.5 0 01-.5.5H4a.5.5 0 010-1h3.5V4a.5.5 0 01.5-.5z"
+                                      fillRule="evenodd"
+                                    />
+                                    <path
+                                      clipRule="evenodd"
+                                      d="M7.5 8a.5.5 0 01.5-.5h4a.5.5 0 010 1H8.5V12a.5.5 0 01-1 0V8z"
+                                      fillRule="evenodd"
+                                    />
+                                  </svg>
+                                </button>
+                              </div>
+                            </div>
+                          </div>
                           <hr
                             className="border-0 bg-secondary mt-0"
                             style={
@@ -4395,47 +4743,130 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                         </div>
                         <div
                           className="p-0 container-fluid"
-                        >
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          className="row"
+          style={
+            {
+              "marginBottom": "10px",
+            }
+          }
+        >
+          <div
+            className="col-12"
+          >
+             
+            <div
+              className="rjsf-field rjsf-field-undefined"
+            >
+              <div>
+                <div
+                  className="card"
+                  style={
+                    {
+                      "marginBottom": "1rem",
+                    }
+                  }
+                >
+                  <div
+                    className="card-body"
+                  />
+                  <div
+                    className="card-body"
+                  >
+                    <div
+                      className="rjsf-field rjsf-field-array"
+                    >
+                      <div>
+                        <div>
                           <div
-                            className="row"
-                            style={
-                              {
-                                "marginBottom": "10px",
-                              }
-                            }
+                            className="p-0 m-0 row"
                           >
                             <div
-                              className="col-12"
+                              className="p-0 m-0 col"
                             >
-                               
                               <div
-                                className="rjsf-field rjsf-field-string"
+                                className="my-1"
+                                id="root_optionalArrayWithAnyofs__title"
                               >
-                                <div>
-                                  <label
-                                    className="form-label"
-                                    htmlFor="root_optionalObjectWithOneofs_name"
+                                <div
+                                  className="p-0 container-fluid"
+                                >
+                                  <div
+                                    className="row"
                                   >
-                                    name
-                                  </label>
-                                  <input
-                                    aria-describedby="root_optionalObjectWithOneofs_name__error root_optionalObjectWithOneofs_name__description root_optionalObjectWithOneofs_name__help"
-                                    autoFocus={false}
-                                    className="form-control"
-                                    disabled={false}
-                                    id="root_optionalObjectWithOneofs_name"
-                                    name="root_optionalObjectWithOneofs_name"
-                                    onBlur={[Function]}
-                                    onChange={[Function]}
-                                    onFocus={[Function]}
-                                    placeholder=""
-                                    readOnly={true}
-                                    required={false}
-                                    type="text"
-                                    value=""
-                                  />
+                                    <div
+                                      className="col-11"
+                                    >
+                                      <h5>
+                                        optionalArrayWithAnyofs
+                                      </h5>
+                                    </div>
+                                    <div
+                                      className="col-1"
+                                      style={
+                                        {
+                                          "marginLeft": "-5px",
+                                        }
+                                      }
+                                    >
+                                      <button
+                                        className="btn btn-secondary btn-sm"
+                                        disabled={false}
+                                        id="root_optionalArrayWithAnyofs__optionalAdd"
+                                        onClick={[Function]}
+                                        title="Add data for optional field"
+                                        type="button"
+                                      >
+                                        <svg
+                                          fill="currentColor"
+                                          height="1em"
+                                          stroke="currentColor"
+                                          strokeWidth="0"
+                                          style={
+                                            {
+                                              "color": undefined,
+                                            }
+                                          }
+                                          viewBox="0 0 16 16"
+                                          width="1em"
+                                          xmlns="http://www.w3.org/2000/svg"
+                                        >
+                                          <path
+                                            clipRule="evenodd"
+                                            d="M8 3.5a.5.5 0 01.5.5v4a.5.5 0 01-.5.5H4a.5.5 0 010-1h3.5V4a.5.5 0 01.5-.5z"
+                                            fillRule="evenodd"
+                                          />
+                                          <path
+                                            clipRule="evenodd"
+                                            d="M7.5 8a.5.5 0 01.5-.5h4a.5.5 0 010 1H8.5V12a.5.5 0 01-1 0V8z"
+                                            fillRule="evenodd"
+                                          />
+                                        </svg>
+                                      </button>
+                                    </div>
+                                  </div>
                                 </div>
+                                <hr
+                                  className="border-0 bg-secondary mt-0"
+                                  style={
+                                    {
+                                      "height": "1px",
+                                    }
+                                  }
+                                />
                               </div>
+                              <div
+                                className="p-0 m-0 container-fluid"
+                              />
                             </div>
                           </div>
                         </div>
@@ -5343,12 +5774,6 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
               className="rjsf-field rjsf-field-undefined"
             >
               <div>
-                <label
-                  className="form-label"
-                  htmlFor="root_optionalObjectWithOneofs"
-                >
-                  optionalObjectWithOneofs
-                </label>
                 <div
                   className="card"
                   style={
@@ -5359,42 +5784,7 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                 >
                   <div
                     className="card-body"
-                  >
-                    <select
-                      aria-describedby="root_optionalObjectWithOneofs__oneof_select__error root_optionalObjectWithOneofs__oneof_select__description root_optionalObjectWithOneofs__oneof_select__help"
-                      className="form-select"
-                      disabled={true}
-                      id="root_optionalObjectWithOneofs__oneof_select"
-                      multiple={false}
-                      name="root_optionalObjectWithOneofs__oneof_select"
-                      onBlur={[Function]}
-                      onChange={[Function]}
-                      onFocus={[Function]}
-                      value="0"
-                    >
-                      <option
-                        disabled={false}
-                        id="Option 1"
-                        value="0"
-                      >
-                        Option 1
-                      </option>
-                      <option
-                        disabled={false}
-                        id="Option 2"
-                        value="1"
-                      >
-                        Option 2
-                      </option>
-                      <option
-                        disabled={false}
-                        id="Option 3"
-                        value="2"
-                      >
-                        Option 3
-                      </option>
-                    </select>
-                  </div>
+                  />
                   <div
                     className="card-body"
                   >
@@ -5421,45 +5811,85 @@ exports[`single fields optional data controls shows "add" and "remove" optional 
                         <div
                           className="p-0 container-fluid"
                         >
+                          <em
+                            id="root_optionalObjectWithOneofs__optionalMsg"
+                          >
+                            No data for optional field
+                          </em>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          className="row"
+          style={
+            {
+              "marginBottom": "10px",
+            }
+          }
+        >
+          <div
+            className="col-12"
+          >
+             
+            <div
+              className="rjsf-field rjsf-field-undefined"
+            >
+              <div>
+                <div
+                  className="card"
+                  style={
+                    {
+                      "marginBottom": "1rem",
+                    }
+                  }
+                >
+                  <div
+                    className="card-body"
+                  />
+                  <div
+                    className="card-body"
+                  >
+                    <div
+                      className="rjsf-field rjsf-field-array"
+                    >
+                      <div>
+                        <div>
                           <div
-                            className="row"
-                            style={
-                              {
-                                "marginBottom": "10px",
-                              }
-                            }
+                            className="p-0 m-0 row"
                           >
                             <div
-                              className="col-12"
+                              className="p-0 m-0 col"
                             >
-                               
                               <div
-                                className="rjsf-field rjsf-field-string"
+                                className="my-1"
+                                id="root_optionalArrayWithAnyofs__title"
                               >
-                                <div>
-                                  <label
-                                    className="form-label"
-                                    htmlFor="root_optionalObjectWithOneofs_name"
-                                  >
-                                    name
-                                  </label>
-                                  <input
-                                    aria-describedby="root_optionalObjectWithOneofs_name__error root_optionalObjectWithOneofs_name__description root_optionalObjectWithOneofs_name__help"
-                                    autoFocus={false}
-                                    className="form-control"
-                                    disabled={false}
-                                    id="root_optionalObjectWithOneofs_name"
-                                    name="root_optionalObjectWithOneofs_name"
-                                    onBlur={[Function]}
-                                    onChange={[Function]}
-                                    onFocus={[Function]}
-                                    placeholder=""
-                                    readOnly={true}
-                                    required={false}
-                                    type="text"
-                                    value=""
-                                  />
-                                </div>
+                                <h5>
+                                  optionalArrayWithAnyofs
+                                </h5>
+                                <hr
+                                  className="border-0 bg-secondary mt-0"
+                                  style={
+                                    {
+                                      "height": "1px",
+                                    }
+                                  }
+                                />
+                              </div>
+                              <div
+                                className="p-0 m-0 container-fluid"
+                              >
+                                <em
+                                  id="root_optionalArrayWithAnyofs__optionalMsg"
+                                >
+                                  No data for optional field
+                                </em>
                               </div>
                             </div>
                           </div>
@@ -5916,12 +6346,6 @@ exports[`single fields optional data controls shows "add" optional controls when
               className="rjsf-field rjsf-field-undefined"
             >
               <div>
-                <label
-                  className="form-label"
-                  htmlFor="root_optionalObjectWithOneofs"
-                >
-                  optionalObjectWithOneofs
-                </label>
                 <div
                   className="card"
                   style={
@@ -5932,42 +6356,7 @@ exports[`single fields optional data controls shows "add" optional controls when
                 >
                   <div
                     className="card-body"
-                  >
-                    <select
-                      aria-describedby="root_optionalObjectWithOneofs__oneof_select__error root_optionalObjectWithOneofs__oneof_select__description root_optionalObjectWithOneofs__oneof_select__help"
-                      className="form-select"
-                      disabled={false}
-                      id="root_optionalObjectWithOneofs__oneof_select"
-                      multiple={false}
-                      name="root_optionalObjectWithOneofs__oneof_select"
-                      onBlur={[Function]}
-                      onChange={[Function]}
-                      onFocus={[Function]}
-                      value="0"
-                    >
-                      <option
-                        disabled={false}
-                        id="Option 1"
-                        value="0"
-                      >
-                        Option 1
-                      </option>
-                      <option
-                        disabled={false}
-                        id="Option 2"
-                        value="1"
-                      >
-                        Option 2
-                      </option>
-                      <option
-                        disabled={false}
-                        id="Option 3"
-                        value="2"
-                      >
-                        Option 3
-                      </option>
-                    </select>
-                  </div>
+                  />
                   <div
                     className="card-body"
                   >
@@ -5979,9 +6368,64 @@ exports[`single fields optional data controls shows "add" optional controls when
                           className="my-1"
                           id="root_optionalObjectWithOneofs__title"
                         >
-                          <h5>
-                            optionalObjectWithOneofs
-                          </h5>
+                          <div
+                            className="p-0 container-fluid"
+                          >
+                            <div
+                              className="row"
+                            >
+                              <div
+                                className="col-11"
+                              >
+                                <h5>
+                                  optionalObjectWithOneofs
+                                </h5>
+                              </div>
+                              <div
+                                className="col-1"
+                                style={
+                                  {
+                                    "marginLeft": "-5px",
+                                  }
+                                }
+                              >
+                                <button
+                                  className="btn btn-secondary btn-sm"
+                                  disabled={false}
+                                  id="root_optionalObjectWithOneofs__optionalAdd"
+                                  onClick={[Function]}
+                                  title="Add data for optional field"
+                                  type="button"
+                                >
+                                  <svg
+                                    fill="currentColor"
+                                    height="1em"
+                                    stroke="currentColor"
+                                    strokeWidth="0"
+                                    style={
+                                      {
+                                        "color": undefined,
+                                      }
+                                    }
+                                    viewBox="0 0 16 16"
+                                    width="1em"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                  >
+                                    <path
+                                      clipRule="evenodd"
+                                      d="M8 3.5a.5.5 0 01.5.5v4a.5.5 0 01-.5.5H4a.5.5 0 010-1h3.5V4a.5.5 0 01.5-.5z"
+                                      fillRule="evenodd"
+                                    />
+                                    <path
+                                      clipRule="evenodd"
+                                      d="M7.5 8a.5.5 0 01.5-.5h4a.5.5 0 010 1H8.5V12a.5.5 0 01-1 0V8z"
+                                      fillRule="evenodd"
+                                    />
+                                  </svg>
+                                </button>
+                              </div>
+                            </div>
+                          </div>
                           <hr
                             className="border-0 bg-secondary mt-0"
                             style={
@@ -5993,47 +6437,130 @@ exports[`single fields optional data controls shows "add" optional controls when
                         </div>
                         <div
                           className="p-0 container-fluid"
-                        >
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          className="row"
+          style={
+            {
+              "marginBottom": "10px",
+            }
+          }
+        >
+          <div
+            className="col-12"
+          >
+             
+            <div
+              className="rjsf-field rjsf-field-undefined"
+            >
+              <div>
+                <div
+                  className="card"
+                  style={
+                    {
+                      "marginBottom": "1rem",
+                    }
+                  }
+                >
+                  <div
+                    className="card-body"
+                  />
+                  <div
+                    className="card-body"
+                  >
+                    <div
+                      className="rjsf-field rjsf-field-array"
+                    >
+                      <div>
+                        <div>
                           <div
-                            className="row"
-                            style={
-                              {
-                                "marginBottom": "10px",
-                              }
-                            }
+                            className="p-0 m-0 row"
                           >
                             <div
-                              className="col-12"
+                              className="p-0 m-0 col"
                             >
-                               
                               <div
-                                className="rjsf-field rjsf-field-string"
+                                className="my-1"
+                                id="root_optionalArrayWithAnyofs__title"
                               >
-                                <div>
-                                  <label
-                                    className="form-label"
-                                    htmlFor="root_optionalObjectWithOneofs_name"
+                                <div
+                                  className="p-0 container-fluid"
+                                >
+                                  <div
+                                    className="row"
                                   >
-                                    name
-                                  </label>
-                                  <input
-                                    aria-describedby="root_optionalObjectWithOneofs_name__error root_optionalObjectWithOneofs_name__description root_optionalObjectWithOneofs_name__help"
-                                    autoFocus={false}
-                                    className="form-control"
-                                    disabled={false}
-                                    id="root_optionalObjectWithOneofs_name"
-                                    name="root_optionalObjectWithOneofs_name"
-                                    onBlur={[Function]}
-                                    onChange={[Function]}
-                                    onFocus={[Function]}
-                                    placeholder=""
-                                    readOnly={true}
-                                    required={false}
-                                    type="text"
-                                    value=""
-                                  />
+                                    <div
+                                      className="col-11"
+                                    >
+                                      <h5>
+                                        optionalArrayWithAnyofs
+                                      </h5>
+                                    </div>
+                                    <div
+                                      className="col-1"
+                                      style={
+                                        {
+                                          "marginLeft": "-5px",
+                                        }
+                                      }
+                                    >
+                                      <button
+                                        className="btn btn-secondary btn-sm"
+                                        disabled={false}
+                                        id="root_optionalArrayWithAnyofs__optionalAdd"
+                                        onClick={[Function]}
+                                        title="Add data for optional field"
+                                        type="button"
+                                      >
+                                        <svg
+                                          fill="currentColor"
+                                          height="1em"
+                                          stroke="currentColor"
+                                          strokeWidth="0"
+                                          style={
+                                            {
+                                              "color": undefined,
+                                            }
+                                          }
+                                          viewBox="0 0 16 16"
+                                          width="1em"
+                                          xmlns="http://www.w3.org/2000/svg"
+                                        >
+                                          <path
+                                            clipRule="evenodd"
+                                            d="M8 3.5a.5.5 0 01.5.5v4a.5.5 0 01-.5.5H4a.5.5 0 010-1h3.5V4a.5.5 0 01.5-.5z"
+                                            fillRule="evenodd"
+                                          />
+                                          <path
+                                            clipRule="evenodd"
+                                            d="M7.5 8a.5.5 0 01.5-.5h4a.5.5 0 010 1H8.5V12a.5.5 0 01-1 0V8z"
+                                            fillRule="evenodd"
+                                          />
+                                        </svg>
+                                      </button>
+                                    </div>
+                                  </div>
                                 </div>
+                                <hr
+                                  className="border-0 bg-secondary mt-0"
+                                  style={
+                                    {
+                                      "height": "1px",
+                                    }
+                                  }
+                                />
                               </div>
+                              <div
+                                className="p-0 m-0 container-fluid"
+                              />
                             </div>
                           </div>
                         </div>
@@ -6391,12 +6918,6 @@ exports[`single fields optional data controls shows "add" optional controls when
               className="rjsf-field rjsf-field-undefined"
             >
               <div>
-                <label
-                  className="form-label"
-                  htmlFor="root_optionalObjectWithOneofs"
-                >
-                  optionalObjectWithOneofs
-                </label>
                 <div
                   className="card"
                   style={
@@ -6407,42 +6928,7 @@ exports[`single fields optional data controls shows "add" optional controls when
                 >
                   <div
                     className="card-body"
-                  >
-                    <select
-                      aria-describedby="root_optionalObjectWithOneofs__oneof_select__error root_optionalObjectWithOneofs__oneof_select__description root_optionalObjectWithOneofs__oneof_select__help"
-                      className="form-select"
-                      disabled={true}
-                      id="root_optionalObjectWithOneofs__oneof_select"
-                      multiple={false}
-                      name="root_optionalObjectWithOneofs__oneof_select"
-                      onBlur={[Function]}
-                      onChange={[Function]}
-                      onFocus={[Function]}
-                      value="0"
-                    >
-                      <option
-                        disabled={false}
-                        id="Option 1"
-                        value="0"
-                      >
-                        Option 1
-                      </option>
-                      <option
-                        disabled={false}
-                        id="Option 2"
-                        value="1"
-                      >
-                        Option 2
-                      </option>
-                      <option
-                        disabled={false}
-                        id="Option 3"
-                        value="2"
-                      >
-                        Option 3
-                      </option>
-                    </select>
-                  </div>
+                  />
                   <div
                     className="card-body"
                   >
@@ -6469,45 +6955,85 @@ exports[`single fields optional data controls shows "add" optional controls when
                         <div
                           className="p-0 container-fluid"
                         >
+                          <em
+                            id="root_optionalObjectWithOneofs__optionalMsg"
+                          >
+                            No data for optional field
+                          </em>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          className="row"
+          style={
+            {
+              "marginBottom": "10px",
+            }
+          }
+        >
+          <div
+            className="col-12"
+          >
+             
+            <div
+              className="rjsf-field rjsf-field-undefined"
+            >
+              <div>
+                <div
+                  className="card"
+                  style={
+                    {
+                      "marginBottom": "1rem",
+                    }
+                  }
+                >
+                  <div
+                    className="card-body"
+                  />
+                  <div
+                    className="card-body"
+                  >
+                    <div
+                      className="rjsf-field rjsf-field-array"
+                    >
+                      <div>
+                        <div>
                           <div
-                            className="row"
-                            style={
-                              {
-                                "marginBottom": "10px",
-                              }
-                            }
+                            className="p-0 m-0 row"
                           >
                             <div
-                              className="col-12"
+                              className="p-0 m-0 col"
                             >
-                               
                               <div
-                                className="rjsf-field rjsf-field-string"
+                                className="my-1"
+                                id="root_optionalArrayWithAnyofs__title"
                               >
-                                <div>
-                                  <label
-                                    className="form-label"
-                                    htmlFor="root_optionalObjectWithOneofs_name"
-                                  >
-                                    name
-                                  </label>
-                                  <input
-                                    aria-describedby="root_optionalObjectWithOneofs_name__error root_optionalObjectWithOneofs_name__description root_optionalObjectWithOneofs_name__help"
-                                    autoFocus={false}
-                                    className="form-control"
-                                    disabled={true}
-                                    id="root_optionalObjectWithOneofs_name"
-                                    name="root_optionalObjectWithOneofs_name"
-                                    onBlur={[Function]}
-                                    onChange={[Function]}
-                                    onFocus={[Function]}
-                                    placeholder=""
-                                    readOnly={true}
-                                    required={false}
-                                    type="text"
-                                    value=""
-                                  />
-                                </div>
+                                <h5>
+                                  optionalArrayWithAnyofs
+                                </h5>
+                                <hr
+                                  className="border-0 bg-secondary mt-0"
+                                  style={
+                                    {
+                                      "height": "1px",
+                                    }
+                                  }
+                                />
+                              </div>
+                              <div
+                                className="p-0 m-0 container-fluid"
+                              >
+                                <em
+                                  id="root_optionalArrayWithAnyofs__optionalMsg"
+                                >
+                                  No data for optional field
+                                </em>
                               </div>
                             </div>
                           </div>
