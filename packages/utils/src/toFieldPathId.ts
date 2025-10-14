@@ -10,11 +10,14 @@ import { FieldPathId, FieldPathList, GlobalFormOptions } from './types';
  * @param fieldPath - The property name or array index of the current field element
  * @param globalFormOptions - The `GlobalFormOptions` used to get the `idPrefix` and `idSeparator`
  * @param [parentPath] - The optional `FieldPathId` or `FieldPathList` of the parent element for this field element
+ * @param [isMultiValue] - Optional flag indicating this field accepts multiple values
+ * @returns - The `FieldPathId` for the given `fieldPath` and the optional `parentPathId`
  */
 export default function toFieldPathId(
   fieldPath: string | number,
   globalFormOptions: GlobalFormOptions,
   parentPath?: FieldPathId | FieldPathList,
+  isMultiValue?: boolean,
 ): FieldPathId {
   const basePath = Array.isArray(parentPath) ? parentPath : parentPath?.path;
   const childPath = fieldPath === '' ? [] : [fieldPath];
@@ -24,7 +27,7 @@ export default function toFieldPathId(
   // Generate name attribute if nameGenerator is provided
   let name: string | undefined;
   if (globalFormOptions.nameGenerator && path.length > 0) {
-    name = globalFormOptions.nameGenerator(path, globalFormOptions.idPrefix);
+    name = globalFormOptions.nameGenerator(path, globalFormOptions.idPrefix, isMultiValue);
   }
 
   return { path, [ID_KEY]: id, ...(name !== undefined && { name }) };

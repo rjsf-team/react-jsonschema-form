@@ -37,7 +37,7 @@ export type FormContextType = GenericObjectType;
 export type TestIdShape = Record<string, string>;
 
 /** Function to generate HTML name attributes from path segments */
-export type NameGeneratorFunction = (path: FieldPathList, idPrefix: string) => string;
+export type NameGeneratorFunction = (path: FieldPathList, idPrefix: string, isMultiValue?: boolean) => string;
 
 /** Experimental feature that specifies the Array `minItems` default form state behavior
  */

@@ -30,6 +30,22 @@ describe('bracketNameGenerator()', () => {
       'root[users][0][addresses][1][street]',
     );
   });
+
+  test('appends [] for multi-value fields (checkboxes, multi-select)', () => {
+    expect(bracketNameGenerator(['hobbies'], 'root', true)).toBe('root[hobbies][]');
+  });
+
+  test('does not append [] when isMultiValue is false', () => {
+    expect(bracketNameGenerator(['hobbies'], 'root', false)).toBe('root[hobbies]');
+  });
+
+  test('does not append [] when isMultiValue is undefined', () => {
+    expect(bracketNameGenerator(['hobbies'], 'root')).toBe('root[hobbies]');
+  });
+
+  test('appends [] to nested path when isMultiValue is true', () => {
+    expect(bracketNameGenerator(['user', 'hobbies'], 'root', true)).toBe('root[user][hobbies][]');
+  });
 });
 
 describe('dotNotationNameGenerator()', () => {
@@ -61,5 +77,13 @@ describe('dotNotationNameGenerator()', () => {
     expect(dotNotationNameGenerator(['users', 0, 'addresses', 1, 'street'], 'root')).toBe(
       'root.users.0.addresses.1.street',
     );
+  });
+
+  test('isMultiValue flag has no effect in dot notation', () => {
+    expect(dotNotationNameGenerator(['hobbies'], 'root', true)).toBe('root.hobbies');
+  });
+
+  test('isMultiValue flag false has no effect in dot notation', () => {
+    expect(dotNotationNameGenerator(['hobbies'], 'root', false)).toBe('root.hobbies');
   });
 });
