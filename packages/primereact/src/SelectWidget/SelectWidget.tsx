@@ -46,7 +46,6 @@ function SingleSelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F 
   registry,
   uiSchema,
   hideError,
-  formContext,
   ...dropdownProps
 }: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, emptyValue: optEmptyVal } = options;

@@ -830,7 +830,6 @@ describe('LayoutGridField', () => {
       formData,
       errorSchema,
       fieldPathId: FIELD_PATH_ID,
-      formContext: registry.formContext,
       registry,
       schema,
       uiSchema,

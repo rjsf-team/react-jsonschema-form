@@ -1,4 +1,4 @@
-import { FieldProps, FieldTemplateProps, ID_KEY, IdSchema, RJSFSchema, getTemplate } from '@rjsf/utils';
+import { FieldProps, FieldTemplateProps, ID_KEY, FieldPathId, RJSFSchema, getTemplate } from '@rjsf/utils';
 import noop from 'lodash/noop';
 
 import { Sample } from './Sample';
@@ -23,15 +23,14 @@ function UiField(props: FieldProps) {
   const citySchema = schemaUtils.findFieldInSchema(schema1, cityKey, {} as RJSFSchema);
   const latSchema = schemaUtils.findFieldInSchema(schema2, latKey, {} as RJSFSchema);
   const lonSchema = schemaUtils.findFieldInSchema(schema2, lonKey, {} as RJSFSchema);
-  const cityIdSchema: IdSchema = { [ID_KEY]: cityKey };
-  const latIdSchema: IdSchema = { [ID_KEY]: latKey };
-  const lonIdSchema: IdSchema = { [ID_KEY]: lonKey };
+  const cityFieldPathId: FieldPathId = { [ID_KEY]: cityKey, path: [cityKey] };
+  const latFieldPathId: FieldPathId = { [ID_KEY]: latKey, path: [latKey] };
+  const lonFieldPathId: FieldPathId = { [ID_KEY]: lonKey, path: [lonKey] };
 
   const fieldTemplateProps: Omit<FieldTemplateProps, 'label' | 'id' | 'children'> = {
     registry,
     schema,
     uiSchema,
-    formContext: props.formContext,
     displayLabel: true,
     disabled: false,
     readonly: false,
@@ -52,14 +51,14 @@ function UiField(props: FieldProps) {
             margin: '1rem',
           }}
         >
-          <FieldTemplate {...fieldTemplateProps} id={cityIdSchema[ID_KEY]} label={cityLabel}>
+          <FieldTemplate {...fieldTemplateProps} id={cityFieldPathId[ID_KEY]} label={cityLabel}>
             <StringField
               schema={citySchema.field!}
               registry={registry}
               {...otherProps}
               name={cityLabel}
               required={citySchema.isRequired}
-              fieldPathId={cityIdSchema}
+              fieldPathId={cityFieldPathId}
               formData={formData.city}
               onChange={changeHandlerFactory(cityKey)}
             />
@@ -73,26 +72,26 @@ function UiField(props: FieldProps) {
             margin: '1rem',
           }}
         >
-          <FieldTemplate {...fieldTemplateProps} id={latIdSchema[ID_KEY]} label={latLabel}>
+          <FieldTemplate {...fieldTemplateProps} id={latFieldPathId[ID_KEY]} label={latLabel}>
             <NumberField
               schema={latSchema.field!}
               registry={registry}
               {...otherProps}
               name={latLabel}
               required={latSchema.isRequired}
-              fieldPathId={latIdSchema}
+              fieldPathId={latFieldPathId}
               formData={formData.lat}
               onChange={changeHandlerFactory(latKey)}
             />
           </FieldTemplate>
-          <FieldTemplate {...fieldTemplateProps} id={lonIdSchema[ID_KEY]} label={lonLabel}>
+          <FieldTemplate {...fieldTemplateProps} id={lonFieldPathId[ID_KEY]} label={lonLabel}>
             <NumberField
               schema={lonSchema.field!}
               registry={registry}
               {...otherProps}
               name={lonLabel}
               required={lonSchema.isRequired}
-              fieldPathId={lonIdSchema}
+              fieldPathId={lonFieldPathId}
               formData={formData.lon}
               onChange={changeHandlerFactory(lonKey)}
             />

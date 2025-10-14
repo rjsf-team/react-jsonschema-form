@@ -20,7 +20,7 @@ import {
 export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
   autofocus,
   disabled,
-  formContext,
+  registry,
   id,
   onBlur,
   onChange,
@@ -29,6 +29,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
   readonly,
   value,
 }: WidgetProps<T, S, F>) {
+  const { formContext } = registry;
   const { readonlyAsDisabled = true } = formContext as GenericObjectType;
 
   const { enumOptions, enumDisabled, emptyValue } = options;

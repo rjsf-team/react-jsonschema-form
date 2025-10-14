@@ -17,9 +17,30 @@ should change the heading of the (upcoming) version to include a major version b
 -->
 # 6.0.0-beta.22
 
+## @rjsf/antd
+
+- Updated most of the widgets to get `formContext` from the `registry` instead of the `props` since it will no longer be passed
+
 ## @rjsf/core
 
 - Updated `MultiSchemaField` and `SchemaField` to properly display `anyOf`/`oneOf` optional data fields by hiding the label and selector control when it is an optional field AND there is no form data
+- Updated `ArrayField`, `BooleanField`, `LayoutMultiSchemaField`, `MultiSchemaField`, `ObjectField`, `SchemaField`, `StringField` and `BaseInputTemplate` to remove `formContext` from the props
+
+## @rjsf/daisyui
+
+- Updated the test mocks to remove `formContext` for the widget mock
+
+## @rjsf/mui
+
+- Updated `BaseInputTemplate` and `SelectWidget` to remove `formContext` from the props
+
+## @rjsf/primereact
+
+- Updated `SelectWidget` to remove `formContext` from the props
+
+## @rjsf/shadcn
+
+- Updated the test mocks to remove `formContext` for the widget mock and added `globalFormOptions` in the registry mock
 
 ## Dev / docs / playground
 - Updated the `formTests.tsx` snapshots to add an `anyOf` of all arrays with different item types and removed the disabling of the optional data controls feature for the optional object with oneOfs
@@ -27,6 +48,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Updated the playground to make the same changes as `formTests.tsx` in the `optionalDataControls.ts` sample, moving the `experimental_defaultFormStateBehavior` inside of a `liveSettings` block
 - Updated the `Sample` and `LiveSettings` types to support the `liveSettings` inside of a sample
 - Updated the `Playground`'s `onSampleSelected` callback to merge any `liveSettings` in the sample on top of those already used in the playground
+- Updated the `customFieldAnyOf` sample to switch `IdSchema` to `FieldPathId`
 
 # 6.0.0-beta.21
 

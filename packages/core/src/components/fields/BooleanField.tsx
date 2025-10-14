@@ -40,7 +40,7 @@ function BooleanField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
     rawErrors,
   } = props;
   const { title: schemaTitle } = schema;
-  const { widgets, formContext, translateString, globalUiOptions } = registry;
+  const { widgets, translateString, globalUiOptions } = registry;
   const {
     widget = 'checkbox',
     title: uiTitle,
@@ -114,7 +114,6 @@ function BooleanField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
       readonly={readonly}
       hideError={hideError}
       registry={registry}
-      formContext={formContext}
       autofocus={autofocus}
       rawErrors={rawErrors}
     />

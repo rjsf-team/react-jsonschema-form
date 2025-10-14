@@ -149,7 +149,6 @@ class AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
       name,
       disabled = false,
       errorSchema = {},
-      formContext,
       formData,
       onBlur,
       onFocus,
@@ -244,7 +243,6 @@ class AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
           value={selectedOption >= 0 ? selectedOption : undefined}
           options={{ enumOptions, ...uiOptions }}
           registry={registry}
-          formContext={formContext}
           placeholder={placeholder}
           autocomplete={autocomplete}
           autofocus={autofocus}

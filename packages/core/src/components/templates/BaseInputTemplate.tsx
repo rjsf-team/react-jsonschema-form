@@ -34,7 +34,6 @@ export default function BaseInputTemplate<
     options,
     schema,
     uiSchema,
-    formContext,
     registry,
     rawErrors,
     type,
