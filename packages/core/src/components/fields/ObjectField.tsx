@@ -242,7 +242,7 @@ class ObjectField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
       title,
     } = this.props;
 
-    const { fields, formContext, schemaUtils, translateString, globalFormOptions, globalUiOptions } = registry;
+    const { fields, schemaUtils, translateString, globalFormOptions, globalUiOptions } = registry;
     const { OptionalDataControlsField, SchemaField } = fields;
     const schema: S = schemaUtils.retrieveSchema(rawSchema, formData, true);
     const uiOptions = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
@@ -297,7 +297,6 @@ class ObjectField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
               errorSchema={get(errorSchema, name)}
               fieldPathId={innerFieldIdPathId}
               formData={get(formData, name)}
-              formContext={formContext}
               wasPropertyKeyModified={this.state.wasPropertyKeyModified}
               onKeyChange={this.onKeyChange(name)}
               onChange={this.onPropertyChange(name, addedByAdditionalProperties)}
@@ -325,7 +324,6 @@ class ObjectField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
       errorSchema,
       schema,
       formData,
-      formContext,
       registry,
       optionalDataControl,
       className: renderOptionalField ? 'rjsf-optional-object-field' : undefined,

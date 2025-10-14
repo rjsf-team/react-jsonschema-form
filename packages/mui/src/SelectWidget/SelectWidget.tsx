@@ -43,7 +43,6 @@ export default function SelectWidget<
   registry,
   uiSchema,
   hideError,
-  formContext,
   ...textFieldProps
 }: WidgetProps<T, S, F>) {
   const { enumOptions, enumDisabled, emptyValue: optEmptyVal } = options;

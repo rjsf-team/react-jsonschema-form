@@ -55,7 +55,6 @@ export function makeWidgetMockProps(props: Partial<WidgetProps> = {}): WidgetPro
     rawErrors: [''],
     value: 'test-value',
     options: {},
-    formContext: {},
     id: 'test-id',
     name: 'test-name',
     placeholder: 'Enter value...',

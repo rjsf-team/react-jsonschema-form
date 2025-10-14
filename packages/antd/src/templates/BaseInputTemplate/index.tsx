@@ -28,7 +28,7 @@ export default function BaseInputTemplate<
 >(props: BaseInputTemplateProps<T, S, F>) {
   const {
     disabled,
-    formContext,
+    registry,
     id,
     onBlur,
     onChange,
@@ -41,6 +41,7 @@ export default function BaseInputTemplate<
     value,
     type,
   } = props;
+  const { formContext } = registry;
   const inputProps = getInputProps<T, S, F>(schema, type, options, false);
   const { readonlyAsDisabled = true } = formContext as GenericObjectType;
 

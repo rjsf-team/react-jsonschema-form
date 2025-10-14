@@ -34,21 +34,8 @@ export default function AltDateWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
 >(props: WidgetProps<T, S, F>) {
-  const {
-    autofocus,
-    disabled,
-    formContext,
-    id,
-    onBlur,
-    onChange,
-    onFocus,
-    options,
-    readonly,
-    registry,
-    showTime,
-    value,
-  } = props;
-  const { translateString, widgets } = registry;
+  const { autofocus, disabled, id, onBlur, onChange, onFocus, options, readonly, registry, showTime, value } = props;
+  const { formContext, translateString, widgets } = registry;
   const { SelectWidget } = widgets;
   const { rowGutter = 24 } = formContext as GenericObjectType;
 

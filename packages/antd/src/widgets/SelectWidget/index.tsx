@@ -29,7 +29,7 @@ export default function SelectWidget<
 >({
   autofocus,
   disabled,
-  formContext = {} as F,
+  registry,
   id,
   multiple,
   onBlur,
@@ -41,6 +41,7 @@ export default function SelectWidget<
   value,
   schema,
 }: WidgetProps<T, S, F>) {
+  const { formContext } = registry;
   const { readonlyAsDisabled = true } = formContext as GenericObjectType;
 
   const { enumOptions, enumDisabled, emptyValue } = options;

@@ -195,7 +195,6 @@ describe('LayoutMultiSchemaField', () => {
     return {
       // required FieldProps stubbed
       autofocus,
-      formContext: {},
       name: '',
       readonly: false,
       required,

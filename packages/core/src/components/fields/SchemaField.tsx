@@ -123,7 +123,7 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
     registry,
     wasPropertyKeyModified = false,
   } = props;
-  const { formContext, schemaUtils, globalUiOptions, fields } = registry;
+  const { schemaUtils, globalUiOptions, fields } = registry;
   const { AnyOfField: _AnyOfField, OneOfField: _OneOfField } = fields;
   const uiOptions = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
   const FieldTemplate = getTemplate<'FieldTemplate', T, S, F>('FieldTemplate', registry, uiOptions);
@@ -204,7 +204,6 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
       hideError={hideError}
       autofocus={autofocus}
       errorSchema={fieldErrorSchema as ErrorSchema}
-      formContext={formContext}
       rawErrors={__errors}
     />
   );
@@ -305,7 +304,6 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
             hideError={hideError}
             errorSchema={errorSchema}
             formData={formData}
-            formContext={formContext}
             fieldPathId={fieldPathId}
             onBlur={props.onBlur}
             onChange={props.onChange}

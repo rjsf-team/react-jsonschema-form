@@ -37,7 +37,6 @@ describe('LayoutHeaderField', () => {
       autofocus: false,
       disabled: false,
       errorSchema: {},
-      formContext: undefined,
       formData: undefined,
       onBlur: noop,
       onChange: noop,

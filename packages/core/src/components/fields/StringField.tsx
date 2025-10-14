@@ -36,7 +36,7 @@ function StringField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
     hideError,
   } = props;
   const { title, format } = schema;
-  const { widgets, formContext, schemaUtils, globalUiOptions } = registry;
+  const { widgets, schemaUtils, globalUiOptions } = registry;
   const enumOptions = schemaUtils.isSelect(schema) ? optionsList<T, S, F>(schema, uiSchema) : undefined;
   let defaultWidget = enumOptions ? 'select' : 'text';
   if (format && hasWidget<T, S, F>(schema, format, widgets)) {
@@ -70,7 +70,6 @@ function StringField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
       required={required}
       disabled={disabled}
       readonly={readonly}
-      formContext={formContext}
       autofocus={autofocus}
       registry={registry}
       placeholder={placeholder}
