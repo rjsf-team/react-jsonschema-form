@@ -25,6 +25,7 @@ exports[`array fields array 1`] = `
           <button
             className="btn btn-info btn-add col-xs-12"
             disabled={false}
+            id="root__add"
             onClick={[Function]}
             title="Add"
             type="button"
@@ -257,6 +258,7 @@ exports[`array fields array icons 1`] = `
           <button
             className="btn btn-info btn-add col-xs-12"
             disabled={false}
+            id="root__add"
             onClick={[Function]}
             title="Add"
             type="button"
@@ -653,6 +655,7 @@ exports[`with title and description array 1`] = `
           <button
             className="btn btn-info btn-add col-xs-12"
             disabled={false}
+            id="root__add"
             onClick={[Function]}
             title="Add"
             type="button"
@@ -930,6 +933,7 @@ exports[`with title and description array icons 1`] = `
           <button
             className="btn btn-info btn-add col-xs-12"
             disabled={false}
+            id="root__add"
             onClick={[Function]}
             title="Add"
             type="button"
@@ -1190,6 +1194,7 @@ exports[`with title and description from both array 1`] = `
           <button
             className="btn btn-info btn-add col-xs-12"
             disabled={false}
+            id="root__add"
             onClick={[Function]}
             title="Add"
             type="button"
@@ -1467,6 +1472,7 @@ exports[`with title and description from both array icons 1`] = `
           <button
             className="btn btn-info btn-add col-xs-12"
             disabled={false}
+            id="root__add"
             onClick={[Function]}
             title="Add"
             type="button"
@@ -1727,6 +1733,7 @@ exports[`with title and description from uiSchema array 1`] = `
           <button
             className="btn btn-info btn-add col-xs-12"
             disabled={false}
+            id="root__add"
             onClick={[Function]}
             title="Add"
             type="button"
@@ -2004,6 +2011,7 @@ exports[`with title and description from uiSchema array icons 1`] = `
           <button
             className="btn btn-info btn-add col-xs-12"
             disabled={false}
+            id="root__add"
             onClick={[Function]}
             title="Add"
             type="button"
@@ -2253,6 +2261,7 @@ exports[`with title and description with global label off array 1`] = `
           <button
             className="btn btn-info btn-add col-xs-12"
             disabled={false}
+            id="root__add"
             onClick={[Function]}
             title="Add"
             type="button"
@@ -2485,6 +2494,7 @@ exports[`with title and description with global label off array icons 1`] = `
           <button
             className="btn btn-info btn-add col-xs-12"
             disabled={false}
+            id="root__add"
             onClick={[Function]}
             title="Add"
             type="button"

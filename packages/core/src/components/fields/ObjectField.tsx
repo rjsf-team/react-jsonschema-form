@@ -3,6 +3,7 @@ import {
   getTemplate,
   getUiOptions,
   orderProperties,
+  shouldRenderOptionalField,
   toFieldPathId,
   ErrorSchema,
   FieldPathList,
@@ -17,6 +18,7 @@ import {
   REF_KEY,
   ANY_OF_KEY,
   ONE_OF_KEY,
+  isFormDataAvailable,
 } from '@rjsf/utils';
 import Markdown from 'markdown-to-jsx';
 import get from 'lodash/get';
@@ -240,32 +242,39 @@ class ObjectField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
       title,
     } = this.props;
 
-    const { fields, formContext, schemaUtils, translateString, globalFormOptions, globalUiOptions } = registry;
-    const { SchemaField } = fields;
-    const schema: S = schemaUtils.retrieveSchema(rawSchema, formData);
+    const { fields, schemaUtils, translateString, globalFormOptions, globalUiOptions } = registry;
+    const { OptionalDataControlsField, SchemaField } = fields;
+    const schema: S = schemaUtils.retrieveSchema(rawSchema, formData, true);
     const uiOptions = getUiOptions<T, S, F>(uiSchema, globalUiOptions);
     const { properties: schemaProperties = {} } = schema;
 
     const templateTitle = uiOptions.title ?? schema.title ?? title ?? name;
     const description = uiOptions.description ?? schema.description;
-    let orderedProperties: string[];
-    try {
-      const properties = Object.keys(schemaProperties);
-      orderedProperties = orderProperties(properties, uiOptions.order);
-    } catch (err) {
-      return (
-        <div>
-          <p className='rjsf-config-error' style={{ color: 'red' }}>
-            <Markdown options={{ disableParsingRawHTML: true }}>
-              {translateString(TranslatableString.InvalidObjectField, [name || 'root', (err as Error).message])}
-            </Markdown>
-          </p>
-          <pre>{JSON.stringify(schema)}</pre>
-        </div>
-      );
+    const renderOptionalField = shouldRenderOptionalField(registry, schema, required, uiSchema);
+    const hasFormData = isFormDataAvailable(formData);
+    let orderedProperties: string[] = [];
+    if (!renderOptionalField || hasFormData) {
+      try {
+        const properties = Object.keys(schemaProperties);
+        orderedProperties = orderProperties(properties, uiOptions.order);
+      } catch (err) {
+        return (
+          <div>
+            <p className='rjsf-config-error' style={{ color: 'red' }}>
+              <Markdown options={{ disableParsingRawHTML: true }}>
+                {translateString(TranslatableString.InvalidObjectField, [name || 'root', (err as Error).message])}
+              </Markdown>
+            </p>
+            <pre>{JSON.stringify(schema)}</pre>
+          </div>
+        );
+      }
     }
 
     const Template = getTemplate<'ObjectFieldTemplate', T, S, F>('ObjectFieldTemplate', registry, uiOptions);
+    const optionalDataControl = renderOptionalField ? (
+      <OptionalDataControlsField {...this.props} schema={schema} />
+    ) : undefined;
 
     const templateProps = {
       // getDisplayLabel() always returns false for object types, so just check the `uiOptions.label`
@@ -288,7 +297,6 @@ class ObjectField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
               errorSchema={get(errorSchema, name)}
               fieldPathId={innerFieldIdPathId}
               formData={get(formData, name)}
-              formContext={formContext}
               wasPropertyKeyModified={this.state.wasPropertyKeyModified}
               onKeyChange={this.onKeyChange(name)}
               onChange={this.onPropertyChange(name, addedByAdditionalProperties)}
@@ -316,8 +324,9 @@ class ObjectField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends Fo
       errorSchema,
       schema,
       formData,
-      formContext,
       registry,
+      optionalDataControl,
+      className: renderOptionalField ? 'rjsf-optional-object-field' : undefined,
     };
     return <Template {...templateProps} onAddClick={this.handleAddClick} />;
   }

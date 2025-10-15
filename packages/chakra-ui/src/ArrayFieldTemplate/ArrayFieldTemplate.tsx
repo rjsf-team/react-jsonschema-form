@@ -15,8 +15,20 @@ export default function ArrayFieldTemplate<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
 >(props: ArrayFieldTemplateProps<T, S, F>) {
-  const { canAdd, disabled, fieldPathId, uiSchema, items, onAddClick, readonly, registry, required, schema, title } =
-    props;
+  const {
+    canAdd,
+    disabled,
+    fieldPathId,
+    uiSchema,
+    items,
+    optionalDataControl,
+    onAddClick,
+    readonly,
+    registry,
+    required,
+    schema,
+    title,
+  } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const ArrayFieldDescriptionTemplate = getTemplate<'ArrayFieldDescriptionTemplate', T, S, F>(
     'ArrayFieldDescriptionTemplate',
@@ -33,6 +45,7 @@ export default function ArrayFieldTemplate<
     registry,
     uiOptions,
   );
+  const showOptionalDataControlInTitle = !readonly && !disabled;
   // Button templates are not overridden in the uiSchema
   const {
     ButtonTemplates: { AddButton },
@@ -46,6 +59,7 @@ export default function ArrayFieldTemplate<
         uiSchema={uiSchema}
         required={required}
         registry={registry}
+        optionalDataControl={showOptionalDataControlInTitle ? optionalDataControl : undefined}
       />
       <ArrayFieldDescriptionTemplate
         fieldPathId={fieldPathId}
@@ -56,13 +70,13 @@ export default function ArrayFieldTemplate<
       />
       <Grid key={`array-item-list-${fieldPathId.$id}`}>
         <GridItem>
-          {items.length > 0 &&
-            items.map(({ key, ...itemProps }: ArrayFieldItemTemplateType<T, S, F>) => (
-              <ArrayFieldItemTemplate key={key} {...itemProps} />
-            ))}
+          {!showOptionalDataControlInTitle ? optionalDataControl : undefined}
+          {items.map(({ key, ...itemProps }: ArrayFieldItemTemplateType<T, S, F>) => (
+            <ArrayFieldItemTemplate key={key} {...itemProps} />
+          ))}
         </GridItem>
         {canAdd && (
-          <GridItem justifySelf={'flex-end'}>
+          <GridItem justifySelf='flex-end'>
             <Box mt={2}>
               <AddButton
                 id={buttonId(fieldPathId, 'add')}

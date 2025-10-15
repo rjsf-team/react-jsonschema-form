@@ -1,7 +1,7 @@
 import { ComponentType } from 'react';
 import renderer, { TestRendererOptions } from 'react-test-renderer';
 import { FormProps } from '@rjsf/core';
-import { RJSFSchema, ErrorSchema, UiSchema } from '@rjsf/utils';
+import { RJSFSchema, ErrorSchema, UiSchema, Experimental_DefaultFormStateBehavior } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
 jest.mock('@rjsf/utils', () => ({
@@ -532,6 +532,245 @@ export function formTests(Form: ComponentType<FormProps>, customOptions: FormRen
         .create(<Form schema={schema} uiSchema={uiSchema} validator={validator} extraErrors={extraErrors} />)
         .toJSON();
       expect(tree).toMatchSnapshot();
+    });
+    describe('optional data controls', () => {
+      let schema: RJSFSchema;
+      let uiSchema: UiSchema;
+      let experimental_defaultFormStateBehavior: Experimental_DefaultFormStateBehavior;
+      let formData: any;
+      beforeAll(() => {
+        schema = {
+          title: 'test',
+          properties: {
+            nestedObjectOptional: {
+              type: 'object',
+              properties: {
+                test: {
+                  type: 'string',
+                },
+                deepObjectOptional: {
+                  type: 'object',
+                  properties: {
+                    deepTest: {
+                      type: 'string',
+                    },
+                  },
+                },
+                deepObject: {
+                  type: 'object',
+                  properties: {
+                    deepTest: {
+                      type: 'string',
+                    },
+                  },
+                },
+                deepArrayOptional: {
+                  type: 'array',
+                  items: {
+                    type: 'string',
+                  },
+                },
+                deepArrayOptional2: {
+                  type: 'array',
+                  items: {
+                    type: 'string',
+                  },
+                },
+                deepArray: {
+                  type: 'array',
+                  items: {
+                    type: 'string',
+                  },
+                },
+              },
+              required: ['deepObject', 'deepArray'],
+            },
+            nestedArrayOptional: {
+              type: 'array',
+              items: {
+                type: 'string',
+              },
+            },
+            nestedObject: {
+              type: 'object',
+              properties: {
+                test: {
+                  type: 'string',
+                },
+              },
+            },
+            nestedArray: {
+              type: 'array',
+              items: {
+                type: 'string',
+              },
+            },
+            optionalObjectWithOneofs: {
+              oneOf: [
+                {
+                  type: 'object',
+                  properties: {
+                    name: {
+                      type: 'string',
+                      default: 'first_option',
+                      readOnly: true,
+                    },
+                  },
+                },
+                {
+                  type: 'object',
+                  properties: {
+                    name: {
+                      type: 'string',
+                      default: 'second_option',
+                      readOnly: true,
+                    },
+                    flag: {
+                      type: 'boolean',
+                      default: false,
+                    },
+                  },
+                },
+                {
+                  type: 'object',
+                  properties: {
+                    name: {
+                      type: 'string',
+                      default: 'third_option',
+                      readOnly: true,
+                    },
+                    flag: {
+                      type: 'boolean',
+                      default: false,
+                    },
+                    inner_obj: {
+                      type: 'object',
+                      properties: {
+                        foo: {
+                          type: 'string',
+                        },
+                      },
+                    },
+                  },
+                },
+              ],
+            },
+            optionalArrayWithAnyofs: {
+              anyOf: [
+                {
+                  type: 'array',
+                  items: {
+                    type: 'string',
+                  },
+                },
+                {
+                  type: 'array',
+                  items: {
+                    type: 'number',
+                  },
+                },
+                {
+                  type: 'array',
+                  items: {
+                    type: 'object',
+                    properties: {
+                      test: {
+                        type: 'string',
+                      },
+                    },
+                  },
+                },
+              ],
+            },
+          },
+          required: ['nestedObject', 'nestedArray'],
+        };
+        uiSchema = {
+          'ui:globalOptions': {
+            enableOptionalDataFieldForType: ['object', 'array'],
+          },
+          nestedObjectOptional: {
+            deepArrayOptional: {
+              'ui:enableOptionalDataFieldForType': ['object'],
+            },
+          },
+        };
+        experimental_defaultFormStateBehavior = {
+          // Set the emptyObjectFields to only populate required defaults to highlight the code working
+          emptyObjectFields: 'populateRequiredDefaults',
+        };
+        formData = {
+          nestedObjectOptional: {
+            test: 'foo',
+          },
+          nestedArrayOptional: ['bar'],
+        };
+      });
+      test('does not show optional controls when not turned on in uiSchema and no formData', () => {
+        const formProps: FormProps = {
+          schema,
+          uiSchema: {},
+          validator,
+          experimental_defaultFormStateBehavior,
+        };
+        const tree = renderer.create(<Form {...formProps} />).toJSON();
+        expect(tree).toMatchSnapshot();
+      });
+      test('shows "add" optional controls when turned on in uiSchema and no formData', () => {
+        const formProps: FormProps = {
+          schema,
+          uiSchema,
+          validator,
+          experimental_defaultFormStateBehavior,
+        };
+        const tree = renderer.create(<Form {...formProps} />).toJSON();
+        expect(tree).toMatchSnapshot();
+      });
+      test('shows "add" and "remove" optional controls when turned on in uiSchema and formData', () => {
+        const formProps: FormProps = {
+          schema,
+          uiSchema,
+          validator,
+          experimental_defaultFormStateBehavior,
+          formData,
+        };
+        const tree = renderer.create(<Form {...formProps} />).toJSON();
+        expect(tree).toMatchSnapshot();
+      });
+      test('does not show optional controls when not turned on in uiSchema, readonly and no formData', () => {
+        const formProps: FormProps = {
+          schema,
+          uiSchema: {},
+          validator,
+          experimental_defaultFormStateBehavior,
+          readonly: true,
+        };
+        const tree = renderer.create(<Form {...formProps} />).toJSON();
+        expect(tree).toMatchSnapshot();
+      });
+      test('shows "add" optional controls when turned on in uiSchema, disabled and no formData', () => {
+        const formProps: FormProps = {
+          schema,
+          uiSchema,
+          validator,
+          experimental_defaultFormStateBehavior,
+          disabled: true,
+        };
+        const tree = renderer.create(<Form {...formProps} />).toJSON();
+        expect(tree).toMatchSnapshot();
+      });
+      test('shows "add" and "remove" optional controls when turned on in uiSchema, readonly and formData', () => {
+        const formProps: FormProps = {
+          schema,
+          uiSchema,
+          validator,
+          experimental_defaultFormStateBehavior,
+          formData,
+          readonly: true,
+        };
+        const tree = renderer.create(<Form {...formProps} />).toJSON();
+        expect(tree).toMatchSnapshot();
+      });
     });
   });
 }

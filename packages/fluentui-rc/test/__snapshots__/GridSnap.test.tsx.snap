@@ -43,6 +43,11 @@ exports[`Complex grid renders person and address and employment in a complex gri
               >
                 <h5
                   className="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
+                  style={
+                    {
+                      "marginBlock": 0,
+                    }
+                  }
                 >
                   Person Info
                 </h5>
@@ -1137,6 +1142,11 @@ exports[`Complex grid renders person and address and employment in a complex gri
               >
                 <h5
                   className="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
+                  style={
+                    {
+                      "marginBlock": 0,
+                    }
+                  }
                 >
                   Person Info
                 </h5>
@@ -2266,6 +2276,11 @@ exports[`Complex grid renders person and address and employment in a complex gri
               >
                 <h5
                   className="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
+                  style={
+                    {
+                      "marginBlock": 0,
+                    }
+                  }
                 >
                   Person Info
                 </h5>
@@ -3192,6 +3207,11 @@ exports[`Complex grid renders person and address and employment in a complex gri
               >
                 <h5
                   className="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
+                  style={
+                    {
+                      "marginBlock": 0,
+                    }
+                  }
                 >
                   Person Info
                 </h5>
@@ -4286,6 +4306,11 @@ exports[`Three even column grid renders person and address in three columns, no 
               >
                 <h5
                   className="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
+                  style={
+                    {
+                      "marginBlock": 0,
+                    }
+                  }
                 >
                   Person Info
                 </h5>
@@ -5007,6 +5032,11 @@ exports[`Two even column grid renders person and address in two columns, no empl
               >
                 <h5
                   className="fui-Text ___1bmgkdy_1xttbln fk6fouc f1x0m3f5 fb86gi6 figsok6 fpgzoln f1w7gpdv f6juhto f1gl81tg f2jf649"
+                  style={
+                    {
+                      "marginBlock": 0,
+                    }
+                  }
                 >
                   Person Info
                 </h5>

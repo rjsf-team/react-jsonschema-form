@@ -26,7 +26,6 @@ import {
   UiSchema,
   ITEMS_KEY,
 } from '@rjsf/utils';
-import cloneDeep from 'lodash/cloneDeep';
 import each from 'lodash/each';
 import flatten from 'lodash/flatten';
 import get from 'lodash/get';
@@ -601,15 +600,10 @@ function LayoutGridFieldComponent<T = any, S extends StrictRJSFSchema = RJSFSche
   const onFieldChange = useCallback(
     (dottedPath: string) => {
       return (value: T | undefined, path: FieldPathList, errSchema?: ErrorSchema<T>, id?: string) => {
-        let newErrorSchema = errorSchema;
-        if (errSchema && errorSchema) {
-          newErrorSchema = cloneDeep(errorSchema);
-          set(newErrorSchema, dottedPath, errSchema);
-        }
-        onChange(value, path, newErrorSchema, id);
+        onChange(value, path, errSchema, id);
       };
     },
-    [errorSchema, onChange],
+    [onChange],
   );
 
   const uiComponentProps = computeUIComponentPropsFromGridSchema(registry, gridSchema);

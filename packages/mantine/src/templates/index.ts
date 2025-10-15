@@ -12,6 +12,7 @@ import FieldTemplate from './FieldTemplate';
 import FieldHelpTemplate from './FieldHelpTemplate';
 import GridTemplate from './GridTemplate';
 import ObjectFieldTemplate from './ObjectFieldTemplate';
+import OptionalDataControlsTemplate from './OptionalDataControlsTemplate';
 import TitleField from './TitleField';
 import WrapIfAdditionalTemplate from './WrapIfAdditionalTemplate';
 import MultiSchemaFieldTemplate from './MultiSchemaFieldTemplate';
@@ -34,6 +35,7 @@ export function generateTemplates<
     FieldHelpTemplate,
     GridTemplate,
     ObjectFieldTemplate,
+    OptionalDataControlsTemplate,
     TitleFieldTemplate: TitleField,
     WrapIfAdditionalTemplate,
     MultiSchemaFieldTemplate,

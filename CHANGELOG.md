@@ -17,32 +17,146 @@ should change the heading of the (upcoming) version to include a major version b
 -->
 # 6.0.0-beta.22
 
+## @rjsf/antd
+
+- Updated most of the widgets to get `formContext` from the `registry` instead of the `props` since it will no longer be passed
+
 ## @rjsf/core
 
+- Updated `MultiSchemaField` and `SchemaField` to properly display `anyOf`/`oneOf` optional data fields by hiding the label and selector control when it is an optional field AND there is no form data
+- Updated `ArrayField`, `BooleanField`, `LayoutMultiSchemaField`, `MultiSchemaField`, `ObjectField`, `SchemaField`, `StringField` and `BaseInputTemplate` to remove `formContext` from the props
 - Refactored LayoutGridField as function components instead of a single class component.
 
+## @rjsf/daisyui
+
+- Updated the test mocks to remove `formContext` for the widget mock
+
+## @rjsf/mui
+
+- Updated `BaseInputTemplate` and `SelectWidget` to remove `formContext` from the props
+
+## @rjsf/primereact
+
+- Updated `SelectWidget` to remove `formContext` from the props
+
+## @rjsf/shadcn
+
+- Updated the test mocks to remove `formContext` for the widget mock and added `globalFormOptions` in the registry mock
 
 ## Dev / docs / playground
-
+- Updated the `formTests.tsx` snapshots to add an `anyOf` of all arrays with different item types and removed the disabling of the optional data controls feature for the optional object with oneOfs
+  - Updated the snapshots in all of the themes accordingly
+- Updated the playground to make the same changes as `formTests.tsx` in the `optionalDataControls.ts` sample, moving the `experimental_defaultFormStateBehavior` inside of a `liveSettings` block
+- Updated the `Sample` and `LiveSettings` types to support the `liveSettings` inside of a sample
+- Updated the `Playground`'s `onSampleSelected` callback to merge any `liveSettings` in the sample on top of those already used in the playground
+- Updated the `customFieldAnyOf` sample to switch `IdSchema` to `FieldPathId`
 - Updated '@rjsf/snapshot-tests' package to explicitly depend on '@rjsf/core' to build first, fixing an error with parallelized builds
 
 
 # 6.0.0-beta.21
 
+## @rjsf/antd
+
+- Updated `ArrayFieldTemplate`, `ObjectFieldTemplate`, `TitleField` to add support for the new `optionalDataControl` feature
+  - Added the new `OptionalDataControlTemplate` to the theme, adding it to the `templates` list
+- Updated the `ButtonTemplates` classes to fix up the props in `AntdIconButtonProps` and the `IconButton`s associated with them to better support the `OptionalDataControlTemplate`
+
+## @rjsf/chakra-ui
+
+- Updated `ArrayFieldTemplate`, `ObjectFieldTemplate`, `TitleField` to add support for the new `optionalDataControl` feature
+  - Added the new `OptionalDataControlTemplate` to the theme, adding it to the `templates` list
+- Updated the `ButtonTemplates` classes to add `ChakraIconButtonProps` and the `IconButton`s associated with them to better support the `OptionalDataControlTemplate`
+
 ## @rjsf/core
 
 - Added `initialDefaultsGenerated` flag to state, which indicates whether the initial generation of defaults has been completed
-- Added `ObjectField` tests for additionalProperties with defaults  
+- Added `ObjectField` tests for additionalProperties with defaults
+- Added a new `OptionalDataControlsField` to the `fields` that renders either undefined (when there is data for a readonly/disabled field) or gets the `OptionalDataControlsTemplate` and renders the `label` and potentially an `onAddClick` or `onRemoveClick` function
+- Updated `ArrayField` and `ObjectField` to check whether it `shouldRenderOptionalData()` and if true, calls `ObjectDataControlsField` and passes the result to its associated render template as `optionalDataControl`
+- Updated `ArrayFieldTemplate`, `ObjectFieldTemplate`, `TitleField` to add support for the new `optionalDataControl` feature
+  - Added the new `OptionalDataControlTemplate` to the theme, adding it to the `templates` list
+- Updated `Form` as follows to fix [#4796](https://github.com/rjsf-team/react-jsonschema-form/issues/4796)
+    - Refactored the `liveValidate()` and `mergeErrors()` functions out of `getStateFromProp()` and `processPendingChange()`
+    - Added new, optional `customErrors?: ErrorSchemaBuilder<T>` to the `FormState`, updating the `IChangeEvent` interface to remove all of the private variables
+    - Reworked the `newErrorSchema` handling in `processPendingChange()` to simplify the handling since `newErrorSchema` is now path-specific, adding `newErrorSchema` to `customErrors` when they don't match an existing validator-based validation
+        - This rework resulted in any custom errors passed from custom widgets/fields will now be remembered during the validation stage
+    - Removed the now unused `getPreviousCustomValidateErrors()` and `filterErrorsBasedOnSchema()` methods
+- Updated `LayoutGridField` to simplify `onFieldChange()` to just return the given `errorSchema` now that it is path-specific, fixing [#4796](https://github.com/rjsf-team/react-jsonschema-form/issues/4796)
+- Updated `NullField` to pass `fieldPathId.path` for the `onChange()` instead of `[name]`
+
+## @rjsf/daisyui
+
+- Updated `ArrayFieldTemplate`, `ArrayFieldTitleTemplate`, `ObjectFieldTemplate`, `TitleField` to add support for the new `optionalDataControl` feature
+  - Added the new `OptionalDataControlTemplate` to the theme, adding it to the `templates` list
+- Updated the `ButtonTemplates` classes to better support the `OptionalDataControlTemplate`
+
+## @rjsf/fluentui-rc
+
+- Updated `ArrayFieldTemplate`, `ObjectFieldTemplate`, `TitleField` to add support for the new `optionalDataControl` feature
+  - Added the new `OptionalDataControlTemplate` to the theme, adding it to the `templates` list
+- Updated the `ButtonTemplates` classes to add `FluentIconButtonProps` and the `IconButton`s associated with them to better support the `OptionalDataControlTemplate`
+
+## @rjsf/mantine
+
+- Updated `ArrayFieldTemplate`, `ObjectFieldTemplate`, `TitleField` to add support for the new `optionalDataControl` feature
+  - Added the new `OptionalDataControlTemplate` to the theme, adding it to the `templates` list
+
+## @rjsf/mui
+
+- Updated `ArrayFieldTemplate`, `ObjectFieldTemplate`, `TitleField` to add support for the new `optionalDataControl` feature
+  - Added the new `OptionalDataControlTemplate` to the theme, adding it to the `templates` list
+
+## @rjsf/primereact
+
+- Updated `ArrayFieldTemplate`, `ObjectFieldTemplate`, `TitleField` to add support for the new `optionalDataControl` feature
+  - Added the new `OptionalDataControlTemplate` to the theme, adding it to the `templates` list
+- Updated the `ButtonTemplates` classes to add `PrimeIconButtonProps` and the `IconButton`s associated with them to better support the `OptionalDataControlTemplate`
+
+## @rjsf/react-bootstrap
+
+- Updated `ArrayFieldTemplate`, `ObjectFieldTemplate`, `TitleField` to add support for the new `optionalDataControl` feature
+  - Added the new `OptionalDataControlTemplate` to the theme, adding it to the `templates` list
+- Updated the `ButtonTemplates` classes to add `BootstrapIconButtonProps` and the `IconButton`s associated with them to better support the `OptionalDataControlTemplate`
+
+## @rjsf/semantic-ui
+
+- Updated `ArrayFieldTemplate`, `ObjectFieldTemplate`, `TitleField` to add support for the new `optionalDataControl` feature
+  - Added the new `OptionalDataControlTemplate` to the theme, adding it to the `templates` list
+- Updated the `ButtonTemplates` classes to add `SemanticIconButtonProps` and the `IconButton`s associated with them to better support the `OptionalDataControlTemplate`
+
+## @rjsf/shadcn
+
+- Updated `ArrayFieldTemplate`, `ObjectFieldTemplate`, `TitleField` to add support for the new `optionalDataControl` feature
+  - Added the new `OptionalDataControlTemplate` to the theme, adding it to the `templates` list
+- Updated the `ButtonTemplates` classes to add `ShadIconButtonProps` and the `IconButton`s associated with them to better support the `OptionalDataControlTemplate`
 
 ## @rjsf/utils
 
 - Updated `getDefaultFormState` to add a new `initialDefaultsGenerated` prop flag, along with type definitions, fixing uneditable & permanent defaults with additional properties [3759](https://github.com/rjsf-team/react-jsonschema-form/issues/3759)
 - Updated `createSchemaUtils` definition to reflect addition of `initialDefaultsGenerated`
 - Updated existing tests where `getDefaultFormState` is used to reflect addition of `initialDefaultsGenerated`
+- Updated `types.ts` to support the new `Optional Data Controls` feature as follows:
+  - Added new `OptionalDataControlsTemplateProps` and refactored the common props from `ArrayFieldTemplateProps` and `ObjectFieldTemplateProps` into a new super type, `ContainerFieldTemplateProps`
+  - Added new `optionalDataControl?: ReactNode` to the `ArrayFieldTitleProps`, `TitleFieldProps` and `ContainerFieldTemplateProps`
+  - Updated `GlobalFormOptions` to add new `enableOptionalDataFieldForType?: ('object' | 'array')[]` prop
+  - Updated `SchemaUtilsType`'s `retrieveSchema()` function to add an additional, property `resolveAnyOfOrOneOfRefs?: boolean`
+- Updated the `Templates` interface to add a new required template `OptionalDataControlsTemplate: ComponentType<OptionalDataControlsTemplateProps<T, S, F>>`
+- Updated `retrieveSchema()` to add an additional  property `resolveAnyOfOrOneOfRefs?: boolean` which causes `resolveAllSchemas()` to resolve `$ref`s inside of the options of `anyOf`/`oneOf` schemas
+- Updated `getDefaultFormState` to fix an issue where optional array props had their default set to an empty array when they shouldn't be
+- Updated the `TranslatableString` enum to add three new strings in support of the new feature: `OptionalObjectAdd`, `OptionalObjectRemove` and `OptionalObjectEmptyMsg`
+- Added four new utility functions: `isFormDataAvailable()`, `isRootSchema()`, `optionalControlsId()`, and `shouldRenderOptionalField()`
+- Updated `validationDataMerge()` to add an additional, optional parameter `preventDuplicates = false`, that causes the `mergeObjects()` call to receive `preventDuplicates` instead of `true`
 
-## @rjsf/docs 
+## Dev / docs / playground
 
-- Updated docs for `getDefaultFormState` to reflect addition of `initialDefaultsGenerated` prop
+- Updated docs for `getDefaultFormState` to reflect addition of the `initialDefaultsGenerated` prop
+- Updated `utility-function.me` docs to add documentation for the new functions and to update the `validationDataMerge()` function's new parameter
+  - Also updated docs for `retrieveSchema` and `SchemaUtilsType` for the new prop
+- Updated `uiSchema.md` to add documentation for the new `enableOptionalDataFieldForType` prop
+- Updated the playground to add a new `Optional Data Controls` example
+- Updated the snapshot and jest tests for `Form` to test the new `Optional Data Controls` feature
+- Updated `custom-widgets-fields.md` to change the documentation around passing errors via `onChange()` to reflect the new reality
+- Updated the `v6x upgrade guide.md` to document the new feature, utility functions and changes to existing method parameters
 
 # 6.0.0-beta-20
 

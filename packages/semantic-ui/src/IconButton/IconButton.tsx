@@ -1,8 +1,14 @@
 import { Button, ButtonProps } from 'semantic-ui-react';
 import { FormContextType, IconButtonProps, RJSFSchema, StrictRJSFSchema, TranslatableString } from '@rjsf/utils';
 
-function IconButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: IconButtonProps<T, S, F>,
+export type SemanticIconButtonProps<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any,
+> = IconButtonProps<T, S, F> & Omit<ButtonProps, 'onChange'>;
+
+export default function IconButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+  props: SemanticIconButtonProps<T, S, F>,
 ) {
   const { icon, iconType, color, className, uiSchema, registry, ...otherProps } = props;
   return (
@@ -16,10 +22,8 @@ function IconButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends 
   );
 }
 
-export default IconButton;
-
 export function CopyButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: IconButtonProps<T, S, F>,
+  props: SemanticIconButtonProps<T, S, F>,
 ) {
   const {
     registry: { translateString },
@@ -28,7 +32,7 @@ export function CopyButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
 }
 
 export function MoveDownButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: IconButtonProps<T, S, F>,
+  props: SemanticIconButtonProps<T, S, F>,
 ) {
   const {
     registry: { translateString },
@@ -37,7 +41,7 @@ export function MoveDownButton<T = any, S extends StrictRJSFSchema = RJSFSchema,
 }
 
 export function MoveUpButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: IconButtonProps<T, S, F>,
+  props: SemanticIconButtonProps<T, S, F>,
 ) {
   const {
     registry: { translateString },
@@ -46,7 +50,7 @@ export function MoveUpButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F
 }
 
 export function RemoveButton<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: IconButtonProps<T, S, F>,
+  props: SemanticIconButtonProps<T, S, F>,
 ) {
   const {
     registry: { translateString },

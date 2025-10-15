@@ -837,7 +837,6 @@ describe('LayoutGridField', () => {
       formData,
       errorSchema,
       fieldPathId: FIELD_PATH_ID,
-      formContext: registry.formContext,
       registry,
       schema,
       uiSchema,
@@ -1425,7 +1424,7 @@ describe('LayoutGridField', () => {
     expect(props.onFocus).toHaveBeenCalledWith(fieldId, '');
     // Type to trigger the onChange
     await userEvent.type(input, 'foo');
-    expect(props.onChange).toHaveBeenCalledWith('foo', fieldPathId.path, props.errorSchema, fieldId);
+    expect(props.onChange).toHaveBeenCalledWith('foo', fieldPathId.path, undefined, fieldId);
     // Tab out of the input field to cause the blur
     await userEvent.tab();
     expect(props.onBlur).toHaveBeenCalledWith(fieldId, 'foo');
@@ -1451,7 +1450,7 @@ describe('LayoutGridField', () => {
     expect(props.onFocus).toHaveBeenCalledWith(fieldId, '');
     // Type to trigger the onChange
     await userEvent.type(input, 'foo');
-    expect(props.onChange).toHaveBeenCalledWith('foo', fieldPathId.path, props.errorSchema, fieldId);
+    expect(props.onChange).toHaveBeenCalledWith('foo', fieldPathId.path, undefined, fieldId);
     // Tab out of the input field to cause the blur
     await userEvent.tab();
     expect(props.onBlur).toHaveBeenCalledWith(fieldId, 'foo');
@@ -1477,7 +1476,7 @@ describe('LayoutGridField', () => {
     expect(props.onFocus).toHaveBeenCalledWith(fieldId, '');
     // Type to trigger the onChange
     await userEvent.type(input, 'foo');
-    expect(props.onChange).toHaveBeenCalledWith('foo', fieldPathId.path, props.errorSchema, fieldId);
+    expect(props.onChange).toHaveBeenCalledWith('foo', fieldPathId.path, undefined, fieldId);
     // Tab out of the input field to cause the blur
     await userEvent.tab();
     expect(props.onBlur).toHaveBeenCalledWith(fieldId, 'foo');
@@ -1631,8 +1630,7 @@ describe('LayoutGridField', () => {
     const input = within(fields[0]).getByRole('textbox');
     expect(input).toHaveValue(props.formData[fieldName]);
     await userEvent.type(input, '!');
-    const expectedErrors = new ErrorSchemaBuilder().addErrors(ERRORS, fieldName).ErrorSchema;
-    expect(props.onChange).toHaveBeenCalledWith('foo!', fieldPathId.path, expectedErrors, fieldId);
+    expect(props.onChange).toHaveBeenCalledWith('foo!', fieldPathId.path, EXTRA_ERROR, fieldId);
   });
   test('renderCondition, condition fails, field and null value, NONE operator, no data', () => {
     const gridProps = { operator: Operators.NONE, field: 'simpleString', value: null };

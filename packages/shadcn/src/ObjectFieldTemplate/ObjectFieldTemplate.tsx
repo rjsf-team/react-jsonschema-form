@@ -30,6 +30,7 @@ export default function ObjectFieldTemplate<
   fieldPathId,
   schema,
   formData,
+  optionalDataControl,
   onAddClick,
   disabled,
   readonly,
@@ -42,6 +43,7 @@ export default function ObjectFieldTemplate<
     registry,
     uiOptions,
   );
+  const showOptionalDataControlInTitle = !readonly && !disabled;
   // Button templates are not overridden in the uiSchema
   const {
     ButtonTemplates: { AddButton },
@@ -56,6 +58,7 @@ export default function ObjectFieldTemplate<
           schema={schema}
           uiSchema={uiSchema}
           registry={registry}
+          optionalDataControl={showOptionalDataControlInTitle ? optionalDataControl : undefined}
         />
       )}
       {description && (
@@ -68,9 +71,10 @@ export default function ObjectFieldTemplate<
         />
       )}
       <div className='flex flex-col gap-2'>
+        {!showOptionalDataControlInTitle ? optionalDataControl : undefined}
         {properties.map((element: any, index: number) => (
           <div key={index} className={`${element.hidden ? 'hidden' : ''} flex`}>
-            <div className='w-full'> {element.content}</div>
+            <div className='w-full'>{element.content}</div>
           </div>
         ))}
         {canExpand(schema, uiSchema, formData) ? (

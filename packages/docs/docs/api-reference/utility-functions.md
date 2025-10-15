@@ -76,7 +76,7 @@ Return a consistent `id` for the `btn` button element
 
 #### Parameters
 
-- id: FieldPathId | string - Either simple string id or an FieldPathId from which to extract it
+- id: FieldPathId | string - The id of the parent component for the option
 - btn: 'add' | 'copy' | 'moveDown' | 'moveUp' | 'remove' - The button type for which to generate the id
 
 #### Returns
@@ -596,6 +596,18 @@ This is the case when `schema.items` is a non-empty array that only contains obj
 
 - boolean: True if there are fixed items in the schema, false otherwise
 
+### isFormDataAvailable&lt;T = any>()
+
+Determines whether the given `formData` represents valid form data, such as a primitive type, an array, or a non-empty object.
+
+#### Parameters
+
+- formData: T - The data to check
+
+#### Returns
+
+- boolean: True if `formData` is not undefined, null, a primitive type or an array or an empty object
+
 ### isObject()
 
 Determines whether a `thing` is an object for the purposes of RSJF.
@@ -608,6 +620,23 @@ In this case, `thing` is an object if it has the type `object` but is NOT null, 
 #### Returns
 
 - boolean: True if it is a non-null, non-array, non-File object
+
+### isRootSchema&lt;T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>()
+
+Helper to check whether a JSON schema object is the root schema. The schema is a root schema with root `properties`
+key or a root `$ref` key. If the `schemaToCompare` has a root `oneOf` property, the function will
+return false. Else if `schemaToCompare` and `rootSchema` are the same object or equal, the function will return
+`true`. Else if the `rootSchema` has a $ref, it will be resolved using `schemaUtils.resolveSchema` utility. If the
+resolved schema matches the `schemaToCompare` the function will return `true`. Otherwise, it will return false.
+
+#### Parameters
+
+- registry: Registry&lt;T, S, F> - The `Registry` used to get the `rootSchema` and `schemaUtils`
+- schemaToCompare: S - The JSON schema object to check. If `schemaToCompare` is an root schema, the function will return true.
+
+#### Returns
+
+- boolean: True if the `uiSchema` describes a custom widget, false otherwise
 
 ### labelValue()
 
@@ -705,6 +734,19 @@ The difference between mergeSchemas and mergeObjects is that mergeSchemas only c
 
 - GenericObjectType: The merged schema object
 
+### optionalControlsId()
+
+Return a consistent `id` for the optional data controls `element`
+
+#### Parameters
+
+- id: string - The id of the parent component for the option
+- element: 'Add' | 'Msg' | 'Remove' - The element type for which to generate the id
+
+#### Returns
+
+- string: The consistent id for the optional data controls element from the given `id` and `element` type
+
 ### optionId()
 
 Return a consistent `id` for the `optionIndex`s of a `Radio` or `Checkboxes` widget
@@ -736,7 +778,7 @@ If the schema has a `oneOf` or `anyOf`, then the value is the list of either:
 #### Parameters
 
 - schema: S - The schema from which to extract the options list
-- uiSchema: UiSchema&lt;T, S, F> - The optional uiSchema from which to get alternate labels for the options
+- [uiSchema]: UiSchema&lt;T, S, F> - The optional uiSchema from which to get alternate labels for the options
 
 #### Returns
 
@@ -849,6 +891,23 @@ If either of those two sets are not the same, then the component should be reren
 #### Returns
 
 - True if boolean: the component should be re-rendered, false otherwise
+
+### shouldRenderOptionalField&lt;T = any, S extends StrictRJSFSchema = RJSFSchema,F extends FormContextType = any>()
+
+Determines whether the field information from the combination of `schema` and `required` along with the
+`enableOptionalDataFieldForType` settings from the global UI options in the `registry` all indicate that this field
+should be rendered with the Optional Data Controls UI.
+
+#### Parameters
+
+- registry: Registry&lt;T, S, F> - The `registry` object
+- schema: S - The schema for the field
+- required - Flag indicating whether the field is required
+- [uiSchema]: UiSchema&lt;T, S, F> - The optional uiSchema for the field
+
+#### Returns
+
+- boolean: True if the field should be rendered with the optional field UI, otherwise false
 
 ### sortedJSONStringify()
 
@@ -996,6 +1055,7 @@ If no `additionalErrorSchema` is passed, then `validationData` is returned.
 
 - validationData: ValidationData&lt;T> - The current `ValidationData` into which to merge the additional errors
 - [additionalErrorSchema]: ErrorSchema&lt;T> | undefined - The optional additional set of errors in an `ErrorSchema`
+- [preventDuplicates=false]: boolean - Optional flag, if true, will call `mergeObjects()` with `preventDuplicates`
 
 #### Returns
 

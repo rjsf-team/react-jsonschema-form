@@ -15,11 +15,20 @@ export default function ArrayFieldTitleTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
->({ title, uiSchema, required, fieldPathId }: ArrayFieldTitleProps<T, S, F>) {
+>({ title, uiSchema, required, fieldPathId, optionalDataControl }: ArrayFieldTitleProps<T, S, F>) {
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  return (
+  let heading = (
     <h5 id={titleId(fieldPathId)} style={{ margin: 0, fontSize: '1.5rem', marginBottom: '0.2rem' }}>
       {uiOptions.title || title} {required ? '*' : ''}
     </h5>
   );
+  if (optionalDataControl) {
+    heading = (
+      <div style={{ display: 'flex' }}>
+        <div style={{ flexGrow: 1 }}>{heading}</div>
+        <div>{optionalDataControl}</div>
+      </div>
+    );
+  }
+  return heading;
 }

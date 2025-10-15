@@ -1,5 +1,5 @@
 import { FormContextType, TitleFieldProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { Header } from 'semantic-ui-react';
+import { Grid, Header } from 'semantic-ui-react';
 
 import { getSemanticProps } from '../util';
 
@@ -16,17 +16,27 @@ export default function TitleField<T = any, S extends StrictRJSFSchema = RJSFSch
   id,
   title,
   uiSchema,
+  optionalDataControl,
 }: TitleFieldProps<T, S, F>) {
   const semanticProps = getSemanticProps<T, S, F>({
     uiSchema,
     defaultSchemaProps: DEFAULT_OPTIONS,
   });
-  if (!title) {
-    return null;
-  }
-  return (
+  let heading = title ? (
     <Header id={id} {...semanticProps} as='h5'>
       {title}
     </Header>
-  );
+  ) : null;
+  if (optionalDataControl) {
+    heading = (
+      <Grid colums={2} relaxed>
+        <Grid.Column width={14} style={{ paddingRight: 0 }}>
+          {heading}
+        </Grid.Column>
+        <Grid.Column width={2}>{optionalDataControl}</Grid.Column>
+      </Grid>
+    );
+  }
+
+  return heading;
 }

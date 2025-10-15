@@ -1,6 +1,6 @@
 import classNames from 'classnames';
 import { FormContextType, TitleFieldProps, RJSFSchema, StrictRJSFSchema } from '@rjsf/utils';
-import { ConfigProvider } from 'antd';
+import { Col, Divider, Row, ConfigProvider } from 'antd';
 import { useContext } from 'react';
 
 /** The `TitleField` is the template to use to render the title of a field
@@ -12,6 +12,7 @@ export default function TitleField<T = any, S extends StrictRJSFSchema = RJSFSch
   required,
   registry,
   title,
+  optionalDataControl,
 }: TitleFieldProps<T, S, F>) {
   const { formContext } = registry;
   const { colon = true } = formContext;
@@ -38,8 +39,7 @@ export default function TitleField<T = any, S extends StrictRJSFSchema = RJSFSch
     [`${prefixCls}-item-required`]: required,
     [`${prefixCls}-item-no-colon`]: !colon,
   });
-
-  return title ? (
+  let heading = title ? (
     <label
       className={labelClassName}
       htmlFor={id}
@@ -49,4 +49,19 @@ export default function TitleField<T = any, S extends StrictRJSFSchema = RJSFSch
       {labelChildren}
     </label>
   ) : null;
+  if (optionalDataControl) {
+    heading = (
+      <Row>
+        <Col flex='auto'>{heading}</Col>
+        <Col flex='none'>{optionalDataControl}</Col>
+      </Row>
+    );
+  }
+
+  return (
+    <>
+      {heading}
+      <Divider size='small' style={{ marginBlock: '1px' /* pull the margin right up against the label */ }} />
+    </>
+  );
 }

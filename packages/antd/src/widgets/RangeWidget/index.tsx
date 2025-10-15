@@ -20,7 +20,7 @@ export default function RangeWidget<T = any, S extends StrictRJSFSchema = RJSFSc
   const {
     autofocus,
     disabled,
-    formContext,
+    registry,
     id,
     onBlur,
     onChange,
@@ -31,6 +31,7 @@ export default function RangeWidget<T = any, S extends StrictRJSFSchema = RJSFSc
     schema,
     value,
   } = props;
+  const { formContext } = registry;
   const { readonlyAsDisabled = true } = formContext as GenericObjectType;
 
   const { min, max, step } = rangeSpec(schema);

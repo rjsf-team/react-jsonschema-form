@@ -21,18 +21,8 @@ export default function TextareaWidget<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
->({
-  disabled,
-  formContext,
-  id,
-  onBlur,
-  onChange,
-  onFocus,
-  options,
-  placeholder,
-  readonly,
-  value,
-}: WidgetProps<T, S, F>) {
+>({ disabled, registry, id, onBlur, onChange, onFocus, options, placeholder, readonly, value }: WidgetProps<T, S, F>) {
+  const { formContext } = registry;
   const { readonlyAsDisabled = true } = formContext as GenericObjectType;
 
   const handleChange = ({ target }: ChangeEvent<HTMLTextAreaElement>) =>

@@ -15,6 +15,7 @@ import FieldHelpTemplate from './FieldHelpTemplate';
 import GridTemplate from './GridTemplate';
 import MultiSchemaFieldTemplate from './MultiSchemaFieldTemplate';
 import ObjectFieldTemplate from './ObjectFieldTemplate';
+import OptionalDataControlsTemplate from './OptionalDataControlsTemplate';
 import TitleField from './TitleField';
 import UnsupportedField from './UnsupportedField';
 import WrapIfAdditionalTemplate from './WrapIfAdditionalTemplate';
@@ -40,6 +41,7 @@ function templates<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends F
     GridTemplate,
     MultiSchemaFieldTemplate,
     ObjectFieldTemplate,
+    OptionalDataControlsTemplate,
     TitleFieldTemplate: TitleField,
     UnsupportedFieldTemplate: UnsupportedField,
     WrapIfAdditionalTemplate,

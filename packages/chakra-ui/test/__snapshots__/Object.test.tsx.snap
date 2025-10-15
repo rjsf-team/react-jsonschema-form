@@ -36,7 +36,7 @@ exports[`object fields additionalProperties 1`] = `
 
 .emotion-2 {
   display: grid;
-  gap: var(--chakra-spacing-6);
+  gap: var(--chakra-spacing-4);
   margin-bottom: var(--chakra-spacing-4);
 }
 
@@ -626,7 +626,7 @@ exports[`object fields object 1`] = `
 
 .emotion-2 {
   display: grid;
-  gap: var(--chakra-spacing-6);
+  gap: var(--chakra-spacing-4);
   margin-bottom: var(--chakra-spacing-4);
 }
 
@@ -994,7 +994,7 @@ exports[`object fields show add button and fields if additionalProperties is tru
 
 .emotion-2 {
   display: grid;
-  gap: var(--chakra-spacing-6);
+  gap: var(--chakra-spacing-4);
   margin-bottom: var(--chakra-spacing-4);
 }
 
@@ -6159,7 +6159,7 @@ exports[`object fields with title and description with global label off addition
 
 .emotion-2 {
   display: grid;
-  gap: var(--chakra-spacing-6);
+  gap: var(--chakra-spacing-4);
   margin-bottom: var(--chakra-spacing-4);
 }
 
@@ -6740,7 +6740,7 @@ exports[`object fields with title and description with global label off object 1
 
 .emotion-2 {
   display: grid;
-  gap: var(--chakra-spacing-6);
+  gap: var(--chakra-spacing-4);
   margin-bottom: var(--chakra-spacing-4);
 }
 
@@ -7064,7 +7064,7 @@ exports[`object fields with title and description with global label off show add
 
 .emotion-2 {
   display: grid;
-  gap: var(--chakra-spacing-6);
+  gap: var(--chakra-spacing-4);
   margin-bottom: var(--chakra-spacing-4);
 }
 

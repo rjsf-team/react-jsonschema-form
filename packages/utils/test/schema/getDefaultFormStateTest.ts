@@ -1837,25 +1837,55 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           );
         });
 
-        test('computeDefaults', () => {
+        test('computeDefaults, requiredAsRoot = true', () => {
+          expect(
+            computeDefaults(testValidator, schema, {
+              rootSchema: schema,
+              includeUndefinedValues,
+              requiredAsRoot: true,
+            }),
+          ).toEqual(expected);
+        });
+
+        test('computeDefaults, requiredAsRoot = false', () => {
           expect(
             computeDefaults(testValidator, schema, {
               rootSchema: schema,
               includeUndefinedValues,
             }),
+          ).toBeUndefined();
+        });
+
+        test('getDefaultBasedOnSchemaType, requiredAsRoot = true', () => {
+          expect(
+            getDefaultBasedOnSchemaType(testValidator, schema, {
+              rootSchema: schema,
+              includeUndefinedValues,
+              requiredAsRoot: true,
+            }),
           ).toEqual(expected);
         });
 
-        test('getDefaultBasedOnSchemaType', () => {
+        test('getDefaultBasedOnSchemaType, requiredAsRoot = false', () => {
           expect(
             getDefaultBasedOnSchemaType(testValidator, schema, { rootSchema: schema, includeUndefinedValues }),
+          ).toBeUndefined();
+        });
+
+        test('getArrayDefaults, requiredAsRoot = true', () => {
+          expect(
+            getArrayDefaults(testValidator, schema, {
+              rootSchema: schema,
+              includeUndefinedValues,
+              requiredAsRoot: true,
+            }),
           ).toEqual(expected);
         });
 
-        test('getArrayDefaults', () => {
-          expect(getArrayDefaults(testValidator, schema, { rootSchema: schema, includeUndefinedValues })).toEqual(
-            expected,
-          );
+        test('getArrayDefaults, requiredAsRoot = false', () => {
+          expect(
+            getArrayDefaults(testValidator, schema, { rootSchema: schema, includeUndefinedValues }),
+          ).toBeUndefined();
         });
       });
 
@@ -1867,16 +1897,28 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           expect(getDefaultFormState(testValidator, schema)).toEqual(expected);
         });
 
-        test('computeDefaults', () => {
-          expect(computeDefaults(testValidator, schema)).toEqual(expected);
+        test('computeDefaults, requiredAsRoot = true', () => {
+          expect(computeDefaults(testValidator, schema, { requiredAsRoot: true })).toEqual(expected);
         });
 
-        test('getDefaultBasedOnSchemaType', () => {
-          expect(getDefaultBasedOnSchemaType(testValidator, schema)).toEqual(expected);
+        test('computeDefaults, requiredAsRoot = false', () => {
+          expect(computeDefaults(testValidator, schema)).toBeUndefined();
         });
 
-        test('getArrayDefaults', () => {
-          expect(getArrayDefaults(testValidator, schema)).toEqual(expected);
+        test('getDefaultBasedOnSchemaType, requiredAsRoot = true', () => {
+          expect(getDefaultBasedOnSchemaType(testValidator, schema, { requiredAsRoot: true })).toEqual(expected);
+        });
+
+        test('getDefaultBasedOnSchemaType, requiredAsRoot = false', () => {
+          expect(getDefaultBasedOnSchemaType(testValidator, schema)).toBeUndefined();
+        });
+
+        test('getArrayDefaults, requiredAsRoot = true', () => {
+          expect(getArrayDefaults(testValidator, schema, { requiredAsRoot: true })).toEqual(expected);
+        });
+
+        test('getArrayDefaults, requiredAsRoot = false', () => {
+          expect(getArrayDefaults(testValidator, schema)).toBeUndefined();
         });
       });
     });
@@ -2124,7 +2166,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
     });
     describe('AJV $data reference in const property in schema should not be treated as default/const value', () => {
       let schema: RJSFSchema;
-      it('test nested object with $data in the schema', () => {
+      it('test nested object with $data in the schema, optional array', () => {
         schema = {
           type: 'object',
           properties: {
@@ -2185,6 +2227,70 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             },
           },
         };
+        expect(computeDefaults(testValidator, schema, { rootSchema: schema })).toEqual({});
+      });
+      it('test nested object with $data in the schema, required array', () => {
+        schema = {
+          type: 'object',
+          properties: {
+            email: {
+              type: 'string',
+              title: 'E-mail',
+              format: 'email',
+            },
+            emailConfirm: {
+              type: 'string',
+              const: {
+                $data: '/email',
+              },
+              title: 'Confirm e-mail',
+              format: 'email',
+            },
+            nestedObject: {
+              type: 'object',
+              properties: {
+                nestedEmail: {
+                  type: 'string',
+                  title: 'E-mail',
+                  format: 'email',
+                },
+                nestedEmailConfirm: {
+                  type: 'string',
+                  title: 'Confirm e-mail',
+                  const: {
+                    $data: '/nestedObject/nestedEmail',
+                  },
+                  format: 'email',
+                },
+              },
+            },
+            nestedObjectConfirm: {
+              type: 'object',
+              properties: {
+                nestedEmailConfirm: {
+                  type: 'string',
+                  title: 'Confirm e-mail',
+                  const: {
+                    $data: '/nestedObject/nestedEmail',
+                  },
+                  format: 'email',
+                },
+              },
+            },
+            arrayConfirm: {
+              type: 'array',
+              items: {
+                type: 'string',
+                title: 'Confirm e-mail',
+                const: {
+                  $data: '/nestedObject/nestedEmail',
+                },
+                format: 'email',
+              },
+            },
+          },
+          required: ['arrayConfirm'],
+        };
         expect(
           computeDefaults(testValidator, schema, {
             rootSchema: schema,
@@ -2199,7 +2305,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             rootSchema: schema,
             experimental_defaultFormStateBehavior: { emptyObjectFields: 'populateRequiredDefaults' },
           }),
-        ).toEqual({});
+        ).toEqual({ arrayConfirm: [] });
       });
       it('test nested object with $data in the schema and emptyObjectFields set to skipEmptyDefaults', () => {
         expect(
@@ -3874,7 +3980,27 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
           array: ['foo', 'qux'],
         });
       });
-      it('returns empty defaults when no item defaults are defined', () => {
+      it('returns empty defaults when no item defaults are defined for required array', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            array: {
+              type: 'array',
+              minItems: 1,
+              uniqueItems: true,
+              items: {
+                type: 'string',
+                enum: ['foo', 'bar', 'fuzz', 'qux'],
+              },
+            },
+          },
+          required: ['array'],
+        };
+        expect(getDefaultFormState(testValidator, schema, {})).toEqual({
+          array: [],
+        });
+      });
+      it('returns undefined defaults when no item defaults are defined for optional array', () => {
         const schema: RJSFSchema = {
           type: 'object',
           properties: {
@@ -3889,9 +4015,7 @@ export default function getDefaultFormStateTest(testValidator: TestValidatorType
             },
           },
         };
-        expect(getDefaultFormState(testValidator, schema, {})).toEqual({
-          array: [],
-        });
+        expect(getDefaultFormState(testValidator, schema, {})).toEqual({});
       });
       it('returns explicit defaults along with auto-fill when provided', () => {
         const schema: RJSFSchema = {

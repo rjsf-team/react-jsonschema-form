@@ -100,12 +100,11 @@ The default widgets you can override are:
 ## Raising errors from within a custom widget or field
 
 You can raise custom 'live validation' errors by overriding the `onChange` method to provide feedback while users are actively changing the form data.
-Note that these errors are temporary and are not recognized during the form validation process.
+If you do set errors this way, you must also clear them this way by passing `undefined` to the `onChange()` for the `errorSchema` parameter.
 
 :::warning
 
-This method of raising errors _only_ runs during `onChange`, i.e. when the user is changing data. This will not catch errors `onSubmit`, i.e when submitting the form.
-If you wish to add generic validation logic for your component, you should use the [`customValidate` Form prop](../api-reference/form-props.md#customvalidate).
+While these errors are retained during validation, it is still preferred for you to use the [`customValidate` Form prop](../api-reference/form-props.md#customvalidate) mechanism instead.
 
 :::
 

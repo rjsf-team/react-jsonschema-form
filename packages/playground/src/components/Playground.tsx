@@ -121,7 +121,8 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
 
   const onSampleSelected = useCallback(
     (sampleName: string) => {
-      load({ ...samples[sampleName], sampleName, liveSettings, theme });
+      const { liveSettings: sampleLiveSettings, ...sample } = samples[sampleName];
+      load({ ...sample, sampleName, liveSettings: { ...liveSettings, ...sampleLiveSettings }, theme });
     },
     [load, liveSettings, theme],
   );
