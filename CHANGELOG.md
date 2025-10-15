@@ -30,6 +30,9 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Updated `MultiSchemaField` and `SchemaField` to properly display `anyOf`/`oneOf` optional data fields by hiding the label and selector control when it is an optional field AND there is no form data
 - Updated `ArrayField`, `BooleanField`, `LayoutMultiSchemaField`, `MultiSchemaField`, `ObjectField`, `SchemaField`, `StringField` and `BaseInputTemplate` to remove `formContext` from the props
+- Updated `ObjectField` to refactor the code from a class component to two stateless functional components, replacing the 3 generator-props with the 4 memoized props mentioned in the `@rjsf/utils` changes
+- Updated `Form` to "memoize" the `fieldPathId` and `registry` into the `FormState`, adding a `toIChangeEvent()` helper to restrict the state returned on the `IChangeEvent` interface callbacks
+- Updated `FieldTemplate`, `ObjectFieldTemplate` and `WrapIfAdditionalTemplate` to rename the old `additionalProperties` interface props to the new ones
 
 ## @rjsf/daisyui
 
