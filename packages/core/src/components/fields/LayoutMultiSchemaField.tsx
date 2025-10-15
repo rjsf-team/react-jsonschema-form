@@ -195,6 +195,8 @@ export default function LayoutMultiSchemaField<
       displayLabel={displayLabel}
       errors={errors}
       onChange={onChange}
+      onKeyRenameBlur={noop}
+      onRemovePropertyClick={noop}
       onDropPropertyClick={ignored}
       onKeyChange={ignored}
     >

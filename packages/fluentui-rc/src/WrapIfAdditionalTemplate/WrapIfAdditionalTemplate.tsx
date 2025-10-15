@@ -1,4 +1,4 @@
-import { CSSProperties, FocusEvent } from 'react';
+import { CSSProperties } from 'react';
 import {
   ADDITIONAL_PROPERTY_FLAG,
   buttonId,
@@ -37,8 +37,8 @@ export default function WrapIfAdditionalTemplate<
     disabled,
     id,
     label,
-    onDropPropertyClick,
-    onKeyChange,
+    onRemovePropertyClick,
+    onKeyRenameBlur,
     readonly,
     required,
     schema,
@@ -66,7 +66,6 @@ export default function WrapIfAdditionalTemplate<
     );
   }
 
-  const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) => onKeyChange(target.value);
   return (
     <Flex gap='gap.medium' vAlign='center' key={`${id}-key`} className={classNames} style={style}>
       <div>
@@ -77,7 +76,7 @@ export default function WrapIfAdditionalTemplate<
             disabled={disabled || readonly}
             id={`${id}-key`}
             name={`${id}-key`}
-            onBlur={!readonly ? handleBlur : undefined}
+            onBlur={!readonly ? onKeyRenameBlur : undefined}
             type='text'
             input={{
               className: classes.input,
@@ -93,7 +92,7 @@ export default function WrapIfAdditionalTemplate<
           className='rjsf-object-property-remove'
           style={btnStyle}
           disabled={disabled || readonly}
-          onClick={onDropPropertyClick(label)}
+          onClick={onRemovePropertyClick}
           uiSchema={uiSchema}
           registry={registry}
         />

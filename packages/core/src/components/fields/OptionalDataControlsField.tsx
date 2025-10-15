@@ -41,7 +41,7 @@ export default function OptionalDataControlsField<
     registry,
     uiOptions,
   );
-  const hasFormData = isFormDataAvailable(formData);
+  const hasFormData = isFormDataAvailable<T>(formData);
   let id: string;
   let label: string | undefined;
   let onAddClick: OptionalDataControlsTemplateProps['onAddClick'];

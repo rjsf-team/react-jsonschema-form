@@ -1,4 +1,3 @@
-import { FocusEvent } from 'react';
 import {
   ADDITIONAL_PROPERTY_FLAG,
   buttonId,
@@ -26,8 +25,8 @@ export default function WrapIfAdditionalTemplate<
   disabled,
   id,
   label,
-  onDropPropertyClick,
-  onKeyChange,
+  onRemovePropertyClick,
+  onKeyRenameBlur,
   readonly,
   required,
   schema,
@@ -46,8 +45,6 @@ export default function WrapIfAdditionalTemplate<
     );
   }
 
-  const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) => onKeyChange(target.value);
-
   return (
     <div
       className={classNames}
@@ -63,7 +60,7 @@ export default function WrapIfAdditionalTemplate<
           name={`${id}-key`}
           defaultValue={label}
           disabled={disabled || readonly}
-          onBlur={!readonly ? handleBlur : undefined}
+          onBlur={!readonly ? onKeyRenameBlur : undefined}
           required={required}
           style={{ width: '100%' }}
         />
@@ -74,7 +71,7 @@ export default function WrapIfAdditionalTemplate<
           id={buttonId(id, 'remove')}
           className='rjsf-object-property-remove'
           disabled={disabled || readonly}
-          onClick={onDropPropertyClick(label)}
+          onClick={onRemovePropertyClick}
           registry={registry}
         />
       </div>

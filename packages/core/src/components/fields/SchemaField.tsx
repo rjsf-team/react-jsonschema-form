@@ -117,6 +117,8 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
     errorSchema,
     name,
     onChange,
+    onKeyRenameBlur,
+    onRemovePropertyClick,
     onKeyChange,
     onDropPropertyClick,
     required = false,
@@ -181,7 +183,7 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
     }
     // When the anyOf/oneOf is an optional data control render AND it does not have form data, hide the label
     const isOptionalRender = shouldRenderOptionalField<T, S, F>(registry, schema, required, uiSchema);
-    const hasFormData = isFormDataAvailable(formData);
+    const hasFormData = isFormDataAvailable<T>(formData);
     displayLabel = displayLabel && (!isOptionalRender || hasFormData);
   }
 
@@ -277,6 +279,8 @@ function SchemaFieldRender<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
     label,
     hidden,
     onChange,
+    onKeyRenameBlur,
+    onRemovePropertyClick,
     onKeyChange,
     onDropPropertyClick,
     required,

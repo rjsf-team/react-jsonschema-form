@@ -1,4 +1,3 @@
-import { useCallback } from 'react';
 import {
   WrapIfAdditionalTemplateProps,
   StrictRJSFSchema,
@@ -29,9 +28,12 @@ export default function WrapIfAdditionalTemplate<
     required,
     schema,
     uiSchema,
+    onKeyRenameBlur,
+    onRemovePropertyClick,
+    registry,
+    // Destructure props we don't want to pass to div
     onKeyChange,
     onDropPropertyClick,
-    registry,
     ...rest
   } = props;
 
@@ -40,17 +42,6 @@ export default function WrapIfAdditionalTemplate<
   // Button templates are not overridden in the uiSchema
   const { RemoveButton } = templates.ButtonTemplates;
   const keyLabel = translateString(TranslatableString.KeyLabel, [label]);
-
-  const handleBlur = useCallback(
-    (event: React.FocusEvent<HTMLInputElement>) => {
-      onKeyChange(event.target.value);
-    },
-    [onKeyChange],
-  );
-
-  const handleRemove = useCallback(() => {
-    onDropPropertyClick(label)();
-  }, [onDropPropertyClick, label]);
 
   if (!additional) {
     return <div className={classNames}>{children}</div>;
@@ -67,7 +58,7 @@ export default function WrapIfAdditionalTemplate<
             type='text'
             className='input input-bordered'
             id={`${id}-key`}
-            onBlur={handleBlur}
+            onBlur={onKeyRenameBlur}
             defaultValue={label}
             disabled={disabled || readonly}
           />
@@ -78,7 +69,7 @@ export default function WrapIfAdditionalTemplate<
             id={buttonId(id, 'remove')}
             className='rjsf-object-property-remove'
             disabled={disabled || readonly}
-            onClick={handleRemove}
+            onClick={onRemovePropertyClick}
             uiSchema={uiSchema}
             registry={registry}
           />

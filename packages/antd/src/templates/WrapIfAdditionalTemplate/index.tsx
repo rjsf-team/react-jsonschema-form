@@ -1,4 +1,3 @@
-import { FocusEvent } from 'react';
 import { Col, Row, Form, Input } from 'antd';
 import {
   ADDITIONAL_PROPERTY_FLAG,
@@ -35,8 +34,8 @@ export default function WrapIfAdditionalTemplate<
     disabled,
     id,
     label,
-    onDropPropertyClick,
-    onKeyChange,
+    onRemovePropertyClick,
+    onKeyRenameBlur,
     readonly,
     required,
     registry,
@@ -65,8 +64,6 @@ export default function WrapIfAdditionalTemplate<
       </div>
     );
   }
-
-  const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) => onKeyChange(target && target.value);
 
   // The `block` prop is not part of the `IconButtonProps` defined in the template, so put it into the uiSchema instead
   const uiOptions = uiSchema ? uiSchema[UI_OPTIONS_KEY] : {};
@@ -97,7 +94,7 @@ export default function WrapIfAdditionalTemplate<
                 disabled={disabled || (readonlyAsDisabled && readonly)}
                 id={`${id}-key`}
                 name={`${id}-key`}
-                onBlur={!readonly ? handleBlur : undefined}
+                onBlur={!readonly ? onKeyRenameBlur : undefined}
                 style={INPUT_STYLE}
                 type='text'
               />
@@ -112,7 +109,7 @@ export default function WrapIfAdditionalTemplate<
             id={buttonId(id, 'remove')}
             className='rjsf-object-property-remove'
             disabled={disabled || readonly}
-            onClick={onDropPropertyClick(label)}
+            onClick={onRemovePropertyClick}
             uiSchema={buttonUiOptions}
             registry={registry}
           />

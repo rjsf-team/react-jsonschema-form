@@ -40,14 +40,14 @@ export default function shouldRenderOptionalField<
   const { enableOptionalDataFieldForType = [] } = getUiOptions<T, S, F>(uiSchema, registry.globalUiOptions);
   let schemaType: ReturnType<typeof getSchemaType<S>>;
   if (ANY_OF_KEY in schema && Array.isArray(schema[ANY_OF_KEY])) {
-    schemaType = getSchemaTypesForXxxOf(schema[ANY_OF_KEY] as S[]);
+    schemaType = getSchemaTypesForXxxOf<S>(schema[ANY_OF_KEY] as S[]);
   } else if (ONE_OF_KEY in schema && Array.isArray(schema[ONE_OF_KEY])) {
-    schemaType = getSchemaTypesForXxxOf(schema[ONE_OF_KEY] as S[]);
+    schemaType = getSchemaTypesForXxxOf<S>(schema[ONE_OF_KEY] as S[]);
   } else {
     schemaType = getSchemaType<S>(schema);
   }
   return (
-    !isRootSchema(registry, schema) &&
+    !isRootSchema<T, S, F>(registry, schema) &&
     !required &&
     !!schemaType &&
     !Array.isArray(schemaType) &&

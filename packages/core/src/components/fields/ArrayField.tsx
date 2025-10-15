@@ -519,8 +519,8 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
     const _schemaItems: S = isObject(schema.items) ? (schema.items as S) : ({} as S);
     const itemsSchema: S = schemaUtils.retrieveSchema(_schemaItems);
     const formData = keyedToPlainFormData(this.state.keyedFormData);
-    const renderOptionalField = shouldRenderOptionalField(registry, schema, required, uiSchema);
-    const hasFormData = isFormDataAvailable(this.props.formData);
+    const renderOptionalField = shouldRenderOptionalField<T[], S, F>(registry, schema, required, uiSchema);
+    const hasFormData = isFormDataAvailable<T[]>(this.props.formData);
     const canAdd = this.canAddItem(formData) && (!renderOptionalField || hasFormData);
     const actualFormData = hasFormData ? keyedFormData : [];
     const extraClass = renderOptionalField ? ' rjsf-optional-array-field' : '';
@@ -752,8 +752,8 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
     const uiOptions = getUiOptions<T[], S, F>(uiSchema);
     const { schemaUtils, fields, formContext, globalFormOptions } = registry;
     const { OptionalDataControlsField } = fields;
-    const renderOptionalField = shouldRenderOptionalField(registry, schema, required, uiSchema);
-    const hasFormData = isFormDataAvailable(formData);
+    const renderOptionalField = shouldRenderOptionalField<T[], S, F>(registry, schema, required, uiSchema);
+    const hasFormData = isFormDataAvailable<T[]>(formData);
     const _schemaItems: S[] = isObject(schema.items) ? (schema.items as S[]) : ([] as S[]);
     const itemSchemas = _schemaItems.map((item: S, index: number) =>
       schemaUtils.retrieveSchema(item, items[index] as unknown as T[]),

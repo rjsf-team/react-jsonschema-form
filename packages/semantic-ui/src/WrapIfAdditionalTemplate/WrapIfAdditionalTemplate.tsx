@@ -1,4 +1,3 @@
-import { FocusEvent } from 'react';
 import {
   ADDITIONAL_PROPERTY_FLAG,
   buttonId,
@@ -28,7 +27,7 @@ export default function WrapIfAdditionalTemplate<
     id,
     label,
     onDropPropertyClick,
-    onKeyChange,
+    onKeyRenameBlur,
     readonly,
     required,
     schema,
@@ -51,8 +50,6 @@ export default function WrapIfAdditionalTemplate<
     );
   }
 
-  const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) => onKeyChange(target.value);
-
   return (
     <div className={classNames} style={style} key={`${id}-key`}>
       <Grid columns='equal'>
@@ -70,7 +67,7 @@ export default function WrapIfAdditionalTemplate<
                 disabled={disabled || (readonlyAsDisabled && readonly)}
                 id={`${id}`}
                 name={`${id}`}
-                onBlur={!readonly ? handleBlur : undefined}
+                onBlur={!readonly ? onKeyRenameBlur : undefined}
                 style={wrapperStyle}
                 type='text'
               ></Form.Input>

@@ -34,6 +34,8 @@ export default function FieldTemplate<
     hidden,
     id,
     label,
+    onRemovePropertyClick,
+    onKeyRenameBlur,
     onDropPropertyClick,
     onKeyChange,
     rawErrors,
@@ -86,6 +88,8 @@ export default function FieldTemplate<
       disabled={disabled}
       id={id}
       label={label}
+      onRemovePropertyClick={onRemovePropertyClick}
+      onKeyRenameBlur={onKeyRenameBlur}
       onDropPropertyClick={onDropPropertyClick}
       onKeyChange={onKeyChange}
       readonly={readonly}

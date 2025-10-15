@@ -1,4 +1,4 @@
-import { CSSProperties, FocusEvent } from 'react';
+import { CSSProperties } from 'react';
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import {
@@ -28,8 +28,8 @@ export default function WrapIfAdditionalTemplate<
     disabled,
     id,
     label,
-    onDropPropertyClick,
-    onKeyChange,
+    onRemovePropertyClick,
+    onKeyRenameBlur,
     readonly,
     required,
     schema,
@@ -56,8 +56,6 @@ export default function WrapIfAdditionalTemplate<
     );
   }
 
-  const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) => onKeyChange(target && target.value);
-
   return (
     <Grid container key={`${id}-key`} alignItems='center' spacing={2} className={classNames} style={style}>
       <Grid size='auto'>
@@ -69,7 +67,7 @@ export default function WrapIfAdditionalTemplate<
           disabled={disabled || readonly}
           id={`${id}-key`}
           name={`${id}-key`}
-          onBlur={!readonly ? handleBlur : undefined}
+          onBlur={!readonly ? onKeyRenameBlur : undefined}
           type='text'
         />
       </Grid>
@@ -81,7 +79,7 @@ export default function WrapIfAdditionalTemplate<
           iconType='default'
           style={btnStyle}
           disabled={disabled || readonly}
-          onClick={onDropPropertyClick(label)}
+          onClick={onRemovePropertyClick}
           uiSchema={uiSchema}
           registry={registry}
         />
