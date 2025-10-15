@@ -28,8 +28,8 @@ export default function WrapIfAdditionalTemplate<
     disabled,
     id,
     label,
-    onRemovePropertyClick,
     onKeyRenameBlur,
+    onRemoveProperty,
     readonly,
     required,
     schema,
@@ -79,7 +79,7 @@ export default function WrapIfAdditionalTemplate<
           iconType='default'
           style={btnStyle}
           disabled={disabled || readonly}
-          onClick={onRemovePropertyClick}
+          onClick={onRemoveProperty}
           uiSchema={uiSchema}
           registry={registry}
         />

@@ -548,22 +548,15 @@ export type FieldTemplateProps<
   formData?: T;
   /** The value change event handler; Can be called with a new value to change the value for this field */
   onChange: FieldProps<T, S, F>['onChange'];
+  /** Callback used to handle the changing of an additional property key's name with the new value
+   */
+  onKeyRename: (newKey: string) => void;
   /** Callback used to handle the changing of an additional property key's name when the input is blurred. The event's
-   * target's value will be used as the new value
+   * target's value will be used as the new value. Its a wrapper callback around `onKeyRename`
    */
   onKeyRenameBlur: (event: FocusEvent<HTMLInputElement>) => void;
-  /** Callback used to handle the clicking of the remove additionalProperty button */
-  onRemovePropertyClick: () => void;
-  /** The key change event handler; Called when the key associated with a field is changed for an additionalProperty
-   *
-   * @deprecated in favor of `onKeyNameChange` and will be removed in a future release
-   */
-  onKeyChange: (value: string) => () => void;
-  /** The property drop/removal event handler; Called when a field is removed in an additionalProperty context
-   *
-   * @deprecated in favor of `onRemovePropertyClick` and will be removed in a future release
-   */
-  onDropPropertyClick: (value: string) => () => void;
+  /** Callback used to handle the removal of the additionalProperty */
+  onRemoveProperty: () => void;
 };
 
 /** The properties that are passed to the `UnsupportedFieldTemplate` implementation */
@@ -775,13 +768,10 @@ export type ObjectFieldTemplateProps<
   description?: string | ReactElement;
   /** An array of objects representing the properties in the object */
   properties: ObjectFieldTemplatePropertyType[];
-  /** Callback to use in order to add an new additionalProperty to the object field */
-  onAddProperty: () => void;
-  /** Returns a function that adds a new property to the object (to be used with additionalProperties)
-   *
-   * @deprecated in favor of `onAddProperty()`, will be removed in a future release
+  /** Callback to use in order to add an new additionalProperty to the object field  (to be used with
+   * additionalProperties and patternProperties)
    */
-  onAddClick: (schema: S) => () => void;
+  onAddProperty: () => void;
   /** A boolean value stating if the object is read-only */
   readonly?: boolean;
   /** A boolean value stating if the object is required */
@@ -833,10 +823,9 @@ export type WrapIfAdditionalTemplateProps<
     | 'disabled'
     | 'schema'
     | 'uiSchema'
+    | 'onKeyRename'
     | 'onKeyRenameBlur'
-    | 'onRemovePropertyClick'
-    | 'onKeyChange'
-    | 'onDropPropertyClick'
+    | 'onRemoveProperty'
     | 'registry'
   >;
 

@@ -26,8 +26,8 @@ export default function WrapIfAdditionalTemplate<
     disabled,
     id,
     label,
-    onDropPropertyClick,
     onKeyRenameBlur,
+    onRemoveProperty,
     readonly,
     required,
     schema,
@@ -82,7 +82,7 @@ export default function WrapIfAdditionalTemplate<
               iconType='mini'
               className='rjsf-object-property-remove'
               disabled={disabled || readonly}
-              onClick={onDropPropertyClick(label)}
+              onClick={onRemoveProperty}
               uiSchema={uiSchema}
               registry={registry}
             />

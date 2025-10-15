@@ -31,7 +31,7 @@ export default function WrapIfAdditionalTemplate<
     schema,
     uiSchema,
     onKeyRenameBlur,
-    onRemovePropertyClick,
+    onRemoveProperty,
     registry,
     children,
   } = props;
@@ -83,7 +83,7 @@ export default function WrapIfAdditionalTemplate<
           iconType='sm'
           className='rjsf-array-item-remove'
           disabled={disabled || readonly}
-          onClick={onRemovePropertyClick}
+          onClick={onRemoveProperty}
           uiSchema={buttonUiOptions}
           registry={registry}
         />

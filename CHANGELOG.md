@@ -20,6 +20,11 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/antd
 
 - Updated most of the widgets to get `formContext` from the `registry` instead of the `props` since it will no longer be passed
+- Updated `FieldTemplate`, `ObjectFieldTemplate` and `WrapIfAdditionalTemplate` to rename the old `additionalProperties` interface props to the new ones
+
+## @rjsf/chakra-ui
+
+- Updated `FieldTemplate`, `ObjectFieldTemplate` and `WrapIfAdditionalTemplate` to rename the old `additionalProperties` interface props to the new ones
 
 ## @rjsf/core
 
@@ -29,18 +34,43 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/daisyui
 
 - Updated the test mocks to remove `formContext` for the widget mock
+- Updated `FieldTemplate`, `ObjectFieldTemplate` and `WrapIfAdditionalTemplate` to rename the old `additionalProperties` interface props to the new ones
+
+## @rjsf/fluentui-rc
+
+- Updated `FieldTemplate`, `ObjectFieldTemplate` and `WrapIfAdditionalTemplate` to rename the old `additionalProperties` interface props to the new ones
+
+## @rjsf/mantine
+
+- Updated `FieldTemplate`, `ObjectFieldTemplate` and `WrapIfAdditionalTemplate` to rename the old `additionalProperties` interface props to the new ones
 
 ## @rjsf/mui
 
 - Updated `BaseInputTemplate` and `SelectWidget` to remove `formContext` from the props
+- Updated `FieldTemplate`, `ObjectFieldTemplate` and `WrapIfAdditionalTemplate` to rename the old `additionalProperties` interface props to the new ones
 
 ## @rjsf/primereact
 
 - Updated `SelectWidget` to remove `formContext` from the props
+- Updated `FieldTemplate`, `ObjectFieldTemplate` and `WrapIfAdditionalTemplate` to rename the old `additionalProperties` interface props to the new ones
+
+## @rjsf/react-bootstrap
+
+- Updated `FieldTemplate`, `ObjectFieldTemplate` and `WrapIfAdditionalTemplate` to rename the old `additionalProperties` interface props to the new ones
+
+## @rjsf/semantic-ui
+
+- Updated `FieldTemplate`, `ObjectFieldTemplate` and `WrapIfAdditionalTemplate` to rename the old `additionalProperties` interface props to the new ones
 
 ## @rjsf/shadcn
 
 - Updated the test mocks to remove `formContext` for the widget mock and added `globalFormOptions` in the registry mock
+- Updated `FieldTemplate`, `ObjectFieldTemplate` and `WrapIfAdditionalTemplate` to rename the old `additionalProperties` interface props to the new ones
+
+## @rjsf/utils
+
+- BREAKING CHANGE: Updated `FieldTemplateProps` and `WrapIfAdditionalTemplateProps` to replace the `onKeyChange()` and `onDropPropertyClick()` callback generator props with the `onKeyRename()`, `onKeyRenameBlur()` and `onRemoveProperty()` callback props
+- BREAKING CHANGE: Updated `ObjectFieldTemplateProps` to replace the `onAddClick()` callback generator prop with the `onAddProperty()` callback prop
 
 ## Dev / docs / playground
 - Updated the `formTests.tsx` snapshots to add an `anyOf` of all arrays with different item types and removed the disabling of the optional data controls feature for the optional object with oneOfs
@@ -49,6 +79,8 @@ should change the heading of the (upcoming) version to include a major version b
 - Updated the `Sample` and `LiveSettings` types to support the `liveSettings` inside of a sample
 - Updated the `Playground`'s `onSampleSelected` callback to merge any `liveSettings` in the sample on top of those already used in the playground
 - Updated the `customFieldAnyOf` sample to switch `IdSchema` to `FieldPathId`
+- Updated the `custom-templates.md` documentation to reflect the `additionalProperties`-based interface props replacement
+- Updated the `v6.x upgrade guide.md` documentation to add the BREAKING CHANGES to the `FieldTemplateProps`, `ObjectFieldTemplateProps` and `WrapIfAdditionalTemplateProps` interface props changes
 
 # 6.0.0-beta.21
 

@@ -23,7 +23,7 @@ export default function WrapIfAdditionalTemplate<
     disabled,
     id,
     label,
-    onRemovePropertyClick,
+    onRemoveProperty,
     onKeyRenameBlur,
     readonly,
     registry,
@@ -65,7 +65,7 @@ export default function WrapIfAdditionalTemplate<
           id={buttonId(id, 'remove')}
           className='rjsf-object-property-remove'
           disabled={disabled || readonly}
-          onClick={onRemovePropertyClick}
+          onClick={onRemoveProperty}
           uiSchema={uiSchema}
           registry={registry}
         />

@@ -27,7 +27,7 @@ export default function WrapIfAdditionalTemplate<
     disabled,
     label,
     onKeyRenameBlur,
-    onRemovePropertyClick,
+    onRemoveProperty,
     readonly,
     required,
     schema,
@@ -79,7 +79,7 @@ export default function WrapIfAdditionalTemplate<
             className='rjsf-object-property-remove btn-block'
             style={{ border: '0' }}
             disabled={disabled || readonly}
-            onClick={onRemovePropertyClick}
+            onClick={onRemoveProperty}
             uiSchema={uiSchema}
             registry={registry}
           />

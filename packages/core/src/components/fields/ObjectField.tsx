@@ -66,18 +66,21 @@ function getDefaultValue<T = any, S extends StrictRJSFSchema = RJSFSchema, F ext
   }
 }
 
+/** Props for the `ObjectFieldProperty` component */
 interface ObjectFieldPropertyProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>
   extends Omit<FieldProps<T, S, F>, 'name'> {
-  /**  */
+  /** The name of the property within the parent object */
   propertyName: string;
-  /**  */
+  /** Flag indicating whether this property was added by the additionalProperties UI */
   addedByAdditionalProperties: boolean;
-  /** */
+  /** Callback that handles the rename of an additionalProperties-based property key */
   handleKeyRename: (oldKey: string, newKey: string) => void;
-  /** */
+  /** Callback that handles the removal of an additionalProperties-based property with key */
   handleRemoveProperty: (keyName: string) => void;
 }
 
+/** The `ObjectFieldProperty` component is used to render the `SchemaField` for a child property of an object
+ */
 function ObjectFieldProperty<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: ObjectFieldPropertyProps<T, S, F>,
 ) {
@@ -103,6 +106,7 @@ function ObjectFieldProperty<T = any, S extends StrictRJSFSchema = RJSFSchema, F
   const [wasPropertyKeyModified, setWasPropertyKeyModified] = useState(false);
   const { globalFormOptions, fields } = registry;
   const { SchemaField } = fields;
+  // Make sure to memoize the fieldPathId for this component to avoid unnecessary rerenders
   const innerFieldIdPathId = useMemo(
     () => toFieldPathId(propertyName, globalFormOptions, fieldPathId.path),
     [propertyName, globalFormOptions, fieldPathId.path],
@@ -129,6 +133,17 @@ function ObjectFieldProperty<T = any, S extends StrictRJSFSchema = RJSFSchema, F
     [onChange, addedByAdditionalProperties],
   );
 
+  /** The key change event handler; Called when the key associated with a field is changed for an additionalProperty.
+   * simply returns a function that call the `handleKeyChange()` event with the value
+   */
+  const onKeyRename = useCallback(
+    (value: string) => {
+      setWasPropertyKeyModified(propertyName !== value);
+      handleKeyRename(propertyName, value);
+    },
+    [propertyName, handleKeyRename],
+  );
+
   /** Returns a callback the handle the blur event, getting the value from the target and passing that along to the
    * `handleKeyChange` function
    */
@@ -137,46 +152,16 @@ function ObjectFieldProperty<T = any, S extends StrictRJSFSchema = RJSFSchema, F
       const {
         target: { value },
       } = event;
-      setWasPropertyKeyModified(propertyName !== value);
-      handleKeyRename(propertyName, value);
+      onKeyRename(value);
     },
-    [handleKeyRename, propertyName],
-  );
-
-  /** The key change event handler; Called when the key associated with a field is changed for an additionalProperty.
-   * simply returns a function that call the `handleKeyChange()` event with the value
-   *
-   * @deprecated in favor of `onKeyRenameBlur`
-   */
-  const onKeyChange = useCallback(
-    (value: string) => {
-      return () => {
-        setWasPropertyKeyModified(propertyName !== value);
-        handleKeyRename(propertyName, value);
-      };
-    },
-    [propertyName, handleKeyRename],
+    [onKeyRename],
   );
 
   /** The property drop/removal event handler; Called when a field is removed in an additionalProperty context
    */
-  const onRemovePropertyClick = useCallback(() => {
+  const onRemoveProperty = useCallback(() => {
     handleRemoveProperty(propertyName);
   }, [propertyName, handleRemoveProperty]);
-
-  /** Returns a callback to handle the onDropPropertyClick event for the given `key` which removes the old `key` data
-   * and calls the `onChange` callback with it
-   *
-   * @param key - The key for which the drop callback is desired
-   * @returns - The drop property click callback
-   * @deprecated in favor of `onRemovePropertyClick`
-   */
-  const onDropPropertyClick = useCallback(
-    (key: string) => {
-      return () => handleRemoveProperty(key);
-    },
-    [handleRemoveProperty],
-  );
 
   return (
     <SchemaField
@@ -188,10 +173,9 @@ function ObjectFieldProperty<T = any, S extends StrictRJSFSchema = RJSFSchema, F
       fieldPathId={innerFieldIdPathId}
       formData={formData}
       wasPropertyKeyModified={wasPropertyKeyModified}
+      onKeyRename={onKeyRename}
       onKeyRenameBlur={onKeyRenameBlur}
-      onRemovePropertyClick={onRemovePropertyClick}
-      onKeyChange={onKeyChange}
-      onDropPropertyClick={onDropPropertyClick}
+      onRemoveProperty={onRemoveProperty}
       onChange={onPropertyChange}
       onBlur={onBlur}
       onFocus={onFocus}
@@ -342,13 +326,6 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
     [onChange, fieldPathId, formData],
   );
 
-  /** Handles the adding of a new additional property on the given `schema`. Calls the `onChange` callback once the new
-   * default data for that field has been added to the formData.
-   *
-   * @param schema - The schema element to which the new property is being added
-   */
-  const handleAddClick = useCallback(() => onAddProperty, [onAddProperty]);
-
   if (!renderOptionalField || hasFormData) {
     try {
       const properties = Object.keys(schemaProperties);
@@ -426,5 +403,5 @@ export default function ObjectField<T = any, S extends StrictRJSFSchema = RJSFSc
     optionalDataControl,
     className: renderOptionalField ? 'rjsf-optional-object-field' : undefined,
   };
-  return <Template {...templateProps} onAddProperty={onAddProperty} onAddClick={handleAddClick} />;
+  return <Template {...templateProps} onAddProperty={onAddProperty} />;
 }

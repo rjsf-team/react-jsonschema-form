@@ -34,10 +34,9 @@ export default function FieldTemplate<
     help,
     hideError,
     displayLabel,
-    onRemovePropertyClick,
+    onKeyRename,
     onKeyRenameBlur,
-    onKeyChange,
-    onDropPropertyClick,
+    onRemoveProperty,
     classNames,
     uiSchema,
     schema,
@@ -69,10 +68,9 @@ export default function FieldTemplate<
       disabled={divProps.disabled}
       id={id}
       label={label}
-      onRemovePropertyClick={onRemovePropertyClick}
+      onKeyRename={onKeyRename}
       onKeyRenameBlur={onKeyRenameBlur}
-      onDropPropertyClick={onDropPropertyClick}
-      onKeyChange={onKeyChange}
+      onRemoveProperty={onRemoveProperty}
       readonly={readonly}
       required={required}
       schema={schema}

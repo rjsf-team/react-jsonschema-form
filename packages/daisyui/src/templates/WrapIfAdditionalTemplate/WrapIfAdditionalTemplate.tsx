@@ -28,12 +28,10 @@ export default function WrapIfAdditionalTemplate<
     required,
     schema,
     uiSchema,
+    onKeyRename,
     onKeyRenameBlur,
-    onRemovePropertyClick,
+    onRemoveProperty,
     registry,
-    // Destructure props we don't want to pass to div
-    onKeyChange,
-    onDropPropertyClick,
     ...rest
   } = props;
 
@@ -69,7 +67,7 @@ export default function WrapIfAdditionalTemplate<
             id={buttonId(id, 'remove')}
             className='rjsf-object-property-remove'
             disabled={disabled || readonly}
-            onClick={onRemovePropertyClick}
+            onClick={onRemoveProperty}
             uiSchema={uiSchema}
             registry={registry}
           />

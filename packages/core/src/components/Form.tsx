@@ -257,13 +257,13 @@ export interface FormState<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   errors: RJSFValidationError[];
   /** The current errors, in `ErrorSchema` format, for the form, includes `extraErrors` */
   errorSchema: ErrorSchema<T>;
+  // Private
   /** The current list of errors for the form directly from schema validation, does NOT include `extraErrors` */
   schemaValidationErrors: RJSFValidationError[];
   /** The current errors, in `ErrorSchema` format, for the form directly from schema validation, does NOT include
    * `extraErrors`
    */
   schemaValidationErrorSchema: ErrorSchema<T>;
-  // Private
   /** A container used to handle custom errors provided via `onChange` */
   customErrors?: ErrorSchemaBuilder<T>;
   /** @description result of schemaUtils.retrieveSchema(schema, formData). This a memoized value to avoid re calculate at internal functions (getStateFromProps, onChange) */
@@ -280,16 +280,7 @@ export interface FormState<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
 export interface IChangeEvent<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>
   extends Pick<
     FormState<T, S, F>,
-    | 'schema'
-    | 'uiSchema'
-    | 'fieldPathId'
-    | 'schemaUtils'
-    | 'formData'
-    | 'edit'
-    | 'errors'
-    | 'errorSchema'
-    | 'schemaValidationErrors'
-    | 'schemaValidationErrorSchema'
+    'schema' | 'uiSchema' | 'fieldPathId' | 'schemaUtils' | 'formData' | 'edit' | 'errors' | 'errorSchema'
   > {
   /** The status of the form when submitted */
   status?: 'submitted';
@@ -306,19 +297,8 @@ function toIChangeEvent<T = any, S extends StrictRJSFSchema = RJSFSchema, F exte
   status?: IChangeEvent['status'],
 ): IChangeEvent<T, S, F> {
   return {
-    ..._pick(state, [
-      'schema',
-      'uiSchema',
-      'fieldPathId',
-      'schemaUtils',
-      'formData',
-      'edit',
-      'errors',
-      'errorSchema',
-      'schemaValidationErrors',
-      'schemaValidationErrorSchema',
-    ]),
-    ...(status !== undefined ? { status } : undefined),
+    ..._pick(state, ['schema', 'uiSchema', 'fieldPathId', 'schemaUtils', 'formData', 'edit', 'errors', 'errorSchema']),
+    ...(status !== undefined && { status }),
   };
 }
 
