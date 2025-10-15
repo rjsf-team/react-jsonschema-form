@@ -197,6 +197,8 @@ export interface FormProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
    * to put the second parameter before the first in its translation.
    */
   translateString?: Registry['translateString'];
+  /** Optional function to generate custom HTML `name` attributes for form fields.
+   */
   nameGenerator?: NameGeneratorFunction;
   /** Optional configuration object with flags, if provided, allows users to override default form state behavior
    * Currently only affecting minItems on array fields and handling of setting defaults based on the value of
