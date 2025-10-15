@@ -1,4 +1,4 @@
-import { FocusEvent, useCallback, useMemo, useState } from 'react';
+import { FocusEvent, useCallback, useState } from 'react';
 import {
   ADDITIONAL_PROPERTY_FLAG,
   ANY_OF_KEY,
@@ -9,6 +9,7 @@ import {
   orderProperties,
   shouldRenderOptionalField,
   toFieldPathId,
+  useFieldPathId,
   ErrorSchema,
   FieldPathList,
   FieldProps,
@@ -106,11 +107,8 @@ function ObjectFieldProperty<T = any, S extends StrictRJSFSchema = RJSFSchema, F
   const [wasPropertyKeyModified, setWasPropertyKeyModified] = useState(false);
   const { globalFormOptions, fields } = registry;
   const { SchemaField } = fields;
-  // Make sure to memoize the fieldPathId for this component to avoid unnecessary rerenders
-  const innerFieldIdPathId = useMemo(
-    () => toFieldPathId(propertyName, globalFormOptions, fieldPathId.path),
-    [propertyName, globalFormOptions, fieldPathId.path],
-  );
+  const innerFieldIdPathId = useFieldPathId(toFieldPathId(propertyName, globalFormOptions, fieldPathId.path));
+
   /** Returns the `onPropertyChange` handler for the `name` field. Handles the special case where a user is attempting
    * to clear the data for a field added as an additional property. Calls the `onChange()` handler with the updated
    * formData.
