@@ -1,4 +1,4 @@
-import { ComponentType, ReactNode } from 'react';
+import { ComponentType, ReactNode, useCallback } from 'react';
 import {
   ANY_OF_KEY,
   ErrorSchema,
@@ -590,6 +590,28 @@ function LayoutGridFieldComponent<T = any, S extends StrictRJSFSchema = RJSFSche
   const { onChange } = otherProps;
   const { fields } = registry;
   const { SchemaField, LayoutMultiSchemaField } = fields;
+
+  /** Generates an `onChange` handler for the field associated with the `dottedPath`. This handler will clone and update
+   * the `formData` with the new `value` and the `errorSchema` if an `errSchema` is provided. After updating those two
+   * elements, they will then be passed on to the `onChange` handler of the `LayoutFieldGrid`.
+   *
+   * @param dottedPath - The dotted-path to the field for which to generate the onChange handler
+   * @returns - The `onChange` handling function for the `dottedPath` field of the `schemaType` type
+   */
+  const onFieldChange = useCallback(
+    (dottedPath: string) => {
+      return (value: T | undefined, path: FieldPathList, errSchema?: ErrorSchema<T>, id?: string) => {
+        let newErrorSchema = errorSchema;
+        if (errSchema && errorSchema) {
+          newErrorSchema = cloneDeep(errorSchema);
+          set(newErrorSchema, dottedPath, errSchema);
+        }
+        onChange(value, path, newErrorSchema, id);
+      };
+    },
+    [errorSchema, onChange],
+  );
+
   const uiComponentProps = computeUIComponentPropsFromGridSchema(registry, gridSchema);
   if (uiComponentProps.rendered) {
     return uiComponentProps.rendered;
@@ -602,24 +624,6 @@ function LayoutGridFieldComponent<T = any, S extends StrictRJSFSchema = RJSFSche
     optionsInfo,
     fieldPathId: fieldIdSchema,
   } = getSchemaDetailsForField<T, S, F>(registry, name, initialSchema, formData, fieldPathId);
-
-  /** Generates an `onChange` handler for the field associated with the `dottedPath`. This handler will clone and update
-   * the `formData` with the new `value` and the `errorSchema` if an `errSchema` is provided. After updating those two
-   * elements, they will then be passed on to the `onChange` handler of the `LayoutFieldGrid`.
-   *
-   * @param dottedPath - The dotted-path to the field for which to generate the onChange handler
-   * @returns - The `onChange` handling function for the `dottedPath` field of the `schemaType` type
-   */
-  const onFieldChange = (dottedPath: string) => {
-    return (value: T | undefined, path: FieldPathList, errSchema?: ErrorSchema<T>, id?: string) => {
-      let newErrorSchema = errorSchema;
-      if (errSchema && errorSchema) {
-        newErrorSchema = cloneDeep(errorSchema);
-        set(newErrorSchema, dottedPath, errSchema);
-      }
-      onChange(value, path, newErrorSchema, id);
-    };
-  };
 
   if (schema) {
     const Field = optionsInfo?.hasDiscriminator ? LayoutMultiSchemaField : SchemaField;
