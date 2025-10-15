@@ -536,7 +536,7 @@ function LayoutGridFieldChildren<T = any, S extends StrictRJSFSchema = RJSFSchem
   const schema = schemaUtils.retrieveSchema(rawSchema, formData);
   return childrenLayoutGridSchemaId.map((layoutGridSchema) => (
     <LayoutGridField<T, S, F>
-      {...props}
+      {...layoutGridFieldProps}
       key={`layoutGrid-${hashObject(layoutGridSchema)}`}
       schema={schema}
       layoutGridSchema={layoutGridSchema}
