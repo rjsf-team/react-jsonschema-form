@@ -609,7 +609,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
 
     return (
       <Widget
-        id={fieldPathId.$id}
+        id={multiValueFieldPathId.$id}
         name={name}
         multiple
         onChange={this.onSelectChange}
@@ -667,7 +667,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
 
     return (
       <Widget
-        id={fieldPathId.$id}
+        id={multiValueFieldPathId.$id}
         name={name}
         multiple
         onChange={this.onSelectChange}
@@ -722,7 +722,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
     return (
       <Widget
         options={options}
-        id={fieldPathId.$id}
+        id={multiValueFieldPathId.$id}
         name={name}
         multiple
         onChange={this.onSelectChange}
