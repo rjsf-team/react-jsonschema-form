@@ -15,6 +15,18 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+# 6.0.0-beta.22
+
+## @rjsf/core
+
+- Refactored LayoutGridField as function components instead of a single class component.
+
+
+## Dev / docs / playground
+
+- Updated '@rjsf/snapshot-tests' package to explicitly depend on '@rjsf/core' to build first, fixing an error with parallelized builds
+
+
 # 6.0.0-beta.21
 
 ## @rjsf/core
