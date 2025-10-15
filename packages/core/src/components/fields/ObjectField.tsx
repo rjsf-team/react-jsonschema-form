@@ -9,8 +9,9 @@ import {
   orderProperties,
   shouldRenderOptionalField,
   toFieldPathId,
-  useFieldPathId,
+  useDeepCompareMemo,
   ErrorSchema,
+  FieldPathId,
   FieldPathList,
   FieldProps,
   FormContextType,
@@ -107,7 +108,9 @@ function ObjectFieldProperty<T = any, S extends StrictRJSFSchema = RJSFSchema, F
   const [wasPropertyKeyModified, setWasPropertyKeyModified] = useState(false);
   const { globalFormOptions, fields } = registry;
   const { SchemaField } = fields;
-  const innerFieldIdPathId = useFieldPathId(toFieldPathId(propertyName, globalFormOptions, fieldPathId.path));
+  const innerFieldIdPathId = useDeepCompareMemo<FieldPathId>(
+    toFieldPathId(propertyName, globalFormOptions, fieldPathId.path),
+  );
 
   /** Returns the `onPropertyChange` handler for the `name` field. Handles the special case where a user is attempting
    * to clear the data for a field added as an additional property. Calls the `onChange()` handler with the updated
@@ -136,7 +139,9 @@ function ObjectFieldProperty<T = any, S extends StrictRJSFSchema = RJSFSchema, F
    */
   const onKeyRename = useCallback(
     (value: string) => {
-      setWasPropertyKeyModified(propertyName !== value);
+      if (propertyName !== value) {
+        setWasPropertyKeyModified(true);
+      }
       handleKeyRename(propertyName, value);
     },
     [propertyName, handleKeyRename],

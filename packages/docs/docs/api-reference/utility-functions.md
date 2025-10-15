@@ -1034,19 +1034,18 @@ Unwraps the `errorHandler` structure into the associated `ErrorSchema`, strippin
 
 - ErrorSchema&lt;T>: The `ErrorSchema` resulting from the stripping of the `addError()` function
 
-### useFieldPathId()
+### useDeepCompareMemo&lt;T = unknown>()
 
-Hook that stores and returns a `FieldPathId`. If `newFieldPathId` is the same as the stored one, then the stored one
-is returned to avoid having a component rerender due it being a different object. Otherwise, the `newFieldPathId` is
-stored and returned.
+Hook that stores and returns a `T`. If `newValue` is the same as the stored one, then the stored one is returned to
+avoid having a component rerender due it being a different object. Otherwise, the `newValue` is stored and returned.
 
 #### Parameters
 
-- newFieldPathId: FieldPathId - The potential new `FieldPathId`
+- newValue: T - The potential new `T` value
 
 #### Returns
 
-- FieldPathId: The latest stored `FieldPathId`
+- T: The latest stored `T` value
 
 ### utcToLocal()
 
