@@ -33,6 +33,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Updated `ObjectField` to refactor the code from a class component to two stateless functional components, replacing the 3 generator-props with the 4 memoized props mentioned in the `@rjsf/utils` changes
 - Updated `Form` to "memoize" the `fieldPathId` and `registry` into the `FormState`, adding a `toIChangeEvent()` helper to restrict the state returned on the `IChangeEvent` interface callbacks
 - Updated `FieldTemplate`, `ObjectFieldTemplate` and `WrapIfAdditionalTemplate` to rename the old `additionalProperties` interface props to the new ones
+- Added `nameGenerator` prop to `Form` component to enable custom HTML `name` attribute generation for form fields
 
 ## @rjsf/daisyui
 
@@ -76,6 +77,13 @@ should change the heading of the (upcoming) version to include a major version b
 - BREAKING CHANGE: Updated `ObjectFieldTemplateProps` to replace the `onAddClick()` callback generator prop with the `onAddProperty()` callback prop
 - Added new hook `useDeepCompareMemo()` and its associated tests
 
+## @rjsf/utils
+
+- Added `NameGeneratorFunction` type and two built-in name generators: `bracketNameGenerator` and `dotNotationNameGenerator`
+- Updated `GlobalFormOptions` type to include optional `nameGenerator` field
+- Updated `toFieldPathId()` function to support name generation via the `nameGenerator` option in `GlobalFormOptions`
+- Added `htmlName` field to `WidgetProps` interface to provide the generated HTML `name` attribute to widgets
+
 ## Dev / docs / playground
 - Updated the `formTests.tsx` snapshots to add an `anyOf` of all arrays with different item types and removed the disabling of the optional data controls feature for the optional object with oneOfs
   - Updated the snapshots in all of the themes accordingly
@@ -86,6 +94,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Updated the `custom-templates.md` documentation to reflect the `additionalProperties`-based interface props replacement
 - Updated the `utility-functions.mf` documenation to add the new `useDeepCompareMemo()` hook
 - Updated the `v6.x upgrade guide.md` documentation to add the BREAKING CHANGES to the `FieldTemplateProps`, `ObjectFieldTemplateProps` and `WrapIfAdditionalTemplateProps` interface props changes and the `useDeepCompareMemo()` hook
+- Added documentation for the `nameGenerator` prop in `form-props.md` and v6.x upgrade guide
 
 # 6.0.0-beta.21
 
@@ -209,7 +218,7 @@ should change the heading of the (upcoming) version to include a major version b
   - `ObjectField` and `ArrayField` to use `toFieldPathId` instead of `toIdSchema()` to generate the `fieldPathId`s of all its children
   - Updated the `onChange` handling of fields to make `path` required and either pass it straight through, or use the `fieldPathId.path` instead of using an empty array or appending path information
   - Updated `Form` to use `toFieldPathId()` to generate `fieldPathId` instead of `idSchema`, always providing the `idPrefix` and `idSeparator` in the `globalFormOptions` and make the `path: FieldPathList` required
-  - Updated `LayoutGridField` to remove the `IdSchema` related code in favor of `FieldPathId` code 
+  - Updated `LayoutGridField` to remove the `IdSchema` related code in favor of `FieldPathId` code
 - Also exported the `getTestRegistry()` function from the main `index.ts` to assist developers in creating `registry` object for tests
 - Updated all of the test to deal with the `idSchema` -> `fieldPathId` changes
 
