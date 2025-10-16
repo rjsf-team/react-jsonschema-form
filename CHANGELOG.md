@@ -20,13 +20,15 @@ should change the heading of the (upcoming) version to include a major version b
 ## @rjsf/antd
 
 - Updated most of the widgets to get `formContext` from the `registry` instead of the `props` since it will no longer be passed
-- Updated `FieldTemplate`, `ObjectFieldTemplate` and `WrapIfAdditionalTemplate` to rename the old `additionalProperties` interface props to the new ones
+- BREAKING CHANGE: Updated `FieldTemplate`, `ObjectFieldTemplate` and `WrapIfAdditionalTemplate` to rename the old `additionalProperties` interface props to the new ones
 - Updated `BaseInputTemplate`, `CheckboxesWidget`, `CheckboxWidget`, `RadioWidget`, `SelectWidget`, and `TextareaWidget` to use `htmlName` for the HTML `name` attribute
+- BREAKING CHANGE: Updated `ArrayFieldTemplate` to remove the `ArrayFieldItemTemplate` render in favor of simply using `items` due to `ArrayField` changes
 
 ## @rjsf/chakra-ui
 
-- Updated `FieldTemplate`, `ObjectFieldTemplate` and `WrapIfAdditionalTemplate` to rename the old `additionalProperties` interface props to the new ones
+- BREAKING CHANGE: Updated `FieldTemplate`, `ObjectFieldTemplate` and `WrapIfAdditionalTemplate` to rename the old `additionalProperties` interface props to the new ones
 - Updated `BaseInputTemplate`, `CheckboxesWidget`, `CheckboxWidget`, `RadioWidget`, `SelectWidget`, and `TextareaWidget` to use `htmlName` for the HTML `name` attribute
+- BREAKING CHANGE: Updated `ArrayFieldTemplate` to remove the `ArrayFieldItemTemplate` render in favor of simply using `items` due to `ArrayField` changes
 
 ## @rjsf/core
 
@@ -34,62 +36,80 @@ should change the heading of the (upcoming) version to include a major version b
 - Updated `ArrayField`, `BooleanField`, `LayoutMultiSchemaField`, `MultiSchemaField`, `ObjectField`, `SchemaField`, `StringField` and `BaseInputTemplate` to remove `formContext` from the props
 - Updated `ObjectField` to refactor the code from a class component to two stateless functional components, replacing the 3 generator-props with the 4 memoized props mentioned in the `@rjsf/utils` changes
 - Updated `Form` to "memoize" the `fieldPathId` and `registry` into the `FormState`, adding a `toIChangeEvent()` helper to restrict the state returned on the `IChangeEvent` interface callbacks
-- Updated `FieldTemplate`, `ObjectFieldTemplate` and `WrapIfAdditionalTemplate` to rename the old `additionalProperties` interface props to the new ones
+- BREAKING CHANGE: Updated `FieldTemplate`, `ObjectFieldTemplate` and `WrapIfAdditionalTemplate` to rename the old `additionalProperties` interface props to the new ones
 - Added `nameGenerator` prop to `Form` component to enable custom HTML `name` attribute generation for form fields
+- Updated `ArrayField` to refactor code from a class component to seven stateless functional components, replacing the 4 generator-props with the 5 memoized props mentioned in the `@rjsf/utils` changes
+  - BREAKING CHANGE: The refactor included rendering the `ArrayFieldItemTemplate` directly by the `ArrayField` rather than deferring it to the `ArrayFieldTemplate`
+  - Updated the `ArrayField` tests to adjust for the rendering change AND to remove 2 tests due to them no longer being valid
+- BREAKING CHANGE: Updated `ArrayFieldTemplate` to remove the `ArrayFieldItemTemplate` render in favor of simply using `items` due to `ArrayField` changes
+- BREAKING CHANGE: Updated `ArrayFieldItemButtonsTemplate` to replace the old callback-generator functions with the new memoizable callback functions
 
 ## @rjsf/daisyui
 
 - Updated the test mocks to remove `formContext` for the widget mock
-- Updated `FieldTemplate`, `ObjectFieldTemplate` and `WrapIfAdditionalTemplate` to rename the old `additionalProperties` interface props to the new ones
+- BREAKING CHANGE: Updated `FieldTemplate`, `ObjectFieldTemplate` and `WrapIfAdditionalTemplate` to rename the old `additionalProperties` interface props to the new ones
 - Updated `BaseInputTemplate`, `CheckboxesWidget`, `CheckboxWidget`, `RadioWidget`, and `TextareaWidget` to use `htmlName` for the HTML `name` attribute
+- BREAKING CHANGE: Updated `ArrayFieldTemplate` to remove the `ArrayFieldItemTemplate` render in favor of simply using `items` due to `ArrayField` changes
+- BREAKING CHANGE: Updated `ArrayFieldItemButtonsTemplate` to replace the old callback-generator functions with the new memoizable callback functions
 
 ## @rjsf/fluentui-rc
 
-- Updated `FieldTemplate`, `ObjectFieldTemplate` and `WrapIfAdditionalTemplate` to rename the old `additionalProperties` interface props to the new ones
+- BREAKING CHANGE: Updated `FieldTemplate`, `ObjectFieldTemplate` and `WrapIfAdditionalTemplate` to rename the old `additionalProperties` interface props to the new ones
 - Updated `BaseInputTemplate`, `CheckboxesWidget`, `CheckboxWidget`, `RadioWidget`, `SelectWidget`, and `TextareaWidget` to use `htmlName` for the HTML `name` attribute
+- BREAKING CHANGE: Updated `ArrayFieldTemplate` to remove the `ArrayFieldItemTemplate` render in favor of simply using `items` due to `ArrayField` changes
 
 ## @rjsf/mantine
 
-- Updated `FieldTemplate`, `ObjectFieldTemplate` and `WrapIfAdditionalTemplate` to rename the old `additionalProperties` interface props to the new ones
+- BREAKING CHANGE: Updated `FieldTemplate`, `ObjectFieldTemplate` and `WrapIfAdditionalTemplate` to rename the old `additionalProperties` interface props to the new ones
 - Updated `BaseInputTemplate`, `CheckboxesWidget`, `CheckboxWidget`, `RadioWidget`, `SelectWidget`, and `TextareaWidget` to use `htmlName` for the HTML `name` attribute
+- BREAKING CHANGE: Updated `ArrayFieldTemplate` to remove the `ArrayFieldItemTemplate` render in favor of simply using `items` due to `ArrayField` changes
 
 ## @rjsf/mui
 
 - Updated `BaseInputTemplate` and `SelectWidget` to remove `formContext` from the props
-- Updated `FieldTemplate`, `ObjectFieldTemplate` and `WrapIfAdditionalTemplate` to rename the old `additionalProperties` interface props to the new ones
+- BREAKING CHANGE: Updated `FieldTemplate`, `ObjectFieldTemplate` and `WrapIfAdditionalTemplate` to rename the old `additionalProperties` interface props to the new ones
 - Updated `BaseInputTemplate`, `CheckboxesWidget`, `CheckboxWidget`, `RadioWidget`, `SelectWidget`, and `TextareaWidget` to use `htmlName` for the HTML `name` attribute
+- BREAKING CHANGE: Updated `ArrayFieldTemplate` to remove the `ArrayFieldItemTemplate` render in favor of simply using `items` due to `ArrayField` changes
 
 ## @rjsf/primereact
 
 - Updated `SelectWidget` to remove `formContext` from the props
-- Updated `FieldTemplate`, `ObjectFieldTemplate` and `WrapIfAdditionalTemplate` to rename the old `additionalProperties` interface props to the new ones
+- BREAKING CHANGE: Updated `FieldTemplate`, `ObjectFieldTemplate` and `WrapIfAdditionalTemplate` to rename the old `additionalProperties` interface props to the new ones
 - Updated `BaseInputTemplate`, `CheckboxesWidget`, `CheckboxWidget`, `RadioWidget`, `SelectWidget`, and `TextareaWidget` to use `htmlName` for the HTML `name` attribute
+- BREAKING CHANGE: Updated `ArrayFieldTemplate` to remove the `ArrayFieldItemTemplate` render in favor of simply using `items` due to `ArrayField` changes
 
 ## @rjsf/react-bootstrap
 
-- Updated `FieldTemplate`, `ObjectFieldTemplate` and `WrapIfAdditionalTemplate` to rename the old `additionalProperties` interface props to the new ones
+- BREAKING CHANGE: Updated `FieldTemplate`, `ObjectFieldTemplate` and `WrapIfAdditionalTemplate` to rename the old `additionalProperties` interface props to the new ones
 - Updated `BaseInputTemplate`, `CheckboxesWidget`, `CheckboxWidget`, `RadioWidget`, `SelectWidget`, and `TextareaWidget` to use `htmlName` for the HTML `name` attribute
+- BREAKING CHANGE: Updated `ArrayFieldTemplate` to remove the `ArrayFieldItemTemplate` render in favor of simply using `items` due to `ArrayField` changes
 
 ## @rjsf/semantic-ui
 
-- Updated `FieldTemplate`, `ObjectFieldTemplate` and `WrapIfAdditionalTemplate` to rename the old `additionalProperties` interface props to the new ones
+- BREAKING CHANGE: Updated `FieldTemplate`, `ObjectFieldTemplate` and `WrapIfAdditionalTemplate` to rename the old `additionalProperties` interface props to the new ones
 - Updated `BaseInputTemplate`, `CheckboxesWidget`, `CheckboxWidget`, `RadioWidget`, `SelectWidget`, and `TextareaWidget` to use `htmlName` for the HTML `name` attribute
+- BREAKING CHANGE: Updated `ArrayFieldTemplate` to remove the `ArrayFieldItemTemplate` render in favor of simply using `items` due to `ArrayField` changes
+- Updated `ArrayFieldItemTemplate` to refactor the getting of the `semanticProps` from `ArrayFieldTemplate`, using the new `parentUiSchema` prop to maintain the feature
 
 ## @rjsf/shadcn
 
 - Updated the test mocks to remove `formContext` for the widget mock and added `globalFormOptions` in the registry mock
-- Updated `FieldTemplate`, `ObjectFieldTemplate` and `WrapIfAdditionalTemplate` to rename the old `additionalProperties` interface props to the new ones
+- BREAKING CHANGE: Updated `FieldTemplate`, `ObjectFieldTemplate` and `WrapIfAdditionalTemplate` to rename the old `additionalProperties` interface props to the new ones
 - Updated `BaseInputTemplate`, `CheckboxesWidget`, `CheckboxWidget`, `SelectWidget`, and `TextareaWidget` to use `htmlName` for the HTML `name` attribute (Note: `RadioWidget` does not support `htmlName` due to Radix UI RadioGroup limitations)
+- BREAKING CHANGE: Updated `ArrayFieldTemplate` to remove the `ArrayFieldItemTemplate` render in favor of simply using `items` due to `ArrayField` changes
 
 ## @rjsf/utils
 
-- BREAKING CHANGE: Updated `FieldTemplateProps` and `WrapIfAdditionalTemplateProps` to replace the `onKeyChange()` and `onDropPropertyClick()` callback generator props with the `onKeyRename()`, `onKeyRenameBlur()` and `onRemoveProperty()` callback props
-- BREAKING CHANGE: Updated `ObjectFieldTemplateProps` to replace the `onAddClick()` callback generator prop with the `onAddProperty()` callback prop
+- BREAKING CHANGE: Updated `FieldTemplateProps` and `WrapIfAdditionalTemplateProps` to replace the `onKeyChange()` and `onDropPropertyClick()` callback-generator props with the `onKeyRename()`, `onKeyRenameBlur()` and `onRemoveProperty()` callback props
+- BREAKING CHANGE: Updated `ObjectFieldTemplateProps` to replace the `onAddClick()` callback-generator prop with the `onAddProperty()` callback prop
 - Added new hook `useDeepCompareMemo()` and its associated tests
 - Added `NameGeneratorFunction` type and two built-in name generators: `bracketNameGenerator` and `dotNotationNameGenerator`
 - Updated `GlobalFormOptions` type to include optional `nameGenerator` field
 - Updated `toFieldPathId()` function to support name generation via the `nameGenerator` option in `GlobalFormOptions`
 - Added `htmlName` field to `WidgetProps` interface to provide the generated HTML `name` attribute to widgets
+- BREAKING CHANGE: Updated `ArrayFieldItemButtonsTemplateType` to replace the `onAddIndexClick()`, `onCopyIndexClick()`, `onDropIndexClick()` and `onReorderClick()` callback-generator props with the `onAddItem()`, `onCopyItem()`, `onMoveUpItem()`, `onMoveDownItem()` and `onRemoveItem()` callback props
+- BREAKING CHANGE: Updated `ArrayFieldItemTemplateType` to change `key: string` to `itemKey: string` to avoid a name collision with React
+- BREAKING CHANGE: Updated `ArrayFieldTemplateProps` to change the type of the `items` prop from `ArrayFieldItemTemplateType<T, S, F>[]` to `ReactElement[]`
 
 ## Dev / docs / playground
 - Updated the `formTests.tsx` snapshots to add an `anyOf` of all arrays with different item types and removed the disabling of the optional data controls feature for the optional object with oneOfs
@@ -98,9 +118,10 @@ should change the heading of the (upcoming) version to include a major version b
 - Updated the `Sample` and `LiveSettings` types to support the `liveSettings` inside of a sample
 - Updated the `Playground`'s `onSampleSelected` callback to merge any `liveSettings` in the sample on top of those already used in the playground
 - Updated the `customFieldAnyOf` sample to switch `IdSchema` to `FieldPathId`
-- Updated the `custom-templates.md` documentation to reflect the `additionalProperties`-based interface props replacement
-- Updated the `utility-functions.mf` documenation to add the new `useDeepCompareMemo()` hook
-- Updated the `v6.x upgrade guide.md` documentation to add the BREAKING CHANGES to the `FieldTemplateProps`, `ObjectFieldTemplateProps` and `WrapIfAdditionalTemplateProps` interface props changes and the `useDeepCompareMemo()` hook
+- Updated the `customArray` sample to refactor out a `ArrayFieldItemButtonsTemplate`
+- Updated the `custom-templates.md` documentation to reflect the `additionalProperties`-based interface props replacement and `ArrayField` conversion changes
+- Updated the `utility-functions.md` documentation to add the new `useDeepCompareMemo()` hook
+- Updated the `v6.x upgrade guide.md` documentation to add the BREAKING CHANGES to the `ArrayFieldTemplateProps`, `ArrayFieldItemTemplateType`, `ArrayFieldItemButtonsTemplateType`,  `FieldTemplateProps`, `ObjectFieldTemplateProps` and `WrapIfAdditionalTemplateProps` interface props changes and the `useDeepCompareMemo()` hook
 - Added documentation for the `nameGenerator` prop in `form-props.md` and v6.x upgrade guide
 
 # 6.0.0-beta.21

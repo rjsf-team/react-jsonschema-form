@@ -4,7 +4,6 @@ import {
   getTemplate,
   getUiOptions,
   ArrayFieldTemplateProps,
-  ArrayFieldItemTemplateType,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
@@ -47,11 +46,6 @@ export default function ArrayFieldTemplate<
     registry,
     uiOptions,
   );
-  const ArrayFieldItemTemplate = getTemplate<'ArrayFieldItemTemplate', T, S, F>(
-    'ArrayFieldItemTemplate',
-    registry,
-    uiOptions,
-  );
   const ArrayFieldTitleTemplate = getTemplate<'ArrayFieldTitleTemplate', T, S, F>(
     'ArrayFieldTitleTemplate',
     registry,
@@ -82,9 +76,7 @@ export default function ArrayFieldTemplate<
       />
       <Flex column key={`array-item-list-${fieldPathId.$id}`} className={classes.arrayItemList}>
         {!showOptionalDataControlInTitle ? optionalDataControl : undefined}
-        {items.map(({ key, ...itemProps }: ArrayFieldItemTemplateType<T, S, F>) => (
-          <ArrayFieldItemTemplate key={key} {...itemProps} />
-        ))}
+        {items}
         {canAdd && (
           <Flex hAlign='end'>
             <AddButton

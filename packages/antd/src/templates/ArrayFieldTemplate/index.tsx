@@ -2,7 +2,6 @@ import {
   getTemplate,
   getUiOptions,
   ArrayFieldTemplateProps,
-  ArrayFieldItemTemplateType,
   FormContextType,
   GenericObjectType,
   RJSFSchema,
@@ -44,11 +43,6 @@ export default function ArrayFieldTemplate<
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const ArrayFieldDescriptionTemplate = getTemplate<'ArrayFieldDescriptionTemplate', T, S, F>(
     'ArrayFieldDescriptionTemplate',
-    registry,
-    uiOptions,
-  );
-  const ArrayFieldItemTemplate = getTemplate<'ArrayFieldItemTemplate', T, S, F>(
-    'ArrayFieldItemTemplate',
     registry,
     uiOptions,
   );
@@ -103,9 +97,7 @@ export default function ArrayFieldTemplate<
         )}
         <Col className='row array-item-list' span={24}>
           {!showOptionalDataControlInTitle ? optionalDataControl : undefined}
-          {items.map(({ key, ...itemProps }: ArrayFieldItemTemplateType<T, S, F>) => (
-            <ArrayFieldItemTemplate key={key} {...itemProps} />
-          ))}
+          {items}
         </Col>
         {canAdd && (
           <Col span={24}>

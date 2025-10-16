@@ -106,9 +106,9 @@ The following props are passed to each `ArrayFieldTemplate`:
 - `canAdd`: A boolean value stating whether new elements can be added to the array.
 - `className`: The className string.
 - `disabled`: A boolean value stating if the array is disabled.
-- `fieldPathId`: An object containing the id for this object & ids for its properties
-- `items`: An array of objects representing the items in the array. Each of the items represent a child with properties described below.
-- `onAddClick: (event?) => void`: A function that adds a new item to the array.
+- `fieldPathId`: An object containing the id for this object & ids for its properties.
+- `items`: An array of React nodes representing the items in the array.
+- `onAddClick: (event?) => void`: A function that adds a new item to the end of the array.
 - `readonly`: A boolean value stating if the array is read-only.
 - `required`: A boolean value stating if the array is required.
 - `hideError`: A boolean value stating if the field is hiding its errors.
@@ -118,25 +118,6 @@ The following props are passed to each `ArrayFieldTemplate`:
 - `formData`: The formData for this array.
 - `errorSchema`: The optional validation errors for the array field and the items within it, in the form of an `ErrorSchema`
 - `rawErrors`: An array of strings listing all generated error messages from encountered errors for this widget
-- `registry`: The `registry` object.
-
-The following props are part of each element in `items`:
-
-- `children`: The html for the item's content.
-- `className`: The className string.
-- `disabled`: A boolean value stating if the array item is disabled.
-- `hasCopy`: A boolean value stating whether the array item can be copied.
-- `hasMoveDown`: A boolean value stating whether the array item can be moved down.
-- `hasMoveUp`: A boolean value stating whether the array item can be moved up.
-- `hasRemove`: A boolean value stating whether the array item can be removed.
-- `hasToolbar`: A boolean value stating whether the array item has a toolbar.
-- `index`: A number stating the index the array item occurs in `items`.
-- `key`: A stable, unique key for the array item.
-- `onAddIndexClick: (index) => (event?) => void`: Returns a function that adds a new item at `index`.
-- `onDropIndexClick: (index) => (event?) => void`: Returns a function that removes the item at `index`.
-- `onReorderClick: (index, newIndex) => (event?) => void`: Returns a function that swaps the items at `index` with `newIndex`.
-- `readonly`: A boolean value stating if the array item is read-only.
-- `uiSchema`: The uiSchema object for this array item.
 - `registry`: The `registry` object.
 
 > Note: Array and object field templates are always rendered inside the FieldTemplate. To fully customize an array field template, you may need to specify both `ui:FieldTemplate` and `ui:ArrayFieldTemplate`.
@@ -242,11 +223,12 @@ The following props are passed to each `ArrayFieldItemTemplate`:
 - `hasToolbar`: A boolean value stating whether the array item has a toolbar.
 - `index`: A number stating the index the array item occurs in `items`.
 - `totalItems`: A number stating the total number `items` in the array.
-- `key`: A stable, unique key for the array item.
+- `itemKey`: A stable, unique key for the array item.
 - `readonly`: A boolean value stating if the array item is read-only.
 - `schema`: The schema object for this array item.
 - `uiSchema`: The uiSchema object for this array item.
 - `registry`: The `registry` object.
+- `parentUiSchema`: The UI schema of the array item's parent array field, used for customization in some themes
 
 ## ArrayFieldItemButtonTemplate
 
@@ -304,10 +286,11 @@ The following props are passed to each `ArrayFieldItemButtonsTemplate`:
 - `fieldPathId`: The FieldPathId of the field in the hierarchy.
 - `index`: A number stating the index the array item occurs in `items`.
 - `totalItems`: A number stating the total number `items` in the array.
-- `onAddIndexClick: (index) => (event?) => void`: Returns a function that adds a new item at `index`.
-- `onCopyIndexClick: (index) => (event?) => void`: Returns a function that copies the item at `index` into the position at `index + 1`
-- `onDropIndexClick: (index) => (event?) => void`: Returns a function that removes the item at `index`.
-- `onReorderClick: (index, newIndex) => (event?) => void`: Returns a function that swaps the items at `index` with `newIndex`.
+- `onAddItem: event?) => void`: Callback function that adds a new item below this item.
+- `onCopyItem: (event?) => void`: Callback function that copies this item below itself.
+- `onRemoveItem: (event?) => void`: Callback function that removes the item from the list.
+- `onMoveUpItem: (event?) => void`: Callback function that moves the item up one spot in the list
+- `onMoveDownItem: (event?) => void`: Callback function that moves the item down one spot in the list
 - `readonly`: A boolean value stating if the array item is read-only.
 - `schema`: The schema object for this array item.
 - `style`: The optional style to pass to all of the buttons

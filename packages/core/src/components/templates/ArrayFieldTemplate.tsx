@@ -2,7 +2,6 @@ import {
   getTemplate,
   getUiOptions,
   ArrayFieldTemplateProps,
-  ArrayFieldItemTemplateType,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
@@ -39,11 +38,6 @@ export default function ArrayFieldTemplate<
     registry,
     uiOptions,
   );
-  const ArrayFieldItemTemplate = getTemplate<'ArrayFieldItemTemplate', T, S, F>(
-    'ArrayFieldItemTemplate',
-    registry,
-    uiOptions,
-  );
   const ArrayFieldTitleTemplate = getTemplate<'ArrayFieldTitleTemplate', T, S, F>(
     'ArrayFieldTitleTemplate',
     registry,
@@ -73,12 +67,7 @@ export default function ArrayFieldTemplate<
         registry={registry}
       />
       {!showOptionalDataControlInTitle ? optionalDataControl : undefined}
-      <div className='row array-item-list'>
-        {items &&
-          items.map(({ key, ...itemProps }: ArrayFieldItemTemplateType<T, S, F>) => (
-            <ArrayFieldItemTemplate key={key} {...itemProps} />
-          ))}
-      </div>
+      <div className='row array-item-list'>{items}</div>
       {canAdd && (
         <AddButton
           id={buttonId(fieldPathId, 'add')}

@@ -1,5 +1,4 @@
 import {
-  ArrayFieldItemTemplateType,
   ArrayFieldTemplateProps,
   buttonId,
   FormContextType,
@@ -38,11 +37,6 @@ export default function ArrayFieldTemplate<
     registry,
     uiOptions,
   );
-  const ArrayFieldItemTemplate = getTemplate<'ArrayFieldItemTemplate', T, S, F>(
-    'ArrayFieldItemTemplate',
-    registry,
-    uiOptions,
-  );
   const ArrayFieldTitleTemplate = getTemplate<'ArrayFieldTitleTemplate', T, S, F>(
     'ArrayFieldTitleTemplate',
     registry,
@@ -75,9 +69,7 @@ export default function ArrayFieldTemplate<
           />
           <div key={`array-item-list-${fieldPathId.$id}`} className='p-0 m-0 w-full mb-2'>
             {!showOptionalDataControlInTitle ? optionalDataControl : undefined}
-            {items.map(({ key, ...itemProps }: ArrayFieldItemTemplateType<T, S, F>) => (
-              <ArrayFieldItemTemplate key={key} {...itemProps} />
-            ))}
+            {items}
             {canAdd && (
               <div className='mt-2 flex'>
                 <AddButton

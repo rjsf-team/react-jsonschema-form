@@ -3,15 +3,13 @@ import {
   getUiOptions,
   isFixedItems,
   ArrayFieldTemplateProps,
-  ArrayFieldItemTemplateType,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
-  UI_OPTIONS_KEY,
   buttonId,
 } from '@rjsf/utils';
 
-import { cleanClassNames, getSemanticProps } from '../util';
+import { cleanClassNames } from '../util';
 
 /** The `ArrayFieldTemplate` component is the template used to render all items in an array.
  *
@@ -39,21 +37,9 @@ export default function ArrayFieldTemplate<
     title,
     registry,
   } = props;
-  const semanticProps = getSemanticProps<T, S, F>({
-    uiSchema,
-    formContext: registry.formContext,
-    defaultSchemaProps: { horizontalButtons: true, wrapItem: false },
-  });
-  const { horizontalButtons, wrapItem } = semanticProps;
-  const semantic = { horizontalButtons, wrapItem };
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const ArrayFieldDescriptionTemplate = getTemplate<'ArrayFieldDescriptionTemplate', T, S, F>(
     'ArrayFieldDescriptionTemplate',
-    registry,
-    uiOptions,
-  );
-  const ArrayFieldItemTemplate = getTemplate<'ArrayFieldItemTemplate', T, S, F>(
-    'ArrayFieldItemTemplate',
     registry,
     uiOptions,
   );
@@ -88,17 +74,7 @@ export default function ArrayFieldTemplate<
       <div key={`array-item-list-${fieldPathId.$id}`}>
         <div className='row array-item-list'>
           {!showOptionalDataControlInTitle ? optionalDataControl : undefined}
-          {items.map(({ key, uiSchema: itemUiSchema = {}, ...props }: ArrayFieldItemTemplateType<T, S, F>) => {
-            // Merge in the semantic props from the ArrayFieldTemplate into each of the items
-            const mergedUiSchema = {
-              ...itemUiSchema,
-              [UI_OPTIONS_KEY]: {
-                ...itemUiSchema[UI_OPTIONS_KEY],
-                semantic,
-              },
-            };
-            return <ArrayFieldItemTemplate key={key} {...props} uiSchema={mergedUiSchema} />;
-          })}
+          {items}
         </div>
         {canAdd && (
           <div

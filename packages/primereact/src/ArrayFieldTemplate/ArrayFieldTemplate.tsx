@@ -3,11 +3,9 @@ import {
   getUiOptions,
   isFixedItems,
   ArrayFieldTemplateProps,
-  ArrayFieldItemTemplateType,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
-  UI_OPTIONS_KEY,
   buttonId,
 } from '@rjsf/utils';
 import { Fieldset } from 'primereact/fieldset';
@@ -45,11 +43,6 @@ export default function ArrayFieldTemplate<
     registry,
     uiOptions,
   );
-  const ArrayFieldItemTemplate = getTemplate<'ArrayFieldItemTemplate', T, S, F>(
-    'ArrayFieldItemTemplate',
-    registry,
-    uiOptions,
-  );
   const ArrayFieldTitleTemplate = getTemplate<'ArrayFieldTitleTemplate', T, S, F>(
     'ArrayFieldTitleTemplate',
     registry,
@@ -83,15 +76,7 @@ export default function ArrayFieldTemplate<
         <div key={`array-item-list-${fieldPathId.$id}`}>
           <div>
             {!showOptionalDataControlInTitle ? optionalDataControl : undefined}
-            {items.map(({ key, uiSchema: itemUiSchema = {}, ...props }: ArrayFieldItemTemplateType<T, S, F>) => {
-              const mergedUiSchema = {
-                ...itemUiSchema,
-                [UI_OPTIONS_KEY]: {
-                  ...itemUiSchema[UI_OPTIONS_KEY],
-                },
-              };
-              return <ArrayFieldItemTemplate key={key} {...props} uiSchema={mergedUiSchema} />;
-            })}
+            {items}
           </div>
           {canAdd && (
             <div
