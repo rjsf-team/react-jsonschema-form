@@ -34,21 +34,22 @@ export default function FieldTemplate<
     help,
     hideError,
     displayLabel,
+    onKeyRename,
+    onKeyRenameBlur,
+    onRemoveProperty,
     classNames,
-    // Destructure props we don't want to pass to div
-    description,
-    onKeyChange,
-    onDropPropertyClick,
     uiSchema,
     schema,
     readonly,
     required,
+    registry,
+    // Destructure props we don't want to pass to div
+    description,
     rawErrors,
     rawHelp,
     rawDescription,
     hidden,
     onChange,
-    registry,
     ...divProps
   } = props;
 
@@ -67,8 +68,9 @@ export default function FieldTemplate<
       disabled={divProps.disabled}
       id={id}
       label={label}
-      onDropPropertyClick={onDropPropertyClick}
-      onKeyChange={onKeyChange}
+      onKeyRename={onKeyRename}
+      onKeyRenameBlur={onKeyRenameBlur}
+      onRemoveProperty={onRemoveProperty}
       readonly={readonly}
       required={required}
       schema={schema}

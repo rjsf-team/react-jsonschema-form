@@ -2,6 +2,7 @@ import type {
   ButtonHTMLAttributes,
   ChangeEvent,
   ComponentType,
+  FocusEvent,
   HTMLAttributes,
   ReactElement,
   ReactNode,
@@ -547,10 +548,15 @@ export type FieldTemplateProps<
   formData?: T;
   /** The value change event handler; Can be called with a new value to change the value for this field */
   onChange: FieldProps<T, S, F>['onChange'];
-  /** The key change event handler; Called when the key associated with a field is changed for an additionalProperty */
-  onKeyChange: (value: string) => () => void;
-  /** The property drop/removal event handler; Called when a field is removed in an additionalProperty context */
-  onDropPropertyClick: (value: string) => () => void;
+  /** Callback used to handle the changing of an additional property key's name with the new value
+   */
+  onKeyRename: (newKey: string) => void;
+  /** Callback used to handle the changing of an additional property key's name when the input is blurred. The event's
+   * target's value will be used as the new value. Its a wrapper callback around `onKeyRename`
+   */
+  onKeyRenameBlur: (event: FocusEvent<HTMLInputElement>) => void;
+  /** Callback used to handle the removal of the additionalProperty */
+  onRemoveProperty: () => void;
 };
 
 /** The properties that are passed to the `UnsupportedFieldTemplate` implementation */
@@ -762,8 +768,10 @@ export type ObjectFieldTemplateProps<
   description?: string | ReactElement;
   /** An array of objects representing the properties in the object */
   properties: ObjectFieldTemplatePropertyType[];
-  /** Returns a function that adds a new property to the object (to be used with additionalProperties) */
-  onAddClick: (schema: S) => () => void;
+  /** Callback to use in order to add an new additionalProperty to the object field  (to be used with
+   * additionalProperties and patternProperties)
+   */
+  onAddProperty: () => void;
   /** A boolean value stating if the object is read-only */
   readonly?: boolean;
   /** A boolean value stating if the object is required */
@@ -815,8 +823,9 @@ export type WrapIfAdditionalTemplateProps<
     | 'disabled'
     | 'schema'
     | 'uiSchema'
-    | 'onKeyChange'
-    | 'onDropPropertyClick'
+    | 'onKeyRename'
+    | 'onKeyRenameBlur'
+    | 'onRemoveProperty'
     | 'registry'
   >;
 

@@ -1,4 +1,3 @@
-import { FocusEvent } from 'react';
 import {
   ADDITIONAL_PROPERTY_FLAG,
   buttonId,
@@ -27,8 +26,8 @@ export default function WrapIfAdditionalTemplate<
     disabled,
     id,
     label,
-    onDropPropertyClick,
-    onKeyChange,
+    onKeyRenameBlur,
+    onRemoveProperty,
     readonly,
     required,
     schema,
@@ -51,8 +50,6 @@ export default function WrapIfAdditionalTemplate<
     );
   }
 
-  const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) => onKeyChange(target.value);
-
   return (
     <div className={classNames} style={style} key={`${id}-key`}>
       <Grid columns='equal'>
@@ -70,7 +67,7 @@ export default function WrapIfAdditionalTemplate<
                 disabled={disabled || (readonlyAsDisabled && readonly)}
                 id={`${id}`}
                 name={`${id}`}
-                onBlur={!readonly ? handleBlur : undefined}
+                onBlur={!readonly ? onKeyRenameBlur : undefined}
                 style={wrapperStyle}
                 type='text'
               ></Form.Input>
@@ -85,7 +82,7 @@ export default function WrapIfAdditionalTemplate<
               iconType='mini'
               className='rjsf-object-property-remove'
               disabled={disabled || readonly}
-              onClick={onDropPropertyClick(label)}
+              onClick={onRemoveProperty}
               uiSchema={uiSchema}
               registry={registry}
             />

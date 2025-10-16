@@ -67,6 +67,7 @@ import toErrorList from './toErrorList';
 import toErrorSchema from './toErrorSchema';
 import toFieldPathId from './toFieldPathId';
 import unwrapErrorHandler from './unwrapErrorHandler';
+import useDeepCompareMemo from './useDeepCompareMemo';
 import utcToLocal from './utcToLocal';
 import validationDataMerge from './validationDataMerge';
 import withIdRefPrefix from './withIdRefPrefix';
@@ -150,6 +151,7 @@ export {
   toErrorSchema,
   toFieldPathId,
   unwrapErrorHandler,
+  useDeepCompareMemo,
   utcToLocal,
   validationDataMerge,
   withIdRefPrefix,

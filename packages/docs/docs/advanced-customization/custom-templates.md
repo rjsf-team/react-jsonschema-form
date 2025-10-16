@@ -911,7 +911,7 @@ The following props are passed to each `ObjectFieldTemplate` as defined by the `
 - `description`: A string value containing the description for the object.
 - `disabled`: A boolean value stating if the object is disabled.
 - `properties`: An array of object representing the properties in the object. Each of the properties represent a child with properties described below.
-- `onAddClick: (schema: RJSFSchema) => () => void`: Returns a function that adds a new property to the object (to be used with additionalProperties and patternProperties)
+- `onAddProperty: () => void`: Callback to use in order to add an new additionalProperty to the object field (to be used with additionalProperties and patternProperties)
 - `readonly`: A boolean value stating if the object is read-only.
 - `required`: A boolean value stating if the object is required.
 - `hideError`: A boolean value stating if the field is hiding its errors.
@@ -1101,8 +1101,19 @@ const schema: RJSFSchema = {
 };
 
 function WrapIfAdditionalTemplate(props: WrapIfAdditionalTemplateProps) {
-  const { id, label, onKeyChange, onDropPropertyClick, schema, children, uiSchema, registry, classNames, style } =
-    props;
+  const {
+    id,
+    label,
+    onKeyRename,
+    onKeyRenameBlur,
+    onRemoveProperty,
+    schema,
+    children,
+    uiSchema,
+    registry,
+    classNames,
+    style,
+  } = props;
   const { RemoveButton } = registry.templates.ButtonTemplates;
   const additional = ADDITIONAL_PROPERTY_FLAG in schema;
 
@@ -1115,17 +1126,9 @@ function WrapIfAdditionalTemplate(props: WrapIfAdditionalTemplateProps) {
       <label label={keyLabel} id={`${id}-key`}>
         Custom Field Key
       </label>
-      <input
-        className='form-control'
-        type='text'
-        id={`${id}-key`}
-        onBlur={function (event) {
-          onKeyChange(event.target.value);
-        }}
-        defaultValue={label}
-      />
+      <input className='form-control' type='text' id={`${id}-key`} onBlur={onKeyRenameBlur} defaultValue={label} />
       <div>{children}</div>
-      <RemoveButton onClick={onDropPropertyClick(label)} uiSchema={uiSchema} />
+      <RemoveButton onClick={onRemoveProperty} uiSchema={uiSchema} />
     </div>
   );
 }
@@ -1149,8 +1152,9 @@ The following props are passed to the `WrapIfAdditionalTemplate`:
 - `disabled`: A boolean value stating if the field is disabled.
 - `schema`: The schema object for this field.
 - `uiSchema`: The uiSchema object for this field.
-- `onKeyChange`: A function that, when called, changes the current property key to the specified value
-- `onDropPropertyClick`: A function that, when called, removes the key from the formData.
+- `onKeyRename`: Callback used to handle the changing of an additional property key's name with the new value
+- `onKeyRenameBlur`: Callback used to handle the changing of an additional property key's name when the input is blurred. The event's target's value will be used as the new value. Its a wrapper callback around `onKeyRename`
+- `onRemoveProperty`: Callback used to handle the removal of the additionalProperty
 
 ## ButtonTemplates
 

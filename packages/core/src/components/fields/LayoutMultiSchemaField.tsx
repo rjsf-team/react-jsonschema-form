@@ -180,7 +180,6 @@ export default function LayoutMultiSchemaField<
     !hideFieldError && rawErrors.length > 0 ? (
       <FieldErrorTemplate fieldPathId={fieldPathId} schema={schema} errors={rawErrors} registry={registry} />
     ) : undefined;
-  const ignored = (value: string) => noop;
 
   return (
     <FieldTemplate
@@ -195,8 +194,9 @@ export default function LayoutMultiSchemaField<
       displayLabel={displayLabel}
       errors={errors}
       onChange={onChange}
-      onDropPropertyClick={ignored}
-      onKeyChange={ignored}
+      onKeyRename={noop}
+      onKeyRenameBlur={noop}
+      onRemoveProperty={noop}
     >
       <Widget
         id={id}

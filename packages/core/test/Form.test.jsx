@@ -143,11 +143,7 @@ describeRepeated('Form common', (createFormComponent) => {
           edit: true,
           uiSchema: {},
           fieldPathId: { $id: 'root', path: [] },
-          schemaValidationErrors: undefined,
-          schemaValidationErrorSchema: undefined,
           schemaUtils: sinon.match.object,
-          retrievedSchema: schema,
-          initialDefaultsGenerated: true,
         });
       });
     });
@@ -1976,11 +1972,7 @@ describeRepeated('Form common', (createFormComponent) => {
           fieldPathId: { $id: 'root', path: [] },
           schema: formProps.schema,
           uiSchema: {},
-          schemaValidationErrors: undefined,
-          schemaValidationErrorSchema: undefined,
           schemaUtils: sinon.match.object,
-          retrievedSchema: formProps.schema,
-          initialDefaultsGenerated: true,
         });
       });
     });

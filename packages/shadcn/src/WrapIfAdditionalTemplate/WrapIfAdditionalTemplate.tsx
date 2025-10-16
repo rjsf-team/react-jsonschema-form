@@ -7,7 +7,6 @@ import {
   TranslatableString,
   WrapIfAdditionalTemplateProps,
 } from '@rjsf/utils';
-import { FocusEvent } from 'react';
 
 import { Input } from '../components/ui/input';
 import { Separator } from '../components/ui/separator';
@@ -28,8 +27,8 @@ export default function WrapIfAdditionalTemplate<
   disabled,
   id,
   label,
-  onDropPropertyClick,
-  onKeyChange,
+  onRemoveProperty,
+  onKeyRenameBlur,
   readonly,
   required,
   schema,
@@ -50,7 +49,6 @@ export default function WrapIfAdditionalTemplate<
     );
   }
 
-  const handleBlur = ({ target }: FocusEvent<HTMLInputElement>) => onKeyChange(target.value);
   const keyId = `${id}-key`;
 
   return (
@@ -68,7 +66,7 @@ export default function WrapIfAdditionalTemplate<
                 disabled={disabled || readonly}
                 id={keyId}
                 name={keyId}
-                onBlur={!readonly ? handleBlur : undefined}
+                onBlur={!readonly ? onKeyRenameBlur : undefined}
                 type='text'
                 className='mt-1 w-full border shadow-sm'
               />
@@ -82,7 +80,7 @@ export default function WrapIfAdditionalTemplate<
           iconType='block'
           className='rjsf-object-property-remove w-full'
           disabled={disabled || readonly}
-          onClick={onDropPropertyClick(label)}
+          onClick={onRemoveProperty}
           uiSchema={uiSchema}
           registry={registry}
         />
