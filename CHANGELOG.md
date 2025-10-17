@@ -21,10 +21,12 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Updated most of the widgets to get `formContext` from the `registry` instead of the `props` since it will no longer be passed
 - Updated `FieldTemplate`, `ObjectFieldTemplate` and `WrapIfAdditionalTemplate` to rename the old `additionalProperties` interface props to the new ones
+- Updated `BaseInputTemplate`, `CheckboxesWidget`, `CheckboxWidget`, `RadioWidget`, `SelectWidget`, and `TextareaWidget` to use `htmlName` for the HTML `name` attribute
 
 ## @rjsf/chakra-ui
 
 - Updated `FieldTemplate`, `ObjectFieldTemplate` and `WrapIfAdditionalTemplate` to rename the old `additionalProperties` interface props to the new ones
+- Updated `BaseInputTemplate`, `CheckboxesWidget`, `CheckboxWidget`, `RadioWidget`, `SelectWidget`, and `TextareaWidget` to use `htmlName` for the HTML `name` attribute
 
 ## @rjsf/core
 
@@ -39,37 +41,45 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Updated the test mocks to remove `formContext` for the widget mock
 - Updated `FieldTemplate`, `ObjectFieldTemplate` and `WrapIfAdditionalTemplate` to rename the old `additionalProperties` interface props to the new ones
+- Updated `BaseInputTemplate`, `CheckboxesWidget`, `CheckboxWidget`, `RadioWidget`, and `TextareaWidget` to use `htmlName` for the HTML `name` attribute
 
 ## @rjsf/fluentui-rc
 
 - Updated `FieldTemplate`, `ObjectFieldTemplate` and `WrapIfAdditionalTemplate` to rename the old `additionalProperties` interface props to the new ones
+- Updated `BaseInputTemplate`, `CheckboxesWidget`, `CheckboxWidget`, `RadioWidget`, `SelectWidget`, and `TextareaWidget` to use `htmlName` for the HTML `name` attribute
 
 ## @rjsf/mantine
 
 - Updated `FieldTemplate`, `ObjectFieldTemplate` and `WrapIfAdditionalTemplate` to rename the old `additionalProperties` interface props to the new ones
+- Updated `BaseInputTemplate`, `CheckboxesWidget`, `CheckboxWidget`, `RadioWidget`, `SelectWidget`, and `TextareaWidget` to use `htmlName` for the HTML `name` attribute
 
 ## @rjsf/mui
 
 - Updated `BaseInputTemplate` and `SelectWidget` to remove `formContext` from the props
 - Updated `FieldTemplate`, `ObjectFieldTemplate` and `WrapIfAdditionalTemplate` to rename the old `additionalProperties` interface props to the new ones
+- Updated `BaseInputTemplate`, `CheckboxesWidget`, `CheckboxWidget`, `RadioWidget`, `SelectWidget`, and `TextareaWidget` to use `htmlName` for the HTML `name` attribute
 
 ## @rjsf/primereact
 
 - Updated `SelectWidget` to remove `formContext` from the props
 - Updated `FieldTemplate`, `ObjectFieldTemplate` and `WrapIfAdditionalTemplate` to rename the old `additionalProperties` interface props to the new ones
+- Updated `BaseInputTemplate`, `CheckboxesWidget`, `CheckboxWidget`, `RadioWidget`, `SelectWidget`, and `TextareaWidget` to use `htmlName` for the HTML `name` attribute
 
 ## @rjsf/react-bootstrap
 
 - Updated `FieldTemplate`, `ObjectFieldTemplate` and `WrapIfAdditionalTemplate` to rename the old `additionalProperties` interface props to the new ones
+- Updated `BaseInputTemplate`, `CheckboxesWidget`, `CheckboxWidget`, `RadioWidget`, `SelectWidget`, and `TextareaWidget` to use `htmlName` for the HTML `name` attribute
 
 ## @rjsf/semantic-ui
 
 - Updated `FieldTemplate`, `ObjectFieldTemplate` and `WrapIfAdditionalTemplate` to rename the old `additionalProperties` interface props to the new ones
+- Updated `BaseInputTemplate`, `CheckboxesWidget`, `CheckboxWidget`, `RadioWidget`, `SelectWidget`, and `TextareaWidget` to use `htmlName` for the HTML `name` attribute
 
 ## @rjsf/shadcn
 
 - Updated the test mocks to remove `formContext` for the widget mock and added `globalFormOptions` in the registry mock
 - Updated `FieldTemplate`, `ObjectFieldTemplate` and `WrapIfAdditionalTemplate` to rename the old `additionalProperties` interface props to the new ones
+- Updated `BaseInputTemplate`, `CheckboxesWidget`, `CheckboxWidget`, `SelectWidget`, and `TextareaWidget` to use `htmlName` for the HTML `name` attribute (Note: `RadioWidget` does not support `htmlName` due to Radix UI RadioGroup limitations)
 
 ## @rjsf/utils
 
