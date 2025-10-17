@@ -107,9 +107,11 @@ should change the heading of the (upcoming) version to include a major version b
 - Updated `GlobalFormOptions` type to include optional `nameGenerator` field
 - Updated `toFieldPathId()` function to support name generation via the `nameGenerator` option in `GlobalFormOptions`
 - Added `htmlName` field to `WidgetProps` interface to provide the generated HTML `name` attribute to widgets
+- BREAKING CHANGE: Renamed `ArrayFieldItemTemplateType` to `ArrayFieldItemTemplateProps` and updated it to change `key: string` to `itemKey: string` to avoid a name collision with React
+- BREAKING CHANGE: Updated `ArrayFieldTemplateProps` to change the type of the `items` prop from `ArrayFieldItemTemplateType<T, S, F>[]` to `ReactElement[]`
 - BREAKING CHANGE: Updated `ArrayFieldItemButtonsTemplateType` to replace the `onAddIndexClick()`, `onCopyIndexClick()`, `onDropIndexClick()` and `onReorderClick()` callback-generator props with the `onAddItem()`, `onCopyItem()`, `onMoveUpItem()`, `onMoveDownItem()` and `onRemoveItem()` callback props
 - BREAKING CHANGE: Updated `ArrayFieldItemTemplateType` to change `key: string` to `itemKey: string` to avoid a name collision with React
-- BREAKING CHANGE: Updated `ArrayFieldTemplateProps` to change the type of the `items` prop from `ArrayFieldItemTemplateType<T, S, F>[]` to `ReactElement[]`
+- BREAKING CHANGE: Renamed `ArrayFieldItemButtonsTemplateType` to `ArrayFieldItemButtonsTemplateProps` and updated it to replace the `onAddIndexClick()`, `onCopyIndexClick()`, `onDropIndexClick()` and `onReorderClick()` callback-generator props with the `onAddItem()`, `onCopyItem()`, `onMoveUpItem()`, `onMoveDownItem()` and `onRemoveItem()` callback props
 
 ## Dev / docs / playground
 - Updated the `formTests.tsx` snapshots to add an `anyOf` of all arrays with different item types and removed the disabling of the optional data controls feature for the optional object with oneOfs

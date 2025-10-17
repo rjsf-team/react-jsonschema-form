@@ -1,5 +1,5 @@
 import {
-  ArrayFieldItemTemplateType,
+  ArrayFieldItemTemplateProps,
   FormContextType,
   getTemplate,
   getUiOptions,
@@ -19,13 +19,13 @@ const useStyles = makeStyles({
 
 /** The `ArrayFieldItemTemplate` component is the template used to render an items of an array.
  *
- * @param props - The `ArrayFieldItemTemplateType` props for the component
+ * @param props - The `ArrayFieldItemTemplateProps` props for the component
  */
 export default function ArrayFieldItemTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
->(props: ArrayFieldItemTemplateType<T, S, F>) {
+>(props: ArrayFieldItemTemplateProps<T, S, F>) {
   const classes = useStyles();
   const { children, buttonsProps, hasToolbar, uiSchema, registry } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);

@@ -2,7 +2,7 @@ import {
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
-  ArrayFieldItemButtonsTemplateType,
+  ArrayFieldItemButtonsTemplateProps,
   buttonId,
 } from '@rjsf/utils';
 
@@ -13,7 +13,7 @@ export default function ArrayFieldItemButtonsTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
->(props: ArrayFieldItemButtonsTemplateType<T, S, F>) {
+>(props: ArrayFieldItemButtonsTemplateProps<T, S, F>) {
   const {
     disabled,
     hasCopy,

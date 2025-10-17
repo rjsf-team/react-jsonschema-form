@@ -333,9 +333,9 @@ export type TemplatesType<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
   /** The template to use while rendering the description for an array field */
   ArrayFieldDescriptionTemplate: ComponentType<ArrayFieldDescriptionProps<T, S, F>>;
   /** The template to use while rendering the buttons for an item in an array field */
-  ArrayFieldItemButtonsTemplate: ComponentType<ArrayFieldItemButtonsTemplateType<T, S, F>>;
+  ArrayFieldItemButtonsTemplate: ComponentType<ArrayFieldItemButtonsTemplateProps<T, S, F>>;
   /** The template to use while rendering an item in an array field */
-  ArrayFieldItemTemplate: ComponentType<ArrayFieldItemTemplateType<T, S, F>>;
+  ArrayFieldItemTemplate: ComponentType<ArrayFieldItemTemplateProps<T, S, F>>;
   /** The template to use while rendering the title for an array field */
   ArrayFieldTitleTemplate: ComponentType<ArrayFieldTitleProps<T, S, F>>;
   /** The template to use while rendering the standard html input */
@@ -636,7 +636,7 @@ export type ArrayFieldDescriptionProps<
 };
 
 /** The properties of the buttons to render for each element in the ArrayFieldTemplateProps.items array */
-export type ArrayFieldItemButtonsTemplateType<
+export type ArrayFieldItemButtonsTemplateProps<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
@@ -677,8 +677,8 @@ export type ArrayFieldItemButtonsTemplateType<
   readonly?: boolean;
 };
 
-/** The properties of each element in the ArrayFieldTemplateProps.items array */
-export type ArrayFieldItemTemplateType<
+/** The properties used to render the ArrayFieldItemTemplate */
+export type ArrayFieldItemTemplateProps<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
@@ -686,7 +686,7 @@ export type ArrayFieldItemTemplateType<
   /** The html for the item's content */
   children: ReactNode;
   /** The props to pass to the `ArrayFieldItemButtonTemplate` */
-  buttonsProps: ArrayFieldItemButtonsTemplateType<T, S, F>;
+  buttonsProps: ArrayFieldItemButtonsTemplateProps<T, S, F>;
   /** The className string */
   className: string;
   /** A boolean value stating if the array item is disabled */
@@ -706,15 +706,6 @@ export type ArrayFieldItemTemplateType<
    */
   parentUiSchema?: UiSchema<T, S, F>;
 };
-
-/**
- * @deprecated - Use `ArrayFieldItemTemplateType` instead
- */
-export type ArrayFieldTemplateItemType<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
-> = ArrayFieldItemTemplateType<T, S, F>;
 
 /** The common properties of the two container templates: `ArrayFieldTemplateProps` and `ObjectFieldTemplateProps` */
 export type ContainerFieldTemplateProps<

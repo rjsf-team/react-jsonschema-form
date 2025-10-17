@@ -1,4 +1,4 @@
-import { ArrayFieldItemButtonsTemplateType, ArrayFieldTemplateProps } from '@rjsf/utils';
+import { ArrayFieldItemButtonsTemplateProps, ArrayFieldTemplateProps } from '@rjsf/utils';
 
 import { Sample } from './Sample';
 
@@ -20,7 +20,7 @@ function ArrayFieldTemplate(props: ArrayFieldTemplateProps) {
   );
 }
 
-function ArrayFieldItemButtonsTemplate(props: ArrayFieldItemButtonsTemplateType) {
+function ArrayFieldItemButtonsTemplate(props: ArrayFieldItemButtonsTemplateProps) {
   const { hasMoveDown, hasMoveUp, onMoveDownItem, onMoveUpItem, onRemoveItem } = props;
   return (
     <>

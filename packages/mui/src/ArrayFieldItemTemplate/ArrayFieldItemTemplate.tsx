@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import {
-  ArrayFieldItemTemplateType,
+  ArrayFieldItemTemplateProps,
   FormContextType,
   getUiOptions,
   getTemplate,
@@ -13,13 +13,13 @@ import {
 
 /** The `ArrayFieldItemTemplate` component is the template used to render an items of an array.
  *
- * @param props - The `ArrayFieldItemTemplateType` props for the component
+ * @param props - The `ArrayFieldItemTemplateProps` props for the component
  */
 export default function ArrayFieldItemTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
->(props: ArrayFieldItemTemplateType<T, S, F>) {
+>(props: ArrayFieldItemTemplateProps<T, S, F>) {
   const { children, buttonsProps, hasToolbar, uiSchema, registry } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const ArrayFieldItemButtonsTemplate = getTemplate<'ArrayFieldItemButtonsTemplate', T, S, F>(

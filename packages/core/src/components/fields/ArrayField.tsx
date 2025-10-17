@@ -503,7 +503,7 @@ function ArrayFieldItem<T = any, S extends StrictRJSFSchema = RJSFSchema, F exte
 }
 
 /** The properties required by the stateless components that render the items using the `ArrayFieldItem` */
-interface ArrayFieldProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>
+interface InternalArrayFieldProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>
   extends FieldProps<T[], S, F> {
   /** The keyedFormData from the `ArrayField` state */
   keyedFormData: KeyedFormDataType<T>[];
@@ -513,14 +513,14 @@ interface ArrayFieldProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
   handleCopyItem: (event: MouseEvent, index: number) => void;
   /** The callback used to handle removing an item at the given index */
   handleRemoveItem: (event: MouseEvent, index: number) => void;
-  /** The calback used to handle reordering an item at the given index to its newIndex */
+  /** The callback used to handle reordering an item at the given index to its newIndex */
   handleReorderItems: (event: MouseEvent<HTMLButtonElement>, index: number, newIndex: number) => void;
 }
 
 /** Renders a normal array without any limitations of length
  */
 function NormalArray<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: ArrayFieldProps<T, S, F>,
+  props: InternalArrayFieldProps<T, S, F>,
 ) {
   const {
     schema,
@@ -626,7 +626,7 @@ function NormalArray<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends
 /** Renders an array that has a maximum limit of items
  */
 function FixedArray<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: ArrayFieldProps<T, S, F>,
+  props: InternalArrayFieldProps<T, S, F>,
 ) {
   const {
     schema,
@@ -1003,7 +1003,6 @@ export default function ArrayField<T = any, S extends StrictRJSFSchema = RJSFSch
   /** Callback handler used to change the value for a checkbox */
   const onSelectChange = useCallback(
     (value: any) => {
-      // select change will pass an empty `path` array since the `ObjectField` will add the path value automatically
       onChange(value, fieldPathId.path, undefined, fieldPathId?.[ID_KEY]);
     },
     [onChange, fieldPathId],
