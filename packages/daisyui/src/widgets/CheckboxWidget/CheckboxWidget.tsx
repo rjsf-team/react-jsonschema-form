@@ -19,6 +19,7 @@ export default function CheckboxWidget<
 >(props: WidgetProps<T, S, F>) {
   const {
     id,
+    htmlName,
     value,
     required,
     disabled,
@@ -71,6 +72,7 @@ export default function CheckboxWidget<
     <input
       type='checkbox'
       id={id}
+      name={htmlName || id}
       checked={value}
       required={required}
       disabled={disabled || readonly}

@@ -30,6 +30,7 @@ export default function BaseInputTemplate<
 >(props: WidgetProps<T, S, F>) {
   const {
     id,
+    htmlName,
     value,
     required,
     disabled,
@@ -75,7 +76,7 @@ export default function BaseInputTemplate<
         </label>
         <input
           id={id}
-          name={id}
+          name={htmlName || id}
           value={value || value === 0 ? value : ''}
           placeholder={placeholder}
           required={required}

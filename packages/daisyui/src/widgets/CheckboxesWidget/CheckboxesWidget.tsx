@@ -17,6 +17,7 @@ import { WidgetProps, StrictRJSFSchema, RJSFSchema, FormContextType } from '@rjs
  */
 export default function CheckboxesWidget<T, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
   id,
+  htmlName,
   disabled,
   options,
   value,
@@ -106,7 +107,7 @@ export default function CheckboxesWidget<T, S extends StrictRJSFSchema = RJSFSch
               type='checkbox'
               id={`${id}-${option.value}`}
               className='checkbox'
-              name={id}
+              name={htmlName || id}
               checked={isChecked(option)}
               required={required}
               disabled={disabled || readonly}
