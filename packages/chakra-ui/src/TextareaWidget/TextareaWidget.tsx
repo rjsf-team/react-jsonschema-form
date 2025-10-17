@@ -18,6 +18,7 @@ export default function TextareaWidget<
   F extends FormContextType = any,
 >({
   id,
+  htmlName,
   placeholder,
   value,
   label,
@@ -52,7 +53,7 @@ export default function TextareaWidget<
     >
       <Textarea
         id={id}
-        name={id}
+        name={htmlName || id}
         value={value ?? ''}
         placeholder={placeholder}
         autoFocus={autofocus}
