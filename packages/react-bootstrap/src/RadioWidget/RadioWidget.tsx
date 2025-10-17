@@ -13,6 +13,7 @@ import {
 
 export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
   id,
+  htmlName,
   options,
   value,
   required,
@@ -46,7 +47,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
               label={option.label}
               id={optionId(id, index)}
               key={index}
-              name={id}
+              name={htmlName || id}
               type='radio'
               disabled={disabled || itemDisabled || readonly}
               checked={checked}

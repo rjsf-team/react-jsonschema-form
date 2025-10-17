@@ -17,6 +17,7 @@ export default function TextareaWidget<
   F extends FormContextType = any,
 >({
   id,
+  htmlName,
   placeholder,
   value,
   required,
@@ -37,7 +38,7 @@ export default function TextareaWidget<
     <InputGroup>
       <FormControl
         id={id}
-        name={id}
+        name={htmlName || id}
         as='textarea'
         placeholder={placeholder}
         disabled={disabled}

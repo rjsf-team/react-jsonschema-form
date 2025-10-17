@@ -17,6 +17,7 @@ export default function SelectWidget<
 >({
   schema,
   id,
+  htmlName,
   options,
   required,
   disabled,
@@ -50,7 +51,7 @@ export default function SelectWidget<
   return (
     <FormSelect
       id={id}
-      name={id}
+      name={htmlName || id}
       value={typeof selectedIndexes === 'undefined' ? emptyValue : selectedIndexes}
       required={required}
       multiple={multiple}

@@ -19,6 +19,7 @@ export default function CheckboxWidget<
 >(props: WidgetProps<T, S, F>) {
   const {
     id,
+    htmlName,
     value,
     disabled,
     readonly,
@@ -61,7 +62,7 @@ export default function CheckboxWidget<
       )}
       <Form.Check
         id={id}
-        name={id}
+        name={htmlName || id}
         label={labelValue(label, hideLabel || !label)}
         checked={typeof value === 'undefined' ? false : value}
         required={required}
