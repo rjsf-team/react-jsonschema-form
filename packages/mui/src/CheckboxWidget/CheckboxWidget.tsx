@@ -25,6 +25,7 @@ export default function CheckboxWidget<
   const {
     schema,
     id,
+    htmlName,
     value,
     disabled,
     readonly,
@@ -68,7 +69,7 @@ export default function CheckboxWidget<
         control={
           <Checkbox
             id={id}
-            name={id}
+            name={htmlName || id}
             checked={typeof value === 'undefined' ? false : Boolean(value)}
             required={required}
             disabled={disabled || readonly}
