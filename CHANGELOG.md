@@ -86,9 +86,6 @@ should change the heading of the (upcoming) version to include a major version b
 - BREAKING CHANGE: Updated `FieldTemplateProps` and `WrapIfAdditionalTemplateProps` to replace the `onKeyChange()` and `onDropPropertyClick()` callback generator props with the `onKeyRename()`, `onKeyRenameBlur()` and `onRemoveProperty()` callback props
 - BREAKING CHANGE: Updated `ObjectFieldTemplateProps` to replace the `onAddClick()` callback generator prop with the `onAddProperty()` callback prop
 - Added new hook `useDeepCompareMemo()` and its associated tests
-
-## @rjsf/utils
-
 - Added `NameGeneratorFunction` type and two built-in name generators: `bracketNameGenerator` and `dotNotationNameGenerator`
 - Updated `GlobalFormOptions` type to include optional `nameGenerator` field
 - Updated `toFieldPathId()` function to support name generation via the `nameGenerator` option in `GlobalFormOptions`

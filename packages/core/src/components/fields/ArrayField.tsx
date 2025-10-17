@@ -603,7 +603,6 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
     const Widget = getWidget<T[], S, F>(schema, widget, widgets);
     const label = uiTitle ?? schema.title ?? name;
     const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions);
-
     // For custom widgets with multiple=true, generate a fieldPathId with isMultiValue flag
     const multiValueFieldPathId = toFieldPathId('', globalFormOptions, fieldPathId, true);
 
@@ -661,7 +660,6 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
     const Widget = getWidget<T[], S, F>(schema, widget, widgets);
     const label = uiTitle ?? schema.title ?? name;
     const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions);
-
     // For multi-select widgets, generate a fieldPathId with isMultiValue flag
     const multiValueFieldPathId = toFieldPathId('', globalFormOptions, fieldPathId, true);
 
@@ -715,7 +713,6 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
     const Widget = getWidget<T[], S, F>(schema, widget, widgets);
     const label = uiTitle ?? schema.title ?? name;
     const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions);
-
     // For file widgets with multiple=true, generate a fieldPathId with isMultiValue flag
     const multiValueFieldPathId = toFieldPathId('', globalFormOptions, fieldPathId, true);
 
