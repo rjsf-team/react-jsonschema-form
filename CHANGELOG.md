@@ -43,6 +43,7 @@ should change the heading of the (upcoming) version to include a major version b
   - Updated the `ArrayField` tests to adjust for the rendering change AND to remove 2 tests due to them no longer being valid
 - BREAKING CHANGE: Updated `ArrayFieldTemplate` to remove the `ArrayFieldItemTemplate` render in favor of simply using `items` due to `ArrayField` changes
 - BREAKING CHANGE: Updated `ArrayFieldItemButtonsTemplate` to replace the old callback-generator functions with the new memoizable callback functions
+- Fixed a bug in `Form` to avoid getting errors being reported at the root level via `onChange` when there aren't
 
 ## @rjsf/daisyui
 
