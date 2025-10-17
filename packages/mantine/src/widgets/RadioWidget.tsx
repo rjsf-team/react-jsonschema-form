@@ -23,6 +23,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
 ) {
   const {
     id,
+    htmlName,
     value,
     required,
     disabled,
@@ -72,7 +73,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
   return (
     <Radio.Group
       id={id}
-      name={id}
+      name={htmlName || id}
       value={selected}
       label={!hideLabel ? label : undefined}
       onChange={handleChange}
