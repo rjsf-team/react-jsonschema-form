@@ -191,16 +191,18 @@ function ArrayAsMultiSelect<T = any, S extends StrictRJSFSchema = RJSFSchema, F 
     name,
     onSelectChange,
   } = props;
-  const { widgets, schemaUtils, globalUiOptions } = registry;
+  const { widgets, schemaUtils, globalFormOptions, globalUiOptions } = registry;
   const itemsSchema = schemaUtils.retrieveSchema(schema.items as S, items);
   const enumOptions = optionsList<T[], S, F>(itemsSchema, uiSchema);
   const { widget = 'select', title: uiTitle, ...options } = getUiOptions<T[], S, F>(uiSchema, globalUiOptions);
   const Widget = getWidget<T[], S, F>(schema, widget, widgets);
   const label = uiTitle ?? schema.title ?? name;
   const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions);
+  // For custom widgets with multiple=true, generate a fieldPathId with isMultiValue flag
+  const multiValueFieldPathId = useDeepCompareMemo(toFieldPathId('', globalFormOptions, fieldPathId, true));
   return (
     <Widget
-      id={fieldPathId[ID_KEY]}
+      id={multiValueFieldPathId[ID_KEY]}
       name={name}
       multiple
       onChange={onSelectChange}
@@ -219,6 +221,7 @@ function ArrayAsMultiSelect<T = any, S extends StrictRJSFSchema = RJSFSchema, F 
       placeholder={placeholder}
       autofocus={autofocus}
       rawErrors={rawErrors}
+      htmlName={multiValueFieldPathId.name}
     />
   );
 }
@@ -246,14 +249,16 @@ function ArrayAsCustomWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F
     name,
     onSelectChange,
   } = props;
-  const { widgets, globalUiOptions, schemaUtils } = registry;
+  const { widgets, schemaUtils, globalFormOptions, globalUiOptions } = registry;
   const { widget, title: uiTitle, ...options } = getUiOptions<T[], S, F>(uiSchema, globalUiOptions);
   const Widget = getWidget<T[], S, F>(schema, widget, widgets);
   const label = uiTitle ?? schema.title ?? name;
   const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions);
+  // For custom widgets with multiple=true, generate a fieldPathId with isMultiValue flag
+  const multiValueFieldPathId = useDeepCompareMemo(toFieldPathId('', globalFormOptions, fieldPathId, true));
   return (
     <Widget
-      id={fieldPathId[ID_KEY]}
+      id={multiValueFieldPathId[ID_KEY]}
       name={name}
       multiple
       onChange={onSelectChange}
@@ -273,6 +278,7 @@ function ArrayAsCustomWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F
       placeholder={placeholder}
       autofocus={autofocus}
       rawErrors={rawErrors}
+      htmlName={multiValueFieldPathId.name}
     />
   );
 }
@@ -298,15 +304,17 @@ function ArrayAsFiles<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
     rawErrors,
     onSelectChange,
   } = props;
-  const { widgets, globalUiOptions, schemaUtils } = registry;
+  const { widgets, schemaUtils, globalFormOptions, globalUiOptions } = registry;
   const { widget = 'files', title: uiTitle, ...options } = getUiOptions<T[], S, F>(uiSchema, globalUiOptions);
   const Widget = getWidget<T[], S, F>(schema, widget, widgets);
   const label = uiTitle ?? schema.title ?? name;
   const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions);
+  // For custom widgets with multiple=true, generate a fieldPathId with isMultiValue flag
+  const multiValueFieldPathId = useDeepCompareMemo(toFieldPathId('', globalFormOptions, fieldPathId, true));
   return (
     <Widget
       options={options}
-      id={fieldPathId[ID_KEY]}
+      id={multiValueFieldPathId[ID_KEY]}
       name={name}
       multiple
       onChange={onSelectChange}
@@ -323,6 +331,7 @@ function ArrayAsFiles<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
       rawErrors={rawErrors}
       label={label}
       hideLabel={!displayLabel}
+      htmlName={multiValueFieldPathId.name}
     />
   );
 }
