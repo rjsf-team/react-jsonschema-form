@@ -22,6 +22,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
   disabled,
   registry,
   id,
+  htmlName,
   onBlur,
   onChange,
   onFocus,
@@ -49,7 +50,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
     <Radio.Group
       disabled={disabled || (readonlyAsDisabled && readonly)}
       id={id}
-      name={id}
+      name={htmlName || id}
       onChange={!readonly ? handleChange : undefined}
       onBlur={!readonly ? handleBlur : undefined}
       onFocus={!readonly ? handleFocus : undefined}
@@ -60,7 +61,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
         enumOptions.map((option, i) => (
           <Radio
             id={optionId(id, i)}
-            name={id}
+            name={htmlName || id}
             autoFocus={i === 0 ? autofocus : false}
             disabled={disabled || (Array.isArray(enumDisabled) && enumDisabled.indexOf(option.value) !== -1)}
             key={i}

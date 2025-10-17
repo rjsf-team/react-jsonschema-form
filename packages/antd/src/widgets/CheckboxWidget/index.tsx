@@ -20,7 +20,8 @@ export default function CheckboxWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
 >(props: WidgetProps<T, S, F>) {
-  const { autofocus, disabled, registry, id, label, hideLabel, onBlur, onChange, onFocus, readonly, value } = props;
+  const { autofocus, disabled, registry, id, htmlName, label, hideLabel, onBlur, onChange, onFocus, readonly, value } =
+    props;
   const { formContext } = registry;
   const { readonlyAsDisabled = true } = formContext as GenericObjectType;
 
@@ -42,7 +43,7 @@ export default function CheckboxWidget<
       checked={typeof value === 'undefined' ? false : value}
       disabled={disabled || (readonlyAsDisabled && readonly)}
       id={id}
-      name={id}
+      name={htmlName || id}
       onChange={!readonly ? handleChange : undefined}
       {...extraProps}
       aria-describedby={ariaDescribedByIds(id)}

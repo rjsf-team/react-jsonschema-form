@@ -21,7 +21,19 @@ export default function TextareaWidget<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
->({ disabled, registry, id, onBlur, onChange, onFocus, options, placeholder, readonly, value }: WidgetProps<T, S, F>) {
+>({
+  disabled,
+  registry,
+  id,
+  htmlName,
+  onBlur,
+  onChange,
+  onFocus,
+  options,
+  placeholder,
+  readonly,
+  value,
+}: WidgetProps<T, S, F>) {
   const { formContext } = registry;
   const { readonlyAsDisabled = true } = formContext as GenericObjectType;
 
@@ -42,7 +54,7 @@ export default function TextareaWidget<
     <Input.TextArea
       disabled={disabled || (readonlyAsDisabled && readonly)}
       id={id}
-      name={id}
+      name={htmlName || id}
       onBlur={!readonly ? handleBlur : undefined}
       onChange={!readonly ? handleChange : undefined}
       onFocus={!readonly ? handleFocus : undefined}
