@@ -28,6 +28,7 @@ export default function TextareaWidget<
 >(props: WidgetProps<T, S, F>) {
   const {
     id,
+    htmlName,
     placeholder,
     required,
     readonly,
@@ -64,7 +65,7 @@ export default function TextareaWidget<
       )}
       <Textarea
         id={id}
-        name={id}
+        name={htmlName || id}
         placeholder={placeholder}
         autoFocus={autofocus}
         required={required}
