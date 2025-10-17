@@ -23,6 +23,7 @@ export default function TextareaWidget<
   const {
     id,
     name,
+    htmlName,
     value,
     placeholder,
     required,
@@ -69,7 +70,7 @@ export default function TextareaWidget<
   return (
     <Textarea
       id={id}
-      name={name}
+      name={htmlName || name}
       value={value || ''}
       placeholder={placeholder || undefined}
       required={required}

@@ -28,6 +28,7 @@ export default function CheckboxesWidget<
   label,
   hideLabel,
   id,
+  htmlName,
   disabled,
   options,
   value,
@@ -73,7 +74,7 @@ export default function CheckboxesWidget<
               <Checkbox
                 key={index}
                 id={optionId(id, index)}
-                name={id}
+                name={htmlName || id}
                 label={option.label}
                 checked={checked}
                 disabled={disabled || itemDisabled || readonly}

@@ -25,6 +25,7 @@ export default function SelectWidget<
   schema,
   id,
   name, // remove this from textFieldProps
+  htmlName,
   options,
   label,
   hideLabel,
@@ -65,7 +66,7 @@ export default function SelectWidget<
   return (
     <TextField
       id={id}
-      name={id}
+      name={htmlName || id}
       label={labelValue(label || undefined, hideLabel, undefined)}
       value={!isEmpty && typeof selectedIndexes !== 'undefined' ? selectedIndexes : emptyValue}
       required={required}

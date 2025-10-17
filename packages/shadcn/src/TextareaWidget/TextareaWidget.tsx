@@ -21,6 +21,7 @@ export default function TextareaWidget<
   F extends FormContextType = any,
 >({
   id,
+  htmlName,
   placeholder,
   value,
   required,
@@ -42,7 +43,7 @@ export default function TextareaWidget<
     <div className='flex p-0.5'>
       <Textarea
         id={id}
-        name={id}
+        name={htmlName || id}
         placeholder={placeholder}
         disabled={disabled}
         readOnly={readonly}

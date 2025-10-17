@@ -71,6 +71,7 @@ import useDeepCompareMemo from './useDeepCompareMemo';
 import utcToLocal from './utcToLocal';
 import validationDataMerge from './validationDataMerge';
 import withIdRefPrefix from './withIdRefPrefix';
+import { bracketNameGenerator, dotNotationNameGenerator } from './nameGenerators';
 
 export * from './types';
 export * from './enums';
@@ -155,6 +156,8 @@ export {
   utcToLocal,
   validationDataMerge,
   withIdRefPrefix,
+  bracketNameGenerator,
+  dotNotationNameGenerator,
 };
 
 export type { ComponentUpdateStrategy } from './shouldRender';

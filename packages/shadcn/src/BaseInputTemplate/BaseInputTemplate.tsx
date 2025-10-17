@@ -24,6 +24,7 @@ export default function BaseInputTemplate<
   F extends FormContextType = any,
 >({
   id,
+  htmlName,
   placeholder,
   required,
   readonly,
@@ -55,7 +56,7 @@ export default function BaseInputTemplate<
     <div className='p-0.5'>
       <Input
         id={id}
-        name={id}
+        name={htmlName || id}
         type={type}
         placeholder={placeholder}
         autoFocus={autofocus}

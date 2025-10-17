@@ -5235,6 +5235,7 @@ exports[`Complex grid renders person and address and employment in a complex gri
                     data-pc-section="root"
                     disabled={false}
                     id="root_employment_description"
+                    name="root_employment_description"
                     onBeforeInput={[Function]}
                     onBlur={[Function]}
                     onChange={[Function]}

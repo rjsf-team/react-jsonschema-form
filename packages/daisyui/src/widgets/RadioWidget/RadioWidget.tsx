@@ -15,6 +15,7 @@ import { WidgetProps, StrictRJSFSchema, FormContextType, RJSFSchema } from '@rjs
  */
 export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
   id,
+  htmlName,
   options,
   value,
   required,
@@ -95,7 +96,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
               type='radio'
               id={`${id}-${option.value}`}
               className='radio'
-              name={id}
+              name={htmlName || id}
               value={getValue(option)}
               checked={isChecked(option)}
               required={required}

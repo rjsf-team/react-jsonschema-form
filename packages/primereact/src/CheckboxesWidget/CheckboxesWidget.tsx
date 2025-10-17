@@ -27,6 +27,7 @@ export default function CheckboxesWidget<
 >(props: WidgetProps<T, S, F>) {
   const {
     id,
+    htmlName,
     disabled,
     options,
     value,
@@ -85,7 +86,7 @@ export default function CheckboxesWidget<
             <div key={index} style={{ display: 'flex', flexDirection: 'row', gap: '0.5rem', alignItems: 'center' }}>
               <Checkbox
                 inputId={optionId(id, index)}
-                name={id}
+                name={htmlName || id}
                 {...primeProps}
                 value={option.value}
                 checked={checked}

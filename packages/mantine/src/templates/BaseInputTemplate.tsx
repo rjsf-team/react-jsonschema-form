@@ -26,6 +26,7 @@ export default function BaseInputTemplate<
 >(props: BaseInputTemplateProps<T, S, F>) {
   const {
     id,
+    htmlName,
     type,
     schema,
     value,
@@ -77,7 +78,7 @@ export default function BaseInputTemplate<
     inputProps.type === 'number' || inputProps.type === 'integer' ? (
       <NumberInput
         id={id}
-        name={id}
+        name={htmlName || id}
         label={labelValue(label || undefined, hideLabel, false)}
         required={required}
         autoFocus={autofocus}
@@ -98,7 +99,7 @@ export default function BaseInputTemplate<
     ) : (
       <TextInput
         id={id}
-        name={id}
+        name={htmlName || id}
         label={labelValue(label || undefined, hideLabel, false)}
         required={required}
         autoFocus={autofocus}

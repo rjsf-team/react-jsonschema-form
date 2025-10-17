@@ -55,7 +55,6 @@ describe('SchemaField', () => {
         globalFormOptions: {
           idPrefix: DEFAULT_ID_PREFIX,
           idSeparator: DEFAULT_ID_SEPARATOR,
-          experimental_componentUpdateStrategy: undefined,
         },
       });
     });
@@ -94,7 +93,6 @@ describe('SchemaField', () => {
         globalFormOptions: {
           idPrefix: DEFAULT_ID_PREFIX,
           idSeparator: DEFAULT_ID_SEPARATOR,
-          experimental_componentUpdateStrategy: undefined,
         },
       });
     });

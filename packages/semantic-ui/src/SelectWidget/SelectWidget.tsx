@@ -54,6 +54,7 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
     uiSchema,
     registry,
     id,
+    htmlName,
     options,
     label,
     hideLabel,
@@ -104,7 +105,7 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
     <Form.Dropdown
       key={id}
       id={id}
-      name={id}
+      name={htmlName || id}
       label={labelValue(label || undefined, hideLabel, false)}
       multiple={typeof multiple === 'undefined' ? false : multiple}
       value={typeof value === 'undefined' ? emptyValue : selectedIndexes}

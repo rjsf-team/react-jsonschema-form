@@ -19,6 +19,7 @@ import { Label, Radio, RadioGroup, RadioGroupOnChangeData } from '@fluentui/reac
  */
 export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
   id,
+  htmlName,
   options,
   value,
   required,
@@ -51,7 +52,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
       )}
       <RadioGroup
         id={id}
-        name={id}
+        name={htmlName || id}
         layout={inline ? 'horizontal' : 'vertical'}
         value={selectedIndex as string | undefined}
         onChange={_onChange}

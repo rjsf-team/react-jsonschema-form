@@ -30,6 +30,7 @@ export default function BaseInputTemplate<
     disabled,
     registry,
     id,
+    htmlName,
     onBlur,
     onChange,
     onChangeOverride,
@@ -60,7 +61,7 @@ export default function BaseInputTemplate<
       <InputNumber
         disabled={disabled || (readonlyAsDisabled && readonly)}
         id={id}
-        name={id}
+        name={htmlName || id}
         onBlur={!readonly ? handleBlur : undefined}
         onChange={!readonly ? handleNumberChange : undefined}
         onFocus={!readonly ? handleFocus : undefined}
@@ -75,7 +76,7 @@ export default function BaseInputTemplate<
       <Input
         disabled={disabled || (readonlyAsDisabled && readonly)}
         id={id}
-        name={id}
+        name={htmlName || id}
         onBlur={!readonly ? handleBlur : undefined}
         onChange={!readonly ? handleTextChange : undefined}
         onFocus={!readonly ? handleFocus : undefined}

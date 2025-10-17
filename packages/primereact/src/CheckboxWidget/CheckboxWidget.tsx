@@ -25,6 +25,7 @@ export default function CheckboxWidget<
 >(props: WidgetProps<T, S, F>) {
   const {
     id,
+    htmlName,
     value,
     disabled,
     readonly,
@@ -68,7 +69,7 @@ export default function CheckboxWidget<
       <div style={{ display: 'flex', flexDirection: 'row', gap: '0.5rem', alignItems: 'center' }}>
         <Checkbox
           inputId={id}
-          name={id}
+          name={htmlName || id}
           {...primeProps}
           disabled={disabled || readonly}
           autoFocus={autofocus}

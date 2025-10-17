@@ -23,6 +23,7 @@ export default function BaseInputTemplate<
   const {
     id,
     name, // remove this from ...rest
+    htmlName,
     value,
     readonly,
     disabled,
@@ -77,7 +78,7 @@ export default function BaseInputTemplate<
     <>
       <input
         id={id}
-        name={id}
+        name={htmlName || id}
         className='form-control'
         readOnly={readonly}
         disabled={disabled}

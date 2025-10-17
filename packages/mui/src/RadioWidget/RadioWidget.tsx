@@ -22,6 +22,7 @@ import {
  */
 export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
   id,
+  htmlName,
   options,
   value,
   required,
@@ -54,7 +55,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
       )}
       <RadioGroup
         id={id}
-        name={id}
+        name={htmlName || id}
         value={selectedIndex}
         row={row as boolean}
         onChange={_onChange}
@@ -67,7 +68,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
             const itemDisabled = Array.isArray(enumDisabled) && enumDisabled.indexOf(option.value) !== -1;
             const radio = (
               <FormControlLabel
-                control={<Radio name={id} id={optionId(id, index)} color='primary' />}
+                control={<Radio name={htmlName || id} id={optionId(id, index)} color='primary' />}
                 label={option.label}
                 value={String(index)}
                 key={index}

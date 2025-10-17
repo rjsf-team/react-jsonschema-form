@@ -21,6 +21,7 @@ export default function TextareaWidget<
 >(props: WidgetProps<T, S, F>) {
   const {
     id,
+    htmlName,
     placeholder,
     value,
     required,
@@ -50,7 +51,7 @@ export default function TextareaWidget<
     <Form.TextArea
       id={id}
       key={id}
-      name={id}
+      name={htmlName || id}
       label={labelValue(label || undefined, hideLabel, false)}
       placeholder={placeholder}
       autoFocus={autofocus}

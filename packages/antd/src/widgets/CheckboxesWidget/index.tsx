@@ -21,7 +21,19 @@ export default function CheckboxesWidget<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
->({ autofocus, disabled, registry, id, onBlur, onChange, onFocus, options, readonly, value }: WidgetProps<T, S, F>) {
+>({
+  autofocus,
+  disabled,
+  registry,
+  id,
+  htmlName,
+  onBlur,
+  onChange,
+  onFocus,
+  options,
+  readonly,
+  value,
+}: WidgetProps<T, S, F>) {
   const { formContext } = registry;
   const { readonlyAsDisabled = true } = formContext as GenericObjectType;
 
@@ -49,7 +61,7 @@ export default function CheckboxesWidget<
     <>
       <Checkbox.Group
         disabled={disabled || (readonlyAsDisabled && readonly)}
-        name={id}
+        name={htmlName || id}
         onChange={!readonly ? handleChange : undefined}
         value={selectedIndexes}
         {...extraProps}
@@ -60,7 +72,7 @@ export default function CheckboxesWidget<
             <span key={i}>
               <Checkbox
                 id={optionId(id, i)}
-                name={id}
+                name={htmlName || id}
                 autoFocus={i === 0 ? autofocus : false}
                 disabled={Array.isArray(enumDisabled) && enumDisabled.indexOf(option.value) !== -1}
                 value={String(i)}

@@ -26,6 +26,7 @@ export default function CheckboxesWidget<
 >(props: WidgetProps<T, S, F>) {
   const {
     id,
+    htmlName,
     value,
     required,
     disabled,
@@ -95,7 +96,7 @@ export default function CheckboxesWidget<
               <Checkbox
                 key={i}
                 id={optionId(id, i)}
-                name={id}
+                name={htmlName || id}
                 value={String(i)}
                 label={option.label}
                 disabled={Array.isArray(enumDisabled) && enumDisabled.indexOf(option.value) !== -1}

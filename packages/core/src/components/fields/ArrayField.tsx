@@ -597,14 +597,18 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
       rawErrors,
       name,
     } = this.props;
-    const { widgets, globalUiOptions, schemaUtils } = registry;
+
+    const { widgets, globalUiOptions, schemaUtils, globalFormOptions } = registry;
     const { widget, title: uiTitle, ...options } = getUiOptions<T[], S, F>(uiSchema, globalUiOptions);
     const Widget = getWidget<T[], S, F>(schema, widget, widgets);
     const label = uiTitle ?? schema.title ?? name;
     const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions);
+    // For custom widgets with multiple=true, generate a fieldPathId with isMultiValue flag
+    const multiValueFieldPathId = toFieldPathId('', globalFormOptions, fieldPathId, true);
+
     return (
       <Widget
-        id={fieldPathId.$id}
+        id={multiValueFieldPathId.$id}
         name={name}
         multiple
         onChange={this.onSelectChange}
@@ -624,6 +628,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
         placeholder={placeholder}
         autofocus={autofocus}
         rawErrors={rawErrors}
+        htmlName={multiValueFieldPathId.name}
       />
     );
   }
@@ -647,16 +652,20 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
       rawErrors,
       name,
     } = this.props;
-    const { widgets, schemaUtils, globalUiOptions } = registry;
+
+    const { widgets, schemaUtils, globalUiOptions, globalFormOptions } = registry;
     const itemsSchema = schemaUtils.retrieveSchema(schema.items as S, items);
     const enumOptions = optionsList<T[], S, F>(itemsSchema, uiSchema);
     const { widget = 'select', title: uiTitle, ...options } = getUiOptions<T[], S, F>(uiSchema, globalUiOptions);
     const Widget = getWidget<T[], S, F>(schema, widget, widgets);
     const label = uiTitle ?? schema.title ?? name;
     const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions);
+    // For multi-select widgets, generate a fieldPathId with isMultiValue flag
+    const multiValueFieldPathId = toFieldPathId('', globalFormOptions, fieldPathId, true);
+
     return (
       <Widget
-        id={fieldPathId.$id}
+        id={multiValueFieldPathId.$id}
         name={name}
         multiple
         onChange={this.onSelectChange}
@@ -675,6 +684,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
         placeholder={placeholder}
         autofocus={autofocus}
         rawErrors={rawErrors}
+        htmlName={multiValueFieldPathId.name}
       />
     );
   }
@@ -697,15 +707,19 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
       formData: items = [],
       rawErrors,
     } = this.props;
-    const { widgets, globalUiOptions, schemaUtils } = registry;
+
+    const { widgets, globalUiOptions, schemaUtils, globalFormOptions } = registry;
     const { widget = 'files', title: uiTitle, ...options } = getUiOptions<T[], S, F>(uiSchema, globalUiOptions);
     const Widget = getWidget<T[], S, F>(schema, widget, widgets);
     const label = uiTitle ?? schema.title ?? name;
     const displayLabel = schemaUtils.getDisplayLabel(schema, uiSchema, globalUiOptions);
+    // For file widgets with multiple=true, generate a fieldPathId with isMultiValue flag
+    const multiValueFieldPathId = toFieldPathId('', globalFormOptions, fieldPathId, true);
+
     return (
       <Widget
         options={options}
-        id={fieldPathId.$id}
+        id={multiValueFieldPathId.$id}
         name={name}
         multiple
         onChange={this.onSelectChange}
@@ -722,6 +736,7 @@ class ArrayField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
         rawErrors={rawErrors}
         label={label}
         hideLabel={!displayLabel}
+        htmlName={multiValueFieldPathId.name}
       />
     );
   }

@@ -439,6 +439,47 @@ render(<Form schema={schema} validator={validator} idSeparator={'/'} />, documen
 This will render `<input id="root/first">` instead of `<input
 id="root_first">` when rendering `first`.
 
+## nameGenerator
+
+The `nameGenerator` prop allows you to customize how HTML `name` attributes are generated for form fields. This is essential when submitting form data to backend frameworks that expect specific naming conventions for structured data.
+
+**Default behavior:** When no `nameGenerator` is provided, the `name` attribute will equal the `id` attribute (e.g., `root_tasks_0_title`).
+
+RJSF provides two built-in generators:
+
+**`bracketNameGenerator`** - Generates bracket notation for PHP/Rails (e.g., `root[tasks][0][title]`). Automatically appends `[]` for multi-value fields like checkboxes.
+
+**`dotNotationNameGenerator`** - Generates dot notation for other frameworks (e.g., `root.tasks.0.title`).
+
+```tsx
+import { Form } from '@rjsf/core';
+import { bracketNameGenerator, RJSFSchema } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
+
+const schema: RJSFSchema = {
+  type: 'object',
+  properties: {
+    firstName: { type: 'string' },
+    tasks: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          title: { type: 'string' },
+        },
+      },
+    },
+  },
+};
+
+render(
+  <Form schema={schema} validator={validator} nameGenerator={bracketNameGenerator} />,
+  document.getElementById('app'),
+);
+```
+
+You can also create a custom generator by implementing the `NameGeneratorFunction` type, which receives `path` (array of path segments), `idPrefix` (typically `'root'`), and optional `isMultiValue` (boolean for multi-value fields).
+
 ## liveOmit
 
 If `omitExtraData` and `liveOmit` are both set to true, then extra form data values that are not in any form field will be removed whenever `onChange` is called. Set to `false` by default.

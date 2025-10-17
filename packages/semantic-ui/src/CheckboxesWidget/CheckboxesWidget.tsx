@@ -27,6 +27,7 @@ export default function CheckboxesWidget<
 >(props: WidgetProps<T, S, F>) {
   const {
     id,
+    htmlName,
     disabled,
     options,
     value,
@@ -72,7 +73,7 @@ export default function CheckboxesWidget<
       {!hideLabel && !!label && (
         <TitleFieldTemplate id={titleId(id)} title={label} schema={schema} uiSchema={uiSchema} registry={registry} />
       )}
-      <Form.Group id={id} name={id} {...inlineOption}>
+      <Form.Group id={id} name={htmlName || id} {...inlineOption}>
         {Array.isArray(enumOptions) &&
           enumOptions.map((option, index) => {
             const checked = enumOptionsIsSelected<S>(option.value, checkboxesValues);
@@ -80,7 +81,7 @@ export default function CheckboxesWidget<
             return (
               <Form.Checkbox
                 id={optionId(id, index)}
-                name={id}
+                name={htmlName || id}
                 key={index}
                 label={option.label}
                 {...semanticProps}

@@ -30,6 +30,7 @@ export default function CheckboxesWidget<
   label,
   hideLabel,
   id,
+  htmlName,
   disabled,
   options,
   value,
@@ -74,7 +75,7 @@ export default function CheckboxesWidget<
             const checkbox = (
               <Checkbox
                 id={optionId(id, index)}
-                name={id}
+                name={htmlName || id}
                 checked={checked}
                 disabled={disabled || itemDisabled || readonly}
                 autoFocus={autofocus && index === 0}
