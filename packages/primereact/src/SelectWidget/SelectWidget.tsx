@@ -27,6 +27,7 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
 function SingleSelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
   schema,
   id,
+  htmlName,
   name, // remove this from dropdownProps
   options,
   label,
@@ -67,7 +68,7 @@ function SingleSelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F 
   return (
     <Dropdown
       id={id}
-      name={id}
+      name={htmlName || id}
       {...primeProps}
       value={!isEmpty && typeof selectedIndexes !== 'undefined' ? selectedIndexes : emptyValue}
       options={(enumOptions ?? []).map(({ value, label }, i: number) => ({
@@ -89,6 +90,7 @@ function SingleSelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F 
 
 function MultiSelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
   id,
+  htmlName,
   options,
   disabled,
   placeholder,
@@ -116,7 +118,7 @@ function MultiSelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   return (
     <MultiSelect
       id={id}
-      name={id}
+      name={htmlName || id}
       {...primeProps}
       value={!isEmpty && typeof selectedIndexes !== 'undefined' ? selectedIndexes : emptyValue}
       options={(enumOptions ?? []).map(({ value, label }, i: number) => ({

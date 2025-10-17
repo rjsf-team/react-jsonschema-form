@@ -9914,6 +9914,7 @@ exports[`single fields textarea field 1`] = `
         data-pc-section="root"
         disabled={false}
         id="root"
+        name="root"
         onBeforeInput={[Function]}
         onBlur={[Function]}
         onChange={[Function]}

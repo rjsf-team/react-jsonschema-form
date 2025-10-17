@@ -11,7 +11,7 @@ export default function TextareaWidget<
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
 >(props: WidgetProps<T, S, F>) {
-  const { id, value, required, disabled, readonly, autofocus, onChange, onBlur, onFocus, options } = props;
+  const { id, htmlName, value, required, disabled, readonly, autofocus, onChange, onBlur, onFocus, options } = props;
   const primeProps = (options.prime || {}) as object;
 
   let rows = 5;
@@ -27,6 +27,7 @@ export default function TextareaWidget<
   return (
     <InputTextarea
       id={id}
+      name={htmlName || id}
       {...primeProps}
       value={value || ''}
       required={required}
