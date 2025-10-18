@@ -23,6 +23,7 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
 ) {
   const {
     id,
+    htmlName,
     options,
     label,
     hideLabel,
@@ -126,7 +127,7 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
       <SelectRoot
         collection={selectOptions}
         id={id}
-        name={id}
+        name={htmlName || id}
         multiple={isMultiple}
         closeOnSelect={!isMultiple}
         onBlur={_onBlur}

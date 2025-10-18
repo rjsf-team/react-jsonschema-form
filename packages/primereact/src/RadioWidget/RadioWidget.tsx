@@ -18,7 +18,7 @@ import { RadioButton, RadioButtonChangeEvent } from 'primereact/radiobutton';
 export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: WidgetProps<T, S, F>,
 ) {
-  const { id, value, disabled, readonly, onChange, onBlur, onFocus, options } = props;
+  const { id, htmlName, value, disabled, readonly, onChange, onBlur, onFocus, options } = props;
   const primeProps = (options.prime || {}) as object;
   const { enumOptions, enumDisabled, emptyValue } = options;
 
@@ -39,7 +39,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
             <div key={index} style={{ display: 'flex', alignItems: 'center' }}>
               <RadioButton
                 inputId={optionId(id, index)}
-                name={id}
+                name={htmlName || id}
                 {...primeProps}
                 onFocus={_onFocus}
                 onBlur={_onBlur}

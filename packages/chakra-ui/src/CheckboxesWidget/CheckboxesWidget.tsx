@@ -22,6 +22,7 @@ export default function CheckboxesWidget<
 >(props: WidgetProps<T, S, F>) {
   const {
     id,
+    htmlName,
     disabled,
     options,
     value,
@@ -70,7 +71,7 @@ export default function CheckboxesWidget<
                 <Checkbox
                   key={index}
                   id={optionId(id, index)}
-                  name={id}
+                  name={htmlName || id}
                   value={String(index)}
                   disabled={disabled || itemDisabled || readonly}
                   onBlur={_onBlur}

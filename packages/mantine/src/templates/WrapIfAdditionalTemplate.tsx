@@ -1,4 +1,3 @@
-import { FocusEvent, useCallback } from 'react';
 import {
   ADDITIONAL_PROPERTY_FLAG,
   UI_OPTIONS_KEY,
@@ -31,8 +30,8 @@ export default function WrapIfAdditionalTemplate<
     disabled,
     schema,
     uiSchema,
-    onKeyChange,
-    onDropPropertyClick,
+    onKeyRenameBlur,
+    onRemoveProperty,
     registry,
     children,
   } = props;
@@ -41,11 +40,6 @@ export default function WrapIfAdditionalTemplate<
   const { RemoveButton } = templates.ButtonTemplates;
   const keyLabel = translateString(TranslatableString.KeyLabel, [label]);
   const additional = ADDITIONAL_PROPERTY_FLAG in schema;
-
-  const handleBlur = useCallback(
-    ({ target }: FocusEvent<HTMLInputElement>) => onKeyChange(target && target.value),
-    [onKeyChange],
-  );
 
   if (!additional) {
     return (
@@ -76,7 +70,7 @@ export default function WrapIfAdditionalTemplate<
                 disabled={disabled || readonly}
                 id={`${id}-key`}
                 name={`${id}-key`}
-                onBlur={!readonly ? handleBlur : undefined}
+                onBlur={!readonly ? onKeyRenameBlur : undefined}
               />
             </div>
           </Grid.Col>
@@ -89,7 +83,7 @@ export default function WrapIfAdditionalTemplate<
           iconType='sm'
           className='rjsf-array-item-remove'
           disabled={disabled || readonly}
-          onClick={onDropPropertyClick(label)}
+          onClick={onRemoveProperty}
           uiSchema={buttonUiOptions}
           registry={registry}
         />

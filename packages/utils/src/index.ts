@@ -67,9 +67,11 @@ import toErrorList from './toErrorList';
 import toErrorSchema from './toErrorSchema';
 import toFieldPathId from './toFieldPathId';
 import unwrapErrorHandler from './unwrapErrorHandler';
+import useDeepCompareMemo from './useDeepCompareMemo';
 import utcToLocal from './utcToLocal';
 import validationDataMerge from './validationDataMerge';
 import withIdRefPrefix from './withIdRefPrefix';
+import { bracketNameGenerator, dotNotationNameGenerator } from './nameGenerators';
 
 export * from './types';
 export * from './enums';
@@ -150,9 +152,12 @@ export {
   toErrorSchema,
   toFieldPathId,
   unwrapErrorHandler,
+  useDeepCompareMemo,
   utcToLocal,
   validationDataMerge,
   withIdRefPrefix,
+  bracketNameGenerator,
+  dotNotationNameGenerator,
 };
 
 export type { ComponentUpdateStrategy } from './shouldRender';

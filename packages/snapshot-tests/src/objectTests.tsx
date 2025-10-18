@@ -1,7 +1,7 @@
 import { ComponentType } from 'react';
 import renderer from 'react-test-renderer';
 import { FormProps } from '@rjsf/core';
-import { RJSFSchema, UiSchema } from '@rjsf/utils';
+import { RJSFSchema, UiSchema, bracketNameGenerator, dotNotationNameGenerator } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
 jest.mock('@rjsf/utils', () => ({
@@ -197,6 +197,165 @@ export function objectTests(Form: ComponentType<FormProps>) {
         };
         const tree = renderer
           .create(<Form schema={schema} uiSchema={labelsOff} validator={validator} formData={formData} />)
+          .toJSON();
+        expect(tree).toMatchSnapshot();
+      });
+    });
+  });
+
+  describe('nameGenerator', () => {
+    describe('bracketNameGenerator', () => {
+      test('simple object', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            firstName: { type: 'string' },
+            lastName: { type: 'string' },
+            age: { type: 'number' },
+          },
+        };
+        const tree = renderer
+          .create(<Form schema={schema} validator={validator} nameGenerator={bracketNameGenerator} />)
+          .toJSON();
+        expect(tree).toMatchSnapshot();
+      });
+
+      test('nested object', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            person: {
+              type: 'object',
+              properties: {
+                name: { type: 'string' },
+                address: {
+                  type: 'object',
+                  properties: {
+                    street: { type: 'string' },
+                    city: { type: 'string' },
+                    country: { type: 'string' },
+                  },
+                },
+              },
+            },
+          },
+        };
+        const tree = renderer
+          .create(<Form schema={schema} validator={validator} nameGenerator={bracketNameGenerator} />)
+          .toJSON();
+        expect(tree).toMatchSnapshot();
+      });
+
+      test('object with additionalProperties', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            name: { type: 'string' },
+          },
+          additionalProperties: true,
+        };
+        const formData = {
+          name: 'John',
+          customField: 'customValue',
+        };
+        const tree = renderer
+          .create(
+            <Form schema={schema} formData={formData} validator={validator} nameGenerator={bracketNameGenerator} />,
+          )
+          .toJSON();
+        expect(tree).toMatchSnapshot();
+      });
+
+      test('object with mixed types', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            name: { type: 'string' },
+            age: { type: 'number' },
+            active: { type: 'boolean' },
+            tags: {
+              type: 'array',
+              items: { type: 'string' },
+            },
+          },
+        };
+        const formData = {
+          name: 'Alice',
+          age: 30,
+          active: true,
+          tags: ['developer', 'designer'],
+        };
+        const tree = renderer
+          .create(
+            <Form schema={schema} formData={formData} validator={validator} nameGenerator={bracketNameGenerator} />,
+          )
+          .toJSON();
+        expect(tree).toMatchSnapshot();
+      });
+    });
+
+    describe('dotNotationNameGenerator', () => {
+      test('simple object', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            firstName: { type: 'string' },
+            lastName: { type: 'string' },
+            age: { type: 'number' },
+          },
+        };
+        const tree = renderer
+          .create(<Form schema={schema} validator={validator} nameGenerator={dotNotationNameGenerator} />)
+          .toJSON();
+        expect(tree).toMatchSnapshot();
+      });
+
+      test('nested object', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            person: {
+              type: 'object',
+              properties: {
+                name: { type: 'string' },
+                address: {
+                  type: 'object',
+                  properties: {
+                    street: { type: 'string' },
+                    city: { type: 'string' },
+                  },
+                },
+              },
+            },
+          },
+        };
+        const tree = renderer
+          .create(<Form schema={schema} validator={validator} nameGenerator={dotNotationNameGenerator} />)
+          .toJSON();
+        expect(tree).toMatchSnapshot();
+      });
+
+      test('object with mixed types', () => {
+        const schema: RJSFSchema = {
+          type: 'object',
+          properties: {
+            name: { type: 'string' },
+            count: { type: 'number' },
+            items: {
+              type: 'array',
+              items: { type: 'string' },
+            },
+          },
+        };
+        const formData = {
+          name: 'Test',
+          count: 5,
+          items: ['a', 'b'],
+        };
+        const tree = renderer
+          .create(
+            <Form schema={schema} formData={formData} validator={validator} nameGenerator={dotNotationNameGenerator} />,
+          )
           .toJSON();
         expect(tree).toMatchSnapshot();
       });

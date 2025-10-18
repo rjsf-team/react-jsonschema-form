@@ -40,7 +40,7 @@ export default function ObjectFieldTemplate<
     disabled,
     formData,
     fieldPathId,
-    onAddClick,
+    onAddProperty,
     optionalDataControl,
     properties,
     readonly,
@@ -160,7 +160,7 @@ export default function ObjectFieldTemplate<
                 id={buttonId(fieldPathId, 'add')}
                 className='rjsf-object-property-expand'
                 disabled={disabled || readonly}
-                onClick={onAddClick(schema)}
+                onClick={onAddProperty}
                 uiSchema={uiSchema}
                 registry={registry}
               />

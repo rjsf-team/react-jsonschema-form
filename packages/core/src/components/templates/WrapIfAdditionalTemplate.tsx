@@ -26,8 +26,8 @@ export default function WrapIfAdditionalTemplate<
     style,
     disabled,
     label,
-    onKeyChange,
-    onDropPropertyClick,
+    onKeyRenameBlur,
+    onRemoveProperty,
     readonly,
     required,
     schema,
@@ -67,7 +67,7 @@ export default function WrapIfAdditionalTemplate<
               className='form-control'
               type='text'
               id={`${id}-key`}
-              onBlur={({ target }) => onKeyChange(target && target.value)}
+              onBlur={onKeyRenameBlur}
               defaultValue={label}
             />
           </div>
@@ -79,7 +79,7 @@ export default function WrapIfAdditionalTemplate<
             className='rjsf-object-property-remove btn-block'
             style={{ border: '0' }}
             disabled={disabled || readonly}
-            onClick={onDropPropertyClick(label)}
+            onClick={onRemoveProperty}
             uiSchema={uiSchema}
             registry={registry}
           />

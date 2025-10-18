@@ -24,6 +24,7 @@ export default function CheckboxWidget<
 >(props: WidgetProps<T, S, F>) {
   const {
     id,
+    htmlName,
     value,
     disabled,
     readonly,
@@ -71,7 +72,7 @@ export default function CheckboxWidget<
       <div className='flex items-center gap-2 my-2'>
         <Checkbox
           id={id}
-          name={id}
+          name={htmlName || id}
           checked={typeof value === 'undefined' ? false : Boolean(value)}
           required={required}
           disabled={disabled || readonly}

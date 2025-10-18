@@ -167,7 +167,7 @@ class AnyOfField<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends For
       globalUiOptions,
     );
     const isOptionalRender = shouldRenderOptionalField<T, S, F>(registry, schema, required, uiSchema);
-    const hasFormData = isFormDataAvailable(formData);
+    const hasFormData = isFormDataAvailable<T>(formData);
 
     const { selectedOption, retrievedOptions } = this.state;
     const {

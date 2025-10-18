@@ -18,6 +18,7 @@ import { getChakra } from '../utils';
 
 export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
   id,
+  htmlName,
   options,
   value,
   required,
@@ -58,7 +59,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
         onBlur={_onBlur}
         onFocus={_onFocus}
         value={selectedIndex}
-        name={id}
+        name={htmlName || id}
         aria-describedby={ariaDescribedByIds(id)}
       >
         <Stack direction={row ? 'row' : 'column'}>

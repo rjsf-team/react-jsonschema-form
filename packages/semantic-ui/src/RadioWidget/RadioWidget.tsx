@@ -22,6 +22,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
 ) {
   const {
     id,
+    htmlName,
     value,
     required,
     disabled,
@@ -58,7 +59,7 @@ export default function RadioWidget<T = any, S extends StrictRJSFSchema = RJSFSc
               required={required}
               control={Radio}
               id={optionId(id, index)}
-              name={id}
+              name={htmlName || id}
               {...semanticProps}
               onFocus={_onFocus}
               onBlur={_onBlur}

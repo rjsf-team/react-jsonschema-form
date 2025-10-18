@@ -24,16 +24,17 @@ describe('ArrayFieldTemplate', () => {
       return (
         <div className={classNames}>
           {props.canAdd && <button className='custom-array-add' />}
-          {props.items.map((element) => {
-            return (
-              <div className='custom-array-item' key={element.index}>
-                {element.buttonsProps.hasMoveUp && <button className='custom-array-item-move-up' />}
-                {element.buttonsProps.hasMoveDown && <button className='custom-array-item-move-down' />}
+          {props.items}
+        </div>
+      );
+    }
+    function ArrayFieldItemTemplate(props) {
+      return (
+        <div className='custom-array-item'>
+          {props.buttonsProps.hasMoveUp && <button className='custom-array-item-move-up' />}
+          {props.buttonsProps.hasMoveDown && <button className='custom-array-item-move-down' />}
 
-                {element.children}
-              </div>
-            );
-          })}
+          {props.children}
         </div>
       );
     }
@@ -41,13 +42,13 @@ describe('ArrayFieldTemplate', () => {
     describe('Stateful ArrayFieldTemplate', () => {
       class ArrayFieldTemplate extends PureComponent {
         render() {
-          return (
-            <div className='field-content'>
-              {this.props.items.map((item, i) => (
-                <div key={i}>item.children</div>
-              ))}
-            </div>
-          );
+          return <div className='field-content'>{this.props.items}</div>;
+        }
+      }
+
+      class ArrayFieldItemTemplate extends PureComponent {
+        render() {
+          return <div>this.props.children</div>;
         }
       }
 
@@ -56,7 +57,7 @@ describe('ArrayFieldTemplate', () => {
           const { node } = createFormComponent({
             schema: { type: 'array', items: { type: 'string' } },
             formData,
-            templates: { ArrayFieldTemplate },
+            templates: { ArrayFieldTemplate, ArrayFieldItemTemplate },
           });
 
           expect(node.querySelectorAll('.rjsf-field-array .field-content div')).to.have.length.of(3);
@@ -69,6 +70,7 @@ describe('ArrayFieldTemplate', () => {
             formData,
             uiSchema: {
               'ui:ArrayFieldTemplate': ArrayFieldTemplate,
+              'ui:ArrayFieldItemTemplate': ArrayFieldItemTemplate,
             },
           });
 
@@ -82,6 +84,7 @@ describe('ArrayFieldTemplate', () => {
             formData,
             uiSchema: {
               'ui:ArrayFieldTemplate': ArrayFieldTemplate,
+              'ui:ArrayFieldItemTemplate': ArrayFieldItemTemplate,
             },
             // Empty field template for proof that we're doing overrides
             templates: { ArrayFieldTemplate: () => <div /> },
@@ -109,7 +112,7 @@ describe('ArrayFieldTemplate', () => {
 
         beforeEach(() => {
           node = createFormComponent({
-            templates: { ArrayFieldTemplate },
+            templates: { ArrayFieldTemplate, ArrayFieldItemTemplate },
             formData,
             schema,
             uiSchema,
@@ -122,6 +125,7 @@ describe('ArrayFieldTemplate', () => {
         const uiSchema = {
           'ui:classNames': 'custom-array',
           'ui:ArrayFieldTemplate': ArrayFieldTemplate,
+          'ui:ArrayFieldItemTemplate': ArrayFieldItemTemplate,
         };
 
         beforeEach(() => {
@@ -133,10 +137,11 @@ describe('ArrayFieldTemplate', () => {
         });
         sharedIts();
       });
-      describe('with template configured globally being overriden in ui:ArrayFieldTemplate', () => {
+      describe('with template configured globally being overridden in ui:ArrayFieldTemplate', () => {
         const uiSchema = {
           'ui:classNames': 'custom-array',
           'ui:ArrayFieldTemplate': ArrayFieldTemplate,
+          'ui:ArrayFieldItemTemplate': ArrayFieldItemTemplate,
         };
 
         beforeEach(() => {
@@ -198,7 +203,7 @@ describe('ArrayFieldTemplate', () => {
             formData,
             schema,
             uiSchema,
-            templates: { ArrayFieldTemplate },
+            templates: { ArrayFieldTemplate, ArrayFieldItemTemplate },
           }).node;
         });
         sharedIts();
@@ -208,6 +213,7 @@ describe('ArrayFieldTemplate', () => {
         const uiSchema = {
           'ui:classNames': 'custom-array',
           'ui:ArrayFieldTemplate': ArrayFieldTemplate,
+          'ui:ArrayFieldItemTemplate': ArrayFieldItemTemplate,
         };
         beforeEach(() => {
           node = createFormComponent({
@@ -222,6 +228,7 @@ describe('ArrayFieldTemplate', () => {
         const uiSchema = {
           'ui:classNames': 'custom-array',
           'ui:ArrayFieldTemplate': ArrayFieldTemplate,
+          'ui:ArrayFieldItemTemplate': ArrayFieldItemTemplate,
         };
         beforeEach(() => {
           node = createFormComponent({
@@ -267,13 +274,13 @@ describe('ArrayFieldTemplate', () => {
   describe('Stateful ArrayFieldTemplate', () => {
     class ArrayFieldTemplate extends PureComponent {
       render() {
-        return (
-          <div className='field-content'>
-            {this.props.items.map((item, i) => (
-              <div key={i}>item.children</div>
-            ))}
-          </div>
-        );
+        return <div className='field-content'>{this.props.items}</div>;
+      }
+    }
+
+    class ArrayFieldItemTemplate extends PureComponent {
+      render() {
+        return <div>this.props.children</div>;
       }
     }
 
@@ -281,7 +288,7 @@ describe('ArrayFieldTemplate', () => {
       const { node } = createFormComponent({
         schema: { type: 'array', items: { type: 'string' } },
         formData,
-        templates: { ArrayFieldTemplate },
+        templates: { ArrayFieldTemplate, ArrayFieldItemTemplate },
       });
       expect(node.querySelectorAll('.rjsf-field-array .field-content div')).to.have.length.of(3);
     });

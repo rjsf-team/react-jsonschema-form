@@ -1,5 +1,3281 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
+exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div>
+      <div
+        className="p-0 container-fluid"
+      >
+        <div
+          className="row"
+          style={
+            {
+              "marginBottom": "10px",
+            }
+          }
+        >
+          <div
+            className="col-12"
+          >
+             
+            <div
+              className="rjsf-field rjsf-field-array"
+            >
+              <div>
+                <div>
+                  <div
+                    className="p-0 m-0 row"
+                  >
+                    <div
+                      className="p-0 m-0 col"
+                    >
+                      <div
+                        className="my-1"
+                        id="root_tasks__title"
+                      >
+                        <h5>
+                          tasks
+                        </h5>
+                        <hr
+                          className="border-0 bg-secondary mt-0"
+                          style={
+                            {
+                              "height": "1px",
+                            }
+                          }
+                        />
+                      </div>
+                      <div
+                        className="p-0 m-0 container-fluid"
+                      >
+                        <div>
+                          <div
+                            className="mb-2  d-flex align-items-center row"
+                          >
+                            <div
+                              className="col-lg-9 col-9"
+                            >
+                              <div
+                                className="rjsf-field rjsf-field-object"
+                              >
+                                <div>
+                                  <div
+                                    className="my-1"
+                                    id="root_tasks_0__title"
+                                  >
+                                    <h5>
+                                      tasks-1
+                                    </h5>
+                                    <hr
+                                      className="border-0 bg-secondary mt-0"
+                                      style={
+                                        {
+                                          "height": "1px",
+                                        }
+                                      }
+                                    />
+                                  </div>
+                                  <div
+                                    className="p-0 container-fluid"
+                                  >
+                                    <div
+                                      className="row"
+                                      style={
+                                        {
+                                          "marginBottom": "10px",
+                                        }
+                                      }
+                                    >
+                                      <div
+                                        className="col-12"
+                                      >
+                                         
+                                        <div
+                                          className="rjsf-field rjsf-field-string"
+                                        >
+                                          <div>
+                                            <label
+                                              className="form-label"
+                                              htmlFor="root_tasks_0_title"
+                                            >
+                                              title
+                                            </label>
+                                            <input
+                                              aria-describedby="root_tasks_0_title__error root_tasks_0_title__description root_tasks_0_title__help"
+                                              autoFocus={false}
+                                              className="form-control"
+                                              disabled={false}
+                                              id="root_tasks_0_title"
+                                              name="root[tasks][0][title]"
+                                              onBlur={[Function]}
+                                              onChange={[Function]}
+                                              onFocus={[Function]}
+                                              placeholder=""
+                                              readOnly={false}
+                                              required={false}
+                                              type="text"
+                                              value="Task 1"
+                                            />
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div
+                                      className="row"
+                                      style={
+                                        {
+                                          "marginBottom": "10px",
+                                        }
+                                      }
+                                    >
+                                      <div
+                                        className="col-12"
+                                      >
+                                         
+                                        <div
+                                          className="rjsf-field rjsf-field-boolean"
+                                        >
+                                          <div>
+                                            <div
+                                              aria-describedby="root_tasks_0_done__error root_tasks_0_done__description root_tasks_0_done__help"
+                                              className=""
+                                            >
+                                              <div
+                                                className="form-check"
+                                              >
+                                                <input
+                                                  autoFocus={false}
+                                                  checked={false}
+                                                  className="form-check-input"
+                                                  disabled={false}
+                                                  id="root_tasks_0_done"
+                                                  name="root[tasks][0][done]"
+                                                  onBlur={[Function]}
+                                                  onChange={[Function]}
+                                                  onFocus={[Function]}
+                                                  required={false}
+                                                  type="checkbox"
+                                                />
+                                                <label
+                                                  className="form-check-label"
+                                                  htmlFor="root_tasks_0_done"
+                                                  title=""
+                                                >
+                                                  done
+                                                </label>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div
+                              className="py-4 col-lg-3 col-3"
+                            >
+                              <div
+                                className="d-flex flex-row"
+                              >
+                                <button
+                                  className="btn btn-light btn-sm"
+                                  disabled={true}
+                                  id="root_tasks_0__moveUp"
+                                  onClick={[Function]}
+                                  title="Move up"
+                                  type="button"
+                                >
+                                  <svg
+                                    fill="currentColor"
+                                    height="1em"
+                                    stroke="currentColor"
+                                    strokeWidth="0"
+                                    style={
+                                      {
+                                        "color": undefined,
+                                      }
+                                    }
+                                    viewBox="0 0 1024 1024"
+                                    width="1em"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                  >
+                                    <path
+                                      d="M868 545.5L536.1 163a31.96 31.96 0 0 0-48.3 0L156 545.5a7.97 7.97 0 0 0 6 13.2h81c4.6 0 9-2 12.1-5.5L474 300.9V864c0 4.4 3.6 8 8 8h60c4.4 0 8-3.6 8-8V300.9l218.9 252.3c3 3.5 7.4 5.5 12.1 5.5h81c6.8 0 10.5-8 6-13.2z"
+                                    />
+                                  </svg>
+                                </button>
+                                <button
+                                  className="btn btn-light btn-sm"
+                                  disabled={false}
+                                  id="root_tasks_0__moveDown"
+                                  onClick={[Function]}
+                                  title="Move down"
+                                  type="button"
+                                >
+                                  <svg
+                                    fill="currentColor"
+                                    height="1em"
+                                    stroke="currentColor"
+                                    strokeWidth="0"
+                                    style={
+                                      {
+                                        "color": undefined,
+                                      }
+                                    }
+                                    viewBox="0 0 1024 1024"
+                                    width="1em"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                  >
+                                    <path
+                                      d="M862 465.3h-81c-4.6 0-9 2-12.1 5.5L550 723.1V160c0-4.4-3.6-8-8-8h-60c-4.4 0-8 3.6-8 8v563.1L255.1 470.8c-3-3.5-7.4-5.5-12.1-5.5h-81c-6.8 0-10.5 8.1-6 13.2L487.9 861a31.96 31.96 0 0 0 48.3 0L868 478.5c4.5-5.2.8-13.2-6-13.2z"
+                                    />
+                                  </svg>
+                                </button>
+                                <button
+                                  className="btn btn-danger btn-sm"
+                                  disabled={false}
+                                  id="root_tasks_0__remove"
+                                  onClick={[Function]}
+                                  title="Remove"
+                                  type="button"
+                                >
+                                  <svg
+                                    fill="currentColor"
+                                    height="1em"
+                                    stroke="currentColor"
+                                    strokeWidth="0"
+                                    style={
+                                      {
+                                        "color": undefined,
+                                      }
+                                    }
+                                    viewBox="0 0 512 512"
+                                    width="1em"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                  >
+                                    <path
+                                      d="M368.5 240h-225c-8.8 0-16 7.2-16 16 0 4.4 1.8 8.4 4.7 11.3 2.9 2.9 6.9 4.7 11.3 4.7h225c8.8 0 16-7.2 16-16s-7.2-16-16-16z"
+                                    />
+                                  </svg>
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div>
+                          <div
+                            className="mb-2  d-flex align-items-center row"
+                          >
+                            <div
+                              className="col-lg-9 col-9"
+                            >
+                              <div
+                                className="rjsf-field rjsf-field-object"
+                              >
+                                <div>
+                                  <div
+                                    className="my-1"
+                                    id="root_tasks_1__title"
+                                  >
+                                    <h5>
+                                      tasks-2
+                                    </h5>
+                                    <hr
+                                      className="border-0 bg-secondary mt-0"
+                                      style={
+                                        {
+                                          "height": "1px",
+                                        }
+                                      }
+                                    />
+                                  </div>
+                                  <div
+                                    className="p-0 container-fluid"
+                                  >
+                                    <div
+                                      className="row"
+                                      style={
+                                        {
+                                          "marginBottom": "10px",
+                                        }
+                                      }
+                                    >
+                                      <div
+                                        className="col-12"
+                                      >
+                                         
+                                        <div
+                                          className="rjsf-field rjsf-field-string"
+                                        >
+                                          <div>
+                                            <label
+                                              className="form-label"
+                                              htmlFor="root_tasks_1_title"
+                                            >
+                                              title
+                                            </label>
+                                            <input
+                                              aria-describedby="root_tasks_1_title__error root_tasks_1_title__description root_tasks_1_title__help"
+                                              autoFocus={false}
+                                              className="form-control"
+                                              disabled={false}
+                                              id="root_tasks_1_title"
+                                              name="root[tasks][1][title]"
+                                              onBlur={[Function]}
+                                              onChange={[Function]}
+                                              onFocus={[Function]}
+                                              placeholder=""
+                                              readOnly={false}
+                                              required={false}
+                                              type="text"
+                                              value="Task 2"
+                                            />
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div
+                                      className="row"
+                                      style={
+                                        {
+                                          "marginBottom": "10px",
+                                        }
+                                      }
+                                    >
+                                      <div
+                                        className="col-12"
+                                      >
+                                         
+                                        <div
+                                          className="rjsf-field rjsf-field-boolean"
+                                        >
+                                          <div>
+                                            <div
+                                              aria-describedby="root_tasks_1_done__error root_tasks_1_done__description root_tasks_1_done__help"
+                                              className=""
+                                            >
+                                              <div
+                                                className="form-check"
+                                              >
+                                                <input
+                                                  autoFocus={false}
+                                                  checked={true}
+                                                  className="form-check-input"
+                                                  disabled={false}
+                                                  id="root_tasks_1_done"
+                                                  name="root[tasks][1][done]"
+                                                  onBlur={[Function]}
+                                                  onChange={[Function]}
+                                                  onFocus={[Function]}
+                                                  required={false}
+                                                  type="checkbox"
+                                                />
+                                                <label
+                                                  className="form-check-label"
+                                                  htmlFor="root_tasks_1_done"
+                                                  title=""
+                                                >
+                                                  done
+                                                </label>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div
+                              className="py-4 col-lg-3 col-3"
+                            >
+                              <div
+                                className="d-flex flex-row"
+                              >
+                                <button
+                                  className="btn btn-light btn-sm"
+                                  disabled={false}
+                                  id="root_tasks_1__moveUp"
+                                  onClick={[Function]}
+                                  title="Move up"
+                                  type="button"
+                                >
+                                  <svg
+                                    fill="currentColor"
+                                    height="1em"
+                                    stroke="currentColor"
+                                    strokeWidth="0"
+                                    style={
+                                      {
+                                        "color": undefined,
+                                      }
+                                    }
+                                    viewBox="0 0 1024 1024"
+                                    width="1em"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                  >
+                                    <path
+                                      d="M868 545.5L536.1 163a31.96 31.96 0 0 0-48.3 0L156 545.5a7.97 7.97 0 0 0 6 13.2h81c4.6 0 9-2 12.1-5.5L474 300.9V864c0 4.4 3.6 8 8 8h60c4.4 0 8-3.6 8-8V300.9l218.9 252.3c3 3.5 7.4 5.5 12.1 5.5h81c6.8 0 10.5-8 6-13.2z"
+                                    />
+                                  </svg>
+                                </button>
+                                <button
+                                  className="btn btn-light btn-sm"
+                                  disabled={true}
+                                  id="root_tasks_1__moveDown"
+                                  onClick={[Function]}
+                                  title="Move down"
+                                  type="button"
+                                >
+                                  <svg
+                                    fill="currentColor"
+                                    height="1em"
+                                    stroke="currentColor"
+                                    strokeWidth="0"
+                                    style={
+                                      {
+                                        "color": undefined,
+                                      }
+                                    }
+                                    viewBox="0 0 1024 1024"
+                                    width="1em"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                  >
+                                    <path
+                                      d="M862 465.3h-81c-4.6 0-9 2-12.1 5.5L550 723.1V160c0-4.4-3.6-8-8-8h-60c-4.4 0-8 3.6-8 8v563.1L255.1 470.8c-3-3.5-7.4-5.5-12.1-5.5h-81c-6.8 0-10.5 8.1-6 13.2L487.9 861a31.96 31.96 0 0 0 48.3 0L868 478.5c4.5-5.2.8-13.2-6-13.2z"
+                                    />
+                                  </svg>
+                                </button>
+                                <button
+                                  className="btn btn-danger btn-sm"
+                                  disabled={false}
+                                  id="root_tasks_1__remove"
+                                  onClick={[Function]}
+                                  title="Remove"
+                                  type="button"
+                                >
+                                  <svg
+                                    fill="currentColor"
+                                    height="1em"
+                                    stroke="currentColor"
+                                    strokeWidth="0"
+                                    style={
+                                      {
+                                        "color": undefined,
+                                      }
+                                    }
+                                    viewBox="0 0 512 512"
+                                    width="1em"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                  >
+                                    <path
+                                      d="M368.5 240h-225c-8.8 0-16 7.2-16 16 0 4.4 1.8 8.4 4.7 11.3 2.9 2.9 6.9 4.7 11.3 4.7h225c8.8 0 16-7.2 16-16s-7.2-16-16-16z"
+                                    />
+                                  </svg>
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div
+                          className="container"
+                        >
+                          <div
+                            className="mt-2 row"
+                          >
+                            <div
+                              className="col-9"
+                            />
+                            <div
+                              className="py-4 col-lg-3 col-3 col-3"
+                            >
+                              <button
+                                className="ml-1 rjsf-array-item-add btn btn-primary"
+                                disabled={false}
+                                id="root_tasks__add"
+                                onClick={[Function]}
+                                style={
+                                  {
+                                    "width": "100%",
+                                  }
+                                }
+                                title="Add Item"
+                                type="button"
+                              >
+                                <svg
+                                  fill="currentColor"
+                                  height="1em"
+                                  stroke="currentColor"
+                                  strokeWidth="0"
+                                  style={
+                                    {
+                                      "color": undefined,
+                                    }
+                                  }
+                                  viewBox="0 0 16 16"
+                                  width="1em"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    clipRule="evenodd"
+                                    d="M8 3.5a.5.5 0 01.5.5v4a.5.5 0 01-.5.5H4a.5.5 0 010-1h3.5V4a.5.5 0 01.5-.5z"
+                                    fillRule="evenodd"
+                                  />
+                                  <path
+                                    clipRule="evenodd"
+                                    d="M7.5 8a.5.5 0 01.5-.5h4a.5.5 0 010 1H8.5V12a.5.5 0 01-1 0V8z"
+                                    fillRule="evenodd"
+                                  />
+                                </svg>
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div>
+      <div
+        className="p-0 container-fluid"
+      >
+        <div
+          className="row"
+          style={
+            {
+              "marginBottom": "10px",
+            }
+          }
+        >
+          <div
+            className="col-12"
+          >
+             
+            <div
+              className="rjsf-field rjsf-field-array"
+            >
+              <div>
+                <div>
+                  <div
+                    className="p-0 m-0 row"
+                  >
+                    <div
+                      className="p-0 m-0 col"
+                    >
+                      <div
+                        className="my-1"
+                        id="root_tags__title"
+                      >
+                        <h5>
+                          tags
+                        </h5>
+                        <hr
+                          className="border-0 bg-secondary mt-0"
+                          style={
+                            {
+                              "height": "1px",
+                            }
+                          }
+                        />
+                      </div>
+                      <div
+                        className="p-0 m-0 container-fluid"
+                      >
+                        <div>
+                          <div
+                            className="mb-2  d-flex align-items-center row"
+                          >
+                            <div
+                              className="col-lg-9 col-9"
+                            >
+                              <div
+                                className="rjsf-field rjsf-field-string"
+                              >
+                                <div>
+                                  <label
+                                    className="form-label"
+                                    htmlFor="root_tags_0"
+                                  >
+                                    tags-1
+                                    *
+                                  </label>
+                                  <input
+                                    aria-describedby="root_tags_0__error root_tags_0__description root_tags_0__help"
+                                    autoFocus={false}
+                                    className="form-control"
+                                    disabled={false}
+                                    id="root_tags_0"
+                                    name="root[tags][0]"
+                                    onBlur={[Function]}
+                                    onChange={[Function]}
+                                    onFocus={[Function]}
+                                    placeholder=""
+                                    readOnly={false}
+                                    required={true}
+                                    type="text"
+                                    value="foo"
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                            <div
+                              className="py-4 col-lg-3 col-3"
+                            >
+                              <div
+                                className="d-flex flex-row"
+                              >
+                                <button
+                                  className="btn btn-light btn-sm"
+                                  disabled={true}
+                                  id="root_tags_0__moveUp"
+                                  onClick={[Function]}
+                                  title="Move up"
+                                  type="button"
+                                >
+                                  <svg
+                                    fill="currentColor"
+                                    height="1em"
+                                    stroke="currentColor"
+                                    strokeWidth="0"
+                                    style={
+                                      {
+                                        "color": undefined,
+                                      }
+                                    }
+                                    viewBox="0 0 1024 1024"
+                                    width="1em"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                  >
+                                    <path
+                                      d="M868 545.5L536.1 163a31.96 31.96 0 0 0-48.3 0L156 545.5a7.97 7.97 0 0 0 6 13.2h81c4.6 0 9-2 12.1-5.5L474 300.9V864c0 4.4 3.6 8 8 8h60c4.4 0 8-3.6 8-8V300.9l218.9 252.3c3 3.5 7.4 5.5 12.1 5.5h81c6.8 0 10.5-8 6-13.2z"
+                                    />
+                                  </svg>
+                                </button>
+                                <button
+                                  className="btn btn-light btn-sm"
+                                  disabled={false}
+                                  id="root_tags_0__moveDown"
+                                  onClick={[Function]}
+                                  title="Move down"
+                                  type="button"
+                                >
+                                  <svg
+                                    fill="currentColor"
+                                    height="1em"
+                                    stroke="currentColor"
+                                    strokeWidth="0"
+                                    style={
+                                      {
+                                        "color": undefined,
+                                      }
+                                    }
+                                    viewBox="0 0 1024 1024"
+                                    width="1em"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                  >
+                                    <path
+                                      d="M862 465.3h-81c-4.6 0-9 2-12.1 5.5L550 723.1V160c0-4.4-3.6-8-8-8h-60c-4.4 0-8 3.6-8 8v563.1L255.1 470.8c-3-3.5-7.4-5.5-12.1-5.5h-81c-6.8 0-10.5 8.1-6 13.2L487.9 861a31.96 31.96 0 0 0 48.3 0L868 478.5c4.5-5.2.8-13.2-6-13.2z"
+                                    />
+                                  </svg>
+                                </button>
+                                <button
+                                  className="btn btn-danger btn-sm"
+                                  disabled={false}
+                                  id="root_tags_0__remove"
+                                  onClick={[Function]}
+                                  title="Remove"
+                                  type="button"
+                                >
+                                  <svg
+                                    fill="currentColor"
+                                    height="1em"
+                                    stroke="currentColor"
+                                    strokeWidth="0"
+                                    style={
+                                      {
+                                        "color": undefined,
+                                      }
+                                    }
+                                    viewBox="0 0 512 512"
+                                    width="1em"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                  >
+                                    <path
+                                      d="M368.5 240h-225c-8.8 0-16 7.2-16 16 0 4.4 1.8 8.4 4.7 11.3 2.9 2.9 6.9 4.7 11.3 4.7h225c8.8 0 16-7.2 16-16s-7.2-16-16-16z"
+                                    />
+                                  </svg>
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div>
+                          <div
+                            className="mb-2  d-flex align-items-center row"
+                          >
+                            <div
+                              className="col-lg-9 col-9"
+                            >
+                              <div
+                                className="rjsf-field rjsf-field-string"
+                              >
+                                <div>
+                                  <label
+                                    className="form-label"
+                                    htmlFor="root_tags_1"
+                                  >
+                                    tags-2
+                                    *
+                                  </label>
+                                  <input
+                                    aria-describedby="root_tags_1__error root_tags_1__description root_tags_1__help"
+                                    autoFocus={false}
+                                    className="form-control"
+                                    disabled={false}
+                                    id="root_tags_1"
+                                    name="root[tags][1]"
+                                    onBlur={[Function]}
+                                    onChange={[Function]}
+                                    onFocus={[Function]}
+                                    placeholder=""
+                                    readOnly={false}
+                                    required={true}
+                                    type="text"
+                                    value="bar"
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                            <div
+                              className="py-4 col-lg-3 col-3"
+                            >
+                              <div
+                                className="d-flex flex-row"
+                              >
+                                <button
+                                  className="btn btn-light btn-sm"
+                                  disabled={false}
+                                  id="root_tags_1__moveUp"
+                                  onClick={[Function]}
+                                  title="Move up"
+                                  type="button"
+                                >
+                                  <svg
+                                    fill="currentColor"
+                                    height="1em"
+                                    stroke="currentColor"
+                                    strokeWidth="0"
+                                    style={
+                                      {
+                                        "color": undefined,
+                                      }
+                                    }
+                                    viewBox="0 0 1024 1024"
+                                    width="1em"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                  >
+                                    <path
+                                      d="M868 545.5L536.1 163a31.96 31.96 0 0 0-48.3 0L156 545.5a7.97 7.97 0 0 0 6 13.2h81c4.6 0 9-2 12.1-5.5L474 300.9V864c0 4.4 3.6 8 8 8h60c4.4 0 8-3.6 8-8V300.9l218.9 252.3c3 3.5 7.4 5.5 12.1 5.5h81c6.8 0 10.5-8 6-13.2z"
+                                    />
+                                  </svg>
+                                </button>
+                                <button
+                                  className="btn btn-light btn-sm"
+                                  disabled={true}
+                                  id="root_tags_1__moveDown"
+                                  onClick={[Function]}
+                                  title="Move down"
+                                  type="button"
+                                >
+                                  <svg
+                                    fill="currentColor"
+                                    height="1em"
+                                    stroke="currentColor"
+                                    strokeWidth="0"
+                                    style={
+                                      {
+                                        "color": undefined,
+                                      }
+                                    }
+                                    viewBox="0 0 1024 1024"
+                                    width="1em"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                  >
+                                    <path
+                                      d="M862 465.3h-81c-4.6 0-9 2-12.1 5.5L550 723.1V160c0-4.4-3.6-8-8-8h-60c-4.4 0-8 3.6-8 8v563.1L255.1 470.8c-3-3.5-7.4-5.5-12.1-5.5h-81c-6.8 0-10.5 8.1-6 13.2L487.9 861a31.96 31.96 0 0 0 48.3 0L868 478.5c4.5-5.2.8-13.2-6-13.2z"
+                                    />
+                                  </svg>
+                                </button>
+                                <button
+                                  className="btn btn-danger btn-sm"
+                                  disabled={false}
+                                  id="root_tags_1__remove"
+                                  onClick={[Function]}
+                                  title="Remove"
+                                  type="button"
+                                >
+                                  <svg
+                                    fill="currentColor"
+                                    height="1em"
+                                    stroke="currentColor"
+                                    strokeWidth="0"
+                                    style={
+                                      {
+                                        "color": undefined,
+                                      }
+                                    }
+                                    viewBox="0 0 512 512"
+                                    width="1em"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                  >
+                                    <path
+                                      d="M368.5 240h-225c-8.8 0-16 7.2-16 16 0 4.4 1.8 8.4 4.7 11.3 2.9 2.9 6.9 4.7 11.3 4.7h225c8.8 0 16-7.2 16-16s-7.2-16-16-16z"
+                                    />
+                                  </svg>
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div
+                          className="container"
+                        >
+                          <div
+                            className="mt-2 row"
+                          >
+                            <div
+                              className="col-9"
+                            />
+                            <div
+                              className="py-4 col-lg-3 col-3 col-3"
+                            >
+                              <button
+                                className="ml-1 rjsf-array-item-add btn btn-primary"
+                                disabled={false}
+                                id="root_tags__add"
+                                onClick={[Function]}
+                                style={
+                                  {
+                                    "width": "100%",
+                                  }
+                                }
+                                title="Add Item"
+                                type="button"
+                              >
+                                <svg
+                                  fill="currentColor"
+                                  height="1em"
+                                  stroke="currentColor"
+                                  strokeWidth="0"
+                                  style={
+                                    {
+                                      "color": undefined,
+                                    }
+                                  }
+                                  viewBox="0 0 16 16"
+                                  width="1em"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    clipRule="evenodd"
+                                    d="M8 3.5a.5.5 0 01.5.5v4a.5.5 0 01-.5.5H4a.5.5 0 010-1h3.5V4a.5.5 0 01.5-.5z"
+                                    fillRule="evenodd"
+                                  />
+                                  <path
+                                    clipRule="evenodd"
+                                    d="M7.5 8a.5.5 0 01.5-.5h4a.5.5 0 010 1H8.5V12a.5.5 0 01-1 0V8z"
+                                    fillRule="evenodd"
+                                  />
+                                </svg>
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`nameGenerator bracketNameGenerator checkboxes field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div>
+      <div
+        className="p-0 container-fluid"
+      >
+        <div
+          className="row"
+          style={
+            {
+              "marginBottom": "10px",
+            }
+          }
+        >
+          <div
+            className="col-12"
+          >
+             
+            <div
+              className="rjsf-field rjsf-field-array"
+            >
+              <div>
+                <label
+                  className="form-label"
+                  htmlFor="root_choices"
+                >
+                  choices
+                </label>
+                <div>
+                  <div
+                    className="bg-transparent border-0 form-check"
+                  >
+                    <input
+                      aria-describedby="root_choices__error root_choices__description root_choices__help"
+                      autoFocus={false}
+                      checked={false}
+                      className="form-check-input"
+                      disabled={false}
+                      id="root_choices-0"
+                      name="root[choices][]"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      onFocus={[Function]}
+                      required={false}
+                      type="checkbox"
+                    />
+                    <label
+                      className="form-check-label"
+                      htmlFor="root_choices-0"
+                      title=""
+                    >
+                      foo
+                    </label>
+                  </div>
+                  <div
+                    className="bg-transparent border-0 form-check"
+                  >
+                    <input
+                      aria-describedby="root_choices__error root_choices__description root_choices__help"
+                      autoFocus={false}
+                      checked={false}
+                      className="form-check-input"
+                      disabled={false}
+                      id="root_choices-1"
+                      name="root[choices][]"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      onFocus={[Function]}
+                      required={false}
+                      type="checkbox"
+                    />
+                    <label
+                      className="form-check-label"
+                      htmlFor="root_choices-1"
+                      title=""
+                    >
+                      bar
+                    </label>
+                  </div>
+                  <div
+                    className="bg-transparent border-0 form-check"
+                  >
+                    <input
+                      aria-describedby="root_choices__error root_choices__description root_choices__help"
+                      autoFocus={false}
+                      checked={false}
+                      className="form-check-input"
+                      disabled={false}
+                      id="root_choices-2"
+                      name="root[choices][]"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      onFocus={[Function]}
+                      required={false}
+                      type="checkbox"
+                    />
+                    <label
+                      className="form-check-label"
+                      htmlFor="root_choices-2"
+                      title=""
+                    >
+                      baz
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`nameGenerator bracketNameGenerator nested object 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div>
+      <div
+        className="p-0 container-fluid"
+      >
+        <div
+          className="row"
+          style={
+            {
+              "marginBottom": "10px",
+            }
+          }
+        >
+          <div
+            className="col-12"
+          >
+             
+            <div
+              className="rjsf-field rjsf-field-object"
+            >
+              <div>
+                <div
+                  className="my-1"
+                  id="root_person__title"
+                >
+                  <h5>
+                    person
+                  </h5>
+                  <hr
+                    className="border-0 bg-secondary mt-0"
+                    style={
+                      {
+                        "height": "1px",
+                      }
+                    }
+                  />
+                </div>
+                <div
+                  className="p-0 container-fluid"
+                >
+                  <div
+                    className="row"
+                    style={
+                      {
+                        "marginBottom": "10px",
+                      }
+                    }
+                  >
+                    <div
+                      className="col-12"
+                    >
+                       
+                      <div
+                        className="rjsf-field rjsf-field-string"
+                      >
+                        <div>
+                          <label
+                            className="form-label"
+                            htmlFor="root_person_firstName"
+                          >
+                            firstName
+                          </label>
+                          <input
+                            aria-describedby="root_person_firstName__error root_person_firstName__description root_person_firstName__help"
+                            autoFocus={false}
+                            className="form-control"
+                            disabled={false}
+                            id="root_person_firstName"
+                            name="root[person][firstName]"
+                            onBlur={[Function]}
+                            onChange={[Function]}
+                            onFocus={[Function]}
+                            placeholder=""
+                            readOnly={false}
+                            required={false}
+                            type="text"
+                            value=""
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    className="row"
+                    style={
+                      {
+                        "marginBottom": "10px",
+                      }
+                    }
+                  >
+                    <div
+                      className="col-12"
+                    >
+                       
+                      <div
+                        className="rjsf-field rjsf-field-string"
+                      >
+                        <div>
+                          <label
+                            className="form-label"
+                            htmlFor="root_person_lastName"
+                          >
+                            lastName
+                          </label>
+                          <input
+                            aria-describedby="root_person_lastName__error root_person_lastName__description root_person_lastName__help"
+                            autoFocus={false}
+                            className="form-control"
+                            disabled={false}
+                            id="root_person_lastName"
+                            name="root[person][lastName]"
+                            onBlur={[Function]}
+                            onChange={[Function]}
+                            onFocus={[Function]}
+                            placeholder=""
+                            readOnly={false}
+                            required={false}
+                            type="text"
+                            value=""
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    className="row"
+                    style={
+                      {
+                        "marginBottom": "10px",
+                      }
+                    }
+                  >
+                    <div
+                      className="col-12"
+                    >
+                       
+                      <div
+                        className="rjsf-field rjsf-field-object"
+                      >
+                        <div>
+                          <div
+                            className="my-1"
+                            id="root_person_address__title"
+                          >
+                            <h5>
+                              address
+                            </h5>
+                            <hr
+                              className="border-0 bg-secondary mt-0"
+                              style={
+                                {
+                                  "height": "1px",
+                                }
+                              }
+                            />
+                          </div>
+                          <div
+                            className="p-0 container-fluid"
+                          >
+                            <div
+                              className="row"
+                              style={
+                                {
+                                  "marginBottom": "10px",
+                                }
+                              }
+                            >
+                              <div
+                                className="col-12"
+                              >
+                                 
+                                <div
+                                  className="rjsf-field rjsf-field-string"
+                                >
+                                  <div>
+                                    <label
+                                      className="form-label"
+                                      htmlFor="root_person_address_street"
+                                    >
+                                      street
+                                    </label>
+                                    <input
+                                      aria-describedby="root_person_address_street__error root_person_address_street__description root_person_address_street__help"
+                                      autoFocus={false}
+                                      className="form-control"
+                                      disabled={false}
+                                      id="root_person_address_street"
+                                      name="root[person][address][street]"
+                                      onBlur={[Function]}
+                                      onChange={[Function]}
+                                      onFocus={[Function]}
+                                      placeholder=""
+                                      readOnly={false}
+                                      required={false}
+                                      type="text"
+                                      value=""
+                                    />
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div
+                              className="row"
+                              style={
+                                {
+                                  "marginBottom": "10px",
+                                }
+                              }
+                            >
+                              <div
+                                className="col-12"
+                              >
+                                 
+                                <div
+                                  className="rjsf-field rjsf-field-string"
+                                >
+                                  <div>
+                                    <label
+                                      className="form-label"
+                                      htmlFor="root_person_address_city"
+                                    >
+                                      city
+                                    </label>
+                                    <input
+                                      aria-describedby="root_person_address_city__error root_person_address_city__description root_person_address_city__help"
+                                      autoFocus={false}
+                                      className="form-control"
+                                      disabled={false}
+                                      id="root_person_address_city"
+                                      name="root[person][address][city]"
+                                      onBlur={[Function]}
+                                      onChange={[Function]}
+                                      onFocus={[Function]}
+                                      placeholder=""
+                                      readOnly={false}
+                                      required={false}
+                                      type="text"
+                                      value=""
+                                    />
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`nameGenerator bracketNameGenerator radio field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div>
+      <div
+        className="p-0 container-fluid"
+      >
+        <div
+          className="row"
+          style={
+            {
+              "marginBottom": "10px",
+            }
+          }
+        >
+          <div
+            className="col-12"
+          >
+             
+            <div
+              className="rjsf-field rjsf-field-string"
+            >
+              <div>
+                <label
+                  className="form-label"
+                  htmlFor="root_option"
+                >
+                  option
+                </label>
+                <div
+                  className="mb-0"
+                >
+                  <div
+                    className="form-check"
+                  >
+                    <input
+                      aria-describedby="root_option__error root_option__description root_option__help"
+                      checked={false}
+                      className="form-check-input"
+                      disabled={false}
+                      id="root_option-0"
+                      name="root[option]"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      onFocus={[Function]}
+                      required={false}
+                      type="radio"
+                      value="0"
+                    />
+                    <label
+                      className="form-check-label"
+                      htmlFor="root_option-0"
+                      title=""
+                    >
+                      foo
+                    </label>
+                  </div>
+                  <div
+                    className="form-check"
+                  >
+                    <input
+                      aria-describedby="root_option__error root_option__description root_option__help"
+                      checked={false}
+                      className="form-check-input"
+                      disabled={false}
+                      id="root_option-1"
+                      name="root[option]"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      onFocus={[Function]}
+                      required={false}
+                      type="radio"
+                      value="1"
+                    />
+                    <label
+                      className="form-check-label"
+                      htmlFor="root_option-1"
+                      title=""
+                    >
+                      bar
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`nameGenerator bracketNameGenerator select field with enum 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div>
+      <div
+        className="p-0 container-fluid"
+      >
+        <div
+          className="row"
+          style={
+            {
+              "marginBottom": "10px",
+            }
+          }
+        >
+          <div
+            className="col-12"
+          >
+             
+            <div
+              className="rjsf-field rjsf-field-string"
+            >
+              <div>
+                <label
+                  className="form-label"
+                  htmlFor="root_color"
+                >
+                  color
+                </label>
+                <select
+                  aria-describedby="root_color__error root_color__description root_color__help"
+                  autoFocus={false}
+                  className="form-select"
+                  disabled={false}
+                  id="root_color"
+                  name="root[color]"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                  required={false}
+                  value=""
+                >
+                  <option
+                    value=""
+                  />
+                  <option
+                    disabled={false}
+                    id="red"
+                    value="0"
+                  >
+                    red
+                  </option>
+                  <option
+                    disabled={false}
+                    id="green"
+                    value="1"
+                  >
+                    green
+                  </option>
+                  <option
+                    disabled={false}
+                    id="blue"
+                    value="2"
+                  >
+                    blue
+                  </option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`nameGenerator bracketNameGenerator simple fields 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div>
+      <div
+        className="p-0 container-fluid"
+      >
+        <div
+          className="row"
+          style={
+            {
+              "marginBottom": "10px",
+            }
+          }
+        >
+          <div
+            className="col-12"
+          >
+             
+            <div
+              className="rjsf-field rjsf-field-string"
+            >
+              <div>
+                <label
+                  className="form-label"
+                  htmlFor="root_firstName"
+                >
+                  firstName
+                </label>
+                <input
+                  aria-describedby="root_firstName__error root_firstName__description root_firstName__help"
+                  autoFocus={false}
+                  className="form-control"
+                  disabled={false}
+                  id="root_firstName"
+                  name="root[firstName]"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                  placeholder=""
+                  readOnly={false}
+                  required={false}
+                  type="text"
+                  value=""
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          className="row"
+          style={
+            {
+              "marginBottom": "10px",
+            }
+          }
+        >
+          <div
+            className="col-12"
+          >
+             
+            <div
+              className="rjsf-field rjsf-field-number"
+            >
+              <div>
+                <label
+                  className="form-label"
+                  htmlFor="root_age"
+                >
+                  age
+                </label>
+                <input
+                  aria-describedby="root_age__error root_age__description root_age__help"
+                  autoFocus={false}
+                  className="form-control"
+                  disabled={false}
+                  id="root_age"
+                  name="root[age]"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                  placeholder=""
+                  readOnly={false}
+                  required={false}
+                  step="any"
+                  type="number"
+                  value=""
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          className="row"
+          style={
+            {
+              "marginBottom": "10px",
+            }
+          }
+        >
+          <div
+            className="col-12"
+          >
+             
+            <div
+              className="rjsf-field rjsf-field-boolean"
+            >
+              <div>
+                <div
+                  aria-describedby="root_active__error root_active__description root_active__help"
+                  className=""
+                >
+                  <div
+                    className="form-check"
+                  >
+                    <input
+                      autoFocus={false}
+                      checked={false}
+                      className="form-check-input"
+                      disabled={false}
+                      id="root_active"
+                      name="root[active]"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      onFocus={[Function]}
+                      required={false}
+                      type="checkbox"
+                    />
+                    <label
+                      className="form-check-label"
+                      htmlFor="root_active"
+                      title=""
+                    >
+                      active
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`nameGenerator bracketNameGenerator textarea field 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div>
+      <div
+        className="p-0 container-fluid"
+      >
+        <div
+          className="row"
+          style={
+            {
+              "marginBottom": "10px",
+            }
+          }
+        >
+          <div
+            className="col-12"
+          >
+             
+            <div
+              className="rjsf-field rjsf-field-string"
+            >
+              <div>
+                <label
+                  className="form-label"
+                  htmlFor="root_description"
+                >
+                  description
+                </label>
+                <div
+                  className="input-group"
+                >
+                  <textarea
+                    aria-describedby="root_description__error root_description__description root_description__help"
+                    autoFocus={false}
+                    className="form-control"
+                    disabled={false}
+                    id="root_description"
+                    name="root[description]"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    readOnly={false}
+                    required={false}
+                    rows={5}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div>
+      <div
+        className="p-0 container-fluid"
+      >
+        <div
+          className="row"
+          style={
+            {
+              "marginBottom": "10px",
+            }
+          }
+        >
+          <div
+            className="col-12"
+          >
+             
+            <div
+              className="rjsf-field rjsf-field-array"
+            >
+              <div>
+                <div>
+                  <div
+                    className="p-0 m-0 row"
+                  >
+                    <div
+                      className="p-0 m-0 col"
+                    >
+                      <div
+                        className="my-1"
+                        id="root_tasks__title"
+                      >
+                        <h5>
+                          tasks
+                        </h5>
+                        <hr
+                          className="border-0 bg-secondary mt-0"
+                          style={
+                            {
+                              "height": "1px",
+                            }
+                          }
+                        />
+                      </div>
+                      <div
+                        className="p-0 m-0 container-fluid"
+                      >
+                        <div>
+                          <div
+                            className="mb-2  d-flex align-items-center row"
+                          >
+                            <div
+                              className="col-lg-9 col-9"
+                            >
+                              <div
+                                className="rjsf-field rjsf-field-object"
+                              >
+                                <div>
+                                  <div
+                                    className="my-1"
+                                    id="root_tasks_0__title"
+                                  >
+                                    <h5>
+                                      tasks-1
+                                    </h5>
+                                    <hr
+                                      className="border-0 bg-secondary mt-0"
+                                      style={
+                                        {
+                                          "height": "1px",
+                                        }
+                                      }
+                                    />
+                                  </div>
+                                  <div
+                                    className="p-0 container-fluid"
+                                  >
+                                    <div
+                                      className="row"
+                                      style={
+                                        {
+                                          "marginBottom": "10px",
+                                        }
+                                      }
+                                    >
+                                      <div
+                                        className="col-12"
+                                      >
+                                         
+                                        <div
+                                          className="rjsf-field rjsf-field-string"
+                                        >
+                                          <div>
+                                            <label
+                                              className="form-label"
+                                              htmlFor="root_tasks_0_title"
+                                            >
+                                              title
+                                            </label>
+                                            <input
+                                              aria-describedby="root_tasks_0_title__error root_tasks_0_title__description root_tasks_0_title__help"
+                                              autoFocus={false}
+                                              className="form-control"
+                                              disabled={false}
+                                              id="root_tasks_0_title"
+                                              name="root.tasks.0.title"
+                                              onBlur={[Function]}
+                                              onChange={[Function]}
+                                              onFocus={[Function]}
+                                              placeholder=""
+                                              readOnly={false}
+                                              required={false}
+                                              type="text"
+                                              value="Task 1"
+                                            />
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div
+                                      className="row"
+                                      style={
+                                        {
+                                          "marginBottom": "10px",
+                                        }
+                                      }
+                                    >
+                                      <div
+                                        className="col-12"
+                                      >
+                                         
+                                        <div
+                                          className="rjsf-field rjsf-field-boolean"
+                                        >
+                                          <div>
+                                            <div
+                                              aria-describedby="root_tasks_0_done__error root_tasks_0_done__description root_tasks_0_done__help"
+                                              className=""
+                                            >
+                                              <div
+                                                className="form-check"
+                                              >
+                                                <input
+                                                  autoFocus={false}
+                                                  checked={false}
+                                                  className="form-check-input"
+                                                  disabled={false}
+                                                  id="root_tasks_0_done"
+                                                  name="root.tasks.0.done"
+                                                  onBlur={[Function]}
+                                                  onChange={[Function]}
+                                                  onFocus={[Function]}
+                                                  required={false}
+                                                  type="checkbox"
+                                                />
+                                                <label
+                                                  className="form-check-label"
+                                                  htmlFor="root_tasks_0_done"
+                                                  title=""
+                                                >
+                                                  done
+                                                </label>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div
+                              className="py-4 col-lg-3 col-3"
+                            >
+                              <div
+                                className="d-flex flex-row"
+                              >
+                                <button
+                                  className="btn btn-light btn-sm"
+                                  disabled={true}
+                                  id="root_tasks_0__moveUp"
+                                  onClick={[Function]}
+                                  title="Move up"
+                                  type="button"
+                                >
+                                  <svg
+                                    fill="currentColor"
+                                    height="1em"
+                                    stroke="currentColor"
+                                    strokeWidth="0"
+                                    style={
+                                      {
+                                        "color": undefined,
+                                      }
+                                    }
+                                    viewBox="0 0 1024 1024"
+                                    width="1em"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                  >
+                                    <path
+                                      d="M868 545.5L536.1 163a31.96 31.96 0 0 0-48.3 0L156 545.5a7.97 7.97 0 0 0 6 13.2h81c4.6 0 9-2 12.1-5.5L474 300.9V864c0 4.4 3.6 8 8 8h60c4.4 0 8-3.6 8-8V300.9l218.9 252.3c3 3.5 7.4 5.5 12.1 5.5h81c6.8 0 10.5-8 6-13.2z"
+                                    />
+                                  </svg>
+                                </button>
+                                <button
+                                  className="btn btn-light btn-sm"
+                                  disabled={false}
+                                  id="root_tasks_0__moveDown"
+                                  onClick={[Function]}
+                                  title="Move down"
+                                  type="button"
+                                >
+                                  <svg
+                                    fill="currentColor"
+                                    height="1em"
+                                    stroke="currentColor"
+                                    strokeWidth="0"
+                                    style={
+                                      {
+                                        "color": undefined,
+                                      }
+                                    }
+                                    viewBox="0 0 1024 1024"
+                                    width="1em"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                  >
+                                    <path
+                                      d="M862 465.3h-81c-4.6 0-9 2-12.1 5.5L550 723.1V160c0-4.4-3.6-8-8-8h-60c-4.4 0-8 3.6-8 8v563.1L255.1 470.8c-3-3.5-7.4-5.5-12.1-5.5h-81c-6.8 0-10.5 8.1-6 13.2L487.9 861a31.96 31.96 0 0 0 48.3 0L868 478.5c4.5-5.2.8-13.2-6-13.2z"
+                                    />
+                                  </svg>
+                                </button>
+                                <button
+                                  className="btn btn-danger btn-sm"
+                                  disabled={false}
+                                  id="root_tasks_0__remove"
+                                  onClick={[Function]}
+                                  title="Remove"
+                                  type="button"
+                                >
+                                  <svg
+                                    fill="currentColor"
+                                    height="1em"
+                                    stroke="currentColor"
+                                    strokeWidth="0"
+                                    style={
+                                      {
+                                        "color": undefined,
+                                      }
+                                    }
+                                    viewBox="0 0 512 512"
+                                    width="1em"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                  >
+                                    <path
+                                      d="M368.5 240h-225c-8.8 0-16 7.2-16 16 0 4.4 1.8 8.4 4.7 11.3 2.9 2.9 6.9 4.7 11.3 4.7h225c8.8 0 16-7.2 16-16s-7.2-16-16-16z"
+                                    />
+                                  </svg>
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div>
+                          <div
+                            className="mb-2  d-flex align-items-center row"
+                          >
+                            <div
+                              className="col-lg-9 col-9"
+                            >
+                              <div
+                                className="rjsf-field rjsf-field-object"
+                              >
+                                <div>
+                                  <div
+                                    className="my-1"
+                                    id="root_tasks_1__title"
+                                  >
+                                    <h5>
+                                      tasks-2
+                                    </h5>
+                                    <hr
+                                      className="border-0 bg-secondary mt-0"
+                                      style={
+                                        {
+                                          "height": "1px",
+                                        }
+                                      }
+                                    />
+                                  </div>
+                                  <div
+                                    className="p-0 container-fluid"
+                                  >
+                                    <div
+                                      className="row"
+                                      style={
+                                        {
+                                          "marginBottom": "10px",
+                                        }
+                                      }
+                                    >
+                                      <div
+                                        className="col-12"
+                                      >
+                                         
+                                        <div
+                                          className="rjsf-field rjsf-field-string"
+                                        >
+                                          <div>
+                                            <label
+                                              className="form-label"
+                                              htmlFor="root_tasks_1_title"
+                                            >
+                                              title
+                                            </label>
+                                            <input
+                                              aria-describedby="root_tasks_1_title__error root_tasks_1_title__description root_tasks_1_title__help"
+                                              autoFocus={false}
+                                              className="form-control"
+                                              disabled={false}
+                                              id="root_tasks_1_title"
+                                              name="root.tasks.1.title"
+                                              onBlur={[Function]}
+                                              onChange={[Function]}
+                                              onFocus={[Function]}
+                                              placeholder=""
+                                              readOnly={false}
+                                              required={false}
+                                              type="text"
+                                              value="Task 2"
+                                            />
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div
+                                      className="row"
+                                      style={
+                                        {
+                                          "marginBottom": "10px",
+                                        }
+                                      }
+                                    >
+                                      <div
+                                        className="col-12"
+                                      >
+                                         
+                                        <div
+                                          className="rjsf-field rjsf-field-boolean"
+                                        >
+                                          <div>
+                                            <div
+                                              aria-describedby="root_tasks_1_done__error root_tasks_1_done__description root_tasks_1_done__help"
+                                              className=""
+                                            >
+                                              <div
+                                                className="form-check"
+                                              >
+                                                <input
+                                                  autoFocus={false}
+                                                  checked={true}
+                                                  className="form-check-input"
+                                                  disabled={false}
+                                                  id="root_tasks_1_done"
+                                                  name="root.tasks.1.done"
+                                                  onBlur={[Function]}
+                                                  onChange={[Function]}
+                                                  onFocus={[Function]}
+                                                  required={false}
+                                                  type="checkbox"
+                                                />
+                                                <label
+                                                  className="form-check-label"
+                                                  htmlFor="root_tasks_1_done"
+                                                  title=""
+                                                >
+                                                  done
+                                                </label>
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div
+                              className="py-4 col-lg-3 col-3"
+                            >
+                              <div
+                                className="d-flex flex-row"
+                              >
+                                <button
+                                  className="btn btn-light btn-sm"
+                                  disabled={false}
+                                  id="root_tasks_1__moveUp"
+                                  onClick={[Function]}
+                                  title="Move up"
+                                  type="button"
+                                >
+                                  <svg
+                                    fill="currentColor"
+                                    height="1em"
+                                    stroke="currentColor"
+                                    strokeWidth="0"
+                                    style={
+                                      {
+                                        "color": undefined,
+                                      }
+                                    }
+                                    viewBox="0 0 1024 1024"
+                                    width="1em"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                  >
+                                    <path
+                                      d="M868 545.5L536.1 163a31.96 31.96 0 0 0-48.3 0L156 545.5a7.97 7.97 0 0 0 6 13.2h81c4.6 0 9-2 12.1-5.5L474 300.9V864c0 4.4 3.6 8 8 8h60c4.4 0 8-3.6 8-8V300.9l218.9 252.3c3 3.5 7.4 5.5 12.1 5.5h81c6.8 0 10.5-8 6-13.2z"
+                                    />
+                                  </svg>
+                                </button>
+                                <button
+                                  className="btn btn-light btn-sm"
+                                  disabled={true}
+                                  id="root_tasks_1__moveDown"
+                                  onClick={[Function]}
+                                  title="Move down"
+                                  type="button"
+                                >
+                                  <svg
+                                    fill="currentColor"
+                                    height="1em"
+                                    stroke="currentColor"
+                                    strokeWidth="0"
+                                    style={
+                                      {
+                                        "color": undefined,
+                                      }
+                                    }
+                                    viewBox="0 0 1024 1024"
+                                    width="1em"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                  >
+                                    <path
+                                      d="M862 465.3h-81c-4.6 0-9 2-12.1 5.5L550 723.1V160c0-4.4-3.6-8-8-8h-60c-4.4 0-8 3.6-8 8v563.1L255.1 470.8c-3-3.5-7.4-5.5-12.1-5.5h-81c-6.8 0-10.5 8.1-6 13.2L487.9 861a31.96 31.96 0 0 0 48.3 0L868 478.5c4.5-5.2.8-13.2-6-13.2z"
+                                    />
+                                  </svg>
+                                </button>
+                                <button
+                                  className="btn btn-danger btn-sm"
+                                  disabled={false}
+                                  id="root_tasks_1__remove"
+                                  onClick={[Function]}
+                                  title="Remove"
+                                  type="button"
+                                >
+                                  <svg
+                                    fill="currentColor"
+                                    height="1em"
+                                    stroke="currentColor"
+                                    strokeWidth="0"
+                                    style={
+                                      {
+                                        "color": undefined,
+                                      }
+                                    }
+                                    viewBox="0 0 512 512"
+                                    width="1em"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                  >
+                                    <path
+                                      d="M368.5 240h-225c-8.8 0-16 7.2-16 16 0 4.4 1.8 8.4 4.7 11.3 2.9 2.9 6.9 4.7 11.3 4.7h225c8.8 0 16-7.2 16-16s-7.2-16-16-16z"
+                                    />
+                                  </svg>
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div
+                          className="container"
+                        >
+                          <div
+                            className="mt-2 row"
+                          >
+                            <div
+                              className="col-9"
+                            />
+                            <div
+                              className="py-4 col-lg-3 col-3 col-3"
+                            >
+                              <button
+                                className="ml-1 rjsf-array-item-add btn btn-primary"
+                                disabled={false}
+                                id="root_tasks__add"
+                                onClick={[Function]}
+                                style={
+                                  {
+                                    "width": "100%",
+                                  }
+                                }
+                                title="Add Item"
+                                type="button"
+                              >
+                                <svg
+                                  fill="currentColor"
+                                  height="1em"
+                                  stroke="currentColor"
+                                  strokeWidth="0"
+                                  style={
+                                    {
+                                      "color": undefined,
+                                    }
+                                  }
+                                  viewBox="0 0 16 16"
+                                  width="1em"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    clipRule="evenodd"
+                                    d="M8 3.5a.5.5 0 01.5.5v4a.5.5 0 01-.5.5H4a.5.5 0 010-1h3.5V4a.5.5 0 01.5-.5z"
+                                    fillRule="evenodd"
+                                  />
+                                  <path
+                                    clipRule="evenodd"
+                                    d="M7.5 8a.5.5 0 01.5-.5h4a.5.5 0 010 1H8.5V12a.5.5 0 01-1 0V8z"
+                                    fillRule="evenodd"
+                                  />
+                                </svg>
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div>
+      <div
+        className="p-0 container-fluid"
+      >
+        <div
+          className="row"
+          style={
+            {
+              "marginBottom": "10px",
+            }
+          }
+        >
+          <div
+            className="col-12"
+          >
+             
+            <div
+              className="rjsf-field rjsf-field-array"
+            >
+              <div>
+                <div>
+                  <div
+                    className="p-0 m-0 row"
+                  >
+                    <div
+                      className="p-0 m-0 col"
+                    >
+                      <div
+                        className="my-1"
+                        id="root_tags__title"
+                      >
+                        <h5>
+                          tags
+                        </h5>
+                        <hr
+                          className="border-0 bg-secondary mt-0"
+                          style={
+                            {
+                              "height": "1px",
+                            }
+                          }
+                        />
+                      </div>
+                      <div
+                        className="p-0 m-0 container-fluid"
+                      >
+                        <div>
+                          <div
+                            className="mb-2  d-flex align-items-center row"
+                          >
+                            <div
+                              className="col-lg-9 col-9"
+                            >
+                              <div
+                                className="rjsf-field rjsf-field-string"
+                              >
+                                <div>
+                                  <label
+                                    className="form-label"
+                                    htmlFor="root_tags_0"
+                                  >
+                                    tags-1
+                                    *
+                                  </label>
+                                  <input
+                                    aria-describedby="root_tags_0__error root_tags_0__description root_tags_0__help"
+                                    autoFocus={false}
+                                    className="form-control"
+                                    disabled={false}
+                                    id="root_tags_0"
+                                    name="root.tags.0"
+                                    onBlur={[Function]}
+                                    onChange={[Function]}
+                                    onFocus={[Function]}
+                                    placeholder=""
+                                    readOnly={false}
+                                    required={true}
+                                    type="text"
+                                    value="foo"
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                            <div
+                              className="py-4 col-lg-3 col-3"
+                            >
+                              <div
+                                className="d-flex flex-row"
+                              >
+                                <button
+                                  className="btn btn-light btn-sm"
+                                  disabled={true}
+                                  id="root_tags_0__moveUp"
+                                  onClick={[Function]}
+                                  title="Move up"
+                                  type="button"
+                                >
+                                  <svg
+                                    fill="currentColor"
+                                    height="1em"
+                                    stroke="currentColor"
+                                    strokeWidth="0"
+                                    style={
+                                      {
+                                        "color": undefined,
+                                      }
+                                    }
+                                    viewBox="0 0 1024 1024"
+                                    width="1em"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                  >
+                                    <path
+                                      d="M868 545.5L536.1 163a31.96 31.96 0 0 0-48.3 0L156 545.5a7.97 7.97 0 0 0 6 13.2h81c4.6 0 9-2 12.1-5.5L474 300.9V864c0 4.4 3.6 8 8 8h60c4.4 0 8-3.6 8-8V300.9l218.9 252.3c3 3.5 7.4 5.5 12.1 5.5h81c6.8 0 10.5-8 6-13.2z"
+                                    />
+                                  </svg>
+                                </button>
+                                <button
+                                  className="btn btn-light btn-sm"
+                                  disabled={false}
+                                  id="root_tags_0__moveDown"
+                                  onClick={[Function]}
+                                  title="Move down"
+                                  type="button"
+                                >
+                                  <svg
+                                    fill="currentColor"
+                                    height="1em"
+                                    stroke="currentColor"
+                                    strokeWidth="0"
+                                    style={
+                                      {
+                                        "color": undefined,
+                                      }
+                                    }
+                                    viewBox="0 0 1024 1024"
+                                    width="1em"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                  >
+                                    <path
+                                      d="M862 465.3h-81c-4.6 0-9 2-12.1 5.5L550 723.1V160c0-4.4-3.6-8-8-8h-60c-4.4 0-8 3.6-8 8v563.1L255.1 470.8c-3-3.5-7.4-5.5-12.1-5.5h-81c-6.8 0-10.5 8.1-6 13.2L487.9 861a31.96 31.96 0 0 0 48.3 0L868 478.5c4.5-5.2.8-13.2-6-13.2z"
+                                    />
+                                  </svg>
+                                </button>
+                                <button
+                                  className="btn btn-danger btn-sm"
+                                  disabled={false}
+                                  id="root_tags_0__remove"
+                                  onClick={[Function]}
+                                  title="Remove"
+                                  type="button"
+                                >
+                                  <svg
+                                    fill="currentColor"
+                                    height="1em"
+                                    stroke="currentColor"
+                                    strokeWidth="0"
+                                    style={
+                                      {
+                                        "color": undefined,
+                                      }
+                                    }
+                                    viewBox="0 0 512 512"
+                                    width="1em"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                  >
+                                    <path
+                                      d="M368.5 240h-225c-8.8 0-16 7.2-16 16 0 4.4 1.8 8.4 4.7 11.3 2.9 2.9 6.9 4.7 11.3 4.7h225c8.8 0 16-7.2 16-16s-7.2-16-16-16z"
+                                    />
+                                  </svg>
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div>
+                          <div
+                            className="mb-2  d-flex align-items-center row"
+                          >
+                            <div
+                              className="col-lg-9 col-9"
+                            >
+                              <div
+                                className="rjsf-field rjsf-field-string"
+                              >
+                                <div>
+                                  <label
+                                    className="form-label"
+                                    htmlFor="root_tags_1"
+                                  >
+                                    tags-2
+                                    *
+                                  </label>
+                                  <input
+                                    aria-describedby="root_tags_1__error root_tags_1__description root_tags_1__help"
+                                    autoFocus={false}
+                                    className="form-control"
+                                    disabled={false}
+                                    id="root_tags_1"
+                                    name="root.tags.1"
+                                    onBlur={[Function]}
+                                    onChange={[Function]}
+                                    onFocus={[Function]}
+                                    placeholder=""
+                                    readOnly={false}
+                                    required={true}
+                                    type="text"
+                                    value="bar"
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                            <div
+                              className="py-4 col-lg-3 col-3"
+                            >
+                              <div
+                                className="d-flex flex-row"
+                              >
+                                <button
+                                  className="btn btn-light btn-sm"
+                                  disabled={false}
+                                  id="root_tags_1__moveUp"
+                                  onClick={[Function]}
+                                  title="Move up"
+                                  type="button"
+                                >
+                                  <svg
+                                    fill="currentColor"
+                                    height="1em"
+                                    stroke="currentColor"
+                                    strokeWidth="0"
+                                    style={
+                                      {
+                                        "color": undefined,
+                                      }
+                                    }
+                                    viewBox="0 0 1024 1024"
+                                    width="1em"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                  >
+                                    <path
+                                      d="M868 545.5L536.1 163a31.96 31.96 0 0 0-48.3 0L156 545.5a7.97 7.97 0 0 0 6 13.2h81c4.6 0 9-2 12.1-5.5L474 300.9V864c0 4.4 3.6 8 8 8h60c4.4 0 8-3.6 8-8V300.9l218.9 252.3c3 3.5 7.4 5.5 12.1 5.5h81c6.8 0 10.5-8 6-13.2z"
+                                    />
+                                  </svg>
+                                </button>
+                                <button
+                                  className="btn btn-light btn-sm"
+                                  disabled={true}
+                                  id="root_tags_1__moveDown"
+                                  onClick={[Function]}
+                                  title="Move down"
+                                  type="button"
+                                >
+                                  <svg
+                                    fill="currentColor"
+                                    height="1em"
+                                    stroke="currentColor"
+                                    strokeWidth="0"
+                                    style={
+                                      {
+                                        "color": undefined,
+                                      }
+                                    }
+                                    viewBox="0 0 1024 1024"
+                                    width="1em"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                  >
+                                    <path
+                                      d="M862 465.3h-81c-4.6 0-9 2-12.1 5.5L550 723.1V160c0-4.4-3.6-8-8-8h-60c-4.4 0-8 3.6-8 8v563.1L255.1 470.8c-3-3.5-7.4-5.5-12.1-5.5h-81c-6.8 0-10.5 8.1-6 13.2L487.9 861a31.96 31.96 0 0 0 48.3 0L868 478.5c4.5-5.2.8-13.2-6-13.2z"
+                                    />
+                                  </svg>
+                                </button>
+                                <button
+                                  className="btn btn-danger btn-sm"
+                                  disabled={false}
+                                  id="root_tags_1__remove"
+                                  onClick={[Function]}
+                                  title="Remove"
+                                  type="button"
+                                >
+                                  <svg
+                                    fill="currentColor"
+                                    height="1em"
+                                    stroke="currentColor"
+                                    strokeWidth="0"
+                                    style={
+                                      {
+                                        "color": undefined,
+                                      }
+                                    }
+                                    viewBox="0 0 512 512"
+                                    width="1em"
+                                    xmlns="http://www.w3.org/2000/svg"
+                                  >
+                                    <path
+                                      d="M368.5 240h-225c-8.8 0-16 7.2-16 16 0 4.4 1.8 8.4 4.7 11.3 2.9 2.9 6.9 4.7 11.3 4.7h225c8.8 0 16-7.2 16-16s-7.2-16-16-16z"
+                                    />
+                                  </svg>
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div
+                          className="container"
+                        >
+                          <div
+                            className="mt-2 row"
+                          >
+                            <div
+                              className="col-9"
+                            />
+                            <div
+                              className="py-4 col-lg-3 col-3 col-3"
+                            >
+                              <button
+                                className="ml-1 rjsf-array-item-add btn btn-primary"
+                                disabled={false}
+                                id="root_tags__add"
+                                onClick={[Function]}
+                                style={
+                                  {
+                                    "width": "100%",
+                                  }
+                                }
+                                title="Add Item"
+                                type="button"
+                              >
+                                <svg
+                                  fill="currentColor"
+                                  height="1em"
+                                  stroke="currentColor"
+                                  strokeWidth="0"
+                                  style={
+                                    {
+                                      "color": undefined,
+                                    }
+                                  }
+                                  viewBox="0 0 16 16"
+                                  width="1em"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    clipRule="evenodd"
+                                    d="M8 3.5a.5.5 0 01.5.5v4a.5.5 0 01-.5.5H4a.5.5 0 010-1h3.5V4a.5.5 0 01.5-.5z"
+                                    fillRule="evenodd"
+                                  />
+                                  <path
+                                    clipRule="evenodd"
+                                    d="M7.5 8a.5.5 0 01.5-.5h4a.5.5 0 010 1H8.5V12a.5.5 0 01-1 0V8z"
+                                    fillRule="evenodd"
+                                  />
+                                </svg>
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`nameGenerator dotNotationNameGenerator nested object 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div>
+      <div
+        className="p-0 container-fluid"
+      >
+        <div
+          className="row"
+          style={
+            {
+              "marginBottom": "10px",
+            }
+          }
+        >
+          <div
+            className="col-12"
+          >
+             
+            <div
+              className="rjsf-field rjsf-field-object"
+            >
+              <div>
+                <div
+                  className="my-1"
+                  id="root_person__title"
+                >
+                  <h5>
+                    person
+                  </h5>
+                  <hr
+                    className="border-0 bg-secondary mt-0"
+                    style={
+                      {
+                        "height": "1px",
+                      }
+                    }
+                  />
+                </div>
+                <div
+                  className="p-0 container-fluid"
+                >
+                  <div
+                    className="row"
+                    style={
+                      {
+                        "marginBottom": "10px",
+                      }
+                    }
+                  >
+                    <div
+                      className="col-12"
+                    >
+                       
+                      <div
+                        className="rjsf-field rjsf-field-string"
+                      >
+                        <div>
+                          <label
+                            className="form-label"
+                            htmlFor="root_person_firstName"
+                          >
+                            firstName
+                          </label>
+                          <input
+                            aria-describedby="root_person_firstName__error root_person_firstName__description root_person_firstName__help"
+                            autoFocus={false}
+                            className="form-control"
+                            disabled={false}
+                            id="root_person_firstName"
+                            name="root.person.firstName"
+                            onBlur={[Function]}
+                            onChange={[Function]}
+                            onFocus={[Function]}
+                            placeholder=""
+                            readOnly={false}
+                            required={false}
+                            type="text"
+                            value=""
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    className="row"
+                    style={
+                      {
+                        "marginBottom": "10px",
+                      }
+                    }
+                  >
+                    <div
+                      className="col-12"
+                    >
+                       
+                      <div
+                        className="rjsf-field rjsf-field-string"
+                      >
+                        <div>
+                          <label
+                            className="form-label"
+                            htmlFor="root_person_lastName"
+                          >
+                            lastName
+                          </label>
+                          <input
+                            aria-describedby="root_person_lastName__error root_person_lastName__description root_person_lastName__help"
+                            autoFocus={false}
+                            className="form-control"
+                            disabled={false}
+                            id="root_person_lastName"
+                            name="root.person.lastName"
+                            onBlur={[Function]}
+                            onChange={[Function]}
+                            onFocus={[Function]}
+                            placeholder=""
+                            readOnly={false}
+                            required={false}
+                            type="text"
+                            value=""
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    className="row"
+                    style={
+                      {
+                        "marginBottom": "10px",
+                      }
+                    }
+                  >
+                    <div
+                      className="col-12"
+                    >
+                       
+                      <div
+                        className="rjsf-field rjsf-field-object"
+                      >
+                        <div>
+                          <div
+                            className="my-1"
+                            id="root_person_address__title"
+                          >
+                            <h5>
+                              address
+                            </h5>
+                            <hr
+                              className="border-0 bg-secondary mt-0"
+                              style={
+                                {
+                                  "height": "1px",
+                                }
+                              }
+                            />
+                          </div>
+                          <div
+                            className="p-0 container-fluid"
+                          >
+                            <div
+                              className="row"
+                              style={
+                                {
+                                  "marginBottom": "10px",
+                                }
+                              }
+                            >
+                              <div
+                                className="col-12"
+                              >
+                                 
+                                <div
+                                  className="rjsf-field rjsf-field-string"
+                                >
+                                  <div>
+                                    <label
+                                      className="form-label"
+                                      htmlFor="root_person_address_street"
+                                    >
+                                      street
+                                    </label>
+                                    <input
+                                      aria-describedby="root_person_address_street__error root_person_address_street__description root_person_address_street__help"
+                                      autoFocus={false}
+                                      className="form-control"
+                                      disabled={false}
+                                      id="root_person_address_street"
+                                      name="root.person.address.street"
+                                      onBlur={[Function]}
+                                      onChange={[Function]}
+                                      onFocus={[Function]}
+                                      placeholder=""
+                                      readOnly={false}
+                                      required={false}
+                                      type="text"
+                                      value=""
+                                    />
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <div
+                              className="row"
+                              style={
+                                {
+                                  "marginBottom": "10px",
+                                }
+                              }
+                            >
+                              <div
+                                className="col-12"
+                              >
+                                 
+                                <div
+                                  className="rjsf-field rjsf-field-string"
+                                >
+                                  <div>
+                                    <label
+                                      className="form-label"
+                                      htmlFor="root_person_address_city"
+                                    >
+                                      city
+                                    </label>
+                                    <input
+                                      aria-describedby="root_person_address_city__error root_person_address_city__description root_person_address_city__help"
+                                      autoFocus={false}
+                                      className="form-control"
+                                      disabled={false}
+                                      id="root_person_address_city"
+                                      name="root.person.address.city"
+                                      onBlur={[Function]}
+                                      onChange={[Function]}
+                                      onFocus={[Function]}
+                                      placeholder=""
+                                      readOnly={false}
+                                      required={false}
+                                      type="text"
+                                      value=""
+                                    />
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`nameGenerator dotNotationNameGenerator select field with enum 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div>
+      <div
+        className="p-0 container-fluid"
+      >
+        <div
+          className="row"
+          style={
+            {
+              "marginBottom": "10px",
+            }
+          }
+        >
+          <div
+            className="col-12"
+          >
+             
+            <div
+              className="rjsf-field rjsf-field-string"
+            >
+              <div>
+                <label
+                  className="form-label"
+                  htmlFor="root_color"
+                >
+                  color
+                </label>
+                <select
+                  aria-describedby="root_color__error root_color__description root_color__help"
+                  autoFocus={false}
+                  className="form-select"
+                  disabled={false}
+                  id="root_color"
+                  name="root.color"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                  required={false}
+                  value=""
+                >
+                  <option
+                    value=""
+                  />
+                  <option
+                    disabled={false}
+                    id="red"
+                    value="0"
+                  >
+                    red
+                  </option>
+                  <option
+                    disabled={false}
+                    id="green"
+                    value="1"
+                  >
+                    green
+                  </option>
+                  <option
+                    disabled={false}
+                    id="blue"
+                    value="2"
+                  >
+                    blue
+                  </option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`nameGenerator dotNotationNameGenerator simple fields 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div>
+      <div
+        className="p-0 container-fluid"
+      >
+        <div
+          className="row"
+          style={
+            {
+              "marginBottom": "10px",
+            }
+          }
+        >
+          <div
+            className="col-12"
+          >
+             
+            <div
+              className="rjsf-field rjsf-field-string"
+            >
+              <div>
+                <label
+                  className="form-label"
+                  htmlFor="root_firstName"
+                >
+                  firstName
+                </label>
+                <input
+                  aria-describedby="root_firstName__error root_firstName__description root_firstName__help"
+                  autoFocus={false}
+                  className="form-control"
+                  disabled={false}
+                  id="root_firstName"
+                  name="root.firstName"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                  placeholder=""
+                  readOnly={false}
+                  required={false}
+                  type="text"
+                  value=""
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          className="row"
+          style={
+            {
+              "marginBottom": "10px",
+            }
+          }
+        >
+          <div
+            className="col-12"
+          >
+             
+            <div
+              className="rjsf-field rjsf-field-number"
+            >
+              <div>
+                <label
+                  className="form-label"
+                  htmlFor="root_age"
+                >
+                  age
+                </label>
+                <input
+                  aria-describedby="root_age__error root_age__description root_age__help"
+                  autoFocus={false}
+                  className="form-control"
+                  disabled={false}
+                  id="root_age"
+                  name="root.age"
+                  onBlur={[Function]}
+                  onChange={[Function]}
+                  onFocus={[Function]}
+                  placeholder=""
+                  readOnly={false}
+                  required={false}
+                  step="any"
+                  type="number"
+                  value=""
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          className="row"
+          style={
+            {
+              "marginBottom": "10px",
+            }
+          }
+        >
+          <div
+            className="col-12"
+          >
+             
+            <div
+              className="rjsf-field rjsf-field-boolean"
+            >
+              <div>
+                <div
+                  aria-describedby="root_active__error root_active__description root_active__help"
+                  className=""
+                >
+                  <div
+                    className="form-check"
+                  >
+                    <input
+                      autoFocus={false}
+                      checked={false}
+                      className="form-check-input"
+                      disabled={false}
+                      id="root_active"
+                      name="root.active"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      onFocus={[Function]}
+                      required={false}
+                      type="checkbox"
+                    />
+                    <label
+                      className="form-check-label"
+                      htmlFor="root_active"
+                      title=""
+                    >
+                      active
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
 exports[`single fields checkbox field 1`] = `
 <form
   className="rjsf"

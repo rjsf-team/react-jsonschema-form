@@ -1,5 +1,2201 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
+exports[`nameGenerator bracketNameGenerator nested object 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <div
+        className="rjsf-field rjsf-field-object"
+      >
+        <div
+          style={
+            {
+              "display": "flex",
+              "flexDirection": "column",
+              "gap": "0.5rem",
+              "marginBottom": "1rem",
+            }
+          }
+        >
+          <div
+            id="root_person__title"
+          >
+            <h5
+              style={
+                {
+                  "fontSize": "1.2rem",
+                  "margin": 0,
+                }
+              }
+            >
+              person
+               
+            </h5>
+            <div
+              aria-orientation="horizontal"
+              className="p-divider p-component p-divider-horizontal p-divider-solid p-divider-left"
+              data-pc-name="divider"
+              data-pc-section="root"
+              role="separator"
+              style={
+                {
+                  "alignItems": null,
+                  "justifyContent": "center",
+                  "marginTop": "0.5rem",
+                }
+              }
+            >
+              <div
+                className="p-divider-content"
+                data-pc-section="content"
+              />
+            </div>
+          </div>
+          <div
+            className="rjsf-field rjsf-field-string"
+          >
+            <div
+              style={
+                {
+                  "display": "flex",
+                  "flexDirection": "column",
+                  "gap": "0.5rem",
+                  "marginBottom": "1rem",
+                }
+              }
+            >
+              <label
+                htmlFor="root_person_name"
+              >
+                name
+                 
+              </label>
+              <input
+                aria-describedby="root_person_name__error root_person_name__description root_person_name__help"
+                autoFocus={false}
+                className="p-inputtext p-component"
+                data-pc-name="inputtext"
+                data-pc-section="root"
+                disabled={false}
+                id="root_person_name"
+                name="root[person][name]"
+                onBeforeInput={[Function]}
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onInput={[Function]}
+                onKeyDown={[Function]}
+                onPaste={[Function]}
+                placeholder=""
+                required={false}
+                type="text"
+                value=""
+              />
+            </div>
+          </div>
+          <div
+            className="rjsf-field rjsf-field-object"
+          >
+            <div
+              style={
+                {
+                  "display": "flex",
+                  "flexDirection": "column",
+                  "gap": "0.5rem",
+                  "marginBottom": "1rem",
+                }
+              }
+            >
+              <div
+                id="root_person_address__title"
+              >
+                <h5
+                  style={
+                    {
+                      "fontSize": "1.2rem",
+                      "margin": 0,
+                    }
+                  }
+                >
+                  address
+                   
+                </h5>
+                <div
+                  aria-orientation="horizontal"
+                  className="p-divider p-component p-divider-horizontal p-divider-solid p-divider-left"
+                  data-pc-name="divider"
+                  data-pc-section="root"
+                  role="separator"
+                  style={
+                    {
+                      "alignItems": null,
+                      "justifyContent": "center",
+                      "marginTop": "0.5rem",
+                    }
+                  }
+                >
+                  <div
+                    className="p-divider-content"
+                    data-pc-section="content"
+                  />
+                </div>
+              </div>
+              <div
+                className="rjsf-field rjsf-field-string"
+              >
+                <div
+                  style={
+                    {
+                      "display": "flex",
+                      "flexDirection": "column",
+                      "gap": "0.5rem",
+                      "marginBottom": "1rem",
+                    }
+                  }
+                >
+                  <label
+                    htmlFor="root_person_address_street"
+                  >
+                    street
+                     
+                  </label>
+                  <input
+                    aria-describedby="root_person_address_street__error root_person_address_street__description root_person_address_street__help"
+                    autoFocus={false}
+                    className="p-inputtext p-component"
+                    data-pc-name="inputtext"
+                    data-pc-section="root"
+                    disabled={false}
+                    id="root_person_address_street"
+                    name="root[person][address][street]"
+                    onBeforeInput={[Function]}
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    onInput={[Function]}
+                    onKeyDown={[Function]}
+                    onPaste={[Function]}
+                    placeholder=""
+                    required={false}
+                    type="text"
+                    value=""
+                  />
+                </div>
+              </div>
+              <div
+                className="rjsf-field rjsf-field-string"
+              >
+                <div
+                  style={
+                    {
+                      "display": "flex",
+                      "flexDirection": "column",
+                      "gap": "0.5rem",
+                      "marginBottom": "1rem",
+                    }
+                  }
+                >
+                  <label
+                    htmlFor="root_person_address_city"
+                  >
+                    city
+                     
+                  </label>
+                  <input
+                    aria-describedby="root_person_address_city__error root_person_address_city__description root_person_address_city__help"
+                    autoFocus={false}
+                    className="p-inputtext p-component"
+                    data-pc-name="inputtext"
+                    data-pc-section="root"
+                    disabled={false}
+                    id="root_person_address_city"
+                    name="root[person][address][city]"
+                    onBeforeInput={[Function]}
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    onInput={[Function]}
+                    onKeyDown={[Function]}
+                    onPaste={[Function]}
+                    placeholder=""
+                    required={false}
+                    type="text"
+                    value=""
+                  />
+                </div>
+              </div>
+              <div
+                className="rjsf-field rjsf-field-string"
+              >
+                <div
+                  style={
+                    {
+                      "display": "flex",
+                      "flexDirection": "column",
+                      "gap": "0.5rem",
+                      "marginBottom": "1rem",
+                    }
+                  }
+                >
+                  <label
+                    htmlFor="root_person_address_country"
+                  >
+                    country
+                     
+                  </label>
+                  <input
+                    aria-describedby="root_person_address_country__error root_person_address_country__description root_person_address_country__help"
+                    autoFocus={false}
+                    className="p-inputtext p-component"
+                    data-pc-name="inputtext"
+                    data-pc-section="root"
+                    disabled={false}
+                    id="root_person_address_country"
+                    name="root[person][address][country]"
+                    onBeforeInput={[Function]}
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    onInput={[Function]}
+                    onKeyDown={[Function]}
+                    onPaste={[Function]}
+                    placeholder=""
+                    required={false}
+                    type="text"
+                    value=""
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`nameGenerator bracketNameGenerator object with additionalProperties 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <div
+        className="rjsf-field rjsf-field-string"
+      >
+        <div
+          style={
+            {
+              "display": "flex",
+              "flexDirection": "column",
+              "gap": "0.5rem",
+              "marginBottom": "1rem",
+            }
+          }
+        >
+          <label
+            htmlFor="root_name"
+          >
+            name
+             
+          </label>
+          <input
+            aria-describedby="root_name__error root_name__description root_name__help"
+            autoFocus={false}
+            className="p-inputtext p-component p-filled"
+            data-pc-name="inputtext"
+            data-pc-section="root"
+            disabled={false}
+            id="root_name"
+            name="root[name]"
+            onBeforeInput={[Function]}
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            onInput={[Function]}
+            onKeyDown={[Function]}
+            onPaste={[Function]}
+            placeholder=""
+            required={false}
+            type="text"
+            value="John"
+          />
+        </div>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-string"
+        style={
+          {
+            "alignItems": "center",
+            "display": "flex",
+            "gap": "1rem",
+          }
+        }
+      >
+        <div
+          style={
+            {
+              "flex": 1,
+            }
+          }
+        >
+          <label
+            htmlFor="root_customField-key"
+            style={
+              {
+                "display": "block",
+                "marginBottom": "0.5rem",
+              }
+            }
+          >
+            customField Key
+          </label>
+          <input
+            className="p-inputtext p-component p-filled"
+            data-pc-name="inputtext"
+            data-pc-section="root"
+            defaultValue="customField"
+            disabled={false}
+            id="root_customField-key"
+            name="root_customField-key"
+            onBeforeInput={[Function]}
+            onBlur={[Function]}
+            onInput={[Function]}
+            onKeyDown={[Function]}
+            onPaste={[Function]}
+            required={false}
+            style={
+              {
+                "width": "100%",
+              }
+            }
+          />
+        </div>
+        <div
+          style={
+            {
+              "flex": 1,
+            }
+          }
+        >
+          <div
+            style={
+              {
+                "display": "flex",
+                "flexDirection": "column",
+                "gap": "0.5rem",
+                "marginBottom": "1rem",
+              }
+            }
+          >
+            <label
+              htmlFor="root_customField"
+            >
+              customField
+               
+            </label>
+            <input
+              aria-describedby="root_customField__error root_customField__description root_customField__help"
+              autoFocus={false}
+              className="p-inputtext p-component p-filled"
+              data-pc-name="inputtext"
+              data-pc-section="root"
+              disabled={false}
+              id="root_customField"
+              name="root[customField]"
+              onBeforeInput={[Function]}
+              onBlur={[Function]}
+              onChange={[Function]}
+              onFocus={[Function]}
+              onInput={[Function]}
+              onKeyDown={[Function]}
+              onPaste={[Function]}
+              placeholder=""
+              required={false}
+              type="text"
+              value="customValue"
+            />
+          </div>
+        </div>
+        <div>
+          <button
+            className="rjsf-object-property-remove p-button p-component p-button-icon-only p-button-text p-button-rounded p-button-secondary"
+            data-pc-name="button"
+            data-pc-section="root"
+            disabled={false}
+            id="root_customField__remove"
+            onClick={[Function]}
+            title="Remove"
+          >
+            <span
+              className="p-button-icon p-c pi pi-trash"
+              data-pc-section="icon"
+            />
+            <span
+              className="p-button-label p-c"
+              dangerouslySetInnerHTML={
+                {
+                  "__html": "&nbsp;",
+                }
+              }
+              data-pc-section="label"
+            />
+          </button>
+        </div>
+      </div>
+      <div
+        style={
+          {
+            "marginTop": "1rem",
+            "textAlign": "right",
+          }
+        }
+      >
+        <button
+          aria-label="Add Item"
+          className="rjsf-object-property-expand p-button p-component p-button-outlined p-button-sm p-button-secondary"
+          data-pc-name="button"
+          data-pc-section="root"
+          disabled={false}
+          id="root__add"
+          onClick={[Function]}
+        >
+          <span
+            className="p-button-icon p-c p-button-icon-left pi pi-plus"
+            data-pc-section="icon"
+          />
+          <span
+            className="p-button-label p-c"
+            data-pc-section="label"
+          >
+            Add Item
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <div
+        className="rjsf-field rjsf-field-string"
+      >
+        <div
+          style={
+            {
+              "display": "flex",
+              "flexDirection": "column",
+              "gap": "0.5rem",
+              "marginBottom": "1rem",
+            }
+          }
+        >
+          <label
+            htmlFor="root_name"
+          >
+            name
+             
+          </label>
+          <input
+            aria-describedby="root_name__error root_name__description root_name__help"
+            autoFocus={false}
+            className="p-inputtext p-component p-filled"
+            data-pc-name="inputtext"
+            data-pc-section="root"
+            disabled={false}
+            id="root_name"
+            name="root[name]"
+            onBeforeInput={[Function]}
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            onInput={[Function]}
+            onKeyDown={[Function]}
+            onPaste={[Function]}
+            placeholder=""
+            required={false}
+            type="text"
+            value="Alice"
+          />
+        </div>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-number"
+      >
+        <div
+          style={
+            {
+              "display": "flex",
+              "flexDirection": "column",
+              "gap": "0.5rem",
+              "marginBottom": "1rem",
+            }
+          }
+        >
+          <label
+            htmlFor="root_age"
+          >
+            age
+             
+          </label>
+          <input
+            aria-describedby="root_age__error root_age__description root_age__help"
+            autoFocus={false}
+            className="p-inputtext p-component p-filled"
+            data-pc-name="inputtext"
+            data-pc-section="root"
+            disabled={false}
+            id="root_age"
+            name="root[age]"
+            onBeforeInput={[Function]}
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            onInput={[Function]}
+            onKeyDown={[Function]}
+            onPaste={[Function]}
+            placeholder=""
+            required={false}
+            step="any"
+            type="number"
+            value={30}
+          />
+        </div>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-boolean"
+      >
+        <div
+          style={
+            {
+              "display": "flex",
+              "flexDirection": "column",
+              "gap": "0.5rem",
+              "marginBottom": "1rem",
+            }
+          }
+        >
+          <div
+            style={
+              {
+                "alignItems": "center",
+                "display": "flex",
+                "flexDirection": "row",
+                "gap": "0.5rem",
+              }
+            }
+          >
+            <div
+              aria-describedby="root_active__error root_active__description root_active__help"
+              className="p-checkbox p-component p-highlight"
+              data-p-disabled={false}
+              data-p-highlight={true}
+              data-pc-name="checkbox"
+              data-pc-section="root"
+              id={null}
+              onBlur={[Function]}
+              onContextMenu={null}
+              onFocus={[Function]}
+              onMouseDown={null}
+              style={{}}
+            >
+              <input
+                aria-describedby="root_active__error root_active__description root_active__help"
+                aria-invalid={false}
+                checked={true}
+                className="p-checkbox-input"
+                data-pc-section="input"
+                disabled={false}
+                id="root_active"
+                name="root[active]"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                readOnly={false}
+                required={false}
+                tabIndex={null}
+                type="checkbox"
+              />
+              <div
+                className="p-checkbox-box"
+                data-p-disabled={false}
+                data-p-highlight={true}
+                data-pc-section="box"
+              >
+                <svg
+                  className="p-icon p-checkbox-icon"
+                  data-pc-section="icon"
+                  fill="none"
+                  height="14"
+                  viewBox="0 0 14 14"
+                  width="14"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M4.86199 11.5948C4.78717 11.5923 4.71366 11.5745 4.64596 11.5426C4.57826 11.5107 4.51779 11.4652 4.46827 11.4091L0.753985 7.69483C0.683167 7.64891 0.623706 7.58751 0.580092 7.51525C0.536478 7.44299 0.509851 7.36177 0.502221 7.27771C0.49459 7.19366 0.506156 7.10897 0.536046 7.03004C0.565935 6.95111 0.613367 6.88 0.674759 6.82208C0.736151 6.76416 0.8099 6.72095 0.890436 6.69571C0.970973 6.67046 1.05619 6.66385 1.13966 6.67635C1.22313 6.68886 1.30266 6.72017 1.37226 6.76792C1.44186 6.81567 1.4997 6.8786 1.54141 6.95197L4.86199 10.2503L12.6397 2.49483C12.7444 2.42694 12.8689 2.39617 12.9932 2.40745C13.1174 2.41873 13.2343 2.47141 13.3251 2.55705C13.4159 2.64268 13.4753 2.75632 13.4938 2.87973C13.5123 3.00315 13.4888 3.1292 13.4271 3.23768L5.2557 11.4091C5.20618 11.4652 5.14571 11.5107 5.07801 11.5426C5.01031 11.5745 4.9368 11.5923 4.86199 11.5948Z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </div>
+            </div>
+            <label
+              htmlFor="root_active"
+            >
+              active
+               
+            </label>
+          </div>
+        </div>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-array"
+      >
+        <div
+          style={
+            {
+              "display": "flex",
+              "flexDirection": "column",
+              "gap": "0.5rem",
+              "marginBottom": "1rem",
+            }
+          }
+        >
+          <h5
+            id="root_tags__title"
+            style={
+              {
+                "fontSize": "1.5rem",
+                "margin": 0,
+                "marginBottom": "0.2rem",
+              }
+            }
+          >
+            tags
+             
+          </h5>
+          <fieldset
+            className="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields p-fieldset p-component"
+            data-pc-name="fieldset"
+            data-pc-section="root"
+            formData={
+              [
+                "developer",
+                "designer",
+              ]
+            }
+            id="root_tags"
+            onClick={null}
+            style={{}}
+          >
+            <div
+              aria-labelledby="root_tags_header"
+              className="p-toggleable-content"
+              data-pc-section="toggleablecontent"
+              id="root_tags_content"
+              role="region"
+            >
+              <div
+                className="p-fieldset-content"
+                data-pc-section="content"
+              >
+                <div>
+                  <div>
+                    <div
+                      style={
+                        {
+                          "position": "relative",
+                        }
+                      }
+                    >
+                      <div
+                        style={
+                          {
+                            "position": "absolute",
+                            "right": 0,
+                            "top": "-10px",
+                          }
+                        }
+                      >
+                        <div
+                          style={
+                            {
+                              "flexDirection": "row",
+                            }
+                          }
+                        >
+                          <button
+                            className="rjsf-array-item-move-up p-button p-component p-button-icon-only p-disabled p-button-text p-button-rounded p-button-secondary"
+                            data-pc-name="button"
+                            data-pc-section="root"
+                            disabled={true}
+                            id="root_tags_0__moveUp"
+                            onClick={[Function]}
+                            title="Move up"
+                          >
+                            <span
+                              className="p-button-icon p-c pi pi-angle-up"
+                              data-pc-section="icon"
+                            />
+                            <span
+                              className="p-button-label p-c"
+                              dangerouslySetInnerHTML={
+                                {
+                                  "__html": "&nbsp;",
+                                }
+                              }
+                              data-pc-section="label"
+                            />
+                          </button>
+                          <button
+                            className="rjsf-array-item-move-down p-button p-component p-button-icon-only p-button-text p-button-rounded p-button-secondary"
+                            data-pc-name="button"
+                            data-pc-section="root"
+                            disabled={false}
+                            id="root_tags_0__moveDown"
+                            onClick={[Function]}
+                            title="Move down"
+                          >
+                            <span
+                              className="p-button-icon p-c pi pi-angle-down"
+                              data-pc-section="icon"
+                            />
+                            <span
+                              className="p-button-label p-c"
+                              dangerouslySetInnerHTML={
+                                {
+                                  "__html": "&nbsp;",
+                                }
+                              }
+                              data-pc-section="label"
+                            />
+                          </button>
+                          <button
+                            className="rjsf-array-item-remove p-button p-component p-button-icon-only p-button-text p-button-rounded p-button-secondary"
+                            data-pc-name="button"
+                            data-pc-section="root"
+                            disabled={false}
+                            id="root_tags_0__remove"
+                            onClick={[Function]}
+                            title="Remove"
+                          >
+                            <span
+                              className="p-button-icon p-c pi pi-trash"
+                              data-pc-section="icon"
+                            />
+                            <span
+                              className="p-button-label p-c"
+                              dangerouslySetInnerHTML={
+                                {
+                                  "__html": "&nbsp;",
+                                }
+                              }
+                              data-pc-section="label"
+                            />
+                          </button>
+                        </div>
+                      </div>
+                      <div
+                        className="rjsf-field rjsf-field-string"
+                      >
+                        <div
+                          style={
+                            {
+                              "display": "flex",
+                              "flexDirection": "column",
+                              "gap": "0.5rem",
+                              "marginBottom": "1rem",
+                            }
+                          }
+                        >
+                          <label
+                            htmlFor="root_tags_0"
+                          >
+                            tags-1
+                             
+                            *
+                          </label>
+                          <input
+                            aria-describedby="root_tags_0__error root_tags_0__description root_tags_0__help"
+                            autoFocus={false}
+                            className="p-inputtext p-component p-filled"
+                            data-pc-name="inputtext"
+                            data-pc-section="root"
+                            disabled={false}
+                            id="root_tags_0"
+                            name="root[tags][0]"
+                            onBeforeInput={[Function]}
+                            onBlur={[Function]}
+                            onChange={[Function]}
+                            onFocus={[Function]}
+                            onInput={[Function]}
+                            onKeyDown={[Function]}
+                            onPaste={[Function]}
+                            placeholder=""
+                            required={true}
+                            type="text"
+                            value="developer"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      style={
+                        {
+                          "position": "relative",
+                        }
+                      }
+                    >
+                      <div
+                        style={
+                          {
+                            "position": "absolute",
+                            "right": 0,
+                            "top": "-10px",
+                          }
+                        }
+                      >
+                        <div
+                          style={
+                            {
+                              "flexDirection": "row",
+                            }
+                          }
+                        >
+                          <button
+                            className="rjsf-array-item-move-up p-button p-component p-button-icon-only p-button-text p-button-rounded p-button-secondary"
+                            data-pc-name="button"
+                            data-pc-section="root"
+                            disabled={false}
+                            id="root_tags_1__moveUp"
+                            onClick={[Function]}
+                            title="Move up"
+                          >
+                            <span
+                              className="p-button-icon p-c pi pi-angle-up"
+                              data-pc-section="icon"
+                            />
+                            <span
+                              className="p-button-label p-c"
+                              dangerouslySetInnerHTML={
+                                {
+                                  "__html": "&nbsp;",
+                                }
+                              }
+                              data-pc-section="label"
+                            />
+                          </button>
+                          <button
+                            className="rjsf-array-item-move-down p-button p-component p-button-icon-only p-disabled p-button-text p-button-rounded p-button-secondary"
+                            data-pc-name="button"
+                            data-pc-section="root"
+                            disabled={true}
+                            id="root_tags_1__moveDown"
+                            onClick={[Function]}
+                            title="Move down"
+                          >
+                            <span
+                              className="p-button-icon p-c pi pi-angle-down"
+                              data-pc-section="icon"
+                            />
+                            <span
+                              className="p-button-label p-c"
+                              dangerouslySetInnerHTML={
+                                {
+                                  "__html": "&nbsp;",
+                                }
+                              }
+                              data-pc-section="label"
+                            />
+                          </button>
+                          <button
+                            className="rjsf-array-item-remove p-button p-component p-button-icon-only p-button-text p-button-rounded p-button-secondary"
+                            data-pc-name="button"
+                            data-pc-section="root"
+                            disabled={false}
+                            id="root_tags_1__remove"
+                            onClick={[Function]}
+                            title="Remove"
+                          >
+                            <span
+                              className="p-button-icon p-c pi pi-trash"
+                              data-pc-section="icon"
+                            />
+                            <span
+                              className="p-button-label p-c"
+                              dangerouslySetInnerHTML={
+                                {
+                                  "__html": "&nbsp;",
+                                }
+                              }
+                              data-pc-section="label"
+                            />
+                          </button>
+                        </div>
+                      </div>
+                      <div
+                        className="rjsf-field rjsf-field-string"
+                      >
+                        <div
+                          style={
+                            {
+                              "display": "flex",
+                              "flexDirection": "column",
+                              "gap": "0.5rem",
+                              "marginBottom": "1rem",
+                            }
+                          }
+                        >
+                          <label
+                            htmlFor="root_tags_1"
+                          >
+                            tags-2
+                             
+                            *
+                          </label>
+                          <input
+                            aria-describedby="root_tags_1__error root_tags_1__description root_tags_1__help"
+                            autoFocus={false}
+                            className="p-inputtext p-component p-filled"
+                            data-pc-name="inputtext"
+                            data-pc-section="root"
+                            disabled={false}
+                            id="root_tags_1"
+                            name="root[tags][1]"
+                            onBeforeInput={[Function]}
+                            onBlur={[Function]}
+                            onChange={[Function]}
+                            onFocus={[Function]}
+                            onInput={[Function]}
+                            onKeyDown={[Function]}
+                            onPaste={[Function]}
+                            placeholder=""
+                            required={true}
+                            type="text"
+                            value="designer"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    style={
+                      {
+                        "marginTop": "1rem",
+                        "position": "relative",
+                        "textAlign": "right",
+                      }
+                    }
+                  >
+                    <button
+                      aria-label="Add Item"
+                      className="rjsf-array-item-add p-button p-component p-button-outlined p-button-sm p-button-secondary"
+                      data-pc-name="button"
+                      data-pc-section="root"
+                      disabled={false}
+                      id="root_tags__add"
+                      onClick={[Function]}
+                    >
+                      <span
+                        className="p-button-icon p-c p-button-icon-left pi pi-plus"
+                        data-pc-section="icon"
+                      />
+                      <span
+                        className="p-button-label p-c"
+                        data-pc-section="label"
+                      >
+                        Add Item
+                      </span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`nameGenerator bracketNameGenerator simple object 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <div
+        className="rjsf-field rjsf-field-string"
+      >
+        <div
+          style={
+            {
+              "display": "flex",
+              "flexDirection": "column",
+              "gap": "0.5rem",
+              "marginBottom": "1rem",
+            }
+          }
+        >
+          <label
+            htmlFor="root_firstName"
+          >
+            firstName
+             
+          </label>
+          <input
+            aria-describedby="root_firstName__error root_firstName__description root_firstName__help"
+            autoFocus={false}
+            className="p-inputtext p-component"
+            data-pc-name="inputtext"
+            data-pc-section="root"
+            disabled={false}
+            id="root_firstName"
+            name="root[firstName]"
+            onBeforeInput={[Function]}
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            onInput={[Function]}
+            onKeyDown={[Function]}
+            onPaste={[Function]}
+            placeholder=""
+            required={false}
+            type="text"
+            value=""
+          />
+        </div>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-string"
+      >
+        <div
+          style={
+            {
+              "display": "flex",
+              "flexDirection": "column",
+              "gap": "0.5rem",
+              "marginBottom": "1rem",
+            }
+          }
+        >
+          <label
+            htmlFor="root_lastName"
+          >
+            lastName
+             
+          </label>
+          <input
+            aria-describedby="root_lastName__error root_lastName__description root_lastName__help"
+            autoFocus={false}
+            className="p-inputtext p-component"
+            data-pc-name="inputtext"
+            data-pc-section="root"
+            disabled={false}
+            id="root_lastName"
+            name="root[lastName]"
+            onBeforeInput={[Function]}
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            onInput={[Function]}
+            onKeyDown={[Function]}
+            onPaste={[Function]}
+            placeholder=""
+            required={false}
+            type="text"
+            value=""
+          />
+        </div>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-number"
+      >
+        <div
+          style={
+            {
+              "display": "flex",
+              "flexDirection": "column",
+              "gap": "0.5rem",
+              "marginBottom": "1rem",
+            }
+          }
+        >
+          <label
+            htmlFor="root_age"
+          >
+            age
+             
+          </label>
+          <input
+            aria-describedby="root_age__error root_age__description root_age__help"
+            autoFocus={false}
+            className="p-inputtext p-component"
+            data-pc-name="inputtext"
+            data-pc-section="root"
+            disabled={false}
+            id="root_age"
+            name="root[age]"
+            onBeforeInput={[Function]}
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            onInput={[Function]}
+            onKeyDown={[Function]}
+            onPaste={[Function]}
+            placeholder=""
+            required={false}
+            step="any"
+            type="number"
+            value=""
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`nameGenerator dotNotationNameGenerator nested object 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <div
+        className="rjsf-field rjsf-field-object"
+      >
+        <div
+          style={
+            {
+              "display": "flex",
+              "flexDirection": "column",
+              "gap": "0.5rem",
+              "marginBottom": "1rem",
+            }
+          }
+        >
+          <div
+            id="root_person__title"
+          >
+            <h5
+              style={
+                {
+                  "fontSize": "1.2rem",
+                  "margin": 0,
+                }
+              }
+            >
+              person
+               
+            </h5>
+            <div
+              aria-orientation="horizontal"
+              className="p-divider p-component p-divider-horizontal p-divider-solid p-divider-left"
+              data-pc-name="divider"
+              data-pc-section="root"
+              role="separator"
+              style={
+                {
+                  "alignItems": null,
+                  "justifyContent": "center",
+                  "marginTop": "0.5rem",
+                }
+              }
+            >
+              <div
+                className="p-divider-content"
+                data-pc-section="content"
+              />
+            </div>
+          </div>
+          <div
+            className="rjsf-field rjsf-field-string"
+          >
+            <div
+              style={
+                {
+                  "display": "flex",
+                  "flexDirection": "column",
+                  "gap": "0.5rem",
+                  "marginBottom": "1rem",
+                }
+              }
+            >
+              <label
+                htmlFor="root_person_name"
+              >
+                name
+                 
+              </label>
+              <input
+                aria-describedby="root_person_name__error root_person_name__description root_person_name__help"
+                autoFocus={false}
+                className="p-inputtext p-component"
+                data-pc-name="inputtext"
+                data-pc-section="root"
+                disabled={false}
+                id="root_person_name"
+                name="root.person.name"
+                onBeforeInput={[Function]}
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                onInput={[Function]}
+                onKeyDown={[Function]}
+                onPaste={[Function]}
+                placeholder=""
+                required={false}
+                type="text"
+                value=""
+              />
+            </div>
+          </div>
+          <div
+            className="rjsf-field rjsf-field-object"
+          >
+            <div
+              style={
+                {
+                  "display": "flex",
+                  "flexDirection": "column",
+                  "gap": "0.5rem",
+                  "marginBottom": "1rem",
+                }
+              }
+            >
+              <div
+                id="root_person_address__title"
+              >
+                <h5
+                  style={
+                    {
+                      "fontSize": "1.2rem",
+                      "margin": 0,
+                    }
+                  }
+                >
+                  address
+                   
+                </h5>
+                <div
+                  aria-orientation="horizontal"
+                  className="p-divider p-component p-divider-horizontal p-divider-solid p-divider-left"
+                  data-pc-name="divider"
+                  data-pc-section="root"
+                  role="separator"
+                  style={
+                    {
+                      "alignItems": null,
+                      "justifyContent": "center",
+                      "marginTop": "0.5rem",
+                    }
+                  }
+                >
+                  <div
+                    className="p-divider-content"
+                    data-pc-section="content"
+                  />
+                </div>
+              </div>
+              <div
+                className="rjsf-field rjsf-field-string"
+              >
+                <div
+                  style={
+                    {
+                      "display": "flex",
+                      "flexDirection": "column",
+                      "gap": "0.5rem",
+                      "marginBottom": "1rem",
+                    }
+                  }
+                >
+                  <label
+                    htmlFor="root_person_address_street"
+                  >
+                    street
+                     
+                  </label>
+                  <input
+                    aria-describedby="root_person_address_street__error root_person_address_street__description root_person_address_street__help"
+                    autoFocus={false}
+                    className="p-inputtext p-component"
+                    data-pc-name="inputtext"
+                    data-pc-section="root"
+                    disabled={false}
+                    id="root_person_address_street"
+                    name="root.person.address.street"
+                    onBeforeInput={[Function]}
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    onInput={[Function]}
+                    onKeyDown={[Function]}
+                    onPaste={[Function]}
+                    placeholder=""
+                    required={false}
+                    type="text"
+                    value=""
+                  />
+                </div>
+              </div>
+              <div
+                className="rjsf-field rjsf-field-string"
+              >
+                <div
+                  style={
+                    {
+                      "display": "flex",
+                      "flexDirection": "column",
+                      "gap": "0.5rem",
+                      "marginBottom": "1rem",
+                    }
+                  }
+                >
+                  <label
+                    htmlFor="root_person_address_city"
+                  >
+                    city
+                     
+                  </label>
+                  <input
+                    aria-describedby="root_person_address_city__error root_person_address_city__description root_person_address_city__help"
+                    autoFocus={false}
+                    className="p-inputtext p-component"
+                    data-pc-name="inputtext"
+                    data-pc-section="root"
+                    disabled={false}
+                    id="root_person_address_city"
+                    name="root.person.address.city"
+                    onBeforeInput={[Function]}
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    onInput={[Function]}
+                    onKeyDown={[Function]}
+                    onPaste={[Function]}
+                    placeholder=""
+                    required={false}
+                    type="text"
+                    value=""
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <div
+        className="rjsf-field rjsf-field-string"
+      >
+        <div
+          style={
+            {
+              "display": "flex",
+              "flexDirection": "column",
+              "gap": "0.5rem",
+              "marginBottom": "1rem",
+            }
+          }
+        >
+          <label
+            htmlFor="root_name"
+          >
+            name
+             
+          </label>
+          <input
+            aria-describedby="root_name__error root_name__description root_name__help"
+            autoFocus={false}
+            className="p-inputtext p-component p-filled"
+            data-pc-name="inputtext"
+            data-pc-section="root"
+            disabled={false}
+            id="root_name"
+            name="root.name"
+            onBeforeInput={[Function]}
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            onInput={[Function]}
+            onKeyDown={[Function]}
+            onPaste={[Function]}
+            placeholder=""
+            required={false}
+            type="text"
+            value="Test"
+          />
+        </div>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-number"
+      >
+        <div
+          style={
+            {
+              "display": "flex",
+              "flexDirection": "column",
+              "gap": "0.5rem",
+              "marginBottom": "1rem",
+            }
+          }
+        >
+          <label
+            htmlFor="root_count"
+          >
+            count
+             
+          </label>
+          <input
+            aria-describedby="root_count__error root_count__description root_count__help"
+            autoFocus={false}
+            className="p-inputtext p-component p-filled"
+            data-pc-name="inputtext"
+            data-pc-section="root"
+            disabled={false}
+            id="root_count"
+            name="root.count"
+            onBeforeInput={[Function]}
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            onInput={[Function]}
+            onKeyDown={[Function]}
+            onPaste={[Function]}
+            placeholder=""
+            required={false}
+            step="any"
+            type="number"
+            value={5}
+          />
+        </div>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-array"
+      >
+        <div
+          style={
+            {
+              "display": "flex",
+              "flexDirection": "column",
+              "gap": "0.5rem",
+              "marginBottom": "1rem",
+            }
+          }
+        >
+          <h5
+            id="root_items__title"
+            style={
+              {
+                "fontSize": "1.5rem",
+                "margin": 0,
+                "marginBottom": "0.2rem",
+              }
+            }
+          >
+            items
+             
+          </h5>
+          <fieldset
+            className="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields p-fieldset p-component"
+            data-pc-name="fieldset"
+            data-pc-section="root"
+            formData={
+              [
+                "a",
+                "b",
+              ]
+            }
+            id="root_items"
+            onClick={null}
+            style={{}}
+          >
+            <div
+              aria-labelledby="root_items_header"
+              className="p-toggleable-content"
+              data-pc-section="toggleablecontent"
+              id="root_items_content"
+              role="region"
+            >
+              <div
+                className="p-fieldset-content"
+                data-pc-section="content"
+              >
+                <div>
+                  <div>
+                    <div
+                      style={
+                        {
+                          "position": "relative",
+                        }
+                      }
+                    >
+                      <div
+                        style={
+                          {
+                            "position": "absolute",
+                            "right": 0,
+                            "top": "-10px",
+                          }
+                        }
+                      >
+                        <div
+                          style={
+                            {
+                              "flexDirection": "row",
+                            }
+                          }
+                        >
+                          <button
+                            className="rjsf-array-item-move-up p-button p-component p-button-icon-only p-disabled p-button-text p-button-rounded p-button-secondary"
+                            data-pc-name="button"
+                            data-pc-section="root"
+                            disabled={true}
+                            id="root_items_0__moveUp"
+                            onClick={[Function]}
+                            title="Move up"
+                          >
+                            <span
+                              className="p-button-icon p-c pi pi-angle-up"
+                              data-pc-section="icon"
+                            />
+                            <span
+                              className="p-button-label p-c"
+                              dangerouslySetInnerHTML={
+                                {
+                                  "__html": "&nbsp;",
+                                }
+                              }
+                              data-pc-section="label"
+                            />
+                          </button>
+                          <button
+                            className="rjsf-array-item-move-down p-button p-component p-button-icon-only p-button-text p-button-rounded p-button-secondary"
+                            data-pc-name="button"
+                            data-pc-section="root"
+                            disabled={false}
+                            id="root_items_0__moveDown"
+                            onClick={[Function]}
+                            title="Move down"
+                          >
+                            <span
+                              className="p-button-icon p-c pi pi-angle-down"
+                              data-pc-section="icon"
+                            />
+                            <span
+                              className="p-button-label p-c"
+                              dangerouslySetInnerHTML={
+                                {
+                                  "__html": "&nbsp;",
+                                }
+                              }
+                              data-pc-section="label"
+                            />
+                          </button>
+                          <button
+                            className="rjsf-array-item-remove p-button p-component p-button-icon-only p-button-text p-button-rounded p-button-secondary"
+                            data-pc-name="button"
+                            data-pc-section="root"
+                            disabled={false}
+                            id="root_items_0__remove"
+                            onClick={[Function]}
+                            title="Remove"
+                          >
+                            <span
+                              className="p-button-icon p-c pi pi-trash"
+                              data-pc-section="icon"
+                            />
+                            <span
+                              className="p-button-label p-c"
+                              dangerouslySetInnerHTML={
+                                {
+                                  "__html": "&nbsp;",
+                                }
+                              }
+                              data-pc-section="label"
+                            />
+                          </button>
+                        </div>
+                      </div>
+                      <div
+                        className="rjsf-field rjsf-field-string"
+                      >
+                        <div
+                          style={
+                            {
+                              "display": "flex",
+                              "flexDirection": "column",
+                              "gap": "0.5rem",
+                              "marginBottom": "1rem",
+                            }
+                          }
+                        >
+                          <label
+                            htmlFor="root_items_0"
+                          >
+                            items-1
+                             
+                            *
+                          </label>
+                          <input
+                            aria-describedby="root_items_0__error root_items_0__description root_items_0__help"
+                            autoFocus={false}
+                            className="p-inputtext p-component p-filled"
+                            data-pc-name="inputtext"
+                            data-pc-section="root"
+                            disabled={false}
+                            id="root_items_0"
+                            name="root.items.0"
+                            onBeforeInput={[Function]}
+                            onBlur={[Function]}
+                            onChange={[Function]}
+                            onFocus={[Function]}
+                            onInput={[Function]}
+                            onKeyDown={[Function]}
+                            onPaste={[Function]}
+                            placeholder=""
+                            required={true}
+                            type="text"
+                            value="a"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      style={
+                        {
+                          "position": "relative",
+                        }
+                      }
+                    >
+                      <div
+                        style={
+                          {
+                            "position": "absolute",
+                            "right": 0,
+                            "top": "-10px",
+                          }
+                        }
+                      >
+                        <div
+                          style={
+                            {
+                              "flexDirection": "row",
+                            }
+                          }
+                        >
+                          <button
+                            className="rjsf-array-item-move-up p-button p-component p-button-icon-only p-button-text p-button-rounded p-button-secondary"
+                            data-pc-name="button"
+                            data-pc-section="root"
+                            disabled={false}
+                            id="root_items_1__moveUp"
+                            onClick={[Function]}
+                            title="Move up"
+                          >
+                            <span
+                              className="p-button-icon p-c pi pi-angle-up"
+                              data-pc-section="icon"
+                            />
+                            <span
+                              className="p-button-label p-c"
+                              dangerouslySetInnerHTML={
+                                {
+                                  "__html": "&nbsp;",
+                                }
+                              }
+                              data-pc-section="label"
+                            />
+                          </button>
+                          <button
+                            className="rjsf-array-item-move-down p-button p-component p-button-icon-only p-disabled p-button-text p-button-rounded p-button-secondary"
+                            data-pc-name="button"
+                            data-pc-section="root"
+                            disabled={true}
+                            id="root_items_1__moveDown"
+                            onClick={[Function]}
+                            title="Move down"
+                          >
+                            <span
+                              className="p-button-icon p-c pi pi-angle-down"
+                              data-pc-section="icon"
+                            />
+                            <span
+                              className="p-button-label p-c"
+                              dangerouslySetInnerHTML={
+                                {
+                                  "__html": "&nbsp;",
+                                }
+                              }
+                              data-pc-section="label"
+                            />
+                          </button>
+                          <button
+                            className="rjsf-array-item-remove p-button p-component p-button-icon-only p-button-text p-button-rounded p-button-secondary"
+                            data-pc-name="button"
+                            data-pc-section="root"
+                            disabled={false}
+                            id="root_items_1__remove"
+                            onClick={[Function]}
+                            title="Remove"
+                          >
+                            <span
+                              className="p-button-icon p-c pi pi-trash"
+                              data-pc-section="icon"
+                            />
+                            <span
+                              className="p-button-label p-c"
+                              dangerouslySetInnerHTML={
+                                {
+                                  "__html": "&nbsp;",
+                                }
+                              }
+                              data-pc-section="label"
+                            />
+                          </button>
+                        </div>
+                      </div>
+                      <div
+                        className="rjsf-field rjsf-field-string"
+                      >
+                        <div
+                          style={
+                            {
+                              "display": "flex",
+                              "flexDirection": "column",
+                              "gap": "0.5rem",
+                              "marginBottom": "1rem",
+                            }
+                          }
+                        >
+                          <label
+                            htmlFor="root_items_1"
+                          >
+                            items-2
+                             
+                            *
+                          </label>
+                          <input
+                            aria-describedby="root_items_1__error root_items_1__description root_items_1__help"
+                            autoFocus={false}
+                            className="p-inputtext p-component p-filled"
+                            data-pc-name="inputtext"
+                            data-pc-section="root"
+                            disabled={false}
+                            id="root_items_1"
+                            name="root.items.1"
+                            onBeforeInput={[Function]}
+                            onBlur={[Function]}
+                            onChange={[Function]}
+                            onFocus={[Function]}
+                            onInput={[Function]}
+                            onKeyDown={[Function]}
+                            onPaste={[Function]}
+                            placeholder=""
+                            required={true}
+                            type="text"
+                            value="b"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    style={
+                      {
+                        "marginTop": "1rem",
+                        "position": "relative",
+                        "textAlign": "right",
+                      }
+                    }
+                  >
+                    <button
+                      aria-label="Add Item"
+                      className="rjsf-array-item-add p-button p-component p-button-outlined p-button-sm p-button-secondary"
+                      data-pc-name="button"
+                      data-pc-section="root"
+                      disabled={false}
+                      id="root_items__add"
+                      onClick={[Function]}
+                    >
+                      <span
+                        className="p-button-icon p-c p-button-icon-left pi pi-plus"
+                        data-pc-section="icon"
+                      />
+                      <span
+                        className="p-button-label p-c"
+                        data-pc-section="label"
+                      >
+                        Add Item
+                      </span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
+exports[`nameGenerator dotNotationNameGenerator simple object 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div
+      style={
+        {
+          "display": "flex",
+          "flexDirection": "column",
+          "gap": "0.5rem",
+          "marginBottom": "1rem",
+        }
+      }
+    >
+      <div
+        className="rjsf-field rjsf-field-string"
+      >
+        <div
+          style={
+            {
+              "display": "flex",
+              "flexDirection": "column",
+              "gap": "0.5rem",
+              "marginBottom": "1rem",
+            }
+          }
+        >
+          <label
+            htmlFor="root_firstName"
+          >
+            firstName
+             
+          </label>
+          <input
+            aria-describedby="root_firstName__error root_firstName__description root_firstName__help"
+            autoFocus={false}
+            className="p-inputtext p-component"
+            data-pc-name="inputtext"
+            data-pc-section="root"
+            disabled={false}
+            id="root_firstName"
+            name="root.firstName"
+            onBeforeInput={[Function]}
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            onInput={[Function]}
+            onKeyDown={[Function]}
+            onPaste={[Function]}
+            placeholder=""
+            required={false}
+            type="text"
+            value=""
+          />
+        </div>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-string"
+      >
+        <div
+          style={
+            {
+              "display": "flex",
+              "flexDirection": "column",
+              "gap": "0.5rem",
+              "marginBottom": "1rem",
+            }
+          }
+        >
+          <label
+            htmlFor="root_lastName"
+          >
+            lastName
+             
+          </label>
+          <input
+            aria-describedby="root_lastName__error root_lastName__description root_lastName__help"
+            autoFocus={false}
+            className="p-inputtext p-component"
+            data-pc-name="inputtext"
+            data-pc-section="root"
+            disabled={false}
+            id="root_lastName"
+            name="root.lastName"
+            onBeforeInput={[Function]}
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            onInput={[Function]}
+            onKeyDown={[Function]}
+            onPaste={[Function]}
+            placeholder=""
+            required={false}
+            type="text"
+            value=""
+          />
+        </div>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-number"
+      >
+        <div
+          style={
+            {
+              "display": "flex",
+              "flexDirection": "column",
+              "gap": "0.5rem",
+              "marginBottom": "1rem",
+            }
+          }
+        >
+          <label
+            htmlFor="root_age"
+          >
+            age
+             
+          </label>
+          <input
+            aria-describedby="root_age__error root_age__description root_age__help"
+            autoFocus={false}
+            className="p-inputtext p-component"
+            data-pc-name="inputtext"
+            data-pc-section="root"
+            disabled={false}
+            id="root_age"
+            name="root.age"
+            onBeforeInput={[Function]}
+            onBlur={[Function]}
+            onChange={[Function]}
+            onFocus={[Function]}
+            onInput={[Function]}
+            onKeyDown={[Function]}
+            onPaste={[Function]}
+            placeholder=""
+            required={false}
+            step="any"
+            type="number"
+            value=""
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    aria-label="Submit"
+    className="p-button p-component"
+    data-pc-name="button"
+    data-pc-section="root"
+    disabled={false}
+    type="submit"
+  >
+    <span
+      className="p-button-label p-c"
+      data-pc-section="label"
+    >
+      Submit
+    </span>
+  </button>
+</form>
+`;
+
 exports[`object fields additionalProperties 1`] = `
 <form
   className="rjsf"

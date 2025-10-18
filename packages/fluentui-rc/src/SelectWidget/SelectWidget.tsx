@@ -25,6 +25,7 @@ function getValue(data: OptionOnSelectData, multiple: boolean) {
  */
 function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>({
   id,
+  htmlName,
   options,
   label,
   hideLabel,
@@ -72,7 +73,7 @@ function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFSchema, F extend
     >
       <Dropdown
         id={id}
-        name={id}
+        name={htmlName || id}
         multiselect={multiple}
         className='form-control'
         value={dropdownValue}

@@ -1,7 +1,7 @@
 import { ComponentType } from 'react';
 import renderer, { TestRendererOptions } from 'react-test-renderer';
 import { FormProps } from '@rjsf/core';
-import { RJSFSchema, ErrorSchema, UiSchema } from '@rjsf/utils';
+import { RJSFSchema, ErrorSchema, UiSchema, bracketNameGenerator, dotNotationNameGenerator } from '@rjsf/utils';
 import validator from '@rjsf/validator-ajv8';
 
 jest.mock('@rjsf/utils', () => ({
@@ -387,6 +387,144 @@ export function arrayTests(Form: ComponentType<FormProps>, customOptions: ArrayR
         .create(<Form schema={schema} uiSchema={uiSchema} validator={validator} formData={['a', 'b']} />)
         .toJSON();
       expect(tree).toMatchSnapshot();
+    });
+  });
+
+  describe('nameGenerator', () => {
+    describe('bracketNameGenerator', () => {
+      test('array of strings', () => {
+        const schema: RJSFSchema = {
+          type: 'array',
+          items: {
+            type: 'string',
+          },
+        };
+        const formData = ['foo', 'bar'];
+        const tree = renderer
+          .create(
+            <Form schema={schema} formData={formData} validator={validator} nameGenerator={bracketNameGenerator} />,
+          )
+          .toJSON();
+        expect(tree).toMatchSnapshot();
+      });
+
+      test('array of objects', () => {
+        const schema: RJSFSchema = {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              name: { type: 'string' },
+              value: { type: 'number' },
+            },
+          },
+        };
+        const formData = [
+          { name: 'Item 1', value: 10 },
+          { name: 'Item 2', value: 20 },
+        ];
+        const tree = renderer
+          .create(
+            <Form schema={schema} formData={formData} validator={validator} nameGenerator={bracketNameGenerator} />,
+          )
+          .toJSON();
+        expect(tree).toMatchSnapshot();
+      });
+
+      test('fixed array', () => {
+        const schema: RJSFSchema = {
+          type: 'array',
+          items: [{ type: 'string' }, { type: 'number' }, { type: 'boolean' }],
+        };
+        const formData = ['text', 42, true];
+        const tree = renderer
+          .create(
+            <Form schema={schema} formData={formData} validator={validator} nameGenerator={bracketNameGenerator} />,
+          )
+          .toJSON();
+        expect(tree).toMatchSnapshot();
+      });
+
+      test('nested arrays', () => {
+        const schema: RJSFSchema = {
+          type: 'array',
+          items: {
+            type: 'array',
+            items: {
+              type: 'string',
+            },
+          },
+        };
+        const formData = [
+          ['a', 'b'],
+          ['c', 'd'],
+        ];
+        const tree = renderer
+          .create(
+            <Form schema={schema} formData={formData} validator={validator} nameGenerator={bracketNameGenerator} />,
+          )
+          .toJSON();
+        expect(tree).toMatchSnapshot();
+      });
+
+      test('checkboxes with nameGenerator', () => {
+        const schema: RJSFSchema = {
+          type: 'array',
+          items: {
+            type: 'string',
+            enum: ['foo', 'bar', 'baz'],
+          },
+          uniqueItems: true,
+        };
+        const tree = renderer
+          .create(
+            <Form schema={schema} validator={validator} nameGenerator={bracketNameGenerator} />,
+            customOptions.checkboxes,
+          )
+          .toJSON();
+        expect(tree).toMatchSnapshot();
+      });
+    });
+
+    describe('dotNotationNameGenerator', () => {
+      test('array of strings', () => {
+        const schema: RJSFSchema = {
+          type: 'array',
+          items: {
+            type: 'string',
+          },
+        };
+        const formData = ['foo', 'bar'];
+        const tree = renderer
+          .create(
+            <Form schema={schema} formData={formData} validator={validator} nameGenerator={dotNotationNameGenerator} />,
+          )
+          .toJSON();
+        expect(tree).toMatchSnapshot();
+      });
+
+      test('array of objects', () => {
+        const schema: RJSFSchema = {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              name: { type: 'string' },
+              value: { type: 'number' },
+            },
+          },
+        };
+        const formData = [
+          { name: 'Item 1', value: 10 },
+          { name: 'Item 2', value: 20 },
+        ];
+        const tree = renderer
+          .create(
+            <Form schema={schema} formData={formData} validator={validator} nameGenerator={dotNotationNameGenerator} />,
+          )
+          .toJSON();
+        expect(tree).toMatchSnapshot();
+      });
     });
   });
 }

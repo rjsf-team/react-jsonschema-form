@@ -16,6 +16,7 @@ export default function BaseInputTemplate<
   F extends FormContextType = any,
 >({
   id,
+  htmlName,
   placeholder,
   required,
   readonly,
@@ -47,7 +48,7 @@ export default function BaseInputTemplate<
     <>
       <Form.Control
         id={id}
-        name={id}
+        name={htmlName || id}
         placeholder={placeholder}
         autoFocus={autofocus}
         required={required}

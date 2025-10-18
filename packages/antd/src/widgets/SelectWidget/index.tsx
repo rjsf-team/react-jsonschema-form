@@ -31,6 +31,7 @@ export default function SelectWidget<
   disabled,
   registry,
   id,
+  htmlName,
   multiple,
   onBlur,
   onChange,
@@ -67,7 +68,7 @@ export default function SelectWidget<
   // Antd's typescript definitions do not contain the following props that are actually necessary and, if provided,
   // they are used, so hacking them in via by spreading `extraProps` on the component to avoid typescript errors
   const extraProps = {
-    name: id,
+    name: htmlName || id,
   };
 
   const showPlaceholderOption = !multiple && schema.default === undefined;

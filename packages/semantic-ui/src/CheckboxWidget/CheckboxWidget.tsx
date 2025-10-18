@@ -25,6 +25,7 @@ export default function CheckboxWidget<
 >(props: WidgetProps<T, S, F>) {
   const {
     id,
+    htmlName,
     value,
     disabled,
     readonly,
@@ -76,7 +77,7 @@ export default function CheckboxWidget<
       )}
       <Form.Checkbox
         id={id}
-        name={id}
+        name={htmlName || id}
         disabled={disabled || readonly}
         autoFocus={autofocus}
         {...semanticProps}

@@ -25,6 +25,7 @@ export default function BaseInputTemplate<
 >(props: BaseInputTemplateProps<T, S, F>) {
   const {
     id,
+    htmlName,
     placeholder,
     label,
     hideLabel,
@@ -60,7 +61,7 @@ export default function BaseInputTemplate<
       <Form.Input
         key={id}
         id={id}
-        name={id}
+        name={htmlName || id}
         placeholder={placeholder}
         {...inputProps}
         label={labelValue(label || undefined, hideLabel, false)}

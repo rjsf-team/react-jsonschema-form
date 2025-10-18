@@ -9,44 +9,39 @@ import ArrayField from '../src/components/fields/ArrayField';
 import { TextWidgetTest } from './StringField.test';
 
 const ArrayKeyDataAttr = 'data-rjsf-itemkey';
+const ExposedArrayKeyItemTemplate = function (props) {
+  return (
+    <div className='rjsf-array-item' data-rjsf-itemkey={props.itemKey}>
+      <div>{props.children}</div>
+      {(props.buttonsProps.hasMoveUp || props.buttonsProps.hasMoveDown) && (
+        <button className='rjsf-array-item-move-down' onClick={props.buttonsProps.onMoveDownItem}>
+          Down
+        </button>
+      )}
+      {(props.buttonsProps.hasMoveUp || props.buttonsProps.hasMoveDown) && (
+        <button className='rjsf-array-item-move-up' onClick={props.buttonsProps.onMoveUpItem}>
+          Up
+        </button>
+      )}
+      {props.buttonsProps.hasCopy && (
+        <button className='rjsf-array-item-copy' onClick={props.buttonsProps.onCopyItem}>
+          Copy
+        </button>
+      )}
+      {props.buttonsProps.hasRemove && (
+        <button className='rjsf-array-item-remove' onClick={props.buttonsProps.onRemoveItem}>
+          Remove
+        </button>
+      )}
+      <hr />
+    </div>
+  );
+};
+
 const ExposedArrayKeyTemplate = function (props) {
   return (
     <div className='array'>
-      {props.items &&
-        props.items.map((element) => (
-          <div key={element.key} className='rjsf-array-item' data-rjsf-itemkey={element.key}>
-            <div>{element.children}</div>
-            {(element.buttonsProps.hasMoveUp || element.buttonsProps.hasMoveDown) && (
-              <button
-                className='rjsf-array-item-move-down'
-                onClick={element.buttonsProps.onReorderClick(element.index, element.index + 1)}
-              >
-                Down
-              </button>
-            )}
-            {(element.buttonsProps.hasMoveUp || element.buttonsProps.hasMoveDown) && (
-              <button
-                className='rjsf-array-item-move-up'
-                onClick={element.buttonsProps.onReorderClick(element.index, element.index - 1)}
-              >
-                Up
-              </button>
-            )}
-            {element.buttonsProps.hasCopy && (
-              <button className='rjsf-array-item-copy' onClick={element.buttonsProps.onCopyIndexClick(element.index)}>
-                Copy
-              </button>
-            )}
-            {element.buttonsProps.hasRemove && (
-              <button className='rjsf-array-item-remove' onClick={element.buttonsProps.onDropIndexClick(element.index)}>
-                Remove
-              </button>
-            )}
-            <button onClick={element.buttonsProps.onDropIndexClick(element.index)}>Delete</button>
-            <hr />
-          </div>
-        ))}
-
+      {props.items}
       {props.canAdd && (
         <div className='rjsf-array-item-add'>
           <button onClick={props.onAddClick} type='button'>
@@ -58,16 +53,18 @@ const ExposedArrayKeyTemplate = function (props) {
   );
 };
 
+const CustomOnAddClickItemTemplate = function (props) {
+  return (
+    <div className='rjsf-array-item'>
+      <div>{props.children}</div>
+    </div>
+  );
+};
+
 const CustomOnAddClickTemplate = function (props) {
   return (
     <div className='array'>
-      {props.items &&
-        props.items.map((element) => (
-          <div key={element.key} className='rjsf-array-item'>
-            <div>{element.children}</div>
-          </div>
-        ))}
-
+      {props.items}
       {props.canAdd && (
         <div className='rjsf-array-item-add'>
           <button onClick={() => props.onAddClick()} type='button'>
@@ -87,47 +84,37 @@ const ArrayFieldTestItemButtonsTemplate = (props) => {
     hasMoveUp,
     hasRemove,
     style,
-    index,
-    onAddIndexClick,
-    onCopyIndexClick,
-    onDropIndexClick,
-    onReorderClick,
+    onAddItem,
+    onCopyItem,
+    onRemoveItem,
+    onMoveDownItem,
+    onMoveUpItem,
     readonly,
   } = props;
   return (
     <>
       {hasMoveDown && (
-        <button
-          title='move-down'
-          style={style}
-          disabled={disabled || readonly}
-          onClick={onReorderClick(index, index + 1)}
-        >
+        <button title='move-down' style={style} disabled={disabled || readonly} onClick={onMoveDownItem}>
           move down
         </button>
       )}
       {hasMoveUp && (
-        <button
-          title='move-up'
-          style={style}
-          disabled={disabled || readonly}
-          onClick={onReorderClick(index, index - 1)}
-        >
+        <button title='move-up' style={style} disabled={disabled || readonly} onClick={onMoveUpItem}>
           move up
         </button>
       )}
       {hasCopy && (
-        <button title='copy' style={style} disabled={disabled || readonly} onClick={onCopyIndexClick(index)}>
+        <button title='copy' style={style} disabled={disabled || readonly} onClick={onCopyItem}>
           copy
         </button>
       )}
       {hasRemove && (
-        <button title='remove' style={style} disabled={disabled || readonly} onClick={onDropIndexClick(index)}>
+        <button title='remove' style={style} disabled={disabled || readonly} onClick={onRemoveItem}>
           remove
         </button>
       )}
       {hasMoveDown && (
-        <button title='insert' style={style} disabled={disabled || readonly} onClick={onAddIndexClick(index + 1)}>
+        <button title='insert' style={style} disabled={disabled || readonly} onClick={onAddItem}>
           insert
         </button>
       )}
@@ -432,7 +419,7 @@ describe('ArrayField', () => {
     it('should assign new keys/ids when clicking the add button', () => {
       const { node } = createFormComponent({
         schema,
-        templates: { ArrayFieldTemplate: ExposedArrayKeyTemplate },
+        templates: { ArrayFieldTemplate: ExposedArrayKeyTemplate, ArrayFieldItemTemplate: ExposedArrayKeyItemTemplate },
       });
 
       act(() => {
@@ -445,7 +432,10 @@ describe('ArrayField', () => {
     it('should add a field when clicking add button even if event is not passed to onAddClick', () => {
       const { node } = createFormComponent({
         schema,
-        templates: { ArrayFieldTemplate: CustomOnAddClickTemplate },
+        templates: {
+          ArrayFieldTemplate: CustomOnAddClickTemplate,
+          ArrayFieldItemTemplate: CustomOnAddClickItemTemplate,
+        },
       });
 
       act(() => {
@@ -477,7 +467,7 @@ describe('ArrayField', () => {
       const { node } = createFormComponent({
         schema: { maxItems: 2, ...schema },
         formData: ['foo'],
-        templates: { ArrayFieldTemplate: ExposedArrayKeyTemplate },
+        templates: { ArrayFieldTemplate: ExposedArrayKeyTemplate, ArrayFieldItemTemplate: ExposedArrayKeyItemTemplate },
       });
 
       const startRows = node.querySelectorAll('.rjsf-array-item');
@@ -500,83 +490,7 @@ describe('ArrayField', () => {
       expect(endRows[1].hasAttribute(ArrayKeyDataAttr)).to.be.true;
     });
 
-    it('should allow inserting anywhere in list', () => {
-      function addItemAboveOrBelow(item) {
-        const beforeIndex = item.index;
-        const addBeforeButton = (
-          <button
-            key={`array-item-add-before-${item.key}`}
-            className={'rjsf-array-item-move-before array-item-move-before-to-' + beforeIndex}
-            onClick={item.buttonsProps.onAddIndexClick(beforeIndex)}
-          >
-            {'Add Item Above'}
-          </button>
-        );
-
-        const afterIndex = item.index + 1;
-        const addAfterButton = (
-          <button
-            key={`array-item-add-after-${item.key}`}
-            className={'rjsf-array-item-move-after array-item-move-after-to-' + afterIndex}
-            onClick={item.buttonsProps.onAddIndexClick(afterIndex)}
-          >
-            {'Add Item Below'}
-          </button>
-        );
-
-        return (
-          <div key={item.key} data-rjsf-itemkey={item.key} className={`rjsf-array-item item-${item.index}`}>
-            <div>{addBeforeButton}</div>
-            {item.children}
-            <div>{addAfterButton}</div>
-            <hr />
-          </div>
-        );
-      }
-
-      function addAboveOrBelowArrayFieldTemplate(props) {
-        return <div className='array'>{props.items.map(addItemAboveOrBelow)}</div>;
-      }
-
-      const { node } = createFormComponent({
-        schema,
-        formData: ['foo', 'bar', 'baz'],
-        templates: { ArrayFieldTemplate: addAboveOrBelowArrayFieldTemplate },
-      });
-
-      const addBeforeButtons = node.querySelectorAll('.rjsf-array-item-move-before');
-      const addAfterButtons = node.querySelectorAll('.rjsf-array-item-move-after');
-
-      const startRows = node.querySelectorAll('.rjsf-array-item');
-      const startRow1_key = startRows[0].getAttribute(ArrayKeyDataAttr);
-      const startRow2_key = startRows[1].getAttribute(ArrayKeyDataAttr);
-      const startRow3_key = startRows[2].getAttribute(ArrayKeyDataAttr);
-
-      act(() => {
-        fireEvent.click(addBeforeButtons[0]);
-      });
-
-      act(() => {
-        fireEvent.click(addAfterButtons[0]);
-      });
-
-      const endRows = node.querySelectorAll('.rjsf-array-item');
-      const endRow2_key = endRows[1].getAttribute(ArrayKeyDataAttr);
-      const endRow4_key = endRows[3].getAttribute(ArrayKeyDataAttr);
-      const endRow5_key = endRows[4].getAttribute(ArrayKeyDataAttr);
-
-      expect(startRow1_key).to.equal(endRow2_key);
-      expect(startRow2_key).to.equal(endRow4_key);
-      expect(startRow3_key).to.equal(endRow5_key);
-
-      expect(endRows[0].hasAttribute(ArrayKeyDataAttr)).to.be.true;
-      expect(endRows[1].hasAttribute(ArrayKeyDataAttr)).to.be.true;
-      expect(endRows[2].hasAttribute(ArrayKeyDataAttr)).to.be.true;
-      expect(endRows[3].hasAttribute(ArrayKeyDataAttr)).to.be.true;
-      expect(endRows[4].hasAttribute(ArrayKeyDataAttr)).to.be.true;
-    });
-
-    it('should not provide an add button if addable is expliclty false regardless maxItems value', () => {
+    it('should not provide an add button if addable is explicitly false regardless maxItems value', () => {
       const { node } = createFormComponent({
         schema: { maxItems: 2, ...schema },
         formData: ['foo'],
@@ -683,7 +597,7 @@ describe('ArrayField', () => {
       const { node } = createFormComponent({
         schema,
         formData: ['foo', 'bar', 'baz'],
-        templates: { ArrayFieldTemplate: ExposedArrayKeyTemplate },
+        templates: { ArrayFieldTemplate: ExposedArrayKeyTemplate, ArrayFieldItemTemplate: ExposedArrayKeyItemTemplate },
       });
       const moveDownBtns = node.querySelectorAll('.rjsf-array-item-move-down');
       const startRows = node.querySelectorAll('.rjsf-array-item');
@@ -713,7 +627,7 @@ describe('ArrayField', () => {
       const { node } = createFormComponent({
         schema,
         formData: ['foo', 'bar', 'baz'],
-        templates: { ArrayFieldTemplate: ExposedArrayKeyTemplate },
+        templates: { ArrayFieldTemplate: ExposedArrayKeyTemplate, ArrayFieldItemTemplate: ExposedArrayKeyItemTemplate },
       });
       const moveUpBtns = node.querySelectorAll('.rjsf-array-item-move-up');
       const startRows = node.querySelectorAll('.rjsf-array-item');
@@ -732,67 +646,6 @@ describe('ArrayField', () => {
 
       expect(startRow1_key).to.equal(endRow1_key);
       expect(startRow2_key).to.equal(endRow3_key);
-      expect(startRow3_key).to.equal(endRow2_key);
-
-      expect(endRows[0].hasAttribute(ArrayKeyDataAttr)).to.be.true;
-      expect(endRows[1].hasAttribute(ArrayKeyDataAttr)).to.be.true;
-      expect(endRows[2].hasAttribute(ArrayKeyDataAttr)).to.be.true;
-    });
-
-    it('should move from first to last in the list', () => {
-      function moveAnywhereArrayItemTemplate(props) {
-        const buttons = [];
-        for (let i = 0; i < 3; i++) {
-          buttons.push(
-            <button
-              key={i}
-              className={'array-item-move-to-' + i}
-              onClick={props.buttonsProps.onReorderClick(props.index, i)}
-            >
-              {'Move item to index ' + i}
-            </button>,
-          );
-        }
-        return (
-          <div key={props.key} data-rjsf-itemkey={props.key} className={`rjsf-array-item item-${props.index}`}>
-            {props.children}
-            {buttons}
-          </div>
-        );
-      }
-
-      function moveAnywhereArrayFieldTemplate(props) {
-        return <div className='array'>{props.items.map(moveAnywhereArrayItemTemplate)}</div>;
-      }
-
-      const { node } = createFormComponent({
-        schema,
-        formData: ['foo', 'bar', 'baz'],
-        templates: { ArrayFieldTemplate: moveAnywhereArrayFieldTemplate },
-      });
-
-      const startRows = node.querySelectorAll('.rjsf-array-item');
-      const startRow1_key = startRows[0].getAttribute(ArrayKeyDataAttr);
-      const startRow2_key = startRows[1].getAttribute(ArrayKeyDataAttr);
-      const startRow3_key = startRows[2].getAttribute(ArrayKeyDataAttr);
-
-      const button = node.querySelector('.item-0 .array-item-move-to-2');
-      act(() => {
-        fireEvent.click(button);
-      });
-
-      const inputs = node.querySelectorAll('.rjsf-field-string input[type=text]');
-      expect(inputs[0].value).eql('bar');
-      expect(inputs[1].value).eql('baz');
-      expect(inputs[2].value).eql('foo');
-
-      const endRows = node.querySelectorAll('.rjsf-array-item');
-      const endRow1_key = endRows[0].getAttribute(ArrayKeyDataAttr);
-      const endRow2_key = endRows[1].getAttribute(ArrayKeyDataAttr);
-      const endRow3_key = endRows[2].getAttribute(ArrayKeyDataAttr);
-
-      expect(startRow1_key).to.equal(endRow3_key);
-      expect(startRow2_key).to.equal(endRow1_key);
       expect(startRow3_key).to.equal(endRow2_key);
 
       expect(endRows[0].hasAttribute(ArrayKeyDataAttr)).to.be.true;
@@ -895,7 +748,7 @@ describe('ArrayField', () => {
       const { node } = createFormComponent({
         schema,
         formData: ['foo', 'bar'],
-        templates: { ArrayFieldTemplate: ExposedArrayKeyTemplate },
+        templates: { ArrayFieldTemplate: ExposedArrayKeyTemplate, ArrayFieldItemTemplate: ExposedArrayKeyItemTemplate },
       });
 
       const startRows = node.querySelectorAll('.rjsf-array-item');
@@ -1853,7 +1706,7 @@ describe('ArrayField', () => {
       const CustomTemplate = (props) => {
         return (
           <div id='custom'>
-            {props.items && props.items.map((p, i) => <CustomItem key={i} {...p} />)}
+            {props.items}
             <div id='custom-error'>{props.rawErrors && props.rawErrors.join(', ')}</div>
           </div>
         );
@@ -1875,7 +1728,7 @@ describe('ArrayField', () => {
 
       const { node } = createFormComponent({
         schema,
-        templates: { ArrayFieldTemplate: CustomTemplate },
+        templates: { ArrayFieldTemplate: CustomTemplate, ArrayFieldItemTemplate: CustomItem },
         formData: [[]],
         liveValidate: true,
       });
@@ -2135,7 +1988,10 @@ describe('ArrayField', () => {
         const { node, onChange } = createFormComponent({
           schema: schemaAdditional,
           formData: [1, 2, 'foo'],
-          templates: { ArrayFieldTemplate: ExposedArrayKeyTemplate },
+          templates: {
+            ArrayFieldTemplate: ExposedArrayKeyTemplate,
+            ArrayFieldItemTemplate: ExposedArrayKeyItemTemplate,
+          },
         });
 
         const addBtn = node.querySelector('.rjsf-array-item-add button');
@@ -2159,7 +2015,10 @@ describe('ArrayField', () => {
         const { node } = createFormComponent({
           schema: schemaAdditional,
           formData: [1, 2, 'foo'],
-          templates: { ArrayFieldTemplate: ExposedArrayKeyTemplate },
+          templates: {
+            ArrayFieldTemplate: ExposedArrayKeyTemplate,
+            ArrayFieldItemTemplate: ExposedArrayKeyItemTemplate,
+          },
         });
 
         const startRows = node.querySelectorAll('.rjsf-array-item');
@@ -2196,7 +2055,10 @@ describe('ArrayField', () => {
         const { node, onChange } = createFormComponent({
           schema: schemaAdditional,
           formData: [1, 2, 'foo'],
-          templates: { ArrayFieldTemplate: ExposedArrayKeyTemplate },
+          templates: {
+            ArrayFieldTemplate: ExposedArrayKeyTemplate,
+            ArrayFieldItemTemplate: ExposedArrayKeyItemTemplate,
+          },
         });
 
         const addBtn = node.querySelector('.rjsf-array-item-add button');
@@ -2228,7 +2090,10 @@ describe('ArrayField', () => {
         const { node, onChange } = createFormComponent({
           schema: schemaAdditional,
           formData: [1, 2, 'foo'],
-          templates: { ArrayFieldTemplate: ExposedArrayKeyTemplate },
+          templates: {
+            ArrayFieldTemplate: ExposedArrayKeyTemplate,
+            ArrayFieldItemTemplate: ExposedArrayKeyItemTemplate,
+          },
         });
 
         const addBtn = node.querySelector('.rjsf-array-item-add button');

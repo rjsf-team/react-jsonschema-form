@@ -1034,6 +1034,19 @@ Unwraps the `errorHandler` structure into the associated `ErrorSchema`, strippin
 
 - ErrorSchema&lt;T>: The `ErrorSchema` resulting from the stripping of the `addError()` function
 
+### useDeepCompareMemo&lt;T = unknown>()
+
+Hook that stores and returns a `T`. If `newValue` is the same as the stored one, then the stored one is returned to
+avoid having a component rerender due it being a different object. Otherwise, the `newValue` is stored and returned.
+
+#### Parameters
+
+- newValue: T - The potential new `T` value
+
+#### Returns
+
+- T: The latest stored `T` value
+
 ### utcToLocal()
 
 Converts a UTC date string into a local Date format

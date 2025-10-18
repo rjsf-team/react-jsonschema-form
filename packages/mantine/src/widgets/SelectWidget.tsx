@@ -23,6 +23,7 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
 ) {
   const {
     id,
+    htmlName,
     value,
     placeholder,
     required,
@@ -88,7 +89,7 @@ export default function SelectWidget<T = any, S extends StrictRJSFSchema = RJSFS
   return (
     <Component
       id={id}
-      name={id}
+      name={htmlName || id}
       label={labelValue(label || undefined, hideLabel, false)}
       data={selectOptions}
       value={multiple ? (selectedIndexes as any) : (selectedIndexes as string)}

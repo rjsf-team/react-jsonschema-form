@@ -48,11 +48,6 @@ export default function ArrayFieldTemplate<T = any, S extends RJSFSchema = RJSFS
     registry as Registry<T, S, F>,
     uiOptions,
   );
-  const ArrayFieldItemTemplate = getTemplate<'ArrayFieldItemTemplate', T, S, F>(
-    'ArrayFieldItemTemplate',
-    registry as Registry<T, S, F>,
-    uiOptions,
-  );
   const ArrayFieldTitleTemplate = getTemplate<'ArrayFieldTitleTemplate', T, S, F>(
     'ArrayFieldTitleTemplate',
     registry as Registry<T, S, F>,
@@ -98,9 +93,7 @@ export default function ArrayFieldTemplate<T = any, S extends RJSFSchema = RJSFS
       <div className='flex flex-col gap-4'>
         {!showOptionalDataControlInTitle ? optionalDataControl : undefined}
         <div className='rjsf-array-item-list'>
-          {items.map(({ key, ...itemProps }, index) => (
-            <ArrayFieldItemTemplate key={key} {...itemProps} index={index} totalItems={items.length} />
-          ))}
+          {items}
           {items && items.length === 0 && canAdd && (
             <div className='text-center italic text-base-content/70'>{TranslatableString.EmptyArray}</div>
           )}

@@ -1,6 +1,5 @@
-import { useMemo } from 'react';
 import {
-  ArrayFieldItemButtonsTemplateType,
+  ArrayFieldItemButtonsTemplateProps,
   buttonId,
   FormContextType,
   RJSFSchema,
@@ -10,13 +9,13 @@ import {
 /** The `ArrayFieldTemplateItemButtons` component is the template used to render the buttons associate3d with items of
  * an array.
  *
- * @param props - The `ArrayFieldItemButtonsTemplateType` props for the component
+ * @param props - The `ArrayFieldItemButtonsTemplateProps` props for the component
  */
 export default function ArrayFieldItemButtonsTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
->(props: ArrayFieldItemButtonsTemplateType<T, S, F>) {
+>(props: ArrayFieldItemButtonsTemplateProps<T, S, F>) {
   const {
     disabled,
     hasCopy,
@@ -24,19 +23,15 @@ export default function ArrayFieldItemButtonsTemplate<
     hasMoveUp,
     hasRemove,
     fieldPathId,
-    index,
-    onCopyIndexClick,
-    onDropIndexClick,
-    onReorderClick,
+    onCopyItem,
+    onRemoveItem,
+    onMoveDownItem,
+    onMoveUpItem,
     readonly,
     registry,
     uiSchema,
   } = props;
   const { CopyButton, MoveDownButton, MoveUpButton, RemoveButton } = registry.templates.ButtonTemplates;
-  const onCopyClick = useMemo(() => onCopyIndexClick(index), [index, onCopyIndexClick]);
-  const onRemoveClick = useMemo(() => onDropIndexClick(index), [index, onDropIndexClick]);
-  const onArrowUpClick = useMemo(() => onReorderClick(index, index - 1), [index, onReorderClick]);
-  const onArrowDownClick = useMemo(() => onReorderClick(index, index + 1), [index, onReorderClick]);
 
   return (
     <>
@@ -45,7 +40,7 @@ export default function ArrayFieldItemButtonsTemplate<
           id={buttonId(fieldPathId, 'moveUp')}
           className='rjsf-array-item-move-up'
           disabled={disabled || readonly || !hasMoveUp}
-          onClick={onArrowUpClick}
+          onClick={onMoveUpItem}
           uiSchema={uiSchema}
           registry={registry}
         />
@@ -55,7 +50,7 @@ export default function ArrayFieldItemButtonsTemplate<
           id={buttonId(fieldPathId, 'moveDown')}
           className='rjsf-array-item-move-down'
           disabled={disabled || readonly || !hasMoveDown}
-          onClick={onArrowDownClick}
+          onClick={onMoveDownItem}
           uiSchema={uiSchema}
           registry={registry}
         />
@@ -65,7 +60,7 @@ export default function ArrayFieldItemButtonsTemplate<
           id={buttonId(fieldPathId, 'copy')}
           className='rjsf-array-item-copy'
           disabled={disabled || readonly}
-          onClick={onCopyClick}
+          onClick={onCopyItem}
           uiSchema={uiSchema}
           registry={registry}
         />
@@ -75,7 +70,7 @@ export default function ArrayFieldItemButtonsTemplate<
           id={buttonId(fieldPathId, 'remove')}
           className='rjsf-array-item-remove'
           disabled={disabled || readonly}
-          onClick={onRemoveClick}
+          onClick={onRemoveItem}
           uiSchema={uiSchema}
           registry={registry}
         />

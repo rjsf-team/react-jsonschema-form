@@ -27,6 +27,7 @@ export default function BaseInputTemplate<
   const {
     id,
     name, // remove this from textFieldProps
+    htmlName,
     placeholder,
     required,
     readonly,
@@ -69,7 +70,7 @@ export default function BaseInputTemplate<
     <>
       <TextField
         id={id}
-        name={id}
+        name={htmlName || id}
         placeholder={placeholder}
         label={labelValue(label || undefined, hideLabel, undefined)}
         autoFocus={autofocus}

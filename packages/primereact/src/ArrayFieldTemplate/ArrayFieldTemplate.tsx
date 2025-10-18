@@ -3,11 +3,9 @@ import {
   getUiOptions,
   isFixedItems,
   ArrayFieldTemplateProps,
-  ArrayFieldItemTemplateType,
   FormContextType,
   RJSFSchema,
   StrictRJSFSchema,
-  UI_OPTIONS_KEY,
   buttonId,
 } from '@rjsf/utils';
 import { Fieldset } from 'primereact/fieldset';
@@ -15,7 +13,7 @@ import AddButton from '../AddButton';
 
 /** The `ArrayFieldTemplate` component is the template used to render all items in an array.
  *
- * @param props - The `ArrayFieldItemTemplateType` props for the component
+ * @param props - The `ArrayFieldTemplateProps` props for the component
  */
 export default function ArrayFieldTemplate<
   T = any,
@@ -42,11 +40,6 @@ export default function ArrayFieldTemplate<
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const ArrayFieldDescriptionTemplate = getTemplate<'ArrayFieldDescriptionTemplate', T, S, F>(
     'ArrayFieldDescriptionTemplate',
-    registry,
-    uiOptions,
-  );
-  const ArrayFieldItemTemplate = getTemplate<'ArrayFieldItemTemplate', T, S, F>(
-    'ArrayFieldItemTemplate',
     registry,
     uiOptions,
   );
@@ -83,15 +76,7 @@ export default function ArrayFieldTemplate<
         <div key={`array-item-list-${fieldPathId.$id}`}>
           <div>
             {!showOptionalDataControlInTitle ? optionalDataControl : undefined}
-            {items.map(({ key, uiSchema: itemUiSchema = {}, ...props }: ArrayFieldItemTemplateType<T, S, F>) => {
-              const mergedUiSchema = {
-                ...itemUiSchema,
-                [UI_OPTIONS_KEY]: {
-                  ...itemUiSchema[UI_OPTIONS_KEY],
-                },
-              };
-              return <ArrayFieldItemTemplate key={key} {...props} uiSchema={mergedUiSchema} />;
-            })}
+            {items}
           </div>
           {canAdd && (
             <div

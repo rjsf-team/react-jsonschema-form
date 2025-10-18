@@ -42,6 +42,8 @@ import {
   DEFAULT_ID_PREFIX,
   GlobalFormOptions,
   ERRORS_KEY,
+  ID_KEY,
+  NameGeneratorFunction,
 } from '@rjsf/utils';
 import _cloneDeep from 'lodash/cloneDeep';
 import _get from 'lodash/get';
@@ -195,6 +197,9 @@ export interface FormProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
    * to put the second parameter before the first in its translation.
    */
   translateString?: Registry['translateString'];
+  /** Optional function to generate custom HTML `name` attributes for form fields.
+   */
+  nameGenerator?: NameGeneratorFunction;
   /** Optional configuration object with flags, if provided, allows users to override default form state behavior
    * Currently only affecting minItems on array fields and handling of setting defaults based on the value of
    * `emptyObjectFields`
@@ -269,22 +274,36 @@ export interface FormState<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   retrievedSchema: S;
   /** Flag indicating whether the initial form defaults have been generated */
   initialDefaultsGenerated: boolean;
+  /** The registry (re)computed only when props changed */
+  registry: Registry<T, S, F>;
 }
 
 /** The event data passed when changes have been made to the form, includes everything from the `FormState` except
  * the schema validation errors. An additional `status` is added when returned from `onSubmit`
  */
 export interface IChangeEvent<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>
-  extends Omit<
+  extends Pick<
     FormState<T, S, F>,
-    | 'schemaValidationErrors'
-    | 'schemaValidationErrorSchema'
-    | 'retrievedSchema'
-    | 'customErrors'
-    | 'initialDefaultsGenerated'
+    'schema' | 'uiSchema' | 'fieldPathId' | 'schemaUtils' | 'formData' | 'edit' | 'errors' | 'errorSchema'
   > {
   /** The status of the form when submitted */
   status?: 'submitted';
+}
+
+/** Converts the full `FormState` into the `IChangeEvent` version by picking out the public values
+ *
+ * @param state - The state of the form
+ * @param status - The status provided by the onSubmit
+ * @returns - The `IChangeEvent` for the state
+ */
+function toIChangeEvent<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+  state: FormState<T, S, F>,
+  status?: IChangeEvent['status'],
+): IChangeEvent<T, S, F> {
+  return {
+    ..._pick(state, ['schema', 'uiSchema', 'fieldPathId', 'schemaUtils', 'formData', 'edit', 'errors', 'errorSchema']),
+    ...(status !== undefined && { status }),
+  };
 }
 
 /** The definition of a pending change that will be processed in the `onChange` handler
@@ -330,7 +349,7 @@ export default class Form<
 
     this.state = this.getStateFromProps(props, props.formData);
     if (this.props.onChange && !deepEquals(this.state.formData, this.props.formData)) {
-      this.props.onChange(this.state);
+      this.props.onChange(toIChangeEvent(this.state));
     }
     this.formElement = createRef();
   }
@@ -413,7 +432,7 @@ export default class Form<
         !deepEquals(nextState.formData, prevState.formData) &&
         this.props.onChange
       ) {
-        this.props.onChange(nextState);
+        this.props.onChange(toIChangeEvent(nextState));
       }
       this.setState(nextState);
     }
@@ -545,7 +564,14 @@ export default class Form<
       errorSchema = mergedErrors.errorSchema;
     }
 
-    const fieldPathId = toFieldPathId('', this.getGlobalFormOptions(this.props));
+    // Only store a new registry when the props cause a different one to be created
+    const newRegistry = this.getRegistry(props, rootSchema, schemaUtils);
+    const registry = deepEquals(state.registry, newRegistry) ? state.registry : newRegistry;
+    // Only compute a new `fieldPathId` when the `idPrefix` is different than the existing fieldPathId's ID_KEY
+    const fieldPathId =
+      state.fieldPathId && state.fieldPathId?.[ID_KEY] === registry.globalFormOptions.idPrefix
+        ? state.fieldPathId
+        : toFieldPathId('', registry.globalFormOptions);
     const nextState: FormState<T, S, F> = {
       schemaUtils,
       schema: rootSchema,
@@ -559,6 +585,7 @@ export default class Form<
       schemaValidationErrorSchema,
       retrievedSchema: _retrievedSchema,
       initialDefaultsGenerated: true,
+      registry,
     };
     return nextState;
   }
@@ -835,7 +862,11 @@ export default class Form<
           customErrors = new ErrorSchemaBuilder<T>();
         }
         if (isRootPath) {
-          customErrors.setErrors(_get(newErrorSchema, ERRORS_KEY, ''));
+          const errors = _get(newErrorSchema, ERRORS_KEY);
+          if (errors) {
+            // only set errors when there are some
+            customErrors.setErrors(errors);
+          }
         } else {
           _set(customErrors.ErrorSchema, path, newErrorSchema);
         }
@@ -867,7 +898,7 @@ export default class Form<
     }
     this.setState(state as FormState<T, S, F>, () => {
       if (onChange) {
-        onChange({ ...this.state, ...state }, id);
+        onChange(toIChangeEvent({ ...this.state, ...state }), id);
       }
       // Now remove the change we just completed and call this again
       this.pendingChanges.shift();
@@ -909,7 +940,7 @@ export default class Form<
       customErrors: undefined,
     } as FormState<T, S, F>;
 
-    this.setState(state, () => onChange && onChange({ ...this.state, ...state }));
+    this.setState(state, () => onChange && onChange(toIChangeEvent({ ...this.state, ...state })));
   };
 
   /** Callback function to handle when a field on the form is blurred. Calls the `onBlur` callback for the `Form` if it
@@ -975,7 +1006,7 @@ export default class Form<
         },
         () => {
           if (onSubmit) {
-            onSubmit({ ...this.state, formData: newFormData, status: 'submitted' }, event);
+            onSubmit(toIChangeEvent({ ...this.state, formData: newFormData }, 'submitted'), event);
           }
         },
       );
@@ -994,34 +1025,39 @@ export default class Form<
       experimental_componentUpdateStrategy,
       idSeparator = DEFAULT_ID_SEPARATOR,
       idPrefix = DEFAULT_ID_PREFIX,
+      nameGenerator,
     } = props;
     const rootFieldId = uiSchema['ui:rootFieldId'];
     // Omit any options that are undefined or null
-    return { idPrefix: rootFieldId || idPrefix, idSeparator, experimental_componentUpdateStrategy };
+    return {
+      idPrefix: rootFieldId || idPrefix,
+      idSeparator,
+      ...(experimental_componentUpdateStrategy !== undefined && { experimental_componentUpdateStrategy }),
+      ...(nameGenerator !== undefined && { nameGenerator }),
+    };
   }
 
-  /** Returns the registry for the form */
-  getRegistry(): Registry<T, S, F> {
-    const { translateString: customTranslateString, uiSchema = {} } = this.props;
-    const { schema, schemaUtils } = this.state;
+  /** Computed the registry for the form using the given `props`, `schema` and `schemaUtils` */
+  getRegistry(props: FormProps<T, S, F>, schema: S, schemaUtils: SchemaUtilsType<T, S, F>): Registry<T, S, F> {
+    const { translateString: customTranslateString, uiSchema = {} } = props;
     const { fields, templates, widgets, formContext, translateString } = getDefaultRegistry<T, S, F>();
     return {
-      fields: { ...fields, ...this.props.fields },
+      fields: { ...fields, ...props.fields },
       templates: {
         ...templates,
-        ...this.props.templates,
+        ...props.templates,
         ButtonTemplates: {
           ...templates.ButtonTemplates,
-          ...this.props.templates?.ButtonTemplates,
+          ...props.templates?.ButtonTemplates,
         },
       },
-      widgets: { ...widgets, ...this.props.widgets },
+      widgets: { ...widgets, ...props.widgets },
       rootSchema: schema,
-      formContext: this.props.formContext || formContext,
+      formContext: props.formContext || formContext,
       schemaUtils,
       translateString: customTranslateString || translateString,
       globalUiOptions: uiSchema[UI_GLOBAL_OPTIONS_KEY],
-      globalFormOptions: this.getGlobalFormOptions(this.props),
+      globalFormOptions: this.getGlobalFormOptions(props),
     };
   }
 
@@ -1162,8 +1198,7 @@ export default class Form<
       _internalFormWrapper,
     } = this.props;
 
-    const { schema, uiSchema, formData, errorSchema, fieldPathId } = this.state;
-    const registry = this.getRegistry();
+    const { schema, uiSchema, formData, errorSchema, fieldPathId, registry } = this.state;
     const { SchemaField: _SchemaField } = registry.fields;
     const { SubmitButton } = registry.templates.ButtonTemplates;
     // The `semantic-ui` and `material-ui` themes have `_internalFormWrapper`s that take an `as` prop that is the

@@ -26,6 +26,7 @@ export default function CheckboxWidget<
   const {
     id,
     name,
+    htmlName,
     value = false,
     required,
     disabled,
@@ -92,7 +93,7 @@ export default function CheckboxWidget<
       )}
       <Checkbox
         id={id}
-        name={name}
+        name={htmlName || name}
         label={labelValue(label || undefined, hideLabel, false)}
         disabled={disabled || readonly}
         required={required}

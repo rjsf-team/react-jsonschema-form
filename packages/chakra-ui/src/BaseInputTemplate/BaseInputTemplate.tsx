@@ -21,6 +21,7 @@ export default function BaseInputTemplate<
 >(props: BaseInputTemplateProps<T, S, F>) {
   const {
     id,
+    htmlName,
     type,
     value,
     label,
@@ -60,7 +61,7 @@ export default function BaseInputTemplate<
     >
       <Input
         id={id}
-        name={id}
+        name={htmlName || id}
         value={value || value === 0 ? value : ''}
         onChange={onChangeOverride || _onChange}
         onBlur={_onBlur}

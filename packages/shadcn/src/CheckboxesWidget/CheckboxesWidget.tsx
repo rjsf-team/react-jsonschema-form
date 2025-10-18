@@ -27,6 +27,7 @@ export default function CheckboxesWidget<
   F extends FormContextType = any,
 >({
   id,
+  htmlName,
   disabled,
   options,
   value,
@@ -58,7 +59,7 @@ export default function CheckboxesWidget<
             <div className='flex items-center gap-2' key={indexOptionId}>
               <Checkbox
                 id={indexOptionId}
-                name={id}
+                name={htmlName || id}
                 required={required}
                 disabled={disabled || itemDisabled || readonly}
                 onCheckedChange={(state) => {

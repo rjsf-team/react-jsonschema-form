@@ -35,8 +35,9 @@ function UiField(props: FieldProps) {
     disabled: false,
     readonly: false,
     onChange,
-    onKeyChange: () => noop,
-    onDropPropertyClick: () => noop,
+    onKeyRename: () => noop,
+    onKeyRenameBlur: () => noop,
+    onRemoveProperty: () => noop,
   };
 
   return (

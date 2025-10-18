@@ -29,7 +29,7 @@ export default function ObjectFieldTemplate<
   schema,
   formData,
   optionalDataControl,
-  onAddClick,
+  onAddProperty,
   disabled,
   readonly,
   registry,
@@ -80,7 +80,7 @@ export default function ObjectFieldTemplate<
             <Col xs={{ offset: 9, span: 3 }} className='py-4'>
               <AddButton
                 id={buttonId(fieldPathId, 'add')}
-                onClick={onAddClick(schema)}
+                onClick={onAddProperty}
                 disabled={disabled || readonly}
                 className='rjsf-object-property-expand'
                 uiSchema={uiSchema}

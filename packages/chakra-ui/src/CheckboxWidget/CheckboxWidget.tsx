@@ -23,6 +23,7 @@ export default function CheckboxWidget<
 >(props: WidgetProps<T, S, F>) {
   const {
     id,
+    htmlName,
     value,
     disabled,
     readonly,
@@ -66,7 +67,7 @@ export default function CheckboxWidget<
       )}
       <Checkbox
         id={id}
-        name={id}
+        name={htmlName || id}
         checked={typeof value === 'undefined' ? false : value}
         disabled={disabled || readonly}
         onCheckedChange={_onChange}

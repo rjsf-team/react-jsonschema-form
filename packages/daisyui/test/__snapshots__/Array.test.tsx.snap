@@ -1216,6 +1216,3289 @@ exports[`array fields no errors 1`] = `
 </form>
 `;
 
+exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-array"
+  >
+    <div
+      className="field-template mb-3 rjsf-field rjsf-field-array"
+      disabled={false}
+    >
+      <div
+        className="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-object"
+      >
+        <div
+          className="flex flex-col gap-4"
+        >
+          <div
+            className="rjsf-array-item-list"
+          >
+            <fieldset
+              className="fieldset bg-base-100 border border-base-300 p-4 rounded-t-lg mb-[-1px] z-10"
+            >
+              <div
+                className="rjsf-field rjsf-field-object"
+              >
+                <div
+                  className="field-template mb-3 rjsf-field rjsf-field-object"
+                  disabled={false}
+                >
+                  <div
+                    className="form-control "
+                  >
+                    <div
+                      className="grid grid-cols-1 gap-4 mb-4"
+                    >
+                      <div
+                        className=""
+                      >
+                        <div
+                          className="rjsf-field rjsf-field-string"
+                        >
+                          <div
+                            className="field-template mb-3 rjsf-field rjsf-field-string"
+                            disabled={false}
+                          >
+                            <label
+                              className="label"
+                              htmlFor="root_0_name"
+                            >
+                              <span
+                                className="label-text font-medium"
+                              >
+                                name
+                              </span>
+                            </label>
+                            <div
+                              className="form-control"
+                            >
+                              <label
+                                className="label hidden"
+                                htmlFor="root_0_name"
+                                style={
+                                  {
+                                    "display": "none",
+                                  }
+                                }
+                              >
+                                <span
+                                  className="label-text"
+                                >
+                                  name
+                                </span>
+                              </label>
+                              <input
+                                aria-describedby="root_0_name__error root_0_name__description root_0_name__help"
+                                autoFocus={false}
+                                className="input input-bordered"
+                                disabled={false}
+                                id="root_0_name"
+                                name="root[0][name]"
+                                onBlur={[Function]}
+                                onChange={[Function]}
+                                onFocus={[Function]}
+                                placeholder=""
+                                required={false}
+                                type="text"
+                                value="Item 1"
+                              />
+                            </div>
+                            <div
+                              className="rjsf-field-error-template text-red-600"
+                            >
+                              <ul
+                                className="list-disc list-inside"
+                              />
+                            </div>
+                            <div
+                              className="rjsf-field-help-template text-gray-500 text-sm"
+                            >
+                              <div />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        className=""
+                      >
+                        <div
+                          className="rjsf-field rjsf-field-number"
+                        >
+                          <div
+                            className="field-template mb-3 rjsf-field rjsf-field-number"
+                            disabled={false}
+                          >
+                            <label
+                              className="label"
+                              htmlFor="root_0_value"
+                            >
+                              <span
+                                className="label-text font-medium"
+                              >
+                                value
+                              </span>
+                            </label>
+                            <div
+                              className="form-control"
+                            >
+                              <label
+                                className="label hidden"
+                                htmlFor="root_0_value"
+                                style={
+                                  {
+                                    "display": "none",
+                                  }
+                                }
+                              >
+                                <span
+                                  className="label-text"
+                                >
+                                  value
+                                </span>
+                              </label>
+                              <input
+                                aria-describedby="root_0_value__error root_0_value__description root_0_value__help"
+                                autoFocus={false}
+                                className="input input-bordered"
+                                disabled={false}
+                                id="root_0_value"
+                                name="root[0][value]"
+                                onBlur={[Function]}
+                                onChange={[Function]}
+                                onFocus={[Function]}
+                                placeholder=""
+                                required={false}
+                                step="any"
+                                type="number"
+                                value={10}
+                              />
+                            </div>
+                            <div
+                              className="rjsf-field-error-template text-red-600"
+                            >
+                              <ul
+                                className="list-disc list-inside"
+                              />
+                            </div>
+                            <div
+                              className="rjsf-field-help-template text-gray-500 text-sm"
+                            >
+                              <div />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    className="rjsf-field-error-template text-red-600"
+                  >
+                    <ul
+                      className="list-disc list-inside"
+                    />
+                  </div>
+                  <div
+                    className="rjsf-field-help-template text-gray-500 text-sm"
+                  >
+                    <div />
+                  </div>
+                </div>
+              </div>
+              <div
+                className="flex justify-end mt-2"
+              >
+                <div
+                  className="join"
+                >
+                  <button
+                    aria-label="Move up"
+                    className="rjsf-array-item-move-up join-item btn btn-sm px-2"
+                    disabled={true}
+                    id="root_0__moveUp"
+                    onClick={[Function]}
+                    title="Move up"
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      className="svg-inline--fa fa-arrow-up h-5 w-5"
+                      data-icon="arrow-up"
+                      data-prefix="fas"
+                      role="img"
+                      viewBox="0 0 384 512"
+                    >
+                      <path
+                        d="M214.6 17.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 117.3 160 488c0 17.7 14.3 32 32 32s32-14.3 32-32l0-370.7 105.4 105.4c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  </button>
+                  <button
+                    aria-label="Move down"
+                    className="rjsf-array-item-move-down join-item btn btn-sm px-2"
+                    disabled={false}
+                    id="root_0__moveDown"
+                    onClick={[Function]}
+                    title="Move down"
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      className="svg-inline--fa fa-arrow-down h-5 w-5"
+                      data-icon="arrow-down"
+                      data-prefix="fas"
+                      role="img"
+                      viewBox="0 0 384 512"
+                    >
+                      <path
+                        d="M169.4 502.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 402.7 224 32c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 370.7-105.4-105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  </button>
+                  <button
+                    aria-label="Remove"
+                    className="rjsf-array-item-remove join-item btn btn-sm btn-error px-2"
+                    disabled={false}
+                    id="root_0__remove"
+                    onClick={[Function]}
+                    title="Remove"
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      className="svg-inline--fa fa-trash h-5 w-5"
+                      data-icon="trash"
+                      data-prefix="fas"
+                      role="img"
+                      viewBox="0 0 448 512"
+                    >
+                      <path
+                        d="M136.7 5.9L128 32 32 32C14.3 32 0 46.3 0 64S14.3 96 32 96l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-96 0-8.7-26.1C306.9-7.2 294.7-16 280.9-16L167.1-16c-13.8 0-26 8.8-30.4 21.9zM416 144L32 144 53.1 467.1C54.7 492.4 75.7 512 101 512L347 512c25.3 0 46.3-19.6 47.9-44.9L416 144z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </fieldset>
+            <fieldset
+              className="fieldset bg-base-100 border border-base-300 p-4 rounded-b-lg  z-9"
+            >
+              <div
+                className="rjsf-field rjsf-field-object"
+              >
+                <div
+                  className="field-template mb-3 rjsf-field rjsf-field-object"
+                  disabled={false}
+                >
+                  <div
+                    className="form-control "
+                  >
+                    <div
+                      className="grid grid-cols-1 gap-4 mb-4"
+                    >
+                      <div
+                        className=""
+                      >
+                        <div
+                          className="rjsf-field rjsf-field-string"
+                        >
+                          <div
+                            className="field-template mb-3 rjsf-field rjsf-field-string"
+                            disabled={false}
+                          >
+                            <label
+                              className="label"
+                              htmlFor="root_1_name"
+                            >
+                              <span
+                                className="label-text font-medium"
+                              >
+                                name
+                              </span>
+                            </label>
+                            <div
+                              className="form-control"
+                            >
+                              <label
+                                className="label hidden"
+                                htmlFor="root_1_name"
+                                style={
+                                  {
+                                    "display": "none",
+                                  }
+                                }
+                              >
+                                <span
+                                  className="label-text"
+                                >
+                                  name
+                                </span>
+                              </label>
+                              <input
+                                aria-describedby="root_1_name__error root_1_name__description root_1_name__help"
+                                autoFocus={false}
+                                className="input input-bordered"
+                                disabled={false}
+                                id="root_1_name"
+                                name="root[1][name]"
+                                onBlur={[Function]}
+                                onChange={[Function]}
+                                onFocus={[Function]}
+                                placeholder=""
+                                required={false}
+                                type="text"
+                                value="Item 2"
+                              />
+                            </div>
+                            <div
+                              className="rjsf-field-error-template text-red-600"
+                            >
+                              <ul
+                                className="list-disc list-inside"
+                              />
+                            </div>
+                            <div
+                              className="rjsf-field-help-template text-gray-500 text-sm"
+                            >
+                              <div />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        className=""
+                      >
+                        <div
+                          className="rjsf-field rjsf-field-number"
+                        >
+                          <div
+                            className="field-template mb-3 rjsf-field rjsf-field-number"
+                            disabled={false}
+                          >
+                            <label
+                              className="label"
+                              htmlFor="root_1_value"
+                            >
+                              <span
+                                className="label-text font-medium"
+                              >
+                                value
+                              </span>
+                            </label>
+                            <div
+                              className="form-control"
+                            >
+                              <label
+                                className="label hidden"
+                                htmlFor="root_1_value"
+                                style={
+                                  {
+                                    "display": "none",
+                                  }
+                                }
+                              >
+                                <span
+                                  className="label-text"
+                                >
+                                  value
+                                </span>
+                              </label>
+                              <input
+                                aria-describedby="root_1_value__error root_1_value__description root_1_value__help"
+                                autoFocus={false}
+                                className="input input-bordered"
+                                disabled={false}
+                                id="root_1_value"
+                                name="root[1][value]"
+                                onBlur={[Function]}
+                                onChange={[Function]}
+                                onFocus={[Function]}
+                                placeholder=""
+                                required={false}
+                                step="any"
+                                type="number"
+                                value={20}
+                              />
+                            </div>
+                            <div
+                              className="rjsf-field-error-template text-red-600"
+                            >
+                              <ul
+                                className="list-disc list-inside"
+                              />
+                            </div>
+                            <div
+                              className="rjsf-field-help-template text-gray-500 text-sm"
+                            >
+                              <div />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    className="rjsf-field-error-template text-red-600"
+                  >
+                    <ul
+                      className="list-disc list-inside"
+                    />
+                  </div>
+                  <div
+                    className="rjsf-field-help-template text-gray-500 text-sm"
+                  >
+                    <div />
+                  </div>
+                </div>
+              </div>
+              <div
+                className="flex justify-end mt-2"
+              >
+                <div
+                  className="join"
+                >
+                  <button
+                    aria-label="Move up"
+                    className="rjsf-array-item-move-up join-item btn btn-sm px-2"
+                    disabled={false}
+                    id="root_1__moveUp"
+                    onClick={[Function]}
+                    title="Move up"
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      className="svg-inline--fa fa-arrow-up h-5 w-5"
+                      data-icon="arrow-up"
+                      data-prefix="fas"
+                      role="img"
+                      viewBox="0 0 384 512"
+                    >
+                      <path
+                        d="M214.6 17.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 117.3 160 488c0 17.7 14.3 32 32 32s32-14.3 32-32l0-370.7 105.4 105.4c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  </button>
+                  <button
+                    aria-label="Move down"
+                    className="rjsf-array-item-move-down join-item btn btn-sm px-2"
+                    disabled={true}
+                    id="root_1__moveDown"
+                    onClick={[Function]}
+                    title="Move down"
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      className="svg-inline--fa fa-arrow-down h-5 w-5"
+                      data-icon="arrow-down"
+                      data-prefix="fas"
+                      role="img"
+                      viewBox="0 0 384 512"
+                    >
+                      <path
+                        d="M169.4 502.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 402.7 224 32c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 370.7-105.4-105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  </button>
+                  <button
+                    aria-label="Remove"
+                    className="rjsf-array-item-remove join-item btn btn-sm btn-error px-2"
+                    disabled={false}
+                    id="root_1__remove"
+                    onClick={[Function]}
+                    title="Remove"
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      className="svg-inline--fa fa-trash h-5 w-5"
+                      data-icon="trash"
+                      data-prefix="fas"
+                      role="img"
+                      viewBox="0 0 448 512"
+                    >
+                      <path
+                        d="M136.7 5.9L128 32 32 32C14.3 32 0 46.3 0 64S14.3 96 32 96l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-96 0-8.7-26.1C306.9-7.2 294.7-16 280.9-16L167.1-16c-13.8 0-26 8.8-30.4 21.9zM416 144L32 144 53.1 467.1C54.7 492.4 75.7 512 101 512L347 512c25.3 0 46.3-19.6 47.9-44.9L416 144z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </fieldset>
+          </div>
+          <div
+            className="flex justify-end"
+          >
+            <div
+              className="row"
+            >
+              <p
+                className="col-xs-3 col-xs-offset-9 text-right rjsf-array-item-add btn btn-primary btn-sm"
+              >
+                <button
+                  aria-label="Add"
+                  className="btn-add col-xs-12 btn-primary btn-primary-content"
+                  disabled={false}
+                  id="root__add"
+                  onClick={[Function]}
+                  title="Add"
+                  type="button"
+                >
+                  <svg
+                    aria-hidden="true"
+                    className="svg-inline--fa fa-plus h-5 w-5"
+                    data-icon="plus"
+                    data-prefix="fas"
+                    role="img"
+                    viewBox="0 0 448 512"
+                  >
+                    <path
+                      d="M256 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 160-160 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l160 0 0 160c0 17.7 14.3 32 32 32s32-14.3 32-32l0-160 160 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-160 0 0-160z"
+                      fill="currentColor"
+                    />
+                  </svg>
+                </button>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="rjsf-field-error-template text-red-600"
+      >
+        <ul
+          className="list-disc list-inside"
+        />
+      </div>
+      <div
+        className="rjsf-field-help-template text-gray-500 text-sm"
+      >
+        <div />
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary btn-primary-content "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-array"
+  >
+    <div
+      className="field-template mb-3 rjsf-field rjsf-field-array"
+      disabled={false}
+    >
+      <div
+        className="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
+      >
+        <div
+          className="flex flex-col gap-4"
+        >
+          <div
+            className="rjsf-array-item-list"
+          >
+            <fieldset
+              className="fieldset bg-base-100 border border-base-300 p-4 rounded-t-lg mb-[-1px] z-10"
+            >
+              <div
+                className="rjsf-field rjsf-field-string"
+              >
+                <div
+                  className="field-template mb-3 rjsf-field rjsf-field-string"
+                  disabled={false}
+                >
+                  <label
+                    className="label"
+                    htmlFor="root_0"
+                  >
+                    <span
+                      className="label-text font-medium"
+                    >
+                      <span
+                        className="text-error ml-1"
+                      >
+                        *
+                      </span>
+                    </span>
+                  </label>
+                  <div
+                    className="form-control"
+                  >
+                    <label
+                      className="label hidden"
+                      htmlFor="root_0"
+                      style={
+                        {
+                          "display": "none",
+                        }
+                      }
+                    >
+                      <span
+                        className="label-text"
+                      />
+                    </label>
+                    <input
+                      aria-describedby="root_0__error root_0__description root_0__help"
+                      autoFocus={false}
+                      className="input input-bordered"
+                      disabled={false}
+                      id="root_0"
+                      name="root[0]"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      onFocus={[Function]}
+                      placeholder=""
+                      required={true}
+                      type="text"
+                      value="foo"
+                    />
+                  </div>
+                  <div
+                    className="rjsf-field-error-template text-red-600"
+                  >
+                    <ul
+                      className="list-disc list-inside"
+                    />
+                  </div>
+                  <div
+                    className="rjsf-field-help-template text-gray-500 text-sm"
+                  >
+                    <div />
+                  </div>
+                </div>
+              </div>
+              <div
+                className="flex justify-end mt-2"
+              >
+                <div
+                  className="join"
+                >
+                  <button
+                    aria-label="Move up"
+                    className="rjsf-array-item-move-up join-item btn btn-sm px-2"
+                    disabled={true}
+                    id="root_0__moveUp"
+                    onClick={[Function]}
+                    title="Move up"
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      className="svg-inline--fa fa-arrow-up h-5 w-5"
+                      data-icon="arrow-up"
+                      data-prefix="fas"
+                      role="img"
+                      viewBox="0 0 384 512"
+                    >
+                      <path
+                        d="M214.6 17.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 117.3 160 488c0 17.7 14.3 32 32 32s32-14.3 32-32l0-370.7 105.4 105.4c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  </button>
+                  <button
+                    aria-label="Move down"
+                    className="rjsf-array-item-move-down join-item btn btn-sm px-2"
+                    disabled={false}
+                    id="root_0__moveDown"
+                    onClick={[Function]}
+                    title="Move down"
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      className="svg-inline--fa fa-arrow-down h-5 w-5"
+                      data-icon="arrow-down"
+                      data-prefix="fas"
+                      role="img"
+                      viewBox="0 0 384 512"
+                    >
+                      <path
+                        d="M169.4 502.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 402.7 224 32c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 370.7-105.4-105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  </button>
+                  <button
+                    aria-label="Remove"
+                    className="rjsf-array-item-remove join-item btn btn-sm btn-error px-2"
+                    disabled={false}
+                    id="root_0__remove"
+                    onClick={[Function]}
+                    title="Remove"
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      className="svg-inline--fa fa-trash h-5 w-5"
+                      data-icon="trash"
+                      data-prefix="fas"
+                      role="img"
+                      viewBox="0 0 448 512"
+                    >
+                      <path
+                        d="M136.7 5.9L128 32 32 32C14.3 32 0 46.3 0 64S14.3 96 32 96l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-96 0-8.7-26.1C306.9-7.2 294.7-16 280.9-16L167.1-16c-13.8 0-26 8.8-30.4 21.9zM416 144L32 144 53.1 467.1C54.7 492.4 75.7 512 101 512L347 512c25.3 0 46.3-19.6 47.9-44.9L416 144z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </fieldset>
+            <fieldset
+              className="fieldset bg-base-100 border border-base-300 p-4 rounded-b-lg  z-9"
+            >
+              <div
+                className="rjsf-field rjsf-field-string"
+              >
+                <div
+                  className="field-template mb-3 rjsf-field rjsf-field-string"
+                  disabled={false}
+                >
+                  <label
+                    className="label"
+                    htmlFor="root_1"
+                  >
+                    <span
+                      className="label-text font-medium"
+                    >
+                      <span
+                        className="text-error ml-1"
+                      >
+                        *
+                      </span>
+                    </span>
+                  </label>
+                  <div
+                    className="form-control"
+                  >
+                    <label
+                      className="label hidden"
+                      htmlFor="root_1"
+                      style={
+                        {
+                          "display": "none",
+                        }
+                      }
+                    >
+                      <span
+                        className="label-text"
+                      />
+                    </label>
+                    <input
+                      aria-describedby="root_1__error root_1__description root_1__help"
+                      autoFocus={false}
+                      className="input input-bordered"
+                      disabled={false}
+                      id="root_1"
+                      name="root[1]"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      onFocus={[Function]}
+                      placeholder=""
+                      required={true}
+                      type="text"
+                      value="bar"
+                    />
+                  </div>
+                  <div
+                    className="rjsf-field-error-template text-red-600"
+                  >
+                    <ul
+                      className="list-disc list-inside"
+                    />
+                  </div>
+                  <div
+                    className="rjsf-field-help-template text-gray-500 text-sm"
+                  >
+                    <div />
+                  </div>
+                </div>
+              </div>
+              <div
+                className="flex justify-end mt-2"
+              >
+                <div
+                  className="join"
+                >
+                  <button
+                    aria-label="Move up"
+                    className="rjsf-array-item-move-up join-item btn btn-sm px-2"
+                    disabled={false}
+                    id="root_1__moveUp"
+                    onClick={[Function]}
+                    title="Move up"
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      className="svg-inline--fa fa-arrow-up h-5 w-5"
+                      data-icon="arrow-up"
+                      data-prefix="fas"
+                      role="img"
+                      viewBox="0 0 384 512"
+                    >
+                      <path
+                        d="M214.6 17.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 117.3 160 488c0 17.7 14.3 32 32 32s32-14.3 32-32l0-370.7 105.4 105.4c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  </button>
+                  <button
+                    aria-label="Move down"
+                    className="rjsf-array-item-move-down join-item btn btn-sm px-2"
+                    disabled={true}
+                    id="root_1__moveDown"
+                    onClick={[Function]}
+                    title="Move down"
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      className="svg-inline--fa fa-arrow-down h-5 w-5"
+                      data-icon="arrow-down"
+                      data-prefix="fas"
+                      role="img"
+                      viewBox="0 0 384 512"
+                    >
+                      <path
+                        d="M169.4 502.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 402.7 224 32c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 370.7-105.4-105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  </button>
+                  <button
+                    aria-label="Remove"
+                    className="rjsf-array-item-remove join-item btn btn-sm btn-error px-2"
+                    disabled={false}
+                    id="root_1__remove"
+                    onClick={[Function]}
+                    title="Remove"
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      className="svg-inline--fa fa-trash h-5 w-5"
+                      data-icon="trash"
+                      data-prefix="fas"
+                      role="img"
+                      viewBox="0 0 448 512"
+                    >
+                      <path
+                        d="M136.7 5.9L128 32 32 32C14.3 32 0 46.3 0 64S14.3 96 32 96l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-96 0-8.7-26.1C306.9-7.2 294.7-16 280.9-16L167.1-16c-13.8 0-26 8.8-30.4 21.9zM416 144L32 144 53.1 467.1C54.7 492.4 75.7 512 101 512L347 512c25.3 0 46.3-19.6 47.9-44.9L416 144z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </fieldset>
+          </div>
+          <div
+            className="flex justify-end"
+          >
+            <div
+              className="row"
+            >
+              <p
+                className="col-xs-3 col-xs-offset-9 text-right rjsf-array-item-add btn btn-primary btn-sm"
+              >
+                <button
+                  aria-label="Add"
+                  className="btn-add col-xs-12 btn-primary btn-primary-content"
+                  disabled={false}
+                  id="root__add"
+                  onClick={[Function]}
+                  title="Add"
+                  type="button"
+                >
+                  <svg
+                    aria-hidden="true"
+                    className="svg-inline--fa fa-plus h-5 w-5"
+                    data-icon="plus"
+                    data-prefix="fas"
+                    role="img"
+                    viewBox="0 0 448 512"
+                  >
+                    <path
+                      d="M256 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 160-160 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l160 0 0 160c0 17.7 14.3 32 32 32s32-14.3 32-32l0-160 160 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-160 0 0-160z"
+                      fill="currentColor"
+                    />
+                  </svg>
+                </button>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="rjsf-field-error-template text-red-600"
+      >
+        <ul
+          className="list-disc list-inside"
+        />
+      </div>
+      <div
+        className="rjsf-field-help-template text-gray-500 text-sm"
+      >
+        <div />
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary btn-primary-content "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`nameGenerator bracketNameGenerator checkboxes with nameGenerator 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-array"
+  >
+    <div
+      className="field-template mb-3 rjsf-field rjsf-field-array"
+      disabled={false}
+    >
+      <label
+        className="label"
+        htmlFor="root"
+      >
+        <span
+          className="label-text font-medium"
+        />
+      </label>
+      <div
+        className="form-control w-full"
+      >
+        <div
+          className="dropdown w-full"
+        >
+          <div
+            className="btn btn-outline w-full text-left flex justify-between items-center "
+            onBlur={[Function]}
+            onFocus={[Function]}
+            role="button"
+            tabIndex={0}
+          >
+            <span
+              className="truncate"
+            >
+              Select...
+            </span>
+            <span
+              className="ml-2"
+            >
+              ▼
+            </span>
+          </div>
+          <ul
+            className="dropdown-content z-[1] bg-base-100 w-full max-h-60 overflow-auto rounded-box shadow-lg"
+          >
+            <li
+              className="px-4 py-2 hover:bg-base-200 cursor-pointer "
+              data-value={0}
+              onClick={[Function]}
+              role="button"
+              tabIndex={0}
+            >
+              <div
+                className="flex items-center gap-2"
+              >
+                <input
+                  checked={false}
+                  className="checkbox checkbox-sm"
+                  readOnly={true}
+                  type="checkbox"
+                />
+                <span>
+                  foo
+                </span>
+              </div>
+            </li>
+            <li
+              className="px-4 py-2 hover:bg-base-200 cursor-pointer "
+              data-value={1}
+              onClick={[Function]}
+              role="button"
+              tabIndex={0}
+            >
+              <div
+                className="flex items-center gap-2"
+              >
+                <input
+                  checked={false}
+                  className="checkbox checkbox-sm"
+                  readOnly={true}
+                  type="checkbox"
+                />
+                <span>
+                  bar
+                </span>
+              </div>
+            </li>
+            <li
+              className="px-4 py-2 hover:bg-base-200 cursor-pointer "
+              data-value={2}
+              onClick={[Function]}
+              role="button"
+              tabIndex={0}
+            >
+              <div
+                className="flex items-center gap-2"
+              >
+                <input
+                  checked={false}
+                  className="checkbox checkbox-sm"
+                  readOnly={true}
+                  type="checkbox"
+                />
+                <span>
+                  baz
+                </span>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div
+        className="rjsf-field-error-template text-red-600"
+      >
+        <ul
+          className="list-disc list-inside"
+        />
+      </div>
+      <div
+        className="rjsf-field-help-template text-gray-500 text-sm"
+      >
+        <div />
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary btn-primary-content "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`nameGenerator bracketNameGenerator fixed array 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-array"
+  >
+    <div
+      className="field-template mb-3 rjsf-field rjsf-field-array"
+      disabled={false}
+    >
+      <div
+        className="array-field-template rjsf-field rjsf-field-array rjsf-field-array-fixed-items"
+      >
+        <div
+          className="flex flex-col gap-4"
+        >
+          <div
+            className="rjsf-array-item-list"
+          >
+            <fieldset
+              className="fieldset bg-base-100 border border-base-300 p-4 rounded-t-lg mb-[-1px] z-10"
+            >
+              <div
+                className="rjsf-field rjsf-field-string"
+              >
+                <div
+                  className="field-template mb-3 rjsf-field rjsf-field-string"
+                  disabled={false}
+                >
+                  <label
+                    className="label"
+                    htmlFor="root_0"
+                  >
+                    <span
+                      className="label-text font-medium"
+                    >
+                      <span
+                        className="text-error ml-1"
+                      >
+                        *
+                      </span>
+                    </span>
+                  </label>
+                  <div
+                    className="form-control"
+                  >
+                    <label
+                      className="label hidden"
+                      htmlFor="root_0"
+                      style={
+                        {
+                          "display": "none",
+                        }
+                      }
+                    >
+                      <span
+                        className="label-text"
+                      />
+                    </label>
+                    <input
+                      aria-describedby="root_0__error root_0__description root_0__help"
+                      autoFocus={false}
+                      className="input input-bordered"
+                      disabled={false}
+                      id="root_0"
+                      name="root[0]"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      onFocus={[Function]}
+                      placeholder=""
+                      required={true}
+                      type="text"
+                      value="text"
+                    />
+                  </div>
+                  <div
+                    className="rjsf-field-error-template text-red-600"
+                  >
+                    <ul
+                      className="list-disc list-inside"
+                    />
+                  </div>
+                  <div
+                    className="rjsf-field-help-template text-gray-500 text-sm"
+                  >
+                    <div />
+                  </div>
+                </div>
+              </div>
+            </fieldset>
+            <fieldset
+              className="fieldset bg-base-100 border border-base-300 p-4  mb-[-1px] z-9"
+            >
+              <div
+                className="rjsf-field rjsf-field-number"
+              >
+                <div
+                  className="field-template mb-3 rjsf-field rjsf-field-number"
+                  disabled={false}
+                >
+                  <label
+                    className="label"
+                    htmlFor="root_1"
+                  >
+                    <span
+                      className="label-text font-medium"
+                    >
+                      <span
+                        className="text-error ml-1"
+                      >
+                        *
+                      </span>
+                    </span>
+                  </label>
+                  <div
+                    className="form-control"
+                  >
+                    <label
+                      className="label hidden"
+                      htmlFor="root_1"
+                      style={
+                        {
+                          "display": "none",
+                        }
+                      }
+                    >
+                      <span
+                        className="label-text"
+                      />
+                    </label>
+                    <input
+                      aria-describedby="root_1__error root_1__description root_1__help"
+                      autoFocus={false}
+                      className="input input-bordered"
+                      disabled={false}
+                      id="root_1"
+                      name="root[1]"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      onFocus={[Function]}
+                      placeholder=""
+                      required={true}
+                      step="any"
+                      type="number"
+                      value={42}
+                    />
+                  </div>
+                  <div
+                    className="rjsf-field-error-template text-red-600"
+                  >
+                    <ul
+                      className="list-disc list-inside"
+                    />
+                  </div>
+                  <div
+                    className="rjsf-field-help-template text-gray-500 text-sm"
+                  >
+                    <div />
+                  </div>
+                </div>
+              </div>
+            </fieldset>
+            <fieldset
+              className="fieldset bg-base-100 border border-base-300 p-4 rounded-b-lg  z-8"
+            >
+              <div
+                className="rjsf-field rjsf-field-boolean"
+              >
+                <div
+                  className="field-template mb-3 rjsf-field rjsf-field-boolean"
+                  disabled={false}
+                >
+                  <div
+                    className="form-control"
+                  >
+                    <input
+                      checked={true}
+                      className="checkbox"
+                      disabled={false}
+                      id="root_2"
+                      name="root[2]"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      onFocus={[Function]}
+                      required={true}
+                      type="checkbox"
+                    />
+                  </div>
+                  <div
+                    className="rjsf-field-error-template text-red-600"
+                  >
+                    <ul
+                      className="list-disc list-inside"
+                    />
+                  </div>
+                  <div
+                    className="rjsf-field-help-template text-gray-500 text-sm"
+                  >
+                    <div />
+                  </div>
+                </div>
+              </div>
+            </fieldset>
+          </div>
+        </div>
+      </div>
+      <div
+        className="rjsf-field-error-template text-red-600"
+      >
+        <ul
+          className="list-disc list-inside"
+        />
+      </div>
+      <div
+        className="rjsf-field-help-template text-gray-500 text-sm"
+      >
+        <div />
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary btn-primary-content "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-array"
+  >
+    <div
+      className="field-template mb-3 rjsf-field rjsf-field-array"
+      disabled={false}
+    >
+      <div
+        className="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-array"
+      >
+        <div
+          className="flex flex-col gap-4"
+        >
+          <div
+            className="rjsf-array-item-list"
+          >
+            <fieldset
+              className="fieldset bg-base-100 border border-base-300 p-4 rounded-t-lg mb-[-1px] z-10"
+            >
+              <div
+                className="rjsf-field rjsf-field-array"
+              >
+                <div
+                  className="field-template mb-3 rjsf-field rjsf-field-array"
+                  disabled={false}
+                >
+                  <div
+                    className="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
+                  >
+                    <div
+                      className="flex flex-col gap-4"
+                    >
+                      <div
+                        className="rjsf-array-item-list"
+                      >
+                        <fieldset
+                          className="fieldset bg-base-100 border border-base-300 p-4 rounded-t-lg mb-[-1px] z-10"
+                        >
+                          <div
+                            className="rjsf-field rjsf-field-string"
+                          >
+                            <div
+                              className="field-template mb-3 rjsf-field rjsf-field-string"
+                              disabled={false}
+                            >
+                              <label
+                                className="label"
+                                htmlFor="root_0_0"
+                              >
+                                <span
+                                  className="label-text font-medium"
+                                >
+                                  <span
+                                    className="text-error ml-1"
+                                  >
+                                    *
+                                  </span>
+                                </span>
+                              </label>
+                              <div
+                                className="form-control"
+                              >
+                                <label
+                                  className="label hidden"
+                                  htmlFor="root_0_0"
+                                  style={
+                                    {
+                                      "display": "none",
+                                    }
+                                  }
+                                >
+                                  <span
+                                    className="label-text"
+                                  />
+                                </label>
+                                <input
+                                  aria-describedby="root_0_0__error root_0_0__description root_0_0__help"
+                                  autoFocus={false}
+                                  className="input input-bordered"
+                                  disabled={false}
+                                  id="root_0_0"
+                                  name="root[0][0]"
+                                  onBlur={[Function]}
+                                  onChange={[Function]}
+                                  onFocus={[Function]}
+                                  placeholder=""
+                                  required={true}
+                                  type="text"
+                                  value="a"
+                                />
+                              </div>
+                              <div
+                                className="rjsf-field-error-template text-red-600"
+                              >
+                                <ul
+                                  className="list-disc list-inside"
+                                />
+                              </div>
+                              <div
+                                className="rjsf-field-help-template text-gray-500 text-sm"
+                              >
+                                <div />
+                              </div>
+                            </div>
+                          </div>
+                          <div
+                            className="flex justify-end mt-2"
+                          >
+                            <div
+                              className="join"
+                            >
+                              <button
+                                aria-label="Move up"
+                                className="rjsf-array-item-move-up join-item btn btn-sm px-2"
+                                disabled={true}
+                                id="root_0_0__moveUp"
+                                onClick={[Function]}
+                                title="Move up"
+                                type="button"
+                              >
+                                <svg
+                                  aria-hidden="true"
+                                  className="svg-inline--fa fa-arrow-up h-5 w-5"
+                                  data-icon="arrow-up"
+                                  data-prefix="fas"
+                                  role="img"
+                                  viewBox="0 0 384 512"
+                                >
+                                  <path
+                                    d="M214.6 17.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 117.3 160 488c0 17.7 14.3 32 32 32s32-14.3 32-32l0-370.7 105.4 105.4c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160z"
+                                    fill="currentColor"
+                                  />
+                                </svg>
+                              </button>
+                              <button
+                                aria-label="Move down"
+                                className="rjsf-array-item-move-down join-item btn btn-sm px-2"
+                                disabled={false}
+                                id="root_0_0__moveDown"
+                                onClick={[Function]}
+                                title="Move down"
+                                type="button"
+                              >
+                                <svg
+                                  aria-hidden="true"
+                                  className="svg-inline--fa fa-arrow-down h-5 w-5"
+                                  data-icon="arrow-down"
+                                  data-prefix="fas"
+                                  role="img"
+                                  viewBox="0 0 384 512"
+                                >
+                                  <path
+                                    d="M169.4 502.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 402.7 224 32c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 370.7-105.4-105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"
+                                    fill="currentColor"
+                                  />
+                                </svg>
+                              </button>
+                              <button
+                                aria-label="Remove"
+                                className="rjsf-array-item-remove join-item btn btn-sm btn-error px-2"
+                                disabled={false}
+                                id="root_0_0__remove"
+                                onClick={[Function]}
+                                title="Remove"
+                                type="button"
+                              >
+                                <svg
+                                  aria-hidden="true"
+                                  className="svg-inline--fa fa-trash h-5 w-5"
+                                  data-icon="trash"
+                                  data-prefix="fas"
+                                  role="img"
+                                  viewBox="0 0 448 512"
+                                >
+                                  <path
+                                    d="M136.7 5.9L128 32 32 32C14.3 32 0 46.3 0 64S14.3 96 32 96l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-96 0-8.7-26.1C306.9-7.2 294.7-16 280.9-16L167.1-16c-13.8 0-26 8.8-30.4 21.9zM416 144L32 144 53.1 467.1C54.7 492.4 75.7 512 101 512L347 512c25.3 0 46.3-19.6 47.9-44.9L416 144z"
+                                    fill="currentColor"
+                                  />
+                                </svg>
+                              </button>
+                            </div>
+                          </div>
+                        </fieldset>
+                        <fieldset
+                          className="fieldset bg-base-100 border border-base-300 p-4 rounded-b-lg  z-9"
+                        >
+                          <div
+                            className="rjsf-field rjsf-field-string"
+                          >
+                            <div
+                              className="field-template mb-3 rjsf-field rjsf-field-string"
+                              disabled={false}
+                            >
+                              <label
+                                className="label"
+                                htmlFor="root_0_1"
+                              >
+                                <span
+                                  className="label-text font-medium"
+                                >
+                                  <span
+                                    className="text-error ml-1"
+                                  >
+                                    *
+                                  </span>
+                                </span>
+                              </label>
+                              <div
+                                className="form-control"
+                              >
+                                <label
+                                  className="label hidden"
+                                  htmlFor="root_0_1"
+                                  style={
+                                    {
+                                      "display": "none",
+                                    }
+                                  }
+                                >
+                                  <span
+                                    className="label-text"
+                                  />
+                                </label>
+                                <input
+                                  aria-describedby="root_0_1__error root_0_1__description root_0_1__help"
+                                  autoFocus={false}
+                                  className="input input-bordered"
+                                  disabled={false}
+                                  id="root_0_1"
+                                  name="root[0][1]"
+                                  onBlur={[Function]}
+                                  onChange={[Function]}
+                                  onFocus={[Function]}
+                                  placeholder=""
+                                  required={true}
+                                  type="text"
+                                  value="b"
+                                />
+                              </div>
+                              <div
+                                className="rjsf-field-error-template text-red-600"
+                              >
+                                <ul
+                                  className="list-disc list-inside"
+                                />
+                              </div>
+                              <div
+                                className="rjsf-field-help-template text-gray-500 text-sm"
+                              >
+                                <div />
+                              </div>
+                            </div>
+                          </div>
+                          <div
+                            className="flex justify-end mt-2"
+                          >
+                            <div
+                              className="join"
+                            >
+                              <button
+                                aria-label="Move up"
+                                className="rjsf-array-item-move-up join-item btn btn-sm px-2"
+                                disabled={false}
+                                id="root_0_1__moveUp"
+                                onClick={[Function]}
+                                title="Move up"
+                                type="button"
+                              >
+                                <svg
+                                  aria-hidden="true"
+                                  className="svg-inline--fa fa-arrow-up h-5 w-5"
+                                  data-icon="arrow-up"
+                                  data-prefix="fas"
+                                  role="img"
+                                  viewBox="0 0 384 512"
+                                >
+                                  <path
+                                    d="M214.6 17.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 117.3 160 488c0 17.7 14.3 32 32 32s32-14.3 32-32l0-370.7 105.4 105.4c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160z"
+                                    fill="currentColor"
+                                  />
+                                </svg>
+                              </button>
+                              <button
+                                aria-label="Move down"
+                                className="rjsf-array-item-move-down join-item btn btn-sm px-2"
+                                disabled={true}
+                                id="root_0_1__moveDown"
+                                onClick={[Function]}
+                                title="Move down"
+                                type="button"
+                              >
+                                <svg
+                                  aria-hidden="true"
+                                  className="svg-inline--fa fa-arrow-down h-5 w-5"
+                                  data-icon="arrow-down"
+                                  data-prefix="fas"
+                                  role="img"
+                                  viewBox="0 0 384 512"
+                                >
+                                  <path
+                                    d="M169.4 502.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 402.7 224 32c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 370.7-105.4-105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"
+                                    fill="currentColor"
+                                  />
+                                </svg>
+                              </button>
+                              <button
+                                aria-label="Remove"
+                                className="rjsf-array-item-remove join-item btn btn-sm btn-error px-2"
+                                disabled={false}
+                                id="root_0_1__remove"
+                                onClick={[Function]}
+                                title="Remove"
+                                type="button"
+                              >
+                                <svg
+                                  aria-hidden="true"
+                                  className="svg-inline--fa fa-trash h-5 w-5"
+                                  data-icon="trash"
+                                  data-prefix="fas"
+                                  role="img"
+                                  viewBox="0 0 448 512"
+                                >
+                                  <path
+                                    d="M136.7 5.9L128 32 32 32C14.3 32 0 46.3 0 64S14.3 96 32 96l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-96 0-8.7-26.1C306.9-7.2 294.7-16 280.9-16L167.1-16c-13.8 0-26 8.8-30.4 21.9zM416 144L32 144 53.1 467.1C54.7 492.4 75.7 512 101 512L347 512c25.3 0 46.3-19.6 47.9-44.9L416 144z"
+                                    fill="currentColor"
+                                  />
+                                </svg>
+                              </button>
+                            </div>
+                          </div>
+                        </fieldset>
+                      </div>
+                      <div
+                        className="flex justify-end"
+                      >
+                        <div
+                          className="row"
+                        >
+                          <p
+                            className="col-xs-3 col-xs-offset-9 text-right rjsf-array-item-add btn btn-primary btn-sm"
+                          >
+                            <button
+                              aria-label="Add"
+                              className="btn-add col-xs-12 btn-primary btn-primary-content"
+                              disabled={false}
+                              id="root_0__add"
+                              onClick={[Function]}
+                              title="Add"
+                              type="button"
+                            >
+                              <svg
+                                aria-hidden="true"
+                                className="svg-inline--fa fa-plus h-5 w-5"
+                                data-icon="plus"
+                                data-prefix="fas"
+                                role="img"
+                                viewBox="0 0 448 512"
+                              >
+                                <path
+                                  d="M256 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 160-160 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l160 0 0 160c0 17.7 14.3 32 32 32s32-14.3 32-32l0-160 160 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-160 0 0-160z"
+                                  fill="currentColor"
+                                />
+                              </svg>
+                            </button>
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    className="rjsf-field-error-template text-red-600"
+                  >
+                    <ul
+                      className="list-disc list-inside"
+                    />
+                  </div>
+                  <div
+                    className="rjsf-field-help-template text-gray-500 text-sm"
+                  >
+                    <div />
+                  </div>
+                </div>
+              </div>
+              <div
+                className="flex justify-end mt-2"
+              >
+                <div
+                  className="join"
+                >
+                  <button
+                    aria-label="Move up"
+                    className="rjsf-array-item-move-up join-item btn btn-sm px-2"
+                    disabled={true}
+                    id="root_0__moveUp"
+                    onClick={[Function]}
+                    title="Move up"
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      className="svg-inline--fa fa-arrow-up h-5 w-5"
+                      data-icon="arrow-up"
+                      data-prefix="fas"
+                      role="img"
+                      viewBox="0 0 384 512"
+                    >
+                      <path
+                        d="M214.6 17.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 117.3 160 488c0 17.7 14.3 32 32 32s32-14.3 32-32l0-370.7 105.4 105.4c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  </button>
+                  <button
+                    aria-label="Move down"
+                    className="rjsf-array-item-move-down join-item btn btn-sm px-2"
+                    disabled={false}
+                    id="root_0__moveDown"
+                    onClick={[Function]}
+                    title="Move down"
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      className="svg-inline--fa fa-arrow-down h-5 w-5"
+                      data-icon="arrow-down"
+                      data-prefix="fas"
+                      role="img"
+                      viewBox="0 0 384 512"
+                    >
+                      <path
+                        d="M169.4 502.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 402.7 224 32c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 370.7-105.4-105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  </button>
+                  <button
+                    aria-label="Remove"
+                    className="rjsf-array-item-remove join-item btn btn-sm btn-error px-2"
+                    disabled={false}
+                    id="root_0__remove"
+                    onClick={[Function]}
+                    title="Remove"
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      className="svg-inline--fa fa-trash h-5 w-5"
+                      data-icon="trash"
+                      data-prefix="fas"
+                      role="img"
+                      viewBox="0 0 448 512"
+                    >
+                      <path
+                        d="M136.7 5.9L128 32 32 32C14.3 32 0 46.3 0 64S14.3 96 32 96l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-96 0-8.7-26.1C306.9-7.2 294.7-16 280.9-16L167.1-16c-13.8 0-26 8.8-30.4 21.9zM416 144L32 144 53.1 467.1C54.7 492.4 75.7 512 101 512L347 512c25.3 0 46.3-19.6 47.9-44.9L416 144z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </fieldset>
+            <fieldset
+              className="fieldset bg-base-100 border border-base-300 p-4 rounded-b-lg  z-9"
+            >
+              <div
+                className="rjsf-field rjsf-field-array"
+              >
+                <div
+                  className="field-template mb-3 rjsf-field rjsf-field-array"
+                  disabled={false}
+                >
+                  <div
+                    className="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
+                  >
+                    <div
+                      className="flex flex-col gap-4"
+                    >
+                      <div
+                        className="rjsf-array-item-list"
+                      >
+                        <fieldset
+                          className="fieldset bg-base-100 border border-base-300 p-4 rounded-t-lg mb-[-1px] z-10"
+                        >
+                          <div
+                            className="rjsf-field rjsf-field-string"
+                          >
+                            <div
+                              className="field-template mb-3 rjsf-field rjsf-field-string"
+                              disabled={false}
+                            >
+                              <label
+                                className="label"
+                                htmlFor="root_1_0"
+                              >
+                                <span
+                                  className="label-text font-medium"
+                                >
+                                  <span
+                                    className="text-error ml-1"
+                                  >
+                                    *
+                                  </span>
+                                </span>
+                              </label>
+                              <div
+                                className="form-control"
+                              >
+                                <label
+                                  className="label hidden"
+                                  htmlFor="root_1_0"
+                                  style={
+                                    {
+                                      "display": "none",
+                                    }
+                                  }
+                                >
+                                  <span
+                                    className="label-text"
+                                  />
+                                </label>
+                                <input
+                                  aria-describedby="root_1_0__error root_1_0__description root_1_0__help"
+                                  autoFocus={false}
+                                  className="input input-bordered"
+                                  disabled={false}
+                                  id="root_1_0"
+                                  name="root[1][0]"
+                                  onBlur={[Function]}
+                                  onChange={[Function]}
+                                  onFocus={[Function]}
+                                  placeholder=""
+                                  required={true}
+                                  type="text"
+                                  value="c"
+                                />
+                              </div>
+                              <div
+                                className="rjsf-field-error-template text-red-600"
+                              >
+                                <ul
+                                  className="list-disc list-inside"
+                                />
+                              </div>
+                              <div
+                                className="rjsf-field-help-template text-gray-500 text-sm"
+                              >
+                                <div />
+                              </div>
+                            </div>
+                          </div>
+                          <div
+                            className="flex justify-end mt-2"
+                          >
+                            <div
+                              className="join"
+                            >
+                              <button
+                                aria-label="Move up"
+                                className="rjsf-array-item-move-up join-item btn btn-sm px-2"
+                                disabled={true}
+                                id="root_1_0__moveUp"
+                                onClick={[Function]}
+                                title="Move up"
+                                type="button"
+                              >
+                                <svg
+                                  aria-hidden="true"
+                                  className="svg-inline--fa fa-arrow-up h-5 w-5"
+                                  data-icon="arrow-up"
+                                  data-prefix="fas"
+                                  role="img"
+                                  viewBox="0 0 384 512"
+                                >
+                                  <path
+                                    d="M214.6 17.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 117.3 160 488c0 17.7 14.3 32 32 32s32-14.3 32-32l0-370.7 105.4 105.4c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160z"
+                                    fill="currentColor"
+                                  />
+                                </svg>
+                              </button>
+                              <button
+                                aria-label="Move down"
+                                className="rjsf-array-item-move-down join-item btn btn-sm px-2"
+                                disabled={false}
+                                id="root_1_0__moveDown"
+                                onClick={[Function]}
+                                title="Move down"
+                                type="button"
+                              >
+                                <svg
+                                  aria-hidden="true"
+                                  className="svg-inline--fa fa-arrow-down h-5 w-5"
+                                  data-icon="arrow-down"
+                                  data-prefix="fas"
+                                  role="img"
+                                  viewBox="0 0 384 512"
+                                >
+                                  <path
+                                    d="M169.4 502.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 402.7 224 32c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 370.7-105.4-105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"
+                                    fill="currentColor"
+                                  />
+                                </svg>
+                              </button>
+                              <button
+                                aria-label="Remove"
+                                className="rjsf-array-item-remove join-item btn btn-sm btn-error px-2"
+                                disabled={false}
+                                id="root_1_0__remove"
+                                onClick={[Function]}
+                                title="Remove"
+                                type="button"
+                              >
+                                <svg
+                                  aria-hidden="true"
+                                  className="svg-inline--fa fa-trash h-5 w-5"
+                                  data-icon="trash"
+                                  data-prefix="fas"
+                                  role="img"
+                                  viewBox="0 0 448 512"
+                                >
+                                  <path
+                                    d="M136.7 5.9L128 32 32 32C14.3 32 0 46.3 0 64S14.3 96 32 96l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-96 0-8.7-26.1C306.9-7.2 294.7-16 280.9-16L167.1-16c-13.8 0-26 8.8-30.4 21.9zM416 144L32 144 53.1 467.1C54.7 492.4 75.7 512 101 512L347 512c25.3 0 46.3-19.6 47.9-44.9L416 144z"
+                                    fill="currentColor"
+                                  />
+                                </svg>
+                              </button>
+                            </div>
+                          </div>
+                        </fieldset>
+                        <fieldset
+                          className="fieldset bg-base-100 border border-base-300 p-4 rounded-b-lg  z-9"
+                        >
+                          <div
+                            className="rjsf-field rjsf-field-string"
+                          >
+                            <div
+                              className="field-template mb-3 rjsf-field rjsf-field-string"
+                              disabled={false}
+                            >
+                              <label
+                                className="label"
+                                htmlFor="root_1_1"
+                              >
+                                <span
+                                  className="label-text font-medium"
+                                >
+                                  <span
+                                    className="text-error ml-1"
+                                  >
+                                    *
+                                  </span>
+                                </span>
+                              </label>
+                              <div
+                                className="form-control"
+                              >
+                                <label
+                                  className="label hidden"
+                                  htmlFor="root_1_1"
+                                  style={
+                                    {
+                                      "display": "none",
+                                    }
+                                  }
+                                >
+                                  <span
+                                    className="label-text"
+                                  />
+                                </label>
+                                <input
+                                  aria-describedby="root_1_1__error root_1_1__description root_1_1__help"
+                                  autoFocus={false}
+                                  className="input input-bordered"
+                                  disabled={false}
+                                  id="root_1_1"
+                                  name="root[1][1]"
+                                  onBlur={[Function]}
+                                  onChange={[Function]}
+                                  onFocus={[Function]}
+                                  placeholder=""
+                                  required={true}
+                                  type="text"
+                                  value="d"
+                                />
+                              </div>
+                              <div
+                                className="rjsf-field-error-template text-red-600"
+                              >
+                                <ul
+                                  className="list-disc list-inside"
+                                />
+                              </div>
+                              <div
+                                className="rjsf-field-help-template text-gray-500 text-sm"
+                              >
+                                <div />
+                              </div>
+                            </div>
+                          </div>
+                          <div
+                            className="flex justify-end mt-2"
+                          >
+                            <div
+                              className="join"
+                            >
+                              <button
+                                aria-label="Move up"
+                                className="rjsf-array-item-move-up join-item btn btn-sm px-2"
+                                disabled={false}
+                                id="root_1_1__moveUp"
+                                onClick={[Function]}
+                                title="Move up"
+                                type="button"
+                              >
+                                <svg
+                                  aria-hidden="true"
+                                  className="svg-inline--fa fa-arrow-up h-5 w-5"
+                                  data-icon="arrow-up"
+                                  data-prefix="fas"
+                                  role="img"
+                                  viewBox="0 0 384 512"
+                                >
+                                  <path
+                                    d="M214.6 17.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 117.3 160 488c0 17.7 14.3 32 32 32s32-14.3 32-32l0-370.7 105.4 105.4c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160z"
+                                    fill="currentColor"
+                                  />
+                                </svg>
+                              </button>
+                              <button
+                                aria-label="Move down"
+                                className="rjsf-array-item-move-down join-item btn btn-sm px-2"
+                                disabled={true}
+                                id="root_1_1__moveDown"
+                                onClick={[Function]}
+                                title="Move down"
+                                type="button"
+                              >
+                                <svg
+                                  aria-hidden="true"
+                                  className="svg-inline--fa fa-arrow-down h-5 w-5"
+                                  data-icon="arrow-down"
+                                  data-prefix="fas"
+                                  role="img"
+                                  viewBox="0 0 384 512"
+                                >
+                                  <path
+                                    d="M169.4 502.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 402.7 224 32c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 370.7-105.4-105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"
+                                    fill="currentColor"
+                                  />
+                                </svg>
+                              </button>
+                              <button
+                                aria-label="Remove"
+                                className="rjsf-array-item-remove join-item btn btn-sm btn-error px-2"
+                                disabled={false}
+                                id="root_1_1__remove"
+                                onClick={[Function]}
+                                title="Remove"
+                                type="button"
+                              >
+                                <svg
+                                  aria-hidden="true"
+                                  className="svg-inline--fa fa-trash h-5 w-5"
+                                  data-icon="trash"
+                                  data-prefix="fas"
+                                  role="img"
+                                  viewBox="0 0 448 512"
+                                >
+                                  <path
+                                    d="M136.7 5.9L128 32 32 32C14.3 32 0 46.3 0 64S14.3 96 32 96l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-96 0-8.7-26.1C306.9-7.2 294.7-16 280.9-16L167.1-16c-13.8 0-26 8.8-30.4 21.9zM416 144L32 144 53.1 467.1C54.7 492.4 75.7 512 101 512L347 512c25.3 0 46.3-19.6 47.9-44.9L416 144z"
+                                    fill="currentColor"
+                                  />
+                                </svg>
+                              </button>
+                            </div>
+                          </div>
+                        </fieldset>
+                      </div>
+                      <div
+                        className="flex justify-end"
+                      >
+                        <div
+                          className="row"
+                        >
+                          <p
+                            className="col-xs-3 col-xs-offset-9 text-right rjsf-array-item-add btn btn-primary btn-sm"
+                          >
+                            <button
+                              aria-label="Add"
+                              className="btn-add col-xs-12 btn-primary btn-primary-content"
+                              disabled={false}
+                              id="root_1__add"
+                              onClick={[Function]}
+                              title="Add"
+                              type="button"
+                            >
+                              <svg
+                                aria-hidden="true"
+                                className="svg-inline--fa fa-plus h-5 w-5"
+                                data-icon="plus"
+                                data-prefix="fas"
+                                role="img"
+                                viewBox="0 0 448 512"
+                              >
+                                <path
+                                  d="M256 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 160-160 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l160 0 0 160c0 17.7 14.3 32 32 32s32-14.3 32-32l0-160 160 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-160 0 0-160z"
+                                  fill="currentColor"
+                                />
+                              </svg>
+                            </button>
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    className="rjsf-field-error-template text-red-600"
+                  >
+                    <ul
+                      className="list-disc list-inside"
+                    />
+                  </div>
+                  <div
+                    className="rjsf-field-help-template text-gray-500 text-sm"
+                  >
+                    <div />
+                  </div>
+                </div>
+              </div>
+              <div
+                className="flex justify-end mt-2"
+              >
+                <div
+                  className="join"
+                >
+                  <button
+                    aria-label="Move up"
+                    className="rjsf-array-item-move-up join-item btn btn-sm px-2"
+                    disabled={false}
+                    id="root_1__moveUp"
+                    onClick={[Function]}
+                    title="Move up"
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      className="svg-inline--fa fa-arrow-up h-5 w-5"
+                      data-icon="arrow-up"
+                      data-prefix="fas"
+                      role="img"
+                      viewBox="0 0 384 512"
+                    >
+                      <path
+                        d="M214.6 17.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 117.3 160 488c0 17.7 14.3 32 32 32s32-14.3 32-32l0-370.7 105.4 105.4c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  </button>
+                  <button
+                    aria-label="Move down"
+                    className="rjsf-array-item-move-down join-item btn btn-sm px-2"
+                    disabled={true}
+                    id="root_1__moveDown"
+                    onClick={[Function]}
+                    title="Move down"
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      className="svg-inline--fa fa-arrow-down h-5 w-5"
+                      data-icon="arrow-down"
+                      data-prefix="fas"
+                      role="img"
+                      viewBox="0 0 384 512"
+                    >
+                      <path
+                        d="M169.4 502.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 402.7 224 32c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 370.7-105.4-105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  </button>
+                  <button
+                    aria-label="Remove"
+                    className="rjsf-array-item-remove join-item btn btn-sm btn-error px-2"
+                    disabled={false}
+                    id="root_1__remove"
+                    onClick={[Function]}
+                    title="Remove"
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      className="svg-inline--fa fa-trash h-5 w-5"
+                      data-icon="trash"
+                      data-prefix="fas"
+                      role="img"
+                      viewBox="0 0 448 512"
+                    >
+                      <path
+                        d="M136.7 5.9L128 32 32 32C14.3 32 0 46.3 0 64S14.3 96 32 96l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-96 0-8.7-26.1C306.9-7.2 294.7-16 280.9-16L167.1-16c-13.8 0-26 8.8-30.4 21.9zM416 144L32 144 53.1 467.1C54.7 492.4 75.7 512 101 512L347 512c25.3 0 46.3-19.6 47.9-44.9L416 144z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </fieldset>
+          </div>
+          <div
+            className="flex justify-end"
+          >
+            <div
+              className="row"
+            >
+              <p
+                className="col-xs-3 col-xs-offset-9 text-right rjsf-array-item-add btn btn-primary btn-sm"
+              >
+                <button
+                  aria-label="Add"
+                  className="btn-add col-xs-12 btn-primary btn-primary-content"
+                  disabled={false}
+                  id="root__add"
+                  onClick={[Function]}
+                  title="Add"
+                  type="button"
+                >
+                  <svg
+                    aria-hidden="true"
+                    className="svg-inline--fa fa-plus h-5 w-5"
+                    data-icon="plus"
+                    data-prefix="fas"
+                    role="img"
+                    viewBox="0 0 448 512"
+                  >
+                    <path
+                      d="M256 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 160-160 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l160 0 0 160c0 17.7 14.3 32 32 32s32-14.3 32-32l0-160 160 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-160 0 0-160z"
+                      fill="currentColor"
+                    />
+                  </svg>
+                </button>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="rjsf-field-error-template text-red-600"
+      >
+        <ul
+          className="list-disc list-inside"
+        />
+      </div>
+      <div
+        className="rjsf-field-help-template text-gray-500 text-sm"
+      >
+        <div />
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary btn-primary-content "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-array"
+  >
+    <div
+      className="field-template mb-3 rjsf-field rjsf-field-array"
+      disabled={false}
+    >
+      <div
+        className="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-object"
+      >
+        <div
+          className="flex flex-col gap-4"
+        >
+          <div
+            className="rjsf-array-item-list"
+          >
+            <fieldset
+              className="fieldset bg-base-100 border border-base-300 p-4 rounded-t-lg mb-[-1px] z-10"
+            >
+              <div
+                className="rjsf-field rjsf-field-object"
+              >
+                <div
+                  className="field-template mb-3 rjsf-field rjsf-field-object"
+                  disabled={false}
+                >
+                  <div
+                    className="form-control "
+                  >
+                    <div
+                      className="grid grid-cols-1 gap-4 mb-4"
+                    >
+                      <div
+                        className=""
+                      >
+                        <div
+                          className="rjsf-field rjsf-field-string"
+                        >
+                          <div
+                            className="field-template mb-3 rjsf-field rjsf-field-string"
+                            disabled={false}
+                          >
+                            <label
+                              className="label"
+                              htmlFor="root_0_name"
+                            >
+                              <span
+                                className="label-text font-medium"
+                              >
+                                name
+                              </span>
+                            </label>
+                            <div
+                              className="form-control"
+                            >
+                              <label
+                                className="label hidden"
+                                htmlFor="root_0_name"
+                                style={
+                                  {
+                                    "display": "none",
+                                  }
+                                }
+                              >
+                                <span
+                                  className="label-text"
+                                >
+                                  name
+                                </span>
+                              </label>
+                              <input
+                                aria-describedby="root_0_name__error root_0_name__description root_0_name__help"
+                                autoFocus={false}
+                                className="input input-bordered"
+                                disabled={false}
+                                id="root_0_name"
+                                name="root.0.name"
+                                onBlur={[Function]}
+                                onChange={[Function]}
+                                onFocus={[Function]}
+                                placeholder=""
+                                required={false}
+                                type="text"
+                                value="Item 1"
+                              />
+                            </div>
+                            <div
+                              className="rjsf-field-error-template text-red-600"
+                            >
+                              <ul
+                                className="list-disc list-inside"
+                              />
+                            </div>
+                            <div
+                              className="rjsf-field-help-template text-gray-500 text-sm"
+                            >
+                              <div />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        className=""
+                      >
+                        <div
+                          className="rjsf-field rjsf-field-number"
+                        >
+                          <div
+                            className="field-template mb-3 rjsf-field rjsf-field-number"
+                            disabled={false}
+                          >
+                            <label
+                              className="label"
+                              htmlFor="root_0_value"
+                            >
+                              <span
+                                className="label-text font-medium"
+                              >
+                                value
+                              </span>
+                            </label>
+                            <div
+                              className="form-control"
+                            >
+                              <label
+                                className="label hidden"
+                                htmlFor="root_0_value"
+                                style={
+                                  {
+                                    "display": "none",
+                                  }
+                                }
+                              >
+                                <span
+                                  className="label-text"
+                                >
+                                  value
+                                </span>
+                              </label>
+                              <input
+                                aria-describedby="root_0_value__error root_0_value__description root_0_value__help"
+                                autoFocus={false}
+                                className="input input-bordered"
+                                disabled={false}
+                                id="root_0_value"
+                                name="root.0.value"
+                                onBlur={[Function]}
+                                onChange={[Function]}
+                                onFocus={[Function]}
+                                placeholder=""
+                                required={false}
+                                step="any"
+                                type="number"
+                                value={10}
+                              />
+                            </div>
+                            <div
+                              className="rjsf-field-error-template text-red-600"
+                            >
+                              <ul
+                                className="list-disc list-inside"
+                              />
+                            </div>
+                            <div
+                              className="rjsf-field-help-template text-gray-500 text-sm"
+                            >
+                              <div />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    className="rjsf-field-error-template text-red-600"
+                  >
+                    <ul
+                      className="list-disc list-inside"
+                    />
+                  </div>
+                  <div
+                    className="rjsf-field-help-template text-gray-500 text-sm"
+                  >
+                    <div />
+                  </div>
+                </div>
+              </div>
+              <div
+                className="flex justify-end mt-2"
+              >
+                <div
+                  className="join"
+                >
+                  <button
+                    aria-label="Move up"
+                    className="rjsf-array-item-move-up join-item btn btn-sm px-2"
+                    disabled={true}
+                    id="root_0__moveUp"
+                    onClick={[Function]}
+                    title="Move up"
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      className="svg-inline--fa fa-arrow-up h-5 w-5"
+                      data-icon="arrow-up"
+                      data-prefix="fas"
+                      role="img"
+                      viewBox="0 0 384 512"
+                    >
+                      <path
+                        d="M214.6 17.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 117.3 160 488c0 17.7 14.3 32 32 32s32-14.3 32-32l0-370.7 105.4 105.4c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  </button>
+                  <button
+                    aria-label="Move down"
+                    className="rjsf-array-item-move-down join-item btn btn-sm px-2"
+                    disabled={false}
+                    id="root_0__moveDown"
+                    onClick={[Function]}
+                    title="Move down"
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      className="svg-inline--fa fa-arrow-down h-5 w-5"
+                      data-icon="arrow-down"
+                      data-prefix="fas"
+                      role="img"
+                      viewBox="0 0 384 512"
+                    >
+                      <path
+                        d="M169.4 502.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 402.7 224 32c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 370.7-105.4-105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  </button>
+                  <button
+                    aria-label="Remove"
+                    className="rjsf-array-item-remove join-item btn btn-sm btn-error px-2"
+                    disabled={false}
+                    id="root_0__remove"
+                    onClick={[Function]}
+                    title="Remove"
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      className="svg-inline--fa fa-trash h-5 w-5"
+                      data-icon="trash"
+                      data-prefix="fas"
+                      role="img"
+                      viewBox="0 0 448 512"
+                    >
+                      <path
+                        d="M136.7 5.9L128 32 32 32C14.3 32 0 46.3 0 64S14.3 96 32 96l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-96 0-8.7-26.1C306.9-7.2 294.7-16 280.9-16L167.1-16c-13.8 0-26 8.8-30.4 21.9zM416 144L32 144 53.1 467.1C54.7 492.4 75.7 512 101 512L347 512c25.3 0 46.3-19.6 47.9-44.9L416 144z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </fieldset>
+            <fieldset
+              className="fieldset bg-base-100 border border-base-300 p-4 rounded-b-lg  z-9"
+            >
+              <div
+                className="rjsf-field rjsf-field-object"
+              >
+                <div
+                  className="field-template mb-3 rjsf-field rjsf-field-object"
+                  disabled={false}
+                >
+                  <div
+                    className="form-control "
+                  >
+                    <div
+                      className="grid grid-cols-1 gap-4 mb-4"
+                    >
+                      <div
+                        className=""
+                      >
+                        <div
+                          className="rjsf-field rjsf-field-string"
+                        >
+                          <div
+                            className="field-template mb-3 rjsf-field rjsf-field-string"
+                            disabled={false}
+                          >
+                            <label
+                              className="label"
+                              htmlFor="root_1_name"
+                            >
+                              <span
+                                className="label-text font-medium"
+                              >
+                                name
+                              </span>
+                            </label>
+                            <div
+                              className="form-control"
+                            >
+                              <label
+                                className="label hidden"
+                                htmlFor="root_1_name"
+                                style={
+                                  {
+                                    "display": "none",
+                                  }
+                                }
+                              >
+                                <span
+                                  className="label-text"
+                                >
+                                  name
+                                </span>
+                              </label>
+                              <input
+                                aria-describedby="root_1_name__error root_1_name__description root_1_name__help"
+                                autoFocus={false}
+                                className="input input-bordered"
+                                disabled={false}
+                                id="root_1_name"
+                                name="root.1.name"
+                                onBlur={[Function]}
+                                onChange={[Function]}
+                                onFocus={[Function]}
+                                placeholder=""
+                                required={false}
+                                type="text"
+                                value="Item 2"
+                              />
+                            </div>
+                            <div
+                              className="rjsf-field-error-template text-red-600"
+                            >
+                              <ul
+                                className="list-disc list-inside"
+                              />
+                            </div>
+                            <div
+                              className="rjsf-field-help-template text-gray-500 text-sm"
+                            >
+                              <div />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        className=""
+                      >
+                        <div
+                          className="rjsf-field rjsf-field-number"
+                        >
+                          <div
+                            className="field-template mb-3 rjsf-field rjsf-field-number"
+                            disabled={false}
+                          >
+                            <label
+                              className="label"
+                              htmlFor="root_1_value"
+                            >
+                              <span
+                                className="label-text font-medium"
+                              >
+                                value
+                              </span>
+                            </label>
+                            <div
+                              className="form-control"
+                            >
+                              <label
+                                className="label hidden"
+                                htmlFor="root_1_value"
+                                style={
+                                  {
+                                    "display": "none",
+                                  }
+                                }
+                              >
+                                <span
+                                  className="label-text"
+                                >
+                                  value
+                                </span>
+                              </label>
+                              <input
+                                aria-describedby="root_1_value__error root_1_value__description root_1_value__help"
+                                autoFocus={false}
+                                className="input input-bordered"
+                                disabled={false}
+                                id="root_1_value"
+                                name="root.1.value"
+                                onBlur={[Function]}
+                                onChange={[Function]}
+                                onFocus={[Function]}
+                                placeholder=""
+                                required={false}
+                                step="any"
+                                type="number"
+                                value={20}
+                              />
+                            </div>
+                            <div
+                              className="rjsf-field-error-template text-red-600"
+                            >
+                              <ul
+                                className="list-disc list-inside"
+                              />
+                            </div>
+                            <div
+                              className="rjsf-field-help-template text-gray-500 text-sm"
+                            >
+                              <div />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    className="rjsf-field-error-template text-red-600"
+                  >
+                    <ul
+                      className="list-disc list-inside"
+                    />
+                  </div>
+                  <div
+                    className="rjsf-field-help-template text-gray-500 text-sm"
+                  >
+                    <div />
+                  </div>
+                </div>
+              </div>
+              <div
+                className="flex justify-end mt-2"
+              >
+                <div
+                  className="join"
+                >
+                  <button
+                    aria-label="Move up"
+                    className="rjsf-array-item-move-up join-item btn btn-sm px-2"
+                    disabled={false}
+                    id="root_1__moveUp"
+                    onClick={[Function]}
+                    title="Move up"
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      className="svg-inline--fa fa-arrow-up h-5 w-5"
+                      data-icon="arrow-up"
+                      data-prefix="fas"
+                      role="img"
+                      viewBox="0 0 384 512"
+                    >
+                      <path
+                        d="M214.6 17.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 117.3 160 488c0 17.7 14.3 32 32 32s32-14.3 32-32l0-370.7 105.4 105.4c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  </button>
+                  <button
+                    aria-label="Move down"
+                    className="rjsf-array-item-move-down join-item btn btn-sm px-2"
+                    disabled={true}
+                    id="root_1__moveDown"
+                    onClick={[Function]}
+                    title="Move down"
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      className="svg-inline--fa fa-arrow-down h-5 w-5"
+                      data-icon="arrow-down"
+                      data-prefix="fas"
+                      role="img"
+                      viewBox="0 0 384 512"
+                    >
+                      <path
+                        d="M169.4 502.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 402.7 224 32c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 370.7-105.4-105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  </button>
+                  <button
+                    aria-label="Remove"
+                    className="rjsf-array-item-remove join-item btn btn-sm btn-error px-2"
+                    disabled={false}
+                    id="root_1__remove"
+                    onClick={[Function]}
+                    title="Remove"
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      className="svg-inline--fa fa-trash h-5 w-5"
+                      data-icon="trash"
+                      data-prefix="fas"
+                      role="img"
+                      viewBox="0 0 448 512"
+                    >
+                      <path
+                        d="M136.7 5.9L128 32 32 32C14.3 32 0 46.3 0 64S14.3 96 32 96l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-96 0-8.7-26.1C306.9-7.2 294.7-16 280.9-16L167.1-16c-13.8 0-26 8.8-30.4 21.9zM416 144L32 144 53.1 467.1C54.7 492.4 75.7 512 101 512L347 512c25.3 0 46.3-19.6 47.9-44.9L416 144z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </fieldset>
+          </div>
+          <div
+            className="flex justify-end"
+          >
+            <div
+              className="row"
+            >
+              <p
+                className="col-xs-3 col-xs-offset-9 text-right rjsf-array-item-add btn btn-primary btn-sm"
+              >
+                <button
+                  aria-label="Add"
+                  className="btn-add col-xs-12 btn-primary btn-primary-content"
+                  disabled={false}
+                  id="root__add"
+                  onClick={[Function]}
+                  title="Add"
+                  type="button"
+                >
+                  <svg
+                    aria-hidden="true"
+                    className="svg-inline--fa fa-plus h-5 w-5"
+                    data-icon="plus"
+                    data-prefix="fas"
+                    role="img"
+                    viewBox="0 0 448 512"
+                  >
+                    <path
+                      d="M256 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 160-160 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l160 0 0 160c0 17.7 14.3 32 32 32s32-14.3 32-32l0-160 160 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-160 0 0-160z"
+                      fill="currentColor"
+                    />
+                  </svg>
+                </button>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="rjsf-field-error-template text-red-600"
+      >
+        <ul
+          className="list-disc list-inside"
+        />
+      </div>
+      <div
+        className="rjsf-field-help-template text-gray-500 text-sm"
+      >
+        <div />
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary btn-primary-content "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-array"
+  >
+    <div
+      className="field-template mb-3 rjsf-field rjsf-field-array"
+      disabled={false}
+    >
+      <div
+        className="array-field-template rjsf-field rjsf-field-array rjsf-field-array-of-string"
+      >
+        <div
+          className="flex flex-col gap-4"
+        >
+          <div
+            className="rjsf-array-item-list"
+          >
+            <fieldset
+              className="fieldset bg-base-100 border border-base-300 p-4 rounded-t-lg mb-[-1px] z-10"
+            >
+              <div
+                className="rjsf-field rjsf-field-string"
+              >
+                <div
+                  className="field-template mb-3 rjsf-field rjsf-field-string"
+                  disabled={false}
+                >
+                  <label
+                    className="label"
+                    htmlFor="root_0"
+                  >
+                    <span
+                      className="label-text font-medium"
+                    >
+                      <span
+                        className="text-error ml-1"
+                      >
+                        *
+                      </span>
+                    </span>
+                  </label>
+                  <div
+                    className="form-control"
+                  >
+                    <label
+                      className="label hidden"
+                      htmlFor="root_0"
+                      style={
+                        {
+                          "display": "none",
+                        }
+                      }
+                    >
+                      <span
+                        className="label-text"
+                      />
+                    </label>
+                    <input
+                      aria-describedby="root_0__error root_0__description root_0__help"
+                      autoFocus={false}
+                      className="input input-bordered"
+                      disabled={false}
+                      id="root_0"
+                      name="root.0"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      onFocus={[Function]}
+                      placeholder=""
+                      required={true}
+                      type="text"
+                      value="foo"
+                    />
+                  </div>
+                  <div
+                    className="rjsf-field-error-template text-red-600"
+                  >
+                    <ul
+                      className="list-disc list-inside"
+                    />
+                  </div>
+                  <div
+                    className="rjsf-field-help-template text-gray-500 text-sm"
+                  >
+                    <div />
+                  </div>
+                </div>
+              </div>
+              <div
+                className="flex justify-end mt-2"
+              >
+                <div
+                  className="join"
+                >
+                  <button
+                    aria-label="Move up"
+                    className="rjsf-array-item-move-up join-item btn btn-sm px-2"
+                    disabled={true}
+                    id="root_0__moveUp"
+                    onClick={[Function]}
+                    title="Move up"
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      className="svg-inline--fa fa-arrow-up h-5 w-5"
+                      data-icon="arrow-up"
+                      data-prefix="fas"
+                      role="img"
+                      viewBox="0 0 384 512"
+                    >
+                      <path
+                        d="M214.6 17.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 117.3 160 488c0 17.7 14.3 32 32 32s32-14.3 32-32l0-370.7 105.4 105.4c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  </button>
+                  <button
+                    aria-label="Move down"
+                    className="rjsf-array-item-move-down join-item btn btn-sm px-2"
+                    disabled={false}
+                    id="root_0__moveDown"
+                    onClick={[Function]}
+                    title="Move down"
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      className="svg-inline--fa fa-arrow-down h-5 w-5"
+                      data-icon="arrow-down"
+                      data-prefix="fas"
+                      role="img"
+                      viewBox="0 0 384 512"
+                    >
+                      <path
+                        d="M169.4 502.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 402.7 224 32c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 370.7-105.4-105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  </button>
+                  <button
+                    aria-label="Remove"
+                    className="rjsf-array-item-remove join-item btn btn-sm btn-error px-2"
+                    disabled={false}
+                    id="root_0__remove"
+                    onClick={[Function]}
+                    title="Remove"
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      className="svg-inline--fa fa-trash h-5 w-5"
+                      data-icon="trash"
+                      data-prefix="fas"
+                      role="img"
+                      viewBox="0 0 448 512"
+                    >
+                      <path
+                        d="M136.7 5.9L128 32 32 32C14.3 32 0 46.3 0 64S14.3 96 32 96l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-96 0-8.7-26.1C306.9-7.2 294.7-16 280.9-16L167.1-16c-13.8 0-26 8.8-30.4 21.9zM416 144L32 144 53.1 467.1C54.7 492.4 75.7 512 101 512L347 512c25.3 0 46.3-19.6 47.9-44.9L416 144z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </fieldset>
+            <fieldset
+              className="fieldset bg-base-100 border border-base-300 p-4 rounded-b-lg  z-9"
+            >
+              <div
+                className="rjsf-field rjsf-field-string"
+              >
+                <div
+                  className="field-template mb-3 rjsf-field rjsf-field-string"
+                  disabled={false}
+                >
+                  <label
+                    className="label"
+                    htmlFor="root_1"
+                  >
+                    <span
+                      className="label-text font-medium"
+                    >
+                      <span
+                        className="text-error ml-1"
+                      >
+                        *
+                      </span>
+                    </span>
+                  </label>
+                  <div
+                    className="form-control"
+                  >
+                    <label
+                      className="label hidden"
+                      htmlFor="root_1"
+                      style={
+                        {
+                          "display": "none",
+                        }
+                      }
+                    >
+                      <span
+                        className="label-text"
+                      />
+                    </label>
+                    <input
+                      aria-describedby="root_1__error root_1__description root_1__help"
+                      autoFocus={false}
+                      className="input input-bordered"
+                      disabled={false}
+                      id="root_1"
+                      name="root.1"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      onFocus={[Function]}
+                      placeholder=""
+                      required={true}
+                      type="text"
+                      value="bar"
+                    />
+                  </div>
+                  <div
+                    className="rjsf-field-error-template text-red-600"
+                  >
+                    <ul
+                      className="list-disc list-inside"
+                    />
+                  </div>
+                  <div
+                    className="rjsf-field-help-template text-gray-500 text-sm"
+                  >
+                    <div />
+                  </div>
+                </div>
+              </div>
+              <div
+                className="flex justify-end mt-2"
+              >
+                <div
+                  className="join"
+                >
+                  <button
+                    aria-label="Move up"
+                    className="rjsf-array-item-move-up join-item btn btn-sm px-2"
+                    disabled={false}
+                    id="root_1__moveUp"
+                    onClick={[Function]}
+                    title="Move up"
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      className="svg-inline--fa fa-arrow-up h-5 w-5"
+                      data-icon="arrow-up"
+                      data-prefix="fas"
+                      role="img"
+                      viewBox="0 0 384 512"
+                    >
+                      <path
+                        d="M214.6 17.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 117.3 160 488c0 17.7 14.3 32 32 32s32-14.3 32-32l0-370.7 105.4 105.4c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  </button>
+                  <button
+                    aria-label="Move down"
+                    className="rjsf-array-item-move-down join-item btn btn-sm px-2"
+                    disabled={true}
+                    id="root_1__moveDown"
+                    onClick={[Function]}
+                    title="Move down"
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      className="svg-inline--fa fa-arrow-down h-5 w-5"
+                      data-icon="arrow-down"
+                      data-prefix="fas"
+                      role="img"
+                      viewBox="0 0 384 512"
+                    >
+                      <path
+                        d="M169.4 502.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 402.7 224 32c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 370.7-105.4-105.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  </button>
+                  <button
+                    aria-label="Remove"
+                    className="rjsf-array-item-remove join-item btn btn-sm btn-error px-2"
+                    disabled={false}
+                    id="root_1__remove"
+                    onClick={[Function]}
+                    title="Remove"
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      className="svg-inline--fa fa-trash h-5 w-5"
+                      data-icon="trash"
+                      data-prefix="fas"
+                      role="img"
+                      viewBox="0 0 448 512"
+                    >
+                      <path
+                        d="M136.7 5.9L128 32 32 32C14.3 32 0 46.3 0 64S14.3 96 32 96l384 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-96 0-8.7-26.1C306.9-7.2 294.7-16 280.9-16L167.1-16c-13.8 0-26 8.8-30.4 21.9zM416 144L32 144 53.1 467.1C54.7 492.4 75.7 512 101 512L347 512c25.3 0 46.3-19.6 47.9-44.9L416 144z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </fieldset>
+          </div>
+          <div
+            className="flex justify-end"
+          >
+            <div
+              className="row"
+            >
+              <p
+                className="col-xs-3 col-xs-offset-9 text-right rjsf-array-item-add btn btn-primary btn-sm"
+              >
+                <button
+                  aria-label="Add"
+                  className="btn-add col-xs-12 btn-primary btn-primary-content"
+                  disabled={false}
+                  id="root__add"
+                  onClick={[Function]}
+                  title="Add"
+                  type="button"
+                >
+                  <svg
+                    aria-hidden="true"
+                    className="svg-inline--fa fa-plus h-5 w-5"
+                    data-icon="plus"
+                    data-prefix="fas"
+                    role="img"
+                    viewBox="0 0 448 512"
+                  >
+                    <path
+                      d="M256 64c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 160-160 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l160 0 0 160c0 17.7 14.3 32 32 32s32-14.3 32-32l0-160 160 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-160 0 0-160z"
+                      fill="currentColor"
+                    />
+                  </svg>
+                </button>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="rjsf-field-error-template text-red-600"
+      >
+        <ul
+          className="list-disc list-inside"
+        />
+      </div>
+      <div
+        className="rjsf-field-help-template text-gray-500 text-sm"
+      >
+        <div />
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="btn btn-primary btn-primary-content "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
 exports[`with title and description array 1`] = `
 <form
   className="rjsf"
