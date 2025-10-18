@@ -1,4 +1,4 @@
-import { MouseEvent, useCallback, useState } from 'react';
+import { MouseEvent, useCallback, useMemo, useState } from 'react';
 import {
   allowAdditionalItems,
   getTemplate,
@@ -794,7 +794,7 @@ type ArrayFieldState<T> = {
  * returning the plain `formData` from the `keyedFormData`.
  */
 function useKeyedFormData<T = any>(formData: T[] = []): KeyedFormDataState<T> {
-  const newHash = useMemo(() => hashObject(formData), [formData])
+  const newHash = useMemo(() => hashObject(formData), [formData]);
   const [state, setState] = useState<ArrayFieldState<T>>(() => ({
     formDataHash: newHash,
     keyedFormData: generateKeyedFormData<T>(formData),
