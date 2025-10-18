@@ -23,6 +23,7 @@ import {
   UI_GLOBAL_OPTIONS_KEY,
   UiSchema,
   ITEMS_KEY,
+  useDeepCompareMemo,
 } from '@rjsf/utils';
 import each from 'lodash/each';
 import flatten from 'lodash/flatten';
@@ -138,268 +139,7 @@ function isNumericIndex(str: string) {
   return /^\d+?$/.test(str); // Matches positive integers
 }
 
-export const LAYOUT_GRID_FIELD_TEST_IDS = getTestIds();
-
-/**
- * Describes the props for LayoutGridCondition, LayoutGridCol, LayoutGridColumns, and LayoutGridRow. This is typically
- * the original props passed through from the nearest ancestor LayoutGridField, plus the layoutGridSchema for the
- * current node.
- */
-type LayoutFieldProps<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
-> = LayoutGridFieldProps<T, S, F> & {
-  /**  The string or object that represents the configuration for the grid field */
-  layoutGridSchema: GridSchemaType;
-};
-
-/** Renders the `children` of the `GridType.CONDITION` if it passes. The `layoutGridSchema` for the
- * `GridType.CONDITION` is separated into the `children` and other `gridProps`. The `gridProps` are used to extract
- * the `operator`, `field` and `value` of the condition. If the condition matches, then all of the `children` are
- * rendered, otherwise null is returned.
- *
- * @returns - The rendered the children for the `GridType.CONDITION` or null
- */
-function LayoutGridCondition<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: LayoutFieldProps<T, S, F>,
-) {
-  const { layoutGridSchema, ...layoutGridFieldProps } = props;
-  const { formData, registry } = layoutGridFieldProps;
-  const { children, gridProps } = findChildrenAndProps<T, S, F>(layoutGridSchema, GridType.CONDITION, registry);
-  const { operator, field = '', value } = gridProps;
-  const fieldData = get(formData, field, null);
-  if (conditionMatches(operator, fieldData, value)) {
-    return <LayoutGridFieldChildren {...layoutGridFieldProps} childrenLayoutGridSchemaId={children} />;
-  }
-  return null;
-}
-
-/** Renders a material-ui `GridTemplate` as an item. The `layoutGridSchema` for the `GridType.COLUMN` is separated
- * into the `children` and other `gridProps`. The `gridProps` will be spread onto the outer `GridTemplate`. Inside
- * the `GridTemplate` all the `children` are rendered.
- *
- * @returns - The rendered `GridTemplate` containing the children for the `GridType.COLUMN`
- */
-function LayoutGridCol<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: LayoutFieldProps<T, S, F>,
-) {
-  const { layoutGridSchema, ...layoutGridFieldProps } = props;
-  const { registry, uiSchema } = layoutGridFieldProps;
-  const { children, gridProps } = findChildrenAndProps<T, S, F>(layoutGridSchema, GridType.COLUMN, registry);
-  const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const GridTemplate = getTemplate<'GridTemplate', T, S, F>('GridTemplate', registry, uiOptions);
-
-  return (
-    <GridTemplate column data-testid={LAYOUT_GRID_FIELD_TEST_IDS.col} {...gridProps}>
-      <LayoutGridFieldChildren {...layoutGridFieldProps} childrenLayoutGridSchemaId={children} />
-    </GridTemplate>
-  );
-}
-
-/** Renders a material-ui `GridTemplate` as an item. The `layoutGridSchema` for the `GridType.COLUMNS` is separated
- * into the `children` and other `gridProps`. The `children` is iterated on and `gridProps` will be spread onto the
- * outer `GridTemplate`. Each child will have their own rendered `GridTemplate`.
- *
- * @returns - The rendered `GridTemplate` containing the children for the `GridType.COLUMNS`
- */
-function LayoutGridColumns<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: LayoutFieldProps<T, S, F>,
-) {
-  const { layoutGridSchema, ...layoutGridFieldProps } = props;
-
-  const { registry, uiSchema } = layoutGridFieldProps;
-  const { children, gridProps } = findChildrenAndProps<T, S, F>(layoutGridSchema, GridType.COLUMNS, registry);
-  const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const GridTemplate = getTemplate<'GridTemplate', T, S, F>('GridTemplate', registry, uiOptions);
-
-  return children.map((child) => (
-    <GridTemplate
-      column
-      key={`column-${hashObject(child)}`}
-      data-testid={LAYOUT_GRID_FIELD_TEST_IDS.col}
-      {...gridProps}
-    >
-      <LayoutGridFieldChildren {...layoutGridFieldProps} childrenLayoutGridSchemaId={[child]} />
-    </GridTemplate>
-  ));
-}
-
-/** Renders a material-ui `GridTemplate` as a container. The
- * `layoutGridSchema` for the `GridType.ROW` is separated into the `children` and other `gridProps`. The `gridProps`
- * will be spread onto the outer `GridTemplate`. Inside of the `GridTemplate` all of the `children` are rendered.
- *
- * @returns - The rendered `GridTemplate` containing the children for the `GridType.ROW`
- */
-function LayoutGridRow<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: LayoutFieldProps<T, S, F>,
-) {
-  const { layoutGridSchema, ...layoutGridFieldProps } = props;
-
-  const { registry, uiSchema } = layoutGridFieldProps;
-  const { children, gridProps } = findChildrenAndProps<T, S, F>(layoutGridSchema, GridType.ROW, registry);
-  const uiOptions = getUiOptions<T, S, F>(uiSchema);
-  const GridTemplate = getTemplate<'GridTemplate', T, S, F>('GridTemplate', registry, uiOptions);
-
-  return (
-    <GridTemplate {...gridProps} data-testid={LAYOUT_GRID_FIELD_TEST_IDS.row}>
-      <LayoutGridFieldChildren {...layoutGridFieldProps} childrenLayoutGridSchemaId={children} />
-    </GridTemplate>
-  );
-}
-
-/**
- * The props for the LayoutGridFieldChildren component.
- */
-type LayoutGridFieldChildrenProps<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
-> = LayoutGridFieldProps<T, S, F> & {
-  /** The list of strings or objects that represents the configurations for the children fields */
-  childrenLayoutGridSchemaId: LayoutGridSchemaType[];
-};
-
-/** Iterates through all the `childrenLayoutGridSchemaId`, rendering a nested `LayoutGridField` for each item in the
- * list, passing all the props for the current `LayoutGridField` along, updating the `schema` by calling
- * `retrieveSchema()` on it to resolve any `$ref`s. In addition to the updated `schema`, each item in
- * `childrenLayoutGridSchemaId` is passed as `layoutGridSchema`.
- *
- * @returns - The nested `LayoutGridField`s
- */
-function LayoutGridFieldChildren<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: LayoutGridFieldChildrenProps<T, S, F>,
-) {
-  const { childrenLayoutGridSchemaId, ...layoutGridFieldProps } = props;
-  const { registry, schema: rawSchema, formData } = layoutGridFieldProps;
-  const { schemaUtils } = registry;
-  const schema = schemaUtils.retrieveSchema(rawSchema, formData);
-  return childrenLayoutGridSchemaId.map((layoutGridSchema) => (
-    <LayoutGridField<T, S, F>
-      {...layoutGridFieldProps}
-      key={`layoutGrid-${hashObject(layoutGridSchema)}`}
-      schema={schema}
-      layoutGridSchema={layoutGridSchema}
-    />
-  ));
-}
-
-/**
- * The props for the LayoutGridFieldComponent.
- */
-type LayoutGridFieldComponentProps<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
-> = LayoutGridFieldProps<T, S, F> & {
-  /** The string or object that represents the configuration for the grid field */
-  gridSchema?: ConfigObject | string;
-};
-
-/** Renders the field described by `gridSchema`. If `gridSchema` is not an object, then is will be assumed
- * to be the dotted-path to the field in the schema. Otherwise, we extract the `name`, and optional `render` and all
- * other props. If `name` does not exist and there is an optional `render`, we return the `render` component with only
- * specified props for that component. If `name` exists, we take the name, the initial & root schemas and the formData
- * and get the destination schema, is required state and optional oneOf/anyOf options for it. If the destination
- * schema was located along with oneOf/anyOf options then a `LayoutMultiSchemaField` will be rendered with the
- * `uiSchema`, `errorSchema`, `fieldPathId` and `formData` drilled down to the dotted-path field, spreading any other
- * props from `gridSchema` into the `ui:options`. If the destination schema located without any oneOf/anyOf options,
- * then a `SchemaField` will be rendered with the same props as mentioned in the previous sentence. If no destination
- * schema was located, but a custom render component was found, then it will be rendered with many of the non-event
- * handling props. If none of the previous render paths are valid, then a null is returned.
- *
- * @returns - One of `LayoutMultiSchemaField`, `SchemaField`, a custom render component or null, depending
- */
-function LayoutGridFieldComponent<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: LayoutGridFieldComponentProps<T, S, F>,
-) {
-  const { gridSchema, ...layoutGridFieldProps } = props;
-  const {
-    schema: initialSchema,
-    uiSchema,
-    errorSchema,
-    fieldPathId,
-    onBlur,
-    onFocus,
-    formData,
-    readonly,
-    registry,
-    layoutGridSchema, // Used to pull this out of otherProps since we don't want to pass it through
-    ...otherProps
-  } = layoutGridFieldProps;
-  const { onChange } = otherProps;
-  const { fields } = registry;
-  const { SchemaField, LayoutMultiSchemaField } = fields;
-
-  const uiComponentProps = computeUIComponentPropsFromGridSchema(registry, gridSchema);
-  if (uiComponentProps.rendered) {
-    return uiComponentProps.rendered;
-  }
-  const { name, UIComponent, uiProps } = uiComponentProps;
-  const {
-    schema,
-    isRequired,
-    isReadonly,
-    optionsInfo,
-    fieldPathId: fieldIdSchema,
-  } = getSchemaDetailsForField<T, S, F>(registry, name, initialSchema, formData, fieldPathId);
-
-  if (schema) {
-    const Field = optionsInfo?.hasDiscriminator ? LayoutMultiSchemaField : SchemaField;
-    // Call this function to get the appropriate UISchema, which will always have its `readonly` state matching the
-    // `uiReadonly` flag that it returns. This is done since the `SchemaField` will always defer to the `readonly`
-    // state in the uiSchema over anything in the props or schema. Because we are implementing the "readonly" state of
-    // the `Form` via the prop passed to `LayoutGridField` we need to make sure the uiSchema always has a true value
-    // when it is needed
-    const { fieldUiSchema, uiReadonly } = computeFieldUiSchema<T, S, F>(name, uiProps, uiSchema, isReadonly, readonly);
-
-    return (
-      <Field
-        data-testid={
-          optionsInfo?.hasDiscriminator
-            ? LAYOUT_GRID_FIELD_TEST_IDS.layoutMultiSchemaField
-            : LAYOUT_GRID_FIELD_TEST_IDS.field
-        }
-        {...otherProps}
-        name={name}
-        required={isRequired}
-        readonly={uiReadonly}
-        schema={schema}
-        uiSchema={fieldUiSchema}
-        errorSchema={get(errorSchema, name)}
-        fieldPathId={fieldIdSchema}
-        formData={get(formData, name)}
-        onChange={onChange}
-        onBlur={onBlur}
-        onFocus={onFocus}
-        options={optionsInfo?.options}
-        registry={registry}
-      />
-    );
-  }
-
-  if (UIComponent) {
-    return (
-      <UIComponent
-        data-testid={LAYOUT_GRID_FIELD_TEST_IDS.uiComponent}
-        {...otherProps}
-        name={name}
-        required={isRequired}
-        formData={formData}
-        readOnly={!!isReadonly || readonly}
-        errorSchema={errorSchema}
-        uiSchema={uiSchema}
-        schema={initialSchema}
-        fieldPathId={fieldPathId}
-        onBlur={onBlur}
-        onFocus={onFocus}
-        registry={registry}
-        {...uiProps}
-      />
-    );
-  }
-  return null;
-}
+const LAYOUT_GRID_FIELD_TEST_IDS = getTestIds();
 
 /** Computes the uiSchema for the field with `name` from the `uiProps` and `uiSchema` provided. The field UI Schema
  * will always contain a copy of the global options from the `uiSchema` (so they can be passed down) as well as
@@ -724,6 +464,269 @@ export function computeUIComponentPropsFromGridSchema<
   return { name, UIComponent, uiProps, rendered };
 }
 
+/**
+ * Describes the props for LayoutGridCondition, LayoutGridCol, LayoutGridColumns, and LayoutGridRow. This is typically
+ * the original props passed through from the nearest ancestor LayoutGridField, plus the layoutGridSchema for the
+ * current node.
+ */
+type LayoutFieldProps<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any,
+> = LayoutGridFieldProps<T, S, F> & {
+  /**  The string or object that represents the configuration for the grid field */
+  layoutGridSchema: GridSchemaType;
+};
+
+/** Renders the `children` of the `GridType.CONDITION` if it passes. The `layoutGridSchema` for the
+ * `GridType.CONDITION` is separated into the `children` and other `gridProps`. The `gridProps` are used to extract
+ * the `operator`, `field` and `value` of the condition. If the condition matches, then all of the `children` are
+ * rendered, otherwise null is returned.
+ *
+ * @returns - The rendered the children for the `GridType.CONDITION` or null
+ */
+function LayoutGridCondition<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+  props: LayoutFieldProps<T, S, F>,
+) {
+  const { layoutGridSchema, ...layoutGridFieldProps } = props;
+  const { formData, registry } = layoutGridFieldProps;
+  const { children, gridProps } = findChildrenAndProps<T, S, F>(layoutGridSchema, GridType.CONDITION, registry);
+  const { operator, field = '', value } = gridProps;
+  const fieldData = get(formData, field, null);
+  if (conditionMatches(operator, fieldData, value)) {
+    return <LayoutGridFieldChildren {...layoutGridFieldProps} childrenLayoutGridSchemaId={children} />;
+  }
+  return null;
+}
+
+/** Renders a `GridTemplate` as an item. The `layoutGridSchema` for the `GridType.COLUMN` is separated into the
+ * `children` and other `gridProps`. The `gridProps` will be spread onto the outer `GridTemplate`. Inside the
+ * `GridTemplate` all the `children` are rendered.
+ *
+ * @returns - The rendered `GridTemplate` containing the children for the `GridType.COLUMN`
+ */
+function LayoutGridCol<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+  props: LayoutFieldProps<T, S, F>,
+) {
+  const { layoutGridSchema, ...layoutGridFieldProps } = props;
+  const { registry, uiSchema } = layoutGridFieldProps;
+  const { children, gridProps } = findChildrenAndProps<T, S, F>(layoutGridSchema, GridType.COLUMN, registry);
+  const uiOptions = getUiOptions<T, S, F>(uiSchema);
+  const GridTemplate = getTemplate<'GridTemplate', T, S, F>('GridTemplate', registry, uiOptions);
+
+  return (
+    <GridTemplate column data-testid={LAYOUT_GRID_FIELD_TEST_IDS.col} {...gridProps}>
+      <LayoutGridFieldChildren {...layoutGridFieldProps} childrenLayoutGridSchemaId={children} />
+    </GridTemplate>
+  );
+}
+
+/** Renders a `GridTemplate` as an item. The `layoutGridSchema` for the `GridType.COLUMNS` is separated into the
+ *  `children` and other `gridProps`. The `children` is iterated on and `gridProps` will be spread onto the outer
+ *  `GridTemplate`. Each child will have their own rendered `GridTemplate`.
+ *
+ * @returns - The rendered `GridTemplate` containing the children for the `GridType.COLUMNS`
+ */
+function LayoutGridColumns<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+  props: LayoutFieldProps<T, S, F>,
+) {
+  const { layoutGridSchema, ...layoutGridFieldProps } = props;
+
+  const { registry, uiSchema } = layoutGridFieldProps;
+  const { children, gridProps } = findChildrenAndProps<T, S, F>(layoutGridSchema, GridType.COLUMNS, registry);
+  const uiOptions = getUiOptions<T, S, F>(uiSchema);
+  const GridTemplate = getTemplate<'GridTemplate', T, S, F>('GridTemplate', registry, uiOptions);
+
+  return children.map((child) => (
+    <GridTemplate
+      column
+      key={`column-${hashObject(child)}`}
+      data-testid={LAYOUT_GRID_FIELD_TEST_IDS.col}
+      {...gridProps}
+    >
+      <LayoutGridFieldChildren {...layoutGridFieldProps} childrenLayoutGridSchemaId={[child]} />
+    </GridTemplate>
+  ));
+}
+
+/** Renders a `GridTemplate` as a container. The `layoutGridSchema` for the `GridType.ROW` is separated into the
+ * `children` and other `gridProps`. The `gridProps` will be spread onto the outer `GridTemplate`. Inside of the
+ * `GridTemplate` all of the `children` are rendered.
+ *
+ * @returns - The rendered `GridTemplate` containing the children for the `GridType.ROW`
+ */
+function LayoutGridRow<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+  props: LayoutFieldProps<T, S, F>,
+) {
+  const { layoutGridSchema, ...layoutGridFieldProps } = props;
+
+  const { registry, uiSchema } = layoutGridFieldProps;
+  const { children, gridProps } = findChildrenAndProps<T, S, F>(layoutGridSchema, GridType.ROW, registry);
+  const uiOptions = getUiOptions<T, S, F>(uiSchema);
+  const GridTemplate = getTemplate<'GridTemplate', T, S, F>('GridTemplate', registry, uiOptions);
+
+  return (
+    <GridTemplate {...gridProps} data-testid={LAYOUT_GRID_FIELD_TEST_IDS.row}>
+      <LayoutGridFieldChildren {...layoutGridFieldProps} childrenLayoutGridSchemaId={children} />
+    </GridTemplate>
+  );
+}
+
+/**
+ * The props for the LayoutGridFieldChildren component.
+ */
+type LayoutGridFieldChildrenProps<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any,
+> = LayoutGridFieldProps<T, S, F> & {
+  /** The list of strings or objects that represents the configurations for the children fields */
+  childrenLayoutGridSchemaId: LayoutGridSchemaType[];
+};
+
+/** Iterates through all the `childrenLayoutGridSchemaId`, rendering a nested `LayoutGridField` for each item in the
+ * list, passing all the props for the current `LayoutGridField` along, updating the `schema` by calling
+ * `retrieveSchema()` on it to resolve any `$ref`s. In addition to the updated `schema`, each item in
+ * `childrenLayoutGridSchemaId` is passed as `layoutGridSchema`.
+ *
+ * @returns - The nested `LayoutGridField`s
+ */
+function LayoutGridFieldChildren<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+  props: LayoutGridFieldChildrenProps<T, S, F>,
+) {
+  const { childrenLayoutGridSchemaId, ...layoutGridFieldProps } = props;
+  const { registry, schema: rawSchema, formData } = layoutGridFieldProps;
+  const { schemaUtils } = registry;
+  const schema = schemaUtils.retrieveSchema(rawSchema, formData);
+  return childrenLayoutGridSchemaId.map((layoutGridSchema) => (
+    <LayoutGridField<T, S, F>
+      {...layoutGridFieldProps}
+      key={`layoutGrid-${hashObject(layoutGridSchema)}`}
+      schema={schema}
+      layoutGridSchema={layoutGridSchema}
+    />
+  ));
+}
+
+/**
+ * The props for the LayoutGridFieldComponent.
+ */
+type LayoutGridFieldComponentProps<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any,
+> = LayoutGridFieldProps<T, S, F> & {
+  /** The string or object that represents the configuration for the grid field */
+  gridSchema?: ConfigObject | string;
+};
+
+/** Renders the field described by `gridSchema`. If `gridSchema` is not an object, then is will be assumed
+ * to be the dotted-path to the field in the schema. Otherwise, we extract the `name`, and optional `render` and all
+ * other props. If `name` does not exist and there is an optional `render`, we return the `render` component with only
+ * specified props for that component. If `name` exists, we take the name, the initial & root schemas and the formData
+ * and get the destination schema, is required state and optional oneOf/anyOf options for it. If the destination
+ * schema was located along with oneOf/anyOf options then a `LayoutMultiSchemaField` will be rendered with the
+ * `uiSchema`, `errorSchema`, `fieldPathId` and `formData` drilled down to the dotted-path field, spreading any other
+ * props from `gridSchema` into the `ui:options`. If the destination schema located without any oneOf/anyOf options,
+ * then a `SchemaField` will be rendered with the same props as mentioned in the previous sentence. If no destination
+ * schema was located, but a custom render component was found, then it will be rendered with many of the non-event
+ * handling props. If none of the previous render paths are valid, then a null is returned.
+ *
+ * @returns - One of `LayoutMultiSchemaField`, `SchemaField`, a custom render component or null, depending
+ */
+function LayoutGridFieldComponent<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+  props: LayoutGridFieldComponentProps<T, S, F>,
+) {
+  const { gridSchema, ...layoutGridFieldProps } = props;
+  const {
+    schema: initialSchema,
+    uiSchema,
+    errorSchema,
+    fieldPathId,
+    onBlur,
+    onFocus,
+    formData,
+    readonly,
+    registry,
+    layoutGridSchema, // Used to pull this out of otherProps since we don't want to pass it through
+    ...otherProps
+  } = layoutGridFieldProps;
+  const { onChange } = otherProps;
+  const { fields } = registry;
+  const { SchemaField, LayoutMultiSchemaField } = fields;
+
+  const uiComponentProps = computeUIComponentPropsFromGridSchema(registry, gridSchema);
+  const { name, UIComponent, uiProps } = uiComponentProps;
+  const {
+    schema,
+    isRequired,
+    isReadonly,
+    optionsInfo,
+    fieldPathId: fieldIdSchema,
+  } = getSchemaDetailsForField<T, S, F>(registry, name, initialSchema, formData, fieldPathId);
+  const memoFieldPathId = useDeepCompareMemo<FieldPathId>(fieldIdSchema);
+
+  if (uiComponentProps.rendered) {
+    return uiComponentProps.rendered;
+  }
+
+  if (schema) {
+    const Field = optionsInfo?.hasDiscriminator ? LayoutMultiSchemaField : SchemaField;
+    // Call this function to get the appropriate UISchema, which will always have its `readonly` state matching the
+    // `uiReadonly` flag that it returns. This is done since the `SchemaField` will always defer to the `readonly`
+    // state in the uiSchema over anything in the props or schema. Because we are implementing the "readonly" state of
+    // the `Form` via the prop passed to `LayoutGridField` we need to make sure the uiSchema always has a true value
+    // when it is needed
+    const { fieldUiSchema, uiReadonly } = computeFieldUiSchema<T, S, F>(name, uiProps, uiSchema, isReadonly, readonly);
+
+    return (
+      <Field
+        data-testid={
+          optionsInfo?.hasDiscriminator
+            ? LAYOUT_GRID_FIELD_TEST_IDS.layoutMultiSchemaField
+            : LAYOUT_GRID_FIELD_TEST_IDS.field
+        }
+        {...otherProps}
+        name={name}
+        required={isRequired}
+        readonly={uiReadonly}
+        schema={schema}
+        uiSchema={fieldUiSchema}
+        errorSchema={get(errorSchema, name)}
+        fieldPathId={memoFieldPathId}
+        formData={get(formData, name)}
+        onChange={onChange}
+        onBlur={onBlur}
+        onFocus={onFocus}
+        options={optionsInfo?.options}
+        registry={registry}
+      />
+    );
+  }
+
+  if (UIComponent) {
+    return (
+      <UIComponent
+        data-testid={LAYOUT_GRID_FIELD_TEST_IDS.uiComponent}
+        {...otherProps}
+        name={name}
+        required={isRequired}
+        formData={formData}
+        readOnly={!!isReadonly || readonly}
+        errorSchema={errorSchema}
+        uiSchema={uiSchema}
+        schema={initialSchema}
+        fieldPathId={fieldPathId}
+        onBlur={onBlur}
+        onFocus={onFocus}
+        registry={registry}
+        {...uiProps}
+      />
+    );
+  }
+  return null;
+}
+
 /** The `LayoutGridField` will render a schema, uiSchema and formData combination out into a GridTemplate in the shape
  * described in the uiSchema. To define the grid to use to render the elements within a field in the schema, provide in
  * the uiSchema for that field the object contained under a `ui:layoutGrid` element. E.g. (as a JSON object):
@@ -980,3 +983,5 @@ export default function LayoutGridField<
   }
   return <LayoutGridFieldComponent {...props} gridSchema={layoutGridSchema} />;
 }
+
+LayoutGridField.TEST_IDS = LAYOUT_GRID_FIELD_TEST_IDS;

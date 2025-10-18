@@ -36,7 +36,6 @@ import LayoutGridField, {
   getCustomRenderComponent,
   getSchemaDetailsForField,
   GridType,
-  LAYOUT_GRID_FIELD_TEST_IDS,
   LAYOUT_GRID_OPTION,
   LayoutGridFieldProps,
   Operators,
@@ -1355,7 +1354,7 @@ describe('LayoutGridField', () => {
         },
         UIComponent: TestRenderer,
         // @ts-expect-error TS2740 because it is missing all of the FieldProps, which we don't need
-        rendered: <TestRenderer data-testid={LAYOUT_GRID_FIELD_TEST_IDS.uiComponent} fullWidth />,
+        rendered: <TestRenderer data-testid={LayoutGridField.TEST_IDS.uiComponent} fullWidth />,
       });
     });
   });
@@ -1364,11 +1363,11 @@ describe('LayoutGridField', () => {
     render(<LayoutGridField {...props} />);
 
     // Check for all the possible things rendered by the grid
-    const uiComponent = screen.queryByTestId(LAYOUT_GRID_FIELD_TEST_IDS.uiComponent);
-    const field = screen.queryByTestId(LAYOUT_GRID_FIELD_TEST_IDS.field);
-    const layoutMultiSchemaField = screen.queryByTestId(LAYOUT_GRID_FIELD_TEST_IDS.layoutMultiSchemaField);
-    const row = screen.queryByTestId(LAYOUT_GRID_FIELD_TEST_IDS.uiComponent);
-    const col = screen.queryByTestId(LAYOUT_GRID_FIELD_TEST_IDS.uiComponent);
+    const uiComponent = screen.queryByTestId(LayoutGridField.TEST_IDS.uiComponent);
+    const field = screen.queryByTestId(LayoutGridField.TEST_IDS.field);
+    const layoutMultiSchemaField = screen.queryByTestId(LayoutGridField.TEST_IDS.layoutMultiSchemaField);
+    const row = screen.queryByTestId(LayoutGridField.TEST_IDS.uiComponent);
+    const col = screen.queryByTestId(LayoutGridField.TEST_IDS.uiComponent);
 
     // and find none of them
     expect(uiComponent).not.toBeInTheDocument();
@@ -1388,7 +1387,7 @@ describe('LayoutGridField', () => {
     // The props readonly flag is transformed to readOnly
     const expectedProps = { ...props, ...options, readOnly: props.readonly, readonly: undefined };
     // Renders the uiComponent with the props and options forwarded
-    const uiComponent = screen.getByTestId(LAYOUT_GRID_FIELD_TEST_IDS.uiComponent);
+    const uiComponent = screen.getByTestId(LayoutGridField.TEST_IDS.uiComponent);
     expect(uiComponent).toHaveTextContent(stringifyProps(expectedProps));
   });
   test('renderField with render=TestRenderer via LAYOUT_GRID_OPTION and name is not provided', () => {
@@ -1400,7 +1399,7 @@ describe('LayoutGridField', () => {
     });
     render(<LayoutGridField {...props} />);
     // Renders the uiComponent with only the options forwarded
-    const uiComponent = screen.getByTestId(LAYOUT_GRID_FIELD_TEST_IDS.uiComponent);
+    const uiComponent = screen.getByTestId(LayoutGridField.TEST_IDS.uiComponent);
     expect(uiComponent).toHaveTextContent(stringifyProps(options));
   });
   test('renderField via name explicit layoutGridSchema', async () => {
@@ -1415,7 +1414,7 @@ describe('LayoutGridField', () => {
     const { [ID_KEY]: fieldId } = fieldPathId;
     render(<LayoutGridField {...props} />);
     // Renders a field
-    const field = screen.getByTestId(LAYOUT_GRID_FIELD_TEST_IDS.field);
+    const field = screen.getByTestId(LayoutGridField.TEST_IDS.field);
     expect(field).toHaveTextContent(stringifyProps(getExpectedPropsForField(props, fieldName)));
     // Test onChange, onFocus, onBlur
     const input = within(field).getByRole('textbox');
@@ -1441,7 +1440,7 @@ describe('LayoutGridField', () => {
     const { [ID_KEY]: fieldId } = fieldPathId;
     render(<LayoutGridField {...props} />);
     // Renders a field
-    const field = screen.getByTestId(LAYOUT_GRID_FIELD_TEST_IDS.field);
+    const field = screen.getByTestId(LayoutGridField.TEST_IDS.field);
     expect(field).toHaveTextContent(stringifyProps(getExpectedPropsForField(props, fieldName)));
     // Test onChange, onFocus, onBlur
     const input = within(field).getByRole('textbox');
@@ -1467,7 +1466,7 @@ describe('LayoutGridField', () => {
     const { [ID_KEY]: fieldId } = fieldPathId;
     render(<LayoutGridField {...props} />);
     // Renders a field
-    const field = screen.getByTestId(LAYOUT_GRID_FIELD_TEST_IDS.field);
+    const field = screen.getByTestId(LayoutGridField.TEST_IDS.field);
     expect(field).toHaveTextContent(stringifyProps(getExpectedPropsForField(props, fieldName)));
     // Test onChange, onFocus, onBlur
     const input = within(field).getByRole('textbox');
@@ -1499,7 +1498,7 @@ describe('LayoutGridField', () => {
       registry: gridFormSchemaRegistry,
     });
     render(<LayoutGridField {...props} {...otherProps} />);
-    const field = screen.getByTestId(LAYOUT_GRID_FIELD_TEST_IDS.layoutMultiSchemaField);
+    const field = screen.getByTestId(LayoutGridField.TEST_IDS.layoutMultiSchemaField);
     expect(field).toHaveTextContent(
       stringifyProps(getExpectedPropsForField(props, fieldName, otherProps, otherUIProps)),
     );
@@ -1518,7 +1517,7 @@ describe('LayoutGridField', () => {
       registry: readonlySchemaRegistry,
     });
     render(<LayoutGridField {...props} />);
-    const field = screen.getByTestId(LAYOUT_GRID_FIELD_TEST_IDS.field);
+    const field = screen.getByTestId(LayoutGridField.TEST_IDS.field);
     expect(field).toHaveTextContent(stringifyProps(getExpectedPropsForField(props, fieldName)));
   });
   test('renderRow not nested', () => {
@@ -1532,10 +1531,10 @@ describe('LayoutGridField', () => {
     });
     render(<LayoutGridField {...props} />);
     // Renders an outer grid row
-    const row = screen.getByTestId(LAYOUT_GRID_FIELD_TEST_IDS.row);
+    const row = screen.getByTestId(LayoutGridField.TEST_IDS.row);
     expect(row).toBeInTheDocument();
     // Renders 2 fields in the row
-    const fields = within(row).getAllByTestId(LAYOUT_GRID_FIELD_TEST_IDS.field);
+    const fields = within(row).getAllByTestId(LayoutGridField.TEST_IDS.field);
     expect(fields).toHaveLength(GRID_CHILDREN.length);
     // First field as the first child
     expect(fields[0]).toHaveTextContent(stringifyProps(getExpectedPropsForField(props, GRID_CHILDREN[0])));
@@ -1553,10 +1552,10 @@ describe('LayoutGridField', () => {
     });
     render(<LayoutGridField {...props} />);
     // Renders an outer grid row item with width 6
-    const row = screen.getByTestId(LAYOUT_GRID_FIELD_TEST_IDS.row);
+    const row = screen.getByTestId(LayoutGridField.TEST_IDS.row);
     expect(row).toHaveClass(ColumnWidth6);
     // Renders 2 fields in the row
-    const fields = within(row).getAllByTestId(LAYOUT_GRID_FIELD_TEST_IDS.field);
+    const fields = within(row).getAllByTestId(LayoutGridField.TEST_IDS.field);
     expect(fields).toHaveLength(GRID_CHILDREN.length);
     // First field as the first child
     expect(fields[0]).toHaveTextContent(stringifyProps(getExpectedPropsForField(props, GRID_CHILDREN[0])));
@@ -1573,10 +1572,10 @@ describe('LayoutGridField', () => {
     });
     render(<LayoutGridField {...props} />);
     // Renders an outer grid item with width 6, but not a row
-    const col = screen.getByTestId(LAYOUT_GRID_FIELD_TEST_IDS.col);
+    const col = screen.getByTestId(LayoutGridField.TEST_IDS.col);
     expect(col).toHaveClass(ColumnWidth6);
     // Renders 2 fields in the column
-    const fields = within(col).getAllByTestId(LAYOUT_GRID_FIELD_TEST_IDS.field);
+    const fields = within(col).getAllByTestId(LayoutGridField.TEST_IDS.field);
     expect(fields).toHaveLength(GRID_CHILDREN.length);
     // First field as the first child
     expect(fields[0]).toHaveTextContent(stringifyProps(getExpectedPropsForField(props, GRID_CHILDREN[0])));
@@ -1593,17 +1592,17 @@ describe('LayoutGridField', () => {
     });
     render(<LayoutGridField {...props} />);
     // Renders two outer columns
-    const cols = screen.getAllByTestId(LAYOUT_GRID_FIELD_TEST_IDS.col);
+    const cols = screen.getAllByTestId(LayoutGridField.TEST_IDS.col);
     expect(cols).toHaveLength(GRID_CHILDREN.length);
     // First column is a grid item with width 6
     expect(cols[0]).toHaveClass(ColumnWidth6);
     // Renders first field in the first column
-    let field = within(cols[0]).getByTestId(LAYOUT_GRID_FIELD_TEST_IDS.field);
+    let field = within(cols[0]).getByTestId(LayoutGridField.TEST_IDS.field);
     expect(field).toHaveTextContent(stringifyProps(getExpectedPropsForField(props, GRID_CHILDREN[0])));
     // First column is a grid item with 6
     expect(cols[1]).toHaveClass(ColumnWidth6);
     // Renders second field in the second column
-    field = within(cols[1]).getByTestId(LAYOUT_GRID_FIELD_TEST_IDS.field);
+    field = within(cols[1]).getByTestId(LayoutGridField.TEST_IDS.field);
     expect(field).toHaveTextContent(stringifyProps(getExpectedPropsForField(props, GRID_CHILDREN[1])));
   });
   test('renderCondition, condition passes, field and empty value, NONE operator, has formData', async () => {
@@ -1620,7 +1619,7 @@ describe('LayoutGridField', () => {
     const { [ID_KEY]: fieldId } = fieldPathId;
     render(<LayoutGridField {...props} />);
     // Renders 2 fields
-    const fields = screen.getAllByTestId(LAYOUT_GRID_FIELD_TEST_IDS.field);
+    const fields = screen.getAllByTestId(LayoutGridField.TEST_IDS.field);
     expect(fields).toHaveLength(GRID_CHILDREN.length);
     // First field as the first child
     expect(fields[0]).toHaveTextContent(stringifyProps(getExpectedPropsForField(props, GRID_CHILDREN[0])));
@@ -1642,11 +1641,11 @@ describe('LayoutGridField', () => {
     });
     render(<LayoutGridField {...props} />);
     // Check for all the possible things rendered by the grid
-    const uiComponent = screen.queryByTestId(LAYOUT_GRID_FIELD_TEST_IDS.uiComponent);
-    const field = screen.queryByTestId(LAYOUT_GRID_FIELD_TEST_IDS.field);
-    const layoutMultiSchemaField = screen.queryByTestId(LAYOUT_GRID_FIELD_TEST_IDS.layoutMultiSchemaField);
-    const row = screen.queryByTestId(LAYOUT_GRID_FIELD_TEST_IDS.uiComponent);
-    const col = screen.queryByTestId(LAYOUT_GRID_FIELD_TEST_IDS.uiComponent);
+    const uiComponent = screen.queryByTestId(LayoutGridField.TEST_IDS.uiComponent);
+    const field = screen.queryByTestId(LayoutGridField.TEST_IDS.field);
+    const layoutMultiSchemaField = screen.queryByTestId(LayoutGridField.TEST_IDS.layoutMultiSchemaField);
+    const row = screen.queryByTestId(LayoutGridField.TEST_IDS.uiComponent);
+    const col = screen.queryByTestId(LayoutGridField.TEST_IDS.uiComponent);
     // and find none of them
     expect(uiComponent).not.toBeInTheDocument();
     expect(field).not.toBeInTheDocument();
@@ -1664,11 +1663,11 @@ describe('LayoutGridField', () => {
     });
     render(<LayoutGridField {...props} />);
     // Check for all the possible things rendered by the grid
-    const uiComponent = screen.queryByTestId(LAYOUT_GRID_FIELD_TEST_IDS.uiComponent);
-    const field = screen.queryByTestId(LAYOUT_GRID_FIELD_TEST_IDS.field);
-    const layoutMultiSchemaField = screen.queryByTestId(LAYOUT_GRID_FIELD_TEST_IDS.layoutMultiSchemaField);
-    const row = screen.queryByTestId(LAYOUT_GRID_FIELD_TEST_IDS.uiComponent);
-    const col = screen.queryByTestId(LAYOUT_GRID_FIELD_TEST_IDS.uiComponent);
+    const uiComponent = screen.queryByTestId(LayoutGridField.TEST_IDS.uiComponent);
+    const field = screen.queryByTestId(LayoutGridField.TEST_IDS.field);
+    const layoutMultiSchemaField = screen.queryByTestId(LayoutGridField.TEST_IDS.layoutMultiSchemaField);
+    const row = screen.queryByTestId(LayoutGridField.TEST_IDS.uiComponent);
+    const col = screen.queryByTestId(LayoutGridField.TEST_IDS.uiComponent);
     // and find none of them
     expect(uiComponent).not.toBeInTheDocument();
     expect(field).not.toBeInTheDocument();
