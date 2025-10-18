@@ -1,5 +1,5 @@
 import {
-  ArrayFieldItemTemplateType,
+  ArrayFieldItemTemplateProps,
   FormContextType,
   getTemplate,
   getUiOptions,
@@ -15,7 +15,7 @@ import {
  * - Positions items with z-index to create a stacked effect
  * - Places action buttons in an easily accessible location
  *
- * @param props - The `ArrayFieldItemTemplateType` props for the component with additional properties:
+ * @param props - The `ArrayFieldItemTemplateProps` props for the component with additional properties:
  * @param props.index - The position of this item in the array (optional)
  * @param props.totalItems - The total number of items in the array (optional)
  */
@@ -23,7 +23,7 @@ export default function ArrayFieldItemTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
->(props: ArrayFieldItemTemplateType<T, S, F>) {
+>(props: ArrayFieldItemTemplateProps<T, S, F>) {
   const { children, buttonsProps, hasToolbar, registry, uiSchema, index, totalItems } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const ArrayFieldItemButtonsTemplate = getTemplate<'ArrayFieldItemButtonsTemplate', T, S, F>(

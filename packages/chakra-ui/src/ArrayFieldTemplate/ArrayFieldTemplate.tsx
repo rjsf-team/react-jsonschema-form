@@ -2,7 +2,6 @@ import { Box, Grid, GridItem } from '@chakra-ui/react';
 import {
   getTemplate,
   getUiOptions,
-  ArrayFieldItemTemplateType,
   ArrayFieldTemplateProps,
   StrictRJSFSchema,
   RJSFSchema,
@@ -32,11 +31,6 @@ export default function ArrayFieldTemplate<
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const ArrayFieldDescriptionTemplate = getTemplate<'ArrayFieldDescriptionTemplate', T, S, F>(
     'ArrayFieldDescriptionTemplate',
-    registry,
-    uiOptions,
-  );
-  const ArrayFieldItemTemplate = getTemplate<'ArrayFieldItemTemplate', T, S, F>(
-    'ArrayFieldItemTemplate',
     registry,
     uiOptions,
   );
@@ -71,9 +65,7 @@ export default function ArrayFieldTemplate<
       <Grid key={`array-item-list-${fieldPathId.$id}`}>
         <GridItem>
           {!showOptionalDataControlInTitle ? optionalDataControl : undefined}
-          {items.map(({ key, ...itemProps }: ArrayFieldItemTemplateType<T, S, F>) => (
-            <ArrayFieldItemTemplate key={key} {...itemProps} />
-          ))}
+          {items}
         </GridItem>
         {canAdd && (
           <GridItem justifySelf='flex-end'>

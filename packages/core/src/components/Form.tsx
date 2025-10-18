@@ -862,7 +862,11 @@ export default class Form<
           customErrors = new ErrorSchemaBuilder<T>();
         }
         if (isRootPath) {
-          customErrors.setErrors(_get(newErrorSchema, ERRORS_KEY, ''));
+          const errors = _get(newErrorSchema, ERRORS_KEY);
+          if (errors) {
+            // only set errors when there are some
+            customErrors.setErrors(errors);
+          }
         } else {
           _set(customErrors.ErrorSchema, path, newErrorSchema);
         }

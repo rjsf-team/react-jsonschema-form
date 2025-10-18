@@ -333,9 +333,9 @@ export type TemplatesType<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
   /** The template to use while rendering the description for an array field */
   ArrayFieldDescriptionTemplate: ComponentType<ArrayFieldDescriptionProps<T, S, F>>;
   /** The template to use while rendering the buttons for an item in an array field */
-  ArrayFieldItemButtonsTemplate: ComponentType<ArrayFieldItemButtonsTemplateType<T, S, F>>;
+  ArrayFieldItemButtonsTemplate: ComponentType<ArrayFieldItemButtonsTemplateProps<T, S, F>>;
   /** The template to use while rendering an item in an array field */
-  ArrayFieldItemTemplate: ComponentType<ArrayFieldItemTemplateType<T, S, F>>;
+  ArrayFieldItemTemplate: ComponentType<ArrayFieldItemTemplateProps<T, S, F>>;
   /** The template to use while rendering the title for an array field */
   ArrayFieldTitleTemplate: ComponentType<ArrayFieldTitleProps<T, S, F>>;
   /** The template to use while rendering the standard html input */
@@ -636,7 +636,7 @@ export type ArrayFieldDescriptionProps<
 };
 
 /** The properties of the buttons to render for each element in the ArrayFieldTemplateProps.items array */
-export type ArrayFieldItemButtonsTemplateType<
+export type ArrayFieldItemButtonsTemplateProps<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
@@ -663,20 +663,22 @@ export type ArrayFieldItemButtonsTemplateType<
   index: number;
   /** A number stating the total number `items` in the array */
   totalItems: number;
-  /** Returns a function that adds a new item at `index` */
-  onAddIndexClick: (index: number) => (event?: any) => void;
-  /** Returns a function that copies the item at `index` into the position at `index + 1` */
-  onCopyIndexClick: (index: number) => (event?: any) => void;
-  /** Returns a function that removes the item at `index` */
-  onDropIndexClick: (index: number) => (event?: any) => void;
-  /** Returns a function that swaps the items at `index` with `newIndex` */
-  onReorderClick: (index: number, newIndex: number) => (event?: any) => void;
+  /** Callback function that adds a new item below this item */
+  onAddItem: (event?: any) => void;
+  /** Callback function that copies this item below itself */
+  onCopyItem: (event?: any) => void;
+  /** Callback function that moves the item up one spot in the list */
+  onMoveUpItem: (event?: any) => void;
+  /** Callback function that moves the item down one spot in the list */
+  onMoveDownItem: (event?: any) => void;
+  /** Callback function that removes the item from the list */
+  onRemoveItem: (event?: any) => void;
   /** A boolean value stating if the array item is read-only */
   readonly?: boolean;
 };
 
-/** The properties of each element in the ArrayFieldTemplateProps.items array */
-export type ArrayFieldItemTemplateType<
+/** The properties used to render the ArrayFieldItemTemplate */
+export type ArrayFieldItemTemplateProps<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
@@ -684,7 +686,7 @@ export type ArrayFieldItemTemplateType<
   /** The html for the item's content */
   children: ReactNode;
   /** The props to pass to the `ArrayFieldItemButtonTemplate` */
-  buttonsProps: ArrayFieldItemButtonsTemplateType<T, S, F>;
+  buttonsProps: ArrayFieldItemButtonsTemplateProps<T, S, F>;
   /** The className string */
   className: string;
   /** A boolean value stating if the array item is disabled */
@@ -698,17 +700,12 @@ export type ArrayFieldItemTemplateType<
   /** A boolean value stating if the array item is read-only */
   readonly?: boolean;
   /** A stable, unique key for the array item */
-  key: string;
+  itemKey: string;
+  /** The UI schema of the array item's parent array field used for
+   * customization in some themes
+   */
+  parentUiSchema?: UiSchema<T, S, F>;
 };
-
-/**
- * @deprecated - Use `ArrayFieldItemTemplateType` instead
- */
-export type ArrayFieldTemplateItemType<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
-> = ArrayFieldItemTemplateType<T, S, F>;
 
 /** The common properties of the two container templates: `ArrayFieldTemplateProps` and `ObjectFieldTemplateProps` */
 export type ContainerFieldTemplateProps<
@@ -746,9 +743,9 @@ export type ArrayFieldTemplateProps<
 > = ContainerFieldTemplateProps<T, S, F> & {
   /** A boolean value stating whether new elements can be added to the array */
   canAdd?: boolean;
-  /** An array of objects representing the items in the array */
-  items: ArrayFieldItemTemplateType<T, S, F>[];
-  /** A function that adds a new item to the array */
+  /** An array of React elements representing the items in the array */
+  items: ReactElement[];
+  /** A function that adds a new item to the end of the array */
   onAddClick: (event?: any) => void;
   /** An array of strings listing all generated error messages from encountered errors for this widget */
   rawErrors?: string[];

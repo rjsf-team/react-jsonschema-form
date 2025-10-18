@@ -2,7 +2,6 @@ import {
   getTemplate,
   getUiOptions,
   ArrayFieldTemplateProps,
-  ArrayFieldItemTemplateType,
   buttonId,
   FormContextType,
   RJSFSchema,
@@ -12,7 +11,7 @@ import { Fieldset, Box, Group } from '@mantine/core';
 
 /** The `ArrayFieldTemplate` component is the template used to render all items in an array.
  *
- * @param props - The `ArrayFieldItemTemplateType` props for the component
+ * @param props - The `ArrayFieldTemplateProps` props for the component
  */
 export default function ArrayFieldTemplate<
   T = any,
@@ -38,11 +37,6 @@ export default function ArrayFieldTemplate<
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const ArrayFieldDescriptionTemplate = getTemplate<'ArrayFieldDescriptionTemplate', T, S, F>(
     'ArrayFieldDescriptionTemplate',
-    registry,
-    uiOptions,
-  );
-  const ArrayFieldItemTemplate = getTemplate<'ArrayFieldItemTemplate', T, S, F>(
-    'ArrayFieldItemTemplate',
     registry,
     uiOptions,
   );
@@ -82,9 +76,7 @@ export default function ArrayFieldTemplate<
       )}
       <Box className='row rjsf-array-item-list'>
         {!showOptionalDataControlInTitle ? optionalDataControl : undefined}
-        {items.map(({ key, ...itemProps }: ArrayFieldItemTemplateType<T, S, F>) => (
-          <ArrayFieldItemTemplate key={key} {...itemProps} />
-        ))}
+        {items}
       </Box>
       {canAdd && (
         <Group justify='flex-end'>

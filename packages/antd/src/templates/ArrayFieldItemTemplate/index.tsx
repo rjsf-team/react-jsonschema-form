@@ -1,6 +1,6 @@
 import { Col, Row, Space } from 'antd';
 import {
-  ArrayFieldItemTemplateType,
+  ArrayFieldItemTemplateProps,
   FormContextType,
   getUiOptions,
   getTemplate,
@@ -18,13 +18,13 @@ const BTN_STYLE = {
 
 /** The `ArrayFieldItemTemplate` component is the template used to render an items of an array.
  *
- * @param props - The `ArrayFieldItemTemplateType` props for the component
+ * @param props - The `ArrayFieldItemTemplateProps` props for the component
  */
 export default function ArrayFieldItemTemplate<
   T = any,
   S extends StrictRJSFSchema = RJSFSchema,
   F extends FormContextType = any,
->(props: ArrayFieldItemTemplateType<T, S, F>) {
+>(props: ArrayFieldItemTemplateProps<T, S, F>) {
   const { children, buttonsProps, hasToolbar, index, registry, uiSchema } = props;
   const uiOptions = getUiOptions<T, S, F>(uiSchema);
   const ArrayFieldItemButtonsTemplate = getTemplate<'ArrayFieldItemButtonsTemplate', T, S, F>(
