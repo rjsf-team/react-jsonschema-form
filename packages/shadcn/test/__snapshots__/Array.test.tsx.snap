@@ -1047,6 +1047,3123 @@ exports[`array fields no errors 1`] = `
 </form>
 `;
 
+exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-array"
+  >
+    <div
+      className="flex flex-col gap-2"
+    >
+      <div>
+        <div
+          className="m-0 flex p-0"
+        >
+          <div
+            className="m-0 w-full p-0"
+          >
+            <div
+              className="p-0 m-0 w-full mb-2"
+            >
+              <div>
+                <div
+                  className="mb-2 flex flex-row flex-wrap items-center"
+                >
+                  <div
+                    className="grow shrink"
+                  >
+                    <div
+                      className="rjsf-field rjsf-field-object"
+                    >
+                      <div
+                        className="flex flex-col gap-2"
+                      >
+                        <div
+                          className="flex flex-col gap-2"
+                        >
+                          <div
+                            className=" flex"
+                          >
+                            <div
+                              className="w-full"
+                            >
+                              <div
+                                className="rjsf-field rjsf-field-string"
+                              >
+                                <div
+                                  className="flex flex-col gap-2"
+                                >
+                                  <label
+                                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                    htmlFor="root_0_name"
+                                  >
+                                    name
+                                  </label>
+                                  <div
+                                    className="p-0.5"
+                                  >
+                                    <input
+                                      aria-describedby="root_0_name__error root_0_name__description root_0_name__help"
+                                      autoFocus={false}
+                                      className="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
+                                      data-slot="input"
+                                      disabled={false}
+                                      id="root_0_name"
+                                      name="root[0][name]"
+                                      onBlur={[Function]}
+                                      onChange={[Function]}
+                                      onFocus={[Function]}
+                                      placeholder=""
+                                      readOnly={false}
+                                      required={false}
+                                      type="text"
+                                      value="Item 1"
+                                    />
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div
+                            className=" flex"
+                          >
+                            <div
+                              className="w-full"
+                            >
+                              <div
+                                className="rjsf-field rjsf-field-number"
+                              >
+                                <div
+                                  className="flex flex-col gap-2"
+                                >
+                                  <label
+                                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                    htmlFor="root_0_value"
+                                  >
+                                    value
+                                  </label>
+                                  <div
+                                    className="p-0.5"
+                                  >
+                                    <input
+                                      aria-describedby="root_0_value__error root_0_value__description root_0_value__help"
+                                      autoFocus={false}
+                                      className="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
+                                      data-slot="input"
+                                      disabled={false}
+                                      id="root_0_value"
+                                      name="root[0][value]"
+                                      onBlur={[Function]}
+                                      onChange={[Function]}
+                                      onFocus={[Function]}
+                                      placeholder=""
+                                      readOnly={false}
+                                      required={false}
+                                      step="any"
+                                      type="number"
+                                      value={10}
+                                    />
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    className="flex items-end justify-end p-0.5"
+                  >
+                    <div
+                      className="flex gap-2"
+                    >
+                      <button
+                        className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 rjsf-array-item-move-up"
+                        data-slot="button"
+                        disabled={true}
+                        id="root_0__moveUp"
+                        onClick={[Function]}
+                        title="Move up"
+                        type="button"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          className="lucide lucide-chevron-up h-4 w-4"
+                          fill="none"
+                          height={24}
+                          stroke="currentColor"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          viewBox="0 0 24 24"
+                          width={24}
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="m18 15-6-6-6 6"
+                          />
+                        </svg>
+                      </button>
+                      <button
+                        className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 rjsf-array-item-move-down"
+                        data-slot="button"
+                        disabled={false}
+                        id="root_0__moveDown"
+                        onClick={[Function]}
+                        title="Move down"
+                        type="button"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          className="lucide lucide-chevron-down h-4 w-4"
+                          fill="none"
+                          height={24}
+                          stroke="currentColor"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          viewBox="0 0 24 24"
+                          width={24}
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="m6 9 6 6 6-6"
+                          />
+                        </svg>
+                      </button>
+                      <button
+                        className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 border-destructive"
+                        data-slot="button"
+                        disabled={false}
+                        id="root_0__remove"
+                        onClick={[Function]}
+                        title="Remove"
+                        type="button"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          className="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
+                          fill="none"
+                          height={24}
+                          stroke="currentColor"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          viewBox="0 0 24 24"
+                          width={24}
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M10 11v6"
+                          />
+                          <path
+                            d="M14 11v6"
+                          />
+                          <path
+                            d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"
+                          />
+                          <path
+                            d="M3 6h18"
+                          />
+                          <path
+                            d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
+                          />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <div
+                  className="mb-2 flex flex-row flex-wrap items-center"
+                >
+                  <div
+                    className="grow shrink"
+                  >
+                    <div
+                      className="rjsf-field rjsf-field-object"
+                    >
+                      <div
+                        className="flex flex-col gap-2"
+                      >
+                        <div
+                          className="flex flex-col gap-2"
+                        >
+                          <div
+                            className=" flex"
+                          >
+                            <div
+                              className="w-full"
+                            >
+                              <div
+                                className="rjsf-field rjsf-field-string"
+                              >
+                                <div
+                                  className="flex flex-col gap-2"
+                                >
+                                  <label
+                                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                    htmlFor="root_1_name"
+                                  >
+                                    name
+                                  </label>
+                                  <div
+                                    className="p-0.5"
+                                  >
+                                    <input
+                                      aria-describedby="root_1_name__error root_1_name__description root_1_name__help"
+                                      autoFocus={false}
+                                      className="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
+                                      data-slot="input"
+                                      disabled={false}
+                                      id="root_1_name"
+                                      name="root[1][name]"
+                                      onBlur={[Function]}
+                                      onChange={[Function]}
+                                      onFocus={[Function]}
+                                      placeholder=""
+                                      readOnly={false}
+                                      required={false}
+                                      type="text"
+                                      value="Item 2"
+                                    />
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div
+                            className=" flex"
+                          >
+                            <div
+                              className="w-full"
+                            >
+                              <div
+                                className="rjsf-field rjsf-field-number"
+                              >
+                                <div
+                                  className="flex flex-col gap-2"
+                                >
+                                  <label
+                                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                    htmlFor="root_1_value"
+                                  >
+                                    value
+                                  </label>
+                                  <div
+                                    className="p-0.5"
+                                  >
+                                    <input
+                                      aria-describedby="root_1_value__error root_1_value__description root_1_value__help"
+                                      autoFocus={false}
+                                      className="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
+                                      data-slot="input"
+                                      disabled={false}
+                                      id="root_1_value"
+                                      name="root[1][value]"
+                                      onBlur={[Function]}
+                                      onChange={[Function]}
+                                      onFocus={[Function]}
+                                      placeholder=""
+                                      readOnly={false}
+                                      required={false}
+                                      step="any"
+                                      type="number"
+                                      value={20}
+                                    />
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    className="flex items-end justify-end p-0.5"
+                  >
+                    <div
+                      className="flex gap-2"
+                    >
+                      <button
+                        className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 rjsf-array-item-move-up"
+                        data-slot="button"
+                        disabled={false}
+                        id="root_1__moveUp"
+                        onClick={[Function]}
+                        title="Move up"
+                        type="button"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          className="lucide lucide-chevron-up h-4 w-4"
+                          fill="none"
+                          height={24}
+                          stroke="currentColor"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          viewBox="0 0 24 24"
+                          width={24}
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="m18 15-6-6-6 6"
+                          />
+                        </svg>
+                      </button>
+                      <button
+                        className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 rjsf-array-item-move-down"
+                        data-slot="button"
+                        disabled={true}
+                        id="root_1__moveDown"
+                        onClick={[Function]}
+                        title="Move down"
+                        type="button"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          className="lucide lucide-chevron-down h-4 w-4"
+                          fill="none"
+                          height={24}
+                          stroke="currentColor"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          viewBox="0 0 24 24"
+                          width={24}
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="m6 9 6 6 6-6"
+                          />
+                        </svg>
+                      </button>
+                      <button
+                        className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 border-destructive"
+                        data-slot="button"
+                        disabled={false}
+                        id="root_1__remove"
+                        onClick={[Function]}
+                        title="Remove"
+                        type="button"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          className="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
+                          fill="none"
+                          height={24}
+                          stroke="currentColor"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          viewBox="0 0 24 24"
+                          width={24}
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M10 11v6"
+                          />
+                          <path
+                            d="M14 11v6"
+                          />
+                          <path
+                            d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"
+                          />
+                          <path
+                            d="M3 6h18"
+                          />
+                          <path
+                            d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
+                          />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                className="mt-2 flex"
+              >
+                <div
+                  className="p-0 m-0"
+                >
+                  <button
+                    className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 w-fit gap-2 rjsf-array-item-add"
+                    data-slot="button"
+                    disabled={false}
+                    id="root__add"
+                    onClick={[Function]}
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      className="lucide lucide-circle-plus"
+                      fill="none"
+                      height={16}
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      viewBox="0 0 24 24"
+                      width={16}
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <circle
+                        cx="12"
+                        cy="12"
+                        r="10"
+                      />
+                      <path
+                        d="M8 12h8"
+                      />
+                      <path
+                        d="M12 8v8"
+                      />
+                    </svg>
+                     
+                    Add Item
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 h-9 px-4 py-2 has-[>svg]:px-3 my-2"
+      data-slot="button"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-array"
+  >
+    <div
+      className="flex flex-col gap-2"
+    >
+      <div>
+        <div
+          className="m-0 flex p-0"
+        >
+          <div
+            className="m-0 w-full p-0"
+          >
+            <div
+              className="p-0 m-0 w-full mb-2"
+            >
+              <div>
+                <div
+                  className="mb-2 flex flex-row flex-wrap items-center"
+                >
+                  <div
+                    className="grow shrink"
+                  >
+                    <div
+                      className="rjsf-field rjsf-field-string"
+                    >
+                      <div
+                        className="flex flex-col gap-2"
+                      >
+                        <label
+                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                          htmlFor="root_0"
+                        >
+                          *
+                        </label>
+                        <div
+                          className="p-0.5"
+                        >
+                          <input
+                            aria-describedby="root_0__error root_0__description root_0__help"
+                            autoFocus={false}
+                            className="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
+                            data-slot="input"
+                            disabled={false}
+                            id="root_0"
+                            name="root[0]"
+                            onBlur={[Function]}
+                            onChange={[Function]}
+                            onFocus={[Function]}
+                            placeholder=""
+                            readOnly={false}
+                            required={true}
+                            type="text"
+                            value="foo"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    className="flex items-end justify-end p-0.5"
+                  >
+                    <div
+                      className="flex gap-2"
+                    >
+                      <button
+                        className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 rjsf-array-item-move-up"
+                        data-slot="button"
+                        disabled={true}
+                        id="root_0__moveUp"
+                        onClick={[Function]}
+                        title="Move up"
+                        type="button"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          className="lucide lucide-chevron-up h-4 w-4"
+                          fill="none"
+                          height={24}
+                          stroke="currentColor"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          viewBox="0 0 24 24"
+                          width={24}
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="m18 15-6-6-6 6"
+                          />
+                        </svg>
+                      </button>
+                      <button
+                        className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 rjsf-array-item-move-down"
+                        data-slot="button"
+                        disabled={false}
+                        id="root_0__moveDown"
+                        onClick={[Function]}
+                        title="Move down"
+                        type="button"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          className="lucide lucide-chevron-down h-4 w-4"
+                          fill="none"
+                          height={24}
+                          stroke="currentColor"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          viewBox="0 0 24 24"
+                          width={24}
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="m6 9 6 6 6-6"
+                          />
+                        </svg>
+                      </button>
+                      <button
+                        className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 border-destructive"
+                        data-slot="button"
+                        disabled={false}
+                        id="root_0__remove"
+                        onClick={[Function]}
+                        title="Remove"
+                        type="button"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          className="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
+                          fill="none"
+                          height={24}
+                          stroke="currentColor"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          viewBox="0 0 24 24"
+                          width={24}
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M10 11v6"
+                          />
+                          <path
+                            d="M14 11v6"
+                          />
+                          <path
+                            d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"
+                          />
+                          <path
+                            d="M3 6h18"
+                          />
+                          <path
+                            d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
+                          />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <div
+                  className="mb-2 flex flex-row flex-wrap items-center"
+                >
+                  <div
+                    className="grow shrink"
+                  >
+                    <div
+                      className="rjsf-field rjsf-field-string"
+                    >
+                      <div
+                        className="flex flex-col gap-2"
+                      >
+                        <label
+                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                          htmlFor="root_1"
+                        >
+                          *
+                        </label>
+                        <div
+                          className="p-0.5"
+                        >
+                          <input
+                            aria-describedby="root_1__error root_1__description root_1__help"
+                            autoFocus={false}
+                            className="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
+                            data-slot="input"
+                            disabled={false}
+                            id="root_1"
+                            name="root[1]"
+                            onBlur={[Function]}
+                            onChange={[Function]}
+                            onFocus={[Function]}
+                            placeholder=""
+                            readOnly={false}
+                            required={true}
+                            type="text"
+                            value="bar"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    className="flex items-end justify-end p-0.5"
+                  >
+                    <div
+                      className="flex gap-2"
+                    >
+                      <button
+                        className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 rjsf-array-item-move-up"
+                        data-slot="button"
+                        disabled={false}
+                        id="root_1__moveUp"
+                        onClick={[Function]}
+                        title="Move up"
+                        type="button"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          className="lucide lucide-chevron-up h-4 w-4"
+                          fill="none"
+                          height={24}
+                          stroke="currentColor"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          viewBox="0 0 24 24"
+                          width={24}
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="m18 15-6-6-6 6"
+                          />
+                        </svg>
+                      </button>
+                      <button
+                        className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 rjsf-array-item-move-down"
+                        data-slot="button"
+                        disabled={true}
+                        id="root_1__moveDown"
+                        onClick={[Function]}
+                        title="Move down"
+                        type="button"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          className="lucide lucide-chevron-down h-4 w-4"
+                          fill="none"
+                          height={24}
+                          stroke="currentColor"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          viewBox="0 0 24 24"
+                          width={24}
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="m6 9 6 6 6-6"
+                          />
+                        </svg>
+                      </button>
+                      <button
+                        className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 border-destructive"
+                        data-slot="button"
+                        disabled={false}
+                        id="root_1__remove"
+                        onClick={[Function]}
+                        title="Remove"
+                        type="button"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          className="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
+                          fill="none"
+                          height={24}
+                          stroke="currentColor"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          viewBox="0 0 24 24"
+                          width={24}
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M10 11v6"
+                          />
+                          <path
+                            d="M14 11v6"
+                          />
+                          <path
+                            d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"
+                          />
+                          <path
+                            d="M3 6h18"
+                          />
+                          <path
+                            d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
+                          />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                className="mt-2 flex"
+              >
+                <div
+                  className="p-0 m-0"
+                >
+                  <button
+                    className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 w-fit gap-2 rjsf-array-item-add"
+                    data-slot="button"
+                    disabled={false}
+                    id="root__add"
+                    onClick={[Function]}
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      className="lucide lucide-circle-plus"
+                      fill="none"
+                      height={16}
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      viewBox="0 0 24 24"
+                      width={16}
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <circle
+                        cx="12"
+                        cy="12"
+                        r="10"
+                      />
+                      <path
+                        d="M8 12h8"
+                      />
+                      <path
+                        d="M12 8v8"
+                      />
+                    </svg>
+                     
+                    Add Item
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 h-9 px-4 py-2 has-[>svg]:px-3 my-2"
+      data-slot="button"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`nameGenerator bracketNameGenerator checkboxes with nameGenerator 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-array"
+  >
+    <div
+      className="flex flex-col gap-2"
+    >
+      <label
+        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+        htmlFor="root"
+      />
+      <div
+        className="p-0.5"
+      >
+        <div
+          aria-disabled={false}
+          autoFocus={false}
+          className="text-popover-foreground flex h-full w-full flex-col rounded-md overflow-visible bg-transparent"
+          cmdk-root=""
+          data-slot="command"
+          onBlur={[Function]}
+          onFocus={[Function]}
+          onKeyDown={[Function]}
+          tabIndex={-1}
+        >
+          <label
+            cmdk-label=""
+            htmlFor="radix-:rh:"
+            id="radix-:rg:"
+            style={
+              {
+                "borderWidth": "0",
+                "clip": "rect(0, 0, 0, 0)",
+                "height": "1px",
+                "margin": "-1px",
+                "overflow": "hidden",
+                "padding": "0",
+                "position": "absolute",
+                "whiteSpace": "nowrap",
+                "width": "1px",
+              }
+            }
+          />
+          <div
+            className="group border border-input px-3 py-2 text-sm ring-offset-background rounded-md focus-within:ring-1 focus-within:ring-ring focus-within:ring-offset-1"
+          >
+            <div
+              className="flex gap-1 flex-wrap"
+            >
+              <input
+                aria-autocomplete="list"
+                aria-controls="radix-:rf:"
+                aria-expanded={true}
+                aria-labelledby="radix-:rg:"
+                autoComplete="off"
+                autoCorrect="off"
+                className="rtl:mr-2 ltr:ml-2 bg-transparent outline-none placeholder:text-muted-foreground flex-1"
+                cmdk-input=""
+                disabled={false}
+                id="radix-:rh:"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                placeholder="Select ..."
+                role="combobox"
+                spellCheck={false}
+                type="text"
+                value=""
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 h-9 px-4 py-2 has-[>svg]:px-3 my-2"
+      data-slot="button"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`nameGenerator bracketNameGenerator fixed array 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-array"
+  >
+    <div
+      className="flex flex-col gap-2"
+    >
+      <div>
+        <div
+          className="m-0 flex p-0"
+        >
+          <div
+            className="m-0 w-full p-0"
+          >
+            <div
+              className="p-0 m-0 w-full mb-2"
+            >
+              <div>
+                <div
+                  className="mb-2 flex flex-row flex-wrap items-center"
+                >
+                  <div
+                    className="grow shrink"
+                  >
+                    <div
+                      className="rjsf-field rjsf-field-string"
+                    >
+                      <div
+                        className="flex flex-col gap-2"
+                      >
+                        <label
+                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                          htmlFor="root_0"
+                        >
+                          *
+                        </label>
+                        <div
+                          className="p-0.5"
+                        >
+                          <input
+                            aria-describedby="root_0__error root_0__description root_0__help"
+                            autoFocus={false}
+                            className="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
+                            data-slot="input"
+                            disabled={false}
+                            id="root_0"
+                            name="root[0]"
+                            onBlur={[Function]}
+                            onChange={[Function]}
+                            onFocus={[Function]}
+                            placeholder=""
+                            readOnly={false}
+                            required={true}
+                            type="text"
+                            value="text"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    className="flex items-end justify-end p-0.5"
+                  />
+                </div>
+              </div>
+              <div>
+                <div
+                  className="mb-2 flex flex-row flex-wrap items-center"
+                >
+                  <div
+                    className="grow shrink"
+                  >
+                    <div
+                      className="rjsf-field rjsf-field-number"
+                    >
+                      <div
+                        className="flex flex-col gap-2"
+                      >
+                        <label
+                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                          htmlFor="root_1"
+                        >
+                          *
+                        </label>
+                        <div
+                          className="p-0.5"
+                        >
+                          <input
+                            aria-describedby="root_1__error root_1__description root_1__help"
+                            autoFocus={false}
+                            className="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
+                            data-slot="input"
+                            disabled={false}
+                            id="root_1"
+                            name="root[1]"
+                            onBlur={[Function]}
+                            onChange={[Function]}
+                            onFocus={[Function]}
+                            placeholder=""
+                            readOnly={false}
+                            required={true}
+                            step="any"
+                            type="number"
+                            value={42}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    className="flex items-end justify-end p-0.5"
+                  />
+                </div>
+              </div>
+              <div>
+                <div
+                  className="mb-2 flex flex-row flex-wrap items-center"
+                >
+                  <div
+                    className="grow shrink"
+                  >
+                    <div
+                      className="rjsf-field rjsf-field-boolean"
+                    >
+                      <div
+                        className="flex flex-col gap-2"
+                      >
+                        <div
+                          aria-describedby="root_2__error root_2__description root_2__help"
+                          className="relative "
+                        >
+                          <div
+                            className="flex items-center gap-2 my-2"
+                          >
+                            <button
+                              aria-checked={true}
+                              aria-required={false}
+                              autoFocus={false}
+                              className="peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50"
+                              data-slot="checkbox"
+                              data-state="checked"
+                              disabled={false}
+                              id="root_2"
+                              onBlur={[Function]}
+                              onClick={[Function]}
+                              onFocus={[Function]}
+                              onKeyDown={[Function]}
+                              role="checkbox"
+                              type="button"
+                              value="on"
+                            >
+                              <span
+                                className="flex items-center justify-center text-current transition-none"
+                                data-slot="checkbox-indicator"
+                                data-state="checked"
+                                style={
+                                  {
+                                    "pointerEvents": "none",
+                                  }
+                                }
+                              >
+                                <svg
+                                  className="size-3.5"
+                                  fill="none"
+                                  height="15"
+                                  viewBox="0 0 15 15"
+                                  width="15"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    clipRule="evenodd"
+                                    d="M11.4669 3.72684C11.7558 3.91574 11.8369 4.30308 11.648 4.59198L7.39799 11.092C7.29783 11.2452 7.13556 11.3467 6.95402 11.3699C6.77247 11.3931 6.58989 11.3355 6.45446 11.2124L3.70446 8.71241C3.44905 8.48022 3.43023 8.08494 3.66242 7.82953C3.89461 7.57412 4.28989 7.55529 4.5453 7.78749L6.75292 9.79441L10.6018 3.90792C10.7907 3.61902 11.178 3.53795 11.4669 3.72684Z"
+                                    fill="currentColor"
+                                    fillRule="evenodd"
+                                  />
+                                </svg>
+                              </span>
+                            </button>
+                            <input
+                              aria-hidden={true}
+                              defaultChecked={true}
+                              disabled={false}
+                              name="root[2]"
+                              required={false}
+                              style={
+                                {
+                                  "margin": 0,
+                                  "opacity": 0,
+                                  "pointerEvents": "none",
+                                  "position": "absolute",
+                                  "transform": "translateX(-100%)",
+                                }
+                              }
+                              tabIndex={-1}
+                              type="checkbox"
+                              value="on"
+                            />
+                            <label
+                              className="flex items-center gap-2 text-sm font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50 leading-tight"
+                              data-slot="label"
+                              htmlFor="root_2"
+                              onMouseDown={[Function]}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    className="flex items-end justify-end p-0.5"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 h-9 px-4 py-2 has-[>svg]:px-3 my-2"
+      data-slot="button"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-array"
+  >
+    <div
+      className="flex flex-col gap-2"
+    >
+      <div>
+        <div
+          className="m-0 flex p-0"
+        >
+          <div
+            className="m-0 w-full p-0"
+          >
+            <div
+              className="p-0 m-0 w-full mb-2"
+            >
+              <div>
+                <div
+                  className="mb-2 flex flex-row flex-wrap items-center"
+                >
+                  <div
+                    className="grow shrink"
+                  >
+                    <div
+                      className="rjsf-field rjsf-field-array"
+                    >
+                      <div
+                        className="flex flex-col gap-2"
+                      >
+                        <div>
+                          <div
+                            className="m-0 flex p-0"
+                          >
+                            <div
+                              className="m-0 w-full p-0"
+                            >
+                              <div
+                                className="p-0 m-0 w-full mb-2"
+                              >
+                                <div>
+                                  <div
+                                    className="mb-2 flex flex-row flex-wrap items-center"
+                                  >
+                                    <div
+                                      className="grow shrink"
+                                    >
+                                      <div
+                                        className="rjsf-field rjsf-field-string"
+                                      >
+                                        <div
+                                          className="flex flex-col gap-2"
+                                        >
+                                          <label
+                                            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                            htmlFor="root_0_0"
+                                          >
+                                            *
+                                          </label>
+                                          <div
+                                            className="p-0.5"
+                                          >
+                                            <input
+                                              aria-describedby="root_0_0__error root_0_0__description root_0_0__help"
+                                              autoFocus={false}
+                                              className="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
+                                              data-slot="input"
+                                              disabled={false}
+                                              id="root_0_0"
+                                              name="root[0][0]"
+                                              onBlur={[Function]}
+                                              onChange={[Function]}
+                                              onFocus={[Function]}
+                                              placeholder=""
+                                              readOnly={false}
+                                              required={true}
+                                              type="text"
+                                              value="a"
+                                            />
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div
+                                      className="flex items-end justify-end p-0.5"
+                                    >
+                                      <div
+                                        className="flex gap-2"
+                                      >
+                                        <button
+                                          className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 rjsf-array-item-move-up"
+                                          data-slot="button"
+                                          disabled={true}
+                                          id="root_0_0__moveUp"
+                                          onClick={[Function]}
+                                          title="Move up"
+                                          type="button"
+                                        >
+                                          <svg
+                                            aria-hidden="true"
+                                            className="lucide lucide-chevron-up h-4 w-4"
+                                            fill="none"
+                                            height={24}
+                                            stroke="currentColor"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth={2}
+                                            viewBox="0 0 24 24"
+                                            width={24}
+                                            xmlns="http://www.w3.org/2000/svg"
+                                          >
+                                            <path
+                                              d="m18 15-6-6-6 6"
+                                            />
+                                          </svg>
+                                        </button>
+                                        <button
+                                          className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 rjsf-array-item-move-down"
+                                          data-slot="button"
+                                          disabled={false}
+                                          id="root_0_0__moveDown"
+                                          onClick={[Function]}
+                                          title="Move down"
+                                          type="button"
+                                        >
+                                          <svg
+                                            aria-hidden="true"
+                                            className="lucide lucide-chevron-down h-4 w-4"
+                                            fill="none"
+                                            height={24}
+                                            stroke="currentColor"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth={2}
+                                            viewBox="0 0 24 24"
+                                            width={24}
+                                            xmlns="http://www.w3.org/2000/svg"
+                                          >
+                                            <path
+                                              d="m6 9 6 6 6-6"
+                                            />
+                                          </svg>
+                                        </button>
+                                        <button
+                                          className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 border-destructive"
+                                          data-slot="button"
+                                          disabled={false}
+                                          id="root_0_0__remove"
+                                          onClick={[Function]}
+                                          title="Remove"
+                                          type="button"
+                                        >
+                                          <svg
+                                            aria-hidden="true"
+                                            className="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
+                                            fill="none"
+                                            height={24}
+                                            stroke="currentColor"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth={2}
+                                            viewBox="0 0 24 24"
+                                            width={24}
+                                            xmlns="http://www.w3.org/2000/svg"
+                                          >
+                                            <path
+                                              d="M10 11v6"
+                                            />
+                                            <path
+                                              d="M14 11v6"
+                                            />
+                                            <path
+                                              d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"
+                                            />
+                                            <path
+                                              d="M3 6h18"
+                                            />
+                                            <path
+                                              d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
+                                            />
+                                          </svg>
+                                        </button>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div>
+                                  <div
+                                    className="mb-2 flex flex-row flex-wrap items-center"
+                                  >
+                                    <div
+                                      className="grow shrink"
+                                    >
+                                      <div
+                                        className="rjsf-field rjsf-field-string"
+                                      >
+                                        <div
+                                          className="flex flex-col gap-2"
+                                        >
+                                          <label
+                                            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                            htmlFor="root_0_1"
+                                          >
+                                            *
+                                          </label>
+                                          <div
+                                            className="p-0.5"
+                                          >
+                                            <input
+                                              aria-describedby="root_0_1__error root_0_1__description root_0_1__help"
+                                              autoFocus={false}
+                                              className="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
+                                              data-slot="input"
+                                              disabled={false}
+                                              id="root_0_1"
+                                              name="root[0][1]"
+                                              onBlur={[Function]}
+                                              onChange={[Function]}
+                                              onFocus={[Function]}
+                                              placeholder=""
+                                              readOnly={false}
+                                              required={true}
+                                              type="text"
+                                              value="b"
+                                            />
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div
+                                      className="flex items-end justify-end p-0.5"
+                                    >
+                                      <div
+                                        className="flex gap-2"
+                                      >
+                                        <button
+                                          className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 rjsf-array-item-move-up"
+                                          data-slot="button"
+                                          disabled={false}
+                                          id="root_0_1__moveUp"
+                                          onClick={[Function]}
+                                          title="Move up"
+                                          type="button"
+                                        >
+                                          <svg
+                                            aria-hidden="true"
+                                            className="lucide lucide-chevron-up h-4 w-4"
+                                            fill="none"
+                                            height={24}
+                                            stroke="currentColor"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth={2}
+                                            viewBox="0 0 24 24"
+                                            width={24}
+                                            xmlns="http://www.w3.org/2000/svg"
+                                          >
+                                            <path
+                                              d="m18 15-6-6-6 6"
+                                            />
+                                          </svg>
+                                        </button>
+                                        <button
+                                          className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 rjsf-array-item-move-down"
+                                          data-slot="button"
+                                          disabled={true}
+                                          id="root_0_1__moveDown"
+                                          onClick={[Function]}
+                                          title="Move down"
+                                          type="button"
+                                        >
+                                          <svg
+                                            aria-hidden="true"
+                                            className="lucide lucide-chevron-down h-4 w-4"
+                                            fill="none"
+                                            height={24}
+                                            stroke="currentColor"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth={2}
+                                            viewBox="0 0 24 24"
+                                            width={24}
+                                            xmlns="http://www.w3.org/2000/svg"
+                                          >
+                                            <path
+                                              d="m6 9 6 6 6-6"
+                                            />
+                                          </svg>
+                                        </button>
+                                        <button
+                                          className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 border-destructive"
+                                          data-slot="button"
+                                          disabled={false}
+                                          id="root_0_1__remove"
+                                          onClick={[Function]}
+                                          title="Remove"
+                                          type="button"
+                                        >
+                                          <svg
+                                            aria-hidden="true"
+                                            className="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
+                                            fill="none"
+                                            height={24}
+                                            stroke="currentColor"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth={2}
+                                            viewBox="0 0 24 24"
+                                            width={24}
+                                            xmlns="http://www.w3.org/2000/svg"
+                                          >
+                                            <path
+                                              d="M10 11v6"
+                                            />
+                                            <path
+                                              d="M14 11v6"
+                                            />
+                                            <path
+                                              d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"
+                                            />
+                                            <path
+                                              d="M3 6h18"
+                                            />
+                                            <path
+                                              d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
+                                            />
+                                          </svg>
+                                        </button>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div
+                                  className="mt-2 flex"
+                                >
+                                  <div
+                                    className="p-0 m-0"
+                                  >
+                                    <button
+                                      className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 w-fit gap-2 rjsf-array-item-add"
+                                      data-slot="button"
+                                      disabled={false}
+                                      id="root_0__add"
+                                      onClick={[Function]}
+                                      type="button"
+                                    >
+                                      <svg
+                                        aria-hidden="true"
+                                        className="lucide lucide-circle-plus"
+                                        fill="none"
+                                        height={16}
+                                        stroke="currentColor"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        viewBox="0 0 24 24"
+                                        width={16}
+                                        xmlns="http://www.w3.org/2000/svg"
+                                      >
+                                        <circle
+                                          cx="12"
+                                          cy="12"
+                                          r="10"
+                                        />
+                                        <path
+                                          d="M8 12h8"
+                                        />
+                                        <path
+                                          d="M12 8v8"
+                                        />
+                                      </svg>
+                                       
+                                      Add Item
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    className="flex items-end justify-end p-0.5"
+                  >
+                    <div
+                      className="flex gap-2"
+                    >
+                      <button
+                        className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 rjsf-array-item-move-up"
+                        data-slot="button"
+                        disabled={true}
+                        id="root_0__moveUp"
+                        onClick={[Function]}
+                        title="Move up"
+                        type="button"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          className="lucide lucide-chevron-up h-4 w-4"
+                          fill="none"
+                          height={24}
+                          stroke="currentColor"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          viewBox="0 0 24 24"
+                          width={24}
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="m18 15-6-6-6 6"
+                          />
+                        </svg>
+                      </button>
+                      <button
+                        className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 rjsf-array-item-move-down"
+                        data-slot="button"
+                        disabled={false}
+                        id="root_0__moveDown"
+                        onClick={[Function]}
+                        title="Move down"
+                        type="button"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          className="lucide lucide-chevron-down h-4 w-4"
+                          fill="none"
+                          height={24}
+                          stroke="currentColor"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          viewBox="0 0 24 24"
+                          width={24}
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="m6 9 6 6 6-6"
+                          />
+                        </svg>
+                      </button>
+                      <button
+                        className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 border-destructive"
+                        data-slot="button"
+                        disabled={false}
+                        id="root_0__remove"
+                        onClick={[Function]}
+                        title="Remove"
+                        type="button"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          className="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
+                          fill="none"
+                          height={24}
+                          stroke="currentColor"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          viewBox="0 0 24 24"
+                          width={24}
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M10 11v6"
+                          />
+                          <path
+                            d="M14 11v6"
+                          />
+                          <path
+                            d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"
+                          />
+                          <path
+                            d="M3 6h18"
+                          />
+                          <path
+                            d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
+                          />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <div
+                  className="mb-2 flex flex-row flex-wrap items-center"
+                >
+                  <div
+                    className="grow shrink"
+                  >
+                    <div
+                      className="rjsf-field rjsf-field-array"
+                    >
+                      <div
+                        className="flex flex-col gap-2"
+                      >
+                        <div>
+                          <div
+                            className="m-0 flex p-0"
+                          >
+                            <div
+                              className="m-0 w-full p-0"
+                            >
+                              <div
+                                className="p-0 m-0 w-full mb-2"
+                              >
+                                <div>
+                                  <div
+                                    className="mb-2 flex flex-row flex-wrap items-center"
+                                  >
+                                    <div
+                                      className="grow shrink"
+                                    >
+                                      <div
+                                        className="rjsf-field rjsf-field-string"
+                                      >
+                                        <div
+                                          className="flex flex-col gap-2"
+                                        >
+                                          <label
+                                            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                            htmlFor="root_1_0"
+                                          >
+                                            *
+                                          </label>
+                                          <div
+                                            className="p-0.5"
+                                          >
+                                            <input
+                                              aria-describedby="root_1_0__error root_1_0__description root_1_0__help"
+                                              autoFocus={false}
+                                              className="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
+                                              data-slot="input"
+                                              disabled={false}
+                                              id="root_1_0"
+                                              name="root[1][0]"
+                                              onBlur={[Function]}
+                                              onChange={[Function]}
+                                              onFocus={[Function]}
+                                              placeholder=""
+                                              readOnly={false}
+                                              required={true}
+                                              type="text"
+                                              value="c"
+                                            />
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div
+                                      className="flex items-end justify-end p-0.5"
+                                    >
+                                      <div
+                                        className="flex gap-2"
+                                      >
+                                        <button
+                                          className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 rjsf-array-item-move-up"
+                                          data-slot="button"
+                                          disabled={true}
+                                          id="root_1_0__moveUp"
+                                          onClick={[Function]}
+                                          title="Move up"
+                                          type="button"
+                                        >
+                                          <svg
+                                            aria-hidden="true"
+                                            className="lucide lucide-chevron-up h-4 w-4"
+                                            fill="none"
+                                            height={24}
+                                            stroke="currentColor"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth={2}
+                                            viewBox="0 0 24 24"
+                                            width={24}
+                                            xmlns="http://www.w3.org/2000/svg"
+                                          >
+                                            <path
+                                              d="m18 15-6-6-6 6"
+                                            />
+                                          </svg>
+                                        </button>
+                                        <button
+                                          className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 rjsf-array-item-move-down"
+                                          data-slot="button"
+                                          disabled={false}
+                                          id="root_1_0__moveDown"
+                                          onClick={[Function]}
+                                          title="Move down"
+                                          type="button"
+                                        >
+                                          <svg
+                                            aria-hidden="true"
+                                            className="lucide lucide-chevron-down h-4 w-4"
+                                            fill="none"
+                                            height={24}
+                                            stroke="currentColor"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth={2}
+                                            viewBox="0 0 24 24"
+                                            width={24}
+                                            xmlns="http://www.w3.org/2000/svg"
+                                          >
+                                            <path
+                                              d="m6 9 6 6 6-6"
+                                            />
+                                          </svg>
+                                        </button>
+                                        <button
+                                          className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 border-destructive"
+                                          data-slot="button"
+                                          disabled={false}
+                                          id="root_1_0__remove"
+                                          onClick={[Function]}
+                                          title="Remove"
+                                          type="button"
+                                        >
+                                          <svg
+                                            aria-hidden="true"
+                                            className="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
+                                            fill="none"
+                                            height={24}
+                                            stroke="currentColor"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth={2}
+                                            viewBox="0 0 24 24"
+                                            width={24}
+                                            xmlns="http://www.w3.org/2000/svg"
+                                          >
+                                            <path
+                                              d="M10 11v6"
+                                            />
+                                            <path
+                                              d="M14 11v6"
+                                            />
+                                            <path
+                                              d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"
+                                            />
+                                            <path
+                                              d="M3 6h18"
+                                            />
+                                            <path
+                                              d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
+                                            />
+                                          </svg>
+                                        </button>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div>
+                                  <div
+                                    className="mb-2 flex flex-row flex-wrap items-center"
+                                  >
+                                    <div
+                                      className="grow shrink"
+                                    >
+                                      <div
+                                        className="rjsf-field rjsf-field-string"
+                                      >
+                                        <div
+                                          className="flex flex-col gap-2"
+                                        >
+                                          <label
+                                            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                            htmlFor="root_1_1"
+                                          >
+                                            *
+                                          </label>
+                                          <div
+                                            className="p-0.5"
+                                          >
+                                            <input
+                                              aria-describedby="root_1_1__error root_1_1__description root_1_1__help"
+                                              autoFocus={false}
+                                              className="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
+                                              data-slot="input"
+                                              disabled={false}
+                                              id="root_1_1"
+                                              name="root[1][1]"
+                                              onBlur={[Function]}
+                                              onChange={[Function]}
+                                              onFocus={[Function]}
+                                              placeholder=""
+                                              readOnly={false}
+                                              required={true}
+                                              type="text"
+                                              value="d"
+                                            />
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div
+                                      className="flex items-end justify-end p-0.5"
+                                    >
+                                      <div
+                                        className="flex gap-2"
+                                      >
+                                        <button
+                                          className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 rjsf-array-item-move-up"
+                                          data-slot="button"
+                                          disabled={false}
+                                          id="root_1_1__moveUp"
+                                          onClick={[Function]}
+                                          title="Move up"
+                                          type="button"
+                                        >
+                                          <svg
+                                            aria-hidden="true"
+                                            className="lucide lucide-chevron-up h-4 w-4"
+                                            fill="none"
+                                            height={24}
+                                            stroke="currentColor"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth={2}
+                                            viewBox="0 0 24 24"
+                                            width={24}
+                                            xmlns="http://www.w3.org/2000/svg"
+                                          >
+                                            <path
+                                              d="m18 15-6-6-6 6"
+                                            />
+                                          </svg>
+                                        </button>
+                                        <button
+                                          className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 rjsf-array-item-move-down"
+                                          data-slot="button"
+                                          disabled={true}
+                                          id="root_1_1__moveDown"
+                                          onClick={[Function]}
+                                          title="Move down"
+                                          type="button"
+                                        >
+                                          <svg
+                                            aria-hidden="true"
+                                            className="lucide lucide-chevron-down h-4 w-4"
+                                            fill="none"
+                                            height={24}
+                                            stroke="currentColor"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth={2}
+                                            viewBox="0 0 24 24"
+                                            width={24}
+                                            xmlns="http://www.w3.org/2000/svg"
+                                          >
+                                            <path
+                                              d="m6 9 6 6 6-6"
+                                            />
+                                          </svg>
+                                        </button>
+                                        <button
+                                          className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 border-destructive"
+                                          data-slot="button"
+                                          disabled={false}
+                                          id="root_1_1__remove"
+                                          onClick={[Function]}
+                                          title="Remove"
+                                          type="button"
+                                        >
+                                          <svg
+                                            aria-hidden="true"
+                                            className="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
+                                            fill="none"
+                                            height={24}
+                                            stroke="currentColor"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth={2}
+                                            viewBox="0 0 24 24"
+                                            width={24}
+                                            xmlns="http://www.w3.org/2000/svg"
+                                          >
+                                            <path
+                                              d="M10 11v6"
+                                            />
+                                            <path
+                                              d="M14 11v6"
+                                            />
+                                            <path
+                                              d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"
+                                            />
+                                            <path
+                                              d="M3 6h18"
+                                            />
+                                            <path
+                                              d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
+                                            />
+                                          </svg>
+                                        </button>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                <div
+                                  className="mt-2 flex"
+                                >
+                                  <div
+                                    className="p-0 m-0"
+                                  >
+                                    <button
+                                      className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 w-fit gap-2 rjsf-array-item-add"
+                                      data-slot="button"
+                                      disabled={false}
+                                      id="root_1__add"
+                                      onClick={[Function]}
+                                      type="button"
+                                    >
+                                      <svg
+                                        aria-hidden="true"
+                                        className="lucide lucide-circle-plus"
+                                        fill="none"
+                                        height={16}
+                                        stroke="currentColor"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        viewBox="0 0 24 24"
+                                        width={16}
+                                        xmlns="http://www.w3.org/2000/svg"
+                                      >
+                                        <circle
+                                          cx="12"
+                                          cy="12"
+                                          r="10"
+                                        />
+                                        <path
+                                          d="M8 12h8"
+                                        />
+                                        <path
+                                          d="M12 8v8"
+                                        />
+                                      </svg>
+                                       
+                                      Add Item
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    className="flex items-end justify-end p-0.5"
+                  >
+                    <div
+                      className="flex gap-2"
+                    >
+                      <button
+                        className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 rjsf-array-item-move-up"
+                        data-slot="button"
+                        disabled={false}
+                        id="root_1__moveUp"
+                        onClick={[Function]}
+                        title="Move up"
+                        type="button"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          className="lucide lucide-chevron-up h-4 w-4"
+                          fill="none"
+                          height={24}
+                          stroke="currentColor"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          viewBox="0 0 24 24"
+                          width={24}
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="m18 15-6-6-6 6"
+                          />
+                        </svg>
+                      </button>
+                      <button
+                        className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 rjsf-array-item-move-down"
+                        data-slot="button"
+                        disabled={true}
+                        id="root_1__moveDown"
+                        onClick={[Function]}
+                        title="Move down"
+                        type="button"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          className="lucide lucide-chevron-down h-4 w-4"
+                          fill="none"
+                          height={24}
+                          stroke="currentColor"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          viewBox="0 0 24 24"
+                          width={24}
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="m6 9 6 6 6-6"
+                          />
+                        </svg>
+                      </button>
+                      <button
+                        className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 border-destructive"
+                        data-slot="button"
+                        disabled={false}
+                        id="root_1__remove"
+                        onClick={[Function]}
+                        title="Remove"
+                        type="button"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          className="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
+                          fill="none"
+                          height={24}
+                          stroke="currentColor"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          viewBox="0 0 24 24"
+                          width={24}
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M10 11v6"
+                          />
+                          <path
+                            d="M14 11v6"
+                          />
+                          <path
+                            d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"
+                          />
+                          <path
+                            d="M3 6h18"
+                          />
+                          <path
+                            d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
+                          />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                className="mt-2 flex"
+              >
+                <div
+                  className="p-0 m-0"
+                >
+                  <button
+                    className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 w-fit gap-2 rjsf-array-item-add"
+                    data-slot="button"
+                    disabled={false}
+                    id="root__add"
+                    onClick={[Function]}
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      className="lucide lucide-circle-plus"
+                      fill="none"
+                      height={16}
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      viewBox="0 0 24 24"
+                      width={16}
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <circle
+                        cx="12"
+                        cy="12"
+                        r="10"
+                      />
+                      <path
+                        d="M8 12h8"
+                      />
+                      <path
+                        d="M12 8v8"
+                      />
+                    </svg>
+                     
+                    Add Item
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 h-9 px-4 py-2 has-[>svg]:px-3 my-2"
+      data-slot="button"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-array"
+  >
+    <div
+      className="flex flex-col gap-2"
+    >
+      <div>
+        <div
+          className="m-0 flex p-0"
+        >
+          <div
+            className="m-0 w-full p-0"
+          >
+            <div
+              className="p-0 m-0 w-full mb-2"
+            >
+              <div>
+                <div
+                  className="mb-2 flex flex-row flex-wrap items-center"
+                >
+                  <div
+                    className="grow shrink"
+                  >
+                    <div
+                      className="rjsf-field rjsf-field-object"
+                    >
+                      <div
+                        className="flex flex-col gap-2"
+                      >
+                        <div
+                          className="flex flex-col gap-2"
+                        >
+                          <div
+                            className=" flex"
+                          >
+                            <div
+                              className="w-full"
+                            >
+                              <div
+                                className="rjsf-field rjsf-field-string"
+                              >
+                                <div
+                                  className="flex flex-col gap-2"
+                                >
+                                  <label
+                                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                    htmlFor="root_0_name"
+                                  >
+                                    name
+                                  </label>
+                                  <div
+                                    className="p-0.5"
+                                  >
+                                    <input
+                                      aria-describedby="root_0_name__error root_0_name__description root_0_name__help"
+                                      autoFocus={false}
+                                      className="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
+                                      data-slot="input"
+                                      disabled={false}
+                                      id="root_0_name"
+                                      name="root.0.name"
+                                      onBlur={[Function]}
+                                      onChange={[Function]}
+                                      onFocus={[Function]}
+                                      placeholder=""
+                                      readOnly={false}
+                                      required={false}
+                                      type="text"
+                                      value="Item 1"
+                                    />
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div
+                            className=" flex"
+                          >
+                            <div
+                              className="w-full"
+                            >
+                              <div
+                                className="rjsf-field rjsf-field-number"
+                              >
+                                <div
+                                  className="flex flex-col gap-2"
+                                >
+                                  <label
+                                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                    htmlFor="root_0_value"
+                                  >
+                                    value
+                                  </label>
+                                  <div
+                                    className="p-0.5"
+                                  >
+                                    <input
+                                      aria-describedby="root_0_value__error root_0_value__description root_0_value__help"
+                                      autoFocus={false}
+                                      className="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
+                                      data-slot="input"
+                                      disabled={false}
+                                      id="root_0_value"
+                                      name="root.0.value"
+                                      onBlur={[Function]}
+                                      onChange={[Function]}
+                                      onFocus={[Function]}
+                                      placeholder=""
+                                      readOnly={false}
+                                      required={false}
+                                      step="any"
+                                      type="number"
+                                      value={10}
+                                    />
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    className="flex items-end justify-end p-0.5"
+                  >
+                    <div
+                      className="flex gap-2"
+                    >
+                      <button
+                        className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 rjsf-array-item-move-up"
+                        data-slot="button"
+                        disabled={true}
+                        id="root_0__moveUp"
+                        onClick={[Function]}
+                        title="Move up"
+                        type="button"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          className="lucide lucide-chevron-up h-4 w-4"
+                          fill="none"
+                          height={24}
+                          stroke="currentColor"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          viewBox="0 0 24 24"
+                          width={24}
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="m18 15-6-6-6 6"
+                          />
+                        </svg>
+                      </button>
+                      <button
+                        className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 rjsf-array-item-move-down"
+                        data-slot="button"
+                        disabled={false}
+                        id="root_0__moveDown"
+                        onClick={[Function]}
+                        title="Move down"
+                        type="button"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          className="lucide lucide-chevron-down h-4 w-4"
+                          fill="none"
+                          height={24}
+                          stroke="currentColor"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          viewBox="0 0 24 24"
+                          width={24}
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="m6 9 6 6 6-6"
+                          />
+                        </svg>
+                      </button>
+                      <button
+                        className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 border-destructive"
+                        data-slot="button"
+                        disabled={false}
+                        id="root_0__remove"
+                        onClick={[Function]}
+                        title="Remove"
+                        type="button"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          className="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
+                          fill="none"
+                          height={24}
+                          stroke="currentColor"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          viewBox="0 0 24 24"
+                          width={24}
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M10 11v6"
+                          />
+                          <path
+                            d="M14 11v6"
+                          />
+                          <path
+                            d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"
+                          />
+                          <path
+                            d="M3 6h18"
+                          />
+                          <path
+                            d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
+                          />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <div
+                  className="mb-2 flex flex-row flex-wrap items-center"
+                >
+                  <div
+                    className="grow shrink"
+                  >
+                    <div
+                      className="rjsf-field rjsf-field-object"
+                    >
+                      <div
+                        className="flex flex-col gap-2"
+                      >
+                        <div
+                          className="flex flex-col gap-2"
+                        >
+                          <div
+                            className=" flex"
+                          >
+                            <div
+                              className="w-full"
+                            >
+                              <div
+                                className="rjsf-field rjsf-field-string"
+                              >
+                                <div
+                                  className="flex flex-col gap-2"
+                                >
+                                  <label
+                                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                    htmlFor="root_1_name"
+                                  >
+                                    name
+                                  </label>
+                                  <div
+                                    className="p-0.5"
+                                  >
+                                    <input
+                                      aria-describedby="root_1_name__error root_1_name__description root_1_name__help"
+                                      autoFocus={false}
+                                      className="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
+                                      data-slot="input"
+                                      disabled={false}
+                                      id="root_1_name"
+                                      name="root.1.name"
+                                      onBlur={[Function]}
+                                      onChange={[Function]}
+                                      onFocus={[Function]}
+                                      placeholder=""
+                                      readOnly={false}
+                                      required={false}
+                                      type="text"
+                                      value="Item 2"
+                                    />
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div
+                            className=" flex"
+                          >
+                            <div
+                              className="w-full"
+                            >
+                              <div
+                                className="rjsf-field rjsf-field-number"
+                              >
+                                <div
+                                  className="flex flex-col gap-2"
+                                >
+                                  <label
+                                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                    htmlFor="root_1_value"
+                                  >
+                                    value
+                                  </label>
+                                  <div
+                                    className="p-0.5"
+                                  >
+                                    <input
+                                      aria-describedby="root_1_value__error root_1_value__description root_1_value__help"
+                                      autoFocus={false}
+                                      className="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
+                                      data-slot="input"
+                                      disabled={false}
+                                      id="root_1_value"
+                                      name="root.1.value"
+                                      onBlur={[Function]}
+                                      onChange={[Function]}
+                                      onFocus={[Function]}
+                                      placeholder=""
+                                      readOnly={false}
+                                      required={false}
+                                      step="any"
+                                      type="number"
+                                      value={20}
+                                    />
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    className="flex items-end justify-end p-0.5"
+                  >
+                    <div
+                      className="flex gap-2"
+                    >
+                      <button
+                        className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 rjsf-array-item-move-up"
+                        data-slot="button"
+                        disabled={false}
+                        id="root_1__moveUp"
+                        onClick={[Function]}
+                        title="Move up"
+                        type="button"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          className="lucide lucide-chevron-up h-4 w-4"
+                          fill="none"
+                          height={24}
+                          stroke="currentColor"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          viewBox="0 0 24 24"
+                          width={24}
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="m18 15-6-6-6 6"
+                          />
+                        </svg>
+                      </button>
+                      <button
+                        className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 rjsf-array-item-move-down"
+                        data-slot="button"
+                        disabled={true}
+                        id="root_1__moveDown"
+                        onClick={[Function]}
+                        title="Move down"
+                        type="button"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          className="lucide lucide-chevron-down h-4 w-4"
+                          fill="none"
+                          height={24}
+                          stroke="currentColor"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          viewBox="0 0 24 24"
+                          width={24}
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="m6 9 6 6 6-6"
+                          />
+                        </svg>
+                      </button>
+                      <button
+                        className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 border-destructive"
+                        data-slot="button"
+                        disabled={false}
+                        id="root_1__remove"
+                        onClick={[Function]}
+                        title="Remove"
+                        type="button"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          className="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
+                          fill="none"
+                          height={24}
+                          stroke="currentColor"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          viewBox="0 0 24 24"
+                          width={24}
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M10 11v6"
+                          />
+                          <path
+                            d="M14 11v6"
+                          />
+                          <path
+                            d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"
+                          />
+                          <path
+                            d="M3 6h18"
+                          />
+                          <path
+                            d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
+                          />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                className="mt-2 flex"
+              >
+                <div
+                  className="p-0 m-0"
+                >
+                  <button
+                    className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 w-fit gap-2 rjsf-array-item-add"
+                    data-slot="button"
+                    disabled={false}
+                    id="root__add"
+                    onClick={[Function]}
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      className="lucide lucide-circle-plus"
+                      fill="none"
+                      height={16}
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      viewBox="0 0 24 24"
+                      width={16}
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <circle
+                        cx="12"
+                        cy="12"
+                        r="10"
+                      />
+                      <path
+                        d="M8 12h8"
+                      />
+                      <path
+                        d="M12 8v8"
+                      />
+                    </svg>
+                     
+                    Add Item
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 h-9 px-4 py-2 has-[>svg]:px-3 my-2"
+      data-slot="button"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-array"
+  >
+    <div
+      className="flex flex-col gap-2"
+    >
+      <div>
+        <div
+          className="m-0 flex p-0"
+        >
+          <div
+            className="m-0 w-full p-0"
+          >
+            <div
+              className="p-0 m-0 w-full mb-2"
+            >
+              <div>
+                <div
+                  className="mb-2 flex flex-row flex-wrap items-center"
+                >
+                  <div
+                    className="grow shrink"
+                  >
+                    <div
+                      className="rjsf-field rjsf-field-string"
+                    >
+                      <div
+                        className="flex flex-col gap-2"
+                      >
+                        <label
+                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                          htmlFor="root_0"
+                        >
+                          *
+                        </label>
+                        <div
+                          className="p-0.5"
+                        >
+                          <input
+                            aria-describedby="root_0__error root_0__description root_0__help"
+                            autoFocus={false}
+                            className="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
+                            data-slot="input"
+                            disabled={false}
+                            id="root_0"
+                            name="root.0"
+                            onBlur={[Function]}
+                            onChange={[Function]}
+                            onFocus={[Function]}
+                            placeholder=""
+                            readOnly={false}
+                            required={true}
+                            type="text"
+                            value="foo"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    className="flex items-end justify-end p-0.5"
+                  >
+                    <div
+                      className="flex gap-2"
+                    >
+                      <button
+                        className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 rjsf-array-item-move-up"
+                        data-slot="button"
+                        disabled={true}
+                        id="root_0__moveUp"
+                        onClick={[Function]}
+                        title="Move up"
+                        type="button"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          className="lucide lucide-chevron-up h-4 w-4"
+                          fill="none"
+                          height={24}
+                          stroke="currentColor"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          viewBox="0 0 24 24"
+                          width={24}
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="m18 15-6-6-6 6"
+                          />
+                        </svg>
+                      </button>
+                      <button
+                        className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 rjsf-array-item-move-down"
+                        data-slot="button"
+                        disabled={false}
+                        id="root_0__moveDown"
+                        onClick={[Function]}
+                        title="Move down"
+                        type="button"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          className="lucide lucide-chevron-down h-4 w-4"
+                          fill="none"
+                          height={24}
+                          stroke="currentColor"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          viewBox="0 0 24 24"
+                          width={24}
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="m6 9 6 6 6-6"
+                          />
+                        </svg>
+                      </button>
+                      <button
+                        className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 border-destructive"
+                        data-slot="button"
+                        disabled={false}
+                        id="root_0__remove"
+                        onClick={[Function]}
+                        title="Remove"
+                        type="button"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          className="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
+                          fill="none"
+                          height={24}
+                          stroke="currentColor"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          viewBox="0 0 24 24"
+                          width={24}
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M10 11v6"
+                          />
+                          <path
+                            d="M14 11v6"
+                          />
+                          <path
+                            d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"
+                          />
+                          <path
+                            d="M3 6h18"
+                          />
+                          <path
+                            d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
+                          />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <div
+                  className="mb-2 flex flex-row flex-wrap items-center"
+                >
+                  <div
+                    className="grow shrink"
+                  >
+                    <div
+                      className="rjsf-field rjsf-field-string"
+                    >
+                      <div
+                        className="flex flex-col gap-2"
+                      >
+                        <label
+                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                          htmlFor="root_1"
+                        >
+                          *
+                        </label>
+                        <div
+                          className="p-0.5"
+                        >
+                          <input
+                            aria-describedby="root_1__error root_1__description root_1__help"
+                            autoFocus={false}
+                            className="file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
+                            data-slot="input"
+                            disabled={false}
+                            id="root_1"
+                            name="root.1"
+                            onBlur={[Function]}
+                            onChange={[Function]}
+                            onFocus={[Function]}
+                            placeholder=""
+                            readOnly={false}
+                            required={true}
+                            type="text"
+                            value="bar"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    className="flex items-end justify-end p-0.5"
+                  >
+                    <div
+                      className="flex gap-2"
+                    >
+                      <button
+                        className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 rjsf-array-item-move-up"
+                        data-slot="button"
+                        disabled={false}
+                        id="root_1__moveUp"
+                        onClick={[Function]}
+                        title="Move up"
+                        type="button"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          className="lucide lucide-chevron-up h-4 w-4"
+                          fill="none"
+                          height={24}
+                          stroke="currentColor"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          viewBox="0 0 24 24"
+                          width={24}
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="m18 15-6-6-6 6"
+                          />
+                        </svg>
+                      </button>
+                      <button
+                        className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 rjsf-array-item-move-down"
+                        data-slot="button"
+                        disabled={true}
+                        id="root_1__moveDown"
+                        onClick={[Function]}
+                        title="Move down"
+                        type="button"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          className="lucide lucide-chevron-down h-4 w-4"
+                          fill="none"
+                          height={24}
+                          stroke="currentColor"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          viewBox="0 0 24 24"
+                          width={24}
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="m6 9 6 6 6-6"
+                          />
+                        </svg>
+                      </button>
+                      <button
+                        className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 size-9 border-destructive"
+                        data-slot="button"
+                        disabled={false}
+                        id="root_1__remove"
+                        onClick={[Function]}
+                        title="Remove"
+                        type="button"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          className="lucide lucide-trash2 lucide-trash-2 h-4 w-4 stroke-destructive"
+                          fill="none"
+                          height={24}
+                          stroke="currentColor"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          viewBox="0 0 24 24"
+                          width={24}
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M10 11v6"
+                          />
+                          <path
+                            d="M14 11v6"
+                          />
+                          <path
+                            d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"
+                          />
+                          <path
+                            d="M3 6h18"
+                          />
+                          <path
+                            d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
+                          />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                className="mt-2 flex"
+              >
+                <div
+                  className="p-0 m-0"
+                >
+                  <button
+                    className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50 h-9 px-4 py-2 has-[>svg]:px-3 w-fit gap-2 rjsf-array-item-add"
+                    data-slot="button"
+                    disabled={false}
+                    id="root__add"
+                    onClick={[Function]}
+                    type="button"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      className="lucide lucide-circle-plus"
+                      fill="none"
+                      height={16}
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      viewBox="0 0 24 24"
+                      width={16}
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <circle
+                        cx="12"
+                        cy="12"
+                        r="10"
+                      />
+                      <path
+                        d="M8 12h8"
+                      />
+                      <path
+                        d="M12 8v8"
+                      />
+                    </svg>
+                     
+                    Add Item
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div>
+    <button
+      className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive bg-primary text-primary-foreground shadow-xs hover:bg-primary/90 h-9 px-4 py-2 has-[>svg]:px-3 my-2"
+      data-slot="button"
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
 exports[`with title and description array 1`] = `
 <form
   className="rjsf"
