@@ -44,6 +44,7 @@ should change the heading of the (upcoming) version to include a major version b
 - BREAKING CHANGE: Updated `ArrayFieldTemplate` to remove the `ArrayFieldItemTemplate` render in favor of simply using `items` due to `ArrayField` changes
 - BREAKING CHANGE: Updated `ArrayFieldItemButtonsTemplate` to replace the old callback-generator functions with the new memoizable callback functions
 - Fixed a bug in `Form` to avoid getting errors being reported at the root level via `onChange` when there aren't
+- Refactored LayoutGridField as function components instead of a single class component.
 
 ## @rjsf/daisyui
 
@@ -126,6 +127,8 @@ should change the heading of the (upcoming) version to include a major version b
 - Updated the `utility-functions.md` documentation to add the new `useDeepCompareMemo()` hook
 - Updated the `v6.x upgrade guide.md` documentation to add the BREAKING CHANGES to the `ArrayFieldTemplateProps`, `ArrayFieldItemTemplateType`, `ArrayFieldItemButtonsTemplateType`,  `FieldTemplateProps`, `ObjectFieldTemplateProps` and `WrapIfAdditionalTemplateProps` interface props changes and the `useDeepCompareMemo()` hook
 - Added documentation for the `nameGenerator` prop in `form-props.md` and v6.x upgrade guide
+- Updated '@rjsf/snapshot-tests' package to explicitly depend on '@rjsf/core' to build first, fixing an error with parallelized builds
+
 
 # 6.0.0-beta.21
 
