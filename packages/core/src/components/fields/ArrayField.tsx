@@ -794,13 +794,13 @@ type ArrayFieldState<T> = {
  * returning the plain `formData` from the `keyedFormData`.
  */
 function useKeyedFormData<T = any>(formData: T[] = []): KeyedFormDataState<T> {
-  const [state, setState] = useState<ArrayFieldState<T>>({
-    formDataHash: hashObject(formData),
+  const newHash = useMemo(() => hashObject(formData), [formData])
+  const [state, setState] = useState<ArrayFieldState<T>>(() => ({
+    formDataHash: newHash,
     keyedFormData: generateKeyedFormData<T>(formData),
-  });
+  }));
 
   let { keyedFormData, formDataHash } = state;
-  const newHash = hashObject(formData);
   if (newHash !== formDataHash) {
     const nextFormData = Array.isArray(formData) ? formData : [];
     const previousKeyedFormData = keyedFormData || [];
