@@ -1,5 +1,1523 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
+exports[`nameGenerator bracketNameGenerator nested object 1`] = `
+<form
+  className="ui form rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div
+      className="grouped equal width fields"
+    >
+      <div
+        className="rjsf-field rjsf-field-object"
+      >
+        <div
+          className="grouped equal width fields"
+        >
+          <h5
+            className="ui dividing header"
+            id="root_person__title"
+          >
+            person
+          </h5>
+          <div
+            className="rjsf-field rjsf-field-string"
+          >
+            <div
+              className="grouped equal width fields"
+            >
+              <div
+                className="field"
+              >
+                <label
+                  htmlFor="root_person_name"
+                >
+                  name
+                </label>
+                <div
+                  className="ui fluid input"
+                >
+                  <input
+                    aria-describedby="root_person_name__error root_person_name__description root_person_name__help"
+                    autoFocus={false}
+                    disabled={false}
+                    id="root_person_name"
+                    name="root[person][name]"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    required={false}
+                    type="text"
+                    value=""
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            className="rjsf-field rjsf-field-object"
+          >
+            <div
+              className="grouped equal width fields"
+            >
+              <h5
+                className="ui dividing header"
+                id="root_person_address__title"
+              >
+                address
+              </h5>
+              <div
+                className="rjsf-field rjsf-field-string"
+              >
+                <div
+                  className="grouped equal width fields"
+                >
+                  <div
+                    className="field"
+                  >
+                    <label
+                      htmlFor="root_person_address_street"
+                    >
+                      street
+                    </label>
+                    <div
+                      className="ui fluid input"
+                    >
+                      <input
+                        aria-describedby="root_person_address_street__error root_person_address_street__description root_person_address_street__help"
+                        autoFocus={false}
+                        disabled={false}
+                        id="root_person_address_street"
+                        name="root[person][address][street]"
+                        onBlur={[Function]}
+                        onChange={[Function]}
+                        onFocus={[Function]}
+                        placeholder=""
+                        required={false}
+                        type="text"
+                        value=""
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                className="rjsf-field rjsf-field-string"
+              >
+                <div
+                  className="grouped equal width fields"
+                >
+                  <div
+                    className="field"
+                  >
+                    <label
+                      htmlFor="root_person_address_city"
+                    >
+                      city
+                    </label>
+                    <div
+                      className="ui fluid input"
+                    >
+                      <input
+                        aria-describedby="root_person_address_city__error root_person_address_city__description root_person_address_city__help"
+                        autoFocus={false}
+                        disabled={false}
+                        id="root_person_address_city"
+                        name="root[person][address][city]"
+                        onBlur={[Function]}
+                        onChange={[Function]}
+                        onFocus={[Function]}
+                        placeholder=""
+                        required={false}
+                        type="text"
+                        value=""
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                className="rjsf-field rjsf-field-string"
+              >
+                <div
+                  className="grouped equal width fields"
+                >
+                  <div
+                    className="field"
+                  >
+                    <label
+                      htmlFor="root_person_address_country"
+                    >
+                      country
+                    </label>
+                    <div
+                      className="ui fluid input"
+                    >
+                      <input
+                        aria-describedby="root_person_address_country__error root_person_address_country__description root_person_address_country__help"
+                        autoFocus={false}
+                        disabled={false}
+                        id="root_person_address_country"
+                        name="root[person][address][country]"
+                        onBlur={[Function]}
+                        onChange={[Function]}
+                        onFocus={[Function]}
+                        placeholder=""
+                        required={false}
+                        type="text"
+                        value=""
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    className="ui primary button"
+    onClick={[Function]}
+    type="submit"
+  >
+    Submit
+  </button>
+</form>
+`;
+
+exports[`nameGenerator bracketNameGenerator object with additionalProperties 1`] = `
+<form
+  className="ui form rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div
+      className="grouped equal width fields"
+    >
+      <div
+        className="rjsf-field rjsf-field-string"
+      >
+        <div
+          className="grouped equal width fields"
+        >
+          <div
+            className="field"
+          >
+            <label
+              htmlFor="root_name"
+            >
+              name
+            </label>
+            <div
+              className="ui fluid input"
+            >
+              <input
+                aria-describedby="root_name__error root_name__description root_name__help"
+                autoFocus={false}
+                disabled={false}
+                id="root_name"
+                name="root[name]"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                placeholder=""
+                required={false}
+                type="text"
+                value="John"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-string"
+      >
+        <div
+          className="ui equal width grid"
+        >
+          <div
+            className="row"
+          >
+            <div
+              className="column form-additional"
+            >
+              <div
+                className="grouped equal width fields"
+              >
+                <div
+                  className="field form-group"
+                >
+                  <label
+                    htmlFor="root_customField"
+                  >
+                    customField Key
+                  </label>
+                  <div
+                    className="ui fluid input"
+                    hasFeedback={true}
+                    htmlFor="root_customField"
+                  >
+                    <input
+                      aria-describedby={null}
+                      defaultValue="customField"
+                      disabled={false}
+                      id="root_customField"
+                      name="root_customField"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      required={false}
+                      type="text"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              className="middle aligned column form-additional"
+            >
+              <div
+                className="grouped equal width fields"
+              >
+                <div
+                  className="field"
+                >
+                  <label
+                    htmlFor="root_customField"
+                  >
+                    customField
+                  </label>
+                  <div
+                    className="ui fluid input"
+                  >
+                    <input
+                      aria-describedby="root_customField__error root_customField__description root_customField__help"
+                      autoFocus={false}
+                      disabled={false}
+                      id="root_customField"
+                      name="root[customField]"
+                      onBlur={[Function]}
+                      onChange={[Function]}
+                      onFocus={[Function]}
+                      placeholder=""
+                      required={false}
+                      type="text"
+                      value="customValue"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              className="column"
+            >
+              <button
+                className="ui mini icon button rjsf-object-property-remove"
+                id="root_customField__remove"
+                onClick={[Function]}
+                title="Remove"
+              >
+                <i
+                  aria-hidden="true"
+                  className="trash icon"
+                  onClick={[Function]}
+                />
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="middle aligned sixteen wide column"
+      >
+        <div
+          className="row"
+        >
+          <div
+            style={
+              {
+                "marginTop": "1rem",
+                "position": "relative",
+                "textAlign": "right",
+              }
+            }
+          >
+            <button
+              className="ui tiny icon button rjsf-object-property-expand"
+              id="root__add"
+              onClick={[Function]}
+              title="Add Item"
+            >
+              <i
+                aria-hidden="true"
+                className="plus icon"
+                onClick={[Function]}
+              />
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    className="ui primary button"
+    onClick={[Function]}
+    type="submit"
+  >
+    Submit
+  </button>
+</form>
+`;
+
+exports[`nameGenerator bracketNameGenerator object with mixed types 1`] = `
+<form
+  className="ui form rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div
+      className="grouped equal width fields"
+    >
+      <div
+        className="rjsf-field rjsf-field-string"
+      >
+        <div
+          className="grouped equal width fields"
+        >
+          <div
+            className="field"
+          >
+            <label
+              htmlFor="root_name"
+            >
+              name
+            </label>
+            <div
+              className="ui fluid input"
+            >
+              <input
+                aria-describedby="root_name__error root_name__description root_name__help"
+                autoFocus={false}
+                disabled={false}
+                id="root_name"
+                name="root[name]"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                placeholder=""
+                required={false}
+                type="text"
+                value="Alice"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-number"
+      >
+        <div
+          className="grouped equal width fields"
+        >
+          <div
+            className="field"
+          >
+            <label
+              htmlFor="root_age"
+            >
+              age
+            </label>
+            <div
+              className="ui fluid input"
+            >
+              <input
+                aria-describedby="root_age__error root_age__description root_age__help"
+                autoFocus={false}
+                disabled={false}
+                id="root_age"
+                name="root[age]"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                placeholder=""
+                required={false}
+                step="any"
+                type="number"
+                value={30}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-boolean"
+      >
+        <div
+          className="grouped equal width fields"
+        >
+          <div
+            className="field"
+          >
+            <div
+              className="ui checked checkbox"
+              inverted="false"
+              onBlur={[Function]}
+              onChange={[Function]}
+              onClick={[Function]}
+              onFocus={[Function]}
+              onMouseDown={[Function]}
+              onMouseUp={[Function]}
+            >
+              <input
+                aria-describedby="root_active__error root_active__description root_active__help"
+                autoFocus={false}
+                checked={true}
+                className="hidden"
+                disabled={false}
+                id="root_active"
+                name="root[active]"
+                readOnly={true}
+                required={false}
+                tabIndex={0}
+                type="checkbox"
+              />
+              <label
+                htmlFor="root_active"
+              >
+                active
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-array"
+      >
+        <div
+          className="grouped equal width fields"
+        >
+          <div
+            className="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields"
+          >
+            <h5
+              className="ui dividing header"
+              id="root_tags__title"
+            >
+              tags
+            </h5>
+            <div>
+              <div
+                className="row array-item-list"
+              >
+                <div
+                  className="rjsf-array-item"
+                >
+                  <div
+                    className="ui grid"
+                    style={
+                      {
+                        "alignItems": "center",
+                        "display": "grid",
+                        "gridTemplateColumns": "1fr 150px",
+                      }
+                    }
+                  >
+                    <div
+                      className="middle aligned sixteen wide column"
+                    >
+                      <div
+                        className="rjsf-field rjsf-field-string"
+                      >
+                        <div
+                          className="grouped equal width fields"
+                        >
+                          <div
+                            className="required field"
+                          >
+                            <label
+                              htmlFor="root_tags_0"
+                            >
+                              tags-0
+                            </label>
+                            <div
+                              className="ui fluid input"
+                            >
+                              <input
+                                aria-describedby="root_tags_0__error root_tags_0__description root_tags_0__help"
+                                autoFocus={false}
+                                disabled={false}
+                                id="root_tags_0"
+                                name="root[tags][0]"
+                                onBlur={[Function]}
+                                onChange={[Function]}
+                                onFocus={[Function]}
+                                placeholder=""
+                                required={true}
+                                type="text"
+                                value="developer"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      className="column"
+                    >
+                      <div
+                        className="ui mini buttons"
+                      >
+                        <button
+                          className="ui icon disabled button rjsf-array-item-move-up"
+                          disabled={true}
+                          id="root_tags_0__moveUp"
+                          onClick={[Function]}
+                          tabIndex={-1}
+                          title="Move up"
+                        >
+                          <i
+                            aria-hidden="true"
+                            className="angle up icon"
+                            onClick={[Function]}
+                          />
+                        </button>
+                        <button
+                          className="ui icon button rjsf-array-item-move-down"
+                          id="root_tags_0__moveDown"
+                          onClick={[Function]}
+                          title="Move down"
+                        >
+                          <i
+                            aria-hidden="true"
+                            className="angle down icon"
+                            onClick={[Function]}
+                          />
+                        </button>
+                        <button
+                          className="ui icon button rjsf-array-item-remove"
+                          id="root_tags_0__remove"
+                          onClick={[Function]}
+                          title="Remove"
+                        >
+                          <i
+                            aria-hidden="true"
+                            className="trash icon"
+                            onClick={[Function]}
+                          />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  className="rjsf-array-item"
+                >
+                  <div
+                    className="ui grid"
+                    style={
+                      {
+                        "alignItems": "center",
+                        "display": "grid",
+                        "gridTemplateColumns": "1fr 150px",
+                      }
+                    }
+                  >
+                    <div
+                      className="middle aligned sixteen wide column"
+                    >
+                      <div
+                        className="rjsf-field rjsf-field-string"
+                      >
+                        <div
+                          className="grouped equal width fields"
+                        >
+                          <div
+                            className="required field"
+                          >
+                            <label
+                              htmlFor="root_tags_1"
+                            >
+                              tags-1
+                            </label>
+                            <div
+                              className="ui fluid input"
+                            >
+                              <input
+                                aria-describedby="root_tags_1__error root_tags_1__description root_tags_1__help"
+                                autoFocus={false}
+                                disabled={false}
+                                id="root_tags_1"
+                                name="root[tags][1]"
+                                onBlur={[Function]}
+                                onChange={[Function]}
+                                onFocus={[Function]}
+                                placeholder=""
+                                required={true}
+                                type="text"
+                                value="designer"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      className="column"
+                    >
+                      <div
+                        className="ui mini buttons"
+                      >
+                        <button
+                          className="ui icon button rjsf-array-item-move-up"
+                          id="root_tags_1__moveUp"
+                          onClick={[Function]}
+                          title="Move up"
+                        >
+                          <i
+                            aria-hidden="true"
+                            className="angle up icon"
+                            onClick={[Function]}
+                          />
+                        </button>
+                        <button
+                          className="ui icon disabled button rjsf-array-item-move-down"
+                          disabled={true}
+                          id="root_tags_1__moveDown"
+                          onClick={[Function]}
+                          tabIndex={-1}
+                          title="Move down"
+                        >
+                          <i
+                            aria-hidden="true"
+                            className="angle down icon"
+                            onClick={[Function]}
+                          />
+                        </button>
+                        <button
+                          className="ui icon button rjsf-array-item-remove"
+                          id="root_tags_1__remove"
+                          onClick={[Function]}
+                          title="Remove"
+                        >
+                          <i
+                            aria-hidden="true"
+                            className="trash icon"
+                            onClick={[Function]}
+                          />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                style={
+                  {
+                    "marginTop": "1rem",
+                    "position": "relative",
+                    "textAlign": "right",
+                  }
+                }
+              >
+                <button
+                  className="ui tiny icon button rjsf-array-item-add"
+                  id="root_tags__add"
+                  onClick={[Function]}
+                  title="Add Item"
+                >
+                  <i
+                    aria-hidden="true"
+                    className="plus icon"
+                    onClick={[Function]}
+                  />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    className="ui primary button"
+    onClick={[Function]}
+    type="submit"
+  >
+    Submit
+  </button>
+</form>
+`;
+
+exports[`nameGenerator bracketNameGenerator simple object 1`] = `
+<form
+  className="ui form rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div
+      className="grouped equal width fields"
+    >
+      <div
+        className="rjsf-field rjsf-field-string"
+      >
+        <div
+          className="grouped equal width fields"
+        >
+          <div
+            className="field"
+          >
+            <label
+              htmlFor="root_firstName"
+            >
+              firstName
+            </label>
+            <div
+              className="ui fluid input"
+            >
+              <input
+                aria-describedby="root_firstName__error root_firstName__description root_firstName__help"
+                autoFocus={false}
+                disabled={false}
+                id="root_firstName"
+                name="root[firstName]"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                placeholder=""
+                required={false}
+                type="text"
+                value=""
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-string"
+      >
+        <div
+          className="grouped equal width fields"
+        >
+          <div
+            className="field"
+          >
+            <label
+              htmlFor="root_lastName"
+            >
+              lastName
+            </label>
+            <div
+              className="ui fluid input"
+            >
+              <input
+                aria-describedby="root_lastName__error root_lastName__description root_lastName__help"
+                autoFocus={false}
+                disabled={false}
+                id="root_lastName"
+                name="root[lastName]"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                placeholder=""
+                required={false}
+                type="text"
+                value=""
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-number"
+      >
+        <div
+          className="grouped equal width fields"
+        >
+          <div
+            className="field"
+          >
+            <label
+              htmlFor="root_age"
+            >
+              age
+            </label>
+            <div
+              className="ui fluid input"
+            >
+              <input
+                aria-describedby="root_age__error root_age__description root_age__help"
+                autoFocus={false}
+                disabled={false}
+                id="root_age"
+                name="root[age]"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                placeholder=""
+                required={false}
+                step="any"
+                type="number"
+                value=""
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    className="ui primary button"
+    onClick={[Function]}
+    type="submit"
+  >
+    Submit
+  </button>
+</form>
+`;
+
+exports[`nameGenerator dotNotationNameGenerator nested object 1`] = `
+<form
+  className="ui form rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div
+      className="grouped equal width fields"
+    >
+      <div
+        className="rjsf-field rjsf-field-object"
+      >
+        <div
+          className="grouped equal width fields"
+        >
+          <h5
+            className="ui dividing header"
+            id="root_person__title"
+          >
+            person
+          </h5>
+          <div
+            className="rjsf-field rjsf-field-string"
+          >
+            <div
+              className="grouped equal width fields"
+            >
+              <div
+                className="field"
+              >
+                <label
+                  htmlFor="root_person_name"
+                >
+                  name
+                </label>
+                <div
+                  className="ui fluid input"
+                >
+                  <input
+                    aria-describedby="root_person_name__error root_person_name__description root_person_name__help"
+                    autoFocus={false}
+                    disabled={false}
+                    id="root_person_name"
+                    name="root.person.name"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    required={false}
+                    type="text"
+                    value=""
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            className="rjsf-field rjsf-field-object"
+          >
+            <div
+              className="grouped equal width fields"
+            >
+              <h5
+                className="ui dividing header"
+                id="root_person_address__title"
+              >
+                address
+              </h5>
+              <div
+                className="rjsf-field rjsf-field-string"
+              >
+                <div
+                  className="grouped equal width fields"
+                >
+                  <div
+                    className="field"
+                  >
+                    <label
+                      htmlFor="root_person_address_street"
+                    >
+                      street
+                    </label>
+                    <div
+                      className="ui fluid input"
+                    >
+                      <input
+                        aria-describedby="root_person_address_street__error root_person_address_street__description root_person_address_street__help"
+                        autoFocus={false}
+                        disabled={false}
+                        id="root_person_address_street"
+                        name="root.person.address.street"
+                        onBlur={[Function]}
+                        onChange={[Function]}
+                        onFocus={[Function]}
+                        placeholder=""
+                        required={false}
+                        type="text"
+                        value=""
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                className="rjsf-field rjsf-field-string"
+              >
+                <div
+                  className="grouped equal width fields"
+                >
+                  <div
+                    className="field"
+                  >
+                    <label
+                      htmlFor="root_person_address_city"
+                    >
+                      city
+                    </label>
+                    <div
+                      className="ui fluid input"
+                    >
+                      <input
+                        aria-describedby="root_person_address_city__error root_person_address_city__description root_person_address_city__help"
+                        autoFocus={false}
+                        disabled={false}
+                        id="root_person_address_city"
+                        name="root.person.address.city"
+                        onBlur={[Function]}
+                        onChange={[Function]}
+                        onFocus={[Function]}
+                        placeholder=""
+                        required={false}
+                        type="text"
+                        value=""
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    className="ui primary button"
+    onClick={[Function]}
+    type="submit"
+  >
+    Submit
+  </button>
+</form>
+`;
+
+exports[`nameGenerator dotNotationNameGenerator object with mixed types 1`] = `
+<form
+  className="ui form rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div
+      className="grouped equal width fields"
+    >
+      <div
+        className="rjsf-field rjsf-field-string"
+      >
+        <div
+          className="grouped equal width fields"
+        >
+          <div
+            className="field"
+          >
+            <label
+              htmlFor="root_name"
+            >
+              name
+            </label>
+            <div
+              className="ui fluid input"
+            >
+              <input
+                aria-describedby="root_name__error root_name__description root_name__help"
+                autoFocus={false}
+                disabled={false}
+                id="root_name"
+                name="root.name"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                placeholder=""
+                required={false}
+                type="text"
+                value="Test"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-number"
+      >
+        <div
+          className="grouped equal width fields"
+        >
+          <div
+            className="field"
+          >
+            <label
+              htmlFor="root_count"
+            >
+              count
+            </label>
+            <div
+              className="ui fluid input"
+            >
+              <input
+                aria-describedby="root_count__error root_count__description root_count__help"
+                autoFocus={false}
+                disabled={false}
+                id="root_count"
+                name="root.count"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                placeholder=""
+                required={false}
+                step="any"
+                type="number"
+                value={5}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-array"
+      >
+        <div
+          className="grouped equal width fields"
+        >
+          <div
+            className="rjsf-field rjsf-field-array rjsf-field-array-of-string sortable-form-fields"
+          >
+            <h5
+              className="ui dividing header"
+              id="root_items__title"
+            >
+              items
+            </h5>
+            <div>
+              <div
+                className="row array-item-list"
+              >
+                <div
+                  className="rjsf-array-item"
+                >
+                  <div
+                    className="ui grid"
+                    style={
+                      {
+                        "alignItems": "center",
+                        "display": "grid",
+                        "gridTemplateColumns": "1fr 150px",
+                      }
+                    }
+                  >
+                    <div
+                      className="middle aligned sixteen wide column"
+                    >
+                      <div
+                        className="rjsf-field rjsf-field-string"
+                      >
+                        <div
+                          className="grouped equal width fields"
+                        >
+                          <div
+                            className="required field"
+                          >
+                            <label
+                              htmlFor="root_items_0"
+                            >
+                              items-0
+                            </label>
+                            <div
+                              className="ui fluid input"
+                            >
+                              <input
+                                aria-describedby="root_items_0__error root_items_0__description root_items_0__help"
+                                autoFocus={false}
+                                disabled={false}
+                                id="root_items_0"
+                                name="root.items.0"
+                                onBlur={[Function]}
+                                onChange={[Function]}
+                                onFocus={[Function]}
+                                placeholder=""
+                                required={true}
+                                type="text"
+                                value="a"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      className="column"
+                    >
+                      <div
+                        className="ui mini buttons"
+                      >
+                        <button
+                          className="ui icon disabled button rjsf-array-item-move-up"
+                          disabled={true}
+                          id="root_items_0__moveUp"
+                          onClick={[Function]}
+                          tabIndex={-1}
+                          title="Move up"
+                        >
+                          <i
+                            aria-hidden="true"
+                            className="angle up icon"
+                            onClick={[Function]}
+                          />
+                        </button>
+                        <button
+                          className="ui icon button rjsf-array-item-move-down"
+                          id="root_items_0__moveDown"
+                          onClick={[Function]}
+                          title="Move down"
+                        >
+                          <i
+                            aria-hidden="true"
+                            className="angle down icon"
+                            onClick={[Function]}
+                          />
+                        </button>
+                        <button
+                          className="ui icon button rjsf-array-item-remove"
+                          id="root_items_0__remove"
+                          onClick={[Function]}
+                          title="Remove"
+                        >
+                          <i
+                            aria-hidden="true"
+                            className="trash icon"
+                            onClick={[Function]}
+                          />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  className="rjsf-array-item"
+                >
+                  <div
+                    className="ui grid"
+                    style={
+                      {
+                        "alignItems": "center",
+                        "display": "grid",
+                        "gridTemplateColumns": "1fr 150px",
+                      }
+                    }
+                  >
+                    <div
+                      className="middle aligned sixteen wide column"
+                    >
+                      <div
+                        className="rjsf-field rjsf-field-string"
+                      >
+                        <div
+                          className="grouped equal width fields"
+                        >
+                          <div
+                            className="required field"
+                          >
+                            <label
+                              htmlFor="root_items_1"
+                            >
+                              items-1
+                            </label>
+                            <div
+                              className="ui fluid input"
+                            >
+                              <input
+                                aria-describedby="root_items_1__error root_items_1__description root_items_1__help"
+                                autoFocus={false}
+                                disabled={false}
+                                id="root_items_1"
+                                name="root.items.1"
+                                onBlur={[Function]}
+                                onChange={[Function]}
+                                onFocus={[Function]}
+                                placeholder=""
+                                required={true}
+                                type="text"
+                                value="b"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      className="column"
+                    >
+                      <div
+                        className="ui mini buttons"
+                      >
+                        <button
+                          className="ui icon button rjsf-array-item-move-up"
+                          id="root_items_1__moveUp"
+                          onClick={[Function]}
+                          title="Move up"
+                        >
+                          <i
+                            aria-hidden="true"
+                            className="angle up icon"
+                            onClick={[Function]}
+                          />
+                        </button>
+                        <button
+                          className="ui icon disabled button rjsf-array-item-move-down"
+                          disabled={true}
+                          id="root_items_1__moveDown"
+                          onClick={[Function]}
+                          tabIndex={-1}
+                          title="Move down"
+                        >
+                          <i
+                            aria-hidden="true"
+                            className="angle down icon"
+                            onClick={[Function]}
+                          />
+                        </button>
+                        <button
+                          className="ui icon button rjsf-array-item-remove"
+                          id="root_items_1__remove"
+                          onClick={[Function]}
+                          title="Remove"
+                        >
+                          <i
+                            aria-hidden="true"
+                            className="trash icon"
+                            onClick={[Function]}
+                          />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                style={
+                  {
+                    "marginTop": "1rem",
+                    "position": "relative",
+                    "textAlign": "right",
+                  }
+                }
+              >
+                <button
+                  className="ui tiny icon button rjsf-array-item-add"
+                  id="root_items__add"
+                  onClick={[Function]}
+                  title="Add Item"
+                >
+                  <i
+                    aria-hidden="true"
+                    className="plus icon"
+                    onClick={[Function]}
+                  />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    className="ui primary button"
+    onClick={[Function]}
+    type="submit"
+  >
+    Submit
+  </button>
+</form>
+`;
+
+exports[`nameGenerator dotNotationNameGenerator simple object 1`] = `
+<form
+  className="ui form rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="rjsf-field rjsf-field-object"
+  >
+    <div
+      className="grouped equal width fields"
+    >
+      <div
+        className="rjsf-field rjsf-field-string"
+      >
+        <div
+          className="grouped equal width fields"
+        >
+          <div
+            className="field"
+          >
+            <label
+              htmlFor="root_firstName"
+            >
+              firstName
+            </label>
+            <div
+              className="ui fluid input"
+            >
+              <input
+                aria-describedby="root_firstName__error root_firstName__description root_firstName__help"
+                autoFocus={false}
+                disabled={false}
+                id="root_firstName"
+                name="root.firstName"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                placeholder=""
+                required={false}
+                type="text"
+                value=""
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-string"
+      >
+        <div
+          className="grouped equal width fields"
+        >
+          <div
+            className="field"
+          >
+            <label
+              htmlFor="root_lastName"
+            >
+              lastName
+            </label>
+            <div
+              className="ui fluid input"
+            >
+              <input
+                aria-describedby="root_lastName__error root_lastName__description root_lastName__help"
+                autoFocus={false}
+                disabled={false}
+                id="root_lastName"
+                name="root.lastName"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                placeholder=""
+                required={false}
+                type="text"
+                value=""
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="rjsf-field rjsf-field-number"
+      >
+        <div
+          className="grouped equal width fields"
+        >
+          <div
+            className="field"
+          >
+            <label
+              htmlFor="root_age"
+            >
+              age
+            </label>
+            <div
+              className="ui fluid input"
+            >
+              <input
+                aria-describedby="root_age__error root_age__description root_age__help"
+                autoFocus={false}
+                disabled={false}
+                id="root_age"
+                name="root.age"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                placeholder=""
+                required={false}
+                step="any"
+                type="number"
+                value=""
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button
+    className="ui primary button"
+    onClick={[Function]}
+    type="submit"
+  >
+    Submit
+  </button>
+</form>
+`;
+
 exports[`object fields additionalProperties 1`] = `
 <form
   className="ui form rjsf"

@@ -619,6 +619,1734 @@ exports[`array fields no errors 1`] = `
 </form>
 `;
 
+exports[`nameGenerator bracketNameGenerator array of objects 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group rjsf-field rjsf-field-array"
+  >
+    <fieldset
+      className="rjsf-field rjsf-field-array rjsf-field-array-of-object"
+      id="root"
+    >
+      <div
+        className="row array-item-list"
+      >
+        <div
+          className="rjsf-array-item"
+        >
+          <div
+            className="col-xs-9"
+          >
+            <div
+              className="form-group rjsf-field rjsf-field-object"
+            >
+              <fieldset
+                id="root_0"
+              >
+                <div
+                  className="form-group rjsf-field rjsf-field-string"
+                >
+                  <label
+                    className="control-label"
+                    htmlFor="root_0_name"
+                  >
+                    name
+                  </label>
+                  <input
+                    aria-describedby="root_0_name__error root_0_name__description root_0_name__help"
+                    autoFocus={false}
+                    className="form-control"
+                    disabled={false}
+                    id="root_0_name"
+                    label="name"
+                    name="root[0][name]"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    readOnly={false}
+                    required={false}
+                    type="text"
+                    value="Item 1"
+                  />
+                </div>
+                <div
+                  className="form-group rjsf-field rjsf-field-number"
+                >
+                  <label
+                    className="control-label"
+                    htmlFor="root_0_value"
+                  >
+                    value
+                  </label>
+                  <input
+                    aria-describedby="root_0_value__error root_0_value__description root_0_value__help"
+                    autoFocus={false}
+                    className="form-control"
+                    disabled={false}
+                    id="root_0_value"
+                    label="value"
+                    name="root[0][value]"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    readOnly={false}
+                    required={false}
+                    step="any"
+                    type="number"
+                    value={10}
+                  />
+                </div>
+              </fieldset>
+            </div>
+          </div>
+          <div
+            className="col-xs-3 array-item-toolbox"
+          >
+            <div
+              className="btn-group"
+              style={
+                {
+                  "display": "flex",
+                  "justifyContent": "space-around",
+                }
+              }
+            >
+              <button
+                className="btn btn-default rjsf-array-item-move-up"
+                disabled={true}
+                id="root_0__moveUp"
+                onClick={[Function]}
+                title="Move up"
+                type="button"
+              >
+                <i
+                  className="glyphicon glyphicon-arrow-up"
+                />
+              </button>
+              <button
+                className="btn btn-default rjsf-array-item-move-down"
+                disabled={false}
+                id="root_0__moveDown"
+                onClick={[Function]}
+                title="Move down"
+                type="button"
+              >
+                <i
+                  className="glyphicon glyphicon-arrow-down"
+                />
+              </button>
+              <button
+                className="btn btn-danger rjsf-array-item-remove"
+                disabled={false}
+                id="root_0__remove"
+                onClick={[Function]}
+                title="Remove"
+                type="button"
+              >
+                <i
+                  className="glyphicon glyphicon-remove"
+                />
+              </button>
+            </div>
+          </div>
+        </div>
+        <div
+          className="rjsf-array-item"
+        >
+          <div
+            className="col-xs-9"
+          >
+            <div
+              className="form-group rjsf-field rjsf-field-object"
+            >
+              <fieldset
+                id="root_1"
+              >
+                <div
+                  className="form-group rjsf-field rjsf-field-string"
+                >
+                  <label
+                    className="control-label"
+                    htmlFor="root_1_name"
+                  >
+                    name
+                  </label>
+                  <input
+                    aria-describedby="root_1_name__error root_1_name__description root_1_name__help"
+                    autoFocus={false}
+                    className="form-control"
+                    disabled={false}
+                    id="root_1_name"
+                    label="name"
+                    name="root[1][name]"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    readOnly={false}
+                    required={false}
+                    type="text"
+                    value="Item 2"
+                  />
+                </div>
+                <div
+                  className="form-group rjsf-field rjsf-field-number"
+                >
+                  <label
+                    className="control-label"
+                    htmlFor="root_1_value"
+                  >
+                    value
+                  </label>
+                  <input
+                    aria-describedby="root_1_value__error root_1_value__description root_1_value__help"
+                    autoFocus={false}
+                    className="form-control"
+                    disabled={false}
+                    id="root_1_value"
+                    label="value"
+                    name="root[1][value]"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    readOnly={false}
+                    required={false}
+                    step="any"
+                    type="number"
+                    value={20}
+                  />
+                </div>
+              </fieldset>
+            </div>
+          </div>
+          <div
+            className="col-xs-3 array-item-toolbox"
+          >
+            <div
+              className="btn-group"
+              style={
+                {
+                  "display": "flex",
+                  "justifyContent": "space-around",
+                }
+              }
+            >
+              <button
+                className="btn btn-default rjsf-array-item-move-up"
+                disabled={false}
+                id="root_1__moveUp"
+                onClick={[Function]}
+                title="Move up"
+                type="button"
+              >
+                <i
+                  className="glyphicon glyphicon-arrow-up"
+                />
+              </button>
+              <button
+                className="btn btn-default rjsf-array-item-move-down"
+                disabled={true}
+                id="root_1__moveDown"
+                onClick={[Function]}
+                title="Move down"
+                type="button"
+              >
+                <i
+                  className="glyphicon glyphicon-arrow-down"
+                />
+              </button>
+              <button
+                className="btn btn-danger rjsf-array-item-remove"
+                disabled={false}
+                id="root_1__remove"
+                onClick={[Function]}
+                title="Remove"
+                type="button"
+              >
+                <i
+                  className="glyphicon glyphicon-remove"
+                />
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="row"
+      >
+        <p
+          className="col-xs-3 col-xs-offset-9 text-right rjsf-array-item-add"
+        >
+          <button
+            className="btn btn-info btn-add col-xs-12"
+            disabled={false}
+            id="root__add"
+            onClick={[Function]}
+            title="Add"
+            type="button"
+          >
+            <i
+              className="glyphicon glyphicon-plus"
+            />
+          </button>
+        </p>
+      </div>
+    </fieldset>
+  </div>
+  <div>
+    <button
+      className="btn btn-info "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`nameGenerator bracketNameGenerator array of strings 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group rjsf-field rjsf-field-array"
+  >
+    <fieldset
+      className="rjsf-field rjsf-field-array rjsf-field-array-of-string"
+      id="root"
+    >
+      <div
+        className="row array-item-list"
+      >
+        <div
+          className="rjsf-array-item"
+        >
+          <div
+            className="col-xs-9"
+          >
+            <div
+              className="form-group rjsf-field rjsf-field-string"
+            >
+              <input
+                aria-describedby="root_0__error root_0__description root_0__help"
+                autoFocus={false}
+                className="form-control"
+                disabled={false}
+                id="root_0"
+                label=""
+                name="root[0]"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                placeholder=""
+                readOnly={false}
+                required={true}
+                type="text"
+                value="foo"
+              />
+            </div>
+          </div>
+          <div
+            className="col-xs-3 array-item-toolbox"
+          >
+            <div
+              className="btn-group"
+              style={
+                {
+                  "display": "flex",
+                  "justifyContent": "space-around",
+                }
+              }
+            >
+              <button
+                className="btn btn-default rjsf-array-item-move-up"
+                disabled={true}
+                id="root_0__moveUp"
+                onClick={[Function]}
+                title="Move up"
+                type="button"
+              >
+                <i
+                  className="glyphicon glyphicon-arrow-up"
+                />
+              </button>
+              <button
+                className="btn btn-default rjsf-array-item-move-down"
+                disabled={false}
+                id="root_0__moveDown"
+                onClick={[Function]}
+                title="Move down"
+                type="button"
+              >
+                <i
+                  className="glyphicon glyphicon-arrow-down"
+                />
+              </button>
+              <button
+                className="btn btn-danger rjsf-array-item-remove"
+                disabled={false}
+                id="root_0__remove"
+                onClick={[Function]}
+                title="Remove"
+                type="button"
+              >
+                <i
+                  className="glyphicon glyphicon-remove"
+                />
+              </button>
+            </div>
+          </div>
+        </div>
+        <div
+          className="rjsf-array-item"
+        >
+          <div
+            className="col-xs-9"
+          >
+            <div
+              className="form-group rjsf-field rjsf-field-string"
+            >
+              <input
+                aria-describedby="root_1__error root_1__description root_1__help"
+                autoFocus={false}
+                className="form-control"
+                disabled={false}
+                id="root_1"
+                label=""
+                name="root[1]"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                placeholder=""
+                readOnly={false}
+                required={true}
+                type="text"
+                value="bar"
+              />
+            </div>
+          </div>
+          <div
+            className="col-xs-3 array-item-toolbox"
+          >
+            <div
+              className="btn-group"
+              style={
+                {
+                  "display": "flex",
+                  "justifyContent": "space-around",
+                }
+              }
+            >
+              <button
+                className="btn btn-default rjsf-array-item-move-up"
+                disabled={false}
+                id="root_1__moveUp"
+                onClick={[Function]}
+                title="Move up"
+                type="button"
+              >
+                <i
+                  className="glyphicon glyphicon-arrow-up"
+                />
+              </button>
+              <button
+                className="btn btn-default rjsf-array-item-move-down"
+                disabled={true}
+                id="root_1__moveDown"
+                onClick={[Function]}
+                title="Move down"
+                type="button"
+              >
+                <i
+                  className="glyphicon glyphicon-arrow-down"
+                />
+              </button>
+              <button
+                className="btn btn-danger rjsf-array-item-remove"
+                disabled={false}
+                id="root_1__remove"
+                onClick={[Function]}
+                title="Remove"
+                type="button"
+              >
+                <i
+                  className="glyphicon glyphicon-remove"
+                />
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="row"
+      >
+        <p
+          className="col-xs-3 col-xs-offset-9 text-right rjsf-array-item-add"
+        >
+          <button
+            className="btn btn-info btn-add col-xs-12"
+            disabled={false}
+            id="root__add"
+            onClick={[Function]}
+            title="Add"
+            type="button"
+          >
+            <i
+              className="glyphicon glyphicon-plus"
+            />
+          </button>
+        </p>
+      </div>
+    </fieldset>
+  </div>
+  <div>
+    <button
+      className="btn btn-info "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`nameGenerator bracketNameGenerator checkboxes with nameGenerator 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group rjsf-field rjsf-field-array"
+  >
+    <select
+      aria-describedby="root__error root__description root__help"
+      autoFocus={false}
+      className="form-control"
+      disabled={false}
+      id="root"
+      multiple={true}
+      name="root"
+      onBlur={[Function]}
+      onChange={[Function]}
+      onFocus={[Function]}
+      required={false}
+      role="combobox"
+      value={[]}
+    >
+      <option
+        value="0"
+      >
+        foo
+      </option>
+      <option
+        value="1"
+      >
+        bar
+      </option>
+      <option
+        value="2"
+      >
+        baz
+      </option>
+    </select>
+  </div>
+  <div>
+    <button
+      className="btn btn-info "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`nameGenerator bracketNameGenerator fixed array 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group rjsf-field rjsf-field-array"
+  >
+    <fieldset
+      className="rjsf-field rjsf-field-array rjsf-field-array-fixed-items"
+      id="root"
+    >
+      <div
+        className="row array-item-list"
+      >
+        <div
+          className="rjsf-array-item"
+        >
+          <div
+            className="col-xs-12"
+          >
+            <div
+              className="form-group rjsf-field rjsf-field-string"
+            >
+              <input
+                aria-describedby="root_0__error root_0__description root_0__help"
+                autoFocus={false}
+                className="form-control"
+                disabled={false}
+                id="root_0"
+                label=""
+                name="root[0]"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                placeholder=""
+                readOnly={false}
+                required={true}
+                type="text"
+                value="text"
+              />
+            </div>
+          </div>
+        </div>
+        <div
+          className="rjsf-array-item"
+        >
+          <div
+            className="col-xs-12"
+          >
+            <div
+              className="form-group rjsf-field rjsf-field-number"
+            >
+              <input
+                aria-describedby="root_1__error root_1__description root_1__help"
+                autoFocus={false}
+                className="form-control"
+                disabled={false}
+                id="root_1"
+                label=""
+                name="root[1]"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                placeholder=""
+                readOnly={false}
+                required={true}
+                step="any"
+                type="number"
+                value={42}
+              />
+            </div>
+          </div>
+        </div>
+        <div
+          className="rjsf-array-item"
+        >
+          <div
+            className="col-xs-12"
+          >
+            <div
+              className="form-group rjsf-field rjsf-field-boolean"
+            >
+              <div
+                className="checkbox "
+              >
+                <label>
+                  <input
+                    aria-describedby="root_2__error root_2__description root_2__help"
+                    autoFocus={false}
+                    checked={true}
+                    disabled={false}
+                    id="root_2"
+                    name="root[2]"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    required={false}
+                    type="checkbox"
+                  />
+                  <span />
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </fieldset>
+  </div>
+  <div>
+    <button
+      className="btn btn-info "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`nameGenerator bracketNameGenerator nested arrays 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group rjsf-field rjsf-field-array"
+  >
+    <fieldset
+      className="rjsf-field rjsf-field-array rjsf-field-array-of-array"
+      id="root"
+    >
+      <div
+        className="row array-item-list"
+      >
+        <div
+          className="rjsf-array-item"
+        >
+          <div
+            className="col-xs-9"
+          >
+            <div
+              className="form-group rjsf-field rjsf-field-array"
+            >
+              <fieldset
+                className="rjsf-field rjsf-field-array rjsf-field-array-of-string"
+                id="root_0"
+              >
+                <div
+                  className="row array-item-list"
+                >
+                  <div
+                    className="rjsf-array-item"
+                  >
+                    <div
+                      className="col-xs-9"
+                    >
+                      <div
+                        className="form-group rjsf-field rjsf-field-string"
+                      >
+                        <input
+                          aria-describedby="root_0_0__error root_0_0__description root_0_0__help"
+                          autoFocus={false}
+                          className="form-control"
+                          disabled={false}
+                          id="root_0_0"
+                          label=""
+                          name="root[0][0]"
+                          onBlur={[Function]}
+                          onChange={[Function]}
+                          onFocus={[Function]}
+                          placeholder=""
+                          readOnly={false}
+                          required={true}
+                          type="text"
+                          value="a"
+                        />
+                      </div>
+                    </div>
+                    <div
+                      className="col-xs-3 array-item-toolbox"
+                    >
+                      <div
+                        className="btn-group"
+                        style={
+                          {
+                            "display": "flex",
+                            "justifyContent": "space-around",
+                          }
+                        }
+                      >
+                        <button
+                          className="btn btn-default rjsf-array-item-move-up"
+                          disabled={true}
+                          id="root_0_0__moveUp"
+                          onClick={[Function]}
+                          title="Move up"
+                          type="button"
+                        >
+                          <i
+                            className="glyphicon glyphicon-arrow-up"
+                          />
+                        </button>
+                        <button
+                          className="btn btn-default rjsf-array-item-move-down"
+                          disabled={false}
+                          id="root_0_0__moveDown"
+                          onClick={[Function]}
+                          title="Move down"
+                          type="button"
+                        >
+                          <i
+                            className="glyphicon glyphicon-arrow-down"
+                          />
+                        </button>
+                        <button
+                          className="btn btn-danger rjsf-array-item-remove"
+                          disabled={false}
+                          id="root_0_0__remove"
+                          onClick={[Function]}
+                          title="Remove"
+                          type="button"
+                        >
+                          <i
+                            className="glyphicon glyphicon-remove"
+                          />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    className="rjsf-array-item"
+                  >
+                    <div
+                      className="col-xs-9"
+                    >
+                      <div
+                        className="form-group rjsf-field rjsf-field-string"
+                      >
+                        <input
+                          aria-describedby="root_0_1__error root_0_1__description root_0_1__help"
+                          autoFocus={false}
+                          className="form-control"
+                          disabled={false}
+                          id="root_0_1"
+                          label=""
+                          name="root[0][1]"
+                          onBlur={[Function]}
+                          onChange={[Function]}
+                          onFocus={[Function]}
+                          placeholder=""
+                          readOnly={false}
+                          required={true}
+                          type="text"
+                          value="b"
+                        />
+                      </div>
+                    </div>
+                    <div
+                      className="col-xs-3 array-item-toolbox"
+                    >
+                      <div
+                        className="btn-group"
+                        style={
+                          {
+                            "display": "flex",
+                            "justifyContent": "space-around",
+                          }
+                        }
+                      >
+                        <button
+                          className="btn btn-default rjsf-array-item-move-up"
+                          disabled={false}
+                          id="root_0_1__moveUp"
+                          onClick={[Function]}
+                          title="Move up"
+                          type="button"
+                        >
+                          <i
+                            className="glyphicon glyphicon-arrow-up"
+                          />
+                        </button>
+                        <button
+                          className="btn btn-default rjsf-array-item-move-down"
+                          disabled={true}
+                          id="root_0_1__moveDown"
+                          onClick={[Function]}
+                          title="Move down"
+                          type="button"
+                        >
+                          <i
+                            className="glyphicon glyphicon-arrow-down"
+                          />
+                        </button>
+                        <button
+                          className="btn btn-danger rjsf-array-item-remove"
+                          disabled={false}
+                          id="root_0_1__remove"
+                          onClick={[Function]}
+                          title="Remove"
+                          type="button"
+                        >
+                          <i
+                            className="glyphicon glyphicon-remove"
+                          />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  className="row"
+                >
+                  <p
+                    className="col-xs-3 col-xs-offset-9 text-right rjsf-array-item-add"
+                  >
+                    <button
+                      className="btn btn-info btn-add col-xs-12"
+                      disabled={false}
+                      id="root_0__add"
+                      onClick={[Function]}
+                      title="Add"
+                      type="button"
+                    >
+                      <i
+                        className="glyphicon glyphicon-plus"
+                      />
+                    </button>
+                  </p>
+                </div>
+              </fieldset>
+            </div>
+          </div>
+          <div
+            className="col-xs-3 array-item-toolbox"
+          >
+            <div
+              className="btn-group"
+              style={
+                {
+                  "display": "flex",
+                  "justifyContent": "space-around",
+                }
+              }
+            >
+              <button
+                className="btn btn-default rjsf-array-item-move-up"
+                disabled={true}
+                id="root_0__moveUp"
+                onClick={[Function]}
+                title="Move up"
+                type="button"
+              >
+                <i
+                  className="glyphicon glyphicon-arrow-up"
+                />
+              </button>
+              <button
+                className="btn btn-default rjsf-array-item-move-down"
+                disabled={false}
+                id="root_0__moveDown"
+                onClick={[Function]}
+                title="Move down"
+                type="button"
+              >
+                <i
+                  className="glyphicon glyphicon-arrow-down"
+                />
+              </button>
+              <button
+                className="btn btn-danger rjsf-array-item-remove"
+                disabled={false}
+                id="root_0__remove"
+                onClick={[Function]}
+                title="Remove"
+                type="button"
+              >
+                <i
+                  className="glyphicon glyphicon-remove"
+                />
+              </button>
+            </div>
+          </div>
+        </div>
+        <div
+          className="rjsf-array-item"
+        >
+          <div
+            className="col-xs-9"
+          >
+            <div
+              className="form-group rjsf-field rjsf-field-array"
+            >
+              <fieldset
+                className="rjsf-field rjsf-field-array rjsf-field-array-of-string"
+                id="root_1"
+              >
+                <div
+                  className="row array-item-list"
+                >
+                  <div
+                    className="rjsf-array-item"
+                  >
+                    <div
+                      className="col-xs-9"
+                    >
+                      <div
+                        className="form-group rjsf-field rjsf-field-string"
+                      >
+                        <input
+                          aria-describedby="root_1_0__error root_1_0__description root_1_0__help"
+                          autoFocus={false}
+                          className="form-control"
+                          disabled={false}
+                          id="root_1_0"
+                          label=""
+                          name="root[1][0]"
+                          onBlur={[Function]}
+                          onChange={[Function]}
+                          onFocus={[Function]}
+                          placeholder=""
+                          readOnly={false}
+                          required={true}
+                          type="text"
+                          value="c"
+                        />
+                      </div>
+                    </div>
+                    <div
+                      className="col-xs-3 array-item-toolbox"
+                    >
+                      <div
+                        className="btn-group"
+                        style={
+                          {
+                            "display": "flex",
+                            "justifyContent": "space-around",
+                          }
+                        }
+                      >
+                        <button
+                          className="btn btn-default rjsf-array-item-move-up"
+                          disabled={true}
+                          id="root_1_0__moveUp"
+                          onClick={[Function]}
+                          title="Move up"
+                          type="button"
+                        >
+                          <i
+                            className="glyphicon glyphicon-arrow-up"
+                          />
+                        </button>
+                        <button
+                          className="btn btn-default rjsf-array-item-move-down"
+                          disabled={false}
+                          id="root_1_0__moveDown"
+                          onClick={[Function]}
+                          title="Move down"
+                          type="button"
+                        >
+                          <i
+                            className="glyphicon glyphicon-arrow-down"
+                          />
+                        </button>
+                        <button
+                          className="btn btn-danger rjsf-array-item-remove"
+                          disabled={false}
+                          id="root_1_0__remove"
+                          onClick={[Function]}
+                          title="Remove"
+                          type="button"
+                        >
+                          <i
+                            className="glyphicon glyphicon-remove"
+                          />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    className="rjsf-array-item"
+                  >
+                    <div
+                      className="col-xs-9"
+                    >
+                      <div
+                        className="form-group rjsf-field rjsf-field-string"
+                      >
+                        <input
+                          aria-describedby="root_1_1__error root_1_1__description root_1_1__help"
+                          autoFocus={false}
+                          className="form-control"
+                          disabled={false}
+                          id="root_1_1"
+                          label=""
+                          name="root[1][1]"
+                          onBlur={[Function]}
+                          onChange={[Function]}
+                          onFocus={[Function]}
+                          placeholder=""
+                          readOnly={false}
+                          required={true}
+                          type="text"
+                          value="d"
+                        />
+                      </div>
+                    </div>
+                    <div
+                      className="col-xs-3 array-item-toolbox"
+                    >
+                      <div
+                        className="btn-group"
+                        style={
+                          {
+                            "display": "flex",
+                            "justifyContent": "space-around",
+                          }
+                        }
+                      >
+                        <button
+                          className="btn btn-default rjsf-array-item-move-up"
+                          disabled={false}
+                          id="root_1_1__moveUp"
+                          onClick={[Function]}
+                          title="Move up"
+                          type="button"
+                        >
+                          <i
+                            className="glyphicon glyphicon-arrow-up"
+                          />
+                        </button>
+                        <button
+                          className="btn btn-default rjsf-array-item-move-down"
+                          disabled={true}
+                          id="root_1_1__moveDown"
+                          onClick={[Function]}
+                          title="Move down"
+                          type="button"
+                        >
+                          <i
+                            className="glyphicon glyphicon-arrow-down"
+                          />
+                        </button>
+                        <button
+                          className="btn btn-danger rjsf-array-item-remove"
+                          disabled={false}
+                          id="root_1_1__remove"
+                          onClick={[Function]}
+                          title="Remove"
+                          type="button"
+                        >
+                          <i
+                            className="glyphicon glyphicon-remove"
+                          />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  className="row"
+                >
+                  <p
+                    className="col-xs-3 col-xs-offset-9 text-right rjsf-array-item-add"
+                  >
+                    <button
+                      className="btn btn-info btn-add col-xs-12"
+                      disabled={false}
+                      id="root_1__add"
+                      onClick={[Function]}
+                      title="Add"
+                      type="button"
+                    >
+                      <i
+                        className="glyphicon glyphicon-plus"
+                      />
+                    </button>
+                  </p>
+                </div>
+              </fieldset>
+            </div>
+          </div>
+          <div
+            className="col-xs-3 array-item-toolbox"
+          >
+            <div
+              className="btn-group"
+              style={
+                {
+                  "display": "flex",
+                  "justifyContent": "space-around",
+                }
+              }
+            >
+              <button
+                className="btn btn-default rjsf-array-item-move-up"
+                disabled={false}
+                id="root_1__moveUp"
+                onClick={[Function]}
+                title="Move up"
+                type="button"
+              >
+                <i
+                  className="glyphicon glyphicon-arrow-up"
+                />
+              </button>
+              <button
+                className="btn btn-default rjsf-array-item-move-down"
+                disabled={true}
+                id="root_1__moveDown"
+                onClick={[Function]}
+                title="Move down"
+                type="button"
+              >
+                <i
+                  className="glyphicon glyphicon-arrow-down"
+                />
+              </button>
+              <button
+                className="btn btn-danger rjsf-array-item-remove"
+                disabled={false}
+                id="root_1__remove"
+                onClick={[Function]}
+                title="Remove"
+                type="button"
+              >
+                <i
+                  className="glyphicon glyphicon-remove"
+                />
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="row"
+      >
+        <p
+          className="col-xs-3 col-xs-offset-9 text-right rjsf-array-item-add"
+        >
+          <button
+            className="btn btn-info btn-add col-xs-12"
+            disabled={false}
+            id="root__add"
+            onClick={[Function]}
+            title="Add"
+            type="button"
+          >
+            <i
+              className="glyphicon glyphicon-plus"
+            />
+          </button>
+        </p>
+      </div>
+    </fieldset>
+  </div>
+  <div>
+    <button
+      className="btn btn-info "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`nameGenerator dotNotationNameGenerator array of objects 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group rjsf-field rjsf-field-array"
+  >
+    <fieldset
+      className="rjsf-field rjsf-field-array rjsf-field-array-of-object"
+      id="root"
+    >
+      <div
+        className="row array-item-list"
+      >
+        <div
+          className="rjsf-array-item"
+        >
+          <div
+            className="col-xs-9"
+          >
+            <div
+              className="form-group rjsf-field rjsf-field-object"
+            >
+              <fieldset
+                id="root_0"
+              >
+                <div
+                  className="form-group rjsf-field rjsf-field-string"
+                >
+                  <label
+                    className="control-label"
+                    htmlFor="root_0_name"
+                  >
+                    name
+                  </label>
+                  <input
+                    aria-describedby="root_0_name__error root_0_name__description root_0_name__help"
+                    autoFocus={false}
+                    className="form-control"
+                    disabled={false}
+                    id="root_0_name"
+                    label="name"
+                    name="root.0.name"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    readOnly={false}
+                    required={false}
+                    type="text"
+                    value="Item 1"
+                  />
+                </div>
+                <div
+                  className="form-group rjsf-field rjsf-field-number"
+                >
+                  <label
+                    className="control-label"
+                    htmlFor="root_0_value"
+                  >
+                    value
+                  </label>
+                  <input
+                    aria-describedby="root_0_value__error root_0_value__description root_0_value__help"
+                    autoFocus={false}
+                    className="form-control"
+                    disabled={false}
+                    id="root_0_value"
+                    label="value"
+                    name="root.0.value"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    readOnly={false}
+                    required={false}
+                    step="any"
+                    type="number"
+                    value={10}
+                  />
+                </div>
+              </fieldset>
+            </div>
+          </div>
+          <div
+            className="col-xs-3 array-item-toolbox"
+          >
+            <div
+              className="btn-group"
+              style={
+                {
+                  "display": "flex",
+                  "justifyContent": "space-around",
+                }
+              }
+            >
+              <button
+                className="btn btn-default rjsf-array-item-move-up"
+                disabled={true}
+                id="root_0__moveUp"
+                onClick={[Function]}
+                title="Move up"
+                type="button"
+              >
+                <i
+                  className="glyphicon glyphicon-arrow-up"
+                />
+              </button>
+              <button
+                className="btn btn-default rjsf-array-item-move-down"
+                disabled={false}
+                id="root_0__moveDown"
+                onClick={[Function]}
+                title="Move down"
+                type="button"
+              >
+                <i
+                  className="glyphicon glyphicon-arrow-down"
+                />
+              </button>
+              <button
+                className="btn btn-danger rjsf-array-item-remove"
+                disabled={false}
+                id="root_0__remove"
+                onClick={[Function]}
+                title="Remove"
+                type="button"
+              >
+                <i
+                  className="glyphicon glyphicon-remove"
+                />
+              </button>
+            </div>
+          </div>
+        </div>
+        <div
+          className="rjsf-array-item"
+        >
+          <div
+            className="col-xs-9"
+          >
+            <div
+              className="form-group rjsf-field rjsf-field-object"
+            >
+              <fieldset
+                id="root_1"
+              >
+                <div
+                  className="form-group rjsf-field rjsf-field-string"
+                >
+                  <label
+                    className="control-label"
+                    htmlFor="root_1_name"
+                  >
+                    name
+                  </label>
+                  <input
+                    aria-describedby="root_1_name__error root_1_name__description root_1_name__help"
+                    autoFocus={false}
+                    className="form-control"
+                    disabled={false}
+                    id="root_1_name"
+                    label="name"
+                    name="root.1.name"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    readOnly={false}
+                    required={false}
+                    type="text"
+                    value="Item 2"
+                  />
+                </div>
+                <div
+                  className="form-group rjsf-field rjsf-field-number"
+                >
+                  <label
+                    className="control-label"
+                    htmlFor="root_1_value"
+                  >
+                    value
+                  </label>
+                  <input
+                    aria-describedby="root_1_value__error root_1_value__description root_1_value__help"
+                    autoFocus={false}
+                    className="form-control"
+                    disabled={false}
+                    id="root_1_value"
+                    label="value"
+                    name="root.1.value"
+                    onBlur={[Function]}
+                    onChange={[Function]}
+                    onFocus={[Function]}
+                    placeholder=""
+                    readOnly={false}
+                    required={false}
+                    step="any"
+                    type="number"
+                    value={20}
+                  />
+                </div>
+              </fieldset>
+            </div>
+          </div>
+          <div
+            className="col-xs-3 array-item-toolbox"
+          >
+            <div
+              className="btn-group"
+              style={
+                {
+                  "display": "flex",
+                  "justifyContent": "space-around",
+                }
+              }
+            >
+              <button
+                className="btn btn-default rjsf-array-item-move-up"
+                disabled={false}
+                id="root_1__moveUp"
+                onClick={[Function]}
+                title="Move up"
+                type="button"
+              >
+                <i
+                  className="glyphicon glyphicon-arrow-up"
+                />
+              </button>
+              <button
+                className="btn btn-default rjsf-array-item-move-down"
+                disabled={true}
+                id="root_1__moveDown"
+                onClick={[Function]}
+                title="Move down"
+                type="button"
+              >
+                <i
+                  className="glyphicon glyphicon-arrow-down"
+                />
+              </button>
+              <button
+                className="btn btn-danger rjsf-array-item-remove"
+                disabled={false}
+                id="root_1__remove"
+                onClick={[Function]}
+                title="Remove"
+                type="button"
+              >
+                <i
+                  className="glyphicon glyphicon-remove"
+                />
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="row"
+      >
+        <p
+          className="col-xs-3 col-xs-offset-9 text-right rjsf-array-item-add"
+        >
+          <button
+            className="btn btn-info btn-add col-xs-12"
+            disabled={false}
+            id="root__add"
+            onClick={[Function]}
+            title="Add"
+            type="button"
+          >
+            <i
+              className="glyphicon glyphicon-plus"
+            />
+          </button>
+        </p>
+      </div>
+    </fieldset>
+  </div>
+  <div>
+    <button
+      className="btn btn-info "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`nameGenerator dotNotationNameGenerator array of strings 1`] = `
+<form
+  className="rjsf"
+  noValidate={false}
+  onSubmit={[Function]}
+>
+  <div
+    className="form-group rjsf-field rjsf-field-array"
+  >
+    <fieldset
+      className="rjsf-field rjsf-field-array rjsf-field-array-of-string"
+      id="root"
+    >
+      <div
+        className="row array-item-list"
+      >
+        <div
+          className="rjsf-array-item"
+        >
+          <div
+            className="col-xs-9"
+          >
+            <div
+              className="form-group rjsf-field rjsf-field-string"
+            >
+              <input
+                aria-describedby="root_0__error root_0__description root_0__help"
+                autoFocus={false}
+                className="form-control"
+                disabled={false}
+                id="root_0"
+                label=""
+                name="root.0"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                placeholder=""
+                readOnly={false}
+                required={true}
+                type="text"
+                value="foo"
+              />
+            </div>
+          </div>
+          <div
+            className="col-xs-3 array-item-toolbox"
+          >
+            <div
+              className="btn-group"
+              style={
+                {
+                  "display": "flex",
+                  "justifyContent": "space-around",
+                }
+              }
+            >
+              <button
+                className="btn btn-default rjsf-array-item-move-up"
+                disabled={true}
+                id="root_0__moveUp"
+                onClick={[Function]}
+                title="Move up"
+                type="button"
+              >
+                <i
+                  className="glyphicon glyphicon-arrow-up"
+                />
+              </button>
+              <button
+                className="btn btn-default rjsf-array-item-move-down"
+                disabled={false}
+                id="root_0__moveDown"
+                onClick={[Function]}
+                title="Move down"
+                type="button"
+              >
+                <i
+                  className="glyphicon glyphicon-arrow-down"
+                />
+              </button>
+              <button
+                className="btn btn-danger rjsf-array-item-remove"
+                disabled={false}
+                id="root_0__remove"
+                onClick={[Function]}
+                title="Remove"
+                type="button"
+              >
+                <i
+                  className="glyphicon glyphicon-remove"
+                />
+              </button>
+            </div>
+          </div>
+        </div>
+        <div
+          className="rjsf-array-item"
+        >
+          <div
+            className="col-xs-9"
+          >
+            <div
+              className="form-group rjsf-field rjsf-field-string"
+            >
+              <input
+                aria-describedby="root_1__error root_1__description root_1__help"
+                autoFocus={false}
+                className="form-control"
+                disabled={false}
+                id="root_1"
+                label=""
+                name="root.1"
+                onBlur={[Function]}
+                onChange={[Function]}
+                onFocus={[Function]}
+                placeholder=""
+                readOnly={false}
+                required={true}
+                type="text"
+                value="bar"
+              />
+            </div>
+          </div>
+          <div
+            className="col-xs-3 array-item-toolbox"
+          >
+            <div
+              className="btn-group"
+              style={
+                {
+                  "display": "flex",
+                  "justifyContent": "space-around",
+                }
+              }
+            >
+              <button
+                className="btn btn-default rjsf-array-item-move-up"
+                disabled={false}
+                id="root_1__moveUp"
+                onClick={[Function]}
+                title="Move up"
+                type="button"
+              >
+                <i
+                  className="glyphicon glyphicon-arrow-up"
+                />
+              </button>
+              <button
+                className="btn btn-default rjsf-array-item-move-down"
+                disabled={true}
+                id="root_1__moveDown"
+                onClick={[Function]}
+                title="Move down"
+                type="button"
+              >
+                <i
+                  className="glyphicon glyphicon-arrow-down"
+                />
+              </button>
+              <button
+                className="btn btn-danger rjsf-array-item-remove"
+                disabled={false}
+                id="root_1__remove"
+                onClick={[Function]}
+                title="Remove"
+                type="button"
+              >
+                <i
+                  className="glyphicon glyphicon-remove"
+                />
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        className="row"
+      >
+        <p
+          className="col-xs-3 col-xs-offset-9 text-right rjsf-array-item-add"
+        >
+          <button
+            className="btn btn-info btn-add col-xs-12"
+            disabled={false}
+            id="root__add"
+            onClick={[Function]}
+            title="Add"
+            type="button"
+          >
+            <i
+              className="glyphicon glyphicon-plus"
+            />
+          </button>
+        </p>
+      </div>
+    </fieldset>
+  </div>
+  <div>
+    <button
+      className="btn btn-info "
+      disabled={false}
+      type="submit"
+    >
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
 exports[`with title and description array 1`] = `
 <form
   className="rjsf"

@@ -5222,4 +5222,256 @@ describe('Form omitExtraData and liveOmit', () => {
       expect(testInput).eql(null);
     });
   });
+
+  describe('nameGenerator', () => {
+    const { bracketNameGenerator, dotNotationNameGenerator } = require('@rjsf/utils');
+
+    it('should generate bracket notation names for simple fields', () => {
+      const schema = {
+        type: 'object',
+        properties: {
+          firstName: { type: 'string' },
+          lastName: { type: 'string' },
+        },
+      };
+      const { node } = createFormComponent({ schema, nameGenerator: bracketNameGenerator });
+
+      const firstNameInput = node.querySelector('#root_firstName');
+      const lastNameInput = node.querySelector('#root_lastName');
+
+      expect(firstNameInput.getAttribute('name')).eql('root[firstName]');
+      expect(lastNameInput.getAttribute('name')).eql('root[lastName]');
+    });
+
+    it('should generate dot notation names for simple fields', () => {
+      const schema = {
+        type: 'object',
+        properties: {
+          firstName: { type: 'string' },
+          lastName: { type: 'string' },
+        },
+      };
+      const { node } = createFormComponent({ schema, nameGenerator: dotNotationNameGenerator });
+
+      const firstNameInput = node.querySelector('#root_firstName');
+      const lastNameInput = node.querySelector('#root_lastName');
+
+      expect(firstNameInput.getAttribute('name')).eql('root.firstName');
+      expect(lastNameInput.getAttribute('name')).eql('root.lastName');
+    });
+
+    it('should generate bracket notation names for nested objects', () => {
+      const schema = {
+        type: 'object',
+        properties: {
+          person: {
+            type: 'object',
+            properties: {
+              firstName: { type: 'string' },
+              address: {
+                type: 'object',
+                properties: {
+                  street: { type: 'string' },
+                  city: { type: 'string' },
+                },
+              },
+            },
+          },
+        },
+      };
+      const { node } = createFormComponent({ schema, nameGenerator: bracketNameGenerator });
+
+      const firstNameInput = node.querySelector('#root_person_firstName');
+      const streetInput = node.querySelector('#root_person_address_street');
+      const cityInput = node.querySelector('#root_person_address_city');
+
+      expect(firstNameInput.getAttribute('name')).eql('root[person][firstName]');
+      expect(streetInput.getAttribute('name')).eql('root[person][address][street]');
+      expect(cityInput.getAttribute('name')).eql('root[person][address][city]');
+    });
+
+    it('should generate bracket notation names for array items', () => {
+      const schema = {
+        type: 'object',
+        properties: {
+          tags: {
+            type: 'array',
+            items: { type: 'string' },
+          },
+        },
+      };
+      const formData = {
+        tags: ['foo', 'bar'],
+      };
+      const { node } = createFormComponent({ schema, formData, nameGenerator: bracketNameGenerator });
+
+      const firstTagInput = node.querySelector('#root_tags_0');
+      const secondTagInput = node.querySelector('#root_tags_1');
+
+      expect(firstTagInput.getAttribute('name')).eql('root[tags][0]');
+      expect(secondTagInput.getAttribute('name')).eql('root[tags][1]');
+    });
+
+    it('should generate bracket notation names for array of objects', () => {
+      const schema = {
+        type: 'object',
+        properties: {
+          tasks: {
+            type: 'array',
+            items: {
+              type: 'object',
+              properties: {
+                title: { type: 'string' },
+                done: { type: 'boolean' },
+              },
+            },
+          },
+        },
+      };
+      const formData = {
+        tasks: [
+          { title: 'Task 1', done: false },
+          { title: 'Task 2', done: true },
+        ],
+      };
+      const { node } = createFormComponent({ schema, formData, nameGenerator: bracketNameGenerator });
+
+      const firstTaskTitleInput = node.querySelector('#root_tasks_0_title');
+      const firstTaskDoneInput = node.querySelector('#root_tasks_0_done');
+      const secondTaskTitleInput = node.querySelector('#root_tasks_1_title');
+      const secondTaskDoneInput = node.querySelector('#root_tasks_1_done');
+
+      expect(firstTaskTitleInput.getAttribute('name')).eql('root[tasks][0][title]');
+      expect(firstTaskDoneInput.getAttribute('name')).eql('root[tasks][0][done]');
+      expect(secondTaskTitleInput.getAttribute('name')).eql('root[tasks][1][title]');
+      expect(secondTaskDoneInput.getAttribute('name')).eql('root[tasks][1][done]');
+    });
+
+    it('should generate bracket notation names for select widgets', () => {
+      const schema = {
+        type: 'object',
+        properties: {
+          color: {
+            type: 'string',
+            enum: ['red', 'green', 'blue'],
+          },
+        },
+      };
+      const { node } = createFormComponent({ schema, nameGenerator: bracketNameGenerator });
+
+      const selectInput = node.querySelector('#root_color');
+      expect(selectInput.getAttribute('name')).eql('root[color]');
+    });
+
+    it('should generate bracket notation names for radio widgets', () => {
+      const schema = {
+        type: 'object',
+        properties: {
+          option: {
+            type: 'string',
+            enum: ['foo', 'bar'],
+          },
+        },
+      };
+      const uiSchema = {
+        option: {
+          'ui:widget': 'radio',
+        },
+      };
+      const { node } = createFormComponent({ schema, uiSchema, nameGenerator: bracketNameGenerator });
+
+      const radioInputs = node.querySelectorAll('input[type="radio"]');
+      expect(radioInputs[0].getAttribute('name')).eql('root[option]');
+      expect(radioInputs[1].getAttribute('name')).eql('root[option]');
+    });
+
+    it('should generate bracket notation names for checkboxes widgets', () => {
+      const schema = {
+        type: 'object',
+        properties: {
+          choices: {
+            type: 'array',
+            items: {
+              type: 'string',
+              enum: ['foo', 'bar', 'baz'],
+            },
+            uniqueItems: true,
+          },
+        },
+      };
+      const uiSchema = {
+        choices: {
+          'ui:widget': 'checkboxes',
+        },
+      };
+      const { node } = createFormComponent({ schema, uiSchema, nameGenerator: bracketNameGenerator });
+
+      const checkboxInputs = node.querySelectorAll('input[type="checkbox"]');
+      // Checkboxes for multi-value fields have [] appended to indicate multiple values
+      expect(checkboxInputs[0].getAttribute('name')).eql('root[choices][]');
+      expect(checkboxInputs[1].getAttribute('name')).eql('root[choices][]');
+      expect(checkboxInputs[2].getAttribute('name')).eql('root[choices][]');
+    });
+
+    it('should generate bracket notation names for textarea widgets', () => {
+      const schema = {
+        type: 'object',
+        properties: {
+          description: { type: 'string' },
+        },
+      };
+      const uiSchema = {
+        description: {
+          'ui:widget': 'textarea',
+        },
+      };
+      const { node } = createFormComponent({ schema, uiSchema, nameGenerator: bracketNameGenerator });
+
+      const textareaInput = node.querySelector('#root_description');
+      expect(textareaInput.getAttribute('name')).eql('root[description]');
+    });
+
+    it('should use default id if nameGenerator is not provided', () => {
+      const schema = {
+        type: 'object',
+        properties: {
+          firstName: { type: 'string' },
+        },
+      };
+      const { node } = createFormComponent({ schema });
+
+      const firstNameInput = node.querySelector('#root_firstName');
+      expect(firstNameInput.getAttribute('name')).eql('root_firstName');
+    });
+
+    it('should handle nameGenerator with number fields', () => {
+      const schema = {
+        type: 'object',
+        properties: {
+          age: { type: 'number' },
+          count: { type: 'integer' },
+        },
+      };
+      const { node } = createFormComponent({ schema, nameGenerator: bracketNameGenerator });
+
+      const ageInput = node.querySelector('#root_age');
+      const countInput = node.querySelector('#root_count');
+
+      expect(ageInput.getAttribute('name')).eql('root[age]');
+      expect(countInput.getAttribute('name')).eql('root[count]');
+    });
+
+    it('should handle nameGenerator with boolean fields', () => {
+      const schema = {
+        type: 'object',
+        properties: {
+          active: { type: 'boolean' },
+        },
+      };
+      const { node } = createFormComponent({ schema, nameGenerator: bracketNameGenerator });
+
+      const activeInput = node.querySelector('#root_active');
+      expect(activeInput.getAttribute('name')).eql('root[active]');
+    });
+  });
 });
