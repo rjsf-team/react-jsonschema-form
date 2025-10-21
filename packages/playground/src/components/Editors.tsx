@@ -1,7 +1,17 @@
-import { useCallback, useState } from 'react';
+import { Dispatch, SetStateAction, useCallback, useState } from 'react';
+import { styled } from '@mui/material/styles';
+import Accordion from '@mui/material/Accordion';
+import MuiAccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import MonacoEditor from '@monaco-editor/react';
 import { ErrorSchema, RJSFSchema, UiSchema } from '@rjsf/utils';
 import isEqualWith from 'lodash/isEqualWith';
+
+import ThemeSelector, { ThemesType } from './ThemeSelector';
+import SubthemeSelector, { SubthemeType } from './SubthemeSelector';
 
 const monacoEditorOptions = {
   minimap: {
@@ -9,6 +19,12 @@ const monacoEditorOptions = {
   },
   automaticLayout: true,
 };
+
+const AccordionSummary = styled(MuiAccordionSummary)({
+  '.MuiAccordionSummary-content': {
+    margin: 0,
+  },
+});
 
 type EditorProps = {
   title: string;
@@ -70,6 +86,12 @@ type EditorsProps = {
   setExtraErrors: React.Dispatch<React.SetStateAction<ErrorSchema | undefined>>;
   setShareURL: React.Dispatch<React.SetStateAction<string | null>>;
   hasUiSchemaGenerator: boolean;
+  themes: { [themeName: string]: ThemesType };
+  theme: string;
+  subtheme: string | null;
+  onThemeSelected: (theme: string, themeObj: ThemesType) => void;
+  setSubtheme: Dispatch<SetStateAction<string | null>>;
+  setStylesheet: Dispatch<SetStateAction<string | null>>;
 };
 
 export default function Editors({
@@ -83,7 +105,20 @@ export default function Editors({
   setShareURL,
   setUiSchema,
   hasUiSchemaGenerator,
+  themes,
+  theme,
+  subtheme,
+  onThemeSelected,
+  setSubtheme,
+  setStylesheet,
 }: EditorsProps) {
+  const onSubthemeSelected = useCallback(
+    (subtheme: any, { stylesheet }: SubthemeType) => {
+      setSubtheme(subtheme);
+      setStylesheet(stylesheet || null);
+    },
+    [setSubtheme, setStylesheet],
+  );
   const onSchemaEdited = useCallback(
     (newSchema: any) => {
       setSchema(newSchema);
@@ -127,23 +162,42 @@ export default function Editors({
   const uiSchemaTitle = hasUiSchemaGenerator ? 'UISchema (regenerated on theme change)' : 'UiSchema';
 
   return (
-    <div className='col-sm-7'>
-      <Editor title='JSONSchema' code={toJson(schema)} onChange={onSchemaEdited} />
-      <div className='row'>
-        <div className='col-sm-6'>
-          <Editor title={uiSchemaTitle} code={toJson(uiSchema)} onChange={onUISchemaEdited} />
-        </div>
-        <div className='col-sm-6'>
-          <Editor title='formData' code={toJson(formData)} onChange={onFormDataEdited} />
-        </div>
-      </div>
-      {extraErrors && (
-        <div className='row'>
-          <div className='col'>
-            <Editor title='extraErrors' code={toJson(extraErrors || {})} onChange={onExtraErrorsEdited} />
-          </div>
-        </div>
-      )}
-    </div>
+    <Accordion defaultExpanded disableGutters>
+      <AccordionSummary expandIcon={<ExpandMoreIcon fontSize='large' />} title='Toggle Editors'>
+        <Grid container spacing={1} sx={{ width: '100%' }}>
+          <Grid size={6}>
+            <Typography component='div' variant='h2' sx={{ pr: 1 }}>
+              react-jsonschema-form
+            </Typography>
+          </Grid>
+          <Grid size={3}>
+            <ThemeSelector themes={themes} theme={theme} select={onThemeSelected} />
+          </Grid>
+          <Grid size={3}>
+            {themes[theme] && themes[theme].subthemes && (
+              <SubthemeSelector subthemes={themes[theme].subthemes!} subtheme={subtheme} select={onSubthemeSelected} />
+            )}
+          </Grid>
+        </Grid>
+      </AccordionSummary>
+      <AccordionDetails sx={{ p: 0 }}>
+        <Grid container spacing={0.5}>
+          <Grid size={extraErrors ? 3 : 4}>
+            <Editor title='JSONSchema' code={toJson(schema)} onChange={onSchemaEdited} />
+          </Grid>
+          <Grid size={extraErrors ? 3 : 4}>
+            <Editor title={uiSchemaTitle} code={toJson(uiSchema)} onChange={onUISchemaEdited} />
+          </Grid>
+          <Grid size={extraErrors ? 3 : 4}>
+            <Editor title='formData' code={toJson(formData)} onChange={onFormDataEdited} />
+          </Grid>
+          {extraErrors && (
+            <Grid size={3}>
+              <Editor title='extraErrors' code={toJson(extraErrors || {})} onChange={onExtraErrorsEdited} />
+            </Grid>
+          )}
+        </Grid>
+      </AccordionDetails>
+    </Accordion>
   );
 }

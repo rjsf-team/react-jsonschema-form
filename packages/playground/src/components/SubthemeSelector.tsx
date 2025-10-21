@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react';
+import { SyntheticEvent, useCallback, useMemo } from 'react';
 import Form, { IChangeEvent } from '@rjsf/core';
 import { RJSFSchema, UiSchema } from '@rjsf/utils';
 import localValidator from '@rjsf/validator-ajv8';
@@ -42,18 +42,24 @@ export default function SubthemeSelector({ subtheme, subthemes, select }: Subthe
     },
     [select, subthemes],
   );
+  const cancelBubble = (event: SyntheticEvent) => {
+    event.preventDefault();
+    event.stopPropagation();
+  };
 
   return (
-    <Form
-      className='form_rjsf_subthemeSelector'
-      idPrefix='rjsf_subthemeSelector'
-      schema={schema}
-      uiSchema={uiSchema}
-      formData={subtheme}
-      validator={localValidator}
-      onChange={handleChange}
-    >
-      <div />
-    </Form>
+    <div onClick={cancelBubble}>
+      <Form
+        className='form_rjsf_subthemeSelector'
+        idPrefix='rjsf_subthemeSelector'
+        schema={schema}
+        uiSchema={uiSchema}
+        formData={subtheme}
+        validator={localValidator}
+        onChange={handleChange}
+      >
+        <div />
+      </Form>
+    </div>
   );
 }

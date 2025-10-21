@@ -6,17 +6,17 @@ import {
   PropsWithChildren,
   SetStateAction,
 } from 'react';
+import Drawer from '@mui/material/Drawer';
 import Form, { IChangeEvent } from '@rjsf/core';
 import { RJSFSchema, UiSchema, ValidatorType } from '@rjsf/utils';
 import localValidator from '@rjsf/validator-ajv8';
-import base64 from '../utils/base64';
 
+import base64 from '../utils/base64';
 import CopyLink from './CopyLink';
-import ThemeSelector, { ThemesType } from './ThemeSelector';
-import SampleSelector, { SampleSelectorProps } from './SampleSelector';
 import ValidatorSelector from './ValidatorSelector';
-import SubthemeSelector, { SubthemeType } from './SubthemeSelector';
 import RawValidatorTest from './RawValidatorTest';
+
+export const DRAWER_WIDTH = '28rem';
 
 type HeaderButtonProps = {
   title: string;
@@ -25,13 +25,20 @@ type HeaderButtonProps = {
 
 function HeaderButton({ title, onClick, children, ...buttonProps }: PropsWithChildren<HeaderButtonProps>) {
   return (
-    <button type='button' className='btn btn-default' title={title} onClick={onClick} {...buttonProps}>
+    <button
+      type='button'
+      className='btn btn-default'
+      title={title}
+      onClick={onClick}
+      {...buttonProps}
+      style={{ marginRight: '5px' }}
+    >
       {children}
     </button>
   );
 }
 
-function HeaderButtons({ playGroundFormRef }: { playGroundFormRef: MutableRefObject<any> }) {
+function OptionsButtons({ playGroundFormRef }: { playGroundFormRef: MutableRefObject<any> }) {
   const submitClick = useCallback(() => {
     playGroundFormRef.current.submit();
   }, [playGroundFormRef]);
@@ -61,6 +68,7 @@ function HeaderButtons({ playGroundFormRef }: { playGroundFormRef: MutableRefObj
 
 const liveSettingsBooleanSchema: RJSFSchema = {
   type: 'object',
+  title: 'Form Options',
   properties: {
     disabled: { type: 'boolean', title: 'Disable whole form' },
     readonly: { type: 'boolean', title: 'Readonly whole form' },
@@ -76,19 +84,6 @@ const liveSettingsBooleanSchema: RJSFSchema = {
       title: 'Show Error List',
       enum: [false, 'top', 'bottom'],
     },
-    experimental_componentUpdateStrategy: {
-      type: 'string',
-      title: 'Component update strategy',
-      default: 'customDeep',
-      enum: ['customDeep', 'shallow', 'always'],
-    },
-    useFallbackUiForUnsupportedType: { type: 'boolean', title: 'Use Fallback UI', default: false },
-  },
-};
-
-const liveSettingsSelectSchema: RJSFSchema = {
-  type: 'object',
-  properties: {
     experimental_defaultFormStateBehavior: {
       title: 'Default Form State Behavior (Experimental)',
       type: 'object',
@@ -234,9 +229,6 @@ const liveSettingsBooleanUiSchema: UiSchema = {
       inline: true,
     },
   },
-};
-
-const liveSettingsSelectUiSchema: UiSchema = {
   experimental_defaultFormStateBehavior: {
     'ui:options': {
       label: false,
@@ -254,14 +246,12 @@ export interface LiveSettings {
   [key: string]: any;
 }
 
-type HeaderProps = {
+type OptionsDrawerProps = {
   schema: RJSFSchema;
   uiSchema: UiSchema;
   formData: any;
   shareURL: string | null;
-  themes: { [themeName: string]: ThemesType };
   theme: string;
-  subtheme: string | null;
   sampleName: string;
   validators: {
     [validatorName: string]: ValidatorType<any, RJSFSchema, any>;
@@ -269,44 +259,26 @@ type HeaderProps = {
   validator: string;
   liveSettings: LiveSettings;
   playGroundFormRef: MutableRefObject<any>;
-  onSampleSelected: SampleSelectorProps['onSelected'];
-  onThemeSelected: (theme: string, themeObj: ThemesType) => void;
-  setSubtheme: Dispatch<SetStateAction<string | null>>;
-  setStylesheet: Dispatch<SetStateAction<string | null>>;
   setValidator: Dispatch<SetStateAction<string>>;
   setLiveSettings: Dispatch<SetStateAction<LiveSettings>>;
   setShareURL: Dispatch<SetStateAction<string | null>>;
 };
 
-export default function Header({
+export default function OptionsDrawer({
   schema,
   uiSchema,
   formData,
   shareURL,
-  themes,
   theme,
-  subtheme,
   validators,
   validator,
   liveSettings,
   playGroundFormRef,
-  onThemeSelected,
-  setSubtheme,
-  setStylesheet,
   setValidator,
   setLiveSettings,
   setShareURL,
   sampleName,
-  onSampleSelected,
-}: HeaderProps) {
-  const onSubthemeSelected = useCallback(
-    (subtheme: any, { stylesheet }: SubthemeType) => {
-      setSubtheme(subtheme);
-      setStylesheet(stylesheet || null);
-    },
-    [setSubtheme, setStylesheet],
-  );
-
+}: OptionsDrawerProps) {
   const onValidatorSelected = useCallback(
     (validator: string) => {
       setValidator(validator);
@@ -345,52 +317,23 @@ export default function Header({
       console.error(error);
     }
   }, [formData, liveSettings, schema, theme, uiSchema, validator, setShareURL, sampleName]);
-
+  const drawerSx = { width: DRAWER_WIDTH, p: 1 };
   return (
-    <div className='page-header'>
-      <h1>react-jsonschema-form</h1>
-      <div className='row'>
-        <div className='col-sm-4'>
-          <SampleSelector onSelected={onSampleSelected} selectedSample={sampleName} />
-        </div>
-        <div className='col-sm-2'>
-          <Form
-            idPrefix='rjsf_options'
-            schema={liveSettingsBooleanSchema}
-            formData={liveSettings}
-            validator={localValidator}
-            onChange={handleSetLiveSettings}
-            uiSchema={liveSettingsBooleanUiSchema}
-          >
-            <div />
-          </Form>
-        </div>
-        <div className='col-sm-2'>
-          <Form
-            idPrefix='rjsf_options'
-            schema={liveSettingsSelectSchema}
-            formData={liveSettings}
-            validator={localValidator}
-            onChange={handleSetLiveSettings}
-            uiSchema={liveSettingsSelectUiSchema}
-          >
-            <div />
-          </Form>
-        </div>
-        <div className='col-sm-2'>
-          <ThemeSelector themes={themes} theme={theme} select={onThemeSelected} />
-          {themes[theme] && themes[theme].subthemes && (
-            <SubthemeSelector subthemes={themes[theme].subthemes!} subtheme={subtheme} select={onSubthemeSelected} />
-          )}
-          <ValidatorSelector validators={validators} validator={validator} select={onValidatorSelected} />
-          <HeaderButtons playGroundFormRef={playGroundFormRef} />
-          <div style={{ marginTop: '5px' }} />
-          <CopyLink shareURL={shareURL} onShare={onShare} />
-        </div>
-        <div className='col-sm-2'>
-          <RawValidatorTest validator={validators[validator]} schema={schema} formData={formData} />
-        </div>
-      </div>
-    </div>
+    <Drawer open variant='permanent' anchor='right' sx={drawerSx} slotProps={{ paper: { sx: drawerSx } }}>
+      <OptionsButtons playGroundFormRef={playGroundFormRef} />
+      <CopyLink shareURL={shareURL} onShare={onShare} />
+      <Form
+        idPrefix='rjsf_options'
+        schema={liveSettingsBooleanSchema}
+        formData={liveSettings}
+        validator={localValidator}
+        onChange={handleSetLiveSettings}
+        uiSchema={liveSettingsBooleanUiSchema}
+      >
+        <span />
+      </Form>
+      <ValidatorSelector validators={validators} validator={validator} select={onValidatorSelected} />
+      <RawValidatorTest validator={validators[validator]} schema={schema} formData={formData} />
+    </Drawer>
   );
 }
