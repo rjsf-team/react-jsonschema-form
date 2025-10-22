@@ -482,11 +482,27 @@ You can also create a custom generator by implementing the `NameGeneratorFunctio
 
 ## liveOmit
 
-If `omitExtraData` and `liveOmit` are both set to true, then extra form data values that are not in any form field will be removed whenever `onChange` is called. Set to `false` by default.
+Flag that describes when live omit will be performed. Live omit happens only when `omitExtraData` is also set to
+to `true` and the form's data is updated by the user.
+
+If no value (or `false`) is provided, then live omit will not happen. If `true` or `onChange` is provided for
+the flag, then live omit will be performed after processing of all pending changes has completed. If `onBlur`
+is provided, then live omit will be performed when a field that was updated is blurred (as a performance
+optimization).
+
+> NOTE: The `boolean` options for this flag is deprecated and will be removed in a future major release
 
 ## liveValidate
 
-If set to true, the form will perform validation and show any validation errors whenever the form data is changed, rather than just on submit.
+Flag that describes when live validation will be performed. Live validation means that the form will perform
+validation and show any validation errors whenever the form data is updated, rather than just on submit.
+
+If no value (or `false`) is provided, then live validation will not happen. If `true` or `onChange` is provided for
+the flag, then live validation will be performed after processing of all pending changes has completed. If `onBlur`
+is provided, then live validation will be performed when a field that was updated is blurred (as a performance
+optimization).
+
+> NOTE: The `boolean` options for this flag is deprecated and will be removed in a future major release
 
 ## method
 
@@ -503,6 +519,8 @@ If set to true, turns off HTML5 validation on the form. Set to `false` by defaul
 ## noValidate
 
 If set to true, turns off all validation. Set to `false` by default.
+
+> NOTE: In a future major release, this flag may be deleted replaced by making `validator` prop optional
 
 ## omitExtraData
 

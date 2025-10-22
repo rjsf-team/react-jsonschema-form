@@ -62,25 +62,25 @@ function HeaderButtons({ playGroundFormRef }: { playGroundFormRef: MutableRefObj
 const liveSettingsBooleanSchema: RJSFSchema = {
   type: 'object',
   properties: {
-    liveValidate: { type: 'boolean', title: 'Live validation' },
     disabled: { type: 'boolean', title: 'Disable whole form' },
     readonly: { type: 'boolean', title: 'Readonly whole form' },
     omitExtraData: { type: 'boolean', title: 'Omit extra data' },
-    liveOmit: { type: 'boolean', title: 'Live omit' },
     noValidate: { type: 'boolean', title: 'Disable validation' },
     noHtml5Validate: { type: 'boolean', title: 'Disable HTML 5 validation' },
     focusOnFirstError: { type: 'boolean', title: 'Focus on 1st Error' },
-    experimental_componentUpdateStrategy: {
-      type: 'string',
-      title: 'Component update strategy',
-      default: 'customDeep',
-      enum: ['customDeep', 'shallow', 'always'],
-    },
+    liveValidate: { type: 'string', title: 'Live validation', default: false, enum: [false, 'onChange', 'onBlur'] },
+    liveOmit: { type: 'string', title: 'Live omit', default: false, enum: [false, 'onChange', 'onBlur'] },
     showErrorList: {
       type: 'string',
       default: 'top',
       title: 'Show Error List',
       enum: [false, 'top', 'bottom'],
+    },
+    experimental_componentUpdateStrategy: {
+      type: 'string',
+      title: 'Component update strategy',
+      default: 'customDeep',
+      enum: ['customDeep', 'shallow', 'always'],
     },
   },
 };
@@ -216,6 +216,18 @@ const liveSettingsSelectSchema: RJSFSchema = {
 
 const liveSettingsBooleanUiSchema: UiSchema = {
   showErrorList: {
+    'ui:widget': 'radio',
+    'ui:options': {
+      inline: true,
+    },
+  },
+  liveValidate: {
+    'ui:widget': 'radio',
+    'ui:options': {
+      inline: true,
+    },
+  },
+  liveOmit: {
     'ui:widget': 'radio',
     'ui:options': {
       inline: true,

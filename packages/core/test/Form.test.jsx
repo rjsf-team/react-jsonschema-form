@@ -2089,7 +2089,6 @@ describeRepeated('Form common', (createFormComponent) => {
       const formProps = {
         ref: createRef(),
         schema: { type: 'string' },
-        liveValidate: true,
       };
 
       it('should call submit handler with new formData prop value', async () => {
@@ -2184,7 +2183,6 @@ describeRepeated('Form common', (createFormComponent) => {
       const formProps = {
         ref: createRef(),
         schema: { type: 'string' },
-        liveValidate: true,
       };
       const { node, onChange } = createFormComponent(formProps);
 
@@ -2651,7 +2649,7 @@ describeRepeated('Form common', (createFormComponent) => {
       });
     });
 
-    describe('root level', () => {
+    describe('root level, live validation', () => {
       const formProps = {
         liveValidate: true,
         schema: {
@@ -2687,7 +2685,7 @@ describeRepeated('Form common', (createFormComponent) => {
       });
     });
 
-    describe('root level with multiple errors', () => {
+    describe('root level with multiple errors, live validation', () => {
       const formProps = {
         liveValidate: true,
         schema: {
@@ -2733,7 +2731,7 @@ describeRepeated('Form common', (createFormComponent) => {
       });
     });
 
-    describe('nested field level', () => {
+    describe('nested field level, live validation', () => {
       const schema = {
         type: 'object',
         properties: {
@@ -2785,7 +2783,7 @@ describeRepeated('Form common', (createFormComponent) => {
       });
     });
 
-    describe('array indices', () => {
+    describe('array indices, live validation', () => {
       const schema = {
         type: 'array',
         items: {
@@ -2837,7 +2835,7 @@ describeRepeated('Form common', (createFormComponent) => {
       });
     });
 
-    describe('nested array indices', () => {
+    describe('nested array indices, live validation', () => {
       const schema = {
         type: 'object',
         properties: {
@@ -2898,7 +2896,7 @@ describeRepeated('Form common', (createFormComponent) => {
       });
     });
 
-    describe('nested arrays', () => {
+    describe('nested arrays, live validation', () => {
       const schema = {
         type: 'object',
         properties: {
@@ -2976,7 +2974,7 @@ describeRepeated('Form common', (createFormComponent) => {
       });
     });
 
-    describe('array nested items', () => {
+    describe('array nested items, live validation', () => {
       const schema = {
         type: 'array',
         items: {
@@ -3025,7 +3023,7 @@ describeRepeated('Form common', (createFormComponent) => {
       });
     });
 
-    describe('schema dependencies', () => {
+    describe('schema dependencies, live validation', () => {
       const schema = {
         type: 'object',
         properties: {
@@ -3144,7 +3142,7 @@ describeRepeated('Form common', (createFormComponent) => {
       });
     });
 
-    describe('customValidate errors', () => {
+    describe('customValidate errors, live validation', () => {
       it('customValidate should raise an error when End is larger than Start field.', () => {
         let schema = {
           required: ['Start', 'End'],
@@ -3466,7 +3464,7 @@ describeRepeated('Form common', (createFormComponent) => {
     });
   });
 
-  describe('Custom format updates', () => {
+  describe('Custom format updates, live validation', () => {
     it('Should update custom formats when customFormats is changed', () => {
       const formProps = {
         ref: createRef(),

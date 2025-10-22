@@ -110,6 +110,14 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
       setFormData(formData);
       setExtraErrors(extraErrors);
       setShowForm(true);
+      if (liveSettings?.liveValidate === true) {
+        // Convert v5 true value to `onChange`
+        liveSettings.liveValidate = 'onChange';
+      }
+      if (liveSettings?.liveOmit === true) {
+        // Convert v5 true value to `onChange`
+        liveSettings.liveOmit = 'onChange';
+      }
       setLiveSettings(liveSettings);
       if ('validator' in data && theValidator !== undefined) {
         setValidator(theValidator);

@@ -50,7 +50,7 @@ const simple: Sample = {
       'ui:autocomplete': 'given-name',
       'ui:enableMarkdownInDescription': true,
       'ui:description':
-        'Make things **bold** or *italic*. Embed snippets of `code`. <small>And this is a small texts.</small> ',
+        'Make things **bold** or *italic*. Embed snippets of `code`. <small>NOTE: Unsafe HTML, not rendered</small> ',
     },
     age: {
       'ui:widget': 'updown',
