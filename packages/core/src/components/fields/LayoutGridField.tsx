@@ -465,6 +465,42 @@ export function computeUIComponentPropsFromGridSchema<
 }
 
 /**
+ * The props for the LayoutGridFieldChildren component.
+ */
+type LayoutGridFieldChildrenProps<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any,
+> = LayoutGridFieldProps<T, S, F> & {
+  /** The list of strings or objects that represents the configurations for the children fields */
+  childrenLayoutGridSchemaId: LayoutGridSchemaType[];
+};
+
+/** Iterates through all the `childrenLayoutGridSchemaId`, rendering a nested `LayoutGridField` for each item in the
+ * list, passing all the props for the current `LayoutGridField` along, updating the `schema` by calling
+ * `retrieveSchema()` on it to resolve any `$ref`s. In addition to the updated `schema`, each item in
+ * `childrenLayoutGridSchemaId` is passed as `layoutGridSchema`.
+ *
+ * @returns - The nested `LayoutGridField`s
+ */
+function LayoutGridFieldChildren<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
+  props: LayoutGridFieldChildrenProps<T, S, F>,
+) {
+  const { childrenLayoutGridSchemaId, ...layoutGridFieldProps } = props;
+  const { registry, schema: rawSchema, formData } = layoutGridFieldProps;
+  const { schemaUtils } = registry;
+  const schema = schemaUtils.retrieveSchema(rawSchema, formData);
+  return childrenLayoutGridSchemaId.map((layoutGridSchema) => (
+    <LayoutGridField<T, S, F>
+      {...layoutGridFieldProps}
+      key={`layoutGrid-${hashObject(layoutGridSchema)}`}
+      schema={schema}
+      layoutGridSchema={layoutGridSchema}
+    />
+  ));
+}
+
+/**
  * Describes the props for LayoutGridCondition, LayoutGridCol, LayoutGridColumns, and LayoutGridRow. This is typically
  * the original props passed through from the nearest ancestor LayoutGridField, plus the layoutGridSchema for the
  * current node.
@@ -573,42 +609,6 @@ function LayoutGridRow<T = any, S extends StrictRJSFSchema = RJSFSchema, F exten
 }
 
 /**
- * The props for the LayoutGridFieldChildren component.
- */
-type LayoutGridFieldChildrenProps<
-  T = any,
-  S extends StrictRJSFSchema = RJSFSchema,
-  F extends FormContextType = any,
-> = LayoutGridFieldProps<T, S, F> & {
-  /** The list of strings or objects that represents the configurations for the children fields */
-  childrenLayoutGridSchemaId: LayoutGridSchemaType[];
-};
-
-/** Iterates through all the `childrenLayoutGridSchemaId`, rendering a nested `LayoutGridField` for each item in the
- * list, passing all the props for the current `LayoutGridField` along, updating the `schema` by calling
- * `retrieveSchema()` on it to resolve any `$ref`s. In addition to the updated `schema`, each item in
- * `childrenLayoutGridSchemaId` is passed as `layoutGridSchema`.
- *
- * @returns - The nested `LayoutGridField`s
- */
-function LayoutGridFieldChildren<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
-  props: LayoutGridFieldChildrenProps<T, S, F>,
-) {
-  const { childrenLayoutGridSchemaId, ...layoutGridFieldProps } = props;
-  const { registry, schema: rawSchema, formData } = layoutGridFieldProps;
-  const { schemaUtils } = registry;
-  const schema = schemaUtils.retrieveSchema(rawSchema, formData);
-  return childrenLayoutGridSchemaId.map((layoutGridSchema) => (
-    <LayoutGridField<T, S, F>
-      {...layoutGridFieldProps}
-      key={`layoutGrid-${hashObject(layoutGridSchema)}`}
-      schema={schema}
-      layoutGridSchema={layoutGridSchema}
-    />
-  ));
-}
-
-/**
  * The props for the LayoutGridFieldComponent.
  */
 type LayoutGridFieldComponentProps<
@@ -637,8 +637,8 @@ type LayoutGridFieldComponentProps<
 function LayoutGridFieldComponent<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends FormContextType = any>(
   props: LayoutGridFieldComponentProps<T, S, F>,
 ) {
-  const { gridSchema, ...layoutGridFieldProps } = props;
   const {
+    gridSchema,
     schema: initialSchema,
     uiSchema,
     errorSchema,
@@ -650,7 +650,7 @@ function LayoutGridFieldComponent<T = any, S extends StrictRJSFSchema = RJSFSche
     registry,
     layoutGridSchema, // Used to pull this out of otherProps since we don't want to pass it through
     ...otherProps
-  } = layoutGridFieldProps;
+  } = props;
   const { onChange } = otherProps;
   const { fields } = registry;
   const { SchemaField, LayoutMultiSchemaField } = fields;

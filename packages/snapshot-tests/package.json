@@ -65,7 +65,7 @@
             "projects": [
               "@rjsf/core"
             ],
-            "target": "build"
+            "target": "^build"
           }
         ]
       }
