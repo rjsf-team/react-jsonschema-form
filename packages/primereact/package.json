@@ -1,6 +1,6 @@
 {
   "name": "@rjsf/primereact",
-  "version": "6.0.0-beta.21",
+  "version": "6.0.0-beta.22",
   "description": "PrimeReact theme, fields and widgets for react-jsonschema-form",
   "main": "dist/index.js",
   "module": "lib/index.js",
@@ -61,17 +61,17 @@
     "node": ">=20"
   },
   "peerDependencies": {
-    "@rjsf/core": "^6.0.0-beta.21",
-    "@rjsf/utils": "^6.0.0-beta.21",
+    "@rjsf/core": "^6.0.0-beta.22",
+    "@rjsf/utils": "^6.0.0-beta.22",
     "primeicons": ">=6.0.0",
     "primereact": ">=8.0.0",
     "react": ">=18"
   },
   "devDependencies": {
-    "@rjsf/core": "^6.0.0-beta.21",
-    "@rjsf/snapshot-tests": "^6.0.0-beta.21",
-    "@rjsf/utils": "^6.0.0-beta.21",
-    "@rjsf/validator-ajv8": "^6.0.0-beta.21",
+    "@rjsf/core": "^6.0.0-beta.22",
+    "@rjsf/snapshot-tests": "^6.0.0-beta.22",
+    "@rjsf/utils": "^6.0.0-beta.22",
+    "@rjsf/validator-ajv8": "^6.0.0-beta.22",
     "@rollup/plugin-replace": "^6.0.2",
     "eslint": "^8.57.1",
     "primeflex": "^4.0.0",
