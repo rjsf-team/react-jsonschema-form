@@ -55,5 +55,20 @@
   "homepage": "https://github.com/rjsf-team/react-jsonschema-form",
   "publishConfig": {
     "access": "public"
+  },
+  "nx": {
+    "targets": {
+      "build": {
+        "dependsOn": [
+          {
+            "//": "Break the dependency cycle between @rjsf/core and @rjsf/snapshot-tests",
+            "projects": [
+              "@rjsf/core"
+            ],
+            "target": "^build"
+          }
+        ]
+      }
+    }
   }
 }

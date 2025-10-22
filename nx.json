@@ -2,13 +2,7 @@
   "extends": "nx/presets/npm.json",
   "targetDefaults": {
     "build": {
-      "dependsOn": [
-        {
-          "//": "use only dependencies to avoid cycle @rjsf/core:build --> @rjsf/snapshot-tests:build --> @rjsf/core:build",
-          "projects": "dependencies",
-          "target": "^build"
-        }
-      ],
+      "dependsOn": ["^build"],
       "cache": true
     },
     "cs-check": {
