@@ -25,6 +25,9 @@ should change the heading of the (upcoming) version to include a major version b
 ## Dev / docs / playground
 
 - Updated the libraries to the latest ones that aren't problematic
+  Updated the playground to modernize the UI using MUI components
+- Updated the documentation to switch to using an animated gif based on the latest modernized playground UI
+- Updated the `README.md` in all themes to show the theme snapshot with the latest theme UI from the playground, making it a link to the theme
 
 # 6.0.0-beta.23
 
