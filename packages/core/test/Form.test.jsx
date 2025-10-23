@@ -3742,8 +3742,6 @@ describe('Live validation onBlur', () => {
     fireEvent.change(node.querySelector('input[type=text]'), {
       target: { value: 'short' },
     });
-
-    sinon.assert.notCalled(onBlur);
     sinon.assert.calledWithMatch(
       onChange.lastCall,
       {
@@ -3752,6 +3750,8 @@ describe('Live validation onBlur', () => {
       },
       'root',
     );
+
+    sinon.assert.notCalled(onBlur);
   });
 
   it('occurs during onBlur, onChange not last called with errors due to no state update', () => {
@@ -3765,9 +3765,7 @@ describe('Live validation onBlur', () => {
     fireEvent.change(element, {
       target: { value: 'longenough' },
     });
-    fireEvent.blur(element);
-
-    sinon.assert.calledWithMatch(onBlur.lastCall, 'root', 'longenough');
+    sinon.assert.calledOnce(onChange);
     sinon.assert.calledWithMatch(
       onChange.lastCall,
       {
@@ -3776,6 +3774,11 @@ describe('Live validation onBlur', () => {
       },
       'root',
     );
+
+    fireEvent.blur(element);
+
+    sinon.assert.calledWithMatch(onBlur.lastCall, 'root', 'longenough');
+    sinon.assert.calledOnce(onChange);
   });
 
   it('occurs during onBlur, onChange last called with errors due to a state update', () => {
@@ -3789,6 +3792,16 @@ describe('Live validation onBlur', () => {
     fireEvent.change(element, {
       target: { value: 'short' },
     });
+    sinon.assert.calledWithMatch(
+      onChange.lastCall,
+      {
+        formData: 'short',
+        errorSchema: {},
+      },
+      'root',
+    );
+    sinon.assert.calledOnce(onChange);
+
     fireEvent.blur(element);
 
     sinon.assert.calledWithMatch(onBlur.lastCall, 'root', 'short');
@@ -3802,6 +3815,7 @@ describe('Live validation onBlur', () => {
       },
       'root',
     );
+    sinon.assert.calledTwice(onChange);
   });
 });
 
@@ -3835,8 +3849,6 @@ describe('omitExtraData and live omit onBlur', () => {
     fireEvent.change(node.querySelector('#root_foo'), {
       target: { value: '' },
     });
-
-    sinon.assert.notCalled(onBlur);
     sinon.assert.calledWithMatch(
       onChange.lastCall,
       {
@@ -3844,6 +3856,8 @@ describe('omitExtraData and live omit onBlur', () => {
       },
       'root_foo',
     );
+
+    sinon.assert.notCalled(onBlur);
   });
 
   it('occurs during onBlur, onChange not last called with empty data removed due to no state update', () => {
@@ -3862,23 +3876,21 @@ describe('omitExtraData and live omit onBlur', () => {
     fireEvent.change(node.querySelector('#root_foo'), {
       target: { value: 'foo' },
     });
+    sinon.assert.calledTwice(onChange);
+
     fireEvent.blur(element);
 
     sinon.assert.calledWithMatch(onBlur.lastCall, 'root', 'foo');
-    sinon.assert.calledWithMatch(
-      onChange.lastCall,
-      {
-        formData,
-      },
-      'root',
-    );
+    sinon.assert.calledTwice(onChange);
   });
 
   it('occurs during onBlur, onChange last called with empty data removed due to a state update', () => {
     const onBlur = sinon.spy();
+    // Add something that should be removed to cause a state update
+    const newFormData = { ...formData, baz: 'baz' };
     const { node, onChange } = createFormComponent({
       schema,
-      formData,
+      formData: newFormData,
       onBlur,
       omitExtraData: true,
       liveOmit: 'onBlur',
@@ -3887,16 +3899,26 @@ describe('omitExtraData and live omit onBlur', () => {
     fireEvent.change(node.querySelector('#root_foo'), {
       target: { value: '' },
     });
+    sinon.assert.calledWithMatch(
+      onChange.lastCall,
+      {
+        formData: { ...newFormData, foo: undefined },
+      },
+      'root',
+    );
+    sinon.assert.calledOnce(onChange);
+
     fireEvent.blur(element);
 
     sinon.assert.calledWithMatch(onBlur.lastCall, 'root', '');
     sinon.assert.calledWithMatch(
       onChange.lastCall,
       {
-        formData: { bar: 'bar' },
+        formData: { bar: 'bar', foo: undefined },
       },
       'root',
     );
+    sinon.assert.calledTwice(onChange);
   });
 });
 

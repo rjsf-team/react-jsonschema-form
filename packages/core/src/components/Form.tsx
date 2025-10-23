@@ -991,18 +991,19 @@ export default class Form<
         );
         state = { formData: newFormData, ...liveValidation, customErrors };
       }
-      const hasChanges = Object.keys(state).some((key) => {
-        const oldData = _get(this.state, key);
-        const newData = _get(state, key);
-        return !deepEquals(oldData, newData);
-      });
-      if (hasChanges) {
-        this.setState(state as FormState<T, S, F>, () => {
-          if (onChange) {
-            onChange(toIChangeEvent({ ...this.state, ...state }), id);
-          }
+      const hasChanges = Object.keys(state)
+        // Filter out `schemaValidationErrors` and `schemaValidationErrorSchema` since they aren't IChangeEvent props
+        .filter((key) => !key.startsWith('schemaValidation'))
+        .some((key) => {
+          const oldData = _get(this.state, key);
+          const newData = _get(state, key);
+          return !deepEquals(oldData, newData);
         });
-      }
+      this.setState(state as FormState<T, S, F>, () => {
+        if (onChange && hasChanges) {
+          onChange(toIChangeEvent({ ...this.state, ...state }), id);
+        }
+      });
     }
   };
 
