@@ -3754,7 +3754,7 @@ describe('Live validation onBlur', () => {
     sinon.assert.notCalled(onBlur);
   });
 
-  it('occurs during onBlur, onChange not last called with errors due to no state update', () => {
+  it('occurs during onBlur, onChange not called during blur due to no state update', () => {
     const onBlur = sinon.spy();
     const { node, onChange } = createFormComponent({
       schema,
@@ -3781,7 +3781,7 @@ describe('Live validation onBlur', () => {
     sinon.assert.calledOnce(onChange);
   });
 
-  it('occurs during onBlur, onChange last called with errors due to a state update', () => {
+  it('occurs during onBlur, onChange called during blur with errors due to a state update', () => {
     const onBlur = sinon.spy();
     const { node, onChange } = createFormComponent({
       schema,
@@ -3835,12 +3835,13 @@ describe('omitExtraData and live omit onBlur', () => {
     },
   };
   const formData = { foo: 'foo', bar: 'bar' };
+  const formData1 = { foo: 'foo', bar: 'bar', baz: 'baz' };
 
-  it('does not occur during onChange, empty data not removed', () => {
+  it('does not occur during onChange, no extra data removed', () => {
     const onBlur = sinon.spy();
     const { node, onChange } = createFormComponent({
       schema,
-      formData,
+      formData: formData1,
       onBlur,
       omitExtraData: true,
       liveOmit: 'onBlur',
@@ -3852,7 +3853,7 @@ describe('omitExtraData and live omit onBlur', () => {
     sinon.assert.calledWithMatch(
       onChange.lastCall,
       {
-        formData: { ...formData, foo: undefined },
+        formData: { ...formData1, foo: undefined },
       },
       'root_foo',
     );
@@ -3860,11 +3861,11 @@ describe('omitExtraData and live omit onBlur', () => {
     sinon.assert.notCalled(onBlur);
   });
 
-  it('occurs during onBlur, onChange not last called with empty data removed due to no state update', () => {
+  it('occurs during onBlur, onChange not called during blur due to no state update', () => {
     const onBlur = sinon.spy();
     const { node, onChange } = createFormComponent({
       schema,
-      formData,
+      formData, // Use form data with nothing to omit to test case
       onBlur,
       omitExtraData: true,
       liveOmit: 'onBlur',
@@ -3884,13 +3885,11 @@ describe('omitExtraData and live omit onBlur', () => {
     sinon.assert.calledTwice(onChange);
   });
 
-  it('occurs during onBlur, onChange last called with empty data removed due to a state update', () => {
+  it('occurs during onBlur, onChange called during blur due to extra data removal in state', () => {
     const onBlur = sinon.spy();
-    // Add something that should be removed to cause a state update
-    const newFormData = { ...formData, baz: 'baz' };
     const { node, onChange } = createFormComponent({
       schema,
-      formData: newFormData,
+      formData: formData1,
       onBlur,
       omitExtraData: true,
       liveOmit: 'onBlur',
@@ -3902,7 +3901,7 @@ describe('omitExtraData and live omit onBlur', () => {
     sinon.assert.calledWithMatch(
       onChange.lastCall,
       {
-        formData: { ...newFormData, foo: undefined },
+        formData: { ...formData1, foo: undefined },
       },
       'root',
     );
