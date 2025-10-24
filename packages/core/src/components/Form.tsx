@@ -168,14 +168,28 @@ export interface FormProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
    * @deprecated - In a future release, this switch may be replaced by making `validator` prop optional
    */
   noValidate?: boolean;
-  /** If set to true, the form will perform validation and show any validation errors whenever the form data is changed,
-   * rather than just on submit
+  /** Flag that describes when live validation will be performed. Live validation means that the form will perform
+   * validation and show any validation errors whenever the form data is updated, rather than just on submit.
+   *
+   * If no value (or `false`) is provided, then live validation will not happen. If `true` or `onChange` is provided for
+   * the flag, then live validation will be performed after processing of all pending changes has completed. If `onBlur`
+   * is provided, then live validation will be performed when a field that was updated is blurred (as a performance
+   * optimization).
+   *
+   * @deprecated - In a future major release, the `boolean` options for this flag will be removed
    */
-  liveValidate?: boolean;
-  /** If `omitExtraData` and `liveOmit` are both set to true, then extra form data values that are not in any form field
-   * will be removed whenever `onChange` is called. Set to `false` by default
+  liveValidate?: boolean | 'onChange' | 'onBlur';
+  /** Flag that describes when live omit will be performed. Live omit happens only when `omitExtraData` is also set to
+   * to `true` and the form's data is updated by the user.
+   *
+   * If no value (or `false`) is provided, then live omit will not happen. If `true` or `onChange` is provided for
+   * the flag, then live omit will be performed after processing of all pending changes has completed. If `onBlur`
+   * is provided, then live omit will be performed when a field that was updated is blurred (as a performance
+   * optimization).
+   *
+   * @deprecated - In a future major release, the `boolean` options for this flag will be removed
    */
-  liveOmit?: boolean;
+  liveOmit?: boolean | 'onChange' | 'onBlur';
   /** If set to true, then extra form data values that are not in any form field will be removed whenever `onSubmit` is
    * called. Set to `false` by default.
    */
@@ -834,11 +848,11 @@ export default class Form<
       retrievedSchema = newState.retrievedSchema;
     }
 
-    const mustValidate = !noValidate && liveValidate;
+    const mustValidate = !noValidate && (liveValidate === true || liveValidate === 'onChange');
     let state: Partial<FormState<T, S, F>> = { formData, schema };
     let newFormData = formData;
 
-    if (omitExtraData === true && liveOmit === true) {
+    if (omitExtraData === true && (liveOmit === true || liveOmit === 'onChange')) {
       newFormData = this.omitExtraData(formData);
       state = {
         formData: newFormData,
@@ -944,15 +958,52 @@ export default class Form<
   };
 
   /** Callback function to handle when a field on the form is blurred. Calls the `onBlur` callback for the `Form` if it
-   * was provided.
+   * was provided. Also runs any live validation and/or live omit operations if the flags indicate they should happen
+   * during `onBlur`.
    *
    * @param id - The unique `id` of the field that was blurred
    * @param data - The data associated with the field that was blurred
    */
   onBlur = (id: string, data: any) => {
-    const { onBlur } = this.props;
+    const { onBlur, omitExtraData, liveOmit, liveValidate } = this.props;
     if (onBlur) {
       onBlur(id, data);
+    }
+    if ((omitExtraData === true && liveOmit === 'onBlur') || liveValidate === 'onBlur') {
+      const { onChange, extraErrors } = this.props;
+      const { formData } = this.state;
+      let newFormData: T | undefined = formData;
+      let state: Partial<FormState<T, S, F>> = { formData: newFormData };
+      if (omitExtraData === true && liveOmit === 'onBlur') {
+        newFormData = this.omitExtraData(formData);
+        state = { formData: newFormData };
+      }
+      if (liveValidate === 'onBlur') {
+        const { schema, schemaUtils, errorSchema, customErrors, retrievedSchema } = this.state;
+        const liveValidation = this.liveValidate(
+          schema,
+          schemaUtils,
+          errorSchema,
+          newFormData,
+          extraErrors,
+          customErrors,
+          retrievedSchema,
+        );
+        state = { formData: newFormData, ...liveValidation, customErrors };
+      }
+      const hasChanges = Object.keys(state)
+        // Filter out `schemaValidationErrors` and `schemaValidationErrorSchema` since they aren't IChangeEvent props
+        .filter((key) => !key.startsWith('schemaValidation'))
+        .some((key) => {
+          const oldData = _get(this.state, key);
+          const newData = _get(state, key);
+          return !deepEquals(oldData, newData);
+        });
+      this.setState(state as FormState<T, S, F>, () => {
+        if (onChange && hasChanges) {
+          onChange(toIChangeEvent({ ...this.state, ...state }), id);
+        }
+      });
     }
   };
 

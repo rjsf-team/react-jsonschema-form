@@ -5,7 +5,14 @@ import { fireEvent, act, render, waitFor } from '@testing-library/react';
 import { Simulate } from 'react-dom/test-utils';
 import { findDOMNode } from 'react-dom';
 import { Portal } from 'react-portal';
-import { getTemplate, getUiOptions, optionalControlsId, buttonId } from '@rjsf/utils';
+import {
+  getTemplate,
+  getUiOptions,
+  optionalControlsId,
+  buttonId,
+  bracketNameGenerator,
+  dotNotationNameGenerator,
+} from '@rjsf/utils';
 import validator, { customizeValidator } from '@rjsf/validator-ajv8';
 
 import Form from '../src';
@@ -21,11 +28,9 @@ import widgetsSchema from './widgets_schema.json';
 
 describeRepeated('Form common', (createFormComponent) => {
   let sandbox;
-
   beforeEach(() => {
     sandbox = createSandbox();
   });
-
   afterEach(() => {
     sandbox.restore();
   });
@@ -2089,7 +2094,6 @@ describeRepeated('Form common', (createFormComponent) => {
       const formProps = {
         ref: createRef(),
         schema: { type: 'string' },
-        liveValidate: true,
       };
 
       it('should call submit handler with new formData prop value', async () => {
@@ -2184,7 +2188,6 @@ describeRepeated('Form common', (createFormComponent) => {
       const formProps = {
         ref: createRef(),
         schema: { type: 'string' },
-        liveValidate: true,
       };
       const { node, onChange } = createFormComponent(formProps);
 
@@ -2651,7 +2654,7 @@ describeRepeated('Form common', (createFormComponent) => {
       });
     });
 
-    describe('root level', () => {
+    describe('root level, live validation', () => {
       const formProps = {
         liveValidate: true,
         schema: {
@@ -2687,7 +2690,7 @@ describeRepeated('Form common', (createFormComponent) => {
       });
     });
 
-    describe('root level with multiple errors', () => {
+    describe('root level with multiple errors, live validation', () => {
       const formProps = {
         liveValidate: true,
         schema: {
@@ -2733,7 +2736,7 @@ describeRepeated('Form common', (createFormComponent) => {
       });
     });
 
-    describe('nested field level', () => {
+    describe('nested field level, live validation', () => {
       const schema = {
         type: 'object',
         properties: {
@@ -2785,7 +2788,7 @@ describeRepeated('Form common', (createFormComponent) => {
       });
     });
 
-    describe('array indices', () => {
+    describe('array indices, live validation', () => {
       const schema = {
         type: 'array',
         items: {
@@ -2837,7 +2840,7 @@ describeRepeated('Form common', (createFormComponent) => {
       });
     });
 
-    describe('nested array indices', () => {
+    describe('nested array indices, live validation', () => {
       const schema = {
         type: 'object',
         properties: {
@@ -2898,7 +2901,7 @@ describeRepeated('Form common', (createFormComponent) => {
       });
     });
 
-    describe('nested arrays', () => {
+    describe('nested arrays, live validation', () => {
       const schema = {
         type: 'object',
         properties: {
@@ -2976,7 +2979,7 @@ describeRepeated('Form common', (createFormComponent) => {
       });
     });
 
-    describe('array nested items', () => {
+    describe('array nested items, live validation', () => {
       const schema = {
         type: 'array',
         items: {
@@ -3025,7 +3028,7 @@ describeRepeated('Form common', (createFormComponent) => {
       });
     });
 
-    describe('schema dependencies', () => {
+    describe('schema dependencies, live validation', () => {
       const schema = {
         type: 'object',
         properties: {
@@ -3144,7 +3147,7 @@ describeRepeated('Form common', (createFormComponent) => {
       });
     });
 
-    describe('customValidate errors', () => {
+    describe('customValidate errors, live validation', () => {
       it('customValidate should raise an error when End is larger than Start field.', () => {
         let schema = {
           required: ['Start', 'End'],
@@ -3466,7 +3469,7 @@ describeRepeated('Form common', (createFormComponent) => {
     });
   });
 
-  describe('Custom format updates', () => {
+  describe('Custom format updates, live validation', () => {
     it('Should update custom formats when customFormats is changed', () => {
       const formProps = {
         ref: createRef(),
@@ -3716,13 +3719,213 @@ describeRepeated('Form common', (createFormComponent) => {
   });
 });
 
-describe('Form omitExtraData and liveOmit', () => {
+describe('Live validation onBlur', () => {
   let sandbox;
-
   beforeEach(() => {
     sandbox = createSandbox();
   });
+  afterEach(() => {
+    sandbox.restore();
+  });
+  const schema = {
+    type: 'string',
+    minLength: 8,
+  };
 
+  it('does not occur during onChange, no errors produced', () => {
+    const onBlur = sinon.spy();
+    const { node, onChange } = createFormComponent({
+      schema,
+      onBlur,
+      liveValidate: 'onBlur',
+    });
+    fireEvent.change(node.querySelector('input[type=text]'), {
+      target: { value: 'short' },
+    });
+    sinon.assert.calledWithMatch(
+      onChange.lastCall,
+      {
+        formData: 'short',
+        errorSchema: {},
+      },
+      'root',
+    );
+
+    sinon.assert.notCalled(onBlur);
+  });
+
+  it('occurs during onBlur, onChange not called during blur due to no state update', () => {
+    const onBlur = sinon.spy();
+    const { node, onChange } = createFormComponent({
+      schema,
+      onBlur,
+      liveValidate: 'onBlur',
+    });
+    const element = node.querySelector('input[type=text]');
+    fireEvent.change(element, {
+      target: { value: 'longenough' },
+    });
+    sinon.assert.calledOnce(onChange);
+    sinon.assert.calledWithMatch(
+      onChange.lastCall,
+      {
+        formData: 'longenough',
+        errorSchema: {},
+      },
+      'root',
+    );
+
+    fireEvent.blur(element);
+
+    sinon.assert.calledWithMatch(onBlur.lastCall, 'root', 'longenough');
+    sinon.assert.calledOnce(onChange);
+  });
+
+  it('occurs during onBlur, onChange called during blur with errors due to a state update', () => {
+    const onBlur = sinon.spy();
+    const { node, onChange } = createFormComponent({
+      schema,
+      onBlur,
+      liveValidate: 'onBlur',
+    });
+    const element = node.querySelector('input[type=text]');
+    fireEvent.change(element, {
+      target: { value: 'short' },
+    });
+    sinon.assert.calledWithMatch(
+      onChange.lastCall,
+      {
+        formData: 'short',
+        errorSchema: {},
+      },
+      'root',
+    );
+    sinon.assert.calledOnce(onChange);
+
+    fireEvent.blur(element);
+
+    sinon.assert.calledWithMatch(onBlur.lastCall, 'root', 'short');
+    sinon.assert.calledWithMatch(
+      onChange.lastCall,
+      {
+        formData: 'short',
+        errorSchema: {
+          __errors: ['must NOT have fewer than 8 characters'],
+        },
+      },
+      'root',
+    );
+    sinon.assert.calledTwice(onChange);
+  });
+});
+
+describe('omitExtraData and live omit onBlur', () => {
+  let sandbox;
+  beforeEach(() => {
+    sandbox = createSandbox();
+  });
+  afterEach(() => {
+    sandbox.restore();
+  });
+  const schema = {
+    type: 'object',
+    properties: {
+      foo: { type: 'string' },
+      bar: { type: 'string' },
+    },
+  };
+  const formData = { foo: 'foo', bar: 'bar' };
+  const formData1 = { foo: 'foo', bar: 'bar', baz: 'baz' };
+
+  it('does not occur during onChange, no extra data removed', () => {
+    const onBlur = sinon.spy();
+    const { node, onChange } = createFormComponent({
+      schema,
+      formData: formData1,
+      onBlur,
+      omitExtraData: true,
+      liveOmit: 'onBlur',
+    });
+
+    fireEvent.change(node.querySelector('#root_foo'), {
+      target: { value: '' },
+    });
+    sinon.assert.calledWithMatch(
+      onChange.lastCall,
+      {
+        formData: { ...formData1, foo: undefined },
+      },
+      'root_foo',
+    );
+
+    sinon.assert.notCalled(onBlur);
+  });
+
+  it('occurs during onBlur, onChange not called during blur due to no state update', () => {
+    const onBlur = sinon.spy();
+    const { node, onChange } = createFormComponent({
+      schema,
+      formData, // Use form data with nothing to omit to test case
+      onBlur,
+      omitExtraData: true,
+      liveOmit: 'onBlur',
+    });
+    const element = node.querySelector('input[type=text]');
+    fireEvent.change(node.querySelector('#root_foo'), {
+      target: { value: '' },
+    });
+    fireEvent.change(node.querySelector('#root_foo'), {
+      target: { value: 'foo' },
+    });
+    sinon.assert.calledTwice(onChange);
+
+    fireEvent.blur(element);
+
+    sinon.assert.calledWithMatch(onBlur.lastCall, 'root', 'foo');
+    sinon.assert.calledTwice(onChange);
+  });
+
+  it('occurs during onBlur, onChange called during blur due to extra data removal in state', () => {
+    const onBlur = sinon.spy();
+    const { node, onChange } = createFormComponent({
+      schema,
+      formData: formData1,
+      onBlur,
+      omitExtraData: true,
+      liveOmit: 'onBlur',
+    });
+    const element = node.querySelector('input[type=text]');
+    fireEvent.change(node.querySelector('#root_foo'), {
+      target: { value: '' },
+    });
+    sinon.assert.calledWithMatch(
+      onChange.lastCall,
+      {
+        formData: { ...formData1, foo: undefined },
+      },
+      'root',
+    );
+    sinon.assert.calledOnce(onChange);
+
+    fireEvent.blur(element);
+
+    sinon.assert.calledWithMatch(onBlur.lastCall, 'root', '');
+    sinon.assert.calledWithMatch(
+      onChange.lastCall,
+      {
+        formData: { bar: 'bar', foo: undefined },
+      },
+      'root',
+    );
+    sinon.assert.calledTwice(onChange);
+  });
+});
+
+describe('Form omitExtraData and liveOmit', () => {
+  let sandbox;
+  beforeEach(() => {
+    sandbox = createSandbox();
+  });
   afterEach(() => {
     sandbox.restore();
   });
@@ -3794,396 +3997,6 @@ describe('Form omitExtraData and liveOmit', () => {
     });
 
     sinon.assert.notCalled(comp.ref.current.omitExtraData);
-  });
-
-  describe('omitExtraData on submit', () => {
-    it('should call omitExtraData when the omitExtraData prop is true', () => {
-      const schema = {
-        type: 'object',
-        properties: {
-          foo: {
-            type: 'string',
-          },
-        },
-      };
-      const formData = {
-        foo: '',
-      };
-      const onSubmit = sandbox.spy();
-      const onError = sandbox.spy();
-      const omitExtraData = true;
-      const { comp, node } = createFormComponent({
-        ref: createRef(),
-        schema,
-        formData,
-        onSubmit,
-        onError,
-        omitExtraData,
-      });
-
-      sandbox.stub(comp.ref.current, 'omitExtraData').returns({
-        foo: '',
-      });
-
-      fireEvent.submit(node);
-
-      sinon.assert.calledOnce(comp.ref.current.omitExtraData);
-    });
-
-    it('Should call validateFormWithFormData with the current formData if omitExtraData is false', () => {
-      const omitExtraData = false;
-      const schema = {
-        type: 'object',
-        properties: {
-          foo: { type: 'string' },
-        },
-      };
-      const formData = { foo: 'bar', baz: 'baz' };
-      const formRef = createRef();
-      const props = {
-        ref: formRef,
-        schema,
-        formData,
-        omitExtraData: omitExtraData,
-      };
-      const { comp, node } = createFormComponent(props);
-      sandbox.stub(comp.ref.current, 'validateFormWithFormData').returns({
-        foo: '',
-      });
-      fireEvent.submit(node);
-      sinon.assert.calledWithMatch(comp.ref.current.validateFormWithFormData, formData);
-    });
-
-    it('Should call validateFormWithFormData with a new formData with only used fields if omitExtraData is true', () => {
-      const omitExtraData = true;
-      const schema = {
-        type: 'object',
-        properties: {
-          foo: { type: 'string' },
-        },
-      };
-      const formData = { foo: 'bar', baz: 'baz' };
-      const formRef = createRef();
-      const props = {
-        ref: formRef,
-        schema,
-        formData,
-        omitExtraData: omitExtraData,
-      };
-      const { comp, node } = createFormComponent(props);
-      sandbox.stub(comp.ref.current, 'validateFormWithFormData').returns({
-        foo: '',
-      });
-      fireEvent.submit(node);
-      sinon.assert.calledWithMatch(comp.ref.current.validateFormWithFormData, { foo: 'bar' });
-    });
-  });
-
-  describe('getUsedFormData', () => {
-    it('should just return the single input form value', () => {
-      const schema = {
-        title: 'A single-field form',
-        type: 'string',
-      };
-      const formData = 'foo';
-      const onSubmit = sandbox.spy();
-      const { comp } = createFormComponent({
-        ref: createRef(),
-        schema,
-        formData,
-        onSubmit,
-      });
-
-      const result = comp.ref.current.getUsedFormData(formData, []);
-      expect(result).eql('foo');
-    });
-
-    it('should return the root level array', () => {
-      const schema = {
-        type: 'array',
-        items: {
-          type: 'string',
-        },
-      };
-      const formData = [];
-      const onSubmit = sandbox.spy();
-      const { comp } = createFormComponent({
-        ref: createRef(),
-        schema,
-        formData,
-        onSubmit,
-      });
-
-      const result = comp.ref.current.getUsedFormData(formData, []);
-      expect(result).eql([]);
-    });
-
-    it('should call getUsedFormData with data from fields in event', () => {
-      const schema = {
-        type: 'object',
-        properties: {
-          foo: { type: 'string' },
-        },
-      };
-      const formData = {
-        foo: 'bar',
-      };
-      const onSubmit = sandbox.spy();
-      const formRef = createRef();
-      const { comp } = createFormComponent({
-        ref: formRef,
-        schema,
-        formData,
-        onSubmit,
-      });
-
-      const result = comp.ref.current.getUsedFormData(formData, ['foo']);
-      expect(result).eql({ foo: 'bar' });
-    });
-
-    it('unused form values should be omitted', () => {
-      const schema = {
-        type: 'object',
-        properties: {
-          foo: { type: 'string' },
-          baz: { type: 'string' },
-          list: {
-            type: 'array',
-            items: {
-              type: 'object',
-              properties: {
-                title: { type: 'string' },
-                details: { type: 'string' },
-              },
-            },
-          },
-        },
-      };
-
-      const formData = {
-        foo: 'bar',
-        baz: 'buzz',
-        list: [
-          { title: 'title0', details: 'details0' },
-          { title: 'title1', details: 'details1' },
-        ],
-      };
-      const onSubmit = sandbox.spy();
-      const { comp } = createFormComponent({
-        ref: createRef(),
-        schema,
-        formData,
-        onSubmit,
-      });
-
-      const result = comp.ref.current.getUsedFormData(formData, ['foo', 'list.0.title', 'list.1.details']);
-      expect(result).eql({
-        foo: 'bar',
-        list: [{ title: 'title0' }, { details: 'details1' }],
-      });
-    });
-  });
-
-  describe('getFieldNames()', () => {
-    it('should return an empty array for a single input form', () => {
-      const schema = {
-        type: 'string',
-      };
-
-      const formData = 'foo';
-
-      const onSubmit = sandbox.spy();
-      const { comp } = createFormComponent({
-        ref: createRef(),
-        schema,
-        formData,
-        onSubmit,
-      });
-
-      const pathSchema = {
-        $name: '',
-      };
-
-      const fieldNames = comp.ref.current.getFieldNames(pathSchema, formData);
-      expect(fieldNames).eql([]);
-    });
-
-    it('should get field names from pathSchema', () => {
-      const schema = {};
-
-      const formData = {
-        extra: {
-          foo: 'bar',
-        },
-        level1: {
-          level2: 'test',
-          anotherThing: {
-            anotherThingNested: 'abc',
-            extra: 'asdf',
-            anotherThingNested2: 0,
-          },
-          stringArray: ['scobochka'],
-        },
-        level1a: 1.23,
-      };
-
-      const onSubmit = sandbox.spy();
-      const { comp } = createFormComponent({
-        ref: createRef(),
-        schema,
-        formData,
-        onSubmit,
-      });
-
-      const pathSchema = {
-        $name: '',
-        level1: {
-          $name: 'level1',
-          level2: { $name: 'level1.level2' },
-          anotherThing: {
-            $name: 'level1.anotherThing',
-            anotherThingNested: {
-              $name: 'level1.anotherThing.anotherThingNested',
-            },
-            anotherThingNested2: {
-              $name: 'level1.anotherThing.anotherThingNested2',
-            },
-          },
-          stringArray: {
-            $name: 'level1.stringArray',
-          },
-        },
-        level1a: {
-          $name: 'level1a',
-        },
-      };
-
-      const fieldNames = comp.ref.current.getFieldNames(pathSchema, formData);
-      expect(fieldNames.sort()).eql(
-        [
-          ['level1', 'anotherThing', 'anotherThingNested'],
-          ['level1', 'anotherThing', 'anotherThingNested2'],
-          ['level1', 'level2'],
-          ['level1', 'stringArray'],
-          ['level1a'],
-        ].sort(),
-      );
-    });
-
-    it('should get field marked as additionalProperties', () => {
-      const schema = {};
-
-      const formData = {
-        extra: {
-          foo: 'bar',
-        },
-        level1: {
-          level2: 'test',
-          extra: 'foo',
-          mixedMap: {
-            namedField: 'foo',
-            key1: 'val1',
-          },
-        },
-        level1a: 1.23,
-      };
-
-      const onSubmit = sandbox.spy();
-      const { comp } = createFormComponent({
-        ref: createRef(),
-        schema,
-        formData,
-        onSubmit,
-      });
-
-      const pathSchema = {
-        $name: '',
-        level1: {
-          $name: 'level1',
-          level2: { $name: 'level1.level2' },
-          mixedMap: {
-            $name: 'level1.mixedMap',
-            __rjsf_additionalProperties: true,
-            namedField: { $name: 'level1.mixedMap.namedField' }, // this name should not be returned, as the root object paths should be returned for objects marked with additionalProperties
-          },
-        },
-        level1a: {
-          $name: 'level1a',
-        },
-      };
-
-      const fieldNames = comp.ref.current.getFieldNames(pathSchema, formData);
-      expect(fieldNames.sort()).eql([['level1', 'level2'], 'level1.mixedMap', ['level1a']].sort());
-    });
-
-    it('should get field names from pathSchema with array', () => {
-      const schema = {};
-
-      const formData = {
-        address_list: [
-          {
-            street_address: '21, Jump Street',
-            city: 'Babel',
-            state: 'Neverland',
-          },
-          {
-            street_address: '1234 Schema Rd.',
-            city: 'New York',
-            state: 'Arizona',
-          },
-        ],
-      };
-
-      const onSubmit = sandbox.spy();
-      const { comp } = createFormComponent({
-        ref: createRef(),
-        schema,
-        formData,
-        onSubmit,
-      });
-
-      const pathSchema = {
-        $name: '',
-        address_list: {
-          0: {
-            $name: 'address_list.0',
-            city: {
-              $name: 'address_list.0.city',
-            },
-            state: {
-              $name: 'address_list.0.state',
-            },
-            street_address: {
-              $name: 'address_list.0.street_address',
-            },
-          },
-          1: {
-            $name: 'address_list.1',
-            city: {
-              $name: 'address_list.1.city',
-            },
-            state: {
-              $name: 'address_list.1.state',
-            },
-            street_address: {
-              $name: 'address_list.1.street_address',
-            },
-          },
-        },
-      };
-
-      const fieldNames = comp.ref.current.getFieldNames(pathSchema, formData);
-      expect(fieldNames.sort()).eql(
-        [
-          ['address_list', '0', 'city'],
-          ['address_list', '0', 'state'],
-          ['address_list', '0', 'street_address'],
-          ['address_list', '1', 'city'],
-          ['address_list', '1', 'state'],
-          ['address_list', '1', 'street_address'],
-        ].sort(),
-      );
-    });
   });
 
   it('should not omit data on change with omitExtraData=false and liveOmit=false', () => {
@@ -4454,183 +4267,6 @@ describe('Form omitExtraData and liveOmit', () => {
     });
   });
 
-  describe('Async errors', () => {
-    it('should render the async errors', () => {
-      const schema = {
-        type: 'object',
-        properties: {
-          foo: { type: 'string' },
-          candy: {
-            type: 'object',
-            properties: {
-              bar: { type: 'string' },
-            },
-          },
-        },
-      };
-
-      const extraErrors = {
-        foo: {
-          __errors: ['some error that got added as a prop'],
-        },
-        candy: {
-          bar: {
-            __errors: ['some other error that got added as a prop'],
-          },
-        },
-      };
-
-      const { node } = createFormComponent({ schema, extraErrors });
-
-      expect(node.querySelectorAll('.error-detail li')).to.have.length.of(2);
-    });
-
-    it('should not block form submission', () => {
-      const onSubmit = sinon.spy();
-      const schema = {
-        type: 'object',
-        properties: {
-          foo: { type: 'string' },
-        },
-      };
-
-      const extraErrors = {
-        foo: {
-          __errors: ['some error that got added as a prop'],
-        },
-      };
-
-      const { node } = createFormComponent({ schema, extraErrors, onSubmit });
-      fireEvent.submit(node);
-      sinon.assert.calledOnce(onSubmit);
-    });
-
-    it('should reset when props extraErrors changes and noValidate is true', () => {
-      const schema = {
-        type: 'object',
-        properties: {
-          foo: { type: 'string' },
-        },
-      };
-
-      const extraErrors = {
-        foo: {
-          __errors: ['foo'],
-        },
-      };
-
-      const formRef = createRef();
-      const props = {
-        ref: formRef,
-        schema,
-        noValidate: true,
-      };
-
-      const { comp } = createFormComponent({
-        ...props,
-        extraErrors,
-      });
-
-      setProps(comp, {
-        ...props,
-        extraErrors: {},
-      });
-
-      setTimeout(() => {
-        expect(comp.ref.current.state.errorSchema).eql({});
-        expect(comp.ref.current.state.errors).eql([]);
-      }, 0);
-      // We use setTimeout with a delay of 0ms to allow all asynchronous operations to complete in the React component.
-      // Despite this being a workaround, it turned out to be the only effective method to handle this test case.
-    });
-
-    it('should reset when props extraErrors changes and liveValidate is false', () => {
-      const schema = {
-        type: 'object',
-        properties: {
-          foo: { type: 'string' },
-        },
-      };
-
-      const extraErrors = {
-        foo: {
-          __errors: ['foo'],
-        },
-      };
-
-      const formRef = createRef();
-      const props = {
-        ref: formRef,
-        schema,
-        liveValidate: false,
-      };
-      const { comp } = createFormComponent({
-        ...props,
-        extraErrors,
-      });
-
-      setProps(comp, {
-        ...props,
-        ref: comp.ref,
-        extraErrors: {},
-      });
-
-      setTimeout(() => {
-        expect(comp.ref.current.state.errorSchema).eql({});
-        expect(comp.ref.current.state.errors).eql([]);
-      }, 0);
-      // We use setTimeout with a delay of 0ms to allow all asynchronous operations to complete in the React component.
-      // Despite this being a workaround, it turned out to be the only effective method to handle this test case.
-    });
-
-    it('should reset when schema changes', () => {
-      const schema = {
-        type: 'object',
-        properties: {
-          foo: { type: 'string' },
-        },
-        required: ['foo'],
-      };
-
-      const { comp, node } = createFormComponent({
-        ref: createRef(),
-        schema,
-      });
-
-      act(() => {
-        fireEvent.submit(node);
-      });
-
-      expect(comp.ref.current.state.errorSchema).eql({ foo: { __errors: ["must have required property 'foo'"] } });
-      expect(comp.ref.current.state.errors).eql([
-        {
-          message: "must have required property 'foo'",
-          property: 'foo',
-          name: 'required',
-          params: {
-            missingProperty: 'foo',
-          },
-          schemaPath: '#/required',
-          stack: "must have required property 'foo'",
-          title: '',
-        },
-      ]);
-
-      // Changing schema to reset errors state.
-      setProps(comp, {
-        ref: comp.ref,
-        schema: {
-          type: 'object',
-          properties: {
-            foo: { type: 'string' },
-          },
-        },
-      });
-      expect(comp.ref.current.state.errorSchema).eql({});
-      expect(comp.ref.current.state.errors).eql([]);
-    });
-  });
-
   it('should keep schema errors when extraErrors set after submit and liveValidate is false', () => {
     const schema = {
       type: 'object',
@@ -4673,805 +4309,1407 @@ describe('Form omitExtraData and liveOmit', () => {
     // We use setTimeout with a delay of 0ms to allow all asynchronous operations to complete in the React component.
     // Despite this being a workaround, it turned out to be the only effective method to handle this test case.
   });
-  describe('Calling onChange right after updating a Form with props formData', () => {
+});
+
+describe('omitExtraData on submit', () => {
+  let sandbox;
+  beforeEach(() => {
+    sandbox = createSandbox();
+  });
+  afterEach(() => {
+    sandbox.restore();
+  });
+  it('should call omitExtraData when the omitExtraData prop is true', () => {
+    const schema = {
+      type: 'object',
+      properties: {
+        foo: {
+          type: 'string',
+        },
+      },
+    };
+    const formData = {
+      foo: '',
+    };
+    const onSubmit = sandbox.spy();
+    const onError = sandbox.spy();
+    const omitExtraData = true;
+    const { comp, node } = createFormComponent({
+      ref: createRef(),
+      schema,
+      formData,
+      onSubmit,
+      onError,
+      omitExtraData,
+    });
+
+    sandbox.stub(comp.ref.current, 'omitExtraData').returns({
+      foo: '',
+    });
+
+    fireEvent.submit(node);
+
+    sinon.assert.calledOnce(comp.ref.current.omitExtraData);
+  });
+
+  it('Should call validateFormWithFormData with the current formData if omitExtraData is false', () => {
+    const omitExtraData = false;
+    const schema = {
+      type: 'object',
+      properties: {
+        foo: { type: 'string' },
+      },
+    };
+    const formData = { foo: 'bar', baz: 'baz' };
+    const formRef = createRef();
+    const props = {
+      ref: formRef,
+      schema,
+      formData,
+      omitExtraData: omitExtraData,
+    };
+    const { comp, node } = createFormComponent(props);
+    sandbox.stub(comp.ref.current, 'validateFormWithFormData').returns({
+      foo: '',
+    });
+    fireEvent.submit(node);
+    sinon.assert.calledWithMatch(comp.ref.current.validateFormWithFormData, formData);
+  });
+
+  it('Should call validateFormWithFormData with a new formData with only used fields if omitExtraData is true', () => {
+    const omitExtraData = true;
+    const schema = {
+      type: 'object',
+      properties: {
+        foo: { type: 'string' },
+      },
+    };
+    const formData = { foo: 'bar', baz: 'baz' };
+    const formRef = createRef();
+    const props = {
+      ref: formRef,
+      schema,
+      formData,
+      omitExtraData: omitExtraData,
+    };
+    const { comp, node } = createFormComponent(props);
+    sandbox.stub(comp.ref.current, 'validateFormWithFormData').returns({
+      foo: '',
+    });
+    fireEvent.submit(node);
+    sinon.assert.calledWithMatch(comp.ref.current.validateFormWithFormData, { foo: 'bar' });
+  });
+});
+
+describe('getUsedFormData', () => {
+  let sandbox;
+  beforeEach(() => {
+    sandbox = createSandbox();
+  });
+  afterEach(() => {
+    sandbox.restore();
+  });
+  it('should just return the single input form value', () => {
+    const schema = {
+      title: 'A single-field form',
+      type: 'string',
+    };
+    const formData = 'foo';
+    const onSubmit = sandbox.spy();
+    const { comp } = createFormComponent({
+      ref: createRef(),
+      schema,
+      formData,
+      onSubmit,
+    });
+
+    const result = comp.ref.current.getUsedFormData(formData, []);
+    expect(result).eql('foo');
+  });
+
+  it('should return the root level array', () => {
     const schema = {
       type: 'array',
       items: {
         type: 'string',
       },
     };
+    const formData = [];
+    const onSubmit = sandbox.spy();
+    const { comp } = createFormComponent({
+      ref: createRef(),
+      schema,
+      formData,
+      onSubmit,
+    });
 
-    let changed = false;
-    class ArrayThatTriggersOnChangeRightAfterUpdated extends Component {
-      componentDidUpdate = () => {
-        if (changed) {
-          return;
-        }
-        changed = true;
-        this.props.onChange('test', [this.props.formData.length]);
-      };
-      render() {
-        const { ArrayField } = this.props.registry.fields;
-        return <ArrayField {...this.props} />;
-      }
-    }
+    const result = comp.ref.current.getUsedFormData(formData, []);
+    expect(result).eql([]);
+  });
 
-    const uiSchema = {
-      'ui:field': ArrayThatTriggersOnChangeRightAfterUpdated,
+  it('should call getUsedFormData with data from fields in event', () => {
+    const schema = {
+      type: 'object',
+      properties: {
+        foo: { type: 'string' },
+      },
+    };
+    const formData = {
+      foo: 'bar',
+    };
+    const onSubmit = sandbox.spy();
+    const formRef = createRef();
+    const { comp } = createFormComponent({
+      ref: formRef,
+      schema,
+      formData,
+      onSubmit,
+    });
+
+    const result = comp.ref.current.getUsedFormData(formData, ['foo']);
+    expect(result).eql({ foo: 'bar' });
+  });
+
+  it('unused form values should be omitted', () => {
+    const schema = {
+      type: 'object',
+      properties: {
+        foo: { type: 'string' },
+        baz: { type: 'string' },
+        list: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              title: { type: 'string' },
+              details: { type: 'string' },
+            },
+          },
+        },
+      },
     };
 
+    const formData = {
+      foo: 'bar',
+      baz: 'buzz',
+      list: [
+        { title: 'title0', details: 'details0' },
+        { title: 'title1', details: 'details1' },
+      ],
+    };
+    const onSubmit = sandbox.spy();
+    const { comp } = createFormComponent({
+      ref: createRef(),
+      schema,
+      formData,
+      onSubmit,
+    });
+
+    const result = comp.ref.current.getUsedFormData(formData, ['foo', 'list.0.title', 'list.1.details']);
+    expect(result).eql({
+      foo: 'bar',
+      list: [{ title: 'title0' }, { details: 'details1' }],
+    });
+  });
+});
+
+describe('getFieldNames()', () => {
+  let sandbox;
+  beforeEach(() => {
+    sandbox = createSandbox();
+  });
+  afterEach(() => {
+    sandbox.restore();
+  });
+  it('should return an empty array for a single input form', () => {
+    const schema = {
+      type: 'string',
+    };
+
+    const formData = 'foo';
+
+    const onSubmit = sandbox.spy();
+    const { comp } = createFormComponent({
+      ref: createRef(),
+      schema,
+      formData,
+      onSubmit,
+    });
+
+    const pathSchema = {
+      $name: '',
+    };
+
+    const fieldNames = comp.ref.current.getFieldNames(pathSchema, formData);
+    expect(fieldNames).eql([]);
+  });
+
+  it('should get field names from pathSchema', () => {
+    const schema = {};
+
+    const formData = {
+      extra: {
+        foo: 'bar',
+      },
+      level1: {
+        level2: 'test',
+        anotherThing: {
+          anotherThingNested: 'abc',
+          extra: 'asdf',
+          anotherThingNested2: 0,
+        },
+        stringArray: ['scobochka'],
+      },
+      level1a: 1.23,
+    };
+
+    const onSubmit = sandbox.spy();
+    const { comp } = createFormComponent({
+      ref: createRef(),
+      schema,
+      formData,
+      onSubmit,
+    });
+
+    const pathSchema = {
+      $name: '',
+      level1: {
+        $name: 'level1',
+        level2: { $name: 'level1.level2' },
+        anotherThing: {
+          $name: 'level1.anotherThing',
+          anotherThingNested: {
+            $name: 'level1.anotherThing.anotherThingNested',
+          },
+          anotherThingNested2: {
+            $name: 'level1.anotherThing.anotherThingNested2',
+          },
+        },
+        stringArray: {
+          $name: 'level1.stringArray',
+        },
+      },
+      level1a: {
+        $name: 'level1a',
+      },
+    };
+
+    const fieldNames = comp.ref.current.getFieldNames(pathSchema, formData);
+    expect(fieldNames.sort()).eql(
+      [
+        ['level1', 'anotherThing', 'anotherThingNested'],
+        ['level1', 'anotherThing', 'anotherThingNested2'],
+        ['level1', 'level2'],
+        ['level1', 'stringArray'],
+        ['level1a'],
+      ].sort(),
+    );
+  });
+
+  it('should get field marked as additionalProperties', () => {
+    const schema = {};
+
+    const formData = {
+      extra: {
+        foo: 'bar',
+      },
+      level1: {
+        level2: 'test',
+        extra: 'foo',
+        mixedMap: {
+          namedField: 'foo',
+          key1: 'val1',
+        },
+      },
+      level1a: 1.23,
+    };
+
+    const onSubmit = sandbox.spy();
+    const { comp } = createFormComponent({
+      ref: createRef(),
+      schema,
+      formData,
+      onSubmit,
+    });
+
+    const pathSchema = {
+      $name: '',
+      level1: {
+        $name: 'level1',
+        level2: { $name: 'level1.level2' },
+        mixedMap: {
+          $name: 'level1.mixedMap',
+          __rjsf_additionalProperties: true,
+          namedField: { $name: 'level1.mixedMap.namedField' }, // this name should not be returned, as the root object paths should be returned for objects marked with additionalProperties
+        },
+      },
+      level1a: {
+        $name: 'level1a',
+      },
+    };
+
+    const fieldNames = comp.ref.current.getFieldNames(pathSchema, formData);
+    expect(fieldNames.sort()).eql([['level1', 'level2'], 'level1.mixedMap', ['level1a']].sort());
+  });
+
+  it('should get field names from pathSchema with array', () => {
+    const schema = {};
+
+    const formData = {
+      address_list: [
+        {
+          street_address: '21, Jump Street',
+          city: 'Babel',
+          state: 'Neverland',
+        },
+        {
+          street_address: '1234 Schema Rd.',
+          city: 'New York',
+          state: 'Arizona',
+        },
+      ],
+    };
+
+    const onSubmit = sandbox.spy();
+    const { comp } = createFormComponent({
+      ref: createRef(),
+      schema,
+      formData,
+      onSubmit,
+    });
+
+    const pathSchema = {
+      $name: '',
+      address_list: {
+        0: {
+          $name: 'address_list.0',
+          city: {
+            $name: 'address_list.0.city',
+          },
+          state: {
+            $name: 'address_list.0.state',
+          },
+          street_address: {
+            $name: 'address_list.0.street_address',
+          },
+        },
+        1: {
+          $name: 'address_list.1',
+          city: {
+            $name: 'address_list.1.city',
+          },
+          state: {
+            $name: 'address_list.1.state',
+          },
+          street_address: {
+            $name: 'address_list.1.street_address',
+          },
+        },
+      },
+    };
+
+    const fieldNames = comp.ref.current.getFieldNames(pathSchema, formData);
+    expect(fieldNames.sort()).eql(
+      [
+        ['address_list', '0', 'city'],
+        ['address_list', '0', 'state'],
+        ['address_list', '0', 'street_address'],
+        ['address_list', '1', 'city'],
+        ['address_list', '1', 'state'],
+        ['address_list', '1', 'street_address'],
+      ].sort(),
+    );
+  });
+});
+
+describe('Async errors', () => {
+  it('should render the async errors', () => {
+    const schema = {
+      type: 'object',
+      properties: {
+        foo: { type: 'string' },
+        candy: {
+          type: 'object',
+          properties: {
+            bar: { type: 'string' },
+          },
+        },
+      },
+    };
+
+    const extraErrors = {
+      foo: {
+        __errors: ['some error that got added as a prop'],
+      },
+      candy: {
+        bar: {
+          __errors: ['some other error that got added as a prop'],
+        },
+      },
+    };
+
+    const { node } = createFormComponent({ schema, extraErrors });
+
+    expect(node.querySelectorAll('.error-detail li')).to.have.length.of(2);
+  });
+
+  it('should not block form submission', () => {
+    const onSubmit = sinon.spy();
+    const schema = {
+      type: 'object',
+      properties: {
+        foo: { type: 'string' },
+      },
+    };
+
+    const extraErrors = {
+      foo: {
+        __errors: ['some error that got added as a prop'],
+      },
+    };
+
+    const { node } = createFormComponent({ schema, extraErrors, onSubmit });
+    fireEvent.submit(node);
+    sinon.assert.calledOnce(onSubmit);
+  });
+
+  it('should reset when props extraErrors changes and noValidate is true', () => {
+    const schema = {
+      type: 'object',
+      properties: {
+        foo: { type: 'string' },
+      },
+    };
+
+    const extraErrors = {
+      foo: {
+        __errors: ['foo'],
+      },
+    };
+
+    const formRef = createRef();
+    const props = {
+      ref: formRef,
+      schema,
+      noValidate: true,
+    };
+
+    const { comp } = createFormComponent({
+      ...props,
+      extraErrors,
+    });
+
+    setProps(comp, {
+      ...props,
+      extraErrors: {},
+    });
+
+    setTimeout(() => {
+      expect(comp.ref.current.state.errorSchema).eql({});
+      expect(comp.ref.current.state.errors).eql([]);
+    }, 0);
+    // We use setTimeout with a delay of 0ms to allow all asynchronous operations to complete in the React component.
+    // Despite this being a workaround, it turned out to be the only effective method to handle this test case.
+  });
+
+  it('should reset when props extraErrors changes and liveValidate is false', () => {
+    const schema = {
+      type: 'object',
+      properties: {
+        foo: { type: 'string' },
+      },
+    };
+
+    const extraErrors = {
+      foo: {
+        __errors: ['foo'],
+      },
+    };
+
+    const formRef = createRef();
+    const props = {
+      ref: formRef,
+      schema,
+      liveValidate: false,
+    };
+    const { comp } = createFormComponent({
+      ...props,
+      extraErrors,
+    });
+
+    setProps(comp, {
+      ...props,
+      ref: comp.ref,
+      extraErrors: {},
+    });
+
+    setTimeout(() => {
+      expect(comp.ref.current.state.errorSchema).eql({});
+      expect(comp.ref.current.state.errors).eql([]);
+    }, 0);
+    // We use setTimeout with a delay of 0ms to allow all asynchronous operations to complete in the React component.
+    // Despite this being a workaround, it turned out to be the only effective method to handle this test case.
+  });
+
+  it('should reset when schema changes', () => {
+    const schema = {
+      type: 'object',
+      properties: {
+        foo: { type: 'string' },
+      },
+      required: ['foo'],
+    };
+
+    const { comp, node } = createFormComponent({
+      ref: createRef(),
+      schema,
+    });
+
+    act(() => {
+      fireEvent.submit(node);
+    });
+
+    expect(comp.ref.current.state.errorSchema).eql({ foo: { __errors: ["must have required property 'foo'"] } });
+    expect(comp.ref.current.state.errors).eql([
+      {
+        message: "must have required property 'foo'",
+        property: 'foo',
+        name: 'required',
+        params: {
+          missingProperty: 'foo',
+        },
+        schemaPath: '#/required',
+        stack: "must have required property 'foo'",
+        title: '',
+      },
+    ]);
+
+    // Changing schema to reset errors state.
+    setProps(comp, {
+      ref: comp.ref,
+      schema: {
+        type: 'object',
+        properties: {
+          foo: { type: 'string' },
+        },
+      },
+    });
+    expect(comp.ref.current.state.errorSchema).eql({});
+    expect(comp.ref.current.state.errors).eql([]);
+  });
+});
+
+describe('Calling onChange right after updating a Form with props formData', () => {
+  const schema = {
+    type: 'array',
+    items: {
+      type: 'string',
+    },
+  };
+
+  let changed = false;
+  class ArrayThatTriggersOnChangeRightAfterUpdated extends Component {
+    componentDidUpdate = () => {
+      if (changed) {
+        return;
+      }
+      changed = true;
+      this.props.onChange('test', [this.props.formData.length]);
+    };
+    render() {
+      const { ArrayField } = this.props.registry.fields;
+      return <ArrayField {...this.props} />;
+    }
+  }
+
+  const uiSchema = {
+    'ui:field': ArrayThatTriggersOnChangeRightAfterUpdated,
+  };
+
+  const props = {
+    schema,
+    uiSchema,
+    validator,
+  };
+
+  class Container extends Component {
+    constructor(props) {
+      super(props);
+      this.state = {};
+    }
+
+    onChange = ({ formData }) => {
+      this.setState({ formData });
+    };
+
+    render() {
+      return <Form {...this.props} {...this.state} onChange={this.onChange} />;
+    }
+  }
+
+  it("doesn't cause a race condition", () => {
+    const { node } = createComponent(Container, { ...props });
+
+    fireEvent.click(node.querySelector('.rjsf-array-item-add button'));
+
+    expect(node.querySelector('#root_0')).to.exist;
+    expect(node.querySelector('#root_1').getAttribute('value')).to.eq('test');
+  });
+});
+
+describe('Calling reset from ref object', () => {
+  it('Reset API test', () => {
+    const schema = {
+      title: 'Test form',
+      type: 'string',
+    };
+    const formRef = createRef();
+    const props = {
+      ref: formRef,
+      schema,
+    };
+    const { node } = createFormComponent(props);
+    expect(formRef.current.reset).to.exist;
+    expect(node.querySelector('input')).to.exist;
+    fireEvent.change(node.querySelector('input'), { target: { value: 'Some Value' } });
+    act(() => {
+      formRef.current.reset();
+    });
+    expect(node.querySelector('input').getAttribute('value')).to.eq('');
+  });
+
+  it('Clear errors', () => {
+    const schema = {
+      title: 'Test form',
+      type: 'number',
+    };
+    const formRef = createRef();
+    const props = {
+      ref: formRef,
+      schema,
+    };
+    const { node, comp } = createFormComponent(props);
+    expect(formRef.current.reset).to.exist;
+    expect(node.querySelector('input')).to.exist;
+    fireEvent.change(node.querySelector('input'), { target: { value: 'Some Value' } });
+    expect(comp.ref.current.state.errors).to.have.length(0);
+    act(() => {
+      fireEvent.submit(node);
+    });
+    expect(comp.ref.current.state.errors).to.have.length(1);
+    expect(node.querySelector('.errors')).to.exist;
+    act(() => {
+      formRef.current.reset();
+    });
+    expect(node.querySelector('.errors')).not.to.exist;
+    expect(node.querySelector('input').getAttribute('value')).to.eq('');
+    expect(comp.ref.current.state.errors).to.have.length(0);
+  });
+
+  it('Reset button test with default value', () => {
+    const schemaWithDefault = {
+      title: 'Test form',
+      type: 'string',
+      default: 'Some-Value',
+    };
+    const formRef = createRef();
+    const props = {
+      ref: formRef,
+      schema: schemaWithDefault,
+    };
+    const { node } = createFormComponent(props);
+    const input = node.querySelector('input');
+    expect(formRef.current.reset).to.exist;
+    expect(input).to.exist;
+    expect(input.getAttribute('value')).to.eq('Some-Value');
+    act(() => {
+      formRef.current.reset();
+    });
+    expect(input.getAttribute('value')).to.eq('Some-Value');
+    fireEvent.change(input, { target: { value: 'Changed value' } });
+    act(() => {
+      formRef.current.reset();
+    });
+    expect(input.getAttribute('value')).to.eq('Some-Value');
+  });
+
+  it('Reset button test with complex schema', () => {
+    const schema = widgetsSchema;
+    const formRef = createRef();
+    const props = {
+      ref: formRef,
+      schema,
+    };
+    const { node } = createFormComponent(props);
+    const checkbox = node.querySelector('input[type="checkbox"]');
+    const input = node.querySelector('input[type="text"]');
+    expect(formRef.current.reset).to.exist;
+    expect(checkbox).to.exist;
+    expect(input).to.exist;
+    expect(checkbox.checked).to.eq(true);
+    expect(input.getAttribute('value')).to.eq('');
+    act(() => {
+      formRef.current.reset();
+    });
+    expect(checkbox.checked).to.eq(true);
+    expect(input.getAttribute('value')).to.eq('');
+    fireEvent.click(checkbox);
+    fireEvent.change(input, { target: { value: 'Changed value' } });
+    expect(checkbox.checked).to.eq(false);
+    expect(input.getAttribute('value')).to.eq('Changed value');
+    act(() => {
+      formRef.current.reset();
+    });
+    expect(input.getAttribute('value')).to.eq('');
+    expect(checkbox.checked).to.eq(true);
+  });
+});
+
+describe('validateForm()', () => {
+  let sandbox;
+  beforeEach(() => {
+    sandbox = createSandbox();
+  });
+  afterEach(() => {
+    sandbox.restore();
+  });
+  it('Should call validateFormWithFormData with the current formData if omitExtraData is false', () => {
+    const omitExtraData = false;
+    const schema = {
+      type: 'object',
+      properties: {
+        foo: { type: 'string' },
+      },
+    };
+    const formData = { foo: 'bar', baz: 'baz' };
+    const formRef = createRef();
+    const props = {
+      ref: formRef,
+      schema,
+      formData,
+      omitExtraData: omitExtraData,
+    };
+    const { comp } = createFormComponent(props);
+    sandbox.stub(comp.ref.current, 'validateFormWithFormData').returns({
+      foo: '',
+    });
+    act(() => {
+      comp.ref.current.validateForm();
+    });
+    sinon.assert.calledWithMatch(comp.ref.current.validateFormWithFormData, formData);
+  });
+
+  it('Should call validateFormWithFormData with a new formData with only used fields if omitExtraData is true', () => {
+    const omitExtraData = true;
+    const schema = {
+      type: 'object',
+      properties: {
+        foo: { type: 'string' },
+      },
+    };
+    const formData = { foo: 'bar', baz: 'baz' };
+    const formRef = createRef();
+    const props = {
+      ref: formRef,
+      schema,
+      formData,
+      omitExtraData: omitExtraData,
+    };
+    const { comp } = createFormComponent(props);
+    sandbox.stub(comp.ref.current, 'validateFormWithFormData').returns({
+      foo: '',
+    });
+    act(() => {
+      comp.ref.current.validateForm();
+    });
+    sinon.assert.calledWithMatch(comp.ref.current.validateFormWithFormData, { foo: 'bar' });
+  });
+
+  it('Should update state when data updated from invalid to valid', () => {
+    const ref = createRef();
+    const props = {
+      schema: {
+        type: 'object',
+        required: ['input'],
+        properties: {
+          input: {
+            type: 'string',
+          },
+        },
+      },
+      formData: {},
+      ref,
+    };
+    const { comp, node } = createFormComponent(props);
+    // trigger programmatic validation and make sure an error appears.
+    act(() => {
+      expect(ref.current.validateForm()).to.eql(false);
+    });
+
+    let errors = node.querySelectorAll('.error-detail');
+    expect(errors).to.have.lengthOf(1);
+    expect(errors[0].textContent).to.be.eql("must have required property 'input'");
+
+    // populate the input and simulate a re-render from the parent.
+    const textNode = node.querySelector('#root_input');
+    fireEvent.change(textNode, {
+      target: { value: 'populated value' },
+    });
+    setProps(comp, { ...props, formData: { input: 'populated value' } });
+    // // error should still be present.
+    errors = node.querySelectorAll('.error-detail');
+    // screen.debug();
+    // change formData and make sure the error disappears.
+    expect(errors).to.have.lengthOf(0);
+
+    // trigger programmatic validation again and make sure the error disappears.
+    act(() => {
+      expect(ref.current.validateForm()).to.eql(true);
+    });
+    errors = node.querySelectorAll('.error-detail');
+    expect(errors).to.have.lengthOf(0);
+  });
+});
+
+describe('optionalDataControls', () => {
+  const schema = {
+    title: 'test',
+    properties: {
+      nestedObjectOptional: {
+        type: 'object',
+        properties: {
+          test: {
+            type: 'string',
+          },
+        },
+      },
+      nestedArrayOptional: {
+        type: 'array',
+        items: {
+          type: 'string',
+        },
+      },
+    },
+  };
+  const arrayOnUiSchema = {
+    'ui:globalOptions': {
+      enableOptionalDataFieldForType: ['array'],
+    },
+  };
+  const objectOnUiSchema = {
+    'ui:globalOptions': {
+      enableOptionalDataFieldForType: ['object'],
+    },
+  };
+  const bothOnUiSchema = {
+    'ui:globalOptions': {
+      enableOptionalDataFieldForType: ['object', 'array'],
+    },
+  };
+  const experimental_defaultFormStateBehavior = {
+    // Set the emptyObjectFields to only populate required defaults to highlight the code working
+    emptyObjectFields: 'populateRequiredDefaults',
+  };
+  const arrayId = 'root_nestedArrayOptional';
+  const objectId = 'root_nestedObjectOptional';
+  const arrayControlAddId = optionalControlsId(arrayId, 'Add');
+  const arrayControlRemoveId = optionalControlsId(arrayId, 'Remove');
+  const arrayControlMsgId = optionalControlsId(arrayId, 'Msg');
+  const arrayAddId = buttonId(arrayId, 'add');
+  const objectControlAddId = optionalControlsId(objectId, 'Add');
+  const objectControlRemoveId = optionalControlsId(objectId, 'Remove');
+  const objectControlMsgId = optionalControlsId(objectId, 'Msg');
+  it('does not render any optional data control messages when not turned on and readonly and disabled', () => {
     const props = {
       schema,
-      uiSchema,
-      validator,
+      experimental_defaultFormStateBehavior,
+      readonly: true,
+      disabled: true,
     };
+    const { node } = createFormComponent(props);
+    const addArrayControlNode = node.querySelector(`#${arrayControlAddId}`);
+    const removeArrayControlNode = node.querySelector(`#${arrayControlRemoveId}`);
+    const msgArrayControlNode = node.querySelector(`#${arrayControlMsgId}`);
+    const addArrayBtn = node.querySelector(`#${arrayAddId}`);
+    const addObjectControlNode = node.querySelector(`#${objectControlAddId}`);
+    const removeObjectControlNode = node.querySelector(`#${objectControlRemoveId}`);
+    const msgObjectControlNode = node.querySelector(`#${objectControlMsgId}`);
+    const testInput = node.querySelector(`#${objectId}_test`);
+    // Check that the expected html elements are rendered (or not) as expected
+    expect(addArrayControlNode).eql(null);
+    expect(removeArrayControlNode).eql(null);
+    expect(msgArrayControlNode).eql(null);
+    expect(addArrayBtn).not.eql(null);
+    expect(addObjectControlNode).eql(null);
+    expect(removeObjectControlNode).eql(null);
+    expect(msgObjectControlNode).eql(null);
+    expect(testInput).not.eql(null);
+  });
+  it('renders optional data control messages when turned on and readonly', () => {
+    const props = {
+      schema,
+      uiSchema: bothOnUiSchema,
+      experimental_defaultFormStateBehavior,
+      readonly: true,
+    };
+    const { node } = createFormComponent(props);
+    const addArrayControlNode = node.querySelector(`#${arrayControlAddId}`);
+    const removeArrayControlNode = node.querySelector(`#${arrayControlRemoveId}`);
+    const msgArrayControlNode = node.querySelector(`#${arrayControlMsgId}`);
+    const addArrayBtn = node.querySelector(`#${arrayAddId}`);
+    const addObjectControlNode = node.querySelector(`#${objectControlAddId}`);
+    const removeObjectControlNode = node.querySelector(`#${objectControlRemoveId}`);
+    const msgObjectControlNode = node.querySelector(`#${objectControlMsgId}`);
+    const testInput = node.querySelector(`#${objectId}_test`);
+    // Check that the expected html elements are rendered (or not) as expected
+    expect(addArrayControlNode).eql(null);
+    expect(removeArrayControlNode).eql(null);
+    expect(msgArrayControlNode).not.eql(null);
+    expect(addArrayBtn).eql(null);
+    expect(addObjectControlNode).eql(null);
+    expect(removeObjectControlNode).eql(null);
+    expect(msgObjectControlNode).not.eql(null);
+    expect(testInput).eql(null);
+  });
+  it('renders optional data control messages when turned on and readonly', () => {
+    const props = {
+      schema,
+      uiSchema: bothOnUiSchema,
+      experimental_defaultFormStateBehavior,
+      disabled: true,
+    };
+    const { node } = createFormComponent(props);
+    const addArrayControlNode = node.querySelector(`#${arrayControlAddId}`);
+    const removeArrayControlNode = node.querySelector(`#${arrayControlRemoveId}`);
+    const msgArrayControlNode = node.querySelector(`#${arrayControlMsgId}`);
+    const addArrayBtn = node.querySelector(`#${arrayAddId}`);
+    const addObjectControlNode = node.querySelector(`#${objectControlAddId}`);
+    const removeObjectControlNode = node.querySelector(`#${objectControlRemoveId}`);
+    const msgObjectControlNode = node.querySelector(`#${objectControlMsgId}`);
+    const testInput = node.querySelector(`#${objectId}_test`);
+    // Check that the expected html elements are rendered (or not) as expected
+    expect(addArrayControlNode).eql(null);
+    expect(removeArrayControlNode).eql(null);
+    expect(msgArrayControlNode).not.eql(null);
+    expect(addArrayBtn).eql(null);
+    expect(addObjectControlNode).eql(null);
+    expect(removeObjectControlNode).eql(null);
+    expect(msgObjectControlNode).not.eql(null);
+    expect(testInput).eql(null);
+  });
+  it('does not render any optional data controls when not turned on', () => {
+    const props = {
+      schema,
+      experimental_defaultFormStateBehavior,
+    };
+    const { node } = createFormComponent(props);
+    const addArrayControlNode = node.querySelector(`#${arrayControlAddId}`);
+    const removeArrayControlNode = node.querySelector(`#${arrayControlRemoveId}`);
+    const addArrayBtn = node.querySelector(`#${arrayAddId}`);
+    const addObjectControlNode = node.querySelector(`#${objectControlAddId}`);
+    const removeObjectControlNode = node.querySelector(`#${objectControlRemoveId}`);
+    const testInput = node.querySelector(`#${objectId}_test`);
+    // Check that the expected html elements are rendered (or not) as expected
+    expect(addArrayControlNode).eql(null);
+    expect(removeArrayControlNode).eql(null);
+    expect(addArrayBtn).not.eql(null);
+    expect(addObjectControlNode).eql(null);
+    expect(removeObjectControlNode).eql(null);
+    expect(testInput).not.eql(null);
+  });
+  it('only render object optional data controls when only object is turned on', () => {
+    const props = {
+      schema,
+      uiSchema: objectOnUiSchema,
+      experimental_defaultFormStateBehavior,
+    };
+    const { node } = createFormComponent(props);
+    const addArrayControlNode = node.querySelector(`#${arrayControlAddId}`);
+    const removeArrayControlNode = node.querySelector(`#${arrayControlRemoveId}`);
+    const addArrayBtn = node.querySelector(`#${arrayAddId}`);
+    let addObjectControlNode = node.querySelector(`#${objectControlAddId}`);
+    let removeObjectControlNode = node.querySelector(`#${objectControlRemoveId}`);
+    let testInput = node.querySelector(`#${objectId}_test`);
+    // Check that the expected html elements are rendered (or not) as expected
+    expect(addArrayControlNode).eql(null);
+    expect(removeArrayControlNode).eql(null);
+    expect(addArrayBtn).not.eql(null);
+    expect(addObjectControlNode).not.eql(null);
+    expect(removeObjectControlNode).eql(null);
+    expect(testInput).eql(null);
 
-    class Container extends Component {
-      constructor(props) {
-        super(props);
-        this.state = {};
-      }
+    // now click on the add optional data button
+    act(() => addObjectControlNode.click());
+    // now check to see if the UI adjusted
+    addObjectControlNode = node.querySelector(`#${objectControlAddId}`);
+    removeObjectControlNode = node.querySelector(`#${objectControlRemoveId}`);
+    testInput = node.querySelector(`#${objectId}_test`);
+    expect(addObjectControlNode).eql(null);
+    expect(removeObjectControlNode).not.eql(null);
+    expect(testInput).not.eql(null);
 
-      onChange = ({ formData }) => {
-        this.setState({ formData });
-      };
+    // now click on the remove optional data button
+    act(() => removeObjectControlNode.click());
+    // now check to see if the UI adjusted
+    addObjectControlNode = node.querySelector(`#${objectControlAddId}`);
+    removeObjectControlNode = node.querySelector(`#${objectControlRemoveId}`);
+    testInput = node.querySelector(`#${objectId}_test`);
+    expect(addObjectControlNode).not.eql(null);
+    expect(removeObjectControlNode).eql(null);
+    expect(testInput).eql(null);
+  });
+  it('only render array optional data controls when only array is turned on', () => {
+    const props = {
+      schema,
+      uiSchema: arrayOnUiSchema,
+      experimental_defaultFormStateBehavior,
+    };
+    const { node } = createFormComponent(props);
+    let addArrayControlNode = node.querySelector(`#${arrayControlAddId}`);
+    let removeArrayControlNode = node.querySelector(`#${arrayControlRemoveId}`);
+    let addArrayBtn = node.querySelector(`#${arrayAddId}`);
+    const addObjectControlNode = node.querySelector(`#${objectControlAddId}`);
+    const removeObjectControlNode = node.querySelector(`#${objectControlRemoveId}`);
+    const testInput = node.querySelector(`#${objectId}_test`);
+    // Check that the expected html elements are rendered (or not) as expected
+    expect(addArrayControlNode).not.eql(null);
+    expect(removeArrayControlNode).eql(null);
+    expect(addArrayBtn).eql(null);
+    expect(addObjectControlNode).eql(null);
+    expect(removeObjectControlNode).eql(null);
+    expect(testInput).not.eql(null);
 
-      render() {
-        return <Form {...this.props} {...this.state} onChange={this.onChange} />;
-      }
-    }
+    // now click on the add optional data button
+    act(() => addArrayControlNode.click());
+    // now check to see if the UI adjusted
+    addArrayControlNode = node.querySelector(`#${arrayControlAddId}`);
+    removeArrayControlNode = node.querySelector(`#${arrayControlRemoveId}`);
+    addArrayBtn = node.querySelector(`#${arrayAddId}`);
+    expect(addArrayControlNode).eql(null);
+    expect(removeArrayControlNode).not.eql(null);
+    expect(addArrayBtn).not.eql(null);
 
-    it("doesn't cause a race condition", () => {
-      const { node } = createComponent(Container, { ...props });
+    // now click on the remove optional data button
+    act(() => removeArrayControlNode.click());
+    // now check to see if the UI adjusted
+    addArrayControlNode = node.querySelector(`#${arrayControlAddId}`);
+    removeArrayControlNode = node.querySelector(`#${arrayControlRemoveId}`);
+    addArrayBtn = node.querySelector(`#${arrayAddId}`);
+    expect(addArrayControlNode).not.eql(null);
+    expect(removeArrayControlNode).eql(null);
+    expect(addArrayBtn).eql(null);
+  });
+  it('render both kinds of optional data controls when only both are turned on', () => {
+    const props = {
+      schema,
+      uiSchema: bothOnUiSchema,
+      experimental_defaultFormStateBehavior,
+    };
+    const { node } = createFormComponent(props);
+    let addArrayControlNode = node.querySelector(`#${arrayControlAddId}`);
+    let removeArrayControlNode = node.querySelector(`#${arrayControlRemoveId}`);
+    let addArrayBtn = node.querySelector(`#${arrayAddId}`);
+    let addObjectControlNode = node.querySelector(`#${objectControlAddId}`);
+    let removeObjectControlNode = node.querySelector(`#${objectControlRemoveId}`);
+    let testInput = node.querySelector(`#${objectId}_test`);
+    // Check that the expected html elements are rendered (or not) as expected
+    expect(addArrayControlNode).not.eql(null);
+    expect(removeArrayControlNode).eql(null);
+    expect(addArrayBtn).eql(null);
+    expect(addObjectControlNode).not.eql(null);
+    expect(removeObjectControlNode).eql(null);
+    expect(testInput).eql(null);
 
-      fireEvent.click(node.querySelector('.rjsf-array-item-add button'));
+    // now click on the add optional data button
+    act(() => addArrayControlNode.click());
+    act(() => addObjectControlNode.click());
+    // now check to see if the UI adjusted
+    addArrayControlNode = node.querySelector(`#${arrayControlAddId}`);
+    removeArrayControlNode = node.querySelector(`#${arrayControlRemoveId}`);
+    addArrayBtn = node.querySelector(`#${arrayAddId}`);
+    addObjectControlNode = node.querySelector(`#${objectControlAddId}`);
+    removeObjectControlNode = node.querySelector(`#${objectControlRemoveId}`);
+    testInput = node.querySelector(`#${objectId}_test`);
+    expect(addArrayControlNode).eql(null);
+    expect(removeArrayControlNode).not.eql(null);
+    expect(addArrayBtn).not.eql(null);
+    expect(addObjectControlNode).eql(null);
+    expect(removeObjectControlNode).not.eql(null);
+    expect(testInput).not.eql(null);
 
-      expect(node.querySelector('#root_0')).to.exist;
-      expect(node.querySelector('#root_1').getAttribute('value')).to.eq('test');
-    });
+    // now click on the remove optional data button
+    act(() => removeArrayControlNode.click());
+    act(() => removeObjectControlNode.click());
+    // now check to see if the UI adjusted
+    addArrayControlNode = node.querySelector(`#${arrayControlAddId}`);
+    removeArrayControlNode = node.querySelector(`#${arrayControlRemoveId}`);
+    addArrayBtn = node.querySelector(`#${arrayAddId}`);
+    addObjectControlNode = node.querySelector(`#${objectControlAddId}`);
+    removeObjectControlNode = node.querySelector(`#${objectControlRemoveId}`);
+    testInput = node.querySelector(`#${objectId}_test`);
+    expect(addArrayControlNode).not.eql(null);
+    expect(removeArrayControlNode).eql(null);
+    expect(addArrayBtn).eql(null);
+    expect(addObjectControlNode).not.eql(null);
+    expect(removeObjectControlNode).eql(null);
+    expect(testInput).eql(null);
+  });
+});
+
+describe('nameGenerator', () => {
+  let sandbox;
+  beforeEach(() => {
+    sandbox = createSandbox();
+  });
+  afterEach(() => {
+    sandbox.restore();
   });
 
-  describe('Calling reset from ref object', () => {
-    it('Reset API test', () => {
-      const schema = {
-        title: 'Test form',
-        type: 'string',
-      };
-      const formRef = createRef();
-      const props = {
-        ref: formRef,
-        schema,
-      };
-      const { node } = createFormComponent(props);
-      expect(formRef.current.reset).to.exist;
-      expect(node.querySelector('input')).to.exist;
-      fireEvent.change(node.querySelector('input'), { target: { value: 'Some Value' } });
-      act(() => {
-        formRef.current.reset();
-      });
-      expect(node.querySelector('input').getAttribute('value')).to.eq('');
-    });
-
-    it('Clear errors', () => {
-      const schema = {
-        title: 'Test form',
-        type: 'number',
-      };
-      const formRef = createRef();
-      const props = {
-        ref: formRef,
-        schema,
-      };
-      const { node, comp } = createFormComponent(props);
-      expect(formRef.current.reset).to.exist;
-      expect(node.querySelector('input')).to.exist;
-      fireEvent.change(node.querySelector('input'), { target: { value: 'Some Value' } });
-      expect(comp.ref.current.state.errors).to.have.length(0);
-      act(() => {
-        fireEvent.submit(node);
-      });
-      expect(comp.ref.current.state.errors).to.have.length(1);
-      expect(node.querySelector('.errors')).to.exist;
-      act(() => {
-        formRef.current.reset();
-      });
-      expect(node.querySelector('.errors')).not.to.exist;
-      expect(node.querySelector('input').getAttribute('value')).to.eq('');
-      expect(comp.ref.current.state.errors).to.have.length(0);
-    });
-
-    it('Reset button test with default value', () => {
-      const schemaWithDefault = {
-        title: 'Test form',
-        type: 'string',
-        default: 'Some-Value',
-      };
-      const formRef = createRef();
-      const props = {
-        ref: formRef,
-        schema: schemaWithDefault,
-      };
-      const { node } = createFormComponent(props);
-      const input = node.querySelector('input');
-      expect(formRef.current.reset).to.exist;
-      expect(input).to.exist;
-      expect(input.getAttribute('value')).to.eq('Some-Value');
-      act(() => {
-        formRef.current.reset();
-      });
-      expect(input.getAttribute('value')).to.eq('Some-Value');
-      fireEvent.change(input, { target: { value: 'Changed value' } });
-      act(() => {
-        formRef.current.reset();
-      });
-      expect(input.getAttribute('value')).to.eq('Some-Value');
-    });
-
-    it('Reset button test with complex schema', () => {
-      const schema = widgetsSchema;
-      const formRef = createRef();
-      const props = {
-        ref: formRef,
-        schema,
-      };
-      const { node } = createFormComponent(props);
-      const checkbox = node.querySelector('input[type="checkbox"]');
-      const input = node.querySelector('input[type="text"]');
-      expect(formRef.current.reset).to.exist;
-      expect(checkbox).to.exist;
-      expect(input).to.exist;
-      expect(checkbox.checked).to.eq(true);
-      expect(input.getAttribute('value')).to.eq('');
-      act(() => {
-        formRef.current.reset();
-      });
-      expect(checkbox.checked).to.eq(true);
-      expect(input.getAttribute('value')).to.eq('');
-      fireEvent.click(checkbox);
-      fireEvent.change(input, { target: { value: 'Changed value' } });
-      expect(checkbox.checked).to.eq(false);
-      expect(input.getAttribute('value')).to.eq('Changed value');
-      act(() => {
-        formRef.current.reset();
-      });
-      expect(input.getAttribute('value')).to.eq('');
-      expect(checkbox.checked).to.eq(true);
-    });
-  });
-
-  describe('validateForm()', () => {
-    it('Should call validateFormWithFormData with the current formData if omitExtraData is false', () => {
-      const omitExtraData = false;
-      const schema = {
-        type: 'object',
-        properties: {
-          foo: { type: 'string' },
-        },
-      };
-      const formData = { foo: 'bar', baz: 'baz' };
-      const formRef = createRef();
-      const props = {
-        ref: formRef,
-        schema,
-        formData,
-        omitExtraData: omitExtraData,
-      };
-      const { comp } = createFormComponent(props);
-      sandbox.stub(comp.ref.current, 'validateFormWithFormData').returns({
-        foo: '',
-      });
-      act(() => {
-        comp.ref.current.validateForm();
-      });
-      sinon.assert.calledWithMatch(comp.ref.current.validateFormWithFormData, formData);
-    });
-
-    it('Should call validateFormWithFormData with a new formData with only used fields if omitExtraData is true', () => {
-      const omitExtraData = true;
-      const schema = {
-        type: 'object',
-        properties: {
-          foo: { type: 'string' },
-        },
-      };
-      const formData = { foo: 'bar', baz: 'baz' };
-      const formRef = createRef();
-      const props = {
-        ref: formRef,
-        schema,
-        formData,
-        omitExtraData: omitExtraData,
-      };
-      const { comp } = createFormComponent(props);
-      sandbox.stub(comp.ref.current, 'validateFormWithFormData').returns({
-        foo: '',
-      });
-      act(() => {
-        comp.ref.current.validateForm();
-      });
-      sinon.assert.calledWithMatch(comp.ref.current.validateFormWithFormData, { foo: 'bar' });
-    });
-
-    it('Should update state when data updated from invalid to valid', () => {
-      const ref = createRef();
-      const props = {
-        schema: {
-          type: 'object',
-          required: ['input'],
-          properties: {
-            input: {
-              type: 'string',
-            },
-          },
-        },
-        formData: {},
-        ref,
-      };
-      const { comp, node } = createFormComponent(props);
-      // trigger programmatic validation and make sure an error appears.
-      act(() => {
-        expect(ref.current.validateForm()).to.eql(false);
-      });
-
-      let errors = node.querySelectorAll('.error-detail');
-      expect(errors).to.have.lengthOf(1);
-      expect(errors[0].textContent).to.be.eql("must have required property 'input'");
-
-      // populate the input and simulate a re-render from the parent.
-      const textNode = node.querySelector('#root_input');
-      fireEvent.change(textNode, {
-        target: { value: 'populated value' },
-      });
-      setProps(comp, { ...props, formData: { input: 'populated value' } });
-      // // error should still be present.
-      errors = node.querySelectorAll('.error-detail');
-      // screen.debug();
-      // change formData and make sure the error disappears.
-      expect(errors).to.have.lengthOf(0);
-
-      // trigger programmatic validation again and make sure the error disappears.
-      act(() => {
-        expect(ref.current.validateForm()).to.eql(true);
-      });
-      errors = node.querySelectorAll('.error-detail');
-      expect(errors).to.have.lengthOf(0);
-    });
-  });
-
-  describe('optionalDataControls', () => {
+  it('should generate bracket notation names for simple fields', () => {
     const schema = {
-      title: 'test',
+      type: 'object',
       properties: {
-        nestedObjectOptional: {
+        firstName: { type: 'string' },
+        lastName: { type: 'string' },
+      },
+    };
+    const { node } = createFormComponent({ schema, nameGenerator: bracketNameGenerator });
+
+    const firstNameInput = node.querySelector('#root_firstName');
+    const lastNameInput = node.querySelector('#root_lastName');
+
+    expect(firstNameInput.getAttribute('name')).eql('root[firstName]');
+    expect(lastNameInput.getAttribute('name')).eql('root[lastName]');
+  });
+
+  it('should generate dot notation names for simple fields', () => {
+    const schema = {
+      type: 'object',
+      properties: {
+        firstName: { type: 'string' },
+        lastName: { type: 'string' },
+      },
+    };
+    const { node } = createFormComponent({ schema, nameGenerator: dotNotationNameGenerator });
+
+    const firstNameInput = node.querySelector('#root_firstName');
+    const lastNameInput = node.querySelector('#root_lastName');
+
+    expect(firstNameInput.getAttribute('name')).eql('root.firstName');
+    expect(lastNameInput.getAttribute('name')).eql('root.lastName');
+  });
+
+  it('should generate bracket notation names for nested objects', () => {
+    const schema = {
+      type: 'object',
+      properties: {
+        person: {
           type: 'object',
           properties: {
-            test: {
-              type: 'string',
+            firstName: { type: 'string' },
+            address: {
+              type: 'object',
+              properties: {
+                street: { type: 'string' },
+                city: { type: 'string' },
+              },
             },
           },
         },
-        nestedArrayOptional: {
+      },
+    };
+    const { node } = createFormComponent({ schema, nameGenerator: bracketNameGenerator });
+
+    const firstNameInput = node.querySelector('#root_person_firstName');
+    const streetInput = node.querySelector('#root_person_address_street');
+    const cityInput = node.querySelector('#root_person_address_city');
+
+    expect(firstNameInput.getAttribute('name')).eql('root[person][firstName]');
+    expect(streetInput.getAttribute('name')).eql('root[person][address][street]');
+    expect(cityInput.getAttribute('name')).eql('root[person][address][city]');
+  });
+
+  it('should generate bracket notation names for array items', () => {
+    const schema = {
+      type: 'object',
+      properties: {
+        tags: {
+          type: 'array',
+          items: { type: 'string' },
+        },
+      },
+    };
+    const formData = {
+      tags: ['foo', 'bar'],
+    };
+    const { node } = createFormComponent({ schema, formData, nameGenerator: bracketNameGenerator });
+
+    const firstTagInput = node.querySelector('#root_tags_0');
+    const secondTagInput = node.querySelector('#root_tags_1');
+
+    expect(firstTagInput.getAttribute('name')).eql('root[tags][0]');
+    expect(secondTagInput.getAttribute('name')).eql('root[tags][1]');
+  });
+
+  it('should generate bracket notation names for array of objects', () => {
+    const schema = {
+      type: 'object',
+      properties: {
+        tasks: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              title: { type: 'string' },
+              done: { type: 'boolean' },
+            },
+          },
+        },
+      },
+    };
+    const formData = {
+      tasks: [
+        { title: 'Task 1', done: false },
+        { title: 'Task 2', done: true },
+      ],
+    };
+    const { node } = createFormComponent({ schema, formData, nameGenerator: bracketNameGenerator });
+
+    const firstTaskTitleInput = node.querySelector('#root_tasks_0_title');
+    const firstTaskDoneInput = node.querySelector('#root_tasks_0_done');
+    const secondTaskTitleInput = node.querySelector('#root_tasks_1_title');
+    const secondTaskDoneInput = node.querySelector('#root_tasks_1_done');
+
+    expect(firstTaskTitleInput.getAttribute('name')).eql('root[tasks][0][title]');
+    expect(firstTaskDoneInput.getAttribute('name')).eql('root[tasks][0][done]');
+    expect(secondTaskTitleInput.getAttribute('name')).eql('root[tasks][1][title]');
+    expect(secondTaskDoneInput.getAttribute('name')).eql('root[tasks][1][done]');
+  });
+
+  it('should generate bracket notation names for select widgets', () => {
+    const schema = {
+      type: 'object',
+      properties: {
+        color: {
+          type: 'string',
+          enum: ['red', 'green', 'blue'],
+        },
+      },
+    };
+    const { node } = createFormComponent({ schema, nameGenerator: bracketNameGenerator });
+
+    const selectInput = node.querySelector('#root_color');
+    expect(selectInput.getAttribute('name')).eql('root[color]');
+  });
+
+  it('should generate bracket notation names for radio widgets', () => {
+    const schema = {
+      type: 'object',
+      properties: {
+        option: {
+          type: 'string',
+          enum: ['foo', 'bar'],
+        },
+      },
+    };
+    const uiSchema = {
+      option: {
+        'ui:widget': 'radio',
+      },
+    };
+    const { node } = createFormComponent({ schema, uiSchema, nameGenerator: bracketNameGenerator });
+
+    const radioInputs = node.querySelectorAll('input[type="radio"]');
+    expect(radioInputs[0].getAttribute('name')).eql('root[option]');
+    expect(radioInputs[1].getAttribute('name')).eql('root[option]');
+  });
+
+  it('should generate bracket notation names for checkboxes widgets', () => {
+    const schema = {
+      type: 'object',
+      properties: {
+        choices: {
           type: 'array',
           items: {
             type: 'string',
+            enum: ['foo', 'bar', 'baz'],
           },
+          uniqueItems: true,
         },
       },
     };
-    const arrayOnUiSchema = {
-      'ui:globalOptions': {
-        enableOptionalDataFieldForType: ['array'],
+    const uiSchema = {
+      choices: {
+        'ui:widget': 'checkboxes',
       },
     };
-    const objectOnUiSchema = {
-      'ui:globalOptions': {
-        enableOptionalDataFieldForType: ['object'],
-      },
-    };
-    const bothOnUiSchema = {
-      'ui:globalOptions': {
-        enableOptionalDataFieldForType: ['object', 'array'],
-      },
-    };
-    const experimental_defaultFormStateBehavior = {
-      // Set the emptyObjectFields to only populate required defaults to highlight the code working
-      emptyObjectFields: 'populateRequiredDefaults',
-    };
-    const arrayId = 'root_nestedArrayOptional';
-    const objectId = 'root_nestedObjectOptional';
-    const arrayControlAddId = optionalControlsId(arrayId, 'Add');
-    const arrayControlRemoveId = optionalControlsId(arrayId, 'Remove');
-    const arrayControlMsgId = optionalControlsId(arrayId, 'Msg');
-    const arrayAddId = buttonId(arrayId, 'add');
-    const objectControlAddId = optionalControlsId(objectId, 'Add');
-    const objectControlRemoveId = optionalControlsId(objectId, 'Remove');
-    const objectControlMsgId = optionalControlsId(objectId, 'Msg');
-    it('does not render any optional data control messages when not turned on and readonly and disabled', () => {
-      const props = {
-        schema,
-        experimental_defaultFormStateBehavior,
-        readonly: true,
-        disabled: true,
-      };
-      const { node } = createFormComponent(props);
-      const addArrayControlNode = node.querySelector(`#${arrayControlAddId}`);
-      const removeArrayControlNode = node.querySelector(`#${arrayControlRemoveId}`);
-      const msgArrayControlNode = node.querySelector(`#${arrayControlMsgId}`);
-      const addArrayBtn = node.querySelector(`#${arrayAddId}`);
-      const addObjectControlNode = node.querySelector(`#${objectControlAddId}`);
-      const removeObjectControlNode = node.querySelector(`#${objectControlRemoveId}`);
-      const msgObjectControlNode = node.querySelector(`#${objectControlMsgId}`);
-      const testInput = node.querySelector(`#${objectId}_test`);
-      // Check that the expected html elements are rendered (or not) as expected
-      expect(addArrayControlNode).eql(null);
-      expect(removeArrayControlNode).eql(null);
-      expect(msgArrayControlNode).eql(null);
-      expect(addArrayBtn).not.eql(null);
-      expect(addObjectControlNode).eql(null);
-      expect(removeObjectControlNode).eql(null);
-      expect(msgObjectControlNode).eql(null);
-      expect(testInput).not.eql(null);
-    });
-    it('renders optional data control messages when turned on and readonly', () => {
-      const props = {
-        schema,
-        uiSchema: bothOnUiSchema,
-        experimental_defaultFormStateBehavior,
-        readonly: true,
-      };
-      const { node } = createFormComponent(props);
-      const addArrayControlNode = node.querySelector(`#${arrayControlAddId}`);
-      const removeArrayControlNode = node.querySelector(`#${arrayControlRemoveId}`);
-      const msgArrayControlNode = node.querySelector(`#${arrayControlMsgId}`);
-      const addArrayBtn = node.querySelector(`#${arrayAddId}`);
-      const addObjectControlNode = node.querySelector(`#${objectControlAddId}`);
-      const removeObjectControlNode = node.querySelector(`#${objectControlRemoveId}`);
-      const msgObjectControlNode = node.querySelector(`#${objectControlMsgId}`);
-      const testInput = node.querySelector(`#${objectId}_test`);
-      // Check that the expected html elements are rendered (or not) as expected
-      expect(addArrayControlNode).eql(null);
-      expect(removeArrayControlNode).eql(null);
-      expect(msgArrayControlNode).not.eql(null);
-      expect(addArrayBtn).eql(null);
-      expect(addObjectControlNode).eql(null);
-      expect(removeObjectControlNode).eql(null);
-      expect(msgObjectControlNode).not.eql(null);
-      expect(testInput).eql(null);
-    });
-    it('renders optional data control messages when turned on and readonly', () => {
-      const props = {
-        schema,
-        uiSchema: bothOnUiSchema,
-        experimental_defaultFormStateBehavior,
-        disabled: true,
-      };
-      const { node } = createFormComponent(props);
-      const addArrayControlNode = node.querySelector(`#${arrayControlAddId}`);
-      const removeArrayControlNode = node.querySelector(`#${arrayControlRemoveId}`);
-      const msgArrayControlNode = node.querySelector(`#${arrayControlMsgId}`);
-      const addArrayBtn = node.querySelector(`#${arrayAddId}`);
-      const addObjectControlNode = node.querySelector(`#${objectControlAddId}`);
-      const removeObjectControlNode = node.querySelector(`#${objectControlRemoveId}`);
-      const msgObjectControlNode = node.querySelector(`#${objectControlMsgId}`);
-      const testInput = node.querySelector(`#${objectId}_test`);
-      // Check that the expected html elements are rendered (or not) as expected
-      expect(addArrayControlNode).eql(null);
-      expect(removeArrayControlNode).eql(null);
-      expect(msgArrayControlNode).not.eql(null);
-      expect(addArrayBtn).eql(null);
-      expect(addObjectControlNode).eql(null);
-      expect(removeObjectControlNode).eql(null);
-      expect(msgObjectControlNode).not.eql(null);
-      expect(testInput).eql(null);
-    });
-    it('does not render any optional data controls when not turned on', () => {
-      const props = {
-        schema,
-        experimental_defaultFormStateBehavior,
-      };
-      const { node } = createFormComponent(props);
-      const addArrayControlNode = node.querySelector(`#${arrayControlAddId}`);
-      const removeArrayControlNode = node.querySelector(`#${arrayControlRemoveId}`);
-      const addArrayBtn = node.querySelector(`#${arrayAddId}`);
-      const addObjectControlNode = node.querySelector(`#${objectControlAddId}`);
-      const removeObjectControlNode = node.querySelector(`#${objectControlRemoveId}`);
-      const testInput = node.querySelector(`#${objectId}_test`);
-      // Check that the expected html elements are rendered (or not) as expected
-      expect(addArrayControlNode).eql(null);
-      expect(removeArrayControlNode).eql(null);
-      expect(addArrayBtn).not.eql(null);
-      expect(addObjectControlNode).eql(null);
-      expect(removeObjectControlNode).eql(null);
-      expect(testInput).not.eql(null);
-    });
-    it('only render object optional data controls when only object is turned on', () => {
-      const props = {
-        schema,
-        uiSchema: objectOnUiSchema,
-        experimental_defaultFormStateBehavior,
-      };
-      const { node } = createFormComponent(props);
-      const addArrayControlNode = node.querySelector(`#${arrayControlAddId}`);
-      const removeArrayControlNode = node.querySelector(`#${arrayControlRemoveId}`);
-      const addArrayBtn = node.querySelector(`#${arrayAddId}`);
-      let addObjectControlNode = node.querySelector(`#${objectControlAddId}`);
-      let removeObjectControlNode = node.querySelector(`#${objectControlRemoveId}`);
-      let testInput = node.querySelector(`#${objectId}_test`);
-      // Check that the expected html elements are rendered (or not) as expected
-      expect(addArrayControlNode).eql(null);
-      expect(removeArrayControlNode).eql(null);
-      expect(addArrayBtn).not.eql(null);
-      expect(addObjectControlNode).not.eql(null);
-      expect(removeObjectControlNode).eql(null);
-      expect(testInput).eql(null);
+    const { node } = createFormComponent({ schema, uiSchema, nameGenerator: bracketNameGenerator });
 
-      // now click on the add optional data button
-      act(() => addObjectControlNode.click());
-      // now check to see if the UI adjusted
-      addObjectControlNode = node.querySelector(`#${objectControlAddId}`);
-      removeObjectControlNode = node.querySelector(`#${objectControlRemoveId}`);
-      testInput = node.querySelector(`#${objectId}_test`);
-      expect(addObjectControlNode).eql(null);
-      expect(removeObjectControlNode).not.eql(null);
-      expect(testInput).not.eql(null);
-
-      // now click on the remove optional data button
-      act(() => removeObjectControlNode.click());
-      // now check to see if the UI adjusted
-      addObjectControlNode = node.querySelector(`#${objectControlAddId}`);
-      removeObjectControlNode = node.querySelector(`#${objectControlRemoveId}`);
-      testInput = node.querySelector(`#${objectId}_test`);
-      expect(addObjectControlNode).not.eql(null);
-      expect(removeObjectControlNode).eql(null);
-      expect(testInput).eql(null);
-    });
-    it('only render array optional data controls when only array is turned on', () => {
-      const props = {
-        schema,
-        uiSchema: arrayOnUiSchema,
-        experimental_defaultFormStateBehavior,
-      };
-      const { node } = createFormComponent(props);
-      let addArrayControlNode = node.querySelector(`#${arrayControlAddId}`);
-      let removeArrayControlNode = node.querySelector(`#${arrayControlRemoveId}`);
-      let addArrayBtn = node.querySelector(`#${arrayAddId}`);
-      const addObjectControlNode = node.querySelector(`#${objectControlAddId}`);
-      const removeObjectControlNode = node.querySelector(`#${objectControlRemoveId}`);
-      const testInput = node.querySelector(`#${objectId}_test`);
-      // Check that the expected html elements are rendered (or not) as expected
-      expect(addArrayControlNode).not.eql(null);
-      expect(removeArrayControlNode).eql(null);
-      expect(addArrayBtn).eql(null);
-      expect(addObjectControlNode).eql(null);
-      expect(removeObjectControlNode).eql(null);
-      expect(testInput).not.eql(null);
-
-      // now click on the add optional data button
-      act(() => addArrayControlNode.click());
-      // now check to see if the UI adjusted
-      addArrayControlNode = node.querySelector(`#${arrayControlAddId}`);
-      removeArrayControlNode = node.querySelector(`#${arrayControlRemoveId}`);
-      addArrayBtn = node.querySelector(`#${arrayAddId}`);
-      expect(addArrayControlNode).eql(null);
-      expect(removeArrayControlNode).not.eql(null);
-      expect(addArrayBtn).not.eql(null);
-
-      // now click on the remove optional data button
-      act(() => removeArrayControlNode.click());
-      // now check to see if the UI adjusted
-      addArrayControlNode = node.querySelector(`#${arrayControlAddId}`);
-      removeArrayControlNode = node.querySelector(`#${arrayControlRemoveId}`);
-      addArrayBtn = node.querySelector(`#${arrayAddId}`);
-      expect(addArrayControlNode).not.eql(null);
-      expect(removeArrayControlNode).eql(null);
-      expect(addArrayBtn).eql(null);
-    });
-    it('render both kinds of optional data controls when only both are turned on', () => {
-      const props = {
-        schema,
-        uiSchema: bothOnUiSchema,
-        experimental_defaultFormStateBehavior,
-      };
-      const { node } = createFormComponent(props);
-      let addArrayControlNode = node.querySelector(`#${arrayControlAddId}`);
-      let removeArrayControlNode = node.querySelector(`#${arrayControlRemoveId}`);
-      let addArrayBtn = node.querySelector(`#${arrayAddId}`);
-      let addObjectControlNode = node.querySelector(`#${objectControlAddId}`);
-      let removeObjectControlNode = node.querySelector(`#${objectControlRemoveId}`);
-      let testInput = node.querySelector(`#${objectId}_test`);
-      // Check that the expected html elements are rendered (or not) as expected
-      expect(addArrayControlNode).not.eql(null);
-      expect(removeArrayControlNode).eql(null);
-      expect(addArrayBtn).eql(null);
-      expect(addObjectControlNode).not.eql(null);
-      expect(removeObjectControlNode).eql(null);
-      expect(testInput).eql(null);
-
-      // now click on the add optional data button
-      act(() => addArrayControlNode.click());
-      act(() => addObjectControlNode.click());
-      // now check to see if the UI adjusted
-      addArrayControlNode = node.querySelector(`#${arrayControlAddId}`);
-      removeArrayControlNode = node.querySelector(`#${arrayControlRemoveId}`);
-      addArrayBtn = node.querySelector(`#${arrayAddId}`);
-      addObjectControlNode = node.querySelector(`#${objectControlAddId}`);
-      removeObjectControlNode = node.querySelector(`#${objectControlRemoveId}`);
-      testInput = node.querySelector(`#${objectId}_test`);
-      expect(addArrayControlNode).eql(null);
-      expect(removeArrayControlNode).not.eql(null);
-      expect(addArrayBtn).not.eql(null);
-      expect(addObjectControlNode).eql(null);
-      expect(removeObjectControlNode).not.eql(null);
-      expect(testInput).not.eql(null);
-
-      // now click on the remove optional data button
-      act(() => removeArrayControlNode.click());
-      act(() => removeObjectControlNode.click());
-      // now check to see if the UI adjusted
-      addArrayControlNode = node.querySelector(`#${arrayControlAddId}`);
-      removeArrayControlNode = node.querySelector(`#${arrayControlRemoveId}`);
-      addArrayBtn = node.querySelector(`#${arrayAddId}`);
-      addObjectControlNode = node.querySelector(`#${objectControlAddId}`);
-      removeObjectControlNode = node.querySelector(`#${objectControlRemoveId}`);
-      testInput = node.querySelector(`#${objectId}_test`);
-      expect(addArrayControlNode).not.eql(null);
-      expect(removeArrayControlNode).eql(null);
-      expect(addArrayBtn).eql(null);
-      expect(addObjectControlNode).not.eql(null);
-      expect(removeObjectControlNode).eql(null);
-      expect(testInput).eql(null);
-    });
+    const checkboxInputs = node.querySelectorAll('input[type="checkbox"]');
+    // Checkboxes for multi-value fields have [] appended to indicate multiple values
+    expect(checkboxInputs[0].getAttribute('name')).eql('root[choices][]');
+    expect(checkboxInputs[1].getAttribute('name')).eql('root[choices][]');
+    expect(checkboxInputs[2].getAttribute('name')).eql('root[choices][]');
   });
 
-  describe('nameGenerator', () => {
-    const { bracketNameGenerator, dotNotationNameGenerator } = require('@rjsf/utils');
+  it('should generate bracket notation names for textarea widgets', () => {
+    const schema = {
+      type: 'object',
+      properties: {
+        description: { type: 'string' },
+      },
+    };
+    const uiSchema = {
+      description: {
+        'ui:widget': 'textarea',
+      },
+    };
+    const { node } = createFormComponent({ schema, uiSchema, nameGenerator: bracketNameGenerator });
 
-    it('should generate bracket notation names for simple fields', () => {
-      const schema = {
-        type: 'object',
-        properties: {
-          firstName: { type: 'string' },
-          lastName: { type: 'string' },
-        },
-      };
-      const { node } = createFormComponent({ schema, nameGenerator: bracketNameGenerator });
+    const textareaInput = node.querySelector('#root_description');
+    expect(textareaInput.getAttribute('name')).eql('root[description]');
+  });
 
-      const firstNameInput = node.querySelector('#root_firstName');
-      const lastNameInput = node.querySelector('#root_lastName');
+  it('should use default id if nameGenerator is not provided', () => {
+    const schema = {
+      type: 'object',
+      properties: {
+        firstName: { type: 'string' },
+      },
+    };
+    const { node } = createFormComponent({ schema });
 
-      expect(firstNameInput.getAttribute('name')).eql('root[firstName]');
-      expect(lastNameInput.getAttribute('name')).eql('root[lastName]');
-    });
+    const firstNameInput = node.querySelector('#root_firstName');
+    expect(firstNameInput.getAttribute('name')).eql('root_firstName');
+  });
 
-    it('should generate dot notation names for simple fields', () => {
-      const schema = {
-        type: 'object',
-        properties: {
-          firstName: { type: 'string' },
-          lastName: { type: 'string' },
-        },
-      };
-      const { node } = createFormComponent({ schema, nameGenerator: dotNotationNameGenerator });
+  it('should handle nameGenerator with number fields', () => {
+    const schema = {
+      type: 'object',
+      properties: {
+        age: { type: 'number' },
+        count: { type: 'integer' },
+      },
+    };
+    const { node } = createFormComponent({ schema, nameGenerator: bracketNameGenerator });
 
-      const firstNameInput = node.querySelector('#root_firstName');
-      const lastNameInput = node.querySelector('#root_lastName');
+    const ageInput = node.querySelector('#root_age');
+    const countInput = node.querySelector('#root_count');
 
-      expect(firstNameInput.getAttribute('name')).eql('root.firstName');
-      expect(lastNameInput.getAttribute('name')).eql('root.lastName');
-    });
+    expect(ageInput.getAttribute('name')).eql('root[age]');
+    expect(countInput.getAttribute('name')).eql('root[count]');
+  });
 
-    it('should generate bracket notation names for nested objects', () => {
-      const schema = {
-        type: 'object',
-        properties: {
-          person: {
-            type: 'object',
-            properties: {
-              firstName: { type: 'string' },
-              address: {
-                type: 'object',
-                properties: {
-                  street: { type: 'string' },
-                  city: { type: 'string' },
-                },
-              },
-            },
-          },
-        },
-      };
-      const { node } = createFormComponent({ schema, nameGenerator: bracketNameGenerator });
+  it('should handle nameGenerator with boolean fields', () => {
+    const schema = {
+      type: 'object',
+      properties: {
+        active: { type: 'boolean' },
+      },
+    };
+    const { node } = createFormComponent({ schema, nameGenerator: bracketNameGenerator });
 
-      const firstNameInput = node.querySelector('#root_person_firstName');
-      const streetInput = node.querySelector('#root_person_address_street');
-      const cityInput = node.querySelector('#root_person_address_city');
-
-      expect(firstNameInput.getAttribute('name')).eql('root[person][firstName]');
-      expect(streetInput.getAttribute('name')).eql('root[person][address][street]');
-      expect(cityInput.getAttribute('name')).eql('root[person][address][city]');
-    });
-
-    it('should generate bracket notation names for array items', () => {
-      const schema = {
-        type: 'object',
-        properties: {
-          tags: {
-            type: 'array',
-            items: { type: 'string' },
-          },
-        },
-      };
-      const formData = {
-        tags: ['foo', 'bar'],
-      };
-      const { node } = createFormComponent({ schema, formData, nameGenerator: bracketNameGenerator });
-
-      const firstTagInput = node.querySelector('#root_tags_0');
-      const secondTagInput = node.querySelector('#root_tags_1');
-
-      expect(firstTagInput.getAttribute('name')).eql('root[tags][0]');
-      expect(secondTagInput.getAttribute('name')).eql('root[tags][1]');
-    });
-
-    it('should generate bracket notation names for array of objects', () => {
-      const schema = {
-        type: 'object',
-        properties: {
-          tasks: {
-            type: 'array',
-            items: {
-              type: 'object',
-              properties: {
-                title: { type: 'string' },
-                done: { type: 'boolean' },
-              },
-            },
-          },
-        },
-      };
-      const formData = {
-        tasks: [
-          { title: 'Task 1', done: false },
-          { title: 'Task 2', done: true },
-        ],
-      };
-      const { node } = createFormComponent({ schema, formData, nameGenerator: bracketNameGenerator });
-
-      const firstTaskTitleInput = node.querySelector('#root_tasks_0_title');
-      const firstTaskDoneInput = node.querySelector('#root_tasks_0_done');
-      const secondTaskTitleInput = node.querySelector('#root_tasks_1_title');
-      const secondTaskDoneInput = node.querySelector('#root_tasks_1_done');
-
-      expect(firstTaskTitleInput.getAttribute('name')).eql('root[tasks][0][title]');
-      expect(firstTaskDoneInput.getAttribute('name')).eql('root[tasks][0][done]');
-      expect(secondTaskTitleInput.getAttribute('name')).eql('root[tasks][1][title]');
-      expect(secondTaskDoneInput.getAttribute('name')).eql('root[tasks][1][done]');
-    });
-
-    it('should generate bracket notation names for select widgets', () => {
-      const schema = {
-        type: 'object',
-        properties: {
-          color: {
-            type: 'string',
-            enum: ['red', 'green', 'blue'],
-          },
-        },
-      };
-      const { node } = createFormComponent({ schema, nameGenerator: bracketNameGenerator });
-
-      const selectInput = node.querySelector('#root_color');
-      expect(selectInput.getAttribute('name')).eql('root[color]');
-    });
-
-    it('should generate bracket notation names for radio widgets', () => {
-      const schema = {
-        type: 'object',
-        properties: {
-          option: {
-            type: 'string',
-            enum: ['foo', 'bar'],
-          },
-        },
-      };
-      const uiSchema = {
-        option: {
-          'ui:widget': 'radio',
-        },
-      };
-      const { node } = createFormComponent({ schema, uiSchema, nameGenerator: bracketNameGenerator });
-
-      const radioInputs = node.querySelectorAll('input[type="radio"]');
-      expect(radioInputs[0].getAttribute('name')).eql('root[option]');
-      expect(radioInputs[1].getAttribute('name')).eql('root[option]');
-    });
-
-    it('should generate bracket notation names for checkboxes widgets', () => {
-      const schema = {
-        type: 'object',
-        properties: {
-          choices: {
-            type: 'array',
-            items: {
-              type: 'string',
-              enum: ['foo', 'bar', 'baz'],
-            },
-            uniqueItems: true,
-          },
-        },
-      };
-      const uiSchema = {
-        choices: {
-          'ui:widget': 'checkboxes',
-        },
-      };
-      const { node } = createFormComponent({ schema, uiSchema, nameGenerator: bracketNameGenerator });
-
-      const checkboxInputs = node.querySelectorAll('input[type="checkbox"]');
-      // Checkboxes for multi-value fields have [] appended to indicate multiple values
-      expect(checkboxInputs[0].getAttribute('name')).eql('root[choices][]');
-      expect(checkboxInputs[1].getAttribute('name')).eql('root[choices][]');
-      expect(checkboxInputs[2].getAttribute('name')).eql('root[choices][]');
-    });
-
-    it('should generate bracket notation names for textarea widgets', () => {
-      const schema = {
-        type: 'object',
-        properties: {
-          description: { type: 'string' },
-        },
-      };
-      const uiSchema = {
-        description: {
-          'ui:widget': 'textarea',
-        },
-      };
-      const { node } = createFormComponent({ schema, uiSchema, nameGenerator: bracketNameGenerator });
-
-      const textareaInput = node.querySelector('#root_description');
-      expect(textareaInput.getAttribute('name')).eql('root[description]');
-    });
-
-    it('should use default id if nameGenerator is not provided', () => {
-      const schema = {
-        type: 'object',
-        properties: {
-          firstName: { type: 'string' },
-        },
-      };
-      const { node } = createFormComponent({ schema });
-
-      const firstNameInput = node.querySelector('#root_firstName');
-      expect(firstNameInput.getAttribute('name')).eql('root_firstName');
-    });
-
-    it('should handle nameGenerator with number fields', () => {
-      const schema = {
-        type: 'object',
-        properties: {
-          age: { type: 'number' },
-          count: { type: 'integer' },
-        },
-      };
-      const { node } = createFormComponent({ schema, nameGenerator: bracketNameGenerator });
-
-      const ageInput = node.querySelector('#root_age');
-      const countInput = node.querySelector('#root_count');
-
-      expect(ageInput.getAttribute('name')).eql('root[age]');
-      expect(countInput.getAttribute('name')).eql('root[count]');
-    });
-
-    it('should handle nameGenerator with boolean fields', () => {
-      const schema = {
-        type: 'object',
-        properties: {
-          active: { type: 'boolean' },
-        },
-      };
-      const { node } = createFormComponent({ schema, nameGenerator: bracketNameGenerator });
-
-      const activeInput = node.querySelector('#root_active');
-      expect(activeInput.getAttribute('name')).eql('root[active]');
-    });
+    const activeInput = node.querySelector('#root_active');
+    expect(activeInput.getAttribute('name')).eql('root[active]');
   });
 });

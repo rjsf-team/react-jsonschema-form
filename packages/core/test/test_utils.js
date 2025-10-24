@@ -48,6 +48,7 @@ export function describeRepeated(title, fn) {
     { omitExtraData: false },
     { omitExtraData: true },
     { omitExtraData: true, liveOmit: true },
+    { omitExtraData: true, liveOmit: 'onBlur' },
   ];
   for (let formExtraProps of formExtraPropsList) {
     const createFormComponentFn = (props) => createFormComponent({ ...props, ...formExtraProps });

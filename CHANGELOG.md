@@ -15,6 +15,17 @@ it according to semantic versioning. For example, if your PR adds a breaking cha
 should change the heading of the (upcoming) version to include a major version bump.
 
 -->
+# 6.0.0-beta.23
+
+## @rjsf/core
+
+- Updated `FormProps` to add new `onChange`/`onBlur` values for the `liveValidate` and `liveOmit` props, deprecating the `boolean` aspect of them
+- Updated `Form` to support the new feature to do `onBlur` handling of `liveValidate` and `liveOmit`
+
+## Dev / docs / playground
+- Updated the playground to switch `liveValidate` and `liveOmit` from checkboxes to radio buttons for the new options
+- Updated `form-props.md` and `v6x upgrade guide.md` to document the new feature and deprecation
+
 # 6.0.0-beta.22
 
 ## @rjsf/antd
@@ -44,7 +55,7 @@ should change the heading of the (upcoming) version to include a major version b
 - BREAKING CHANGE: Updated `ArrayFieldTemplate` to remove the `ArrayFieldItemTemplate` render in favor of simply using `items` due to `ArrayField` changes
 - BREAKING CHANGE: Updated `ArrayFieldItemButtonsTemplate` to replace the old callback-generator functions with the new memoizable callback functions
 - Fixed a bug in `Form` to avoid getting errors being reported at the root level via `onChange` when there aren't
-- Refactored LayoutGridField as function components instead of a single class component.
+- Refactored `LayoutGridField` as function components instead of a single class component.
 
 ## @rjsf/daisyui
 
@@ -127,8 +138,7 @@ should change the heading of the (upcoming) version to include a major version b
 - Updated the `utility-functions.md` documentation to add the new `useDeepCompareMemo()` hook
 - Updated the `v6.x upgrade guide.md` documentation to add the BREAKING CHANGES to the `ArrayFieldTemplateProps`, `ArrayFieldItemTemplateType`, `ArrayFieldItemButtonsTemplateType`,  `FieldTemplateProps`, `ObjectFieldTemplateProps` and `WrapIfAdditionalTemplateProps` interface props changes and the `useDeepCompareMemo()` hook
 - Added documentation for the `nameGenerator` prop in `form-props.md` and v6.x upgrade guide
-- Updated '@rjsf/snapshot-tests' package to explicitly depend on '@rjsf/core' to build first, fixing an error with parallelized builds
-
+- Updated `@rjsf/snapshot-tests` package to explicitly depend on `@rjsf/core` to build first, fixing an error with parallelized builds
 
 # 6.0.0-beta.21
 
