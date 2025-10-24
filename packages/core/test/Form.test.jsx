@@ -1,4 +1,4 @@
-import { Component, createRef, useEffect } from 'react';
+import { Component, createRef, useEffect, useState } from 'react';
 import { expect } from 'chai';
 import sinon from 'sinon';
 import { fireEvent, act, render, waitFor } from '@testing-library/react';
@@ -394,10 +394,24 @@ describeRepeated('Form common', (createFormComponent) => {
     });
 
     it('should pass errors as the provided React component', () => {
+      // live validate does not run on initial render anymore
+      expect(node.querySelectorAll('.error-detail li')).to.have.length.of(0);
+      act(() => {
+        fireEvent.change(node.querySelector('input'), {
+          target: { value: 'stillinvalid' },
+        });
+      });
       expect(node.querySelectorAll('.error-detail li')).to.have.length.of(1);
     });
 
     it('should pass rawErrors as an array of strings', () => {
+      // live validate does not run on initial render anymore
+      expect(node.querySelectorAll('.raw-error')).to.have.length.of(0);
+      act(() => {
+        fireEvent.change(node.querySelector('input'), {
+          target: { value: 'stillinvalid' },
+        });
+      });
       expect(node.querySelectorAll('.raw-error')).to.have.length.of(1);
     });
 
@@ -2683,6 +2697,15 @@ describeRepeated('Form common', (createFormComponent) => {
       it('should denote the error in the field', () => {
         const { node } = createFormComponent(formProps);
 
+        // live validate does not run on initial render anymore
+        expect(node.querySelectorAll('.rjsf-field-error')).to.have.length.of(0);
+
+        act(() => {
+          fireEvent.change(node.querySelector('input'), {
+            target: { value: 'shorts' },
+          });
+        });
+
         expect(node.querySelectorAll('.rjsf-field-error')).to.have.length.of(1);
         expect(node.querySelector('.rjsf-field-string .error-detail').textContent).eql(
           'must NOT have fewer than 8 characters',
@@ -2729,6 +2752,14 @@ describeRepeated('Form common', (createFormComponent) => {
       it('should denote the error in the field', () => {
         const { node } = createFormComponent(formProps);
 
+        // live validate does not run on initial render anymore
+        expect(node.querySelectorAll('.rjsf-field-error')).to.have.length.of(0);
+
+        act(() => {
+          fireEvent.change(node.querySelector('input'), {
+            target: { value: 'shorts' },
+          });
+        });
         const liNodes = node.querySelectorAll('.rjsf-field-string .error-detail li');
         const errors = [].map.call(liNodes, (li) => li.textContent);
 
@@ -2781,6 +2812,14 @@ describeRepeated('Form common', (createFormComponent) => {
 
       it('should denote the error in the field', () => {
         const { node } = createFormComponent(formProps);
+        // live validate does not run on initial render anymore
+        expect(node.querySelectorAll('.rjsf-field-error')).to.have.length.of(0);
+
+        act(() => {
+          fireEvent.change(node.querySelector('input'), {
+            target: { value: 'shorts' },
+          });
+        });
         const errorDetail = node.querySelector('.rjsf-field-object .rjsf-field-string .error-detail');
 
         expect(node.querySelectorAll('.rjsf-field-error')).to.have.length.of(1);
@@ -2800,7 +2839,7 @@ describeRepeated('Form common', (createFormComponent) => {
       const formProps = {
         schema,
         liveValidate: true,
-        formData: ['good', 'bad', 'good'],
+        formData: ['good', 'ba', 'good'],
       };
 
       it('should contextualize the error for array indices', () => {
@@ -2824,10 +2863,19 @@ describeRepeated('Form common', (createFormComponent) => {
         const { node } = createFormComponent(formProps);
         const fieldNodes = node.querySelectorAll('.rjsf-field-string');
 
+        // live validate does not run on initial render anymore
+        expect(fieldNodes[1].classList.contains('rjsf-field-error')).eql(false);
+
+        // Change the End field to a larger value than Start field to remove customValidate raised errors.
+        act(() => {
+          fireEvent.change(fieldNodes[1].querySelector('input'), {
+            target: { value: 'bad' },
+          });
+        });
+
         const liNodes = fieldNodes[1].querySelectorAll('.rjsf-field-string .error-detail li');
         const errors = [].map.call(liNodes, (li) => li.textContent);
 
-        expect(fieldNodes[1].classList.contains('rjsf-field-error')).eql(true);
         expect(errors).eql(['must NOT have fewer than 4 characters']);
       });
 
@@ -2890,13 +2938,25 @@ describeRepeated('Form common', (createFormComponent) => {
         const { node } = createFormComponent({
           ...formProps,
           formData: {
-            level1: ['good', 'bad', 'good'],
+            level1: ['good', 'ba', 'good'],
           },
         });
 
-        const liNodes = node.querySelectorAll('.rjsf-field-string .error-detail li');
-        const errors = [].map.call(liNodes, (li) => li.textContent);
+        const fields = node.querySelectorAll('.rjsf-field-string');
+        let liNodes = node.querySelectorAll('.rjsf-field-string .error-detail li');
+        let errors = [].map.call(liNodes, (li) => li.textContent);
 
+        // live validate does not run on initial render anymore
+        expect(errors).eql([]);
+
+        act(() => {
+          fireEvent.change(fields[1].querySelector('input'), {
+            target: { value: 'bad' },
+          });
+        });
+
+        liNodes = node.querySelectorAll('.rjsf-field-string .error-detail li');
+        errors = [].map.call(liNodes, (li) => li.textContent);
         expect(errors).eql(['must NOT have fewer than 4 characters']);
       });
     });
@@ -2964,14 +3024,28 @@ describeRepeated('Form common', (createFormComponent) => {
 
       it('should denote the error in the nested item field in error', () => {
         const { node } = createFormComponent(formProps);
+
         const fields = node.querySelectorAll('.rjsf-field-string');
-        const errors = [].map.call(fields, (field) => {
+        let errors = [].map.call(fields, (field) => {
+          const li = field.querySelector('.error-detail li');
+          return li && li.textContent;
+        });
+
+        // live validate does not run on initial render anymore
+        expect(errors).eql([null, null, null, null]);
+
+        act(() => {
+          fireEvent.change(fields[0].querySelector('input'), {
+            target: { value: 'bad' },
+          });
+        });
+        errors = [].map.call(fields, (field) => {
           const li = field.querySelector('.error-detail li');
           return li && li.textContent;
         });
 
         expect(errors).eql([
-          null,
+          'must NOT have fewer than 4 characters',
           'must NOT have fewer than 4 characters',
           'must NOT have fewer than 4 characters',
           null,
@@ -2996,7 +3070,7 @@ describeRepeated('Form common', (createFormComponent) => {
       const formProps = {
         schema,
         liveValidate: true,
-        formData: [{ foo: 'good' }, { foo: 'bad' }, { foo: 'good' }],
+        formData: [{ foo: 'good' }, { foo: 'ba' }, { foo: 'good' }],
       };
 
       it('should contextualize the error for array nested items', () => {
@@ -3020,9 +3094,17 @@ describeRepeated('Form common', (createFormComponent) => {
         const { node } = createFormComponent(formProps);
         const fieldNodes = node.querySelectorAll('.rjsf-field-string');
 
-        const liNodes = fieldNodes[1].querySelectorAll('.rjsf-field-string .error-detail li');
-        const errors = [].map.call(liNodes, (li) => li.textContent);
+        // Initial render no longer does live validation
+        expect(fieldNodes[1].classList.contains('rjsf-field-error')).eql(false);
+        // Change the End field to a larger value than Start field to remove customValidate raised errors.
+        act(() => {
+          fireEvent.change(fieldNodes[1].querySelector('input'), {
+            target: { value: 'bad' },
+          });
+        });
 
+        const liNodes = fieldNodes[1].querySelectorAll('.error-detail li');
+        const errors = [].map.call(liNodes, (li) => li.textContent);
         expect(fieldNodes[1].classList.contains('rjsf-field-error')).eql(true);
         expect(errors).eql(['must NOT have fewer than 4 characters']);
       });
@@ -3173,16 +3255,25 @@ describeRepeated('Form common', (createFormComponent) => {
         const { node, onChange } = createFormComponent({
           schema,
           liveValidate: true,
-          formData: { Start: 2, End: 1 },
+          formData: { Start: 2, End: 0 },
           customValidate,
         });
 
+        // live validate does not run on initial render anymore
+        expect(node.querySelectorAll('#root_Start__error')).to.have.length(0);
+
+        // Change the End field to a larger value than Start field to remove customValidate raised errors.
+        let endInput = node.querySelector('#root_End');
+        act(() => {
+          fireEvent.change(endInput, {
+            target: { value: 1 },
+          });
+        });
         expect(node.querySelectorAll('#root_Start__error')).to.have.length(1);
         let errorMessageContent = node.querySelector('#root_Start__error .text-danger').textContent;
         expect(errorMessageContent).to.contain('Validate error: Test should be LE than End');
 
         // Change the End field to a larger value than Start field to remove customValidate raised errors.
-        const endInput = node.querySelector('#root_End');
         act(() => {
           fireEvent.change(endInput, {
             target: { value: 3 },
@@ -5063,6 +5154,30 @@ describe('Calling reset from ref object', () => {
     expect(input.getAttribute('value')).to.eq('');
     expect(checkbox.checked).to.eq(true);
   });
+
+  it('Reset button test with initial value', () => {
+    const schemaWithDefault = {
+      title: 'Test form',
+      type: 'string',
+    };
+    const formRef = createRef();
+    const props = {
+      ref: formRef,
+      initialFormData: 'foo',
+      schema: schemaWithDefault,
+    };
+    const { node } = createFormComponent(props);
+    const input = node.querySelector('input');
+    expect(formRef.current.reset).to.exist;
+    expect(input).to.exist;
+    expect(input.getAttribute('value')).to.eq(props.initialFormData);
+    fireEvent.change(input, { target: { value: 'Changed value' } });
+    expect(input.getAttribute('value')).to.eq('Changed value');
+    act(() => {
+      formRef.current.reset();
+    });
+    expect(input.getAttribute('value')).to.eq(props.initialFormData);
+  });
 });
 
 describe('validateForm()', () => {
@@ -5711,5 +5826,76 @@ describe('nameGenerator', () => {
 
     const activeInput = node.querySelector('#root_active');
     expect(activeInput.getAttribute('name')).eql('root[active]');
+  });
+});
+
+describe('initialFormData feature to prevent form reset', () => {
+  const schema = {
+    title: 'Reset Example',
+    properties: {
+      name: { type: 'string', title: 'Name' },
+    },
+  };
+  const data = { name: 'initial_id' };
+  const FormWrapper = ({ formData, initialFormData }) => {
+    const [isPending, setIsPending] = useState(false);
+
+    const handleSubmit = () => {
+      setIsPending(true);
+      setTimeout(() => setIsPending(false), 3000);
+    };
+
+    const props = {
+      ...(formData !== undefined && { formData }),
+    };
+
+    return (
+      <Form
+        initialFormData={initialFormData}
+        schema={schema}
+        validator={validator}
+        onSubmit={handleSubmit}
+        disabled={isPending}
+        {...props}
+      />
+    );
+  };
+  it('Form reset without initial data and not being controlled', () => {
+    const { container } = render(<FormWrapper formData={data} />);
+    let input = container.querySelector('input');
+    expect(input.value).to.eql(data.name);
+
+    fireEvent.change(input, {
+      target: { value: 'new value' },
+    });
+    input = container.querySelector('input');
+    expect(input.value).to.eql('new value');
+
+    const submit = container.querySelector('button');
+    act(() => {
+      fireEvent.click(submit);
+    });
+
+    input = container.querySelector('input');
+    expect(input.value).to.eql(data.name);
+  });
+  it('Form does not reset with initial data and not being controlled', () => {
+    const { container } = render(<FormWrapper initialFormData={data} />);
+    let input = container.querySelector('input');
+    expect(input.value).to.eql(data.name);
+
+    fireEvent.change(input, {
+      target: { value: 'new value' },
+    });
+    input = container.querySelector('input');
+    expect(input.value).to.eql('new value');
+
+    const submit = container.querySelector('button');
+    act(() => {
+      fireEvent.click(submit);
+    });
+
+    input = container.querySelector('input');
+    expect(input.value).to.eql('new value');
   });
 });

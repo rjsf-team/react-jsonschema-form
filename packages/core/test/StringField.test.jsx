@@ -305,6 +305,9 @@ describe('StringField', () => {
         liveValidate: true,
       });
 
+      // trigger the errors by submitting the form since initial render no longer shows them
+      submitForm(node);
+
       const errorMessages = node.querySelectorAll('#root__error');
       expect(errorMessages).to.have.length(1);
       const errorMessageContent = node.querySelector('#root__error .text-danger').textContent;
