@@ -391,8 +391,7 @@ See [Semantic UI Customization](themes/semantic-ui/uiSchema.md#formcontext) for 
 
 ## formData
 
-The data for the form, used to fill a form with data, causing the form to be "controlled".
-If you want an "uncontrolled" form with initial data, then use `initialFormData` instead.
+The data for the form, used to load a "controlled" form with its current data. If you want an "uncontrolled" form with initial data, then use `initialFormData` instead.
 
 ## id
 
@@ -442,7 +441,7 @@ id="root_first">` when rendering `first`.
 
 ## initialFormData
 
-The initial data for the form, used to fill a "uncontrolled" form with existing data on the initial render and when `reset()` is called programmatically.
+The initial data for the form, used to fill an "uncontrolled" form with existing data on the initial render and when `reset()` is called programmatically.
 
 ## nameGenerator
 

@@ -67,11 +67,11 @@ export interface FormProps<T = any, S extends StrictRJSFSchema = RJSFSchema, F e
   children?: ReactNode;
   /** The uiSchema for the form */
   uiSchema?: UiSchema<T, S, F>;
-  /** The data for the form, used to fill a form with data, causing the form to be "controlled". If you want an
-   * "uncontrolled" form with initial data, then use `initialFormData` instead.
+  /** The data for the form, used to load a "controlled" form with its current data. If you want an "uncontrolled" form
+   * with initial data, then use `initialFormData` instead.
    */
   formData?: T;
-  /** The initial data for the form, used to fill a "uncontrolled" form with existing data on the initial render and
+  /** The initial data for the form, used to fill an "uncontrolled" form with existing data on the initial render and
    * when `reset()` is called programmatically.
    */
   initialFormData?: T;
