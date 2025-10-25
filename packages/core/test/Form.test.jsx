@@ -5155,7 +5155,7 @@ describe('Calling reset from ref object', () => {
     expect(checkbox.checked).to.eq(true);
   });
 
-  it('Reset button test with initial value', () => {
+  it('Reset button test with initialFormData', () => {
     const schemaWithDefault = {
       title: 'Test form',
       type: 'string',
@@ -5837,6 +5837,8 @@ describe('initialFormData feature to prevent form reset', () => {
     },
   };
   const data = { name: 'initial_id' };
+  /** This was adapted from the [example](https://playcode.io/2038613) provided in issue #391
+   */
   const FormWrapper = ({ formData, initialFormData }) => {
     const [isPending, setIsPending] = useState(false);
 
@@ -5860,7 +5862,7 @@ describe('initialFormData feature to prevent form reset', () => {
       />
     );
   };
-  it('Form reset without initial data and not being controlled', () => {
+  it('show that Form resets without initial data when it is controlled', () => {
     const { container } = render(<FormWrapper formData={data} />);
     let input = container.querySelector('input');
     expect(input.value).to.eql(data.name);
@@ -5879,7 +5881,7 @@ describe('initialFormData feature to prevent form reset', () => {
     input = container.querySelector('input');
     expect(input.value).to.eql(data.name);
   });
-  it('Form does not reset with initial data and not being controlled', () => {
+  it('show that Form does not reset with initialFormData when it is uncontrolled', () => {
     const { container } = render(<FormWrapper initialFormData={data} />);
     let input = container.querySelector('input');
     expect(input.value).to.eql(data.name);
