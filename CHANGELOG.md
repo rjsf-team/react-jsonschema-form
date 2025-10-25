@@ -26,6 +26,7 @@ should change the heading of the (upcoming) version to include a major version b
   - Also fixed an issue where live validation was called on the initial form render, causing errors to show immediately, partially fixing [#512](https://github.com/rjsf-team/react-jsonschema-form/issues/512)
 
 ## Dev / docs / playground
+
 - Updated the playground to switch `liveValidate` and `liveOmit` from checkboxes to radio buttons for the new options
 - Updated `form-props.md` and `v6x upgrade guide.md` to document the new features, potential breaking changes and deprecations
 
@@ -130,6 +131,7 @@ should change the heading of the (upcoming) version to include a major version b
 - BREAKING CHANGE: Renamed `ArrayFieldItemButtonsTemplateType` to `ArrayFieldItemButtonsTemplateProps` and updated it to replace the `onAddIndexClick()`, `onCopyIndexClick()`, `onDropIndexClick()` and `onReorderClick()` callback-generator props with the `onAddItem()`, `onCopyItem()`, `onMoveUpItem()`, `onMoveDownItem()` and `onRemoveItem()` callback props
 
 ## Dev / docs / playground
+
 - Updated the `formTests.tsx` snapshots to add an `anyOf` of all arrays with different item types and removed the disabling of the optional data controls feature for the optional object with oneOfs
   - Updated the snapshots in all of the themes accordingly
 - Updated the playground to make the same changes as `formTests.tsx` in the `optionalDataControls.ts` sample, moving the `experimental_defaultFormStateBehavior` inside of a `liveSettings` block
