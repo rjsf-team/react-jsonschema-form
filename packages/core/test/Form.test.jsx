@@ -5286,7 +5286,7 @@ describe('validateForm()', () => {
   });
 });
 
-describe.only('setFieldValue()', () => {
+describe('setFieldValue()', () => {
   let sandbox;
   beforeEach(() => {
     sandbox = createSandbox();
@@ -5314,7 +5314,7 @@ describe.only('setFieldValue()', () => {
       {
         formData: 'populated value',
       },
-      undefined, // id is not provided for programmatic update
+      'root',
     );
 
     expect(node.querySelector('input').value).to.eql('populated value');
@@ -5339,7 +5339,7 @@ describe.only('setFieldValue()', () => {
       {
         formData: 'populated value',
       },
-      undefined, // id is not provided for programmatic update
+      'root',
     );
 
     expect(node.querySelector('input').value).to.eql('populated value');
@@ -5390,7 +5390,7 @@ describe.only('setFieldValue()', () => {
           },
         },
       },
-      undefined, // id is not provided for programmatic update
+      'root_foo_input',
     );
 
     // error should still be present.
@@ -5445,7 +5445,7 @@ describe.only('setFieldValue()', () => {
           },
         },
       },
-      undefined, // id is not provided for programmatic update
+      'root_foo_input',
     );
 
     // error should still be present.

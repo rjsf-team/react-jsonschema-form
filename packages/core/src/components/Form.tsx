@@ -826,8 +826,10 @@ export default class Form<
    * @param [newValue] - The new value for the field
    */
   setFieldValue = (fieldPath: string | FieldPathList, newValue?: T) => {
+    const { registry } = this.state;
     const path = Array.isArray(fieldPath) ? fieldPath : fieldPath.split('.');
-    this.onChange(newValue, path);
+    const fieldPathId = toFieldPathId('', registry.globalFormOptions, path);
+    this.onChange(newValue, path, undefined, fieldPathId[ID_KEY]);
   };
 
   /** Pushes the given change information into the `pendingChanges` array and then calls `processPendingChanges()` if
