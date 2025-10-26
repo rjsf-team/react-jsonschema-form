@@ -12,9 +12,13 @@ export default function FieldHelpTemplate<
 >(props: FieldHelpProps<T, S, F>) {
   const { fieldPathId, help } = props;
 
+  if (!help) {
+    return null;
+  }
+
   const id = helpId(fieldPathId);
 
-  return !help ? null : (
+  return (
     <Text id={id} size='sm' my='xs' c='dimmed'>
       {help}
     </Text>
