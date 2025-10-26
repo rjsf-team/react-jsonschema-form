@@ -25,6 +25,10 @@ should change the heading of the (upcoming) version to include a major version b
 - Updated `Form` so that is behaves as a "controlled" form when `formData` is passed and uncontrolled when `initialFormData` is passed, fixing [#391](https://github.com/rjsf-team/react-jsonschema-form/issues/391)
   - Also fixed an issue where live validation was called on the initial form render, causing errors to show immediately, partially fixing [#512](https://github.com/rjsf-team/react-jsonschema-form/issues/512)
 
+## @rjsf/mantine
+
+- Updated `FieldHelpTemplate` to avoid issue when `help` `and `fieldPathId` are undefined
+
 ## Dev / docs / playground
 
 - Updated the playground to switch `liveValidate` and `liveOmit` from checkboxes to radio buttons for the new options
