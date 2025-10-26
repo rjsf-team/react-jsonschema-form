@@ -818,6 +818,18 @@ export default class Form<
     return this.getUsedFormData(formData, fieldNames);
   };
 
+  /** Allows a user to set a value for the provided `fieldPath`, which must be either a dotted path to the field OR a
+   * `FieldPathList`. To set the root element, used either `''` or `[]` for the path. Passing undefined will clear the
+   * value in the field.
+   *
+   * @param fieldPath - Either a dotted path to the field or the `FieldPathList` to the field
+   * @param [newValue] - The new value for the field
+   */
+  setFieldValue = (fieldPath: string | FieldPathList, newValue?: T) => {
+    const path = Array.isArray(fieldPath) ? fieldPath : fieldPath.split('.');
+    this.onChange(newValue, path);
+  };
+
   /** Pushes the given change information into the `pendingChanges` array and then calls `processPendingChanges()` if
    * the array only contains a single pending change.
    *

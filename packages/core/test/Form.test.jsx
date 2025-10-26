@@ -5286,6 +5286,176 @@ describe('validateForm()', () => {
   });
 });
 
+describe.only('setFieldValue()', () => {
+  let sandbox;
+  beforeEach(() => {
+    sandbox = createSandbox();
+  });
+  afterEach(() => {
+    sandbox.restore();
+  });
+  it('Sets root to value using ""', () => {
+    const ref = createRef();
+    const props = {
+      schema: {
+        type: 'string',
+      },
+      formData: {},
+      ref,
+    };
+    const { onChange, node } = createFormComponent(props);
+    // populate the input
+    act(() => {
+      ref.current.setFieldValue('', 'populated value');
+    });
+
+    sinon.assert.calledWithMatch(
+      onChange.lastCall,
+      {
+        formData: 'populated value',
+      },
+      undefined, // id is not provided for programmatic update
+    );
+
+    expect(node.querySelector('input').value).to.eql('populated value');
+  });
+  it('Sets root to value using []', () => {
+    const ref = createRef();
+    const props = {
+      schema: {
+        type: 'string',
+      },
+      formData: {},
+      ref,
+    };
+    const { onChange, node } = createFormComponent(props);
+    // populate the input
+    act(() => {
+      ref.current.setFieldValue([], 'populated value');
+    });
+
+    sinon.assert.calledWithMatch(
+      onChange.lastCall,
+      {
+        formData: 'populated value',
+      },
+      undefined, // id is not provided for programmatic update
+    );
+
+    expect(node.querySelector('input').value).to.eql('populated value');
+  });
+  it('Sets field to new value via dotted path', () => {
+    const ref = createRef();
+    const props = {
+      schema: {
+        type: 'object',
+        properties: {
+          foo: {
+            type: 'object',
+            required: ['input'],
+            properties: {
+              input: {
+                type: 'string',
+              },
+            },
+          },
+        },
+        required: ['foo'],
+      },
+      formData: {},
+      ref,
+      liveValidate: true,
+    };
+    const { onChange, node } = createFormComponent(props);
+    // trigger programmatic validation and make sure an error appears.
+    act(() => {
+      expect(ref.current.validateForm()).to.eql(false);
+    });
+
+    let errors = node.querySelectorAll('.error-detail');
+    expect(errors).to.have.lengthOf(1);
+    expect(errors[0].textContent).to.be.eql("must have required property 'input'");
+
+    // populate the input
+    act(() => {
+      ref.current.setFieldValue('foo.input', 'populated value');
+    });
+
+    sinon.assert.calledWithMatch(
+      onChange.lastCall,
+      {
+        formData: {
+          foo: {
+            input: 'populated value',
+          },
+        },
+      },
+      undefined, // id is not provided for programmatic update
+    );
+
+    // error should still be present.
+    errors = node.querySelectorAll('.error-detail');
+    // screen.debug();
+    // change formData and make sure the error disappears.
+    expect(errors).to.have.lengthOf(0);
+  });
+  it('Sets field to new value via field path list', () => {
+    const ref = createRef();
+    const props = {
+      schema: {
+        type: 'object',
+        properties: {
+          foo: {
+            type: 'object',
+            required: ['input'],
+            properties: {
+              input: {
+                type: 'string',
+              },
+            },
+          },
+        },
+        required: ['foo'],
+      },
+      formData: {},
+      ref,
+      liveValidate: true,
+    };
+    const { onChange, node } = createFormComponent(props);
+    // trigger programmatic validation and make sure an error appears.
+    act(() => {
+      expect(ref.current.validateForm()).to.eql(false);
+    });
+
+    let errors = node.querySelectorAll('.error-detail');
+    expect(errors).to.have.lengthOf(1);
+    expect(errors[0].textContent).to.be.eql("must have required property 'input'");
+
+    // populate the input
+    act(() => {
+      ref.current.setFieldValue(['foo', 'input'], 'populated value');
+    });
+
+    sinon.assert.calledWithMatch(
+      onChange.lastCall,
+      {
+        formData: {
+          foo: {
+            input: 'populated value',
+          },
+        },
+      },
+      undefined, // id is not provided for programmatic update
+    );
+
+    // error should still be present.
+    errors = node.querySelectorAll('.error-detail');
+    // screen.debug();
+    // change formData and make sure the error disappears.
+    expect(errors).to.have.lengthOf(0);
+  });
+});
+
 describe('optionalDataControls', () => {
   const schema = {
     title: 'test',
