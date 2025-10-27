@@ -13,5 +13,5 @@ export default function AltDateTimeWidget<
 
 AltDateTimeWidget.defaultProps = {
   ..._AltDateWidget.defaultProps,
-  showTime: true,
+  time: true,
 };

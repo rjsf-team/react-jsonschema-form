@@ -4,7 +4,7 @@ import { type DateObject } from './types';
 export type DateElementFormat = 'DMY' | 'MDY' | 'YMD';
 
 /** Type describing format of DateElement prop */
-type DateElementProp = {
+export type DateElementProp = {
   type: string;
   range: [number, number];
   value: number | undefined;
