@@ -380,7 +380,7 @@ describe('ArrayField', () => {
         liveValidate: true,
       });
 
-      // trigger the errors by submitting the form since initial render no longer shows them
+      // trigger the errors by submitting the form
       submitForm(node);
 
       const matches = node.querySelectorAll('#custom');
