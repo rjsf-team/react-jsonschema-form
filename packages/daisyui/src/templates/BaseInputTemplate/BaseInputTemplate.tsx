@@ -31,6 +31,7 @@ export default function BaseInputTemplate<
   const {
     id,
     htmlName,
+    multiple,
     value,
     required,
     disabled,
@@ -48,7 +49,12 @@ export default function BaseInputTemplate<
   } = props;
 
   const inputProps = getInputProps<T, S, F>(schema, type, options);
-
+  let className = 'input input-bordered';
+  let isMulti = multiple;
+  if (type === 'file') {
+    isMulti = schema.type === 'array' || Boolean(options.multiple);
+    className = 'file-input w-full';
+  }
   // Extract step, min, max, accept from inputProps
   const { step, min, max, accept, ...rest } = inputProps;
   const htmlInputProps = { step, min, max, accept, ...(schema.examples ? { list: examplesId(id) } : undefined) };
@@ -82,7 +88,8 @@ export default function BaseInputTemplate<
           required={required}
           disabled={disabled || readonly}
           autoFocus={autofocus}
-          className='input input-bordered'
+          className={className}
+          multiple={isMulti}
           {...rest}
           {...htmlInputProps}
           onChange={onChangeOverride || _onChange}

@@ -6,7 +6,6 @@ import CheckboxWidget from './CheckboxWidget/CheckboxWidget';
 import CheckboxesWidget from './CheckboxesWidget/CheckboxesWidget';
 import DateTimeWidget from './DateTimeWidget/DateTimeWidget';
 import DateWidget from './DateWidget/DateWidget';
-import FileWidget from './FileWidget/FileWidget';
 import RadioWidget from './RadioWidget/RadioWidget';
 import RangeWidget from './RangeWidget/RangeWidget';
 import RatingWidget from './RatingWidget/RatingWidget';
@@ -22,7 +21,6 @@ export {
   CheckboxWidget,
   DateTimeWidget,
   DateWidget,
-  FileWidget,
   RadioWidget,
   RangeWidget,
   RatingWidget,
@@ -44,7 +42,6 @@ export function generateWidgets<
     CheckboxWidget,
     DateTimeWidget,
     DateWidget,
-    FileWidget,
     RadioWidget,
     RangeWidget,
     RatingWidget,
