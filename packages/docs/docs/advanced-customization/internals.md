@@ -95,8 +95,51 @@ const formRef = createRef<Form>();
 
 render(
   <Form schema={schema} validator={validator} onSubmit={onSubmit} ref={formRef} />,
-  document.getElementById('app')
+  document.getElementById('app'),
 );
 
 formRef.current.submit();
+```
+
+## Update field value in form programmatically
+
+You can use the reference to get your `Form` component and call the `setFieldValue(fieldPath: string | FieldPathList, newValue?: T): void` method to change the value of a field.
+This method will dispatch the `onChange` event of the form.
+
+```tsx
+import { createRef } from 'react';
+import { RJSFSchema, UiSchema } from '@rjsf/utils';
+import { Form } from '@rjsf/core';
+import validator from '@rjsf/validator-ajv8';
+
+const onChange = ({ formData }) => console.log('Data updated to: ', formData);
+let yourForm;
+
+const schema: RJSFSchema = {
+  type: 'object',
+  properties: {
+    foo: {
+      type: 'object',
+      required: ['input'],
+      properties: {
+        input: {
+          type: 'string',
+        },
+      },
+    },
+  },
+  required: ['foo'],
+};
+
+const formRef = createRef<Form>();
+
+render(
+  <Form schema={schema} validator={validator} onSubmit={onSubmit} ref={formRef} />,
+  document.getElementById('app'),
+);
+
+formRef.current.setFieldValue('foo.input', 'value');
+formRef.current.setFieldValue(['foo'], { input: 'newvalue' });
+formRef.current.setFieldValue('', { foo: { input: 'another value' } });
+formRef.current.setFieldValue([], { foo: { input: 'more values' } });
 ```
