@@ -29,6 +29,7 @@ Below is the table that lists all the `templates`, their props interface, their 
 | [BaseInputTemplate](#baseinputtemplate)                         | WidgetProps                        | ui:BaseInputTemplate             | Formerly a `widget` in `@rjsf.core` moved to `templates` and newly implemented in each theme to maximize code reuse.                                                 |
 | [DescriptionFieldTemplate](#descriptionfieldtemplate)           | DescriptionFieldProps              | ui:DescriptionFieldTemplate      | Formerly a `field` in `@rjsf.core` moved to `templates` with the `Template` suffix. Previously implemented in each theme.                                            |
 | [ErrorListTemplate](#errorlisttemplate)                         | ErrorListProps                     | ui:ErrorListTemplate             | Formerly `Form.ErrorList` moved to `templates` with the `Templates` suffix. Previously implemented in each theme.                                                    |
+| [FallbackFieldTemplate](#fallbackfieldtemplate)                 | FallbackFieldTemplateProps         | ui:FallbackFieldTemplate         | Added in RJSF v6                                                                                                                                                     |
 | [FieldErrorTemplate](#fielderrortemplate)                       | FieldErrorProps                    | ui:FieldErrorTemplate            | Formerly internal `ErrorList` component accessible only to `SchemaField`                                                                                             |
 | [FieldHelpTemplate](#fieldhelptemplate)                         | FieldHelpProps                     | ui:FieldHelpTemplate             | Formerly internal `Help` component accessible only to `SchemaField`                                                                                                  |
 | [FieldTemplate](#fieldtemplate)                                 | FieldTemplateProps                 | ui:FieldTemplate                 | Formerly `Form.FieldTemplate` or `Registry.FieldTemplate`                                                                                                            |
@@ -568,6 +569,43 @@ The following props are passed to the `ErrorListTemplate`:
 - `uiSchema`: The uiSchema that was passed to `Form`
 - `errors`: An array of all errors in this `Form`.
 - `errorSchema`: The `ErrorSchema` constructed by `Form`
+
+## FallbackFieldTemplate
+
+The `FallbackFieldTemplate` is the template that renders opt-in fallback UI to control fields of unknown or unhandled types. Usage of this feature is controlled by the [`useFallbackUiForUnsupportedType` Form prop](../api-reference/form-props.md#usefallbackuiforunsupportedtype).
+
+```tsx
+import { FallbackFieldTemplateProps, RJSFSchema } from '@rjsf/utils';
+import validator from '@rjsf/validator-ajv8';
+
+const schema: RJSFSchema = {
+  type: 'unknownType',
+  title: 'My input',
+};
+
+function FallbackFieldTemplate(props: FallbackFieldTemplateProps) {
+  const { typeSelector, schemaField } = props;
+  return (
+    <div className={'row'}>
+      <div className={'col-xs-4'}>{typeSelector}</div>
+      <div className={'col-xs-8'}>{schemaField}</div>
+    </div>
+  );
+}
+
+render(
+  <Form schema={schema} validator={validator} templates={{ FallbackFieldTemplate }} />,
+  document.getElementById('app'),
+);
+```
+
+The following props are passed to the `FallbackFieldTemplate`:
+
+- `schema`: The schema for the field
+- `uiSchema`: The uiSchema for the field
+- `registry`: The `Registry` object
+- `typeSelector`: A ReactNode that allows the selecting a different type for the field
+- `schemaField`: A ReactNode that renders the field with the present formData and matches the selected type
 
 ## FieldErrorTemplate
 

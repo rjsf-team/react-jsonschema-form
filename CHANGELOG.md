@@ -21,10 +21,11 @@ should change the heading of the (upcoming) version to include a major version b
 
 - Updated `FormProps` to add new `onChange`/`onBlur` values for the `liveValidate` and `liveOmit` props, deprecating the `boolean` aspect of them
 - Updated `Form` to support the new feature to do `onBlur` handling of `liveValidate` and `liveOmit`
+- Added new `FallbackField` to add opt-in functionality to control form data that is of an unsupported or unknown type ([#4736](https://github.com/rjsf-team/react-jsonschema-form/issues/4736)).
 
 ## Dev / docs / playground
 - Updated the playground to switch `liveValidate` and `liveOmit` from checkboxes to radio buttons for the new options
-- Updated `form-props.md` and `v6x upgrade guide.md` to document the new feature and deprecation
+- Updated `form-props.md` and `v6x upgrade guide.md` to document the new features and deprecation
 
 # 6.0.0-beta.22
 

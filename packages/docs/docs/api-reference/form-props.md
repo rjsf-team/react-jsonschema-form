@@ -652,6 +652,10 @@ function fixupSomeEnglishStrings(stringToTranslate: TranslatableString, params?:
 
 Form uiSchema. See [uiSchema Reference](uiSchema.md) for more information.
 
+## useFallbackUiForUnsupportedType
+
+If set to true, when an unsupported schema type is encountered, the form will render a fallback UI instead of displaying an error. The fallback UI will display a widget that allows the user to select a JSON Schema primitive type, and a field containing the form data that matches the selected type. Set to false by default.
+
 ## validator
 
 **Required**! An implementation of the `ValidatorType` interface that is needed for form validation to work.

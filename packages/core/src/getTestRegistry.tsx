@@ -17,7 +17,11 @@ export default function getTestRegistry(
   templates: Partial<Registry['templates']> = {},
   widgets: Registry['widgets'] = {},
   formContext: Registry['formContext'] = {},
-  globalFormOptions: Registry['globalFormOptions'] = { idPrefix: DEFAULT_ID_PREFIX, idSeparator: DEFAULT_ID_SEPARATOR },
+  globalFormOptions: Registry['globalFormOptions'] = {
+    idPrefix: DEFAULT_ID_PREFIX,
+    idSeparator: DEFAULT_ID_SEPARATOR,
+    useFallbackUiForUnsupportedType: false,
+  },
 ): Registry {
   const defaults = getDefaultRegistry();
   const schemaUtils = createSchemaUtils(validator, rootSchema);

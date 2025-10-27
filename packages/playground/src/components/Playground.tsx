@@ -44,6 +44,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
     liveOmit: false,
     experimental_componentUpdateStrategy: 'customDeep',
     experimental_defaultFormStateBehavior: { arrayMinItems: 'populate', emptyObjectFields: 'populateAllDefaults' },
+    useFallbackField: false,
   });
   const [otherFormProps, setOtherFormProps] = useState<Partial<FormProps>>({});
 
@@ -236,6 +237,7 @@ export default function Playground({ themes, validators }: PlaygroundProps) {
                 uiSchema={uiSchema}
                 formData={formData}
                 fields={{
+                  ...otherFormProps.fields,
                   geo: GeoPosition,
                   '/schemas/specialString': SpecialInput,
                 }}

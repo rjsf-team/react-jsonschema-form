@@ -344,6 +344,8 @@ export type TemplatesType<T = any, S extends StrictRJSFSchema = RJSFSchema, F ex
   DescriptionFieldTemplate: ComponentType<DescriptionFieldProps<T, S, F>>;
   /** The template to use while rendering the errors for the whole form */
   ErrorListTemplate: ComponentType<ErrorListProps<T, S, F>>;
+  /** The template to use while rendering a fallback field for schemas that have an empty or unknown 'type' */
+  FallbackFieldTemplate: ComponentType<FallbackFieldTemplateProps<T, S, F>>;
   /** The template to use while rendering the errors for a single field */
   FieldErrorTemplate: ComponentType<FieldErrorProps<T, S, F>>;
   /** The template to use while rendering the errors for a single field */
@@ -431,6 +433,11 @@ export type GlobalFormOptions = {
    * (`root[tasks][0][title]`) or Django (`root__tasks-0__title`) to receive form data in their expected format.
    */
   readonly nameGenerator?: NameGeneratorFunction;
+  /**
+   * Boolean flag that, when set to true, will cause the form to use a fallback UI when encountering a schema type that
+   * is not supported by RJSF or a custom field. When false, the UnsupportedField error component will be shown instead.
+   */
+  readonly useFallbackUiForUnsupportedType?: boolean;
 };
 
 /** The object containing the registered core, theme and custom fields and widgets as well as the root schema, form
@@ -567,6 +574,27 @@ export type FieldTemplateProps<
   onKeyRenameBlur: (event: FocusEvent<HTMLInputElement>) => void;
   /** Callback used to handle the removal of the additionalProperty */
   onRemoveProperty: () => void;
+};
+
+/**
+ * The properties that are passed to a `FallbackField` implementation
+ */
+export type FallbackFieldProps<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any,
+> = FieldProps<T, S, F>;
+
+/**
+ * The properties that are passed to a `FallbackFieldTemplate` implementation
+ */
+export type FallbackFieldTemplateProps<
+  T = any,
+  S extends StrictRJSFSchema = RJSFSchema,
+  F extends FormContextType = any,
+> = RJSFBaseProps<T, S, F> & {
+  typeSelector: ReactNode;
+  schemaField: ReactNode;
 };
 
 /** The properties that are passed to the `UnsupportedFieldTemplate` implementation */

@@ -9,6 +9,7 @@ import BaseInputTemplate from './BaseInputTemplate';
 import ButtonTemplates from './ButtonTemplates';
 import DescriptionField from './DescriptionField';
 import ErrorList from './ErrorList';
+import FallbackFieldTemplate from './FallbackFieldTemplate';
 import FieldTemplate from './FieldTemplate';
 import FieldErrorTemplate from './FieldErrorTemplate';
 import FieldHelpTemplate from './FieldHelpTemplate';
@@ -35,6 +36,7 @@ function templates<T = any, S extends StrictRJSFSchema = RJSFSchema, F extends F
     BaseInputTemplate,
     DescriptionFieldTemplate: DescriptionField,
     ErrorListTemplate: ErrorList,
+    FallbackFieldTemplate,
     FieldTemplate,
     FieldErrorTemplate,
     FieldHelpTemplate,

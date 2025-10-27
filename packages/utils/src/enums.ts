@@ -86,4 +86,8 @@ export enum TranslatableString {
    * provided by FileWidget
    */
   FilesInfo = '**%1** (%2, %3 bytes)',
+  /** Label for the schema type selector, used by FallbackField */
+  Type = 'Type',
+  /** Label for the 'value' field, used by FallbackField */
+  Value = 'Value',
 }

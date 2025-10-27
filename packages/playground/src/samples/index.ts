@@ -12,6 +12,7 @@ import references from './references';
 import custom from './custom';
 import errors from './errors';
 import examples from './examples';
+import fallback from './fallback';
 import large from './large';
 import date from './date';
 import validation from './validation';
@@ -78,6 +79,7 @@ const _samples: Record<string, Sample> = {
   'Layout Grid': layoutGrid,
   'Bundled Schema': bundledSchema,
   'Optional Data Controls': optionalDataControls,
+  'Fallback (unknown schema)': fallback,
 };
 
 export const samples = _samples;
